@@ -1,0 +1,380 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.20.1
+> 本文件收集 MC Mod 开发中的常见错误模式，每条含错误症状和正确方案。
+
+---
+
+## 注册相关
+
+### ❌ 在 Entity 构造函数中注册属性
+
+```java
+// 错误
+public MyEntity(EntityType<?> type, Level level) {
+    super(type, level);
+    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(100.0); // ❌ 太早，Attributes 系统未就绪
+}
+```
+
+**错误症状**：`NullPointerException` 或属性不生效
+
+**正确方案**：使用 `DeferredRegister<Attribute>` + modEventBus（在 mod 构造函数中完成）
+
+```java
+public static final DeferredRegister<Attribute> ATTRIBUTES =
+    DeferredRegister.create(ForgeRegistries.Keys.ATTRIBUTES, MOD_ID);
+
+public static void register(IEventBus eventBus) {
+    ATTRIBUTES.register(eventBus);
+}
+```
+
+---
+
+### ❌ 使用 `new` 构造函数直接注册方块/物品
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到游戏
+```
+
+**错误症状**：方块在世界中显示为缺失方块（紫色黑色格子）
+
+**正确方案**：通过 `DeferredRegister<Block>` 注册
+
+```java
+public static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+
+public static final RegistryObject<Block> MY_BLOCK =
+    BLOCKS.register("my_block", () -> new Block(...));
+```
+
+---
+
+### ❌ mod ID 不一致
+
+```java
+// mods.toml 中
+modId = "examplemod"
+
+// 代码中
+private static final String MOD_ID = "ExampleMod"; // ❌ 大写，与 mods.toml 不一致
+```
+
+**错误症状**：`RuntimeException: Unable to load a minecraft component`
+
+**正确方案**：确保所有地方使用完全相同的 mod ID（全小写）
+
+```java
+private static final String MOD_ID = "examplemod";
+```
+
+---
+
+## 方块/BlockEntity 相关
+
+### ❌ 在 `BlockEntity.load()` 中读取世界数据
+
+```java
+// 错误
+@Override
+public void load(CompoundTag nbt) {
+    super.load(nbt);
+    BlockState state = level.getBlockState(pos); // ❌ level 可能为 null 或 world 未完全加载
+    if (state.getValue(BlockStateProperties.POWERED)) {
+        this.activate();
+    }
+}
+```
+
+**错误症状**：`NullPointerException`，游戏崩溃在 `BlockEntity.load`
+
+**正确方案**：在 `onLoad()` 中处理需要世界数据的逻辑（`load()` 仅用于读写 NBT）
+
+```java
+// load() 只读写 NBT，不访问 world
+@Override
+public void load(CompoundTag nbt) {
+    super.load(nbt);
+    if (nbt.contains("data", Tag.TAG_COMPOUND)) {
+        this.data = nbt.getCompound("data");
+    }
+}
+
+// onLoad() 在 BlockEntity 进入 world 后调用，此时 level 已可用
+@Override
+public void onLoad() {
+    super.onLoad();
+    if (this.level != null && this.level.isClientSide) {
+        // 基于世界的初始化逻辑
+    }
+}
+```
+
+---
+
+### ❌ 忘记在 `BlockEntity.setRemoved()` 中清理监听器
+
+```java
+// 错误
+@Override
+public void setRemoved() {
+    // ❌ 没有取消订阅，导致内存泄漏
+    super.setRemoved();
+}
+```
+
+**错误症状**：内存泄漏，World 不释放，卸载区块后大量对象无法 GC
+
+**正确方案**：
+
+```java
+private final List<Runnable> listeners = new ArrayList<>();
+
+@Override
+public void setRemoved() {
+    for (Runnable listener : listeners) {
+        // 取消监听器订阅
+    }
+    listeners.clear();
+    super.setRemoved();
+}
+```
+
+---
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+
+```java
+// 错误
+@SubscribeEvent
+public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ServerPlayer player = ctx.get().getSender();
+    player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState()); // ❌ 不安全
+}
+```
+
+**错误症状**：异步修改世界导致数据损坏或崩溃
+
+**正确方案**：
+
+```java
+@SubscribeEvent
+public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ServerPlayer player = ctx.get().getSender();
+        if (player != null) {
+            player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState());
+        }
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+---
+
+### ❌ 逐字段发送大量网络数据
+
+```java
+// 错误
+channel.sendToServer(new SyncFieldMessage("field1", value1));
+channel.sendToServer(new SyncFieldMessage("field2", value2));
+channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络开销
+```
+
+**错误症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟
+
+**正确方案**：使用 `CompoundTag` 或自定义 `BinaryBuffer` 批量序列化
+
+```java
+// 正确：单次批量同步
+public class SyncAllDataMessage implements IMessage {
+    private CompoundTag data;
+
+    public void toBytes(PacketByteBuf buf) {
+        buf.writeNbt(data);
+    }
+
+    public void fromBytes(PacketByteBuf buf) {
+        data = buf.readNbt();
+    }
+}
+```
+
+---
+
+## 事件相关
+
+### ❌ 在 TickEvent 中执行重操作
+
+```java
+// 错误
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        for (Entity entity : world.getAllEntities()) { // ❌ 每 tick 遍历所有实体
+            processHeavy(entity);
+        }
+    }
+}
+```
+
+**错误症状**：服务端严重卡顿，TPS 下降
+
+**正确方案**：
+- 使用 `scheduledTasks` 分散负载
+- 使用计数器，每 N tick 处理一批
+- 优先使用事件驱动而非轮询
+
+```java
+private int tickCounter = 0;
+
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        tickCounter++;
+        if (tickCounter % 20 == 0) {  // 每秒处理一次
+            scheduleProcessing();
+        }
+    }
+}
+```
+
+---
+
+### ❌ 在渲染线程中修改服务端数据
+
+```java
+// 错误（客户端代码）
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在渲染线程修改世界
+}
+```
+
+**错误症状**：`IllegalStateException: Do not modify the game from the render thread`
+
+**正确方案**：将操作发送到服务端主线程
+
+```java
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    // 发送网络消息，让服务端执行
+    NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
+}
+```
+
+---
+
+## 生命周期相关
+
+### ❌ 在 `FMLClientSetupEvent` 中执行游戏逻辑
+
+```java
+// 错误
+@SubscribeEvent
+public static void onClientSetup(FMLClientSetupEvent event) {
+    world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在客户端修改世界数据
+}
+```
+
+**错误症状**：游戏崩溃或数据不同步
+
+**正确方案**：
+- `FMLClientSetupEvent` 只用于注册 KeyBinding 和渲染器
+- 游戏逻辑使用网络包或服务端事件
+
+---
+
+### ❌ Capability 未检查 null
+
+```java
+// 错误
+player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
+    cap.setData(someData); // 如果 Capability 未附加，会走到这里但数据丢失
+});
+```
+
+**错误症状**：数据写入后丢失，或逻辑不执行
+
+**正确方案**：
+
+```java
+// 正确：主动检查 Capability 是否存在
+if (player.getCapability(ModCapabilities.MY_CAP).isPresent()) {
+    player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
+        cap.setData(someData);
+    });
+}
+
+// 或使用 orElse
+IMyCapability cap = player.getCapability(ModCapabilities.MY_CAP).orElse(null);
+if (cap != null) {
+    cap.setData(someData);
+}
+```
+
+---
+
+### ❌ Mixin 中在 `@Inject` 的构造函数里修改 final 字段
+
+```java
+// Mixin 错误示例
+@Mixin(Entity.class)
+public class MixinEntity {
+    @Inject(at = At("TAIL"), method = "<init>")
+    private void init(CallbackInfo ci) {
+        this.someFinalField = value; // ❌ 不能修改 final 字段
+    }
+}
+```
+
+**错误症状**：游戏崩溃，JVM 报错
+
+**正确方案**：Mixin 中避免修改 final 字段，在 `@Inject` 方法的参数中操作
+
+---
+
+## 资源文件相关
+
+### ❌ 资源路径大小写错误
+
+```json
+// 错误：文件名包含大写
+"textures/item/MyItem.png"  // ❌ 大写
+
+// 正确：全部小写
+"textures/item/my_item.png"
+```
+
+**错误症状**：材质不加载，显示紫色黑色格子
+
+---
+
+### ❌ 物品模型 JSON 指向不存在的资源
+
+```json
+// 错误
+{
+  "parent": "examplemod:item/my_item"  // ❌ 文件不存在
+}
+```
+
+**错误症状**：物品显示为紫色黑色方块
+
+---
+
+## 工具提示
+
+当遇到错误时，按以下顺序排查：
+
+1. `09-anti-patterns.mdc` — 是否是已知错误模式
+2. 检查 `mods.toml` 语法和 mod ID 是否一致
+3. 检查资源文件路径是否全小写
+4. 检查是否混用了服务端和客户端线程
+5. 检查 `enqueueWork` 是否正确使用
+6. 检查 Registry 注册是否通过事件系统

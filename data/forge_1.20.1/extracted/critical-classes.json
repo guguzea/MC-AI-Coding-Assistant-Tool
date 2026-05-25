@@ -1,0 +1,107 @@
+{
+  "net/minecraftforge/registries/DeferredRegister": null,
+  "net/minecraftforge/registries/ForgeRegistries": null,
+  "net/minecraftforge/registries/RegistryObject": null,
+  "net/minecraftforge/registries/IForgeRegistry": null,
+  "net/minecraft/world/item/Item": {
+    "methods": 45,
+    "fields": 0
+  },
+  "net/minecraft/world/item/BlockItem": {
+    "methods": 19,
+    "fields": 0
+  },
+  "net/minecraft/world/item/SwordItem": {
+    "methods": 9,
+    "fields": 1
+  },
+  "net/minecraft/world/item/PickaxeItem": {
+    "methods": 1,
+    "fields": 0
+  },
+  "net/minecraft/world/item/AxeItem": {
+    "methods": 6,
+    "fields": 0
+  },
+  "net/minecraft/world/item/HoeItem": {
+    "methods": 6,
+    "fields": 0
+  },
+  "net/minecraft/world/item/ShovelItem": {
+    "methods": 3,
+    "fields": 1
+  },
+  "net/minecraft/world/item/ArmorItem": {
+    "methods": 7,
+    "fields": 0
+  },
+  "net/minecraft/world/item/FoodProperties": null,
+  "net/minecraft/world/block/Block": null,
+  "net/minecraft/world/block/state/BlockBehaviour": null,
+  "net/minecraft/world/tileentity/BlockEntity": null,
+  "net/minecraft/world/tileentity/BlockEntityType": null,
+  "net/minecraft/world/entity/Entity": {
+    "methods": 251,
+    "fields": 0
+  },
+  "net/minecraft/world/entity/LivingEntity": {
+    "methods": 201,
+    "fields": 2
+  },
+  "net/minecraft/world/entity/Mob": {
+    "methods": 90,
+    "fields": 0
+  },
+  "net/minecraft/world/entity/animal/Animal": {
+    "methods": 22,
+    "fields": 0
+  },
+  "net/minecraft/world/entity/projectile/Projectile": {
+    "methods": 17,
+    "fields": 0
+  },
+  "net/minecraft/world/entity/EntityType": {
+    "methods": 27,
+    "fields": 0
+  },
+  "net/minecraft/world/entity/ai/attributes/Attribute": {
+    "methods": 6,
+    "fields": 3
+  },
+  "net/minecraft/world/entity/ai/attributes/RangedAttribute": {
+    "methods": 4,
+    "fields": 2
+  },
+  "net/minecraftforge/common/capabilities/Capability": null,
+  "net/minecraftforge/common/capabilities/CapabilityManager": null,
+  "net/minecraftforge/common/capabilities/ICapabilityProvider": null,
+  "net/minecraftforge/common/capabilities/ICapabilitySerializable": null,
+  "net/minecraftforge/common/capabilities/LazyOptional": null,
+  "net/minecraftforge/fml/common/eventhandler/Event": null,
+  "net/minecraftforge/fml/common/eventhandler/SubscribeEvent": null,
+  "net/minecraftforge/network/NetworkRegistry": null,
+  "net/minecraftforge/network/simple/SimpleChannel": null,
+  "net/minecraftforge/network/handshake/NetworkDispatcher": null,
+  "net/minecraft/world/item/crafting/RecipeSerializer": {
+    "methods": 4,
+    "fields": 0
+  },
+  "net/minecraft/data/recipes/RecipeProvider": {
+    "methods": 77,
+    "fields": 0
+  },
+  "net/minecraft/data/recipes/ShapedRecipeBuilder": {
+    "methods": 12,
+    "fields": 0
+  },
+  "net/minecraft/data/recipes/ShapelessRecipeBuilder": {
+    "methods": 12,
+    "fields": 0
+  },
+  "net/minecraft/data/loot/LootTableProvider": {
+    "methods": 3,
+    "fields": 0
+  },
+  "net/minecraft/data/loot/LootPool": null,
+  "net/minecraftforge/common/data/LanguageProvider": null
+}

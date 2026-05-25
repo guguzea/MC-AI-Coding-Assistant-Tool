@@ -1,0 +1,578 @@
+{
+  "1.20.1/gettingstarted": {
+    "label": "Getting Started",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted",
+    "file": "gettingstarted.md",
+    "fetchedAt": "2026-05-05T03:26:17.225Z",
+    "size": 6106
+  },
+  "1.20.1/concepts/registries": {
+    "label": "Registries",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/registries",
+    "file": "concepts_registries.md",
+    "fetchedAt": "2026-05-05T03:26:24.664Z",
+    "size": 13537
+  },
+  "1.20.1/concepts/events": {
+    "label": "Events",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/events",
+    "file": "concepts_events.md",
+    "fetchedAt": "2026-05-05T03:26:27.145Z",
+    "size": 8333
+  },
+  "1.20.1/concepts/sides": {
+    "label": "Sides",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/sides",
+    "file": "concepts_sides.md",
+    "fetchedAt": "2026-05-05T03:26:29.668Z",
+    "size": 11437
+  },
+  "1.20.1/concepts/lifecycle": {
+    "label": "Mod Lifecycle",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle",
+    "file": "concepts_lifecycle.md",
+    "fetchedAt": "2026-05-05T03:26:31.083Z",
+    "size": 3990
+  },
+  "1.20.1/concepts/resources": {
+    "label": "Resources",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/resources",
+    "file": "concepts_resources.md",
+    "fetchedAt": "2026-05-05T03:26:33.105Z",
+    "size": 2475
+  },
+  "1.20.1/concepts/internationalization": {
+    "label": "Internationalization",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/internationalization",
+    "file": "concepts_internationalization.md",
+    "fetchedAt": "2026-05-05T03:26:35.288Z",
+    "size": 4626
+  },
+  "1.20.1/datastorage/capabilities": {
+    "label": "Capabilities",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities",
+    "file": "datastorage_capabilities.md",
+    "fetchedAt": "2026-05-05T03:26:38.105Z",
+    "size": 11294
+  },
+  "1.20.1/datastorage/saveddata": {
+    "label": "Saved Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata",
+    "file": "datastorage_saveddata.md",
+    "fetchedAt": "2026-05-05T03:26:40.004Z",
+    "size": 2100
+  },
+  "1.20.1/datastorage/codecs": {
+    "label": "Codecs",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs",
+    "file": "datastorage_codecs.md",
+    "fetchedAt": "2026-05-05T03:26:41.646Z",
+    "size": 16811
+  },
+  "1.20.1/items/": {
+    "label": "Items",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items",
+    "file": "items.md",
+    "fetchedAt": "2026-05-05T03:26:43.118Z",
+    "size": 3384
+  },
+  "1.20.1/items/bewlr": {
+    "label": "BlockEntityWithoutLevelRenderer",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items/bewlr",
+    "file": "items_bewlr.md",
+    "fetchedAt": "2026-05-05T03:26:44.962Z",
+    "size": 1649
+  },
+  "1.20.1/blocks/": {
+    "label": "Blocks",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks",
+    "file": "blocks.md",
+    "fetchedAt": "2026-05-05T03:26:46.527Z",
+    "size": 4583
+  },
+  "1.20.1/blocks/states": {
+    "label": "Block States",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/states",
+    "file": "blocks_states.md",
+    "fetchedAt": "2026-05-05T03:26:48.326Z",
+    "size": 7207
+  },
+  "1.20.1/blockentities/": {
+    "label": "Block Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities",
+    "file": "blockentities.md",
+    "fetchedAt": "2026-05-05T03:26:50.719Z",
+    "size": 7456
+  },
+  "1.20.1/blockentities/ber": {
+    "label": "BlockEntityRenderer",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/ber",
+    "file": "blockentities_ber.md",
+    "fetchedAt": "2026-05-05T03:26:52.814Z",
+    "size": 1707
+  },
+  "1.20.1/networking/": {
+    "label": "Networking",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking",
+    "file": "networking.md",
+    "fetchedAt": "2026-05-05T03:26:54.307Z",
+    "size": 935
+  },
+  "1.20.1/networking/simpleimpl": {
+    "label": "SimpleImpl",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl",
+    "file": "networking_simpleimpl.md",
+    "fetchedAt": "2026-05-05T03:26:56.586Z",
+    "size": 7019
+  },
+  "1.20.1/networking/entities": {
+    "label": "Synchronizing Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/entities",
+    "file": "networking_entities.md",
+    "fetchedAt": "2026-05-05T03:26:58.512Z",
+    "size": 2037
+  },
+  "1.20.1/gameeffects/particles": {
+    "label": "Particles",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles",
+    "file": "gameeffects_particles.md",
+    "fetchedAt": "2026-05-05T03:27:00.482Z",
+    "size": 9641
+  },
+  "1.20.1/gameeffects/sounds": {
+    "label": "Sounds",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/sounds",
+    "file": "gameeffects_sounds.md",
+    "fetchedAt": "2026-05-05T03:27:02.347Z",
+    "size": 6978
+  },
+  "1.20.1/datagen/": {
+    "label": "Data Generation",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen",
+    "file": "datagen.md",
+    "fetchedAt": "2026-05-05T03:27:05.037Z",
+    "size": 4640
+  },
+  "1.20.1/datagen/client/modelproviders": {
+    "label": "Model Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/modelproviders",
+    "file": "datagen_client_modelproviders.md",
+    "fetchedAt": "2026-05-05T03:27:06.459Z",
+    "size": 24347
+  },
+  "1.20.1/datagen/client/localization": {
+    "label": "Language Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/localization",
+    "file": "datagen_client_localization.md",
+    "fetchedAt": "2026-05-05T03:27:08.247Z",
+    "size": 1651
+  },
+  "1.20.1/datagen/client/sounds": {
+    "label": "Sound Providers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds",
+    "file": "datagen_client_sounds.md",
+    "fetchedAt": "2026-05-05T03:27:11.275Z",
+    "size": 3585
+  },
+  "1.20.1/datagen/server/recipes": {
+    "label": "Recipe Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/recipes",
+    "file": "datagen_server_recipes.md",
+    "fetchedAt": "2026-05-05T03:27:13.588Z",
+    "size": 9344
+  },
+  "1.20.1/datagen/server/loottables": {
+    "label": "Loot Table Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables",
+    "file": "datagen_server_loottables.md",
+    "fetchedAt": "2026-05-05T03:27:16.278Z",
+    "size": 7827
+  },
+  "1.20.1/datagen/server/tags": {
+    "label": "Tag Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags",
+    "file": "datagen_server_tags.md",
+    "fetchedAt": "2026-05-05T03:27:18.789Z",
+    "size": 5031
+  },
+  "1.20.1/datagen/server/advancements": {
+    "label": "Advancement Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements",
+    "file": "datagen_server_advancements.md",
+    "fetchedAt": "2026-05-05T03:27:21.067Z",
+    "size": 3358
+  },
+  "1.20.1/datagen/server/glm": {
+    "label": "GLM Providers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/glm",
+    "file": "datagen_server_glm.md",
+    "fetchedAt": "2026-05-05T03:27:22.563Z",
+    "size": 1035
+  },
+  "1.20.1/datagen/server/datapackregistries": {
+    "label": "Datapack Registry",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries",
+    "file": "datagen_server_datapackregistries.md",
+    "fetchedAt": "2026-05-05T03:27:24.219Z",
+    "size": 5209
+  },
+  "1.20.1/resources/client/": {
+    "label": "Client Assets",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client",
+    "file": "resources_client.md",
+    "fetchedAt": "2026-05-05T03:27:26.012Z",
+    "size": 1029
+  },
+  "1.20.1/resources/client/models/": {
+    "label": "Models",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models",
+    "file": "resources_client_models.md",
+    "fetchedAt": "2026-05-05T03:27:28.878Z",
+    "size": 2163
+  },
+  "1.20.1/resources/client/models/tinting": {
+    "label": "Texture Tinting",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting",
+    "file": "resources_client_models_tinting.md",
+    "fetchedAt": "2026-05-05T03:27:30.404Z",
+    "size": 2779
+  },
+  "1.20.1/resources/client/models/itemproperties": {
+    "label": "Item Properties",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties",
+    "file": "resources_client_models_itemproperties.md",
+    "fetchedAt": "2026-05-05T03:27:32.913Z",
+    "size": 3841
+  },
+  "1.20.1/resources/server/": {
+    "label": "Server Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server",
+    "file": "resources_server.md",
+    "fetchedAt": "2026-05-05T03:27:34.358Z",
+    "size": 902
+  },
+  "1.20.1/resources/server/recipes/": {
+    "label": "Recipes",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes",
+    "file": "resources_server_recipes.md",
+    "fetchedAt": "2026-05-05T03:27:35.937Z",
+    "size": 4290
+  },
+  "1.20.1/resources/server/recipes/custom/": {
+    "label": "Custom Recipes",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/custom",
+    "file": "resources_server_recipes_custom.md",
+    "fetchedAt": "2026-05-04T17:00:50.678Z",
+    "size": 5802
+  },
+  "1.20.1/resources/server/loottables/": {
+    "label": "Loot Tables",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables",
+    "file": "resources_server_loottables.md",
+    "fetchedAt": "2026-05-05T03:27:41.237Z",
+    "size": 4792
+  },
+  "1.20.1/resources/server/glm/": {
+    "label": "Global Loot Modifiers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm",
+    "file": "resources_server_glm.md",
+    "fetchedAt": "2026-05-05T03:27:42.949Z",
+    "size": 7184
+  },
+  "1.20.1/resources/server/tags/": {
+    "label": "Tags",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags",
+    "file": "resources_server_tags.md",
+    "fetchedAt": "2026-05-05T03:27:44.783Z",
+    "size": 6888
+  },
+  "1.20.1/resources/server/advancements/": {
+    "label": "Advancements",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements",
+    "file": "resources_server_advancements.md",
+    "fetchedAt": "2026-05-05T03:27:46.923Z",
+    "size": 7479
+  },
+  "1.20.1/resources/server/conditional/": {
+    "label": "Conditionally-Loaded Data",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/conditional",
+    "file": "resources_server_conditional.md",
+    "fetchedAt": "2026-05-05T03:27:50.060Z",
+    "size": 5340
+  },
+  "1.20.1/gui/menus/": {
+    "label": "Menus",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/menus",
+    "file": "gui_menus.md",
+    "fetchedAt": "2026-05-05T03:27:51.838Z",
+    "size": 17134
+  },
+  "1.20.1/gui/screens/": {
+    "label": "Screens",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/screens",
+    "file": "gui_screens.md",
+    "fetchedAt": "2026-05-05T03:27:54.230Z",
+    "size": 20448
+  },
+  "1.20.1/rendering/modelloaders/": {
+    "label": "Model Loaders",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders",
+    "file": "rendering_modelloaders.md",
+    "fetchedAt": "2026-05-04T17:00:00.566Z",
+    "size": 2090
+  },
+  "1.20.1/misc/config/": {
+    "label": "Configuration",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/config",
+    "file": "misc_config.md",
+    "fetchedAt": "2026-05-05T03:28:10.513Z",
+    "size": 5573
+  },
+  "1.20.1/misc/keymappings/": {
+    "label": "Key Mappings",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/keymappings",
+    "file": "misc_keymappings.md",
+    "fetchedAt": "2026-05-05T03:28:14.787Z",
+    "size": 8233
+  },
+  "1.20.1/misc/gametest/": {
+    "label": "Game Tests",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/gametest",
+    "file": "misc_gametest.md",
+    "fetchedAt": "2026-05-05T03:28:16.717Z",
+    "size": 12201
+  },
+  "1.20.1/misc/updatechecker/": {
+    "label": "Forge Update Checker",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker",
+    "file": "misc_updatechecker.md",
+    "fetchedAt": "2026-05-04T17:01:20.800Z",
+    "size": 3772
+  },
+  "1.20.1/advanced/accesstransformers/": {
+    "label": "Access Transformers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers",
+    "file": "advanced_accesstransformers.md",
+    "fetchedAt": "2026-05-04T17:01:22.289Z",
+    "size": 4813
+  },
+  "1.20.1/legacy/": {
+    "label": "Legacy",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy",
+    "file": "legacy.md",
+    "fetchedAt": "2026-05-05T03:28:39.564Z",
+    "size": 2852
+  },
+  "1.20.1/legacy/porting/": {
+    "label": "Porting",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/porting",
+    "file": "legacy_porting.md",
+    "fetchedAt": "2026-05-05T03:28:41.504Z",
+    "size": 1032
+  },
+  "1.20.1/gettingstarted/modfiles": {
+    "label": "The Mod Files",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/modfiles",
+    "file": "gettingstarted_modfiles.md",
+    "fetchedAt": "2026-05-05T03:26:18.922Z",
+    "size": 11271
+  },
+  "1.20.1/gettingstarted/structuring": {
+    "label": "Structuring",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring",
+    "file": "gettingstarted_structuring.md",
+    "fetchedAt": "2026-05-05T03:26:20.680Z",
+    "size": 4543
+  },
+  "1.20.1/gettingstarted/versioning": {
+    "label": "Versioning",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning",
+    "file": "gettingstarted_versioning.md",
+    "fetchedAt": "2026-05-05T03:26:22.761Z",
+    "size": 4306
+  },
+  "1.20.1/rendering/modelextensions/transforms": {
+    "label": "Root Transforms",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms",
+    "file": "rendering_modelextensions_transforms.md",
+    "fetchedAt": "2026-05-05T03:27:56.012Z",
+    "size": 3363
+  },
+  "1.20.1/rendering/modelextensions/rendertypes": {
+    "label": "Render Types",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes",
+    "file": "rendering_modelextensions_rendertypes.md",
+    "fetchedAt": "2026-05-05T03:27:58.522Z",
+    "size": 4232
+  },
+  "1.20.1/rendering/modelextensions/visibility": {
+    "label": "Part Visibility",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility",
+    "file": "rendering_modelextensions_visibility.md",
+    "fetchedAt": "2026-05-05T03:27:59.961Z",
+    "size": 1958
+  },
+  "1.20.1/rendering/modelextensions/facedata": {
+    "label": "Face Data",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata",
+    "file": "rendering_modelextensions_facedata.md",
+    "fetchedAt": "2026-05-05T03:28:01.751Z",
+    "size": 3949
+  },
+  "1.20.1/resources/server/recipes/ingredients": {
+    "label": "Ingredients",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients",
+    "file": "resources_server_recipes_ingredients.md",
+    "fetchedAt": "2026-05-05T03:27:37.686Z",
+    "size": 6035
+  },
+  "1.20.1/resources/server/recipes/incode": {
+    "label": "Non-Datapack Recipes",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode",
+    "file": "resources_server_recipes_incode.md",
+    "fetchedAt": "2026-05-05T03:27:39.509Z",
+    "size": 3734
+  },
+  "1.20.1/rendering/modelloaders": {
+    "label": "Model Loaders",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders",
+    "file": "rendering_modelloaders.md",
+    "fetchedAt": "2026-05-05T03:28:03.271Z",
+    "size": 2090
+  },
+  "1.20.1/rendering/modelloaders/bakedmodel": {
+    "label": "Baked Model",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel",
+    "file": "rendering_modelloaders_bakedmodel.md",
+    "fetchedAt": "2026-05-05T03:28:05.618Z",
+    "size": 4287
+  },
+  "1.20.1/rendering/modelloaders/transform": {
+    "label": "Model Transform",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform",
+    "file": "rendering_modelloaders_transform.md",
+    "fetchedAt": "2026-05-05T03:28:07.201Z",
+    "size": 2897
+  },
+  "1.20.1/rendering/modelloaders/itemoverrides": {
+    "label": "Item Overrides",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides",
+    "file": "rendering_modelloaders_itemoverrides.md",
+    "fetchedAt": "2026-05-05T03:28:08.897Z",
+    "size": 1918
+  },
+  "1.20.1/misc/updatechecker": {
+    "label": "Forge Update Checker",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker",
+    "file": "misc_updatechecker.md",
+    "fetchedAt": "2026-05-05T03:28:18.505Z",
+    "size": 3772
+  },
+  "1.20.1/misc/debugprofiler": {
+    "label": "Debug Profiler",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler",
+    "file": "misc_debugprofiler.md",
+    "fetchedAt": "2026-05-05T03:28:24.803Z",
+    "size": 2593
+  },
+  "1.20.1/advanced/accesstransformers": {
+    "label": "Access Transformers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers",
+    "file": "advanced_accesstransformers.md",
+    "fetchedAt": "2026-05-05T03:28:31.780Z",
+    "size": 4813
+  },
+  "1.20.1/forgedev": {
+    "label": "Contributing to Forge",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev",
+    "file": "forgedev.md",
+    "fetchedAt": "2026-05-05T03:28:33.582Z",
+    "size": 8518
+  },
+  "1.20.1/forgedev/prguidelines": {
+    "label": "Pull Request Guidelines",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines",
+    "file": "forgedev_prguidelines.md",
+    "fetchedAt": "2026-05-05T03:28:35.643Z",
+    "size": 6037
+  },
+  "1.20.1/contributing": {
+    "label": "Contributing to Docs",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/contributing",
+    "file": "contributing.md",
+    "fetchedAt": "2026-05-05T03:28:37.857Z",
+    "size": 1955
+  }
+}

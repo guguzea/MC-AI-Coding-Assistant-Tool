@@ -1,0 +1,1227 @@
+[
+  {
+    "id": "1.20.1/rendering_modelloaders_bakedmodel",
+    "version": "1.20.1",
+    "label": "`BakedModel",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/bakedmodel",
+    "tags": [
+      "rendering",
+      "BakedModel",
+      "IBakedModel",
+      "ItemStack",
+      "render",
+      "model"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders_itemoverrides",
+    "version": "1.20.1",
+    "label": "`ItemOverrides",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/itemoverrides",
+    "tags": [
+      "item",
+      "rendering",
+      "ItemOverrides",
+      "ItemOverride",
+      "ItemStack",
+      "BakedModel"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/advanced_accesstransformers",
+    "version": "1.20.1",
+    "label": "Access Transformers",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers",
+    "tags": [
+      "advanced",
+      "AccessTransformer",
+      "AT",
+      "accesstransformer",
+      "accesstransformer.cfg",
+      "META-INF",
+      "field",
+      "method",
+      "public",
+      "protected",
+      "private"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/datagen_server_advancements",
+    "version": "1.20.1",
+    "label": "Advancement Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/advancements",
+    "tags": [
+      "datagen",
+      "tag",
+      "AdvancementProvider",
+      "Advancement",
+      "AdvancementRewards",
+      "DataGenerator",
+      "recipe",
+      "mob"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/resources_server_advancements",
+    "version": "1.20.1",
+    "label": "Advancements",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/advancements",
+    "tags": [
+      "advancement",
+      "Advancement",
+      "AdvancementRewards",
+      "criterion",
+      "challenge",
+      "reward"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/blocks_states",
+    "version": "1.20.1",
+    "label": "Block States",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/states",
+    "tags": [
+      "block",
+      "BlockState",
+      "BlockBehaviour",
+      "properties",
+      "Multipart",
+      "StateDefinition"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/blockentities",
+    "version": "1.20.1",
+    "label": "BlockEntities",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities",
+    "tags": [
+      "block",
+      "BlockEntity",
+      "BlockEntityType",
+      "Tickable",
+      "ServerLevel",
+      "ClientLevel",
+      "NBTTagCompound",
+      "getUpdateTag",
+      "handleUpdateTag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/blockentities_ber",
+    "version": "1.20.1",
+    "label": "BlockEntityRenderer",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/ber",
+    "tags": [
+      "block",
+      "BlockEntityRenderer",
+      "BER",
+      "render",
+      "client",
+      "renderLayer"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/items_bewlr",
+    "version": "1.20.1",
+    "label": "BlockEntityWithoutLevelRenderer",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items/bewlr",
+    "tags": [
+      "item",
+      "BlockEntityWithoutLevelRenderer",
+      "BEWLR",
+      "ItemStack",
+      "client"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/blocks",
+    "version": "1.20.1",
+    "label": "Blocks",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks",
+    "tags": [
+      "block",
+      "Block",
+      "BlockBehaviour",
+      "use",
+      "BlockState",
+      "ItemBlock",
+      "register"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/datastorage_codecs",
+    "version": "1.20.1",
+    "label": "Codecs",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs",
+    "tags": [
+      "Codec",
+      "DynamicOps",
+      "NBT",
+      "JSON",
+      "encode",
+      "decode",
+      "Ops",
+      "record"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/resources_client_models_tinting",
+    "version": "1.20.1",
+    "label": "Coloring Textures",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/tinting",
+    "tags": [
+      "tint",
+      "texture",
+      "ColorResolver",
+      "rendering",
+      "item",
+      "block",
+      "BakedModel"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/resources_server_conditional",
+    "version": "1.20.1",
+    "label": "Conditionally-Loaded Data",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/conditional",
+    "tags": [
+      "conditional",
+      "tag",
+      "ingredient",
+      "recipe",
+      "loot",
+      "enabled"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/misc_config",
+    "version": "1.20.1",
+    "label": "Configuration",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/config",
+    "tags": [
+      "config",
+      "Configuration",
+      "ForgeConfigSpec",
+      "spec",
+      "ModConfig",
+      "Toml"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders",
+    "version": "1.20.1",
+    "label": "Custom Model Loaders",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders",
+    "tags": [
+      "rendering",
+      "ModelLoader",
+      "BakedModel",
+      "IModelGeometry",
+      "IModelLoader",
+      "custom",
+      "model"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/datagen",
+    "version": "1.20.1",
+    "label": "Data Generators",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen",
+    "tags": [
+      "datagen",
+      "DataGenerator",
+      "DataProvider",
+      "Provider",
+      "tag",
+      "registries"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/datagen_server_datapackregistries",
+    "version": "1.20.1",
+    "label": "Datapack Registry Object Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/datapackregistries",
+    "tags": [
+      "registry",
+      "datagen",
+      "tag",
+      "DatapackBuiltinEntriesProvider",
+      "RegistryOps",
+      "ResourceKey",
+      "ForgeRegistries"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/resources_server",
+    "version": "1.20.1",
+    "label": "Datapacks",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server",
+    "tags": [
+      "datapack",
+      "data",
+      "json",
+      "tag",
+      "advancement",
+      "recipe",
+      "loot"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/misc_debugprofiler",
+    "version": "1.20.1",
+    "label": "Debug Profiler",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler",
+    "tags": [
+      "debug",
+      "profiler",
+      "System",
+      "nanoTime",
+      "profile"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/legacy",
+    "version": "1.20.1",
+    "label": "Documentation for Legacy Versions",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy",
+    "tags": [
+      "legacy",
+      "old",
+      "version",
+      "archive"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/networking_entities",
+    "version": "1.20.1",
+    "label": "Entities",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/entities",
+    "tags": [
+      "networking",
+      "Entity",
+      "EntityType",
+      "server",
+      "client",
+      "sync",
+      "data",
+      "S2C",
+      "C2S",
+      "IMessage"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/concepts_events",
+    "version": "1.20.1",
+    "label": "Events",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/events",
+    "tags": [
+      "event",
+      "SubscribeEvent",
+      "EventBus",
+      "modEventBus",
+      "DistExecutor",
+      "IEventBus",
+      "bus",
+      "ForgeEventBus",
+      "EventPriority",
+      "eventbus",
+      "listener",
+      "subscriber"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_facedata",
+    "version": "1.20.1",
+    "label": "Face Data",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/facedata",
+    "tags": [
+      "rendering",
+      "FaceData",
+      "FaceProperties",
+      "Quadrilateral",
+      "BakedModel",
+      "FaceOffset"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/misc_updatechecker",
+    "version": "1.20.1",
+    "label": "Forge Update Checker",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker",
+    "tags": [
+      "update",
+      "VersionCheckEvent",
+      "updatechecker",
+      "version"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/misc_gametest",
+    "version": "1.20.1",
+    "label": "Game Tests",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/gametest",
+    "tags": [
+      "tests",
+      "gametest",
+      "GameTest",
+      "GameTestRunner",
+      "GameTestBatch",
+      "StructureBlock",
+      "TestInstance"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/forgedev",
+    "version": "1.20.1",
+    "label": "Getting Started",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev",
+    "tags": [
+      "gettingstarted",
+      "getting",
+      "started",
+      "setup",
+      "forge"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/gettingstarted",
+    "version": "1.20.1",
+    "label": "Getting Started with Forge",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted",
+    "tags": [
+      "gettingstarted",
+      "setup",
+      "workspace",
+      "gradle",
+      "forge",
+      "eclipse",
+      "intellij"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/datagen_server_glm",
+    "version": "1.20.1",
+    "label": "Global Loot Modifier Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/glm",
+    "tags": [
+      "datagen",
+      "tag",
+      "GlobalLootModifierProvider",
+      "LootModifier",
+      "loot",
+      "GlobalLootModifier",
+      "IGlobalLootModifier"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/resources_server_glm",
+    "version": "1.20.1",
+    "label": "Global Loot Modifiers",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/glm",
+    "tags": [
+      "loot",
+      "GlobalLootModifier",
+      "LootModifier",
+      "IGlobalLootModifier",
+      "LootPool",
+      "item",
+      "drop"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_ingredients",
+    "version": "1.20.1",
+    "label": "Ingredients",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients",
+    "tags": [
+      "recipe",
+      "Ingredient",
+      "IngredientStack",
+      "tag",
+      "Crafting",
+      "Smelting"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/concepts_internationalization",
+    "version": "1.20.1",
+    "label": "Internationalization and Localization",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/internationalization",
+    "tags": [
+      "i18n",
+      "lang",
+      "translation",
+      "locale",
+      "en_us",
+      "ModLanguageProvider",
+      "I18n",
+      "LanguageMap"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/resources_client_models_itemproperties",
+    "version": "1.20.1",
+    "label": "Item Properties",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models/itemproperties",
+    "tags": [
+      "item",
+      "properties",
+      "ItemModelProperties",
+      "ModelResourceLocation",
+      "Hand",
+      "model"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/items",
+    "version": "1.20.1",
+    "label": "Items",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/items",
+    "tags": [
+      "item",
+      "Item",
+      "ItemStack",
+      "BucketItem",
+      "BlockItem",
+      "SwordItem",
+      "ArmorItem",
+      "use",
+      "inventory"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/misc_keymappings",
+    "version": "1.20.1",
+    "label": "Key Mappings",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/keymappings",
+    "tags": [
+      "key",
+      "keymap",
+      "KeyMapping",
+      "InputEvent",
+      "KeyConflictContext",
+      "InputConstants",
+      "keybind"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/datagen_client_localization",
+    "version": "1.20.1",
+    "label": "Language Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/localization",
+    "tags": [
+      "datagen",
+      "tag",
+      "LanguageProvider",
+      "ModLanguageProvider",
+      "i18n",
+      "lang",
+      "en_us",
+      "translation"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/datagen_server_loottables",
+    "version": "1.20.1",
+    "label": "Loot Table Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/loottables",
+    "tags": [
+      "datagen",
+      "loot",
+      "tag",
+      "LootTableProvider",
+      "LootData",
+      "LootTable",
+      "LootPool",
+      "item",
+      "drop"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/resources_server_loottables",
+    "version": "1.20.1",
+    "label": "Loot Tables",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/loottables",
+    "tags": [
+      "loot",
+      "LootTable",
+      "LootPool",
+      "LootItem",
+      "entry",
+      "item",
+      "drop",
+      "function"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/gui_menus",
+    "version": "1.20.1",
+    "label": "Menus",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/menus",
+    "tags": [
+      "gui",
+      "menu",
+      "MenuType",
+      "MenuScreens",
+      "AbstractContainerMenu",
+      "ContainerMenu",
+      "ContainerData",
+      "DataSlot",
+      "IContainerFactory",
+      "MenuProvider",
+      "Slot",
+      "quickMoveStack",
+      "screen",
+      "client",
+      "inventory"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/gettingstarted_modfiles",
+    "version": "1.20.1",
+    "label": "Mod Files",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/modfiles",
+    "tags": [
+      "meta",
+      "mods.toml",
+      "modid",
+      "version",
+      "mod",
+      "file",
+      "jar",
+      "manifest"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/concepts_lifecycle",
+    "version": "1.20.1",
+    "label": "Mod Lifecycle",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle",
+    "tags": [
+      "lifecycle",
+      "FMLCommonSetupEvent",
+      "FMLClientSetupEvent",
+      "RegistryEvent",
+      "DeferredRegister",
+      "modEventBus",
+      "DistExecutor",
+      "setup",
+      "init",
+      "register"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/datagen_client_modelproviders",
+    "version": "1.20.1",
+    "label": "Model Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/modelproviders",
+    "tags": [
+      "datagen",
+      "tag",
+      "BlockStateProvider",
+      "ItemModelProvider",
+      "recipes",
+      "BlockModelShapes",
+      "ModelFile",
+      "cube_all",
+      "generated",
+      "handheld",
+      "model"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.20.1/resources_client_models",
+    "version": "1.20.1",
+    "label": "Models",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client/models",
+    "tags": [
+      "model",
+      "block",
+      "item",
+      "json",
+      "parent",
+      "texture",
+      "variants",
+      "multipart"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/networking",
+    "version": "1.20.1",
+    "label": "Networking",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking",
+    "tags": [
+      "networking",
+      "SimpleChannel",
+      "IMessage",
+      "AbstractMessage",
+      "Packet",
+      "C2S",
+      "S2C",
+      "NetworkDirection",
+      "NetworkRegistry",
+      "login",
+      "play",
+      "register",
+      "sendToServer",
+      "sendToPlayer"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_incode",
+    "version": "1.20.1",
+    "label": "Non-Datapack Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode",
+    "tags": [
+      "recipe",
+      "RecipeSerializer",
+      "RecipeType",
+      "Recipe",
+      "Crafting",
+      "Smelting",
+      "codec",
+      "code"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/gameeffects_particles",
+    "version": "1.20.1",
+    "label": "Particles",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles",
+    "tags": [
+      "particles",
+      "Particle",
+      "ParticleType",
+      "ParticleOptions",
+      "ClientLevel",
+      "render",
+      "sprite"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/forgedev_prguidelines",
+    "version": "1.20.1",
+    "label": "Pull Request Guidelines",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/forgedev/prguidelines",
+    "tags": [
+      "pr",
+      "pull",
+      "request",
+      "guideline",
+      "contributing"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.20.1/datagen_server_recipes",
+    "version": "1.20.1",
+    "label": "Recipe Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/recipes",
+    "tags": [
+      "datagen",
+      "recipe",
+      "tag",
+      "RecipeProvider",
+      "ShapedRecipe",
+      "ShapelessRecipe",
+      "CookingRecipe",
+      "SingleItemRecipe",
+      "StonecuttingRecipe",
+      "smithing"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.20.1/resources_server_recipes",
+    "version": "1.20.1",
+    "label": "Recipes",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes",
+    "tags": [
+      "recipe",
+      "shaped",
+      "shapeless",
+      "smelting",
+      "blasting",
+      "smoking",
+      "campfire",
+      "stonecutting",
+      "smithing",
+      "crafting"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/concepts_registries",
+    "version": "1.20.1",
+    "label": "Registries",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/registries",
+    "tags": [
+      "registry",
+      "DeferredRegister",
+      "ForgeRegistries",
+      "RegistryEvent",
+      "ResourceKey",
+      "Registry",
+      "register",
+      "modEventBus",
+      "new",
+      "CreativeModeTab",
+      "IForgeRegistry",
+      "DataSerializerRegistry",
+      "registries"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_rendertypes",
+    "version": "1.20.1",
+    "label": "Render Types",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/rendertypes",
+    "tags": [
+      "rendering",
+      "RenderType",
+      "RenderTypeMachine",
+      "LayeredRenderType",
+      "cutout",
+      "translucent",
+      "solid",
+      "entity"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/resources_client",
+    "version": "1.20.1",
+    "label": "Resource Packs",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client",
+    "tags": [
+      "resourcepack",
+      "pack",
+      "texture",
+      "model",
+      "lang",
+      "atlas",
+      "assets"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/concepts_resources",
+    "version": "1.20.1",
+    "label": "Resources",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/resources",
+    "tags": [
+      "resources",
+      "assets",
+      "data",
+      "namespace",
+      "location",
+      "ResourceLocation"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/datastorage_saveddata",
+    "version": "1.20.1",
+    "label": "Saved Data",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata",
+    "tags": [
+      "SavedData",
+      "WorldData",
+      "ServerLevel",
+      "CompoundTag",
+      "NBT",
+      "save",
+      "load",
+      "chunk",
+      "data"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/gui_screens",
+    "version": "1.20.1",
+    "label": "Screens",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/screens",
+    "tags": [
+      "gui",
+      "screen",
+      "Screen",
+      "AbstractContainerMenu",
+      "MenuScreens",
+      "Button",
+      "Widget",
+      "GuiGraphics",
+      "poseStack",
+      "render",
+      "client",
+      "init",
+      "tick"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.20.1/concepts_sides",
+    "version": "1.20.1",
+    "label": "Sides in Minecraft",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/sides",
+    "tags": [
+      "sides",
+      "client",
+      "server",
+      "Dist",
+      "DistExecutor",
+      "FMLEnvironment",
+      "OnlyIn",
+      "CLIENT",
+      "DEDICATED_SERVER",
+      "logical",
+      "physical",
+      "side",
+      "physicalside",
+      "logicalside",
+      "CommonProxy",
+      "ClientProxy"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.20.1/networking_simpleimpl",
+    "version": "1.20.1",
+    "label": "SimpleImpl",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl",
+    "tags": [
+      "networking",
+      "SimpleChannel",
+      "IMessage",
+      "AbstractMessage",
+      "IPacket",
+      "C2S",
+      "S2C",
+      "NetworkRegistry",
+      "NetworkDirection",
+      "MESSAGES_ID",
+      "SimpleImpl",
+      "PacketHandler"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/datagen_client_sounds",
+    "version": "1.20.1",
+    "label": "Sound Definition Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/client/sounds",
+    "tags": [
+      "datagen",
+      "tag",
+      "sounds",
+      "SoundDefinitionProvider",
+      "ModEventBus",
+      "sounds.json",
+      "sound"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/gameeffects_sounds",
+    "version": "1.20.1",
+    "label": "Sounds",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/sounds",
+    "tags": [
+      "sounds",
+      "SoundEvent",
+      "SoundType",
+      "SoundSource",
+      "playSound",
+      "ambient"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.20.1/gettingstarted_structuring",
+    "version": "1.20.1",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring",
+    "tags": [
+      "meta",
+      "package",
+      "structure",
+      "architecture",
+      "modid",
+      "annotation",
+      "ObjectHolder"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/datagen_server_tags",
+    "version": "1.20.1",
+    "label": "Tag Generation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen/server/tags",
+    "tags": [
+      "datagen",
+      "tag",
+      "TagProvider",
+      "TagKey",
+      "BlockTagsProvider",
+      "EntityTypeTagsProvider",
+      "ItemTagsProvider",
+      "FluidTagsProvider",
+      "Tag",
+      "datapack"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.20.1/resources_server_tags",
+    "version": "1.20.1",
+    "label": "Tags",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/tags",
+    "tags": [
+      "tag",
+      "TagKey",
+      "Tag",
+      "block_tag",
+      "item_tag",
+      "entity_tag",
+      "fluid_tag",
+      "datapack",
+      "minecraft"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.20.1/datastorage_capabilities",
+    "version": "1.20.1",
+    "label": "The Capability System",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities",
+    "tags": [
+      "capability",
+      "Capability",
+      "CapabilityKey",
+      "CapabilityProvider",
+      "ICapabilityProvider",
+      "ICapabilityConsumer",
+      "ICapabilitySerializable",
+      "LazyOptional",
+      "getCapability",
+      "FluidTank",
+      "ItemStackHandler",
+      "EnergyStorage",
+      "ItemHandler",
+      "register",
+      "attach",
+      "provider"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.20.1/rendering_modelloaders_transform",
+    "version": "1.20.1",
+    "label": "Transform",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders/transform",
+    "tags": [
+      "rendering",
+      "Transform",
+      "TransformType",
+      "ItemTransform",
+      "ItemTransforms",
+      "model",
+      "item",
+      "thirdperson",
+      "firstperson"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.20.1/contributing",
+    "version": "1.20.1",
+    "label": "Contributing to This Documentation",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/contributing",
+    "tags": [
+      "contributing",
+      "docs",
+      "documentation",
+      "markdown",
+      "mkdocs"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_visibility",
+    "version": "1.20.1",
+    "label": "Part Visibility",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/visibility",
+    "tags": [
+      "rendering",
+      "visibility",
+      "PartVisibility",
+      "BakedModel",
+      "Quadrilateral",
+      "cull"
+    ],
+    "priority": "🟡",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.20.1/rendering_modelextensions_transforms",
+    "version": "1.20.1",
+    "label": "Root Transforms",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelextensions/transforms",
+    "tags": [
+      "rendering",
+      "RootTransforms",
+      "PartTransforms",
+      "ModelState",
+      "BakedModel",
+      "poseStack",
+      "translate",
+      "rotate",
+      "scale"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/gettingstarted_versioning",
+    "version": "1.20.1",
+    "label": "Versioning",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning",
+    "tags": [
+      "meta",
+      "version",
+      "semver",
+      "versioning",
+      "modid",
+      "changelog"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.20.1/legacy_porting",
+    "version": "1.20.1",
+    "label": "Porting to Minecraft 1.20",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/porting",
+    "tags": [
+      "legacy",
+      "port",
+      "migrate",
+      "1.20",
+      "upgrade",
+      "breaking"
+    ],
+    "priority": "🟢",
+    "sectionCount": 0
+  }
+]

@@ -1,0 +1,9 @@
+Initial commit: MC Skill project foundation
+
+- MC_skill: Forge 1.20.1 AI coding assistant rules and skills
+- mcp-server: MCP server for Forge documentation and project scaffolding
+- forge/1.20.1: Complete scaffold with Gradle Wrapper, Parchment plugin
+- 11 Skills: mc-registry, mc-block, mc-item, mc-entity, mc-datagen,
+  mc-networking, mc-capability, mc-mixin, mc-compat-jei, mc-gui, mc-fluid
+- 10 rules (00-09) + 10-gui: Decision flows for all major systems
+- MCP search_forge_docs with enhanced keyword injection for better hits

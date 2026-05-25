@@ -1,0 +1,39 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+gradle-*.zip
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Node / npm
+mcp-server/node_modules/
+mcp-server/dist/
+*.log
+npm-debug.log*
+
+# Java / Minecraft
+*.class
+*.jar
+*.zip
+run/
+run-data/
+src/generated/
+eclipse/
+out/
+
+# MCP server build
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local

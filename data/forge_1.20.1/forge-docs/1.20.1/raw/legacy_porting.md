@@ -1,0 +1,18 @@
+# Porting
+
+> 来源：https://docs.minecraftforge.net/en/1.20.1/legacy/porting
+> 版本：1.20.1
+
+# Porting to Minecraft 1.20
+
+Here you can find a list of primers on how to port from old versions to the current version. Some versions are lumped together since that particular version never saw much usage.
+
+From -> To | Primer
+--- | ---
+1.12 -> 1.13/1.14 | [Primer by williewillus](https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a)
+1.14 -> 1.15 | [Primer by williewillus](https://gist.github.com/williewillus/30d7e3f775fe93c503bddf054ef3f93e)
+1.15 -> 1.16 | [Primer by 50ap5ud5](https://gist.github.com/50ap5ud5/f4e70f0e8faeddcfde6b4b1df70f83b8)
+1.16 -> 1.17 | [Primer by 50ap5ud5](https://gist.github.com/50ap5ud5/beebcf056cbdd3c922cc8993689428f4)
+1.19.2 -> 1.19.3 | [Primer by ChampionAsh5357](https://gist.github.com/ChampionAsh5357/c21724bafbc630da2ed8899fe0c1d226)
+1.19.3 -> 1.19.4 | [Primer by ChampionAsh5357](https://gist.github.com/ChampionAsh5357/163a75e87599d19ee6b4b879821953e8)
+1.19.4 -> 1.20 | [Primer by ChampionAsh5357](https://gist.github.com/ChampionAsh5357/cf818acc53ffea6f4387fe28c2977d56)
