@@ -157,7 +157,7 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 
 ## 参考资料
 
-- 详细示例：参见 `forge/1.20.1/.cursor/rules/03-item.mdc`
+- 详细示例：参见 `03-item.mdc`
 
 ## 扩展点
 

@@ -109,7 +109,7 @@ public static void broadcast(MyBroadcastMessage msg) {
 
 ## 参考资料
 
-- 详细示例：参见 `forge/1.20.1/.cursor/rules/06-networking.mdc`
+- 详细示例：参见 `06-networking.mdc`
 
 ## 扩展点
 

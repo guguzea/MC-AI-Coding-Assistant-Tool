@@ -32,7 +32,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new)
+        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
     );
 
 // 在 mod 构造函数中
@@ -43,26 +43,26 @@ MENUS.register(modEventBus);
 
 ```java
 public class MyMenu extends AbstractContainerMenu {
-    private final ContainerData dataSlots;
+    private final SimpleContainerData dataSlots;
 
-    public MyMenu(int windowId, Inventory inv, Player player, FriendlyByteBuf extraData) {
+    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用）
+    public MyMenu(int windowId, Inventory inv, Player player) {
         super(MY_MENU.get(), windowId);
-
-        // 添加槽位（示例：物品栏 3x9 = 27 格）
+        // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 this.addSlot(new Slot(inv, col + row * 9, 8 + col * 18, 18 + row * 18));
             }
         }
 
-        // 玩家物品栏（9 格 hotbar + 27 格主栏 = 36 格，索引 0-35）
-        // 玩家输出槽（3 格，索引 36-38）
-        // 根据实际布局调整
-
         // 同步数据（服务端 → 客户端）
         this.dataSlots = new SimpleContainerData(1); // 1 个整数同步
-        this.dataSlots.set(0, 0); // 初始值
         this.addDataSlots(this.dataSlots);
+    }
+
+    // 提供 getter 让 Screen 读取数据
+    public SimpleContainerData getData() {
+        return this.dataSlots;
     }
 
     // Shift-点击转移物品
@@ -75,9 +75,9 @@ public class MyMenu extends AbstractContainerMenu {
             ItemStack slotStack = slot.getItem();
             stack = slotStack.copy();
 
-            // 从玩家物品栏 → 容器（索引 0 开始是容器槽）
+            // 从玩家物品栏（索引 0-35）→ 容器（索引 36 开始）
             if (slotIndex < 36) {
-                if (!this.moveItemStackTo(slotStack, 0, this.slots.size(), false)) {
+                if (!this.moveItemStackTo(slotStack, 36, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
@@ -106,18 +106,18 @@ public class MyBlock extends Block implements EntityBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
-            (id, inv, player) -> new MyMenu(id, inv, player, InvMenu.noGlobalStd()),
-            Component.literal("My GUI")
+            (id, inv, player) -> new MyMenu(id, inv, player),
+            Component.translatable("block." + MOD_ID + ".my_block")
         );
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult result) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             MenuProvider p = state.getMenuProvider(level, pos);
             if (p != null) {
-                player.openMenu(p);
+                NetworkHooks.openScreen(serverPlayer, p);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -132,7 +132,9 @@ public class MyBlock extends Block implements EntityBlock {
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        MenuScreens.register(MY_MENU.get(), MyScreen::new);
+        event.enqueueWork(() ->
+            MenuScreens.register(MY_MENU.get(), MyScreen::new)
+        );
     }
 }
 ```
@@ -143,8 +145,8 @@ public class ClientSetup {
 public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
     private int progress; // 本地缓存，用于渲染
 
-    public MyScreen(MyMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title);
+    public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         this.progress = 0;
     }
 
@@ -158,28 +160,35 @@ public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
     protected void containerTick() {
         super.containerTick();
         // 每帧同步数据
-        this.progress = this.menu.dataSlots.get(0);
+        this.progress = this.menu.getData().get(0);
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // 渲染背景纹理
-        this.renderBackground(graphics);
-        // 绘制进度条等
+        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
+        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
+            0, 0, this.imageWidth, this.imageHeight);
+        // 叠加进度条
         int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
-        graphics.fill(this.leftPos, this.topPos, this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
+        graphics.fill(this.leftPos, this.topPos,
+            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
     }
+
+    private static final ResourceLocation BACKGROUND_TEXTURE =
+        new ResourceLocation(MOD_ID, "textures/gui/container/my_gui.png");
 }
 ```
 
 ## ContainerData 同步（服务端 ↔ 客户端）
 
+Menu 自己持有 `SimpleContainerData` 并提供 `getData()` getter，Screen 通过 `menu.getData()` 访问：
+
 ```java
 // 服务端设置
-this.menu.dataSlots.set(0, newValue); // 自动同步到客户端
+this.menu.getData().set(0, newValue); // 自动同步到客户端
 
-// 客户端读取（在 Screen#containerTick 或直接 getter 中）
-int value = this.menu.dataSlots.get(0);
+// 客户端读取（Screen 中）
+int value = this.menu.getData().get(0);
 ```
 
 ## DataSlot（槽位级别同步，已过时）

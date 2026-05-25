@@ -283,7 +283,7 @@ generator.addProvider(true, new ModLanguageProvider(output, "zh_cn"));
 
 ## 参考资料
 
-- 详细示例：参见 `forge/1.20.1/.cursor/rules/07-datagen.mdc`
+- 详细示例：参见 `07-datagen.mdc`
 
 ## 扩展点
 

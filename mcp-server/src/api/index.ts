@@ -12,13 +12,13 @@
  */
 
 import { Worker } from "worker_threads";
-import { join, dirname } from "path";
+import { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { WorkerOutMessage } from "../workers/types.js";
+import { resolveDataDir } from "../utils/path.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// dist/api/ → mcp-server/ → mc_skill/  (data 在 mc_skill/data/forge_1.20.1/extracted/)
-const DATA_DIR = join(__dirname, "..", "..", "..", "data", "forge_1.20.1", "extracted");
+const DATA_DIR = resolveDataDir("forge_1.20.1", "extracted");
 
 // ── 类型定义 ───────────────────────────────────────────────────────────────
 
@@ -245,6 +245,42 @@ function descriptorToReturnType(desc: string): string {
 
 // ── 辅助：模糊类名搜索（优先 Trie，次选线性扫描）────────────────────────────
 
+/**
+ * 计算两个方法名的相似度得分（0-100）。
+ * 策略：前缀匹配 > 子串匹配 > 编辑距离
+ */
+function methodSimilarity(a: string, b: string): number {
+  const al = a.toLowerCase();
+  const bl = b.toLowerCase();
+  if (al === bl) return 100;
+  if (al.startsWith(bl) || bl.startsWith(al)) return 80;
+  if (al.includes(bl) || bl.includes(al)) return 60;
+  // 编辑距离（简化版：公共前缀 + 长度差惩罚）
+  let common = 0;
+  for (let i = 0; i < Math.min(al.length, bl.length); i++) {
+    if (al[i] === bl[i]) common++;
+    else break;
+  }
+  if (common >= 3) {
+    const lenPenalty = Math.abs(al.length - bl.length) * 5;
+    return Math.max(0, 70 - lenPenalty);
+  }
+  return 0;
+}
+
+/**
+ * 在方法列表中查找与目标名称相似的方法。
+ * 返回得分 >= 50 的方法，按得分降序，最多 5 条。
+ */
+function fuzzyMethodSearch(query: string, methods: MethodInfo[]): MethodInfo[] {
+  return methods
+    .map(m => ({ m, score: methodSimilarity(m.name, query) }))
+    .filter(({ score }) => score >= 50)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+    .map(({ m }) => m);
+}
+
 function fuzzyClassSearch(query: string): string[] {
   const normalized = query.toLowerCase().replace(/\./g, "/");
 
@@ -404,6 +440,27 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
       m => m.name === methodName || m.name === `<${methodName}>`
     );
     if (matched.length === 0) {
+      // 优先显示名称相似的方法（如 getHealth → getMaxHealth）
+      const similar = fuzzyMethodSearch(methodName, cls.methods);
+      const similarSuggestions = similar.map(m =>
+        `你指的是 '${m.name}' 吗？`
+      );
+      if (similarSuggestions.length > 0) {
+        return {
+          found: false,
+          className: toDot(slashName),
+          methodName,
+          mappings: { mojang: slashName, parchment: slashName },
+          suggestions: [
+            `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
+            ...similarSuggestions,
+          ],
+          notes: [
+            `Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
+            `提示：如果你看到的是混淆名（如 aqm），请访问 https://mappings.xhyrom.dev/1.20.1/ 反查`,
+          ],
+        };
+      }
       return {
         found: false,
         className: toDot(slashName),
@@ -412,6 +469,9 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         suggestions: [
           `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
           `可用方法（部分）：${cls.methods.slice(0, 8).map(m => m.name).join(", ")}${cls.methods.length > 8 ? "..." : ""}`,
+        ],
+        notes: [
+          `Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
         ],
       };
     }

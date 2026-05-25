@@ -56,9 +56,6 @@ public static final RegistryObject<FluidType> MY_FLUID_TYPE =
 ### 3. 注册 Source Fluid（静止来源）
 
 ```java
-public static final RegistryObject<FluidType> FluidSource =
-    FLUID_TYPES.register("my_fluid_type", ...);
-
 public static final RegistryObject<FlowingFluid> MY_FLUID_SOURCE =
     FLUIDS.register("my_fluid",
         () -> new ForgeFlowingFluid.Source(FLUID_PROPERTIES)
@@ -81,7 +78,7 @@ public static final RegistryObject<LiquidBlock> MY_FLUID_BLOCK =
     BLOCKS.register("my_fluid",
         () -> new LiquidBlock(MY_FLUID_SOURCE.get(),
             BlockBehaviour.Properties.of(Material.WATER)
-                .noCollission()
+                .noCollision()
                 .strength(100.0f)
                 .noDrops()
         )

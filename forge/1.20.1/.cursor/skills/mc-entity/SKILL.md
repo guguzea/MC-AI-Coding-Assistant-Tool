@@ -143,7 +143,107 @@ this.entityData.set(DATA_HEALTH, 50); // 设置（自动同步）
 
 ## 参考资料
 
-- 详细示例：参见 `forge/1.20.1/.cursor/rules/04-entity.mdc`
+- 详细示例：参见 `04-entity.mdc`
+
+## 实体动画（Forge 1.20.1）
+
+> **注意**：Forge 的 ASM 动画 API（`IAnimationStateMachine` / `AnimationTESR`）在 1.18 已移除。1.20.1 的实体动画依赖 vanilla 内置系统，无需任何 Forge 特有代码。复杂动画推荐使用 **GeckoLib**（第三方库）。
+
+### Vanilla 动画系统（内置）
+
+基础：`HierarchicalModel<Entity>` + `AnimationState` + `AnimationDefinition`
+
+```java
+// 实体模型类
+public class MyEntityModel extends HierarchicalModel<MyEntity> {
+    public static final ModelLayerLocation LAYER_LOCATION =
+        new ModelLayerLocation(new ResourceLocation(MOD_ID, "my_entity"), "main");
+
+    @Override
+    public void setupAnim(MyEntity entity, float limbSwing, float limbSwingAmount,
+                          float ageInTicks, float netHeadYaw, float headPitch) {
+        // 行走动画
+        this.animateWalk(MyEntityAnimations.WALK, limbSwing, limbSwingAmount, 2.0f, 2.5f);
+
+        // 闲置动画
+        this.animate(entity.idleAnimationState, MyEntityAnimations.IDLE, ageInTicks);
+    }
+
+    @Override
+    public ModelRenderer root() { return body; }
+}
+```
+
+在 `EntityRenderersEvent.RegisterLayerDefinitions` 中注册模型层：
+
+```java
+@SubscribeEvent
+public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    event.registerLayerDefinition(MyEntityModel.LAYER_LOCATION, MyEntityModel::createBodyLayer);
+}
+```
+
+`AnimationDefinition` JSON 放在 `assets/<modid>/animations/<entity>.json`：
+
+```json
+{
+  "format_version": [1, 20, 0],
+  "animations": {
+    "walk": {
+      "loop": true,
+      "animation_length": 0.666,
+      "bones": {
+        "body": {
+          "rotation": {
+            "0.0": [0, 0, 0],
+            "0.666": [0, 360, 0]
+          }
+        }
+      }
+    },
+    "idle": {
+      "loop": true,
+      "animation_length": 3.0,
+      "bones": {
+        "body": {
+          "rotation": {
+            "0.0": [0, 0, 0],
+            "1.5": [0, 5, 0],
+            "3.0": [0, 0, 0]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+### 在服务端触发动画
+
+```java
+public class MyEntity extends LivingEntity {
+    private final AnimationState idleAnimationState = new AnimationState();
+
+    @Override
+    public void animateTick() {
+        super.animateTick();
+        if (!this.level().isClientSide) return;
+        // 客户端：驱动动画状态机
+        this.idleAnimationState.tryTransition(MyEntityModel.ANIMATION_LOCATION);
+    }
+}
+```
+
+### GeckoLib（复杂动画推荐）
+
+对于多段动画、骨骼层级、程序化控制，推荐使用 GeckoLib：
+
+1. 添加依赖：`GeckoLib` mod（Fabric/Forge 通用）
+2. 模型改为 `.geo.json`（GeoMaid 或 Cubik Studio 导出）
+3. `EntityRenderer` 继承 `GeoEntityRenderer`
+4. 动画文件使用 `.json` 格式放在 `animations/`
+
+> GeckoLib 是社区最主流的动画方案，文档：https:///geckolib.com/
 
 ## 扩展点
 

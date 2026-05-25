@@ -15,6 +15,9 @@ knowledge/
 │   ├── registry.md             # 注册相关
 │   ├── item.md                 # 物品/工具相关
 │   ├── entity.md               # 实体相关
+│   ├── block.md                # 方块相关
+│   ├── events.md               # 事件系统相关
+│   ├── networking.md           # 网络通信相关
 │   └── gradle.md              # Gradle 构建相关
 └── version-changes/            # 版本变更记录
     ├── 1.20.x.md              # 1.20.x 变更
@@ -31,5 +34,17 @@ knowledge/
 | 资源包 | `common/resourcepack-format.md` |
 | 注册失败崩溃 | `antipatterns/registry.md` |
 | 物品/工具 API | `antipatterns/item.md` |
+| 实体行为异常 | `antipatterns/entity.md` |
+| 方块/BlockEntity 崩溃 | `antipatterns/block.md` |
+| 事件不触发 | `antipatterns/events.md` |
+| 客户端/服务端数据不同步 | `antipatterns/networking.md` |
 | Gradle 构建错误 | `antipatterns/gradle.md` |
 | 从旧版迁移 | `version-changes/1.19.x.md` |
+
+## 阶段里程碑
+
+| 阶段   | 状态     | 说明 |
+|------|---------|------|
+| Phase 1 | ✅ 完成 | 知识库基础结构 |
+| Phase 2 | 🚧 实施中 | 持续补充反模式条目 |
+| Phase 3 | 📋 规划中 | 与 MCP Server 联动（工具自动推荐相关反模式） |

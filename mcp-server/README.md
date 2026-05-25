@@ -4,9 +4,11 @@ Minecraft Forge MCP Server，为 Cursor AI 编程助手提供 Forge 开发专用
 
 ## 功能特性
 
-- **11 个 MCP 工具**：API 查询、映射转换、版本指导、Gradle 诊断、DataGen 代码生成、崩溃分析、项目校验、Forge 官方文档搜索
+- **12 个 MCP 工具**：API 查询、映射转换、版本指导、Gradle 诊断、DataGen 代码生成、崩溃分析、项目校验、Forge 官方文档搜索、数据路径诊断
 - **本地数据**：内置 Parchment 1.20.1 映射数据（5720 个类）+ Forge 官方文档，无需联网
 - **三层文档查询**：L0 索引搜索 → L1 摘要 → L2/L2+ 全文，按需加载
+- **懒加载校验**：数据目录缺失时不影响非文档工具（如 `query_api`）
+- **统一错误格式**：所有错误返回 `{ ok: false, error: { code, message, hint } }`
 
 ---
 
@@ -93,19 +95,29 @@ mklink /J C:\Users\<用户名>\MC_skill h:\MC_skill
 
 ### 3. 重启编辑器
 
-配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏（左侧边栏 → AI → MCP Tools）中应能看到 `mc-forge`，包含 11 个工具。
+配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏（左侧边栏 → AI → MCP Tools）中应能看到 `mc-forge`，包含 12 个工具。
 
-### 4. 开发调试
+### 4. 环境变量
+
+| 变量 | 说明 | 示例 |
+|------|------|------|
+| `MC_SKILL_DATA` | 数据目录根路径 | `MC_SKILL_DATA=h:/MC_skill/data` |
+| `MC_SKILL_DEBUG_PATHS` | 设为 `1` 打印路径解析过程 | `MC_SKILL_DEBUG_PATHS=1` |
+
+### 5. 开发调试
 
 ```bash
+# 构建
+npm run build
+
+# 运行测试（进程复用，精确响应匹配）
+npm test
+
 # 监听模式（修改后自动重启）
 npm run dev
 
-# 直接运行（编译后）
+# 直接运行
 node dist/index.js
-
-# 构建
-npm run build
 ```
 
 > 调试时可以用 MCP Inspector：
@@ -118,20 +130,39 @@ npm run build
 
 ## 工具列表
 
+### 核心工具
 
-| 工具                      | 功能                                  | 输入                                                |
-| ----------------------- | ----------------------------------- | ------------------------------------------------- |
-| `query_api`             | 查询类/方法的完整签名、参数名、javadoc             | `className`, `methodName?`, `version?`            |
-| `get_method_params`     | 查询方法参数名列表（区分重载）                     | `className`, `methodName`, `descriptor?`          |
-| `convert_mapping`       | mojang/mcp/yarn/parchment 映射互转      | `from`, `to`, `memberName`, `ownerClass?`         |
-| `get_version_info`      | 获取版本的推荐做法和关键变更点                     | `version`, `action`                               |
-| `diagnose_gradle`       | 校验 build.gradle 和 gradle.properties | `buildGradle`, `gradleProperties?`                |
-| `generate_datagen`      | 生成 DataGen Provider 代码模板            | `providerType`, `modId`, `targetName`, `version?` |
-| `crash_analyze`         | 解析崩溃日志并给出修复建议                       | `crashReport`, `version?`                         |
-| `validate_project`      | 校验 mods.toml 和 Java 代码规范            | `modsToml?`, `javaFiles?`, `buildGradle?` 等       |
-| `search_forge_docs`     | Forge 官方文档关键词搜索（L0）                 | `query`, `version?`, `tags?`                      |
-| `get_forge_doc_summary` | 获取文档页面的章节骨架与摘要（L1）                  | `id`, `version?`                                  |
-| `get_forge_doc_full`    | 获取文档页面全文，含关键段落突出（L2）                | `id`, `version?`, `highlight_key?`                |
+| 工具 | 功能 | 输入 |
+|------|------|------|
+| `query_api` | 查询类/方法的完整签名、参数名、javadoc | `className`, `methodName?`, `version?` |
+| `get_method_params` | 查询方法参数名列表（区分重载） | `className`, `methodName`, `descriptor?` |
+| `convert_mapping` | mojang/mcp/yarn/parchment 映射互转 | `from`, `to`, `memberName`, `ownerClass?` |
+| `get_version_info` | 获取版本的推荐做法和关键变更点 | `version`, `action` |
+| `diagnose_gradle` | 校验 build.gradle 和 gradle.properties | `buildGradle`, `gradleProperties?` |
+| `generate_datagen` | 生成 DataGen Provider 代码模板 | `providerType`, `modId`, `targetName`, `version?` |
+| `crash_analyze` | 解析崩溃日志并给出修复建议 | `crashReport`, `version?` |
+| `validate_project` | 校验 mods.toml 和 Java 代码规范 | `modsToml?`, `javaFiles?`, `buildGradle?` 等 |
+| `diagnose_data_paths` | 诊断数据目录配置（高级排障） | （无参数） |
+
+### 通用文档工具（支持多平台）
+
+| 工具 | 功能 | 输入 |
+|------|------|------|
+| `list_doc_versions` | 列出支持平台的可用版本 | `platform?` |
+| `search_docs` | 通用文档搜索（L0） | `query`, `version?`, `platform?`, `tags?` |
+| `get_doc_summary` | 获取文档摘要（L1） | `id`, `version?`, `platform?` |
+| `get_doc_full` | 获取文档全文（L2） | `id`, `version?`, `platform?`, `highlight_key?` |
+| `get_doc_related` | 获取相关文档 | `id`, `version?`, `platform?`, `limit?` |
+
+### Forge 专用别名（向后兼容）
+
+| 别名 | 指向 |
+|------|------|
+| `list_forge_versions` | `list_doc_versions` (platform=forge) |
+| `search_forge_docs` | `search_docs` (platform=forge) |
+| `get_forge_doc_summary` | `get_doc_summary` (platform=forge) |
+| `get_forge_doc_full` | `get_doc_full` (platform=forge) |
+| `get_forge_doc_related` | `get_doc_related` (platform=forge) |
 
 
 ---

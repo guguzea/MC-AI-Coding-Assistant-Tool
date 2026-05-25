@@ -129,7 +129,7 @@ protected void registerAttributes() {
 ## 参考资料
 
 - Forge 官方文档：https://docs.minecraftforge.net/en/1.20.1/concepts/registries/
-- 详细示例：参见 `forge/1.20.1/.cursor/rules/01-registry.mdc`
+- 详细示例：参见 `01-registry.mdc`
 
 ## 扩展点
 

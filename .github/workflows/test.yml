@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build
+        run: |
+          cd mcp-server
+          npm install
+          npm run build
+
+      - name: Download test data
+        run: |
+          if [ -d "${{ github.workspace }}/data" ]; then
+            echo "Using existing data directory"
+          else
+            echo "No test data found, tests may be skipped or use mock mode"
+          fi
+
+      - name: Test
+        run: |
+          cd mcp-server
+          npm test
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+          MCP_TIMEOUT_MS: 60000

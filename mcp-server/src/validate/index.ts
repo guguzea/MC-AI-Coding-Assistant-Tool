@@ -585,17 +585,25 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     }
 
     // RegistryObject 缺少 static/final
-    const roPattern =
-      /(?:(?:private|public|protected)\s+)?(?:(static)\s+)?(?:(final)\s+)?RegistryObject<[^>]+>\s+([A-Z_][A-Z0-9_]*)/g;
+    // 两阶段方案：1. 提取包含 RegistryObject 的声明行；2. 分析修饰符和变量名
+    // 支持嵌套泛型：<Supplier<Block>>，通过 [^<>]+(?:<[^<>]+>)* 匹配
+    const roDeclPattern =
+      /((?:private|public|protected)\s+)?((?:static|final)\s+)*(RegistryObject\s*<[^<>]+(?:<[^<>]+>)*>\s+([A-Z_][A-Z0-9_]*))/gm;
     let rm;
-    while ((rm = roPattern.exec(content)) !== null) {
-      const [, isStatic, isFinal, name] = rm;
-      if (!isStatic) {
+    while ((rm = roDeclPattern.exec(content)) !== null) {
+      const [full, visibility, modifiers, , name] = rm;
+      const hasStatic = /\bstatic\b/.test(modifiers ?? "");
+      const hasFinal = /\bfinal\b/.test(modifiers ?? "");
+      // 接口中的字段默认 static，不警告
+      const isInterfaceField = /\binterface\b/.test(
+        content.substring(Math.max(0, rm.index - 200), rm.index)
+      );
+      if (!hasStatic && !isInterfaceField) {
         warnings.push(
           `[${path}] RegistryObject '${name}' 缺少 static 修饰符`,
         );
       }
-      if (!isFinal) {
+      if (!hasFinal) {
         warnings.push(
           `[${path}] RegistryObject '${name}' 缺少 final 修饰符`,
         );

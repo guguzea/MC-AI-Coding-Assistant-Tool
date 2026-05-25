@@ -9,14 +9,31 @@ import { diagnoseGradle } from "./gradle/index.js";
 import { generateDatagen } from "./datagen/index.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
+import { diagnoseDataPaths } from "./utils/path.js";
 import {
+  // 旧 Forge 别名（向后兼容）
+  listForgeVersions,
+  listForgeVersionsSchema,
   searchForgeDocs,
   searchForgeDocsSchema,
   getForgeDocSummary,
   getForgeDocSummarySchema,
   getForgeDocFull,
   getForgeDocFullSchema,
-} from "./forge-docs/index.js";
+  getForgeDocRelated,
+  getForgeDocRelatedSchema,
+  // 新通用工具
+  listVersions,
+  listVersionsSchema,
+  searchDocs,
+  searchDocsSchema,
+  getDocSummary,
+  getDocSummarySchema,
+  getDocFull,
+  getDocFullSchema,
+  getDocRelated,
+  getDocRelatedSchema,
+} from "./docs-platform/index.js";
 
 const server = new McpServer({
   version: "0.1.0",
@@ -212,7 +229,9 @@ server.registerTool(
       "搜索 Forge 官方文档（L0 索引搜索）。" +
       "适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。" +
       "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
-      "建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。",
+      "建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
+      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" +
+      "另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。",
     inputSchema: searchForgeDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -262,6 +281,146 @@ server.registerTool(
   }
 );
 
+// ── 11. Forge 文档相关页面 ─────────────────────────────────────────────────
+server.registerTool(
+  getForgeDocRelatedSchema.name,
+  {
+    title: "Get Related Forge Documentation Pages",
+    description:
+      "获取与指定 Forge 文档页面相关的其他页面列表。" +
+      "适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。" +
+      "返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。",
+    inputSchema: getForgeDocRelatedSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getForgeDocRelated({ id: args.id, version: args.version, limit: args.limit });
+  }
+);
+
+// ── 12. 列出可用版本 ─────────────────────────────────────────────────────
+server.registerTool(
+  listForgeVersionsSchema.name,
+  {
+    title: "List Available Forge Doc Versions",
+    description:
+      "返回 data 目录下所有已加载的 Forge 文档版本列表（如 [\"1.20.1\"]）。" +
+      "用于确认当前 MCP 服务支持哪些版本，无需通过报错来发现。",
+    inputSchema: listForgeVersionsSchema.inputSchema,
+  },
+  async (): Promise<CallToolResult> => {
+    return listForgeVersions();
+  }
+);
+
+// ── 13. 通用文档版本列表 ─────────────────────────────────────────────────
+server.registerTool(
+  listVersionsSchema.name,
+  {
+    title: "List Available Doc Versions (Multi-Platform)",
+    description:
+      "返回指定平台的可用文档版本列表。" +
+      "platform 参数指定平台（forge/neoforge/fabric），默认 forge。",
+    inputSchema: listVersionsSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return listVersions({ platform: args.platform });
+  }
+);
+
+// ── 14. 通用文档搜索 ─────────────────────────────────────────────────────
+server.registerTool(
+  searchDocsSchema.name,
+  {
+    title: "Search Documentation (Multi-Platform)",
+    description:
+      "通用文档搜索，支持多平台（Forge/NeoForge/Fabric）。" +
+      "platform 参数指定平台，默认 forge。" +
+      "适用于：需要了解平台特有功能的官方说明时。" +
+      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。",
+    inputSchema: searchDocsSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return searchDocs({
+      query: args.query,
+      version: args.version,
+      platform: args.platform,
+      tags: args.tags,
+    });
+  }
+);
+
+// ── 15. 通用文档摘要 ─────────────────────────────────────────────────────
+server.registerTool(
+  getDocSummarySchema.name,
+  {
+    title: "Get Doc Page Summary (Multi-Platform)",
+    description:
+      "获取文档页面的章节骨架与摘要，支持多平台（platform 参数）。" +
+      "适用于：判断某篇文档是否包含所需内容时。",
+    inputSchema: getDocSummarySchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getDocSummary({ id: args.id, version: args.version, platform: args.platform });
+  }
+);
+
+// ── 16. 通用文档全文 ─────────────────────────────────────────────────────
+server.registerTool(
+  getDocFullSchema.name,
+  {
+    title: "Get Full Documentation Page (Multi-Platform)",
+    description:
+      "获取文档页面全文，支持多平台（platform 参数）。" +
+      "适用于：需要查看 API 完整步骤、事件列表、配置项清单时。" +
+      "highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。",
+    inputSchema: getDocFullSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getDocFull({
+      id: args.id,
+      version: args.version,
+      platform: args.platform,
+      highlight_key: args.highlight_key,
+    });
+  }
+);
+
+// ── 17. 通用文档相关页面 ─────────────────────────────────────────────────
+server.registerTool(
+  getDocRelatedSchema.name,
+  {
+    title: "Get Related Documentation Pages (Multi-Platform)",
+    description:
+      "获取与指定文档页面相关的其他页面列表，支持多平台（platform 参数）。" +
+      "返回共享最多关键词的其他页面，按相关性降序排列。",
+    inputSchema: getDocRelatedSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getDocRelated({ id: args.id, version: args.version, platform: args.platform, limit: args.limit });
+  }
+);
+
+// ── 诊断工具（可选，高级排障用）──────────────────────────────────────────────
+
+server.registerTool(
+  "diagnose_data_paths",
+  {
+    title: "Diagnose Data Path Configuration",
+    description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。",
+    inputSchema: z.object({}),
+  },
+  async (): Promise<CallToolResult> => {
+    const result = diagnoseDataPaths();
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
 // ── 启动 ────────────────────────────────────────────────────────────────────
+
+// 启动时打印诊断（仅当 MC_SKILL_DEBUG_PATHS=1）
+if (process.env.MC_SKILL_DEBUG_PATHS === "1") {
+  console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));
+}
+
 const transport = new StdioServerTransport();
 await server.connect(transport);

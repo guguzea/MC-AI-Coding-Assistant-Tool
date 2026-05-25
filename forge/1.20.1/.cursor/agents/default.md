@@ -66,9 +66,10 @@
 ### 遇到报错时的处理顺序
 
 1. 检查 `09-anti-patterns.mdc` 是否已有记录
-2. 检查 `mods.toml` 语法是否正确
-3. 检查 mod ID 是否在所有地方一致
-4. 检查 `build.gradle` 中的 `mappings` 配置
+2. 检查 `10-gui.mdc` 是否为 GUI 相关问题
+3. 检查 `mods.toml` 语法是否正确
+4. 检查 mod ID 是否在所有地方一致
+5. 检查 `build.gradle` 中的 `mappings` 配置
 5. 最后才考虑其他原因
 
 ---

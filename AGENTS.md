@@ -64,14 +64,15 @@ neoforge "20.4.237"
 ```
 00-project-setup.mdc    → 项目结构
 01-registry.mdc         → 注册系统（最重要，优先读）
-02-block.mdc           → 方块开发
+02-block.mdc            → 方块开发
 03-item.mdc             → 物品开发
 04-entity.mdc           → 实体开发
 05-events.mdc           → 事件系统
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc    → 反模式库
+09-anti-patterns.mdc     → 反模式库
+10-gui.mdc              → GUI / Menu / Screen 开发
 ```
 
 ## 第三步：通用约束（所有平台都必须遵守）
@@ -125,10 +126,13 @@ Decision: 选择注册方式
 → ELSE → 询问用户
 ```
 
-## 遇到问题时
+## 第五步：查阅知识库（遇到问题时）
 
 1. 先查阅 `09-anti-patterns.mdc` 看是否是已知错误模式
-2. 再查阅 `knowledge/` 下的通用知识
+2. 再查阅 `knowledge/` 下的通用知识：
+   - `knowledge/antipatterns/` — 按症状分类的反模式（registry / item / block / entity / events / networking / gradle）
+   - `knowledge/version-changes/` — 版本迁移指南（1.19.x / 1.20.x）
+   - `knowledge/common/` — 术语表、数据包/资源包格式速查
 3. 如果仍无法解决，询问用户当前使用的具体版本和平台
 
 ## 不确定时
@@ -137,3 +141,21 @@ Decision: 选择注册方式
 - 不确定用哪个事件 → 选更通用的事件
 - 不确定方法名 → 用 IDE 自动补全或查阅文档
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
+
+## MCP Server 工具（可选）
+
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用以下 MCP 工具提升效率：
+
+| 工具 | 功能 |
+| --- | --- |
+| `query_api` | 按类名查询 Forge/MCP API 签名 |
+| `get_method_params` | 查询方法参数名 |
+| `convert_mapping` | MCP ↔ Parchment ↔ Mojang 映射互转 |
+| `get_version_info` | 查询版本支持的 API 范围 |
+| `diagnose_gradle` | 诊断 Gradle 构建问题 |
+| `generate_datagen` | 生成数据生成器代码 |
+| `crash_analyze` | 分析崩溃日志，定位问题原因 |
+| `validate_project` | 校验模组项目结构 |
+| `search_forge_docs` | 搜索 Forge 官方文档 |
+| `get_forge_doc_summary` | 获取文档摘要 |
+| `get_forge_doc_full` | 获取文档全文 |

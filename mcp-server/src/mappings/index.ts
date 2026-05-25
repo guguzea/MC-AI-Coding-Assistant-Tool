@@ -27,12 +27,13 @@
  *   - 当前实现基于 Parchment 数据，主要覆盖 mcp/parchment 层的正向查询
  */
 
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { resolveDataDir } from "../utils/path.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "..", "..", "..", "data", "forge_1.20.1", "extracted");
+const DATA_DIR = resolveDataDir("forge_1.20.1", "extracted");
 
 export interface MappingQuery {
   from: "mojang" | "mcp" | "yarn" | "parchment";

@@ -1,0 +1,184 @@
+# Client-Server separation and GUI (Forge 1.20.1)
+
+## Physical Side vs Logical Side
+
+| Side | Meaning |
+|------|---------|
+| Physical CLIENT | The game process rendering the world |
+| Physical SERVER | Dedicated server process (or integrated server in single-player) |
+| Logical CLIENT | Code running on the client that can ONLY observe/render |
+| Logical SERVER | Code running on the dedicated server that manages world state |
+
+### Rules
+
+- **Never** call client-only code from a logical server context
+- **Never** modify server-side world data from the logical client
+- Use `@OnlyIn(Dist.CLIENT)` for client-only code
+- Use `DistExecutor` for safe side-aware execution without annotations
+
+## DistExecutor
+
+```java
+// Run on the CLIENT only
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
+
+// Run on the DEDICATED_SERVER only
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+
+// Safe version with supplier (avoids classloading issues on wrong side)
+DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
+```
+
+**Note:** `@OnlyIn` exists but **there is NO reason for using this annotation directly. Use `DistExecutor` or a check on `FMLEnvironment#dist` instead.**
+
+## FMLEnvironment
+
+```java
+// Quick side check
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // client-only initialization
+}
+
+// NEVER use for game logic — only for initialization/setup
+```
+
+## GUI System Overview
+
+```
+Player interacts
+      │
+      ▼
+Block#use (Server) ──► creates MenuProvider ──► openContainer (Server)
+                                                       │
+                                                       ▼
+                                              ContainerMenu + Screen pair
+                                                       │
+                                               MenuScreens.register()
+                                                       │
+                                                       ▼
+                                                   Renders Screen
+```
+
+## Decision: Container/Menu type
+
+```
+IF interactable block with persistent data (machine, chest)
+  → AbstractContainerMenu + MenuType + Screen
+
+IF just a simple interaction (no data)
+  → Screen directly (without Menu)
+
+IF inventory with multiple slots
+  → AbstractContainerMenu (for slot management and quickMoveStack)
+```
+
+## MenuType Registration
+
+```java
+// 1. Define the Menu class
+public class MyMenu extends AbstractContainerMenu {
+    public MyMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
+        super(MY_MENU_TYPE.get(), windowId);
+        // slot layout...
+    }
+
+    // Shift-click transfer logic
+    @Override
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
+        return ItemStack.EMPTY; // or implement slot transfer
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return true;
+    }
+}
+
+// 2. Register MenuType
+public static final DeferredRegister<MenuType<?>> MENUS =
+    DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
+
+public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
+    MENUS.register("my_menu",
+        () -> IContainerFactory.of(MyMenu::new)
+    );
+```
+
+## Screen registration (CLIENT ONLY)
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        MenuScreens.register(MyMenuTypes.MY_MENU.get(), MyScreen::new);
+    }
+}
+```
+
+## Data Synchronization (ContainerData)
+
+```java
+// Define synced data
+private final ContainerData dataSlots = new ContainerData() {
+    @Override public int get(int index) { return /* ... */; }
+    @Override public void set(int index, int value) { /* ... */; }
+    @Override public int getCount() { return 1; }
+};
+
+// In Menu constructor
+super(menuType, windowId, inventory, extraData, dataSlots);
+
+// Set from server
+menu.dataSlots.set(0, newValue); // Triggers sync to client automatically
+
+// Read on client in Screen
+int value = menu.dataSlots.get(0);
+```
+
+## Block → Menu binding
+
+```java
+public class MyBlock extends Block {
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult result) {
+        if (!level.isClientSide) {
+            MenuProvider menuProvider = state.getMenuProvider(level, pos);
+            if (menuProvider != null) {
+                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(),
+                    SoundSource.BLOCKS, 0.5f, 0.8f);
+                player.openMenu(menuProvider);
+            }
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
+    public MenuProvider getMenuProvider(BlockState state, Level level,
+            BlockPos pos) {
+        return new SimpleMenuProvider(
+            (windowId, inv, player) -> new MyMenu(windowId, inv, InvMenu.noGlobalStd()), // wrong
+            Component.literal("My Menu")
+        );
+        // Better: use IContainerFactory with the registered MenuType
+        return new MenuProvider() {
+            @Override public Component getDisplayName() {
+                return Component.literal("My Menu");
+            }
+            @Override public AbstractContainerMenu createMenu(int windowId,
+                    Inventory inv, Player player) {
+                return new MyMenu(windowId, inv, player);
+            }
+        };
+    }
+}
+```
+
+## Common errors
+
+- ❌ Opening a Menu on the server without a registered `MenuType` → crash
+- ❌ `MenuScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `quickMoveStack` not implemented → Shift-click does nothing
+- ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `broadcastChanges()`
+- ❌ `ContainerData` set from client → must be set server-side only

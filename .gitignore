@@ -15,9 +15,12 @@ gradle-*.zip
 .DS_Store
 Thumbs.db
 
-# Node / npm
+# MCP server
 mcp-server/node_modules/
 mcp-server/dist/
+mcp-server/test-mcp.mjs
+mcp-server/stress-test.mjs
+*.tsbuildinfo
 *.log
 npm-debug.log*
 
@@ -30,9 +33,6 @@ run-data/
 src/generated/
 eclipse/
 out/
-
-# MCP server build
-*.tsbuildinfo
 
 # Environment
 .env

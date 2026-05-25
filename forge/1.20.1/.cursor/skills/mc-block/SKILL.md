@@ -32,7 +32,7 @@ IF 只是静态显示（无状态）
   → 普通方块
 
 IF 需要流体
-  → 流体（Fluid）→ 参考 forge/1.20.1/.cursor/rules/02-block.mdc
+  → 流体（Fluid）→ 参考 `02-block.mdc`
 ```
 
 ## BlockBehaviour.Properties 常用配置
@@ -147,7 +147,7 @@ public class MyMachineBlockEntity extends BlockEntity {
 
 ## 参考资料
 
-- 详细决策流和示例：参见 `forge/1.20.1/.cursor/rules/02-block.mdc`
+- 详细决策流和示例：参见 `02-block.mdc`
 
 ## 扩展点
 
