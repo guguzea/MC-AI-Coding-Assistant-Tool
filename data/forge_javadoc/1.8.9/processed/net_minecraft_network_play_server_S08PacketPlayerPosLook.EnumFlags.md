@@ -1,0 +1,1 @@
+# S08PacketPlayerPosLook.EnumFlags

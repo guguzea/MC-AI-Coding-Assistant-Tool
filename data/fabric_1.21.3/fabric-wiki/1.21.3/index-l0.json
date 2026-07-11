@@ -1,0 +1,81 @@
+[
+  {
+    "id": "1.21.3/tutorial_items",
+    "version": "1.21.3",
+    "label": "tutorial_items",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
+    "tags": [
+      "item",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 10
+  },
+  {
+    "id": "1.21.3/tutorial_blocks",
+    "version": "1.21.3",
+    "label": "tutorial_blocks",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:blocks",
+    "tags": [
+      "block",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 9
+  },
+  {
+    "id": "1.21.3/tutorial_kotlin",
+    "version": "1.21.3",
+    "label": "tutorial_kotlin",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
+    "tags": [
+      "kotlin",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.21.3/tutorial_commands",
+    "version": "1.21.3",
+    "label": "tutorial_commands",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:commands",
+    "tags": [
+      "command",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 13
+  },
+  {
+    "id": "1.21.3/start",
+    "version": "1.21.3",
+    "label": "start",
+    "url": "https://fabricmc.net/wiki/doku.php?id=start",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.21.3/documentation_start",
+    "version": "1.21.3",
+    "label": "documentation_start",
+    "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
+    "tags": [
+      "documentation"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.21.3/tutorial_start",
+    "version": "1.21.3",
+    "label": "tutorial_start",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:start",
+    "tags": [
+      "tutorial"
+    ],
+    "priority": "🟡",
+    "sectionCount": 3
+  }
+]

@@ -1,0 +1,240 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### 物理端注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@SideOnly(Side.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@SideOnly(Side.SERVER)` | 仅在服务端运行 | 服务端逻辑 |
+| 无注解 | 两端都可编译，但可能运行时错误 | 通用逻辑（不推荐） |
+
+### 线程约束
+
+- **服务端线程**：游戏逻辑处理、事件订阅（大多数）
+- **客户端线程**：渲染、输入、粒子效果
+- **禁止**在渲染线程中执行服务端逻辑
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+### Proxy 模式架构
+
+Forge 1.12.2 使用 Proxy 模式处理物理端分离：
+
+```
+src/main/java/
+├── ExampleMod.java              # @Mod 入口类
+├── CommonProxy.java             # 通用代理（两端的通用代码）
+└── proxy/
+    └── ClientProxy.java        # 客户端代理（@SideOnly(Side.CLIENT)）
+```
+
+- **禁止**将 `@SideOnly(Side.CLIENT)` 的类放在 proxy 包以外
+- **禁止**在 CommonProxy 中调用任何客户端特有方法
+
+### FMLInitializationEvent vs 其他生命周期事件
+
+- `FMLPreInitializationEvent`：两端都会收到，用于加载配置
+- `FMLInitializationEvent`：两端都会收到，用于通用初始化
+- 客户端特有初始化放在 `ClientProxy.init()`
+
+---
+
+## Decision Flow
+
+### Decision: 代码应该放在哪一端
+
+```
+IF 代码涉及渲染（Model、Render）
+  → 客户端
+  → 放在 client/proxy/ 包下
+  → 使用 @SideOnly(Side.CLIENT)
+
+IF 代码涉及输入（KeyBinding）
+  → 客户端
+  → 放在 client/proxy/ 包下
+  → 使用 @SideOnly(Side.CLIENT)
+
+IF 代码涉及游戏逻辑（实体行为、方块交互、数据存储）
+  → 服务端
+  → 放在 CommonProxy 中
+  → 不使用 @SideOnly
+
+IF 代码既涉及渲染又涉及逻辑
+  → 分离处理
+  → 逻辑在服务端
+  → 渲染在客户端
+```
+
+### Decision: 选择分离模式
+
+```
+IF 只需在客户端显示额外信息（如 GUI 覆盖层）
+  → 使用 TickEvent.Client 或 RenderGameOverlayEvent
+
+IF 需要在客户端渲染自定义模型
+  → 继承 Model / Render 类
+  → 在 ClientProxy 中注册
+
+IF 需要服务端数据同步到客户端
+  → 使用 SimpleNetworkWrapper（参见 06-networking.mdc）
+  → 使用 TileEntity.syncData
+
+IF 需要客户端触发服务端逻辑
+  → 使用 PlayerInteractEvent（在服务端自然处理）
+  → 或使用网络包：客户端 sendToServer() → 服务端处理后可能回复
+```
+
+---
+
+## 示例：Proxy 设置
+
+```java
+// ExampleMod.java
+@Mod(ExampleMod.MODID)
+public class ExampleMod {
+    public static final String MODID = "examplemod";
+
+    @Instance(ExampleMod.MODID)
+    public static ExampleMod instance;
+
+    @SidedProxy(clientSide = "com.example.mod.proxy.ClientProxy",
+                 serverSide = "com.example.mod.proxy.CommonProxy")
+    public static CommonProxy proxy;
+
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        proxy.preInit(event);
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init(event);
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
+    }
+}
+```
+
+## 示例：CommonProxy
+
+```java
+// proxy/CommonProxy.java
+public class CommonProxy {
+    public void preInit(FMLPreInitializationEvent event) {
+        // 通用预初始化
+    }
+
+    public void init(FMLInitializationEvent event) {
+        // 通用初始化
+    }
+
+    public void postInit(FMLPostInitializationEvent event) {
+        // 通用后初始化
+    }
+}
+```
+
+## 示例：ClientProxy
+
+```java
+// proxy/ClientProxy.java
+@SideOnly(Side.CLIENT)
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        // 客户端预初始化
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+        // 客户端特有初始化
+        // 渲染器注册
+        // KeyBinding 注册
+    }
+}
+```
+
+## 示例：KeyBinding 处理
+
+```java
+// keys/ModKeys.java
+@SideOnly(Side.CLIENT)
+public class ModKeys {
+    public static KeyBinding KEY_TEST;
+
+    public static void init() {
+        KEY_TEST = new KeyBinding("key.examplemod.test",
+                Keyboard.KEY_G, "key.categories.examplemod");
+        ClientRegistry.registerKeyBinding(KEY_TEST);
+    }
+}
+```
+
+```java
+// ClientProxy.java
+@SideOnly(Side.CLIENT)
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
+        ModKeys.init();
+        MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+    }
+}
+```
+
+```java
+// keys/KeyInputHandler.java
+@SideOnly(Side.CLIENT)
+public class KeyInputHandler {
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+        if (ModKeys.KEY_TEST.isPressed()) {
+            // 按键按下时的逻辑
+        }
+    }
+}
+```
+
+## 示例：服务端数据同步
+
+```java
+// TileEntity 中的同步
+public class TileEntityExample extends TileEntity {
+    private int syncData = 0;
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger("syncData", syncData);
+        return new SPacketUpdateTileEntity(pos, 1, nbt);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        syncData = pkt.getNbtCompound().getInteger("syncData");
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = super.getUpdateTag();
+        nbt.setInteger("syncData", syncData);
+        return nbt;
+    }
+}
+```
+
+> 注意：
+> - 1.12.2 的 TileEntity 同步使用 `getUpdatePacket()` / `onDataPacket()`
+> - `markDirty()` 标记数据已修改
+> - `world.notifyBlockUpdate()` 将更新通知发送给客户端

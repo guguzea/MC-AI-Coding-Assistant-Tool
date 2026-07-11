@@ -1,0 +1,1 @@
+# VertexFormatElement.EnumType

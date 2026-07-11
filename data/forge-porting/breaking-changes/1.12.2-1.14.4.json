@@ -1,0 +1,77 @@
+{
+  "versionRange": "1.12.2-1.14.4",
+  "note": "Legacy → Modern Forge 最大断裂",
+  "generatedAt": "2026-05-31T12:50:27.859Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 44,
+    "removedCount": 43,
+    "added": [
+      "1.14.4/datagen_intro",
+      "1.14.4/networking_entities",
+      "1.14.4/events_intro",
+      "1.14.4/datagen_modelproviders",
+      "1.14.4/networking",
+      "1.14.4/networking_overview",
+      "1.14.4/concepts_registries",
+      "1.14.4/concepts_sides",
+      "1.14.4/networking_simpleimpl",
+      "1.14.4/datastorage_capabilities",
+      "1.14.4/blocks_interaction",
+      "1.14.4/blocks_states",
+      "1.14.4/blocks_blocks",
+      "1.14.4/items_globallootmodifiers",
+      "1.14.4/items_items",
+      "1.14.4/utilities_recipes",
+      "1.14.4/utilities_tags",
+      "1.14.4/tileentities_tileentity",
+      "1.14.4/tileentities_tesr",
+      "1.14.4/advanced_accesstransformers"
+    ],
+    "removed": [
+      "1.12.2/networking_entities",
+      "1.12.2/events_intro",
+      "1.12.2/networking",
+      "1.12.2/networking_overview",
+      "1.12.2/concepts_registries",
+      "1.12.2/concepts_sides",
+      "1.12.2/networking_simpleimpl",
+      "1.12.2/datastorage_capabilities",
+      "1.12.2/blocks_interaction",
+      "1.12.2/blocks_states",
+      "1.12.2/blocks_blocks",
+      "1.12.2/datastorage_extendedentityproperties",
+      "1.12.2/items_items",
+      "1.12.2/items_loot_tables",
+      "1.12.2/utilities_recipes",
+      "1.12.2/tileentities_tileentity",
+      "1.12.2/tileentities_tesr",
+      "1.12.2/config_annotations",
+      "1.12.2/animation_asm",
+      "1.12.2/animation_armature"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": [
+      {
+        "domain": "project",
+        "description": "整个项目结构重写，ForgeGradle 2.x → 3.x",
+        "severity": "critical",
+        "fixType": "manual-review"
+      },
+      {
+        "domain": "resources",
+        "description": "资源加载 API 完全重构",
+        "severity": "high",
+        "fixType": "manual-review"
+      },
+      {
+        "domain": "registry",
+        "description": "注册方式再次变化",
+        "severity": "medium",
+        "fixType": "manual-review"
+      }
+    ]
+  }
+}

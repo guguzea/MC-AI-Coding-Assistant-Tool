@@ -1,0 +1,228 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-27",
+    "note": "Mixin 配置参考数据。按平台/用途分类，提供各 Loader 的官方 mixin.json 模板。Mixin 不可跨 Loader 共享，各子工程必须独立维护。",
+    "reference": "https://docs.neoforged.net/1.20.4/docs/influencinginecraft/mixin/ | https://fabricmc.net/wiki/documentation:mixin_introduction"
+  },
+  "commonMixinRules": {
+    "description": "Mixin JSON 的通用字段说明",
+    "requiredFields": [
+      "package (String): 目标 Mixin 类的根包名",
+      "compatibilityLevel (String): Java 版本，如 JAVA_17",
+      "mixins (String[]): 服务端 + 客户端共用的 Mixin",
+      "client (String[]): 仅客户端执行的 Mixin",
+      "server (String[]): 仅服务端执行的 Mixin"
+    ],
+    "optionalFields": [
+      "injectors (Number): @Inject 方法的最大变身数，默认 10",
+      "maxShiftBy (Number): @At 允许的最大偏移，默认 0",
+      "required (Boolean): 设为 false 则 Mixin 失败时不崩溃",
+      "refmap (String): RemapReferenceMap 处理器，自动由 Loom 生成"
+    ],
+    "compatibilityLevels": {
+      "JAVA_8": "Java 8 (Minecraft ≤ 1.16)",
+      "JAVA_16": "Java 16 (Minecraft 1.17–1.18)",
+      "JAVA_17": "Java 17 (Minecraft 1.19–1.20.4)",
+      "JAVA_21": "Java 21 (Minecraft 1.21+)"
+    }
+  },
+  "fabricMixins": {
+    "versions": [
+      {
+        "mcVersion": "1.20.1",
+        "fabricLoaderVersionRange": ">=0.14.0",
+        "yarnBuild": "stable #1050（对应 Intermediary 1.20.1）",
+        "compatibilityLevel": "JAVA_17",
+        "loomVersion": "0.15.x",
+        "mixinRegistrationNote": "Mixin 配置文件名写在 fabric.mod.json 的 mixins/clientMixins 字段，而非独立入口"
+      }
+    ],
+    "standard": {
+      "description": "Fabric 标准 mixin.json 模板",
+      "example": {
+        "required": true,
+        "compatibilityLevel": "JAVA_17",
+        "package": "com.examplemod.mixin",
+        "mixins": [
+          "ExampleMixin"
+        ],
+        "client": [
+          "ExampleClientMixin"
+        ],
+        "injectors": {
+          "defaultRequire": 1
+        }
+      },
+      "fabricModJsonEntry": {
+        "description": "fabric.mod.json 中的 mixin 入口点",
+        "key": "mixins",
+        "example": [
+          "examplemod.mixins.json"
+        ]
+      },
+      "fabricModJsonClientEntry": {
+        "description": "fabric.mod.json 中仅客户端的 mixin",
+        "key": "clientMixins",
+        "example": [
+          "examplemod-client.mixins.json"
+        ]
+      }
+    },
+    "quiltCompatible": {
+      "description": "Quilt 兼容的 Fabric Mixin（Fabric Mixin 同时适用于 Quilt）",
+      "note": "Quilt 使用相同的 Mixin 系统，无需额外配置"
+    }
+  },
+  "neoforgeMixins": {
+    "versions": [],
+    "standard": {
+      "description": "NeoForge 标准 mixin.json 模板",
+      "example": {
+        "required": true,
+        "compatibilityLevel": "JAVA_17",
+        "package": "com.examplemod.mixin",
+        "mixins": [
+          "ExampleMixin"
+        ],
+        "client": [
+          "ExampleClientMixin"
+        ],
+        "server": [],
+        "injectors": {
+          "defaultRequire": 1
+        }
+      },
+      "modsTomlEntry": {
+        "description": "neoforge.mods.toml 中的 mixin 配置（NeoForge 特有）",
+        "example": [
+          "com.examplemod.mixin.ExampleMixin"
+        ],
+        "clientMixins": [
+          "com.examplemod.mixin.client.ExampleClientMixin"
+        ]
+      }
+    },
+    "architecturySplit": {
+      "description": "Architectury 项目中 NeoForge 子工程的 mixin 分离",
+      "note": "common 模块不使用 Mixin，loader 子工程各自维护 mixin.json",
+      "commonMixins": {
+        "description": "common 层不应有 mixin，改为使用 AccessWidener",
+        "reason": "Mixin 引用具体平台类，无法放入 common 层"
+      },
+      "neoforgeMixinFiles": {
+        "description": "neoforge/src/main/resources/ 下的文件",
+        "examples": [
+          "mixins.examplemod.json"
+        ]
+      }
+    }
+  },
+  "architecturyMixinStrategy": {
+    "description": "Architectury MultiLoader 项目中的 Mixin 分离策略",
+    "principle": "Mixin 不可跨 Loader 共享，必须在各子工程独立配置",
+    "common": {
+      "description": "common 层不应包含任何 mixin 配置",
+      "alternatives": [
+        "使用 AccessWidener 放宽访问权限（architectury.common.json）",
+        "使用 Interface Injection 注入接口（architectury.common.json）",
+        "纯 Java/Kotlin 代码，不依赖 Mixin"
+      ],
+      "architecturyCommonJson": {
+        "description": "用 architectury.common.json 代替 common 层的 mixin",
+        "example": {
+          "accessWidener": "examplemod.accesswidener",
+          "injected_interfaces": {
+            "net/minecraft/class_2586": ["com/examplemod/api/IExtendedPlayer"]
+          }
+        }
+      }
+    },
+    "fabricMixinFile": {
+      "description": "fabric/src/main/resources/ 下的 mixin 配置",
+      "filename": "mixins.<modid>.json",
+      "packageNote": "Mixin 类放在 fabric/src/main/java/<base>/<modid>/mixin/ 下",
+      "registrationNote": "Mixin 配置文件名在 fabric.mod.json 的 mixins/clientMixins 字段中注册（不是独立入口点）"
+    },
+    "neoforgeMixinFile": {
+      "description": "neoforge/src/main/resources/ 下的 mixin 配置",
+      "filename": "mixins.<modid>.json",
+      "packageNote": "Mixin 类放在 neoforge/src/main/java/<base>/<modid>/mixin/ 下"
+    },
+    "accessWidener": {
+      "description": "AccessWidener 文件格式（替代 common 层 Mixin）",
+      "format": "<access-type> <owner-class> <member-name>",
+      "accessTypes": [
+        "accessible: 放宽 private → protected",
+        "mutable: 放宽 final → 非 final",
+        "extendable: 允许子类继承"
+      ],
+      "example": [
+        "accessible net/minecraft/class_2586 field_12345 Lnet/minecraft/class_1297; # playerTickEvent field"
+      ]
+    }
+  },
+  "commonMixinPatterns": {
+    "entityMixin": {
+      "description": "实体 Mixin（跨平台常见）",
+      "fabric": {
+        "class": "EntityMixin",
+        "target": "@Mixin(Entity.class)",
+        "commonInjections": [
+          "@Inject(at = @At(\"HEAD\"), method = \"tick\")",
+          "@Inject(at = @At(\"TAIL\"), method = \"baseTick\")"
+        ]
+      },
+      "note": "Entity Mixin 在 Fabric 和 NeoForge 中注解写法相同，但包名不同"
+    },
+    "playerMixin": {
+      "description": "玩家 Mixin（常用于事件监听）",
+      "commonPattern": "@Mixin(Player.class)",
+      "neoForgeSpecific": {
+        "description": "NeoForge 中可直接用 LivingEntityEvents",
+        "alternative": "优先使用 @SubscribeEvent 而非 Mixin"
+      }
+    },
+    "blockMixin": {
+      "description": "方块 Mixin（用于拦截方块行为）",
+      "target": "@Mixin(Block.class)",
+      "commonInjections": [
+        "@Inject(at = @At(\"HEAD\"), method = \"onNeighborChange\")"
+      ]
+    },
+    "clientMixin": {
+      "description": "客户端 Mixin（仅客户端执行）",
+      "fabric": {
+        "description": "在 fabric.mod.json 的 clientMixins 数组中注册",
+        "mixinJson": "mixins.<modid>-client.json"
+      },
+      "neoforge": {
+        "description": "在 neoforge.mods.toml 的 clientMixins 中注册",
+        "mixinJson": "mixins.<modid>-client.json"
+      }
+    },
+    "networkMixin": {
+      "description": "网络 Mixin（拦截数据包）",
+      "commonTargets": [
+        "ClientPacketListener (Fabric: ClientPlayNetworking)",
+        "ServerPacketHandler (NeoForge: SimpleChannel)"
+      ],
+      "note": "网络 Mixin 通常是平台相关的，建议用 @ExpectPlatform 抽象"
+    }
+  },
+  "mixinConflicts": {
+    "description": "Mixin 冲突处理",
+    "priority": {
+      "description": "Mixin 优先级，避免与其他 Mixin 冲突",
+      "values": [
+        "EARLY (最低): 在其他 Mixin 之前应用",
+        "DEFAULT: 标准优先级",
+        "LATE: 在其他 Mixin 之后应用",
+        "LAST: 最后应用，通常用于覆盖"
+      ]
+    },
+    "redirects": {
+      "description": "@Redirect 重定向方法调用",
+      "warning": "谨慎使用，可能与其他 Mixin 冲突"
+    }
+  }
+}

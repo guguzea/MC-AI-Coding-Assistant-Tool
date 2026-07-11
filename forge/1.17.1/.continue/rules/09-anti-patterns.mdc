@@ -1,0 +1,97 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.17.1
+> 本文件收集 MC Mod 开发中的常见错误模式。
+
+---
+
+## 注册相关
+
+### ❌ 在 Entity 构造函数中注册属性
+
+```java
+// 错误
+public MyEntity(EntityType<?> type, Level level) {
+    super(type, level);
+    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(100.0); // ❌ 太早
+}
+```
+
+**正确方案**：使用 `DeferredRegister<Attribute>>` + modEventBus
+
+---
+
+### ❌ 使用 `new` 构造函数直接注册方块/物品
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到游戏
+```
+
+**正确方案**：通过 `DeferredRegister<Block>` 注册
+
+---
+
+## 方块/BlockEntity 相关
+
+### ❌ 在 `BlockEntity.load()` 中读取世界数据
+
+```java
+// 错误
+@Override
+public void load(CompoundTag nbt) {
+    super.load(nbt);
+    BlockState state = level.getBlockState(pos); // ❌ level 可能为 null
+}
+```
+
+**正确方案**：在 `onLoad()` 中处理需要世界数据的逻辑
+
+---
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+
+```java
+// 错误
+ServerPlayer player = ctx.get().getSender();
+player.getLevel().setBlock(...); // ❌ 不安全
+```
+
+**正确方案**：
+
+```java
+ctx.get().enqueueWork(() -> {
+    ServerPlayer player = ctx.get().getSender();
+    if (player != null) {
+        player.getLevel().setBlock(...);
+    }
+});
+```
+
+---
+
+## 资源文件相关
+
+### ❌ 资源路径大小写错误
+
+```json
+// 错误
+"textures/item/MyItem.png"  // ❌ 大写
+
+// 正确
+"textures/item/my_item.png"
+```
+
+---
+
+## 工具提示
+
+当遇到错误时，按以下顺序排查：
+1. `09-anti-patterns.mdc` — 是否是已知错误模式
+2. 检查 `mods.toml` 语法和 mod ID 是否一致
+3. 检查资源文件路径是否全小写
+4. 检查是否混用了服务端和客户端线程
+5. 检查 `enqueueWork` 是否正确使用
+6. 检查 Registry 注册是否通过事件系统

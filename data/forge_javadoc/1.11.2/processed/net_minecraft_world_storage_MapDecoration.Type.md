@@ -1,0 +1,1 @@
+# MapDecoration.Type

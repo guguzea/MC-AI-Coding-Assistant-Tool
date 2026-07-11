@@ -1,82 +1,106 @@
 /**
- * 路径解析工具（ESM 模块）
+ * 数据目录解析工具
  *
- * 本文件适用于 "type": "module" 项目。
- * __dirname 在 ESM 中不可直接使用，需通过 import.meta.url 获取。
- * 如果迁移到 CommonJS，需将 fileURLToPath(new URL(".", import.meta.url))
- * 替换为 require("path").dirname(require.resolve("./package.json"))
+ * 本文件解决 MCP Server 运行时数据目录定位问题。
+ * 策略（按可靠性从高到低）：
+ * 1. MC_SKILL_DATA 环境变量
+ * 2. import.meta.url 推导（运行时）
+ * 3. process.cwd() 回退
  */
 
-import { join } from "path";
 import { existsSync, readdirSync } from "fs";
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-/**
- * 解析 MC_skill data 目录路径。
- * 三层兜底策略（优先级从高到低）：
- *   1. 环境变量 MC_SKILL_DATA（支持测试时换数据源）
- *   2. __dirname 向上追溯（原有逻辑，依赖 symlink）
- *   3. cwd 回退（相对项目根目录）
- *
- * @param subPath - 相对于 data/ 的路径部分，如 "forge_1.20.1", "extracted"
- */
-const DEBUG = process.env.MC_SKILL_DEBUG_PATHS === "1";
+function getSelfDir(): string {
+  try {
+    return dirname(fileURLToPath(import.meta.url));
+  } catch {
+    return process.cwd();
+  }
+}
 
-export function resolveDataDir(...subPath: string[]): string {
+function getDataDirFromSelf(): string {
+  // 推导 data 目录：
+  // - dist/utils/path.js → dist/utils/ → dist/ → mcp-server/ → MC_skill/ → data/
+  const selfDir = getSelfDir();
+  return join(selfDir, "..", "..", "..", "data");
+}
+
+function getDataDirFromEnv(): string | null {
   const envPath = process.env.MC_SKILL_DATA;
-  if (envPath) {
-    const result = join(envPath, ...subPath);
-    if (DEBUG) console.error(`[path] env MC_SKILL_DATA → ${result}`);
-    return result;
-  }
-
-  const __dirname = fileURLToPath(new URL(".", import.meta.url));
-  const byDirname = join(__dirname, "..", "..", "..", "data", ...subPath);
-  if (existsSync(byDirname)) {
-    if (DEBUG) console.error(`[path] __dirname fallback → ${byDirname}`);
-    return byDirname;
-  }
-
-  const cwdFallback = join(process.cwd(), "data", ...subPath);
-  if (DEBUG) console.error(`[path] cwd fallback → ${cwdFallback}`);
-  return cwdFallback;
+  if (envPath && existsSync(envPath)) return envPath;
+  return null;
 }
 
-// ── 数据路径诊断 ─────────────────────────────────────────────────────────────
-
-export interface DataPathResult {
-  platform: string;
-  dataDir: string;
-  available: boolean;
-  details: string;
+function getDataDirFromCwd(): string {
+  return join(process.cwd(), "data");
 }
-
-export interface DataPathDiagnosis {
-  resolvedDataRoot: string;
-  results: DataPathResult[];
-}
-
-const PLATFORMS = ["forge", "neoforge", "fabric"] as const;
 
 /**
- * 诊断所有平台的数据目录可用性。
- * 用于调试路径解析问题和 diagnose_data_paths 工具。
+ * 解析数据目录路径（外部调用接口）
+ * 按以下优先级：
+ * 1. MC_SKILL_DATA 环境变量
+ * 2. 从 import.meta.url 推导
+ * 3. process.cwd()/data
+ *
+ * @param subpaths  可选子路径，join 到数据根目录之后
+ *                  示例：resolveDataDir("forge_1.20.1", "extracted") → data/forge_1.20.1/extracted
  */
-export function diagnoseDataPaths(): DataPathDiagnosis {
-  const results: DataPathResult[] = [];
-  for (const platform of PLATFORMS) {
-    const subPath = platform === "forge" ? "forge_1.20.1" : `${platform}_versions/${platform}`;
-    const dataDir = resolveDataDir(subPath, "forge-docs");
-    const indexPath = join(dataDir, "1.20.1", "index-l0.json");
-    const exists = existsSync(indexPath);
-    results.push({
-      platform,
-      dataDir,
-      available: exists,
-      details: exists
-        ? `index-l0.json found`
-        : `index-l0.json NOT found at ${indexPath}`,
-    });
+export function resolveDataDir(...subpaths: string[]): string {
+  // 策略 1：环境变量
+  const fromEnv = getDataDirFromEnv();
+  const base = fromEnv ? fromEnv : (existsSync(getDataDirFromSelf()) ? getDataDirFromSelf() : getDataDirFromCwd());
+
+  if (subpaths.length === 0) return base;
+  return join(base, ...subpaths);
+}
+
+/**
+ * 诊断数据目录配置（供 MCP 工具 diagnose_data_paths 使用）
+ * 返回各平台数据目录的可用性状态。
+ */
+export function diagnoseDataPaths(): {
+  resolvedDataDir: string;
+  sources: string[];
+  platforms: Record<string, { status: string; path: string; details: string }>;
+} {
+  const sources: string[] = [];
+  const envPath = process.env.MC_SKILL_DATA;
+  if (envPath) sources.push(`MC_SKILL_DATA=${envPath}`);
+  sources.push(`cwd=${process.cwd()}`);
+  sources.push(`self=${getSelfDir()}`);
+
+  const dataDir = resolveDataDir();
+  const platforms: Record<string, { status: string; path: string; details: string }> = {};
+
+  for (const platform of ["forge", "fabric", "neoforge"] as const) {
+    const prefix = `${platform}_`;
+    let status = "not_found";
+    let details = "";
+    let path = "";
+    try {
+      if (existsSync(dataDir)) {
+        const entries = readdirSync(dataDir, { withFileTypes: true });
+        const matching = entries.filter(e => e.isDirectory() && e.name.startsWith(prefix));
+        if (matching.length > 0) {
+          status = "found";
+          path = join(dataDir, matching[0].name);
+          details = `Found ${matching.length} version(s): ${matching.map(e => e.name).join(", ")}`;
+        } else {
+          status = "empty";
+          details = `Directory ${dataDir} exists but no ${prefix}* subdirectories found`;
+        }
+      } else {
+        status = "not_found";
+        details = `Data directory not found at ${dataDir}`;
+      }
+    } catch (err) {
+      status = "error";
+      details = String(err);
+    }
+    platforms[platform] = { status, path, details };
   }
-  return { resolvedDataRoot: resolveDataDir(), results };
+
+  return { resolvedDataDir: dataDir, sources, platforms };
 }

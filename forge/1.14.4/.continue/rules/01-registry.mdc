@@ -1,0 +1,123 @@
+# 注册系统（Forge 1.14.4）
+
+> Registry 是 Forge 的核心概念，所有游戏内容（方块、物品、实体等）都通过 Registry 注册。
+
+## 核心规则
+
+### 规则 1：禁止通过构造函数 new 方式注册
+
+```java
+// ❌ 错误：在构造函数中注册
+public ExampleMod() {
+    Registry.register(Registry.BLOCK, new ResourceLocation(MOD_ID, "my_block"), new Block(...));
+}
+
+// ✅ 正确：使用 RegistryEvent 回调
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class RegistryEvents {
+    @SubscribeEvent
+    public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+        event.getRegistry().register(
+            new Block(Block.Properties.create(Material.STONE))
+                .setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+        );
+    }
+}
+```
+
+### 规则 2：Registry 名称规范
+
+- 全小写
+- 仅使用 `_` 分隔（禁止 `-`）
+- mod ID 必须与 `mods.toml` 中一致
+
+### 规则 3：ItemBlock 必须与方块同名
+
+```java
+@SubscribeEvent
+public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
+    // 注意：registry name 必须与方块完全相同
+    event.getRegistry().register(
+        new BlockItem(ExampleModBlocks.MY_BLOCK, new Item.Properties())
+            .setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+    );
+}
+```
+
+## Decision: 选择注册方式
+
+```
+IF 注册方块、物品、实体、TileEntityType、SoundEvent、Enchantment 等
+  → 使用 RegistryEvent.Register<T>（标准方式，强制）
+
+IF 注册自定义 Registry（全新注册表）
+  → RegistryEvent.NewRegistry + RegistryBuilder
+
+IF 在 mod constructor 执行前引用已注册对象
+  → ❌ 禁止：在静态字段初始化中引用另一个静态字段
+  → ✅ 正确：在 RegistryEvent 回调中使用
+```
+
+## Decision: 常用注册表
+
+| 注册内容 | 事件类型 | 常用方法 |
+|----------|----------|---------|
+| 方块 | `RegistryEvent.Register<Block>` | `.setRegistryName()` |
+| 物品 | `RegistryEvent.Register<Item>` | `.setRegistryName()` |
+| TileEntity | `RegistryEvent.Register<TileEntityType>` | `.setRegistryName()` |
+| 实体类型 | `RegistryEvent.Register<EntityType>` | `.setRegistryName()` |
+| 声音事件 | `RegistryEvent.Register<SoundEvent>` | `.setRegistryName()` |
+| 附魔 | `RegistryEvent.Register<Enchantment>` | `.setRegistryName()` |
+| 容器类型 | `RegistryEvent.Register<ContainerType>` | `.setRegistryName()` |
+| 粒子类型 | `RegistryEvent.Register<ParticleType>` | `.setRegistryName()` |
+| Fluid | `RegistryEvent.Register<Fluid>` | `.setRegistryName()` |
+
+## DeferredRegister（可选，功能有限）
+
+Forge 1.16.5+ 才完全支持 DeferredRegister。Forge 1.14.4 的 DeferredRegister 功能有限，**推荐使用 RegistryEvent**。
+
+如坚持使用 DeferredRegister：
+
+```java
+// DeferredRegister（可选，功能有限）
+private static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(Block.class, MOD_ID);
+
+public static final RegistryObject<Block> MY_BLOCK =
+    BLOCKS.register("my_block", () -> new Block(Block.Properties.create(Material.STONE)));
+
+// mod constructor 中调用
+BLOCKS.register(modEventBus);
+```
+
+## 注册优先级
+
+```
+RegistryEvent.NewRegistry → RegistryEvent.Register<T> → mod constructor → FMLCommonSetupEvent
+```
+
+- `RegistryEvent.NewRegistry`：创建新的注册表（自定义 Registry）
+- `RegistryEvent.Register<T>`：填充已存在的注册表
+- `mod constructor`：Mod 实例构造（可安全注册 DeferredRegister）
+- `FMLCommonSetupEvent`：通用端初始化（游戏逻辑）
+
+## Forge 1.14.4 与 1.20.1 注册差异
+
+| 特性 | Forge 1.14.4 | Forge 1.20.1 |
+|------|-------------|-------------|
+| 标准方式 | `RegistryEvent.Register<T>` | `DeferredRegister<T>` |
+| 名称设置 | `.setRegistryName()` | 构造函数参数 |
+| ItemBlock 注册 | 手动 `new BlockItem(...).setRegistryName()` | DeferredRegister 自动处理 |
+| 自定义注册表 | `RegistryBuilder` | `RegistryBuilder` |
+| NBT 类 | `NBTTagCompound` | `CompoundTag` |
+| TileEntity 注册 | `TileEntityType.Builder` | `BlockEntityType.Builder` |
+| ContainerType | `IForgeContainerType.create()` | `MenuType` 构造函数 |
+
+## 常见错误
+
+- ❌ 忘记 `.setRegistryName()`：游戏无法识别注册名称
+- ❌ Registry name 使用大写或横杠：`"My_Block"` → `"my_block"`
+- ❌ mod ID 与 mods.toml 不一致：`"mymod"` vs `"my_mod"`
+- ❌ ItemBlock 与方块 registry name 不匹配
+- ❌ 在构造函数中引用其他 RegistryObject（此时尚未注册）
+- ❌ 使用 Java 11+ 编译：Forge 1.14.4 必须使用 **Java 8**

@@ -4,7 +4,7 @@ Minecraft Forge MCP Server，为 Cursor AI 编程助手提供 Forge 开发专用
 
 ## 功能特性
 
-- **12 个 MCP 工具**：API 查询、映射转换、版本指导、Gradle 诊断、DataGen 代码生成、崩溃分析、项目校验、Forge 官方文档搜索、数据路径诊断
+- **20 个 MCP 工具**：API 查询、映射转换、版本指导、Gradle 诊断、DataGen 代码生成、崩溃分析、项目校验、Forge 官方文档搜索、**Fabric 官方文档搜索**、数据路径诊断、Mod 移植分析（2 个新工具）
 - **本地数据**：内置 Parchment 1.20.1 映射数据（5720 个类）+ Forge 官方文档，无需联网
 - **三层文档查询**：L0 索引搜索 → L1 摘要 → L2/L2+ 全文，按需加载
 - **懒加载校验**：数据目录缺失时不影响非文档工具（如 `query_api`）
@@ -95,7 +95,7 @@ mklink /J C:\Users\<用户名>\MC_skill h:\MC_skill
 
 ### 3. 重启编辑器
 
-配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏（左侧边栏 → AI → MCP Tools）中应能看到 `mc-forge`，包含 12 个工具。
+配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏（左侧边栏 → AI → MCP Tools）中应能看到 `mc-forge`，包含 14 个工具。
 
 ### 4. 环境变量
 
@@ -144,7 +144,14 @@ node dist/index.js
 | `validate_project` | 校验 mods.toml 和 Java 代码规范 | `modsToml?`, `javaFiles?`, `buildGradle?` 等 |
 | `diagnose_data_paths` | 诊断数据目录配置（高级排障） | （无参数） |
 
-### 通用文档工具（支持多平台）
+### Mod 移植工具
+
+| 工具 | 功能 | 输入 |
+|------|------|------|
+| `analyze_porting_path` | 分析项目，生成跨平台/跨版本移植路线图（风险评估、动态 routeSteps、参考链接） | `projectPath`, `targetPlatform?`, `targetVersion?` |
+| `port_project` | 执行移植步骤（init_architectury / extract_common / apply_version_migration），默认 dryRun | `projectPath`, `action`, `dryRun?`, `confirmed?` |
+
+### 通用文档工具（支持多平台：Forge / NeoForge / Fabric）
 
 | 工具 | 功能 | 输入 |
 |------|------|------|
@@ -153,6 +160,16 @@ node dist/index.js
 | `get_doc_summary` | 获取文档摘要（L1） | `id`, `version?`, `platform?` |
 | `get_doc_full` | 获取文档全文（L2） | `id`, `version?`, `platform?`, `highlight_key?` |
 | `get_doc_related` | 获取相关文档 | `id`, `version?`, `platform?`, `limit?` |
+
+### Fabric 专用别名
+
+| 别名 | 指向 |
+|------|------|
+| `list_fabric_versions` | `list_doc_versions` (platform=fabric) |
+| `search_fabric_docs` | `search_docs` (platform=fabric) |
+| `get_fabric_doc_summary` | `get_doc_summary` (platform=fabric) |
+| `get_fabric_doc_full` | `get_doc_full` (platform=fabric) |
+| `get_fabric_doc_related` | `get_doc_related` (platform=fabric) |
 
 ### Forge 专用别名（向后兼容）
 
@@ -194,6 +211,45 @@ node dist/index.js
 
 返回：完整的 `LootTableProvider` + `BlockLootSubProvider` Java 代码，含正确的 `gatherData` 写法。
 
+### 分析 Mod 移植路线
+
+```
+工具: analyze_porting_path
+输入: {
+  "projectPath": "h:/my-forge-mod",
+  "targetPlatform": "neoforge",
+  "targetVersion": "1.20.4"
+}
+```
+
+返回：当前平台推断、平台证据评分、风险评估、动态 routeSteps、参考链接和建议的 `query_api` 调用。
+
+### 执行移植步骤
+
+```
+工具: port_project
+输入: {
+  "projectPath": "h:/my-forge-mod",
+  "action": "extract_common",
+  "dryRun": true
+}
+```
+
+返回：候选移动清单（`safe_to_move` / `has_loader_calls` / `review_required`），始终 dryRun。
+
+```
+工具: port_project
+输入: {
+  "projectPath": "h:/my-forge-mod",
+  "action": "init_architectury",
+  "dryRun": true,
+  "targetPlatform": "neoforge",
+  "targetVersion": "1.20.4"
+}
+```
+
+返回：diff 预览。用户确认后以 `confirmed: true` 写入文件。
+
 ### 搜索 Forge 文档
 
 ```
@@ -229,6 +285,16 @@ node dist/index.js
 - 覆盖 60 个页面（L0/L1/L2 三层索引）
 - 数据文件：`data/forge_1.20.1/forge-docs/1.20.1/`
 
+### Fabric 官方文档（1.20.1）
+
+- 来源：`https://docs.fabricmc.net/develop/`（主）+ `https://fabricmc.net/wiki/documentation:`（旧 Wiki）
+- 预处理脚本：`scripts/fetch-fabric-docs.js` + `scripts/process-fabric-docs.js`
+- 覆盖 12+ 个页面（L0/L1/L2 三层索引）
+- 数据文件：`data/fabric_1.20.1/fabric-docs/1.20.1/`
+- `data/fabric_1.20.1/meta.json` 含版本元信息（Loader 版本、Yarn build、Loom 版本等）
+
+> **关于 meta.json**：Fabric 数据目录下有 `meta.json`，记录 Fabric Loader 版本范围、Yarn build、Loom 版本等元信息。该文件**不影响任何 MCP 工具**，仅供人工参考和脚本使用。
+
 ---
 
 ## 项目结构
@@ -236,7 +302,7 @@ node dist/index.js
 ```
 mcp-server/
 ├── src/
-│   ├── index.ts              # 11 个工具注册 + stdio 启动
+│   ├── porting/             # analyze_porting_path, port_project
 │   ├── api/                  # query_api、get_method_params
 │   ├── mappings/              # convert_mapping
 │   ├── version/               # get_version_info
@@ -244,22 +310,98 @@ mcp-server/
 │   ├── datagen/              # generate_datagen
 │   ├── crash/                # crash_analyze
 │   ├── validate/             # validate_project
-│   └── forge-docs/           # search/summary/full 三个工具
-│       ├── index.ts
-│       ├── store.ts          # 数据访问层 + 缓存
-│       └── types.ts
+│   ├── docs-platform/           # 多平台文档搜索（Forge/Fabric）
+│   │   ├── forge/             # ForgeDocStore + 工具注册
+│   │   │   ├── index.ts
+│   │   │   └── store.ts
+│   │   ├── fabric/           # FabricDocStore + 工具注册
+│   │   │   ├── index.ts
+│   │   │   └── store.ts
+│   │   ├── index.ts          # 统一导出
+│   │   └── store.ts          # createDocStore 工厂
 ├── data/
-│   └── forge_1.20.1/
-│       ├── extracted/            # Parchment 预提取索引
-│       ├── forge-docs/           # Forge 文档预处理数据
-│       │   └── 1.20.1/
-│       └── mappings/            # Parchment 原始数据
-├── scripts/                  # 数据提取脚本
+│   ├── forge_1.20.1/
+│   │   ├── extracted/            # Parchment 预提取索引
+│   │   ├── forge-docs/           # Forge 文档预处理数据
+│   │   │   └── 1.20.1/
+│   │   └── mappings/            # Parchment 原始数据
+│   └── porting/                  # Mod 移植知识库
+│       ├── knowledge-base/
+│       │   ├── versions.json     # 版本 breaking changes 知识库
+│       │   └── loaders.json     # 跨 Loader API 对照表
+│       └── architectury-patterns.json
 │   ├── parchment-extractor.js
 │   ├── fetch-forge-docs.js
-│   └── process-forge-docs.js
+│   ├── process-forge-docs.js
+│   ├── fetch-fabric-docs.js    # Fabric 文档抓取（Fabric Docs + Wiki）
+│   ├── process-fabric-docs.js  # Fabric 文档处理（Fabric 专用 PRIORITY_TAGS）
+│   ├── check-porting-updates.js       # 检查知识库版本更新
+│   ├── update-porting-updates.js      # 辅助生成 breaking changes 草稿
+│   └── update-architectury-examples.js # 从 GitHub 提取 ExpectPlatform 用例草稿
 └── dist/                     # 编译输出（运行时代码）
+
+---
+
+## 文档数据维护脚本
+
+### fetch-forge-docs.js + process-forge-docs.js（Forge）
+
+```bash
+node scripts/fetch-forge-docs.js             # 增量抓取 Forge 文档
+node scripts/fetch-forge-docs.js --force    # 强制全部重新抓取
+node scripts/process-forge-docs.js           # 处理所有版本，产出 index-l0/l1/l2.json
+node scripts/process-forge-docs.js --version=1.20.1
 ```
+
+- raw 文件顶部有元数据行（`> 来源：...` / `> 版本：...`），process 脚本依赖此格式
+- 缓存机制：使用 ETag / Last-Modified，避免重复抓取
+
+### fetch-fabric-docs.js + process-fabric-docs.js（Fabric）
+
+```bash
+node scripts/fetch-fabric-docs.js             # 增量抓取 Fabric 文档
+node scripts/fetch-fabric-docs.js --force      # 强制全部重新抓取
+node scripts/process-fabric-docs.js             # 处理，产出 index-l0/l1/l2.json + processed/
+node scripts/process-fabric-docs.js --version=1.20.1
+```
+
+- **来源优先级**：`docs.fabricmc.net`（官方 VitePress）> `fabricmc.net/wiki/documentation:`（旧 Wiki）
+- raw 文件顶部元数据行格式与 Forge 完全一致（确保 process 脚本无缝复用）
+- Fabric 专用 PRIORITY_TAGS：区分 `Registry.register` / `Identifier` / `ModInitializer` 与 Forge 的 `DeferredRegister` / `ResourceLocation` / `@Mod`
+- ⚠️ 两个 process 脚本的核心解析函数（`parseMarkdown` / `inferTags` 等）逻辑完全一致，仅 PRIORITY_TAGS 不同
+
+### check-porting-updates.js（日常检查）
+
+```bash
+node scripts/check-porting-updates.js
+```
+
+- 对比 `data/porting/knowledge-base/versions.json` 与硬编码的最新版本
+- 发现新版本后输出提醒，**不修改任何文件**
+- 适合定期运行（如每周一次）
+
+### update-porting-updates.js（按需生成草稿）
+
+```bash
+node scripts/update-porting-updates.js --version=1.20.4
+node scripts/update-porting-updates.js --version=26.1
+```
+
+- 输出引导信息 + breaking changes 草稿 JSON
+- **不自动覆写** `versions.json`，需人工 review 后手动合并
+- 草稿 JSON 片段供直接复制到 `versions.json`
+
+### update-architectury-examples.js（按需提取示例）
+
+```bash
+node scripts/update-architectury-examples.js --dry-run   # 仅预览，不写入
+node scripts/update-architectury-examples.js             # 生成草稿文件
+```
+
+- 通过 GitHub API 查询 MultiLoader-Template 等真实项目
+- 提取 `@ExpectPlatform` 注解模式 + mixin 配置
+- 输出草稿 JSON，需人工 review 后合并到 `architectury-patterns.json`
+- 可选设置 `GITHUB_TOKEN` 环境变量提高速率限制
 
 ---
 
@@ -280,8 +422,11 @@ mklink /J C:\Users\<用户名>\MC_skill h:\MC_skill
 
 然后在 `mcp.json` 中使用 `C:/Users/用户名/MC_skill/mcp-server/dist/index.js`。
 
-**Q: 工具返回"不支持的版本"？**
-A: 当前仅支持 1.20.1。新版本需要运行数据提取脚本更新 `data/` 目录。
+**Q: 工具返回"平台不支持"？**
+A: 当前仅支持 `forge` 和 `fabric` 平台（`neoforge` 正在扩展中）。确认 `data/` 目录下存在对应数据目录且含 `index-l0.json`。
+
+**Q: `search_docs(platform="fabric")` 返回空结果？**
+A: 先确认 `data/fabric_1.20.1/fabric-docs/1.20.1/index-l0.json` 存在且非空。若目录为空，先运行 `node scripts/fetch-fabric-docs.js` 抓取文档。
 
 **Q: `query_api` 返回 found=false？**
 A: 该工具仅覆盖 Vanilla Minecraft 类（5720 个）。Forge 特有类（如 DeferredRegister）不在数据中，请使用 `search_forge_docs` 查询 Forge 官方文档。

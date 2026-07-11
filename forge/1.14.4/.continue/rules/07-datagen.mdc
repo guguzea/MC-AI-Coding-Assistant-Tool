@@ -1,0 +1,152 @@
+# 数据生成器（Forge 1.14.4）
+
+> **重要**：Forge 1.14.4 的 DataGen 功能非常有限。大部分资源文件需要**手动编写 JSON**。
+
+## 建议：优先手动编写 JSON
+
+Forge 1.14.4 的 DataGen 仅支持：
+- 配方（`RecipeProvider`，有限支持）
+- 战利品表（`LootTableProvider`，有限支持）
+
+其他资源（方块状态、物品模型、标签、语言文件等）**必须手动编写 JSON**。
+
+## 配方 JSON
+
+文件位置：`src/main/resources/data/{modid}/recipes/{name}.json`
+
+```json
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_buttons",
+  "pattern": [
+    "X",
+    "X"
+  ],
+  "key": {
+    "X": { "tag": "minecraft:planks" }
+  },
+  "result": { "item": "minecraft:oak_button", "count": 1 }
+}
+```
+
+### 无序合成
+
+```json
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:diamond" },
+    { "item": "minecraft:stick" }
+  ],
+  "result": { "item": "mymod:my_item", "count": 1 }
+}
+```
+
+### 烧炼配方
+
+```json
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "minecraft:iron_ore" },
+  "result": "minecraft:iron_ingot",
+  "experience": 0.7,
+  "cookingtime": 200
+}
+```
+
+## 战利品表 JSON
+
+文件位置：`src/main/resources/data/{modid}/loot_tables/blocks/{block}.json`
+
+```json
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mymod:my_item"
+        }
+      ],
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond",
+          "functions": [
+            { "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }
+          ]
+        }
+      ],
+      "conditions": [
+        { "condition": "minecraft:random_chance", "chance": 0.1 }
+      ]
+    }
+  ]
+}
+```
+
+## 方块标签 JSON
+
+文件位置：`src/main/resources/data/{modid}/tags/blocks/{tagname}.json`
+
+```json
+{
+  "replace": false,
+  "values": [
+    "mymod:my_block",
+    "minecraft:stone",
+    "minecraft:cobblestone"
+  ]
+}
+```
+
+## 方块状态 JSON
+
+文件位置：`src/main/resources/assets/{modid}/blockstates/{block}.json`
+
+```json
+{
+  "variants": {
+    "": { "model": "mymod:block/my_block" }
+  }
+}
+```
+
+## 物品模型 JSON
+
+文件位置：`src/main/resources/assets/{modid}/models/item/{item}.json`
+
+```json
+{
+  "parent": "mymod:block/my_block"
+}
+```
+
+## 语言文件 JSON
+
+文件位置：`src/main/resources/assets/{modid}/lang/zh_cn.json`
+
+```json
+{
+  "item.mymod.my_item": "我的物品",
+  "block.mymod.my_block": "我的方块",
+  "entity.mymod.my_entity": "我的实体"
+}
+```
+
+## 常见错误
+
+- ❌ 期望 DataGen 生成所有资源 → 1.14.4 大部分需要手动编写
+- ❌ 标签 JSON 格式错误：`"values": [...]` 不是 `"blocks": [...]`
+- ❌ 方块状态路径错误：`blockstates/` 不是 `block_states/`
+- ❌ 配方 key 使用数字：`"X"` 不是 `0`
+- ❌ 配方 result 缺少类型：有序合成需要 `pattern`/`key`/`result`，无序合成需要 `ingredients`/`result`
+- ❌ 战利品表函数顺序错误：某些函数有依赖顺序

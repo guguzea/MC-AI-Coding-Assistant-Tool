@@ -1,0 +1,10 @@
+---
+title: "FluidIdRegistryMessageHandler"
+description: ""
+package: "net/minecraftforge/common/network"
+version: "1.10.2"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/common/network/FluidIdRegistryMessageHandler.html"
+sourceType: javadoc
+---
+
+# FluidIdRegistryMessageHandler

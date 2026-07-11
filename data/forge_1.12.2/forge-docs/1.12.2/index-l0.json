@@ -1,0 +1,434 @@
+[
+  {
+    "id": "1.12.2/networking_entities",
+    "version": "1.12.2",
+    "label": "Entities",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/entities/",
+    "tags": [
+      "networking"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/events_intro",
+    "version": "1.12.2",
+    "label": "Events",
+    "url": "https://docs.readthedocs.net/en/1.12.x/events/intro/",
+    "tags": [
+      "event"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.12.2/networking",
+    "version": "1.12.2",
+    "label": "Networking",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/",
+    "tags": [
+      "networking"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/networking_overview",
+    "version": "1.12.2",
+    "label": "Overview",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/overview/",
+    "tags": [
+      "networking"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/concepts_registries",
+    "version": "1.12.2",
+    "label": "Registries",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/registries/",
+    "tags": [
+      "registry"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/concepts_sides",
+    "version": "1.12.2",
+    "label": "Sides in Minecraft",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/sides/",
+    "tags": [
+      "sides"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/networking_simpleimpl",
+    "version": "1.12.2",
+    "label": "SimpleImpl",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/simpleimpl/",
+    "tags": [
+      "networking"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/datastorage_capabilities",
+    "version": "1.12.2",
+    "label": "The Capability System",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/capabilities/",
+    "tags": [
+      "capability"
+    ],
+    "priority": "⭐",
+    "sectionCount": 9
+  },
+  {
+    "id": "1.12.2/blocks_interaction",
+    "version": "1.12.2",
+    "label": "Block Interaction",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/interaction/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/blocks_states",
+    "version": "1.12.2",
+    "label": "Block States",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/states/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 7
+  },
+  {
+    "id": "1.12.2/blocks_blocks",
+    "version": "1.12.2",
+    "label": "Blocks",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/blocks/",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/datastorage_extendedentityproperties",
+    "version": "1.12.2",
+    "label": "Extended Entity Properties",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/extendedentityproperties/",
+    "tags": [
+      "entity"
+    ],
+    "priority": "🟡",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/items_items",
+    "version": "1.12.2",
+    "label": "Items",
+    "url": "https://docs.readthedocs.net/en/1.12.x/items/items/",
+    "tags": [
+      "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/items_loot_tables",
+    "version": "1.12.2",
+    "label": "Loot Tables",
+    "url": "https://docs.readthedocs.net/en/1.12.x/items/loot_tables/",
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "priority": "🟡",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.12.2/utilities_recipes",
+    "version": "1.12.2",
+    "label": "Recipes",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "🟡",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/tileentities_tileentity",
+    "version": "1.12.2",
+    "label": "TileEntities",
+    "url": "https://docs.readthedocs.net/en/1.12.x/tileentities/tileentity/",
+    "tags": [
+      "entity"
+    ],
+    "priority": "🟡",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/tileentities_tesr",
+    "version": "1.12.2",
+    "label": "TileEntitySpecialRenderer",
+    "url": "https://docs.readthedocs.net/en/1.12.x/tileentities/tesr/",
+    "tags": [],
+    "priority": "🟡",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/config_annotations",
+    "version": "1.12.2",
+    "label": "`@Config",
+    "url": "https://docs.readthedocs.net/en/1.12.x/config/annotations/",
+    "tags": [
+      "config"
+    ],
+    "priority": "🟢",
+    "sectionCount": 12
+  },
+  {
+    "id": "1.12.2/animation_asm",
+    "version": "1.12.2",
+    "label": "Animation State Machine Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/asm/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/animation_armature",
+    "version": "1.12.2",
+    "label": "Armature Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/armature/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/models_color",
+    "version": "1.12.2",
+    "label": "Coloring Textures",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/color/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/models_using",
+    "version": "1.12.2",
+    "label": "Connecting Blocks and Items to Models",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/using/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/gettingstarted_debugprofiler",
+    "version": "1.12.2",
+    "label": "Debug Profiler",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/debugprofiler/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/gettingstarted_dependencymanagement",
+    "version": "1.12.2",
+    "label": "Dependency Management",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/dependencymanagement/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/gettingstarted_autoupdate",
+    "version": "1.12.2",
+    "label": "Forge Update Checker",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/autoupdate/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/gettingstarted",
+    "version": "1.12.2",
+    "label": "Getting Started with Forge",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/concepts_internationalization",
+    "version": "1.12.2",
+    "label": "Internationalization and localization",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/internationalization/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/models_introduction",
+    "version": "1.12.2",
+    "label": "Intro to Models",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/introduction/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/animation_intro",
+    "version": "1.12.2",
+    "label": "Intro to the Animation API",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/intro/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.12.2/models_overrides",
+    "version": "1.12.2",
+    "label": "Item Property Overrides",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/overrides/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/conventions_loadstages",
+    "version": "1.12.2",
+    "label": "Loading Stages",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/loadstages/",
+    "tags": [
+      "tag"
+    ],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/conventions_locations",
+    "version": "1.12.2",
+    "label": "Locations",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/locations/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 0
+  },
+  {
+    "id": "1.12.2/models_files",
+    "version": "1.12.2",
+    "label": "Model Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/files/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/utilities_oredictionary",
+    "version": "1.12.2",
+    "label": "OreDictionary",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/oredictionary/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.12.2/utilities_permissionapi",
+    "version": "1.12.2",
+    "label": "PermissionAPI",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/permissionapi/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/concepts_resources",
+    "version": "1.12.2",
+    "label": "Resources",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/resources/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.12.2/concepts_jarsigning",
+    "version": "1.12.2",
+    "label": "Signing a JAR",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/jarsigning/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.12.2/effects_sounds",
+    "version": "1.12.2",
+    "label": "Sounds",
+    "url": "https://docs.readthedocs.net/en/1.12.x/effects/sounds/",
+    "tags": [
+      "sounds"
+    ],
+    "priority": "🟢",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.12.2/gettingstarted_structuring",
+    "version": "1.12.2",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/structuring/",
+    "tags": [
+      "meta"
+    ],
+    "priority": "🟢",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.12.2/rendering_teisr",
+    "version": "1.12.2",
+    "label": "TileEntityItemStackRenderer",
+    "url": "https://docs.readthedocs.net/en/1.12.x/rendering/teisr/",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.12.2/animation_implementing",
+    "version": "1.12.2",
+    "label": "Using the API",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/implementing/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.12.2/conventions_versioning",
+    "version": "1.12.2",
+    "label": "Versioning",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/versioning/",
+    "tags": [
+      "meta"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.12.2/datastorage_worldsaveddata",
+    "version": "1.12.2",
+    "label": "World Saved Data",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/worldsaveddata/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  }
+]

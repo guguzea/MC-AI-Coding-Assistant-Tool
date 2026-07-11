@@ -1,0 +1,1 @@
+# IForgeRegistry.ClearCallback

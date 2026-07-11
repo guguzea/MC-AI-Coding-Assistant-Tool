@@ -1,0 +1,157 @@
+# 网络通信（Forge 1.14.4）
+
+> Forge 1.14.4 使用 `SimpleNetworkWrapper`（而非 1.20.1 的 `SimpleChannel`）。
+
+## 核心概念
+
+```
+SimpleNetworkWrapper          → 网络通道（类似频道）
+IMessage                      → 消息接口
+PacketBuffer                  → 缓冲区（1.20.1 用 PacketByteBuf）
+NetworkEvent.Context          → 消息上下文
+```
+
+## 创建网络通道
+
+```java
+public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleChannel(
+    new ResourceLocation(MOD_ID, "main"),
+    () -> PROTOCOL_VERSION,        // 客户端接受的最低协议版本
+    PROTOCOL_VERSION::equals,      // 验证客户端版本
+    PROTOCOL_VERSION::equals        // 验证服务端版本
+);
+
+private static final String PROTOCOL_VERSION = "1.0.0";
+private static int msgId = 0;
+
+// 注册消息
+public static void register() {
+    INSTANCE.registerMessage(
+        msgId++,                    // 消息 ID
+        MyMessage.class,            // 消息类
+        MyMessage::toBytes,         // 序列化
+        MyMessage::new,             // 反序列化（构造函数引用）
+        MyMessage::handle           // 处理逻辑
+    );
+}
+```
+
+## 消息类结构
+
+```java
+public class MyMessage implements IMessage {
+    private int value;
+    private ResourceLocation targetId;
+
+    public MyMessage() {} // 必须有无参构造函数
+
+    public MyMessage(int value, ResourceLocation targetId) {
+        this.value = value;
+        this.targetId = targetId;
+    }
+
+    @Override
+    public void toBytes(PacketBuffer buf) {
+        buf.writeInt(value);
+        buf.writeResourceLocation(targetId);
+    }
+
+    @Override
+    public void fromBytes(PacketBuffer buf) {
+        this.value = buf.readInt();
+        this.targetId = buf.readResourceLocation();
+    }
+}
+```
+
+## 消息处理
+
+```java
+public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        // 在主线程执行游戏逻辑
+        NetworkEvent.Context context = ctx.get();
+        PlayerEntity player = context.getSender();
+        if (player != null) {
+            // 服务端处理（从客户端发来的消息）
+        }
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+## 发送消息
+
+```java
+// 客户端 → 服务端
+INSTANCE.sendToServer(message);
+
+// 服务端 → 单个玩家
+INSTANCE.sendTo(message, player, NetworkDirection.PLAY_TO_CLIENT);
+
+// 服务端 → 所有玩家
+INSTANCE.sendToAll(message);
+
+// 服务端 → 附近玩家
+for (ServerPlayerEntity player : world.getPlayers()) {
+    if (player.getDistanceSq(pos) < 64*64) {
+        INSTANCE.sendTo(message, player, NetworkDirection.PLAY_TO_CLIENT);
+    }
+}
+```
+
+## Decision: 选择消息方向
+
+```
+IF 客户端触发、服务端处理（C2S）
+  → 客户端调用 sendToServer()
+  → 服务端 handler 处理
+
+IF 服务端触发、单个玩家处理（S2C）
+  → 服务端调用 sendTo(player, ..., PLAY_TO_CLIENT)
+
+IF 服务端触发、所有玩家处理（S2C 全服）
+  → 服务端调用 sendToAll()
+```
+
+## 自动消息方向推断
+
+Forge 1.14.4 可以省略 `NetworkDirection`：
+
+```java
+// 简化版（自动推断方向）
+INSTANCE.sendToServer(message);  // C2S
+INSTANCE.sendToAll(message);       // S2C 全服
+
+// 但 sendTo 需要指定方向
+INSTANCE.sendTo(message, player, NetworkDirection.PLAY_TO_CLIENT);
+```
+
+## NBTTagCompound 数据包
+
+复杂数据可使用 NBT：
+
+```java
+// 发送
+NBTTagCompound nbt = new NBTTagCompound();
+nbt.putString("key", "value");
+INSTANCE.sendToServer(new NBTPacket(nbt));
+
+// 消息类
+public class NBTPacket implements IMessage {
+    private NBTTagCompound nbt;
+    public NBTPacket() {}
+    public NBTPacket(NBTTagCompound nbt) { this.nbt = nbt; }
+    @Override public void toBytes(PacketBuffer buf) { buf.writeNbt(nbt); }
+    @Override public void fromBytes(PacketBuffer buf) { this.nbt = buf.readNbt(); }
+}
+```
+
+## 常见错误
+
+- ❌ `SimpleChannel`（1.20.1）→ Forge 1.14.4 用 `SimpleNetworkWrapper`
+- ❌ `PacketByteBuf`（1.20.1）→ Forge 1.14.4 用 `PacketBuffer`
+- ❌ 消息 ID 冲突：每个消息 ID 必须唯一
+- ❌ 在网络线程直接修改世界：必须在 `enqueueWork()` 中执行
+- ❌ `sendToServer()` 在服务端调用：会导致 NPE
+- ❌ 消息类缺少无参构造函数：反序列化失败

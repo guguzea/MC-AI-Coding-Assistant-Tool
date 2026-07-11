@@ -1,0 +1,10 @@
+---
+title: "NoiseGeneratorImproved"
+description: ""
+package: "net/minecraft/world/gen"
+version: "1.10.2"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraft/world/gen/NoiseGeneratorImproved.html"
+sourceType: javadoc
+---
+
+# NoiseGeneratorImproved

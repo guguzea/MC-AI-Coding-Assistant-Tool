@@ -1,0 +1,306 @@
+{
+  "1.19.4/gettingstarted": {
+    "label": "Getting Started",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gettingstarted",
+    "file": "gettingstarted.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gettingstarted/structuring": {
+    "label": "Structuring",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gettingstarted/structuring",
+    "file": "gettingstarted_structuring.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gettingstarted/modfiles": {
+    "label": "The Mod Files",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gettingstarted/modfiles",
+    "file": "gettingstarted_modfiles.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gettingstarted/versioning": {
+    "label": "Versioning",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gettingstarted/versioning",
+    "file": "gettingstarted_versioning.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/registries": {
+    "label": "Registries",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/registries",
+    "file": "concepts_registries.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/sides": {
+    "label": "Sides",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/sides",
+    "file": "concepts_sides.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/lifecycle": {
+    "label": "Lifecycle",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/lifecycle",
+    "file": "concepts_lifecycle.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/resources": {
+    "label": "Resources",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/resources",
+    "file": "concepts_resources.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/events": {
+    "label": "Events",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/events",
+    "file": "concepts_events.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/concepts/internationalization": {
+    "label": "Internationalization",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/concepts/internationalization",
+    "file": "concepts_internationalization.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/datastorage/capabilities": {
+    "label": "Capabilities",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/datastorage/capabilities",
+    "file": "datastorage_capabilities.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/datastorage/saveddata": {
+    "label": "Saved Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/datastorage/saveddata",
+    "file": "datastorage_saveddata.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/datastorage/codecs": {
+    "label": "Codecs",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/datastorage/codecs",
+    "file": "datastorage_codecs.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/items": {
+    "label": "Items",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/items",
+    "file": "items.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/items/bewlr": {
+    "label": "BEWLR",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/items/bewlr",
+    "file": "items_bewlr.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/blocks": {
+    "label": "Blocks",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/blocks",
+    "file": "blocks.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/blocks/states": {
+    "label": "Block States",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/blocks/states",
+    "file": "blocks_states.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/blockentities": {
+    "label": "Block Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/blockentities",
+    "file": "blockentities.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/blockentities/ber": {
+    "label": "BlockEntityRenderer",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/blockentities/ber",
+    "file": "blockentities_ber.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/networking": {
+    "label": "Networking",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/networking",
+    "file": "networking.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/networking/simpleimpl": {
+    "label": "SimpleImpl",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/networking/simpleimpl",
+    "file": "networking_simpleimpl.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/networking/entities": {
+    "label": "Synchronizing Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/networking/entities",
+    "file": "networking_entities.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gameeffects/particles": {
+    "label": "Particles",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gameeffects/particles",
+    "file": "gameeffects_particles.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gameeffects/sounds": {
+    "label": "Sounds",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gameeffects/sounds",
+    "file": "gameeffects_sounds.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/datagen": {
+    "label": "Data Generation",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/datagen",
+    "file": "datagen.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/resources/client": {
+    "label": "Client Assets",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/resources/client",
+    "file": "resources_client.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/resources/server": {
+    "label": "Server Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/resources/server",
+    "file": "resources_server.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/rendering/modelloaders": {
+    "label": "Model Loaders",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/rendering/modelloaders",
+    "file": "rendering_modelloaders.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gui/menus": {
+    "label": "Menus",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gui/menus",
+    "file": "gui_menus.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/gui/screens": {
+    "label": "Screens",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/gui/screens",
+    "file": "gui_screens.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/misc/config": {
+    "label": "Configuration",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/misc/config",
+    "file": "misc_config.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/misc/debugprofiler": {
+    "label": "Debug Profiler",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/misc/debugprofiler",
+    "file": "misc_debugprofiler.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/misc/gametest": {
+    "label": "Game Tests",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/misc/gametest",
+    "file": "misc_gametest.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/misc/keymappings": {
+    "label": "Key Mappings",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/misc/keymappings",
+    "file": "misc_keymappings.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/misc/updatechecker": {
+    "label": "Forge Update Checker",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/misc/updatechecker",
+    "file": "misc_updatechecker.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/legacy": {
+    "label": "Legacy",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/legacy",
+    "file": "legacy.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/legacy/porting": {
+    "label": "Porting",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/legacy/porting",
+    "file": "legacy_porting.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  },
+  "1.19.4/advanced/accesstransformers": {
+    "label": "Access Transformers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.19.4/advanced/accesstransformers",
+    "file": "advanced_accesstransformers.md",
+    "fetchedAt": "2026-05-10T00:00:00.000Z",
+    "size": 0
+  }
+}

@@ -1,0 +1,1 @@
+# ILanguageAdapter.JavaAdapter

@@ -1,0 +1,886 @@
+{
+  "1.20.4/gettingstarted": {
+    "label": "Getting Started",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gettingstarted",
+    "file": "gettingstarted.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 6497,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gettingstarted/structuring": {
+    "label": "Structuring",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gettingstarted/structuring",
+    "file": "gettingstarted_structuring.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4767,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gettingstarted/modfiles": {
+    "label": "The Mod Files",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gettingstarted/modfiles",
+    "file": "gettingstarted_modfiles.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 11439,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gettingstarted/versioning": {
+    "label": "Versioning",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gettingstarted/versioning",
+    "file": "gettingstarted_versioning.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4420,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/registries": {
+    "label": "Registries",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/registries",
+    "file": "concepts_registries.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 14358,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/sides": {
+    "label": "Sides",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/sides",
+    "file": "concepts_sides.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 11981,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/lifecycle": {
+    "label": "Lifecycle",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/lifecycle",
+    "file": "concepts_lifecycle.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4121,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/resources": {
+    "label": "Resources",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/resources",
+    "file": "concepts_resources.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2475,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/events": {
+    "label": "Events",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/events",
+    "file": "concepts_events.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 8783,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/concepts/internationalization": {
+    "label": "Internationalization",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/concepts/internationalization",
+    "file": "concepts_internationalization.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4770,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datastorage/capabilities": {
+    "label": "Capabilities",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datastorage/capabilities",
+    "file": "datastorage_capabilities.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 11724,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datastorage/saveddata": {
+    "label": "Saved Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datastorage/saveddata",
+    "file": "datastorage_saveddata.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2222,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datastorage/codecs": {
+    "label": "Codecs",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datastorage/codecs",
+    "file": "datastorage_codecs.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 17560,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/items": {
+    "label": "Items",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/items",
+    "file": "items.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3498,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/items/bewlr": {
+    "label": "BEWLR",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/items/bewlr",
+    "file": "items_bewlr.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1782,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/blocks": {
+    "label": "Blocks",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/blocks",
+    "file": "blocks.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4700,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/blocks/states": {
+    "label": "Block States",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/blocks/states",
+    "file": "blocks_states.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7398,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/blockentities": {
+    "label": "Block Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/blockentities",
+    "file": "blockentities.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7976,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/blockentities/ber": {
+    "label": "BlockEntityRenderer",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/blockentities/ber",
+    "file": "blockentities_ber.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1731,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/networking": {
+    "label": "Networking",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/networking",
+    "file": "networking.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 951,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/networking/simpleimpl": {
+    "label": "SimpleImpl",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/networking/simpleimpl",
+    "file": "networking_simpleimpl.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7257,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/networking/entities": {
+    "label": "Synchronizing Entities",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/networking/entities",
+    "file": "networking_entities.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2168,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gameeffects/particles": {
+    "label": "Particles",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gameeffects/particles",
+    "file": "gameeffects_particles.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 9865,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gameeffects/sounds": {
+    "label": "Sounds",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gameeffects/sounds",
+    "file": "gameeffects_sounds.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7223,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen": {
+    "label": "Data Generation",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen",
+    "file": "datagen.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4728,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/client/modelproviders": {
+    "label": "Model Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/client/modelproviders",
+    "file": "datagen_client_modelproviders.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 25627,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/client/localization": {
+    "label": "Language Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/client/localization",
+    "file": "datagen_client_localization.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1799,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/client/sounds": {
+    "label": "Sound Providers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/client/sounds",
+    "file": "datagen_client_sounds.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3783,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/recipes": {
+    "label": "Recipe Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/recipes",
+    "file": "datagen_server_recipes.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 10127,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/loottables": {
+    "label": "Loot Table Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/loottables",
+    "file": "datagen_server_loottables.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 8267,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/tags": {
+    "label": "Tag Providers",
+    "priority": "⭐",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/tags",
+    "file": "datagen_server_tags.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 5389,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/advancements": {
+    "label": "Advancement Providers",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/advancements",
+    "file": "datagen_server_advancements.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3575,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/glm": {
+    "label": "GLM Providers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/glm",
+    "file": "datagen_server_glm.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1097,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/datagen/server/datapackregistries": {
+    "label": "Datapack Registry",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/datagen/server/datapackregistries",
+    "file": "datagen_server_datapackregistries.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 5457,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/client": {
+    "label": "Client Assets",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/client",
+    "file": "resources_client.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1029,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/client/models": {
+    "label": "Models",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/client/models",
+    "file": "resources_client_models.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2258,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/client/models/itemproperties": {
+    "label": "Item Properties",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/client/models/itemproperties",
+    "file": "resources_client_models_itemproperties.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4076,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/client/models/tinting": {
+    "label": "Texture Tinting",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/client/models/tinting",
+    "file": "resources_client_models_tinting.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2921,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server": {
+    "label": "Server Data",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server",
+    "file": "resources_server.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 902,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/recipes": {
+    "label": "Recipes",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/recipes",
+    "file": "resources_server_recipes.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4590,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/recipes/ingredients": {
+    "label": "Ingredients",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/recipes/ingredients",
+    "file": "resources_server_recipes_ingredients.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 6514,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/recipes/incode": {
+    "label": "Non-Datapack Recipes",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/recipes/incode",
+    "file": "resources_server_recipes_incode.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3969,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/loottables": {
+    "label": "Loot Tables",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/loottables",
+    "file": "resources_server_loottables.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 5174,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/glm": {
+    "label": "Global Loot Modifiers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/glm",
+    "file": "resources_server_glm.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7642,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/tags": {
+    "label": "Tags",
+    "priority": "🟡",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/tags",
+    "file": "resources_server_tags.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 7014,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/advancements": {
+    "label": "Advancements",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/advancements",
+    "file": "resources_server_advancements.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 8063,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/resources/server/conditional": {
+    "label": "Conditionally-Loaded Data",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/resources/server/conditional",
+    "file": "resources_server_conditional.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 6026,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelloaders": {
+    "label": "Model Loaders",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelloaders",
+    "file": "rendering_modelloaders.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2172,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelloaders/bakedmodel": {
+    "label": "Baked Model",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelloaders/bakedmodel",
+    "file": "rendering_modelloaders_bakedmodel.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4634,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelloaders/transform": {
+    "label": "Model Transform",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelloaders/transform",
+    "file": "rendering_modelloaders_transform.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3003,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelloaders/itemoverrides": {
+    "label": "Item Overrides",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelloaders/itemoverrides",
+    "file": "rendering_modelloaders_itemoverrides.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1964,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelextensions/transforms": {
+    "label": "Root Transforms",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelextensions/transforms",
+    "file": "rendering_modelextensions_transforms.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3418,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelextensions/rendertypes": {
+    "label": "Render Types",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelextensions/rendertypes",
+    "file": "rendering_modelextensions_rendertypes.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4423,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelextensions/visibility": {
+    "label": "Part Visibility",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelextensions/visibility",
+    "file": "rendering_modelextensions_visibility.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1970,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/rendering/modelextensions/facedata": {
+    "label": "Face Data",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/rendering/modelextensions/facedata",
+    "file": "rendering_modelextensions_facedata.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 4171,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gui/menus": {
+    "label": "Menus",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gui/menus",
+    "file": "gui_menus.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 17957,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/gui/screens": {
+    "label": "Screens",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/gui/screens",
+    "file": "gui_screens.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 21310,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/misc/config": {
+    "label": "Configuration",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/misc/config",
+    "file": "misc_config.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 5986,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/misc/debugprofiler": {
+    "label": "Debug Profiler",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/misc/debugprofiler",
+    "file": "misc_debugprofiler.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2638,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/misc/gametest": {
+    "label": "Game Tests",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/misc/gametest",
+    "file": "misc_gametest.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 12925,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/misc/keymappings": {
+    "label": "Key Mappings",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/misc/keymappings",
+    "file": "misc_keymappings.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 8847,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/misc/updatechecker": {
+    "label": "Forge Update Checker",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/misc/updatechecker",
+    "file": "misc_updatechecker.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3798,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/legacy": {
+    "label": "Legacy",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/legacy",
+    "file": "legacy.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 3109,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/legacy/porting": {
+    "label": "Porting",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/legacy/porting",
+    "file": "legacy_porting.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 1193,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/advanced/accesstransformers": {
+    "label": "Access Transformers",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/advanced/accesstransformers",
+    "file": "advanced_accesstransformers.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 5108,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/forgedev": {
+    "label": "Contributing to Forge",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/forgedev",
+    "file": "forgedev.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 8813,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/forgedev/prguidelines": {
+    "label": "Pull Request Guidelines",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/forgedev/prguidelines",
+    "file": "forgedev_prguidelines.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 6218,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  },
+  "1.20.4/contributing": {
+    "label": "Contributing to Docs",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.4/contributing",
+    "file": "contributing.md",
+    "fetchedAt": "2026-07-11T00:00:00.000Z",
+    "size": 2074,
+    "provenance": {
+      "sourceBase": "https://docs.minecraftforge.net/en/1.20.x/",
+      "fetchedAt": "2026-07-11T00:00:00.000Z",
+      "derivation": "Frontmatter / index `version` field originally pinned to 1.20.1 by link-forge-1.20.4-from-1.20.1.js copy; the canonical Forge mkdocs route for the 1.20.4 release is /en/1.20.x/. Phase-6 repair on 2026-07-11 rewrites version/id/url and re-stamps provenance."
+    }
+  }
+}

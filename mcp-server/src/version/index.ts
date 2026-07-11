@@ -14,6 +14,7 @@ export interface VersionQuery {
 export interface VersionInfo {
   version: string;
   forgeVersion: string;
+  note?: string;
   recommendation: string;
   keyChanges: string[];
   gotchas: string[];
@@ -25,6 +26,25 @@ export interface VersionInfo {
 }
 
 const VERSION_DB: Record<string, VersionInfo> = {
+  "1.20.4": {
+    version: "1.20.4",
+    forgeVersion: "47.x",
+    note: "Forge 1.20.4 为最后一个官方版本，之后转向 NeoForge",
+    recommendation: "Forge 1.20.4 + NeoForge 20.4.237，与 1.20.1 API 基本兼容",
+    keyChanges: [
+      "Forge 1.20.4 为最后官方版，后续 NeoForge 维护",
+      "与 1.20.1 注册 API 相同",
+    ],
+    gotchas: [
+      "1.20.4 之后应使用 NeoForge 而非 Forge",
+      "NeoForge 包名从 net.minecraftforge 迁移到 net.neoforged",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.20.4.html",
+      parchmentMappings: "https://mappings.xhyrom.dev/1.20.4/",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.20.4",
+    },
+  },
   "1.20.1": {
     version: "1.20.1",
     forgeVersion: "47.x",
@@ -33,13 +53,10 @@ const VERSION_DB: Record<string, VersionInfo> = {
       "DeferredRegister 支持 Vanilla Registry（通过 ResourceKey）",
       "BlockBehaviour.Properties 推荐使用 .of() 静态工厂",
       "CreativeModeTab 使用 DeferredRegister 注册",
-      "SwordItem 构造函数（来源：MCP 层，非 Yarn）：new SwordItem(Tier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)",
-      "  最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）",
     ],
     gotchas: [
-      "1.20.1 的 DeferredRegister vs 1.20.5+ DeferredRegister：API 完全一致，无需区分",
       "EntityType.Builder.build() 接受 String 参数，不是 Direction",
-      "属性注册使用 ForgeRegistries.Keys.ATTRIBUTES，不是 ForgeRegistries.ATTRIBUTES",
+      "属性注册使用 ForgeRegistries.Keys.ATTRIBUTES",
     ],
     links: {
       forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html",
@@ -62,6 +79,104 @@ const VERSION_DB: Record<string, VersionInfo> = {
       forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.19.4.html",
       parchmentMappings: "https://mappings.xhyrom.dev/1.19.4/",
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.19.4",
+    },
+  },
+  "1.18.2": {
+    version: "1.18.2",
+    forgeVersion: "40.x",
+    recommendation: "DeferredRegister 成为主流写法，但 RegistryEvent.Register<T> 仍可用",
+    keyChanges: [
+      "Java 16 → Java 17",
+      "DeferredRegister 广泛使用",
+      "ForgeGradle 7 项目结构稳定",
+    ],
+    gotchas: [
+      "数据生成器（DataGenerator）架构与 1.17.x 有差异",
+      "Capability API 基本稳定",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.18.2.html",
+      parchmentMappings: "https://mappings.xhyrom.dev/1.18.2/",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.18.2",
+    },
+  },
+  "1.17.1": {
+    version: "1.17.1",
+    forgeVersion: "37.x",
+    recommendation: "DeferredRegister 正式引入，推荐使用",
+    keyChanges: [
+      "Java 8 → Java 16（必须）",
+      "ForgeGradle 7 完全重构",
+      "DeferredRegister 正式引入",
+      "数据生成器完全重构",
+      "包名从 net.minecraftforge 保持，但结构变化大",
+    ],
+    gotchas: [
+      "项目结构与 1.16.x 完全不兼容",
+      "必须使用 Java 16+ 编译",
+      "推荐使用 Parchment mappings 获取参数名",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.17.1.html",
+      parchmentMappings: "https://mappings.xhyrom.dev/1.17.1/",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.17.1",
+    },
+  },
+  "1.16.5": {
+    version: "1.16.5",
+    forgeVersion: "36.x",
+    recommendation: "RegistryEvent.Register<T> + 旧版注册方式",
+    keyChanges: [
+      "MCP 可选切换为 MojMaps",
+      "包名使用混淆前的 SRG 名称",
+    ],
+    gotchas: [
+      "使用 MCP mappings 时类名与方法名与 Mojang 名不同",
+      "切换为 MojMaps 后需重新理解混淆名",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.16.5.html",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.16.5",
+    },
+  },
+  "1.14.4": {
+    version: "1.14.4",
+    forgeVersion: "26.x",
+    recommendation: "ForgeGradle 3 项目结构，资源加载 API 完全重构",
+    keyChanges: [
+      "项目结构完全重写（ForgeGradle 2.x → 3.x）",
+      "资源加载 API 完全重构",
+      "新注册方式引入",
+    ],
+    gotchas: [
+      "与 1.12.x 的代码完全不兼容",
+      "需要从头创建项目",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.14.4.html",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.14.4",
+    },
+  },
+  "1.12.2": {
+    version: "1.12.2",
+    forgeVersion: "14.23.x",
+    recommendation: "Legacy 版本，使用 @SubscribeEvent + RegistryEvent",
+    keyChanges: [
+      "mcmod.info → mods.toml",
+      "@ForgeSubscribe → @SubscribeEvent",
+      "Legacy 注册方式",
+    ],
+    gotchas: [
+      "ForgeGradle 1.x/2.x 项目结构",
+      "Java 8",
+      "不支持 DeferredRegister",
+    ],
+    links: {
+      forgeChangelog: "",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.12.2",
     },
   },
 };

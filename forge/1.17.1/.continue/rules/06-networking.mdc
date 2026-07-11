@@ -1,0 +1,79 @@
+# 06 — 网络通信
+
+> 适用版本：Forge 1.17.1
+
+---
+
+## 约束
+
+### 物理端约束（最重要）
+
+- **所有网络包只能在物理端分隔的类中使用**
+- 禁止在客户端包类中直接访问服务端独有类
+- 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
+- 使用 `level.isClientSide` 判断当前逻辑端
+
+### SimpleChannel 配置
+
+```java
+private static final String PROTOCOL_VERSION = "1.0";
+public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+    new ResourceLocation(MOD_ID, "main"),
+    () -> PROTOCOL_VERSION,
+    PROTOCOL_VERSION::equals,
+    PROTOCOL_VERSION::equals
+);
+```
+
+---
+
+## 示例：消息类定义
+
+```java
+public class MyMessage implements IMessage {
+    private int value;
+
+    public MyMessage() {}  // 必须有无参构造函数
+
+    public MyMessage(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public void toBytes(PacketByteBuf buf) {
+        buf.writeInt(value);
+    }
+
+    @Override
+    public void fromBytes(PacketByteBuf buf) {
+        this.value = buf.readInt();
+    }
+}
+```
+
+## 示例：消息处理器
+
+```java
+public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ServerPlayer sender = ctx.get().getSender();
+        if (sender != null) {
+        }
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+## 示例：注册和发送
+
+```java
+public static void register() {
+    INSTANCE.registerMessage(0, MyMessage.class, MyMessage::toBytes, MyMessage::new, MyMessage::handle);
+}
+
+public static void sendTo(ServerPlayer player, MyMessage message) {
+    INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+}
+```
+
+> 重要：收到消息后**永远不要**直接修改世界或实体。必须用 `enqueueWork()` 将操作排队到主线程执行。

@@ -1,0 +1,200 @@
+# 00 — 项目结构与构建
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Java 版本
+
+- **必须使用 Java 8**（Forge 1.12.2 要求；Java 9+ 不兼容）
+- `build.gradle` 中使用 `sourceCompatibility = '1.8'` 和 `targetCompatibility = '1.8'`
+- IDE（IDEA / VSCode）需配置 JDK 8
+
+### Gradle 约束
+
+#### 禁止的操作
+
+- ❌ 不要手动运行 `build` 任务以外的 Gradle 命令
+- ❌ 不要修改 `build.gradle` 中的 `version` 和 `mc_version` 配置块
+- ❌ 不要混用 Fabric 的 `loom` 插件和 Forge 的 `forge` 插件
+- ❌ 不要使用 Java 9+ 语法（lambda 表达式可以，但不要用 `var`、模块系统等）
+
+#### 正确的构建命令
+
+```bash
+# 首次构建（下载所有依赖，耗时较长）
+./gradlew build
+
+# 跳过测试构建
+./gradlew build --no-build-cache --rerun-tasks
+
+# 仅重新编译资源文件
+./gradlew processResources
+
+# 在 IDEA 中同步项目后，使用 IDE 内置构建
+```
+
+### 版本号管理
+
+- 所有版本号集中在 `gradle.properties` 管理，不硬编码在 `build.gradle`
+- `gradle.properties` 必须包含：
+
+```properties
+# ---- Minecraft / Forge 版本（必须与 Forge 版本匹配）----
+mc_version=1.12.2
+forge_version=14.23.5.2847
+mcp_version=stable_22
+```
+
+### Mappings 约束
+
+- Forge 1.12.2 使用 **MCP SRG** 映射
+- `gradle.properties` 中的 `mcp_version` 对应 MCP 版本
+- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_70024_e` → `getHealth`
+
+### 项目目录结构（强制规范）
+
+```
+src/main/java/
+└── {groupId}/           # 例：com.example.mod
+    ├── ExampleMod.java  # @Mod 入口类，@Init 方法
+    ├── registry/        # 注册类（@EventBusSubscriber）
+    ├── blocks/         # 方块类
+    ├── items/          # 物品类
+    ├── entities/       # 实体类
+    ├── init/           # 事件订阅类
+    └── client/         # 客户端专用代码（可选）
+
+src/main/resources/
+├── mcmod.info          # Forge 元数据（必需）
+├── pack.mcmeta         # 资源包标识（必需）
+└── assets/
+    └── {modid}/       # 资源文件
+        ├── lang/
+        ├── models/
+        ├── blockstates/
+        └── textures/
+```
+
+---
+
+## Decision Flow
+
+### Decision: 选择项目初始化方式
+
+```
+IF 这是新项目（没有 build.gradle）
+  → 使用 forge/1.12.2/scaffold/ 中的模板生成项目骨架
+  → README_AI.md 包含每个文件的职责说明
+
+IF 这是已有项目
+  → 读取 gradle.properties 获取版本配置
+  → 读取 build.gradle 确认 mappings 和插件配置
+  → 读取 mcmod.info 确认 modId
+
+IF 构建失败且报错涉及版本号
+  → 检查 gradle.properties 中的版本是否匹配
+  → 典型错误：「net.minecraftforge.fml.loading.FMLError」通常是 forge_version 不兼容
+```
+
+### Decision: 遇到 Gradle 构建报错时的处理顺序
+
+```
+IF 报错包含 "Could not resolve net.minecraftforge"
+  → 检查网络连接，或配置 Maven 镜像
+  → 检查 gradle.properties 中 forge_version 是否有效
+
+IF 报错包含 "Incompatible Java version"
+  → 确认使用 Java 8，不兼容 Java 9+
+
+IF 报错包含 "Could not find net.minecraftforge:forge"
+  → 确认 build.gradle 中 mc_version 和 forge_version 版本匹配
+  → Forge 版本对应关系：1.12.2 → 14.23.5.x
+
+IF 以上都不匹配
+  → 将完整报错信息提供给用户，并指出可能的解决方向
+```
+
+---
+
+## 示例：正确的 build.gradle 结构（Forge 1.12.2）
+
+```groovy
+buildscript {
+    repositories {
+        maven { url = "https://maven.minecraftforge.net/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+    }
+}
+apply plugin: 'forge'
+
+version = mod_version
+group = mod_group_id
+archivesBaseName = mod_id
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    runDir = "run"
+    mappings = "${mcp_channel},${mcp_version}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // mod 依赖
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", mc_version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':mc_version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+```
+
+---
+
+## mcmod.info 字段说明
+
+生成或修改 `mcmod.info` 时，关注以下字段：
+
+```json
+[{
+  "modid": "examplemod",
+  "name": "Example Mod",
+  "description": "Example mod description.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["YourNameHere"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["forge@[${forge_version},)"]
+}]
+```
+
+- `modId` 禁止包含 `-`，必须全小写
+- `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
+- `dependencies` 中的 Forge 版本范围格式：`forge@[14.23.5,)`

@@ -29,10 +29,12 @@ forge "47.2.0"
 ```
 # fabric.mod.json 中有：
 "schemaVersion": 1,
-"loader": "fabric-mod-json"
+"id": "examplemod",
+"entrypoints": { "main": [...] }
 
 # build.gradle 中有：
-loom.platform = "fabric"
+id 'fabric-loom'
+loom { ... }
 ```
 
 如果匹配 → 跳转到 `fabric/1.20.1/AGENTS.md`
@@ -156,6 +158,9 @@ Decision: 选择注册方式
 | `generate_datagen` | 生成数据生成器代码 |
 | `crash_analyze` | 分析崩溃日志，定位问题原因 |
 | `validate_project` | 校验模组项目结构 |
+| `search_fabric_docs` | 搜索 Fabric Docs + Wiki |
+| `get_fabric_doc_summary` | 获取 Fabric 文档摘要 |
+| `get_fabric_doc_full` | 获取 Fabric 文档全文 |
 | `search_forge_docs` | 搜索 Forge 官方文档 |
-| `get_forge_doc_summary` | 获取文档摘要 |
-| `get_forge_doc_full` | 获取文档全文 |
+| `get_forge_doc_summary` | 获取 Forge 文档摘要 |
+| `get_forge_doc_full` | 获取 Forge 文档全文 |

@@ -1,0 +1,257 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.12.2
+> 本文件收集 MC Mod 开发中的常见错误模式，每条含错误症状和正确方案。
+
+---
+
+## 注册相关
+
+### ❌ 在静态字段初始化中注册实体
+
+```java
+// 错误
+public class MyMod {
+    public static final EntityEntry MY_ENTITY = new EntityEntry(...); // ❌ 太早，Registry 未就绪
+}
+```
+
+**错误症状**：`NullPointerException` 或实体注册失败
+
+**正确方案**：使用 `@EventBusSubscriber` + `RegistryEvent.Register<EntityEntry>`
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModEntities {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<EntityEntry> event) {
+        event.getRegistry().register(
+            EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+                .setRegistryName(MOD_ID, "my_entity")
+                .build(MOD_ID + ":my_entity")
+        );
+    }
+}
+```
+
+---
+
+### ❌ 使用 `new Block()` 直接注册（未通过 RegistryEvent）
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到游戏
+```
+
+**错误症状**：方块在世界显示为缺失方块（紫色黑色格子）
+
+**正确方案**：通过 `RegistryEvent.Register<Block>` 注册
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModBlocks {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Block> event) {
+        event.getRegistry().register(
+            new Block(Block.Properties.create(Material.ROCK))
+                .setRegistryName(MOD_ID, "my_block")
+        );
+    }
+}
+```
+
+---
+
+### ❌ mod ID 不一致
+
+```java
+// mcmod.info 中
+"modid": "examplemod"
+
+// 代码中
+private static final String MOD_ID = "ExampleMod"; // ❌ 大写，与 mcmod.info 不一致
+```
+
+**错误症状**：`RuntimeException: Unable to load a minecraft component`
+
+**正确方案**：确保所有地方使用完全相同的 mod ID（全小写）
+
+```java
+private static final String MOD_ID = "examplemod";
+```
+
+---
+
+## 方块/TileEntity 相关
+
+### ❌ 在 TileEntity 构造函数中访问 world
+
+```java
+// 错误
+public MyTileEntity() {
+    super();
+    World world = this.getWorld(); // ❌ world 可能为 null
+}
+```
+
+**错误症状**：`NullPointerException`，TileEntity 数据异常
+
+**正确方案**：在 `update()` 或 `readFromNBT()` 中处理需要 world 的逻辑
+
+```java
+@Override
+public void update() {
+    if (!this.world.isRemote) {
+        // 基于世界的初始化逻辑
+    }
+}
+```
+
+---
+
+### ❌ 忘记注册 TileEntity
+
+```java
+// 错误
+// 方块实现了 createTileEntity() 但没有注册
+```
+
+**错误症状**：`TileEntity for my_block does not exist` 错误
+
+**正确方案**：在 `FMLInitializationEvent` 之前注册 TileEntity
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModTileEntities {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<TileEntity> event) {
+        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
+    }
+}
+```
+
+---
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未切换线程）
+
+```java
+// 错误
+public static void onMessage(MyMessage msg, MessageContext ctx) {
+    ctx.getServerHandler().player.getEntityWorld().setBlockState(pos, Blocks.AIR.getDefaultState()); // ❌ 不安全
+}
+```
+
+**错误症状**：异步修改世界导致数据损坏或崩溃
+
+**正确方案**：将操作发送到主线程
+
+```java
+public static void onMessage(MyMessage msg, MessageContext ctx) {
+    if (ctx.side == EnumFacing.EnumFacingSide.SERVER) {
+        ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
+            // 修改世界的操作
+        });
+    }
+}
+```
+
+---
+
+## 事件相关
+
+### ❌ 在 TickEvent 中执行重操作
+
+```java
+// 错误
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        for (Entity entity : world.getEntities(Entity.class, predicate)) { // ❌ 每 tick 遍历所有实体
+            processHeavy(entity);
+        }
+    }
+}
+```
+
+**错误症状**：服务端严重卡顿，TPS 下降
+
+**正确方案**：使用计数器分散负载
+
+```java
+private int tickCounter = 0;
+
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        tickCounter++;
+        if (tickCounter % 20 == 0) {  // 每秒处理一次
+            scheduleProcessing();
+        }
+    }
+}
+```
+
+---
+
+## 生命周期相关
+
+### ❌ 在 `FMLInitializationEvent` 中执行游戏逻辑修改世界
+
+```java
+// 错误
+@Mod.EventHandler
+public void init(FMLInitializationEvent event) {
+    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ FMLInitializationEvent 不是正确的初始化时机
+}
+```
+
+**错误症状**：游戏崩溃或数据不同步
+
+**正确方案**：
+- 使用事件驱动的逻辑（如 `PlayerLoggedInEvent`）
+- 或在服务端 tick 中处理
+
+---
+
+## 资源文件相关
+
+### ❌ 资源路径大小写错误
+
+```json
+// 错误
+"textures/item/MyItem.png"  // ❌ 大写
+
+// 正确
+"textures/item/my_item.png"  // 全部小写
+```
+
+**错误症状**：材质不加载，显示紫色黑色格子
+
+---
+
+### ❌ pack_format 版本错误
+
+```json
+// 错误（1.12.2 用 4，不是 15）
+"pack_format": 15
+
+// 正确
+"pack_format": 4
+```
+
+**错误症状**：资源包无法加载
+
+---
+
+## 工具提示
+
+当遇到错误时，按以下顺序排查：
+
+1. `09-anti-patterns.mdc` — 是否是已知错误模式
+2. 检查 `mcmod.info` 语法和 mod ID 是否一致
+3. 检查资源文件路径是否全小写
+4. 检查是否混用了服务端和客户端线程
+5. 检查 pack_format 是否正确（1.12.2 = 4）
+6. 检查 Registry 注册是否通过事件系统

@@ -1,0 +1,25 @@
+{
+  "version": "1.17.1",
+  "fetchedAt": "2026-05-30T16:35:46.668Z",
+  "game": {
+    "version": "1.17.1",
+    "stable": true
+  },
+  "loader": {
+    "version": "0.11.7",
+    "stable": false,
+    "separator": ".",
+    "build": 7
+  },
+  "yarn": {
+    "version": "1.17.1+build.65",
+    "stable": false,
+    "maven": "net.fabricmc:yarn:1.17.1+build.65"
+  },
+  "installer": {
+    "version": "1.1.1",
+    "stable": true,
+    "url": "https://maven.fabricmc.net/net/fabricmc/fabric-installer/1.1.1/fabric-installer-1.1.1.jar",
+    "maven": "net.fabricmc:fabric-installer:1.1.1"
+  }
+}

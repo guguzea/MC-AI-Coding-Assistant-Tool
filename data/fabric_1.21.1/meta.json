@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "platform": "fabric",
+    "mcVersion": "1.21.1",
+    "fabricLoaderVersionRange": "0.15.x",
+    "loomVersion": "0.15.x",
+    "yarnBuild": "stable: #1050",
+    "compatibilityLevel": "JAVA_17",
+    "lastUpdated": "2026-05-27",
+    "note": "版本元信息。工具不读取此文件，仅供人工参考。",
+    "sources": {
+      "primary": "https://docs.fabricmc.net/develop/",
+      "wiki": "https://fabricmc.net/wiki/documentation:",
+      "meta": "https://meta.fabricmc.net/v2/versions"
+    },
+    "lastUpdatedAt": "2026-07-11",
+    "fetchedAt": "2026-07-11T14:05:29.445Z",
+    "docs": {
+      "sourceRepo": "FabricMC/fabric-docs",
+      "branch": "main",
+      "archiveBranches": [
+        "1.21.1.x-archive",
+        "versions/1.21.1",
+        "archive/1.21.1",
+        "archive/1.21.1.x"
+      ],
+      "pages": [
+        {
+          "id": "networking",
+          "gitPath": "develop/networking.md",
+          "filename": "develop_networking.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/networking",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:33.978Z",
+          "sha256": "ddea2ffaf12d694823ab606e291db66ccff0889e471db92e502fae5417e00631",
+          "bytes": 11994
+        },
+        {
+          "id": "fabric-mod-json",
+          "gitPath": "develop/loader/fabric-mod-json.md",
+          "filename": "develop_loader_fabric-mod-json.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:36.446Z",
+          "sha256": "d3ca850d530adfe6d1bfe4a11cf6f3af08cece3749e3a371825a5850a8ffdb4b",
+          "bytes": 13140
+        },
+        {
+          "id": "items-first-item",
+          "gitPath": "develop/items/first-item.md",
+          "filename": "develop_items_first-item.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/items/first-item",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:38.028Z",
+          "sha256": "d9980f68ab6b627f8f38513311252dac469b66f29490f0012b45af72f9b6a64b",
+          "bytes": 8923
+        },
+        {
+          "id": "items-item-models",
+          "gitPath": "develop/items/item-models.md",
+          "filename": "develop_items_item-models.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/items/item-models",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:39.180Z",
+          "sha256": "4cf065ee88eb66564a56fe0f9985fc8006e8984ef62763115c75d23669627ed2",
+          "bytes": 7885
+        },
+        {
+          "id": "items-custom-tools",
+          "gitPath": "develop/items/custom-tools.md",
+          "filename": "develop_items_custom-tools.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/items/custom-tools",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:40.752Z",
+          "sha256": "9f8066e242597a2bb092a10659511b0fa1cd16c2d10bbc61ed07195d6133adce",
+          "bytes": 6347
+        },
+        {
+          "id": "blocks-first-block",
+          "gitPath": "develop/blocks/first-block.md",
+          "filename": "develop_blocks_first-block.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/blocks/first-block",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:42.541Z",
+          "sha256": "f99308d4e3538fdd7754a55b25c6d0af1af397c82a07b794e6e54808da16eec7",
+          "bytes": 9836
+        },
+        {
+          "id": "blocks-block-models",
+          "gitPath": "develop/blocks/block-models.md",
+          "filename": "develop_blocks_block-models.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/blocks/block-models",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:45.836Z",
+          "sha256": "8e9976f8cbdaa4b9ae2a2ab31e9288b51d47d824d7877f25d5ad3b28d4a5548c",
+          "bytes": 7724
+        },
+        {
+          "id": "blocks-block-entities",
+          "gitPath": "develop/blocks/block-entities.md",
+          "filename": "develop_blocks_block-entities.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/blocks/block-entities",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:47.066Z",
+          "sha256": "f0d17654186e99bf0235aae348de62611a3e73b88c252474b9a2974d78bf5ec4",
+          "bytes": 9849
+        },
+        {
+          "id": "events",
+          "gitPath": "develop/events.md",
+          "filename": "develop_events.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/events",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:48.132Z",
+          "sha256": "cbf4152cafd4ea702a0c50175a133228d46dc811086c15550eba9cea7f2d1d6f",
+          "bytes": 8679
+        },
+        {
+          "id": "entities-first-entity",
+          "gitPath": "develop/entities/first-entity.md",
+          "filename": "develop_entities_first-entity.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/entities/first-entity",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:51.772Z",
+          "sha256": "c6382f4cd88e1d734087e3c4c9fe2c1862e7f17a9e33f87cd5b3dd3aa8a6399f",
+          "bytes": 20181
+        },
+        {
+          "id": "commands-basics",
+          "gitPath": "develop/commands/basics.md",
+          "filename": "develop_commands_basics.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/commands/basics",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:53.348Z",
+          "sha256": "2e0fb17ea58d39f2745303b8f4fc15a303f552a33c2e0377ff22b6aa5178327a",
+          "bytes": 11353
+        },
+        {
+          "id": "data-generation-setup",
+          "gitPath": "develop/data-generation/setup.md",
+          "filename": "develop_data-generation_setup.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/data-generation/setup",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:54.574Z",
+          "sha256": "27cbd384517b7a1e54e4b0b6045eb1454e6ee2832b32c7c5ccf476f3e709dd87",
+          "bytes": 2260
+        },
+        {
+          "id": "data-generation-recipes",
+          "gitPath": "develop/data-generation/recipes.md",
+          "filename": "develop_data-generation_recipes.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/data-generation/recipes",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:55.960Z",
+          "sha256": "ace6d9882631eaa92e47570eb3cf051505fb31cfea7ab0fe40159358aff2c311",
+          "bytes": 5513
+        },
+        {
+          "id": "data-generation-loot-tables",
+          "gitPath": "develop/data-generation/loot-tables.md",
+          "filename": "develop_data-generation_loot-tables.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:04:57.736Z",
+          "sha256": "d973d45b2419e42c0fffcfbd1cbf6efcac09f675318e513734fd3acd3dc1698f",
+          "bytes": 4491
+        },
+        {
+          "id": "data-generation-tags",
+          "gitPath": "develop/data-generation/tags.md",
+          "filename": "develop_data-generation_tags.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/data-generation/tags",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:11.212Z",
+          "sha256": "67b92dbe694c174e9ba9bc0ec32f7c7bee33334dfb7624bcbb335c1c6a03cfc1",
+          "bytes": 2175
+        },
+        {
+          "id": "mixins-bytecode",
+          "gitPath": "develop/mixins/bytecode.md",
+          "filename": "develop_mixins_bytecode.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:12.685Z",
+          "sha256": "ccf12b8c4e699e71b675daf681f308efad6bfb944f14cb92aa7f321022d64695",
+          "bytes": 14482
+        },
+        {
+          "id": "getting-started-creating-a-project",
+          "gitPath": "develop/getting-started/creating-a-project.md",
+          "filename": "develop_getting-started_creating-a-project.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:14.251Z",
+          "sha256": "fd34e2905ed02b48e766854f0be93d94009ad99dd82f841c43c27262c62d1a03",
+          "bytes": 3721
+        },
+        {
+          "id": "getting-started-building-a-mod",
+          "gitPath": "develop/getting-started/building-a-mod.md",
+          "filename": "develop_getting-started_building-a-mod.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:15.725Z",
+          "sha256": "7dae32539ddb2c4cc90c7cf213c64f307673dba76dbb80f28e2eab759b51a4b8",
+          "bytes": 1140
+        },
+        {
+          "id": "loom",
+          "gitPath": "develop/loom/index.md",
+          "filename": "develop_loom_index.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/loom",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:17.756Z",
+          "sha256": "da8f3742569b62e99e7ca172fe7be201ebee2792f0d39ff6f0651a54e3d4cc3a",
+          "bytes": 7185
+        },
+        {
+          "id": "rendering-basic-concepts",
+          "gitPath": "develop/rendering/basic-concepts.md",
+          "filename": "develop_rendering_basic-concepts.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:18.872Z",
+          "sha256": "69c22aef5e53a0957585d8818c233b55658975ab6981b926127dfcf53034d92c",
+          "bytes": 12045
+        },
+        {
+          "id": "rendering-gui-custom-screens",
+          "gitPath": "develop/rendering/gui/custom-screens.md",
+          "filename": "develop_rendering_gui_custom-screens.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:21.557Z",
+          "sha256": "ecb93bc7d86562fc4f19b8348cd4911622ab15e6008fee65a98a876dca007219",
+          "bytes": 3941
+        },
+        {
+          "id": "key-mappings",
+          "gitPath": "develop/key-mappings.md",
+          "filename": "develop_key-mappings.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/key-mappings",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:27.874Z",
+          "sha256": "fd46bfe18455552d6ee318953e646992411311694335791486c7f5e856bac835",
+          "bytes": 2851
+        },
+        {
+          "id": "porting-index",
+          "gitPath": "develop/porting/index.md",
+          "filename": "develop_porting_index.md",
+          "source": "vitepress",
+          "url": "https://docs.fabricmc.net/develop/porting",
+          "branch": "main",
+          "fetchedAt": "2026-07-11T14:05:29.430Z",
+          "sha256": "a2f5c4f72755877a59b7be759aee207bd263b638f83d7dbc5402b9b8da85cc61",
+          "bytes": 2943
+        }
+      ],
+      "failures": [
+        {
+          "id": "saved-data",
+          "gitPath": "develop/saved-data.md",
+          "tried": [
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/saved-data.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.1.x-archive/develop/saved-data.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.1/develop/saved-data.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.1/develop/saved-data.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.1.x/develop/saved-data.md",
+            "vitepress:https://docs.fabricmc.net/develop/saved-data"
+          ]
+        },
+        {
+          "id": "codecs",
+          "gitPath": "develop/codecs.md",
+          "tried": [
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/codecs.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.1.x-archive/develop/codecs.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.1/develop/codecs.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.1/develop/codecs.md",
+            "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.1.x/develop/codecs.md",
+            "vitepress:https://docs.fabricmc.net/develop/codecs"
+          ]
+        }
+      ]
+    }
+  }
+}

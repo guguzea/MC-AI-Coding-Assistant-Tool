@@ -295,13 +295,21 @@
     "fetchedAt": "2026-05-05T03:27:35.937Z",
     "size": 4290
   },
-  "1.20.1/resources/server/recipes/custom/": {
-    "label": "Custom Recipes",
+  "1.20.1/resources/server/recipes/ingredients": {
+    "label": "Ingredients",
     "priority": "🟢",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/custom",
-    "file": "resources_server_recipes_custom.md",
-    "fetchedAt": "2026-05-04T17:00:50.678Z",
-    "size": 5802
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/ingredients",
+    "file": "resources_server_recipes_ingredients.md",
+    "fetchedAt": "2026-05-05T03:27:37.686Z",
+    "size": 6035
+  },
+  "1.20.1/resources/server/recipes/incode": {
+    "label": "Non-Datapack Recipes",
+    "priority": "🟢",
+    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server/recipes/incode",
+    "file": "resources_server_recipes_incode.md",
+    "fetchedAt": "2026-05-05T03:27:39.509Z",
+    "size": 3734
   },
   "1.20.1/resources/server/loottables/": {
     "label": "Loot Tables",

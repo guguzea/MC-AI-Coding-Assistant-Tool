@@ -1,0 +1,1 @@
+# GlStateManager.FogMode

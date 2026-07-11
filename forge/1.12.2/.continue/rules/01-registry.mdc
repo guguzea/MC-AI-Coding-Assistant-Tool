@@ -1,0 +1,278 @@
+# 01 — 注册系统
+
+> 适用版本：Forge 1.12.2
+> **本文件最重要，所有注册相关操作必须先读本文件。**
+
+---
+
+## 约束
+
+### 核心原则
+
+- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 所有注册必须通过 **Forge 事件系统**（`RegistryEvent.Register<T>`）
+- **DeferredRegister 在 Forge 1.12.2 中不存在**
+- mod ID 必须与 `mcmod.info` 中的 `modid` 完全一致
+
+### 注册方式：RegistryEvent + @EventBusSubscriber
+
+**Forge 1.12.2 必须使用 `@EventBusSubscriber` + `RegistryEvent.Register<T>` 进行注册。**
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModRegistry {
+    @SubscribeEvent
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        event.getRegistry().registerAll(
+            new Block(Material.ROCK).setRegistryName("my_block")
+        );
+    }
+}
+```
+
+### 注册时机
+
+| 注册内容 | 事件类型 | 注意事项 |
+|---------|---------|---------|
+| 方块 | `RegistryEvent.Register<Block>` | 先注册方块 |
+| 物品 | `RegistryEvent.Register<Item>` | 后注册物品 |
+| 方块实体 | `RegistryEvent.Register<TileEntity>` | 注册 TileEntityType |
+| 实体类型 | `RegistryEvent.Register<EntityEntry>` | 注册生物实体 |
+| 附魔 | `RegistryEvent.Register<Enchantment>` | |
+| 流体 | `RegistryEvent.Register<Fluid>` | |
+| 粒子类型 | `RegistryEvent.Register<ParticleType>` | |
+| 声音事件 | `RegistryEvent.Register<SoundEvent>` | |
+
+### mod ID 规范
+
+```java
+// ✅ 正确：在 mcmod.info 中声明的 mod ID
+private static final String MOD_ID = "examplemod";
+
+// ❌ 错误：硬编码或不一致
+private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+private static final String MOD_ID = "ExampleMod";    // 不能大写
+```
+
+### setRegistryName 使用规范
+
+```java
+// ✅ 推荐：在对象上链式调用 setRegistryName
+event.getRegistry().register(
+    new Block(Material.STONE).setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+);
+
+// ❌ 禁止：分离调用
+Block block = new Block(Material.STONE);
+block.setRegistryName(new ResourceLocation(MOD_ID, "my_block"));
+event.getRegistry().register(block);  // 可能导致注册名丢失
+```
+
+### 注册名称规范
+
+```java
+// ✅ 正确：全小写，下划线分隔
+event.getRegistry().register(new Block(...).setRegistryName(MOD_ID, "my_awesome_block"));
+
+// ❌ 错误：驼峰命名
+event.getRegistry().register(new Block(...).setRegistryName(MOD_ID, "myAwesomeBlock"));
+
+// ❌ 错误：大写开头
+event.getRegistry().register(new Block(...).setRegistryName(MOD_ID, "MyAwesomeBlock"));
+
+// ❌ 错误：使用横杠
+event.getRegistry().register(new Block(...).setRegistryName(MOD_ID, "my-awesome-block"));
+```
+
+---
+
+## Decision Flow
+
+### Decision: 选择注册方式
+
+```
+IF 注册 方块 / 物品 / 实体 / 方块实体 / 附魔 / 粒子 / 声音等标准内容
+  → 使用 @EventBusSubscriber + RegistryEvent.Register<T>
+
+IF 平台 = Fabric
+  → 跳转 fabric/对应版本/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
+
+IF 平台 = Forge 1.18+
+  → 跳转 forge/1.18+/AGENTS.md（使用 DeferredRegister）
+
+IF 平台 = NeoForge (1.20.4+)
+  → 跳转 neoforge/1.20.4/AGENTS.md（使用 DeferredRegister）
+```
+
+### Decision: 注册什么类型？
+
+```
+IF 注册 方块
+  → 使用 RegistryEvent.Register<Block>
+  → 在 event.getRegistry().register() 中注册
+  → 如需物品形态，注册对应的 ItemBlock
+
+IF 注册 物品
+  → 使用 RegistryEvent.Register<Item>
+  → 在 event.getRegistry().register() 中注册
+
+IF 注册 方块实体（TileEntity）
+  → 注册 TileEntity（TileEntity.register(...) 静态方法）
+  → 在 mods.toml / mcmod.info 中声明 entity 字段
+
+IF 注册 实体（Entity）
+  → 使用 RegistryEvent.Register<EntityEntry>
+  → 在 EntityRegistry.registerGlobalEntityType() 中注册
+  → 必须在 mcmod.info 中声明 entity 字段
+
+IF 注册 流体
+  → 使用 RegistryEvent.Register<Fluid>
+
+IF 注册 其他内容（附魔/粒子/声音等）
+  → 确认对应的 Registry 类型
+  → 查找 Forge 源码或文档确认类名
+```
+
+### Decision: 注册顺序（依赖关系）
+
+```
+IF 一个方块有对应的 ItemBlock
+  → 必须先注册 Block，再注册 ItemBlock
+  → ItemBlock 的 registry name 必须与 Block 完全相同
+
+IF 一个方块有 TileEntity
+  → 必须先注册 Block，再注册 TileEntity
+  → TileEntity.register(...) 需要方块的 ResourceLocation
+```
+
+### Decision: 常见 Registry 报错处理
+
+```
+IF 报错 "No such registry"
+  → 检查 Registry 类型是否正确
+
+IF 报错 "Resource location ... is invalid"
+  → 检查 registry name 是否全小写，是否包含非法字符
+
+IF 报错 "Registry name must be in namespace:name format"
+  → 使用 new ResourceLocation(MOD_ID, "registry_name")
+
+IF 运行时物品/方块显示为紫色黑色方块（缺失模型）
+  → 这是正常的注册成功但缺少资源文件，不是注册问题
+```
+
+---
+
+## 示例：完整注册流程
+
+### 方式一：所有内容集中在 ModRegistry（适合小模组）
+
+```java
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID)
+public class ModRegistry {
+    @SubscribeEvent
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        IForgeRegistry<Block> registry = event.getRegistry();
+        registry.register(new Block(Block.Properties.create(Material.ROCK))
+            .setRegistryName(ExampleMod.MOD_ID, "example_block"));
+    }
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> registry = event.getRegistry();
+
+        // 普通物品
+        registry.register(new Item(
+            new Item.Properties().maxStackSize(64))
+            .setRegistryName(ExampleMod.MOD_ID, "example_item")
+        );
+
+        // 方块对应的 ItemBlock（必须同名）
+        registry.register(new ItemBlock(Blocks.my_block)
+            .setRegistryName(ExampleMod.MOD_ID, "example_block")
+        );
+    }
+}
+```
+
+### 方式二：分散到多个注册类（推荐，适合中大型模组）
+
+```java
+// com/example/mod/registry/ModBlocks.java
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID)
+public class ModBlocks {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Block> event) {
+        IForgeRegistry<Block> reg = event.getRegistry();
+        reg.register(new Block(Block.Properties.create(Material.ROCK))
+            .setRegistryName(ExampleMod.MOD_ID, "my_block"));
+    }
+}
+```
+
+```java
+// com/example/mod/registry/ModItems.java
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID)
+public class ModItems {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> reg = event.getRegistry();
+        reg.register(new Item(new Item.Properties())
+            .setRegistryName(ExampleMod.MOD_ID, "my_item"));
+    }
+}
+```
+
+### 方式三：ExampleMod 主类中注册（适合最小模组）
+
+```java
+@Mod(ExampleMod.MOD_ID)
+public class ExampleMod {
+    public static final String MOD_ID = "examplemod";
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        // 注册在 init 阶段
+    }
+}
+
+// TileEntity 注册（必须在 FMLInitializationEvent 之前）
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModTileEntities {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<TileEntity> event) {
+        TileEntity.register("my_tile", MyTileEntity.class);
+    }
+}
+```
+
+---
+
+## TileEntity 注册
+
+```java
+// TileEntity.register(name, class) — 在 mods 启动时调用
+public static void registerTileEntities() {
+    GameRegistry.registerTileEntity(MyTileEntity.class,
+        new ResourceLocation(MOD_ID, "my_tile"));
+}
+
+// 或在 RegistryEvent.Register<TileEntity> 中
+@SubscribeEvent
+public static void registerTE(RegistryEvent.Register<TileEntity> event) {
+    event.getRegistry().register(
+        new TileEntity(myTEClass, new ResourceLocation(MOD_ID, "my_tile"))
+    );
+}
+```
+
+---
+
+## Forge 1.12.2 注册方式对比
+
+| 特性 | `RegistryEvent.Register<T>` | `DeferredRegister` |
+|------|--------------------------|-------------------|
+| 适用版本 | 1.12.2 及以前 | 1.18+ |
+| 代码风格 | 事件监听回调中手动注册 | 静态声明，集中在类顶部 |
+| mod ID 前缀 | 需手动 `new ResourceLocation()` | 自动，无需手动拼接 |
+| 官方推荐 | **是**（1.12.2 唯一方式） | 是（1.18+ 推荐） |

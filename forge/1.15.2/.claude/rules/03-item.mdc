@@ -1,0 +1,122 @@
+# 03 — 物品开发
+
+> 适用版本：Forge 1.15.2
+
+---
+
+## 约束
+
+### Item 子类规范
+
+- 基础物品类继承 `Item`（`net.minecraft.item.Item`）
+- 禁止重写已废弃的 `onCreated()` 等方法
+- 物品必须通过 `DeferredRegister<Item>` 注册
+
+### Item.Properties 配置
+
+```java
+new Item.Properties()
+    .maxStackSize(int maxStackSize)                 // 默认 64
+    .durability(int maxDamage)                       // 有耐久物品
+    .craftRemainder(Item copyFrom)                 // 消耗后保留物品
+    .fireResistant()                               // 防火（鞘翅等）
+    .rarity(EnumRarity rarity)                      // 稀有度（COMMON, UNCOMMON, RARE, EPIC）
+    .tab(CreativeModeTab tab)                       // 创造模式标签
+```
+
+### ITier（工具材料）规范
+
+```java
+public enum MyItemTier implements ITier {
+    MY_MATERIAL(4, 2000, 10.0f, 4.0f, 20, () -> Ingredient.fromItems(Items.DIAMOND));
+
+    // getLevel(), getUses(), getSpeed(), getAttackDamageBonus(), getEnchantmentValue(), getRepairMaterial()
+}
+```
+
+- `getLevel()`：挖掘等级（木=0，石=1，铁=2，金=3，钻=4，奈=5）
+- `getUses()`：耐久值
+- `getSpeed()`：挖掘速度
+- `getAttackDamageBonus()`：附加攻击伤害
+- `getEnchantmentValue()`：附魔能力值
+
+### 食物属性（Food）
+
+```java
+new Item.Properties()
+    .food(new Food.Builder()
+        .hunger(int saturation)        // 饱食度（0-20）
+        .saturation(float saturationMod)    // 饱和度修正
+        .meat()                           // 狗可食用
+        .alwaysEat()                      // 总是可食用（即使饱食）
+        .effect(new MobEffectInstance(MobEffects.JUMP, 200), 1.0f)
+        .build()
+    )
+```
+
+### 注册约束
+
+- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- 工具/盔甲使用 `ITier` 时，需要在构造中传入工具属性
+- **物品的创造模式标签通过 `.tab()` 方法设置**
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的物品？
+
+```
+IF 需要可放置的基础方块物品
+  → 注册 BlockItem（关联已有的方块）
+  → 不需要新建 Item 子类
+
+IF 需要普通物品（无特殊功能）
+  → extends Item，使用默认属性
+  → 最简单的物品
+
+IF 需要工具（剑、镐、斧、铲）
+  → extends PickaxeItem / AxeItem / SwordItem / ShovelItem
+  → 需要定义 ITier
+  → 需要在 constructor 传入：speed, damage, efficiency, tier属性
+
+IF 需要盔甲
+  → extends ArmorItem
+  → 需要定义 IArmorMaterial
+  → 需要在 constructor 传入：material, slot, properties
+
+IF 需要食物（可食用物品）
+  → extends Item + 设置 .food()
+  → 或 extends Item 覆盖 onFoodEaten() 方法实现自定义食用逻辑
+
+IF 需要可耐久物品
+  → 设置 .durability(maxDamage)
+  → 覆盖 hitEntity() 处理使用逻辑
+```
+
+### Decision: ITier 定义
+
+```
+IF 自定义工具材料
+  → 定义枚举实现 ITier 接口
+  → 5 个必需方法全部实现
+  → getRepairMaterial() 必须返回有效的 Ingredient
+  → 在物品类中引用：super(speed, damage, efficiency, tier)
+
+IF 复用现有材料
+  → Tiers.STONE / Tiers.IRON / Tiers.DIAMOND / Tiers.GOLD（静态字段）
+```
+
+### Decision: 物品放置在哪个 Creative Tab
+
+```
+IF 建筑方块 → CreativeModeTab.BUILDING_BLOCKS
+IF 自然方块 → CreativeModeTab.BLOCKS
+IF 工具 → CreativeModeTab.TOOLS
+IF 武器 → CreativeModeTab.COMBAT
+IF 食物 → CreativeModeTab.FOOD
+IF 材料 → CreativeModeTab.MATERIALS
+IF 红石 → CreativeModeTab.REDSTONE
+IF 交通 → CreativeModeTab.TRANSPORTATION
+IF 杂项 → CreativeModeTab.MISC
+```

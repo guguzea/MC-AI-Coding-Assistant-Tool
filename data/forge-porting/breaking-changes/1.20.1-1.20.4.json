@@ -1,0 +1,58 @@
+{
+  "versionRange": "1.20.1-1.20.4",
+  "note": "Forge 最后版，转 NeoForge",
+  "generatedAt": "2026-05-31T12:50:29.842Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 38,
+    "removedCount": 68,
+    "added": [
+      "1.20.4/datagen",
+      "1.20.4/resources_server",
+      "1.20.4/networking_entities",
+      "1.20.4/concepts_events",
+      "1.20.4/concepts_lifecycle",
+      "1.20.4/networking",
+      "1.20.4/concepts_registries",
+      "1.20.4/resources_client",
+      "1.20.4/concepts_sides",
+      "1.20.4/networking_simpleimpl",
+      "1.20.4/datastorage_capabilities",
+      "1.20.4/blocks_states",
+      "1.20.4/blockentities",
+      "1.20.4/blockentities_ber",
+      "1.20.4/items_bewlr",
+      "1.20.4/blocks",
+      "1.20.4/items",
+      "1.20.4/advanced_accesstransformers",
+      "1.20.4/datastorage_codecs",
+      "1.20.4/misc_config"
+    ],
+    "removed": [
+      "1.20.1/datagen_server_advancements",
+      "1.20.1/resources_server_advancements",
+      "1.20.1/resources_client_models_tinting",
+      "1.20.1/resources_server_conditional",
+      "1.20.1/datagen",
+      "1.20.1/datagen_server_datapackregistries",
+      "1.20.1/resources_server",
+      "1.20.1/networking_entities",
+      "1.20.1/concepts_events",
+      "1.20.1/datagen_server_glm",
+      "1.20.1/resources_server_glm",
+      "1.20.1/resources_server_recipes_ingredients",
+      "1.20.1/resources_client_models_itemproperties",
+      "1.20.1/datagen_client_localization",
+      "1.20.1/datagen_server_loottables",
+      "1.20.1/resources_server_loottables",
+      "1.20.1/concepts_lifecycle",
+      "1.20.1/datagen_client_modelproviders",
+      "1.20.1/resources_client_models",
+      "1.20.1/networking"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": []
+  }
+}

@@ -1,0 +1,26 @@
+# 06 — 网络通信
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## SimpleNetworkWrapper
+
+```java
+public static final SimpleNetworkWrapper INSTANCE =
+    NetworkRegistry.newSimpleChannel(
+        new ResourceLocation(MOD_ID, "main"),
+        () -> PROTOCOL_VERSION,
+        PROTOCOL_VERSION::equals,
+        PROTOCOL_VERSION::equals
+    );
+```
+
+## 发送消息
+
+- `INSTANCE.sendToServer(msg)` — 客户端发送
+- `INSTANCE.sendTo(msg, player)` — 服务端发送
+
+## 常见错误
+
+- ❌ 在网络线程修改世界 → 使用 `enqueueWork()`

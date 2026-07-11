@@ -1,0 +1,6 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+}
+
+rootProject.name = 'examplemod'

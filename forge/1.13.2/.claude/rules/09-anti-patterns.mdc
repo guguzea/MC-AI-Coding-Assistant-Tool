@@ -1,0 +1,36 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 注册相关
+
+### ❌ 使用 `new` 构造函数直接注册方块/物品
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到游戏
+```
+
+**正确方案**：通过 `RegistryEvent.Register<Block>` 注册并调用 `setRegistryName`
+
+### ❌ 不调用 `setRegistryName()`
+
+**正确方案**：
+```java
+event.getRegistry().register(
+    MY_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+);
+```
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+
+**正确方案**：
+```java
+ctx.get().enqueueWork(() -> {
+    // 修改世界的逻辑
+});
+```

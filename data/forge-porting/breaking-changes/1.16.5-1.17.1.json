@@ -1,0 +1,83 @@
+{
+  "versionRange": "1.16.5-1.17.1",
+  "note": "Java 8→16 + ForgeGradle 7 断裂",
+  "generatedAt": "2026-05-31T12:50:28.857Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 40,
+    "removedCount": 40,
+    "added": [
+      "1.17.1/datagen_intro",
+      "1.17.1/networking_entities",
+      "1.17.1/events_intro",
+      "1.17.1/concepts_lifecycle",
+      "1.17.1/datagen_modelproviders",
+      "1.17.1/networking",
+      "1.17.1/networking_overview",
+      "1.17.1/concepts_registries",
+      "1.17.1/concepts_sides",
+      "1.17.1/networking_simpleimpl",
+      "1.17.1/datastorage_capabilities",
+      "1.17.1/blocks_interaction",
+      "1.17.1/blocks_states",
+      "1.17.1/blockentities_blockentity",
+      "1.17.1/blockentities_ber",
+      "1.17.1/blocks_blocks",
+      "1.17.1/items_globallootmodifiers",
+      "1.17.1/models_itemproperties",
+      "1.17.1/items_items",
+      "1.17.1/utilities_recipes"
+    ],
+    "removed": [
+      "1.16.5/datagen_intro",
+      "1.16.5/networking_entities",
+      "1.16.5/events_intro",
+      "1.16.5/datagen_modelproviders",
+      "1.16.5/networking",
+      "1.16.5/networking_overview",
+      "1.16.5/concepts_registries",
+      "1.16.5/concepts_sides",
+      "1.16.5/networking_simpleimpl",
+      "1.16.5/datastorage_capabilities",
+      "1.16.5/blocks_interaction",
+      "1.16.5/blocks_states",
+      "1.16.5/blocks_blocks",
+      "1.16.5/items_globallootmodifiers",
+      "1.16.5/items_items",
+      "1.16.5/utilities_recipes",
+      "1.16.5/utilities_tags",
+      "1.16.5/tileentities_tileentity",
+      "1.16.5/tileentities_tesr",
+      "1.16.5/advanced_accesstransformers"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": [
+      {
+        "domain": "project",
+        "description": "ForgeGradle 7，项目结构完全重构",
+        "severity": "critical",
+        "fixType": "manual-review"
+      },
+      {
+        "domain": "java",
+        "description": "Java 8 → Java 16",
+        "severity": "critical",
+        "fixType": "manual-edit"
+      },
+      {
+        "domain": "registry",
+        "description": "DeferredRegister 正式引入",
+        "severity": "high",
+        "fixType": "manual-review"
+      },
+      {
+        "domain": "datagen",
+        "description": "数据生成器完全重构",
+        "severity": "high",
+        "fixType": "manual-review"
+      }
+    ]
+  }
+}

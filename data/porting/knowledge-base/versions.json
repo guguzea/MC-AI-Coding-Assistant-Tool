@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-31",
+    "coverage": "Forge 1.7.10–1.20.4 (Javadoc 1.7–1.12, MkDocs 1.12.2–1.20.4), NeoForge 1.20.2–26.1, Fabric 0.76–26.1",
+    "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。"
+  },
+  "versions": {
+    "1.7.10": {
+      "forge": "10.13.4.1614",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": []
+    },
+    "1.8.9": {
+      "forge": "11.15.1.2318",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": []
+    },
+    "1.9.4": {
+      "forge": "12.17.0.2051",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": []
+    },
+    "1.10.2": {
+      "forge": "12.18.3.2185",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": []
+    },
+    "1.11.2": {
+      "forge": "13.20.0.2228",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": []
+    },
+    "1.12.2": {
+      "forge": "14.23.5.2859",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "javadoc",
+      "breakingChanges": [
+        {
+          "domain": "meta",
+          "description": "mcmod.info → mods.toml",
+          "affectedFiles": ["mcmod.info", "mods.toml"],
+          "severity": "high",
+          "fixType": "manual-edit"
+        },
+        {
+          "domain": "events",
+          "description": "EventBus 重构，@ForgeSubscribe 改名 @SubscribeEvent",
+          "severity": "high",
+          "fixType": "manual-edit"
+        },
+        {
+          "domain": "registry",
+          "description": "RegistryEvent.NewRegistry 事件引入",
+          "severity": "medium",
+          "fixType": "manual-review"
+        }
+      ]
+    },
+    "1.14.4": {
+      "forge": "26.0.21",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "mkdocs",
+      "breakingChanges": [
+        {
+          "domain": "project",
+          "description": "整个项目结构重写，ForgeGradle 2.x → 3.x",
+          "severity": "critical",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "resources",
+          "description": "资源加载 API 完全重构",
+          "severity": "high",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "registry",
+          "description": "注册方式再次变化",
+          "severity": "medium",
+          "fixType": "manual-review"
+        }
+      ]
+    },
+    "1.15.2": {
+      "forge": "29.0.23",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp"],
+      "docSource": "mkdocs",
+      "breakingChanges": []
+    },
+    "1.16.5": {
+      "forge": "36.2.34",
+      "neoforge": null,
+      "fabric": null,
+      "java": 8,
+      "mappings": ["mcp", "mojmaps"],
+      "docSource": "mkdocs",
+      "breakingChanges": [
+        {
+          "domain": "mappings",
+          "description": "MCP 可选切换为 MojMaps",
+          "severity": "low",
+          "fixType": "optional"
+        }
+      ]
+    },
+    "1.17.1": {
+      "forge": "37.1.2",
+      "neoforge": null,
+      "fabric": null,
+      "java": 16,
+      "mappings": ["mojmaps"],
+      "docSource": "mkdocs",
+      "breakingChanges": [
+        {
+          "domain": "project",
+          "description": "ForgeGradle 7，项目结构完全重构",
+          "severity": "critical",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "java",
+          "description": "Java 8 → Java 16",
+          "severity": "critical",
+          "fixType": "manual-edit"
+        },
+        {
+          "domain": "registry",
+          "description": "DeferredRegister 正式引入",
+          "severity": "high",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "datagen",
+          "description": "数据生成器完全重构",
+          "severity": "high",
+          "fixType": "manual-review"
+        }
+      ]
+    },
+    "1.18.2": {
+      "forge": "40.2.14",
+      "neoforge": null,
+      "fabric": null,
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "breakingChanges": [
+        {
+          "domain": "registry",
+          "description": "DeferredRegister 成为主流写法",
+          "severity": "medium",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "datagen",
+          "description": "DataGenerator 架构调整",
+          "severity": "medium",
+          "fixType": "manual-review"
+        }
+      ]
+    },
+    "1.19.4": {
+      "forge": "45.2.0",
+      "neoforge": null,
+      "fabric": "0.14.21",
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "breakingChanges": []
+    },
+    "1.20.1": {
+      "forge": "47.2.0",
+      "neoforge": null,
+      "fabric": "0.15.0",
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "breakingChanges": []
+    },
+    "1.20.4": {
+      "forge": null,
+      "neoforge": "20.4.237",
+      "fabric": "0.15.7",
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "note": "Forge 1.20.4 为最后官方版，后续转为 NeoForge。breakingChanges 为空（小幅升级）。",
+      "breakingChanges": []
+    },
+    "1.20.2": {
+      "forge": null,
+      "neoforge": "20.2.247",
+      "fabric": "0.15.0",
+      "java": 17,
+      "mappings": ["mojmaps", "parchment"],
+      "docSource": "mkdocs",
+      "breakingChanges": [
+        {
+          "domain": "packages",
+          "description": "net.minecraftforge → net.neoforged",
+          "affectedFiles": "all-java",
+          "severity": "high",
+          "fixType": "global-replace"
+        },
+        {
+          "domain": "registry",
+          "description": "RegistryObject<T> → DeferredHolder<T, T> 或 Supplier<T>",
+          "severity": "medium",
+          "fixType": "manual-review"
+        },
+        {
+          "domain": "mods-toml",
+          "description": "modId=\"forge\" → modId=\"neoforge\"",
+          "affectedFiles": ["mods.toml", "neoforge.mods.toml"],
+          "severity": "medium",
+          "fixType": "manual-edit"
+        },
+        {
+          "domain": "gradle",
+          "description": "移除 fg.deobf 配置，NeoGradle 7 简化配置",
+          "severity": "low",
+          "fixType": "manual-review"
+        }
+      ]
+    }
+  }
+}

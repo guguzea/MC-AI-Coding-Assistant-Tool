@@ -1,0 +1,198 @@
+# 方块开发（Forge 1.14.4）
+
+## Decision: 方块类型选择
+
+```
+IF 需要持久的 extra data（如机器存储、多格容器）
+  → TileEntity 方块
+  → 方块实现 hasTileEntity() + createTileEntity()
+  → 参考 rules/10-gui.mdc
+
+IF 只是静态显示（无状态交互）
+  → 普通方块
+
+IF 需要流体
+  → 流体方块（FlowingFluidBlock）
+  → 参考 mc-fluid Skill
+
+IF 需要实体方块（可手持）
+  → EntityBlock（较少用）
+```
+
+## Block.Properties
+
+Forge 1.14.4 使用 `Block.Properties.create()`：
+
+```java
+Block.Properties.create(Material.STONE)
+    .hardnessAndResistance(1.5f, 6.0f)              // 硬度、抗爆性
+    .harvestTool(ToolType.PICKAXE)                  // 所需工具类型
+    .harvestLevel(2)                                // 挖掘等级
+    .sound(SoundType.STONE)                         // 音效
+    .notSolid()                                     // 非固体（光/声音可穿透）
+    .noDrops()                                      // 挖掘不掉落
+    .jumpParticles()                                // 羊跳时有粒子
+    .emissiveRedstoneLogic()                        // 红石逻辑（与 1.20.1 不同）
+```
+
+### Material 参考
+
+`Material.IRON`、`Material.WOOD`、`Material.STONE`、`Material.SAND` 等。
+
+### SoundType 参考
+
+`SoundType.STONE`、`SoundType.WOOD`、`SoundType.GROUND` 等。
+
+### ToolType 参考
+
+`ToolType.PICKAXE`、`ToolType.SHOVEL`、`ToolType.AXE`、`ToolType.HOE`。
+
+## 普通方块完整示例
+
+```java
+public class MyBlock extends Block {
+    public MyBlock() {
+        super(Block.Properties.create(Material.STONE)
+            .hardnessAndResistance(1.5f, 6.0f)
+            .harvestTool(ToolType.PICKAXE)
+            .harvestLevel(2)
+        );
+    }
+
+    // 方块破坏音效
+    @Override
+    public SoundType getSoundType(BlockState state, World world, BlockPos pos, Entity entity) {
+        return SoundType.STONE;
+    }
+
+    // 掉落物品
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+        return Collections.singletonList(new ItemStack(Items.DIAMOND, 3));
+    }
+}
+
+// 注册
+@SubscribeEvent
+public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+    event.getRegistry().register(
+        new MyBlock().setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+    );
+}
+```
+
+## TileEntity 方块
+
+```java
+public class MyBlockWithTile extends Block {
+    public MyBlockWithTile() {
+        super(Block.Properties.create(Material.WOOD));
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, BlockState state) {
+        return new MyTileEntity();
+    }
+}
+```
+
+### TileEntity 类
+
+```java
+public class MyTileEntity extends TileEntity {
+    private int counter = 0;
+
+    public MyTileEntity() {
+        super(TileEntityType.byId(0)); // 实际使用注册的 TileEntityType
+    }
+
+    // tick 逻辑（服务端）
+    @Override
+    public void tick() {
+        if (world.isRemote) return;
+        counter++;
+        if (counter >= 20) {
+            counter = 0;
+            // 每秒执行一次
+        }
+    }
+
+    // 数据持久化
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.putInt("counter", counter);
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        counter = compound.getInt("counter");
+    }
+
+    // 数据同步（服务端 → 客户端）
+    @Override
+    public NBTTagCompound getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.putInt("counter", counter);
+        return nbt;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketCustomPayload pkt) {
+        readFromNBT(pkt.getNbtCompound());
+    }
+}
+```
+
+## BlockState JSON
+
+### 简单方块
+
+文件：`assets/{modid}/blockstates/my_block.json`
+
+```json
+{
+  "variants": {
+    "": { "model": "modid:block/my_block" }
+  }
+}
+```
+
+### 多状态方块
+
+```json
+{
+  "variants": {
+    "facing=north": { "model": "modid:block/my_block" },
+    "facing=south": { "model": "modid:block/my_block", "y": 180 },
+    "facing=east":  { "model": "modid:block/my_block", "y": 90 },
+    "facing=west":  { "model": "modid:block/my_block", "y": 270 }
+  }
+}
+```
+
+### Multipart 方块
+
+```json
+{
+  "multipart": [
+    { "when": { "facing": "north" }, "apply": { "model": "modid:block/my_block" } }
+  ]
+}
+```
+
+## 常见错误
+
+- ❌ `Block.Properties.of()`（1.16.5+ 写法）→ Forge 1.14.4 用 `Block.Properties.create()`
+- ❌ TileEntity `newBlockEntity()` 返回 null：必须返回新实例
+- ❌ 在 TileEntity 构造函数中访问 world：world 可能为 null
+- ❌ `markDirty()` 忘记调用：数据变化后必须调用
+- ❌ 忘记 `harvestTool()`：任何工具都能挖掘方块
+- ❌ `writeToNBT` / `readFromNBT` 忘记调用 `super`

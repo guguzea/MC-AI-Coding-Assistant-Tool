@@ -1,0 +1,940 @@
+[
+  {
+    "id": "gettingstarted",
+    "version": "1.20.4",
+    "label": "Getting Started with Neo",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core"
+    ],
+    "firstParagraph": "This section includes information about how to set up a NeoForge workspace, and how to run and test your mod.",
+    "sections": [
+      {
+        "title": "Prerequisites",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Setting Up the Workspace",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Customizing Your Mod Information",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Building and Testing Your Mod",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Server Testing",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "gettingstarted/modfiles",
+    "version": "1.20.4",
+    "label": "Mod Files",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/modfiles/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "The mod files are responsible for determining what mods are packaged into your JAR, what information to display within the 'Mods' menu, and how your mod should be loaded in the game.",
+    "sections": [
+      {
+        "title": "gradle.properties",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "The Group ID",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "mods.toml",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Non-Mod-Specific Properties",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Mod-Specific Properties",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Dependency Configurations",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Mod Entrypoints",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "javafml and @Mod",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "lowcodefml",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "gettingstarted/structuring",
+    "version": "1.20.4",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/structuring/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Structured mods are beneficial for maintenance, making contributions, and providing a clearer understanding of the underlying codebase. Some of the recommendations from Java, Minecraft, and NeoForge are listed below.",
+    "sections": [
+      {
+        "title": "Packaging",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Sub-package Organization",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Class Naming Schemes",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Choose One Method from Many",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "gettingstarted/versioning",
+    "version": "1.20.4",
+    "label": "Versioning",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/versioning/",
+    "tags": [
+      "getting-started",
+      "tutorial",
+      "setup",
+      "neoforge-core"
+    ],
+    "firstParagraph": "This article will break down how versioning works in Minecraft and NeoForge, and will give some recommendations for mod versioning as well.",
+    "sections": [
+      {
+        "title": "Minecraft",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Snapshots",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Pre-releases and Release Candidates",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "NeoForge",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Mods",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Semantic Versioning",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "\"Reduced\" and \"Expanded\" Semver",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Alpha, Beta, Release",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Including the Minecraft Version",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Including the Mod Loader",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "A Note on Maven",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "advanced/accesstransformers",
+    "version": "1.20.4",
+    "label": "Advanced Topics",
+    "url": "https://docs.neoforged.net/docs/1.20.4/advanced/accesstransformers/",
+    "tags": [
+      "advanced",
+      "mixin",
+      "access-transformer",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Access Transformers (ATs for short) allow for widening the visibility and modifying the `final` flags of classes, methods, and fields. They allow modders to access and modify otherwise inaccessible members in classes outside their control.",
+    "sections": [
+      {
+        "title": "Adding ATs",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Comments",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Access Modifiers",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Targets and Directives",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Classes",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Fields",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Methods",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Examples",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "blockentities",
+    "version": "1.20.4",
+    "label": "Block Entities",
+    "url": "https://docs.neoforged.net/docs/1.20.4/blockentities/",
+    "tags": [
+      "block-entity",
+      "tile-entity",
+      "tickable",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "`BlockEntities` are like simplified `Entities` that are bound to a Block.\nThey are used to store dynamic data, execute tick based tasks, and dynamic rendering.\nSome examples from vanilla Minecraft would be handling of inventories on chests, smelting logic on furnaces, or area effects on beacons.\nMor",
+    "sections": [
+      {
+        "title": "Registering",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Creating a BlockEntity",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Storing Data within your BlockEntity",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Ticking BlockEntities",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Synchronizing the Data to the Client",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Synchronizing on LevelChunk Load",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Synchronizing on Block Update",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Synchronizing Using a Custom Network Message",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "blocks",
+    "version": "1.20.4",
+    "label": "Blocks",
+    "url": "https://docs.neoforged.net/docs/1.20.4/blocks/",
+    "tags": [
+      "block",
+      "blockstate",
+      "model",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "Blocks are essential to the Minecraft world. They make up all the terrain, structures, and machines. Chances are if you are interested in making a mod, then you will want to add some blocks. This page will guide you through the creation of blocks, and some of the things you can do with them.",
+    "sections": [
+      {
+        "title": "One Block to Rule Them All",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Creating Blocks",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Basic Blocks",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "More Functionality",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "DeferredRegister.Blocks helpers",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Resources",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Using Blocks",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Placing a Block",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Breaking a Block",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Ticking",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "blocks/states",
+    "version": "1.20.4",
+    "label": "Blockstates",
+    "url": "https://docs.neoforged.net/docs/1.20.4/blocks/states/",
+    "tags": [
+      "block",
+      "blockstate",
+      "model",
+      "has-code"
+    ],
+    "firstParagraph": "Often, you will find yourself in a situation where you want different states of a block. For example, a wheat crop has eight growth stages, and making a separate block for each stage feels wrong. Or you have a slab or slab-like block - one bottom state, one top state, and one state that has both.",
+    "sections": [
+      {
+        "title": "Blockstate Properties",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "When to Use Blockstates",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Blockstates vs. Separate Blocks",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Blockstates vs.",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Implementing Blockstates",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Using Blockstates",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Level#setBlock",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "concepts/events",
+    "version": "1.20.4",
+    "label": "Concepts",
+    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/events/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code",
+      "registerevent"
+    ],
+    "firstParagraph": "One of NeoForge's main features is the event system. Events are fired for various things that happen in the game. For example, there are events for when the player right clicks, when a player or another entity jumps, when blocks are rendered, when the game is loaded, etc. A modder can subscribe even",
+    "sections": [
+      {
+        "title": "Registering an Event Handler",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "IEventBus#addListener",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "@SubscribeEvent",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "@Mod.EventBusSubscriber",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Event Options",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Fields and Methods",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Hierarchy",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Cancellable Events",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Results",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Priority",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Sided Events",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Event Buses",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "The Mod Lifecycle",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Other Mod Bus Events",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "datagen/advancements",
+    "version": "1.20.4",
+    "label": "Datagen",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datagen/advancements/",
+    "tags": [
+      "datagen",
+      "data-generation",
+      "provider",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "[Advancements](/docs/1.20.4/resources/server/advancements) can be generated for a mod by constructing a new `AdvancementProvider` and providing `AdvancementSubProvider`s. Advancements can either be created and supplied manually or, for convenience, created using Advancement.Builder. The provider mus",
+    "sections": [
+      {
+        "title": "ForgeAdvancementProvider.AdvancementGenerator",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Advancement.Builder",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "datamaps",
+    "version": "1.20.4",
+    "label": "Data Maps",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datamaps/",
+    "tags": [
+      "datamaps",
+      "data-components",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "A registry data map contains data-driven, reloadable objects that can be attached to a registry object.",
+    "sections": [
+      {
+        "title": "Registration",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Syncing",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "JSON Structure and location",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Usage",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Advanced data maps",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Creation",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Mergers",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Removers",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Datagen",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "datastorage/attachments",
+    "version": "1.20.4",
+    "label": "Data Storage",
+    "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/attachments/",
+    "tags": [
+      "nbt",
+      "data-storage",
+      "saved-data",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "The data attachment system allows mods to attach and store additional data on block entities, chunks, entities, and item stacks.",
+    "sections": [
+      {
+        "title": "Creating an attachment type",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Using the attachment type",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Sharing data with the client",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Copying data on player death",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "gui/menus",
+    "version": "1.20.4",
+    "label": "GUIs",
+    "url": "https://docs.neoforged.net/docs/1.20.4/gui/menus/",
+    "tags": [
+      "gui",
+      "screen",
+      "menu",
+      "widget",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "Menus are one type of backend for Graphical User Interfaces, or GUIs; they handle the logic involved in interacting with some represented data holder. Menus themselves are not data holders. They are views which allow to user to indirectly modify the internal data holder state. As such, a data holder",
+    "sections": [
+      {
+        "title": "MenuType",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "MenuSupplier",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "IContainerFactory",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "AbstractContainerMenu",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "#stillValid and ContainerLevelAccess",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Data Synchronization",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Opening a Menu",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Common Implementations",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "items",
+    "version": "1.20.4",
+    "label": "Items",
+    "url": "https://docs.neoforged.net/docs/1.20.4/items/",
+    "tags": [
+      "item",
+      "creative-tab",
+      "tooltip",
+      "neoforge-core",
+      "has-code",
+      "deferredregister"
+    ],
+    "firstParagraph": "Along with blocks, items are a key component of Minecraft. While blocks make up the world around you, items exist within inventories.",
+    "sections": [
+      {
+        "title": "What Even Is an Item?",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Creating an Item",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Food",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "More Functionality",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "DeferredRegister.Items",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Resources",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "ItemStacks",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Mutability of ItemStacks",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Creative Tabs",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Existing Creative Tabs",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Custom Creative Tabs",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "misc/config",
+    "version": "1.20.4",
+    "label": "Miscellaneous",
+    "url": "https://docs.neoforged.net/docs/1.20.4/misc/config/",
+    "tags": [
+      "misc",
+      "config",
+      "logging",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Configurations define settings and consumer preferences that can be applied to a mod instance. NeoForge uses a configuration system using [TOML](https://toml.io/) files and read with [NightConfig](https://github.com/TheElectronWill/night-config).",
+    "sections": [
+      {
+        "title": "Creating a Configuration",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "ConfigValue",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Registering a Configuration",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Configuration Events",
+        "level": 2,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "networking",
+    "version": "1.20.4",
+    "label": "Networking",
+    "url": "https://docs.neoforged.net/docs/1.20.4/networking/",
+    "tags": [
+      "networking",
+      "packet",
+      "payload",
+      "channel",
+      "neoforge-core"
+    ],
+    "firstParagraph": "Communication between servers and clients is the backbone of a successful mod implementation.",
+    "sections": []
+  },
+  {
+    "id": "resources",
+    "version": "1.20.4",
+    "label": "Resources",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "Resources are external files that are used by the game, but are not code. The most prominent kinds of resources are textures, however, many other types of resources exist in the Minecraft ecosystem. Of course, all these resources require a consumer on the code side, so the consuming systems are grou",
+    "sections": [
+      {
+        "title": "Assets",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Data",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "pack.mcmeta",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Command Line Arguments",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "resources/client/i18n",
+    "version": "1.20.4",
+    "label": "Client",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/i18n/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table",
+      "neoforge-core",
+      "has-code"
+    ],
+    "firstParagraph": "I18n (short for internationalization) is the way of designing a program to work with multiple languages. L10n (short for localization) is the process of translating text into the user's language. Minecraft implements these using `Component`s.",
+    "sections": [
+      {
+        "title": "Components",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Text Formatting",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Language Files",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Translation Keys",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Translating Mod Metadata",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Datagen",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "resources/server",
+    "version": "1.20.4",
+    "label": "Datapacks",
+    "url": "https://docs.neoforged.net/docs/1.20.4/resources/server/",
+    "tags": [
+      "resources",
+      "assets",
+      "datapack",
+      "loot-table"
+    ],
+    "firstParagraph": "In 1.13, Mojang added [datapacks](https://minecraft.wiki/w/Data_pack) to the base game. They allow for the modification of the files for logical servers through the `data` directory. This includes advancements, loot_tables, structures, recipes, tags, etc. Forge, and your mod, can also have datapacks",
+    "sections": [
+      {
+        "title": "Creating a Datapack",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,153 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### @SideOnly 注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@SideOnly(Side.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@SideOnly(Side.SERVER)` | 仅在服务端运行 | 服务端逻辑（很少用） |
+| 无注解 | 客户端和服务端都运行 | 通用逻辑 |
+
+### 线程约束
+
+- **服务端线程**：游戏逻辑处理、事件订阅（大多数）
+- **客户端线程**：渲染、输入（KeyBinding）、粒子效果
+- **禁止**在渲染线程中执行服务端逻辑（如修改世界数据）
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+### 分离架构
+
+```
+src/main/java/
+├── ExampleMod.java                    # 两端都加载
+├── registry/
+│   ├── ModBlocks.java               # 两端都加载
+│   └── ModItems.java                # 两端都加载
+├── client/
+│   └── ClientProxy.java             # 仅客户端（@SideOnly）
+└── init/
+    └── ModEvents.java               # 两端都加载
+```
+
+- **禁止**将 `@SideOnly(Side.CLIENT)` 的类放在 `client` 包以外
+- **禁止**在非 `@SideOnly(Side.CLIENT)` 的类中调用任何客户端特有方法
+
+### 代理模式
+
+Forge 1.12.2 使用**代理模式**（Proxy Pattern）分离客户端和服务端代码：
+
+```java
+@Mod(modid = MOD_ID)
+public class ExampleMod {
+    public static final ExampleMod instance = this;
+    public static final String MOD_ID = "examplemod";
+
+    // 代理实例
+    @SidedProxy(
+        clientSide = "com.example.examplemod.client.ClientProxy",
+        serverSide = "com.example.examplemod.CommonProxy"
+    )
+    public static CommonProxy proxy;
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        proxy.preInit(event);
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init();
+    }
+}
+```
+
+---
+
+## 示例：CommonProxy（服务端代理）
+
+```java
+public class CommonProxy {
+    public void preInit(FMLPreInitializationEvent event) {
+        // 两端都需要的预初始化
+    }
+
+    public void init() {
+        // 两端都需要的初始化
+    }
+
+    public void registerRenderers() {
+        // 无操作（服务端不需要）
+    }
+}
+```
+
+## 示例：ClientProxy（客户端代理）
+
+```java
+@SideOnly(Side.CLIENT)
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        // 客户端特有预初始化
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        // 客户端特有初始化
+    }
+
+    @Override
+    public void registerRenderers() {
+        // 注册实体渲染器
+        RenderingRegistry.registerEntityRenderingHandler(
+            MyEntity.class,
+            new RenderMyEntity.Factory()
+        );
+    }
+}
+```
+
+## 示例：KeyBinding 处理（客户端）
+
+```java
+@SideOnly(Side.CLIENT)
+public class KeyBindings {
+    public static KeyBinding TEST_KEY;
+
+    public static void init() {
+        TEST_KEY = new KeyBinding(
+            "key.examplemod.test",
+            Keyboard.KEY_G,
+            "key.categories.examplemod"
+        );
+        ClientRegistry.registerKeyBinding(TEST_KEY);
+    }
+}
+```
+
+## 示例：运行时物理端检测
+
+```java
+// 检测物理端
+if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+    // 客户端
+}
+
+// 检测逻辑端
+if (world.isRemote) {
+    // 逻辑客户端（客户端线程处理渲染）
+}
+
+// 或使用 DistExecutor
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientOnlyMethod());
+```
+
+> 注意：1.12.2 使用 `world.isRemote` 判断逻辑端（不是 `level.isClientSide`）。

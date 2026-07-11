@@ -16,24 +16,29 @@
  * │  ✅ Architectury Loom 可构建时 Re-obfuscate                 │
  * └─────────────────────────────────────────────────────────────┘
  *
- * 本模块数据来源：
- * - Parchment 1.20.1 (2023.09.03) 提取数据
- *   → 提供 mcp/srg 层的类名、方法名、参数名
- *   → parchment.json 中的 name = mcp/srg 名（非 mojang official）
+ * 本模块数据来源（按版本）：
+ * - 1.7.10–1.13.2: MCP stable 映射（tsrg/csv 提取的索引）
+ * - 1.14.4–1.15.2: MCP stable CSV 提取的索引
+ * - 1.16.5–1.20.4: Parchment 映射
  *
  * ⚠️ 重要限制：
  *   - mojang → mcp/parchment 的转换（反向查询）需要 mojang 反混淆表
  *   - yarn ↔ mcp 转换需要专门的跨平台映射表
- *   - 当前实现基于 Parchment 数据，主要覆盖 mcp/parchment 层的正向查询
+ *   - 当前实现基于上述数据，主要覆盖 mcp/parchment 层的正向查询
  */
 
 import { readFileSync, existsSync } from "fs";
-import { join, dirname } from "path";
+import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = resolveDataDir("forge_1.20.1", "extracted");
+const DEFAULT_VERSION = "1.20.1";
+
+/** 解析某个 Minecraft 版本的 extracted 数据目录 */
+function resolveVersionDataDir(version: string): string {
+  return resolveDataDir(`forge_${version}`, "extracted");
+}
 
 export interface MappingQuery {
   from: "mojang" | "mcp" | "yarn" | "parchment";
@@ -41,6 +46,9 @@ export interface MappingQuery {
   memberName: string;
   ownerClass?: string;
   descriptor?: string;
+  /** Minecraft 版本（如 "1.20.1"），决定使用哪份 extracted 索引。
+   *  未指定时使用 DEFAULT_VERSION (1.20.1)。 */
+  version?: string;
 }
 
 export interface MappingResult {
@@ -69,13 +77,29 @@ type ParchmentClass = {
   fields: unknown[];
 };
 
-let _apiIndex: Record<string, ParchmentClass> | null = null;
-let _classNames: string[] | null = null;
+const _dataCache = new Map<string, { apiIndex: Record<string, ParchmentClass>; classNames: string[] }>();
 
-function loadData() {
-  if (_apiIndex) return;
-  _apiIndex = JSON.parse(readFileSync(join(DATA_DIR, "api-index.json"), "utf-8"));
-  _classNames = JSON.parse(readFileSync(join(DATA_DIR, "class-names.json"), "utf-8"));
+/** 加载指定版本的数据（按 version 缓存到内存） */
+function loadData(version: string): { apiIndex: Record<string, ParchmentClass>; classNames: string[] } {
+  const cached = _dataCache.get(version);
+  if (cached) return cached;
+
+  const dataDir = resolveVersionDataDir(version);
+  const apiIndexPath = join(dataDir, "api-index.json");
+  const classNamesPath = join(dataDir, "class-names.json");
+
+  let apiIndex: Record<string, ParchmentClass> = {};
+  let classNames: string[] = [];
+
+  if (existsSync(apiIndexPath)) {
+    apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8"));
+  }
+  if (existsSync(classNamesPath)) {
+    classNames = JSON.parse(readFileSync(classNamesPath, "utf-8"));
+  }
+  const data = { apiIndex, classNames };
+  _dataCache.set(version, data);
+  return data;
 }
 
 function toSlash(name: string): string {
@@ -105,7 +129,8 @@ function descriptorToReturnType(desc: string): string {
  * 查询时应使用 mcp/srg 层名字（如 getHealth），不是 official 名（如 aqm）
  */
 export function convertMapping(query: MappingQuery): MappingResult {
-  loadData();
+  const version = query.version ?? DEFAULT_VERSION;
+  const { apiIndex } = loadData(version);
   const { from, to, memberName, ownerClass, descriptor } = query;
 
   if (from === to) {
@@ -137,7 +162,7 @@ ${memberName} instance = new ${memberName}();`,
     // 先尝试精确查询（memberName 本身是 mcp/srg 名的情况）
     if (ownerClass) {
       const classSlash = toSlash(ownerClass);
-      const cls = _apiIndex![classSlash];
+      const cls = apiIndex[classSlash];
       if (cls) {
         const method = cls.methods.find(
           m => m.name === memberName && (!descriptor || m.descriptor === descriptor)
@@ -159,7 +184,7 @@ ${memberName} instance = new ${memberName}();`,
     }
     // 类名查询
     const classSlash = toSlash(memberName);
-    if (_apiIndex![classSlash]) {
+    if (apiIndex[classSlash]) {
       return {
         found: true, original: memberName, converted: memberName,
         direction: "mojang→mcp (间接匹配)", confidence: "medium", mappingType: "class",
@@ -188,7 +213,7 @@ ${memberName} instance = new ${memberName}();`,
   if ((from === "mcp" || from === "parchment") && to === "mojang") {
     if (ownerClass) {
       const classSlash = toSlash(ownerClass);
-      const cls = _apiIndex![classSlash];
+      const cls = apiIndex[classSlash];
       if (cls) {
         const method = cls.methods.find(
           m => m.name === memberName && (!descriptor || m.descriptor === descriptor)
@@ -207,7 +232,7 @@ ${memberName} instance = new ${memberName}();`,
       }
     }
     const classSlash = toSlash(memberName);
-    if (_apiIndex![classSlash]) {
+    if (apiIndex[classSlash]) {
       return {
         found: true, original: memberName, converted: memberName,
         direction: `${from}→mojang (srg→official需额外表)`, confidence: "medium", mappingType: "class",
@@ -245,7 +270,7 @@ ${memberName} instance = new ${memberName}();`,
   // ── 方法/参数名查询（提供 Parchment 的核心价值）───────────────
   if (ownerClass && memberName) {
     const classSlash = toSlash(ownerClass);
-    const cls = _apiIndex![classSlash];
+    const cls = apiIndex[classSlash];
 
     if (cls) {
       const methods = cls.methods.filter(m => {
@@ -298,6 +323,8 @@ export interface ParamQuery {
   className: string;
   methodName: string;
   descriptor?: string;
+  /** Minecraft 版本（如 "1.20.1"），决定使用哪份 extracted 索引 */
+  version?: string;
 }
 
 export interface ParamResult {
@@ -312,15 +339,16 @@ export interface ParamResult {
 }
 
 export function getMethodParams(query: ParamQuery): ParamResult {
-  loadData();
+  const version = query.version ?? DEFAULT_VERSION;
+  const { apiIndex, classNames } = loadData(version);
   const { className, methodName, descriptor } = query;
   const slash = toSlash(className);
-  const cls = _apiIndex![slash];
+  const cls = apiIndex[slash];
 
   if (!cls) {
     return {
       found: false, className, methodName, parameters: [], descriptor: "", returnType: "void",
-      note: `类 ${className} 不在 Parchment 数据中（仅含 5720 个 Vanilla 类，不含 Forge 特有类）`,
+      note: `类 ${className} 不在 ${version} 索引中（共 ${classNames.length} 个 Vanilla 类，不含 Forge 特有类）`,
     };
   }
 

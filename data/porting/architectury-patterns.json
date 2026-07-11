@@ -1,0 +1,148 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-27",
+    "note": "从 Architectury 官方文档 + 真实项目提取。使用 scripts/update-architectury-examples.js 辅助更新。"
+  },
+  "expectPlatform": {
+    "rule": "Only static methods; no instance methods",
+    "ruleDetail": "@ExpectPlatform 只能注解静态方法。实例方法需要包装为静态方法。",
+    "commonExample": {
+      "java": [
+        "import dev.architectury.injectables.annotations.ExpectPlatform;",
+        "",
+        "@ExpectPlatform",
+        "public static Path getConfigDir(String modId) {",
+        "    throw new AssertionError(\"Platform implementation missing!\");",
+        "}"
+      ]
+    },
+    "fabricImpl": {
+      "package": "net.examplemod.fabric",
+      "java": [
+        "import net.fabricmc.loader.api.FabricLoader;",
+        "import java.nio.file.Path;",
+        "",
+        "public class ConfigHelperImpl {",
+        "    public static Path getConfigDir(String modId) {",
+        "        return FabricLoader.getInstance().getConfigDir().resolve(modId);",
+        "    }",
+        "}"
+      ]
+    },
+    "neoforgeImpl": {
+      "package": "net.examplemod.neoforge",
+      "java": [
+        "import net.neoforged.fml.loading.FMLPaths;",
+        "import java.nio.file.Path;",
+        "",
+        "public class ConfigHelperImpl {",
+        "    public static Path getConfigDir(String modId) {",
+        "        return FMLPaths.GAMEDIR.get().resolve(\"config\").resolve(modId);",
+        "    }",
+        "}"
+      ]
+    },
+    "kotlinImpl": {
+      "note": "Kotlin 中 object 单例的 @ExpectPlatform 实现",
+      "common": [
+        "@ExpectPlatform",
+        "public static fun getConfigDir(modId: String): Path {",
+        "    throw AssertionError(\"Platform implementation missing!\")",
+        "}"
+      ],
+      "fabric": [
+        "object ConfigHelperImpl {",
+        "    @JvmStatic",
+        "    fun getConfigDir(modId: String): Path =",
+        "        FabricLoader.getInstance().configDir.resolve(modId)",
+        "}"
+      ],
+      "neoforge": [
+        "object ConfigHelperImpl {",
+        "    @JvmStatic",
+        "    fun getConfigDir(modId: String): Path =",
+        "        FMLPaths.GAMEDIR.get().resolve(\"config\").resolve(modId)",
+        "}"
+      ]
+    }
+  },
+  "architecturyCommonJson": {
+    "description": "common/src/main/resources/architectury.common.json，用于 Interface Injection 和 Access Widener",
+    "interfaceInjection": {
+      "description": "向已存在的类注入接口",
+      "example": {
+        "injected_interfaces": {
+          "net/minecraft/class_2586": ["net/examplemod/api/IMixinServerPlayer"]
+        }
+      }
+    },
+    "accessWidener": {
+      "description": "放宽访问权限，允许 common 模块访问 private/protected 成员",
+      "example": {
+        "accessWidener": "mymod.accesswidener"
+      }
+    },
+    "example": {
+      "common": "architectury.common.json"
+    }
+  },
+  "buildGradle": {
+    "root": {
+      "plugins": [
+        "id 'architectury-plugin' version '3.4'",
+        "id 'dev.architectury.loom' version '3.4'",
+        "id 'com.github.johnrengelman.shadow' version '8.1.1' apply false"
+      ],
+      "subprojectsNote": "所有 subprojects 应用 dev.architectury.loom，dependencies 中配置 minecraft + mappings"
+    },
+    "common": {
+      "architecturyBlock": "architectury { common(\"fabric\", \"forge\", \"neoforge\") { it.platformPackage \"neoforge\", \"forge\" } }"
+    },
+    "loader": {
+      "fabric": "architectury { platformSetupLoomIde() fabric() }",
+      "neoforge": "architectury { platformSetupLoomIde() neoForge() }",
+      "forge": "architectury { platformSetupLoomIde() forge() }"
+    },
+    "mappings": {
+      "note": "推荐使用 layered mappings + Parchment",
+      "example": [
+        "mappings loom.layered {",
+        "    officialMojangMappings()",
+        "    parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")",
+        "}"
+      ]
+    }
+  },
+  "settingsGradle": {
+    "content": [
+      "pluginManagement {",
+      "    repositories {",
+      "        maven { url 'https://maven.fabricmc.net/' }",
+      "        maven { url 'https://maven.neoforged.net/releases' }",
+      "        gradlePluginPortal()",
+      "    }",
+      "}",
+      "",
+      "rootProject.name = 'my-multiloader-mod'",
+      "include 'common'",
+      "include 'fabric'",
+      "include 'neoforge'"
+    ]
+  },
+  "moduleStructure": {
+    "common": [
+      "src/main/java/<base>/<modid>/",
+      "src/main/resources/assets/<modid>/"
+    ],
+    "fabric": [
+      "src/main/java/<base>/<modid>/<modid>.java (FabricMod entrypoint)",
+      "src/main/java/<base>/<modid>/fabric/ (fabric-specific impl)",
+      "src/main/resources/fabric.mod.json"
+    ],
+    "neoforge": [
+      "src/main/java/<base>/<modid>/<modid>.java (NeoForge mod class)",
+      "src/main/java/<base>/<modid>/neoforge/ (neoforge-specific impl)",
+      "src/main/resources/META-INF/neoforge.mods.toml"
+    ]
+  }
+}

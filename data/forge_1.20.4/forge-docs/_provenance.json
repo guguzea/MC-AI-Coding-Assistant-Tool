@@ -1,0 +1,693 @@
+{
+  "version": "1.20.4",
+  "generatedAt": "2026-07-11T00:00:00.000Z",
+  "sources": {
+    "forgeMkdocsRoute": "https://docs.minecraftforge.net/en/1.20.x/",
+    "forgeManifest": "https://files.minecraftforge.net"
+  },
+  "processed": [
+    {
+      "file": "advanced_accesstransformers.md",
+      "sha256": "48b274d8725fdc6a8ea71353c919b75e0da2fe03ad3216dfc625df93e23b319a",
+      "size": 5108
+    },
+    {
+      "file": "blockentities.md",
+      "sha256": "59849677acba0b5ba449888170f08c6a0a1a8c9f4a6bc06b17a2e5a96c6dfc01",
+      "size": 7976
+    },
+    {
+      "file": "blockentities_ber.md",
+      "sha256": "3d0ee67b93b010bf254e296906f992ccde8d7eff94fb6d7ba2fd23b40b83874e",
+      "size": 1731
+    },
+    {
+      "file": "blocks.md",
+      "sha256": "8ae66155fa100e171d7246d6c94a3a69c709ee9a75b32c38093bf9d83115f38c",
+      "size": 4700
+    },
+    {
+      "file": "blocks_states.md",
+      "sha256": "a3e63a54016376a19dd8e5e14f75fb31258f2f950e0ff94e2cd0ded4141e107a",
+      "size": 7398
+    },
+    {
+      "file": "concepts_events.md",
+      "sha256": "c3bc626cb39230296a0e9a784724114795832249746f93350242d7584f5562a9",
+      "size": 8783
+    },
+    {
+      "file": "concepts_internationalization.md",
+      "sha256": "6cc4cf5d44fe928c08507e698e6ef689871e5f878d1e2ed7e7e11eb0c4e55bd5",
+      "size": 4770
+    },
+    {
+      "file": "concepts_lifecycle.md",
+      "sha256": "3241a10ffd71248cde1dd3325f2f4b67f7363cc8fff109c80873964eb0a5b41a",
+      "size": 4121
+    },
+    {
+      "file": "concepts_registries.md",
+      "sha256": "25e338af7446957b38526d250edb545184a0a7d733f7791adfc1ad0a2ce1a01f",
+      "size": 14358
+    },
+    {
+      "file": "concepts_resources.md",
+      "sha256": "ee72af173fc5fea365706f6968b419d1f1af87cd2440af05eb3de43d0fb6b4db",
+      "size": 2475
+    },
+    {
+      "file": "concepts_sides.md",
+      "sha256": "4fe561c9fbdbc7bfc09cd303d216d223aa00f58d498e0ac377b372107f748fcf",
+      "size": 11981
+    },
+    {
+      "file": "datagen.md",
+      "sha256": "d29c75421322c036c95c38420654e58b785b764b8afe8f9885079217215c7656",
+      "size": 4728
+    },
+    {
+      "file": "datastorage_capabilities.md",
+      "sha256": "a32246011fadf90abe1e1d8599ad1dd5ecd84f3dc7749fe71e48faded554ae7c",
+      "size": 11724
+    },
+    {
+      "file": "datastorage_codecs.md",
+      "sha256": "d2e6508d33fb0739dcdf679ac9ef0b57214fa3e46a844d8ca1d04afdff1c264b",
+      "size": 17560
+    },
+    {
+      "file": "datastorage_saveddata.md",
+      "sha256": "d0869ced7a5f8ae4e855ae4ef7513bc20be8adf7224eef59ff0e043d387516fc",
+      "size": 2222
+    },
+    {
+      "file": "gameeffects_particles.md",
+      "sha256": "1137a4456878ec064eece02b6bf1698e5bd0fa4dd98e55a651f303b166b04051",
+      "size": 9865
+    },
+    {
+      "file": "gameeffects_sounds.md",
+      "sha256": "9ad31f144afbd283070a3cb5eb50d922ae8f5b76fdaaca92e04f7d21b6866ad8",
+      "size": 7223
+    },
+    {
+      "file": "gettingstarted.md",
+      "sha256": "9871bf6bf3a22f643f7b8b1d2e9243f77d78bd243f7ca793909b604d8425bd68",
+      "size": 6497
+    },
+    {
+      "file": "gettingstarted_modfiles.md",
+      "sha256": "c8e04bf79ab457186349587780d5a0bb9a123b6efcde79895964058f62cc5920",
+      "size": 11439
+    },
+    {
+      "file": "gettingstarted_structuring.md",
+      "sha256": "42db11be0eed02b3bd80e569a9857bb6c1ba02bd05dbb6e83943f1f16a5d1042",
+      "size": 4767
+    },
+    {
+      "file": "gettingstarted_versioning.md",
+      "sha256": "816011caea59bd045d48a0348f8e449bfde42acd2d90b504f2c984711a82e016",
+      "size": 4420
+    },
+    {
+      "file": "gui_menus.md",
+      "sha256": "901331f889b873deed5ed8145b17c70896d7f8f5944c422a1da0234296167099",
+      "size": 17957
+    },
+    {
+      "file": "gui_screens.md",
+      "sha256": "84c4cca47209c8172e260dd2068b35a4ab9aaef8dcb8bea75a9d8198694b346a",
+      "size": 21310
+    },
+    {
+      "file": "items.md",
+      "sha256": "92b12550016e14cec355bff18720eb5b569bae46fa1bf3ff0b4c6c6438cf8970",
+      "size": 3498
+    },
+    {
+      "file": "items_bewlr.md",
+      "sha256": "51d2dffbc133dd8d9dab1fd4a220a9ad3610db0bdbf0e171b30bcc5083ac9ce7",
+      "size": 1782
+    },
+    {
+      "file": "legacy.md",
+      "sha256": "bd91f55e4097fe90b8763ddc824eea0347e3bbc22359dbb1251197cb7ab23c2b",
+      "size": 3109
+    },
+    {
+      "file": "legacy_porting.md",
+      "sha256": "30109b0540301a8844958d43cb2733137fa95ca536406d99feac4e2094ae9ca2",
+      "size": 1193
+    },
+    {
+      "file": "misc_config.md",
+      "sha256": "bd1029a52ff3756b1ce4db4ace1e253c7a532e290ff025c91e61d4678ad97d9b",
+      "size": 5986
+    },
+    {
+      "file": "misc_debugprofiler.md",
+      "sha256": "7ca52444d5bdbbf5a4995bc32ea4ffecff94bb19d0d1b93ed170a9c1ee623608",
+      "size": 2638
+    },
+    {
+      "file": "misc_gametest.md",
+      "sha256": "dd5eef483fe32ac3bbf8c7dcb6c05ff5eae2749890c7617e06bf4c32ecf22ade",
+      "size": 12925
+    },
+    {
+      "file": "misc_keymappings.md",
+      "sha256": "3a3e243fcee8eb69a2bdf08ec37a179b1d0e045daa0c3b138d01622ed63bb1f3",
+      "size": 8847
+    },
+    {
+      "file": "misc_updatechecker.md",
+      "sha256": "e7bcbcfe121ec1f0a5e630bb44884c517920fc34cfb76b0c1a2588276239d847",
+      "size": 3798
+    },
+    {
+      "file": "networking.md",
+      "sha256": "2c65b99aef37ee32036c018eff882cc2c633de0c3ec6b789e43f60f4988fe3c4",
+      "size": 951
+    },
+    {
+      "file": "networking_entities.md",
+      "sha256": "9b261c719c845705cfac5ed0c1b9b85e812dfb1ae786d8ac91629b64aa2b96be",
+      "size": 2168
+    },
+    {
+      "file": "networking_simpleimpl.md",
+      "sha256": "78bff4bd73264fb47fddf848daf803b87a6199e8d877233946306fdc606bf0a8",
+      "size": 7257
+    },
+    {
+      "file": "rendering_modelloaders.md",
+      "sha256": "cfb43a765bd4bc54ae9bf6aa94216105dfee450e1c162ef577f1e7188f061a3b",
+      "size": 2172
+    },
+    {
+      "file": "resources_client.md",
+      "sha256": "5d5b9a9251a17ceb37ea1a98c4332909ae2fa1f376f65d1a79301f5fb0338965",
+      "size": 1029
+    },
+    {
+      "file": "resources_server.md",
+      "sha256": "4fb6e64fb47825119ad3991e55e461386a1d8fb82136b28f1f1f98e2fd8ecde0",
+      "size": 902
+    },
+    {
+      "file": "contributing.md",
+      "sha256": "6d3f1d29658966520c50f0188aa1a673313b6407e46697bde8d9a9f57bc32f2b",
+      "size": 2074
+    },
+    {
+      "file": "datagen_client_localization.md",
+      "sha256": "2b31f4e62a41f2e44e360a61328818d25830e727274d19e33cc2ae1d8fcb96c9",
+      "size": 1799
+    },
+    {
+      "file": "datagen_client_modelproviders.md",
+      "sha256": "319f024be49975ee728947f64db76a97c1717477984036e75a4a0ada93f2f0db",
+      "size": 25627
+    },
+    {
+      "file": "datagen_client_sounds.md",
+      "sha256": "923299ba0acfa56e856f8ad42144566e414153b6e0d840498949100ef1e89d6b",
+      "size": 3783
+    },
+    {
+      "file": "datagen_server_advancements.md",
+      "sha256": "7e2199a893dd2caeb7bf1b3f17b3f9d3fafd908ced3747735e3576eea08f381b",
+      "size": 3575
+    },
+    {
+      "file": "datagen_server_datapackregistries.md",
+      "sha256": "ae2c407f56c1b6d64ec770a46eacad7146738022413099bee0b3d58cd807c27a",
+      "size": 5457
+    },
+    {
+      "file": "datagen_server_glm.md",
+      "sha256": "26c767630cd88ca2d3149a947e163f6a4c3a5b25e4de6d3460d1b9a85e913cd2",
+      "size": 1097
+    },
+    {
+      "file": "datagen_server_loottables.md",
+      "sha256": "c7719ffef46dfc6269bc7703f847ab5a73fabd7077f2d007094eff8643147a6d",
+      "size": 8267
+    },
+    {
+      "file": "datagen_server_recipes.md",
+      "sha256": "bf1a9bfccbe1deea112c4c9899a95fdbce9c93e6cfa364fe9cf3130886bf4155",
+      "size": 10127
+    },
+    {
+      "file": "datagen_server_tags.md",
+      "sha256": "b7d47c7a65a71f1cbb229fad8d3b3037179c59e572662079deadd08aa9f7088f",
+      "size": 5389
+    },
+    {
+      "file": "forgedev.md",
+      "sha256": "5315edc45072cef8a58e438de9b08de12918ea882287efebd2c4ca0977accf55",
+      "size": 8813
+    },
+    {
+      "file": "forgedev_prguidelines.md",
+      "sha256": "8d02622f260058272ecd62479103ee743a018bfbd7ca619683ee065397778056",
+      "size": 6218
+    },
+    {
+      "file": "rendering_modelextensions_facedata.md",
+      "sha256": "d4c1338dd67e03cd465ba33feb087cc46bf6a957a89acaacf27ff1494c587654",
+      "size": 4171
+    },
+    {
+      "file": "rendering_modelextensions_rendertypes.md",
+      "sha256": "e3fab0ffd687949ff47a30eccc10c69028e5a16b6b45775d5f6b42864e1cdfce",
+      "size": 4423
+    },
+    {
+      "file": "rendering_modelextensions_transforms.md",
+      "sha256": "3034f330bd5bf88dcf1747b4905f4d775fda65f4e11ab0201d5dea030e145610",
+      "size": 3418
+    },
+    {
+      "file": "rendering_modelextensions_visibility.md",
+      "sha256": "e6f8ce71f36b84725358682e57ed2a93ef56256f536794ca3bb6a311567e367e",
+      "size": 1970
+    },
+    {
+      "file": "rendering_modelloaders_bakedmodel.md",
+      "sha256": "0b8736fe3d00fff317a06b56f11c7ae2ec6e530bfe6d59d8a7ada52dc8c16386",
+      "size": 4634
+    },
+    {
+      "file": "rendering_modelloaders_itemoverrides.md",
+      "sha256": "9112ab523fb3ac40d78e307ec0a3647439509dee2d3c35616b3b69b4aba03b76",
+      "size": 1964
+    },
+    {
+      "file": "rendering_modelloaders_transform.md",
+      "sha256": "4847b13b04946388c3a89680dc3b79a92802f2364098f442231d146c23b6a6bd",
+      "size": 3003
+    },
+    {
+      "file": "resources_client_models.md",
+      "sha256": "49b4ec8a843e2f04872637d4f6df85e9f3b5e7100d4f95f087c337cdcb07fe4c",
+      "size": 2258
+    },
+    {
+      "file": "resources_client_models_itemproperties.md",
+      "sha256": "e73a13cc3cfa69e83cd1b963ce6dbe0765b8a112d5a71b9b233b34ed0abd4735",
+      "size": 4076
+    },
+    {
+      "file": "resources_client_models_tinting.md",
+      "sha256": "971ce46187de40d7c83677a07f9d33d083c3a811d0f33e68552fb75b5a42dfeb",
+      "size": 2921
+    },
+    {
+      "file": "resources_server_advancements.md",
+      "sha256": "6dd9276a8c6b58a1726f86ca19a0fdb15169503fbd0a655dd4e070b194b31453",
+      "size": 8063
+    },
+    {
+      "file": "resources_server_conditional.md",
+      "sha256": "dbcf8c74ec8421c51e3375781cdd83644a9a6fc51f10f4d246c495c2b7d346ec",
+      "size": 6026
+    },
+    {
+      "file": "resources_server_glm.md",
+      "sha256": "487c726c4a3e856501e7e2291090a3a4727ad2d6b5540935fadb7d88182fa0d9",
+      "size": 7642
+    },
+    {
+      "file": "resources_server_loottables.md",
+      "sha256": "04fd5b2c38a294d929def84ce2ea144edb278e219c65eec71da5c0ff35aa6bd8",
+      "size": 5174
+    },
+    {
+      "file": "resources_server_recipes.md",
+      "sha256": "203d931886d34aa830b70eacd8dcf1e4058f83011dfb2d46c3752ce4413bd0df",
+      "size": 4590
+    },
+    {
+      "file": "resources_server_recipes_incode.md",
+      "sha256": "5aa97ba2444a0df216fa68d1c876484a66350c797722ab8123cb8d86560f67cb",
+      "size": 3969
+    },
+    {
+      "file": "resources_server_recipes_ingredients.md",
+      "sha256": "98989905766280aee376da9e94b76a69d6f7e051a3b9ab8aea9897541bff0638",
+      "size": 6514
+    },
+    {
+      "file": "resources_server_tags.md",
+      "sha256": "eba5f3c3e6937c438c931c6f311289182527352b0abe98aadfd3a02e60937fa0",
+      "size": 7014
+    }
+  ],
+  "raw": [
+    {
+      "file": "advanced_accesstransformers.md",
+      "sha256": "534581e871dfb783bb98e0c07f468c9a73748bf961a60fa6220fdd4f08532db8",
+      "size": 5137
+    },
+    {
+      "file": "blockentities.md",
+      "sha256": "52e749d68236a8fd5170e657cb193518754117320dd2a01cf24b14eca883cf52",
+      "size": 7640
+    },
+    {
+      "file": "blockentities_ber.md",
+      "sha256": "ae0a95d0b4ed1ec2e90b422b2911506e57e2e3eeaf0fce3eabb5dac01bfa34b2",
+      "size": 1914
+    },
+    {
+      "file": "blocks.md",
+      "sha256": "aa9f31e94250b24fcae12fdefe942df376d154210b3fbbd02ea29c6605cb83c7",
+      "size": 4766
+    },
+    {
+      "file": "blocks_states.md",
+      "sha256": "79e7e69aad8471fcdbf2d96f65f82245f8c141de89a8e4dd5f9b1de53aefb725",
+      "size": 7452
+    },
+    {
+      "file": "concepts_events.md",
+      "sha256": "63d9a8c4ff13f84503a4e57bd19dbefe9960d6f4e14e4c4c5288290c49497b41",
+      "size": 8544
+    },
+    {
+      "file": "concepts_internationalization.md",
+      "sha256": "457e370c09f6fed67c0e4bc434802b4e5887dd78fa1c706ef1bbcc18beb482cb",
+      "size": 4846
+    },
+    {
+      "file": "concepts_lifecycle.md",
+      "sha256": "0d17d5fcc69697f462053d155934effd1558fa03e68760a2cd602bd6dca4112c",
+      "size": 4175
+    },
+    {
+      "file": "concepts_registries.md",
+      "sha256": "d4f87a088513d18c2ddf830aad68acdeb32c9482f175881cb5041ed03e23726a",
+      "size": 13951
+    },
+    {
+      "file": "concepts_resources.md",
+      "sha256": "fd3c6afc6d9b9e820e9615f640ed4fdc5a4aa788fb219204b90601af69eb9387",
+      "size": 2660
+    },
+    {
+      "file": "concepts_sides.md",
+      "sha256": "582103ae62786d4f7e2665d1ad5360a7d367737a35c8d1da053eb64c46507266",
+      "size": 11685
+    },
+    {
+      "file": "datagen.md",
+      "sha256": "a98c5ee8a10e71901c3b1bc5c9078dc354a8b0eadc1ede57904889a750d1d66d",
+      "size": 4891
+    },
+    {
+      "file": "datastorage_capabilities.md",
+      "sha256": "0cfe069c50d495bd364d9ccd0c6c904741b453cb23cc9ccdb174a71f47bfb1ea",
+      "size": 11523
+    },
+    {
+      "file": "datastorage_codecs.md",
+      "sha256": "af3461d6f332d9845ec8b9d99a8f229669caa0af48021b4e622f14b8881f45d0",
+      "size": 17003
+    },
+    {
+      "file": "datastorage_saveddata.md",
+      "sha256": "464daf82980923ee3e80b4ce5d33a238a799b36349a30ad34ec98b34e5290925",
+      "size": 2299
+    },
+    {
+      "file": "gameeffects_particles.md",
+      "sha256": "3b69298630a167daefd0d9d891f39170c3e7a9964cb3d1db96ecabac047e6209",
+      "size": 9828
+    },
+    {
+      "file": "gameeffects_sounds.md",
+      "sha256": "f28a651924f1e50077271f4f64912f81eccd31e35d95c6dcc833980d8f85c5f4",
+      "size": 7325
+    },
+    {
+      "file": "gettingstarted.md",
+      "sha256": "1582ee4d147987c34dfa47f115b414403141e6d7cc8f896f344b12b16d1ff67f",
+      "size": 6351
+    },
+    {
+      "file": "gettingstarted_modfiles.md",
+      "sha256": "4cfbb0e9e7a65a5513bd99c4ab428098fe3bb175bb3d42958dd72aed30f67e94",
+      "size": 11498
+    },
+    {
+      "file": "gettingstarted_structuring.md",
+      "sha256": "a9c32716d4128de17cc1e71e0a87dffb3776f8688807c68c8a9ebf221a97701f",
+      "size": 4764
+    },
+    {
+      "file": "gettingstarted_versioning.md",
+      "sha256": "ba5f3bdf9a3c4d091c1cddcd004098e0524cb74099e5f36da5d12dc1a9aad717",
+      "size": 4569
+    },
+    {
+      "file": "gui_menus.md",
+      "sha256": "b8b883e6b97f08645608474b4077863c64472d3c270762eb8fa2b5b9d2816228",
+      "size": 17221
+    },
+    {
+      "file": "gui_screens.md",
+      "sha256": "06729c7e78d6ad80a3919217e9bfa49c1817598b188eed67017e262eee649619",
+      "size": 20619
+    },
+    {
+      "file": "items.md",
+      "sha256": "554a26bdbc4b1efc82850f3c5188f8ab6a68a2e8ad04fd8ef81fac2f44d5e8b1",
+      "size": 3543
+    },
+    {
+      "file": "items_bewlr.md",
+      "sha256": "05bb3663bd546d472952b398db1a187d7c2fd84a60262a7acc8d30d01c2853ae",
+      "size": 1820
+    },
+    {
+      "file": "legacy.md",
+      "sha256": "9574d04e145b58830c6096ec82295c0b7bcdc07f172f84cdc3aa64d327767b61",
+      "size": 3144
+    },
+    {
+      "file": "legacy_porting.md",
+      "sha256": "63dbdcd8ec9d420b2ed232f40c0bd07dc7c6fc7b3242c1175a9142fcdc5fcfaf",
+      "size": 1332
+    },
+    {
+      "file": "misc_config.md",
+      "sha256": "e10b8cd334a8197214180ee0cf4065d442ca79dd0cd74433fec6d04e00469d8a",
+      "size": 5861
+    },
+    {
+      "file": "misc_debugprofiler.md",
+      "sha256": "246b5f34a74cd61e0a138d9d4667e47b1fd227877a05e38ef36c820f9323f39c",
+      "size": 2778
+    },
+    {
+      "file": "misc_gametest.md",
+      "sha256": "426eed34b5c93678bf2ea24bff7bd56492b691cd9e8946b21e2c50e1307202d4",
+      "size": 12400
+    },
+    {
+      "file": "misc_keymappings.md",
+      "sha256": "f4c841dd9ea013c578cbbda1a39fd6fe0266282344ad71eca9a8ace6f9f4a4de",
+      "size": 8414
+    },
+    {
+      "file": "misc_updatechecker.md",
+      "sha256": "e2f40e4c015a34a326db173f361692b08d4dd484d76badf7db8820870bfb5c5c",
+      "size": 3983
+    },
+    {
+      "file": "networking.md",
+      "sha256": "07e434188bd2a47a5a7868dffeb6b2035ddea2785dd1ac0f3bfeffa42609b22b",
+      "size": 1120
+    },
+    {
+      "file": "networking_entities.md",
+      "sha256": "7be25c315a8cd84f73baf9efbb27cc69c0a2b10f6d0c594804c3ff5f7b35f2f3",
+      "size": 2224
+    },
+    {
+      "file": "networking_simpleimpl.md",
+      "sha256": "00b45852d98eebd1f19632acb4fb01839b6012ce782fde8d3fbd71d889fdabb6",
+      "size": 7238
+    },
+    {
+      "file": "rendering_modelloaders.md",
+      "sha256": "3bee45add16ac97df7002bd2ed661f12968558912eb2eaaf66e12f1e0d7143fe",
+      "size": 2279
+    },
+    {
+      "file": "resources_client.md",
+      "sha256": "4d71b8b1840955cf6384b243f8b87612344b3493512cba708eef6b5d424208ce",
+      "size": 1210
+    },
+    {
+      "file": "resources_server.md",
+      "sha256": "c7595147e44f7dcb488ea3be7cc8076b7fd61272743eb070de1c3b1aeef5acb4",
+      "size": 1083
+    },
+    {
+      "file": "contributing.md",
+      "sha256": "bdfccf4c191c0213a7fd0510848a054fa946bc218379b3696902972847ecb2eb",
+      "size": 2097
+    },
+    {
+      "file": "datagen_client_localization.md",
+      "sha256": "ddb7f7994a6f13052bc669956d36b632c05542dc44a06015e92ca655bf025c17",
+      "size": 1803
+    },
+    {
+      "file": "datagen_client_modelproviders.md",
+      "sha256": "e3d59c777e766394489271027b5a368686730b2f507d2c8bdbf39cafac7fb1ab",
+      "size": 24856
+    },
+    {
+      "file": "datagen_client_sounds.md",
+      "sha256": "2c77c8494efb9b521bdd0d02fbb4e43b9660aa873ed21a1fe2d52ff9931b109b",
+      "size": 3774
+    },
+    {
+      "file": "datagen_server_advancements.md",
+      "sha256": "f99d71a37128325eef5e0f0a3e0f29f7f43ad68943b9b692d7bb4adcc0ce1812",
+      "size": 3543
+    },
+    {
+      "file": "datagen_server_datapackregistries.md",
+      "sha256": "370e1a524079b2e2a84b1e3cf015032fb390a35d7ec50bb8130617735f2303ad",
+      "size": 5458
+    },
+    {
+      "file": "datagen_server_glm.md",
+      "sha256": "9dc13aba11571c1bd7c41e0b2230aa573b43739bfe68da7f55c84e65ebd7aa80",
+      "size": 1169
+    },
+    {
+      "file": "datagen_server_loottables.md",
+      "sha256": "19aac36ef2749bd096e357778b22050b8ac2df0dead0ee5fd9712158bd841277",
+      "size": 8074
+    },
+    {
+      "file": "datagen_server_recipes.md",
+      "sha256": "fb7d57d08f5b97c917f483d609330e35ef711d9b07e074cafe428928f561c0b5",
+      "size": 9640
+    },
+    {
+      "file": "datagen_server_tags.md",
+      "sha256": "62347ecb13ae2421b419a599e007a9967264920efa9763673e2adb69989177a0",
+      "size": 5253
+    },
+    {
+      "file": "forgedev.md",
+      "sha256": "ea706b97b0ede724ee9d51d16b8d555f8596437f139821ccbb28cf59cbeb6d0b",
+      "size": 8717
+    },
+    {
+      "file": "forgedev_prguidelines.md",
+      "sha256": "06bb667cca04dad2da887c9d584dc6a1fed9194ea063478e00533c53afa3fd22",
+      "size": 6227
+    },
+    {
+      "file": "rendering_modelextensions_facedata.md",
+      "sha256": "46296d6c9d9bc3d871dc1bef0abf5c22886291e9d687a0db92a0fb630dd08280",
+      "size": 4117
+    },
+    {
+      "file": "rendering_modelextensions_rendertypes.md",
+      "sha256": "a200cc15fe4b2ed317d1b3586394a4f5a93dd349c569ec5bc2d9f0a0026d1723",
+      "size": 4430
+    },
+    {
+      "file": "rendering_modelextensions_transforms.md",
+      "sha256": "9636eeb2f4eb8818e3f58bb6beae301f4b23e6891a20a17258cedadc7adc5b78",
+      "size": 3548
+    },
+    {
+      "file": "rendering_modelextensions_visibility.md",
+      "sha256": "68715024828d1a84770674342508d1710fe50d3b379dee2143317eb0b30df4e9",
+      "size": 2100
+    },
+    {
+      "file": "rendering_modelloaders_bakedmodel.md",
+      "sha256": "54528f27f7d32d43792248ee72b8ef5633ac3fd9812f2f6efd86baa8b229d30e",
+      "size": 4460
+    },
+    {
+      "file": "rendering_modelloaders_itemoverrides.md",
+      "sha256": "5150aaf777329fdc67f24afe9faed74c89ef29a43ee60364d4c8ff8272e83270",
+      "size": 2093
+    },
+    {
+      "file": "rendering_modelloaders_transform.md",
+      "sha256": "7d030930d6a5766c9f0052721209a005bf7fbec0fe65608e1dd5a97e916c5f9b",
+      "size": 3053
+    },
+    {
+      "file": "resources_client_models.md",
+      "sha256": "b6a36dfdd409126d35c5bb43d89f8f08afeaee8e077225c9ea9e87a9df640266",
+      "size": 2283
+    },
+    {
+      "file": "resources_client_models_itemproperties.md",
+      "sha256": "ba7c1f66c73a36b48cdc383defbedd5d4cdc7d42c3f3d67d64a6b69732dd788c",
+      "size": 4025
+    },
+    {
+      "file": "resources_client_models_tinting.md",
+      "sha256": "a6f57683ef16a32e99a56887edb05c1cf47e91f4613606dd3281c1518d1b6d7d",
+      "size": 2932
+    },
+    {
+      "file": "resources_server_advancements.md",
+      "sha256": "47859b2568e86778e4486199727a3ef4d31b6f4ab8715bb81ada6028091a390e",
+      "size": 7746
+    },
+    {
+      "file": "resources_server_conditional.md",
+      "sha256": "650e0a81c19b95fc4bbca680cf8f15f8511ce2d8dd3859b18e30a07d0702305a",
+      "size": 5638
+    },
+    {
+      "file": "resources_server_glm.md",
+      "sha256": "35364364b6671152a62e9c5276ea3f38e5b17e72187e95af3b19ed1969d73ec1",
+      "size": 7427
+    },
+    {
+      "file": "resources_server_loottables.md",
+      "sha256": "878590b0a33aac11f57c154ff5a10f9cd628aa8933b672010bb068882ee12d01",
+      "size": 5006
+    },
+    {
+      "file": "resources_server_recipes.md",
+      "sha256": "79bb10a11c62bec9ef9a4be751ba34833be1a3a7fb30929a2bcbb383c97b1097",
+      "size": 4481
+    },
+    {
+      "file": "resources_server_recipes_incode.md",
+      "sha256": "940e12e8f177e66cc52ab06c678666e5fa82e6bc9abf87e622889d50df1b1683",
+      "size": 3913
+    },
+    {
+      "file": "resources_server_recipes_ingredients.md",
+      "sha256": "88cfa3d7f70e0e29c06bf81584f6d00d724c506bc0478c1263f46881ddf577ee",
+      "size": 6324
+    },
+    {
+      "file": "resources_server_tags.md",
+      "sha256": "d8d7f97bc64fdf0cf468c9025d2a18547939eacac80a5e71741d47d67be9ac20",
+      "size": 7073
+    }
+  ],
+  "phase6Notes": "Mechanical rewrite; no content invented. Forge 1.20.x docs are the canonical Forge source for the 1.20.4 release; NeoForge 1.20.4 docs live at docs.neoforged.net/docs/1.20.4/ and must not be merged here."
+}

@@ -1,0 +1,171 @@
+# 反模式库（Forge 1.14.4）
+
+> 本文档列出 Forge 1.14.4 开发中的常见错误模式和解决方案。
+
+## 1. Registry 错误
+
+### ❌ 在静态字段初始化中引用其他静态字段
+
+```java
+// 错误：EXAMPLE_BLOCK 在此行被创建时，BLOCK_ITEM 引用的 EXAMPLE_BLOCK 可能尚未注册
+public static final Block EXAMPLE_BLOCK = new Block(...);
+public static final Item BLOCK_ITEM = new BlockItem(EXAMPLE_BLOCK, ...); // ❌
+
+// 正确：使用 RegistryEvent 回调
+@SubscribeEvent
+public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+    event.getRegistry().register(EXAMPLE_BLOCK.setRegistryName(...));
+}
+
+@SubscribeEvent
+public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
+    event.getRegistry().register(BLOCK_ITEM.setRegistryName(...)); // ✅
+}
+```
+
+### ❌ Registry 名称大小写错误
+
+```java
+// 错误
+new Block(...).setRegistryName(new ResourceLocation(MOD_ID, "My_Block"));
+
+// 正确
+new Block(...).setRegistryName(new ResourceLocation(MOD_ID, "my_block"));
+```
+
+## 2. TileEntity 错误
+
+### ❌ 忘记 markDirty()
+
+数据变化后不调用 `markDirty()`，会导致 Chunk 保存时数据丢失：
+
+```java
+// 错误
+counter++;
+
+// 正确
+counter++;
+this.markDirty(); // ✅
+```
+
+### ❌ writeToNBT / readFromNBT 忘记调用 super
+
+```java
+// 错误
+@Override
+public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    compound.putInt("counter", counter); // 覆盖了父类的 NBT 数据
+    return compound;
+}
+
+// 正确
+@Override
+public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    super.writeToNBT(compound); // ✅ 先调用父类
+    compound.putInt("counter", counter);
+    return compound;
+}
+```
+
+## 3. 物理端错误
+
+### ❌ 在服务端直接修改世界数据
+
+```java
+// 错误：在逻辑端混合时调用
+if (!world.isRemote) {
+    player.getCapability(MY_CAP).ifPresent(cap -> {
+        cap.setValue(cap.getValue() + 1);
+        // ...
+    });
+}
+
+// 正确：通过网络包同步
+// 服务端：修改数据 → 发送数据包
+// 客户端：接收数据包 → 更新渲染
+```
+
+### ❌ DistExecutor 混用
+
+```java
+// 错误：Forge 1.14.4 用 runWhenOn
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...); // ❌
+
+// 正确
+DistExecutor.runWhenOn(Dist.CLIENT, ...); // ✅
+```
+
+## 4. 网络错误
+
+### ❌ 在网络线程修改世界
+
+```java
+// 错误
+public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().getSender().getEntity().addVelocity(0, 1, 0); // ❌ 在网络线程
+
+    ctx.get().setPacketHandled(true);
+}
+
+// 正确
+public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ctx.get().getSender().getEntity().addVelocity(0, 1, 0); // ✅ 主线程
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+### ❌ 消息 ID 冲突
+
+同一通道内每个消息 ID 必须唯一。最好使用枚举：
+
+```java
+private static int nextId() {
+    return msgId++;
+}
+```
+
+## 5. NBT 错误
+
+### ❌ NBTTagCompound 类型不匹配
+
+```java
+// 错误
+compound.put("count", new NBTTagInt(5)); // 1.14.4 用 putInt
+compound.getString("count"); // 类型不匹配
+
+// 正确
+compound.putInt("count", 5);
+compound.getInt("count");
+```
+
+## 6. Java 版本错误
+
+### ❌ 使用 Java 11+ 编译
+
+Forge 1.14.4 必须使用 **Java 8**：
+
+```properties
+# build.gradle 中禁止
+sourceCompatibility = JavaVersion.VERSION_11  # ❌
+
+# 正确
+sourceCompatibility = JavaVersion.VERSION_1_8  # ✅
+```
+
+### ❌ 混淆 Java 版本
+
+```bash
+# 编译时指定 Java 8
+javac -source 8 -target 8 ...
+```
+
+## 7. 常见崩溃原因
+
+| 崩溃 | 原因 |
+|------|------|
+| `NullPointerException` at `TileEntity.createTileEntity()` | `hasTileEntity()` 返回 true 但 `createTileEntity()` 返回 null |
+| `IllegalArgumentException: don't know how to serialize` | NBT 中使用了不支持的类型 |
+| `ConcurrentModificationException` | 在遍历集合时修改（网络/事件线程） |
+| ClassNotFoundException | 忘记注册 `RecipeSerializer` 或 `ParticleFactory` |

@@ -23,11 +23,30 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "fs";
-import { join, dirname, basename } from "path";
+import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { parseCliArgs } from "./_lib/args.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "..", "data", "forge-docs");
+const DATA_DIR = join(__dirname, "..", "..", "data");
+
+// ── 版本比较工具（采纳"建议3"：避免字符串比较不可靠）──────────────────
+
+function parseVersion(version) {
+  return version.split(".").map(p => (p === "x" ? 0 : parseInt(p, 10) || 0));
+}
+
+function compareVersion(a, b) {
+  const va = parseVersion(a);
+  const vb = parseVersion(b);
+  for (let i = 0; i < Math.max(va.length, vb.length); i++) {
+    const da = va[i] ?? 0;
+    const db = vb[i] ?? 0;
+    if (da < db) return -1;
+    if (da > db) return 1;
+  }
+  return 0;
+}
 
 // ── 关键标签定义 ─────────────────────────────────────────────────────────
 
@@ -54,19 +73,33 @@ const PRIORITY_TAGS = [
   { priority: "🟢", keywords: ["access transformers", "accesstransformer"] },
 ];
 
-function inferTags(filename, title, content) {
-  const text = `${filename} ${title} ${content}`.toLowerCase();
-  const tags = new Set();
+function inferPriorityBase(path) {
+  const text = path.toLowerCase();
   const priorities = new Set();
-
   for (const { priority, keywords } of PRIORITY_TAGS) {
-    if (keywords.some(k => text.includes(k))) {
-      priorities.add(priority);
-    }
+    if (keywords.some(k => text.includes(k))) priorities.add(priority);
   }
+  return priorities;
+}
 
-  // 额外标签：从文件名推断（始终添加小写语义标签）
-  const name = basename(filename, ".md").toLowerCase();
+function inferPriorityForVersion(path, version) {
+  if (version === "1.12.x") {
+    const legacyCore = ["registries", "events/intro", "networking/overview"];
+    if (legacyCore.some(c => path.includes(c))) return new Set(["⭐"]);
+  }
+  if (compareVersion(version, "1.17.0") >= 0) {
+    const modernCore = ["registries", "events", "lifecycle", "sides"];
+    if (modernCore.some(c => path.includes(c))) return new Set(["⭐"]);
+  }
+  return inferPriorityBase(path);
+}
+
+function inferTags(filename, title, content, version) {
+  const path = filename.replace(".md", "");
+  const priorities = inferPriorityForVersion(path, version || "");
+  const tags = new Set();
+
+  const name = path.toLowerCase();
   if (name.includes("registr")) tags.add("registry");
   if (name.includes("event")) tags.add("event");
   if (name.includes("capabilit")) tags.add("capability");
@@ -90,7 +123,6 @@ function inferTags(filename, title, content) {
   if (name.includes("access")) tags.add("advanced");
   if (name.includes("versioning") || name.includes("structuring") || name.includes("modfile")) tags.add("meta");
 
-  // 同时返回优先级（用于排序）和标签
   return { tags: [...tags], priorities: [...priorities] };
 }
 
@@ -287,7 +319,7 @@ function generateL2Plus(content, keys) {
 // ── 主处理函数 ──────────────────────────────────────────────────────────
 
 function processVersion(version) {
-  const versionDir = join(DATA_DIR, version);
+  const versionDir = join(DATA_DIR, `forge_${version}`, "forge-docs", version);
   const rawDir = join(versionDir, "raw");
   if (!existsSync(rawDir)) {
     console.error(`❌ 版本目录不存在: ${rawDir}`);
@@ -315,14 +347,32 @@ function processVersion(version) {
     const rawPath = join(rawDir, file);
     const raw = readFileSync(rawPath, "utf-8");
 
-    // 提取元数据行（由 fetch 脚本添加）
-    // 使用 \r?\n 支持 Windows (\r\n) 和 Unix (\n) 行尾
-    // 使用 m 标志让 ^ 匹配行首（因为文件第一行是标题，不是元数据）
-    const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
-    const url = metaMatch?.[1] || "";
+    // 提取元数据（支持 YAML frontmatter 和旧格式 > 来源：）
+    let url = "", sourceVersion = "";
+    if (raw.startsWith("---")) {
+      const fmEnd = raw.indexOf("---", 4);
+      if (fmEnd > 0) {
+        const fmText = raw.slice(3, fmEnd);
+        const srcMatch = fmText.match(/^\s*source:\s*"?([^"\n]+)"?/m);
+        const verMatch = fmText.match(/^\s*version:\s*"?([^"\n]+)"?/m);
+        url = srcMatch?.[1] || "";
+        sourceVersion = verMatch?.[1] || "";
+      }
+    } else {
+      const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
+      url = metaMatch?.[1] || "";
+      sourceVersion = metaMatch?.[2] || "";
+    }
 
-    // 去掉元数据行，获取正文
-    const content = metaMatch ? raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length) : raw;
+    // 去掉元数据，获取正文
+    let content = raw;
+    if (raw.startsWith("---")) {
+      const fmEnd = raw.indexOf("---", 4);
+      if (fmEnd > 0) content = raw.slice(fmEnd + 4).trimStart();
+    } else {
+      const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
+      if (metaMatch) content = raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length);
+    }
 
     // 提取标题
     const titleMatch = content.match(/^# (.+)/);
@@ -340,12 +390,12 @@ function processVersion(version) {
     const l2PlusFile = join(processedDir, file);
     writeFileSync(l2PlusFile, l2Plus, "utf-8");
 
-    const tags = inferTags(file, title, content);
+    const tags = inferTags(file, title, content, sourceVersion);
 
     // 构建 L0 索引条目
     const l0Entry = {
       id: `${version}/${file.replace(".md", "")}`,
-      version,
+      version: sourceVersion || version,
       label: title,
       url,
       tags: tags.tags,
@@ -357,7 +407,7 @@ function processVersion(version) {
     // 构建 L1 摘要条目
     l1.push({
       id: l0Entry.id,
-      version,
+      version: sourceVersion || version,
       label: title,
       url,
       tags: tags.tags,
@@ -368,7 +418,7 @@ function processVersion(version) {
     // 构建 L2 全文索引条目（不存全文，只存引用）
     l2.push({
       id: l0Entry.id,
-      version,
+      version: sourceVersion || version,
       label: title,
       url,
       tags: tags.tags,
@@ -407,20 +457,27 @@ function processVersion(version) {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  const versionArg = args.find(a => a.startsWith("--version="))?.split("=")[1];
+  const args = parseCliArgs(process.argv.slice(2));
+  if (args.flags.versionError) {
+    throw new Error("--version requires a non-empty value");
+  }
+  const versionArg = args.flags.version;
 
   const versions = versionArg
     ? [versionArg]
     : readdirSync(DATA_DIR).filter(d =>
         existsSync(join(DATA_DIR, d)) &&
         !d.startsWith("_") &&
-        !d.startsWith(".")
-      );
+        !d.startsWith(".") &&
+        d.startsWith("forge_")
+      ).map(d => d.replace(/^forge_/, ""));
 
   for (const version of versions) {
     processVersion(version);
   }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

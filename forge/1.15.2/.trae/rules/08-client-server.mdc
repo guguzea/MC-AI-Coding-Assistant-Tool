@@ -1,0 +1,120 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.15.2
+
+---
+
+## 约束
+
+### 物理端注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@OnlyIn(Dist.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@OnlyIn(Dist.DEDICATED_SERVER)` | 仅在服务端运行 | 服务端逻辑、AI、数据处理 |
+| 无注解 | 客户端和服务端都运行 | 通用逻辑 |
+
+### 线程约束
+
+- **服务端线程**：游戏逻辑处理、事件订阅（大多数）
+- **客户端线程**：渲染、输入（KeyBinding）、粒子效果
+- **禁止**在渲染线程中执行服务端逻辑（如修改世界数据）
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+### 分离架构
+
+```
+src/main/java/
+├── MyMod.java                    # 两端都加载
+├── registry/
+│   └── ModBlocks.java           # 两端都加载
+├── client/
+│   ├── ClientSetup.java          # 仅客户端（@Mod.EventBusSubscriber(bus=MOD, value=Dist.CLIENT)）
+│   └── rendering/
+│       └── MyBlockRenderer.java # 仅客户端
+└── init/
+    └── ModEvents.java           # 两端都加载
+```
+
+- **禁止**将 `@OnlyIn(Dist.CLIENT)` 的类放在 `client` 包以外
+- **禁止**在非 `@OnlyIn(Dist.CLIENT)` 的类中调用任何客户端特有方法
+
+### FMLClientSetupEvent vs FMLCommonSetupEvent
+
+- `FMLCommonSetupEvent`：两端都会收到，用于通用初始化
+- `FMLClientSetupEvent`：**仅客户端**收到，用于客户端特有初始化
+
+---
+
+## Decision Flow
+
+### Decision: 代码应该放在哪一端
+
+```
+IF 代码涉及渲染（Model、BakedQuad、RenderType）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及输入（KeyBinding、MouseListener、KeyboardListener）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及粒子效果
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及 GUI（Screen、Button）
+  → 客户端
+  → 放在 client/ 包下
+
+IF 代码涉及游戏逻辑（实体行为、方块交互、数据存储）
+  → 服务端
+  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或不标注
+
+IF 代码既涉及渲染又涉及逻辑
+  → 分离处理
+  → 逻辑在服务端（数据包同步）
+  → 渲染在客户端（接收同步数据后渲染）
+
+IF 代码涉及网络消息处理
+  → 客户端消息 → 服务端处理
+  → 服务端消息 → 客户端处理
+  → 消息类两端的代码必须都能运行
+```
+
+### Decision: 选择分离模式
+
+```
+IF 只需在客户端显示额外信息（如 GUI 覆盖层）
+  → 使用 ClientTickEvent / RenderGameOverlayEvent
+
+IF 需要在客户端渲染自定义模型
+  → 继承 Render
+  → 在 ClientSetup 中注册
+
+IF 需要服务端数据同步到客户端
+  → 使用 TileEntity.syncable（TileEntity 数据）
+  → 使用 SimpleNetworkWrapper（自定义数据）
+
+IF 需要客户端触发服务端逻辑
+  → 使用 PlayerInteractEvent（在服务端自然处理）
+  → 或使用网络包：客户端 sendToServer() → 服务端处理后可能回复
+```
+
+### Decision: 客户端服务端交互方式
+
+```
+客户端触发 → 服务端处理：
+  PlayerInteractEvent / PlayerInteractEvent.RightClickBlock
+  （服务端事件，不需要网络包）
+
+服务端推送 → 客户端更新：
+  TileEntity.syncable()（TileEntity 数据）
+  SimpleNetworkWrapper 消息（自定义数据）
+
+客户端查询 → 服务端响应：
+  SimpleNetworkWrapper（Request-Reply 模式）
+```

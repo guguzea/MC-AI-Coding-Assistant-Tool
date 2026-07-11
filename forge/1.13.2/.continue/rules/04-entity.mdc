@@ -1,0 +1,19 @@
+# 04 — 实体开发
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## Entity 基础规范
+
+- 实体类继承 `LivingEntity`
+- 实体必须通过 `RegistryEvent.Register<EntityType>` 注册
+
+## EntityType.Builder
+
+```java
+EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+    .size(0.6f, 1.8f)
+    .trackingRange(8)
+    .updateInterval(3)
+```

@@ -1,0 +1,67 @@
+# Client-Server separation and GUI (Forge 1.17.1)
+
+## Physical Side vs Logical Side
+
+| Side | Meaning |
+|------|---------|
+| Physical CLIENT | The game process rendering the world |
+| Physical SERVER | Dedicated server process (or integrated server) |
+| Logical CLIENT | Code running on the client that can ONLY observe/render |
+| Logical SERVER | Code running on the dedicated server that manages world state |
+
+### Rules
+
+- **Never** call client-only code from a logical server context
+- **Never** modify server-side world data from the logical client
+- Use `@OnlyIn(Dist.CLIENT)` for client-only code
+- Use `DistExecutor` for safe side-aware execution without annotations
+
+## DistExecutor
+
+```java
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+```
+
+## FMLEnvironment
+
+```java
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // client-only initialization
+}
+```
+
+## GUI System Overview
+
+```
+Player interacts → Block#use (Server) → creates MenuProvider → ContainerMenu + Screen pair → MenuScreens.register() → Renders Screen
+```
+
+## MenuType Registration
+
+```java
+public static final DeferredRegister<MenuType<?>> MENUS =
+    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+
+public static final RegistryObject<MenuType<MyMenu>> MY_MENU = MENUS.register("my_menu",
+    () -> IContainerFactory.of(MyMenu::new));
+```
+
+## Screen registration (CLIENT ONLY)
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        MenuScreens.register(MyMenuTypes.MY_MENU.get(), MyScreen::new);
+    }
+}
+```
+
+## Common errors
+
+- ❌ Opening a Menu on the server without a registered `MenuType` → crash
+- ❌ `MenuScreens.register()` called on server → `FMLClientSetupEvent` already prevents this
+- ❌ `quickMoveStack` not implemented → Shift-click does nothing
+- ❌ `ContainerData` set from client → must be set server-side only

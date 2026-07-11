@@ -15,12 +15,9 @@
 import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
-import { createDocStore, type IDocStore, type Platform } from "../store.js";
-import { resolveDataDir } from "../../utils/path.js";
+import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform } from "../store.js";
 
-const DATA_DIR = resolveDataDir("forge_1.20.1", "forge-docs");
-
-const store = new ForgeDocStore(DATA_DIR);
+const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
 // ── 通用工具 store 缓存（key = platform:DATA_DIR，支持数据目录变化时正确失效）────────────
 
@@ -33,8 +30,8 @@ const _genericStoreCache = new Map<string, IDocStore>();
  * 这样行为统一，调用方收到一致的错误 envelope。
  */
 class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = "平台不支持，当前仅支持 forge";
-  private static readonly HINT = "请使用 platform: forge（当前唯一支持的平台）";
+  private static readonly MSG = "平台不支持，当前支持 forge、neoforge 和 fabric";
+  private static readonly HINT = "请使用 platform: forge、neoforge 或 fabric";
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
@@ -54,13 +51,14 @@ class UnsupportedPlatformStore implements IDocStore {
 }
 
 function getGenericStore(platform: Platform): IDocStore {
-  if (platform !== "forge") {
+  if (platform !== "forge" && platform !== "neoforge" && platform !== "fabric") {
     return new UnsupportedPlatformStore();
   }
-  const cacheKey = `${platform}:${DATA_DIR}`;
+  const dataDir = resolvePlatformDataDir(platform);
+  const cacheKey = `${platform}:${dataDir}`;
   let s = _genericStoreCache.get(cacheKey);
   if (!s) {
-    s = createDocStore(platform, DATA_DIR);
+    s = createDocStore(platform, dataDir);
     _genericStoreCache.set(cacheKey, s);
   }
   return s;
@@ -71,15 +69,16 @@ function getGenericStore(platform: Platform): IDocStore {
 export const listForgeVersionsSchema = {
   name: "list_forge_versions",
   description:
-    "返回 data 目录下所有已加载的 Forge 文档版本列表（如 [\"1.20.1\"]）。" +
-    "用于确认当前 MCP 服务支持哪些版本，无需通过报错来发现。",
+    "返回 data 目录下所有已加载的 Forge 文档版本列表（如 [\"1.20.1\", \"1.18.2\", \"1.17.1\", ...]）。" +
+    "支持 ForgeJavaDocs 存档版本（1.7.10–1.12.2）和 MkDocs 官方文档版本（1.12.2–1.20.4）。" +
+    "用于确认当前 MCP 服务支持哪些版本。",
   inputSchema: z.object({}),
 } as const;
 
 export async function listForgeVersions(): Promise<CallToolResult> {
   const versions = store.getAvailableVersions();
   return {
-    content: [{ type: "text", text: JSON.stringify({ versions }, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify({ platform: "forge", versions }, null, 2) }],
   };
 }
 
@@ -104,14 +103,14 @@ export const searchForgeDocsSchema = {
 
 参数说明：
   - query: 搜索关键词，可以是类名、概念或功能描述。
-  - version: Minecraft/Forge 版本，默认 1.20.1。
+  - version: Minecraft/Forge 版本。默认使用最高版本，版本不存在时自动降级（如 1.18→1.18.x→最高可用版本）。
   - tags: 可选标签过滤（小写无连字符，如 registry, event, capability, networking, datagen, sides, client, server）。
 
 另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，
 适合在已知类名后精确查询某个方法的签名。`,
   inputSchema: z.object({
     query: z.string().describe("搜索关键词（类名、概念或功能描述，支持 class:/event:/method: 前缀和 | OR 分组）"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
     tags: z
       .array(z.string())
       .optional()
@@ -125,7 +124,7 @@ export async function searchForgeDocs(
   try {
     const result = store.searchIndex(
       args.query,
-      args.version ?? "1.20.1",
+      args.version,
       args.tags,
     );
     return {
@@ -135,7 +134,7 @@ export async function searchForgeDocs(
           text: JSON.stringify(
             {
               query: args.query,
-              version: args.version ?? "1.20.1",
+              version: args.version,
               tags: args.tags,
               total: result.length,
               results: result,
@@ -188,7 +187,7 @@ export const getForgeDocSummarySchema = {
 返回内容：每个 <h2> 章节的标题 + 150-200 字摘要 + 首段概述。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
   }),
 } as const;
 
@@ -198,7 +197,7 @@ export async function getForgeDocSummary(
   try {
     const result = store.loadSummary(
       args.id,
-      args.version ?? "1.20.1",
+      args.version,
     );
     return {
       content: [
@@ -268,7 +267,7 @@ highlight_key=true 时，关键要点（🔴新手必读、🟠常见错误、�
   若关键摘要已够用则不必细读全文。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
     highlight_key: z
       .boolean()
       .optional()
@@ -281,9 +280,9 @@ export async function getForgeDocFull(
   args: z.infer<typeof getForgeDocFullSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const result = store.loadFullDoc(
+    const result = await store.loadFullDoc(
       args.id,
-      args.version ?? "1.20.1",
+      args.version,
       args.highlight_key ?? true,
     );
     return {
@@ -350,7 +349,7 @@ export const getForgeDocRelatedSchema = {
 返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
     limit: z
       .number()
       .optional()
@@ -365,7 +364,7 @@ export async function getForgeDocRelated(
   try {
     const result = store.getRelatedDocs(
       args.id,
-      args.version ?? "1.20.1",
+      args.version,
       args.limit ?? 5,
     );
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
@@ -444,7 +443,7 @@ function handleError(e: unknown): CallToolResult {
   if (e instanceof DocNotFoundError) {
     const code = e.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
     const hint = e.code === "UNSUPPORTED_PLATFORM"
-      ? "请使用 platform: forge（当前唯一支持的平台）"
+      ? "请使用 platform: forge、neoforge 或 fabric"
       : "请使用 search_docs 查询正确的页面 ID";
     const message = e.code === "UNSUPPORTED_PLATFORM"
       ? e.version  // 短提示
@@ -474,9 +473,14 @@ function handleError(e: unknown): CallToolResult {
 
 export const listVersionsSchema = {
   name: "list_doc_versions",
-  description:
-    "返回指定平台的可用文档版本列表。" +
-    "platform 参数指定平台（forge/neoforge/fabric），默认 forge。",
+  description: `返回指定平台的可用文档版本列表。
+
+返回示例：{ "platform": "forge", "versions": ["1.20.1"] }
+⚠️ 此工具只返回指定 platform 的版本，不会返回其他平台的版本。
+如需同时查询多个平台，请分别调用 list_doc_versions({ platform: "forge" }) 和 list_doc_versions({ platform: "fabric" })。
+
+参数说明：
+  - platform: 平台（forge/neoforge/fabric），默认 forge。请先用此工具确认各平台的可用版本。`,
   inputSchema: z.object({
     platform: z
       .enum(["forge", "neoforge", "fabric"])
@@ -510,8 +514,14 @@ export const searchDocsSchema = {
   1. 先调用 search_docs(query) 找出相关页面。
   2. 对于可能相关的页面，调用 get_doc_summary 获取摘要。
   3. 仅当摘要显示该页肯定包含所需细节时，才调用 get_doc_full。
-  4. 永远不要一次性加载超过 2 个 full page，避免上下文溢出。
-  5. ⚠️ 搜索失败时，使用精确术语（如类名、方法名、事件名）重新尝试。
+  4. ⚡ 核心课题（注册/事件/网络/数据生成/mixin）默认用 get_doc_full 一步到位获取全文 + highlight。
+  5. 永远不要一次性加载超过 2 个 full page，避免上下文溢出。
+  6. ⚠️ 搜索失败时，使用精确术语（如类名、方法名、事件名）重新尝试。
+
+⚠️ platform 和 version 必须对应：
+  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
+  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）
+  混合使用会导致文档查找失败。请先用 list_doc_versions 确认各平台的可用版本。
 
 增强功能：
   - OR 分组：query 支持 | 分隔（如 blockentity | ticker）
@@ -520,12 +530,12 @@ export const searchDocsSchema = {
 
 参数说明：
   - query: 搜索关键词
-  - version: 版本，默认 1.20.1
+  - version: Minecraft 版本（必填）
   - platform: 平台，默认 forge
   - tags: 可选标签过滤`,
   inputSchema: z.object({
     query: z.string().describe("搜索关键词（支持 | OR 分组、class:/event:/method: 前缀）"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(["forge", "neoforge", "fabric"])
       .optional()
@@ -542,7 +552,7 @@ export async function searchDocs(
     const store = getGenericStore(args.platform ?? "forge");
     const result = store.searchIndex(
       args.query,
-      args.version ?? "1.20.1",
+      args.version,
       args.tags,
     );
     return {
@@ -552,7 +562,7 @@ export async function searchDocs(
           text: JSON.stringify(
             {
               query: args.query,
-              version: args.version ?? "1.20.1",
+              version: args.version,
               platform: args.platform ?? "forge",
               tags: args.tags,
               total: result.length,
@@ -574,10 +584,14 @@ export async function searchDocs(
 export const getDocSummarySchema = {
   name: "get_doc_summary",
   description: `获取文档页面的章节骨架与摘要，用于判断是否需要深入。
-支持多平台（platform 参数）。`,
+支持多平台（platform 参数）。
+
+⚠️ platform 和 version 必须对应：
+  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
+  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(["forge", "neoforge", "fabric"])
       .optional()
@@ -591,7 +605,7 @@ export async function getDocSummary(
 ): Promise<CallToolResult> {
   try {
     const store = getGenericStore(args.platform ?? "forge");
-    const result = store.loadSummary(args.id, args.version ?? "1.20.1");
+    const result = store.loadSummary(args.id, args.version);
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   } catch (e) {
     return handleError(e);
@@ -603,10 +617,14 @@ export async function getDocSummary(
 export const getDocFullSchema = {
   name: "get_doc_full",
   description: `获取文档页面全文，支持多平台（platform 参数）。
-highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。`,
+highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。
+
+⚠️ platform 和 version 必须对应：
+  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
+  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(["forge", "neoforge", "fabric"])
       .optional()
@@ -625,9 +643,9 @@ export async function getDocFull(
 ): Promise<CallToolResult> {
   try {
     const store = getGenericStore(args.platform ?? "forge");
-    const result = store.loadFullDoc(
+    const result = await store.loadFullDoc(
       args.id,
-      args.version ?? "1.20.1",
+      args.version,
       args.highlight_key ?? true,
     );
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
@@ -641,10 +659,14 @@ export async function getDocFull(
 export const getDocRelatedSchema = {
   name: "get_doc_related",
   description: `获取与指定文档页面相关的其他页面列表，支持多平台。
-返回共享最多关键词的其他页面，按相关性降序排列。`,
+返回共享最多关键词的其他页面，按相关性降序排列。
+
+⚠️ platform 和 version 必须对应：
+  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
+  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
-    version: z.string().optional().default("1.20.1").describe("版本，默认 1.20.1"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(["forge", "neoforge", "fabric"])
       .optional()
@@ -661,7 +683,7 @@ export async function getDocRelated(
     const store = getGenericStore(args.platform ?? "forge");
     const result = store.getRelatedDocs(
       args.id,
-      args.version ?? "1.20.1",
+      args.version,
       args.limit ?? 5,
     );
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };

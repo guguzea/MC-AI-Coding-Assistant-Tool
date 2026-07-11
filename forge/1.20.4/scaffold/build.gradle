@@ -1,0 +1,127 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+// Mojang ships Java 17 to end users in 1.18+
+// Target 17 for maximum compatibility; IDE can override for development
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+// Mappings channel and version — parchment is community-sourced with parameter names and javadocs
+// Use "official" for vanilla MCP names (no parameter names)
+// See: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+mappings channel: mapping_channel, version: mapping_version
+
+minecraft {
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all',
+                '--output', file('src/generated/resources/'),
+                '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+// Data generators write to src/generated/resources; IDE reads from both
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    // ForgeGradle auto-adds the Forge maven and Maven Central
+    maven { url = 'https://maven.parchmentmc.org' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    def replaceProperties = [
+        minecraft_version      : minecraft_version,
+        minecraft_version_range: minecraft_version_range,
+        forge_version          : forge_version,
+        forge_version_range    : forge_version_range,
+        loader_version_range   : loader_version_range,
+        mod_id                : mod_id,
+        mod_name              : mod_name,
+        mod_license           : mod_license,
+        mod_version           : mod_version,
+        mod_authors           : mod_authors,
+        mod_description       : mod_description,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes(
+            'Specification-Title'     : mod_id,
+            'Specification-Vendor'     : mod_authors,
+            'Specification-Version' : '1',
+            'Implementation-Title'   : project.name,
+            'Implementation-Version'  : project.jar.archiveVersion,
+            'Implementation-Vendor'  : mod_authors,
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        )
+    }
+    finalizedBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

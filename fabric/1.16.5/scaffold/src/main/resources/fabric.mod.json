@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": ["${mod_authors}"],
+  "contact": {
+    "homepage": "https://fabricmc.net"
+  },
+  "license": "${mod_license}",
+  "icon": "assets/${mod_id}/icon.png",
+  "entrypoints": {
+    "main": ["${maven_group}.${mod_id}.ExampleMod"],
+    "client": ["${maven_group}.${mod_id}.ExampleModClient"]
+  },
+  "mixins": ["${mod_id}.mixins.json"],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": ">=${minecraft_version}",
+    "java": ">=16"
+  },
+  "suggests": {}
+}

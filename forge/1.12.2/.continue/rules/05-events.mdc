@@ -1,0 +1,210 @@
+# 05 — 事件系统
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### @SubscribeEvent 基础规范
+
+- 所有事件处理方法必须标注 `@SubscribeEvent`
+- 事件类必须在 `@Mod.EventBusSubscriber` 或手动注册到事件总线
+- `RegistryEvent` 是 Forge 最重要的初始化事件
+- **禁止**在错误的事件总线监听事件
+
+### 初始化事件顺序
+
+1. `FMLPreInitializationEvent` — 早期初始化（配置文件、代理）
+2. `RegistryEvent.Register<T>` — 注册所有内容
+3. `FMLInitializationEvent` — 内容注册完毕，初始化
+4. `FMLPostInitializationEvent` — 后期初始化（模组交互）
+
+### Dist（物理端）约束
+
+**使用 `DistExecutor` 或 `@SideOnly`：**
+
+```java
+// 使用 @SideOnly 注解类或方法
+@SideOnly(Side.CLIENT)
+public class ClientProxy {
+    public void init() { ... }
+}
+
+// 或使用 DistExecutor
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+
+// 简单判断
+if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+    // 仅在客户端运行
+}
+```
+
+---
+
+## Decision Flow
+
+### Decision: 选择正确的事件类
+
+根据触发场景选择事件：
+
+```
+IF 监听玩家右键点击方块
+  → PlayerInteractEvent
+  → 注意：此事件仅在服务端触发
+
+IF 监听生物死亡
+  → LivingDeathEvent
+  → 注意：此事件仅在服务端触发
+
+IF 监听物品被使用完成（食物吃完等）
+  → LivingEntityUseItemEvent.Stop / Finish
+
+IF 监听实体掉落物品
+  → LivingDropsEvent
+  → 仅服务端
+
+IF 监听玩家登录/登出
+  → PlayerLoggedInEvent
+  → PlayerLoggedOutEvent
+  → PlayerRespawnEvent
+
+IF 监听方块放置/破坏
+  → BlockEvent.BreakEvent
+  → BlockEvent.PlaceEvent
+
+IF 监听配方解锁（合成/烧炼/烟熏等）
+  → PlayerEvent.ItemCraftedEvent（玩家完成合成时）
+  → FurnaceSmeltEvent（物品被烧炼时）
+
+IF 监听 Tick（每帧逻辑）
+  → TickEvent.ServerTickEvent / WorldTickEvent
+  → 注意：不要在 Tick 中做重操作，会导致卡顿
+
+IF 监听 Capability 附加
+  → AttachCapabilitiesEvent<Entity>
+
+IF 监听服务端/客户端启动
+  → FMLInitializationEvent
+  → FMLClientSetupEvent（客户端）
+
+IF 监听 Registry 注册
+  → RegistryEvent.Register<T>
+  → 参考 01-registry.mdc
+```
+
+### Decision: 事件应在哪个物理端监听
+
+```
+IF 事件涉及世界修改（放置方块、生成实体）
+  → 服务端处理
+  → 使用 @SideOnly(Side.SERVER) 或确保在服务端线程
+
+IF 事件涉及渲染、输入
+  → 客户端处理
+  → 使用 @SideOnly(Side.CLIENT)
+
+IF 不确定
+  → 优先考虑服务端处理（更安全）
+```
+
+---
+
+## 示例：事件订阅类结构
+
+```java
+// init/ModEvents.java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModEvents {
+
+    @SubscribeEvent
+    public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+        // 玩家右键方块
+        if (event.getWorld().isRemote) return; // 确保服务端
+        // ...
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        // 生物死亡
+        if (event.getEntity().world.isRemote) return;
+        // ...
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerLoggedInEvent event) {
+        // 玩家登录
+        // ...
+    }
+}
+```
+
+## 示例：Capability 附加事件
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class CapabilityEvents {
+    @SubscribeEvent
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof EntityPlayer) {
+            event.addCapability(
+                new ResourceLocation(MOD_ID, "my_capability"),
+                new ICapabilityProvider() {
+                    private final ICapabilityInstance instance = new MyCapability();
+
+                    @Override
+                    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                        return capability == ModCapabilities.MY_CAP;
+                    }
+
+                    @Override
+                    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                        if (capability == ModCapabilities.MY_CAP) {
+                            return (T) instance;
+                        }
+                        return null;
+                    }
+                }
+            );
+        }
+    }
+}
+```
+
+---
+
+## 示例：FMLInitializationEvent 中的初始化
+
+```java
+@Mod(modid = MOD_ID)
+public class ExampleMod {
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        // 注册所有内容（在 RegistryEvent 中已完成）
+        // 设置网络
+        NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_ID);
+
+        // 注册事件监听
+        MinecraftForge.EVENT_BUS.register(new ModEvents());
+
+        // 初始化代理
+        proxy.init();
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
+        // 配置文件
+        config = new Configuration(event.getSuggestedConfigurationFile());
+
+        // 代理预初始化
+        proxy.preInit();
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        // 模组交互
+    }
+}
+```
+
+> 关键点：`AttachCapabilitiesEvent` 可以在 Entity 上附加 Capability。`deserializeNBT` 在数据加载时由 Forge 自动调用。

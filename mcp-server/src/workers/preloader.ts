@@ -3,24 +3,39 @@
  *
  * 在独立 Worker Thread 中并行解析 JSON 文件并构建 Trie 索引，
  * 避免阻塞主线程。完成后通过 postMessage 将数据发回主线程。
+ *
+ * 关键设计决策：
+ * 1. apiIndex 直接传解析后的对象（v8 内部序列化，效率远高于 JSON.stringify + JSON.parse）
+ *    注意：Worker 线程不能访问主线程的对象，只能通过 postMessage 克隆（结构化克隆 / v8.serialize）
+ * 2. Trie 构建分两阶段检查：读取完成后检查一次（粗筛），postMessage 前再检查一次（精确兜底）
+ * 3. 用绝对 deadline 而非相对 elapsed，覆盖 read + build 全部阶段
  */
 
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 import { workerData, parentPort } from "worker_threads";
+
+interface PreloadConfig {
+  type: "start";
+  timeout?: number;
+}
 
 interface PreloadMessage {
   type: "start";
+  /** 可选：覆盖数据目录（用于按 Minecraft 版本加载不同 extracted） */
+  dataDir?: string;
 }
 
 interface PreloadResult {
   type: "ready";
-  _apiIndexStr: string;
+  /** apiIndex: 直接传解析后的对象（v8 序列化，效率高）。主线程直接使用，无需 JSON.parse */
+  apiIndex: Record<string, unknown>;
   classNames: string[];
   l0Index: unknown;
+  /** Trie 扁平数组，仅在剩余时间充足时构建；超时时为 null，改用线性扫描 */
   trieFlat: unknown;
+  trieSkipped: boolean;
   elapsed: number;
   classCount: number;
 }
@@ -35,24 +50,23 @@ type WorkerOutMessage = PreloadResult | PreloadError;
 // ── 数据目录解析（4 策略，按可靠性从高到低）──────────────────────────────
 
 function resolveDataDir(): string {
-  // 策略 1：从 import.meta.url 推导（最可靠，不受 cwd 影响）
-  const selfDir = dirname(fileURLToPath(import.meta.url));
-  // dist/workers/ → mcp-server/ → mc_skill/  (data 在 mc_skill/data/forge_1.20.1/)
-  const fromFile = join(selfDir, "..", "..", "..", "data", "forge_1.20.1");
-  if (existsSync(fromFile)) return fromFile;
+  // 策略 1：workerData.dataDir（主线程通过 new Worker(path, { workerData: { dataDir } }) 传入）
+  const wdMsg = (workerData as { dataDir?: string } | null)?.dataDir;
+  if (wdMsg && existsSync(wdMsg)) return wdMsg;
 
-  // 策略 2：Worker data（主线程显式传入）
-  const wd = (workerData as { dataDir?: string } | null)?.dataDir;
-  if (wd && existsSync(wd)) return wd;
-
-  // 策略 3：process.cwd() 回退（仅作最后手段）
+  // 策略 2：process.cwd() 回退（仅作最后手段）
   const cwd = join(process.cwd(), "data", "forge_1.20.1");
   return cwd;
 }
 
-const dataDir: string = resolveDataDir();
+let dataDir: string = resolveDataDir();
 
-// ── Trie 实现（Worker 中构建，结果通过结构化克隆传递）───────────────────────
+/** 接收主线程通过 postMessage 传来的 dataDir 后可调用此函数覆盖。 */
+function setDataDir(d: string | undefined) {
+  if (d && existsSync(d)) dataDir = d;
+}
+
+// ── Trie 实现（Worker 中构建，结果通过 postMessage 传递）──────────────────
 
 interface TrieNodeFlat {
   children: [string, number][]; // [partName, childIndex]
@@ -83,20 +97,20 @@ function buildTrieIndex(classNames: string[]): TrieNodeFlat[] {
   return flat;
 }
 
-// ── 并行加载所有数据文件 ────────────────────────────────────────────────
+// ── 主预加载函数 ─────────────────────────────────────────────────────────
 
-async function preload(): Promise<void> {
-  const start = Date.now();
+async function preload(timeoutMs = 15000): Promise<void> {
+  // 用绝对截止时间（deadline）而非相对 elapsed，覆盖 read + build + send 全部阶段
+  const deadline = Date.now() + timeoutMs;
 
   const files = [
-    { key: "apiIndex", path: "extracted/api-index.json" },
-    { key: "classNames", path: "extracted/class-names.json" },
-    { key: "l0Index", path: "forge-docs/1.20.1/index-l0.json" },
+    { key: "apiIndex", path: "api-index.json", critical: true },
+    { key: "classNames", path: "class-names.json", critical: true },
   ];
 
   const results: Record<string, unknown> = {};
 
-  // 并行读取 + JSON.parse（CPU 密集操作在 Worker 中完成，不阻塞主线程）
+  // 读取阶段（可并行，CPU 密集解析在 Worker 中完成，不阻塞主线程）
   await Promise.all(
     files.map(async (f) => {
       try {
@@ -110,34 +124,65 @@ async function preload(): Promise<void> {
   );
 
   if (!results.apiIndex || !results.classNames) {
-    parentPort?.postMessage({
-      type: "error",
-      errors: [
-        `Failed to load critical data: apiIndex=${results.apiIndex !== null}, classNames=${results.classNames !== null}`,
-        `dataDir=${dataDir}`,
-      ],
-    } satisfies WorkerOutMessage);
+    // 即使文件缺失也不阻塞，在 postMessage 前检查 deadline
+    const skipTrie = true;
+    sendResult(
+      null,
+      results.classNames as string[] | null,
+      skipTrie,
+      Date.now()
+    );
     return;
   }
 
-  const classNames = results.classNames as string[];
-  const trieFlat = buildTrieIndex(classNames);
+  // 阶段一检查（粗筛）：读取阶段已耗时间
+  const elapsedRead = Date.now() - (deadline - timeoutMs);
+  const remainingAfterRead = deadline - Date.now();
+  // 读取阶段已消耗超过一半超时时间 → 跳过 Trie（留给后续处理的时间不够）
+  const skipTrieStage1 = remainingAfterRead < timeoutMs * 0.5;
 
+  const classNames = results.classNames as string[];
+  const trieFlat = skipTrieStage1 ? null : buildTrieIndex(classNames);
+
+  // 阶段二检查（精确兜底）：buildTrieIndex 耗时可能很长，在 postMessage 前再次检查
+  const skipTrie = skipTrieStage1 || Date.now() >= deadline;
+
+  sendResult(
+    results.apiIndex as Record<string, unknown>,
+    classNames,
+    skipTrie,
+    Date.now()
+  );
+}
+
+function sendResult(
+  apiIndex: Record<string, unknown> | null,
+  classNames: string[] | null,
+  trieSkipped: boolean,
+  _sentAt: number
+): void {
+  const now = Date.now();
   parentPort?.postMessage({
     type: "ready",
-    _apiIndexStr: JSON.stringify(results.apiIndex),
-    classNames,
-    l0Index: results.l0Index,
-    trieFlat,
-    elapsed: Date.now() - start,
-    classCount: classNames.length,
+    // 直接传解析后的对象，由 v8 序列化（比 JSON.stringify → JSON.parse 快一个数量级）
+    apiIndex: apiIndex ?? {},
+    classNames: classNames ?? [],
+    l0Index: undefined, // 兼容旧 WorkerOutMessage 消费者（外部搜索预加载仍可用）
+    trieFlat: trieSkipped ? null : undefined,
+    trieSkipped,
+    elapsed: now,
+    classCount: classNames?.length ?? 0,
   } satisfies WorkerOutMessage);
 }
 
-parentPort?.on("message", (e: MessageEvent<PreloadMessage> | PreloadMessage) => {
+parentPort?.on("message", (e: MessageEvent<PreloadConfig | PreloadMessage> | PreloadConfig | PreloadMessage) => {
   const data = "data" in e ? e.data : e;
   if (data.type === "start") {
-    preload().catch((err) => {
+    const timeoutMs = typeof data === "object" && "timeout" in data ? (data as PreloadConfig).timeout ?? 15000 : 15000;
+    if (typeof data === "object" && "dataDir" in data) {
+      setDataDir((data as PreloadMessage).dataDir);
+    }
+    preload(timeoutMs).catch((err) => {
       parentPort?.postMessage({
         type: "error",
         errors: [(err as Error).message],

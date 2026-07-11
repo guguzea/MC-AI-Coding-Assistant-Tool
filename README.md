@@ -26,16 +26,13 @@ MC_skill/
 │       ├── .continue/          # Continue.dev 配置
 │       ├── .trae/              # Trae AI 配置
 │       ├── scaffold/           # 项目骨架模板
-│       └── code-patterns/      # 代码模式库（6 个文件）
+│       ├── code-patterns/      # 代码模式库（5 个文件）
+│       └── knowledge/           # forge通用知识（antipatterns / common / porting / version-changes）
 │
 ├── fabric/                      # 规划中
 ├── neoforge/                   # 规划中
 ├── mcp-server/                  # MCP Server（9 个工具模块）
-├── data/                        # Forge 文档 + Parchment 映射数据
-└── knowledge/                  # 跨平台通用知识
-    ├── common/                  # 通用文档（术语表、数据包/资源包格式）
-    ├── antipatterns/            # 反模式库（7 个文件）
-    └── version-changes/         # 版本变更记录
+└── data/                        # Forge/fabric 文档 + Parchment/yarn 映射数据
 ```
 
 ## 平台说明
@@ -94,6 +91,16 @@ forge/1.20.1/
 | `MC_SKILL_DATA` | 数据目录根路径（不含版本子目录） | `MC_SKILL_DATA=/path/to/data` |
 | `MC_SKILL_DEBUG_PATHS` | 设为 `1` 打印路径解析过程 | `MC_SKILL_DEBUG_PATHS=1` |
 | `MCP_TIMEOUT_MS` | 测试脚本超时毫秒数 | `MCP_TIMEOUT_MS=30000` |
+
+## 数据复现与分发
+
+`data/` 中的索引和文本数据由 `mcp-server/scripts/` 下的抓取、处理和索引脚本生成。原始 `*.jar`、`*.zip` 体积较大且已被 `.gitignore` 排除，不应假定它们会随 Git 仓库分发。
+
+- 只从对应脚本声明的 Fabric、Forge、NeoForge、Parchment 或 Maven 官方来源重建数据。
+- 每次重建记录来源 URL、抓取时间和原始内容 SHA-256；生成后的 `meta.json`、manifest、raw/processed 头信息及索引版本必须一致。
+- 运行 `cd mcp-server && npm run audit:data` 校验所有声明版本；任何 `ERROR` 都表示数据包不能发布。
+- 需要分发原始二进制时使用 Git LFS 或 release artifact，并同时发布哈希清单；不要取消全局 `*.jar`/`*.zip` 忽略规则后直接提交。
+- 本地原始包丢失时应重新运行对应 fetch/extractor 流程，不从其他 Minecraft 版本目录复制并改名。
 
 ## 目录约定
 

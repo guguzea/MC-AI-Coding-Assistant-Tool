@@ -1,0 +1,1 @@
+# CapabilityAnimation.DefaultItemAnimationCapabilityProvider

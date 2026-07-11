@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-27",
+    "coverage": "fabric, forge, neoforge, quilt",
+    "note": "与 forge/1.20.1/knowledge/porting/01-api-cross-loader.md 同步更新"
+  },
+  "loaders": ["fabric", "forge", "neoforge", "quilt"],
+  "domains": {
+    "registry_block": {
+      "description": "方块注册",
+      "fabric": "Registry.register(Registries.BLOCK, Identifier.of(modId, name), blockInstance)",
+      "forge": "DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register(name, () -> blockInstance)",
+      "neoforge": "DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register(name, () -> blockInstance)",
+      "architectury": "DeferredRegister.create(MOD_ID, Registries.BLOCK).register(name, () -> blockInstance)"
+    },
+    "registry_item": {
+      "description": "物品注册",
+      "fabric": "Registry.register(Registries.ITEM, Identifier.of(modId, name), itemInstance)",
+      "forge": "DeferredRegister.create(ForgeRegistries.ITEMS, MODID).register(name, () -> itemInstance)",
+      "neoforge": "DeferredRegister.create(ForgeRegistries.ITEMS, MODID).register(name, () -> itemInstance)",
+      "architectury": "DeferredRegister.create(MOD_ID, Registries.ITEM).register(name, () -> itemInstance)"
+    },
+    "registry_entity": {
+      "description": "实体注册",
+      "fabric": "EntityType.Builder.create().build(id) + Registry.register(Registries.ENTITY_TYPE, id, entityType)",
+      "forge": "DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID).register(name, () -> EntityType.Builder.create().build(id))",
+      "neoforge": "同 Forge",
+      "architectury": "DeferredRegister.create(MOD_ID, Registries.ENTITY_TYPE).register(name, () -> EntityType.Builder.create().build(id))"
+    },
+    "registry_block_entity": {
+      "description": "方块实体注册",
+      "fabric": "BlockEntityType.Builder.create(...).build(null) + Registry.register(Registries.BLOCK_ENTITY_TYPE, id, type)",
+      "forge": "DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPE, MODID).register(name, () -> BlockEntityType.Builder.create(...).build(null))",
+      "neoforge": "同 Forge",
+      "architectury": "DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE).register(name, () -> BlockEntityType.Builder.create(...).build(null))"
+    },
+    "network_send": {
+      "description": "网络包发送",
+      "fabric": "ClientPlayNetworking.send(id, buf) / ServerPlayNetworking.send(player, id, buf)",
+      "forge": "SimpleChannel.channel.send(player, message)",
+      "neoforge": "SimpleChannel.channel.send(player, message)",
+      "architectury": "@ExpectPlatform abstract static NetworkSender getPacketSender()"
+    },
+    "network_receive": {
+      "description": "网络包接收",
+      "fabric": "ClientPlayNetworking.registerGlobalHandler(id, (client, handler, buf, responsePromises) -> {})",
+      "forge": "SimpleChannel.channel.register(MSG_INDEX, MSG_TYPE, (msg, suppliers) -> { msg.handle(...); })",
+      "neoforge": "同 Forge",
+      "architectury": "common 中声明 handler 接口，在 loader 层实现"
+    },
+    "event_subscribe": {
+      "description": "事件订阅",
+      "fabric": "@Environment(EnvType.CLIENT) on method / FabricEventHooks / ServerTickEvents",
+      "forge": "@SubscribeEvent on MinecraftForge.EVENT_BUS (global) or Mod.EventBusSubscriber (mod-level)",
+      "neoforge": "同 Forge",
+      "architectury": "EventHookRegistry / common EventRegistry / ModLifecycleEvents"
+    },
+    "dist_check": {
+      "description": "物理端检测",
+      "fabric": "FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT",
+      "forge": "DistExecutor.runWhenOn(Dist.CLIENT, () -> runnable)",
+      "neoforge": "同 Forge",
+      "architectury": "Environment.get() == Environment.CLIENT"
+    },
+    "config_path": {
+      "description": "配置目录路径",
+      "fabric": "FabricLoader.getInstance().getConfigDir()",
+      "forge": "FMLPaths.GAMEDIR.get().resolve(\"config\")",
+      "neoforge": "FMLPaths.GAMEDIR.get().resolve(\"config\")",
+      "architectury": "@ExpectPlatform abstract static Path getConfigDir()"
+    },
+    "datagen": {
+      "description": "数据生成",
+      "fabric": "FabricDataGenerator.generate(pack, complete) / FabricDatapackBuiltinEntriesProvider",
+      "forge": "DataGenerators.gatherData() + GatherDataEvent",
+      "neoforge": "同 Forge",
+      "architectury": "Datagen 在 loader 子工程处理，common 放 provider 类定义"
+    }
+  }
+}

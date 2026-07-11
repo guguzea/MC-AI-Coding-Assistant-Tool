@@ -1,0 +1,1 @@
+# ServerStatusResponse.MinecraftProtocolVersionIdentifier.Serializer

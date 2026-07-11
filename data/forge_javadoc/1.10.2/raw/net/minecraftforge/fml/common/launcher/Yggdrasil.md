@@ -1,0 +1,10 @@
+---
+title: "Yggdrasil"
+description: ""
+package: "net/minecraftforge/fml/common/launcher"
+version: "1.10.2"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.10.2-12.18.3.2185/net/minecraftforge/fml/common/launcher/Yggdrasil.html"
+sourceType: javadoc
+---
+
+# Yggdrasil

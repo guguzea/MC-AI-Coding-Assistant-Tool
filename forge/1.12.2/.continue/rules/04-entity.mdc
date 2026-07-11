@@ -1,0 +1,199 @@
+# 04 — 实体开发
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Entity 基础规范
+
+- 实体类继承 `Entity`（基础）或 `EntityLiving`（可移动/有生命）
+- 推荐继承 `EntityLiving`，除非需要完全自定义行为
+- 实体必须通过 `RegistryEvent.Register<EntityEntry>` 注册
+- 必须在 `mcmod.info` 中添加 entity 字段
+
+### EntityEntry 注册
+
+```java
+// 在 RegistryEvent.Register<EntityEntry> 中注册
+public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
+    RegistryHelper.registerEntity(EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+        .setTrackingRange(64)
+        .setShouldDespawn(true)
+        .size(0.6f, 1.8f)
+        .build("my_entity"),
+        MOD_ID, "my_entity");
+}
+```
+
+### 实体属性（Attribute）
+
+- 每个实体**必须**在构造函数中设置属性（最大生命值、攻击伤害、移动速度等）
+- 属性在 Entity 构造函数中设置，使用 `getAttributeMap().getAttributeInstance(...)`
+
+### AI Goal / Target Goal
+
+- 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
+- 每个 Entity 实例在 `applyEntityAttributes()` 中注册目标
+
+### 渲染器规范（客户端）
+
+- 渲染器必须放在 `client` 包下
+- 必须通过 `RenderingRegistry.registerEntityRenderingHandler()` 注册
+- 纹理文件路径：`textures/entity/{entity_path}/{name}.png`
+
+---
+
+## Decision Flow
+
+### Decision: 选择实体基类
+
+```
+IF 实体需要移动、AI、装备栏、药水效果等
+  → 继承 EntityLiving
+  → 获得完整的实体行为系统
+
+IF 实体是静态物品（掉落物、经验球等）
+  → 使用现有的 EntityItem、EntityXPOrb 等
+  → 通常不需要自定义 Entity
+
+IF 实体需要完全控制渲染和碰撞
+  → 继承 Entity（不推荐，需要大量手动实现）
+```
+
+### Decision: 选择 EntityClassification（生物分类）
+
+```
+IF 自然生成的动物/怪物
+  → EntityClassification.CREATURE（被动生物）
+  → EntityClassification.MONSTER（敌对生物）
+  → EntityClassification.WATER_CREATURE（水生生物）
+  → EntityClassification.AMBIENT（环境生物，如蝙蝠）
+
+IF NPC 或乘客
+  → EntityClassification.MISC（杂项）
+  → 不会自然生成
+
+IF 乘坐实体
+  → 使用 EntityClassification.MISC
+```
+
+### Decision: 渲染器选择
+
+```
+IF 基础实体（无自定义模型）
+  → 使用 RenderLiving 基类
+
+IF 覆盖默认 Steve 模型
+  → 覆盖 RenderLiving
+
+IF 自定义模型（Biped、Quadruped 等）
+  → 继承对应基类：RenderLiving<Entity, ModelBiped>
+  → 需要提供 .json 模型文件和材质贴图
+```
+
+---
+
+## 示例：定义实体属性
+
+```java
+// Entity 类中
+public MyEntity(World world) {
+    super(world);
+    this.setSize(0.6f, 1.8f);
+    this.tasks.addTask(0, new EntityAISwimming(this));
+    this.tasks.addTask(1, new EntityAIMeleeAttack(this, 1.0, true));
+    this.tasks.addTask(2, new EntityAIWander(this, 1.0));
+    this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+    this.targetTasks.addTask(0, new EntityAIHurtByTarget(this, true));
+}
+
+@Override
+protected void applyEntityAttributes() {
+    super.applyEntityAttributes();
+    this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+    this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+}
+
+@Override
+protected void entityInit() {
+    super.entityInit();
+    // 同步数据
+}
+```
+
+## 示例：实体注册
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModEntities {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<EntityEntry> event) {
+        RegistryHelper.registerEntity(
+            EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+                .setName("My Entity")
+                .setRegistryName(new ResourceLocation(MOD_ID, "my_entity"))
+                .setTrackingRange(64)
+                .setShouldDespawn(true)
+                .size(0.6f, 1.8f),
+            MOD_ID, "my_entity"
+        );
+    }
+}
+```
+
+## 示例：客户端渲染器注册
+
+```java
+// 在 @Mod 主类的 FMLInitializationEvent 中
+@Mod.EventHandler
+public void init(FMLInitializationEvent event) {
+    // 注册渲染器
+    RenderingRegistry.registerEntityRenderingHandler(
+        MyEntity.class,
+        new RenderManager.render<>(new RenderMyEntity(renderManager))
+    );
+}
+```
+
+```java
+// client/rendering/MyEntityRenderer.java
+public class RenderMyEntity extends RenderLiving<MyEntity> {
+    public RenderMyEntity(RenderManager manager) {
+        super(manager, new ModelBiped(), 0.5f);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(MyEntity entity) {
+        return new ResourceLocation(ExampleMod.MOD_ID, "textures/entity/my_entity.png");
+    }
+}
+```
+
+## 示例：Model 定义
+
+```java
+public class ModelMyEntity extends ModelBiped {
+    public ModelMyEntity() {
+        // 模型部件初始化
+    }
+
+    @Override
+    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks,
+                       float netHeadYaw, float headPitch, float scale) {
+        this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
+        bipedHead.render(scale);
+        bipedBody.render(scale);
+        bipedLeftArm.render(scale);
+        bipedRightArm.render(scale);
+        bipedLeftLeg.render(scale);
+        bipedRightLeg.render(scale);
+    }
+}
+```
+
+> 注意：
+> 1. `RenderingRegistry` 在 Forge 1.12.2 中通过 `RenderingRegistry.registerEntityRenderingHandler()` 注册
+> 2. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）

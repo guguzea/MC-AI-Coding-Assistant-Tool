@@ -1,0 +1,238 @@
+# 03 — 物品开发
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Item 子类规范
+
+- 基础物品类继承 `Item`（`net.minecraft.item.Item`）
+- 物品必须通过 `RegistryEvent.Register<Item>` 注册
+
+### Item.Properties 配置
+
+```java
+new Item()
+    .setMaxStackSize(int maxStackSize)           // 默认 64
+    .setMaxDamage(int maxDamage)                 // 有耐久物品
+    .setContainerItem(Item container)             // 消耗后保留物品
+    .setRarity(EnumRarity rarity)               // 稀有度（COMMON, UNCOMMON, RARE, EPIC）
+    .setPotionEffect(String effect)              // 药水效果
+    .addToolClass(String class, int level)       // 工具类
+```
+
+### ToolMaterial（工具材料）规范
+
+```java
+// 定义自定义工具材料
+public enum MyToolMaterial implements ToolMaterial {
+    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> {
+        return Ingredient.fromItems(Items.DIAMOND);
+    });
+
+    private final int harvestLevel;
+    private final int maxUses;
+    private final float efficiency;
+    private final float damage;
+    private final int enchantability;
+    private final Supplier<Ingredient> repairMaterial;
+
+    MyToolMaterial(int harvestLevel, int maxUses, float efficiency, float damage,
+                   int enchantability, Supplier<Ingredient> repairMaterial) {
+        this.harvestLevel = harvestLevel;
+        this.maxUses = maxUses;
+        this.efficiency = efficiency;
+        this.damage = damage;
+        this.enchantability = enchantability;
+        this.repairMaterial = repairMaterial;
+    }
+
+    @Override
+    public int getMaxUses() { return maxUses; }
+
+    @Override
+    public float getEfficiency() { return efficiency; }
+
+    @Override
+    public float getAttackDamage() { return damage; }
+
+    @Override
+    public int getHarvestLevel() { return harvestLevel; }
+
+    @Override
+    public int getEnchantability() { return enchantability; }
+
+    @Override
+    public Ingredient getRepairMaterial() { return repairMaterial.get(); }
+}
+```
+
+- `getHarvestLevel()`：挖掘等级（木=0，石=1，铁=2，金=3，钻=4）
+- `getMaxUses()`：耐久值
+- `getEfficiency()`：挖掘速度
+- `getAttackDamage()`：附加攻击伤害
+
+### 注册约束
+
+- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- 工具使用 `ToolMaterial` 时，需要在构造中传入材料
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的物品？
+
+```
+IF 需要可放置的基础方块物品
+  → 注册 ItemBlock（关联已有的方块）
+  → 不需要新建 Item 子类
+
+IF 需要普通物品（无特殊功能）
+  → extends Item，使用默认属性
+
+IF 需要工具（剑、镐、斧、铲）
+  → extends ItemStack / 直接继承 Item
+  → 需要定义 ToolMaterial
+  → 需要设置工具类
+
+IF 需要盔甲
+  → extends ItemArmor
+  → 需要定义 ArmorMaterial
+  → 需要在 constructor 传入：material, slot, properties
+
+IF 需要食物（可食用物品）
+  → extends ItemFood
+  → 或 extends Item 覆盖 onFoodEaten 方法
+
+IF 需要可耐久物品
+  → 设置 setMaxDamage(maxDamage)
+  → 覆盖 onItemUseFinish 处理使用逻辑
+```
+
+### Decision: ToolMaterial 定义
+
+```
+IF 自定义工具材料
+  → 定义枚举实现 ToolMaterial 接口
+  → 5 个必需方法全部实现
+  → getRepairMaterial() 必须返回有效的 Ingredient
+  → 在物品类中引用
+
+IF 复用现有材料
+  → ToolMaterial.WOOD / ToolMaterial.STONE / ToolMaterial.IRON / ToolMaterial.GOLD / ToolMaterial.DIAMOND（静态字段）
+```
+
+---
+
+## 示例：基础物品
+
+```java
+// items/ItemExample.java
+public class ItemExample extends Item {
+    public ItemExample() {
+        super(new Item.Properties()
+                .maxStackSize(64)
+                .rarity(EnumRarity.COMMON)
+        );
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        // 右键点击时的逻辑
+        return ActionResult.newActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+    }
+}
+```
+
+## 示例：工具（剑）
+
+```java
+// items/ItemSwordExample.java
+public class ItemSwordExample extends ItemSword {
+    public ItemSwordExample(ToolMaterial material) {
+        super(material);
+    }
+}
+```
+
+```java
+// 注册剑
+public static final Item EXAMPLE_SWORD = new ItemSwordExample(MyToolMaterial.MY_MATERIAL)
+        .setRegistryName(MODID, "example_sword")
+        .setTranslationKey(MODID + ".example_sword");
+```
+
+## 示例：盔甲
+
+```java
+// items/ItemArmorExample.java
+public class ItemArmorExample extends ItemArmor {
+    public ItemArmorExample(ArmorMaterial material, int slot, Item.Properties properties) {
+        super(material, slot, properties);
+    }
+}
+```
+
+```java
+// 定义盔甲材料
+public enum MyArmorMaterial implements ArmorMaterial {
+    MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20);
+
+    private final String name;
+    private final int durability;
+    private final int[] damageReduction;
+    private final int enchantability;
+
+    MyArmorMaterial(String name, int durability, int[] damageReduction, int enchantability) {
+        this.name = name;
+        this.durability = durability;
+        this.damageReduction = damageReduction;
+        this.enchantability = enchantability;
+    }
+
+    @Override
+    public int getDurability(EnumArmorSlot slot) { return durability; }
+
+    @Override
+    public int getDamageReductionAmount(EnumArmorSlot slot) { return damageReduction[slot.getIndex()]; }
+
+    @Override
+    public int getEnchantability() { return enchantability; }
+
+    @Override
+    public String getName() { return name; }
+
+    @Override
+    public float getToughness() { return 0; }
+}
+```
+
+## 示例：食物
+
+```java
+// items/ItemFoodExample.java
+public class ItemFoodExample extends ItemFood {
+    public ItemFoodExample(int amount, float saturation, boolean isWolfFood) {
+        super(amount, saturation, isWolfFood);
+    }
+
+    @Override
+    protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
+        super.onFoodEaten(stack, world, player);
+        // 食物效果逻辑
+        player.addPotionEffect(new PotionEffect(MobEffects.JUMP, 200, 1));
+    }
+}
+```
+
+```java
+// 注册食物
+public static final Item EXAMPLE_FOOD = new ItemFoodExample(4, 0.3f, false)
+        .setRegistryName(MODID, "example_food")
+        .setTranslationKey(MODID + ".example_food");
+```
+
+> 注：`PotionEffect` 第一个参数是 `Potion`（如 `MobEffects.JUMP`），不是 `int` ID。

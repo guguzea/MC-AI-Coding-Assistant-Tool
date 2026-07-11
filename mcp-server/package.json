@@ -8,7 +8,15 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc --watch",
-    "test": "node test-mcp.mjs"
+    "test": "npm run build && node test-core.mjs && node test-scripts.mjs && node test-audit-data.mjs && node test-mcp.mjs",
+    "test:core": "npm run build && node test-core.mjs",
+    "test:scripts": "node test-scripts.mjs",
+    "test:audit": "node test-audit-data.mjs",
+    "audit:data": "node scripts/audit-data-consistency.mjs",
+    "audit:data:forge": "node scripts/audit-data-consistency.mjs --platform=forge",
+    "audit:data:fabric": "node scripts/audit-data-consistency.mjs --platform=fabric",
+    "audit:data:neoforge": "node scripts/audit-data-consistency.mjs --platform=neoforge",
+    "audit:data:fail-on-error": "node scripts/audit-data-consistency.mjs --platform=all"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

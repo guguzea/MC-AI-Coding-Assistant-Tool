@@ -1,0 +1,26 @@
+# 05 — 事件系统
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## @SubscribeEvent 基础规范
+
+- 所有事件处理方法必须标注 `@SubscribeEvent`
+- 事件类必须在构造函数中 `MinecraftForge.EVENT_BUS.register(this)`
+
+## Dist 检查
+
+```java
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+```
+
+## 常用事件
+
+| 事件 | 用途 |
+|------|------|
+| `RegistryEvent.Register<T>` | 注册内容 |
+| `LivingDeathEvent` | 实体死亡 |
+| `FMLCommonSetupEvent` | 通用初始化 |
+| `FMLClientSetupEvent` | 客户端初始化 |

@@ -1977,5 +1977,51 @@
     "keySections": 1,
     "file": "resources_server_tags.md",
     "processedFile": "processed/resources_server_tags.md"
+  },
+  {
+    "id": "1.20.1/resources_server_recipes_custom",
+    "version": "1.20.1",
+    "label": "Custom Recipes",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Recipe",
+        "level": 2,
+        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
+      },
+      {
+        "title": "RecipeType",
+        "level": 2,
+        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
+      },
+      {
+        "title": "RecipeSerializer",
+        "level": 2,
+        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
+      },
+      {
+        "title": "Building the JSON",
+        "level": 2,
+        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
+      },
+      {
+        "title": "Non-Item Logic",
+        "level": 2,
+        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 5,
+    "keySections": 7,
+    "file": "resources_server_recipes_custom.md",
+    "processedFile": "processed/resources_server_recipes_custom.md"
   }
 ]

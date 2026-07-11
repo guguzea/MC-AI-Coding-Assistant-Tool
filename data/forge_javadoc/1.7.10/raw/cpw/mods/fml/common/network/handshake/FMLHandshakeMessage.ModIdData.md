@@ -1,0 +1,10 @@
+---
+title: "FMLHandshakeMessage.ModIdData"
+description: ""
+package: "cpw/mods/fml/common/network/handshake"
+version: "1.7.10"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/cpw/mods/fml/common/network/handshake/FMLHandshakeMessage.ModIdData.html"
+sourceType: javadoc
+---
+
+# FMLHandshakeMessage.ModIdData

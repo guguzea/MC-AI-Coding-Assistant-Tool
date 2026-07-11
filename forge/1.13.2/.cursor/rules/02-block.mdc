@@ -1,0 +1,213 @@
+# 02 — 方块开发
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 约束
+
+### Block 子类规范
+
+- 方块类必须继承 `Block`（`net.minecraft.block.Block`）
+- 使用 `Block.Properties.create(Material)` 创建属性（不是 1.14+ 的 `BlockBehaviour.Properties.of()`）
+- **禁止**重写旧版已废弃的交互方法
+
+### Block.Properties 常用配置
+
+```java
+Block.Properties.create(Material material)
+    .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
+    .hardnessAndResistance(float hardness)                   // 抗爆性默认 = 硬度 * 5
+    .lightValue(int lightValue)                             // 发光值 0-15
+    .lightOpacity(int lightOpacity)                         // 遮光值
+    .hardnessAndResistance(3.0f, 15.0f)
+    .harvestLevel(int level)                                // 挖掘等级
+    .harvestTool(ToolType tool)                             // 工具类型
+    .sound(SoundType type)                                 // 放置/破坏音效
+    .variableOpacity()                                      // 可变透明度
+    .noDrops()                                             // 无掉落
+```
+
+### 注册约束
+
+- **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
+- 必须通过 `RegistryEvent.Register<Block>` 注册（参见 `01-registry.mdc`）
+- 注册名称必须全小写
+- ItemBlock 需要单独注册（与方块使用相同 registry name）
+
+### 方块实体（TileEntity）约束
+
+- 有状态或需要持久化的方块必须使用 TileEntity（1.13 的命名，非 BlockEntity）
+- TileEntity 通过 `ITileEntityProvider` 接口实现
+- TileEntity 必须在方块类中重写 `createNewTileEntity()` 方法
+- TileEntity 的 `writeToNBT`/`readFromNBT` 方法处理 NBT 序列化
+
+### BlockState 配置
+
+- 使用 `axisAlignedBB` 定义碰撞箱
+- 使用 `setDefaultState` 设置默认状态
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的方块？
+
+```
+IF 需要可放置物品、不可交互的基础方块
+  → 基础方块（extends Block）
+  → 注册后注册 ItemBlock
+  → 创建 blockstates JSON 和 models JSON
+
+IF 需要存储数据（箱子、熔炉等）
+  → 方块实体方块（Block + ITileEntityProvider）
+  → 需要在方块类重写 createNewTileEntity()
+  → 需要实现 TileEntity 类
+
+IF 需要可交互（右键打开 GUI、触发事件）
+  → 基础方块 + onBlockActivated 事件
+  → 或使用 IGuiHandler 实现 GUI
+
+IF 需要流体
+  → 使用 Forge 专用流体系统
+  → 参考 Forge 文档
+```
+
+### Decision: 方块属性（Material）选择
+
+```
+IF 自然方块（石头、木头、草）
+  → Material.STONE / Material.WOOD / Material.GRASS
+  → 需要 harvestLevel 和 harvestTool 时用 STONE/WOOD
+
+IF 泥土类
+  → Material.EARTH / Material.SAND / Material.SNOW
+
+IF 玻璃/冰/透明
+  → Material.GLASS / Material.ICE
+  → 需要 variableOpacity()
+
+IF 植物
+  → Material.PLANT / Material.REPLACEABLE_PLANT
+  → 不能放置方块，需要特殊放置逻辑
+
+IF 液体
+  → 不在 Block 中实现，使用 Fluid 系统
+```
+
+### Decision: Block vs TileEntity
+
+```
+IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
+  → 必须使用 TileEntity
+  → 在方块类实现 ITileEntityProvider
+  → 重写 createNewTileEntity()
+
+IF 需要每 tick 逻辑（自动机、计时器）
+  → 必须使用 TileEntity + ITickable
+  → 在 TileEntity 中实现 update() 方法
+
+IF 只需要静态方块（装饰、完整方块）
+  → 普通 Block 即可，不需要 TileEntity
+  → 减少内存占用和复杂度
+```
+
+---
+
+## 示例：基础方块（带 ItemBlock）
+
+```java
+// blocks/MyBlock.java
+public class MyBlock extends Block {
+    public MyBlock() {
+        super(Block.Properties.create(Material.STONE)
+            .hardnessAndResistance(1.5f, 6.0f)
+            .sound(SoundType.STONE)
+        );
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state,
+                                ILivingEntity placer, ItemStack stack) {
+        // 方块放置时的逻辑
+    }
+
+    @Override
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos,
+                                        BlockState state, PlayerEntity player) {
+        // 方块被玩家破坏时的逻辑
+    }
+}
+```
+
+```java
+// 注册（在 RegistryEvent.Register<Block> 中）
+@SubscribeEvent
+public void onBlocksRegistry(RegistryEvent.Register<Block> event) {
+    event.getRegistry().register(
+        MY_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+    );
+}
+```
+
+```java
+// ❌ 错误示例：没有 setRegistryName
+event.getRegistry().register(new MyBlock()); // 没有注册名，无法引用
+```
+
+## 示例：带 TileEntity 的方块
+
+```java
+// blocks/MyTileEntityBlock.java
+public class MyTileEntityBlock extends Block implements ITileEntityProvider {
+    public MyTileEntityBlock() {
+        super(Block.Properties.create(Material.WOOD));
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new MyTileEntity();
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state,
+                                   PlayerEntity player, Direction side,
+                                   float hitX, float hitY, float hitZ) {
+        // 右键交互逻辑
+        return true;
+    }
+}
+```
+
+```java
+// entities/MyTileEntity.java
+public class MyTileEntity extends TileEntity implements ITickable {
+    private int counter = 0;
+
+    public MyTileEntity() {
+        super(TileEntityTypeRegistry.MY_TILE_ENTITY.get());
+    }
+
+    @Override
+    public void update() {
+        counter++;
+        if (counter % 20 == 0) {
+            // 每秒执行一次
+        }
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setInteger("counter", counter);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        counter = compound.getInteger("counter");
+    }
+}
+```
+
+> 注意：`writeToNBT`/`readFromNBT` 中读取 NBT 是安全的，但你**不能**在这些方法中读取世界数据。

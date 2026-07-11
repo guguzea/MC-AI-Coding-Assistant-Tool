@@ -1,0 +1,1 @@
+# EntityHasProperty.Serializer

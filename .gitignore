@@ -20,6 +20,8 @@ mcp-server/node_modules/
 mcp-server/dist/
 mcp-server/test-mcp.mjs
 mcp-server/stress-test.mjs
+release/
+.github/workflows/release-mcp-server.yml
 *.tsbuildinfo
 *.log
 npm-debug.log*

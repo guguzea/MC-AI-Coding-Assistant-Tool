@@ -1,0 +1,125 @@
+# 客户端/服务端分离（Forge 1.14.4）
+
+## 核心规则
+
+Forge 是**客户端-服务端分离**的架构。服务端代码运行在专用服务器或集成服务器的客户端中。
+
+```
+Dist.CLIENT          → 客户端进程
+Dist.DEDICATED_SERVER → 专用服务器进程
+```
+
+### DistExecutor（逻辑端执行）
+
+```java
+// 客户端执行（Forge 1.14.4）
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+    // 客户端代码
+});
+
+// 服务端执行
+DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+    // 服务端代码
+});
+```
+
+### 逻辑端判断
+
+```java
+// World.isRemote
+if (world.isRemote) {
+    // 客户端
+} else {
+    // 服务端
+}
+```
+
+## KeyBinding 注册（客户端）
+
+Forge 1.14.4 使用 `ClientRegistry` 和 `FMLClientSetupEvent`：
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class KeyBindings {
+    public static KeyBinding MY_KEY;
+
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        MY_KEY = ClientRegistry.registerKeyBind(new KeyBinding(
+            "key.mymod.my_key",           // 翻译键
+            Keyboard.KEY_RSHIFT,           // 默认按键
+            "key.categories.mymod"        // 分类
+        ));
+
+        ClientRegistry.registerKeyBinding(MY_KEY);
+    }
+}
+```
+
+> 注意：`Keyboard`（1.14.4）vs `InputConstants`（1.16.5+）
+
+### 监听 KeyInputEvent
+
+```java
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class KeyInputEvents {
+    @SubscribeEvent
+    public static void onKeyInput(KeyInputEvent event) {
+        if (KeyBindings.MY_KEY.isPressed()) {
+            // 按键被按下
+        }
+    }
+}
+```
+
+## TileEntity 数据同步（客户端 ↔ 服务端）
+
+### 服务端 → 客户端：getUpdatePacket / onDataPacket
+
+```java
+public class MyTileEntity extends TileEntity {
+    private int progress = 0;
+
+    @Override
+    public NBTTagCompound getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.putInt("progress", progress);
+        return nbt;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketCustomPayload pkt) {
+        readFromNBT(pkt.getNbtCompound());
+        // 触发 GUI 刷新
+        if (openContainers.containsKey(getPos())) {
+            // notifyAllContainers
+        }
+    }
+}
+```
+
+> 注意：`SPacketCustomPayload`（1.14.4）vs `ClientboundBlockEntityDataPacket`（1.16.5+）
+
+## EntityRenderer 注册
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void setup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(
+            ModEntities.MY_ENTITY,
+            MyEntityRenderer::new
+        );
+    }
+}
+```
+
+## 常见错误
+
+- ❌ 在服务端线程调用 `ClientRegistry`（必须 `Dist.CLIENT`）
+- ❌ `world.isRemote`（1.14.4）vs `level.isClientSide`（1.20.1）
+- ❌ `DistExecutor.runWhenOn`（1.14.4）vs `DistExecutor.unsafeRunWhenOn`（1.20.1）
+- ❌ `Keyboard`（1.14.4）vs `InputConstants`（1.16.5+）
+- ❌ 在 `getUpdatePacket()` 中创建新的 `NBTTagCompound` 时忘记 `super`
+- ❌ 在网络线程直接修改世界状态：必须在 `enqueueWork()` 中执行

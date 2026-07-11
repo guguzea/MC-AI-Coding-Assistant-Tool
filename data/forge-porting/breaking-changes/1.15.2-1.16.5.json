@@ -1,0 +1,65 @@
+{
+  "versionRange": "1.15.2-1.16.5",
+  "note": "MCP 可选切 MojMaps",
+  "generatedAt": "2026-05-31T12:50:28.640Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 40,
+    "removedCount": 39,
+    "added": [
+      "1.16.5/datagen_intro",
+      "1.16.5/networking_entities",
+      "1.16.5/events_intro",
+      "1.16.5/datagen_modelproviders",
+      "1.16.5/networking",
+      "1.16.5/networking_overview",
+      "1.16.5/concepts_registries",
+      "1.16.5/concepts_sides",
+      "1.16.5/networking_simpleimpl",
+      "1.16.5/datastorage_capabilities",
+      "1.16.5/blocks_interaction",
+      "1.16.5/blocks_states",
+      "1.16.5/blocks_blocks",
+      "1.16.5/items_globallootmodifiers",
+      "1.16.5/items_items",
+      "1.16.5/utilities_recipes",
+      "1.16.5/utilities_tags",
+      "1.16.5/tileentities_tileentity",
+      "1.16.5/tileentities_tesr",
+      "1.16.5/advanced_accesstransformers"
+    ],
+    "removed": [
+      "1.15.2/datagen_intro",
+      "1.15.2/networking_entities",
+      "1.15.2/events_intro",
+      "1.15.2/datagen_modelproviders",
+      "1.15.2/networking",
+      "1.15.2/networking_overview",
+      "1.15.2/concepts_registries",
+      "1.15.2/concepts_sides",
+      "1.15.2/networking_simpleimpl",
+      "1.15.2/datastorage_capabilities",
+      "1.15.2/blocks_interaction",
+      "1.15.2/blocks_states",
+      "1.15.2/blocks_blocks",
+      "1.15.2/items_globallootmodifiers",
+      "1.15.2/items_items",
+      "1.15.2/utilities_recipes",
+      "1.15.2/utilities_tags",
+      "1.15.2/tileentities_tileentity",
+      "1.15.2/tileentities_tesr",
+      "1.15.2/advanced_accesstransformers"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": [
+      {
+        "domain": "mappings",
+        "description": "MCP 可选切换为 MojMaps",
+        "severity": "low",
+        "fixType": "optional"
+      }
+    ]
+  }
+}

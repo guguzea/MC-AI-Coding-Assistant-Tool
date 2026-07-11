@@ -1,0 +1,170 @@
+# 05 — 事件系统
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 约束
+
+### @SubscribeEvent 基础规范
+
+- 所有事件处理方法必须标注 `@SubscribeEvent`
+- 事件类必须在 `@Mod.EventBusSubscriber` 或手动注册到事件总线
+- **禁止**在错误的事件总线监听事件
+
+### 事件订阅时机
+
+| 事件总线 | 使用场景 | 订阅方式 |
+|----------|----------|----------|
+| `MinecraftForge.EVENT_BUS` | Forge 原生事件（Registry、LivingDrops 等） | `MinecraftForge.EVENT_BUS.register(this)` |
+| `FMLJavaModLoadingContext.get().getModEventBus()` | Mod 特有事件 | `context.getModEventBus().addListener(this::method)` |
+
+### Dist（物理端）约束
+
+**首选方案：使用 `DistExecutor` 判断物理端**
+
+```java
+// 客户端执行（DistExecutor 自动处理类加载隔离）
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+
+// 服务端执行
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+```
+
+> **注意**：`safe*` 变体在 Java 9+ 开发环境中有问题（抛出 `BootstrapMethodError`），**推荐始终使用 `unsafe*`**。
+
+**次选方案：`FMLEnvironment#dist`**
+
+```java
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // 仅在客户端运行
+}
+```
+
+---
+
+## Decision Flow
+
+### Decision: 选择正确的事件类
+
+根据触发场景选择事件：
+
+```
+IF 监听玩家右键点击方块
+  → PlayerInteractEvent（注意版本差异）
+
+IF 监听生物死亡
+  → LivingDeathEvent
+
+IF 监听物品被使用完成（食物吃完等）
+  → LivingEntityUseItemEvent
+
+IF 监听实体掉落物品
+  → LivingDropsEvent
+
+IF 监听玩家登录/登出
+  → PlayerEvent.PlayerLoggedInEvent
+  → PlayerEvent.PlayerLoggedOutEvent
+  → PlayerEvent.PlayerRespawnEvent
+
+IF 监听玩家数据保存/加载
+  → PlayerEvent.PlayerLoggedInEvent
+
+IF 监听方块放置/破坏
+  → BlockEvent.BreakEvent
+  → BlockEvent.PlaceEvent
+
+IF 监听配方解锁（合成/烧炼等）
+  → FurnaceSmeltEvent
+  → 优先使用数据包注册配方，而非监听事件
+
+IF 监听 Tick（每帧逻辑）
+  → TickEvent
+  → 注意：不要在 Tick 中做重操作，会导致卡顿
+
+IF 监听 Capability 附加
+  → AttachCapabilitiesEvent<Entity / Block / Item / Chunk>
+
+IF 监听服务端/客户端启动
+  → FMLCommonSetupEvent
+  → FMLClientSetupEvent
+
+IF 监听 Registry 注册
+  → RegistryEvent.Register<T>
+  → 参考 01-registry.mdc
+```
+
+### Decision: 事件应在哪个物理端监听
+
+```
+IF 事件涉及世界修改（放置方块、生成实体）
+  → 服务端处理
+  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或确保在服务端线程
+
+IF 事件涉及渲染、输入
+  → 客户端处理
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 不确定
+  → 优先考虑服务端处理（更安全）
+```
+
+---
+
+## 示例：事件订阅类结构
+
+```java
+// init/ModEvents.java
+public class ModEvents {
+
+    @SubscribeEvent
+    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+        // 玩家右键方块
+    }
+
+    @SubscribeEvent
+    public void onLivingDeath(LivingDeathEvent event) {
+        // 生物死亡
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        // 玩家登录
+    }
+}
+```
+
+```java
+// 在 ExampleMod 构造函数中注册
+public ExampleMod() {
+    MinecraftForge.EVENT_BUS.register(new ModEvents());
+}
+```
+
+## 示例：FMLCommonSetupEvent（服务端初始化）
+
+```java
+public ExampleMod() {
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+}
+
+private void commonSetup(final FMLCommonSetupEvent event) {
+    // 在这里设置网络消息
+    NetworkHandler.register();
+}
+```
+
+## 示例：FMLClientSetupEvent（客户端初始化）
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // KeyBinding 注册
+        ClientRegistry.registerKeyBinding(...);
+    }
+}
+```
+
+KeyBinding 注册应使用 `ClientRegistry.registerKeyBinding()`。

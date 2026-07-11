@@ -1,0 +1,1 @@
+# Item.html#getItemBurnTime-net.minecraft.item.ItemStack-

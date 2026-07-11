@@ -1,0 +1,21 @@
+# 07 — 数据生成器
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 约束
+
+Forge 1.13.2 的 DataGen API 相对基础，大部分资源文件需要**手动编写 JSON**。
+
+## 目录结构
+
+```
+src/main/resources/
+├── assets/{modid}/
+│   ├── blockstates/
+│   ├── models/
+│   └── lang/
+└── data/{modid}/
+    └── recipes/
+```

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.example.examplemod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "ExampleMixin"
+  ],
+  "server": [],
+  "mixins": []
+}

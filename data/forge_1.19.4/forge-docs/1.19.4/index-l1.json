@@ -1,0 +1,995 @@
+[
+  {
+    "id": "1.19.4/advanced_accesstransformers",
+    "version": "1.19.4",
+    "label": "Access Transformers",
+    "url": "https://docs.readthedocs.net/en/1.19.x/advanced/accesstransformers/",
+    "tags": [
+      "advanced"
+    ],
+    "firstParagraph": "Adding an Access Transformer to your mod project is as simple as adding a single line into your build.gradle:",
+    "sections": [
+      {
+        "title": "Adding ATs",
+        "level": 2,
+        "summary": "Adding an Access Transformer to your mod project is as simple as adding a single line into your build."
+      },
+      {
+        "title": "Comments",
+        "level": 2,
+        "summary": "All text after a # until the end of the line will be treated as a comment and will not be parsed."
+      },
+      {
+        "title": "Access Modifiers",
+        "level": 2,
+        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - <li>public - visible to all classes inside and outside its packa..."
+      },
+      {
+        "title": "Targets and Directives",
+        "level": 2,
+        "summary": "> Important: Important When using Access Transformers on Minecraft classes, the SRG name must be used for fields and methods."
+      },
+      {
+        "title": "Examples",
+        "level": 2,
+        "summary": "# Makes protected and removes the final modifier from 'random' in MinecraftServer protected-f net.minecraft.server."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/blockentities",
+    "version": "1.19.4",
+    "label": "BlockEntities",
+    "url": "https://docs.readthedocs.net/en/1.19.x/blockentities/",
+    "tags": [
+      "block"
+    ],
+    "firstParagraph": "Block Entities are created and removed dynamically and as such are not registry objects on their own.",
+    "sections": [
+      {
+        "title": "Registering",
+        "level": 2,
+        "summary": "Block Entities are created and removed dynamically and as such are not registry objects on their own. In order to create a BlockEntity, you need to extend the BlockEntity class."
+      },
+      {
+        "title": "Creating a `BlockEntity",
+        "level": 2,
+        "summary": "To create a <code>BlockEntity and attach it to a Block, the EntityBlock interface must be implemented on your Block subclass."
+      },
+      {
+        "title": "Storing Data within your `BlockEntity",
+        "level": 2,
+        "summary": "In order to save data, override the following two methods: `` BlockEntity#saveAdditional(CompoundTag tag) BlockEntity#load(CompoundTag tag) ` These methods are called whenever the <code>LevelChunk ..."
+      },
+      {
+        "title": "Ticking `BlockEntities",
+        "level": 2,
+        "summary": "If you need a ticking <code>BlockEntity, for example to keep track of the progress during a smelting process, another method must be implemented and overridden within EntityBlock: EntityBlock#getTi..."
+      },
+      {
+        "title": "Synchronizing the Data to the Client",
+        "level": 2,
+        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/blockentities_ber",
+    "version": "1.19.4",
+    "label": "BlockEntityRenderer",
+    "url": "https://docs.readthedocs.net/en/1.19.x/blockentities/ber/",
+    "tags": [
+      "block"
+    ],
+    "firstParagraph": "To create a BER, create a class that inherits from BlockEntityRenderer. It takes a generic argument specifying the block&rsquo;s BlockEntity class.",
+    "sections": [
+      {
+        "title": "Creating a BER",
+        "level": 2,
+        "summary": "To create a BER, create a class that inherits from BlockEntityRenderer. It takes a generic argument specifying the block&rsquo;s BlockEntity class."
+      },
+      {
+        "title": "Registering a BER",
+        "level": 2,
+        "summary": "In order to register a BER, you must subscribe to the EntityRenderersEvent$RegisterRenderers event on the mod event bus and call #registerBlockEntityRenderer."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/blocks",
+    "version": "1.19.4",
+    "label": "Blocks",
+    "url": "https://docs.readthedocs.net/en/1.19.x/blocks/",
+    "tags": [
+      "block"
+    ],
+    "firstParagraph": "For simple blocks, which need no special functionality (think cobblestone, wooden planks, etc.), a custom class is not necessary.",
+    "sections": [
+      {
+        "title": "Creating a Block",
+        "level": 2,
+        "summary": "For simple blocks, which need no special functionality (think cobblestone, wooden planks, etc.), a custom class is not necessary."
+      },
+      {
+        "title": "Registering a Block",
+        "level": 2,
+        "summary": "Blocks must be registered to function. > Important: Important A block in the level and a &ldquo;block&rdquo; in an inventory are very different things."
+      },
+      {
+        "title": "Further Reading",
+        "level": 2,
+        "summary": "For information about block properties, such as those used for vanilla blocks like fences, walls, and many more, see the section on blockstates."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/blocks_states",
+    "version": "1.19.4",
+    "label": "Block States",
+    "url": "https://docs.readthedocs.net/en/1.19.x/blocks/states/",
+    "tags": [
+      "block"
+    ],
+    "firstParagraph": "In Minecraft 1.7 and previous versions, blocks which need to store placement or state data that did not have BlockEntities used metadata.",
+    "sections": [
+      {
+        "title": "Legacy Behavior",
+        "level": 2,
+        "summary": "In Minecraft 1.7 and previous versions, blocks which need to store placement or state data that did not have BlockEntities used metadata."
+      },
+      {
+        "title": "Introduction of States",
+        "level": 2,
+        "summary": "In Minecraft 1.8 and above, the metadata system, along with the block ID system, was deprecated and eventually replaced with the block state system."
+      },
+      {
+        "title": "Proper Usage of Block States",
+        "level": 2,
+        "summary": "The BlockState system is a flexible and powerful system, but it also has limitations. BlockStates are immutable, and all combinations of their properties are generated on startup of the game."
+      },
+      {
+        "title": "Implementing Block States",
+        "level": 2,
+        "summary": "In your Block class, create or reference static final Property<?> objects for every property that your Block has. You are free to make your own Property<?"
+      },
+      {
+        "title": "Using `BlockState&rsquo;s",
+        "level": 2,
+        "summary": "You can get the value of a property by calling <code>BlockState#getValue(Property<?>), passing it the property you want to get the value of."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_events",
+    "version": "1.19.4",
+    "label": "Events",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/events/",
+    "tags": [
+      "event"
+    ],
+    "firstParagraph": "Event handlers methods have a single parameter and do not return a result. The method could be static or instance depending on implementation.",
+    "sections": [
+      {
+        "title": "Creating an Event Handler",
+        "level": 2,
+        "summary": "Event handlers methods have a single parameter and do not return a result. The method could be static or instance depending on implementation."
+      },
+      {
+        "title": "Canceling",
+        "level": 2,
+        "summary": "If an event can be canceled, it will be marked with the @Cancelable annotation, and the method Event#isCancelable() will return true."
+      },
+      {
+        "title": "Results",
+        "level": 2,
+        "summary": "Some events have an Event$Result. A result can be one of three things: DENY which stops the event, DEFAULT which uses the Vanilla behavior, and ALLOW which forces the action to take place, regardle..."
+      },
+      {
+        "title": "Priority",
+        "level": 2,
+        "summary": "Event handler methods (marked with @SubscribeEvent) have a priority. You can set the priority of an event handler method by setting the priority value of the annotation."
+      },
+      {
+        "title": "Sub Events",
+        "level": 2,
+        "summary": "Many events have different variations of themselves. These can be different but all based around one common factor (e.g. PlayerEvent) or can be an event that has multiple phases (e.g."
+      },
+      {
+        "title": "Mod Event Bus",
+        "level": 2,
+        "summary": "The mod event bus is primarily used for listening to lifecycle events in which mods should initialize. Each event on the mod bus is required to implement IModBusEvent."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_internationalization",
+    "version": "1.19.4",
+    "label": "Internationalization and Localization",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/internationalization/",
+    "tags": [],
+    "firstParagraph": "Language files are located by assets/[namespace]/lang/[locale].json (e.g. all US English translations provided by examplemod would be within assets/examplemod/lang/en_us.json).",
+    "sections": [
+      {
+        "title": "Language files",
+        "level": 2,
+        "summary": "Language files are located by assets/[namespace]/lang/[locale].json (e.g. all US English translations provided by examplemod would be within assets/examplemod/lang/en_us.json)."
+      },
+      {
+        "title": "Usage with Blocks and Items",
+        "level": 2,
+        "summary": "Block, Item and a few other Minecraft classes have built-in translation keys used to display their names. These translation keys are specified by overriding #getDescriptionId."
+      },
+      {
+        "title": "Localization methods",
+        "level": 2,
+        "summary": "> Warning: Warning A common issue is having the server localize for clients. The server can only localize in its own locale, which does not necessarily match the locale of connected clients."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_lifecycle",
+    "version": "1.19.4",
+    "label": "Mod Lifecycle",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/lifecycle/",
+    "tags": [
+      "lifecycle"
+    ],
+    "firstParagraph": "The registry events are fired after the mod instance construction. There are two: NewRegistryEvent and RegisterEvent. These events are fired synchronously during mod loading.",
+    "sections": [
+      {
+        "title": "Registry Events",
+        "level": 2,
+        "summary": "The registry events are fired after the mod instance construction. There are two: NewRegistryEvent and RegisterEvent. These events are fired synchronously during mod loading."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "If the game is setup to run data generators, then the GatherDataEvent will be the last event to fire. This event is for registering mods&rsquo; data providers to their associated data generator."
+      },
+      {
+        "title": "Common Setup",
+        "level": 2,
+        "summary": "FMLCommonSetupEvent is for actions that are common to both physical client and server, such as registering capabilities."
+      },
+      {
+        "title": "Sided Setup",
+        "level": 2,
+        "summary": "The sided-setup events are fired on their respective physical sides: FMLClientSetupEvent on the physical client, and FMLDedicatedServerSetupEvent for the dedicated server."
+      },
+      {
+        "title": "InterModComms",
+        "level": 2,
+        "summary": "This is where messages can be sent to mods for cross-mod compatibility. There are two events: InterModEnqueueEvent and InterModProcessEvent."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_registries",
+    "version": "1.19.4",
+    "label": "Registries",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/registries/",
+    "tags": [
+      "registry"
+    ],
+    "firstParagraph": "There are two proper ways to register objects: the DeferredRegister class, and the RegisterEvent lifecycle event.",
+    "sections": [
+      {
+        "title": "Methods for Registering",
+        "level": 2,
+        "summary": "There are two proper ways to register objects: the DeferredRegister class, and the RegisterEvent lifecycle event. DeferredRegister is the recommended way to register objects."
+      },
+      {
+        "title": "Referencing Registered Objects",
+        "level": 2,
+        "summary": "Registered objects should not be stored in fields when they are created and registered. They are to be always newly created and registered whenever RegisterEvent is fired for that registry."
+      },
+      {
+        "title": "Creating Custom Forge Registries",
+        "level": 2,
+        "summary": "Custom registries can usually just be a simple map of key to value. This is a common style; however, it forces a hard dependency on the registry being present."
+      },
+      {
+        "title": "Handling Missing Entries",
+        "level": 2,
+        "summary": "There are cases where certain registry objects will cease to exist whenever a mod is updated or, more likely, removed."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_resources",
+    "version": "1.19.4",
+    "label": "Resources",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/resources/",
+    "tags": [],
+    "firstParagraph": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path.",
+    "sections": [
+      {
+        "title": "`ResourceLocation",
+        "level": 2,
+        "summary": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/concepts_sides",
+    "version": "1.19.4",
+    "label": "Sides in Minecraft",
+    "url": "https://docs.readthedocs.net/en/1.19.x/concepts/sides/",
+    "tags": [
+      "sides"
+    ],
+    "firstParagraph": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we are talking about.",
+    "sections": [
+      {
+        "title": "Different Kinds of Sides",
+        "level": 2,
+        "summary": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we are talking about."
+      },
+      {
+        "title": "Performing Side-Specific Operations",
+        "level": 2,
+        "summary": "This boolean check will be your most used way to check sides. Querying this field on a <code>Level object establishes the logical side the level belongs to."
+      },
+      {
+        "title": "Common Mistakes",
+        "level": 2,
+        "summary": "Whenever you want to send information from one logical side to another, you must always use network packets."
+      },
+      {
+        "title": "Writing One-Sided Mods",
+        "level": 2,
+        "summary": "In recent versions, Minecraft Forge has removed a &ldquo;sidedness&rdquo; attribute from the mods.toml."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/datagen",
+    "version": "1.19.4",
+    "label": "Data Generators",
+    "url": "https://docs.readthedocs.net/en/1.19.x/datagen/",
+    "tags": [
+      "datagen",
+      "tag"
+    ],
+    "firstParagraph": "All references to textures or other data files not generated for data generation must reference existing files on the system.",
+    "sections": [
+      {
+        "title": "Existing Files",
+        "level": 2,
+        "summary": "All references to textures or other data files not generated for data generation must reference existing files on the system."
+      },
+      {
+        "title": "Generator Modes",
+        "level": 2,
+        "summary": "The data generator can be configured to run 4 different data generations, which are configured from the command-line parameters, and can be checked from GatherDataEvent#include*** methods."
+      },
+      {
+        "title": "Data Providers",
+        "level": 2,
+        "summary": "Data providers are the classes that actually define what data will be generated and provided. All data providers implement DataProvider."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/datastorage_capabilities",
+    "version": "1.19.4",
+    "label": "The Capability System",
+    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/capabilities/",
+    "tags": [
+      "capability"
+    ],
+    "firstParagraph": "Forge provides three capabilities: IItemHandler, IFluidHandler and IEnergyStorage.",
+    "sections": [
+      {
+        "title": "Forge-provided Capabilities",
+        "level": 2,
+        "summary": "Forge provides three capabilities: IItemHandler, IFluidHandler and IEnergyStorage. IItemHandler exposes an interface for handling inventory slots."
+      },
+      {
+        "title": "Using an Existing Capability",
+        "level": 2,
+        "summary": "As mentioned earlier, BlockEntities, Entities, and ItemStacks implement the capability provider feature through the ICapabilityProvider interface."
+      },
+      {
+        "title": "Exposing a Capability",
+        "level": 2,
+        "summary": "In order to expose a capability, you will first need an instance of the underlying capability type. Note that you should assign a separate instance to each object that keeps the capability, since t..."
+      },
+      {
+        "title": "Attaching Capabilities",
+        "level": 2,
+        "summary": "As mentioned, attaching capabilities to existing providers, Levels, and LevelChunks can be done using AttachCapabilitiesEvent. The same event is used for all objects that can provide capabilities."
+      },
+      {
+        "title": "Creating Your Own Capability",
+        "level": 2,
+        "summary": "A capability can be registered using one of two ways: RegisterCapabilitiesEvent or @AutoRegisterCapability."
+      },
+      {
+        "title": "Persisting LevelChunk and BlockEntity capabilities",
+        "level": 2,
+        "summary": "Unlike Levels, Entities, and ItemStacks, LevelChunks and BlockEntities are only written to disk when they have been marked as dirty."
+      },
+      {
+        "title": "Synchronizing Data with Clients",
+        "level": 2,
+        "summary": "By default, capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets."
+      },
+      {
+        "title": "Persisting across Player Deaths",
+        "level": 2,
+        "summary": "By default, the capability data does not persist on death. In order to change this, the data has to be manually copied when the player entity is cloned during the respawn process."
+      },
+      {
+        "title": "Migrating from IExtendedEntityProperties",
+        "level": 2,
+        "summary": "Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don&rsquo;t fully match 1:1."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/datastorage_codecs",
+    "version": "1.19.4",
+    "label": "Codecs",
+    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/codecs/",
+    "tags": [],
+    "firstParagraph": "Codecs are primarily used to encode, or serialize, Java objects to some data format type and decode, or deserialize, formatted data objects back to its associated Java type.",
+    "sections": [
+      {
+        "title": "Using Codecs",
+        "level": 2,
+        "summary": "Codecs are primarily used to encode, or serialize, Java objects to some data format type and decode, or deserialize, formatted data objects back to its associated Java type."
+      },
+      {
+        "title": "Existing Codecs",
+        "level": 2,
+        "summary": "The Codec class contains static instances of codecs for certain defined primitives. Codec | Java Type --- | --- BOOL | Boolean BYTE | Byte SHORT | Short INT | Integer LONG | Long FLOAT | Float DOUB..."
+      },
+      {
+        "title": "Creating Codecs",
+        "level": 2,
+        "summary": "Codecs can be created for encoding and decoding any object. For understanding purposes, the equivalent encoded JSON will be shown. Codecs can define objects through the use of records."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/datastorage_saveddata",
+    "version": "1.19.4",
+    "label": "Saved Data",
+    "url": "https://docs.readthedocs.net/en/1.19.x/datastorage/saveddata/",
+    "tags": [],
+    "firstParagraph": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of:",
+    "sections": [
+      {
+        "title": "Declaration",
+        "level": 2,
+        "summary": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of: - <li>save: Allows the implementation to write NBT data to the level."
+      },
+      {
+        "title": "Attaching to a Level",
+        "level": 2,
+        "summary": "Any SavedData is loaded and/or attached to a level dynamically. As such, if one is never created on a level, then it will not exist."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gameeffects_particles",
+    "version": "1.19.4",
+    "label": "Particles",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gameeffects/particles/",
+    "tags": [
+      "particles"
+    ],
+    "firstParagraph": "Particles are broken up between its client only implementation to display the particle and its common implementation to reference the particle or sync data from the server.",
+    "sections": [
+      {
+        "title": "Creating a Particle",
+        "level": 2,
+        "summary": "Particles are broken up between its client only implementation to display the particle and its common implementation to reference the particle or sync data from the server."
+      },
+      {
+        "title": "Spawning a Particle",
+        "level": 2,
+        "summary": "Particles can be spawned from either level instance. However, each side has a specific way to spawn a particle."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gameeffects_sounds",
+    "version": "1.19.4",
+    "label": "Sounds",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gameeffects/sounds/",
+    "tags": [
+      "sounds"
+    ],
+    "firstParagraph": "Term | Description --- | --- Sound Events | Something that triggers a sound effect. Examples include minecraft:block.anvil.hit or botania:spreader_fire.",
+    "sections": [
+      {
+        "title": "Terminology",
+        "level": 2,
+        "summary": "Term | Description --- | --- Sound Events | Something that triggers a sound effect. Examples include minecraft:block.anvil.hit or botania:spreader_fire."
+      },
+      {
+        "title": "`sounds.json",
+        "level": 2,
+        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with <code>ResourceLocations. sounds."
+      },
+      {
+        "title": "Creating Sound Events",
+        "level": 2,
+        "summary": "In order to reference sounds on the server, a SoundEvent holding a corresponding entry in sounds.json must be created. This SoundEvent must then be registered."
+      },
+      {
+        "title": "Playing Sounds",
+        "level": 2,
+        "summary": "Vanilla has lots of methods for playing sounds, and it is unclear which to use at times. Note that each takes a SoundEvent, the ones registered above."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gettingstarted",
+    "version": "1.19.4",
+    "label": "Getting Started with Forge",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/",
+    "tags": [],
+    "firstParagraph": "- <li> An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin.",
+    "sections": [
+      {
+        "title": "Prerequisites",
+        "level": 2,
+        "summary": "- <li> An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin."
+      },
+      {
+        "title": "Building and Testing Your Mod",
+        "level": 2,
+        "summary": "1. <li>To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar, by default."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gettingstarted_modfiles",
+    "version": "1.19.4",
+    "label": "Mod Files",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/modfiles/",
+    "tags": [
+      "meta"
+    ],
+    "firstParagraph": "The mods.toml file defines the metadata of your mod(s). It also contains additional information that is displayed within the &lsquo;Mods&rsquo; menu and how your mod(s) should be loaded into the game.",
+    "sections": [
+      {
+        "title": "mods.toml",
+        "level": 2,
+        "summary": "The mods.toml file defines the metadata of your mod(s). It also contains additional information that is displayed within the &lsquo;Mods&rsquo; menu and how your mod(s) should be loaded into the game."
+      },
+      {
+        "title": "Mod Entrypoints",
+        "level": 2,
+        "summary": "Now that the mods.toml is filled out, we need to provide an entrypoint to being programming the mod. Entrypoints are essentially the starting point for executing the mod."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gettingstarted_structuring",
+    "version": "1.19.4",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/structuring/",
+    "tags": [
+      "meta"
+    ],
+    "firstParagraph": "When structuring your mod, pick a unique, top-level package structure. Many programmers will use the same name for different classes, interfaces, etc.",
+    "sections": [
+      {
+        "title": "Packaging",
+        "level": 2,
+        "summary": "When structuring your mod, pick a unique, top-level package structure. Many programmers will use the same name for different classes, interfaces, etc."
+      },
+      {
+        "title": "Class Naming Schemes",
+        "level": 2,
+        "summary": "A common class naming scheme makes it easier to decipher the purpose of the class or to easily locate specific classes. Classes are commonly suffixed with its type, for example:"
+      },
+      {
+        "title": "Choose One Method from Many",
+        "level": 2,
+        "summary": "There are many methods for performing a certain task: registering an object, listening for events, etc."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gettingstarted_versioning",
+    "version": "1.19.4",
+    "label": "Versioning",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gettingstarted/versioning/",
+    "tags": [
+      "meta"
+    ],
+    "firstParagraph": "Here is a list of examples that can increment the various variables.",
+    "sections": [
+      {
+        "title": "Examples",
+        "level": 2,
+        "summary": "Here is a list of examples that can increment the various variables. - <li>MCVERSION - <li>Always matches the Minecraft version the mod is for."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gui_menus",
+    "version": "1.19.4",
+    "label": "Menus",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gui/menus/",
+    "tags": [
+      "gui"
+    ],
+    "firstParagraph": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the type of the menu.",
+    "sections": [
+      {
+        "title": "`MenuType",
+        "level": 2,
+        "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the type of the menu."
+      },
+      {
+        "title": "`AbstractContainerMenu",
+        "level": 2,
+        "summary": "All menus are extended from <code>AbstractContainerMenu. A menu takes in two parameters, the MenuType`, which represents the type of the menu itself, and the container id, which represents the uniq..."
+      },
+      {
+        "title": "Opening a Menu",
+        "level": 2,
+        "summary": "Once a menu type has been registered, the menu itself has been finished, and a screen has been attached, a menu can then be opened by the player."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/gui_screens",
+    "version": "1.19.4",
+    "label": "Screens",
+    "url": "https://docs.readthedocs.net/en/1.19.x/gui/screens/",
+    "tags": [
+      "gui"
+    ],
+    "firstParagraph": "Whenever anything is rendered, there needs to be some identifier which specifies where it will appear.",
+    "sections": [
+      {
+        "title": "Relative Coordinates",
+        "level": 2,
+        "summary": "Whenever anything is rendered, there needs to be some identifier which specifies where it will appear."
+      },
+      {
+        "title": "Gui Components",
+        "level": 2,
+        "summary": "Any GUI rendered by Minecraft is an instance of a GuiComponent. GuiComponents contain the most basic methods used to render the most commonly used objects."
+      },
+      {
+        "title": "Renderable",
+        "level": 2,
+        "summary": "Renderables are essentially objects that are rendered. These include screens, buttons, chat boxes, lists, etc. Renderables only have one method: #render."
+      },
+      {
+        "title": "GuiEventListener",
+        "level": 2,
+        "summary": "Any screen rendered in Minecraft implements GuiEventListener. GuiEventListeners are responsible for handling user interaction with the screen."
+      },
+      {
+        "title": "NarratableEntry",
+        "level": 2,
+        "summary": "NarratableEntrys are elements which can be spoken about through Minecraft&rsquo;s accessibility narration feature."
+      },
+      {
+        "title": "The Screen Subtype",
+        "level": 2,
+        "summary": "With all of the above knowledge, a basic screen can be constructed. To make it easier to understand, the components of a screen will be mentioned in the order they are typically encountered."
+      },
+      {
+        "title": "`AbstractContainerScreen",
+        "level": 2,
+        "summary": "If a screen is directly attached to a menu, then an <code>AbstractContainerScreen should be subclassed instead."
+      },
+      {
+        "title": "Registering an AbstractContainerScreen",
+        "level": 2,
+        "summary": "To use an AbstractContainerScreen with a menu, it needs to be registered. This can be done by calling MenuScreens#register within the FMLClientSetupEvent on the mod event bus."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/items",
+    "version": "1.19.4",
+    "label": "Items",
+    "url": "https://docs.readthedocs.net/en/1.19.x/items/",
+    "tags": [
+      "item"
+    ],
+    "firstParagraph": "Basic items that need no special functionality (think sticks or sugar) do not need custom classes. You can create an item by instantiating the Item class with an Item$Properties object.",
+    "sections": [
+      {
+        "title": "Creating an Item",
+        "level": 2,
+        "summary": "Basic items that need no special functionality (think sticks or sugar) do not need custom classes. You can create an item by instantiating the Item class with an Item$Properties object."
+      },
+      {
+        "title": "`CreativeModeTabEvent",
+        "level": 2,
+        "summary": "An item can be added to a <code>CreativeModeTab via CreativeModeTabEvent$BuildContents on the mod event bus. Items can be added without any additional configurations via #accept`."
+      },
+      {
+        "title": "Registering an Item",
+        "level": 2,
+        "summary": "Items must be registered to function."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/items_bewlr",
+    "version": "1.19.4",
+    "label": "BlockEntityWithoutLevelRenderer",
+    "url": "https://docs.readthedocs.net/en/1.19.x/items/bewlr/",
+    "tags": [
+      "item"
+    ],
+    "firstParagraph": "BlockEntityWithoutLevelRenderer allows you to render your item using public void renderByItem(ItemStack itemStack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource, int c...",
+    "sections": [
+      {
+        "title": "Using BlockEntityWithoutLevelRenderer",
+        "level": 2,
+        "summary": "BlockEntityWithoutLevelRenderer allows you to render your item using public void renderByItem(ItemStack itemStack, ItemDisplayContext ctx, PoseStack poseStack, MultiBufferSource bufferSource, int c..."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/legacy",
+    "version": "1.19.4",
+    "label": "Documentation for Legacy Versions",
+    "url": "https://docs.readthedocs.net/en/1.19.x/legacy/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.19.4/legacy_porting",
+    "version": "1.19.4",
+    "label": "Porting to Minecraft 1.19",
+    "url": "https://docs.readthedocs.net/en/1.19.x/legacy/porting/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.19.4/misc_config",
+    "version": "1.19.4",
+    "label": "Configuration",
+    "url": "https://docs.readthedocs.net/en/1.19.x/misc/config/",
+    "tags": [
+      "config"
+    ],
+    "firstParagraph": "A configuration can be created using a subtype of IConfigSpec. Forge implements the type via ForgeConfigSpec and enables its construction through ForgeConfigSpec$Builder.",
+    "sections": [
+      {
+        "title": "Creating a Configuration",
+        "level": 2,
+        "summary": "A configuration can be created using a subtype of IConfigSpec. Forge implements the type via ForgeConfigSpec and enables its construction through ForgeConfigSpec$Builder."
+      },
+      {
+        "title": "Registering a Configuration",
+        "level": 2,
+        "summary": "Once a ForgeConfigSpec has been built, it must be registered to allow Forge to load, track, and sync the configuration settings as required."
+      },
+      {
+        "title": "Configuration Events",
+        "level": 2,
+        "summary": "Operations that occur whenever a config is loaded or reloaded can be done using the ModConfigEvent$Loading and ModConfigEvent$Reloading events. The events must be registered to the mod event bus."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/misc_debugprofiler",
+    "version": "1.19.4",
+    "label": "Debug Profiler",
+    "url": "https://docs.readthedocs.net/en/1.19.x/misc/debugprofiler/",
+    "tags": [],
+    "firstParagraph": "The Debug Profiler is very simple to use. It requires the debug keybind F3 + L to start the profiler. After 10 seconds, it will automatically stop; however, it can be stopped earlier by pressing th...",
+    "sections": [
+      {
+        "title": "Using the Debug Profiler",
+        "level": 2,
+        "summary": "The Debug Profiler is very simple to use. It requires the debug keybind F3 + L to start the profiler. After 10 seconds, it will automatically stop; however, it can be stopped earlier by pressing th..."
+      },
+      {
+        "title": "Reading a Profiling result",
+        "level": 2,
+        "summary": "Within each sided folder (client and server), you will find a profiling.txt file containing the result data."
+      },
+      {
+        "title": "Profiling your own code",
+        "level": 2,
+        "summary": "The Debug Profiler has basic support for Entity and BlockEntity. If you would like to profile something else, you may need to manually create your sections like so: `` ProfilerFiller#push(yourSecti..."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/misc_gametest",
+    "version": "1.19.4",
+    "label": "Game Tests",
+    "url": "https://docs.readthedocs.net/en/1.19.x/misc/gametest/",
+    "tags": [
+      "tests"
+    ],
+    "firstParagraph": "A standard Game Test follows three basic steps:",
+    "sections": [
+      {
+        "title": "Creating a Game Test",
+        "level": 2,
+        "summary": "A standard Game Test follows three basic steps: 1. <li>A structure, or template, is loaded holding the scene on which the interaction or behavior is tested. 2."
+      },
+      {
+        "title": "Registering a Game Test",
+        "level": 2,
+        "summary": "A Game Test must be registered to be ran in-game. There are two methods of doing so: via the @GameTestHolder annotation or RegisterGameTestsEvent."
+      },
+      {
+        "title": "Structure Templates",
+        "level": 2,
+        "summary": "Game Tests are performed within scenes loaded by structures, or templates. All templates define the dimensions of the scene and the initial data (blocks and entities) that will be loaded."
+      },
+      {
+        "title": "Running Game Tests",
+        "level": 2,
+        "summary": "Game Tests can be run using the /test command. The test command is highly configurable; however, only a few are of importance to running tests: Subcommand | Description --- | --- run | Runs the spe..."
+      },
+      {
+        "title": "Buildscript Configurations",
+        "level": 2,
+        "summary": "Game Tests provide additional configuration settings within a buildscript (the build.gradle file) to run and integrate into different settings."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/misc_keymappings",
+    "version": "1.19.4",
+    "label": "Key Mappings",
+    "url": "https://docs.readthedocs.net/en/1.19.x/misc/keymappings/",
+    "tags": [],
+    "firstParagraph": "A <code>KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register`.",
+    "sections": [
+      {
+        "title": "Registering a `KeyMapping",
+        "level": 2,
+        "summary": "A <code>KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register`."
+      },
+      {
+        "title": "Creating a `KeyMapping",
+        "level": 2,
+        "summary": "A <code>KeyMapping can be created using it&rsquo;s constructor. The KeyMapping` takes in a translation key defining the name of the mapping, the default input of the mapping, and the translation ke..."
+      },
+      {
+        "title": "Checking a `KeyMapping",
+        "level": 2,
+        "summary": "A <code>KeyMapping` can be checked to see whether it has been clicked. Depending on when, the mapping can be used in a conditional to apply the associated logic."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/misc_updatechecker",
+    "version": "1.19.4",
+    "label": "Forge Update Checker",
+    "url": "https://docs.readthedocs.net/en/1.19.x/misc/updatechecker/",
+    "tags": [],
+    "firstParagraph": "The first thing you want to do is specify the updateJSONURL parameter in your mods.toml file. The value of this parameter should be a valid URL pointing to an update JSON file.",
+    "sections": [
+      {
+        "title": "Getting Started",
+        "level": 2,
+        "summary": "The first thing you want to do is specify the updateJSONURL parameter in your mods.toml file. The value of this parameter should be a valid URL pointing to an update JSON file."
+      },
+      {
+        "title": "Update JSON format",
+        "level": 2,
+        "summary": "The JSON itself has a relatively simple format as follows: This is fairly self-explanatory, but some notes:"
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/networking",
+    "version": "1.19.4",
+    "label": "Networking",
+    "url": "https://docs.readthedocs.net/en/1.19.x/networking/",
+    "tags": [
+      "networking"
+    ],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.19.4/networking_entities",
+    "version": "1.19.4",
+    "label": "Entities",
+    "url": "https://docs.readthedocs.net/en/1.19.x/networking/entities/",
+    "tags": [
+      "networking"
+    ],
+    "firstParagraph": "In general, the spawning of modded entities is handled separately, by Forge.",
+    "sections": [
+      {
+        "title": "Spawn Data",
+        "level": 2,
+        "summary": "In general, the spawning of modded entities is handled separately, by Forge. > Note: Note This means that simply extending a vanilla entity class may not inherit all its behavior."
+      },
+      {
+        "title": "Dynamic Data",
+        "level": 2,
+        "summary": "This is the main vanilla system for synchronizing entity data from the server to the client. As such, a number of vanilla examples are available to refer to."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/networking_simpleimpl",
+    "version": "1.19.4",
+    "label": "SimpleImpl",
+    "url": "https://docs.readthedocs.net/en/1.19.x/networking/simpleimpl/",
+    "tags": [
+      "networking"
+    ],
+    "firstParagraph": "First you need to create your SimpleChannel object. We recommend that you do this in a separate class, possibly something like ModidPacketHandler.",
+    "sections": [
+      {
+        "title": "Getting Started",
+        "level": 2,
+        "summary": "First you need to create your SimpleChannel object. We recommend that you do this in a separate class, possibly something like ModidPacketHandler."
+      },
+      {
+        "title": "The Version Checker",
+        "level": 2,
+        "summary": "If your mod does not require the other side to have a specific network channel, or to be a Forge instance at all, you should take care that you properly define your version compatibility checkers (..."
+      },
+      {
+        "title": "Registering Packets",
+        "level": 2,
+        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - <li>The first parameter is the discrimin..."
+      },
+      {
+        "title": "Handling Packets",
+        "level": 2,
+        "summary": "There are a couple things to highlight in a packet handler. A packet handler has both the message object and the network context available to it."
+      },
+      {
+        "title": "Sending Packets",
+        "level": 2,
+        "summary": "There is but one way to send a packet to the server. This is because there is only ever one server the client can be connected to at once."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/rendering_modelloaders",
+    "version": "1.19.4",
+    "label": "Custom Model Loaders",
+    "url": "https://docs.readthedocs.net/en/1.19.x/rendering/modelloaders/",
+    "tags": [
+      "rendering"
+    ],
+    "firstParagraph": "Forge adds a loader for the .obj file format. To use these models, the JSON must reference the forge:obj loader.",
+    "sections": [
+      {
+        "title": "WaveFront OBJ Models",
+        "level": 2,
+        "summary": "Forge adds a loader for the .obj file format. To use these models, the JSON must reference the forge:obj loader."
+      }
+    ]
+  },
+  {
+    "id": "1.19.4/resources_client",
+    "version": "1.19.4",
+    "label": "Resource Packs",
+    "url": "https://docs.readthedocs.net/en/1.19.x/resources/client/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  },
+  {
+    "id": "1.19.4/resources_server",
+    "version": "1.19.4",
+    "label": "Datapacks",
+    "url": "https://docs.readthedocs.net/en/1.19.x/resources/server/",
+    "tags": [],
+    "firstParagraph": "",
+    "sections": []
+  }
+]

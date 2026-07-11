@@ -1,0 +1,58 @@
+{
+  "versionRange": "1.14.4-1.15.2",
+  "note": "ForgeGradle 3 小幅升级",
+  "generatedAt": "2026-05-31T12:50:28.429Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 39,
+    "removedCount": 44,
+    "added": [
+      "1.15.2/datagen_intro",
+      "1.15.2/networking_entities",
+      "1.15.2/events_intro",
+      "1.15.2/datagen_modelproviders",
+      "1.15.2/networking",
+      "1.15.2/networking_overview",
+      "1.15.2/concepts_registries",
+      "1.15.2/concepts_sides",
+      "1.15.2/networking_simpleimpl",
+      "1.15.2/datastorage_capabilities",
+      "1.15.2/blocks_interaction",
+      "1.15.2/blocks_states",
+      "1.15.2/blocks_blocks",
+      "1.15.2/items_globallootmodifiers",
+      "1.15.2/items_items",
+      "1.15.2/utilities_recipes",
+      "1.15.2/utilities_tags",
+      "1.15.2/tileentities_tileentity",
+      "1.15.2/tileentities_tesr",
+      "1.15.2/advanced_accesstransformers"
+    ],
+    "removed": [
+      "1.14.4/datagen_intro",
+      "1.14.4/networking_entities",
+      "1.14.4/events_intro",
+      "1.14.4/datagen_modelproviders",
+      "1.14.4/networking",
+      "1.14.4/networking_overview",
+      "1.14.4/concepts_registries",
+      "1.14.4/concepts_sides",
+      "1.14.4/networking_simpleimpl",
+      "1.14.4/datastorage_capabilities",
+      "1.14.4/blocks_interaction",
+      "1.14.4/blocks_states",
+      "1.14.4/blocks_blocks",
+      "1.14.4/items_globallootmodifiers",
+      "1.14.4/items_items",
+      "1.14.4/utilities_recipes",
+      "1.14.4/utilities_tags",
+      "1.14.4/tileentities_tileentity",
+      "1.14.4/tileentities_tesr",
+      "1.14.4/advanced_accesstransformers"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": []
+  }
+}

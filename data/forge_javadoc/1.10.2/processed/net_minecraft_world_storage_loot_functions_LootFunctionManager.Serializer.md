@@ -1,0 +1,1 @@
+# LootFunctionManager.Serializer

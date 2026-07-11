@@ -1,0 +1,143 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.15.2
+> 本文件收集 MC Mod 开发中的常见错误模式，每条含错误症状和正确方案。
+
+---
+
+## 注册相关
+
+### ❌ 在 Entity 构造函数中注册属性
+
+```java
+// 错误
+public MyEntity(EntityType type, World world) {
+    super(type, world);
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(100.0); // ❌ 太早
+}
+```
+
+**正确方案**：使用 `DeferredRegister<Attribute>` + modEventBus
+
+---
+
+### ❌ 使用 `new` 构造函数直接注册方块/物品
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册
+```
+
+**正确方案**：通过 `DeferredRegister<Block>` 注册
+
+---
+
+### ❌ mod ID 不一致
+
+```java
+// mods.toml 中
+modId = "examplemod"
+
+// 代码中
+private static final String MOD_ID = "ExampleMod"; // ❌ 大写
+```
+
+**正确方案**：确保全小写一致
+
+---
+
+## 方块/TileEntity 相关
+
+### ❌ 在 `TileEntity.readFromNBT()` 中读取世界数据
+
+```java
+// 错误
+@Override
+public void readFromNBT(NBTTagCompound nbt) {
+    super.readFromNBT(nbt);
+    BlockState state = world.getBlockState(pos); // ❌ world 可能为 null
+}
+```
+
+**正确方案**：在 `onLoad()` 或 `markDirty()` 中处理需要世界数据的逻辑
+
+---
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+
+```java
+// 错误
+ctx.get().getSender().getEntityWorld().setBlockState(...); // ❌ 不安全
+```
+
+**正确方案**：
+
+```java
+ctx.get().enqueueWork(() -> {
+    // 在主线程执行
+});
+ctx.get().setPacketHandled(true);
+```
+
+---
+
+## 事件相关
+
+### ❌ 在 TickEvent 中执行重操作
+
+```java
+// 错误
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    for (Entity entity : world.getAllEntities()) { // ❌ 每 tick 遍历所有实体
+        processHeavy(entity);
+    }
+}
+```
+
+**正确方案**：使用计数器，每 N tick 处理一批
+
+---
+
+## 生命周期相关
+
+### ❌ 在 `FMLClientSetupEvent` 中执行游戏逻辑
+
+```java
+// 错误
+@SubscribeEvent
+public static void onClientSetup(FMLClientSetupEvent event) {
+    world.setBlockState(...); // ❌ 禁止在客户端修改世界
+}
+```
+
+**正确方案**：`FMLClientSetupEvent` 只用于注册 KeyBinding 和渲染器
+
+---
+
+## 资源文件相关
+
+### ❌ 资源路径大小写错误
+
+```json
+// 错误
+"textures/item/MyItem.png"  // ❌ 大写
+
+// 正确
+"textures/item/my_item.png"  // 全部小写
+```
+
+---
+
+## 工具提示
+
+当遇到错误时，按以下顺序排查：
+
+1. `09-anti-patterns.mdc` — 是否是已知错误模式
+2. 检查 `mods.toml` 语法和 mod ID 是否一致
+3. 检查资源文件路径是否全小写
+4. 检查是否混用了服务端和客户端线程
+5. 检查 `enqueueWork` 是否正确使用
+6. 检查 Registry 注册是否通过事件系统

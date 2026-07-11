@@ -1,0 +1,233 @@
+# GUI / Menu 开发（Forge 1.14.4）
+
+## Decision: 是否需要 Container
+
+```
+IF 交互时需要持久数据存储（机器进度、箱子物品）
+  → 使用 Container + IInventory + ContainerScreen
+
+IF 只是显示 UI（无数据）
+  → 直接使用 Screen（无需 Container）
+
+IF 需要物品栏槽位（多格容器）
+  → Container（slot 管理 + transferStackInSlot）
+```
+
+## 架构概览
+
+```
+玩家右键方块
+    → Block.onBlockActivated()  [服务端]
+    → NetworkHooks.openGui()    [服务端]
+    → Container 构造             [服务端]
+    → ScreenManager 创建 Screen  [客户端]
+    → ContainerScreen 渲染        [客户端]
+```
+
+## 方块实现 onBlockActivated
+
+```java
+public class MyMachineBlock extends Block {
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state,
+            PlayerEntity player, Hand hand, RayTraceResult hit) {
+        if (!world.isRemote) {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile instanceof MyMachineTileEntity) {
+                // 打开 GUI
+                NetworkHooks.openGui((ServerPlayerEntity) player, tile);
+            }
+        }
+        return true;
+    }
+}
+```
+
+## IInventory 实现（TileEntity）
+
+```java
+public class MyMachineTileEntity extends TileEntity implements IInventory {
+    private ItemStack[] inventory = new ItemStack[9];
+
+    public MyMachineTileEntity() {
+        super(TileEntityType.byId(0)); // 实际使用注册的 TileEntityType
+    }
+
+    // ===== IInventory 接口 =====
+    @Override public int getSizeInventory() { return 9; }
+    @Override public boolean isEmpty() {
+        for (ItemStack s : inventory) if (!s.isEmpty()) return false;
+        return true;
+    }
+    @Override public ItemStack getStackInSlot(int index) { return inventory[index]; }
+    @Override public ItemStack decrStackSize(int index, int count) {
+        ItemStack stack = getStackInSlot(index);
+        if (!stack.isEmpty()) {
+            if (stack.getCount() <= count) {
+                setInventorySlotContents(index, ItemStack.EMPTY);
+            } else {
+                stack.shrink(count);
+            }
+        }
+        return stack;
+    }
+    @Override public void setInventorySlotContents(int index, ItemStack stack) {
+        inventory[index] = stack;
+        if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()) {
+            stack.setCount(getInventoryStackLimit());
+        }
+        this.markDirty();
+    }
+    @Override public int getInventoryStackLimit() { return 64; }
+    @Override public boolean isUsableByPlayer(PlayerEntity player) { return true; }
+    @Override public void openInventory(PlayerEntity player) {}
+    @Override public void closeInventory(PlayerEntity player) {}
+    @Override public boolean isItemValidForSlot(int index, ItemStack stack) { return true; }
+    @Override public void clear() { for (int i = 0; i < 9; i++) inventory[i] = ItemStack.EMPTY; }
+}
+```
+
+## Container 实现
+
+```java
+public class MyMachineContainer extends Container {
+    private final IInventory tileInventory;
+
+    public MyMachineContainer(int windowId, PlayerInventory playerInv, IInventory tileInv) {
+        super(null, windowId); // ContainerType 在注册时指定
+        this.tileInventory = tileInv;
+
+        // 机器物品栏（3行3列）
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                int slot = col + row * 3;
+                int x = 8 + col * 18;
+                int y = 18 + row * 18;
+                this.addSlot(new Slot(tileInv, slot, x, y));
+            }
+        }
+
+        // 玩家物品栏（上方3行）
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 9; col++) {
+                int slot = col + row * 9;
+                int x = 8 + col * 18;
+                int y = 58 + row * 18;
+                this.addSlot(new Slot(playerInv, slot, x, y));
+            }
+        }
+
+        // 玩家快捷栏（下方1行）
+        for (int col = 0; col < 9; col++) {
+            this.addSlot(new Slot(playerInv, col, 8 + col * 18, 116));
+        }
+    }
+
+    // Shift-点击物品转移
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
+
+            if (index < 9) { // 从机器到玩家
+                if (!this.mergeItemStack(stack1, 9, 45, true)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.onSlotChange(stack1, stack);
+            } else { // 从玩家到机器
+                if (!this.mergeItemStack(stack1, 0, 9, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+        return stack;
+    }
+
+    @Override
+    public boolean canInteractWith(PlayerEntity player) {
+        return tileInventory.isUsableByPlayer(player);
+    }
+}
+```
+
+## ContainerType 注册
+
+```java
+public static final ContainerType<MyMachineContainer> MY_MACHINE_CONTAINER =
+    IForgeContainerType.create((windowId, playerInv, extraData) -> {
+        World world = playerInv.player.world;
+        TileEntity tile = world.getTileEntity(extraData.readBlockPos());
+        if (tile instanceof MyMachineTileEntity) {
+            return new MyMachineContainer(windowId, playerInv, (IInventory) tile);
+        }
+        return null;
+    });
+
+@SubscribeEvent
+public static void onContainerRegistry(final RegistryEvent.Register<IContainer>> event) {
+    event.getRegistry().register(
+        MY_MACHINE_CONTAINER.setRegistryName(new ResourceLocation(MOD_ID, "my_machine"))
+    );
+}
+```
+
+## Screen 客户端实现
+
+```java
+public class MyMachineScreen extends ContainerScreen<MyMachineContainer> {
+    public MyMachineScreen(MyMachineContainer container, PlayerInventory playerInv, ITextComponent title) {
+        super(container, playerInv, title);
+        this.guiLeft = 0;
+        this.guiTop = 0;
+        this.xSize = 176;
+        this.ySize = 165;
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        // 绘制背景 PNG
+        this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        // 绘制文字
+        this.font.drawString(this.guiLeft + 8, this.guiTop + 6, "My Machine", 0x404040);
+    }
+}
+```
+
+## Screen 注册（客户端）
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        ScreenManager.registerFactory(
+            ModContainers.MY_MACHINE_CONTAINER,
+            MyMachineScreen::new
+        );
+    }
+}
+```
+
+## 常见错误
+
+- ❌ `Container` vs `AbstractContainerMenu`：1.14.4 用 `Container`
+- ❌ `IInventory` vs `Container`：1.14.4 用 `IInventory`
+- ❌ `IContainer` vs `ContainerType`：注意类名
+- ❌ `ScreenManager`（1.14.4）vs `MenuScreens`（1.16.5+）
+- ❌ `transferStackInSlot` 返回空导致物品消失：必须完整实现
+- ❌ `canInteractWith` 返回 false：GUI 无法打开
+- ❌ 在客户端构造 Container（Container 在服务端构造）
+- ❌ 忘记在 `IInventory.setInventorySlotContents` 中调用 `markDirty()`

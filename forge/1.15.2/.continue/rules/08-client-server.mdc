@@ -1,0 +1,114 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.15.2
+
+---
+
+## 约束
+
+### 物理端注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@OnlyIn(Dist.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@OnlyIn(Dist.DEDICATED_SERVER)` | 仅在服务端运行 | 服务端逻辑、AI、数据处理 |
+| 无注解 | 客户端和服务端都运行 | 通用逻辑 |
+
+### 线程约束
+
+- **服务端线程**：游戏逻辑处理、事件订阅（大多数）
+- **客户端线程**：渲染、输入（KeyBinding）、粒子效果
+- **禁止**在渲染线程中执行服务端逻辑（如修改世界数据）
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+### 分离架构
+
+```
+src/main/java/
+├── MyMod.java                    # 两端都加载
+├── registry/
+│   └── ModBlocks.java           # 两端都加载
+├── client/
+│   ├── ClientSetup.java          # 仅客户端
+│   └── rendering/
+│       └── MyBlockRenderer.java # 仅客户端
+└── init/
+    └── ModEvents.java           # 两端都加载
+```
+
+### FMLClientSetupEvent vs FMLCommonSetupEvent
+
+- `FMLCommonSetupEvent`：两端都会收到，用于通用初始化
+- `FMLClientSetupEvent`：**仅客户端**收到，用于客户端特有初始化
+
+---
+
+## Decision Flow
+
+### Decision: 代码应该放在哪一端
+
+```
+IF 代码涉及渲染（Model、BakedQuad、RenderType）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及输入（KeyBinding、MouseListener、KeyboardListener）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及粒子效果
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及 GUI（Screen、Button）
+  → 客户端
+  → 放在 client/ 包下
+
+IF 代码涉及游戏逻辑（实体行为、方块交互、数据存储）
+  → 服务端
+  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或不标注
+
+IF 需要服务端数据同步到客户端
+  → 使用 TileEntity.syncable（TileEntity 数据）
+  → 使用 SimpleChannel（自定义数据）
+```
+
+## 示例：客户端初始化
+
+```java
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // KeyBinding 注册
+        ClientRegistry.registerKeyBinding(TEST_KEY);
+
+        // 实体渲染器注册
+        RenderingRegistry.registerEntityRenderingHandler(
+            ModEntities.MY_ENTITY.get(),
+            MyEntityRenderer::new
+        );
+    }
+}
+```
+
+## 示例：KeyBinding
+
+```java
+public static final KeyBinding TEST_KEY = new KeyBinding(
+    "key.examplemod.test",
+    KeyConflictContext.IN_GAME,
+    InputMappings.getInputFromString("key.keyboard.g"),
+    "key.categories.examplemod"
+);
+
+@SubscribeEvent
+public static void onKeyInput(InputEvent.KeyInputEvent event) {
+    if (TEST_KEY.isPressed()) {
+        // 按键按下时的逻辑
+    }
+}
+```

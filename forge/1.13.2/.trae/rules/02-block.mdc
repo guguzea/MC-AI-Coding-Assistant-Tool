@@ -1,0 +1,29 @@
+# 02 — 方块开发
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## Block 子类规范
+
+- 方块类必须继承 `Block`
+- 使用 `Block.Properties.create(Material)` 创建属性
+- 必须通过 `RegistryEvent.Register<Block>` 注册
+
+## Block.Properties
+
+```java
+Block.Properties.create(Material.STONE)
+    .hardnessAndResistance(1.5f, 6.0f)
+```
+
+## TileEntity
+
+```java
+public class MyBlock extends Block implements ITileEntityProvider {
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new MyTileEntity();
+    }
+}
+```

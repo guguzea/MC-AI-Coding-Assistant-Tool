@@ -1,0 +1,71 @@
+{
+  "versionRange": "1.17.1-1.18.2",
+  "note": "DeferredRegister 主流化",
+  "generatedAt": "2026-05-31T12:50:29.100Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 33,
+    "removedCount": 40,
+    "added": [
+      "1.18.2/datagen",
+      "1.18.2/resources_server",
+      "1.18.2/networking_entities",
+      "1.18.2/concepts_events",
+      "1.18.2/concepts_lifecycle",
+      "1.18.2/networking",
+      "1.18.2/concepts_registries",
+      "1.18.2/resources_client",
+      "1.18.2/concepts_sides",
+      "1.18.2/networking_simpleimpl",
+      "1.18.2/datastorage_capabilities",
+      "1.18.2/blocks_states",
+      "1.18.2/blockentities",
+      "1.18.2/blockentities_ber",
+      "1.18.2/items_bewlr",
+      "1.18.2/blocks",
+      "1.18.2/items",
+      "1.18.2/advanced_accesstransformers",
+      "1.18.2/misc_config",
+      "1.18.2/rendering_modelloaders"
+    ],
+    "removed": [
+      "1.17.1/datagen_intro",
+      "1.17.1/networking_entities",
+      "1.17.1/events_intro",
+      "1.17.1/concepts_lifecycle",
+      "1.17.1/datagen_modelproviders",
+      "1.17.1/networking",
+      "1.17.1/networking_overview",
+      "1.17.1/concepts_registries",
+      "1.17.1/concepts_sides",
+      "1.17.1/networking_simpleimpl",
+      "1.17.1/datastorage_capabilities",
+      "1.17.1/blocks_interaction",
+      "1.17.1/blocks_states",
+      "1.17.1/blockentities_blockentity",
+      "1.17.1/blockentities_ber",
+      "1.17.1/blocks_blocks",
+      "1.17.1/items_globallootmodifiers",
+      "1.17.1/models_itemproperties",
+      "1.17.1/items_items",
+      "1.17.1/utilities_recipes"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": [
+      {
+        "domain": "registry",
+        "description": "DeferredRegister 成为主流写法",
+        "severity": "medium",
+        "fixType": "manual-review"
+      },
+      {
+        "domain": "datagen",
+        "description": "DataGenerator 架构调整",
+        "severity": "medium",
+        "fixType": "manual-review"
+      }
+    ]
+  }
+}

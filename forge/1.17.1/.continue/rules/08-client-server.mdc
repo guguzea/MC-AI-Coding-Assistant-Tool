@@ -1,0 +1,48 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.17.1
+
+---
+
+## 约束
+
+### 物理端注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@OnlyIn(Dist.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@OnlyIn(Dist.DEDICATED_SERVER)` | 仅在服务端运行 | 服务端逻辑、AI、数据处理 |
+
+### 线程约束
+
+- **禁止**在渲染线程中执行服务端逻辑
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+---
+
+## 示例：客户端初始化
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+    }
+}
+```
+
+## 示例：服务端数据同步（SynchedEntityData）
+
+```java
+private static final EntityDataAccessor<Integer> DATA_CUSTOM =
+    SynchedEntityData.defineId(MyEntity.class, EntityDataSerializers.INT);
+
+@Override
+protected void defineSynchedData() {
+    this.entityData.define(DATA_CUSTOM, 0);
+}
+
+public void setCustomValue(int value) {
+    this.entityData.set(DATA_CUSTOM, value);
+}
+```

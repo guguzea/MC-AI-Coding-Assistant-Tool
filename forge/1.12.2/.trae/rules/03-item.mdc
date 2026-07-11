@@ -1,0 +1,239 @@
+# 03 — 物品开发
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Item 子类规范
+
+- 基础物品类继承 `Item`（`net.minecraft.item.Item`）
+- 禁止重写已废弃的方法
+- 物品必须通过 `RegistryEvent.Register<Item>` 注册
+
+### Item.Properties 配置（1.12.2 风格）
+
+```java
+new Item.Properties()
+    .maxStackSize(int size)                    // 默认 64
+    .maxDamage(int maxDamage)                  // 有耐久物品
+    .canRepair()                               // 可用砧台修复
+    .setNoRepair()                             // 不可修复
+    .addToolType(String type, int level)       // 工具类型和等级
+    .setContainerItem(Item container)           // 消耗后保留物品
+    .setCraftingRemainingItem(Item remaining)   // 同上（旧 API）
+    .setCreativeTab(CreativeTabs tab)          // 创造模式标签
+```
+
+### ItemTier（工具材料）规范
+
+```java
+public enum MyItemTier implements IItemTier {
+    MY_MATERIAL(3, 2000, 10.0f, 4.0f, 20, () -> Ingredient.fromItems(Items.DIAMOND));
+
+    // getLevel(), getUses(), getEfficiency(), getDamage(), getEnchantability(), getRepairMaterial()
+}
+```
+
+- `getLevel()`：挖掘等级（木=0，石=1，铁=2，金=3，钻=4）
+- `getUses()`：耐久值
+- `getEfficiency()`：挖掘速度
+- `getDamage()`：攻击伤害加成
+- `getEnchantability()`：附魔能力值
+
+### 食物属性（FoodStats）
+
+1.12.2 的食物直接操作 `FoodStats`：
+
+```java
+// 在 Item.useRightClick 中
+player.getFoodStats().addStats(saturation, hunger);
+```
+
+### 注册约束
+
+- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- 工具/盔甲使用 `IItemTier` 时，需要在构造中传入工具属性
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的物品？
+
+```
+IF 需要可放置的基础方块物品
+  → 注册 ItemBlock（关联已有的方块）
+  → 不需要新建 Item 子类
+
+IF 需要普通物品（无特殊功能）
+  → extends Item，使用默认属性
+  → 最简单的物品
+
+IF 需要工具（剑、镐、斧、铲）
+  → extends ItemStack 或直接继承 Item
+  → 使用 ItemStack 的工具逻辑或自定义 Item 类
+
+IF 需要盔甲
+  → extends ItemArmor
+  → 需要定义 ArmorMaterial
+
+IF 需要食物（可食用物品）
+  → extends Item 并覆盖 use() 方法
+  → 在 use() 中操作 player.getFoodStats()
+
+IF 需要可耐久物品
+  → 设置 .maxDamage()
+  → 覆盖 onItemRightClick 处理使用逻辑
+
+IF 需要附魔书以外的附魔物品
+  → 不支持，Forge 1.12.2 附魔只能通过附魔台/附魔桌
+```
+
+### Decision: ItemTier 定义
+
+```
+IF 自定义工具材料
+  → 定义枚举实现 IItemTier 接口
+  → 6 个必需方法全部实现
+  → getRepairMaterial() 必须返回有效的 Ingredient
+  → 在物品类中引用：new ItemStack(Items.DIAMOND)
+
+IF 复用现有材料
+  → ToolMaterial.WOOD / ToolMaterial.STONE / ToolMaterial.IRON / ToolMaterial.GOLD / ToolMaterial.DIAMOND
+```
+
+---
+
+## 示例：基础物品
+
+```java
+// items/MyItem.java
+public class MyItem extends Item {
+    public MyItem() {
+        super(new Item.Properties()
+            .maxStackSize(64)
+            .addToolType("pickaxe", 1)
+        );
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        return ActionResult.newActionResult(Result.SUCCESS, player.getHeldItem(hand));
+    }
+}
+```
+
+```java
+// 注册
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModItems {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> reg = event.getRegistry();
+        reg.register(new MyItem()
+            .setRegistryName(MOD_ID, "my_item")
+        );
+    }
+}
+```
+
+## 示例：工具（剑）
+
+```java
+// items/MyTier.java
+public enum MyTier implements IItemTier {
+    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
+
+    private final int level;
+    private final int durability;
+    private final float efficiency;
+    private final float damage;
+    private final int enchantability;
+    private final Supplier<Ingredient> repair;
+
+    MyTier(int level, int durability, float efficiency, float damage, int enchantability, Supplier<Ingredient> repair) {
+        this.level = level;
+        this.durability = durability;
+        this.efficiency = efficiency;
+        this.damage = damage;
+        this.enchantability = enchantability;
+        this.repair = repair;
+    }
+
+    @Override public int getMaxUses() { return durability; }
+    @Override public float getEfficiency() { return efficiency; }
+    @Override public float getAttackDamage() { return damage; }
+    @Override public int getHarvestLevel() { return level; }
+    @Override public int getEnchantability() { return enchantability; }
+    @Override public Ingredient getRepairMaterial() { return repair.get(); }
+}
+```
+
+```java
+// 剑（继承 ItemSword 或自定义）
+public class MySword extends ItemSword {
+    public MySword(ToolMaterial material) {
+        super(material);
+    }
+}
+
+// 注册剑
+public static Item MY_SWORD = new MySword(MyTier.MY_MATERIAL)
+    .setRegistryName(MOD_ID, "my_sword")
+    .setUnlocalizedName("my_sword");
+```
+
+## 示例：盔甲
+
+```java
+// items/MyArmorMaterial.java
+public enum MyArmorMaterial implements IArmorMaterial {
+    MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0f, 0.0f, () -> Ingredient.fromItems(Items.IRON_INGOT));
+
+    // getDurability(), getDamageReduction(), getEnchantability(), getName(), getSoundEvent(), getToughness(), getRepairMaterial()
+}
+```
+
+```java
+// items/MyArmorItem.java
+public class MyArmorItem extends ItemArmor {
+    public MyArmorItem(ArmorMaterial material, EntityEquipmentSlot slot) {
+        super(material, slot, new Item.Properties());
+    }
+}
+
+// 注册各部位
+public static Item MY_HELMET = new MyArmorItem(MyArmorMaterial.MY_MATERIAL, EntityEquipmentSlot.HEAD)
+    .setRegistryName(MOD_ID, "my_helmet")
+    .setUnlocalizedName("my_helmet");
+```
+
+## 示例：食物
+
+```java
+// items/MyFoodItem.java
+public class MyFoodItem extends Item {
+    public MyFoodItem() {
+        super(new Item.Properties()
+            .maxStackSize(16)
+            .creativeTab(CreativeTabs.FOOD)
+        );
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+        if (!player.getFoodStats().needFood()) {
+            return ActionResult.newActionResult(EnumActionResult.FAIL, stack);
+        }
+        player.getFoodStats().addStats(4, 0.3f);  // hunger, saturation
+        stack.shrink(1);
+        return ActionResult.newActionResult(EnumActionResult.SUCCESS, stack);
+    }
+}
+```
+
+> 注：1.12.2 的食物效果（药水等）需要通过事件系统（如 `LivingEntityUseItemEvent.Finish`）触发。

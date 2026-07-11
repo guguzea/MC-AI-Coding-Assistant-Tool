@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "lastUpdated": "2026-05-27",
+    "note": "各平台 mod 元数据文件参考模板。analyze_porting_path 工具扫描这些文件来获取 modId 和 modName。",
+    "coverage": "fabric, neoforge, forge, quilt"
+  },
+  "fabric_mod_json": {
+    "schemaVersion": {
+      "description": "fabric.mod.json schemaVersion 必须为 1",
+      "value": 1
+    },
+    "minimal": {
+      "description": "最小化 fabric.mod.json",
+      "example": {
+        "schemaVersion": 1,
+        "id": "examplemod",
+        "version": "1.0.0",
+        "name": "Example Mod",
+        "description": "An example mod",
+        "entrypoints": {
+          "main": [
+            "com.examplemod.ExampleMod"
+          ]
+        },
+        "depends": {
+          "minecraft": "*"
+        }
+      }
+    },
+    "full": {
+      "description": "完整的 fabric.mod.json（含客户端、datagen、custom 等）",
+      "example": {
+        "schemaVersion": 1,
+        "id": "examplemod",
+        "version": "1.0.0",
+        "name": "Example Mod",
+        "description": "An example mod for Fabric",
+        "authors": [
+          "Author Name"
+        ],
+        "contact": {
+          "homepage": "https://example.com",
+          "sources": "https://github.com/example/examplemod"
+        },
+        "license": "MIT",
+        "icon": "assets/examplemod/icon.png",
+        "environment": "*",
+        "entrypoints": {
+          "main": [
+            "com.examplemod.ExampleMod"
+          ],
+          "client": [
+            "com.examplemod.ExampleModClient"
+          ],
+          "server": [
+            "com.examplemod.ExampleModServer"
+          ],
+          "fabric-datagen": [
+            "com.examplemod.datagen.ExampleDataGenerator"
+          ]
+        },
+        "mixins": [
+          "examplemod.mixins.json"
+        ],
+        "client": [
+          "examplemod.client.mixins.json"
+        ],
+        "depends": {
+          "minecraft": ">=1.20.1",
+          "java": ">=17",
+          "fabricloader": ">=0.15.0",
+          "fabric-api": "*"
+        },
+        "suggests": {
+          "another-mod": "*"
+        },
+        "custom": {
+          "modmenu": {
+            "badges": [
+              "library"
+            ],
+            "links": {
+              "modmenu.discord": "https://discord.gg/example"
+            }
+          }
+        }
+      }
+    }
+  },
+  "neoforge_mods_toml": {
+    "description": "neoforge.mods.toml（NeoForge 1.20.2+）",
+    "minimal": {
+      "description": "最小化 neoforge.mods.toml",
+      "example": "modLoader=\"javafml\"\nloaderVersion=\"[44,)\"\nlicense=\"MIT\"\n\n[[mods]]\nmodId=\"examplemod\"\nversion=\"1.0.0\"\ndisplayName=\"Example Mod\"\ndescription='''An example mod'''\n\n[[mods.modId.dependencies]]\nmodId=\"neoforge\"\nmandatory=true\nversionRange=\"[20.2,)\"\nordering=\"NONE\"\nside=\"BOTH\""
+    },
+    "full": {
+      "description": "完整的 neoforge.mods.toml",
+      "example": "modLoader=\"javafml\"\nloaderVersion=\"[44,)\"\nlicense=\"MIT\"\nissueTrackerURL=\"https://github.com/example/examplemod/issues\"\n\n[[mods]]\nmodId=\"examplemod\"\nversion=\"${file.jarVersion}\"\ndisplayName=\"Example Mod\"\nauthors=\"Author Name (author@email.com)\"\ndescription='''\nAn example mod for NeoForge.\n\nFeatures:\n- Feature A\n- Feature B\n'''\nlogoFile=\"assets/examplemod/logo.png\"\ncredits=\"Inspired by other mods\"\n\n[[mods.modId.contributors]]\ncontributor=\"Contributor Name\"\ndescription=\"Contributed feature X\"\n\n[[mods.modId.dependencies.examplemod]]\nmodId=\"neoforge\"\ntype=\"required\"\nversionRange=\"[20.4,)\"\nordering=\"NONE\"\nside=\"BOTH\"\n\n[[mods.modId.dependencies.examplemod]]\nmodId=\"minecraft\"\ntype=\"required\"\nversionRange=\"*\"\nordering=\"NONE\"\nside=\"BOTH\"\n\n[[mixins]]\nconfig=\"examplemod.mixins.json\"\n\n[[clientMixins]]\nconfig=\"examplemod.client.mixins.json\""
+    },
+    "breakingChanges": {
+      "description": "Forge → NeoForge 迁移时的 mods.toml 变更",
+      "changes": [
+        {
+          "field": "modLoader",
+          "forge": "javafml",
+          "neoforge": "javafml（不变）"
+        },
+        {
+          "field": "loaderVersion",
+          "forge": "[47,)",
+          "neoforge": "[44,)"
+        },
+        {
+          "field": "modId in [[mods]]",
+          "note": "不再强制要求 'forge'，直接用实际 modId"
+        }
+      ]
+    }
+  },
+  "forge_mods_toml": {
+    "description": "mods.toml（旧版 Forge 1.20.1 使用，新项目推荐 neoforge.mods.toml）",
+    "example": "modLoader=\"javafml\"\nloaderVersion=\"[47,)\"\nlicense=\"MIT\"\n\n[[mods]]\nmodId=\"examplemod\"\nversion=\"${file.jarVersion}\"\ndisplayName=\"Example Mod\"\nauthors=\"Author Name\"\ndescription='''An example mod for Forge'''\n\n[[dependencies.examplemod]]\nmodId=\"forge\"\nmandatory=true\nversionRange=\"[47.2.0,)\"\nordering=\"NONE\"\nside=\"BOTH\""
+  },
+  "quilt_mod_json": {
+    "description": "quilt.mod.json（Quilt 加载器，与 Fabric 高度兼容）",
+    "note": "Quilt 与 Fabric 使用相同的 Mixin 系统，Fabric mod 通常可直接运行",
+    "schemaUrl": "https://raw.githubusercontent.com/QuiltMC/quilt-loader/main/src/main/resources/quilt.mod.json.schema.json",
+    "example": {
+      "schema_version": 1,
+      "quilt_loader:quilt_loader": {
+        "id": "examplemod",
+        "group": "com.examplemod",
+        "version": "1.0.0",
+        "metadata": {
+          "name": "Example Mod",
+          "description": "An example mod for Quilt",
+          "contributors": [
+            "Author Name"
+          ],
+          "contact": {
+            "homepage": "https://example.com"
+          },
+          "license": "MIT"
+        },
+        "entry_points": {
+          "client": [
+            "com.examplemod.ExampleModClient"
+          ],
+          "server": [
+            "com.examplemod.ExampleModServer"
+          ]
+        },
+        "depends": [
+          {
+            "id": "quilt_loader",
+            "versions": ">=0.22.0"
+          },
+          {
+            "id": "minecraft",
+            "versions": ">=1.20.1"
+          },
+          {
+            "id": "quilted_fabric_api",
+            "versions": "*"
+          }
+        ]
+      }
+    },
+    "quiltRelationship": {
+      "description": "Quilt 与 Fabric 的关系",
+      "compatibility": "Quilt 支持 Fabric mod（通过 Quilted Fabric API）",
+      "recommendation": "如需同时支持 Fabric 和 Quilt，推荐使用 Architectury"
+    }
+  },
+  "architectury_common_json": {
+    "description": "architectury.common.json — Architectury common 模块的接口注入和访问放宽配置",
+    "location": "common/src/main/resources/architectury.common.json",
+    "standard": {
+      "description": "标准空配置",
+      "example": {
+        "common": []
+      }
+    },
+    "withAccessWidener": {
+      "description": "使用 AccessWidener 放宽访问权限",
+      "example": {
+        "accessWidener": "examplemod.accesswidener"
+      }
+    },
+    "withInterfaceInjection": {
+      "description": "使用 Interface Injection 注入接口",
+      "example": {
+        "injected_interfaces": {
+          "net/minecraft/class_2586": [
+            "com/examplemod/api/IExtendedPlayer"
+          ]
+        }
+      }
+    },
+    "combined": {
+      "description": "AccessWidener + InterfaceInjection 组合",
+      "example": {
+        "accessWidener": "examplemod.accesswidener",
+        "injected_interfaces": {
+          "net/minecraft/class_2586": [
+            "com/examplemod/api/IExtendedPlayer"
+          ]
+        }
+      }
+    }
+  },
+  "gradleWrapperProperties": {
+    "neoforge_standalone": {
+      "description": "gradle/wrapper/gradle-wrapper.properties — NeoForge 独立项目",
+      "example": "distributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.6-bin.zip\nnetworkTimeout=10000\nvalidateDistributionUrl=true\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists"
+    },
+    "fabric_standalone": {
+      "description": "gradle/wrapper/gradle-wrapper.properties — Fabric 独立项目",
+      "example": "distributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.6-bin.zip\nnetworkTimeout=10000\nvalidateDistributionUrl=true\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists"
+    },
+    "architectury_multiloader": {
+      "description": "gradle/wrapper/gradle-wrapper.properties — Architectury MultiLoader",
+      "note": "与 standalone 版本相同，Architectury 项目使用相同的 Gradle 版本",
+      "example": "distributionBase=GRADLE_USER_HOME\ndistributionPath=wrapper/dists\ndistributionUrl=https\\://services.gradle.org/distributions/gradle-8.6-bin.zip\nnetworkTimeout=10000\nvalidateDistributionUrl=true\nzipStoreBase=GRADLE_USER_HOME\nzipStorePath=wrapper/dists"
+    }
+  }
+}

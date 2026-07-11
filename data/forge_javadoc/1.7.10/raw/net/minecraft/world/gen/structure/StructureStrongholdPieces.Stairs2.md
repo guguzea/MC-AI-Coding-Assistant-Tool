@@ -1,0 +1,10 @@
+---
+title: "StructureStrongholdPieces.Stairs2"
+description: ""
+package: "net/minecraft/world/gen/structure"
+version: "1.7.10"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.7.10-10.13.4.1614/net/minecraft/world/gen/structure/StructureStrongholdPieces.Stairs2.html"
+sourceType: javadoc
+---
+
+# StructureStrongholdPieces.Stairs2

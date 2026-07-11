@@ -1,0 +1,1 @@
+# EntityThrowable.html#onImpact-net.minecraft.util.math.RayTraceResult-

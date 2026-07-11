@@ -1,0 +1,62 @@
+# 07 — 数据生成器
+
+> 适用版本：Forge 1.17.1
+
+---
+
+## 约束
+
+### 数据生成时机
+
+- 数据生成（DataGen）在 Gradle 任务 `./gradlew runData` 或 `build` 期间执行
+- **禁止**在运行时修改数据生成器输出
+- 生成的 JSON 文件放在 `src/generated/resources/`（数据包）或 `src/main/resources/`（资源包）
+
+### pack_format
+
+- Forge 1.17.1 使用 **pack_format = 8**
+- 资源包和数据包的 pack_format 相同
+
+---
+
+## 示例：入口类
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class DataGenerators {
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput output = generator.getPackOutput();
+
+        if (event.includeServer()) {
+            generator.addProvider(true, new ModRecipeProvider(output));
+            generator.addProvider(true, new ModLootTableProvider(output, event.getLookupProvider(), Collections.emptySet()));
+        }
+        if (event.includeClient()) {
+            generator.addProvider(true, new ModItemModelsProvider(output, event.getExistingFileHelper()));
+        }
+    }
+}
+```
+
+## 示例：合成配方
+
+```java
+ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MY_ITEM.get(), 1)
+    .pattern(" X ")
+    .pattern(" X ")
+    .pattern(" Y ")
+    .define('X', Items.DIAMOND)
+    .define('Y', Items.STICK)
+    .unlockedBy("has_diamond", has(Items.DIAMOND))
+    .save(consumer);
+```
+
+## 示例：战利品表
+
+```java
+protected void addTables() {
+    dropSelf(ModBlocks.MY_BLOCK.get());
+}
+```

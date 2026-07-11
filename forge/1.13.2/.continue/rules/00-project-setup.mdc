@@ -1,0 +1,23 @@
+# 00 — 项目结构与构建
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## Java 版本
+
+- **必须使用 Java 11**（Forge 1.13.2 要求）
+- Gradle Wrapper 版本不低于 **Gradle 6.9.4**
+
+## 版本号管理
+
+```properties
+minecraft_version=1.13.2
+forge_version=25.0.219
+mapping_channel=mcp
+mapping_version=1.13.2
+```
+
+## pack_format
+
+- `pack.mcmeta` 中使用 `pack_format = 6`

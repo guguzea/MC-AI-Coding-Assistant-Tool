@@ -1,0 +1,141 @@
+# 事件系统（Forge 1.14.4）
+
+## 事件总线
+
+Forge 使用 `EventBus` 分发事件：
+
+| 总线 | 用途 | 订阅方式 |
+|------|------|---------|
+| `MOD` | Mod 生命周期事件 | `@SubscribeEvent` + `EventBusSubscriber` |
+| `FORGE` | 全局 Forge 事件 | `@SubscribeEvent` + `EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)` |
+
+## 常用事件
+
+### FMLCommonSetupEvent（通用端初始化）
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class CommonSetup {
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        // 网络通道注册、配方类型注册等
+    }
+}
+```
+
+### FMLClientSetupEvent（客户端初始化）
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // 渲染器注册、KeyBinding 注册等
+    }
+}
+```
+
+### RegistryEvent（所有注册）
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class RegistryEvents {
+    @SubscribeEvent
+    public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) { ... }
+    @SubscribeEvent
+    public static void onItemsRegistry(final RegistryEvent.Register<Item> event) { ... }
+    @SubscribeEvent
+    public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType> event) { ... }
+}
+```
+
+### PlayerInteractEvent（玩家交互）
+
+```java
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class InteractEvents {
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        World world = event.getWorld();
+        PlayerEntity player = event.getPlayer();
+        Hand hand = event.getHand();
+        // 方块右键逻辑
+    }
+}
+```
+
+### LivingDropsEvent（生物掉落）
+
+```java
+@SubscribeEvent
+public static void onLivingDrops(LivingDropsEvent event) {
+    LivingEntity entity = event.getEntityLiving();
+    if (entity instanceof MyEntity) {
+        event.getDrops().add(new ItemEntity(entity.world, entity.getPosX(), entity.getPosY(), entity.getPosZ(),
+            new ItemStack(Items.DIAMOND, 3)));
+    }
+}
+```
+
+### AttachCapabilitiesEvent（附加 Capability）
+
+```java
+@SubscribeEvent
+public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    if (event.getObject() instanceof PlayerEntity) {
+        event.addCapability(new ResourceLocation(MOD_ID, "player_data"),
+            new PlayerDataProvider());
+    }
+}
+```
+
+## DistExecutor（逻辑端分离）
+
+```java
+// 客户端执行（Forge 1.14.4）
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+    // 客户端代码
+});
+
+// 服务端执行
+DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
+    // 服务端代码
+});
+```
+
+> Forge 1.14.4 用 `runWhenOn`，而不是 1.20.1 的 `unsafeRunWhenOn`。
+
+## 逻辑端判断
+
+```java
+// World.isRemote：true = 客户端，false = 服务端
+if (world.isRemote) {
+    // 客户端专用逻辑
+} else {
+    // 服务端专用逻辑
+}
+```
+
+## 常用 Forge 事件列表
+
+| 事件 | 触发时机 |
+|------|---------|
+| `FMLCommonSetupEvent` | mod 通用端初始化 |
+| `FMLClientSetupEvent` | mod 客户端初始化 |
+| `RegistryEvent.Register<T>` | 注册表填充 |
+| `RegistryEvent.NewRegistry` | 创建新注册表 |
+| `PlayerInteractEvent` | 玩家交互 |
+| `LivingDropsEvent` | 生物死亡掉落 |
+| `LivingAttackEvent` | 生物受击 |
+| `AttachCapabilitiesEvent<T>` | 附加 Capability |
+| `TickEvent` | 每 tick |
+| `PlayerLoggedInEvent` | 玩家登录 |
+| `PlayerRespawnEvent` | 玩家重生 |
+
+## 常见错误
+
+- ❌ `DistExecutor.unsafeRunWhenOn`（1.20.1）→ Forge 1.14.4 用 `DistExecutor.runWhenOn`
+- ❌ 在服务端线程调用客户端代码
+- ❌ `world.isRemote`（1.14.4）vs `level.isClientSide`（1.20.1）
+- ❌ `@SubscribeEvent` 静态方法中访问实例字段：事件回调默认在服务端/客户端总线上执行
+- ❌ 忘记 `@SubscribeEvent` 注解：方法不会被调用

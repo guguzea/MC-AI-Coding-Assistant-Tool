@@ -1,0 +1,1 @@
+# FMLClientHandler.html#beginMinecraftLoading-net.minecraft.client.Minecraft-java.util.List-net.minecraft.client.resources.IReloadableResourceManager-net.minecraft.client.resources.data.MetadataSerializer-

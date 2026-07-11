@@ -1,0 +1,1369 @@
+[
+  {
+    "id": "1.12.2/animation_armature",
+    "version": "1.12.2",
+    "label": "Armature Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/armature/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "File Structure",
+        "level": 2,
+        "summary": "An example armature file, taken from the forge debug mod `` { \"joints\": { \"stick\": {\"2\": [1.0]}, \"cube\": {\"3\": [1."
+      },
+      {
+        "title": "Joints",
+        "level": 2,
+        "summary": "Each joint defines an object that animates together as a single unit in the animation. With Vanilla JSON models, this means that multiple elements can belong to the same joint."
+      },
+      {
+        "title": "Clips",
+        "level": 2,
+        "summary": "Clips are essentially instructions on how to use a value to animate some collection of joints. They also include events to fire at certain points."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
+    "keySections": 1,
+    "file": "animation_armature.md",
+    "processedFile": "processed/animation_armature.md"
+  },
+  {
+    "id": "1.12.2/animation_asm",
+    "version": "1.12.2",
+    "label": "Animation State Machine Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/asm/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Concepts",
+        "level": 2,
+        "summary": "The ASM contains parameters, clips, states, and transitions. The Animation State Machine can be in many different states. You define which states there are in the states section."
+      },
+      {
+        "title": "Code API",
+        "level": 2,
+        "summary": "> Warning: Warning The ASM code API can only be used client side. When storing ASMs in code, use the side-agnostic IAnimationStateMachine interface. ASMs can be loaded by calling ModelLoaderRegistry."
+      },
+      {
+        "title": "File Format",
+        "level": 2,
+        "summary": "The ASMs are stored in json files. The location does not matter, but they are usually placed in an asms folder."
+      },
+      {
+        "title": "Transitions",
+        "level": 2,
+        "summary": "The transitions section defines which states can go to what other states. A state can go to 0, 1, or many other states. To define a state as going to no other states, omit it from the section."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 11,
+    "keySections": 7,
+    "file": "animation_asm.md",
+    "processedFile": "processed/animation_asm.md"
+  },
+  {
+    "id": "1.12.2/animation_implementing",
+    "version": "1.12.2",
+    "label": "Using the API",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/implementing/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Blocks",
+        "level": 2,
+        "summary": "Animations for blocks are done with the AnimationTESR, which is a FastTESR. Because of this, having a TileEntity for your block is necessary."
+      },
+      {
+        "title": "Items",
+        "level": 2,
+        "summary": "Animations for items are done entirely using the capability system. Your item must provide the ANIMATION_CAPABILITY through an ICapabilityProvider."
+      },
+      {
+        "title": "Entities",
+        "level": 2,
+        "summary": "In order to animate an entity with the animation API, your entity&rsquo;s renderer must take an AnimationModelBase as its model."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 1,
+    "file": "animation_implementing.md",
+    "processedFile": "processed/animation_implementing.md"
+  },
+  {
+    "id": "1.12.2/animation_intro",
+    "version": "1.12.2",
+    "label": "Intro to the Animation API",
+    "url": "https://docs.readthedocs.net/en/1.12.x/animation/intro/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Filesystem Structure Conventions",
+        "level": 2,
+        "summary": "ASM Files are normally stored in the asms/block for blocks or asms/item for items and so on. You specify where to load them from, so their location is really up to you."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "animation_intro.md",
+    "processedFile": "processed/animation_intro.md"
+  },
+  {
+    "id": "1.12.2/blocks_blocks",
+    "version": "1.12.2",
+    "label": "Blocks",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/blocks/",
+    "tags": [
+      "block"
+    ],
+    "sections": [
+      {
+        "title": "Creating a Block",
+        "level": 2,
+        "summary": "For simple blocks, which need no special functionality (think cobblestone, wood planks, etc.), a custom class is not necessary."
+      },
+      {
+        "title": "Registering a Block",
+        "level": 2,
+        "summary": "Blocks must be registered to function. > Important: Important A block in the world and a &ldquo;block&rdquo; in an inventory are very different things."
+      },
+      {
+        "title": "Further Reading",
+        "level": 2,
+        "summary": "For information about block properties, such as those used for vanilla blocks like wood types, fences, walls, and many more, see the section on blockstates."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "blocks_blocks.md",
+    "processedFile": "processed/blocks_blocks.md"
+  },
+  {
+    "id": "1.12.2/blocks_interaction",
+    "version": "1.12.2",
+    "label": "Block Interaction",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/interaction/",
+    "tags": [
+      "block"
+    ],
+    "sections": [
+      {
+        "title": "Player Right Click",
+        "level": 2,
+        "summary": "Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is the most common ..."
+      },
+      {
+        "title": "Player Break/Destroy",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Player Highlighting",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Entity Collision",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "`onBlockClicked",
+        "level": 2,
+        "summary": "Called on a block when it is clicked by a player. > Note: Note This method is for when the player left-clicks on a block."
+      },
+      {
+        "title": "`onBlockDestroyedByPlayer",
+        "level": 2,
+        "summary": "Called on a block after it&rsquo;s destroyed by a player Type | Name | Description --- | --- | --- <code>World | worldIn` | The world that the block was destroyed BlockPos | pos | The position of t..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 5,
+    "file": "blocks_interaction.md",
+    "processedFile": "processed/blocks_interaction.md"
+  },
+  {
+    "id": "1.12.2/blocks_states",
+    "version": "1.12.2",
+    "label": "Block States",
+    "url": "https://docs.readthedocs.net/en/1.12.x/blocks/states/",
+    "tags": [
+      "block"
+    ],
+    "sections": [
+      {
+        "title": "Motivation",
+        "level": 2,
+        "summary": "In Minecraft 1.8 and above, direct manipulation of blocks and metadata values have been abstracted away into what is known as blockstates."
+      },
+      {
+        "title": "A New Way of Thinking",
+        "level": 2,
+        "summary": "How about, instead of having to munge around with numbers everywhere, we instead use some system that abstracts out the details of saving from the semantics of the block itself?"
+      },
+      {
+        "title": "Imbuing your Blocks with these Magical Properties",
+        "level": 2,
+        "summary": "Now that I&rsquo;ve successfully convinced you that properties and values are superior to arbitrary numbers, let&rsquo;s move on to the actual how-to-do part."
+      },
+      {
+        "title": "Using `IBlockState&rsquo;s",
+        "level": 2,
+        "summary": "<code>IBlockState, as we know now, is a powerful object. You can get the value of a property by calling getValue(<PROPERTY>), passing it the IProperty<> you want to test."
+      },
+      {
+        "title": "Illusion Breaker",
+        "level": 2,
+        "summary": "Sadly, abstractions are lies at their core. We still have the responsibility of translating every IBlockState back into a number between 0 and 15 inclusive that will be stored in the world and vice..."
+      },
+      {
+        "title": "&ldquo;Actual&rdquo; States",
+        "level": 2,
+        "summary": "Some sharper minds might know that fences don&rsquo;t save any of their connections to meta, yet they still have properties and values in the F3 menu! What is this blasphemy?!"
+      },
+      {
+        "title": "<a href=\"../../models/advanced/extended-blockstates/\">Extended Blockstates",
+        "level": 2,
+        "summary": "Extended blockstates are a way to pass arbitrary data into IBakedModels during the rendering of a block."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 6,
+    "file": "blocks_states.md",
+    "processedFile": "processed/blocks_states.md"
+  },
+  {
+    "id": "1.12.2/concepts_internationalization",
+    "version": "1.12.2",
+    "label": "Internationalization and localization",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/internationalization/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Language files",
+        "level": 2,
+        "summary": "Language files are located by assets/[namespace]/lang/[locale].lang (e.g. the US English translation for examplemod would be assets/examplemod/lang/en_us.lang)."
+      },
+      {
+        "title": "Usage with Blocks and Items",
+        "level": 2,
+        "summary": "> Note: Note As of July 14th 2018, the term &ldquo;unlocalized name&rdquo; has been replaced by &ldquo;translation key&rdquo; in MCP."
+      },
+      {
+        "title": "Localization methods",
+        "level": 2,
+        "summary": "> Warning: Warning A common issue is having the server localize for clients. The server can only localize in its own locale, which does not necessarily match the locale of connected clients."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 8,
+    "file": "concepts_internationalization.md",
+    "processedFile": "processed/concepts_internationalization.md"
+  },
+  {
+    "id": "1.12.2/concepts_jarsigning",
+    "version": "1.12.2",
+    "label": "Signing a JAR",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/jarsigning/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Creating a keystore",
+        "level": 2,
+        "summary": "A keystore is a private database file which holds the required information to successfully sign the jar. To sign a jar, you need both a public and a private key."
+      },
+      {
+        "title": "Buildscript setup",
+        "level": 2,
+        "summary": "Finally, to let Gradle sign the jar file with the generated key pair, a new task in the buildscript build.gradle is required. build.dependsOn signJar [CODE_BLOCK]"
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 1,
+    "file": "concepts_jarsigning.md",
+    "processedFile": "processed/concepts_jarsigning.md"
+  },
+  {
+    "id": "1.12.2/concepts_registries",
+    "version": "1.12.2",
+    "label": "Registries",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/registries/",
+    "tags": [
+      "registry"
+    ],
+    "sections": [
+      {
+        "title": "Registering Things",
+        "level": 2,
+        "summary": "The recommended way to register things is through the RegistryEvents. These events are fired right after preinitialization, In RegistryEvent.NewRegistry, registries should be created."
+      },
+      {
+        "title": "Creating Registries",
+        "level": 2,
+        "summary": "There&rsquo;s a global registry where all the other registries are stored. By taking a Class that a registry is supposed to store or its ResourceLocation name, one can retrieve a registry from this..."
+      },
+      {
+        "title": "Injecting Registry Values Into Fields",
+        "level": 2,
+        "summary": "It is possible to have Forge inject values from registries into public static final fields of classes. This is done by annotating classes and fields with @ObjectHolder."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 3,
+    "file": "concepts_registries.md",
+    "processedFile": "processed/concepts_registries.md"
+  },
+  {
+    "id": "1.12.2/concepts_resources",
+    "version": "1.12.2",
+    "label": "Resources",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/resources/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "`ResourceLocation",
+        "level": 2,
+        "summary": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "concepts_resources.md",
+    "processedFile": "processed/concepts_resources.md"
+  },
+  {
+    "id": "1.12.2/concepts_sides",
+    "version": "1.12.2",
+    "label": "Sides in Minecraft",
+    "url": "https://docs.readthedocs.net/en/1.12.x/concepts/sides/",
+    "tags": [
+      "sides"
+    ],
+    "sections": [
+      {
+        "title": "Different Kinds of Sides",
+        "level": 2,
+        "summary": "When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows with a fairly intuitive understanding of what part of the game we&rsquo;re talking about."
+      },
+      {
+        "title": "Performing Side-Specific Operations",
+        "level": 2,
+        "summary": "This boolean check will be your most used way to check sides. Querying this field on a <code>World object establishes the logical side the world belongs to."
+      },
+      {
+        "title": "Common Mistakes",
+        "level": 2,
+        "summary": "Whenever you want to send information from one logical side to another, you must always use network packets."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 8,
+    "file": "concepts_sides.md",
+    "processedFile": "processed/concepts_sides.md"
+  },
+  {
+    "id": "1.12.2/config_annotations",
+    "version": "1.12.2",
+    "label": "`@Config",
+    "url": "https://docs.readthedocs.net/en/1.12.x/config/annotations/",
+    "tags": [
+      "config"
+    ],
+    "sections": [
+      {
+        "title": "Table of Contents",
+        "level": 2,
+        "summary": "- <li>Basics - <li>@Config Use - <li>@Comment Use - <li>@Name Use - <li>@RangeInt Use - <li>@RangeDouble Use - <li>@LangKey Use - <li>@RequiresMcRestart Use - <li>@RequiresWorldRestart Use - <li>Su..."
+      },
+      {
+        "title": "Basics",
+        "level": 2,
+        "summary": "A class annotated with @Config will have any fields turned into config options. Said fields can be annotated to add information, using the plethora of annotations provided in the @Config class."
+      },
+      {
+        "title": "@Config Use",
+        "level": 2,
+        "summary": "This annotation is used to denote a class is the container for some configuration options. There are 4 properties:"
+      },
+      {
+        "title": "@Comment Use",
+        "level": 2,
+        "summary": "Adding a @Comment annotation to a field will add a comment to the config in its file. Property | Type | Default Value | Comment --- | --- | --- | --- value | String[]/String | N/A | The passed valu..."
+      },
+      {
+        "title": "@Name Use",
+        "level": 2,
+        "summary": "You should use the @Name annotation to give a config a user friendly name in the config file. Property | Type | Default Value --- | --- | --- value | String | N/A"
+      },
+      {
+        "title": "@RangeInt Use",
+        "level": 2,
+        "summary": "You should use @RangeInt to limit an int or Integer config value. Property | Type | Default Value --- | --- | --- min | int | Integer.MIN_VALUE max | int | Integer.MAX_VALUE"
+      },
+      {
+        "title": "@RangeDouble Use",
+        "level": 2,
+        "summary": "You should use @RangeDouble to limit a double or Double config value. Property | Type | Default Value --- | --- | --- min | double | Double.MIN_VALUE max | double | Double.MAX_VALUE"
+      },
+      {
+        "title": "@LangKey Use",
+        "level": 2,
+        "summary": "If you want to add translations for your configs in the mod options menu, add to the config&rsquo;s field @LangKey. Property | Type | Default Value --- | --- | --- value | String | N/A"
+      },
+      {
+        "title": "@RequiresMcRestart Use",
+        "level": 2,
+        "summary": "You should include this annotation on a config that if changed, will require the game to be restarted for the change to take affect."
+      },
+      {
+        "title": "@RequiresWorldRestart Use",
+        "level": 2,
+        "summary": "This will force the world to be restarted if the config is changed in the mod options menu."
+      },
+      {
+        "title": "Sub Categories",
+        "level": 2,
+        "summary": "A Sub Category is a way to group certain (usually related) config options together, and should be used to help make navigating your config file easier."
+      },
+      {
+        "title": "@Ignore Use",
+        "level": 2,
+        "summary": "Adding the @Ignore annotation to a field in the config class will cause the ConfigManager to skip over it when processing your config file. > Note: Note This will only work on forge version 1.12.2-14."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 12,
+    "keySections": 4,
+    "file": "config_annotations.md",
+    "processedFile": "processed/config_annotations.md"
+  },
+  {
+    "id": "1.12.2/conventions_loadstages",
+    "version": "1.12.2",
+    "label": "Loading Stages",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/loadstages/",
+    "tags": [
+      "tag"
+    ],
+    "sections": [
+      {
+        "title": "Pre-Initialization",
+        "level": 2,
+        "summary": "Pre Init is the place set anything up that is required by your own or other mods. This stage&rsquo;s event is the FMLPreInitializationEvent."
+      },
+      {
+        "title": "Initialization",
+        "level": 2,
+        "summary": "Init is where to accomplish any game related tasks that rely upon the items and blocks set up in preInit. This stage&rsquo;s event is the FMLInitializationEvent."
+      },
+      {
+        "title": "Post-Initialization",
+        "level": 2,
+        "summary": "Post Init is where your mod usually does things which rely upon other mods. This stage&rsquo;s event is the FMLPostInitializationEvent."
+      },
+      {
+        "title": "Other Important Events",
+        "level": 2,
+        "summary": "- <li>IMCEvent: Process received IMC Messages - <li>FMLServerStartingEvent: Register Commands"
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 2,
+    "file": "conventions_loadstages.md",
+    "processedFile": "processed/conventions_loadstages.md"
+  },
+  {
+    "id": "1.12.2/conventions_locations",
+    "version": "1.12.2",
+    "label": "Locations",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/locations/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "conventions_locations.md",
+    "processedFile": "processed/conventions_locations.md"
+  },
+  {
+    "id": "1.12.2/conventions_versioning",
+    "version": "1.12.2",
+    "label": "Versioning",
+    "url": "https://docs.readthedocs.net/en/1.12.x/conventions/versioning/",
+    "tags": [
+      "meta"
+    ],
+    "sections": [
+      {
+        "title": "Examples",
+        "level": 2,
+        "summary": "Here is a (most likely incomplete) list of things that increment the various variables. - <li>MCVERSION<ul> <li>Always matches the Minecraft version the mod is for."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "conventions_versioning.md",
+    "processedFile": "processed/conventions_versioning.md"
+  },
+  {
+    "id": "1.12.2/datastorage_capabilities",
+    "version": "1.12.2",
+    "label": "The Capability System",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/capabilities/",
+    "tags": [
+      "capability"
+    ],
+    "sections": [
+      {
+        "title": "Forge-provided Capabilities",
+        "level": 2,
+        "summary": "Forge provides three capabilities: IItemHandler, IFluidHandler and IEnergyStorage IItemHandler exposes an interface for handling inventory slots."
+      },
+      {
+        "title": "Using an Existing Capability",
+        "level": 2,
+        "summary": "As mentioned earlier, TileEntities, Entities, and ItemStacks implement the capability provider feature, through the ICapabilityProvider interface."
+      },
+      {
+        "title": "Exposing a Capability",
+        "level": 2,
+        "summary": "In order to expose a capability, you will first need an instance of the underlying capability type. Note that you should assign a separate instance to each object that keeps the capability, since t..."
+      },
+      {
+        "title": "Attaching Capabilities",
+        "level": 2,
+        "summary": "As mentioned, attaching capabilities to entities and itemstacks can be done using AttachCapabilitiesEvent. The same event is used for all objects that can provide capabilities."
+      },
+      {
+        "title": "Creating Your Own Capability",
+        "level": 2,
+        "summary": "In general terms, a capability is declared and registered through a single method call to CapabilityManager.INSTANCE.register()."
+      },
+      {
+        "title": "Persisting Chunk and TileEntity capabilities",
+        "level": 2,
+        "summary": "Unlike Worlds, Entities and ItemStacks, Chunks and TileEntities are only written to disk when they have been marked as dirty."
+      },
+      {
+        "title": "Synchronizing Data with Clients",
+        "level": 2,
+        "summary": "By default, Capability data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets."
+      },
+      {
+        "title": "Persisting across Player Deaths",
+        "level": 2,
+        "summary": "By default, the capability data does not persist on death. In order to change this, the data has to be manually copied when the player entity is cloned during the respawn process."
+      },
+      {
+        "title": "Migrating from IExtendedEntityProperties",
+        "level": 2,
+        "summary": "Although the Capability system can do everything IEEPs (IExtendedEntityProperties) did and more, the two concepts don&rsquo;t fully match 1:1."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 7,
+    "keySections": 9,
+    "file": "datastorage_capabilities.md",
+    "processedFile": "processed/datastorage_capabilities.md"
+  },
+  {
+    "id": "1.12.2/datastorage_extendedentityproperties",
+    "version": "1.12.2",
+    "label": "Extended Entity Properties",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/extendedentityproperties/",
+    "tags": [
+      "entity"
+    ],
+    "sections": [
+      {
+        "title": "Declaration and Registration",
+        "level": 2,
+        "summary": "The basis of the EEPs is the IExtendedEntityProperties interface. This interface provides the basic methods required for managing the extended data: - <li>init: Allows the implementation to have kn..."
+      },
+      {
+        "title": "Attaching the Implementation to Entities",
+        "level": 2,
+        "summary": "In order to attach the extended property to an entity, it is done by handling the EntityEvent.EntityConstructing event, and if the entity is of interest, using the Entity#registerExtendedProperties..."
+      },
+      {
+        "title": "Making Use of the Implementation",
+        "level": 2,
+        "summary": "To make use of the extended data, the instance of the IEEP implementation has to be obtained from the Entity, and because the entity could have been unloaded or may have changed dimensions, it is n..."
+      },
+      {
+        "title": "Saving and Loading Data from NBT",
+        "level": 2,
+        "summary": "Forge allows all IEEPs attached to an entity to save and load themselves. However, keep in mind that the NBT tag provided in the saveNBTData and loadNBTData methods is a global tag for the entity, ..."
+      },
+      {
+        "title": "Synchronizing Data with Clients",
+        "level": 2,
+        "summary": "By default, the entity data is not sent to clients. In order to change this, the mods have to manage their own synchronization code using packets."
+      },
+      {
+        "title": "Persisting across Player Deaths",
+        "level": 2,
+        "summary": "By default, the entity data does not persist on death. In order to change this, the data has to be manually copied when the player entity is cloned during the respawn process."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 7,
+    "keySections": 10,
+    "file": "datastorage_extendedentityproperties.md",
+    "processedFile": "processed/datastorage_extendedentityproperties.md"
+  },
+  {
+    "id": "1.12.2/datastorage_worldsaveddata",
+    "version": "1.12.2",
+    "label": "World Saved Data",
+    "url": "https://docs.readthedocs.net/en/1.12.x/datastorage/worldsaveddata/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Declaration",
+        "level": 2,
+        "summary": "The basis of the system is the WorldSavedData class. This class provides the basic methods used to manage the data: - <li>writeToNBT: Allows the implementation to write data to the world."
+      },
+      {
+        "title": "Registration and Usage",
+        "level": 2,
+        "summary": "The WorldSavedData is loaded and/or attached to the world on demand. A good practice is to create a static get method that will load the data, and if not present, attach a new instance."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 1,
+    "file": "datastorage_worldsaveddata.md",
+    "processedFile": "processed/datastorage_worldsaveddata.md"
+  },
+  {
+    "id": "1.12.2/effects_sounds",
+    "version": "1.12.2",
+    "label": "Sounds",
+    "url": "https://docs.readthedocs.net/en/1.12.x/effects/sounds/",
+    "tags": [
+      "sounds"
+    ],
+    "sections": [
+      {
+        "title": "Terminology",
+        "level": 2,
+        "summary": "Term | Description --- | --- Sound Events | Something that triggers a sound effect. Examples include \"minecraft:block.anvil.hit\" or \"botania:spreaderFire\"."
+      },
+      {
+        "title": "`sounds.json",
+        "level": 2,
+        "summary": "This JSON defines sound events, and defines which sound files they play, the subtitle, etc. Sound events are identified with <code>ResourceLocations. sounds."
+      },
+      {
+        "title": "Creating Sound Events",
+        "level": 2,
+        "summary": "In order to actually be able to play sounds, a SoundEvent corresponding to an entry in sounds.json must be created. This SoundEvent must then be registered."
+      },
+      {
+        "title": "Playing Sounds",
+        "level": 2,
+        "summary": "Vanilla has lots of methods for playing sounds, and it&rsquo;s unclear which to use at times. > Note: Note This information was gathered by looking at these various methods, analyzing their usage a..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 2,
+    "file": "effects_sounds.md",
+    "processedFile": "processed/effects_sounds.md"
+  },
+  {
+    "id": "1.12.2/events_intro",
+    "version": "1.12.2",
+    "label": "Events",
+    "url": "https://docs.readthedocs.net/en/1.12.x/events/intro/",
+    "tags": [
+      "event"
+    ],
+    "sections": [
+      {
+        "title": "Creating an Event Handler",
+        "level": 2,
+        "summary": "To register this event handler, use MinecraftForge.EVENT_BUS.register() and pass it an instance of your event handler class. > Note: Note In older forge versions, there were two separate event buses."
+      },
+      {
+        "title": "Canceling",
+        "level": 2,
+        "summary": "If an event can be canceled, it will be marked with the @Cancelable annotation, and the method Event#isCancelable() will return true."
+      },
+      {
+        "title": "Results",
+        "level": 2,
+        "summary": "Some events have an Event.Result, a result can be one of three things, DENY which stops the event, DEFAULT which uses the Vanilla behavior, and ALLOW which forces the action to take place, regardle..."
+      },
+      {
+        "title": "Priority",
+        "level": 2,
+        "summary": "Event handler methods (marked with @SubscribeEvent) have a priority. You can set the priority of an event handler method by setting the priority value of the annotation."
+      },
+      {
+        "title": "Sub Events",
+        "level": 2,
+        "summary": "Many events have different variations of themselves, these can be different but all based around one common factor (e.g. PlayerEvent) or can be an event that has multiple phases (e.g."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 0,
+    "file": "events_intro.md",
+    "processedFile": "processed/events_intro.md"
+  },
+  {
+    "id": "1.12.2/gettingstarted",
+    "version": "1.12.2",
+    "label": "Getting Started with Forge",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "From Zero to Modding",
+        "level": 2,
+        "summary": "1. <li>Obtain a Java 8 Development Kit (JDK) and a 64-bit Java Virtual Machine (JVM). Minecraft and MinecraftForge both compile against Java 8 and as such should be used for development."
+      },
+      {
+        "title": "Customizing Your Mod Information",
+        "level": 2,
+        "summary": "Edit the build.gradle file to customize how your mod is built (the file names, versions, and other things). > Important: Important Do not edit the buildscript {} section of the build."
+      },
+      {
+        "title": "Building and Testing Your Mod",
+        "level": 2,
+        "summary": "1. <li>To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "gettingstarted.md",
+    "processedFile": "processed/gettingstarted.md"
+  },
+  {
+    "id": "1.12.2/gettingstarted_autoupdate",
+    "version": "1.12.2",
+    "label": "Forge Update Checker",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/autoupdate/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Getting Started",
+        "level": 2,
+        "summary": "The first thing you want to do is specify the updateJSON parameter in your @Mod annotation. The value of this parameter should be a valid URL pointing to an update JSON file."
+      },
+      {
+        "title": "Update JSON format",
+        "level": 2,
+        "summary": "The JSON itself has a relatively simple format, given as follows: This is fairly self-explanatory, but some notes:"
+      },
+      {
+        "title": "Retrieving Update Check Results",
+        "level": 2,
+        "summary": "You can retrieve the results of the Forge Update Checker using ForgeVersion.getResult(ModContainer). The returned object has a field status which indicates the status of the version check."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 0,
+    "file": "gettingstarted_autoupdate.md",
+    "processedFile": "processed/gettingstarted_autoupdate.md"
+  },
+  {
+    "id": "1.12.2/gettingstarted_debugprofiler",
+    "version": "1.12.2",
+    "label": "Debug Profiler",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/debugprofiler/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Using the Debug Profiler",
+        "level": 2,
+        "summary": "The Debug Profiler is very simple to use. It requires two commands /debug start, which starts the profiling process, and /debug stop, which ends it."
+      },
+      {
+        "title": "Reading a Profiling result",
+        "level": 2,
+        "summary": "At the top it first tells you how long in milliseconds it was running and how many ticks ran in that time. Below that, you will find information similar to the snippet below: ``toml [00] levels - 96."
+      },
+      {
+        "title": "Profiling your own code",
+        "level": 2,
+        "summary": "The Debug Profiler has basic support for Entity and TileEntity. If you would like to profile something else, you may need to manually create your sections like so: `` Profiler#startSection(yourSect..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 1,
+    "file": "gettingstarted_debugprofiler.md",
+    "processedFile": "processed/gettingstarted_debugprofiler.md"
+  },
+  {
+    "id": "1.12.2/gettingstarted_dependencymanagement",
+    "version": "1.12.2",
+    "label": "Dependency Management",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/dependencymanagement/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "The mod repository",
+        "level": 2,
+        "summary": "The mod repository is a Maven-like repository containing mods and libraries. An artifact in this repository is identified by its Maven coordinate: groupId:artifactId:version:classifier@extention."
+      },
+      {
+        "title": "Dependency extraction",
+        "level": 2,
+        "summary": "Forge provides a simple way to embed dependencies in a mod and have them extracted at runtime. By placing dependency jars in your own jar, Forge can extract them into the mod repository and load them."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "gettingstarted_dependencymanagement.md",
+    "processedFile": "processed/gettingstarted_dependencymanagement.md"
+  },
+  {
+    "id": "1.12.2/gettingstarted_structuring",
+    "version": "1.12.2",
+    "label": "Structuring Your Mod",
+    "url": "https://docs.readthedocs.net/en/1.12.x/gettingstarted/structuring/",
+    "tags": [
+      "meta"
+    ],
+    "sections": [
+      {
+        "title": "Packaging",
+        "level": 2,
+        "summary": "Pick a unique package name. If you own a URL associated with your project, you can use it as your top level package. For example if you own &ldquo;example.com&rdquo;, you may use com."
+      },
+      {
+        "title": "The `mcmod.info file",
+        "level": 2,
+        "summary": "This file defines the metadata of your mod. Its information may be viewed by users from the main screen of the game through the Mods button. A single info file can describe several mods."
+      },
+      {
+        "title": "The Mod File",
+        "level": 2,
+        "summary": "Generally, we&rsquo;ll start with a file named after your mod, and put into your package. This is the entry point to your mod and will contain some special indicators marking it as such."
+      },
+      {
+        "title": "What is `@Mod?",
+        "level": 2,
+        "summary": "This is an annotation indicating to the Forge Mod Loader that the class is a Mod entry point. It contains various metadata about the mod."
+      },
+      {
+        "title": "Keeping Your Code Clean Using Sub-packages",
+        "level": 2,
+        "summary": "Rather than clutter up a single class and package with everything, it is recommended you break your mod into subpackages."
+      },
+      {
+        "title": "Class Naming Schemes",
+        "level": 2,
+        "summary": "A common class naming scheme allows easier deciphering of what a class is, and also makes it easier for someone developing with your mod to find things."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 4,
+    "file": "gettingstarted_structuring.md",
+    "processedFile": "processed/gettingstarted_structuring.md"
+  },
+  {
+    "id": "1.12.2/items_items",
+    "version": "1.12.2",
+    "label": "Items",
+    "url": "https://docs.readthedocs.net/en/1.12.x/items/items/",
+    "tags": [
+      "item"
+    ],
+    "sections": [
+      {
+        "title": "Creating an Item",
+        "level": 2,
+        "summary": "Basic items that need no special functionality (think sticks or sugar) don&rsquo;t need custom classes. You can simply instantiate Item and call its various setters to set some simple properties."
+      },
+      {
+        "title": "Registering an Item",
+        "level": 2,
+        "summary": "Items must be registered to function."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "items_items.md",
+    "processedFile": "processed/items_items.md"
+  },
+  {
+    "id": "1.12.2/items_loot_tables",
+    "version": "1.12.2",
+    "label": "Loot Tables",
+    "url": "https://docs.readthedocs.net/en/1.12.x/items/loot_tables/",
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "sections": [
+      {
+        "title": "Registering a Modded Loot Table",
+        "level": 2,
+        "summary": "In order to make Minecraft load and be aware of your loot table, simply call LootTableList.register(new ResourceLocation(\"modid\", \"loottablename\")), which will resolve and load /assets/modid/lootta..."
+      },
+      {
+        "title": "Registering Custom Objects",
+        "level": 2,
+        "summary": "In addition to vanilla&rsquo;s, you can also register your own loot conditions, loot functions, and entity properties."
+      },
+      {
+        "title": "Modifying Vanilla Loot",
+        "level": 2,
+        "summary": "Not only can you specify your own loot tables, conditions, functions, and entity properties, you can also modify others as they load."
+      },
+      {
+        "title": "Changing Mob Drops",
+        "level": 2,
+        "summary": "Subclasses of EntityLiving automatically support drawing from a loot table upon death. This is done by overriding the getLootTable method to return a ResourceLocation to the desired table."
+      },
+      {
+        "title": "Generating Loot In-Code",
+        "level": 2,
+        "summary": "Occasionally, you may want to generate ItemStacks from a loot table from your own code. First, obtain the loot table itself (you need access to a World): `` LootTable table = this.world."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 8,
+    "keySections": 7,
+    "file": "items_loot_tables.md",
+    "processedFile": "processed/items_loot_tables.md"
+  },
+  {
+    "id": "1.12.2/models_color",
+    "version": "1.12.2",
+    "label": "Coloring Textures",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/color/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "models_color.md",
+    "processedFile": "processed/models_color.md"
+  },
+  {
+    "id": "1.12.2/models_files",
+    "version": "1.12.2",
+    "label": "Model Files",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/files/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Textures",
+        "level": 2,
+        "summary": "Textures, like models, are contained within resource packs and are referred to with ResourceLocations."
+      },
+      {
+        "title": "JSON Models",
+        "level": 2,
+        "summary": "Vanilla Minecraft&rsquo;s JSON model format is rather simple. It defines cuboid (cube/rectangular prism) elements, and assigns textures to their faces."
+      },
+      {
+        "title": "WaveFront OBJ Models",
+        "level": 2,
+        "summary": "Forge adds a loader for the .obj file format. To use these models, the resource namespace must be registered through OBJLoader.addDomain."
+      },
+      {
+        "title": "Blitz3D Models",
+        "level": 2,
+        "summary": "Forge adds a loader for the .b3d file format. To use these models, the resource namespace must be registered through B3DLoader.addDomain."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 3,
+    "file": "models_files.md",
+    "processedFile": "processed/models_files.md"
+  },
+  {
+    "id": "1.12.2/models_introduction",
+    "version": "1.12.2",
+    "label": "Intro to Models",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/introduction/",
+    "tags": [],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "models_introduction.md",
+    "processedFile": "processed/models_introduction.md"
+  },
+  {
+    "id": "1.12.2/models_overrides",
+    "version": "1.12.2",
+    "label": "Item Property Overrides",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/overrides/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Adding Properties to Items",
+        "level": 2,
+        "summary": "Item::addPropertyOverride is used to add a property to an item. The ResourceLocation parameter is the name given to the property (e.g. new ResourceLocation(\"pull\"))."
+      },
+      {
+        "title": "Using Overrides",
+        "level": 2,
+        "summary": "The format of an override can be seen on the wiki, and a good example can be found in model/item/bow.json. For reference, here is a hypothetical example of an item with an examplemod:power property."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 1,
+    "file": "models_overrides.md",
+    "processedFile": "processed/models_overrides.md"
+  },
+  {
+    "id": "1.12.2/models_using",
+    "version": "1.12.2",
+    "label": "Connecting Blocks and Items to Models",
+    "url": "https://docs.readthedocs.net/en/1.12.x/models/using/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Block Models",
+        "level": 2,
+        "summary": "Blocks are not directly linked to models, instead, blockstates are mapped to ModelResourceLocations, which point to models (&ldquo;models&rdquo; includes blockstate JSONs)."
+      },
+      {
+        "title": "Item Models",
+        "level": 2,
+        "summary": "Unlike blocks, which automatically have a default IStateMapper that works without any extra registration, items must be registered to their models manually. This is done through ModelLoader."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 4,
+    "file": "models_using.md",
+    "processedFile": "processed/models_using.md"
+  },
+  {
+    "id": "1.12.2/networking",
+    "version": "1.12.2",
+    "label": "Networking",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/",
+    "tags": [
+      "networking"
+    ],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "networking.md",
+    "processedFile": "processed/networking.md"
+  },
+  {
+    "id": "1.12.2/networking_entities",
+    "version": "1.12.2",
+    "label": "Entities",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/entities/",
+    "tags": [
+      "networking"
+    ],
+    "sections": [
+      {
+        "title": "Spawn Data",
+        "level": 2,
+        "summary": "In general, the spawning of modded entities is handled seperately, by Forge. > Note: Note This means that simply extending a vanilla entity class may not inherit all its behaviour here."
+      },
+      {
+        "title": "Dynamic Data",
+        "level": 2,
+        "summary": "This is the main vanilla system for synchronizing entity data from the server to the client. As such, a number of vanilla examples are available to refer to."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "networking_entities.md",
+    "processedFile": "processed/networking_entities.md"
+  },
+  {
+    "id": "1.12.2/networking_overview",
+    "version": "1.12.2",
+    "label": "Overview",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/overview/",
+    "tags": [
+      "networking"
+    ],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "networking_overview.md",
+    "processedFile": "processed/networking_overview.md"
+  },
+  {
+    "id": "1.12.2/networking_simpleimpl",
+    "version": "1.12.2",
+    "label": "SimpleImpl",
+    "url": "https://docs.readthedocs.net/en/1.12.x/networking/simpleimpl/",
+    "tags": [
+      "networking"
+    ],
+    "sections": [
+      {
+        "title": "Getting Started",
+        "level": 2,
+        "summary": "First you need to create your SimpleNetworkWrapper object. We recommend that you do this in a separate class, possibly something like ModidPacketHandler."
+      },
+      {
+        "title": "Making Packets",
+        "level": 2,
+        "summary": "A packet is defined by using the IMessage interface. This interface defines 2 methods, toBytes and fromBytes."
+      },
+      {
+        "title": "Registering Packets",
+        "level": 2,
+        "summary": "So now we have a packet, and a handler for this packet. But the SimpleNetworkWrapper needs one more thing to function!"
+      },
+      {
+        "title": "Using Packets",
+        "level": 2,
+        "summary": "When sending packets, make sure that there is a handler registered on the receiving side for said packet."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 7,
+    "file": "networking_simpleimpl.md",
+    "processedFile": "processed/networking_simpleimpl.md"
+  },
+  {
+    "id": "1.12.2/rendering_teisr",
+    "version": "1.12.2",
+    "label": "TileEntityItemStackRenderer",
+    "url": "https://docs.readthedocs.net/en/1.12.x/rendering/teisr/",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "Using TileEntityItemStackRenderer",
+        "level": 2,
+        "summary": "TileEntityItemStackRenderer allows you to render your item using public void renderByItem(ItemStack itemStackIn)."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "rendering_teisr.md",
+    "processedFile": "processed/rendering_teisr.md"
+  },
+  {
+    "id": "1.12.2/tileentities_tesr",
+    "version": "1.12.2",
+    "label": "TileEntitySpecialRenderer",
+    "url": "https://docs.readthedocs.net/en/1.12.x/tileentities/tesr/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Creating a TESR",
+        "level": 2,
+        "summary": "To create a TESR, create a class that inherits from TileEntitySpecialRenderer. It takes a generic argument specifying the block&rsquo;s TileEntity class."
+      },
+      {
+        "title": "Registering a TESR",
+        "level": 2,
+        "summary": "In order to register a TESR, call ClientRegistry#bindTileEntitySpecialRenderer passing the tile entity class to be renderer with this TESR and the instance of the TESR to use to render all TEs of t..."
+      },
+      {
+        "title": "`FastTESR",
+        "level": 2,
+        "summary": "A TESR can opt-in to being a FastTESR by extending the <code>FastTESR class instead of TileEntitySpecialRenderer and returning true from TileEntity#hasFastRenderer."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "tileentities_tesr.md",
+    "processedFile": "processed/tileentities_tesr.md"
+  },
+  {
+    "id": "1.12.2/tileentities_tileentity",
+    "version": "1.12.2",
+    "label": "TileEntities",
+    "url": "https://docs.readthedocs.net/en/1.12.x/tileentities/tileentity/",
+    "tags": [
+      "entity"
+    ],
+    "sections": [
+      {
+        "title": "Creating a `TileEntity",
+        "level": 2,
+        "summary": "In order to create a <code>TileEntity you need to extend the TileEntity class. It is important that your TileEntity has a default constructor, so that Minecraft can properly load it."
+      },
+      {
+        "title": "Attaching a `TileEntity to a <code>Block",
+        "level": 2,
+        "summary": "To attach your new <code>TileEntity to a Block you need to override 2 (two) methods within the Block class."
+      },
+      {
+        "title": "Storing Data within your `TileEntity",
+        "level": 2,
+        "summary": "In order to save data, override the following two methods `` TileEntity#writeToNBT(NBTTagCompound nbt) TileEntity#readFromNBT(NBTTagCompound nbt) ` These methods are called whenever the <code>Chunk..."
+      },
+      {
+        "title": "Keeping a `TileEntity through changing <code>BlockStates",
+        "level": 2,
+        "summary": "There might be situations in which you need to change your <code>BlockState, such as with the vanilla furnace, which changes its state from lit=false to lit=true when fuel and something smeltable i..."
+      },
+      {
+        "title": "Ticking `TileEntities",
+        "level": 2,
+        "summary": "If you need a ticking <code>TileEntity, for example to keep track of the progress during a smelting process, you need to add the net.minecraft.util.ITickable interface to your TileEntity."
+      },
+      {
+        "title": "Synchronizing the Data to the Client",
+        "level": 2,
+        "summary": "There are 3 (three) ways of syncing data to the client. Synchronizing on chunk load, synchronizing on block updates and synchronizing with a custom network message."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 9,
+    "keySections": 13,
+    "file": "tileentities_tileentity.md",
+    "processedFile": "processed/tileentities_tileentity.md"
+  },
+  {
+    "id": "1.12.2/utilities_oredictionary",
+    "version": "1.12.2",
+    "label": "OreDictionary",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/oredictionary/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "OreDictionary Name Convention",
+        "level": 2,
+        "summary": "> Note: Note Because OreDictionary names are meant to be shared between items from different mods, they should be fairly general. Use a name that other mods are likely to use."
+      },
+      {
+        "title": "WILDCARD_VALUE",
+        "level": 2,
+        "summary": "This value is used to indicate that the metadata of an ItemStack is not important. See below for an example of its use."
+      },
+      {
+        "title": "Using OreDictionary in Crafting Recipes",
+        "level": 2,
+        "summary": "Recipes that use the OreDictionary are created and registered in much the same way as regular crafting recipes."
+      },
+      {
+        "title": "Registering Items to the OreDictionary",
+        "level": 2,
+        "summary": "Add entries to the OreDictionary during registry events, after registering your items. Simply call OreDictionary."
+      },
+      {
+        "title": "Common OreDictionary Names",
+        "level": 2,
+        "summary": "All OreDictionary names for Minecraft items and blocks can be found in net.minecraftforge.oredict.OreDictionary. A full list will not be included here."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 4,
+    "file": "utilities_oredictionary.md",
+    "processedFile": "processed/utilities_oredictionary.md"
+  },
+  {
+    "id": "1.12.2/utilities_permissionapi",
+    "version": "1.12.2",
+    "label": "PermissionAPI",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/permissionapi/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "How to use the PermissionAPI",
+        "level": 2,
+        "summary": "For basic support you just need to call PermissionAPI.hasPermission(EntityPlayer player, String node), though by default this is going to return always false, as the default implementation uses the..."
+      },
+      {
+        "title": "`DefaultPermissionLevel",
+        "level": 2,
+        "summary": "The <code>DefaultPermissionLevel` has 3 Values:  ALL =all players got this permission  OP = only operators got this permission * NONE = neither normal players nor operators got this permission"
+      },
+      {
+        "title": "Permission node",
+        "level": 2,
+        "summary": "While there are technically no rules for the permission nodes, the best practice is to be of the form modid.subgroup."
+      },
+      {
+        "title": "Making your own implementation of the `PermissionHandler",
+        "level": 2,
+        "summary": "By default the PermissionHandler is very basic, which is usually enough for most users, but you might want more control over the permissions for things like a big server."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "utilities_permissionapi.md",
+    "processedFile": "processed/utilities_permissionapi.md"
+  },
+  {
+    "id": "1.12.2/utilities_recipes",
+    "version": "1.12.2",
+    "label": "Recipes",
+    "url": "https://docs.readthedocs.net/en/1.12.x/utilities/recipes/",
+    "tags": [
+      "recipe"
+    ],
+    "sections": [
+      {
+        "title": "Loading Recipes",
+        "level": 2,
+        "summary": "Forge will load all recipes which can be found within the ./assets/<modid>/recipes/ folder. You can call these files whatever you want, thought the vanilla convention is to name them after the outp..."
+      },
+      {
+        "title": "The Recipe file",
+        "level": 2,
+        "summary": "A basic recipe file might look like the following example: > Note: Note When you first obtain an ingredient to a vanilla recipe it will automatically unlock the recipe in the recipe book."
+      },
+      {
+        "title": "Types of crafting recipes",
+        "level": 2,
+        "summary": "Within this section we will take a closer look on the differences between defining a shaped and a shapeless crafting recipe. Shaped recipes require the pattern and key keywords."
+      },
+      {
+        "title": "Recipe Elements",
+        "level": 2,
+        "summary": "A pattern will be defined with the pattern list. Each string represents one row in the crafting grid and each placeholder character within the String represents a column."
+      },
+      {
+        "title": "Factories",
+        "level": 2,
+        "summary": "Factories can be used to allow defining recipes and ingredients of a custom type (class). To create your own factory, create a _factories.json."
+      },
+      {
+        "title": "Constants",
+        "level": 2,
+        "summary": "It is possible to define constant values for your recipes. These values have to be defined within a _constants.json and can be used within any recipe of your mod by just writing #<name>."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 6,
+    "keySections": 6,
+    "file": "utilities_recipes.md",
+    "processedFile": "processed/utilities_recipes.md"
+  }
+]

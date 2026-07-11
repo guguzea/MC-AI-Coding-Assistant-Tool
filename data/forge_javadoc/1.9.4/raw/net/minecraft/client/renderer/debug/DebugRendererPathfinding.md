@@ -1,0 +1,10 @@
+---
+title: "DebugRendererPathfinding"
+description: ""
+package: "net/minecraft/client/renderer/debug"
+version: "1.9.4"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/client/renderer/debug/DebugRendererPathfinding.html"
+sourceType: javadoc
+---
+
+# DebugRendererPathfinding

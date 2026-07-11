@@ -13,6 +13,7 @@
  *   MC_SKILL_DATA=/path/to/data node test-mcp.mjs  # 指定数据目录
  */
 
+import assert from "node:assert/strict";
 import { spawn } from "child_process";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -57,6 +58,8 @@ function recordPerf(name, startMs) {
 
 let serverProc = null;
 let serverReady = false;
+let serverReadyError = null;
+let serverReadyWaiters = [];
 const pendingRequests = new Map(); // id -> { resolve, reject }
 let serverStartTime = 0;
 
@@ -83,6 +86,8 @@ function startServer() {
       if (r.result?.protocolVersion && !serverReady) {
         serverReady = true;
         recordPerf("server_init", serverStartTime);
+        for (const waiter of serverReadyWaiters) waiter.resolve();
+        serverReadyWaiters = [];
         console.log(`[perf] server cold start: ${Date.now() - serverStartTime}ms`);
       }
       // 精确匹配响应（只匹配有 id 的响应）
@@ -94,11 +99,23 @@ function startServer() {
   });
 
   serverProc.on("error", err => {
-    console.error("[server] spawn error:", err.message);
-    process.exit(1);
+    const error = new Error(`Server spawn failed: ${err.message}`);
+    serverReadyError = error;
+    for (const waiter of serverReadyWaiters) waiter.reject(error);
+    serverReadyWaiters = [];
+    for (const request of pendingRequests.values()) request.reject(error);
+    pendingRequests.clear();
   });
 
   serverProc.on("close", code => {
+    const error = new Error(`Server exited before completing tests (code=${code ?? "unknown"})`);
+    if (!serverReady) {
+      serverReadyError = error;
+      for (const waiter of serverReadyWaiters) waiter.reject(error);
+      serverReadyWaiters = [];
+    }
+    for (const request of pendingRequests.values()) request.reject(error);
+    pendingRequests.clear();
     if (code !== 0 && code !== null) {
       console.error(`[server] exited with code ${code}`);
     }
@@ -106,14 +123,25 @@ function startServer() {
 }
 
 async function waitForServerReady() {
-  if (serverReady) return Promise.resolve();
-  return new Promise(resolve => {
-    const check = setInterval(() => {
-      if (serverReady) {
-        clearInterval(check);
+  if (serverReady) return;
+  if (serverReadyError) throw serverReadyError;
+
+  await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      const error = new Error(`Server did not become ready within ${TIMEOUT_MS}ms`);
+      serverReadyError = error;
+      reject(error);
+    }, TIMEOUT_MS);
+    serverReadyWaiters.push({
+      resolve: () => {
+        clearTimeout(timeout);
         resolve();
-      }
-    }, 50);
+      },
+      reject: (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      },
+    });
   });
 }
 
@@ -172,13 +200,16 @@ async function runTests() {
 
   // ── Doc Tools ──────────────────────────────────────────────────────────────
 
-  console.log("[Test D1] search_docs: DeferredRegister (1.20.1)");
+  console.log("[Test D1] search_docs: registry (1.20.1)");
   const rd1 = await callTool("search_docs", {
-    query: "DeferredRegister",
+    query: "registry",
     version: "1.20.1",
     platform: "forge",
   });
+  assert.ok(rd1.result?.content?.[0]?.text, "search_docs must return text content");
   const cd1 = JSON.parse(rd1.result.content[0].text);
+  assert.equal(cd1.error, undefined, `search_docs failed: ${JSON.stringify(cd1.error)}`);
+  assert.ok(cd1.total > 0, "Forge registry search should return results");
   console.log(`  total=${cd1.total ?? 0}  first_id=${cd1.results?.[0]?.id ?? "n/a"}`);
   if (cd1.results?.[0]) {
     console.log(`  label=${cd1.results[0].label}  tags=${cd1.results[0].tags?.join(", ")}`);
@@ -245,6 +276,8 @@ async function runTests() {
     className: "net.minecraft.world.entity.LivingEntity",
   });
   const content1 = JSON.parse(r1.result.content[0].text);
+  assert.equal(content1.found, true, `LivingEntity API lookup failed: ${JSON.stringify(content1.suggestions)}`);
+  assert.ok(content1.methods?.length > 0, "LivingEntity should expose methods");
   console.log(`  found=${content1.found}  methods=${content1.methods?.length ?? 0}`);
   console.log(`  javadoc: ${(content1.classJavadoc ?? "").slice(0, 120)}...`);
   console.log();
@@ -255,6 +288,7 @@ async function runTests() {
     methodName: "getMaxHealth",
   });
   const content2 = JSON.parse(r2.result.content[0].text);
+  assert.equal(content2.found, true, `getMaxHealth lookup failed: ${JSON.stringify(content2.suggestions)}`);
   console.log(`  found=${content2.found}`);
   if (content2.methods) {
     for (const m of content2.methods) {
@@ -274,22 +308,18 @@ async function runTests() {
 
   // ── 通用 doc 工具（非 forge 平台测试）──────────────────────────────────────
 
-  console.log("[Test D6] search_docs: platform=neoforge (should return UNSUPPORTED_PLATFORM error)");
+  console.log("[Test D6] search_docs: platform=neoforge");
   const rd6 = await callTool("search_docs", {
     query: "registry",
     version: "1.20.4",
     platform: "neoforge",
   });
+  assert.ok(rd6.result?.content?.[0]?.text, "NeoForge search must return text content");
   const cd6 = JSON.parse(rd6.result.content[0].text);
-  if (cd6.ok === false && cd6.error?.code === "UNSUPPORTED_PLATFORM") {
-    console.log(`  ✓ Got expected UNSUPPORTED_PLATFORM error`);
-    console.log(`  message: ${cd6.error.message}`);
-    console.log(`  hint: ${cd6.error.hint}`);
-  } else if (cd6.error) {
-    console.log(`  ERROR (unexpected format): ${JSON.stringify(cd6)}`);
-  } else {
-    console.log(`  WARNING: Expected error but got success: ${JSON.stringify(cd6).slice(0, 200)}`);
-  }
+  assert.equal(cd6.error, undefined, `NeoForge search failed: ${JSON.stringify(cd6.error)}`);
+  assert.equal(cd6.platform, "neoforge");
+  assert.ok(Array.isArray(cd6.results), "NeoForge search must return a results array");
+  console.log(`  total=${cd6.total}  first_id=${cd6.results[0]?.id ?? "n/a"}`);
   console.log();
 
   // ── 性能报告 ────────────────────────────────────────────────────────────────

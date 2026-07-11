@@ -64,6 +64,7 @@ export interface KeyBlock {
 export interface SearchLogEntry {
   query: string;
   version: string;
+  resolvedVersion: string;
   results: number;
   timestamp: number;
 }
@@ -107,6 +108,9 @@ const STOP_WORDS = new Set([
   "how", "what", "when", "where", "which", "who", "can", "will",
 ]);
 
+/** Forge 1.7.10–1.12.2 使用 forge_javadoc 而非 forge-docs（需与 store.ts 保持一致） */
+const JAVADOC_VERSIONS = new Set(["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2"]);
+
 export class ForgeDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
 
@@ -125,10 +129,18 @@ export class ForgeDocStore {
   /** 搜索日志（最多 500 条） */
   private searchLog: SearchLogEntry[] = [];
 
-  /** 懒加载校验标志（首次调用文档方法时触发） */
   private _validated = false;
 
   constructor(private readonly dataDir: string) {}
+
+  private versionDataDir(version: string): string {
+    const standard = join(this.dataDir, `forge_${version}`, "forge-docs", version);
+    if (existsSync(join(standard, "index-l0.json"))) return standard;
+    if (JAVADOC_VERSIONS.has(version)) {
+      return join(this.dataDir, "forge_javadoc", version);
+    }
+    return standard;
+  }
 
   // ── 懒加载校验 ────────────────────────────────────────────────────────────
 
@@ -147,20 +159,11 @@ export class ForgeDocStore {
         `示例：MC_SKILL_DATA=/path/to/h-MC-skill/data`
       );
     }
-    let hasVersion = false;
-    try {
-      for (const entry of readdirSync(this.dataDir, { withFileTypes: true })) {
-        if (entry.isDirectory() && existsSync(join(this.dataDir, entry.name, "index-l0.json"))) {
-          hasVersion = true;
-          break;
-        }
-      }
-    } catch { /* readdir 失败 */ }
-    if (!hasVersion) {
+    if (this.getAvailableVersionsUnchecked().length === 0) {
       throw new Error(
         `数据目录结构不符合预期: ${this.dataDir}\n` +
-        `预期结构: <dataDir>/<version>/index-l0.json\n` +
-        `常见错误：将 "forge_1.20.1" 当作 dataDir，应传入 "forge_1.20.1/forge-docs"`
+        `预期结构: <dataDir>/forge_<version>/forge-docs/<version>/index-l0.json ` +
+        `或 <dataDir>/forge_javadoc/<version>/index-l0.json`
       );
     }
   }
@@ -169,19 +172,70 @@ export class ForgeDocStore {
 
   /**
    * 返回 data 目录下所有可用版本列表。
-   * 用于告知用户当前有哪些版本可用。
+   * 扫描两个来源：
+   *   1. dataRoot/forge_<version>/<subDirName>/<version>/index-l0.json（forge-docs）
+   *   2. dataRoot/forge_javadoc/<version>/index-l0.json（javadoc 版本）
    */
   getAvailableVersions(): string[] {
     this.ensureValidated();
-    if (!existsSync(this.dataDir)) return [];
+    return this.getAvailableVersionsUnchecked();
+  }
+
+  private getAvailableVersionsUnchecked(): string[] {
+    const results = new Set<string>();
     try {
-      return readdirSync(this.dataDir, { withFileTypes: true })
-        .filter((d: Dirent) => d.isDirectory() && existsSync(join(this.dataDir, d.name, "index-l0.json")))
-        .map((d: Dirent) => d.name)
-        .sort();
-    } catch {
-      return [];
+      for (const entry of readdirSync(this.dataDir, { withFileTypes: true })) {
+        if (!entry.isDirectory() || !entry.name.startsWith("forge_") || entry.name === "forge_javadoc") continue;
+        const version = entry.name.replace(/^forge_/, "");
+        if (existsSync(join(this.dataDir, entry.name, "forge-docs", version, "index-l0.json"))) {
+          results.add(version);
+        }
+      }
+      const javadocDir = join(this.dataDir, "forge_javadoc");
+      if (existsSync(javadocDir)) {
+        for (const entry of readdirSync(javadocDir, { withFileTypes: true })) {
+          if (entry.isDirectory() && existsSync(join(javadocDir, entry.name, "index-l0.json"))) {
+            results.add(entry.name);
+          }
+        }
+      }
+    } catch { /* ignore */ }
+
+    return [...results].sort((a, b) => {
+      const pa = a.split(".").map(Number);
+      const pb = b.split(".").map(Number);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const da = pa[i] ?? 0, db = pb[i] ?? 0;
+        if (da !== db) return db - da;
+      }
+      return 0;
+    });
+  }
+
+  /** 版本降级策略（递归查找有数据的版本）。
+   *
+   * 示例降级链：
+   * - 1.18.x  → 1.18.x（直接）
+   * - 1.18    → 1.18.x（带 x）
+   * - 1.18.1  → 1.18.x（精确点号）
+   * - 1.19.2  → 1.19.x → 1.19.4（存在 1.19.x 时）
+   * - 1.21    → 最高可用版本（跨主版本降级）
+   */
+  resolveVersion(requested: string): string {
+    const available = this.getAvailableVersions();
+    if (available.includes(requested)) return requested;
+
+    const withX = requested.endsWith(".x") ? requested : requested.replace(/(\.\d+)$/, ".x");
+    if (available.includes(withX)) return withX;
+
+    const majorMinor = requested.match(/^(\d+\.\d+)/)?.[1];
+    if (majorMinor) {
+      const xMatch = available.find(v => v.startsWith(majorMinor + "."));
+      if (xMatch) return xMatch;
     }
+
+    if (available.length > 0) return available[0];
+    throw new VersionNotFoundError(requested, available);
   }
 
   /**
@@ -209,7 +263,10 @@ export class ForgeDocStore {
       return cached.data as SearchResult[];
     }
 
-    const index = this.loadIndexL0(version);
+    // 版本降级（确保找到有数据的版本）
+    const resolvedVersion = this.resolveVersion(version);
+
+    const index = this.loadIndexL0(resolvedVersion);
 
     // 1. 提取前缀指令
     const classMatch = query.match(/^class:(\S+)/i);
@@ -288,14 +345,15 @@ export class ForgeDocStore {
       })
       .slice(0, 10);
 
-    // 写入缓存
+    // 写入缓存（用 resolvedVersion 保持一致性）
     this.searchCache.set(cacheKey, {
       data: results,
       expiry: Date.now() + ForgeDocStore.CACHE_TTL,
     });
 
-    // 搜索日志
-    this.searchLog.push({ query, version, results: results.length, timestamp: Date.now() });
+    // 搜索日志（记录原始请求版本和实际解析版本）
+    const logEntry: SearchLogEntry = { query, version, resolvedVersion, results: results.length, timestamp: Date.now() };
+    this.searchLog.push(logEntry);
     if (this.searchLog.length > 500) this.searchLog.splice(0, 100);
 
     return results;
@@ -392,11 +450,11 @@ export class ForgeDocStore {
    * - 读取 processed/*.md 内容并缓存
    * - highlightKey=true 时提取关键段落（<!-- key:* -->）
    */
-  loadFullDoc(
+  async loadFullDoc(
     id: string,
     version: string,
     highlightKey?: boolean,
-  ): FullDocResult {
+  ): Promise<FullDocResult> {
     this.ensureValidated();
     const l2 = this.loadIndexL2(version);
     // id 可能是 "resources/server/recipes/ingredients" 或 "1.20.1/resources_server_recipes_ingredients"
@@ -415,7 +473,7 @@ export class ForgeDocStore {
     if (cached && cached.expiry > Date.now()) {
       content = cached.data;
     } else {
-      const filepath = join(this.dataDir, version, meta.processedFile);
+      const filepath = join(this.versionDataDir(version), meta.processedFile);
       if (!existsSync(filepath)) {
         throw new DocNotFoundError(id, version);
       }
@@ -434,7 +492,7 @@ export class ForgeDocStore {
   private loadIndexL0(version: string): SearchResult[] {
     return this.loadCachedIndex<SearchResult[]>(
       `l0-${version}`,
-      join(this.dataDir, version, "index-l0.json"),
+      join(this.versionDataDir(version), "index-l0.json"),
       version,
     );
   }
@@ -442,7 +500,7 @@ export class ForgeDocStore {
   private loadIndexL1(version: string): SummaryResult[] {
     return this.loadCachedIndex<SummaryResult[]>(
       `l1-${version}`,
-      join(this.dataDir, version, "index-l1.json"),
+      join(this.versionDataDir(version), "index-l1.json"),
       version,
     );
   }
@@ -450,7 +508,7 @@ export class ForgeDocStore {
   private loadIndexL2(version: string): import("./types.js").L2Entry[] {
     return this.loadCachedIndex<import("./types.js").L2Entry[]>(
       `l2-${version}`,
-      join(this.dataDir, version, "index-l2.json"),
+      join(this.versionDataDir(version), "index-l2.json"),
       version,
     );
   }

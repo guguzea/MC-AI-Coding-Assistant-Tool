@@ -1,0 +1,19 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 物理端注解
+
+| 注解 | 含义 |
+|------|------|
+| `@OnlyIn(Dist.CLIENT)` | 仅在客户端运行 |
+| `@OnlyIn(Dist.DEDICATED_SERVER)` | 仅在服务端运行 |
+
+## Dist 检查
+
+```java
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+```

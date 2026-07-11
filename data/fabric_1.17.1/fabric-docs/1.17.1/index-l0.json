@@ -1,0 +1,259 @@
+[
+  {
+    "id": "1.17.1/develop_loader_fabric-mod-json",
+    "version": "1.17.1",
+    "label": "develop_loader_fabric-mod-json",
+    "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.17.1/develop_items_first-item",
+    "version": "1.17.1",
+    "label": "develop_items_first-item",
+    "url": "https://docs.fabricmc.net/develop/items/first-item",
+    "tags": [
+      "item"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.17.1/develop_items_item-models",
+    "version": "1.17.1",
+    "label": "develop_items_item-models",
+    "url": "https://docs.fabricmc.net/develop/items/item-models",
+    "tags": [
+      "item"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_blocks_first-block",
+    "version": "1.17.1",
+    "label": "develop_blocks_first-block",
+    "url": "https://docs.fabricmc.net/develop/blocks/first-block",
+    "tags": [
+      "block"
+    ],
+    "priority": "⭐",
+    "sectionCount": 9
+  },
+  {
+    "id": "1.17.1/develop_blocks_block-entities",
+    "version": "1.17.1",
+    "label": "develop_blocks_block-entities",
+    "url": "https://docs.fabricmc.net/develop/blocks/block-entities",
+    "tags": [
+      "block"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6
+  },
+  {
+    "id": "1.17.1/develop_events",
+    "version": "1.17.1",
+    "label": "develop_events",
+    "url": "https://docs.fabricmc.net/develop/events",
+    "tags": [
+      "event"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.17.1/develop_entities_first-entity",
+    "version": "1.17.1",
+    "label": "develop_entities_first-entity",
+    "url": "https://docs.fabricmc.net/develop/entities/first-entity",
+    "tags": [
+      "entity"
+    ],
+    "priority": "⭐",
+    "sectionCount": 7
+  },
+  {
+    "id": "1.17.1/develop_commands_basics",
+    "version": "1.17.1",
+    "label": "develop_commands_basics",
+    "url": "https://docs.fabricmc.net/develop/commands/basics",
+    "tags": [
+      "command"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.17.1/develop_data-generation_setup",
+    "version": "1.17.1",
+    "label": "develop_data-generation_setup",
+    "url": "https://docs.fabricmc.net/develop/data-generation/setup",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.17.1/develop_data-generation_recipes",
+    "version": "1.17.1",
+    "label": "develop_data-generation_recipes",
+    "url": "https://docs.fabricmc.net/develop/data-generation/recipes",
+    "tags": [
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.17.1/develop_data-generation_loot-tables",
+    "version": "1.17.1",
+    "label": "develop_data-generation_loot-tables",
+    "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables",
+    "tags": [
+      "loot"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.17.1/develop_data-generation_tags",
+    "version": "1.17.1",
+    "label": "develop_data-generation_tags",
+    "url": "https://docs.fabricmc.net/develop/data-generation/tags",
+    "tags": [
+      "tag"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_getting-started_building-a-mod",
+    "version": "1.17.1",
+    "label": "develop_getting-started_building-a-mod",
+    "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.17.1/develop_loom_index",
+    "version": "1.17.1",
+    "label": "develop_loom_index",
+    "url": "https://docs.fabricmc.net/develop/loom",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 8
+  },
+  {
+    "id": "1.17.1/develop_rendering_basic-concepts",
+    "version": "1.17.1",
+    "label": "develop_rendering_basic-concepts",
+    "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4
+  },
+  {
+    "id": "1.17.1/develop_rendering_gui_custom-screens",
+    "version": "1.17.1",
+    "label": "develop_rendering_gui_custom-screens",
+    "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.17.1/develop_saved-data",
+    "version": "1.17.1",
+    "label": "develop_saved-data",
+    "url": "https://docs.fabricmc.net/develop/saved-data",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 1
+  },
+  {
+    "id": "1.17.1/develop_codecs",
+    "version": "1.17.1",
+    "label": "develop_codecs",
+    "url": "https://docs.fabricmc.net/develop/codecs",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_key-mappings",
+    "version": "1.17.1",
+    "label": "develop_key-mappings",
+    "url": "https://docs.fabricmc.net/develop/key-mappings",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 3
+  },
+  {
+    "id": "1.17.1/develop_networking",
+    "version": "1.17.1",
+    "label": "develop_networking",
+    "url": "https://docs.fabricmc.net/develop/networking",
+    "tags": [
+      "networking"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_items_custom-tools",
+    "version": "1.17.1",
+    "label": "develop_items_custom-tools",
+    "url": "https://docs.fabricmc.net/develop/items/custom-tools",
+    "tags": [
+      "item"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_blocks_block-models",
+    "version": "1.17.1",
+    "label": "develop_blocks_block-models",
+    "url": "https://docs.fabricmc.net/develop/blocks/block-models",
+    "tags": [
+      "block"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_mixins_bytecode",
+    "version": "1.17.1",
+    "label": "develop_mixins_bytecode",
+    "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
+    "tags": [
+      "mixin"
+    ],
+    "priority": "🟡",
+    "sectionCount": 5
+  },
+  {
+    "id": "1.17.1/develop_getting-started_creating-a-project",
+    "version": "1.17.1",
+    "label": "develop_getting-started_creating-a-project",
+    "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2
+  },
+  {
+    "id": "1.17.1/develop_porting_index",
+    "version": "1.17.1",
+    "label": "develop_porting_index",
+    "url": "https://docs.fabricmc.net/develop/porting",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  }
+]

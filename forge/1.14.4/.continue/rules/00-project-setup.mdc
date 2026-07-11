@@ -1,0 +1,208 @@
+# 项目初始化配置（Forge 1.14.4）
+
+> 本文件定义 Forge 1.14.4 项目结构、依赖版本、配置规范。
+
+## 目录结构
+
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/
+│   │       └── example/
+│   │           └── examplemod/
+│   │               ├── ExampleMod.java      ← @Mod 主类
+│   │               └── ...                  ← 其他类
+│   └── resources/
+│       ├── META-INF/
+│       │   └── mods.toml                   ← mod 元信息
+│       └── assets/
+│           └── examplemod/                 ← 资源（纹理、模型、lang）
+└─── gradle/wrapper/
+    └── gradle-wrapper.properties
+build.gradle
+settings.gradle
+```
+
+## build.gradle
+
+```groovy
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[3.0.0,3.2)'
+}
+
+version = '1.0.0'
+group = 'com.example.examplemod'
+
+base {
+    archivesName = 'examplemod'
+}
+
+minecraft {
+    version = '1.14.4'
+    runDir = 'run'
+
+    mappings = channel: 'snapshot', version: 'snapshot_20190719'
+
+    makeObfSourceJar = false
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.forgeHooksClazzes', ''
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', 'examplemod'
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', 'examplemod'
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', 'examplemod'
+        }
+
+        data {
+            workingDirectory project.file('run')
+            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            property 'forge.logging.console.level', 'debug'
+        }
+    }
+}
+
+repositories {
+    maven {
+        name = 'Minecraft Forge'
+        url = 'https://maven.minecraftforge.net/'
+    }
+    maven {
+        name = 'SpongePowered'
+        url = 'https://repo.spongepowered.org/maven'
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.14.4-28.2.3'
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'     : 'examplemod',
+            'Specification-Vendor'    : 'ExampleMod',
+            'Specification-Version'   : '1',
+            'Implementation-Title'    : project.name,
+            'Implementation-Version'   : project.jar.archiveVersion,
+            'Implementation-Vendor'    : 'ExampleMod',
+            'Implementation-Timestamp' : new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+```
+
+> **注意**：`forge` 版本号 `1.14.4-28.2.3` 和 `loaderVersion` `28.2.3` 需保持一致。
+
+## gradle/wrapper/gradle-wrapper.properties
+
+```properties
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-5.6.4-bin.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+```
+
+> **Gradle 5.6.4** 是 Forge 1.14.4 推荐版本。禁止使用 Gradle 7+。
+
+## mods.toml
+
+```toml
+modLoader="javafml"
+loaderVersion="[28,)"
+license="MIT"
+
+[[mods]]
+modId="examplemod"
+version="1.0.0"
+displayName="Example Mod"
+authors="ExampleAuthor"
+description='''
+Example mod description
+'''
+
+[[dependencies.examplemod]]
+modId="forge"
+mandatory=true
+versionRange="[28,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.examplemod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.14.4,1.15)"
+ordering="NONE"
+side="BOTH"
+```
+
+> **pack_format**：`4`（对应 1.14.4）
+
+## pack.mcmeta
+
+```json
+{
+  "pack": {
+    "description": "Example Mod Resources",
+    "pack_format": 4
+  }
+}
+```
+
+## src/main/resources/.gitkeep
+
+保留空目录（Gradle 需要）。
+
+## 常见错误
+
+- ❌ `forge_version` 与 `minecraft_version` 不匹配 Forge 支持范围
+- ❌ `loaderVersion` 格式错误：Forge 1.14.4 必须是 `[28,)`（含 28 及以上主版本）
+- ❌ 使用 `JavaLanguageVersion.of(17)` → **禁止**，Forge 1.14.4 必须使用 **Java 8**
+- ❌ 使用 Gradle 7+ → ForgeGradle 3.x 不兼容
+- ❌ `mods.toml` 中 `modId` 使用大写或 `-`
+
+## 项目初始化命令
+
+```bash
+# 首次设置
+gradle wrapper
+gradle eclipse   # 生成 Eclipse 项目
+gradle idea      # 生成 IntelliJ 项目
+
+# 启动测试
+gradle runClient  # 启动 Minecraft 客户端
+gradle runServer  # 启动 Minecraft 服务端
+
+# 构建发布 JAR
+gradle build
+
+# 数据生成
+gradle runData
+```

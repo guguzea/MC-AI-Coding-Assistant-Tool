@@ -1,0 +1,244 @@
+# 02 — 方块开发
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Block 子类规范
+
+- 方块类必须继承 `Block`（`net.minecraft.block.Block`）
+- 使用 `Block.Properties.create(Material)` 创建属性
+- **BlockState**：1.12.2 使用 `IBlockState` + `property` 系统（不是 1.13+ 的 `BlockState` + `StateDefinition`）
+
+### Block.Properties 常用配置
+
+```java
+Block.Properties.create(Material material)
+    .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
+    .harvestLevel(String toolClass, int level)               // 挖掘等级
+    .harvestTool(String toolClass)                          // 工具类型
+    .sound(SoundType type)                                 // 放置/破坏音效
+    .lightValue(int value)                                 // 发光值 0-15
+```
+
+### 注册约束
+
+- **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
+- 必须通过 `RegistryEvent.Register<Block>` 注册（参见 `01-registry.mdc`）
+- 注册名称必须全小写
+- ItemBlock 需要单独注册（与方块使用相同 registry name）
+
+### TileEntity 约束
+
+- 有状态或需要持久化的方块必须使用 TileEntity
+- TileEntity 必须调用 `TileEntity.register(...)` 或通过 `RegistryEvent.Register<TileEntity>` 注册
+- TileEntity 的 `readFromNBT`/`writeToNBT` 方法处理 NBT 序列化（使用 `NBTTagCompound`，不是 `CompoundTag`）
+- **禁止**在 TileEntity 构造函数中访问 world
+
+### BlockState 配置（1.12.2 特有）
+
+```java
+// 定义属性
+public static final PropertyDirection FACING = PropertyDirection.create("facing");
+
+// 在方块类中
+@Override
+protected BlockState createBlockState() {
+    return new BlockState(this, new IProperty[]{FACING});
+}
+
+// getStateForPlacement 返回放置时的状态
+@Override
+public IBlockState getStateForPlacement(IBlockAccess world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+    return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+}
+
+// 获取放置后的 meta 值
+@Override
+public int getMetaFromState(IBlockState state) {
+    return state.getValue(FACING).getHorizontalIndex();
+}
+
+// 从 meta 值恢复状态
+@Override
+public IBlockState getStateFromMeta(int meta) {
+    return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
+}
+```
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的方块？
+
+```
+IF 需要可放置物品、不可交互的基础方块
+  → 基础方块（extends Block）
+  → 注册后注册 ItemBlock
+  → 创建 blockstates JSON 和 models JSON
+
+IF 需要存储数据（箱子、熔炉等）
+  → 方块实体方块（Block + TileEntity）
+  → TileEntity.register(...) 注册
+  → 需要在 mcmod.info 中添加 entity 字段
+
+IF 需要可交互（右键打开 GUI、触发事件）
+  → 基础方块 + onBlockActivated 事件
+  → 或使用 Container + IInteractionObject
+
+IF 需要流体
+  → 使用 Forge 专用流体系统
+```
+
+### Decision: 方块属性（Material）选择
+
+```
+IF 自然方块（石头、木头、草）
+  → Material.STONE / Material.WOOD / Material.GRASS
+  → 需要 .harvestLevel() 时用 STONE/WOOD
+
+IF 泥土类
+  → Material.GROUND / Material.SAND / Material.SNOW
+
+IF 玻璃/冰/透明
+  → Material.GLASS / Material.ICE
+
+IF 植物
+  → Material.PLANTS / Material.VINE
+  → 不能放置方块，需要特殊放置逻辑
+
+IF 液体
+  → 不在 Block 中实现，使用 Fluid 系统
+```
+
+### Decision: Block vs TileEntity
+
+```
+IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
+  → 必须使用 TileEntity
+  → TileEntity.register(...) 注册
+
+IF 需要每 tick 逻辑（自动机、计时器）
+  → 必须使用 TileEntity + ITickable
+  → 在 TileEntity.update() 中处理
+
+IF 只需要静态方块（装饰、完整方块）
+  → 普通 Block 即可，不需要 TileEntity
+  → 减少内存占用和复杂度
+```
+
+---
+
+## 示例：基础方块（带 ItemBlock）
+
+```java
+// 方块类
+public class MyBlock extends Block {
+    public MyBlock() {
+        super(Block.Properties.create(Material.ROCK)
+            .hardnessAndResistance(1.5f, 6.0f)
+            .harvestLevel("pickaxe", 0)
+            .harvestTool("pickaxe")
+            .sound(SoundType.STONE)
+        );
+    }
+}
+```
+
+```java
+// 注册（使用 RegistryEvent）
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModBlocks {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Block> event) {
+        IForgeRegistry<Block> reg = event.getRegistry();
+        reg.register(new MyBlock()
+            .setRegistryName(MOD_ID, "my_block")
+        );
+    }
+}
+```
+
+```java
+// ItemBlock 注册
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModItems {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<Item> event) {
+        IForgeRegistry<Item> reg = event.getRegistry();
+        // 方块同名 ItemBlock
+        reg.register(new ItemBlock(ModBlocks.my_block)
+            .setRegistryName(MOD_ID, "my_block")
+        );
+    }
+}
+```
+
+## 示例：带 TileEntity 的方块
+
+```java
+// 方块类
+public class MyTileBlock extends Block {
+    public MyTileBlock() {
+        super(Block.Properties.create(Material.WOOD));
+    }
+
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new MyTileEntity();
+    }
+}
+```
+
+```java
+// TileEntity 类
+public class MyTileEntity extends TileEntity implements ITickable {
+    private int counter = 0;
+
+    public MyTileEntity() {
+        super();
+    }
+
+    @Override
+    public void update() {
+        counter++;
+        if (counter % 20 == 0) {
+            // 每秒执行一次
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setInteger("counter", counter);
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        counter = compound.getInteger("counter");
+    }
+}
+```
+
+```java
+// TileEntity 注册（在 FMLInitializationEvent 之前）
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModTileEntities {
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<TileEntity> event) {
+        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
+    }
+}
+```
+
+> 注意：`writeToNBT`/`readFromNBT` 中读写 NBT 是安全的，但你**不能**在构造函数中访问 world。

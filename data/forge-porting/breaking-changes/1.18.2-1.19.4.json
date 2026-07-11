@@ -1,0 +1,58 @@
+{
+  "versionRange": "1.18.2-1.19.4",
+  "note": "小升级",
+  "generatedAt": "2026-05-31T12:50:29.318Z",
+  "structuralChanges": {
+    "description": "⚠️ 基于文档章节结构变化（自动检测），不代表完整 API breaking changes",
+    "addedCount": 38,
+    "removedCount": 33,
+    "added": [
+      "1.19.4/datagen",
+      "1.19.4/resources_server",
+      "1.19.4/networking_entities",
+      "1.19.4/concepts_events",
+      "1.19.4/concepts_lifecycle",
+      "1.19.4/networking",
+      "1.19.4/concepts_registries",
+      "1.19.4/resources_client",
+      "1.19.4/concepts_sides",
+      "1.19.4/networking_simpleimpl",
+      "1.19.4/datastorage_capabilities",
+      "1.19.4/blocks_states",
+      "1.19.4/blockentities",
+      "1.19.4/blockentities_ber",
+      "1.19.4/items_bewlr",
+      "1.19.4/blocks",
+      "1.19.4/items",
+      "1.19.4/advanced_accesstransformers",
+      "1.19.4/datastorage_codecs",
+      "1.19.4/misc_config"
+    ],
+    "removed": [
+      "1.18.2/datagen",
+      "1.18.2/resources_server",
+      "1.18.2/networking_entities",
+      "1.18.2/concepts_events",
+      "1.18.2/concepts_lifecycle",
+      "1.18.2/networking",
+      "1.18.2/concepts_registries",
+      "1.18.2/resources_client",
+      "1.18.2/concepts_sides",
+      "1.18.2/networking_simpleimpl",
+      "1.18.2/datastorage_capabilities",
+      "1.18.2/blocks_states",
+      "1.18.2/blockentities",
+      "1.18.2/blockentities_ber",
+      "1.18.2/items_bewlr",
+      "1.18.2/blocks",
+      "1.18.2/items",
+      "1.18.2/advanced_accesstransformers",
+      "1.18.2/misc_config",
+      "1.18.2/rendering_modelloaders"
+    ]
+  },
+  "breakingChanges": {
+    "description": "✅ 基于 versions.json 手动录入的 API 级别变更",
+    "changes": []
+  }
+}

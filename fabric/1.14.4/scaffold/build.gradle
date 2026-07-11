@@ -1,0 +1,74 @@
+plugins {
+    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'maven-publish'
+    id 'eclipse'
+    id 'idea'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.mod_id
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://maven.fabricmc.net/" }
+}
+
+loom {
+    // 1.14.x 需要显式指定 mixin 配置
+    // mixin {
+    //     add sourceSets.main, "${mod_id}.mixins"
+    // }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API（选择性引入，删除注释即可使用）
+    // modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    // 注意：1.14.x 的 Fabric API 版本较旧，部分功能可能不可用
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "yarn_mappings", project.yarn_mappings
+    inputs.property "loader_version", project.loader_version
+
+    filesMatching(["fabric.mod.json", "pack.mcmeta"]) {
+        expand "version": project.version,
+            "minecraft_version": project.minecraft_version,
+            "yarn_mappings": project.yarn_mappings,
+            "loader_version": project.loader_version
+    }
+}
+
+tasks.named('jar').configure {
+    manifest {
+        attributes(
+            "Fabric-ModuleType": "Lib",
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.jar.archiveVersion,
+            "Implementation-Vendor": project.maven_group
+        )
+    }
+}
+
+// 1.14.x 必须使用 Java 8 编译
+// 如果使用 JDK 11+ 编译，需要设置 release 为 8
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 8
+    it.options.encoding = 'UTF-8'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+}

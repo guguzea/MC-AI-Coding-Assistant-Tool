@@ -1,0 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'NeoForge'
+            url = 'https://maven.neoforged.net/'
+        }
+        maven {
+            name = 'Minecraft'
+            url = 'https://maven.minecraft.net/'
+        }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
+}

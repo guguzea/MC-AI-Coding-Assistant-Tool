@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "platform": "fabric",
+    "mcVersion": "1.21.1",
+    "lastUpdated": "2026-05-27",
+    "note": "Fabric 文档抓取 URL 清单。来源：FabricMC/fabric-docs GitHub 仓库（main 分支）。fetch-fabric-docs.js 使用 GitHub Raw（main 分支）优先抓取 Markdown 源，fallback 到 VitePress HTML。",
+    "githubRepo": "FabricMC/fabric-docs",
+    "githubBranch": "main",
+    "noteUrlFormat": "GitHub Raw URL 由脚本动态构建为 https://raw.githubusercontent.com/FabricMC/fabric-docs/main/<gitPath>。无需手动维护 commit hash。"
+  },
+  "urlSources": [
+    {
+      "sourceType": "github_raw",
+      "base": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main",
+      "notes": "优先数据源，直接获取 Markdown 源（含 frontmatter），绕过 VitePress SSR"
+    },
+    {
+      "sourceType": "vitepress",
+      "base": "https://docs.fabricmc.net",
+      "notes": "Fallback。VitePress 官方文档，需 HTML→Markdown 转换"
+    }
+  ],
+  "confirmedWorkingUrls": [
+    {
+      "id": "networking",
+      "url": "https://docs.fabricmc.net/develop/networking",
+      "gitPath": "develop/networking.md",
+      "sourceType": "github_raw",
+      "note": "GitHub Raw @ main 分支已验证，返回 HTTP 200（10686 bytes，含 frontmatter）"
+    }
+  ],
+  "toFetch": [
+    { "id": "networking", "url": "https://docs.fabricmc.net/develop/networking", "gitPath": "develop/networking.md", "priority": "⭐", "notes": "已验证 VitePress 200（GitHub Raw 可能超时）" },
+    { "id": "fabric-mod-json", "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json", "gitPath": "develop/loader/fabric-mod-json.md", "priority": "⭐", "notes": "fabric.mod.json 所有字段与 Forge mods.toml 完全对应" },
+    { "id": "items-first-item", "url": "https://docs.fabricmc.net/develop/items/first-item", "gitPath": "develop/items/first-item.md", "priority": "⭐", "notes": "Registry.register() 注册物品" },
+    { "id": "items-item-models", "url": "https://docs.fabricmc.net/develop/items/item-models", "gitPath": "develop/items/item-models.md", "priority": "⭐" },
+    { "id": "items-custom-tools", "url": "https://docs.fabricmc.net/develop/items/custom-tools", "gitPath": "develop/items/custom-tools.md", "priority": "⭐" },
+    { "id": "blocks-first-block", "url": "https://docs.fabricmc.net/develop/blocks/first-block", "gitPath": "develop/blocks/first-block.md", "priority": "⭐" },
+    { "id": "blocks-block-models", "url": "https://docs.fabricmc.net/develop/blocks/block-models", "gitPath": "develop/blocks/block-models.md", "priority": "⭐" },
+    { "id": "blocks-block-entities", "url": "https://docs.fabricmc.net/develop/blocks/block-entities", "gitPath": "develop/blocks/block-entities.md", "priority": "⭐" },
+    { "id": "events", "url": "https://docs.fabricmc.net/develop/events", "gitPath": "develop/events.md", "priority": "⭐" },
+    { "id": "entities-first-entity", "url": "https://docs.fabricmc.net/develop/entities/first-entity", "gitPath": "develop/entities/first-entity.md", "priority": "⭐" },
+    { "id": "commands-basics", "url": "https://docs.fabricmc.net/develop/commands/basics", "gitPath": "develop/commands/basics.md", "priority": "🟡" },
+    { "id": "data-generation-setup", "url": "https://docs.fabricmc.net/develop/data-generation/setup", "gitPath": "develop/data-generation/setup.md", "priority": "🟡" },
+    { "id": "data-generation-recipes", "url": "https://docs.fabricmc.net/develop/data-generation/recipes", "gitPath": "develop/data-generation/recipes.md", "priority": "🟡" },
+    { "id": "data-generation-loot-tables", "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables", "gitPath": "develop/data-generation/loot-tables.md", "priority": "🟡" },
+    { "id": "data-generation-tags", "url": "https://docs.fabricmc.net/develop/data-generation/tags", "gitPath": "develop/data-generation/tags.md", "priority": "🟡" },
+    { "id": "mixins-bytecode", "url": "https://docs.fabricmc.net/develop/mixins/bytecode", "gitPath": "develop/mixins/bytecode.md", "priority": "🟡" },
+    { "id": "getting-started-creating-a-project", "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project", "gitPath": "develop/getting-started/creating-a-project.md", "priority": "🟡" },
+    { "id": "getting-started-building-a-mod", "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod", "gitPath": "develop/getting-started/building-a-mod.md", "priority": "🟡" },
+    { "id": "loom", "url": "https://docs.fabricmc.net/develop/loom", "gitPath": "develop/loom/index.md", "priority": "🟡" },
+    { "id": "rendering-basic-concepts", "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts", "gitPath": "develop/rendering/basic-concepts.md", "priority": "🟡" },
+    { "id": "rendering-gui-custom-screens", "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens", "gitPath": "develop/rendering/gui/custom-screens.md", "priority": "🟡" },
+    { "id": "saved-data", "url": "https://docs.fabricmc.net/develop/saved-data", "gitPath": "develop/saved-data.md", "priority": "🟡" },
+    { "id": "codecs", "url": "https://docs.fabricmc.net/develop/codecs", "gitPath": "develop/codecs.md", "priority": "🟡" },
+    { "id": "key-mappings", "url": "https://docs.fabricmc.net/develop/key-mappings", "gitPath": "develop/key-mappings.md", "priority": "🟢" },
+    { "id": "porting-index", "url": "https://docs.fabricmc.net/develop/porting", "gitPath": "develop/porting/index.md", "priority": "🟢", "notes": "Fabric API 移植文档，含 API 对照表" }
+  ],
+  "knownMissing": [
+    { "id": "registries", "url": "https://docs.fabricmc.net/develop/registries", "note": "Fabric 官方文档中不存在此页面。Registry 概念通过代码示例（items/blocks/first-item 等）体现，无独立 Registry 文档" },
+    { "id": "mod-initializer", "url": "https://docs.fabricmc.net/develop/mod-initializer", "note": "Fabric 官方文档中不存在此页面。入口点概念通过 getting-started/ 章节体现，无独立 ModInitializer 文档" },
+    { "id": "identifier", "url": "https://docs.fabricmc.net/develop/identifier", "note": "Fabric 官方文档中不存在此页面。Identifier 概念在多个页面的代码示例中出现（如 networking.md）" },
+    { "id": "mixins", "url": "https://docs.fabricmc.net/develop/mixins", "note": "Fabric 官方文档中不存在 mixins 索引页，仅有 mixins/bytecode.md。有字节码混写指南但无概述文档" }
+  ]
+}

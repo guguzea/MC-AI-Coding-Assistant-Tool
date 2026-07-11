@@ -1,0 +1,180 @@
+# 物品开发（Forge 1.14.4）
+
+## Decision: 物品类型选择
+
+```
+IF 只是手持物品（无特殊行为）
+  → Item
+
+IF 剑（影响攻击伤害、攻击速度）
+  → SwordItem
+
+IF 挖掘工具（影响挖掘速度、挖掘等级）
+  → PickaxeItem / AxeItem / ShovelItem / HoeItem
+
+IF 盔甲（影响护甲值、韧性）
+  → ArmorItem + IArmorMaterial
+
+IF 可食用
+  → Item + .food() + Food.Builder
+
+IF 需要附魔
+  → Enchantment + IForgeEntityEquipmentSlot
+```
+
+## Item.Properties
+
+```java
+new Item.Properties()
+    .maxStackSize(64)                    // 最大堆叠数
+    .maxDamage(250)                      // 最大耐久（与 maxStackSize 互斥）
+    .group(ItemGroup.BUILDING_BLOCKS)   // 创造模式标签
+    .containerItem(Items.BUCKET)         // 容器物品（如桶装牛奶）
+    .rarity(Rarity.RARE)                 // 稀有度（影响名称颜色）
+    .burnTime(100)                       // 燃烧时间（燃料）
+    .saturation(0)                       // 饱和度（食物）
+```
+
+## Item 基础示例
+
+```java
+public class MyItem extends Item {
+    public MyItem() {
+        super(new Item.Properties()
+            .maxStackSize(64)
+            .group(ItemGroup.MISC)
+        );
+    }
+
+    // 右键使用
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+        player.sendMessage(new StringTextComponent("Hello!"), player.getUniqueID());
+        return ActionResult.resultSuccess(player.getHeldItem(hand));
+    }
+}
+
+// 注册
+@SubscribeEvent
+public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
+    event.getRegistry().register(
+        new MyItem().setRegistryName(new ResourceLocation(MOD_ID, "my_item"))
+    );
+}
+```
+
+## 工具层级 ITier
+
+```java
+public enum MyTier implements ITier {
+    COPPER(3,       // harvestLevel
+            500,    // maxUses
+            6.0f,   // efficiency
+            2.0f,   // attackDamage
+            15,     // enchantability
+            () -> Ingredient.fromItems(Items.DIAMOND));
+
+    private final int harvestLevel;
+    private final int maxUses;
+    private final float efficiency;
+    private final float attackDamage;
+    private final int enchantability;
+    private final Ingredient repairMaterial;
+
+    MyTier(int harvestLevel, int maxUses, float efficiency, float attackDamage, int enchantability, Supplier<Ingredient> repairMaterial) {
+        this.harvestLevel = harvestLevel;
+        this.maxUses = maxUses;
+        this.efficiency = efficiency;
+        this.attackDamage = attackDamage;
+        this.enchantability = enchantability;
+        this.repairMaterial = repairMaterial;
+    }
+
+    @Override public int getHarvestLevel() { return harvestLevel; }
+    @Override public float getEfficiency() { return efficiency; }
+    @Override public float getAttackDamage() { return attackDamage; }
+    @Override public int getEnchantability() { return enchantability; }
+    @Override public Ingredient getRepairMaterial() { return repairMaterial; }
+}
+```
+
+## 剑 SwordItem
+
+```java
+// 参数顺序：(Tier, float attackDamage, float attackSpeed, Item.Properties)
+// attackDamage 是最终伤害，不是加成
+public static final Item COPPER_SWORD = new SwordItem(
+    MyTier.COPPER, 3.0f, 1.6f,
+    new Item.Properties().group(ItemGroup.COMBAT).maxDamage(500)
+);
+```
+
+## 挖掘工具 DiggerItem
+
+```java
+// PickaxeItem
+public static final Item COPPER_PICKAXE = new PickaxeItem(
+    MyTier.COPPER, 1.0f, -2.8f,
+    ToolType.PICKAXE,
+    new Item.Properties().group(ItemGroup.TOOLS)
+);
+
+// AxeItem
+public static final Item COPPER_AXE = new AxeItem(
+    MyTier.COPPER, 5.0f, -3.0f,
+    new Item.Properties().group(ItemGroup.TOOLS)
+);
+```
+
+## 盔甲 ArmorItem
+
+```java
+public enum MyArmorMaterial implements IArmorMaterial {
+    COPPER("copper", 40,
+        new int[]{4, 7, 9, 4},  // 护甲值：头、胸、腿、脚
+        20,                      // 附魔能力
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+        0.0f,                    // 韧性
+        0.0f,                    // 击退抗性
+        () -> Ingredient.fromItems(Items.COPPER_INGOT));
+
+    @Override public int getDurability(EquipmentSlotType slot) { ... }
+    @Override public int getDamageReductionAmount(EquipmentSlotType slot) { ... }
+    @Override public int getEnchantability() { ... }
+    @Override public SoundEvent getEquippableSound() { ... }
+    @Override public Ingredient getRepairMaterial() { ... }
+    @Override public String getName() { return name; }
+    @Override public float getToughness() { return toughness; }
+}
+
+// 注册各部位
+public static final Item COPPER_HELMET = new ArmorItem(
+    MyArmorMaterial.COPPER, EquipmentSlotType.HEAD,
+    new Item.Properties().group(ItemGroup.COMBAT)
+);
+```
+
+## 食物 Food.Builder
+
+```java
+public static final Item MY_FOOD = new Item(
+    new Item.Properties()
+        .group(ItemGroup.FOOD)
+        .food(new Food.Builder()
+            .hunger(4)                              // 饱食度
+            .saturation(1.2f)                      // 饱和度
+            .effect(new EffectInstance(Effects.REGENERATION, 100, 1), 1.0f)
+            .alwaysEat()                            // 无视饱食度
+            .fast()                                // 快速食用
+            .meat()                                // 可喂狼
+            .build())
+);
+```
+
+## 常见错误
+
+- ❌ `ToolType.PICKAXE` vs `ToolType.get("pickaxe")`：使用静态字段
+- ❌ `SwordItem` 构造函数参数顺序错误
+- ❌ `Effects.JUMP_BOOST`（1.20.1）→ Forge 1.14.4 用 `Effects.JUMP`
+- ❌ `Item.Properties.group()`：1.14.4 使用 `.group()`，不是 1.20.1 的 `BuildCreativeModeTabContentsEvent`
+- ❌ `MobEffects` vs `Effects`：注意包名

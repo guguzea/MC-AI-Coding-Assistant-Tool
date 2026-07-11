@@ -1,0 +1,10 @@
+---
+title: "EntityLivingBase.html#getItemStackFromSlot-net.minecraft.inventory.EntityEquipmentSlot-"
+description: ""
+package: "net/minecraftforge/items/wrapper"
+version: "1.12.2"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.12.2-14.23.5.2859/net/minecraft/entity/EntityLivingBase.html#getItemStackFromSlot-net.minecraft.inventory.EntityEquipmentSlot-"
+sourceType: javadoc
+---
+
+# EntityLivingBase.html#getItemStackFromSlot-net.minecraft.inventory.EntityEquipmentSlot-

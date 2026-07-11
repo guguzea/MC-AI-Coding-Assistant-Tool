@@ -1,0 +1,1 @@
+# ConstructBeaconTrigger.Instance

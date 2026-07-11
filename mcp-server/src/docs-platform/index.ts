@@ -3,6 +3,7 @@
  *
  * 导出内容：
  * - Forge 专用工具别名（向后兼容）
+ * - Fabric 专用工具
  * - 通用平台无关工具
  * - Store 抽象层类型和工厂
  */
@@ -15,6 +16,24 @@ export {
   getForgeDocFull, getForgeDocFullSchema,
   getForgeDocRelated, getForgeDocRelatedSchema,
 } from "./forge/index.js";
+
+export {
+  // Fabric 专用工具
+  listFabricVersions, listFabricVersionsSchema,
+  searchFabricDocs, searchFabricDocsSchema,
+  getFabricDocSummary, getFabricDocSummarySchema,
+  getFabricDocFull, getFabricDocFullSchema,
+  getFabricDocRelated, getFabricDocRelatedSchema,
+} from "./fabric/index.js";
+
+export {
+  // NeoForge 专用工具
+  listNeoForgeVersions, listNeoForgeVersionsSchema,
+  searchNeoForgeDocs, searchNeoForgeDocsSchema,
+  getNeoForgeDocSummary, getNeoForgeDocSummarySchema,
+  getNeoForgeDocFull, getNeoForgeDocFullSchema,
+  getNeoForgeDocRelated, getNeoForgeDocRelatedSchema,
+} from "./neoforge/index.js";
 
 export {
   // 通用工具

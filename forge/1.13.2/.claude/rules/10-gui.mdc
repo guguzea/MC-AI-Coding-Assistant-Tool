@@ -1,0 +1,41 @@
+# 10 — GUI / Container 开发
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## GUI 系统
+
+Forge 1.13.2 使用基于 `Container` 和 `IGuiHandler` 的 GUI 系统。
+
+## Container
+
+```java
+public class MyContainer extends Container {
+    public MyContainer(int windowId, PlayerInventory inv, MyTileEntity te) {
+        super(ModContainers.MY_CONTAINER, windowId);
+        // 添加槽位...
+    }
+}
+```
+
+## IGuiHandler
+
+```java
+NetworkRegistry.INSTANCE.registerGuiHandler(MOD_ID, new IGuiHandler() {
+    @Override
+    public Container createServerGui(int id, PlayerInventory inv, PacketBuffer data) {
+        return new MyContainer(id, inv, te);
+    }
+
+    @Override
+    public Object getClientGuiElement(int id, PlayerInventory inv, PacketBuffer data) {
+        return new MyGuiScreen(new MyContainer(id, inv, te));
+    }
+});
+```
+
+## 常见错误
+
+- ❌ `openContainer` 在客户端调用
+- ❌ `transferStackInSlot` 返回空

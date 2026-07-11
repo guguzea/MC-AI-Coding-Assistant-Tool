@@ -1,0 +1,27 @@
+# 03 — 物品开发
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## Item 子类规范
+
+- 基础物品类继承 `Item`
+- 物品必须通过 `RegistryEvent.Register<Item>` 注册
+
+## Item.Properties
+
+```java
+new Item.Properties()
+    .group(ItemGroup.TAB_MISC)
+    .maxStackSize(64)
+```
+
+## ItemGroup
+
+- `ItemGroup.TAB_BUILDING_BLOCKS` — 建筑方块
+- `ItemGroup.TAB_TOOLS` — 工具
+- `ItemGroup.TAB_COMBAT` — 武器/盔甲
+- `ItemGroup.TAB_FOOD` — 食物
+- `ItemGroup.TAB_MATERIALS` — 材料
+- `ItemGroup.TAB_MISC` — 杂项

@@ -1,0 +1,73 @@
+# 05 — 事件系统
+
+> 适用版本：Forge 1.17.1
+
+---
+
+## 约束
+
+### @SubscribeEvent 基础规范
+
+- 所有事件处理方法必须标注 `@SubscribeEvent`
+- 事件类必须在 `@Mod.EventBusSubscriber` 或手动注册到事件总线
+- `bus` 属性决定事件总线：`Bus.FORGE`（默认）或 `Bus.MOD`（Mod 总线）
+
+### Dist（物理端）约束
+
+**首选方案：使用 `DistExecutor` 判断物理端**
+
+```java
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+```
+
+**次选方案：`FMLEnvironment#dist`**
+
+```java
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // 仅在客户端运行
+}
+```
+
+---
+
+## 示例：事件订阅类结构
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.FORGE)
+public class ModEvents {
+
+    @SubscribeEvent
+    public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide) return;
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntity().getCommandSenderWorld().isClientSide) return;
+    }
+}
+```
+
+## 示例：FMLCommonSetupEvent
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD)
+public class ModSetup {
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+        NetworkHandler.register();
+    }
+}
+```
+
+## 示例：FMLClientSetupEvent
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+    }
+}
+```

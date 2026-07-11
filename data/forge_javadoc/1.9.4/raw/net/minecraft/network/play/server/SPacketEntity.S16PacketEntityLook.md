@@ -1,0 +1,10 @@
+---
+title: "SPacketEntity.S16PacketEntityLook"
+description: ""
+package: "net/minecraft/network/play/server"
+version: "1.9.4"
+source: "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/1.9.4-12.17.0.2051/net/minecraft/network/play/server/SPacketEntity.S16PacketEntityLook.html"
+sourceType: javadoc
+---
+
+# SPacketEntity.S16PacketEntityLook

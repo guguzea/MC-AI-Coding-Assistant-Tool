@@ -10,6 +10,7 @@ import { generateDatagen } from "./datagen/index.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
 import { diagnoseDataPaths } from "./utils/path.js";
+import { analyzePortingPath, portProject } from "./porting/index.js";
 import {
   // 旧 Forge 别名（向后兼容）
   listForgeVersions,
@@ -22,6 +23,28 @@ import {
   getForgeDocFullSchema,
   getForgeDocRelated,
   getForgeDocRelatedSchema,
+  // Fabric 专用工具
+  listFabricVersions,
+  listFabricVersionsSchema,
+  searchFabricDocs,
+  searchFabricDocsSchema,
+  getFabricDocSummary,
+  getFabricDocSummarySchema,
+  getFabricDocFull,
+  getFabricDocFullSchema,
+  getFabricDocRelated,
+  getFabricDocRelatedSchema,
+  // NeoForge 专用工具
+  listNeoForgeVersions,
+  listNeoForgeVersionsSchema,
+  searchNeoForgeDocs,
+  searchNeoForgeDocsSchema,
+  getNeoForgeDocSummary,
+  getNeoForgeDocSummarySchema,
+  getNeoForgeDocFull,
+  getNeoForgeDocFullSchema,
+  getNeoForgeDocRelated,
+  getNeoForgeDocRelatedSchema,
   // 新通用工具
   listVersions,
   listVersionsSchema,
@@ -297,7 +320,64 @@ server.registerTool(
   }
 );
 
-// ── 12. 列出可用版本 ─────────────────────────────────────────────────────
+// ── 9. Fabric 官方文档搜索 ─────────────────────────────────────────────────
+server.registerTool(
+  searchFabricDocsSchema.name,
+  {
+    title: "Search Official Fabric Documentation",
+    description:
+      "搜索 Fabric 官方文档（L0 索引搜索）。" +
+      "适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。" +
+      "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
+      "建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
+      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。",
+    inputSchema: searchFabricDocsSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return searchFabricDocs({ query: args.query, version: args.version, tags: args.tags, source: args.source });
+  }
+);
+
+// ── 10. Fabric 文档摘要 ──────────────────────────────────────────────────
+server.registerTool(
+  getFabricDocSummarySchema.name,
+  {
+    title: "Get Fabric Doc Summary",
+    description: "获取 Fabric 文档页面的章节骨架与摘要，用于判断是否需要深入。",
+    inputSchema: getFabricDocSummarySchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getFabricDocSummary({ id: args.id, version: args.version, source: args.source });
+  }
+);
+
+// ── 11. Fabric 文档全文 ─────────────────────────────────────────────────
+server.registerTool(
+  getFabricDocFullSchema.name,
+  {
+    title: "Get Fabric Doc Full",
+    description: "获取 Fabric 文档页面全文。highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。",
+    inputSchema: getFabricDocFullSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getFabricDocFull({ id: args.id, version: args.version, highlight_key: args.highlight_key, source: args.source });
+  }
+);
+
+// ── 12. Fabric 相关文档 ─────────────────────────────────────────────────
+server.registerTool(
+  getFabricDocRelatedSchema.name,
+  {
+    title: "Get Related Fabric Docs",
+    description: "返回与目标 Fabric 文档共享最多关键词的其他页面，按相关性降序排列。",
+    inputSchema: getFabricDocRelatedSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getFabricDocRelated({ id: args.id, version: args.version, limit: args.limit, source: args.source });
+  }
+);
+
+// ── 13. 列出可用版本 ─────────────────────────────────────────────────────
 server.registerTool(
   listForgeVersionsSchema.name,
   {
@@ -312,7 +392,102 @@ server.registerTool(
   }
 );
 
-// ── 13. 通用文档版本列表 ─────────────────────────────────────────────────
+// ── 13a. 列出 Fabric 可用版本 ──────────────────────────────────────────
+server.registerTool(
+  listFabricVersionsSchema.name,
+  {
+    title: "List Available Fabric Doc Versions",
+    description:
+      "返回 data 目录下所有已加载的 Fabric 文档版本列表（如 [\"1.20.1\"]）。",
+    inputSchema: listFabricVersionsSchema.inputSchema,
+  },
+  async (): Promise<CallToolResult> => {
+    return listFabricVersions();
+  }
+);
+
+// ── 13b. 列出 NeoForge 可用版本 ─────────────────────────────────────────
+server.registerTool(
+  listNeoForgeVersionsSchema.name,
+  {
+    title: "List Available NeoForge Doc Versions",
+    description:
+      "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。" +
+      "注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。",
+    inputSchema: listNeoForgeVersionsSchema.inputSchema,
+  },
+  async (): Promise<CallToolResult> => {
+    return listNeoForgeVersions();
+  }
+);
+
+// ── 13c. NeoForge 文档搜索 ─────────────────────────────────────────────
+server.registerTool(
+  searchNeoForgeDocsSchema.name,
+  {
+    title: "Search Official NeoForge Documentation",
+    description:
+      "搜索 NeoForge 官方文档（L0 索引搜索）。" +
+      "适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。" +
+      "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。",
+    inputSchema: searchNeoForgeDocsSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return searchNeoForgeDocs({
+      query: args.query,
+      version: args.version,
+      tags: args.tags,
+    });
+  }
+);
+
+// ── 13d. NeoForge 文档摘要 ──────────────────────────────────────────────
+server.registerTool(
+  getNeoForgeDocSummarySchema.name,
+  {
+    title: "Get NeoForge Doc Summary",
+    description: "获取 NeoForge 文档页面的章节骨架与摘要（L1），用于判断是否需要深入。",
+    inputSchema: getNeoForgeDocSummarySchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getNeoForgeDocSummary({ id: args.id, version: args.version });
+  }
+);
+
+// ── 13e. NeoForge 文档全文 ──────────────────────────────────────────────
+server.registerTool(
+  getNeoForgeDocFullSchema.name,
+  {
+    title: "Get Full NeoForge Documentation Page",
+    description:
+      "获取 NeoForge 文档页面全文（L2/L2+）。" +
+      "highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。" +
+      "**永远不要一次性加载超过 2 个 full page**。",
+    inputSchema: getNeoForgeDocFullSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getNeoForgeDocFull({
+      id: args.id,
+      version: args.version,
+      highlight_key: args.highlight_key,
+    });
+  }
+);
+
+// ── 13f. NeoForge 相关文档 ─────────────────────────────────────────────
+server.registerTool(
+  getNeoForgeDocRelatedSchema.name,
+  {
+    title: "Get Related NeoForge Docs",
+    description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。",
+    inputSchema: getNeoForgeDocRelatedSchema.inputSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    return getNeoForgeDocRelated({ id: args.id, version: args.version, limit: args.limit });
+  }
+);
+
+// ── 14. 通用文档版本列表 ─────────────────────────────────────────────────
 server.registerTool(
   listVersionsSchema.name,
   {
@@ -327,7 +502,7 @@ server.registerTool(
   }
 );
 
-// ── 14. 通用文档搜索 ─────────────────────────────────────────────────────
+// ── 15. 通用文档搜索 ─────────────────────────────────────────────────────
 server.registerTool(
   searchDocsSchema.name,
   {
@@ -349,7 +524,7 @@ server.registerTool(
   }
 );
 
-// ── 15. 通用文档摘要 ─────────────────────────────────────────────────────
+// ── 16. 通用文档摘要 ─────────────────────────────────────────────────────
 server.registerTool(
   getDocSummarySchema.name,
   {
@@ -364,7 +539,7 @@ server.registerTool(
   }
 );
 
-// ── 16. 通用文档全文 ─────────────────────────────────────────────────────
+// ── 17. 通用文档全文 ─────────────────────────────────────────────────────
 server.registerTool(
   getDocFullSchema.name,
   {
@@ -385,7 +560,7 @@ server.registerTool(
   }
 );
 
-// ── 17. 通用文档相关页面 ─────────────────────────────────────────────────
+// ── 18. 通用文档相关页面 ─────────────────────────────────────────────────
 server.registerTool(
   getDocRelatedSchema.name,
   {
@@ -412,6 +587,56 @@ server.registerTool(
   async (): Promise<CallToolResult> => {
     const result = diagnoseDataPaths();
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+// ── 移植分析工具（port_project 模块）────────────────────────────────────────
+
+server.registerTool(
+  "analyze_porting_path",
+  {
+    title: "Analyze Mod Porting Path",
+    description:
+      "分析 Minecraft Mod 项目，生成跨平台/跨版本移植路线图。" +
+      "扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、" +
+      "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
+      "参考链接和建议的 query_api 调用。" +
+      "适用于：用户询问如何将 Mod 移植到其他平台或版本时。",
+    inputSchema: z.object({
+      projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
+      targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台（可选，未指定则自动推断）"),
+      targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
+    }),
+  },
+  async (args): Promise<CallToolResult> => {
+    const result = await analyzePortingPath(args);
+    return { content: [{ type: "text", text: result }] };
+  }
+);
+
+server.registerTool(
+  "port_project",
+  {
+    title: "Execute Porting Step",
+    description:
+      "执行移植步骤（init_architectury / extract_common / apply_version_migration）。" +
+      "所有写文件操作默认 dryRun=true，仅输出 diff 预览。" +
+      "实际写入需要 dryRun=false 且 confirmed=true（用户显式确认）。" +
+      "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
+      "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
+      "包名替换操作始终 dryRun，不执行实际替换。",
+    inputSchema: z.object({
+      projectPath: z.string().describe("项目根目录"),
+      targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
+      targetVersion: z.string().optional().describe("目标 MC 版本"),
+      dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
+      confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
+      action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
+    }),
+  },
+  async (args): Promise<CallToolResult> => {
+    const result = await portProject(args);
+    return { content: [{ type: "text", text: result }] };
   }
 );
 

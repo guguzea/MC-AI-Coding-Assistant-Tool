@@ -1,0 +1,15 @@
+# Fabric 1.20.1 Mappings
+
+下载来源：
+  Fabric Maven: https://maven.fabricmc.net/net/fabricmc/yarn/
+  Parchment Maven: https://maven.parchmentmc.org/
+
+文件说明：
+  yarn-*.jar         — Yarn mappings JAR（内含 mappings.tiny）
+  yarn-*.tiny.gz    — Yarn Tiny 格式压缩包
+  yarn-*.sources.jar — Yarn Minecraft 源码
+  parchment-*.zip    — Parchment 参数名 + Javadoc
+
+解析产出：
+  yarn-mappings.json      — Yarn Tiny 解析后的双向索引（named ↔ official ↔ intermediary）
+  parchment-params.json   — Parchment JSON（类参数名 + Javadoc，与 Forge parchment.json 同格式）

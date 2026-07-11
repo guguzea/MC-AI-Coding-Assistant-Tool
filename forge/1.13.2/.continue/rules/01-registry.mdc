@@ -1,0 +1,33 @@
+# 01 — 注册系统
+
+> 适用版本：Forge 1.13.2
+> **本文件最重要，所有注册相关操作必须先读本文件。**
+
+---
+
+## 核心原则
+
+- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 所有注册必须通过 **Forge 事件系统**（使用 `RegistryEvent.Register<T>`）
+- **必须使用 `@EventBusSubscriber` + `@SubscribeEvent`**
+- `DeferredRegister` 在 Forge 1.13.2 中**不可用**
+
+## 注册方式
+
+```java
+// 在 mod 主类中定义静态字段
+public static final Block MY_BLOCK = new Block(...);
+
+// 在构造函数中注册到事件总线
+public ExampleMod() {
+    MinecraftForge.EVENT_BUS.register(this);
+}
+
+// 使用 @SubscribeEvent 处理注册事件
+@SubscribeEvent
+public void onBlocksRegistry(RegistryEvent.Register<Block> event) {
+    event.getRegistry().register(
+        MY_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+    );
+}
+```

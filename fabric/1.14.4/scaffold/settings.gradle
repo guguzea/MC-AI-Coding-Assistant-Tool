@@ -1,0 +1,5 @@
+pluginPlatforms {
+    fabric()
+}
+
+rootProject.name = 'examplemod'

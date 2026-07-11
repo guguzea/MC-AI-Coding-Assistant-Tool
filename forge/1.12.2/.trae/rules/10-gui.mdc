@@ -1,0 +1,252 @@
+# Client-Server separation and GUI (Forge 1.12.2)
+
+## Physical Side vs Logical Side
+
+| Side | Meaning |
+|------|---------|
+| Physical CLIENT | The game process rendering the world |
+| Physical SERVER | Dedicated server process (or integrated server in single-player) |
+| Logical CLIENT | Code running on the client that can ONLY observe/render |
+| Logical SERVER | Code running on the dedicated server that manages world state |
+
+### Rules
+
+- **Never** call client-only code from a logical server context
+- **Never** modify server-side world data from the logical client
+- Use `@SideOnly(Side.CLIENT)` for client-only code
+- Use `DistExecutor` or `FMLCommonHandler` for safe side-aware execution without annotations
+
+## @SideOnly Annotation
+
+```java
+// Class-level
+@SideOnly(Side.CLIENT)
+public class ClientProxy {
+    public void init() { ... }
+}
+
+// Method-level
+@SideOnly(Side.CLIENT)
+public void clientOnlyMethod() { ... }
+```
+
+## Proxy Pattern
+
+Forge 1.12.2 uses a proxy pattern for client/server separation:
+
+```java
+@Mod(modid = MOD_ID)
+public class ExampleMod {
+    @SidedProxy(
+        clientSide = "com.example.examplemod.client.ClientProxy",
+        serverSide = "com.example.examplemod.CommonProxy"
+    )
+    public static CommonProxy proxy;
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        proxy.init();
+    }
+}
+
+public class CommonProxy {
+    public void init() { /* both sides */ }
+}
+
+@SideOnly(Side.CLIENT)
+public class ClientProxy extends CommonProxy {
+    @Override
+    public void init() {
+        super.init();
+        // client-only init: register renderers, keybindings
+    }
+}
+```
+
+## GUI System Overview
+
+```
+Player interacts
+      │
+      ▼
+Block#onBlockActivated (Server) ──► creates IInteractionObject ──► openGui (Server)
+                                                       │
+                                                       ▼
+                                              Container + Slot pair
+                                                       │
+                                               Container.openGui()
+                                                       │
+                                                       ▼
+                                                   Renders Gui
+```
+
+## Decision: Container/Menu type
+
+```
+IF interactable block with persistent data (machine, chest)
+  → Container + Slot + IInteractionObject
+
+IF just a simple interaction (no data)
+  → GuiScreen directly
+
+IF inventory with multiple slots
+  → Container (for slot management and transferHandler)
+```
+
+## Container Registration
+
+```java
+// Register in FMLInitializationEvent
+@Mod.EventHandler
+public void init(FMLInitializationEvent event) {
+    NetworkRegistry.INSTANCE.registerGuiHandler(MOD_ID, new GuiHandler());
+    // or use new SimpleGuiHandler() if extending IGuiHandler
+}
+
+// IGuiHandler implementation
+public class GuiHandler implements IGuiHandler {
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+        if (tile instanceof MyMachineTile) {
+            return new MyContainer(player.inventory, (MyMachineTile) tile);
+        }
+        return null;
+    }
+
+    @Override
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+        if (tile instanceof MyMachineTile) {
+            return new MyGui(new MyContainer(player.inventory, (MyMachineTile) tile), player.inventory);
+        }
+        return null;
+    }
+}
+```
+
+## Container class
+
+```java
+public class MyContainer extends Container {
+    private final IInventory tile;
+
+    public MyContainer(IInventory playerInventory, IInventory tileInventory) {
+        this.tile = tileInventory;
+
+        // Add player inventory slots
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 9; col++) {
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9,
+                    8 + col * 18, 84 + row * 18));
+            }
+        }
+
+        // Add player hotbar
+        for (int col = 0; col < 9; col++) {
+            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
+        }
+
+        // Add tile inventory slots
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                this.addSlot(new Slot(tileInventory, col + row * 3,
+                    62 + col * 18, 17 + row * 18));
+            }
+        }
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+
+        if (slot != null && slot.getHasStack()) {
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
+
+            if (index < 36) {
+                // Player inventory → Tile
+                if (!this.mergeItemStack(stack1, 36, this.inventorySlots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                // Tile → Player inventory
+                if (!this.mergeItemStack(stack1, 0, 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stack1.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
+            } else {
+                slot.onSlotChanged();
+            }
+        }
+
+        return stack;
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer player) {
+        return tile.isUsableByPlayer(player);
+    }
+}
+```
+
+## GuiScreen (CLIENT ONLY)
+
+```java
+@SideOnly(Side.CLIENT)
+public class MyGui extends GuiScreen {
+    private final Container container;
+    private final IInventory playerInventory;
+
+    public MyGui(Container container, IInventory playerInventory) {
+        this.container = container;
+        this.playerInventory = playerInventory;
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        drawRect(x, y, x + 176, y + 166, 0xFF000000);
+        // Draw slots, progress bars, etc.
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        // Handle slot clicks
+    }
+}
+```
+
+## Opening the GUI
+
+```java
+// From a block's onActivated
+@Override
+public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
+                                EntityPlayer player, EnumHand hand, EnumFacing facing,
+                                float hitX, float hitY, float hitZ) {
+    if (!world.isRemote) {
+        player.openGui(MOD_ID, 0, world, pos.getX(), pos.getY(), pos.getZ());
+    }
+    return true;
+}
+```
+
+## Common errors
+
+- ❌ Opening a Container on the server without registering GuiHandler → crash
+- ❌ `GuiScreen` called on server → use `@SideOnly(Side.CLIENT)`
+- ❌ `transferStackInSlot` not implemented → Shift-click does nothing
+- ❌ Modifying world state in Container constructor → too early, use `onContainerClosed`
+- ❌ Player slot index out of range → verify slot indices are correct

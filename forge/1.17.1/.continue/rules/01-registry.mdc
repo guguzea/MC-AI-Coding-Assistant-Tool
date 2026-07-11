@@ -1,0 +1,70 @@
+# 01 — 注册系统
+
+> 适用版本：Forge 1.17.1
+> **本文件最重要，所有注册相关操作必须先读本文件。**
+
+---
+
+## 约束
+
+### 核心原则
+
+- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 所有注册必须通过 **Forge 事件系统**（最终由 `RegisterEvent` 触发）
+- mod ID 必须与 `mods.toml` 中的 `modId` 完全一致
+- **推荐使用 `DeferredRegister`**
+
+### 注册时机
+
+`DeferredRegister` 通过 modEventBus 在正确的 `RegisterEvent` 时机自动执行注册。
+
+| 注册内容 | DeferredRegister 工厂方法 | 注册到 |
+|----------|---------------------------|--------|
+| 方块 | `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
+| 物品 | `DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
+| 方块实体 | `DeferredRegister.create(ForgeRegistries.BLOCKENTITIES, MOD_ID)` | modEventBus |
+| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID)` | modEventBus |
+| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidType` | modEventBus |
+| 声音事件 | `DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
+
+---
+
+## 示例：完整注册流程
+
+```java
+@Mod(ExampleMod.MOD_ID)
+public class ExampleMod {
+    public static final String MOD_ID = "examplemod";
+
+    public static final DeferredRegister<Block> BLOCKS =
+        DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    public static final DeferredRegister<Item> ITEMS =
+        DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+
+    public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
+        () -> new Block(Block.Properties.of(Material.STONE)
+            .strength(1.5f, 6.0f)
+        )
+    );
+
+    public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",
+        () -> new BlockItem(MY_BLOCK.get(), new Item.Properties())
+    );
+
+    public ExampleMod(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
+        BLOCKS.register(modEventBus);
+        ITEMS.register(modEventBus);
+    }
+}
+```
+
+---
+
+## Forge 1.17.1 注册方式对比
+
+| 特性 | `DeferredRegister`（推荐） | `RegisterEvent`（备选） |
+|------|--------------------------|------------------------|
+| 代码风格 | 静态声明，集中在类顶部 | 事件监听回调中手动注册 |
+| mod ID 前缀 | 自动 | 需手动 |
+| 官方推荐 | **是** | 可用，但不推荐 |

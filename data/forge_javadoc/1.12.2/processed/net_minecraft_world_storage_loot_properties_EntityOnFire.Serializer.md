@@ -1,0 +1,1 @@
+# EntityOnFire.Serializer
