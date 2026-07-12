@@ -264,6 +264,27 @@ test("fetchPageHtml: 4xx 立即返回（不重试）", async () => {
   }
 });
 
+test("fetchPageHtml: 重定向严格受 maxRedirects 限制", async () => {
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls++;
+    return new Response(null, {
+      status: 302,
+      headers: { location: "/next" },
+    });
+  };
+  try {
+    const res = await fetchPageHtml("http://example.test/start", { maxRedirects: 2 });
+    assert.equal(res.ok, false);
+    assert.equal(res.status, 302);
+    assert.match(res.error, /Too many redirects/);
+    assert.equal(calls, 3);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
 // ── 集成：downloadFileAtomic 用临时 http server ─────────────────────────
 
 test("downloadFileAtomic: 完整下载并原子重命名", async () => {

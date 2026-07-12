@@ -56,6 +56,7 @@ export async function fetchPageHtml(url, opts = {}) {
   const {
     timeoutMs = 30_000,
     userAgent = "Mozilla/5.0 (MC-skill pipeline)",
+    maxRedirects = 5,
     headers = {},
     signal,
   } = opts;
@@ -69,18 +70,39 @@ export async function fetchPageHtml(url, opts = {}) {
   }
 
   try {
-    const res = await fetch(url, {
-      method: "GET",
-      redirect: "follow",
-      signal: controller.signal,
-      headers: {
-        "User-Agent": userAgent,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        ...headers,
-      },
-    });
+    let currentUrl = url;
+    let redirectsRemaining = maxRedirects;
+    let res;
+
+    while (true) {
+      res = await fetch(currentUrl, {
+        method: "GET",
+        redirect: "manual",
+        signal: controller.signal,
+        headers: {
+          "User-Agent": userAgent,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          ...headers,
+        },
+      });
+
+      const location = res.headers.get("location");
+      if (res.status < 300 || res.status >= 400 || !location) break;
+      if (redirectsRemaining === 0) {
+        return {
+          ok: false,
+          status: res.status,
+          html: null,
+          url: currentUrl,
+          error: `Too many redirects (limit ${maxRedirects})`,
+        };
+      }
+      currentUrl = new URL(location, currentUrl).href;
+      redirectsRemaining -= 1;
+    }
+
     const status = res.status;
-    const finalUrl = res.url || url;
+    const finalUrl = res.url || currentUrl;
     const text = await res.text();
     return {
       ok: status >= 200 && status < 400,
@@ -169,15 +191,24 @@ export async function downloadFileAtomic(url, destPath, opts = {}) {
   try {
     const res = await fetch(url, {
       method: "GET",
-      redirect: maxRedirects > 0 ? "manual" : "follow",
+      redirect: "manual",
       signal: controller.signal,
       headers: { "User-Agent": userAgent },
     });
 
-    // 处理手动重定向
-    if (res.status >= 300 && res.status < 400 && res.headers.get("location") && maxRedirects > 0) {
-      const loc = res.headers.get("location");
-      const next = new URL(loc, url).href;
+    const location = res.headers.get("location");
+    if (res.status >= 300 && res.status < 400 && location) {
+      if (maxRedirects === 0) {
+        cleanup();
+        return {
+          ok: false,
+          status: res.status,
+          bytes: 0,
+          url,
+          error: "Too many redirects",
+        };
+      }
+      const next = new URL(location, url).href;
       cleanup();
       return downloadFileAtomic(next, destPath, { ...opts, maxRedirects: maxRedirects - 1 });
     }
