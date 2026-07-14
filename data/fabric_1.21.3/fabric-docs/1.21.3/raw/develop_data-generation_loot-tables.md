@@ -1,7 +1,7 @@
 # data generation loot tables
 
 > 来源：https://docs.fabricmc.net/develop/data-generation/loot-tables
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/data-generation/loot-tables.md
 > 抓取源：github_raw
 

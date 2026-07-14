@@ -1,7 +1,7 @@
 # events
 
 > 来源：https://docs.fabricmc.net/develop/events
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/events.md
 > 抓取源：github_raw
 

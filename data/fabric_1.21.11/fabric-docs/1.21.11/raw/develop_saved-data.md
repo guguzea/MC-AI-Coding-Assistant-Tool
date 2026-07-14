@@ -1,7 +1,7 @@
 # saved data
 
 > 来源：https://docs.fabricmc.net/develop/saved-data
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/saved-data.md
 > 抓取源：github_raw
 

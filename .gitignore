@@ -26,6 +26,10 @@ release/
 *.log
 npm-debug.log*
 
+# Local-only audit / scratch artefacts
+mcp-server/audit-*.txt
+mcp-server/scripts/_temp/
+
 # Java / Minecraft
 *.class
 *.jar

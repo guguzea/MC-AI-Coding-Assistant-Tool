@@ -1,7 +1,7 @@
 # rendering gui custom screens
 
 > 来源：https://docs.fabricmc.net/develop/rendering/gui/custom-screens
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/rendering/gui/custom-screens.md
 > 抓取源：github_raw
 

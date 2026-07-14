@@ -1,7 +1,7 @@
 # getting started creating a project
 
 > 来源：https://docs.fabricmc.net/develop/getting-started/creating-a-project
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/getting-started/creating-a-project.md
 > 抓取源：vitepress
 

@@ -1,7 +1,7 @@
 # loom
 
 > 来源：https://docs.fabricmc.net/develop/loom
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/loom/index.md
 > 抓取源：github_raw
 

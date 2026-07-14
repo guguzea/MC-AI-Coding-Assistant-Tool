@@ -1,7 +1,7 @@
 # getting started building a mod
 
 > 来源：https://docs.fabricmc.net/develop/getting-started/building-a-mod
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/getting-started/building-a-mod.md
 > 抓取源：github_raw
 

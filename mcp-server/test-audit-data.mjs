@@ -226,6 +226,33 @@ async function testNestedFabricMetaVersionMismatch() {
   assert.equal(mismatch.actual, 'version "1.20.1"');
 }
 
+function buildForgeFrontmatterFixture(root) {
+  // Confirm the audit recognises both forge raw formats:
+  //   ---\nversion: "..."\n... (older mkdocs harvest)
+  //   `> 版本：...` header (newer MkDocs/manual)
+  const ver = "1.20.4";
+  const docsRoot = path.join(root, `forge_${ver}`, "forge-docs", ver);
+  writeText(path.join(docsRoot, "raw", "old_style.md"),
+    `---\nversion: "${ver}"\nchapter: "old-style"\n---\n# Old Style\nbody\n`);
+  writeText(path.join(docsRoot, "raw", "new_style.md"),
+    `# New Style\n\n> 版本：${ver}\n\nbody\n`);
+  // Wrong version on the new format must surface as ERROR.
+  writeText(path.join(docsRoot, "raw", "wrong.md"),
+    `# Wrong\n\n> 版本：1.20.1\n\nbody\n`);
+  return { idx: { name: `forge_${ver}`, platform: "forge", version: ver }, root };
+}
+
+async function testForgeRawHeaderForms() {
+  const root = tmpRoot("forge-fmt");
+  const fx = buildForgeFrontmatterFixture(root);
+  const issues = auditIndex(fx.root, fx.idx);
+  // old_style + new_style pass; wrong → ERROR
+  const errs = issues.filter((i) => i.check === "B-raw-header" && i.level === "ERROR");
+  assert.equal(errs.length, 1, `expected exactly 1 B-raw-header ERROR, got ${errs.length}`);
+  const warns = issues.filter((i) => i.check === "B-raw-header" && i.level === "WARN");
+  assert.equal(warns.length, 0, "both forge formats must be accepted (no WARN)");
+}
+
 const tests = [
   ["read-only contract", testReadOnlyContract],
   ["planted errors surfaced", testPlantedErrors],
@@ -235,6 +262,7 @@ const tests = [
   ["auditIndex direct call", testAuditIndexDirectly],
   ["json output shape", testJsonOutputShape],
   ["nested Fabric meta version mismatch", testNestedFabricMetaVersionMismatch],
+  ["forge raw header accepts both frontmatter and `> 版本：` formats", testForgeRawHeaderForms],
 ];
 
 let failed = 0;

@@ -1,7 +1,7 @@
 # entities first entity
 
 > 来源：https://docs.fabricmc.net/develop/entities/first-entity
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/entities/first-entity.md
 > 抓取源：github_raw
 

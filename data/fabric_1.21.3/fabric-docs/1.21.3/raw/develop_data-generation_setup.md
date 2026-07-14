@@ -1,7 +1,7 @@
 # data generation setup
 
 > 来源：https://docs.fabricmc.net/develop/data-generation/setup
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/data-generation/setup.md
 > 抓取源：github_raw
 

@@ -1,7 +1,7 @@
 # networking
 
 > 来源：https://docs.fabricmc.net/develop/networking
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/networking.md
 > 抓取源：vitepress
 

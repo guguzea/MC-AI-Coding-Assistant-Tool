@@ -1,7 +1,7 @@
 # codecs
 
 > 来源：https://docs.fabricmc.net/develop/codecs
-> 版本：1.20.1
+> 版本：1.21.1
 > GitHub 路径：develop/codecs.md
 > 抓取源：github_raw
 

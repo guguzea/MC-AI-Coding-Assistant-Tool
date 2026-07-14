@@ -1,7 +1,7 @@
 # mixins bytecode
 
 > 来源：https://docs.fabricmc.net/develop/mixins/bytecode
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/mixins/bytecode.md
 > 抓取源：vitepress
 

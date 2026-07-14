@@ -1,7 +1,7 @@
 # items item models
 
 > 来源：https://docs.fabricmc.net/develop/items/item-models
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/items/item-models.md
 > 抓取源：vitepress
 

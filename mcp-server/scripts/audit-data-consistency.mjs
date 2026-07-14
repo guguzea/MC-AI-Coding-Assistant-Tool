@@ -37,6 +37,7 @@ import process from "node:process";
 
 const PLATFORMS = ["forge", "fabric", "neoforge"];
 const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
+const RAW_FRONTMATTER_VERSION_RX = /^version:\s*"([^"]+)"/m;
 const NEO_VERSION_RX = /^version:\s*"([^"]+)"/m;
 
 function parseArgs(argv) {
@@ -220,6 +221,22 @@ function checkVersionedDocScope(platform, name, version, versionDir, doc, docRoo
           issues.push(rec("B-raw-header", "ERROR", abs, "frontmatter version marker", "missing"));
         } else if (m[1] !== version) {
           issues.push(rec("B-raw-header", "ERROR", abs, `version "${version}"`, `version "${m[1]}"`));
+        }
+      } else if (platform === "forge") {
+        // forge raw may use either `---\nversion: "..."\n---` front-matter
+        // (older style) or `> 版本：...` (newer style). Accept both.
+        const m1 = sample.match(RAW_FRONTMATTER_VERSION_RX);
+        if (m1) {
+          if (m1[1] !== version) {
+            issues.push(rec("B-raw-header", "ERROR", abs, `version "${version}"`, `version "${m1[1]}"`));
+          }
+        } else {
+          const m2 = sample.match(RAW_VERSION_RX);
+          if (!m2) {
+            issues.push(rec("B-raw-header", "WARN", abs, "forge version marker (frontmatter `version:` or `> 版本：...`)", "missing"));
+          } else if (m2[1] !== version) {
+            issues.push(rec("B-raw-header", "ERROR", abs, `version "${version}"`, `version "${m2[1]}"`));
+          }
         }
       } else {
         const m = sample.match(RAW_VERSION_RX);

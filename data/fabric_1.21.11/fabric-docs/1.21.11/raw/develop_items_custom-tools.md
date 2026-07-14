@@ -1,7 +1,7 @@
 # items custom tools
 
 > 来源：https://docs.fabricmc.net/develop/items/custom-tools
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/items/custom-tools.md
 > 抓取源：github_raw
 

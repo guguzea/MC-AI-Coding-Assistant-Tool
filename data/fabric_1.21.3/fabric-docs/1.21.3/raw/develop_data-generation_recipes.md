@@ -1,7 +1,7 @@
 # data generation recipes
 
 > 来源：https://docs.fabricmc.net/develop/data-generation/recipes
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/data-generation/recipes.md
 > 抓取源：github_raw
 

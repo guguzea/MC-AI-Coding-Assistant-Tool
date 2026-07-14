@@ -1,7 +1,7 @@
 # tutorial items
 
 > 来源：https://fabricmc.net/wiki/doku.php?id=tutorial:items
-> 版本：1.21.1
+> 版本：1.16.5
 > 页面 ID：tutorial:items
 > 优先级：⭐
 > 抓取源：wiki_raw

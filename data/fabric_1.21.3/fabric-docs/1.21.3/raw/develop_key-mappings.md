@@ -1,7 +1,7 @@
 # key mappings
 
 > 来源：https://docs.fabricmc.net/develop/key-mappings
-> 版本：1.20.1
+> 版本：1.21.3
 > GitHub 路径：develop/key-mappings.md
 > 抓取源：github_raw
 

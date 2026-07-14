@@ -1,7 +1,7 @@
 # blocks first block
 
 > 来源：https://docs.fabricmc.net/develop/blocks/first-block
-> 版本：1.20.1
+> 版本：1.21.11
 > GitHub 路径：develop/blocks/first-block.md
 > 抓取源：github_raw
 
