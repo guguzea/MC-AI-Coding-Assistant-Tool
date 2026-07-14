@@ -10,6 +10,7 @@ gradle-*.zip
 *.ipr
 *.iws
 .vscode/
+.omo/
 *.swp
 *.swo
 .DS_Store
