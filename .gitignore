@@ -43,3 +43,5 @@ out/
 # Environment
 .env
 .env.local
+
+mcp-server/_temp_tool_probe/
