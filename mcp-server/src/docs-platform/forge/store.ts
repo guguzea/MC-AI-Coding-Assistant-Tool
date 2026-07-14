@@ -274,8 +274,9 @@ export class ForgeDocStore {
     const methodMatch = query.match(/^method:(\S+)/i);
     const hasPrefix = !!(classMatch || eventMatch || methodMatch);
 
-    // 2. 去停用词 + OR 分组
-    const segments = query.split(/\s*\|\s*/);
+    // 2. 去停用词 + OR 分组（剥离前缀，避免 "class:Foo" 整词无法命中）
+    const residualQuery = query.replace(/^(?:class|event|method):\S+\s*/i, "").trim();
+    const segments = residualQuery.length > 0 ? residualQuery.split(/\s*\|\s*/) : [];
     const processedTerms: string[][] = [];
     for (const seg of segments) {
       const words = seg.trim().split(/\s+/).filter(w =>
@@ -290,21 +291,19 @@ export class ForgeDocStore {
 
     const results = index
       .filter((e) => {
+        const haystack = `${e.label} ${e.id} ${e.url ?? ""} ${e.tags.join(" ")}`.toLowerCase();
         // 前缀路由
         if (classMatch) {
           const cls = classMatch[1].toLowerCase();
-          if (
-            !e.label.toLowerCase().includes(cls) &&
-            !e.tags.some((t) => t.toLowerCase().includes(cls))
-          ) return false;
+          if (!haystack.includes(cls)) return false;
         }
         if (eventMatch) {
           const ev = eventMatch[1].toLowerCase();
-          if (!e.tags.some((t) => t.toLowerCase().includes(ev))) return false;
+          if (!haystack.includes(ev)) return false;
         }
         if (methodMatch) {
           const m = methodMatch[1].toLowerCase();
-          if (!e.tags.some((t) => t.toLowerCase().includes(m))) return false;
+          if (!haystack.includes(m)) return false;
         }
 
         // 标签过滤
@@ -317,7 +316,7 @@ export class ForgeDocStore {
           );
         if (!tagMatch) return false;
 
-        // 词匹配
+        // 词匹配：仅有前缀时前缀过滤已足够
         if (processedTerms.length === 0) return true;
 
         let matched = 0;
@@ -326,6 +325,7 @@ export class ForgeDocStore {
             const t = term.toLowerCase();
             return (
               e.label.toLowerCase().includes(t) ||
+              e.id.toLowerCase().includes(t) ||
               e.tags.some((tag) => tag.toLowerCase().includes(t)) ||
               (e.url && e.url.toLowerCase().includes(t))
             );
@@ -335,7 +335,7 @@ export class ForgeDocStore {
         // 有前缀时降级为至少匹配 1 组
         // 有 OR 分组时（| 分隔），各组为"或"的关系，只需匹配 1 组
         // 无前缀且无 OR 时，多词 query 要求至少匹配 2 个词组（精确优先）
-        const hasOr = query.includes("|");
+        const hasOr = residualQuery.includes("|");
         const minGroups = hasPrefix || hasOr ? 1 : Math.min(2, processedTerms.length);
         return matched >= minGroups;
       })

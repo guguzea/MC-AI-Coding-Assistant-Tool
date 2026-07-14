@@ -89,8 +89,48 @@ forge/1.20.1/
 | 变量 | 说明 | 示例 |
 |------|------|------|
 | `MC_SKILL_DATA` | 数据目录根路径（不含版本子目录） | `MC_SKILL_DATA=/path/to/data` |
+| `MC_SKILL_ALLOW_WRITE` | `1` 时允许 `port_project` 写盘 | `1` |
+| `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根目录 | `H:/mods/my-mod` |
 | `MC_SKILL_DEBUG_PATHS` | 设为 `1` 打印路径解析过程 | `MC_SKILL_DEBUG_PATHS=1` |
 | `MCP_TIMEOUT_MS` | 测试脚本超时毫秒数 | `MCP_TIMEOUT_MS=30000` |
+
+## MCP 工具使用注意
+
+本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（约 31 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22**（Yarn 映射使用内置 `node:sqlite`）。
+
+### 文档查询（Fabric / Forge）
+
+1. **页面 ID 必须用搜索结果里的 `id`**，不要用网站 URL 路径。  
+   - 正确：`get_fabric_doc_full({ id: "1.20.4/develop_items_first-item", version: "1.20.4" })`  
+   - 错误：`id: "items/first-item"`
+2. **推荐流程**：`search_*_docs` →（可选）`get_*_doc_summary` → `get_*_doc_full`。
+3. **L0 搜索只匹配索引字段**（`label` / `id` / `url` / `tags`），不是全文检索。索引里没有的词（例如部分版本没有 `registry` 标签）会返回空；可换 `item`、`mixin` 等已有标签，或用 `class:` / `event:` / `method:` 前缀。
+4. 前缀查询示例：`class:Item`、`event:lifecycle`；前缀本身不会再当作普通关键词重复过滤。
+
+### 映射转换（`convert_mapping` + Yarn）
+
+1. Yarn 走预建 **`yarn-mappings.sqlite` 惰性点查**，运行时**禁止**全量加载 `yarn-mappings.json`。
+2. 类名推荐写法（任选其一）：  
+   - Yarn 路径：`net/minecraft/block/Block`  
+   - 简单类名：`Block`（唯一匹配或可按包路径消歧时可用）  
+   - 官方混淆名：`cpn`（与 Yarn 互转时，`mojang` 列指的是混淆短名，**不是** `net.minecraft.world.level.block.Block` 这种 Mojang 映射全名）
+3. 也可用 Mojang 映射风格 FQN 做启发式匹配（按简单类名 + 包路径打分）；不确定时看返回的 `notes` / `候选`。
+
+### 移植分析（`analyze_porting_path`）
+
+1. 平台识别会综合 **Java/Kotlin 源码**（`import` / `@Mod`）与 **构建/元数据**（`build.gradle`、`mods.toml`、`fabric.mod.json` 等）。  
+   - 仅有 gradle/元数据、尚无源码时，一般也能识别为 forge / fabric / neoforge。  
+   - 空目录仍为 `platform: unknown`。
+2. `mappings channel: 'official'` 等形式会解析为 mappings 通道名（如 `official`）。
+
+### 写操作（`port_project`）
+
+默认只读。真正写盘需要同时设置：
+
+- `MC_SKILL_ALLOW_WRITE=1`
+- `MC_SKILL_PROJECT_ROOT=<允许写入的项目根>`
+
+且目标路径必须落在该根目录下。
 
 ## 数据复现与分发
 

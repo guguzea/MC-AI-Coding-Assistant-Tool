@@ -5,6 +5,10 @@ import { join } from "node:path";
 
 import { listVersions } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
+import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
+import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 function parseToolText(result) {
   return JSON.parse(result.content[0].text);
@@ -23,6 +27,49 @@ async function testUnknownPlatformEvidence() {
     const result = JSON.parse(await analyzePortingPath({ projectPath: root }));
     assert.equal(result.analysis.current.platform, "unknown");
     assert.equal(result.analysis.current.ambiguous, true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function testForgeDetectedFromGradleOnly() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-forge-meta-"));
+  try {
+    mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+    writeFileSync(
+      join(root, "build.gradle"),
+      `
+plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
+minecraft { mappings channel: 'official', version: '1.20.1' }
+dependencies {
+  minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+}
+`,
+      "utf8",
+    );
+    writeFileSync(
+      join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+      `
+modLoader="javafml"
+loaderVersion="[47,)"
+[[mods]]
+modId="examplemod"
+version="1.0.0"
+displayName="Example Mod"
+`,
+      "utf8",
+    );
+    const result = JSON.parse(await analyzePortingPath({
+      projectPath: root,
+      targetPlatform: "neoforge",
+      targetVersion: "1.20.4",
+    }));
+    assert.equal(result.analysis.current.platform, "forge");
+    assert.equal(result.analysis.current.modId, "examplemod");
+    assert.equal(result.analysis.current.mcVersion, "1.20.1");
+    assert.equal(result.analysis.current.platformVersion, "47.2.0");
+    assert.equal(result.analysis.current.mappings, "official");
+    assert.equal(result.analysis.current.stats.javaFiles, 0);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -110,8 +157,46 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
   }
 }
 
+async function testYarnShortNameAndMojangHeuristic() {
+  const dataRoot =
+    process.env.MC_SKILL_DATA ??
+    resolve(fileURLToPath(new URL("..", import.meta.url)), "data");
+  process.env.MC_SKILL_DATA = dataRoot;
+  try {
+    const short = convertYarnMember("1.20.1", "yarn", "mojang", "Block");
+    assert.equal(short.found, true);
+    assert.equal(short.converted, "cpn");
+
+    const fqn = convertYarnMember(
+      "1.20.1",
+      "mojang",
+      "yarn",
+      "net.minecraft.world.level.block.Block",
+    );
+    assert.equal(fqn.found, true);
+    assert.equal(fqn.converted, "net/minecraft/block/Block");
+  } finally {
+    closeAllYarnDbs();
+  }
+}
+
+async function testFabricClassPrefixSearch() {
+  const dataRoot =
+    process.env.MC_SKILL_DATA ??
+    resolve(fileURLToPath(new URL("..", import.meta.url)), "data");
+  process.env.MC_SKILL_DATA = dataRoot;
+  const store = createFabricDocStore("1.20.4", "fabric-docs", dataRoot);
+  const byClass = store.searchIndex("class:item", "1.20.4");
+  assert.ok(byClass.length > 0, "class:item should hit L0 index via prefix-only filter");
+  const byPlain = store.searchIndex("item", "1.20.4");
+  assert.ok(byPlain.length > 0, "plain item search should still work");
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
+await testForgeDetectedFromGradleOnly();
+await testYarnShortNameAndMojangHeuristic();
+await testFabricClassPrefixSearch();
 await testArchitecturyDryRunDoesNotWrite();
 await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();

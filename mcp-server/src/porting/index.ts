@@ -89,6 +89,65 @@ function inferPlatform(evidence: PlatformEvidence): { platform: string; ambiguou
   return { platform: top[0], ambiguous };
 }
 
+/** 从 build.gradle / 元数据累加平台证据（无 Java 源码时仍可识别）。 */
+function addBuildMetadataEvidence(
+  evidence: PlatformEvidence,
+  files: {
+    buildGradle: string;
+    buildGradleKts: string;
+    settingsGradle: string;
+    gradleProps: string;
+    modsToml: string;
+    neoforgeModsToml: string;
+    fabricJson: string;
+  },
+): void {
+  const build = [
+    files.buildGradle,
+    files.buildGradleKts,
+    files.settingsGradle,
+    files.gradleProps,
+  ].join("\n");
+
+  // NeoForge（先于 Forge，避免 net.minecraftforge 子串误伤已迁移项目）
+  if (
+    /net\.neoforged/.test(build) ||
+    /neoforged\.gradle/.test(build) ||
+    /['"]net\.neoforged:/.test(build) ||
+    /\bneoforge\s*['":=]/.test(build) ||
+    files.neoforgeModsToml
+  ) {
+    evidence.neoforge += 4;
+  }
+
+  // Forge
+  if (
+    /net\.minecraftforge/.test(build) ||
+    /minecraftforge\.gradle/.test(build) ||
+    /['"]net\.minecraftforge:forge:/.test(build)
+  ) {
+    evidence.forge += 4;
+  }
+  if (files.modsToml && !files.neoforgeModsToml) {
+    evidence.forge += 2;
+    if (/modLoader\s*=\s*["']javafml["']/.test(files.modsToml)) {
+      evidence.forge += 1;
+    }
+  }
+
+  // Fabric
+  if (
+    /fabric-loom/.test(build) ||
+    /net\.fabricmc/.test(build) ||
+    /id\s*\(?\s*['"]fabric-loom['"]/.test(build)
+  ) {
+    evidence.fabric += 4;
+  }
+  if (files.fabricJson) {
+    evidence.fabric += 3;
+  }
+}
+
 // ── 知识库查询 ──────────────────────────────────────────────────────────────
 
 function queryBreakingChanges(currentVer: string, targetVer: string): {
@@ -278,11 +337,17 @@ export async function analyzePortingPath(args: unknown) {
   const mappingsMatch =
     buildGradle.match(/mappings\s+["']([^"']+)["']/) ??
     buildGradleKts.match(/mappings\s+["']([^"']+)["']/) ??
+    buildGradle.match(/mappings\s+channel\s*:\s*['"]([^'"]+)['"]/) ??
+    buildGradleKts.match(/mappings\s*\{\s*channel\s*=\s*['"]([^'"]+)['"]/) ??
+    buildGradle.match(/mappings\s*\{[^}]*channel\s*:\s*['"]([^'"]+)['"]/) ??
     gradleProps.match(/mappings\s*=\s*(.+)/);
   if (mappingsMatch) mappings = mappingsMatch[1].trim();
 
   // 检查是否已有 Architectury
-  const isArchitectury = settingsGradle.includes("architectury") || buildGradle.includes("architectury-plugin");
+  const isArchitectury =
+    settingsGradle.includes("architectury") ||
+    buildGradle.includes("architectury-plugin") ||
+    buildGradleKts.includes("architectury");
 
   // 2. 解析元数据
   let modId: string | null = null;
@@ -301,7 +366,7 @@ export async function analyzePortingPath(args: unknown) {
   if (!modId && (modsToml || neoforgeModsToml)) {
     const idMatch =
       (modsToml + neoforgeModsToml).match(/modId\s*=\s*["']([^"']+)["']/) ??
-      (modsToml + neoforgeModsToml).match(/\bid\s*=\s*["']([^"']+)["']/);
+      (modsToml + neoforgeModsToml).match(/\bid\s*=\s*["']([^'"]+)["']/);
     if (idMatch) modId = idMatch[1];
   }
 
@@ -338,6 +403,17 @@ export async function analyzePortingPath(args: unknown) {
     if (/@Mixin\(/g.test(content)) mixinConfigs++;
     if (/@OnlyIn\(Dist\.CLIENT\)/g.test(content)) clientOnlyAnnotations++;
   }
+
+  // 构建/元数据证据：无源码时也能识别平台（gradle / mods.toml / fabric.mod.json）
+  addBuildMetadataEvidence(evidence, {
+    buildGradle,
+    buildGradleKts,
+    settingsGradle,
+    gradleProps,
+    modsToml,
+    neoforgeModsToml,
+    fabricJson,
+  });
 
   // mixin.json 文件
   const mixinFiles = walkDir(root, ["mixin*.json"]);

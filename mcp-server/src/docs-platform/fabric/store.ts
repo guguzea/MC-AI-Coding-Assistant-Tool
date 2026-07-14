@@ -289,7 +289,9 @@ export class FabricDocStore {
     const methodMatch = query.match(/^method:(\S+)/i);
     const hasPrefix = !!(classMatch || eventMatch || methodMatch);
 
-    const segments = query.split(/\s*\|\s*/);
+    // 前缀指令已单独过滤；从词匹配中剥离，避免 "class:Foo" 整词无法命中
+    const residualQuery = query.replace(/^(?:class|event|method):\S+\s*/i, "").trim();
+    const segments = residualQuery.length > 0 ? residualQuery.split(/\s*\|\s*/) : [];
     const processedTerms: string[][] = [];
     for (const seg of segments) {
       const words = seg.trim().split(/\s+/).filter(w =>
@@ -304,20 +306,18 @@ export class FabricDocStore {
 
     const results = index
       .filter((e) => {
+        const haystack = `${e.label} ${e.id} ${e.url ?? ""} ${e.tags.join(" ")}`.toLowerCase();
         if (classMatch) {
           const cls = classMatch[1].toLowerCase();
-          if (
-            !e.label.toLowerCase().includes(cls) &&
-            !e.tags.some((t) => t.toLowerCase().includes(cls))
-          ) return false;
+          if (!haystack.includes(cls)) return false;
         }
         if (eventMatch) {
           const ev = eventMatch[1].toLowerCase();
-          if (!e.tags.some((t) => t.toLowerCase().includes(ev))) return false;
+          if (!haystack.includes(ev)) return false;
         }
         if (methodMatch) {
           const m = methodMatch[1].toLowerCase();
-          if (!e.tags.some((t) => t.toLowerCase().includes(m))) return false;
+          if (!haystack.includes(m)) return false;
         }
 
         const tagMatch =
@@ -329,6 +329,7 @@ export class FabricDocStore {
           );
         if (!tagMatch) return false;
 
+        // 仅有前缀、无残余关键词时，前缀过滤已足够
         if (processedTerms.length === 0) return true;
 
         let matched = 0;
@@ -337,6 +338,7 @@ export class FabricDocStore {
             const t = term.toLowerCase();
             return (
               e.label.toLowerCase().includes(t) ||
+              e.id.toLowerCase().includes(t) ||
               e.tags.some((tag) => tag.toLowerCase().includes(t)) ||
               (e.url && e.url.toLowerCase().includes(t))
             );
@@ -344,7 +346,7 @@ export class FabricDocStore {
           if (groupHit) matched++;
         }
 
-        const hasOr = query.includes("|");
+        const hasOr = residualQuery.includes("|");
         const minGroups = hasPrefix || hasOr ? 1 : Math.min(2, processedTerms.length);
         return matched >= minGroups;
       })
