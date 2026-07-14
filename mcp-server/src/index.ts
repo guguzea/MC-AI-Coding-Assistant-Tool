@@ -60,7 +60,7 @@ import {
 
 const server = new McpServer({
   version: "0.1.0",
-  name: "mc-mcp-server",
+  name: "MC-AI-Coding-Assistant-Tool",
 });
 
 // ── 1. API 查询 ─────────────────────────────────────────────────────────────

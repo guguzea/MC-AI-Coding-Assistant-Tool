@@ -291,7 +291,7 @@ export async function getFabricDocFull(
 ): Promise<CallToolResult> {
   try {
     const resolvedSource = args.source ?? "fabric-docs";
-    const result = getStore(args.version, resolvedSource).loadFullDoc(
+    const result = await getStore(args.version, resolvedSource).loadFullDoc(
       args.id,
       args.version,
       args.highlight_key ?? true,

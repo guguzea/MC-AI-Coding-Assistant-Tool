@@ -1,7 +1,7 @@
 {
-  "name": "mc-mcp-server",
+  "name": "mc-ai-coding-assistant-tool",
   "version": "0.1.0",
-  "description": "Minecraft Forge MCP Server — API 查询、映射转换、版本适配、崩溃分析",
+  "description": "MC AI Coding Assistant Tool — 本地 stdio MCP（Forge/Fabric/NeoForge）",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

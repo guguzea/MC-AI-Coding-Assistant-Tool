@@ -257,10 +257,22 @@ export async function analyzePortingPath(args: unknown) {
   let platformVersion: string | null = null;
   let mappings: string | null = null;
 
-  const mcMatch = buildGradle.match(/minecraft\s+["']([^"']+)["']/) ?? buildGradleKts.match(/minecraft\s+["']([^"']+)["']/);
-  if (mcMatch) mcVersion = mcMatch[1];
+  const mcMatch =
+    buildGradle.match(/minecraft\s*\(\s*["']([^"']+)["']\s*\)/) ??
+    buildGradle.match(/minecraft\s+["']([^"']+)["']/) ??
+    buildGradleKts.match(/minecraft\s*\(\s*["']([^"']+)["']\s*\)/) ??
+    buildGradleKts.match(/minecraft\s+["']([^"']+)["']/);
+  if (mcMatch) {
+    const raw = mcMatch[1];
+    // FG style: net.minecraftforge:forge:1.20.1-47.2.0 → 1.20.1
+    const verFromCoord = raw.match(/:(\d+\.\d+(?:\.\d+)?)(?:-|:|$)/);
+    mcVersion = verFromCoord?.[1] ?? (/^\d+\.\d+/.test(raw) ? raw : null);
+  }
 
-  const forgeMatch = buildGradle.match(/forge\s+["':]+(\d+\.\d+\.\d+)/) ?? buildGradle.match(/neoforge\s+["':]+(\d+\.\d+)/);
+  const forgeMatch =
+    buildGradle.match(/['"]net\.minecraftforge:forge:[^'"]+-(\d+\.\d+\.\d+)['"]/) ??
+    buildGradle.match(/forge\s*['":=]+(\d+\.\d+\.\d+)/) ??
+    buildGradle.match(/neoforge\s*['":=]+(\d+\.\d+(?:\.\d+)?)/);
   if (forgeMatch) platformVersion = forgeMatch[1];
 
   const mappingsMatch =
@@ -287,7 +299,9 @@ export async function analyzePortingPath(args: unknown) {
     }
   }
   if (!modId && (modsToml || neoforgeModsToml)) {
-    const idMatch = (modsToml + neoforgeModsToml).match(/id\s*=\s*["']([^"']+)["']/);
+    const idMatch =
+      (modsToml + neoforgeModsToml).match(/modId\s*=\s*["']([^"']+)["']/) ??
+      (modsToml + neoforgeModsToml).match(/\bid\s*=\s*["']([^"']+)["']/);
     if (idMatch) modId = idMatch[1];
   }
 
@@ -311,8 +325,9 @@ export async function analyzePortingPath(args: unknown) {
     const content = readContent(file);
     if (!content) continue;
 
-    // 平台证据
-    evidence.forge += (content.match(/import net\.forge[s]?craft\./g) ?? []).length;
+    // 平台证据（import / 注解）
+    evidence.forge += (content.match(/import net\.minecraftforge\./g) ?? []).length;
+    evidence.forge += (content.match(/@Mod\s*\(/g) ?? []).length;
     evidence.fabric += (content.match(/import net\.fabricmc\./g) ?? []).length;
     evidence.neoforge += (content.match(/import net\.neoforged\./g) ?? []).length;
 
