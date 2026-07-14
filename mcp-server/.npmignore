@@ -1,0 +1,10 @@
+node_modules/
+src/
+scripts/
+test-*.mjs
+stress-test.mjs
+audit-*.txt
+_debug*/
+_temp/
+*.tsbuildinfo
+tsconfig.json

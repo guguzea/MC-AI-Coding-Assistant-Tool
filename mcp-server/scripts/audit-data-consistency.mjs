@@ -341,23 +341,46 @@ function checkMappingsArtifacts(platform, versionDir, version, issues) {
     if (!e.isFile()) continue;
     const abs = path.join(mdir, e.name);
     if (e.name === "yarn-mappings.json") {
-      const text = safeReadFile(abs);
-      if (text === null) { issues.push(rec("C-mapping", "ERROR", abs, "readable", "unreadable")); continue; }
-      let obj;
-      try { obj = JSON.parse(text); } catch (err) { issues.push(rec("C-mapping", "ERROR", abs, "JSON parse", `error: ${err.message}`)); continue; }
-      const v = String(obj.version ?? "");
+      // Peek header only — never JSON.parse the full ~200MB file in audit.
+      let head = "";
+      try {
+        const fd = fs.openSync(abs, "r");
+        try {
+          const buf = Buffer.alloc(2048);
+          const n = fs.readSync(fd, buf, 0, 2048, 0);
+          head = buf.slice(0, n).toString("utf8");
+        } finally {
+          fs.closeSync(fd);
+        }
+      } catch {
+        issues.push(rec("C-mapping", "ERROR", abs, "readable", "unreadable"));
+        continue;
+      }
+      const v = /"version"\s*:\s*"([^"]+)"/.exec(head)?.[1] ?? "";
       const m = v.match(/^(\d+\.\d+(?:\.\d+)?)/);
       if (!m || m[1] !== version) {
         issues.push(rec("C-mapping", "ERROR", abs, `yarn version starts with "${version}"`, `yarn version "${v}"`));
       }
-      if (typeof obj.format !== "string" || !obj.format.startsWith("yarn")) {
-        issues.push(rec("C-mapping", "ERROR", abs, "yarn-* format", JSON.stringify(obj.format)));
+      const format = /"format"\s*:\s*"([^"]+)"/.exec(head)?.[1];
+      if (!format || !format.startsWith("yarn")) {
+        issues.push(rec("C-mapping", "ERROR", abs, "yarn-* format", JSON.stringify(format)));
       }
-      if (typeof obj.source !== "string" || !obj.source.startsWith("https://")) {
-        issues.push(rec("C-mapping", "WARN", abs, "https source URL", JSON.stringify(obj.source)));
+      const source = /"source"\s*:\s*"([^"]+)"/.exec(head)?.[1];
+      if (!source || !source.startsWith("https://")) {
+        issues.push(rec("C-mapping", "WARN", abs, "https source URL", JSON.stringify(source)));
       }
-      if (!obj.classMap || typeof obj.classMap !== "object") {
-        issues.push(rec("C-mapping", "ERROR", abs, "classMap object", "missing"));
+      if (!/"classMap"\s*:/.test(head)) {
+        issues.push(rec("C-mapping", "ERROR", abs, "classMap object", "missing in header peek"));
+      }
+      const sqlitePath = path.join(mdir, "yarn-mappings.sqlite");
+      if (!safeStat(sqlitePath)) {
+        issues.push(rec(
+          "C-mapping",
+          "ERROR",
+          sqlitePath,
+          "yarn-mappings.sqlite present when yarn-mappings.json exists",
+          "missing — run: npm run build:yarn-sqlite",
+        ));
       }
     } else if (e.name === "parchment-params.json") {
       const text = safeReadFile(abs);

@@ -28,11 +28,10 @@
  */
 
 import { readFileSync, existsSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 import { resolveDataDir } from "../utils/path.js";
+import { convertYarnMember } from "./yarn-sqlite.js";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_VERSION = "1.20.1";
 
 /** 解析某个 Minecraft 版本的 extracted 数据目录 */
@@ -249,21 +248,17 @@ ${memberName} instance = new ${memberName}();`,
     };
   }
 
-  // ── yarn ↔ mcp/parchment ───────────────────────────────────
-  // ⚠️ Yarn 是 Fabric 专属映射，与 MCP 不完全兼容
+  // ── yarn ↔ *（仅类级；惰性打开预建 SQLite，禁止全量 JSON）──────────
   if (from === "yarn" || to === "yarn") {
+    const yarn = convertYarnMember(version, from, to, memberName);
     return {
-      found: false, original: memberName, converted: memberName,
-      direction: `${from}↔${to}`, confidence: "low", mappingType: "class",
-      notes: [
-        `❌ Yarn 是 Fabric 专属映射，与 MCP/srg 不完全兼容`,
-        `不建议在 Forge 项目中直接使用 Yarn 命名`,
-        from === "yarn"
-          ? "如果你需要 Yarn → MCP 转换，建议使用 Architectury Loom 在构建时处理"
-          : "如果你需要 MCP → Yarn 转换，建议使用 Architectury Loom 在构建时处理",
-        "跨平台开发（Forge + Fabric）：建议使用 Architectury 框架",
-        "替代方案：使用 Mojang 官方映射作为中间层（所有平台通用）",
-      ],
+      found: yarn.found,
+      original: memberName,
+      converted: yarn.converted,
+      direction: `${from}→${to}`,
+      confidence: yarn.found ? "high" : "low",
+      mappingType: yarn.mappingType,
+      notes: yarn.notes,
     };
   }
 

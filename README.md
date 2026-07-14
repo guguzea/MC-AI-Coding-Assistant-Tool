@@ -29,20 +29,20 @@ MC_skill/
 │       ├── code-patterns/      # 代码模式库（5 个文件）
 │       └── knowledge/           # forge通用知识（antipatterns / common / porting / version-changes）
 │
-├── fabric/                      # 规划中
-├── neoforge/                   # 规划中
-├── mcp-server/                  # MCP Server（9 个工具模块）
-└── data/                        # Forge/fabric 文档 + Parchment/yarn 映射数据
+├── fabric/                      # Fabric 规则与知识（多版本）
+├── neoforge/                    # NeoForge 规则与知识（多版本）
+├── mcp-server/                  # 本地 stdio MCP Server（约 31 个工具）
+└── data/                        # 完整离线数据：文档 + mappings zip + yarn JSON/SQLite + porting
 ```
 
 ## 平台说明
 
 
-| 平台       | 状态     | 当前版本          |
-| -------- | ------ | ------------- |
-| Forge    | ✅ 完成  | 1.20.1        |
-| Fabric   | 🔜 规划中 | 1.20.1 / 1.21 |
-| NeoForge | 🔜 规划中 | 1.20.4 / 1.21 |
+| 平台       | 状态    | 当前版本（规则/数据） |
+| -------- | ----- | ------------- |
+| Forge    | ✅ 完成 | 多版本（主推 1.20.1） |
+| Fabric   | ✅ 完成 | 多版本（主推 1.20.1 / 1.21.x） |
+| NeoForge | ✅ 完成 | 多版本（主推 1.20.4+） |
 
 
 ## 多 IDE 支持

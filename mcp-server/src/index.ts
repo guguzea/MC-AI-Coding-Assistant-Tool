@@ -119,10 +119,11 @@ server.registerTool(
       to: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("目标映射类型"),
       memberName: z.string().describe("成员名（字段或方法）"),
       ownerClass: z.string().optional().describe("所属类，用于精确匹配方法"),
+      version: z.string().optional().describe("Minecraft 版本（Yarn 查询必填建议，默认 1.20.1）"),
     }),
   },
-  async ({ from, to, memberName, ownerClass }): Promise<CallToolResult> => {
-    const result = convertMapping({ from, to, memberName, ownerClass });
+  async ({ from, to, memberName, ownerClass, version }): Promise<CallToolResult> => {
+    const result = convertMapping({ from, to, memberName, ownerClass, version });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -621,14 +622,16 @@ server.registerTool(
     description:
       "执行移植步骤（init_architectury / extract_common / apply_version_migration）。" +
       "所有写文件操作默认 dryRun=true，仅输出 diff 预览。" +
-      "实际写入需要 dryRun=false 且 confirmed=true（用户显式确认）。" +
+      "实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，" +
+      "且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。" +
       "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
       "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
-      "包名替换操作始终 dryRun，不执行实际替换。",
+      "apply_version_migration 在确认写入时会真实执行包名替换；冲突文件在 confirmed 写入时会被拒绝。",
     inputSchema: z.object({
       projectPath: z.string().describe("项目根目录"),
       targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
       targetVersion: z.string().optional().describe("目标 MC 版本"),
+      modId: z.string().optional().describe("init_architectury 的 modId（小写）；默认从目录名推导"),
       dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
       confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
       action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
@@ -642,10 +645,22 @@ server.registerTool(
 
 // ── 启动 ────────────────────────────────────────────────────────────────────
 
+process.on("unhandledRejection", (reason) => {
+  console.error("[mc-mcp-server] unhandledRejection:", reason);
+});
+process.on("uncaughtException", (err) => {
+  console.error("[mc-mcp-server] uncaughtException:", err);
+});
+
 // 启动时打印诊断（仅当 MC_SKILL_DEBUG_PATHS=1）
 if (process.env.MC_SKILL_DEBUG_PATHS === "1") {
   console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));
 }
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+try {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+} catch (err) {
+  console.error("[mc-mcp-server] failed to start:", err);
+  process.exit(1);
+}

@@ -1,14 +1,15 @@
 # MC MCP Server
 
-Minecraft Forge MCP Server，为 Cursor AI 编程助手提供 Forge 开发专用工具集。
+本地 **stdio** MCP Server：为 Cursor 等 AI 助手提供 Minecraft 模组开发工具（Forge / Fabric / NeoForge）。
+
+**要求：Node.js >= 22**（Yarn 映射使用内置 `node:sqlite`）。
 
 ## 功能特性
 
-- **20 个 MCP 工具**：API 查询、映射转换、版本指导、Gradle 诊断、DataGen 代码生成、崩溃分析、项目校验、Forge 官方文档搜索、**Fabric 官方文档搜索**、数据路径诊断、Mod 移植分析（2 个新工具）
-- **本地数据**：内置 Parchment 1.20.1 映射数据（5720 个类）+ Forge 官方文档，无需联网
-- **三层文档查询**：L0 索引搜索 → L1 摘要 → L2/L2+ 全文，按需加载
-- **懒加载校验**：数据目录缺失时不影响非文档工具（如 `query_api`）
-- **统一错误格式**：所有错误返回 `{ ok: false, error: { code, message, hint } }`
+- **约 31 个 MCP 工具**：API 查询、映射转换（含 Yarn SQLite 惰性点查）、版本指导、Gradle 诊断、DataGen、崩溃分析、项目校验、Forge/Fabric/NeoForge 文档搜索、数据路径诊断、Mod 移植分析等
+- **完整离线 data/**：文档索引、parchment/mcp zip、yarn-mappings.json（源）+ **yarn-mappings.sqlite（运行时）**、porting 知识库
+- **三层文档查询**：L0 索引搜索 → L1 摘要 → L2/L2+ 全文
+- **硬性禁令**：运行时禁止全量加载 `yarn-mappings.json`（避免 >1.5GB 内存与事件循环阻塞）
 
 ---
 
@@ -18,65 +19,43 @@ Minecraft Forge MCP Server，为 Cursor AI 编程助手提供 Forge 开发专用
 
 ```bash
 cd mcp-server
-npm install
+npm ci
 npm run build
+# 若 data 中尚无 sqlite：
+npm run build:yarn-sqlite
 ```
 
 ### 2. 配置 MCP 客户端
 
-#### Cursor（Windows）
-
-编辑 `%APPDATA%\Cursor\mcp.json`：
+推荐使用 **绝对路径** + `MC_SKILL_DATA` 指向 `data/` 目录（无需 junction）：
 
 ```json
 {
   "mcpServers": {
-    "mc-forge": {
+    "mc-skill": {
       "command": "node",
-      "args": ["<项目路径>/mcp-server/dist/index.js"]
+      "args": ["H:/MC_skill/mcp-server/dist/index.js"],
+      "env": {
+        "MC_SKILL_DATA": "H:/MC_skill/data"
+      }
     }
   }
 }
 ```
 
-**示例（若项目在 `C:\Users\用户名\MC_skill\`）：**
+写操作（`port_project` 且 `dryRun=false`）额外需要：
 
 ```json
-{
-  "mcpServers": {
-    "mc-forge": {
-      "command": "node",
-      "args": ["C:/Users/用户名/MC_skill/mcp-server/dist/index.js"]
-    }
-  }
+"env": {
+  "MC_SKILL_DATA": "H:/MC_skill/data",
+  "MC_SKILL_ALLOW_WRITE": "1",
+  "MC_SKILL_PROJECT_ROOT": "H:/path/to/your/mod"
 }
 ```
 
-#### 项目在其他盘符（如 H:\）
+#### 可选：目录联接（旧方案）
 
-如果 MCP Server 项目在非 C: 盘，需要先创建目录链接，再在配置中使用：
-
-```bash
-# 管理员命令行
-mklink /J C:\Users\<用户名>\MC_skill h:\MC_skill
-```
-
-```json
-{
-  "mcpServers": {
-    "mc-forge": {
-      "command": "node",
-      "args": ["C:/Users/用户名/MC_skill/mcp-server/dist/index.js"]
-    }
-  }
-}
-```
-
-> **为什么需要链接？** Windows 下 Node.js 进程的工作目录默认在 `C:\Users\<用户名>`，`h:` 盘符在 `C:` 进程中无法访问。目录链接解决了这一问题。
-
-#### Claude Desktop（Windows）
-
-编辑 `%APPDATA%\Claude\claude_desktop_config.json`：
+若环境无法解析其他盘符，仍可用 `mklink /J`，但优先使用绝对路径 + `MC_SKILL_DATA`。
 
 ```json
 {
@@ -95,14 +74,16 @@ mklink /J C:\Users\<用户名>\MC_skill h:\MC_skill
 
 ### 3. 重启编辑器
 
-配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏（左侧边栏 → AI → MCP Tools）中应能看到 `mc-forge`，包含 14 个工具。
+配置完成后，**完全关闭并重新打开** Cursor。MCP 工具栏中应能看到 `mc-skill`，约 **31** 个工具。
 
 ### 4. 环境变量
 
 | 变量 | 说明 | 示例 |
 |------|------|------|
-| `MC_SKILL_DATA` | 数据目录根路径 | `MC_SKILL_DATA=h:/MC_skill/data` |
-| `MC_SKILL_DEBUG_PATHS` | 设为 `1` 打印路径解析过程 | `MC_SKILL_DEBUG_PATHS=1` |
+| `MC_SKILL_DATA` | data 目录绝对路径（必填推荐） | `H:/MC_skill/data` |
+| `MC_SKILL_ALLOW_WRITE` | `1` 时允许 port_project 写盘 | `1` |
+| `MC_SKILL_PROJECT_ROOT` | 写盘允许根目录 | `H:/mods/my-mod` |
+| `MC_SKILL_DEBUG_PATHS` | `1` 打印路径解析 | `1` |
 
 ### 5. 开发调试
 

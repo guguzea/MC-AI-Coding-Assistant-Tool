@@ -14,6 +14,11 @@ export const portProjectSchema = z.object({
   projectPath: z.string().describe("项目根目录"),
   targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
   targetVersion: z.string().optional().describe("目标 MC 版本"),
+  modId: z
+    .string()
+    .regex(/^[a-z][a-z0-9_]*$/, "modId 须为小写字母开头，仅含 a-z0-9_")
+    .optional()
+    .describe("init_architectury 使用的 modId；未指定时从目录名推导"),
   dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
   confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
   action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),

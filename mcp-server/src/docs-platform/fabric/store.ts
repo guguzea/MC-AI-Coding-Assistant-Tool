@@ -20,8 +20,8 @@
  *       ├── raw/  processed/  index-l0/l1/l2.json
  */
 
-import { readFileSync, existsSync, readdirSync, type Dirent } from "fs";
-import { join, dirname } from "path";
+import { readFileSync, existsSync, readdirSync } from "fs";
+import { join, resolve } from "path";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -111,9 +111,9 @@ const SUBDIR_MAP: Record<string, string> = {
  *
  * @param version  MC 版本，如 "1.20.1"
  * @param source  数据源，默认 "fabric-docs"
- * @param rootDir 可选，覆盖默认根目录（不传则从 cwd 推断）
+ * @param rootDir 可选，data 根目录（含 fabric_* 子目录）；不传则用 cwd/data
  *
- * 最终 dataDir 结构：
+ * 最终版本数据目录：
  *   <root>/fabric_<version>/<source>/<version>
  * 例如：data/fabric_1.20.1/fabric-docs/1.20.1
  */
@@ -122,11 +122,8 @@ export function createFabricDocStore(
   source = "fabric-docs",
   rootDir?: string,
 ): FabricDocStore {
-  const subdir = SUBDIR_MAP[source] ?? "fabric-docs";
-  const root = rootDir ?? join(process.cwd(), "data", `fabric_${version}`);
-  // dataDir 指向 <source>/ 层（如 fabric-docs/），不含版本号
-  const dataDir = join(root, subdir);
-  return new FabricDocStore(dataDir, version, source);
+  const root = rootDir ?? join(process.cwd(), "data");
+  return new FabricDocStore(root, version, source);
 }
 
 interface CacheEntry<T> {
@@ -167,33 +164,38 @@ export class FabricDocStore {
   private _validated = false;
 
   /**
-   * 创建 FabricDocStore。
-   *
-   * @param dataDir     完整数据目录路径（如 `data/fabric_1.21.1/fabric-docs/1.21.1`）
-   * @param version    MC 版本（默认 "1.21.1"）
-   * @param source     数据源（默认 "fabric-docs"）
+   * Create FabricDocStore.
+   * @param dataDir data root (contains fabric_VERSION dirs) or legacy fabric-docs dir
+   * @param version default MC version fallback; query version wins at call sites
+   * @param source data source name, default fabric-docs
    */
   constructor(
     private readonly dataDir: string,
-    version = "1.21.1",
+    version = "1.20.1",
     source = "fabric-docs",
   ) {
-    this.source = source;
+    this.source = SUBDIR_MAP[source] ?? source ?? "fabric-docs";
     Object.defineProperty(this, "_version", { value: version, writable: false, enumerable: false });
   }
 
-  private get version(): string {
+  private get defaultVersion(): string {
     return (this as unknown as { _version: string })._version;
   }
 
-  /**
-   * 返回 dataDir 的父目录（用于 `getAvailableVersions` 扫描）。
-   * 若 dataDir = `<root>/fabric_<version>/<source>/`（如 fabric_1.20.1/fabric-docs/），
-   * 则 rootDir = `<root>/fabric_<version>/`（如 fabric_1.20.1/），
-   * 其中 `<source>/` 下包含 `<version>/index-l0.json`。
-   */
-  private get rootDir(): string {
-    return dirname(this.dataDir);
+  /** Resolve on-disk directory for a MC version under this store. */
+  private versionDataDir(version: string): string {
+    const canonical = join(this.dataDir, `fabric_${version}`, this.source, version);
+    if (existsSync(join(canonical, "index-l0.json"))) return canonical;
+
+    // Legacy: dataDir already points at .../fabric-docs (or .../fabric-wiki)
+    const legacy = join(this.dataDir, version);
+    if (existsSync(join(legacy, "index-l0.json"))) return legacy;
+
+    // Legacy: dataDir is .../fabric_<ver>/<source> without nesting version wrongly
+    const nested = join(this.dataDir, this.source, version);
+    if (existsSync(join(nested, "index-l0.json"))) return nested;
+
+    return canonical;
   }
 
   // ── 懒加载校验 ────────────────────────────────────────────────────────────
@@ -209,24 +211,14 @@ export class FabricDocStore {
     if (!existsSync(this.dataDir)) {
       throw new Error(
         `数据目录不存在: ${this.dataDir}\n` +
-        `请确保 MC_SKILL_DATA 环境变量指向 "data" 目录的父目录。\n` +
-        `示例：MC_SKILL_DATA=/path/to/h-MC-skill/data`
+        `请设置 MC_SKILL_DATA 为 data 目录的绝对路径。\n` +
+        `示例：MC_SKILL_DATA=/path/to/MC_skill/data`
       );
     }
-    let hasVersion = false;
-    try {
-      for (const entry of readdirSync(this.dataDir, { withFileTypes: true })) {
-        if (entry.isDirectory() && existsSync(join(this.dataDir, entry.name, "index-l0.json"))) {
-          hasVersion = true;
-          break;
-        }
-      }
-    } catch { /* readdir 失败 */ }
-    if (!hasVersion) {
+    if (this.getAvailableVersionsUnchecked().length === 0) {
       throw new Error(
         `数据目录结构不符合预期: ${this.dataDir}\n` +
-        `预期结构: <dataDir>/<version>/index-l0.json\n` +
-        `常见错误：将 "fabric_1.21.1" 当作 dataDir，应传入 "fabric_1.21.1/fabric-docs"`
+        `预期结构: <dataDir>/fabric_<version>/${this.source}/<version>/index-l0.json`
       );
     }
   }
@@ -239,16 +231,31 @@ export class FabricDocStore {
    */
   getAvailableVersions(): string[] {
     this.ensureValidated();
-    const root = this.rootDir;
-    if (!existsSync(root)) return [];
+    return this.getAvailableVersionsUnchecked();
+  }
+
+  private getAvailableVersionsUnchecked(): string[] {
+    if (!existsSync(this.dataDir)) return [];
+    const versions = new Set<string>();
     try {
-      return readdirSync(root, { withFileTypes: true })
-        .filter((d: Dirent) => d.isDirectory() && existsSync(join(root, d.name, "index-l0.json")))
-        .map((d: Dirent) => d.name)
-        .sort();
+      for (const entry of readdirSync(this.dataDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        if (entry.name.startsWith("fabric_")) {
+          const ver = entry.name.slice("fabric_".length);
+          if (existsSync(join(this.dataDir, entry.name, this.source, ver, "index-l0.json"))) {
+            versions.add(ver);
+          }
+          continue;
+        }
+        // Legacy: dataDir is .../fabric-docs with version subdirs
+        if (existsSync(join(this.dataDir, entry.name, "index-l0.json"))) {
+          versions.add(entry.name);
+        }
+      }
     } catch {
       return [];
     }
+    return [...versions].sort();
   }
 
   /**
@@ -461,11 +468,12 @@ export class FabricDocStore {
     if (cached && cached.expiry > Date.now()) {
       content = cached.data;
     } else {
-      const filepath = join(this.dataDir, version, meta.processedFile);
-      if (!existsSync(filepath)) {
+      const versionRoot = resolve(this.versionDataDir(version));
+      const resolved = resolve(versionRoot, meta.processedFile);
+      if (!resolved.startsWith(versionRoot) || !existsSync(resolved)) {
         throw new DocNotFoundError(id, version);
       }
-      content = readFileSync(filepath, "utf-8");
+      content = readFileSync(resolved, "utf-8");
       this.fileCache.set(cacheKey, {
         data: content,
         expiry: Date.now() + FabricDocStore.CACHE_TTL,
@@ -477,27 +485,27 @@ export class FabricDocStore {
 
   // ── 内部 ──────────────────────────────────────────────────────────────
 
-  private loadIndexL0(_version: string): SearchResult[] {
+  private loadIndexL0(version: string): SearchResult[] {
     return this.loadCachedIndex<SearchResult[]>(
-      `l0-${this.source}-${this.version}`,
-      join(this.dataDir, this.version, "index-l0.json"),
-      this.version,
+      `l0-${this.source}-${version}`,
+      join(this.versionDataDir(version), "index-l0.json"),
+      version,
     );
   }
 
-  private loadIndexL1(_version: string): SummaryResult[] {
+  private loadIndexL1(version: string): SummaryResult[] {
     return this.loadCachedIndex<SummaryResult[]>(
-      `l1-${this.source}-${this.version}`,
-      join(this.dataDir, this.version, "index-l1.json"),
-      this.version,
+      `l1-${this.source}-${version}`,
+      join(this.versionDataDir(version), "index-l1.json"),
+      version,
     );
   }
 
-  private loadIndexL2(_version: string): L2Entry[] {
+  private loadIndexL2(version: string): L2Entry[] {
     return this.loadCachedIndex<L2Entry[]>(
-      `l2-${this.source}-${this.version}`,
-      join(this.dataDir, this.version, "index-l2.json"),
-      this.version,
+      `l2-${this.source}-${version}`,
+      join(this.versionDataDir(version), "index-l2.json"),
+      version,
     );
   }
 

@@ -80,7 +80,7 @@ const KNOWN_VERSIONS: Record<Platform, string[]> = {
     // Forge 兼容版本（复用 Forge 1.20.1 数据）
     "1.20.1",
   ],
-  fabric:   ["1.20.1", "1.21.1"],
+  fabric:   ["1.21.11", "1.21.3", "1.21.1", "1.20.4", "1.20.1", "1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.14.4"],
 };
 
 /** 各平台文档子目录名（version 前的固定前缀） */
@@ -114,7 +114,7 @@ function resolvePlatformDataDir(platform: Platform): string {
     } else {
       const docsDir = join(dataRoot, subDir, PLATFORM_DOC_SUBDIR[platform]);
       if (existsSync(join(docsDir, v, "index-l0.json"))) {
-        return platform === "fabric" ? docsDir : dataRoot;
+        return dataRoot;
       }
     }
   }
@@ -147,7 +147,7 @@ function resolvePlatformDataDir(platform: Platform): string {
 
   // Prefer standard naming; fallback to javadoc only if no standard dirs found
   const bestDir = bestDirByPattern["standard"]?.dir ?? bestDirByPattern["javadoc"]?.dir ?? "";
-  if (bestDir) return platform === "fabric" ? bestDir : dataRoot;
+  if (bestDir) return dataRoot;
   throw new Error(`No data found for platform: ${platform}`);
 }
 
@@ -192,7 +192,8 @@ export function createDocStore(platform: Platform, dataDir: string): IDocStore {
     return new ForgeDocStore(dataDir);
   }
   if (platform === "fabric") {
-    return new FabricDocStore(dataDir);
+    // dataDir is data root; default version is first known for constructor fallback only
+    return new FabricDocStore(dataDir, KNOWN_VERSIONS.fabric[0] ?? "1.20.1", "fabric-docs");
   }
   if (platform === "neoforge") {
     return new NeoForgeDocStore(dataDir);

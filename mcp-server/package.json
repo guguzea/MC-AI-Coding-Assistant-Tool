@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc --watch",
-    "test": "npm run build && node test-core.mjs && node test-scripts.mjs && node test-audit-data.mjs && node test-mcp.mjs",
+    "test": "npm run build && node test-core.mjs && node test-scripts.mjs && node test-audit-data.mjs && node --test scripts/_lib/pipeline-helpers.test.mjs scripts/_lib/build-yarn-mappings.test.mjs scripts/_lib/build-yarn-sqlite.test.mjs && node test-mcp.mjs && node scripts/assert-no-yarn-json-slurp.mjs",
     "test:core": "npm run build && node test-core.mjs",
     "test:scripts": "node test-scripts.mjs",
     "test:audit": "node test-audit-data.mjs",
@@ -16,18 +16,26 @@
     "audit:data:forge": "node scripts/audit-data-consistency.mjs --platform=forge",
     "audit:data:fabric": "node scripts/audit-data-consistency.mjs --platform=fabric",
     "audit:data:neoforge": "node scripts/audit-data-consistency.mjs --platform=neoforge",
-    "audit:data:fail-on-error": "node scripts/audit-data-consistency.mjs --platform=all"
+    "audit:data:fail-on-error": "node scripts/audit-data-consistency.mjs --platform=all",
+    "build:yarn-sqlite": "node scripts/_lib/build-yarn-sqlite.mjs --all",
+    "assert:no-yarn-slurp": "node scripts/assert-no-yarn-json-slurp.mjs",
+    "smoke:release": "node scripts/release-smoke.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.10.0",
     "tsx": "^4.21.0",
     "typescript": "^5.4.0"
   },
   "engines": {
-    "node": ">=18"
-  }
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ]
 }

@@ -24,7 +24,8 @@ const serverPath = join(__dirname, "dist", "index.js");
 // ── 配置 ──────────────────────────────────────────────────────────────────────
 
 const TIMEOUT_MS = parseInt(process.env.MCP_TIMEOUT_MS ?? "30000", 10);
-const DATA_DIR = process.env.MC_SKILL_DATA ?? "h:/MC_skill/data";
+const REPO_ROOT = join(__dirname, "..");
+const DATA_DIR = process.env.MC_SKILL_DATA ?? join(REPO_ROOT, "data");
 
 // ── JSON-RPC helpers ───────────────────────────────────────────────────────────
 
@@ -68,7 +69,7 @@ function startServer() {
 
   serverStartTime = Date.now();
   serverProc = spawn("node", [serverPath], {
-    cwd: "h:/MC_skill",
+    cwd: REPO_ROOT,
     stdio: ["pipe", "pipe", "pipe"],
     env: { ...process.env, MC_SKILL_DATA: DATA_DIR },
   });
@@ -322,6 +323,72 @@ async function runTests() {
   console.log(`  total=${cd6.total}  first_id=${cd6.results[0]?.id ?? "n/a"}`);
   console.log();
 
+  // ── Fabric docs + Yarn SQLite ───────────────────────────────────────────────
+
+  console.log("[Test D7] search_fabric_docs: item (1.20.1)");
+  const rd7 = await callTool("search_fabric_docs", {
+    query: "item",
+    version: "1.20.1",
+  });
+  assert.ok(rd7.result?.content?.[0]?.text, "Fabric search must return text");
+  const cd7 = JSON.parse(rd7.result.content[0].text);
+  assert.equal(cd7.error, undefined, `Fabric search failed: ${JSON.stringify(cd7.error)}`);
+  assert.ok((cd7.total ?? 0) > 0 || (cd7.results?.length ?? 0) > 0, "Fabric item search should return results");
+  console.log(`  total=${cd7.total ?? cd7.results?.length ?? 0}`);
+  console.log();
+
+  console.log("[Test M1] convert_mapping yarn→mojang class (SQLite)");
+  const rm1 = await callTool("convert_mapping", {
+    from: "yarn",
+    to: "mojang",
+    memberName: "net/minecraft/block/Block",
+    version: "1.20.1",
+  });
+  const cm1 = JSON.parse(rm1.result.content[0].text);
+  assert.equal(cm1.found, true, `yarn convert failed: ${JSON.stringify(cm1)}`);
+  console.log(`  found=${cm1.found} converted=${cm1.converted}`);
+  console.log();
+
+  console.log("[Test P1] port_project write blocked without allow env");
+  const rp1 = await callTool("port_project", {
+    projectPath: join(REPO_ROOT, "tmp-should-not-write"),
+    action: "init_architectury",
+    dryRun: false,
+    confirmed: true,
+    modId: "sandboxmod",
+  });
+  const cp1 = JSON.parse(rp1.result.content[0].text);
+  assert.equal(cp1.ok, false, "write without MC_SKILL_ALLOW_WRITE must fail");
+  assert.ok(
+    cp1.error?.code === "WRITE_DISABLED" || cp1.error?.code === "PROJECT_ROOT_REQUIRED",
+    `expected sandbox error, got ${JSON.stringify(cp1.error)}`,
+  );
+  console.log(`  blocked as expected: ${cp1.error?.code}`);
+  console.log();
+
+  console.log("[Test L1] tools/list includes core tools");
+  const { id: listId, message: listMsg } = jsonrpc("tools/list", {});
+  const listPromise = new Promise((resolve, reject) => {
+    pendingRequests.set(listId, { resolve, reject });
+    serverProc.stdin.write(listMsg + "\n");
+  });
+  const listTimeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("tools/list timeout")), TIMEOUT_MS),
+  );
+  const listResp = await Promise.race([listPromise, listTimeout]);
+  const toolNames = (listResp.result?.tools ?? []).map((t) => t.name);
+  for (const required of [
+    "search_fabric_docs",
+    "convert_mapping",
+    "port_project",
+    "search_docs",
+    "query_api",
+  ]) {
+    assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
+  }
+  console.log(`  tools=${toolNames.length}`);
+  console.log();
+
   // ── 性能报告 ────────────────────────────────────────────────────────────────
 
   console.log("=== Performance Summary ===");
@@ -338,6 +405,7 @@ async function runTests() {
 
   stopServer();
   console.log("✓ All MCP calls completed successfully");
+  process.exit(0);
 }
 
 // ── 主入口 ────────────────────────────────────────────────────────────────────

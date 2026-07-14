@@ -29,7 +29,12 @@ function getDataDirFromSelf(): string {
 
 function getDataDirFromEnv(): string | null {
   const envPath = process.env.MC_SKILL_DATA;
-  if (envPath && existsSync(envPath)) return envPath;
+  if (!envPath) return null;
+  if (existsSync(envPath)) return envPath;
+  console.error(
+    `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 不存在，已回退到推导/cwd 路径。` +
+      `请检查路径是否为 data 目录的绝对路径。`,
+  );
   return null;
 }
 

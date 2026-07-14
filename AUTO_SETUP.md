@@ -7,7 +7,7 @@
 
 ## 目标
 
-把 `mcp-server` 编译、配置好，让 Cursor MCP Tools 能调用到 `mc-forge` 的 9 个工具模块。
+把 `mcp-server` 编译好，并**生成** Cursor MCP 配置草稿供用户确认后粘贴（不要静默改写用户的 `mcp.json`，不要自动执行 `mklink`）。目标：本地 stdio MCP，约 **31** 个工具可用。
 
 ---
 
@@ -33,8 +33,9 @@ cd <MC_skill根目录路径>
 
 ```bash
 cd mcp-server
-npm install
+npm ci
 npm run build
+npm run build:yarn-sqlite
 ```
 
 **验证编译产物存在：**
@@ -44,8 +45,9 @@ npm run build
 ls dist/index.js
 ```
 
-- 如果报错 → 查看 `mcp-server/` 下 `package.json` 的 `"engines"` 要求，确保 Node.js >= 18
-- 如果 `node` 命令找不到 → 告知用户安装 Node.js 18+
+- 如果报错 → 查看 `mcp-server/` 下 `package.json` 的 `"engines"` 要求，确保 **Node.js >= 22**
+- 如果 `node` 命令找不到 → 告知用户安装 Node.js 22+
+- Yarn 映射依赖 `data/fabric_*/mappings/yarn-mappings.sqlite`（由 `build:yarn-sqlite` 生成）
 
 ---
 

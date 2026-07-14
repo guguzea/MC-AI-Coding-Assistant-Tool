@@ -1,0 +1,139 @@
+name: Release (mcp-server)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: mcp-server
+        run: npm ci
+
+      - name: Build
+        working-directory: mcp-server
+        run: npm run build
+
+      - name: Ensure yarn SQLite artefacts
+        working-directory: mcp-server
+        run: npm run build:yarn-sqlite
+
+      - name: Data audit (fail on error)
+        working-directory: mcp-server
+        run: npm run audit:data:fail-on-error
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+
+      - name: Test
+        working-directory: mcp-server
+        run: npm test
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+          MCP_TIMEOUT_MS: 60000
+
+      - name: npm audit (production)
+        working-directory: mcp-server
+        run: npm audit --omit=dev --audit-level=high || true
+
+      - name: Prepare release bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG_NAME="${GITHUB_REF_NAME}"
+          SERVER_ZIP="mcp-server-${TAG_NAME}.zip"
+          DATA_ZIP="mc-skill-data-full-${TAG_NAME}.zip"
+
+          mkdir -p release/mcp-server release/staging-data
+          cp -R mcp-server/dist release/mcp-server/
+          cp mcp-server/package.json release/mcp-server/
+          cp mcp-server/package-lock.json release/mcp-server/
+          cp mcp-server/README.md release/mcp-server/
+          cp LICENSE release/mcp-server/ 2>/dev/null || true
+          if [ -f THIRD_PARTY_NOTICES.md ]; then
+            cp THIRD_PARTY_NOTICES.md release/mcp-server/
+          fi
+
+          # Full data minus junk (no rsync dependency)
+          mkdir -p release/staging-data
+          cp -a data/. release/staging-data/
+          rm -rf release/staging-data/test_mcp_check \
+                 release/staging-data/_debug_* \
+                 release/staging-data/_temp \
+                 release/staging-data/audit-*.txt || true
+
+          # Compact manifest (platforms / versions / mapping artefacts)
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path("release/staging-data")
+          platforms = {}
+          for p in sorted(root.iterdir()):
+              if not p.is_dir():
+                  continue
+              name = p.name
+              info = {"mappings": [], "has_docs": False}
+              for m in (p / "mappings").glob("*") if (p / "mappings").is_dir() else []:
+                  if m.suffix in {".zip", ".json", ".sqlite", ".gz", ".tiny"} or m.name.endswith(".tiny"):
+                      info["mappings"].append(m.name)
+              for sub in ("forge-docs", "fabric-docs", "fabric-wiki", "neoforge-docs"):
+                  if (p / sub).exists():
+                      info["has_docs"] = True
+              platforms[name] = info
+          Path("release/data-manifest.json").write_text(
+              json.dumps({"platformDirs": platforms}, indent=2, ensure_ascii=False),
+              encoding="utf-8",
+          )
+          print("manifest dirs", len(platforms))
+          PY
+
+          (cd release && zip -r -q "../${SERVER_ZIP}" mcp-server)
+          (cd release/staging-data && zip -r -q "../../${DATA_ZIP}" .)
+          sha256sum "${SERVER_ZIP}" "${DATA_ZIP}" release/data-manifest.json > "SHA256SUMS-${TAG_NAME}.txt"
+          echo "SERVER_ZIP=${SERVER_ZIP}" >> "$GITHUB_ENV"
+          echo "DATA_ZIP=${DATA_ZIP}" >> "$GITHUB_ENV"
+          echo "SUMS=SHA256SUMS-${TAG_NAME}.txt" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ env.SERVER_ZIP }}
+            ${{ env.DATA_ZIP }}
+            ${{ env.SUMS }}
+            release/data-manifest.json
+          generate_release_notes: true
+          body: |
+            ## Install (out of the box)
+
+            1. Download **mcp-server** zip and **mc-skill-data-full** zip
+            2. Unzip both (place `data/` next to or anywhere; point env at it)
+            3. Configure Cursor MCP stdio:
+
+            ```json
+            {
+              "mcpServers": {
+                "mc-skill": {
+                  "command": "node",
+                  "args": ["/absolute/path/to/mcp-server/dist/index.js"],
+                  "env": {
+                    "MC_SKILL_DATA": "/absolute/path/to/data"
+                  }
+                }
+              }
+            }
+            ```
+
+            Requires **Node.js >= 22**. Yarn lookups use prebuilt `yarn-mappings.sqlite` (never loads full JSON).

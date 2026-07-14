@@ -18,10 +18,7 @@ Thumbs.db
 # MCP server
 mcp-server/node_modules/
 mcp-server/dist/
-mcp-server/test-mcp.mjs
-mcp-server/stress-test.mjs
 release/
-.github/workflows/release-mcp-server.yml
 *.tsbuildinfo
 *.log
 npm-debug.log*
@@ -32,8 +29,11 @@ mcp-server/scripts/_temp/
 
 # Java / Minecraft
 *.class
+# Keep mapping zips / yarn jars under data/ tracked; ignore elsewhere
 *.jar
+!data/**/*.jar
 *.zip
+!data/**/*.zip
 run/
 run-data/
 src/generated/

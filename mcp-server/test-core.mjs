@@ -34,8 +34,8 @@ async function testArchitecturyDryRunDoesNotWrite() {
     const result = JSON.parse(await portProject({
       projectPath: root,
       action: "init_architectury",
-      targetPlatform: "fabric",
       targetVersion: "1.20.4",
+      modId: "examplemod",
       dryRun: true,
     }));
     assert.equal(result.ok, true);
@@ -48,11 +48,41 @@ async function testArchitecturyDryRunDoesNotWrite() {
   }
 }
 
+async function testWriteBlockedWithoutAllowEnv() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-block-"));
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
+  delete process.env.MC_SKILL_ALLOW_WRITE;
+  delete process.env.MC_SKILL_PROJECT_ROOT;
+  try {
+    const result = JSON.parse(await portProject({
+      projectPath: root,
+      action: "init_architectury",
+      dryRun: false,
+      confirmed: true,
+      modId: "sandboxmod",
+    }));
+    assert.equal(result.ok, false);
+    assert.equal(result.error.code, "WRITE_DISABLED");
+  } finally {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
   const root = mkdtempSync(join(tmpdir(), "mc-skill-migrate-"));
   const source = join(root, "src", "main", "java", "Example.java");
   mkdirSync(join(root, "src", "main", "java"), { recursive: true });
   writeFileSync(source, "import net.minecraftforge.eventbus.api.Event;\n", "utf8");
+
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  process.env.MC_SKILL_PROJECT_ROOT = root;
 
   try {
     await portProject({
@@ -72,6 +102,10 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
     assert.match(readFileSync(source, "utf8"), /net\.neoforged/);
     assert.doesNotMatch(readFileSync(source, "utf8"), /net\.minecraftforge/);
   } finally {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
     rmSync(root, { recursive: true, force: true });
   }
 }
@@ -79,5 +113,6 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testArchitecturyDryRunDoesNotWrite();
+await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
 console.log("core regression tests passed");

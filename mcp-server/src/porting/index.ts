@@ -1,7 +1,8 @@
 import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync } from "fs";
-import { join, relative, posix } from "path";
+import { join, relative, basename } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
+import { resolveProjectPath, ProjectPathError } from "../utils/project-sandbox.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -22,20 +23,22 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 // ── 知识库加载 ──────────────────────────────────────────────────────────────
 
 function loadVersionsKB(): Record<string, unknown> {
-  const kbPath = resolveDataDir("porting/knowledge-base/versions.json", "data");
+  const kbPath = resolveDataDir("porting/knowledge-base/versions.json");
   try {
     return JSON.parse(readFileSync(kbPath, "utf-8"));
-  } catch {
-    return { versions: {} };
+  } catch (err) {
+    console.error(`[porting] FAILED to load versions KB at ${kbPath}:`, (err as Error).message);
+    return { versions: {}, _loadError: String((err as Error).message), _path: kbPath };
   }
 }
 
 function loadArchitecturyPatterns(): Record<string, unknown> {
-  const kbPath = resolveDataDir("porting/architectury-patterns.json", "data");
+  const kbPath = resolveDataDir("porting/architectury-patterns.json");
   try {
     return JSON.parse(readFileSync(kbPath, "utf-8"));
-  } catch {
-    return {};
+  } catch (err) {
+    console.error(`[porting] FAILED to load architectury patterns at ${kbPath}:`, (err as Error).message);
+    return { _loadError: String((err as Error).message), _path: kbPath };
   }
 }
 
@@ -228,7 +231,20 @@ export async function analyzePortingPath(args: unknown) {
     return JSON.stringify(err);
   }
 
-  const { projectPath: root, targetPlatform: userTargetPlatform, targetVersion: userTargetVersion } = parsed.data;
+  const { targetPlatform: userTargetPlatform, targetVersion: userTargetVersion } = parsed.data;
+  let root: string;
+  try {
+    root = resolveProjectPath(parsed.data.projectPath, false);
+  } catch (err) {
+    if (err instanceof ProjectPathError) {
+      const e: AnalyzePortingError = {
+        ok: false,
+        error: { code: err.code, message: err.message },
+      };
+      return JSON.stringify(e);
+    }
+    throw err;
+  }
 
   // 1. 解析构建配置
   const buildGradle = readContent(join(root, "build.gradle"));
@@ -392,8 +408,8 @@ function safeConfirmed(confirmed: unknown): boolean {
 // ── 2a. init_architectury ───────────────────────────────────────────────────
 
 function generateSettingsGradleContent(modId: string): string {
-  const patterns = loadArchitecturyPatterns() as { settingsGradle?: string[] };
-  return (patterns.settingsGradle ?? [
+  const patterns = loadArchitecturyPatterns() as { settingsGradle?: unknown };
+  const fallback = [
     "pluginManagement {",
     "    repositories {",
     "        maven { url 'https://maven.fabricmc.net/' }",
@@ -406,7 +422,9 @@ function generateSettingsGradleContent(modId: string): string {
     "include 'common'",
     "include 'fabric'",
     "include 'neoforge'",
-  ]).join("\n");
+  ];
+  const lines = Array.isArray(patterns.settingsGradle) ? patterns.settingsGradle.map(String) : fallback;
+  return lines.join("\n");
 }
 
 function generateRootBuildGradleContent(mcVersion: string): string {
@@ -608,15 +626,43 @@ export async function portProject(args: unknown) {
     });
   }
 
-  const { projectPath: root, dryRun = true, confirmed, action } = parsed.data;
+  const { dryRun = true, confirmed, action } = parsed.data;
   const doWrite = !dryRun && safeConfirmed(confirmed);
 
+  let root: string;
+  try {
+    root = resolveProjectPath(parsed.data.projectPath, doWrite);
+  } catch (err) {
+    if (err instanceof ProjectPathError) {
+      return JSON.stringify({
+        ok: false,
+        error: { code: err.code, message: err.message },
+      });
+    }
+    throw err;
+  }
+
   if (action === "init_architectury") {
-    const modId = parsed.data.targetPlatform ?? "mymod";
+    const derived =
+      basename(root)
+        .toLowerCase()
+        .replace(/[^a-z0-9_]/g, "_")
+        .replace(/^[^a-z]+/, "") || "mymod";
+    const modId = (parsed.data.modId ?? derived).slice(0, 64);
     const mcVersion = parsed.data.targetVersion ?? "1.20.4";
 
     const conflicts = checkConflicts(root);
-    if (conflicts.length > 0 && !doWrite) {
+    if (conflicts.length > 0) {
+      if (doWrite) {
+        return JSON.stringify({
+          ok: false,
+          error: {
+            code: "CONFLICTING_FILES",
+            message: `拒绝覆盖已存在文件: ${conflicts.join(", ")}`,
+            hint: "请换空目录，或先备份/移除冲突文件后再以 confirmed=true 写入",
+          },
+        });
+      }
       const output: InitArchitecturyOutput = {
         ok: true,
         dryRun: true,

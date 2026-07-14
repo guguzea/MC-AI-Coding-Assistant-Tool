@@ -19,25 +19,34 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: mcp-server/package-lock.json
+
+      - name: Install
+        working-directory: mcp-server
+        run: npm ci
 
       - name: Build
-        run: |
-          cd mcp-server
-          npm install
-          npm run build
+        working-directory: mcp-server
+        run: npm run build
 
-      - name: Download test data
+      - name: Build yarn SQLite if missing
+        working-directory: mcp-server
+        shell: bash
         run: |
-          if [ -d "${{ github.workspace }}/data" ]; then
-            echo "Using existing data directory"
-          else
-            echo "No test data found, tests may be skipped or use mock mode"
+          if [ ! -f "${{ github.workspace }}/data/fabric_1.20.1/mappings/yarn-mappings.sqlite" ]; then
+            npm run build:yarn-sqlite
           fi
 
+      - name: Data audit
+        working-directory: mcp-server
+        run: npm run audit:data:fail-on-error
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+
       - name: Test
-        run: |
-          cd mcp-server
-          npm test
+        working-directory: mcp-server
+        run: npm test
         env:
           MC_SKILL_DATA: ${{ github.workspace }}/data
           MCP_TIMEOUT_MS: 60000

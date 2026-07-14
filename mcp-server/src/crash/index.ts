@@ -190,6 +190,14 @@ const KNOWN_PATTERNS: Array<{
 
 export function analyzeCrash(query: CrashQuery): CrashResult {
   const { crashReport } = query;
+  if (typeof crashReport === "string" && crashReport.length > 512_000) {
+    return {
+      probableCause: "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP",
+      fixSuggestions: ["请裁剪为相关堆栈段落后再试"],
+      deobfuscated: [],
+      relatedMistakes: [],
+    };
+  }
   const deobfuscated: string[] = [];
 
   // 反混淆处理（去除混淆名称中的 $ 内部类引用）
