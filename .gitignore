@@ -28,6 +28,8 @@ npm-debug.log*
 mcp-server/audit-*.txt
 mcp-server/scripts/_temp/
 agent-tools/
+check-sources.txt
+临时文件*.md
 
 # Java / Minecraft
 *.class
