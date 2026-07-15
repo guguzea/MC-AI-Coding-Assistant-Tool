@@ -182,6 +182,8 @@ export interface ApplyMigrationOutput {
     packageRenames: { from: string; to: string; affectedFiles: number }[];
     todoBlocksAdded: { file: string; lines: number }[];
     unreviewedCandidates: { file: string; reason: string }[];
+    /** Notes for humans — gradle files are NOT modified by this tool */
+    manualFollowUps?: string[];
   };
 }
 

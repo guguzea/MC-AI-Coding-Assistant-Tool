@@ -170,11 +170,17 @@ export class NeoForgeDocStore {
 
   // ── 工具方法 ────────────────────────────────────────────────────────────
 
-  /** 解析版本目录路径（支持降级） */
+  /** 解析版本目录路径（支持 Forge 兼容回退） */
   private resolveVersionDir(version: string): string {
     const effectiveVersion = this.resolveEffectiveVersion(version);
     const nested = this.versionDataDir(effectiveVersion);
     if (existsSync(join(nested, "index-l0.json"))) return nested;
+
+    // NeoForge 1.20.1：回退到 Forge 1.20.1 文档（API 语义兼容）
+    if (FORGE_COMPATIBLE_VERSIONS.has(version) || FORGE_COMPATIBLE_VERSIONS.has(effectiveVersion)) {
+      const forgeCompat = join(this.dataDir, "forge_1.20.1", "forge-docs", "1.20.1");
+      if (existsSync(join(forgeCompat, "index-l0.json"))) return forgeCompat;
+    }
 
     // Fallback: dataDir 直接包含 index-l0.json（兼容单版本目录）
     if (existsSync(join(this.dataDir, "index-l0.json"))) return this.dataDir;
@@ -186,7 +192,7 @@ export class NeoForgeDocStore {
       if (existsSync(join(fallbackNested, "index-l0.json"))) return fallbackNested;
     }
 
-    // 找不到时返回原始拼接路径（让后续 existsSync 失败抛错）
+    // 找不到时返回原始拼接路径（让后续 loadIndex 抛 VersionNotFoundError）
     return nested;
   }
 
@@ -224,7 +230,9 @@ export class NeoForgeDocStore {
     if (cached !== undefined) return cached;
 
     const path = join(versionDir, `${name}.json`);
-    if (!existsSync(path)) return [];
+    if (!existsSync(path)) {
+      throw new VersionNotFoundError(version, this.getAvailableVersions());
+    }
     const data = JSON.parse(readFileSync(path, "utf-8"));
     this.setCache(this.indexCache, cacheKey, data);
     return data;
@@ -249,19 +257,26 @@ export class NeoForgeDocStore {
     this.ensureValidated();
     if (!existsSync(this.dataDir)) return [];
     try {
-      return readdirSync(this.dataDir, { withFileTypes: true })
+      const versions = readdirSync(this.dataDir, { withFileTypes: true })
         .filter((d: Dirent) => d.isDirectory() && d.name.startsWith("neoforge_") && d.name !== "neoforge_javadoc")
         .map((d: Dirent) => d.name.replace(/^neoforge_/, ""))
-        .filter(v => existsSync(join(this.versionDataDir(v), "index-l0.json")))
-        .sort((a, b) => {
-          const pa = a.split(".").map(Number);
-          const pb = b.split(".").map(Number);
-          for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-            const da = pa[i] ?? 0, db = pb[i] ?? 0;
-            if (da !== db) return db - da;
-          }
-          return 0;
-        });
+        .filter(v => existsSync(join(this.versionDataDir(v), "index-l0.json")));
+
+      // 1.20.1：无独立 neoforge_1.20.1 时，若 Forge 文档可用则列入
+      const forgeCompat = join(this.dataDir, "forge_1.20.1", "forge-docs", "1.20.1", "index-l0.json");
+      if (existsSync(forgeCompat) && !versions.includes("1.20.1")) {
+        versions.push("1.20.1");
+      }
+
+      return versions.sort((a, b) => {
+        const pa = a.split(".").map(Number);
+        const pb = b.split(".").map(Number);
+        for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+          const da = pa[i] ?? 0, db = pb[i] ?? 0;
+          if (da !== db) return db - da;
+        }
+        return 0;
+      });
     } catch { return []; }
   }
 

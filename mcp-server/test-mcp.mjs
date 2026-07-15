@@ -386,6 +386,7 @@ async function runTests() {
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
+  assert.equal(toolNames.length, 31, `expected 31 tools, got ${toolNames.length}`);
   console.log(`  tools=${toolNames.length}`);
   console.log();
 

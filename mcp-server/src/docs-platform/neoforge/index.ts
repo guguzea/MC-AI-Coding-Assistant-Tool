@@ -124,12 +124,23 @@ export async function searchNeoForgeDocs(args: {
   tags?: string[];
 }): Promise<CallToolResult> {
   try {
-    const s = getGenericStore();
-    const results = s.searchIndex(args.query, args.version ?? "26.1", args.tags);
+    const s = getGenericStore() as NeoForgeDocStore;
+    const version = args.version ?? "26.1";
+    const results = s.searchIndex(args.query, version, args.tags);
+    const forgeCompatible = version === "1.20.1";
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, query: args.query, version: args.version, results }, null, 2),
+        text: JSON.stringify({
+          ok: true,
+          query: args.query,
+          version,
+          forgeCompatible: forgeCompatible || undefined,
+          sourceNote: forgeCompatible
+            ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
+            : undefined,
+          results,
+        }, null, 2),
       }],
     };
   } catch (e) {

@@ -7,6 +7,9 @@ import { listVersions } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
+import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
+import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
+import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -192,11 +195,90 @@ async function testFabricClassPrefixSearch() {
   assert.ok(byPlain.length > 0, "plain item search should still work");
 }
 
+async function testSandboxAssertWritablePath() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-sandbox-"));
+  const secret = mkdtempSync(join(tmpdir(), "mc-skill-secret-"));
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  process.env.MC_SKILL_PROJECT_ROOT = root;
+  try {
+    // New file under existing parent — allowed
+    assertWritablePath(join(root, "NewFile.java"), nativeReal(root));
+
+    // Relative PROJECT_ROOT rejected
+    process.env.MC_SKILL_PROJECT_ROOT = "relative-not-allowed";
+    const blocked = JSON.parse(await portProject({
+      projectPath: root,
+      action: "init_architectury",
+      dryRun: false,
+      confirmed: true,
+      modId: "relmod",
+    }));
+    assert.equal(blocked.ok, false);
+    assert.equal(blocked.error.code, "PROJECT_ROOT_REQUIRED");
+
+    process.env.MC_SKILL_PROJECT_ROOT = root;
+
+    // Symlink / junction escape: link inside root pointing outside
+    const linkInside = join(root, "escape-link");
+    try {
+      symlinkSync(secret, linkInside, "junction");
+    } catch {
+      try {
+        symlinkSync(secret, linkInside, "dir");
+      } catch (e) {
+        console.log("skip symlink escape test:", e.message);
+        return;
+      }
+    }
+    let threw = false;
+    try {
+      assertWritablePath(join(linkInside, "leak.txt"), nativeReal(root));
+    } catch (e) {
+      threw = true;
+      assert.ok(e instanceof ProjectPathError);
+      assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
+    }
+    assert.equal(threw, true, "symlink/junction escape must be rejected");
+
+    // Windows case-insensitive prefix
+    if (process.platform === "win32") {
+      const a = nativeReal(root);
+      const b = a.toUpperCase();
+      assert.equal(isInsideReal(a, b), true);
+    }
+  } finally {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+    rmSync(root, { recursive: true, force: true });
+    rmSync(secret, { recursive: true, force: true });
+  }
+}
+
+async function testNeoForge1201ForgeCompat() {
+  const dataRoot =
+    process.env.MC_SKILL_DATA ??
+    resolve(fileURLToPath(new URL("..", import.meta.url)), "data");
+  process.env.MC_SKILL_DATA = dataRoot;
+  const result = await searchNeoForgeDocs({ query: "event", version: "1.20.1" });
+  const text = result.content[0].text;
+  const body = JSON.parse(text);
+  assert.equal(body.ok, true);
+  assert.ok(Array.isArray(body.results));
+  assert.ok(body.results.length > 0, "NeoForge 1.20.1 should fall back to Forge docs");
+  assert.equal(body.forgeCompatible, true);
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
 await testYarnShortNameAndMojangHeuristic();
 await testFabricClassPrefixSearch();
+await testSandboxAssertWritablePath();
+await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();
 await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();

@@ -155,8 +155,8 @@ export class ForgeDocStore {
     if (!existsSync(this.dataDir)) {
       throw new Error(
         `数据目录不存在: ${this.dataDir}\n` +
-        `请确保 MC_SKILL_DATA 环境变量指向 "data" 目录的父目录。\n` +
-        `示例：MC_SKILL_DATA=/path/to/h-MC-skill/data`
+        `请确保 MC_SKILL_DATA 环境变量指向 data 目录本身（绝对路径）。\n` +
+        `示例：MC_SKILL_DATA=/path/to/MC_skill/data`
       );
     }
     if (this.getAvailableVersionsUnchecked().length === 0) {

@@ -54,9 +54,18 @@ function resolveDataDir(): string {
   const wdMsg = (workerData as { dataDir?: string } | null)?.dataDir;
   if (wdMsg && existsSync(wdMsg)) return wdMsg;
 
-  // 策略 2：process.cwd() 回退（仅作最后手段）
-  const cwd = join(process.cwd(), "data", "forge_1.20.1");
-  return cwd;
+  // 策略 2：MC_SKILL_DATA（与主进程 path.ts 一致：指向 data/ 根）
+  const env = process.env.MC_SKILL_DATA;
+  if (env && existsSync(env)) {
+    const extracted = join(env, "forge_1.20.1", "extracted");
+    if (existsSync(extracted)) return extracted;
+    return env;
+  }
+
+  // 策略 3：cwd/data/forge_1.20.1/extracted
+  const cwdExtracted = join(process.cwd(), "data", "forge_1.20.1", "extracted");
+  if (existsSync(cwdExtracted)) return cwdExtracted;
+  return join(process.cwd(), "data", "forge_1.20.1");
 }
 
 let dataDir: string = resolveDataDir();

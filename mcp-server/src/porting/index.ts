@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSy
 import { join, relative, basename } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
-import { resolveProjectPath, ProjectPathError } from "../utils/project-sandbox.js";
+import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -214,8 +214,8 @@ function generateRouteSteps(
   if (!isArchitectury && needCrossPlatform) {
     return [
       "初始化 MultiLoader 项目结构（调用 port_project action=init_architectury）",
-      "从当前源码提取 common 模块候选（调用 port_project action=extract_common，人工确认后执行）",
-      "通过 @ExpectPlatform 抽象 Registry 层（Agent 根据 extract_common 输出人工处理）",
+      "从当前源码提取 common 模块候选（调用 port_project action=extract_common：仅静态分析，不搬文件）",
+      "通过 @ExpectPlatform 抽象 Registry 层（根据 extract_common 输出人工处理）",
       "拆分 Mixin 配置到 fabric/ 和 neoforge/ 子工程（Agent 手动处理）",
       "验证 fabric/ 模块编译通过",
       "验证 neoforge/ 模块编译通过",
@@ -677,6 +677,7 @@ function applyPackageRenames(root: string, dryRun: boolean): {
 } {
   const srcDir = join(root, "src");
   const files = walkDir(srcDir, [".java", ".kt"]);
+  const allowRoot = dryRun ? null : getAllowRootReal();
 
   const renames: { from: string; to: string; affectedFiles: number }[] = [];
   const unreviewed: { file: string; reason: string }[] = [];
@@ -687,7 +688,8 @@ function applyPackageRenames(root: string, dryRun: boolean): {
       const content = readContent(file);
       if (content.includes(from)) {
         count++;
-        if (!dryRun) {
+        if (!dryRun && allowRoot) {
+          assertWritablePath(file, allowRoot);
           writeFileSync(file, content.replaceAll(from, to), "utf-8");
         }
       }
@@ -697,9 +699,8 @@ function applyPackageRenames(root: string, dryRun: boolean): {
     }
   }
 
-  // TODO blocks for API changes
   const unreviewedCandidates: { file: string; reason: string }[] = [
-    { file: "需要人工 review", reason: "RegistryObject → DeferredHolder 变更（见 forge/1.20.1/knowledge/porting/02-version-migration.md）" },
+    { file: "需要人工 review", reason: "RegistryObject → DeferredHolder 变更（见 data/porting 知识库 / 平台 porting 文档）" },
     { file: "需要人工 review", reason: "NeoForge 1.20.2+ 事件总线订阅方式（mod bus / forge bus）" },
   ];
 
@@ -774,9 +775,13 @@ export async function portProject(args: unknown) {
     const files = buildArchitecturySkeleton(root, modId, mcVersion);
 
     if (doWrite) {
+      const allowRoot = getAllowRootReal();
       for (const [filePath, content] of Object.entries(files)) {
         const full = join(root, filePath);
-        mkdirSync(join(full, ".."), { recursive: true });
+        const parent = join(full, "..");
+        assertCreatableDir(parent, allowRoot);
+        mkdirSync(parent, { recursive: true });
+        assertWritablePath(full, allowRoot);
         writeFileSync(full, content, "utf-8");
       }
     }
@@ -845,27 +850,25 @@ export async function portProject(args: unknown) {
     const targetVersion = parsed.data.targetVersion ?? "1.20.4";
     const { renames, unreviewed } = applyPackageRenames(root, !doWrite);
 
-    // Build Gradle updates
-    const buildUpdates: string[] = [];
-    const gradleUpdates: string[] = [];
-
+    // Notes only — this action does NOT rewrite build.gradle / gradle.properties
+    const manualNotes: string[] = [];
     if (renames.length > 0) {
-      buildUpdates.push(`包名替换: ${renames.map((r) => `${r.from} → ${r.to}`).join(", ")}`);
-      gradleUpdates.push(`NeoForge 版本迁移至 ${targetVersion}（需手动确认版本号）`);
+      manualNotes.push(`已（或将）替换 Java 包名: ${renames.map((r) => `${r.from} → ${r.to}`).join(", ")}`);
+      manualNotes.push(`请手动将 NeoForge/依赖版本对齐到 ${targetVersion}（本工具不修改 build.gradle）`);
     }
 
-    // TODO blocks
     const todoBlocks: { file: string; lines: number }[] = [];
 
     const output: ApplyMigrationOutput = {
       ok: true,
       dryRun,
       changes: {
-        buildGradleUpdates: buildUpdates,
-        gradlePropertiesUpdates: gradleUpdates,
+        buildGradleUpdates: [],
+        gradlePropertiesUpdates: [],
         packageRenames: renames,
         todoBlocksAdded: todoBlocks,
         unreviewedCandidates: unreviewed,
+        manualFollowUps: manualNotes,
       },
     };
     return JSON.stringify(output, null, 2);

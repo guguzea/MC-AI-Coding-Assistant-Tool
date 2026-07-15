@@ -46,7 +46,7 @@ jobs:
 
       - name: npm audit (production)
         working-directory: mcp-server
-        run: npm audit --omit=dev --audit-level=high || true
+        run: npm audit --omit=dev --audit-level=high
 
       - name: Prepare release bundles
         shell: bash
@@ -101,10 +101,22 @@ jobs:
 
           (cd release && zip -r -q "../${SERVER_ZIP}" mcp-server)
           (cd release/staging-data && zip -r -q "../../${DATA_ZIP}" .)
-          sha256sum "${SERVER_ZIP}" "${DATA_ZIP}" release/data-manifest.json > "SHA256SUMS-${TAG_NAME}.txt"
+          # Checksums must use bare filenames: softprops/action-gh-release uploads
+          # release/data-manifest.json as data-manifest.json (directory stripped).
+          {
+            sha256sum "${SERVER_ZIP}" "${DATA_ZIP}"
+            (cd release && sha256sum data-manifest.json)
+          } > "SHA256SUMS-${TAG_NAME}.txt"
           echo "SERVER_ZIP=${SERVER_ZIP}" >> "$GITHUB_ENV"
           echo "DATA_ZIP=${DATA_ZIP}" >> "$GITHUB_ENV"
           echo "SUMS=SHA256SUMS-${TAG_NAME}.txt" >> "$GITHUB_ENV"
+
+      - name: Release smoke (checkout node_modules, not artifact)
+        working-directory: mcp-server
+        run: npm run smoke:release
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+          MCP_TIMEOUT_MS: 60000
 
       - name: Create GitHub Release and upload assets
         uses: softprops/action-gh-release@v2
@@ -116,16 +128,30 @@ jobs:
             release/data-manifest.json
           generate_release_notes: true
           body: |
-            ## Install (out of the box)
+            ## Install
 
-            1. Download **mcp-server** zip and **mc-skill-data-full** zip
-            2. Unzip both (place `data/` next to or anywhere; point env at it)
-            3. Configure Cursor MCP stdio:
+            Server zip **does not** include `node_modules` (same as git). Build locally:
+
+            1. **Check Node.js** (Yarn mappings need `node:sqlite`):
+               ```bash
+               node -v
+               # must be v22.5+
+               node -e "const [maj,min]=process.versions.node.split('.').map(Number); if(maj<22||(maj===22&&min<5)){console.error('Need Node >=22.5');process.exit(1)} else console.log('OK',process.versions.node)"
+               ```
+            2. Unzip **mcp-server** zip and **mc-skill-data-full** zip
+            3. Install & build:
+               ```bash
+               cd mcp-server
+               npm ci
+               npm run build
+               # If dist/ is already present in the zip, `npm ci --omit=dev` is enough to run.
+               ```
+            4. Configure Cursor MCP stdio:
 
             ```json
             {
               "mcpServers": {
-                "mc-skill": {
+                "MC-AI-Coding-Assistant-Tool": {
                   "command": "node",
                   "args": ["/absolute/path/to/mcp-server/dist/index.js"],
                   "env": {
@@ -136,4 +162,4 @@ jobs:
             }
             ```
 
-            Requires **Node.js >= 22**. Yarn lookups use prebuilt `yarn-mappings.sqlite` (never loads full JSON).
+            Requires **Node.js >= 22.5**. Yarn lookups use prebuilt `yarn-mappings.sqlite` (never loads full JSON).

@@ -9,7 +9,7 @@ import { diagnoseGradle } from "./gradle/index.js";
 import { generateDatagen } from "./datagen/index.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
-import { diagnoseDataPaths } from "./utils/path.js";
+import { diagnoseDataPaths, hasAnyPlatformData } from "./utils/path.js";
 import { analyzePortingPath, portProject } from "./porting/index.js";
 import {
   // 旧 Forge 别名（向后兼容）
@@ -69,7 +69,7 @@ server.registerTool(
   {
     title: "Query Forge/Vanilla API",
     description:
-      "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：Parchment 1.20.1 (2023.09.03)。" +
+      "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。" +
       "适用于：需要确认某个 Minecraft API 的正确用法时。" +
       "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。",
     inputSchema: z.object({
@@ -90,17 +90,18 @@ server.registerTool(
   {
     title: "Get Method Parameter Names",
     description:
-      "查询指定方法的完整参数名列表（来源：Parchment 1.20.1 真实映射）。" +
+      "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。" +
       "适用于：当知道方法名但不确定参数顺序和名称时。" +
       "需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。",
     inputSchema: z.object({
       className: z.string().describe("类全限定名"),
       methodName: z.string().describe("方法名（mcp/srg 层名，非 mojang official）"),
       descriptor: z.string().optional().describe("完整 JNI 描述符（用于区分重载，如 (Lnet/minecraft/world/entity/LivingEntity;)V）"),
+      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
     }),
   },
-  async ({ className, methodName, descriptor }): Promise<CallToolResult> => {
-    const result = getMethodParams({ className, methodName, descriptor });
+  async ({ className, methodName, descriptor, version }): Promise<CallToolResult> => {
+    const result = getMethodParams({ className, methodName, descriptor, version });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -655,6 +656,17 @@ process.on("uncaughtException", (err) => {
 // 启动时打印诊断（仅当 MC_SKILL_DEBUG_PATHS=1）
 if (process.env.MC_SKILL_DEBUG_PATHS === "1") {
   console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));
+}
+
+if (!hasAnyPlatformData()) {
+  const msg =
+    "[mc-mcp-server] WARN: 未在数据目录中找到 forge_*/fabric_*/neoforge_*。" +
+    "请设置 MC_SKILL_DATA 为 data 目录绝对路径并确认已解压数据。";
+  console.error(msg);
+  if (process.env.MC_SKILL_STRICT === "1") {
+    console.error("[mc-mcp-server] MC_SKILL_STRICT=1：数据缺失，退出。");
+    process.exit(1);
+  }
 }
 
 try {

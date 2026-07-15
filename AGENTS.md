@@ -146,21 +146,21 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用以下 MCP 工具提升效率：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **31** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`）：
 
 | 工具 | 功能 |
 | --- | --- |
-| `query_api` | 按类名查询 Forge/MCP API 签名 |
-| `get_method_params` | 查询方法参数名 |
-| `convert_mapping` | MCP ↔ Parchment ↔ Mojang 映射互转 |
+| `query_api` | 按类名查询 Vanilla/Parchment API 签名 |
+| `get_method_params` | 查询方法参数名（可选 version） |
+| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite） |
 | `get_version_info` | 查询版本支持的 API 范围 |
 | `diagnose_gradle` | 诊断 Gradle 构建问题 |
 | `generate_datagen` | 生成数据生成器代码 |
-| `crash_analyze` | 分析崩溃日志，定位问题原因 |
+| `crash_analyze` | 分析崩溃日志 |
 | `validate_project` | 校验模组项目结构 |
-| `search_fabric_docs` | 搜索 Fabric Docs + Wiki |
-| `get_fabric_doc_summary` | 获取 Fabric 文档摘要 |
-| `get_fabric_doc_full` | 获取 Fabric 文档全文 |
-| `search_forge_docs` | 搜索 Forge 官方文档 |
-| `get_forge_doc_summary` | 获取 Forge 文档摘要 |
-| `get_forge_doc_full` | 获取 Forge 文档全文 |
+| `search_forge_docs` / `get_forge_doc_*` | Forge 文档 |
+| `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
+| `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
+| `search_docs` / `get_doc_*` | 跨平台通用文档入口 |
+| `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
+| `diagnose_data_paths` | 诊断数据目录配置 |

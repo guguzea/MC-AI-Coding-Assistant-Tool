@@ -90,13 +90,14 @@ forge/1.20.1/
 |------|------|------|
 | `MC_SKILL_DATA` | 数据目录根路径（不含版本子目录） | `MC_SKILL_DATA=/path/to/data` |
 | `MC_SKILL_ALLOW_WRITE` | `1` 时允许 `port_project` 写盘 | `1` |
-| `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根目录 | `H:/mods/my-mod` |
+| `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径） | `H:/mods/my-mod` |
+| `MC_SKILL_STRICT` | `1` 时数据无效则 MCP 启动失败 | `1` |
 | `MC_SKILL_DEBUG_PATHS` | 设为 `1` 打印路径解析过程 | `MC_SKILL_DEBUG_PATHS=1` |
 | `MCP_TIMEOUT_MS` | 测试脚本超时毫秒数 | `MCP_TIMEOUT_MS=30000` |
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（约 31 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22**（Yarn 映射使用内置 `node:sqlite`）。
+本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（约 31 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。解压 Release 后需自行 `npm ci && npm run build`（仓库/Release **不含** `node_modules`）。
 
 ### 文档查询（Fabric / Forge）
 

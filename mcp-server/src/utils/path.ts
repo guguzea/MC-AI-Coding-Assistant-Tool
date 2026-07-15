@@ -29,11 +29,17 @@ function getDataDirFromSelf(): string {
 
 function getDataDirFromEnv(): string | null {
   const envPath = process.env.MC_SKILL_DATA;
-  if (!envPath) return null;
+  if (!envPath) {
+    console.error(
+      "[mc-mcp-server] WARN: 未设置 MC_SKILL_DATA，将尝试从安装路径或 cwd 推导 data/。" +
+        "推荐设置 MC_SKILL_DATA 为 data 目录的绝对路径。",
+    );
+    return null;
+  }
   if (existsSync(envPath)) return envPath;
   console.error(
     `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 不存在，已回退到推导/cwd 路径。` +
-      `请检查路径是否为 data 目录的绝对路径。`,
+      `请检查路径是否为 data 目录的绝对路径（例如 H:/MC_skill/data）。`,
   );
   return null;
 }
@@ -108,4 +114,20 @@ export function diagnoseDataPaths(): {
   }
 
   return { resolvedDataDir: dataDir, sources, platforms };
+}
+
+/** True if data root contains at least one platform version directory. */
+export function hasAnyPlatformData(dataDir = resolveDataDir()): boolean {
+  if (!existsSync(dataDir)) return false;
+  try {
+    return readdirSync(dataDir, { withFileTypes: true }).some(
+      (e) =>
+        e.isDirectory() &&
+        (e.name.startsWith("forge_") ||
+          e.name.startsWith("fabric_") ||
+          e.name.startsWith("neoforge_")),
+    );
+  } catch {
+    return false;
+  }
 }
