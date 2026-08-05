@@ -51,6 +51,10 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
 
@@ -160,3 +164,5 @@ src/main/java/
 | 网络包 | `SimpleChannel` | 包名变为 `net.neoforged.neoforge.network` |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本和 NeoForge 版本。
+
+社区实务可用 MCP `search_community_docs`；用到短文时若不清楚，按仓库根 `community_knowledge/AGENT_USAGE.md` 打开原文 / 官方文档，禁止臆造 API。

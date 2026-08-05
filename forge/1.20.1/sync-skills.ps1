@@ -2,7 +2,7 @@
 # MC Skill Sync Script — forge/1.20.1
 #
 # 将 .cursor/skills/ 和 .cursor/rules/ 中的配置同步到
-# .claude/、.continue/、.trae/ 目录。
+# .claude/、.continue/、.trae/、.opencode/、.agents/、.zcode/、.pi/ 目录。
 #
 # 特性：
 #   - 自动将 skill 文件中的 .cursor/ 路径引用替换为纯文件名
@@ -77,6 +77,14 @@ foreach ($skillDir in Get-ChildItem $cursorSkillsDir -Directory) {
     # .trae/skills/mc-xxx.md  (flat, 保留 mc- 前缀)
     [System.IO.File]::WriteAllText("$BASE\.trae\skills\$($skillDir.Name).md", $normalized, [System.Text.Encoding]::UTF8)
 
+    # OpenCode / Codex / ZCode：子目录 SKILL.md
+    New-Item -ItemType Directory -Force -Path "$BASE\.opencode\skills\$($skillDir.Name)" | Out-Null
+    [System.IO.File]::WriteAllText("$BASE\.opencode\skills\$($skillDir.Name)\SKILL.md", $normalized, [System.Text.Encoding]::UTF8)
+    New-Item -ItemType Directory -Force -Path "$BASE\.agents\skills\$($skillDir.Name)" | Out-Null
+    [System.IO.File]::WriteAllText("$BASE\.agents\skills\$($skillDir.Name)\SKILL.md", $normalized, [System.Text.Encoding]::UTF8)
+    New-Item -ItemType Directory -Force -Path "$BASE\.zcode\skills\$($skillDir.Name)" | Out-Null
+    [System.IO.File]::WriteAllText("$BASE\.zcode\skills\$($skillDir.Name)\SKILL.md", $normalized, [System.Text.Encoding]::UTF8)
+
     Write-Host "  Synced: $($skillDir.Name)" -ForegroundColor Green
     $skillCount++
 }
@@ -95,6 +103,22 @@ foreach ($rule in Get-ChildItem $cursorRulesDir -Filter "*.mdc") {
     Copy-Item $rule.FullName "$BASE\.claude\rules\$($rule.Name)" -Force
     Copy-Item $rule.FullName "$BASE\.continue\rules\$($rule.Name)" -Force
     Copy-Item $rule.FullName "$BASE\.trae\rules\$($rule.Name)" -Force
+
+    # Pi：.mdc → .pi/rules/*.md，补 description frontmatter
+    $ruleText = [System.IO.File]::ReadAllText($rule.FullName, [System.Text.Encoding]::UTF8)
+    $piName = [System.IO.Path]::GetFileNameWithoutExtension($rule.Name) + ".md"
+    if ($ruleText -notmatch '(?m)^description\s*:') {
+        $titleLine = ($ruleText -split "`r?`n" | Where-Object { $_ -match '^#\s+' } | Select-Object -First 1)
+        $desc = if ($titleLine) { ($titleLine -replace '^#\s+', '').Trim() } else { $piName }
+        if ($ruleText.StartsWith("---")) {
+            $ruleText = $ruleText -replace '(?s)^---\r?\n', "---`ndescription: $desc`n"
+        } else {
+            $ruleText = "---`ndescription: $desc`n---`n`n" + $ruleText
+        }
+    }
+    New-Item -ItemType Directory -Force -Path "$BASE\.pi\rules" | Out-Null
+    [System.IO.File]::WriteAllText("$BASE\.pi\rules\$piName", $ruleText, [System.Text.Encoding]::UTF8)
+
     Write-Host "  Synced: $($rule.Name)" -ForegroundColor Green
     $ruleCount++
 }
@@ -147,6 +171,11 @@ Write-Host "  .continue/rules/   (.mdc)"
 Write-Host "  .trae/skills/      (flat, path references normalized)"
 Write-Host "  .trae/rules/       (.mdc)"
 Write-Host "  .trae/agents/      (synced from AGENTS.md)"
+Write-Host "  .opencode/skills/  (OpenCode)"
+Write-Host "  .agents/skills/    (Codex)"
+Write-Host "  .zcode/skills/     (ZCode)"
+Write-Host "  .pi/rules/         (Pi, .md + description)"
 Write-Host ""
 Write-Host "Preserved (not synced):" -ForegroundColor Cyan
 Write-Host "  .cursor/agents/default.md  (Cursor-specific role definition)"
+Write-Host "  AGENTS.md                  (OpenCode / Codex / ZCode 直接读取)"

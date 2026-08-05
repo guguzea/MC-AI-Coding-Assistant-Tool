@@ -8,7 +8,7 @@
 
 ### Java 版本
 
-- **必须使用 Java 17**（NeoForge 1.20.4 要求；Java 21 仅在更高版本才需要）
+- **必须使用 Java 17**（NeoForge 1.20.4 要求；Java 21 仅在 Minecraft 1.20.6+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_17` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(17)`
 - Gradle Wrapper 版本不低于 **Gradle 8.4**
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
@@ -20,7 +20,7 @@
 - ❌ 不要手动运行 `build` 任务以外的 Gradle 命令（`compileJava`、`processResources` 等应通过 `build` 间接触发）
 - ❌ 不要修改 `build.gradle` 中的 `minecraft` 和 `neoforge` 版本号（这两个版本号必须与项目目标版本匹配）
 - ❌ 不要删除或注释 `minecraft` 和 `neoforge` 配置块中的任何必需行
-- ❌ 不要混用 Fabric 的 `loom` 插件和 NeoForge 的 `neoforge` 插件
+- ❌ 不要混用 Fabric 的 `loom` 插件和 NeoForge 的 `neogradle` 插件
 
 #### 正确的构建命令
 
@@ -45,23 +45,21 @@
   minecraft_version=1.20.4
   neoform_version=20240429.174701
   neoforge_version=20.4.237
-  neoforge_version_range=[20.4,)
-  loader_version_range=[20.4,)
-  mapping_channel=official
-  mapping_version=20240527.185332
+  mappings_channel=official
+  mappings_version=20240527.185332
+  loader_version=20.4
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
   > - `loader_version` 填 NeoForge 版本号，与 neoforge.mods.toml 中的 `loaderVersion` 字段对应
-
 - **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性
 
 ### Mappings 约束
 
-- NeoForge 1.20.4 默认使用 **Official**（Mojang 映射）
-- `gradle.properties` 中的 `mapping_version` 对应官方映射版本
-- **NeoGradle 原生支持 Parchment**，无需额外插件
-- Official 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
+- NeoForge 1.20.4 默认使用 **MCP**
+- `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
+- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
+- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 
 ### 项目目录结构（强制规范）
 
@@ -99,7 +97,7 @@ src/main/resources/
 
 ```
 IF 这是新项目（没有 build.gradle）
-  → 使用 neoforge/1.20.4/scaffold/ 中的模板生成项目骨架
+  → 使用 neoforge/scaffold/ 中的模板生成项目骨架
   → README_AI.md 包含每个文件的职责说明
 
 IF 这是已有项目
@@ -120,10 +118,10 @@ IF 报错包含 "Could not resolve net.neoforged"
   → 检查 gradle.properties 中 neoforge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 17，不兼容 Java 8 或 Java 21（仅更高版本才需要 21）
+  → 确认使用 Java 17，不兼容 Java 8 或 Java 21（仅 1.20.6+ 才需要 21）
 
 IF 报错包含 "Could not find net.neoforged:neoforge"
-  → 确认 build.gradle 中 neoform_version 和 neoforge_version 版本匹配
+  → 确认 build.gradle 中 minecraft_version 和 neoforge_version 版本匹配
   → NeoForge 版本对应关系：1.20.4 → 20.4.x
 
 IF 报错包含 "No resource bundling found"
@@ -155,7 +153,7 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: mapping_channel, version: mapping_version
+    mappings channel: 'official', version: mappings_version
     copyIdeResources = true
 
     runs {
@@ -163,7 +161,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'neoforge.logging.markers', 'REGISTRIES'
             property 'neoforge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'neoforge.enabledGameTestNamespaces', mod_id
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -171,10 +169,10 @@ minecraft {
             }
         }
         client {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'neoforge.enabledGameTestNamespaces', mod_id
         }
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'neoforge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
     }
@@ -182,7 +180,6 @@ minecraft {
 
 repositories {
     mavenCentral()
-    maven { url = 'https://maven.neoforged.net/' }
 }
 
 dependencies {
@@ -195,7 +192,7 @@ tasks.named('processResources').configure {
         minecraft_version_range: "[${minecraft_version},)",
         neoforge_version       : neoforge_version,
         neoforge_version_range : "[${neoforge_version},)",
-        loader_version_range   : "[${loader_version},)",
+        loader_version_range: "[${loader_version},)",
         mod_id              : mod_id,
         mod_name            : mod_name,
         mod_license         : mod_license,
@@ -243,11 +240,11 @@ license = "MIT"               # 可选，许可证
 
 # dependencies 块（可选但推荐）
 [[dependencies.examplemod]]
-modId = "neoforge"           # 必需（注意：NeoForge）
+modId = "neoforge"           # 必需
 mandatory = true              # 必需
-versionRange = "[20.4,)"        # 必需：NeoForge 版本范围
+versionRange = "[20.4,)"      # 必需：NeoForge 版本范围
 ordering = "NONE"             # 可选：NONE / BEFORE / AFTER
-side = "BOTH"                 # 可选：BOTH / CLIENT / SERVER
+side = "BOTH"                # 可选：BOTH / CLIENT / SERVER
 
 [[dependencies.examplemod]]
 modId = "minecraft"

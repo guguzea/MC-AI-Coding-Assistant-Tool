@@ -48,6 +48,11 @@ function getDataDirFromCwd(): string {
   return join(process.cwd(), "data");
 }
 
+function getRepoRootFromSelf(): string {
+  // dist/utils → dist → mcp-server → repo root
+  return join(getSelfDir(), "..", "..", "..");
+}
+
 /**
  * 解析数据目录路径（外部调用接口）
  * 按以下优先级：
@@ -68,6 +73,33 @@ export function resolveDataDir(...subpaths: string[]): string {
 }
 
 /**
+ * 社区知识库目录（community_knowledge/）
+ * 优先级：
+ * 1. MC_SKILL_COMMUNITY
+ * 2. dirname(MC_SKILL_DATA)/community_knowledge
+ * 3. 仓库根 / community_knowledge
+ * 4. cwd/community_knowledge
+ */
+export function resolveCommunityDir(...subpaths: string[]): string {
+  const env = process.env.MC_SKILL_COMMUNITY;
+  let base: string | null = null;
+  if (env && existsSync(env)) {
+    base = env;
+  } else {
+    const dataDir = resolveDataDir();
+    const sibling = join(dirname(dataDir), "community_knowledge");
+    if (existsSync(sibling)) base = sibling;
+    else {
+      const fromSelf = join(getRepoRootFromSelf(), "community_knowledge");
+      if (existsSync(fromSelf)) base = fromSelf;
+      else base = join(process.cwd(), "community_knowledge");
+    }
+  }
+  if (subpaths.length === 0) return base;
+  return join(base, ...subpaths);
+}
+
+/**
  * 诊断数据目录配置（供 MCP 工具 diagnose_data_paths 使用）
  * 返回各平台数据目录的可用性状态。
  */
@@ -75,10 +107,13 @@ export function diagnoseDataPaths(): {
   resolvedDataDir: string;
   sources: string[];
   platforms: Record<string, { status: string; path: string; details: string }>;
+  community: { status: string; path: string; details: string; env: string | null };
 } {
   const sources: string[] = [];
   const envPath = process.env.MC_SKILL_DATA;
   if (envPath) sources.push(`MC_SKILL_DATA=${envPath}`);
+  const communityEnv = process.env.MC_SKILL_COMMUNITY;
+  if (communityEnv) sources.push(`MC_SKILL_COMMUNITY=${communityEnv}`);
   sources.push(`cwd=${process.cwd()}`);
   sources.push(`self=${getSelfDir()}`);
 
@@ -113,7 +148,37 @@ export function diagnoseDataPaths(): {
     platforms[platform] = { status, path, details };
   }
 
-  return { resolvedDataDir: dataDir, sources, platforms };
+  const communityPath = resolveCommunityDir();
+  const communityIndex = join(communityPath, "indexes", "index-l0.json");
+  let communityStatus = "not_found";
+  let communityDetails = "";
+  try {
+    if (!existsSync(communityPath)) {
+      communityStatus = "not_found";
+      communityDetails = `Community directory not found at ${communityPath}`;
+    } else if (!existsSync(communityIndex)) {
+      communityStatus = "empty";
+      communityDetails = `Directory exists but indexes/index-l0.json missing`;
+    } else {
+      communityStatus = "found";
+      communityDetails = `index-l0.json present`;
+    }
+  } catch (err) {
+    communityStatus = "error";
+    communityDetails = String(err);
+  }
+
+  return {
+    resolvedDataDir: dataDir,
+    sources,
+    platforms,
+    community: {
+      status: communityStatus,
+      path: communityPath,
+      details: communityDetails,
+      env: communityEnv ?? null,
+    },
+  };
 }
 
 /** True if data root contains at least one platform version directory. */

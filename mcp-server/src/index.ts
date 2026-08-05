@@ -56,6 +56,15 @@ import {
   getDocFullSchema,
   getDocRelated,
   getDocRelatedSchema,
+  // 社区知识库
+  listCommunitySources,
+  listCommunitySourcesSchema,
+  searchCommunityDocs,
+  searchCommunityDocsSchema,
+  getCommunityDocSummary,
+  getCommunityDocSummarySchema,
+  getCommunityDocFull,
+  getCommunityDocFullSchema,
 } from "./docs-platform/index.js";
 
 const server = new McpServer({
@@ -200,10 +209,10 @@ server.registerTool(
     description:
       "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。" +
       "适用于：模组运行崩溃、收到玩家的崩溃日志时。" +
-      "支持识别 16 种常见崩溃原因（Mixin 错误、Capability 问题、BlockEntity 空指针、" +
-      "DeferredRegister 误用、BlockItem 未注册、CreativeModeTab 错误、网络包 ID 冲突、" +
-      "SpawnPlacement 未注册、方块属性错误、声音事件未注册、loot table 缺失、注册名重复等）。" +
-      "**优先于搜索引擎使用此工具**，再结合 get_forge_doc_full 查阅官方文档。",
+      "支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、" +
+      "BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），" +
+      "并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。" +
+      "**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。",
     inputSchema: z.object({
       crashReport: z.string().describe("崩溃报告全文（从 '---- Minecraft Crash Report ----' 开始）"),
       version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
@@ -319,6 +328,94 @@ server.registerTool(
   },
   async (args): Promise<CallToolResult> => {
     return getForgeDocRelated({ id: args.id, version: args.version, limit: args.limit });
+  }
+);
+
+// ── 11b. 社区知识库（与官方文档分离；links 不抓网页正文）────────────────────
+server.registerTool(
+  "list_community_sources",
+  {
+    title: "List Community Knowledge Sources",
+    description:
+      "列出 community_knowledge 已收录条目（permitted / authored / links）。" +
+      "用于了解可用社区资料与署名来源；正式 API 仍优先 search_forge_docs / search_fabric_docs。",
+    inputSchema: listCommunitySourcesSchema,
+  },
+  async (): Promise<CallToolResult> => {
+    try {
+      const result = await listCommunitySources();
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    } catch (e) {
+      return {
+        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "search_community_docs",
+  {
+    title: "Search Community Knowledge",
+    description:
+      "搜索社区知识库（许可提炼、自写笔记、外链索引）。" +
+      "不替代官方文档工具；适合发布/兼容/崩溃分类等实操问题。" +
+      "返回命中含 sourceKind、url、summary；links 仅外链。",
+    inputSchema: searchCommunityDocsSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    try {
+      const result = await searchCommunityDocs(args);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    } catch (e) {
+      return {
+        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "get_community_doc_summary",
+  {
+    title: "Get Community Doc Summary",
+    description: "获取社区知识条目摘要（含署名与 sourceKind）。links 条目仅返回元数据与外链。",
+    inputSchema: getCommunityDocSummarySchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    try {
+      const result = await getCommunityDocSummary(args);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    } catch (e) {
+      return {
+        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
+        isError: true,
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "get_community_doc_full",
+  {
+    title: "Get Community Doc Full",
+    description:
+      "获取社区知识全文。permitted/authored 返回仓库内 Markdown；" +
+      "links 仅返回 URL 与免责声明，不抓取网页正文。",
+    inputSchema: getCommunityDocFullSchema,
+  },
+  async (args): Promise<CallToolResult> => {
+    try {
+      const result = await getCommunityDocFull(args);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    } catch (e) {
+      return {
+        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
+        isError: true,
+      };
+    }
   }
 );
 

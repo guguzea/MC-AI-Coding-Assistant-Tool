@@ -1,68 +1,66 @@
----
+﻿---
 name: mc-registry
-description: Minecraft NeoForge 注册系统。注册方块、物品、实体、方块实体等。触发词：注册、register、DeferredHolder、NeoForgeRegistries、init
-platform: neoforge
+description: Minecraft NeoNeoneoforge 注册系统。注册方块、物品、实体、方块实体等。触发词：注册、register、RegistryObject、DeferredRegister、NeoNeoneoforgeRegistries、BuildPlugin
+platform: neoNeoneoforge
 version: "1.20.4"
 dependencies: []
-mappings: official
+mappings: mcp
 ---
 
-# Registry 注册系统（NeoForge 1.20.4）
+# Registry 注册系统（NeoNeoneoforge 1.20.4）
 
 ## 快速开始
 
-**始终使用 DeferredRegister**，这是 NeoForge 1.20.4 官方推荐的注册方式：
+**始终使用 DeferredRegister**，这是 NeoNeoneoforge 1.20.4 官方推荐的注册方式：
 
 ```java
 // 1. 创建 DeferredRegister（通常在 mod 主类或单独的注册类中）
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(NeoNeoneoforgeRegistries.BLOCKS, MOD_ID);
 
-// 2. 创建 DeferredHolder 持有引用
-public static final DeferredHolder<Block, Block> MY_BLOCK = BLOCKS.register("my_block",
+// 2. 创建 RegistryObject 持有引用
+public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE))
 );
 
-// 3. 在 init() 方法中注册到 modEventBus
-public static void init(IEventBus modEventBus) {
-    BLOCKS.register(modEventBus);
-}
+// 3. 在 mod 构造函数中注册到 modEventBus
+BLOCKS.register(modEventBus);
 ```
 
 ## Decision: 选择注册方式
 
 ```
 IF 注册方块/物品/实体/Biomes/SoundEvents 等
-  → 使用 DeferredRegister<T> + DeferredHolder<T>
+  → 使用 DeferredRegister<T> + RegistryObject<T>
 
 IF 注册自定义 Registry（全新注册表）
   → 使用 RegistryEvent.NewRegistry + DeferredRegister.create(ResourceKey)
 
 IF 需要在 mod constructor 执行前引用已注册对象
-  → ❌ 禁止：在静态字段初始化中引用另一个 DeferredRegister 的 DeferredHolder
-  → ✅ 正确：在 DeferredHolder 的 lambda 内部使用 .get() 获取
+  → ❌ 禁止：在静态字段初始化中引用另一个 DeferredRegister 的 RegistryObject
+  → ✅ 正确：在 RegistryObject 的 lambda 内部使用 .get() 获取
 ```
 
 ## Decision: 常用注册表
 
-| 注册内容 | NeoForgeRegistries 字段 | 备注 |
-|----------|------------------------|------|
-| 方块 | `NeoForgeRegistries.BLOCKS` | |
-| 物品 | `NeoForgeRegistries.ITEMS` | |
-| 方块实体 | `NeoForgeRegistries.BLOCK_ENTITIES` | |
-| 实体类型 | `NeoForgeRegistries.ENTITY_TYPES` | |
+| 注册内容 | NeoNeoneoforgeRegistries 字段 | 备注 |
+|----------|---------------------|------|
+| 方块 | `NeoNeoneoforgeRegistries.BLOCKS` | |
+| 物品 | `NeoNeoneoforgeRegistries.ITEMS` | |
+| 方块实体 | `NeoNeoneoforgeRegistries.BLOCK_ENTITY_TYPES` | |
+| 实体类型 | `NeoNeoneoforgeRegistries.ENTITY_TYPES` | |
 | 生物群系 | `Registries.BIOME`（Vanilla） | 用 `ResourceKey` |
-| 声音事件 | `NeoForgeRegistries.SOUND_EVENTS` | |
-| 附魔 | `NeoForgeRegistries.ENCHANTMENTS` | |
-| 药水 | `NeoForgeRegistries.POTIONS` | |
+| 声音事件 | `NeoNeoneoforgeRegistries.SOUND_EVENTS` | |
+| 附魔 | `NeoNeoneoforgeRegistries.ENCHANTMENTS` | |
+| 药水 | `NeoNeoneoforgeRegistries.POTIONS` | |
 | 创造模式标签 | `Registries.CREATIVE_MODE_TAB` | Vanilla |
 
 ## 注册 ItemBlock
 
-方块的 ItemBlock 与方块同名注册，NeoForge 自动关联：
+方块的 ItemBlock 与方块同名注册，NeoNeoneoforge 自动关联：
 
 ```java
-public static final DeferredHolder<Item, Item> MY_BLOCK_ITEM = ITEMS.register("my_block",
+public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",
     () -> new BlockItem(MY_BLOCK.get(), new Item.Properties())
 );
 ```
@@ -85,11 +83,11 @@ public class MyBlock extends Block implements EntityBlock {
     }
 }
 
-// 注册 BlockEntityType
+// 注册方块实体类型
 public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-    DeferredRegister.create(NeoForgeRegistries.BLOCK_ENTITIES, MOD_ID);
+    DeferredRegister.create(NeoNeoneoforgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
-public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
+public static final RegistryObject<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
     BLOCK_ENTITIES.register("my_block",
         () -> BlockEntityType.Builder.of(MyBlockEntity::new, EXAMPLE_BLOCK.get())
             .build(null)
@@ -99,16 +97,16 @@ public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MyBlockEn
 ## 注册实体属性
 
 ```java
-// 在 mod 初始化中注册（非 FMLCommonSetupEvent）
+// 在 mod 构造函数中注册（非 FMLCommonSetupEvent）
 public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(NeoForgeRegistries.Keys.ATTRIBUTES, MOD_ID);
+    DeferredRegister.create(NeoNeoneoforgeRegistries.Keys.ATTRIBUTES, MOD_ID);
 
-public static final DeferredHolder<Attribute, Attribute> MY_ATTRIBUTE =
+public static final RegistryObject<Attribute> MY_ATTRIBUTE =
     ATTRIBUTES.register("my_attribute",
         () -> new RangedAttribute("attribute.modid.my_attribute", 100.0, 1.0, 1024.0)
     );
 
-// 在 init() 方法中
+// 在 mod 构造函数中
 ATTRIBUTES.register(modEventBus);
 
 // 实体上使用属性
@@ -121,16 +119,24 @@ protected void registerAttributes() {
 }
 ```
 
+## NeoNeoneoforge 1.20.4 与 Neoneoforge 的差异
+
+| 项目 | Neoneoforge 1.20.4 | NeoNeoneoforge 1.20.4 |
+|------|---------------|------------------|
+| 注册表持有类 | `NeoneoforgeRegistries` | `NeoNeoneoforgeRegistries` |
+| 包名空间 | `net.minecraftNeoneoforge` | `net.neoNeoneoforged` |
+| mod 构造参数 | `FMLJavaModLoadingContext` | `NeoNeoneoforgeAddonPlugin` |
+
 ## 常见错误
 
-- ❌ 在 lambda 外引用 DeferredHolder：`new BlockItem(MY_BLOCK, ...)`（此时 MY_BLOCK 为 null）
+- ❌ 在 lambda 外引用 RegistryObject：`new BlockItem(MY_BLOCK, ...)`（此时 MY_BLOCK 为 null）
 - ❌ 硬编码 registry name：`registry.register(new Block(...).setRegistryName("my_mod:my_block"))`（禁止）
-- ❌ mod ID 与 neoforge.mods.toml 不一致
+- ❌ mod ID 与 neoNeoneoforge.mods.toml 不一致
 - ❌ Registry 名称含大写或横杠：必须全小写、下划线分隔
 
 ## 参考资料
 
-- NeoForge 官方文档：https://docs.neoforged.net/
+- NeoNeoneoforge 官方文档：https://docs.neoNeoneoforged.net/
 - 详细示例：参见 `01-registry.mdc`
 
 ## 扩展点

@@ -187,6 +187,9 @@ fabric-mod/
 | `get_method_params` | 查询方法参数名 |
 | `convert_mapping` | Yarn ↔ Parchment ↔ Mojang 映射互转 |
 | `diagnose_gradle` | 诊断 Gradle/Loom 构建问题 |
+| `search_community_docs` 等 | 社区实务（见仓库根 `community_knowledge/`） |
+
+用到社区短文时若不清楚，按 `community_knowledge/AGENT_USAGE.md` 打开原文 / 官方文档，禁止臆造 API。
 
 ---
 

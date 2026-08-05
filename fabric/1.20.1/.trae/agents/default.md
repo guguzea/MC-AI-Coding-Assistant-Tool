@@ -3,6 +3,9 @@
 > 本规则集适用于 **Fabric 1.20.1**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -40,9 +43,9 @@ Decision: 本规则集是否适用？
 ### 本规则集的 IDE 加载优先级
 
 1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+2. 再按编号读 `.cursor/rules/00-10.mdc`
+3. 如需深入了解特定领域，读 `.cursor/skills/mc-*.md`
+4. 遇到问题查 `knowledge/antipatterns/`
 
 ---
 
@@ -165,7 +168,7 @@ fabric-mod/
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 

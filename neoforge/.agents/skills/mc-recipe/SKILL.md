@@ -1,0 +1,148 @@
+﻿---
+name: mc-recipe
+description: Minecraft NeoNeoneoforge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现、Datagen。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、ProcessingRecipe、Ingredient
+platform: neoNeoneoforge
+version: "1.20.4"
+dependencies: []
+mappings: mcp
+---
+
+# 自定义配方开发（NeoNeoneoforge 1.20.4）
+
+## 快速总览
+
+```
+注册 RecipeType（静态） → 实现 Recipe 类 → 注册 RecipeSerializer（静态） → DataGen（可选）
+```
+
+## 1. 注册 RecipeType
+
+`RecipeType` 不支持 `DeferredRegister`，使用**静态注册**：
+
+```java
+public static final RecipeType<MyRecipe> MILLING =
+    RecipeType.register(MOD_ID + ":milling");
+```
+
+## 2. 实现 Recipe 类
+
+推荐使用 **record**（简洁、无 setter）：
+
+```java
+public record MyRecipe(
+    ResourceLocation id,
+    Ingredient input,
+    ItemStack output,
+    int processingTime
+) implements Recipe<Container> {
+
+    @Override
+    public boolean matches(Container container, Level level) {
+        return input.test(container.getItem(0));
+    }
+
+    @Override
+    public ItemStack assemble(Container container, RegistryAccess access) {
+        return output.copy();  // 必须返回副本！
+    }
+
+    @Override
+    public ItemStack getResultItem(RegistryAccess access) {
+        return output.copy();
+    }
+
+    @Override
+    public RecipeType<?> getType() {
+        return ModRecipes.MILLING;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return ModRecipeSerializers.MY_SERIALIZER.get();
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int w, int h) {
+        return w * h >= 1;
+    }
+}
+```
+
+> `assemble` 和 `getResultItem` **必须返回副本**（`output.copy()`），否则同一个 ItemStack 实例被修改会影响原配方。
+
+## 3. 注册 RecipeSerializer
+
+`RecipeSerializer` 同样使用**静态注册**：
+
+```java
+// ModRecipeSerializers.java
+public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
+    RECIPE_SERIALIZERS.register("my_recipe",
+        () -> MyRecipeSerializer.INSTANCE
+    );
+
+// MyRecipeSerializer.java
+public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
+    public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
+
+    @Override
+    public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
+        Ingredient input = Ingredient.fromJson(JsonHelpers.getAsArray(json, "input"));
+        ItemStack output = CraftingHelper.getItemStack(
+            JsonHelpers.getAsObject(json, "output"), true
+        );
+        int time = JsonHelpers.getAsInt(json, "processingTime", 200);
+        return new MyRecipe(id, input, output, time);
+    }
+
+    @Override
+    public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        Ingredient input = Ingredient.STREAM_CODEC.fromNetwork(buf);
+        ItemStack output = buf.readItem();
+        int time = buf.readInt();
+        return new MyRecipe(id, input, output, time);
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf, MyRecipe recipe) {
+        recipe.input().toNetwork(buf);
+        buf.writeItem(recipe.output());
+        buf.writeInt(recipe.processingTime());
+    }
+}
+```
+
+> `Ingredient.fromJson` 接收的 JSON 必须是**数组**：`[{ "item": "minecraft:diamond" }]`，不是 `{ "item": "..." }`。
+
+## 4. 配方 JSON 格式
+
+```json
+{
+  "type": "mymod:my_recipe",
+  "input": [{ "item": "minecraft:diamond" }],
+  "output": { "item": "mymod:processed_diamond", "count": 2 },
+  "processingTime": 400
+}
+```
+
+- `"type"` 必须与 `RecipeSerializer` 注册名一致
+- `"input"` 必须是数组
+
+## 常见错误
+
+- ❌ `Ingredient.fromJson` 参数不是数组 → `{ "item": "..." }` 改为 `[{ "item": "..." }]`
+- ❌ `assemble` / `getResultItem` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
+- ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
+- ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
+
+## 参考资料
+
+- 官方文档：https://docs.neoNeoneoforged.net/
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-datagen` | DataGen 生成配方 JSON |
+| `mc-networking` | 配方相关网络同步 |
+| `mc-blockentity` | 机器方块内处理配方的 tick 逻辑 |

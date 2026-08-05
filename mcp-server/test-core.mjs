@@ -272,6 +272,32 @@ async function testNeoForge1201ForgeCompat() {
   assert.equal(body.forgeCompatible, true);
 }
 
+async function testCommunityDocsSearchAndLinks() {
+  const { searchCommunityDocs, getCommunityDocFull, listCommunitySources } =
+    await import("./dist/docs-platform/community/index.js");
+  const listed = await listCommunitySources();
+  assert.ok(listed.total >= 1, "community index should have entries");
+  const search = await searchCommunityDocs({ query: "发布" });
+  assert.ok(search.total >= 1, "search 发布 should hit authored publishing");
+  assert.ok(search.results.some((r) => r.id.includes("publishing") || /发布/.test(r.label + r.summary)));
+  const linkHits = await searchCommunityDocs({ query: "官方文档", sourceKind: "links" });
+  assert.ok(linkHits.total >= 1);
+  const full = await getCommunityDocFull({ id: linkHits.results[0].id });
+  assert.equal(full.linkOnly, true);
+  assert.ok(full.url, "links full must return url");
+  assert.equal(full.content, "");
+}
+
+async function testCrashAnalyzeKindAndMissingDep() {
+  const { analyzeCrash, detectCrashKind } = await import("./dist/crash/index.js");
+  const fmlName = "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: examplelib\n";
+  assert.equal(detectCrashKind(fmlName), "fml");
+  const result = analyzeCrash({ crashReport: fmlName });
+  assert.equal(result.crashKind, "fml");
+  assert.match(result.probableCause, /缺少强制依赖|前置/);
+  assert.ok(Array.isArray(result.logHints) && result.logHints.length > 0);
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -282,4 +308,6 @@ await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();
 await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
+await testCommunityDocsSearchAndLinks();
+await testCrashAnalyzeKindAndMissingDep();
 console.log("core regression tests passed");

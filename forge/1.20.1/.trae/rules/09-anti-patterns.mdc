@@ -378,3 +378,13 @@ public class MixinEntity {
 4. 检查是否混用了服务端和客户端线程
 5. 检查 `enqueueWork` 是否正确使用
 6. 检查 Registry 注册是否通过事件系统
+7. 崩溃 / 缺前置 / 软依赖 / 机器 GUI 实务 → MCP `crash_analyze`，或 `search_community_docs`（社区库，不替代官方文档）
+8. **依据社区短文写方案时若不清楚** → 打开短文给出的原文 URL / 官方文档（见仓库 `community_knowledge/AGENT_USAGE.md`），禁止臆造 API
+
+### 机器 GUI 相关（社区短文已覆盖）
+
+| 症状 | 查 |
+|------|-----|
+| GUI 进度条不同步 / Screen 直接读 BE | `authored/menu-screen-sync` |
+| 漏斗管道进不出 | `authored/itemhandler-capability` |
+| WORKING 狂闪或卡顿 | `authored/machine-be-gui-working`（仅变化时 setBlock） |

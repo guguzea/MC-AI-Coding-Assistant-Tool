@@ -3,6 +3,9 @@
 > 本规则集适用于 **NeoForge 1.20.4**，推荐使用 `DeferredRegister` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_forge_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -12,9 +15,9 @@
 | 平台 | NeoForge |
 | Minecraft 版本 | 1.20.4 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
-| Java 版本 | **Java 17**（NeoForge 1.20.4 要求） |
-| Gradle | Gradle 8.x + NeoGradle 7.x |
-| Mappings | **Official** / **Parchment** |
+| Java 版本 | **Java 17**（NeoForge 1.20.4 最低要求） |
+| Gradle | Gradle 8.x + NeoGradle |
+| Mappings | **MCP**（`minecraft "1.20.4"` 下默认） |
 | 构建工具 | NeoGradle（`build.gradle`） |
 
 ---
@@ -27,10 +30,10 @@
 Decision: 本规则集是否适用？
 → IF 项目中存在 src/main/resources/META-INF/neoforge.mods.toml
     → IF neoforge.mods.toml 中 modLoader = "javafml"
-        → IF gradle.properties 中 neoforge_version = "20.4.x"
+        → IF build.gradle 中 neoforge_version 或 neoform 包含 "1.20.4"
             → 继续加载本规则集（NeoForge 1.20.4）
         → ELSE → 跳转到对应版本的 neoforge/版本号/AGENTS.md
-    → ELSE → 不是 NeoForge，跳转到 forge/ 或 fabric/ 对应版本
+    → ELSE → 不是 NeoForge，跳转到 fabric/ 或 forge/ 对应版本
 → ELSE IF 项目中存在 src/main/resources/fabric.mod.json
     → 跳转到 fabric/对应版本/AGENTS.md
 → ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
@@ -48,6 +51,10 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
 
@@ -116,12 +123,24 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 NeoForge 官方推荐的注册方式
+1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 NeoForge 官方推荐的注册方式，与 Forge 完全兼容
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `neoforge.mods.toml` 中的 `dependencies`**：任何对 NeoForge API 的依赖必须声明
 5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
-6. **使用 BuildPlugin 模式**：NeoForge 1.20.4 不再使用 `@Mod` 注解，而是使用 `BuildPlugin` + `init()` 方法
+
+---
+
+## NeoForge 1.20.4 与 Forge 1.20.1 的关键差异
+
+| 项目 | Forge 1.20.1 | NeoForge 1.20.4 |
+|------|---------------|------------------|
+| 元数据文件 | `mods.toml` | `neoforge.mods.toml` |
+| 包名空间 | `net.minecraftforge` | `net.neoforged` |
+| 入口模式 | `@Mod` 注解类 | `BuildPlugin` + `@SubscribeEvent` |
+| 事件总线 | `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` |
+| Gradle 插件 | `net.minecraftforge.gradle` | `neogradle` |
+| 依赖声明 | `modId="forge"` | `modId="neoforge"` |
 
 ---
 
@@ -134,15 +153,14 @@ src/main/java/
 
 ---
 
-## NeoForge 1.20.4 与 Forge 1.20.1 的差异
+## 关于 NeoForge 1.20.4 与其他版本的差异
 
-| 功能 | Forge 1.20.1 | NeoForge 1.20.4 | 备注 |
-|------|---------------|-------------------|------|
-| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| 元数据文件 | `mods.toml` | `neoforge.mods.toml` | 变更 |
-| 包名空间 | `net.minecraftforge` | `net.neoforged` | 重大变更 |
-| 事件总线 | `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` | 变更 |
-| 初始化入口 | `@Mod` 注解类 | `BuildPlugin` + `init()` | 重大变更 |
-| Gradle | ForgeGradle | NeoGradle | 变更 |
+| 功能 | NeoForge 1.20.4 | 备注 |
+|------|------------------|------|
+| 注册方式 | `DeferredRegister` | 与 Forge 完全一致 |
+| Fluid 注册 | `FluidType` | 有 Breaking Changes，参考 NeoForge 文档 |
+| BlockEntity | 相同 | - |
+| DataGen | `DataGenerators` | 相同 |
+| 网络包 | `SimpleChannel` | 包名变为 `net.neoforged.neoforge.network` |
 
-如果你发现用户的代码与本规则集描述不符，先询问具体版本。
+如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本和 NeoForge 版本。

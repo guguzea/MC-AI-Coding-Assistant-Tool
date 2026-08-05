@@ -1,0 +1,362 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "id": "AGENT_USAGE",
+      "label": "AGENT_USAGE",
+      "path": "AGENT_USAGE.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "unknown",
+      "priority": "🟢",
+      "summary": "适用：`community_knowledge/authored/`、`permitted/`、`links/`，以及 MCP `search_community_docs` / `get_community_doc_*`。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/blockentity-persist-ticker",
+      "label": "BlockEntity 持久化与 Ticker 接入",
+      "path": "authored/blockentity-persist-ticker.md",
+      "url": "",
+      "tags": [
+        "blockentity",
+        "nbt",
+        "ticker",
+        "setchanged",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "BE 与方块分工；saveAdditional/load 写什么；setChanged；getTicker 接入；教学计数器 vs 生产逻辑。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/crash-reports",
+      "label": "崩溃报告与日志",
+      "path": "authored/crash-reports.md",
+      "url": "",
+      "tags": [
+        "crash",
+        "fml",
+        "logs",
+        "debug",
+        "mixin"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "三类日志、crash 文件名 KIND、加载期/运行期常见症状；配合 crash_analyze 与 search_community_docs。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/creative-tabs-1.20",
+      "label": "创造页签 1.20+（CreativeModeTab）",
+      "path": "authored/creative-tabs-1.20.md",
+      "url": "",
+      "tags": [
+        "creative-tab",
+        "item",
+        "1.20",
+        "deferredregister"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "1.18/1.19 的 Properties.tab 已移除；DeferredRegister 注册页签；displayItems 或 BuildCreativeModeTabContentsEvent 填充；本地化键。",
+      "mcHint": "1.20+"
+    },
+    {
+      "id": "authored/cursemaven-optional-deps",
+      "label": "CurseMaven 与 compileOnly 可选依赖",
+      "path": "authored/cursemaven-optional-deps.md",
+      "url": "",
+      "tags": [
+        "cursemaven",
+        "gradle",
+        "jei",
+        "interop",
+        "optional",
+        "maven"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "三种引入他模方式；CurseMaven 坐标；compileOnly vs runtimeOnly vs implementation；fg.deobf；含 Mixin 的依赖注意。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/forge-dev-env-pitfalls",
+      "label": "Forge 开发环境常见坑（Parchment / 证书 / assets / Git）",
+      "path": "authored/forge-dev-env-pitfalls.md",
+      "url": "",
+      "tags": [
+        "gradle",
+        "parchment",
+        "git",
+        "idea",
+        "forge",
+        "setup",
+        "assets"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "三类命名；Parchment 切换；证书与离线 assets 双步；JavaCompile 警告；.gitignore；勿手塞 run/mods。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/itemhandler-capability",
+      "label": "机器对外暴露 IItemHandler（Capability）",
+      "path": "authored/itemhandler-capability.md",
+      "url": "",
+      "tags": [
+        "capability",
+        "itemhandler",
+        "lazyoptional",
+        "hopper",
+        "pipe",
+        "forge",
+        "machine"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Menu 用 getItemHandler 不够；漏斗/管道需 ForgeCapabilities.ITEM_HANDLER + LazyOptional；分面输入输出；invalidateCaps。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/localization-lang",
+      "label": "本地化键与 lang JSON",
+      "path": "authored/localization-lang.md",
+      "url": "",
+      "tags": [
+        "localization",
+        "lang",
+        "i18n",
+        "resources"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "禁止硬编码玩家可见文本；assets 下 lang 文件；item/block/itemGroup/advancements/自定义键；占位符与双语。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/machine-be-gui-working",
+      "label": "机器方块：BE、GUI、库存与 WORKING 状态",
+      "path": "authored/machine-be-gui-working.md",
+      "url": "",
+      "tags": [
+        "blockentity",
+        "menu",
+        "screen",
+        "itemstackhandler",
+        "machine",
+        "forge",
+        "ticker",
+        "capability"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "机器全链路；进度必须用 ContainerData；WORKING 仅在 ticker 对比后 setBlock；对外物流需 ITEM_HANDLER Capability。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/menu-screen-sync",
+      "label": "Menu / Screen 与 ContainerData 同步",
+      "path": "authored/menu-screen-sync.md",
+      "url": "",
+      "tags": [
+        "menu",
+        "screen",
+        "containerdata",
+        "gui",
+        "networkhooks",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Menu 与 Screen 职责；双构造器与 FriendlyByteBuf；ContainerData；槽位分区与 quickMoveStack；stillValid；ClientSetup 注册。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/mod-entry-init-structure",
+      "label": "主类瘦身与 init 注册拆分",
+      "path": "authored/mod-entry-init-structure.md",
+      "url": "",
+      "tags": [
+        "engineering",
+        "structure",
+        "deferredregister",
+        "eventbus",
+        "forge",
+        "package"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "MDK 模板主类六块拆解；主类只挂总线；init/client/event/block 分包；ModEventBus 挂载区约定。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/multi-face-block-models",
+      "label": "多面贴图与朝向方块模型",
+      "path": "authored/multi-face-block-models.md",
+      "url": "",
+      "tags": [
+        "blockstate",
+        "model",
+        "facing",
+        "blockbench",
+        "resources",
+        "horizontaldirectional"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "cube_all 局限；machine 贴图组织；HorizontalDirectionalBlock 三方法；逻辑朝向 vs JSON 旋转；复杂 BlockItem 用 cube 分面。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/publishing",
+      "label": "模组发布要点（CurseForge / Modrinth / GitHub / Maven）",
+      "path": "authored/publishing.md",
+      "url": "",
+      "tags": [
+        "publishing",
+        "curseforge",
+        "modrinth",
+        "maven",
+        "release",
+        "readme"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "分发渠道对比、发布前检查、reobf jar、自建 Maven（mcmodsrepo）、README 徽章与附属说明。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/register-helpers",
+      "label": "注册辅助方法（Block + 同名 BlockItem）",
+      "path": "authored/register-helpers.md",
+      "url": "",
+      "tags": [
+        "registry",
+        "blockitem",
+        "deferredregister",
+        "forge",
+        "dry"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "注册≠new；DeferredRegister 流程；registerBlock 自动 BlockItem；物品三重重载；避免重复注册与过早 get。",
+      "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/soft-deps-modlist",
+      "label": "软依赖：ModList.isLoaded 与可选联动",
+      "path": "authored/soft-deps-modlist.md",
+      "url": "",
+      "tags": [
+        "soft-deps",
+        "modlist",
+        "interop",
+        "optional",
+        "mixin"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "硬/软依赖区分；ModList 探测；类加载隔离；mods.toml optional；与 compileOnly/Mixin 条件注册配合。",
+      "mcHint": ""
+    },
+    {
+      "id": "links/forge-docs-official",
+      "label": "Forge 官方文档（外链）",
+      "path": "links/forge-docs-official.md",
+      "url": "https://docs.minecraftforge.net/",
+      "tags": [
+        "official",
+        "forge",
+        "docs"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "官方 Getting Started / Concepts；API 与注册请以此为准，勿用社区教程替代。",
+      "mcHint": ""
+    },
+    {
+      "id": "links/mcmod-6071-forge-engineering",
+      "label": "Forge 1.20.1 工程化开发指南（外链，禁转载）",
+      "path": "links/mcmod-6071-forge-engineering.md",
+      "url": "https://www.mcmod.cn/post/6071.html",
+      "tags": [
+        "forge",
+        "1.20.1",
+        "engineering",
+        "machine",
+        "blockentity",
+        "gui",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "作者 Kadar_Visico；Forge 1.20.1 工程骨架与工业机器全链路。文首禁止转载，本库仅外链；实务要点见 authored 自写短文。",
+      "mcHint": "1.20.1"
+    },
+    {
+      "id": "mcmod-3993/crash-publishing",
+      "label": "崩溃日志类型与发布渠道（社区）",
+      "path": "permitted/mcmod-3993-forge-mod-guide/pages/crash-publishing.md",
+      "url": "",
+      "tags": [
+        "crash",
+        "publishing",
+        "curseforge",
+        "modrinth"
+      ],
+      "sourceKind": "permitted",
+      "priority": "🟡",
+      "summary": "提炼自社区教程「游戏崩溃篇 / 发表模组篇」。更完整的自写说明见 `authored/crash-reports.md` 与 `authored/publishing.md`。",
+      "mcHint": "version-agnostic"
+    },
+    {
+      "id": "mcmod-3993/items-registry",
+      "label": "物品注册：1.18/1.19 与 1.20 差异",
+      "path": "permitted/mcmod-3993-forge-mod-guide/pages/items-registry.md",
+      "url": "",
+      "tags": [
+        "item",
+        "registry",
+        "deferredregister",
+        "creativetab"
+      ],
+      "sourceKind": "permitted",
+      "priority": "🟡",
+      "summary": "提炼自社区教程；实现以各版本官方 API 与本仓库 rules 为准。",
+      "mcHint": "1.18-1.20"
+    },
+    {
+      "id": "mcmod-3993/mixin-basics",
+      "label": "Mixin 实务要点（社区）",
+      "path": "permitted/mcmod-3993-forge-mod-guide/pages/mixin-basics.md",
+      "url": "",
+      "tags": [
+        "mixin",
+        "inject",
+        "redirect",
+        "bytecode"
+      ],
+      "sourceKind": "permitted",
+      "priority": "🟡",
+      "summary": "提炼自社区教程 Mixin 篇；生产环境请配合官方 Mixin 文档与本仓库 `mc-mixin` skill。",
+      "mcHint": "version-agnostic"
+    },
+    {
+      "id": "mcmod-3993/setup",
+      "label": "Forge MDK 与工程搭建要点",
+      "path": "permitted/mcmod-3993-forge-mod-guide/pages/setup.md",
+      "url": "",
+      "tags": [
+        "setup",
+        "mdk",
+        "gradle",
+        "idea"
+      ],
+      "sourceKind": "permitted",
+      "priority": "🟡",
+      "summary": "提炼自 MC百科教程（耿悠博），主体偏 1.18；细节以官方 Getting Started 为准。",
+      "mcHint": "1.18.x+"
+    }
+  ]
+}

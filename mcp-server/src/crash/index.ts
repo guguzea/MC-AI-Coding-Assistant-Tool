@@ -2,10 +2,21 @@
  * 崩溃日志分析模块
  *
  * 功能：
- * 1. 解析崩溃堆栈
+ * 1. 解析崩溃堆栈 / 文件名后缀
  * 2. 通过映射表反混淆类名
- * 3. 返回可能成因和修复建议
+ * 3. 返回可能成因和修复建议（含 crashKind、logHints）
  */
+
+export type CrashKind =
+  | "fml"
+  | "client"
+  | "server"
+  | "integrated-server"
+  | "openGL"
+  | "memory"
+  | "fabric"
+  | "java"
+  | "unknown";
 
 export interface CrashQuery {
   crashReport: string;
@@ -17,9 +28,13 @@ export interface CrashResult {
   fixSuggestions: string[];
   deobfuscated?: string[];
   relatedMistakes: string[];
+  /** 从文件名或正文推断的崩溃类型 */
+  crashKind?: CrashKind;
+  /** 建议同时查看的日志 */
+  logHints?: string[];
 }
 
-// 已知的常见崩溃原因模式（从 8 种扩展至 16 种）
+// 已知的常见崩溃原因模式（从 8 种扩展至 16 种 + 加载期）
 const KNOWN_PATTERNS: Array<{
   pattern: RegExp;
   cause: string;
@@ -104,7 +119,6 @@ const KNOWN_PATTERNS: Array<{
     ],
     relatedMistakes: [],
   },
-  // ── 新增 #9 ~ #16 ──────────────────────────────────────────────────
   {
     pattern: /BlockItem.*null|BlockItem.*NPE|BlockItem.*NullPointer/i,
     cause: "Block 未注册对应的 BlockItem",
@@ -186,7 +200,80 @@ const KNOWN_PATTERNS: Array<{
     ],
     relatedMistakes: ["mc-registry: 注册名重复导致覆盖"],
   },
+  // ── 加载期：缺前置 / 版本不兼容 ──────────────────────────────────────────
+  {
+    pattern:
+      /Missing or unsupported mandatory dependencies|MissingModException|ModLoadingException.*missing|required.*mod.*not.*found|ModNotFoundException/i,
+    cause: "缺少强制依赖（前置模组未安装或不在 mods 目录）",
+    fix: [
+      "对照 mods.toml / fabric.mod.json 的 mandatory 依赖安装对应 jar",
+      "确认依赖的 modId 拼写与对方 mods.toml 一致",
+      "客户端与服务端 mods 列表保持一致",
+      "可配合 search_community_docs 查阅「软依赖 / 发布」实务要点",
+    ],
+    relatedMistakes: ["mc-project-setup: 强制依赖未声明或未安装"],
+  },
+  {
+    pattern:
+      /ModResolutionException|Incompatible mods found|version range|VersionConstraint|ModLoadingException.*version|requires.*\[.*\].*but/i,
+    cause: "模组或 loader 版本范围不兼容",
+    fix: [
+      "核对 Minecraft / Forge|Fabric|NeoForge 版本是否在依赖声明范围内",
+      "升级或降级冲突模组到兼容构建",
+      "检查 loaderVersion / depends 与当前安装是否一致",
+    ],
+    relatedMistakes: ["mc-project-setup: 版本范围写错"],
+  },
 ];
+
+/** 从报告正文 / 路径推断 crashKind */
+export function detectCrashKind(crashReport: string): CrashKind {
+  const name =
+    crashReport.match(/crash-\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
+    crashReport.match(/File:\s*.*crash-.*-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
+    "";
+  const kindFromName = name.toLowerCase();
+  const map: Record<string, CrashKind> = {
+    fml: "fml",
+    client: "client",
+    server: "server",
+    "integrated-server": "integrated-server",
+    opengl: "openGL",
+    rendering: "openGL",
+    memory: "memory",
+    fabric: "fabric",
+    java: "java",
+  };
+  if (kindFromName && map[kindFromName]) return map[kindFromName];
+
+  if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
+  if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
+  if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
+  if (
+    /ModLoader|FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|Missing or unsupported mandatory/i.test(
+      crashReport,
+    )
+  ) {
+    return "fml";
+  }
+  if (/DedicatedServer|net\.minecraft\.server\.dedicated/i.test(crashReport)) return "server";
+  if (/IntegratedServer/i.test(crashReport)) return "integrated-server";
+  if (/Minecraft\.getInstance|net\.minecraft\.client/i.test(crashReport)) return "client";
+  if (/---- Minecraft Crash Report ----/i.test(crashReport)) return "java";
+  return "unknown";
+}
+
+function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
+  const hints = ["logs/latest.log", "logs/debug.log"];
+  if (kind === "fml" || kind === "fabric" || !matchedKnown) {
+    return [
+      "优先核对崩溃报告开头的异常与 Mod List",
+      ...hints,
+      "社区实务：search_community_docs 查询「崩溃」或 authored/crash-reports",
+    ];
+  }
+  return hints;
+}
 
 export function analyzeCrash(query: CrashQuery): CrashResult {
   const { crashReport } = query;
@@ -196,11 +283,13 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       fixSuggestions: ["请裁剪为相关堆栈段落后再试"],
       deobfuscated: [],
       relatedMistakes: [],
+      crashKind: "unknown",
+      logHints: ["logs/latest.log"],
     };
   }
   const deobfuscated: string[] = [];
+  const crashKind = detectCrashKind(crashReport);
 
-  // 反混淆处理（去除混淆名称中的 $ 内部类引用）
   for (const line of crashReport.split("\n")) {
     const m = line.match(/([a-z][a-z0-9_]*(\\\$[a-z0-9_]+)+)/gi);
     if (m) {
@@ -208,25 +297,40 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     }
   }
 
-  // 匹配已知模式
   for (const { pattern, cause, fix, relatedMistakes } of KNOWN_PATTERNS) {
     if (pattern.test(crashReport)) {
-      return { probableCause: cause, fixSuggestions: fix, deobfuscated, relatedMistakes };
+      return {
+        probableCause: cause,
+        fixSuggestions: fix,
+        deobfuscated,
+        relatedMistakes,
+        crashKind,
+        logHints: buildLogHints(crashKind, true),
+      };
     }
   }
 
-  // 默认响应
-  const hasModLoader = /Minecraft Forge|Forge Mod Loader/i.test(crashReport);
+  const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge/i.test(crashReport);
+  const fmlHint =
+    crashKind === "fml"
+      ? "此报告疑似加载期（-fml）失败：优先查缺前置、版本范围与 mods.toml"
+      : hasModLoader
+        ? "崩溃原因不明确，请将堆栈信息与 Forge/Fabric 文档对照分析"
+        : "未能识别为典型 Forge/Fabric 崩溃报告，请检查粘贴内容是否完整";
+
   return {
-    probableCause: hasModLoader
-      ? "崩溃原因不明确，请将堆栈信息与 Forge 文档对照分析"
-      : "这不是一个 Forge 崩溃报告",
+    probableCause: fmlHint,
     fixSuggestions: [
       "将崩溃堆栈的完整内容粘贴到 https://minecraft.wiki/w/Crash_report",
       "检查是否涉及自定义模组内容",
       "尝试使用 parchment 映射以获得更清晰的可读堆栈",
+      ...(crashKind === "fml"
+        ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
+        : []),
     ],
     deobfuscated,
     relatedMistakes: [],
+    crashKind,
+    logHints: buildLogHints(crashKind, false),
   };
 }

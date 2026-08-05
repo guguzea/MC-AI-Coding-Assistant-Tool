@@ -135,18 +135,27 @@ Decision: 选择注册方式
    - `knowledge/antipatterns/` — 按症状分类的反模式（registry / item / block / entity / events / networking / gradle）
    - `knowledge/version-changes/` — 版本迁移指南（1.19.x / 1.20.x）
    - `knowledge/common/` — 术语表、数据包/资源包格式速查
-3. 如果仍无法解决，询问用户当前使用的具体版本和平台
+3. 实务问题（发布 / 崩溃分类 / 软依赖 / 机器 GUI）→ MCP `search_community_docs`（仓库根 `community_knowledge/`）
+4. 如果仍无法解决，询问用户当前使用的具体版本和平台
+
+### 使用社区自写短文时（强制）
+
+完整规则见 `community_knowledge/AGENT_USAGE.md`。摘要：
+
+- 社区短文 **不替代** 官方文档 / `query_api`
+- 依据某篇 `authored/` / `permitted/` / `links/` 写方案时，若 **不清楚、不会、缺方法名、与现象对不上** → **必须先打开短文给出的原文 URL 或官方文档**（`WebFetch` / 浏览器 / `get_*_doc_full`），禁止臆造
+- `links/`（如 6071）仅外链浏览，**禁止**把网页正文拷进回复当「已入库全文」
 
 ## 不确定时
 
 永远选择**保守**方案：
 - 不确定用哪个事件 → 选更通用的事件
-- 不确定方法名 → 用 IDE 自动补全或查阅文档
+- 不确定方法名 → 用 IDE 自动补全、`query_api` 或查阅官方文档（含社区短文指向的原文）
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **31** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **35** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |
@@ -162,5 +171,6 @@ Decision: 选择注册方式
 | `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
 | `search_docs` / `get_doc_*` | 跨平台通用文档入口 |
+| `list_community_sources` / `search_community_docs` / `get_community_doc_*` | 社区实务知识库（发布/崩溃/软依赖；不替代官方文档） |
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
-| `diagnose_data_paths` | 诊断数据目录配置 |
+| `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |

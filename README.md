@@ -18,7 +18,8 @@ MC_skill/
 ├── forge/                       # Forge 规则 / skills / scaffold / knowledge（多版本）
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
-├── mcp-server/                  # 本地 stdio MCP Server（约 31 个工具）
+├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
+├── mcp-server/                  # 本地 stdio MCP Server（约 35 个工具）
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -39,7 +40,11 @@ MC_skill/
 ├── .cursor/     → Cursor AI（源）
 ├── .claude/     → Claude Desktop
 ├── .continue/   → Continue.dev
-└── .trae/       → Trae AI
+├── .trae/       → Trae AI
+├── .opencode/   → OpenCode（skills；规则读 AGENTS.md）
+├── .agents/     → Codex（skills；规则读 AGENTS.md）
+├── .zcode/      → ZCode（skills；规则读 AGENTS.md）
+└── .pi/         → Pi（rules/*.md）
 ```
 
 | IDE | Rules | Skills / Commands | Agent |
@@ -48,6 +53,10 @@ MC_skill/
 | Claude Desktop | `.claude/rules/*.mdc` | `.claude/commands/` | `.claude/agents/` |
 | Continue.dev | `.continue/rules/*.mdc` | `.continue/skills/` | — |
 | Trae | `.trae/rules/*.mdc` | `.trae/skills/` | `.trae/agents/` |
+| OpenCode | `AGENTS.md` | `.opencode/skills/` | — |
+| Codex | `AGENTS.md` | `.agents/skills/` | — |
+| ZCode | `AGENTS.md` | `.zcode/skills/` | — |
+| Pi | `.pi/rules/*.md` | （主靠 AGENTS + rules） | — |
 
 ## 快速开始
 
@@ -73,6 +82,7 @@ MC_skill/
 | 变量 | 说明 | 示例 |
 |------|------|------|
 | `MC_SKILL_DATA` | 数据目录根路径（指向 `data/`，不含版本子目录） | `H:/MC_skill/data` |
+| `MC_SKILL_COMMUNITY` | 社区知识库根路径（默认仓库根 `community_knowledge/`） | `H:/MC_skill/community_knowledge` |
 | `MC_SKILL_ALLOW_WRITE` | `1` 时允许 `port_project` 写盘 | `1` |
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径） | `H:/mods/my-mod` |
 | `MC_SKILL_STRICT` | `1` 时数据无效则 MCP 启动失败 | `1` |

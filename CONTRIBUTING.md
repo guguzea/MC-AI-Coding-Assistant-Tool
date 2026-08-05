@@ -34,10 +34,13 @@
 │   ├── skills/
 │   └── agents/
 ├── .claude/ / .continue/ / .trae/
+├── .opencode/ / .agents/ / .zcode/ / .pi/   # OpenCode / Codex / ZCode / Pi（代表版本已支持）
 ├── scaffold/                # 可选：Gradle 骨架
 ├── code-patterns/           # 可选
 └── knowledge/               # antipatterns / common / porting / version-changes
 ```
+
+社区实务知识写在仓库根 `community_knowledge/`（不要双写进 `forge/*/knowledge/`）。
 
 ### 步骤 2：改版本相关字段
 

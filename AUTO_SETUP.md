@@ -9,7 +9,7 @@
 
 把本仓库的本地 **stdio MCP Server** 编译好，并**生成** Cursor MCP 配置草稿供用户确认后粘贴（不要静默改写用户的 `mcp.json`，不要自动执行 `mklink`）。
 
-完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **31** 个工具可用，覆盖：
+完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **35** 个工具可用，覆盖：
 
 | 模块 | 代表工具 |
 |------|----------|
@@ -19,9 +19,10 @@
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*` |
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
+| 社区知识库 | `list_community_sources`、`search_community_docs`、`get_community_doc_*` |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 
-本仓库还包含 `forge/` / `fabric/` / `neoforge/` 规则集与 `data/` 离线数据包；MCP 负责运行时查询，规则集负责写代码时的约束与决策流。
+本仓库还包含 `forge/` / `fabric/` / `neoforge/` 规则集、`data/` 离线数据包，以及根目录 `community_knowledge/`（社区实务，与官方文档分离）；MCP 负责运行时查询，规则集负责写代码时的约束与决策流。
 
 ---
 
@@ -120,7 +121,8 @@ node -e "console.log(require('path').resolve('data'))"
       "command": "node",
       "args": ["<dist/index.js 绝对路径>"],
       "env": {
-        "MC_SKILL_DATA": "<data 目录绝对路径>"
+        "MC_SKILL_DATA": "<data 目录绝对路径>",
+        "MC_SKILL_COMMUNITY": "<可选：community_knowledge 绝对路径>"
       }
     }
   }
@@ -130,6 +132,7 @@ node -e "console.log(require('path').resolve('data'))"
 注意：
 
 - `MC_SKILL_DATA` 必须指向 **`data/` 根目录**（如 `H:/MC_skill/data`），不要指到 `data/fabric_1.20.1` 这类版本子目录
+- `MC_SKILL_COMMUNITY` 可选；未设置时默认使用与 `data/` 同级或仓库根的 `community_knowledge/`
 - 若用户已有其他 MCP，只**合并** `mcpServers` 中的本条目，不要整体覆盖文件
 - 路径用 `/`，不要用 Windows 反斜杠
 
@@ -159,7 +162,7 @@ node -e "console.log(require('path').resolve('data'))"
 配置粘贴完成后，请用户**完全退出并重新打开** Cursor，再在 MCP 面板确认：
 
 1. 出现 `MC-AI-Coding-Assistant-Tool`
-2. 工具数量约 **31**
+2. 工具数量约 **35**
 3. 可试调：`list_doc_versions` 或 `diagnose_data_paths`（应能看到 forge / fabric / neoforge 相关数据）
 
 ---

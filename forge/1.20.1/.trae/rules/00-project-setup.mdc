@@ -256,3 +256,13 @@ side = "BOTH"
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
 - `loaderVersion` 的格式：`"[44,)"` 表示 Forge 44 及以上
+
+## 发布前清单（轻量）
+
+准备上传 CurseForge / Modrinth / GitHub 前：
+
+1. 核对 `mods.toml` 的 `modId`、version、license、dependencies
+2. 用 `gradlew build` 产出 jar，勿手改混淆产物
+3. 写清支持的 MC / Forge 版本与更新日志
+
+实务细节可用 MCP `search_community_docs` 查「发布」；API 仍以 `search_forge_docs` 为准。依据社区短文时若不清楚，按 `community_knowledge/AGENT_USAGE.md` 打开原文 / 官方文档。

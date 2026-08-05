@@ -66,3 +66,16 @@ When publishing or mirroring:
 ## Disclaimer
 
 Minecraft is a trademark of Mojang Synergies AB. This project is not affiliated with Mojang, Microsoft, Forge, FabricMC, or NeoForged. Documentation and mappings are provided for offline developer assistance; redistribute only in accordance with each upstream project’s license.
+
+## Community knowledge（`community_knowledge/`）
+
+本仓库另含社区实务知识库（与 `data/` 官方文档分离）：
+
+| 来源 | 说明 |
+|------|------|
+| MC百科教程（耿悠博） | 《如何制作并且维护你的mod？（Forge，1.18–1.20）》；作者评论区约 51 楼「随意吧」许可收录提炼。原文：https://www.mcmod.cn/post/3993.html 。详见 `community_knowledge/ATTRIBUTION.md`。 |
+| 仅外链（禁转载） | 例：https://www.mcmod.cn/post/6071.html（Kadar_Visico 工程化指南）→ `links/` stub，正文不入库。 |
+| 本仓库自写短文 | `community_knowledge/authored/`（发布、崩溃、软依赖、创造页签、工程结构、注册 helper、机器/GUI/BE/Capability、多面模型、开发环境、本地化、CurseMaven 等）；Agent 用法见 `community_knowledge/AGENT_USAGE.md` |
+| 外链 stub | `community_knowledge/links/`（仅 URL，无网页正文入库） |
+
+社区内容经 MCP `search_community_docs` 等工具查询；**API / 注册细节仍以官方 Forge/Fabric/NeoForge 文档工具为准**。

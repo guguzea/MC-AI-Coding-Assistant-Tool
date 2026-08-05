@@ -49,8 +49,16 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
+社区实务（发布 / 崩溃分类 / 软依赖 / 机器 GUI）可用 MCP `search_community_docs`；API 仍以 `search_forge_docs` 为准。署名见根目录 `THIRD_PARTY_NOTICES.md` 与 `community_knowledge/ATTRIBUTION.md`。
+
+**用到社区短文时：** 若不清楚 / 不会，必须按 `community_knowledge/AGENT_USAGE.md` 去访问原文 URL 或官方文档，禁止臆造 API。
 
 ---
 

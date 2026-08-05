@@ -55,3 +55,14 @@ export {
   DocNotFoundError,
   VersionNotFoundError,
 } from "./store.js";
+
+export {
+  listCommunitySources,
+  listCommunitySourcesSchema,
+  searchCommunityDocs,
+  searchCommunityDocsSchema,
+  getCommunityDocSummary,
+  getCommunityDocSummarySchema,
+  getCommunityDocFull,
+  getCommunityDocFullSchema,
+} from "./community/index.js";
