@@ -19,7 +19,7 @@ MC_skill/
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
-├── mcp-server/                  # 本地 stdio MCP Server（约 35 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（35 个工具）
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -100,7 +100,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（约 **31** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（**35** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -111,6 +111,7 @@ MC_skill/
 3. **L0 搜索只匹配索引字段**（`label` / `id` / `url` / `标签`），不是全文检索。
 4. 前缀查询示例：`class:Item`、`event:lifecycle`。
 5. NeoForge `1.20.1` 文档查询会回退到 Forge 1.20.1 视图（兼容层），属预期。
+6. 若某平台数据包未下载，对应 list/search 会返回 `PLATFORM_DATA_MISSING`（可用 `diagnose_data_paths` 确认）。
 
 ### 映射转换（`convert_mapping` + Yarn）
 
@@ -182,17 +183,100 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 
 ## MCP Server 工具（35 个）
 
-| 模块 | 代表工具 |
-|------|----------|
-| API / 映射 | `query_api`、`get_method_params`、`convert_mapping`、`get_version_info` |
-| 工程辅助 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project` |
-| Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
-| Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
-| NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*` |
-| 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
-| 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
+服务名：**`MC-AI-Coding-Assistant-Tool`**。安装与配置见 [`AUTO_SETUP.md`](./AUTO_SETUP.md)、[`mcp-server/README.md`](./mcp-server/README.md)。
 
-详细安装步骤见 [`AUTO_SETUP.md`](./AUTO_SETUP.md) 与 [`mcp-server/README.md`](./mcp-server/README.md)。
+推荐通用流程：
+
+1. `diagnose_data_paths` / `list_*_versions` 确认数据与版本  
+2. 文档：`search_*` → `get_*_summary` → `get_*_full`（全文勿一次超过 2 页）  
+3. API：`query_api` / `get_method_params`；映射：`convert_mapping`  
+4. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`  
+5. 移植：`analyze_porting_path` →（确认后）`port_project`
+
+---
+
+### 1. API 与映射（4）
+
+| 工具 | 作用 |
+|------|------|
+| `query_api` | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。 |
+| `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。 |
+| `convert_mapping` | 在 **mojang / mcp / yarn / parchment** 之间互转成员名；返回方向、置信度、可选 suggestions。Yarn 仅适用于 Fabric；`to=mojang` 时多为 Tiny official 短名，不是可读 FQCN。 |
+| `get_version_info` | **【Forge only】** 按 MC 版本 + 操作（如「注册方块」）给出推荐做法、关键变更、gotchas 与官方 Changelog 链接。 |
+
+### 2. 工程辅助（4）
+
+| 工具 | 作用 |
+|------|------|
+| `diagnose_gradle` | **【Forge only】** 检查 `build.gradle` / `gradle.properties`：依赖、Forge 版本、Java toolchain、Parchment、reobf 等。返回 errors / warnings / suggestions。暂不覆盖 Loom / NeoGradle 全分支。 |
+| `generate_datagen` | 生成 DataGen Provider 代码模板（recipe / blockstate / itemmodel / loottable / tag）。当前主推 **1.20.1 DeferredRegister** 风格；需 `modId`、`targetName`。 |
+| `crash_analyze` | 解析崩溃报告全文，推断 `crashKind`、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。 |
+| `validate_project` | **【Forge only】** 审查项目结构：`mods.toml` / `@Mod` / DeferredRegister / RegistryObject / Mixin / 资源路径 / 重复注册名等。适合首次接手或修完后自查。 |
+
+### 3. Forge 官方文档（5）
+
+| 工具 | 作用 |
+|------|------|
+| `list_forge_versions` | 列出本地已加载的 Forge 文档版本。无数据时返回 `PLATFORM_DATA_MISSING`。 |
+| `search_forge_docs` | L0 索引搜索（label/id/url/tags）。支持 `class:` / `event:` / `method:` 前缀与 `\|` OR、去停用词、标签过滤。返回页面 `id` 供后续工具使用。 |
+| `get_forge_doc_summary` | 取单页 L1 摘要：首段 + 各章节标题/短摘要，用于判断是否值得读全文。 |
+| `get_forge_doc_full` | 取单页 L2/L2+ 全文；默认 `highlight_key=true` 突出 🔴🟠🟢 关键段。**不要一次加载超过 2 个全文页。** |
+| `get_forge_doc_related` | 根据路径骨架、标签与章节关键词返回相关页面列表。 |
+
+### 4. Fabric 官方文档（5）
+
+| 工具 | 作用 |
+|------|------|
+| `list_fabric_versions` | 列出本地 Fabric 文档版本（`fabric-docs` / `fabric-wiki` 有索引即计入）。无数据 → `PLATFORM_DATA_MISSING`。 |
+| `search_fabric_docs` | 搜索 Fabric 文档；可选 `source`：`fabric-docs`（默认）/ `fabric-wiki` / `all`。wiki 偏入门教程。 |
+| `get_fabric_doc_summary` | Fabric 页 L1 摘要（可指定 source）。 |
+| `get_fabric_doc_full` | Fabric 页全文 + 关键段高亮（可指定 source）。 |
+| `get_fabric_doc_related` | Fabric 相关页推荐。 |
+
+### 5. NeoForge 官方文档（5）
+
+| 工具 | 作用 |
+|------|------|
+| `list_neoforge_versions` | 列出本地 NeoForge 文档版本；**1.20.1** 可回退使用 Forge 1.20.1 数据。 |
+| `search_neoforge_docs` | NeoForge L0 搜索（DeferredRegister、Data Components、Payload 等）；结果可带相关性评分。 |
+| `get_neoforge_doc_summary` | NeoForge 页 L1 摘要。 |
+| `get_neoforge_doc_full` | NeoForge 页全文 + 关键段高亮。 |
+| `get_neoforge_doc_related` | NeoForge 相关页推荐。 |
+
+### 6. 跨平台通用文档（5）
+
+与专用工具能力对应，通过 `platform`（`forge` / `fabric` / `neoforge`，默认 forge）统一入口：
+
+| 工具 | 作用 |
+|------|------|
+| `list_doc_versions` | 列出**指定** platform 的可用版本（不会一次返回三平台）。 |
+| `search_docs` | 多平台搜索；Fabric 时可传 `source`。缺平台数据 → `PLATFORM_DATA_MISSING`。 |
+| `get_doc_summary` | 多平台 L1 摘要。 |
+| `get_doc_full` | 多平台全文。 |
+| `get_doc_related` | 多平台相关页。 |
+
+### 7. 社区知识库（4）
+
+与官方文档分离；**不替代** `search_*_docs`。适合发布、崩溃分类、软依赖、机器 GUI 等实务。
+
+| 工具 | 作用 |
+|------|------|
+| `list_community_sources` | 列出 `community_knowledge` 条目（permitted / authored / links）及来源统计。 |
+| `search_community_docs` | 搜索社区库；命中含 `sourceKind`、`url`、`summary`。 |
+| `get_community_doc_summary` | 社区条目摘要（含署名）；links 仅元数据 + 外链。 |
+| `get_community_doc_full` | permitted/authored 返回仓库内 Markdown；**links 只给 URL，不抓网页正文**。 |
+
+### 8. 移植与数据诊断（3）
+
+| 工具 | 作用 |
+|------|------|
+| `diagnose_data_paths` | 诊断 `MC_SKILL_DATA` / `MC_SKILL_COMMUNITY` 解析结果，以及 forge/fabric/neoforge/community 是 `found` / `empty` / `not_found`。排障首选。 |
+| `analyze_porting_path` | 扫描项目，识别平台/版本/Mappings/Architectury，输出风险、`routeSteps`、参考链接与建议的 `query_api` 调用。 |
+| `port_project` | 执行移植步骤：`init_architectury` / `extract_common` / `apply_version_migration`。默认 **dryRun**；真正写入需 `dryRun=false` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 路径在 `MC_SKILL_PROJECT_ROOT` 内。 |
+
+---
+
+
 
 ## 阶段里程碑
 
@@ -201,6 +285,6 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | Phase 1 | ✅ 完成 | Forge / Fabric / NeoForge 规则集与多版本扩展 |
 | Phase 1.5 | ✅ 完成 | 模组脚手架 + 校验 CLI |
 | Phase 2 | ✅ 完成 | Agent Skills + 代码模式库 |
-| Phase 3 | ✅ 完成 | MCP Server（Forge/Fabric/NeoForge 文档 + 映射 + 移植工具，约 31 工具） |
+| Phase 3 | ✅ 完成 | MCP Server（Forge/Fabric/NeoForge 文档 + 映射 + 移植 + 社区，**35** 工具） |
 | Phase 4 | ✅ 进行中 | 知识库 / 反模式 / 数据审计与 Release 分发 |
 | Phase 5 | 📋 暂缓 | 微调数据集 + runtime-inspector |

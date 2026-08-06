@@ -24,6 +24,7 @@ import { join } from "path";
 import { existsSync, readdirSync, readFileSync } from "fs";
 
 import { resolveDataDir } from "../utils/path.js";
+import { PlatformDataMissingError } from "./platform-data.js";
 
 // ── 类型 re-export ──────────────────────────────────────────────────────────
 export type {
@@ -97,7 +98,8 @@ const JAVADOC_VERSIONS = new Set(["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2"
  *
  *  1. 按已知版本顺序扫描 `${platform}_${version}/${PLATFORM_DOC_SUBDIR[platform]}/${version}/index-l0.json`
  *  2. 均未命中时扫描所有匹配目录，按 index-l0.json 条目数降序选最完整的那个
- *  3. 无任何数据则抛出错误
+ *  3. NeoForge：额外认可 forge_1.20.1（与 hasPlatformDocData / NeoForgeDocStore 一致）
+ *  4. 无任何数据则抛出 PlatformDataMissingError
  */
 function resolvePlatformDataDir(platform: Platform): string {
   const dataRoot = resolveDataDir();
@@ -148,7 +150,16 @@ function resolvePlatformDataDir(platform: Platform): string {
   // Prefer standard naming; fallback to javadoc only if no standard dirs found
   const bestDir = bestDirByPattern["standard"]?.dir ?? bestDirByPattern["javadoc"]?.dir ?? "";
   if (bestDir) return dataRoot;
-  throw new Error(`No data found for platform: ${platform}`);
+
+  // 3. NeoForge 1.20.1：与 hasPlatformDocData / NeoForgeDocStore 一致，认可 Forge 文档
+  if (
+    platform === "neoforge" &&
+    existsSync(join(dataRoot, "forge_1.20.1", "forge-docs", "1.20.1", "index-l0.json"))
+  ) {
+    return dataRoot;
+  }
+
+  throw new PlatformDataMissingError(platform);
 }
 
 /** 导出供外部使用（如 forge/index.ts 的 getGenericStore） */

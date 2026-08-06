@@ -15,6 +15,7 @@ import {
   hasPlatformDocData,
   platformDataMissingPayload,
 } from "./dist/docs-platform/platform-data.js";
+import { resolvePlatformDataDir } from "./dist/docs-platform/store.js";
 import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
@@ -526,6 +527,7 @@ async function testPlatformDataMissing() {
   try {
     assert.equal(hasPlatformDocData("fabric", empty), false);
     assert.equal(hasPlatformDocData("forge", empty), false);
+    assert.equal(hasPlatformDocData("neoforge", empty), false);
 
     const forgeStore = new ForgeDocStore(empty);
     assert.throws(
@@ -542,6 +544,11 @@ async function testPlatformDataMissing() {
     const prev = process.env.MC_SKILL_DATA;
     process.env.MC_SKILL_DATA = empty;
     try {
+      assert.throws(
+        () => resolvePlatformDataDir("neoforge"),
+        (e) => e instanceof PlatformDataMissingError && e.platform === "neoforge",
+      );
+
       const listed = parseToolText(await listFabricVersions());
       assert.equal(listed.ok, false);
       assert.equal(listed.error?.code, "PLATFORM_DATA_MISSING");
@@ -559,6 +566,11 @@ async function testPlatformDataMissing() {
       );
       assert.equal(docsSearch.ok, false);
       assert.equal(docsSearch.error?.code, "PLATFORM_DATA_MISSING");
+
+      const neoListed = parseToolText(await listVersions({ platform: "neoforge" }));
+      assert.equal(neoListed.ok, false);
+      assert.equal(neoListed.error?.code, "PLATFORM_DATA_MISSING");
+      assert.notEqual(neoListed.error?.code, "INTERNAL_ERROR");
     } finally {
       if (prev === undefined) delete process.env.MC_SKILL_DATA;
       else process.env.MC_SKILL_DATA = prev;
@@ -576,6 +588,52 @@ async function testPlatformDataMissing() {
   }
 }
 
+/** hasPlatformDocData(neoforge) 认可 forge_1.20.1 时，resolvePlatformDataDir 必须同样认可，避免 INTERNAL_ERROR */
+async function testNeoForgeResolveDirForgeCompat() {
+  const forgeOnly = mkdtempSync(join(tmpdir(), "mc-skill-nf-forge-compat-"));
+  const forgeDocs = join(forgeOnly, "forge_1.20.1", "forge-docs", "1.20.1");
+  mkdirSync(forgeDocs, { recursive: true });
+  writeFileSync(
+    join(forgeDocs, "index-l0.json"),
+    JSON.stringify([
+      {
+        id: "1.20.1/concepts_registries",
+        version: "1.20.1",
+        label: "Registries",
+        url: "https://example.com",
+        tags: ["registry"],
+        priority: "high",
+        sectionCount: 1,
+      },
+    ]),
+    "utf8",
+  );
+
+  assert.equal(hasPlatformDocData("neoforge", forgeOnly), true);
+  assert.equal(hasPlatformDocData("forge", forgeOnly), true);
+
+  const prev = process.env.MC_SKILL_DATA;
+  process.env.MC_SKILL_DATA = forgeOnly;
+  try {
+    assert.equal(resolvePlatformDataDir("neoforge"), forgeOnly);
+
+    const listed = parseToolText(await listVersions({ platform: "neoforge" }));
+    assert.equal(listed.ok, true);
+    assert.ok(listed.versions.includes("1.20.1"));
+    assert.notEqual(listed.error?.code, "INTERNAL_ERROR");
+
+    const searched = parseToolText(
+      await searchDocs({ query: "Registries", version: "1.20.1", platform: "neoforge" }),
+    );
+    assert.equal(searched.ok, true);
+    assert.notEqual(searched.error?.code, "INTERNAL_ERROR");
+  } finally {
+    if (prev === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prev;
+    rmSync(forgeOnly, { recursive: true, force: true });
+  }
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -588,6 +646,8 @@ await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
 await testCommunityDocsSearchAndLinks();
 await testCrashAnalyzeKindAndMissingDep();
+await testPlatformDataMissing();
+await testNeoForgeResolveDirForgeCompat();
 await testSearchEnhancements();
 await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
