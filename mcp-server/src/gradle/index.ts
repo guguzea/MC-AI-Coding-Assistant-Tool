@@ -96,6 +96,26 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     }
   }
 
+  // 检查 forge 坐标与 properties 交叉一致性
+  const forgeCoord = buildGradle.match(
+    /net\.minecraftforge:forge:([0-9.]+)-([0-9.]+)/,
+  );
+  if (forgeCoord) {
+    const [, mcFromCoord, forgeFromCoord] = forgeCoord;
+    if (props.minecraft_version && props.minecraft_version !== mcFromCoord) {
+      errors.push(
+        `build.gradle 中 Forge 坐标 MC 版本 ${mcFromCoord} 与 gradle.properties 的 minecraft_version=${props.minecraft_version} 不一致`,
+      );
+    }
+    if (props.forge_version && props.forge_version !== forgeFromCoord) {
+      errors.push(
+        `build.gradle 中 Forge 版本 ${forgeFromCoord} 与 gradle.properties 的 forge_version=${props.forge_version} 不一致`,
+      );
+    }
+  } else if (/net\.minecraftforge:forge:\$\{/.test(buildGradle)) {
+    suggestions.push("Forge 依赖使用 ${...} 占位，已跳过与 properties 的字面交叉比对");
+  }
+
   if (errors.length === 0) {
     suggestions.push("配置看起来基本正确，建议运行 ./gradlew build 验证");
   }
@@ -103,7 +123,8 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   return { errors, warnings, suggestions };
 }
 
-function parseGradleProperties(content: string): Record<string, string> {
+/** 导出供 porting 等复用 */
+export function parseGradleProperties(content: string): Record<string, string> {
   const result: Record<string, string> = {};
   for (const line of content.split("\n")) {
     const trimmed = line.trim();

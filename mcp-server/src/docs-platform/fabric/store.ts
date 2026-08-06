@@ -20,8 +20,14 @@
  *       ├── raw/  processed/  index-l0/l1/l2.json
  */
 
-import { readFileSync, existsSync, readdirSync } from "fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "fs";
 import { join, resolve } from "path";
+import {
+  buildSymbolIndex,
+  enhancedSearch,
+  stripScores,
+  type SymbolIndex,
+} from "../search-utils.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -131,13 +137,12 @@ interface CacheEntry<T> {
   expiry: number;
 }
 
-/** 搜索去停用词 */
-const STOP_WORDS = new Set([
-  "the", "and", "of", "to", "a", "in", "is", "it", "for", "on",
-  "with", "as", "by", "at", "from", "or", "an", "be", "this",
-  "that", "are", "was", "were", "has", "have", "had", "not",
-  "how", "what", "when", "where", "which", "who", "can", "will",
-]);
+export interface SearchIndexDetailed {
+  results: SearchResult[];
+  requestedVersion: string;
+  resolvedVersion: string;
+  versionFallback: boolean;
+}
 
 export class FabricDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
@@ -154,6 +159,8 @@ export class FabricDocStore {
   /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟） */
   private searchCache = new Map<string, CacheEntry<unknown>>();
 
+  private symbolIndexCache = new Map<string, SymbolIndex>();
+
   /** 相关文档缓存（以 id|version|limit 为 key） */
   private relatedCache = new Map<string, SearchResult[]>();
 
@@ -162,6 +169,7 @@ export class FabricDocStore {
 
   /** 懒加载校验标志（首次调用文档方法时触发） */
   private _validated = false;
+  private _lastSearchMeta: Omit<SearchIndexDetailed, "results"> | null = null;
 
   /**
    * Create FabricDocStore.
@@ -258,113 +266,95 @@ export class FabricDocStore {
     return [...versions].sort();
   }
 
+  getLastSearchMeta(): Omit<SearchIndexDetailed, "results"> | null {
+    return this._lastSearchMeta;
+  }
+
+  getSymbolIndexBuildGeneration(version: string): number {
+    return this.symbolIndexCache.get(`${this.source}|${version}`)?.buildGeneration ?? 0;
+  }
+
   /**
-   * L0 索引搜索。
-   *
-   * 增强功能：
-   * - 去停用词（the / and / of 等常见词不参与匹配）
-   * - OR 分组：用 | 分割词组，每组内任意词匹配即满足该组
-   * - 前缀路由：支持 class: / event: / method: 语义前缀
-   * - 前缀时降级：检测到前缀指令时，普通词匹配要求降为"至少 1 个 OR 组"
-   * - 无前缀时：多词 query 要求至少匹配 2 个 OR 组（精确优先）
-   *
-   * 按 priority 排序（⭐ > 🟡 > 🟢），最多返回 10 条。
+   * L0 + L1 符号增强搜索。Fabric 不做静默版本降级（version 必须存在）。
    */
   searchIndex(
     query: string,
     version: string,
     tags?: string[],
   ): SearchResult[] {
+    return this.searchIndexDetailed(query, version, tags).results;
+  }
+
+  searchIndexDetailed(
+    query: string,
+    version: string,
+    tags?: string[],
+  ): SearchIndexDetailed {
     this.ensureValidated();
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
     const cached = this.searchCache.get(cacheKey);
     if (cached && cached.expiry > Date.now()) {
-      return cached.data as SearchResult[];
+      const packed = cached.data as SearchIndexDetailed;
+      this._lastSearchMeta = {
+        requestedVersion: packed.requestedVersion,
+        resolvedVersion: packed.resolvedVersion,
+        versionFallback: packed.versionFallback,
+      };
+      return packed;
     }
 
+    // Fabric：严格版本，不存在则抛错（loadIndexL0 内部）
     const index = this.loadIndexL0(version);
+    const symbolIndex = this.getOrBuildSymbolIndex(version);
 
-    const classMatch = query.match(/^class:(\S+)/i);
-    const eventMatch = query.match(/^event:(\S+)/i);
-    const methodMatch = query.match(/^method:(\S+)/i);
-    const hasPrefix = !!(classMatch || eventMatch || methodMatch);
+    const scored = enhancedSearch({
+      query,
+      l0: index,
+      symbolIndex,
+      tags,
+      limit: 10,
+      minTokenLength: 1,
+    });
+    const results = stripScores(scored) as SearchResult[];
 
-    // 前缀指令已单独过滤；从词匹配中剥离，避免 "class:Foo" 整词无法命中
-    const residualQuery = query.replace(/^(?:class|event|method):\S+\s*/i, "").trim();
-    const segments = residualQuery.length > 0 ? residualQuery.split(/\s*\|\s*/) : [];
-    const processedTerms: string[][] = [];
-    for (const seg of segments) {
-      const words = seg.trim().split(/\s+/).filter(w =>
-        w.length > 0 && !STOP_WORDS.has(w.toLowerCase()),
-      );
-      if (words.length > 0) processedTerms.push(words);
-    }
-
-    const normalizedTags = (tags ?? []).map(t =>
-      t.toLowerCase().replace(/-/g, ""),
-    );
-
-    const results = index
-      .filter((e) => {
-        const haystack = `${e.label} ${e.id} ${e.url ?? ""} ${e.tags.join(" ")}`.toLowerCase();
-        if (classMatch) {
-          const cls = classMatch[1].toLowerCase();
-          if (!haystack.includes(cls)) return false;
-        }
-        if (eventMatch) {
-          const ev = eventMatch[1].toLowerCase();
-          if (!haystack.includes(ev)) return false;
-        }
-        if (methodMatch) {
-          const m = methodMatch[1].toLowerCase();
-          if (!haystack.includes(m)) return false;
-        }
-
-        const tagMatch =
-          normalizedTags.length === 0 ||
-          normalizedTags.every((wanted) =>
-            e.tags.some((t) =>
-              t.toLowerCase().replace(/-/g, "").includes(wanted),
-            ),
-          );
-        if (!tagMatch) return false;
-
-        // 仅有前缀、无残余关键词时，前缀过滤已足够
-        if (processedTerms.length === 0) return true;
-
-        let matched = 0;
-        for (const group of processedTerms) {
-          const groupHit = group.some((term) => {
-            const t = term.toLowerCase();
-            return (
-              e.label.toLowerCase().includes(t) ||
-              e.id.toLowerCase().includes(t) ||
-              e.tags.some((tag) => tag.toLowerCase().includes(t)) ||
-              (e.url && e.url.toLowerCase().includes(t))
-            );
-          });
-          if (groupHit) matched++;
-        }
-
-        const hasOr = residualQuery.includes("|");
-        const minGroups = hasPrefix || hasOr ? 1 : Math.min(2, processedTerms.length);
-        return matched >= minGroups;
-      })
-      .sort((a, b) => {
-        const order: Record<string, number> = { "⭐": 0, "🟡": 1, "🟢": 2 };
-        return (order[a.priority] ?? 3) - (order[b.priority] ?? 3);
-      })
-      .slice(0, 10);
+    const detailed: SearchIndexDetailed = {
+      results,
+      requestedVersion: version,
+      resolvedVersion: version,
+      versionFallback: false,
+    };
+    this._lastSearchMeta = {
+      requestedVersion: version,
+      resolvedVersion: version,
+      versionFallback: false,
+    };
 
     this.searchCache.set(cacheKey, {
-      data: results,
+      data: detailed,
       expiry: Date.now() + FabricDocStore.CACHE_TTL,
     });
 
     this.searchLog.push({ query, version, results: results.length, timestamp: Date.now() });
     if (this.searchLog.length > 500) this.searchLog.splice(0, 100);
 
-    return results;
+    return detailed;
+  }
+
+  private getOrBuildSymbolIndex(version: string): SymbolIndex | null {
+    const key = `${this.source}|${version}`;
+    const cached = this.symbolIndexCache.get(key);
+    if (cached) return cached;
+    try {
+      const l1Path = join(this.versionDataDir(version), "index-l1.json");
+      if (!existsSync(l1Path)) return null;
+      const byteSize = statSync(l1Path).size;
+      const l1 = this.loadIndexL1(version);
+      const idx = buildSymbolIndex(l1, { byteSize, generation: 1 });
+      this.symbolIndexCache.set(key, idx);
+      return idx;
+    } catch {
+      return null;
+    }
   }
 
   /**

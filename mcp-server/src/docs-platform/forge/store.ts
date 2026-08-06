@@ -13,8 +13,14 @@
  * - 相关文档：缓存于 relatedCache（以 id|version|limit 为 key）
  */
 
-import { readFileSync, existsSync, readdirSync, type Dirent } from "fs";
+import { readFileSync, existsSync, readdirSync, statSync, type Dirent } from "fs";
 import { join } from "path";
+import {
+  buildSymbolIndex,
+  enhancedSearch,
+  stripScores,
+  type SymbolIndex,
+} from "../search-utils.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -100,16 +106,15 @@ interface CacheEntry<T> {
   expiry: number;
 }
 
-/** 搜索去停用词 */
-const STOP_WORDS = new Set([
-  "the", "and", "of", "to", "a", "in", "is", "it", "for", "on",
-  "with", "as", "by", "at", "from", "or", "an", "be", "this",
-  "that", "are", "was", "were", "has", "have", "had", "not",
-  "how", "what", "when", "where", "which", "who", "can", "will",
-]);
-
 /** Forge 1.7.10–1.12.2 使用 forge_javadoc 而非 forge-docs（需与 store.ts 保持一致） */
 const JAVADOC_VERSIONS = new Set(["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2"]);
+
+export interface SearchIndexDetailed {
+  results: SearchResult[];
+  requestedVersion: string;
+  resolvedVersion: string;
+  versionFallback: boolean;
+}
 
 export class ForgeDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
@@ -123,6 +128,9 @@ export class ForgeDocStore {
   /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟） */
   private searchCache = new Map<string, CacheEntry<unknown>>();
 
+  /** L1 符号倒排（按 resolved version） */
+  private symbolIndexCache = new Map<string, SymbolIndex>();
+
   /** 相关文档缓存（以 id|version|limit 为 key） */
   private relatedCache = new Map<string, SearchResult[]>();
 
@@ -130,8 +138,18 @@ export class ForgeDocStore {
   private searchLog: SearchLogEntry[] = [];
 
   private _validated = false;
+  private _lastSearchMeta: Omit<SearchIndexDetailed, "results"> | null = null;
 
   constructor(private readonly dataDir: string) {}
+
+  /** 供测试：符号索引构建代数 */
+  getSymbolIndexBuildGeneration(version: string): number {
+    return this.symbolIndexCache.get(version)?.buildGeneration ?? 0;
+  }
+
+  getLastSearchMeta(): Omit<SearchIndexDetailed, "results"> | null {
+    return this._lastSearchMeta;
+  }
 
   private versionDataDir(version: string): string {
     const standard = join(this.dataDir, `forge_${version}`, "forge-docs", version);
@@ -239,124 +257,94 @@ export class ForgeDocStore {
   }
 
   /**
-   * L0 索引搜索。
-   *
-   * 增强功能：
-   * - 去停用词（the / and / of 等常见词不参与匹配）
-   * - OR 分组：用 | 分割词组，每组内任意词匹配即满足该组
-   * - 前缀路由：支持 class: / event: / method: 语义前缀
-   * - 前缀时降级：检测到前缀指令时，普通词匹配要求降为"至少 1 个 OR 组"
-   * - 无前缀时：多词 query 要求至少匹配 2 个 OR 组（精确优先）
-   *
-   * 按 priority 排序（⭐ > 🟡 > 🟢），最多返回 10 条。
+   * L0 + L1 符号增强搜索。
+   * 版本不存在时自动降级；调用方可经 getLastSearchMeta / searchIndexDetailed 获取 versionFallback。
    */
   searchIndex(
     query: string,
     version: string,
     tags?: string[],
   ): SearchResult[] {
+    return this.searchIndexDetailed(query, version, tags).results;
+  }
+
+  searchIndexDetailed(
+    query: string,
+    version: string,
+    tags?: string[],
+  ): SearchIndexDetailed {
     this.ensureValidated();
-    // 缓存命中检查
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
     const cached = this.searchCache.get(cacheKey);
     if (cached && cached.expiry > Date.now()) {
-      return cached.data as SearchResult[];
+      const packed = cached.data as SearchIndexDetailed;
+      this._lastSearchMeta = {
+        requestedVersion: packed.requestedVersion,
+        resolvedVersion: packed.resolvedVersion,
+        versionFallback: packed.versionFallback,
+      };
+      return packed;
     }
 
-    // 版本降级（确保找到有数据的版本）
     const resolvedVersion = this.resolveVersion(version);
-
+    const versionFallback = resolvedVersion !== version;
     const index = this.loadIndexL0(resolvedVersion);
+    const symbolIndex = this.getOrBuildSymbolIndex(resolvedVersion);
 
-    // 1. 提取前缀指令
-    const classMatch = query.match(/^class:(\S+)/i);
-    const eventMatch = query.match(/^event:(\S+)/i);
-    const methodMatch = query.match(/^method:(\S+)/i);
-    const hasPrefix = !!(classMatch || eventMatch || methodMatch);
+    const scored = enhancedSearch({
+      query,
+      l0: index,
+      symbolIndex,
+      tags,
+      limit: 10,
+      minTokenLength: 1,
+    });
+    const results = stripScores(scored) as SearchResult[];
 
-    // 2. 去停用词 + OR 分组（剥离前缀，避免 "class:Foo" 整词无法命中）
-    const residualQuery = query.replace(/^(?:class|event|method):\S+\s*/i, "").trim();
-    const segments = residualQuery.length > 0 ? residualQuery.split(/\s*\|\s*/) : [];
-    const processedTerms: string[][] = [];
-    for (const seg of segments) {
-      const words = seg.trim().split(/\s+/).filter(w =>
-        w.length > 0 && !STOP_WORDS.has(w.toLowerCase()),
-      );
-      if (words.length > 0) processedTerms.push(words);
-    }
+    const detailed: SearchIndexDetailed = {
+      results,
+      requestedVersion: version,
+      resolvedVersion,
+      versionFallback,
+    };
+    this._lastSearchMeta = {
+      requestedVersion: version,
+      resolvedVersion,
+      versionFallback,
+    };
 
-    const normalizedTags = (tags ?? []).map(t =>
-      t.toLowerCase().replace(/-/g, ""),
-    );
-
-    const results = index
-      .filter((e) => {
-        const haystack = `${e.label} ${e.id} ${e.url ?? ""} ${e.tags.join(" ")}`.toLowerCase();
-        // 前缀路由
-        if (classMatch) {
-          const cls = classMatch[1].toLowerCase();
-          if (!haystack.includes(cls)) return false;
-        }
-        if (eventMatch) {
-          const ev = eventMatch[1].toLowerCase();
-          if (!haystack.includes(ev)) return false;
-        }
-        if (methodMatch) {
-          const m = methodMatch[1].toLowerCase();
-          if (!haystack.includes(m)) return false;
-        }
-
-        // 标签过滤
-        const tagMatch =
-          normalizedTags.length === 0 ||
-          normalizedTags.every((wanted) =>
-            e.tags.some((t) =>
-              t.toLowerCase().replace(/-/g, "").includes(wanted),
-            ),
-          );
-        if (!tagMatch) return false;
-
-        // 词匹配：仅有前缀时前缀过滤已足够
-        if (processedTerms.length === 0) return true;
-
-        let matched = 0;
-        for (const group of processedTerms) {
-          const groupHit = group.some((term) => {
-            const t = term.toLowerCase();
-            return (
-              e.label.toLowerCase().includes(t) ||
-              e.id.toLowerCase().includes(t) ||
-              e.tags.some((tag) => tag.toLowerCase().includes(t)) ||
-              (e.url && e.url.toLowerCase().includes(t))
-            );
-          });
-          if (groupHit) matched++;
-        }
-        // 有前缀时降级为至少匹配 1 组
-        // 有 OR 分组时（| 分隔），各组为"或"的关系，只需匹配 1 组
-        // 无前缀且无 OR 时，多词 query 要求至少匹配 2 个词组（精确优先）
-        const hasOr = residualQuery.includes("|");
-        const minGroups = hasPrefix || hasOr ? 1 : Math.min(2, processedTerms.length);
-        return matched >= minGroups;
-      })
-      .sort((a, b) => {
-        const order: Record<string, number> = { "⭐": 0, "🟡": 1, "🟢": 2 };
-        return (order[a.priority] ?? 3) - (order[b.priority] ?? 3);
-      })
-      .slice(0, 10);
-
-    // 写入缓存（用 resolvedVersion 保持一致性）
     this.searchCache.set(cacheKey, {
-      data: results,
+      data: detailed,
       expiry: Date.now() + ForgeDocStore.CACHE_TTL,
     });
 
-    // 搜索日志（记录原始请求版本和实际解析版本）
-    const logEntry: SearchLogEntry = { query, version, resolvedVersion, results: results.length, timestamp: Date.now() };
+    const logEntry: SearchLogEntry = {
+      query,
+      version,
+      resolvedVersion,
+      results: results.length,
+      timestamp: Date.now(),
+    };
     this.searchLog.push(logEntry);
     if (this.searchLog.length > 500) this.searchLog.splice(0, 100);
 
-    return results;
+    return detailed;
+  }
+
+  private getOrBuildSymbolIndex(version: string): SymbolIndex | null {
+    const cached = this.symbolIndexCache.get(version);
+    if (cached) return cached;
+    try {
+      const l1Path = join(this.versionDataDir(version), "index-l1.json");
+      if (!existsSync(l1Path)) return null;
+      const byteSize = statSync(l1Path).size;
+      const l1 = this.loadIndexL1(version);
+      const idx = buildSymbolIndex(l1, { byteSize, generation: 1 });
+      this.symbolIndexCache.set(version, idx);
+      return idx;
+    } catch {
+      return null;
+    }
   }
 
   /**

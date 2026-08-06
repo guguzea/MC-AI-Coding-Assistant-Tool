@@ -287,7 +287,7 @@
       "id": "mcmod-3993/crash-publishing",
       "label": "崩溃日志类型与发布渠道（社区）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/crash-publishing.md",
-      "url": "",
+      "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "crash",
         "publishing",
@@ -296,14 +296,14 @@
       ],
       "sourceKind": "permitted",
       "priority": "🟡",
-      "summary": "提炼自社区教程「游戏崩溃篇 / 发表模组篇」。更完整的自写说明见 `authored/crash-reports.md` 与 `authored/publishing.md`。",
+      "summary": "提炼自社区教程「游戏崩溃篇 / 发表模组篇」。更完整的自写说明见 `authored/crash-reports.md` 与 `authored/publishing.md`。（来源教程：如何制作并且维护你的mod？（Forge））",
       "mcHint": "version-agnostic"
     },
     {
       "id": "mcmod-3993/items-registry",
       "label": "物品注册：1.18/1.19 与 1.20 差异",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/items-registry.md",
-      "url": "",
+      "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "item",
         "registry",
@@ -312,14 +312,14 @@
       ],
       "sourceKind": "permitted",
       "priority": "🟡",
-      "summary": "提炼自社区教程；实现以各版本官方 API 与本仓库 rules 为准。",
+      "summary": "提炼自社区教程；实现以各版本官方 API 与本仓库 rules 为准。（来源教程：如何制作并且维护你的mod？（Forge））",
       "mcHint": "1.18-1.20"
     },
     {
       "id": "mcmod-3993/mixin-basics",
       "label": "Mixin 实务要点（社区）",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/mixin-basics.md",
-      "url": "",
+      "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "mixin",
         "inject",
@@ -328,14 +328,14 @@
       ],
       "sourceKind": "permitted",
       "priority": "🟡",
-      "summary": "提炼自社区教程 Mixin 篇；生产环境请配合官方 Mixin 文档与本仓库 `mc-mixin` skill。",
+      "summary": "提炼自社区教程 Mixin 篇；生产环境请配合官方 Mixin 文档与本仓库 `mc-mixin` skill。（来源教程：如何制作并且维护你的mod？（Forge））",
       "mcHint": "version-agnostic"
     },
     {
       "id": "mcmod-3993/setup",
       "label": "Forge MDK 与工程搭建要点",
       "path": "permitted/mcmod-3993-forge-mod-guide/pages/setup.md",
-      "url": "",
+      "url": "https://www.mcmod.cn/post/3993.html",
       "tags": [
         "setup",
         "mdk",
@@ -344,7 +344,7 @@
       ],
       "sourceKind": "permitted",
       "priority": "🟡",
-      "summary": "提炼自 MC百科教程（耿悠博），主体偏 1.18；细节以官方 Getting Started 为准。",
+      "summary": "提炼自 MC百科教程（耿悠博），主体偏 1.18；细节以官方 Getting Started 为准。（来源教程：如何制作并且维护你的mod？（Forge））",
       "mcHint": "1.18.x+"
     }
   ]

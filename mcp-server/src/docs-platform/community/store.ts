@@ -57,6 +57,32 @@ interface IndexFile {
   entries: CommunityIndexEntry[];
 }
 
+export class CommunityDocNotFoundError extends Error {
+  code = "DOC_NOT_FOUND" as const;
+  constructor(public id: string) {
+    super(`Community doc not found: ${id}`);
+  }
+}
+
+/** 英文按空白/符号切；连续汉字整段保留并加 2 字滑窗 */
+export function tokenizeCommunityQuery(q: string): string[] {
+  const out: string[] = [];
+  const parts = q.split(/[\s,;|/]+/).filter(Boolean);
+  for (const p of parts) {
+    out.push(p);
+    const cjk = p.match(/[\u4e00-\u9fff]+/g);
+    if (cjk) {
+      for (const run of cjk) {
+        out.push(run);
+        if (run.length >= 2) {
+          for (let i = 0; i < run.length - 1; i++) out.push(run.slice(i, i + 2));
+        }
+      }
+    }
+  }
+  return [...new Set(out.filter((t) => t.length > 0))];
+}
+
 export class CommunityDocStore {
   private root: string;
   private entries: CommunityIndexEntry[] | null = null;
@@ -102,12 +128,32 @@ export class CommunityDocStore {
     };
   }
 
+  /** 读正文进检索（links 跳过；体积封顶，避免偶发超大文件拖慢） */
+  private bodyHaystack(e: CommunityIndexEntry): string {
+    if (e.sourceKind === "links") return "";
+    const filePath = join(this.root, e.path);
+    if (!existsSync(filePath)) return "";
+    try {
+      let content = readFileSync(filePath, "utf8");
+      if (content.startsWith("---")) {
+        const end = content.indexOf("\n---", 3);
+        if (end >= 0) content = content.slice(end + 4);
+      }
+      return content.slice(0, 12_000).toLowerCase();
+    } catch {
+      return "";
+    }
+  }
+
   search(
     query: string,
     opts?: { sourceKind?: CommunitySourceKind; tags?: string[]; limit?: number },
   ): CommunitySearchResult[] {
     const q = query.toLowerCase().trim();
-    const tokens = q.split(/\s+/).filter(Boolean);
+    const tokens = tokenizeCommunityQuery(q);
+    // 空查询不应「列出前 N 条」——容易被当成命中；请用 list_community_sources
+    if (!tokens.length) return [];
+
     let entries = this.loadIndex();
     if (opts?.sourceKind) {
       entries = entries.filter((e) => e.sourceKind === opts.sourceKind);
@@ -119,15 +165,16 @@ export class CommunityDocStore {
     }
     const scored: CommunitySearchResult[] = [];
     for (const e of entries) {
-      const hay = `${e.id} ${e.label} ${e.summary} ${(e.tags ?? []).join(" ")} ${e.mcHint ?? ""}`.toLowerCase();
+      const meta = `${e.id} ${e.label} ${e.summary} ${(e.tags ?? []).join(" ")} ${e.mcHint ?? ""} ${e.url ?? ""}`.toLowerCase();
+      const body = this.bodyHaystack(e);
+      const hay = `${meta}\n${body}`;
       let score = 0;
-      if (!tokens.length) score = 1;
-      else {
-        for (const t of tokens) {
-          if (hay.includes(t)) score += t.length >= 2 ? 2 : 1;
-          if (e.id.toLowerCase().includes(t)) score += 2;
-          if (e.label.toLowerCase().includes(t)) score += 3;
-        }
+      for (const t of tokens) {
+        if (meta.includes(t)) score += t.length >= 2 ? 2 : 1;
+        if (e.id.toLowerCase().includes(t)) score += 2;
+        if (e.label.toLowerCase().includes(t)) score += 3;
+        // 正文命中权重略低，避免长文淹没标题匹配
+        if (body && body.includes(t)) score += t.length >= 2 ? 1 : 0;
       }
       if (score > 0) scored.push({ ...e, score });
     }
@@ -142,7 +189,7 @@ export class CommunityDocStore {
   getSummary(id: string): CommunitySummaryResult {
     const e = this.getById(id);
     if (!e) {
-      throw new Error(`Community doc not found: ${id}`);
+      throw new CommunityDocNotFoundError(id);
     }
     return {
       id: e.id,
@@ -159,7 +206,7 @@ export class CommunityDocStore {
   getFull(id: string): CommunityFullResult {
     const e = this.getById(id);
     if (!e) {
-      throw new Error(`Community doc not found: ${id}`);
+      throw new CommunityDocNotFoundError(id);
     }
     if (e.sourceKind === "links") {
       return {
@@ -182,7 +229,7 @@ export class CommunityDocStore {
     let content = readFileSync(filePath, "utf8");
     if (content.startsWith("---")) {
       const end = content.indexOf("\n---", 3);
-      if (end >= 0) content = content.slice(end + 4).replace(/^\r?\n/, "");
+      if (end >= 0) content = content.slice(end + 4).replace(/^[\r\n]+/, "");
     }
     return {
       id: e.id,

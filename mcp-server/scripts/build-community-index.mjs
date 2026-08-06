@@ -64,6 +64,24 @@ function sourceKindOf(rel) {
   return "unknown";
 }
 
+function loadNearestMeta(file) {
+  let dir = dirname(file);
+  for (let i = 0; i < 4; i++) {
+    const metaPath = join(dir, "meta.json");
+    if (existsSync(metaPath)) {
+      try {
+        return JSON.parse(readFileSync(metaPath, "utf8"));
+      } catch {
+        return null;
+      }
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+  return null;
+}
+
 const entries = [];
 for (const file of walkMd(ROOT)) {
   const rel = relative(ROOT, file).replace(/\\/g, "/");
@@ -78,15 +96,20 @@ for (const file of walkMd(ROOT)) {
       .replace(/\//g, "/");
   const label = meta.title || id;
   const tags = Array.isArray(meta.tags) ? meta.tags : meta.tags ? [meta.tags] : [];
+  let summary = meta.summary || firstParagraph(body);
+  const guideMeta = kind === "permitted" ? loadNearestMeta(file) : null;
+  if (guideMeta?.title && !String(summary).includes(guideMeta.title)) {
+    summary = `${summary}（来源教程：${guideMeta.title}）`.slice(0, 280);
+  }
   entries.push({
     id,
     label,
     path: rel,
-    url: meta.url || "",
+    url: meta.url || guideMeta?.sourceUrl || guideMeta?.url || "",
     tags,
     sourceKind: kind,
     priority: kind === "authored" ? "⭐" : kind === "permitted" ? "🟡" : "🟢",
-    summary: meta.summary || firstParagraph(body),
+    summary,
     mcHint: meta.mcHint || "",
   });
 }

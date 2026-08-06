@@ -15,6 +15,7 @@
 
 import * as z from "zod";
 import { existsSync, readdirSync } from "fs";
+import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
@@ -90,21 +91,23 @@ export const listFabricVersionsSchema = {
 } as const;
 
 export async function listFabricVersions(): Promise<CallToolResult> {
-  // 动态扫描 data 目录下所有 fabric_<version> 子目录
+  // 动态扫描 data 目录下所有 fabric_<version> 子目录，且须有 index-l0.json
   const versionSet = new Set<string>();
   if (existsSync(ROOT_DIR)) {
     try {
       for (const entry of readdirSync(ROOT_DIR, { withFileTypes: true })) {
         if (entry.isDirectory() && entry.name.startsWith("fabric_")) {
           const ver = entry.name.replace(/^fabric_/, "");
-          versionSet.add(ver);
+          const docsL0 = join(ROOT_DIR, entry.name, "fabric-docs", ver, "index-l0.json");
+          const wikiL0 = join(ROOT_DIR, entry.name, "fabric-wiki", ver, "index-l0.json");
+          if (existsSync(docsL0) || existsSync(wikiL0)) versionSet.add(ver);
         }
       }
     } catch { /* ignore */ }
   }
   const allVersions = [...versionSet].sort();
   return {
-    content: [{ type: "text", text: JSON.stringify({ platform: "fabric", versions: allVersions }, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "fabric", versions: allVersions }, null, 2) }],
   };
 }
 
@@ -160,18 +163,20 @@ export async function searchFabricDocs(
 
     if (source === "all") {
       // 合并两个数据源
-      const docs = getStore(version, "fabric-docs").searchIndex(query, version, tags);
-      const wiki = getStore(version, "fabric-wiki").searchIndex(query, version, tags);
+      const docsStore = getStore(version, "fabric-docs");
+      const wikiStore = getStore(version, "fabric-wiki");
+      const docs = docsStore.searchIndexDetailed(query, version, tags);
+      const wiki = wikiStore.searchIndexDetailed(query, version, tags);
       const merged = [
-        ...docs.map((r) => ({ ...r, _source: "fabric-docs" as const })),
-        ...wiki.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
+        ...docs.results.map((r) => ({ ...r, _source: "fabric-docs" as const })),
+        ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
       ];
-      // 按 priority 排序
       const order: Record<string, number> = { "⭐": 0, "🟡": 1, "🟢": 2 };
       merged.sort((a, b) => (order[a.priority] ?? 3) - (order[b.priority] ?? 3));
-      results = merged.slice(0, 10) as typeof docs;
+      results = merged.slice(0, 10) as typeof docs.results;
     } else {
-      results = getStore(version, source).searchIndex(query, version, tags);
+      const detailed = getStore(version, source).searchIndexDetailed(query, version, tags);
+      results = detailed.results;
     }
 
     return {
@@ -180,8 +185,11 @@ export async function searchFabricDocs(
           type: "text",
           text: JSON.stringify(
             {
+              ok: true,
               query,
               version,
+              resolvedVersion: version,
+              versionFallback: false,
               source,
               tags,
               total: (results as unknown as Array<unknown>).length,

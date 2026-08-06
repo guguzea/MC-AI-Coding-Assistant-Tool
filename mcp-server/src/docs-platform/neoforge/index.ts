@@ -73,7 +73,7 @@ function handleError(e: unknown): CallToolResult {
     };
   }
   return {
-    content: [{ type: "text", text: JSON.stringify({ ok: false, error: String(e) }, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify({ ok: false, error: { code: "INTERNAL_ERROR", message: String(e) } }, null, 2) }],
   };
 }
 
@@ -126,8 +126,8 @@ export async function searchNeoForgeDocs(args: {
   try {
     const s = getGenericStore() as NeoForgeDocStore;
     const version = args.version ?? "26.1";
-    const results = s.searchIndex(args.query, version, args.tags);
-    const forgeCompatible = version === "1.20.1";
+    const detailed = s.searchIndexDetailed(args.query, version, args.tags);
+    const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
     return {
       content: [{
         type: "text",
@@ -135,11 +135,17 @@ export async function searchNeoForgeDocs(args: {
           ok: true,
           query: args.query,
           version,
+          resolvedVersion: detailed.resolvedVersion,
+          versionFallback: detailed.versionFallback,
+          warning: detailed.versionFallback
+            ? `请求版本 ${version} 已映射到 ${detailed.resolvedVersion}`
+            : undefined,
           forgeCompatible: forgeCompatible || undefined,
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
             : undefined,
-          results,
+          total: detailed.results.length,
+          results: detailed.results,
         }, null, 2),
       }],
     };

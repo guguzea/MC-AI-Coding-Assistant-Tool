@@ -1,0 +1,4 @@
+{
+  "error": "Error: timeout initialize id=1\n    at Timeout._onTimeout (file:///H:/MC_skill/mcp-server/scripts/audit-all-tools.mjs:33:14)\n    at listOnTimeout (node:internal/timers:588:17)\n    at process.processTimers (node:internal/timers:523:7)",
+  "findings": []
+}

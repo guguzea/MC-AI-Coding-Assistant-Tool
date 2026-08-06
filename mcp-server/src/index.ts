@@ -65,7 +65,38 @@ import {
   getCommunityDocSummarySchema,
   getCommunityDocFull,
   getCommunityDocFullSchema,
+  CommunityDocNotFoundError,
 } from "./docs-platform/index.js";
+
+function communityDocError(e: unknown): CallToolResult {
+  if (e instanceof CommunityDocNotFoundError) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          error: e.message,
+          code: e.code,
+          id: e.id,
+          hint: "请用 search_community_docs 或 list_community_sources 确认 id",
+        }, null, 2),
+      }],
+      isError: true,
+    };
+  }
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        ok: false,
+        error: (e as Error).message,
+        code: "INTERNAL_ERROR",
+        hint: "请检查 community_knowledge 路径与索引",
+      }, null, 2),
+    }],
+    isError: true,
+  };
+}
 
 const server = new McpServer({
   version: "0.1.0",
@@ -123,7 +154,9 @@ server.registerTool(
     description:
       "在 mojang / mcp / yarn / parchment 四种映射之间互转成员名。" +
       "适用于：混淆堆栈中看到的方法名需要转换、或者需要确认当前项目使用的是哪种映射时。" +
-      "注意：Yarn 仅适用于 Fabric 项目，在 Forge 项目中无法直接使用。返回转换方向、置信度和用法示例。",
+      "注意：Yarn 仅适用于 Fabric 项目，在 Forge 项目中无法直接使用。" +
+      "to=mojang 时 converted 为 Tiny official（混淆短名），不是可读 Mojang FQCN。" +
+      "返回转换方向、置信度、可选 suggestions（高门槛相似名）和用法示例。",
     inputSchema: z.object({
       from: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("源映射类型"),
       to: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("目标映射类型"),
@@ -144,7 +177,7 @@ server.registerTool(
   {
     title: "Get Version-Specific Guidance",
     description:
-      "获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
+      "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
       "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
       "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。",
     inputSchema: z.object({
@@ -164,9 +197,9 @@ server.registerTool(
   {
     title: "Diagnose Gradle Build Configuration",
     description:
-      "校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、" +
-      "parchment 映射、reobfJar 配置是否正确。" +
-      "适用于：项目构建失败、依赖冲突、或首次搭建项目时。" +
+      "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、" +
+      "parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。" +
+      "适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。" +
       "返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。",
     inputSchema: z.object({
       buildGradle: z.string().describe("build.gradle 文件内容"),
@@ -197,7 +230,7 @@ server.registerTool(
   },
   async ({ providerType, modId, targetName, version }): Promise<CallToolResult> => {
     const result = generateDatagen({ providerType, modId, targetName, version: version ?? "1.20.1" });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
 
@@ -230,7 +263,7 @@ server.registerTool(
   {
     title: "Validate Forge Mod Project Structure",
     description:
-      "校验模组项目的结构完整性。" +
+      "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。" +
       "适用于：收到用户项目后首次审查、或修复问题后验证。" +
       "支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、" +
       "@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、" +
@@ -389,10 +422,7 @@ server.registerTool(
       const result = await getCommunityDocSummary(args);
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     } catch (e) {
-      return {
-        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
-        isError: true,
-      };
+      return communityDocError(e);
     }
   }
 );
@@ -411,10 +441,7 @@ server.registerTool(
       const result = await getCommunityDocFull(args);
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     } catch (e) {
-      return {
-        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
-        isError: true,
-      };
+      return communityDocError(e);
     }
   }
 );

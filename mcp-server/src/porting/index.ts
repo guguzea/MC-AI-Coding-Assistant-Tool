@@ -3,6 +3,7 @@ import { join, relative, basename } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
+import { parseGradleProperties } from "../gradle/index.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -267,14 +268,32 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
 
 // ── 参考链接 ───────────────────────────────────────────────────────────────
 
-const REFERENCE_LINKS = [
-  { title: "NeoForge 1.20.2 发布说明", url: "https://neoforged.net/news/20.2release/" },
-  { title: "Architectury NeoForge 迁移教程", url: "https://docs.architectury.dev/api/migration/neoforge" },
-  { title: "MultiLoader 模板", url: "https://github.com/jaredlll08/MultiLoader-Template" },
-  { title: "Architectury @ExpectPlatform", url: "https://docs.architectury.dev/plugin/expect_platform" },
-  { title: "Fabric 26.1 迁移文档", url: "https://docs.fabricmc.net/develop/porting/" },
-  { title: "NeoForge 26.1 迁移指南", url: "https://docs.neoforged.net/primer/docs/26.1/" },
-];
+function buildReferenceLinks(platform: string, version: string): Array<{ title: string; url: string }> {
+  const links: Array<{ title: string; url: string }> = [
+    { title: "Architectury NeoForge 迁移教程", url: "https://docs.architectury.dev/api/migration/neoforge" },
+    { title: "MultiLoader 模板", url: "https://github.com/jaredlll08/MultiLoader-Template" },
+    { title: "Architectury @ExpectPlatform", url: "https://docs.architectury.dev/plugin/expect_platform" },
+  ];
+  if (platform === "neoforge" || platform === "forge") {
+    links.unshift({ title: "NeoForge 1.20.2 发布说明", url: "https://neoforged.net/news/20.2release/" });
+  }
+  // 仅目标版本 >= 26 时附带 26.1 链接
+  const major = parseFloat(version);
+  if (!Number.isNaN(major) && major >= 26) {
+    links.push({ title: "Fabric 26.1 迁移文档", url: "https://docs.fabricmc.net/develop/porting/" });
+    links.push({ title: "NeoForge 26.1 迁移指南", url: "https://docs.neoforged.net/primer/docs/26.1/" });
+  }
+  if (platform === "fabric") {
+    links.push({ title: "Fabric Wiki", url: "https://fabricmc.net/wiki/" });
+    links.push({ title: "Yarn 映射浏览", url: "https://linkie.shedaniel.dev/mappings" });
+    if (version.startsWith("1.20")) {
+      links.push({ title: "Fabric Docs", url: "https://docs.fabricmc.net/" });
+    }
+  }
+  return links;
+}
+
+const REFERENCE_LINKS = buildReferenceLinks("neoforge", "26.1"); // 兼容旧引用；实际输出用 buildReferenceLinks
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TOOL 1: analyze_porting_path
@@ -310,6 +329,7 @@ export async function analyzePortingPath(args: unknown) {
   const buildGradleKts = readContent(join(root, "build.gradle.kts"));
   const settingsGradle = readContent(join(root, "settings.gradle"));
   const gradleProps = readContent(join(root, "gradle.properties"));
+  const props = parseGradleProperties(gradleProps);
 
   // 提取 MC 版本
   let mcVersion: string | null = null;
@@ -327,12 +347,15 @@ export async function analyzePortingPath(args: unknown) {
     const verFromCoord = raw.match(/:(\d+\.\d+(?:\.\d+)?)(?:-|:|$)/);
     mcVersion = verFromCoord?.[1] ?? (/^\d+\.\d+/.test(raw) ? raw : null);
   }
+  if (!mcVersion && props.minecraft_version) mcVersion = props.minecraft_version;
 
   const forgeMatch =
     buildGradle.match(/['"]net\.minecraftforge:forge:[^'"]+-(\d+\.\d+\.\d+)['"]/) ??
     buildGradle.match(/forge\s*['":=]+(\d+\.\d+\.\d+)/) ??
     buildGradle.match(/neoforge\s*['":=]+(\d+\.\d+(?:\.\d+)?)/);
   if (forgeMatch) platformVersion = forgeMatch[1];
+  if (!platformVersion && props.forge_version) platformVersion = props.forge_version;
+  if (!platformVersion && props.neoforge_version) platformVersion = props.neoforge_version;
 
   const mappingsMatch =
     buildGradle.match(/mappings\s+["']([^"']+)["']/) ??
@@ -342,6 +365,7 @@ export async function analyzePortingPath(args: unknown) {
     buildGradle.match(/mappings\s*\{[^}]*channel\s*:\s*['"]([^'"]+)['"]/) ??
     gradleProps.match(/mappings\s*=\s*(.+)/);
   if (mappingsMatch) mappings = mappingsMatch[1].trim();
+  if (!mappings && props.mapping_channel) mappings = props.mapping_channel;
 
   // 检查是否已有 Architectury
   const isArchitectury =
@@ -368,6 +392,12 @@ export async function analyzePortingPath(args: unknown) {
       (modsToml + neoforgeModsToml).match(/modId\s*=\s*["']([^"']+)["']/) ??
       (modsToml + neoforgeModsToml).match(/\bid\s*=\s*["']([^'"]+)["']/);
     if (idMatch) modId = idMatch[1];
+  }
+  if (modId === "${mod_id}" || modId === "${modId}") {
+    modId = props.mod_id ?? props.modId ?? null;
+  }
+  if (!modId && (props.mod_id || props.modId)) {
+    modId = props.mod_id ?? props.modId ?? null;
   }
 
   // 3. 扫描源码
@@ -467,7 +497,10 @@ export async function analyzePortingPath(args: unknown) {
   const targetInfo: TargetInfo = {
     platform: targetPlatform,
     mcVersion: targetVer,
-    mappings: targetVersionInfo?.mappings?.[0] ?? mappings ?? null,
+    mappings:
+      targetPlatform === "fabric"
+        ? "yarn"
+        : (targetVersionInfo?.mappings?.[0] ?? mappings ?? null),
     java: targetVersionInfo?.java ?? (targetVer === "26.1" ? 25 : 21),
   };
 
@@ -480,7 +513,7 @@ export async function analyzePortingPath(args: unknown) {
       riskAssessment,
       recommendedRoute: isArchitectury ? "version_migration" : needCrossPlatform ? "architectury_common_refactor" : "version_migration",
       routeSteps,
-      referenceLinks: REFERENCE_LINKS,
+      referenceLinks: buildReferenceLinks(targetPlatform, targetVer),
       queryApiSuggestions: buildQuerySuggestions(targetVer, targetPlatform),
     },
   };

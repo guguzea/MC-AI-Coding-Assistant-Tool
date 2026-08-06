@@ -52,14 +52,39 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-capability: getCapability 返回 null"],
   },
   {
-    pattern: /NullPointerException.*BlockEntity|BlockEntity.*null/i,
-    cause: "BlockEntity 访问了 world 数据但 world 为 null",
+    // BE 引用本身为 null（常见于 getBlockEntity 未判空）— 须排在 world 模式前，避免包名 world.level 误伤
+    pattern:
+      /because\s+"[^"]+"\s+is\s+null[\s\S]{0,80}BlockEntity|Cannot invoke "[^"]*BlockEntity[^"]*" because "[^"]+" is null/i,
+    cause: "BlockEntity 引用为 null（未取到 BE，或过早使用）",
     fix: [
-      "在 BlockEntity 构造函数中不要访问 world",
-      "在 load() 中先检查 level.hasChunkAt(blockPos)",
-      "使用 @Nullable 标注可能为 null 的 world 引用",
+      "调用 level.getBlockEntity(pos) 后先判空再使用",
+      "确认方块已实现 EntityBlock / newBlockEntity，且 BlockEntityType 已注册",
+      "勿在方块尚未放置完成或区块未加载时假定 BE 存在",
+    ],
+    relatedMistakes: ["mc-blockentity: getBlockEntity 未判空"],
+  },
+  {
+    // level/world 字段为 null（构造期或未就绪）— 匹配 because "level"/"world" is null，避免匹配包名
+    pattern:
+      /because\s+"(?:this\.)?(?:level|world)"\s+is\s+null|(?:getLevel\(\)|this\.level|this\.world)\s*(?:==|!=)\s*null/i,
+    cause: "BlockEntity/方块逻辑访问了 level/world，但其仍为 null",
+    fix: [
+      "在 BlockEntity 构造函数中不要访问 level/world",
+      "在 load() 中先检查 level != null 且 level.hasChunkAt(blockPos)",
+      "使用 @Nullable 标注可能为 null 的 level 引用",
     ],
     relatedMistakes: ["mc-block: 在 BlockEntity 构造函数中访问 world"],
+  },
+  {
+    // 兜底：仍含 BlockEntity + NPE，但原因不够具体
+    pattern: /NullPointerException[\s\S]{0,200}BlockEntity/i,
+    cause: "与 BlockEntity 相关的空指针（需结合堆栈确认是 BE 引用还是 level）",
+    fix: [
+      "检查 getBlockEntity 是否判空",
+      "检查是否在构造/load 过早访问 level",
+      "对照 authored/blockentity-persist-ticker 与 09-anti-patterns",
+    ],
+    relatedMistakes: ["mc-blockentity: NPE 排查"],
   },
   {
     pattern: /ClassCastException.*LivingEntity|LivingEntity.*cast/i,

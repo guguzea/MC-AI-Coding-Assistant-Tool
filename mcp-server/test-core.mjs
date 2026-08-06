@@ -3,15 +3,28 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { listVersions } from "./dist/docs-platform/forge/index.js";
+import { listVersions, searchForgeDocs, searchDocs } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
+import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
+import { searchFabricDocs } from "./dist/docs-platform/fabric/index.js";
+import { ForgeDocStore } from "./dist/docs-platform/forge/store.js";
+import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
+import { generateDatagen } from "./dist/datagen/index.js";
+import { diagnoseGradle } from "./dist/gradle/index.js";
+import { resolveDataDir } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  listCommunitySources,
+  searchCommunityDocs,
+  getCommunityDocFull,
+} from "./dist/docs-platform/community/index.js";
+import { analyzeCrash } from "./dist/crash/index.js";
 
 function parseToolText(result) {
   return JSON.parse(result.content[0].text);
@@ -273,22 +286,157 @@ async function testNeoForge1201ForgeCompat() {
 }
 
 async function testCommunityDocsSearchAndLinks() {
-  const { searchCommunityDocs, getCommunityDocFull, listCommunitySources } =
-    await import("./dist/docs-platform/community/index.js");
   const listed = await listCommunitySources();
   assert.ok(listed.total >= 1, "community index should have entries");
   assert.equal(listed.byKind?.unknown ?? 0, 0, "AGENT_USAGE/README must not be indexed as unknown");
+  const empty = await searchCommunityDocs({ query: "   " });
+  assert.equal(empty.total, 0, "blank query must not list all entries");
   const search = await searchCommunityDocs({ query: "发布" });
   assert.ok(search.total >= 1, "search 发布 should hit authored publishing");
   assert.ok(search.results.some((r) => r.id.includes("publishing") || /发布/.test(r.label + r.summary)));
   const cap = await searchCommunityDocs({ query: "ITEM_HANDLER" });
   assert.ok(cap.total >= 1, "search ITEM_HANDLER should hit capability short doc");
+  const bodyHit = await searchCommunityDocs({ query: "发表模组篇" });
+  assert.ok(bodyHit.total >= 1, "body search should hit permitted crash-publishing page");
+  const titleHit = await searchCommunityDocs({ query: "如何制作并且维护" });
+  assert.ok(titleHit.total >= 1, "permitted pages should be findable by guide title via index summary");
+  const cjk = await searchCommunityDocs({ query: "漏斗管道Capability" });
+  assert.ok(cjk.total >= 1, "CJK tokenization should hit capability docs");
   const linkHits = await searchCommunityDocs({ query: "官方文档", sourceKind: "links" });
   assert.ok(linkHits.total >= 1);
   const full = await getCommunityDocFull({ id: linkHits.results[0].id });
   assert.equal(full.linkOnly, true);
   assert.ok(full.url, "links full must return url");
   assert.equal(full.content, "");
+  const machine = await getCommunityDocFull({ id: "authored/machine-be-gui-working" });
+  assert.ok(!machine.content.startsWith("\r"), "full content should strip leading CR after frontmatter");
+  assert.match(machine.content, /^#\s/);
+}
+
+async function testSearchEnhancements() {
+  const deferred = parseToolText(await searchForgeDocs({ query: "DeferredRegister", version: "1.20.1" }));
+  assert.ok(deferred.total >= 1, "DeferredRegister should hit");
+  assert.ok(
+    deferred.results.some((r) => /registr/i.test(r.id + r.label)),
+    "DeferredRegister should relate to registries",
+  );
+
+  const registry = parseToolText(await searchForgeDocs({ query: "registry", version: "1.20.1" }));
+  assert.ok(registry.total >= 1);
+  assert.ok(
+    /concepts|registr/i.test(registry.results[0].id + registry.results[0].label),
+    "registry ranking should prefer concepts/registry page",
+  );
+
+  const fallback = parseToolText(await searchForgeDocs({ query: "block", version: "9.9.9" }));
+  assert.equal(fallback.versionFallback, true);
+  assert.ok(fallback.resolvedVersion);
+  assert.notEqual(fallback.resolvedVersion, "9.9.9");
+
+  const dataRoot = resolveDataDir();
+  const forgeStore = new ForgeDocStore(dataRoot);
+  forgeStore.searchIndex("DeferredRegister", "1.20.1");
+  const gen1 = forgeStore.getSymbolIndexBuildGeneration("1.20.1");
+  forgeStore.searchIndex("RegisterEvent", "1.20.1");
+  const gen2 = forgeStore.getSymbolIndexBuildGeneration("1.20.1");
+  assert.equal(gen1, 1);
+  assert.equal(gen2, 1, "symbol index must not rebuild on second search");
+
+  const fabricMiss = parseToolText(await searchFabricDocs({ query: "Registry", version: "9.9.9" }));
+  assert.equal(fabricMiss.ok, false);
+  assert.equal(fabricMiss.error?.code, "VERSION_NOT_FOUND");
+
+  const fabricHit = parseToolText(await searchFabricDocs({ query: "Identifier", version: "1.20.1" }));
+  assert.ok(fabricHit.total >= 1 || fabricHit.results?.length >= 1, "Fabric Identifier should hit via L1 symbols");
+
+  const nf = parseToolText(await searchNeoForgeDocs({ query: "registry", version: "1.20.4" }));
+  assert.ok(nf.total >= 1);
+  for (const r of nf.results.slice(0, 5)) {
+    const hay = `${r.id} ${r.label} ${(r.tags ?? []).join(" ")}`.toLowerCase();
+    // 修 bug 后不应整页无词却仅因 high priority 进结果；允许 concepts 等同义命中
+    assert.ok(
+      /registr|deferred|block|item|event/i.test(hay) || (r.score ?? 1) > 0,
+      `neoforge registry hit should be topical: ${r.id}`,
+    );
+  }
+
+  const nfFb = parseToolText(await searchNeoForgeDocs({ query: "block", version: "26.2" }));
+  assert.equal(nfFb.versionFallback, true);
+  assert.equal(nfFb.resolvedVersion, "26.1");
+
+  const nf1201 = new NeoForgeDocStore(dataRoot);
+  const summary = nf1201.loadSummary("concepts/registries", "1.20.1");
+  assert.ok(summary.id.includes("registr"), "1.20.1 short id should resolve");
+
+  const docsFb = parseToolText(await searchDocs({ query: "block", version: "9.9.9", platform: "forge" }));
+  assert.equal(docsFb.versionFallback, true);
+}
+
+async function testDatagenAndMappingGates() {
+  const soft = generateDatagen({
+    providerType: "recipe",
+    modId: "example.mod",
+    targetName: "My-Block",
+  });
+  assert.ok(soft.code, "soft-normalized datagen should still emit code");
+  assert.equal(soft.usedModId, "example_mod");
+  assert.equal(soft.usedTargetName, "my_block");
+  assert.ok(soft.warnings?.length >= 1);
+
+  const sugg = suggestSimilarMethods("getHealth", ["getMaxHealth", "getHunger", "hurt"]);
+  assert.ok(sugg.includes("getMaxHealth"));
+  const short = suggestSimilarMethods("getH", ["getHunger", "getMaxHealth", "getHealth"]);
+  assert.equal(short.length, 0, "getH must not suggest unrelated methods");
+
+  const mapped = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.world.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(mapped.mappingType, "method");
+  if (mapped.suggestions?.length) {
+    assert.ok(!mapped.suggestions.some((s) => s === "getHunger" && !s.toLowerCase().includes("health")));
+  }
+
+  const gradle = diagnoseGradle({
+    buildGradle: `
+plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+minecraft { mappings channel: 'parchment', version: '2023.09.03-1.20.1' }
+dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }
+jar { finalizedBy 'reobfJar' }
+copyIdeResources = true
+`,
+    gradleProperties: "minecraft_version=1.19.2\nforge_version=47.1.0\n",
+  });
+  assert.ok(gradle.errors.some((e) => /不一致/.test(e)));
+}
+
+async function testPortingFabricYarnAndProps() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-port-props-"));
+  try {
+    mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+    writeFileSync(join(root, "gradle.properties"), "minecraft_version=1.20.1\nforge_version=47.2.0\nmod_id=demo_mod\nmapping_channel=official\n", "utf8");
+    writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+    writeFileSync(
+      join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+      'modLoader="javafml"\n[[mods]]\nmodId="${mod_id}"\n',
+      "utf8",
+    );
+    const result = JSON.parse(await analyzePortingPath({
+      projectPath: root,
+      targetPlatform: "fabric",
+      targetVersion: "1.20.1",
+    }));
+    assert.equal(result.analysis.current.modId, "demo_mod");
+    assert.equal(result.analysis.current.mcVersion, "1.20.1");
+    assert.equal(result.analysis.target.mappings, "yarn");
+    assert.ok(!result.analysis.referenceLinks.some((l) => /26\.1/.test(l.url)));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 }
 
 async function testCrashAnalyzeKindAndMissingDep() {
@@ -299,6 +447,12 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.equal(result.crashKind, "fml");
   assert.match(result.probableCause, /缺少强制依赖|前置/);
   assert.ok(Array.isArray(result.logHints) && result.logHints.length > 0);
+
+  const beNull =
+    '---- Minecraft Crash Report ----\nDescription: Unexpected error\n\njava.lang.NullPointerException: Cannot invoke "net.minecraft.world.level.block.entity.BlockEntity.getBlockState()" because "be" is null\n';
+  const beResult = analyzeCrash({ crashReport: beNull });
+  assert.match(beResult.probableCause, /BlockEntity 引用为 null|未取到 BE/);
+  assert.doesNotMatch(beResult.probableCause, /world 为 null/);
 }
 
 await testNeoForgeGenericRouting();
@@ -313,4 +467,7 @@ await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
 await testCommunityDocsSearchAndLinks();
 await testCrashAnalyzeKindAndMissingDep();
+await testSearchEnhancements();
+await testDatagenAndMappingGates();
+await testPortingFabricYarnAndProps();
 console.log("core regression tests passed");

@@ -401,12 +401,20 @@ function fuzzyMethodSearch(query: string, methods: MethodInfo[]): MethodInfo[] {
 
 function fuzzyClassSearch(query: string, vData: VersionData): string[] {
   const normalized = query.toLowerCase().replace(/\./g, "/");
+  const simple = normalized.includes("/")
+    ? normalized.slice(normalized.lastIndexOf("/") + 1)
+    : normalized;
 
   // 优先尝试 Trie 前缀搜索（O(k)）
   if (vData.trieIndex) {
     const prefixResults = vData.trieIndex.searchPrefix(normalized);
     if (prefixResults.length > 0) {
       return prefixResults.slice(0, 5);
+    }
+    if (simple.length >= 3) {
+      const simplePrefix = vData.trieIndex.searchPrefix(simple);
+      // trie 可能按全路径；若无结果走线性
+      if (simplePrefix.length > 0) return simplePrefix.slice(0, 5);
     }
   }
 
@@ -416,16 +424,45 @@ function fuzzyClassSearch(query: string, vData: VersionData): string[] {
 
   for (const name of vData.classNames) {
     const lower = name.toLowerCase();
+    const simpleName = lower.includes("/") ? lower.slice(lower.lastIndexOf("/") + 1) : lower;
     if (lower === normalized) { results.push({ score: 100, name }); continue; }
     if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replace("/", "."))) {
       results.push({ score: 90, name }); continue;
     }
-    if (lower.includes(normalized)) {
+    if (lower.includes(normalized) || simpleName.includes(simple)) {
       results.push({ score: 80 - (lower.length - normalized.length), name });
+      continue;
+    }
+    // 末段编辑距离（Blck → Block）
+    if (simple.length >= 3 && simpleName.length >= 3) {
+      const dist = editDistanceLimited(simple, simpleName, 3);
+      if (dist !== null && dist <= 2) {
+        results.push({ score: 70 - dist * 10, name });
+      }
     }
   }
 
   return results.sort((a, b) => b.score - a.score).slice(0, 5).map(r => r.name);
+}
+
+function editDistanceLimited(a: string, b: string, max: number): number | null {
+  if (Math.abs(a.length - b.length) > max) return null;
+  const m = a.length;
+  const n = b.length;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = new Array<number>(n + 1);
+    cur[0] = i;
+    let rowMin = cur[0];
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > max) return null;
+    prev = cur;
+  }
+  return prev[n] <= max ? prev[n] : null;
 }
 
 // ── 辅助：查找相关类 ─────────────────────────────────────────────────────
@@ -577,7 +614,9 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
       mappings: { mojang: slashName, parchment: slashName },
       suggestions: [`未找到类 ${className}，请检查类名是否正确`],
       notes: [
-        "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
+        /minecraftforge|neoforged/i.test(className)
+          ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
+          : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
         `共收录 ${vData.classNames.length} 个类（版本 ${version}）。`,
       ],
     };

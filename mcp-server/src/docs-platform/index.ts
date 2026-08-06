@@ -66,3 +66,5 @@ export {
   getCommunityDocFull,
   getCommunityDocFullSchema,
 } from "./community/index.js";
+
+export { CommunityDocNotFoundError } from "./community/store.js";

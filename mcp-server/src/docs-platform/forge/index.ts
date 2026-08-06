@@ -78,7 +78,7 @@ export const listForgeVersionsSchema = {
 export async function listForgeVersions(): Promise<CallToolResult> {
   const versions = store.getAvailableVersions();
   return {
-    content: [{ type: "text", text: JSON.stringify({ platform: "forge", versions }, null, 2) }],
+    content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "forge", versions }, null, 2) }],
   };
 }
 
@@ -122,7 +122,7 @@ export async function searchForgeDocs(
   args: z.infer<typeof searchForgeDocsSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const result = store.searchIndex(
+    const detailed = store.searchIndexDetailed(
       args.query,
       args.version,
       args.tags,
@@ -133,11 +133,17 @@ export async function searchForgeDocs(
           type: "text",
           text: JSON.stringify(
             {
+              ok: true,
               query: args.query,
               version: args.version,
+              resolvedVersion: detailed.resolvedVersion,
+              versionFallback: detailed.versionFallback,
+              warning: detailed.versionFallback
+                ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
+                : undefined,
               tags: args.tags,
-              total: result.length,
-              results: result,
+              total: detailed.results.length,
+              results: detailed.results,
             },
             null,
             2,
@@ -153,7 +159,9 @@ export async function searchForgeDocs(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
+                code: "VERSION_NOT_FOUND",
                 hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
               },
               null,
@@ -167,7 +175,7 @@ export async function searchForgeDocs(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ error: (e as Error).message }, null, 2),
+          text: JSON.stringify({ ok: false, error: (e as Error).message }, null, 2),
         },
       ],
     };
@@ -549,24 +557,49 @@ export async function searchDocs(
   args: z.infer<typeof searchDocsSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const store = getGenericStore(args.platform ?? "forge");
+    const platform = args.platform ?? "forge";
+    const store = getGenericStore(platform);
     const result = store.searchIndex(
       args.query,
       args.version,
       args.tags,
     );
+    const meta =
+      typeof (store as unknown as { getLastSearchMeta?: () => {
+        resolvedVersion: string;
+        versionFallback: boolean;
+        requestedVersion: string;
+      } | null }).getLastSearchMeta === "function"
+        ? (store as unknown as { getLastSearchMeta: () => {
+            resolvedVersion: string;
+            versionFallback: boolean;
+            requestedVersion: string;
+          } | null }).getLastSearchMeta()
+        : null;
+    const resolvedVersion = meta?.resolvedVersion ?? args.version;
+    const versionFallback = meta?.versionFallback ?? false;
     return {
       content: [
         {
           type: "text",
           text: JSON.stringify(
             {
+              ok: true,
               query: args.query,
               version: args.version,
-              platform: args.platform ?? "forge",
+              resolvedVersion,
+              versionFallback,
+              warning: versionFallback
+                ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
+                : undefined,
+              platform,
               tags: args.tags,
               total: result.length,
               results: result,
+              notes:
+                platform === "fabric"
+                  ? "Fabric 的 docs/wiki 数据源请优先用 search_fabric_docs 的 source 参数"
+                  : undefined,
             },
             null,
             2,

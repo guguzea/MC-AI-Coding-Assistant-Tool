@@ -17,23 +17,99 @@ export interface DatagenQuery {
   version?: string;
 }
 
-export function generateDatagen(query: DatagenQuery): string {
-  const { providerType, modId, targetName, version = "1.20.1" } = query;
+export interface DatagenResult {
+  code: string | null;
+  usedModId: string;
+  usedTargetName: string;
+  warnings?: string[];
+  errors?: string[];
+}
 
+const IDEAL_ID = /^[a-z][a-z0-9_]*$/;
+
+/** 归一化 modId/targetName：大写→小写，./-→_；无法得到合法标识则返回 null */
+export function normalizeModIdentifier(raw: string): { value: string; warned: boolean } | null {
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  let warned = false;
+  if (!IDEAL_ID.test(trimmed)) warned = true;
+  let v = trimmed.toLowerCase().replace(/[.\-]+/g, "_").replace(/[^a-z0-9_]/g, "_");
+  v = v.replace(/_+/g, "_").replace(/^_|_$/g, "");
+  if (!v || !/^[a-z]/.test(v)) {
+    // 若以数字开头，前缀 m_
+    if (/^[0-9]/.test(v)) {
+      v = `m_${v}`;
+      warned = true;
+    } else {
+      return null;
+    }
+  }
+  if (!IDEAL_ID.test(v)) return null;
+  return { value: v, warned: warned || v !== trimmed };
+}
+
+export function generateDatagen(query: DatagenQuery): DatagenResult {
+  const { providerType, version = "1.20.1" } = query;
+  const warnings: string[] = [];
+
+  const mod = normalizeModIdentifier(query.modId);
+  const target = normalizeModIdentifier(query.targetName);
+  if (!mod || !target) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: [
+        "无法归一化 modId/targetName：请使用字母开头，可含数字与下划线（非法字符会被尝试转为下划线）",
+      ],
+    };
+  }
+  if (mod.warned) {
+    warnings.push(
+      `modId "${query.modId}" 已归一化为 "${mod.value}"（Forge 虽偶允许 ./-，模板使用下划线更安全）`,
+    );
+  }
+  if (target.warned) {
+    warnings.push(`targetName "${query.targetName}" 已归一化为 "${target.value}"`);
+  }
+
+  const modId = mod.value;
+  const targetName = target.value;
+  void version;
+
+  let code: string;
   switch (providerType) {
     case "recipe":
-      return generateRecipe(modId, targetName);
+      code = generateRecipe(modId, targetName);
+      break;
     case "blockstate":
-      return generateBlockState(modId, targetName);
+      code = generateBlockState(modId, targetName);
+      break;
     case "itemmodel":
-      return generateItemModel(modId, targetName);
+      code = generateItemModel(modId, targetName);
+      break;
     case "loottable":
-      return generateLootTable(modId, targetName);
+      code = generateLootTable(modId, targetName);
+      break;
     case "tag":
-      return generateTag(modId, targetName);
+      code = generateTag(modId, targetName);
+      break;
     default:
-      return `// Unknown provider type: ${providerType}`;
+      return {
+        code: null,
+        usedModId: modId,
+        usedTargetName: targetName,
+        errors: [`Unknown provider type: ${providerType}`],
+        warnings: warnings.length ? warnings : undefined,
+      };
   }
+
+  return {
+    code,
+    usedModId: modId,
+    usedTargetName: targetName,
+    warnings: warnings.length ? warnings : undefined,
+  };
 }
 
 function generateRecipe(modId: string, targetName: string): string {

@@ -14,7 +14,7 @@ export async function listCommunitySources() {
 }
 
 export const searchCommunityDocsSchema = z.object({
-  query: z.string().describe("搜索关键词，如 发布、软依赖、崩溃、DeferredRegister"),
+  query: z.string().describe("搜索关键词，如 发布、软依赖、崩溃、DeferredRegister（空字符串不返回结果，请用 list_community_sources 浏览）"),
   sourceKind: z
     .enum(["permitted", "authored", "links"])
     .optional()
