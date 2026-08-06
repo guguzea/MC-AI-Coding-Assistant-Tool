@@ -108,7 +108,7 @@ MC_skill/
    - 正确：`get_fabric_doc_full({ id: "1.20.4/develop_items_first-item", version: "1.20.4" })`  
    - 错误：`id: "items/first-item"`
 2. **推荐流程**：`search_*_docs` →（可选）`get_*_doc_summary` → `get_*_doc_full`。
-3. **L0 搜索只匹配索引字段**（`label` / `id` / `url` / `tags`），不是全文检索。
+3. **L0 搜索只匹配索引字段**（`label` / `id` / `url` / `标签`），不是全文检索。
 4. 前缀查询示例：`class:Item`、`event:lifecycle`。
 5. NeoForge `1.20.1` 文档查询会回退到 Forge 1.20.1 视图（兼容层），属预期。
 
@@ -180,7 +180,7 @@ MC_skill/
 
 Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Config 等平台专有 Skill。
 
-## MCP Server 工具（约 31 个）
+## MCP Server 工具（35 个）
 
 | 模块 | 代表工具 |
 |------|----------|
