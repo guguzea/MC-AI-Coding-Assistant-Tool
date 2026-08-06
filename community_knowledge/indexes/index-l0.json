@@ -2,17 +2,6 @@
   "version": 1,
   "entries": [
     {
-      "id": "AGENT_USAGE",
-      "label": "AGENT_USAGE",
-      "path": "AGENT_USAGE.md",
-      "url": "",
-      "tags": [],
-      "sourceKind": "unknown",
-      "priority": "🟢",
-      "summary": "适用：`community_knowledge/authored/`、`permitted/`、`links/`，以及 MCP `search_community_docs` / `get_community_doc_*`。",
-      "mcHint": ""
-    },
-    {
       "id": "authored/blockentity-persist-ticker",
       "label": "BlockEntity 持久化与 Ticker 接入",
       "path": "authored/blockentity-persist-ticker.md",

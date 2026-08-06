@@ -45,7 +45,12 @@ function walkMd(dir, out = []) {
     const p = join(dir, name);
     const st = statSync(p);
     if (st.isDirectory()) walkMd(p, out);
-    else if (name.endsWith(".md") && name.toLowerCase() !== "readme.md" && name.toLowerCase() !== "attribution.md") {
+    else if (
+      name.endsWith(".md") &&
+      name.toLowerCase() !== "readme.md" &&
+      name.toLowerCase() !== "attribution.md" &&
+      name.toLowerCase() !== "agent_usage.md"
+    ) {
       out.push(p);
     }
   }

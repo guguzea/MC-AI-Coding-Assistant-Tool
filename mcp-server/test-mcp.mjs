@@ -26,6 +26,7 @@ const serverPath = join(__dirname, "dist", "index.js");
 const TIMEOUT_MS = parseInt(process.env.MCP_TIMEOUT_MS ?? "30000", 10);
 const REPO_ROOT = join(__dirname, "..");
 const DATA_DIR = process.env.MC_SKILL_DATA ?? join(REPO_ROOT, "data");
+const COMMUNITY_DIR = process.env.MC_SKILL_COMMUNITY ?? join(REPO_ROOT, "community_knowledge");
 
 // ── JSON-RPC helpers ───────────────────────────────────────────────────────────
 
@@ -71,7 +72,11 @@ function startServer() {
   serverProc = spawn("node", [serverPath], {
     cwd: REPO_ROOT,
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, MC_SKILL_DATA: DATA_DIR },
+    env: {
+      ...process.env,
+      MC_SKILL_DATA: DATA_DIR,
+      MC_SKILL_COMMUNITY: COMMUNITY_DIR,
+    },
   });
 
   serverProc.stderr.on("data", d => {
@@ -184,7 +189,7 @@ async function callTool(name, args) {
 
 async function runTests() {
   console.log("=== MCP Server Full Tool Test ===\n");
-  console.log(`Config: TIMEOUT_MS=${TIMEOUT_MS}, DATA_DIR=${DATA_DIR}\n`);
+  console.log(`Config: TIMEOUT_MS=${TIMEOUT_MS}, DATA_DIR=${DATA_DIR}, COMMUNITY_DIR=${COMMUNITY_DIR}\n`);
 
   // 启动服务器
   startServer();
@@ -383,11 +388,76 @@ async function runTests() {
     "port_project",
     "search_docs",
     "query_api",
+    "list_community_sources",
+    "search_community_docs",
+    "get_community_doc_summary",
+    "get_community_doc_full",
+    "diagnose_data_paths",
+    "crash_analyze",
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 31, `expected 31 tools, got ${toolNames.length}`);
+  assert.equal(toolNames.length, 35, `expected 35 tools, got ${toolNames.length}`);
   console.log(`  tools=${toolNames.length}`);
+  console.log();
+
+  // ── Community + diagnose + crash ────────────────────────────────────────────
+
+  console.log("[Test C1] diagnose_data_paths (community found)");
+  const rc1 = await callTool("diagnose_data_paths", {});
+  const cc1 = JSON.parse(rc1.result.content[0].text);
+  assert.ok(cc1.platforms?.forge?.status === "found", "forge data must be found");
+  assert.ok(cc1.community?.status === "found", `community must be found: ${JSON.stringify(cc1.community)}`);
+  console.log(`  community=${cc1.community?.path}`);
+  console.log();
+
+  console.log("[Test C2] list_community_sources");
+  const rc2 = await callTool("list_community_sources", {});
+  const cc2 = JSON.parse(rc2.result.content[0].text);
+  assert.ok(cc2.total >= 14, `expected community entries, got ${cc2.total}`);
+  assert.equal(cc2.byKind?.unknown ?? 0, 0, `no unknown kind entries: ${JSON.stringify(cc2.byKind)}`);
+  console.log(`  total=${cc2.total} byKind=${JSON.stringify(cc2.byKind)}`);
+  console.log();
+
+  console.log("[Test C3] search_community_docs: Capability");
+  const rc3 = await callTool("search_community_docs", { query: "Capability 漏斗" });
+  const cc3 = JSON.parse(rc3.result.content[0].text);
+  assert.ok((cc3.total ?? 0) >= 1, "Capability search should hit itemhandler");
+  const capHit = (cc3.results ?? []).some((r) => String(r.id).includes("itemhandler") || /Capability/i.test(r.label + r.summary));
+  assert.ok(capHit, `expected capability/itemhandler hit: ${JSON.stringify(cc3.results?.slice(0, 3))}`);
+  console.log(`  total=${cc3.total} first=${cc3.results?.[0]?.id}`);
+  console.log();
+
+  console.log("[Test C4] get_community_doc_full links are linkOnly");
+  const rc4s = await callTool("search_community_docs", { query: "工程化", sourceKind: "links" });
+  const cc4s = JSON.parse(rc4s.result.content[0].text);
+  assert.ok(cc4s.total >= 1, "links search should find 6071 stub");
+  const linkId = cc4s.results[0].id;
+  const rc4 = await callTool("get_community_doc_full", { id: linkId });
+  const cc4 = JSON.parse(rc4.result.content[0].text);
+  assert.equal(cc4.linkOnly, true);
+  assert.ok(cc4.url, "link full must include url");
+  assert.equal(cc4.content ?? "", "");
+  console.log(`  id=${linkId} url=${cc4.url}`);
+  console.log();
+
+  console.log("[Test C5] get_community_doc_summary authored machine");
+  const rc5 = await callTool("get_community_doc_summary", { id: "authored/machine-be-gui-working" });
+  const cc5 = JSON.parse(rc5.result.content[0].text);
+  assert.ok(!cc5.error, `summary error: ${JSON.stringify(cc5)}`);
+  assert.ok((cc5.summary ?? "").length > 10);
+  console.log(`  label=${cc5.label}`);
+  console.log();
+
+  console.log("[Test C6] crash_analyze missing dependency");
+  const rc6 = await callTool("crash_analyze", {
+    crashReport:
+      "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: examplelib\n",
+  });
+  const cc6 = JSON.parse(rc6.result.content[0].text);
+  assert.equal(cc6.crashKind, "fml");
+  assert.ok(Array.isArray(cc6.logHints) && cc6.logHints.length > 0);
+  console.log(`  crashKind=${cc6.crashKind} cause=${cc6.probableCause}`);
   console.log();
 
   // ── 性能报告 ────────────────────────────────────────────────────────────────

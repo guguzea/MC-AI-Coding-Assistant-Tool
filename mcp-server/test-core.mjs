@@ -277,9 +277,12 @@ async function testCommunityDocsSearchAndLinks() {
     await import("./dist/docs-platform/community/index.js");
   const listed = await listCommunitySources();
   assert.ok(listed.total >= 1, "community index should have entries");
+  assert.equal(listed.byKind?.unknown ?? 0, 0, "AGENT_USAGE/README must not be indexed as unknown");
   const search = await searchCommunityDocs({ query: "发布" });
   assert.ok(search.total >= 1, "search 发布 should hit authored publishing");
   assert.ok(search.results.some((r) => r.id.includes("publishing") || /发布/.test(r.label + r.summary)));
+  const cap = await searchCommunityDocs({ query: "ITEM_HANDLER" });
+  assert.ok(cap.total >= 1, "search ITEM_HANDLER should hit capability short doc");
   const linkHits = await searchCommunityDocs({ query: "官方文档", sourceKind: "links" });
   assert.ok(linkHits.total >= 1);
   const full = await getCommunityDocFull({ id: linkHits.results[0].id });
