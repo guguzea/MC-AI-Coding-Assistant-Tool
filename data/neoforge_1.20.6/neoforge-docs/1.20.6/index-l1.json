@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "1.20.6",
-    "label": "Getting Started with Neo",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/1.20.6/gettingstarted/",
     "tags": [
       "getting-started",
@@ -15,27 +15,27 @@
       {
         "title": "Prerequisites",
         "level": 2,
-        "summary": ""
+        "summary": "- Familiarity with the Java programming language, specifically its object-oriented, polymorphic, generic, and functional features. - An installation of the Java 21 Development Kit (JDK) and 64-bit ..."
       },
       {
         "title": "Setting Up the Workspace",
         "level": 2,
-        "summary": ""
+        "summary": "- Open the Mod Developer Kit (MDK) GitHub repository, click \"Use this template\" and clone the newly-created repository to your local machine."
       },
       {
         "title": "Customizing Your Mod Information",
         "level": 2,
-        "summary": ""
+        "summary": "Many of the basic properties of your mod can be changed in the gradle.properties file. This includes basic things like the mod name or the mod version. For more information, see the comments in the..."
       },
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": ""
+        "summary": "To build your mod, run gradlew build. This will output a file in build/libs with the name -.jar. ` and  are properties set by the build.gradle and default to the mod_id and mod_version values in th..."
       },
       {
         "title": "Server Testing",
         "level": 3,
-        "summary": ""
+        "summary": "If you are running a dedicated server, whether through the run configuration or gradlew runServer, the server will shut down immediately. You will need to accept the Minecraft EULA by editing the e..."
       }
     ]
   },
@@ -50,64 +50,65 @@
       "setup",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "firstParagraph": "The mod files are responsible for determining what mods are packaged into your JAR, what information to display within the 'Mods' menu, and how your mod should be loaded in the game.",
     "sections": [
       {
         "title": "gradle.properties",
         "level": 2,
-        "summary": ""
+        "summary": "The gradle.properties file holds various common properties of your mod, such as the mod id or mod version. During building, Gradle reads the values in these files and inlines them in various places..."
       },
       {
         "title": "The Mod ID",
         "level": 3,
-        "summary": ""
+        "summary": "The mod ID is the main way your mod is distinguished from others. It is used in a wide variety of places, including as the namespace for your mod's registries, and as your resource and data pack na..."
       },
       {
         "title": "The Group ID",
         "level": 3,
-        "summary": ""
+        "summary": "While the group property in the build.gradle is only necessary if you plan to publish your mod to a maven, it is considered good practice to always properly set this. This is done for you through t..."
       },
       {
         "title": "neoforge.mods.toml",
         "level": 2,
-        "summary": ""
+        "summary": "The neoforge.mods.toml file, located at src/main/resources/META-INF/neoforge.mods.toml, is a file in TOML format that defines the metadata of your mod(s). It also contains additional information on..."
       },
       {
         "title": "Non-Mod-Specific Properties",
         "level": 3,
-        "summary": ""
+        "summary": "Non-mod-specific properties are properties associated with the JAR itself, indicating how to load the mod(s) and any additional global metadata."
       },
       {
         "title": "Mod-Specific Properties",
         "level": 3,
-        "summary": ""
+        "summary": "Mod-specific properties are tied to the specified mod using the [[mods]] header. This is an array of tables; all key/value properties will be attached to that mod until the next header."
       },
       {
         "title": "Access Transformer-Specific Properties",
         "level": 3,
-        "summary": ""
+        "summary": "Access Transformer-specific properties are tied to the specified access transformer using the [[accessTransformers]] header. This is an array of tables; all key/value properties will be attached to..."
       },
       {
         "title": "Dependency Configurations",
         "level": 3,
-        "summary": ""
+        "summary": "Mods can specify their dependencies, which are checked by NeoForge before loading the mods. These configurations are created using the array of tables [[dependencies.]], where modid is the identifi..."
       },
       {
         "title": "Mod Entrypoints",
         "level": 2,
-        "summary": ""
+        "summary": "Now that the neoforge.mods.toml is filled out, we need to provide an entrypoint for the mod. Entrypoints are essentially the starting point for executing the mod. The entrypoint itself is determine..."
       },
       {
         "title": "javafml and @Mod",
         "level": 3,
-        "summary": ""
+        "summary": "javafml is a language loader provided by NeoForge for the Java programming language. The entrypoint is defined using a public class with the @Mod annotation. The value of @Mod must contain one of t..."
       },
       {
         "title": "lowcodefml",
         "level": 3,
-        "summary": ""
+        "summary": "lowcodefml is a language loader used as a way to distribute datapacks and resource packs as mods without the need of an in-code entrypoint. It is specified as lowcodefml rather than nocodefml for m..."
       }
     ]
   },
@@ -128,22 +129,22 @@
       {
         "title": "Packaging",
         "level": 2,
-        "summary": ""
+        "summary": "When structuring your mod, pick a unique, top-level package structure. Many programmers will use the same name for different classes, interfaces, etc. Java allows classes to have the same name as l..."
       },
       {
         "title": "Sub-package Organization",
         "level": 3,
-        "summary": ""
+        "summary": "In addition to the top-level package, it is highly recommend to break your mod's classes between subpackages. There are two major methods on how to do so:"
       },
       {
         "title": "Class Naming Schemes",
         "level": 2,
-        "summary": ""
+        "summary": "A common class naming scheme makes it easier to decipher the purpose of the class or to easily locate specific classes."
       },
       {
         "title": "Choose One Method from Many",
         "level": 2,
-        "summary": ""
+        "summary": "There are many methods for performing a certain task: registering an object, listening for events, etc. It's generally recommended to be consistent by using a single method to accomplish a given ta..."
       }
     ]
   },
@@ -163,64 +164,64 @@
       {
         "title": "Minecraft",
         "level": 2,
-        "summary": ""
+        "summary": "Minecraft uses semantic versioning. Semantic versioning, or \"semver\" for short, has the format major.minor.patch. So for example, Minecraft 1.20.2 has the major version 1, the minor version 20 and ..."
       },
       {
         "title": "Snapshots",
         "level": 3,
-        "summary": ""
+        "summary": "Snapshots deviate from the standard semver scheme. They are labeled as YYwWWa, where YY represents the last two digits of the year (e.g. 23) and WW represents the week of that year (e.g. 01). So fo..."
       },
       {
         "title": "Pre-releases and Release Candidates",
         "level": 3,
-        "summary": ""
+        "summary": "When a snapshot cycle is coming completion, Mojang starts releasing so-called pre-releases. Pre-releases are deemed feature-complete for a version and focus solely on bugfixes. They use the semver ..."
       },
       {
         "title": "NeoForge",
         "level": 2,
-        "summary": ""
+        "summary": "NeoForge uses an adapted semver system: The major version is Minecraft's minor version, the minor version is Minecraft's patch version, and the patch version is the \"actual\" NeoForge version. So fo..."
       },
       {
         "title": "Mods",
         "level": 2,
-        "summary": ""
+        "summary": "There is no definitive best versioning system. Different styles of development, scopes of projects, etc. all influence the decision of what versioning system to use. Sometimes, versioning system ca..."
       },
       {
         "title": "Semantic Versioning",
         "level": 3,
-        "summary": ""
+        "summary": "Semantic versioning (\"semver\") consists of three parts: major.minor.patch. The major version is bumped when major changes are made to the codebase, which usually correlates with major new features ..."
       },
       {
         "title": "\"Reduced\" and \"Expanded\" Semver",
         "level": 3,
-        "summary": ""
+        "summary": "Sometimes, semver can be seen with only two numbers. This is a sort of \"reduced\" semver, or \"2-part\" semver. Their version numbers only have a major.minor scheme. This is commonly used by small mod..."
       },
       {
         "title": "Alpha, Beta, Release",
         "level": 3,
-        "summary": ""
+        "summary": "Like Minecraft itself, modding is often done in the classical alpha/beta/release stages known from software engineering, where alpha denotes an unstable/experimental version (sometimes also called ..."
       },
       {
         "title": "Including the Minecraft Version",
         "level": 3,
-        "summary": ""
+        "summary": "It is common to include the Minecraft version a mod is for in the filename. This makes it easier for end users to easily find out what Minecraft version a mod is for. A common place for this is eit..."
       },
       {
         "title": "Including the Mod Loader",
         "level": 3,
-        "summary": ""
+        "summary": "As you probably know, NeoForge is not the only mod loader out there, and many mod developers develop on multiple platforms. As a result, a way to distinguish between two files of the same mod of th..."
       },
       {
         "title": "A Note on Maven",
         "level": 3,
-        "summary": ""
+        "summary": "Maven, the system used for dependency hosting, uses a versioning system that differs from semver in some details (though the general major.minor.patch pattern remains the same). The related Maven V..."
       }
     ]
   },
   {
     "id": "advanced/accesstransformers",
     "version": "1.20.6",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/1.20.6/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -234,17 +235,7 @@
       {
         "title": "Adding ATs",
         "level": 2,
-        "summary": ""
-      },
-      {
-        "title": "The file is relative to the output directory of the resources, or the root path inside the jar when compiled",
-        "level": 2,
-        "summary": ""
-      },
-      {
-        "title": "The 'resources' directory represents the root output directory of the resources",
-        "level": 2,
-        "summary": ""
+        "summary": "Adding an Access Transformer to your mod project is as simple as adding a single line into your build.gradle:"
       },
       {
         "title": "The Access Transformer Specification",
@@ -254,17 +245,17 @@
       {
         "title": "Comments",
         "level": 3,
-        "summary": ""
+        "summary": "All text after a # until the end of the line will be treated as a comment and will not be parsed."
       },
       {
         "title": "Access Modifiers",
         "level": 3,
-        "summary": ""
+        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility:"
       },
       {
         "title": "Targets and Directives",
         "level": 3,
-        "summary": ""
+        "summary": "Inner classes are denoted by combining the fully qualified name of the outer class and the name of the inner class with a $ as separator."
       },
       {
         "title": "Examples",
@@ -284,49 +275,50 @@
       "tickable",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "firstParagraph": "`BlockEntities` are like simplified `Entities` that are bound to a Block. They are used to store dynamic data, execute tick based tasks, and dynamic rendering. Some examples from vanilla Minecraft would be handling of inventories on chests, smelting logic on furnaces, or area effects on beacons. Mor",
     "sections": [
       {
         "title": "Registering",
         "level": 2,
-        "summary": ""
+        "summary": "Block Entities are created and removed dynamically and as such are not registry objects on their own."
       },
       {
         "title": "Creating a BlockEntity",
         "level": 2,
-        "summary": ""
+        "summary": "To create a BlockEntity and attach it to a Block, the EntityBlock interface must be implemented on your Block subclass. The method EntityBlock#newBlockEntity(BlockPos, BlockState) must be implement..."
       },
       {
         "title": "Storing Data within your BlockEntity",
         "level": 2,
-        "summary": ""
+        "summary": "In order to save data, override the following two methods:"
       },
       {
         "title": "Ticking BlockEntities",
         "level": 2,
-        "summary": ""
+        "summary": "If you need a ticking BlockEntity, for example to keep track of the progress during a smelting process, another method must be implemented and overridden within EntityBlock: EntityBlock#getTicker(L..."
       },
       {
         "title": "Synchronizing the Data to the Client",
         "level": 2,
-        "summary": ""
+        "summary": "There are three ways of syncing data to the client: synchronizing on chunk load, on block updates, and with a custom network message."
       },
       {
         "title": "Synchronizing on LevelChunk Load",
         "level": 3,
-        "summary": ""
+        "summary": "For this you need to override"
       },
       {
         "title": "Synchronizing on Block Update",
         "level": 3,
-        "summary": ""
+        "summary": "This method is a bit more complicated, but again you just need to override two or three methods. Here is a tiny example implementation of it:"
       },
       {
         "title": "Synchronizing Using a Custom Network Message",
         "level": 3,
-        "summary": ""
+        "summary": "This way of synchronizing is probably the most complicated but is usually the most optimized, as you can make sure that only the data you need to be synchronized is actually synchronized. You shoul..."
       }
     ]
   },
@@ -341,59 +333,60 @@
       "model",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "firstParagraph": "Blocks are essential to the Minecraft world. They make up all the terrain, structures, and machines. Chances are if you are interested in making a mod, then you will want to add some blocks. This page will guide you through the creation of blocks, and some of the things you can do with them.",
     "sections": [
       {
         "title": "One Block to Rule Them All",
         "level": 2,
-        "summary": ""
+        "summary": "Before we get started, it is important to understand that there is only ever one of each block in the game. A world consists of thousands of references to that one block in different locations. In ..."
       },
       {
         "title": "Creating Blocks",
         "level": 2,
-        "summary": ""
+        "summary": "As discussed before, we start by creating our DeferredRegister.Blocks:"
       },
       {
         "title": "Basic Blocks",
         "level": 3,
-        "summary": ""
+        "summary": "For simple blocks which need no special functionality (think cobblestone, wooden planks, etc.), the Block class can be used directly. To do so, during registration, instantiate Block with a BlockBe..."
       },
       {
         "title": "More Functionality",
         "level": 3,
-        "summary": ""
+        "summary": "Directly using Block only allows for very basic blocks. If you want to add functionality, like player interaction or a different hitbox, a custom class that extends Block is required. The Block cla..."
       },
       {
         "title": "DeferredRegister.Blocks helpers",
         "level": 3,
-        "summary": ""
+        "summary": "We already discussed how to create a DeferredRegister.Blocks above, as well as that it returns DeferredBlocks. Now, let's have a look at what other utilities the specialized DeferredRegister has to..."
       },
       {
         "title": "Resources",
         "level": 3,
-        "summary": ""
+        "summary": "If you register your block and place it in the world, you will find it to be missing things like a texture. This is because textures, among others, are handled by Minecraft's resource system. To ap..."
       },
       {
         "title": "Using Blocks",
         "level": 2,
-        "summary": ""
+        "summary": "Blocks are very rarely directly used to do things. In fact, probably two of the most common operations in all of Minecraft - getting the block at a position, and setting a block at a position - use..."
       },
       {
         "title": "Placing a Block",
         "level": 3,
-        "summary": ""
+        "summary": "Block placement logic is called from BlockItem#useOn (or some subclass's implementation thereof, such as in PlaceOnWaterBlockItem, which is used for lily pads). For more information on how the game..."
       },
       {
         "title": "Breaking a Block",
         "level": 3,
-        "summary": ""
+        "summary": "Breaking a block is a bit more complex, as it requires time. The process can be roughly divided into three stages: \"initiating\", \"mining\" and \"actually breaking\"."
       },
       {
         "title": "Ticking",
         "level": 3,
-        "summary": ""
+        "summary": "Ticking is a mechanism that updates (ticks) parts of the game every 1 / 20 seconds, or 50 milliseconds (\"one tick\"). Blocks provide different ticking methods that are called in different ways."
       }
     ]
   },
@@ -413,7 +406,7 @@
       {
         "title": "Blockstate Properties",
         "level": 2,
-        "summary": ""
+        "summary": "Blockstates use a system of properties. A block can have multiple properties of multiple types. For example, an end portal frame has two properties: whether it has an eye (eye, 2 options) and which..."
       },
       {
         "title": "When to Use Blockstates",
@@ -423,34 +416,34 @@
       {
         "title": "Blockstates vs. Separate Blocks",
         "level": 3,
-        "summary": ""
+        "summary": "A good rule of thumb is: **if it has a different name, it should be a separate block**. An example is making chair blocks: the direction of the chair should be a property, while the different types..."
       },
       {
         "title": "Blockstates vs.",
         "level": 3,
-        "summary": ""
+        "summary": "Here, the rule of thumb is: **if you have a finite amount of states, use a blockstate, if you have an infinite or near-infinite amount of states, use a block entity.** Block entities can store arbi..."
       },
       {
         "title": "Implementing Blockstates",
         "level": 2,
-        "summary": ""
+        "summary": "To implement a blockstate property, in your block class, create or reference a public static final Property constant. While you are free to make your own Property implementations, the vanilla code ..."
       },
       {
         "title": "Using Blockstates",
         "level": 2,
-        "summary": ""
+        "summary": "To go from Block to BlockState, call Block#defaultBlockState(). The default blockstate can be changed through Block#registerDefaultState, as described above."
       },
       {
         "title": "Level#setBlock",
         "level": 3,
-        "summary": ""
+        "summary": "To set a BlockState in the level, use Level#setBlock(BlockPos, BlockState, int)."
       }
     ]
   },
   {
     "id": "concepts/events",
     "version": "1.20.6",
-    "label": "Concepts",
+    "label": "Events",
     "url": "https://docs.neoforged.net/docs/1.20.6/concepts/events/",
     "tags": [
       "core",
@@ -458,29 +451,30 @@
       "fundamentals",
       "neoforge-core",
       "has-code",
-      "registerevent"
+      "registerevent",
+      "registry"
     ],
     "firstParagraph": "One of NeoForge's main features is the event system. Events are fired for various things that happen in the game. For example, there are events for when the player right clicks, when a player or another entity jumps, when blocks are rendered, when the game is loaded, etc. A modder can subscribe even",
     "sections": [
       {
         "title": "Registering an Event Handler",
         "level": 2,
-        "summary": ""
+        "summary": "There are multiple ways to register event handlers. Common for all of those ways is that every event handler is a method with a single event parameter and no result (i.e. return type void)."
       },
       {
         "title": "IEventBus#addListener",
         "level": 3,
-        "summary": ""
+        "summary": "The simplest way to register method handlers is by registering their method reference, like so:"
       },
       {
         "title": "@SubscribeEvent",
         "level": 3,
-        "summary": ""
+        "summary": "Alternatively, event handlers can be annotation-driven by creating an event handler method and annotating it with @SubscribeEvent. Then, you can pass an instance of the encompassing class to the ev..."
       },
       {
         "title": "@EventBusSubscriber",
         "level": 3,
-        "summary": ""
+        "summary": "We can go one step further and also annotate the event handler class with @EventBusSubscriber. This annotation is discovered automatically by NeoForge, allowing you to remove all event-related code..."
       },
       {
         "title": "Event Options",
@@ -490,73 +484,74 @@
       {
         "title": "Fields and Methods",
         "level": 3,
-        "summary": ""
+        "summary": "Fields and methods are probably the most obvious part of an event. Most events contain context for the event handler to use, such as an entity causing the event or a level the event occurs in."
       },
       {
         "title": "Hierarchy",
         "level": 3,
-        "summary": ""
+        "summary": "In order to use the advantages of inheritance, some events do not directly extend Event, but one of its subclasses, for example BlockEvent (which contains block context for block-related events) or..."
       },
       {
         "title": "Cancellable Events",
         "level": 3,
-        "summary": ""
+        "summary": "Some events implement the ICancellableEvent interface. These events can be cancelled using #setCanceled(boolean canceled), and the cancellation status can be checked using #isCanceled(). If an even..."
       },
       {
         "title": "TriStates and Results",
         "level": 3,
-        "summary": ""
+        "summary": "Some events have three potential return states represented by TriState, or a Result enum directly on the event class. The return states can typically either cancel the action the event is handling ..."
       },
       {
         "title": "Priority",
         "level": 3,
-        "summary": ""
+        "summary": "Event handlers can optionally get assigned a priority. The EventPriority enum contains five values: HIGHEST, HIGH, NORMAL (default), LOW and LOWEST. Event handlers are executed from highest to lowe..."
       },
       {
         "title": "Sided Events",
         "level": 3,
-        "summary": ""
+        "summary": "Some events are only fired on one side. Common examples include the various render events, which are only fired on the client. Since client-only events generally need to access other client-only pa..."
       },
       {
         "title": "Event Buses",
         "level": 2,
-        "summary": ""
+        "summary": "While most events are posted on the NeoForge.EVENT_BUS, some events are posted on the mod event bus instead. These are generally called mod bus events. Mod bus events can be distinguished from regu..."
       },
       {
         "title": "The Mod Lifecycle",
         "level": 3,
-        "summary": ""
+        "summary": "Most mod bus events are what is known as lifecycle events. Lifecycle events run once in every mod's lifecycle during startup. Many of them are fired in parallel by subclassing ParallelDispatchEvent..."
       },
       {
         "title": "Other Mod Bus Events",
         "level": 3,
-        "summary": ""
+        "summary": "Next to the lifecycle events, there are a few miscellaneous events that are fired on the mod event bus, mostly for legacy reasons. These are generally events where you can register, set up, or init..."
       }
     ]
   },
   {
     "id": "datagen/advancements",
     "version": "1.20.6",
-    "label": "Datagen",
+    "label": "Advancement Generation",
     "url": "https://docs.neoforged.net/docs/1.20.6/datagen/advancements/",
     "tags": [
       "datagen",
       "data-generation",
       "provider",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "firstParagraph": "[Advancements](/docs/1.20.6/resources/server/advancements) can be generated for a mod by constructing a new `AdvancementProvider` and providing `AdvancementSubProvider`s. Advancements can either be created and supplied manually or, for convenience, created using `Advancement.Builder`. The provider m",
     "sections": [
       {
         "title": "AdvancementProvider.AdvancementGenerator",
         "level": 2,
-        "summary": ""
+        "summary": "An AdvancementProvider.AdvancementGenerator is responsible for generating advancements, containing a method which takes in a registry lookup, the writer (Consumer), and the existing file helper."
       },
       {
         "title": "Advancement.Builder",
         "level": 2,
-        "summary": ""
+        "summary": "Advancement.Builder is a convenience implementation for creating Advancements to generate. It allows the definition of the parent advancement, the display information, the rewards when the advancem..."
       }
     ]
   },
@@ -569,61 +564,62 @@
       "datamaps",
       "data-components",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "firstParagraph": "A registry data map contains data-driven, reloadable objects that can be attached to a registry object. This system allows more easily data-driving game behaviour, as they provide functionality such as syncing or conflict resolution, leading to a better and more configurable user experience.",
     "sections": [
       {
         "title": "Registration",
         "level": 2,
-        "summary": ""
+        "summary": "A data map type should be statically created and then registered to the RegisterDataMapTypesEvent (which is fired on the mod event bus). The DataMapType can be created using a DataMapType.Builder, ..."
       },
       {
         "title": "Syncing",
         "level": 2,
-        "summary": ""
+        "summary": "A synced data map will have its values synced to clients. A data map can be marked as synced using DataMapType$Builder#synced(Codec networkCodec, boolean mandatory). The values of the data map will..."
       },
       {
         "title": "JSON Structure and location",
         "level": 2,
-        "summary": ""
+        "summary": "Data maps are loaded from a JSON file located at mapNamespace/data_maps/registryNamespace/registryPath/mapPath.json, where:"
       },
       {
         "title": "Usage",
         "level": 2,
-        "summary": ""
+        "summary": "As data maps can be used on any registry, they can be queried through Holders, and not through the actual registry objects. You can query a data map value using Holder#getData(DataMapType). If that..."
       },
       {
         "title": "Advanced data maps",
         "level": 2,
-        "summary": ""
+        "summary": "Advanced data maps are data maps which have additional functionality. Namely, the ability of merging values and selectively removing them, through a remover. Implementing some form of merging and r..."
       },
       {
         "title": "Creation",
         "level": 3,
-        "summary": ""
+        "summary": "You create an AdvancedDataMapType using AdvancedDataMapType#builder. Unlike the normal builder, the builder returned by that method will have two more methods (merger and remover), and it will retu..."
       },
       {
         "title": "Mergers",
         "level": 3,
-        "summary": ""
+        "summary": "An advanced data map can provide a DataMapValueMerger through AdvancedDataMapType#merger. This merger will be used to handle conflicts between data packs that attempt to attach a value to the same ..."
       },
       {
         "title": "Removers",
         "level": 3,
-        "summary": ""
+        "summary": "An advanced data map can provide a DataMapValueRemover through AdvancedDataMapType#remover. The remover will allow selective removals of data map values, effectively decomposition. While by default..."
       },
       {
         "title": "Datagen",
         "level": 2,
-        "summary": ""
+        "summary": "Data maps can be generated through DataMapProvider. You should extend that class, and then override the generate method to create your entries, similar to tag generation."
       }
     ]
   },
   {
     "id": "datastorage/attachments",
     "version": "1.20.6",
-    "label": "Data Storage",
+    "label": "Data Attachments",
     "url": "https://docs.neoforged.net/docs/1.20.6/datastorage/attachments/",
     "tags": [
       "nbt",
@@ -632,36 +628,37 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "firstParagraph": "The data attachment system allows mods to attach and store additional data on block entities, chunks, and entities.",
     "sections": [
       {
         "title": "Creating an attachment type",
         "level": 2,
-        "summary": ""
+        "summary": "To use the system, you need to register an AttachmentType. The attachment type contains the following configuration:"
       },
       {
         "title": "Using the attachment type",
         "level": 2,
-        "summary": ""
+        "summary": "Once the attachment type is registered, it can be used on any holder object. Calling getData if no data is present will attach a new default instance."
       },
       {
         "title": "Sharing data with the client",
         "level": 2,
-        "summary": ""
+        "summary": "To sync block entity, chunk, or entity attachments to a client, you need to send a packet to the client yourself. For chunks, you can use ChunkWatchEvent.Sent to know when to send chunk data to a p..."
       },
       {
         "title": "Copying data on player death",
         "level": 2,
-        "summary": ""
+        "summary": "By default, entity data attachments are not copied on player death. To automatically copy an attachment on player death, set copyOnDeath in the attachment builder."
       }
     ]
   },
   {
     "id": "gui/menus",
     "version": "1.20.6",
-    "label": "GUIs",
+    "label": "Menus",
     "url": "https://docs.neoforged.net/docs/1.20.6/gui/menus/",
     "tags": [
       "gui",
@@ -670,49 +667,50 @@
       "widget",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "firstParagraph": "Menus are one type of backend for Graphical User Interfaces, or GUIs; they handle the logic involved in interacting with some represented data holder. Menus themselves are not data holders. They are views which allow to user to indirectly modify the internal data holder state. As such, a data holder",
     "sections": [
       {
         "title": "MenuType",
         "level": 2,
-        "summary": ""
+        "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a men..."
       },
       {
         "title": "MenuSupplier",
         "level": 3,
-        "summary": ""
+        "summary": "A MenuType is created by passing in a MenuSupplier and a FeatureFlagSet to its constructor. A MenuSupplier represents a function which takes in the id of the container and the inventory of the play..."
       },
       {
         "title": "IContainerFactory",
         "level": 3,
-        "summary": ""
+        "summary": "If additional information is needed on the client (e.g. the position of the data holder in the world), then the subclass IContainerFactory can be used instead. In addition to the container id and t..."
       },
       {
         "title": "AbstractContainerMenu",
         "level": 2,
-        "summary": ""
+        "summary": "All menus are extended from AbstractContainerMenu. A menu takes in two parameters, the MenuType, which represents the type of the menu itself, and the container id, which represents the unique iden..."
       },
       {
         "title": "#stillValid and ContainerLevelAccess",
         "level": 3,
-        "summary": ""
+        "summary": "#stillValid determines whether the menu should remain open for a given player. This is typically directed to the static #stillValid which takes in a ContainerLevelAccess, the player, and the Block ..."
       },
       {
         "title": "Data Synchronization",
         "level": 3,
-        "summary": ""
+        "summary": "Some data needs to be present on both the server and the client to display to the player. To do this, the menu implements a basic layer of data synchronization such that whenever the current data d..."
       },
       {
         "title": "Opening a Menu",
         "level": 2,
-        "summary": ""
+        "summary": "Once a menu type has been registered, the menu itself has been finished, and a screen has been attached, a menu can then be opened by the player. Menus can be opened by calling IPlayerExtension#ope..."
       },
       {
         "title": "Common Implementations",
         "level": 3,
-        "summary": ""
+        "summary": "Menus are typically opened on a player interaction of some kind (e.g. when a block or entity is right-clicked)."
       }
     ]
   },
@@ -728,71 +726,72 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "firstParagraph": "Along with blocks, items are a key component of Minecraft. While blocks make up the world around you, items exist within inventories.",
     "sections": [
       {
         "title": "What Even Is an Item?",
         "level": 2,
-        "summary": ""
+        "summary": "Before we get further into creating items, it is important to understand what an item actually is, and what distinguishes it from, say, a block. Let's illustrate this using an example:"
       },
       {
         "title": "Creating an Item",
         "level": 2,
-        "summary": ""
+        "summary": "Now that we understand what an item is, let's create one!"
       },
       {
         "title": "Food",
         "level": 3,
-        "summary": ""
+        "summary": "The Item class provides default functionality for food items, meaning you don't need a separate class for that. To make your item edible, all you need to do is set the FoodProperties on it through ..."
       },
       {
         "title": "More Functionality",
         "level": 3,
-        "summary": ""
+        "summary": "Directly using Item only allows for very basic items. If you want to add functionality, for example right-click interactions, a custom class that extends Item is required. The Item class has many m..."
       },
       {
         "title": "DeferredRegister.Items",
         "level": 3,
-        "summary": ""
+        "summary": "All registries use DeferredRegister to register their contents, and items are no exceptions. However, due to the fact that adding new items is such an essential feature of an overwhelming amount of..."
       },
       {
         "title": "Resources",
         "level": 3,
-        "summary": ""
+        "summary": "If you register your item and get your item (via /give or through a creative tab), you will find it to be missing a proper model and texture. This is because textures and models  are handled by Min..."
       },
       {
         "title": "ItemStacks",
         "level": 2,
-        "summary": ""
+        "summary": "Like with blocks and blockstates, most places where you'd expect an Item actually use an ItemStack instead. ItemStacks represent a stack of one or multiple items in a container, e.g. an inventory. ..."
       },
       {
         "title": "Mutability of ItemStacks",
         "level": 3,
-        "summary": ""
+        "summary": "ItemStacks are mutable objects. This means that if you call for example #setCount or any data component map methods, the ItemStack itself will be modified. Vanilla uses the mutability of ItemStacks..."
       },
       {
         "title": "Creative Tabs",
         "level": 2,
-        "summary": ""
+        "summary": "By default, your item will only be available through /give and not appear in the creative inventory. Let's change that!"
       },
       {
         "title": "Existing Creative Tabs",
         "level": 3,
-        "summary": ""
+        "summary": "This method is for adding your items to Minecraft's tabs, or to other mods' tabs. To add items to your own tabs, see below."
       },
       {
         "title": "Custom Creative Tabs",
         "level": 3,
-        "summary": ""
+        "summary": "CreativeModeTabs are a registry, meaning custom CreativeModeTabs must be registered. Creating a creative tab uses a builder system, the builder is obtainable through CreativeModeTab#builder. The bu..."
       }
     ]
   },
   {
     "id": "misc/config",
     "version": "1.20.6",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/1.20.6/misc/config/",
     "tags": [
       "misc",
@@ -806,27 +805,27 @@
       {
         "title": "Creating a Configuration",
         "level": 2,
-        "summary": ""
+        "summary": "A configuration can be created using a subtype of IConfigSpec. NeoForge implements the type via ModConfigSpec and enables its construction through ModConfigSpec.Builder. The builder can separate th..."
       },
       {
         "title": "ConfigValue",
         "level": 3,
-        "summary": ""
+        "summary": "Config values can be built with the provided contexts (if defined) using any of the #define methods."
       },
       {
         "title": "Registering a Configuration",
         "level": 2,
-        "summary": ""
+        "summary": "Once a ModConfigSpec has been built, it must be registered to allow NeoForge to load, track, and sync the configuration settings as required. Configurations should be registered in the mod construc..."
       },
       {
         "title": "Configuration Types",
         "level": 3,
-        "summary": ""
+        "summary": "Configuration types determine where the configuration file is located, what time it is loaded, and whether the file is synced across the network. All configurations are, by default, either loaded f..."
       },
       {
         "title": "Configuration Events",
         "level": 2,
-        "summary": ""
+        "summary": "Operations that occur whenever a config is loaded or reloaded can be done using the ModConfigEvent.Loading and ModConfigEvent.Reloading events. The events must be registered to the mod event bus."
       }
     ]
   },
@@ -856,41 +855,42 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "firstParagraph": "Resources are external files that are used by the game, but are not code. The most prominent kinds of resources are textures, however, many other types of resources exist in the Minecraft ecosystem. Of course, all these resources require a consumer on the code side, so the consuming systems are grou",
     "sections": [
       {
         "title": "Assets",
         "level": 2,
-        "summary": ""
+        "summary": "*See also: Resource Packs on the Minecraft Wiki*"
       },
       {
         "title": "Data",
         "level": 2,
-        "summary": ""
+        "summary": "*See also: Data Packs on the Minecraft Wiki*"
       },
       {
         "title": "pack.mcmeta",
         "level": 2,
-        "summary": ""
+        "summary": "*See also: pack.mcmeta (Resource Pack) and pack.mcmeta (Data Pack) on the Minecraft Wiki*"
       },
       {
         "title": "Data Generation",
         "level": 2,
-        "summary": ""
+        "summary": "Data generation, colloquially known as datagen, is a way to programmatically generate JSON resource files, in order to avoid the tedious and error-prone process of writing them by hand. The name is..."
       },
       {
         "title": "Command Line Arguments",
         "level": 3,
-        "summary": ""
+        "summary": "The data generator can accept several command line arguments:"
       }
     ]
   },
   {
     "id": "resources/client/i18n",
     "version": "1.20.6",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/1.20.6/resources/client/i18n/",
     "tags": [
       "resources",
@@ -898,44 +898,45 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "firstParagraph": "I18n (short for internationalization) is the way of designing a program to work with multiple languages. L10n (short for localization) is the process of translating text into the user's language. Minecraft implements these using `Component`s.",
     "sections": [
       {
         "title": "Components",
         "level": 2,
-        "summary": ""
+        "summary": "A Component is a piece of text with metadata, with the metadata including things such as text formatting. It can be created in one of the following ways (all of the following are static methods in ..."
       },
       {
         "title": "MutableComponent",
         "level": 3,
-        "summary": ""
+        "summary": "All constructed components are generally MutableComponents. A MutableComponent provides methods to add new component siblings that are appended to the end of this component and set the style of the..."
       },
       {
         "title": "Text Formatting",
         "level": 3,
-        "summary": ""
+        "summary": "Components can be formatted using Styles. Styles are immutable, creating a new Style object when modified, and thus allowing them to be created once and then be reused as needed."
       },
       {
         "title": "Language Files",
         "level": 2,
-        "summary": ""
+        "summary": "Language files are JSON files that contain mappings from translation keys (see below) to actual names. They are located at assets//lang/language_name.json. For example, US English translations for ..."
       },
       {
         "title": "Translation Keys",
         "level": 3,
-        "summary": ""
+        "summary": "Translation keys are the keys used in translations. In many cases, they follow the format registry.modid.name. For example, a mod with the id examplemod that provides a block named example_block wi..."
       },
       {
         "title": "Translating Mod Metadata",
         "level": 3,
-        "summary": ""
+        "summary": "Starting with NeoForge 20.4.179, translation files can override certain parts of mod info using the following keys (where modid is to be replaced with the actual mod id):"
       },
       {
         "title": "Datagen",
         "level": 3,
-        "summary": ""
+        "summary": "Language files can be datagenned. To do so, extend the LanguageProvider class and add your translations in the addTranslations() method:"
       }
     ]
   },
@@ -955,7 +956,7 @@
       {
         "title": "Creating a Datapack",
         "level": 2,
-        "summary": ""
+        "summary": "Datapacks are stored within the data directory within your project's resources. Your mod can have multiple data domains, since you can add or modify already existing datapacks, like vanilla's, forg..."
       }
     ]
   }

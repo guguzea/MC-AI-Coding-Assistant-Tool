@@ -1,5 +1,5 @@
 > 来源：https://fabricmc.net/wiki/doku.php?id=tutorial:blocks
-> 版本：1.21.1
+> 版本：1.21.11
 > 页面 ID：tutorial:blocks
 > 优先级：⭐
 > 抓取源：wiki_raw

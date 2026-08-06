@@ -1,5 +1,5 @@
 > 来源：https://fabricmc.net/wiki/doku.php?id=start
-> 版本：1.21.1
+> 版本：1.19.4
 > 页面 ID：start
 > 优先级：🟡
 > 抓取源：wiki_raw

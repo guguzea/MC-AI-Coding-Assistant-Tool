@@ -93,7 +93,11 @@ function inferTags(pageId, content) {
   if (lower.includes("deferredregister")) tags.add("deferredregister");
   if (lower.includes("registerevent")) tags.add("registerevent");
   if (lower.includes("datacomponent")) tags.add("data-components");
-  if (pageId.includes("registr") || lower.includes("registry") || lower.includes("registries")) {
+  // 词边界匹配：避免 DeferredRegister 子串误标 registry
+  if (
+    /registr/.test(pageId) ||
+    /\bregistr(?:y|ies)\b/i.test(lower)
+  ) {
     tags.add("registry");
   }
 
@@ -126,13 +130,48 @@ function extractFirstParagraph(content) {
 
 function extractSections(content) {
   const sections = [];
-  const headingRegex = /^#{2,3}\s+(.+)$/gm;
-  let match;
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[0].startsWith("###") ? 3 : 2;
-    const title = match[1].replace(/\[.*?\]\(.*?\)/g, "").trim();
-    sections.push({ title, level, summary: "" });
+  const lines = content.split("\n");
+  let current = null;
+  let paraBuf = [];
+  let inCode = false;
+
+  const flushPara = () => {
+    if (!current) return;
+    const text = paraBuf.join(" ").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/`([^`]+)`/g, "$1").trim();
+    paraBuf = [];
+    if (text.length > 20 && !current.summary) {
+      current.summary = text.length > 200 ? text.slice(0, 197) + "..." : text;
+    }
+  };
+
+  for (const line of lines) {
+    if (line.startsWith("```")) {
+      inCode = !inCode;
+      continue;
+    }
+    if (inCode) continue;
+
+    const h = line.match(/^(#{2,3})\s+(.+)$/);
+    if (h) {
+      flushPara();
+      if (current) sections.push(current);
+      current = {
+        title: h[2].replace(/\[.*?\]\(.*?\)/g, "").trim(),
+        level: h[1].length,
+        summary: "",
+      };
+      continue;
+    }
+
+    if (!current) continue;
+    if (line.trim() === "") {
+      flushPara();
+    } else if (!line.startsWith("#")) {
+      paraBuf.push(line.trim());
+    }
   }
+  flushPara();
+  if (current) sections.push(current);
   return sections;
 }
 
@@ -212,7 +251,7 @@ function processVersion(version) {
       url: entry.url,
       tags: entry.tags,
       firstParagraph: extractFirstParagraph(content),
-      sections: extractSections(content).map(s => ({ title: s.title, level: s.level, summary: "" })),
+      sections: extractSections(content).map(s => ({ title: s.title, level: s.level, summary: s.summary || "" })),
     };
   });
 

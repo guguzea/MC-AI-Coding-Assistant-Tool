@@ -2,7 +2,7 @@
   {
     "id": "1.17.1/tutorial_start",
     "version": "1.17.1",
-    "label": "tutorial_start",
+    "label": "Fabric Modding Tutorials",
     "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:start",
     "tags": [
       "tutorial"
@@ -29,7 +29,7 @@
   {
     "id": "1.17.1/tutorial_items",
     "version": "1.17.1",
-    "label": "tutorial_items",
+    "label": "Adding an Item",
     "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
     "tags": [
       "item",
@@ -92,7 +92,7 @@
   {
     "id": "1.17.1/tutorial_blocks",
     "version": "1.17.1",
-    "label": "tutorial_blocks",
+    "label": "Adding a Block",
     "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:blocks",
     "tags": [
       "block",
@@ -150,7 +150,7 @@
   {
     "id": "1.17.1/tutorial_kotlin",
     "version": "1.17.1",
-    "label": "tutorial_kotlin",
+    "label": "Using Kotlin with Fabric",
     "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
     "tags": [
       "kotlin",
@@ -188,7 +188,7 @@
   {
     "id": "1.17.1/tutorial_commands",
     "version": "1.17.1",
-    "label": "tutorial_commands",
+    "label": "Creating Commands",
     "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:commands",
     "tags": [
       "command",
@@ -251,7 +251,7 @@
   {
     "id": "1.17.1/start",
     "version": "1.17.1",
-    "label": "start",
+    "label": "Welcome to the Fabric Wiki!",
     "url": "https://fabricmc.net/wiki/doku.php?id=start",
     "tags": [],
     "firstParagraph": "If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki.",
@@ -291,7 +291,7 @@
   {
     "id": "1.17.1/documentation_start",
     "version": "1.17.1",
-    "label": "documentation_start",
+    "label": "Documentation",
     "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
     "tags": [
       "documentation"

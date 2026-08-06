@@ -383,6 +383,8 @@ function processVersion() {
     const pageIdMatch = rawText.match(/^> 页面 ID：(.+)$/m);
     const priorityMatch = rawText.match(/^> 优先级：(.+)$/m);
     const titleMatch = rawText.match(/^# (.+)$/);
+    // DokuWiki 一级标题 ====== Title ======（优先于 slug 注入的 # tutorial_xxx）
+    const dokuH1 = rawText.match(/^={6}\s*(.+?)\s*={6}\s*$/m);
 
     // 去掉元数据行后转 Markdown
     const contentWithoutMeta = rawText
@@ -396,7 +398,16 @@ function processVersion() {
       .replace(/^\n+/, "");
 
     const markdown = wikiToMarkdown(contentWithoutMeta);
-    const title = titleMatch ? titleMatch[1].trim() : file.replace(".txt", "");
+    const title = (() => {
+      if (dokuH1?.[1]) return dokuH1[1].trim();
+      // wikiToMarkdown 后可能变成 # Title
+      const mdH1 = markdown.match(/^#\s+(.+)$/m);
+      if (mdH1?.[1] && !/^tutorial[\s_-]/i.test(mdH1[1])) return mdH1[1].replace(/\s*\{#.*\}$/, "").trim();
+      if (titleMatch?.[1] && !/^tutorial[\s_-]/i.test(titleMatch[1])) return titleMatch[1].trim();
+      // slug → 可读：tutorial_items → Items
+      const stem = file.replace(/\.txt$/, "").replace(/^tutorial[_-]?/i, "").replace(/[_-]+/g, " ").trim();
+      return stem ? stem.replace(/\b\w/g, (c) => c.toUpperCase()) : file.replace(".txt", "");
+    })();
     const url = urlMatch ? urlMatch[1].trim() : "";
     const pageId = pageIdMatch ? pageIdMatch[1].trim() : file;
     const priority = priorityMatch ? priorityMatch[1].trim() : "🟢";

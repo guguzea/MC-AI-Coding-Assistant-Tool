@@ -1,5 +1,5 @@
 > 来源：https://fabricmc.net/wiki/doku.php?id=tutorial:commands
-> 版本：1.21.1
+> 版本：1.21.11
 > 页面 ID：tutorial:commands
 > 优先级：🟡
 > 抓取源：wiki_raw
@@ -282,11 +282,13 @@ dispatcher.register(literal("foo")
 Below are links to the articles about more complex concepts used in brigadier.
 
 ^ Page                                                           ^ Description                                                                     ^
-| [Exceptions](command_exceptions  ) | Fail execution of a command with a descriptive message and in certain contexts. |  |
+| [Exceptions](command_exceptions  ) | Fail execution of a command with a descriptive message and in certain contexts. |
+| --- | --- |
 | [Suggestions](command_suggestions) | Suggesting command input for the client. |
 | [Redirects](command_redirects) | Allow use of aliases or repeating elements to execute commands. |
 | [Custom Argument Types](command_${1}_types) | Parse your own arguments into your own objects. |
-| [Examples](command_examples) | Some example commands |  |
+| [Examples](command_examples) | Some example commands |
+
 # FAQ
 ## Why does my code not compile
 There are several immediate possibilities for why this could occur.

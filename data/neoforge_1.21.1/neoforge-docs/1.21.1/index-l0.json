@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "1.21.1",
-    "label": "Getting Started",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/1.21.1/gettingstarted/",
     "tags": [
       "getting-started",
@@ -24,7 +24,8 @@
       "setup",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 12
@@ -61,7 +62,7 @@
   {
     "id": "concepts/registries",
     "version": "1.21.1",
-    "label": "Concepts",
+    "label": "Registries",
     "url": "https://docs.neoforged.net/docs/1.21.1/concepts/registries/",
     "tags": [
       "core",
@@ -70,7 +71,8 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "registerevent"
+      "registerevent",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 9
@@ -86,7 +88,8 @@
       "model",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 10
@@ -117,7 +120,8 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 13
@@ -133,7 +137,8 @@
       "tickable",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7
@@ -149,7 +154,8 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 5
@@ -157,7 +163,7 @@
   {
     "id": "resources/client/i18n",
     "version": "1.21.1",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/1.21.1/resources/client/i18n/",
     "tags": [
       "resources",
@@ -165,7 +171,8 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7
@@ -173,7 +180,7 @@
   {
     "id": "resources/server/advancements",
     "version": "1.21.1",
-    "label": "Server",
+    "label": "Advancements",
     "url": "https://docs.neoforged.net/docs/1.21.1/resources/server/advancements/",
     "tags": [
       "resources",
@@ -182,7 +189,8 @@
       "loot-table",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7
@@ -190,7 +198,7 @@
   {
     "id": "inventories/container",
     "version": "1.21.1",
-    "label": "Inventories & Transfers",
+    "label": "Containers",
     "url": "https://docs.neoforged.net/docs/1.21.1/inventories/container/",
     "tags": [
       "inventory",
@@ -206,7 +214,7 @@
   {
     "id": "datastorage/nbt",
     "version": "1.21.1",
-    "label": "Data Storage",
+    "label": "Named Binary Tag (NBT)",
     "url": "https://docs.neoforged.net/docs/1.21.1/datastorage/nbt/",
     "tags": [
       "nbt",
@@ -222,7 +230,7 @@
   {
     "id": "worldgen/biomemodifier",
     "version": "1.21.1",
-    "label": "Worldgen",
+    "label": "Biome Modifiers",
     "url": "https://docs.neoforged.net/docs/1.21.1/worldgen/biomemodifier/",
     "tags": [
       "worldgen",
@@ -230,7 +238,8 @@
       "feature",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 16
@@ -278,7 +287,8 @@
       "channel",
       "neoforge-core",
       "has-code",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 19
@@ -302,7 +312,7 @@
   {
     "id": "advanced/accesstransformers",
     "version": "1.21.1",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/1.21.1/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -312,12 +322,12 @@
       "has-code"
     ],
     "priority": "high",
-    "sectionCount": 8
+    "sectionCount": 6
   },
   {
     "id": "misc/config",
     "version": "1.21.1",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/1.21.1/misc/config/",
     "tags": [
       "misc",

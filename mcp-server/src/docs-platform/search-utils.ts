@@ -58,8 +58,16 @@ const SYMBOL_STOP = new Set([
 
 /** 短缩写白名单（NeoForge 原先 length>2 会丢掉） */
 export const SHORT_QUERY_WHITELIST = new Set([
-  "at", "be", "nbt", "gui", "gui", "ui", "ai", "id", "mc", "mod",
+  "at", "be", "nbt", "gui", "ui", "ai", "id", "mc", "mod",
 ]);
+
+/** 短缩写 → 文档路径/标题常用全称（边界匹配 alone 打不中 Access Transformers） */
+const ABBREV_EXPAND: Record<string, string[]> = {
+  at: ["accesstransformer", "accesstransformers", "access", "transformer", "transformers"],
+  be: ["blockentity", "blockentities", "tileentity", "tileentities"],
+  nbt: ["compoundtag", "tag"],
+  gui: ["screen", "screens", "menu", "menus"],
+};
 
 const CAMEL =
   /\b([A-Z][a-zA-Z0-9]+|[a-z][a-zA-Z0-9]*[A-Z][a-zA-Z0-9]*)\b/g;
@@ -114,6 +122,10 @@ export function expandQueryTerms(raw: string): string[] {
   for (const p of splitCamelCase(raw)) {
     out.add(p);
     out.add(stemToken(p));
+  }
+  const abbr = ABBREV_EXPAND[lower];
+  if (abbr) {
+    for (const w of abbr) out.add(w);
   }
   return [...out];
 }
@@ -179,6 +191,10 @@ function normalizeTag(t: string): string {
   return t.toLowerCase().replace(/-/g, "");
 }
 
+function escapeRegExp(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function priorityRank(p: string): number {
   if (p === "⭐" || p === "high") return 0;
   if (p === "🟡" || p === "medium") return 1;
@@ -214,6 +230,23 @@ function l0FieldHit(e: L0Like, term: string): number {
   const url = (e.url ?? "").toLowerCase();
 
   const match = (hay: string, weight: number) => {
+    // 短缩写（AT/BE/UI…）必须词边界匹配，避免 datagen/attachments 误中
+    const useBoundary = t.length <= 2 || SHORT_QUERY_WHITELIST.has(t);
+    if (useBoundary) {
+      const re = new RegExp(`(?:^|[^a-z0-9])${escapeRegExp(t)}(?:[^a-z0-9]|$)`, "i");
+      if (re.test(hay)) {
+        score += weight;
+        return;
+      }
+      // 仍允许词级词干相等（nbt 等）
+      for (const part of hay.split(/[^a-z0-9]+/).filter(Boolean)) {
+        if (stemToken(part) === stemmed && (part === t || part === stemmed)) {
+          score += weight;
+          return;
+        }
+      }
+      return;
+    }
     if (hay.includes(t) || hay.includes(stemmed)) {
       score += weight;
       return;

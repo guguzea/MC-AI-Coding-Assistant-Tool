@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "1.20.6",
-    "label": "Getting Started with Neo",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/1.20.6/gettingstarted/",
     "tags": [
       "getting-started",
@@ -24,7 +24,8 @@
       "setup",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 11
@@ -61,7 +62,7 @@
   {
     "id": "advanced/accesstransformers",
     "version": "1.20.6",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/1.20.6/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -71,7 +72,7 @@
       "has-code"
     ],
     "priority": "high",
-    "sectionCount": 8
+    "sectionCount": 6
   },
   {
     "id": "blockentities",
@@ -84,7 +85,8 @@
       "tickable",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 8
@@ -100,7 +102,8 @@
       "model",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 10
@@ -122,7 +125,7 @@
   {
     "id": "concepts/events",
     "version": "1.20.6",
-    "label": "Concepts",
+    "label": "Events",
     "url": "https://docs.neoforged.net/docs/1.20.6/concepts/events/",
     "tags": [
       "core",
@@ -130,7 +133,8 @@
       "fundamentals",
       "neoforge-core",
       "has-code",
-      "registerevent"
+      "registerevent",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 14
@@ -138,14 +142,15 @@
   {
     "id": "datagen/advancements",
     "version": "1.20.6",
-    "label": "Datagen",
+    "label": "Advancement Generation",
     "url": "https://docs.neoforged.net/docs/1.20.6/datagen/advancements/",
     "tags": [
       "datagen",
       "data-generation",
       "provider",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 2
@@ -159,7 +164,8 @@
       "datamaps",
       "data-components",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 9
@@ -167,7 +173,7 @@
   {
     "id": "datastorage/attachments",
     "version": "1.20.6",
-    "label": "Data Storage",
+    "label": "Data Attachments",
     "url": "https://docs.neoforged.net/docs/1.20.6/datastorage/attachments/",
     "tags": [
       "nbt",
@@ -176,7 +182,8 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 4
@@ -184,7 +191,7 @@
   {
     "id": "gui/menus",
     "version": "1.20.6",
-    "label": "GUIs",
+    "label": "Menus",
     "url": "https://docs.neoforged.net/docs/1.20.6/gui/menus/",
     "tags": [
       "gui",
@@ -193,7 +200,8 @@
       "widget",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 8
@@ -210,7 +218,8 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 11
@@ -218,7 +227,7 @@
   {
     "id": "misc/config",
     "version": "1.20.6",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/1.20.6/misc/config/",
     "tags": [
       "misc",
@@ -256,7 +265,8 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 5
@@ -264,7 +274,7 @@
   {
     "id": "resources/client/i18n",
     "version": "1.20.6",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/1.20.6/resources/client/i18n/",
     "tags": [
       "resources",
@@ -272,7 +282,8 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7

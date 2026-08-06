@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "26.1",
-    "label": "Getting Started",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/gettingstarted/",
     "tags": [
       "getting-started",
@@ -24,7 +24,8 @@
       "setup",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 11
@@ -61,7 +62,7 @@
   {
     "id": "concepts/registries",
     "version": "26.1",
-    "label": "Concepts",
+    "label": "Registries",
     "url": "https://docs.neoforged.net/docs/concepts/registries/",
     "tags": [
       "core",
@@ -71,7 +72,8 @@
       "has-code",
       "deferredregister",
       "registerevent",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 9
@@ -87,7 +89,8 @@
       "model",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 10
@@ -118,7 +121,8 @@
       "neoforge-core",
       "has-code",
       "deferredregister",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 16
@@ -134,7 +138,8 @@
       "ai",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 13
@@ -150,7 +155,8 @@
       "tickable",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 8
@@ -166,7 +172,8 @@
       "datapack",
       "loot-table",
       "neoforge-core",
-      "has-code"
+      "has-code",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 5
@@ -174,7 +181,7 @@
   {
     "id": "resources/client/i18n",
     "version": "26.1",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/resources/client/i18n/",
     "tags": [
       "resources",
@@ -183,7 +190,8 @@
       "loot-table",
       "neoforge-core",
       "has-code",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7
@@ -191,7 +199,7 @@
   {
     "id": "resources/server/advancements",
     "version": "26.1",
-    "label": "Server",
+    "label": "Advancements",
     "url": "https://docs.neoforged.net/docs/resources/server/advancements/",
     "tags": [
       "resources",
@@ -200,7 +208,8 @@
       "loot-table",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 7
@@ -208,7 +217,7 @@
   {
     "id": "inventories/container",
     "version": "26.1",
-    "label": "Inventories & Transfers",
+    "label": "Containers",
     "url": "https://docs.neoforged.net/docs/inventories/container/",
     "tags": [
       "inventory",
@@ -224,7 +233,7 @@
   {
     "id": "datastorage/nbt",
     "version": "26.1",
-    "label": "Data Storage",
+    "label": "Named Binary Tag (NBT)",
     "url": "https://docs.neoforged.net/docs/datastorage/nbt/",
     "tags": [
       "nbt",
@@ -240,7 +249,7 @@
   {
     "id": "worldgen/biomemodifier",
     "version": "26.1",
-    "label": "Worldgen",
+    "label": "Biome Modifiers",
     "url": "https://docs.neoforged.net/docs/worldgen/biomemodifier/",
     "tags": [
       "worldgen",
@@ -248,7 +257,8 @@
       "feature",
       "neoforge-core",
       "has-code",
-      "deferredregister"
+      "deferredregister",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 17
@@ -296,7 +306,8 @@
       "channel",
       "neoforge-core",
       "has-code",
-      "data-components"
+      "data-components",
+      "registry"
     ],
     "priority": "high",
     "sectionCount": 19
@@ -320,7 +331,7 @@
   {
     "id": "rendering/feature",
     "version": "26.1",
-    "label": "Rendering",
+    "label": "Features",
     "url": "https://docs.neoforged.net/docs/rendering/feature/",
     "tags": [
       "rendering",
@@ -336,7 +347,7 @@
   {
     "id": "advanced/accesstransformers",
     "version": "26.1",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -346,12 +357,12 @@
       "has-code"
     ],
     "priority": "high",
-    "sectionCount": 8
+    "sectionCount": 6
   },
   {
     "id": "misc/config",
     "version": "26.1",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/misc/config/",
     "tags": [
       "misc",

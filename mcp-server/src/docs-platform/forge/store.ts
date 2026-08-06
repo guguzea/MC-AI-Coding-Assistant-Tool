@@ -376,15 +376,35 @@ export class ForgeDocStore {
     const current = l2.find((e) => e.id === id);
     if (!current) throw new DocNotFoundError(id, version);
 
-    // 当前文档关键词集合：URL path 骨架 + section 标题/摘要
+    // 当前文档关键词：path 骨架（按 / 与 _ 切分）+ section 标题/摘要 + tags
+    const RELATED_STOP = new Set([
+      "there", "their", "these", "those", "this", "that", "with", "from", "into",
+      "over", "under", "after", "before", "using", "used", "also", "only", "such",
+      "than", "then", "else", "when", "where", "which", "what", "will", "would",
+      "could", "should", "have", "been", "were", "they", "them", "some", "any",
+      "each", "other", "more", "most", "very", "just", "like", "make", "made",
+      "class", "public", "private", "static", "return", "import", "package",
+      "minecraft", "forge", "mod", "code", "example", "page", "section", "docs",
+      "objects", "object", "methods", "method", "ways", "way", "needs", "need",
+      "done", "does", "doing", "appear", "appears", "typically", "simply",
+    ]);
+    const meaningful = (w: string) =>
+      w.length > 3 && !RELATED_STOP.has(w);
+
     const pathKws = this.extractPathKeywords(id);
     const sectionKws = current.sections
       .flatMap((s) => [s.title, s.summary])
       .join(" ")
       .toLowerCase()
       .split(/\W+/)
-      .filter((w) => w.length > 3);
-    const currentKeywords = new Set([...pathKws, ...sectionKws]);
+      .filter(meaningful);
+    const tagKws = (current.tags ?? []).map((t) => t.toLowerCase().replace(/-/g, ""));
+    const pathSet = new Set(pathKws);
+    const sectionSet = new Set(sectionKws);
+    const tagSet = new Set(tagKws);
+
+    // 顶层章节前缀（concepts / datagen / networking …）用于同章加权
+    const topSeg = id.replace(/^\d+\.\d+(\.\d+)?\//, "").split(/[/_]/)[0]?.toLowerCase() ?? "";
 
     const results = (l2 as Array<import("./types.js").L2Entry & { overlap: number }>)
       .filter((e) => e.id !== id)
@@ -395,13 +415,30 @@ export class ForgeDocStore {
           .join(" ")
           .toLowerCase()
           .split(/\W+/)
-          .filter((w) => w.length > 3);
-        const otherKeywords = new Set([...otherPathKws, ...otherSectionKws]);
+          .filter(meaningful);
+        const otherTagKws = (e.tags ?? []).map((t) => t.toLowerCase().replace(/-/g, ""));
+        const otherPath = new Set(otherPathKws);
+        const otherSection = new Set(otherSectionKws);
+        const otherTag = new Set(otherTagKws);
 
         let overlap = 0;
-        for (const w of currentKeywords) {
-          if (otherKeywords.has(w)) overlap++;
+        // path 骨架命中权重大于散文词
+        for (const w of pathSet) {
+          if (otherPath.has(w) || otherSection.has(w) || otherTag.has(w)) overlap += 5;
         }
+        for (const w of sectionSet) {
+          if (otherPath.has(w) || otherSection.has(w)) overlap += 1;
+        }
+        for (const t of tagSet) {
+          if (otherTag.has(t) || otherPath.has(t) || otherSection.has(t)) overlap += 6;
+        }
+        const otherTop = e.id.replace(/^\d+\.\d+(\.\d+)?\//, "").split(/[/_]/)[0]?.toLowerCase() ?? "";
+        if (topSeg && topSeg === otherTop) overlap += 10;
+        else if (topSeg && otherTop && topSeg !== otherTop && overlap < 8) {
+          // 弱相关且跨章：压制 GUI/杂项误入
+          overlap = Math.max(0, overlap - 3);
+        }
+
         return { ...e, overlap };
       })
       .filter((e) => e.overlap > 0)
@@ -535,15 +572,17 @@ export class ForgeDocStore {
    * "1.20.1/blockentities/ber" → ["blockentities","ber","block","entity"]
    */
   private extractPathKeywords(id: string): string[] {
-    const parts = id.replace(/^\d+\.\d+\.\d+\//, "").split("/");
+    // Forge id 多为 1.20.1/concepts_registries（下划线）；同时兼容 concepts/registries
+    const stem = id.replace(/^\d+\.\d+(?:\.\d+)?\//, "");
+    const parts = stem.split(/[/_]+/).filter(Boolean);
     const keywords: string[] = [];
     for (const part of parts) {
-      keywords.push(part.toLowerCase());
-      // 词根提取（去除常见后缀）
+      const lower = part.toLowerCase();
+      keywords.push(lower);
       const root = part
-        .replace(/(?:entity|es|s|ing|ed)$/i, "")
+        .replace(/(?:entity|ies|es|s|ing|ed)$/i, "")
         .toLowerCase();
-      if (root !== part.toLowerCase() && root.length > 2) {
+      if (root !== lower && root.length > 2) {
         keywords.push(root);
       }
     }
