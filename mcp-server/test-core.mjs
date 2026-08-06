@@ -8,8 +8,13 @@ import { analyzePortingPath, portProject } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
-import { searchFabricDocs } from "./dist/docs-platform/fabric/index.js";
+import { searchFabricDocs, listFabricVersions } from "./dist/docs-platform/fabric/index.js";
 import { ForgeDocStore } from "./dist/docs-platform/forge/store.js";
+import {
+  PlatformDataMissingError,
+  hasPlatformDocData,
+  platformDataMissingPayload,
+} from "./dist/docs-platform/platform-data.js";
 import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
@@ -514,6 +519,61 @@ async function testCrashAnalyzeKindAndMissingDep() {
   const beResult = analyzeCrash({ crashReport: beNull });
   assert.match(beResult.probableCause, /BlockEntity 引用为 null|未取到 BE/);
   assert.doesNotMatch(beResult.probableCause, /world 为 null/);
+}
+
+async function testPlatformDataMissing() {
+  const empty = mkdtempSync(join(tmpdir(), "mc-skill-plat-miss-"));
+  try {
+    assert.equal(hasPlatformDocData("fabric", empty), false);
+    assert.equal(hasPlatformDocData("forge", empty), false);
+
+    const forgeStore = new ForgeDocStore(empty);
+    assert.throws(
+      () => forgeStore.getAvailableVersions(),
+      (e) => e instanceof PlatformDataMissingError && e.platform === "forge",
+    );
+
+    const fabStore = createFabricDocStore("1.20.1", "fabric-docs", empty);
+    assert.throws(
+      () => fabStore.searchIndex("Registry", "1.20.1"),
+      (e) => e instanceof PlatformDataMissingError && e.platform === "fabric",
+    );
+
+    const prev = process.env.MC_SKILL_DATA;
+    process.env.MC_SKILL_DATA = empty;
+    try {
+      const listed = parseToolText(await listFabricVersions());
+      assert.equal(listed.ok, false);
+      assert.equal(listed.error?.code, "PLATFORM_DATA_MISSING");
+      assert.equal(listed.error?.platform, "fabric");
+      assert.match(listed.error?.hint ?? "", /下载|fabric_/i);
+
+      const searched = parseToolText(
+        await searchFabricDocs({ query: "Registry", version: "1.20.1" }),
+      );
+      assert.equal(searched.ok, false);
+      assert.equal(searched.error?.code, "PLATFORM_DATA_MISSING");
+
+      const docsSearch = parseToolText(
+        await searchDocs({ query: "block", version: "1.20.1", platform: "fabric" }),
+      );
+      assert.equal(docsSearch.ok, false);
+      assert.equal(docsSearch.error?.code, "PLATFORM_DATA_MISSING");
+    } finally {
+      if (prev === undefined) delete process.env.MC_SKILL_DATA;
+      else process.env.MC_SKILL_DATA = prev;
+    }
+
+    // 有完整数据时：错误版本仍是 VERSION_NOT_FOUND，不是 MISSING
+    const fabricMiss = parseToolText(await searchFabricDocs({ query: "Registry", version: "9.9.9" }));
+    assert.equal(fabricMiss.ok, false);
+    assert.equal(fabricMiss.error?.code, "VERSION_NOT_FOUND");
+
+    const payload = platformDataMissingPayload("neoforge");
+    assert.equal(payload.error.code, "PLATFORM_DATA_MISSING");
+  } finally {
+    rmSync(empty, { recursive: true, force: true });
+  }
 }
 
 await testNeoForgeGenericRouting();

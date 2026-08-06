@@ -28,6 +28,7 @@ import {
   stripScores,
   type SymbolIndex,
 } from "../search-utils.js";
+import { PlatformDataMissingError } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -217,17 +218,10 @@ export class FabricDocStore {
     this._validated = true;
 
     if (!existsSync(this.dataDir)) {
-      throw new Error(
-        `数据目录不存在: ${this.dataDir}\n` +
-        `请设置 MC_SKILL_DATA 为 data 目录的绝对路径。\n` +
-        `示例：MC_SKILL_DATA=/path/to/MC_skill/data`
-      );
+      throw new PlatformDataMissingError("fabric");
     }
     if (this.getAvailableVersionsUnchecked().length === 0) {
-      throw new Error(
-        `数据目录结构不符合预期: ${this.dataDir}\n` +
-        `预期结构: <dataDir>/fabric_<version>/${this.source}/<version>/index-l0.json`
-      );
+      throw new PlatformDataMissingError("fabric");
     }
   }
 

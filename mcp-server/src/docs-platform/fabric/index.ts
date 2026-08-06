@@ -19,16 +19,24 @@ import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
+import {
+  asPlatformDataMissingResult,
+  platformDataMissingResult,
+  hasPlatformDocData,
+} from "../platform-data.js";
 
-const ROOT_DIR = resolveDataDir();
+function getDataRoot(): string {
+  return resolveDataDir();
+}
 
-// 按 source 缓存 store 实例（避免重复创建）
+// 按 source 缓存 store 实例（避免重复创建；key 含 dataRoot）
 const _stores = new Map<string, ReturnType<typeof createFabricDocStore>>();
 
 function getStore(version: string, source: string) {
-  const key = `${version}:${source}`;
+  const root = getDataRoot();
+  const key = `${root}:${version}:${source}`;
   if (!_stores.has(key)) {
-    _stores.set(key, createFabricDocStore(version, source, ROOT_DIR));
+    _stores.set(key, createFabricDocStore(version, source, root));
   }
   return _stores.get(key)!;
 }
@@ -36,7 +44,10 @@ function getStore(version: string, source: string) {
 // ── 统一错误处理 ──────────────────────────────────────────────────────────────────
 
 function handleError(e: unknown): CallToolResult {
+  const miss = asPlatformDataMissingResult(e);
+  if (miss) return miss;
   if (e instanceof VersionNotFoundError) {
+    if (e.availableVersions.length === 0) return platformDataMissingResult("fabric");
     return {
       content: [{
         type: "text",
@@ -91,6 +102,10 @@ export const listFabricVersionsSchema = {
 } as const;
 
 export async function listFabricVersions(): Promise<CallToolResult> {
+  const ROOT_DIR = getDataRoot();
+  if (!hasPlatformDocData("fabric", ROOT_DIR)) {
+    return platformDataMissingResult("fabric");
+  }
   // 动态扫描 data 目录下所有 fabric_<version> 子目录，且须有 index-l0.json
   const versionSet = new Set<string>();
   if (existsSync(ROOT_DIR)) {
@@ -106,6 +121,7 @@ export async function listFabricVersions(): Promise<CallToolResult> {
     } catch { /* ignore */ }
   }
   const allVersions = [...versionSet].sort();
+  if (allVersions.length === 0) return platformDataMissingResult("fabric");
   return {
     content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "fabric", versions: allVersions }, null, 2) }],
   };
@@ -157,6 +173,9 @@ export async function searchFabricDocs(
   args: z.infer<typeof searchFabricDocsSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
+    if (!hasPlatformDocData("fabric", getDataRoot())) {
+      return platformDataMissingResult("fabric");
+    }
     const { query, version, tags, source } = args;
 
     let results: ReturnType<typeof getStore.prototype.searchIndex>;

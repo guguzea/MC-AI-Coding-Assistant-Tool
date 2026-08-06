@@ -21,6 +21,7 @@ import {
   stripScores,
   type SymbolIndex,
 } from "../search-utils.js";
+import { PlatformDataMissingError } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -171,18 +172,10 @@ export class ForgeDocStore {
     this._validated = true;
 
     if (!existsSync(this.dataDir)) {
-      throw new Error(
-        `数据目录不存在: ${this.dataDir}\n` +
-        `请确保 MC_SKILL_DATA 环境变量指向 data 目录本身（绝对路径）。\n` +
-        `示例：MC_SKILL_DATA=/path/to/MC_skill/data`
-      );
+      throw new PlatformDataMissingError("forge");
     }
     if (this.getAvailableVersionsUnchecked().length === 0) {
-      throw new Error(
-        `数据目录结构不符合预期: ${this.dataDir}\n` +
-        `预期结构: <dataDir>/forge_<version>/forge-docs/<version>/index-l0.json ` +
-        `或 <dataDir>/forge_javadoc/<version>/index-l0.json`
-      );
+      throw new PlatformDataMissingError("forge");
     }
   }
 

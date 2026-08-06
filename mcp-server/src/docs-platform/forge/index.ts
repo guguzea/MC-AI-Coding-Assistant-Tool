@@ -18,6 +18,11 @@ import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.j
 import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform } from "../store.js";
 import { createFabricDocStore } from "../fabric/store.js";
 import { resolveDataDir } from "../../utils/path.js";
+import {
+  asPlatformDataMissingResult,
+  platformDataMissingResult,
+  hasPlatformDocData,
+} from "../platform-data.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -78,10 +83,19 @@ export const listForgeVersionsSchema = {
 } as const;
 
 export async function listForgeVersions(): Promise<CallToolResult> {
-  const versions = store.getAvailableVersions();
-  return {
-    content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "forge", versions }, null, 2) }],
-  };
+  try {
+    const versions = store.getAvailableVersions();
+    if (versions.length === 0) return platformDataMissingResult("forge");
+    return {
+      content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "forge", versions }, null, 2) }],
+    };
+  } catch (e) {
+    const miss = asPlatformDataMissingResult(e);
+    if (miss) return miss;
+    return {
+      content: [{ type: "text", text: JSON.stringify({ ok: false, error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2) }],
+    };
+  }
 }
 
 // ── 工具 1：search_forge_docs（L0 搜索）────────────────────────────────
@@ -124,6 +138,9 @@ export async function searchForgeDocs(
   args: z.infer<typeof searchForgeDocsSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
+    if (!hasPlatformDocData("forge")) {
+      return platformDataMissingResult("forge");
+    }
     const detailed = store.searchIndexDetailed(
       args.query,
       args.version,
@@ -154,7 +171,10 @@ export async function searchForgeDocs(
       ],
     };
   } catch (e) {
+    const miss = asPlatformDataMissingResult(e);
+    if (miss) return miss;
     if (e instanceof VersionNotFoundError) {
+      if (e.availableVersions.length === 0) return platformDataMissingResult("forge");
       return {
         content: [
           {
@@ -435,7 +455,13 @@ export type { IDocStore, Platform } from "../store.js";
  * 成功路径保持原样 JSON.stringify({ query, version, total, results })，不套 envelope。
  */
 function handleError(e: unknown): CallToolResult {
+  const miss = asPlatformDataMissingResult(e);
+  if (miss) return miss;
   if (e instanceof VersionNotFoundError) {
+    if (e.availableVersions.length === 0) {
+      // 无法从 VersionNotFoundError 区分平台；通用工具默认按消息提示下载
+      return platformDataMissingResult("forge");
+    }
     return {
       content: [{
         type: "text",
@@ -503,13 +529,21 @@ export const listVersionsSchema = {
 export async function listVersions(
   args: z.infer<typeof listVersionsSchema.inputSchema>,
 ): Promise<CallToolResult> {
+  const platform = args.platform ?? "forge";
   try {
-    const store = getGenericStore(args.platform ?? "forge");
+    const store = getGenericStore(platform);
     const versions = store.getAvailableVersions();
+    if (versions.length === 0) return platformDataMissingResult(platform);
     return {
-      content: [{ type: "text", text: JSON.stringify({ platform: args.platform ?? "forge", versions }, null, 2) }],
+      content: [{ type: "text", text: JSON.stringify({ ok: true, platform, versions }, null, 2) }],
     };
   } catch (e) {
+    const miss = asPlatformDataMissingResult(e);
+    if (miss) return miss;
+    // PlatformDataMissingError 可能未从 neoforge/fabric store 传到 instanceof（多副本）时用平台回退
+    if (e instanceof Error && /未下载|结构不符合预期|数据目录不存在/.test(e.message)) {
+      return platformDataMissingResult(platform);
+    }
     return handleError(e);
   }
 }
@@ -566,6 +600,10 @@ export async function searchDocs(
   try {
     const platform = args.platform ?? "forge";
     const fabricSource = args.source ?? "fabric-docs";
+
+    if (!hasPlatformDocData(platform)) {
+      return platformDataMissingResult(platform);
+    }
 
     if (platform === "fabric") {
       const dataRoot = resolveDataDir();

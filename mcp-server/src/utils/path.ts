@@ -135,7 +135,9 @@ export function diagnoseDataPaths(): {
           details = `Found ${matching.length} version(s): ${matching.map(e => e.name).join(", ")}`;
         } else {
           status = "empty";
-          details = `Directory ${dataDir} exists but no ${prefix}* subdirectories found`;
+          details =
+            `Directory ${dataDir} exists but no ${prefix}* documentation indexes found. ` +
+            `Document tools for ${platform} will return PLATFORM_DATA_MISSING until you download that platform's data pack.`;
         }
       } else {
         status = "not_found";

@@ -23,6 +23,7 @@ import {
   enhancedSearch,
   type SymbolIndex,
 } from "../search-utils.js";
+import { PlatformDataMissingError } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -174,10 +175,11 @@ export class NeoForgeDocStore {
     if (this._validated) return;
     this._validated = true;
     if (!existsSync(this.dataDir)) {
-      throw new Error(
-        `数据目录不存在: ${this.dataDir}\n` +
-        `请确保数据已抓取：node scripts/fetch-neoforge-docs.js`
-      );
+      throw new PlatformDataMissingError("neoforge");
+    }
+    // 无 neoforge_* 且无 forge_1.20.1 兼容数据时视为未下载
+    if (this.getAvailableVersionsUnchecked().length === 0) {
+      throw new PlatformDataMissingError("neoforge");
     }
   }
 
@@ -273,6 +275,10 @@ export class NeoForgeDocStore {
 
   getAvailableVersions(): string[] {
     this.ensureValidated();
+    return this.getAvailableVersionsUnchecked();
+  }
+
+  private getAvailableVersionsUnchecked(): string[] {
     if (!existsSync(this.dataDir)) return [];
     try {
       const versions = readdirSync(this.dataDir, { withFileTypes: true })

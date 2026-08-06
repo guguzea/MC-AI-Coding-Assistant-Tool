@@ -21,6 +21,11 @@ import {
 } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
 import type { IDocStore } from "../store.js";
+import {
+  asPlatformDataMissingResult,
+  platformDataMissingResult,
+  hasPlatformDocData,
+} from "../platform-data.js";
 
 const DATA_ROOT = resolveDataDir();
 
@@ -41,7 +46,10 @@ function getGenericStore(): IDocStore {
 // ── 错误处理 ──────────────────────────────────────────────────────────────
 
 function handleError(e: unknown): CallToolResult {
+  const miss = asPlatformDataMissingResult(e);
+  if (miss) return miss;
   if (e instanceof VersionNotFoundError) {
+    if (e.availableVersions.length === 0) return platformDataMissingResult("neoforge");
     return {
       content: [{
         type: "text",
@@ -90,11 +98,15 @@ export const listNeoForgeVersionsSchema = {
 
 export async function listNeoForgeVersions(): Promise<CallToolResult> {
   try {
+    if (!hasPlatformDocData("neoforge", DATA_ROOT)) {
+      return platformDataMissingResult("neoforge");
+    }
     const versions = store.getAvailableVersions();
+    if (versions.length === 0) return platformDataMissingResult("neoforge");
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, versions }, null, 2),
+        text: JSON.stringify({ ok: true, platform: "neoforge", versions }, null, 2),
       }],
     };
   } catch (e) {
@@ -124,6 +136,9 @@ export async function searchNeoForgeDocs(args: {
   tags?: string[];
 }): Promise<CallToolResult> {
   try {
+    if (!hasPlatformDocData("neoforge", DATA_ROOT)) {
+      return platformDataMissingResult("neoforge");
+    }
     const s = getGenericStore() as NeoForgeDocStore;
     const version = args.version ?? "26.1";
     const detailed = s.searchIndexDetailed(args.query, version, args.tags);
