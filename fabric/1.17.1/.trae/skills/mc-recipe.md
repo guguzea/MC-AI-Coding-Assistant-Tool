@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-recipe
 description: Fabric 配方系统。手写 JSON 配方文件。触发词：配方、Recipe、ShapedRecipe、ShapelessRecipe
 platform: fabric

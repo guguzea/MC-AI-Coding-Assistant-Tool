@@ -12,9 +12,9 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.16.5 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
-| Java 版本 | **Java 11**（Forge 1.16.5 最低要求，推荐 Java 16） |
+| Java 版本 | **Java 11**（Forge 1.16.5 推荐）/ Java 16 |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`1.16.5-2021.06.09-18`） |
+| Mappings | **Parchment**（`1.16.5-2021.06.09`，带参数名） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -46,8 +46,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -114,9 +119,9 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，Forge 1.16.5 完全支持
+1. **推荐使用 DeferredRegister**：`DeferredRegister` 自 Forge 1.16.2 起可用于所有注册表，1.16.5 完全支持
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
-3. **不要在 `client` 包外放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
+3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
 5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
 
@@ -127,16 +132,18 @@ src/main/java/
 1. 先读 `01-registry.mdc` 确认注册方式
 2. 再读对应主题的规则文件（如 `02-block.mdc`）
 3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
-4. 最后运行 `validate_project` 自查（Phase 1.5 CLI 工具）
 
 ---
 
 ## 关于 1.16.5 与其他版本的差异
 
-| 功能 | 1.16.5 Forge | 1.20.1 Forge | 备注 |
-|------|---------------|---------------|------|
+| 功能 | 1.16.5 Forge | 1.20.1+ Forge | 备注 |
+|------|---------------|----------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| 方块实体 | `TileEntity` | `BlockEntity` | 1.17+ 重命名 |
-| NBT 数据 | `CompoundNBT` | `CompoundTag` | 1.17+ 重命名 |
-| Item.Properties | `.tab(ItemGroup)` | 无 `.tab()` 方法 | 1.17+ 改变 |
-| DataGen | `RecipeProvider` | `RecipeProvider` | 基本一致 |
+| Java 版本 | Java 11/16 | Java 17+ | 1.16.5 不支持 Java 17 |
+| Mappings | Parchment（推荐） | MCP / Parchment | 1.16.5 推荐 Parchment |
+| pack_format | **8** | 15+ | 资源包格式不同 |
+| DataGen | 存在但 API 简化 | 完整 DataGen | 1.16.5 DataGen 有限 |
+| Fluid 注册 | `FluidType` | `FluidType` | 相同 |
+
+如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

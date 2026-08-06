@@ -43,9 +43,9 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.15.2
-  forge_version=31.2.50
+  forge_version=31.2.51
   mappings_version=1.15.2
-  loader_version=31.2.50
+  loader_version=31.2.51
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -57,7 +57,7 @@
 - Forge 1.15.2 默认使用 **MCP**
 - `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
 - **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
-- MCP 映射将混淆的 Minecraft 方法映射为可读名称
+- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 
 ### 项目目录结构（强制规范）
 
@@ -120,13 +120,85 @@ IF 报错包含 "Incompatible Java version"
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
-  → Forge 版本对应关系：1.15.2 → 31.x.x
+  → Forge 版本对应关系：1.15.2 → 31.2.x
 
 IF 报错包含 "No resource bundling found"
   → 这是正常的（非客户端打包时），可忽略
 
 IF 以上都不匹配
   → 将完整报错信息提供给用户，并指出可能的解决方向
+```
+
+---
+
+## 示例：正确的 build.gradle 结构（Forge 1.15.2）
+
+```groovy
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[4.1.4,4.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+minecraft {
+    version = "${minecraft_version}-${forge_version}"
+    runDir = "run"
+    mappings channel: 'snapshot', version: "${mapping_version}"
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft_version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+        expand 'version':project.version, 'mcversion':project.minecraft_version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'     : mod_id,
+            'Specification-Vendor'    : mod_authors,
+            'Specification-Version'   : '1',
+            'Implementation-Title'   : project.name,
+            'Implementation-Version'  : project.jar.archiveVersion,
+            'Implementation-Vendor'   : mod_authors,
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
 ```
 
 ---

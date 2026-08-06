@@ -23,7 +23,6 @@ src/main/java/
         ├── ModItemModels.java           # 物品模型
         ├── ModRecipes.java              # 合成配方
         ├── ModLootTables.java           # 战利品表
-        ├── ModBlockLootSubProvider.java # 战利品子提供器
         └── ModTags.java                 # 标签
 ```
 
@@ -40,7 +39,7 @@ public class DataGenerators {
 
         if (event.includeServer()) {
             generator.addProvider(true, new ModBlockTagsProvider(output, lookup));
-            generator.addProvider(true, new ModItemTagsProvider(output, lookup, lookup));
+            generator.addProvider(true, new ModItemTagsProvider(output, lookup));
             generator.addProvider(true, new ModRecipeProvider(output));
             generator.addProvider(true, new ModLootTableProvider(output,
                 Collections.emptySet(),
@@ -170,7 +169,7 @@ public class DataGenerators {
 
         if (event.includeServer()) {
             generator.addProvider(true, new ModBlockTagsProvider(output, lookup));
-            generator.addProvider(true, new ModItemTagsProvider(output, lookup, lookup));
+            generator.addProvider(true, new ModItemTagsProvider(output, lookup));
             generator.addProvider(true, new ModRecipeProvider(output));
             generator.addProvider(true, new ModLootTableProvider(output,
                 Collections.emptySet(),
@@ -269,7 +268,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider lookup) {
-        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(ModBlocks.MY_BLOCK.get())
             .addOptionalTag(Tags.Blocks.ORES);
     }

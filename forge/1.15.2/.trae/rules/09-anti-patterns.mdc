@@ -82,11 +82,14 @@ private static final String MOD_ID = "examplemod";
 @Override
 public void read(NBTTagCompound nbt) {
     super.read(nbt);
-    BlockState state = world.getBlockState(pos); // ❌ world 可能为 null
+    BlockState state = world.getBlockState(pos); // ❌ world 可能为 null 或 world 未完全加载
+    if (state.getBlock() == Blocks.DIAMOND_BLOCK) {
+        this.activate();
+    }
 }
 ```
 
-**错误症状**：`NullPointerException`
+**错误症状**：`NullPointerException`，游戏崩溃在 `TileEntity.read`
 
 **正确方案**：在 `markDirty()` 或单独的同步方法中处理需要世界数据的逻辑
 
@@ -103,7 +106,7 @@ public void invalidate() {
 }
 ```
 
-**错误症状**：内存泄漏
+**错误症状**：内存泄漏，World 不释放，卸载区块后大量对象无法 GC
 
 **正确方案**：
 
@@ -131,7 +134,7 @@ public void invalidate() {
 @SubscribeEvent
 public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
     ServerPlayerEntity player = ctx.get().getSender();
-    player.getEntityWorld().setBlockState(...); // ❌ 不安全
+    player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState()); // ❌ 不安全
 }
 ```
 
@@ -140,10 +143,46 @@ public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> c
 **正确方案**：
 
 ```java
-ctx.get().enqueueWork(() -> {
-    // 在主线程执行
-});
-ctx.get().setPacketHandled(true);
+@SubscribeEvent
+public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ServerPlayerEntity player = ctx.get().getSender();
+        if (player != null) {
+            player.getEntityWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
+        }
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+---
+
+### ❌ 逐字段发送大量网络数据
+
+```java
+// 错误
+channel.sendToServer(new SyncFieldMessage("field1", value1));
+channel.sendToServer(new SyncFieldMessage("field2", value2));
+channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络开销
+```
+
+**错误症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟
+
+**正确方案**：使用 `NBTTagCompound` 或自定义 `PacketBuffer` 批量序列化
+
+```java
+// 正确：单次批量同步
+public class SyncAllDataMessage implements IMessage {
+    private NBTTagCompound data;
+
+    public void toBytes(PacketBuffer buf) {
+        buf.writeCompoundTag(data);
+    }
+
+    public void fromBytes(PacketBuffer buf) {
+        data = buf.readCompoundTag();
+    }
+}
 ```
 
 ---
@@ -166,7 +205,48 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 
 **错误症状**：服务端严重卡顿，TPS 下降
 
-**正确方案**：使用计数器，每 N tick 处理一批
+**正确方案**：
+- 使用 `scheduledTasks` 分散负载
+- 使用计数器，每 N tick 处理一批
+- 优先使用事件驱动而非轮询
+
+```java
+private int tickCounter = 0;
+
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        tickCounter++;
+        if (tickCounter % 20 == 0) {  // 每秒处理一次
+            scheduleProcessing();
+        }
+    }
+}
+```
+
+---
+
+### ❌ 在渲染线程中修改服务端数据
+
+```java
+// 错误（客户端代码）
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在渲染线程修改世界
+}
+```
+
+**错误症状**：`IllegalStateException: Do not modify the game from the render thread`
+
+**正确方案**：将操作发送到服务端主线程
+
+```java
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    // 发送网络消息，让服务端执行
+    NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
+}
+```
 
 ---
 
@@ -178,13 +258,15 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 // 错误
 @SubscribeEvent
 public static void onClientSetup(FMLClientSetupEvent event) {
-    world.setBlockState(...); // ❌ 禁止在客户端修改世界数据
+    world.setBlockState(pos, Blocks.DIRT.getDefaultState()); // ❌ 禁止在客户端修改世界数据
 }
 ```
 
 **错误症状**：游戏崩溃或数据不同步
 
-**正确方案**：`FMLClientSetupEvent` 只用于注册 KeyBinding 和渲染器
+**正确方案**：
+- `FMLClientSetupEvent` 只用于注册 KeyBinding 和渲染器
+- 游戏逻辑使用网络包或服务端事件
 
 ---
 
@@ -192,20 +274,48 @@ public static void onClientSetup(FMLClientSetupEvent event) {
 
 ```java
 // 错误
-player.getCapability(MY_CAP).ifPresent(cap -> {
-    cap.setData(someData); // 如果 Capability 未附加，数据可能丢失
+player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
+    cap.setData(someData); // 如果 Capability 未附加，会走到这里但数据丢失
 });
 ```
 
-**正确方案**：主动检查 Capability 是否存在
+**错误症状**：数据写入后丢失，或逻辑不执行
+
+**正确方案**：
 
 ```java
-if (player.getCapability(MY_CAP).isPresent()) {
-    player.getCapability(MY_CAP).ifPresent(cap -> {
+// 正确：主动检查 Capability 是否存在
+if (player.getCapability(ModCapabilities.MY_CAP).isPresent()) {
+    player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
         cap.setData(someData);
     });
 }
+
+// 或使用 orElse
+IMyCapability cap = player.getCapability(ModCapabilities.MY_CAP).orElse(null);
+if (cap != null) {
+    cap.setData(someData);
+}
 ```
+
+---
+
+### ❌ Mixin 中在 `@Inject` 的构造函数里修改 final 字段
+
+```java
+// Mixin 错误示例
+@Mixin(Entity.class)
+public class MixinEntity {
+    @Inject(at = At("TAIL"), method = "<init>")
+    private void init(CallbackInfo ci) {
+        this.someFinalField = value; // ❌ 不能修改 final 字段
+    }
+}
+```
+
+**错误症状**：游戏崩溃，JVM 报错
+
+**正确方案**：Mixin 中避免修改 final 字段，在 `@Inject` 方法的参数中操作
 
 ---
 
@@ -214,14 +324,27 @@ if (player.getCapability(MY_CAP).isPresent()) {
 ### ❌ 资源路径大小写错误
 
 ```json
-// 错误
+// 错误：文件名包含大写
 "textures/item/MyItem.png"  // ❌ 大写
 
-// 正确
-"textures/item/my_item.png"  // 全部小写
+// 正确：全部小写
+"textures/item/my_item.png"
 ```
 
 **错误症状**：材质不加载，显示紫色黑色格子
+
+---
+
+### ❌ 物品模型 JSON 指向不存在的资源
+
+```json
+// 错误
+{
+  "parent": "examplemod:item/my_item"  // ❌ 文件不存在
+}
+```
+
+**错误症状**：物品显示为紫色黑色方块
 
 ---
 

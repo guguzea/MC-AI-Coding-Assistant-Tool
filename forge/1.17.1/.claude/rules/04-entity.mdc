@@ -10,7 +10,7 @@
 
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
-- 实体必须通过 `RegistryEvent.Register<EntityType<?>>` 注册
+- 实体必须通过 `DeferredRegister<EntityType>` 注册
 - 必须在 `mods.toml` 中添加 `[[entities]]` 声明
 
 ### EntityType.Builder 配置
@@ -26,8 +26,8 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 ### 实体属性（Attribute）
 
-- 每个实体**必须**通过 `RegistryEvent.Register<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
-- 属性注册在 mod 构造函数中完成
+- 每个实体**必须**通过 `DeferredRegister<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
+- 属性注册在 mod 构造函数中通过 modEventBus 完成（使用 DeferredRegister）
 - **禁止**在 Entity 构造函数中注册属性（太早，属性系统尚未初始化）
 
 ### AI Goal / Target Goal
@@ -82,12 +82,15 @@ IF 乘坐实体
 ### Decision: 属性注册时机
 
 ```
-IF 在 Mod init 中直接注册属性
-  → ✅ 正确：在 mod 构造函数中通过 RegistryEvent.Register<Attribute> 完成
-  → 属性系统在 modEventBus 阶段就绪
+IF 在 Mod init 中直接注册属性（不使用 DeferredRegister）
+  → ❌ 错误：太早，Attributes 系统未就绪
+
+IF 使用 DeferredRegister + modEventBus
+  → ✅ 正确：在 mod 构造函数中通过 modEventBus 完成
+  → 属性系统已在 modEventBus 阶段就绪
 
 IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
-  → ⚠️ 可用但不推荐
+  → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
 ```
 
 ### Decision: 渲染器选择
@@ -112,19 +115,21 @@ IF 自定义模型（Biped、Quadruped 等）
 ```java
 // init/ModAttributes.java
 public class ModAttributes {
-    // 在 RegistryEvent.Register<Attribute> 中注册
-    public static Attribute EXAMPLE_HEALTH;
-    public static Attribute EXAMPLE_DAMAGE;
+    // 推荐：使用 DeferredRegister（需 modEventBus）
+    public static final DeferredRegister<Attribute> ATTRIBUTES =
+        DeferredRegister.create(ForgeRegistries.ATTRIBUTES, ExampleMod.MOD_ID);
 
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<Attribute> event) {
-        EXAMPLE_HEALTH = new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0);
-        EXAMPLE_HEALTH.setRegistryName(new ResourceLocation(ExampleMod.MOD_ID, "example.health"));
-        event.getRegistry().register(EXAMPLE_HEALTH);
+    public static final RegistryObject<Attribute> EXAMPLE_HEALTH =
+        ATTRIBUTES.register("example.health",
+            () -> new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0));
 
-        EXAMPLE_DAMAGE = new RangedAttribute("attribute.examplemod.damage", 2.0, 0.0, 1024.0);
-        EXAMPLE_DAMAGE.setRegistryName(new ResourceLocation(ExampleMod.MOD_ID, "example.damage"));
-        event.getRegistry().register(EXAMPLE_DAMAGE);
+    public static final RegistryObject<Attribute> EXAMPLE_DAMAGE =
+        ATTRIBUTES.register("example.damage",
+            () -> ((RangedAttribute) new RangedAttribute("attribute.examplemod.damage", 2.0, 0.0, 1024.0))
+                .setSyncable(true));;
+
+    public static void register(IEventBus eventBus) {
+        ATTRIBUTES.register(eventBus);
     }
 }
 ```
@@ -132,9 +137,13 @@ public class ModAttributes {
 ```java
 // ExampleMod.java 构造函数中
 public ExampleMod() {
-    MinecraftForge.EVENT_BUS.register(new ModAttributes());
+    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    ModAttributes.register(modEventBus);
+    // ... 其他注册
 }
 ```
+
+> 注意：`ForgeRegistries.ATTRIBUTES` 是注册表的持有类，`DeferredRegister.create()` 需要传入 `IRegistry<Attribute>`。属性注册在 mod 构造函数中通过 modEventBus 完成，而不是在 `FMLCommonSetupEvent` 中。
 
 ## 示例：实体类
 
@@ -171,18 +180,21 @@ public class MyEntity extends LivingEntity {
 ```java
 // registry/ModEntities.java
 public class ModEntities {
-    public static EntityType<MyEntity> MY_ENTITY;
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
+        DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<EntityType<?>> event) {
-        MY_ENTITY = EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
-            .sized(0.6f, 1.8f)
-            .clientTrackingRange(8)
-            .updateInterval(3)
-            .fireImmune()
-            .build("my_entity");
-        MY_ENTITY.setRegistryName(new ResourceLocation(ExampleMod.MOD_ID, "my_entity"));
-        event.getRegistry().register(MY_ENTITY);
+    public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
+        ENTITY_TYPES.register("my_entity", () ->
+            EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+                .sized(0.6f, 1.8f)
+                .clientTrackingRange(8)
+                .updateInterval(3)
+                .fireImmune()
+                .build(MOD_ID + ":my_entity")
+        );
+
+    public static void register(IEventBus eventBus) {
+        ENTITY_TYPES.register(eventBus);
     }
 }
 ```
@@ -190,19 +202,31 @@ public class ModEntities {
 ```java
 // ExampleMod.java 构造函数中
 public ExampleMod() {
-    MinecraftForge.EVENT_BUS.register(new ModEntities());
+    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    ModEntities.register(modEventBus);
 }
+```
+
+```java
+// ❌ 错误示例：setRegistryName + 直接 new（已过时）
+event.getRegistry().register(
+    EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+        ...
+        .build("my_mod:my_entity")
+);
+type.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
 ```
 
 ## 示例：客户端渲染器注册
 
 ```java
 // client/ClientSetup.java
-@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         // 渲染器通过 EntityRenderersEvent.RegisterRenderers 注册
+        // 参见 ClientSetup 中的 subscribe
     }
 
     @SubscribeEvent
@@ -219,8 +243,7 @@ public class ClientSetup {
 public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MyEntityModel.LAYER_LOCATION)), 0.5f);
-        this.addLayer(new ItemInHandLayer<>(this,
-            context.getItemRenderer(), context.getBlockRenderer()));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer(), context.getBlockRenderer()));
     }
 
     @Override

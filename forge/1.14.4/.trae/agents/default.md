@@ -3,6 +3,9 @@
 > 本规则集适用于 **Forge 1.14.4**，推荐使用 `DeferredRegister` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_forge_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -11,10 +14,10 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.14.4 |
-| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
-| Java 版本 | **Java 11**（Forge 1.14.4 最低要求） |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
+| Java 版本 | **Java 11**（Forge 1.14.4 要求） |
 | Gradle | Gradle 7.x + ForgeGradle 3.x |
-| Mappings | **MCP/SRG**（`minecraft "1.14.4"` 下默认 SRG） |
+| Mappings | **MCP**（`minecraft "1.14.4"` 下默认） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -46,8 +49,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -67,7 +75,7 @@ Decision: 本规则集是否适用？
 | 07 | `07-datagen.mdc` | 生成数据包时 |
 | 08 | `08-client-server.mdc` | 涉及客户端渲染或服务端逻辑分离时 |
 | 09 | `09-anti-patterns.mdc` | 遇到错误或不确定最佳实践时 |
-| 10 | `10-gui.mdc` | GUI、Container、Screen 开发时 |
+| 10 | `10-gui.mdc` | GUI、Menu、Screen 开发时 |
 
 ---
 
@@ -96,10 +104,8 @@ src/main/java/
     │   ├── ModItems.java
     │   ├── ModEntities.java
     │   └── ModMessages.java   # 网络包
-    ├── blocks/                # 方块
+    ├── blocks/                 # 方块
     │   └── MyBlock.java
-    ├── tiles/                  # TileEntity
-    │   └── MyTileEntity.java
     ├── items/                  # 物品
     │   └── MyItem.java
     ├── entities/               # 实体
@@ -116,8 +122,8 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.13 起即可用于所有注册表，1.14.4 完全支持
-2. **TileEntity vs BlockEntity**：1.14.4 使用 `TileEntity`，不是 `BlockEntity`
+1. **DeferredRegister 已可用**：`DeferredRegister` 自 Forge 1.14 起引入并可用，1.14.4 完全支持
+2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
 5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
@@ -135,12 +141,12 @@ src/main/java/
 
 ## 关于 1.14.4 与其他版本的差异
 
-| 功能 | 1.14.4 Forge | 1.18+ Forge | 1.20.1 Forge | 备注 |
-|------|---------------|---------------|---------------|------|
-| 注册方式 | `DeferredRegister` | `DeferredRegister` | `DeferredRegister` | 一致 |
-| 方块实体 | `TileEntity` | `BlockEntity` | `BlockEntity` | 1.14.4 名称不同 |
-| NBT 类 | `NBTTagCompound` | `CompoundTag` | `CompoundTag` | 1.14.4 用旧名 |
-| 粒子渲染 | `Particle` | `Particle` | `Particle` | - |
-| DataGen | 有限支持 | 完善支持 | 完善支持 | 1.14.4 很多需手写 JSON |
+| 功能 | 1.14.4 Forge | 1.20.1+ Forge | 备注 |
+|------|---------------|----------------|------|
+| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
+| Java 版本 | Java 11 | Java 17+ | 1.14.4 要求 Java 11 |
+| pack_format | 5 | 15 | 1.20.x 用 15 |
+| DataGen | 有 | 有 | API 有差异 |
+| BlockEntity | 旧版签名 | 相同 | - |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

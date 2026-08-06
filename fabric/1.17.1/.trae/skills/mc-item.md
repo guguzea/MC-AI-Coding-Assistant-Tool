@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-item
 description: Fabric 物品开发。Item、FoodComponent、ToolMaterial。触发词：物品、Item、ItemStack、ToolMaterial、FoodComponent
 platform: fabric

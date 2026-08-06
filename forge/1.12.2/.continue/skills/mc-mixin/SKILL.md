@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-mixin
-description: Forge 1.12.2 Mixin skill (@Inject, @At, mixins.json)
+description: Minecraft Forge Mixin 注入。安全使用 @Mixin、@Inject、@At。触发词：Mixin、@Inject、@At、mixins.json
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -100,10 +100,6 @@ public abstract class MixinPlayer {
 - ❌ 错误的 `@At` 参数
 - ❌ mixin 类不在 `mixins.json` 中声明
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- Mixin 0.7.x version
-- JAVA_8 compatibility level
-- MCP SRG mappings (method names like func_XXX)
-- mcmod.info entry (not mods.toml)
-- Java 8 only
+- Mixin 文档：https://github.com/SpongePowered/Mixin

@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-gui
-description: Forge 1.12.2 GUI skill (Container, Slot, IGuiHandler, @SideOnly)
+description: Minecraft Forge GUI/菜单开发。创建 Container、Slot、IInteractionObject、GuiHandler。触发词：Screen、Container、Slot、GuiHandler、IInteractionObject
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -32,16 +32,19 @@ public class MyContainer extends Container {
 
     public MyContainer(IInventory playerInv, IInventory tileInv) {
         this.tile = tileInv;
+
         // 玩家物品栏
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 this.addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
+
         // 玩家快捷栏
         for (int col = 0; col < 9; col++) {
             this.addSlot(new Slot(playerInv, col, 8 + col * 18, 142));
         }
+
         // 方块物品栏
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -51,18 +54,19 @@ public class MyContainer extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        // Shift-click 逻辑
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return tile.isUsableByPlayer(player);
     }
 }
 ```
 
-### 2. 注册 IGuiHandler
+### 2. 注册 GuiHandler
 
 ```java
 public class GuiHandler implements IGuiHandler {
@@ -115,6 +119,7 @@ public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
 @SideOnly(Side.CLIENT)
 public class MyGui extends GuiScreen {
     private final Container container;
+    private final IInventory playerInventory;
 
     public MyGui(Container container, IInventory playerInventory) {
         this.container = container;
@@ -138,14 +143,17 @@ public class MyGui extends GuiScreen {
 ## 常见错误
 
 - ❌ `GuiHandler` 在服务端调用 → 只在客户端有效果
-- ❌ `transferStackInSlot` 返回空导致物品丢失
+- ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- IGuiHandler (not MenuType)
-- Container (not Menu)
-- Slot (not SlotContainer)
-- @SideOnly(Side.CLIENT) (not @OnlyIn(Dist.CLIENT))
-- player.openGui() (not openMenu())
-- world.isRemote (not level.isClientSide)
+- 详细示例：参见 `10-gui.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | GUI 元素注册 |
+| `mc-item` | 物品栏槽位中的 ItemStack 交互 |
+| `mc-capability` | Container 可附加 Capability 管理自定义数据 |

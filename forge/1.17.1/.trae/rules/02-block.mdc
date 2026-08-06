@@ -9,18 +9,19 @@
 ### Block 子类规范
 
 - 方块类必须继承 `Block`（`net.minecraft.world.level.block.Block`）
-- 使用 `Block.Properties.of(Material)` 创建属性
-- 注意：Forge 1.17.x 用的是 `Block.Properties`，不是 `BlockBehaviour.Properties`（1.18+ 才改的名）
+- 推荐使用 `BlockBehaviour.Properties.of(Material)` 创建属性
+- 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法（Forge 1.17.x 已在大部分方法上标注 `@Deprecated`）
 
-### Block.Properties 常用配置
+### BlockBehaviour.Properties 常用配置
 
 ```java
-Block.Properties.of(Material material)
+BlockBehaviour.Properties.of(Material material)
     .strength(float breakTime)                          // 破坏时间和硬度
     .strength(float breakTime, float explosionResistance)
     .requiresCorrectToolForDrops()                      // 需要正确工具才能掉落
     .noOcclusion()                                      // 不阻挡光
     .isRedstoneConductor((state, level, pos) -> true) // 红石导体
+    .jumpThreshold(float value)                        // 生物跳跃阈值（台阶）
     .sound(SoundType type)                             // 放置/破坏音效
 ```
 
@@ -35,7 +36,7 @@ Block.Properties.of(Material material)
 
 - 有状态或需要持久化的方块必须使用 BlockEntity（而非仅靠 Block）
 - BlockEntity 必须在方块类中重写 `newBlockEntity()` 方法
-- BlockEntity 的 `saveAdditional`/`load` 方法处理 NBT 序列化
+- BlockEntity 的 `saveAdditional`/`load` 方法处理 NBT 序列化（使用 `CompoundTag`，不是 `NBTTagCompound`）
 - **禁止**在 `load()` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -72,7 +73,8 @@ IF 需要流体
   → 参考 05-events.mdc 中的流体相关事件
 
 IF 需要特殊渲染（多面材质、透明度、动画）
-  → 使用自定义 BlockState + BakedQuad
+  → 使用 IBucketMenu 相关的流体方块
+  → 或自定义 BlockState + BakedQuad
   → 参考 08-client-server.mdc 中的渲染规则
 ```
 
@@ -169,7 +171,7 @@ public class MyBlockEntityBlock extends Block {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntities.MY_BLOCK_ENTITY.get().create(pos, state);
+        return new MyBlockEntity(pos, state);
     }
 
     @Override

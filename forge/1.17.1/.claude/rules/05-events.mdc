@@ -32,7 +32,7 @@ DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
 DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
 ```
 
-> **注意**：`safe*` 变体在 Java 9+ 环境中有问题（抛出 `BootstrapMethodError`），**推荐始终使用 `unsafe*`**。
+> **注意**：`safe*` 变体在 Java 9+ 开发环境中有问题（抛出 `BootstrapMethodError`），**推荐始终使用 `unsafe*`**。
 
 **次选方案：`FMLEnvironment#dist`**
 
@@ -180,7 +180,7 @@ public class ModSetup {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         // 在这里注册属性（不是 Entity 构造函数）
-        ModAttributes.register();
+        ModAttributes.registerAll();
 
         // 在这里设置网络消息
         NetworkHandler.register();

@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-capability
 description: Fabric Attachment API（替代旧 Capability）。Key.create、getData、setData。触发词：Attachment、Capability、实体数据
 platform: fabric

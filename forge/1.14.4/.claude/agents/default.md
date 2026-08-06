@@ -3,6 +3,9 @@
 > 本规则集适用于 **Forge 1.14.4**，推荐使用 `DeferredRegister` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_forge_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -46,8 +49,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -100,8 +108,6 @@ src/main/java/
     │   └── MyBlock.java
     ├── items/                  # 物品
     │   └── MyItem.java
-    ├── tiles/                   # TileEntity
-    │   └── MyTileEntity.java
     ├── entities/               # 实体
     │   └── MyEntity.java
     ├── init/                   # 事件订阅
@@ -141,6 +147,6 @@ src/main/java/
 | Java 版本 | Java 11 | Java 17+ | 1.14.4 要求 Java 11 |
 | pack_format | 5 | 15 | 1.20.x 用 15 |
 | DataGen | 有 | 有 | API 有差异 |
-| TileEntity | 旧版签名 | BlockEntity | 1.14.x 用 TileEntity |
+| BlockEntity | 旧版签名 | 相同 | - |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

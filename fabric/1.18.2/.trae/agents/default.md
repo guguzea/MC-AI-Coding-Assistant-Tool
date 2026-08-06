@@ -18,6 +18,7 @@
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
+| Pack 格式 | **8**（1.18.x 对应 pack 8）|
 
 ---
 
@@ -39,10 +40,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -51,12 +63,27 @@ Decision: 本规则集是否适用？
 | 维度 | Forge | Fabric |
 |------|-------|--------|
 | 注册时机 | modEventBus + `RegisterEvent` | `onInitialize()` 中直接调用 |
-| 注册 API | `DeferredRegister.create(...)` | `Registry.register(Registries.ITEM, id, item)` |
+| 注册 API | `DeferredRegister.create(...)` | `Registry.register(Registry.ITEM, id, item)` |
 | Mod 入口 | `@Mod` 注解 + `FMLJavaModLoadingContext` | `FabricMod` 接口 + `Fabric.mod.json` entrypoints |
 | Mixin | 需配置 `org.spongepowered.mixin` 插件 | **Loom 原生支持**，无需额外插件 |
 | Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（方法名如 `method_12345`）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
 | 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`EventDispatcher`）|
+
+---
+
+## 1.18.x 与 1.20.x 的关键差异
+
+| 维度 | 1.18.x | 1.20.x |
+|------|--------|--------|
+| Registry | `Registry.BLOCK`（静态字段） | `Registries.BLOCK`（实例） |
+| `fabric.mod.json` | **无** `environment` 字段 | 有 `environment` 字段 |
+| Block class | `Block`（旧命名） | `AbstractBlock`（重命名） |
+| BlockItem | `BlockItem`（相同） | `BlockItem`（相同） |
+| Pack format | **8** | **22** |
+| FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder`（相同） |
+| EntityType | `EntityType.Builder.create()` | `EntityType.Builder.create()` |
+| EntityCategory | `EntityCategory.CREATURE` | `EntityCategory.CREATURE` |
 
 ---
 
@@ -87,14 +114,13 @@ fabric-mod/
 └── src/main/
     ├── java/
     │   └── com/example/examplemod/
-    │       ├── ExampleMod.java    # implements FabricMod 入口类
-    │       ├── registry/          # 注册类（可选）
-    │       ├── mixins/            # Mixin 类（可选）
+    │       ├── ExampleMod.java    # implements ModInitializer 入口类
+    │       ├── ExampleModClient.java # 客户端入口（implements ClientModInitializer）
     │       └── ...
     │
     └── resources/
         ├── fabric.mod.json         # Fabric 元数据（必需）
-        ├── pack.mcmeta            # 资源包标识
+        ├── pack.mcmeta            # 资源包标识（pack_format: 8）
         └── assets/{modid}/
             ├── lang/
             ├── models/
@@ -139,7 +165,7 @@ fabric-mod/
 ### 命名规范
 
 - `modId`：全小写，无 `-`，无空格
-- 注册名称：`Identifier(MOD_ID, "registry_name")`
+- 注册名称：`new Identifier(MOD_ID, "registry_name")`
 - 资源路径：`assets/{modid}/...` 全小写
 
 ### Minecraft 版本兼容性
@@ -148,6 +174,7 @@ fabric-mod/
 - Fabric Loader 0.14.x（推荐 0.14.24）
 - Fabric API 0.44.x for 1.18.2
 - Java 17+
+- Pack format **8**
 
 ---
 
@@ -165,7 +192,7 @@ fabric-mod/
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 

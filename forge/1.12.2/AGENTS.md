@@ -36,7 +36,7 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-各 AI 助手会优先读取自己对应的配置目录：
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
 
 | AI 助手 | 读取路径 |
 |---------|---------|
@@ -44,6 +44,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 

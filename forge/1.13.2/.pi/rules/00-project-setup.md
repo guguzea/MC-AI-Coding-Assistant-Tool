@@ -1,0 +1,246 @@
+﻿---
+description: 00 — 项目结构与构建
+---
+
+# 00 — 项目结构与构建
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 约束
+
+### Java 版本
+
+- **必须使用 Java 11**（Forge 1.13.2 要求；不支持 Java 17）
+- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(11)`
+- Gradle Wrapper 版本不低于 **Gradle 6.9.4**
+- IDE（IDEA / VSCode）需配置相同的 JDK 版本
+
+### Gradle 约束
+
+#### 禁止的操作
+
+- ❌ 不要手动运行 `build` 任务以外的 Gradle 命令（`compileJava`、`processResources` 等应通过 `build` 间接触发）
+- ❌ 不要修改 `build.gradle` 中的 `minecraft` 和 `forge` 版本号（这两个版本号必须与项目目标版本匹配）
+- ❌ 不要删除或注释 `minecraft` 和 `forge` 配置块中的任何必需行
+- ❌ 不要混用 Fabric 的 `loom` 插件和 Forge 的 `forge` 插件
+
+#### 正确的构建命令
+
+```bash
+# 首次构建（下载所有依赖，耗时较长）
+./gradlew build
+
+# 跳过测试构建
+./gradlew build --no-build-cache --rerun-tasks
+
+# 仅重新编译资源文件
+./gradlew processResources
+
+# 在 IDEA 中同步项目后，使用 IDE 内置构建
+```
+
+### 版本号管理
+
+- 所有版本号集中在 `gradle.properties` 管理，不硬编码在 `build.gradle`
+- `gradle.properties` 必须包含：
+  ```properties
+  minecraft_version=1.13.2
+  forge_version=25.0.219
+  mapping_channel=mcp
+  mapping_version=1.13.2
+  loader_version=25.0.219
+  ```
+  > 注意：
+  > - `build.gradle` 中引用时用 `${minecraft_version}` 等属性
+  > - `loader_version` 填 Forge 版本号，与 mods.toml 中的 `loaderVersion` 字段对应
+- **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性
+
+### Mappings 约束
+
+- Forge 1.13.2 使用 **MCP SRG** 格式
+- `gradle.properties` 中的 `mapping_channel` 和 `mapping_version` 对应 MCP 配置
+- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`
+
+### 项目目录结构（强制规范）
+
+```
+src/main/java/
+└── {groupId}/           # 例：com.example.mod
+    ├── ExampleMod.java  # @Mod 入口类
+    ├── blocks/         # 方块类
+    ├── items/          # 物品类
+    ├── entities/       # 实体类
+    └── init/           # 事件订阅类
+
+src/main/resources/
+├── META-INF/
+│   └── mods.toml       # Forge 元数据（必需）
+├── pack.mcmeta         # 资源包标识（必需）
+└── assets/
+    └── {modid}/        # 资源文件
+        ├── lang/
+        ├── models/
+        ├── blockstates/
+        └── textures/
+```
+
+- **禁止**将 Java 源码放在客户端专用目录
+- **禁止**在 `resources/assets/{modid}` 目录使用大写文件名（资源路径全小写）
+
+---
+
+## Decision Flow
+
+### Decision: 选择项目初始化方式
+
+```
+IF 这是新项目（没有 build.gradle）
+  → 使用 forge/1.13.2/scaffold/ 中的模板生成项目骨架
+  → README_AI.md 包含每个文件的职责说明
+
+IF 这是已有项目
+  → 读取 gradle.properties 获取版本配置
+  → 读取 build.gradle 确认 mappings 和插件配置
+  → 读取 mods.toml 确认 modId
+
+IF 构建失败且报错涉及版本号
+  → 检查 gradle.properties 中的版本是否匹配
+  → 典型错误：「net.minecraftforge.fml.loading.FMLError」通常是 forge_version 不兼容
+```
+
+### Decision: 遇到 Gradle 构建报错时的处理顺序
+
+```
+IF 报错包含 "Could not resolve net.minecraftforge"
+  → 检查网络连接，或配置 Maven 镜像
+  → 检查 gradle.properties 中 forge_version 是否有效
+
+IF 报错包含 "Incompatible Java version"
+  → 确认使用 Java 11，不兼容 Java 17 或更高版本
+
+IF 报错包含 "Could not find net.minecraftforge:forge"
+  → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
+  → Forge 版本对应关系：1.13.2 → 25.x.x
+
+IF 以上都不匹配
+  → 将完整报错信息提供给用户，并指出可能的解决方向
+```
+
+---
+
+## 示例：正确的 build.gradle 结构（Forge 1.13.2）
+
+```java
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[3.2,3.3)'
+}
+
+version = mod_version
+group = mod_group_id
+
+archivesBaseName = mod_id
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+
+minecraft {
+    mappings channel: 'mcp', version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', mod_id
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+tasks.named('processResources').configure {
+    def replaceProperties = [
+        minecraft_version   : minecraft_version,
+        minecraft_version_range: "[${minecraft_version},)",
+        forge_version       : forge_version,
+        forge_version_range : "[${forge_version},)",
+        loader_version_range: "[${loader_version},)",
+        mod_id              : mod_id,
+        mod_name            : mod_name,
+        mod_license         : mod_license,
+        mod_version         : mod_version,
+        mod_authors         : mod_authors,
+        mod_description     : mod_description
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties
+    }
+}
+```
+
+---
+
+## mods.toml 字段说明
+
+生成或修改 `mods.toml` 时，关注以下字段：
+
+```toml
+[[mods]]
+modId = "examplemod"          # 必需：必须小写，无横杠
+version = "${mod_version}"    # 必需：建议使用 gradle 占位符
+displayName = "Example Mod"   # 必需
+description = '''多行描述'''  # 必需
+
+# dependencies 块（可选但推荐）
+[[dependencies.examplemod]]
+modId = "forge"               # 必需
+mandatory = true              # 必需
+versionRange = "[25,)"        # 必需：Forge 版本范围
+ordering = "NONE"             # 可选：NONE / BEFORE / AFTER
+side = "BOTH"                 # 可选：BOTH / CLIENT / SERVER
+
+[[dependencies.examplemod]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.13.2,1.14)"
+ordering = "NONE"
+side = "BOTH"
+```
+
+- `modId` 禁止包含 `-`，必须全小写
+- `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
+- `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
+- `loaderVersion` 的格式：`"[25,)"` 表示 Forge 25 及以上
+
+### pack.mcmeta
+
+```json
+{
+  "pack": {
+    "description": "${mod_name}",
+    "pack_format": 6
+  }
+}
+```
+
+> Forge 1.13.2 使用 `pack_format = 6`（不是 15）

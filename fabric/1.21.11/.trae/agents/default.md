@@ -1,7 +1,10 @@
-# Fabric 1.20.1 — Agent 总纲
+# Fabric 1.21.11 — Agent 总纲
 
-> 本规则集适用于 **Fabric 1.20.1**，推荐使用 `Registry.register()` 注册模式。
+> 本规则集适用于 **Fabric 1.21.11**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
+
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
 
 ---
 
@@ -10,11 +13,11 @@
 | 项目 | 值 |
 |------|-----|
 | 平台 | Fabric |
-| Minecraft 版本 | 1.20.1 |
+| Minecraft 版本 | 1.21.11 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 17**（Fabric 1.20.1 最低要求） |
+| Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
 | Gradle | Gradle 8.x + Loom |
-| Mappings | **Yarn**（`net.fabricmc:yarn:1.20.1+build.10:v2`）|
+| Mappings | **Yarn**（`net.fabricmc:yarn:1.21.11+build.6:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
@@ -30,7 +33,7 @@ Decision: 本规则集是否适用？
 → IF 项目中存在 src/main/resources/fabric.mod.json
     → IF fabric.mod.json 中 id 字段存在
         → 检查 build.gradle 中 Loom 配置
-        → 继续加载本规则集（Fabric 1.20.1）
+        → 继续加载本规则集（Fabric 1.21.11）
     → ELSE → fabric.mod.json schema 版本不匹配，跳转根目录 AGENTS.md
 → ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
     → 这是 Forge 项目，跳转到 ../forge/1.20.1/AGENTS.md
@@ -39,10 +42,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -144,10 +158,53 @@ fabric-mod/
 
 ### Minecraft 版本兼容性
 
-- Fabric 1.20.1 支持 Minecraft 1.20.1
-- Fabric Loader 0.15.x（推荐 0.15.11）
-- Fabric API 0.91.x for 1.20.1
-- Java 17+
+- Fabric 1.21.11 支持 Minecraft 1.21.11
+- Fabric Loader 0.16.x（推荐 0.16.9）
+- Fabric API 0.200.x+build.3 for 1.21.11
+- Java 21+
+
+---
+
+## 1.21.x 重要 API 变化
+
+### 网络通信变化（1.21+）
+
+从 1.21 开始，Fabric API 的网络系统有重大变化：
+
+1. **使用 `PayloadTypeRegistry`** 代替旧的 `Identifier` 基于的注册方式
+2. **自定义 `FabricPacket` 接口** 已被移除，改用纯 `CustomPayload` 接口
+3. **注册示例**：
+
+```java
+// 旧方式（1.20.x）
+public class MyPacket implements FabricPacket {
+    public static final Packet<MyPacket> TYPE = new Packet<>(...);
+}
+
+// 新方式（1.21.x）
+public record MyPayload(int data) implements CustomPayload {
+    public static final CustomPayload.Id<MyPayload> ID = 
+        new CustomPayload.Id<>(new Identifier("modid", "my_packet"));
+    
+    public static final PacketType<MyPayload> TYPE = PacketType.create(ID);
+}
+```
+
+### Attachment vs Capability（1.21+）
+
+1.21.x 移除了对旧版 Capability API 的支持，统一使用 Attachment API：
+
+```java
+// Attachment 注册
+public static final Key<MyData> MY_DATA = Key.create(
+    Registries.ATTACHMENT_TYPE, 
+    new Identifier("modid", "my_data")
+);
+
+// 获取/设置
+entity.getData(MY_DATA);           // 获取
+entity.setData(MY_DATA, data);    // 设置
+```
 
 ---
 
@@ -165,7 +222,7 @@ fabric-mod/
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 

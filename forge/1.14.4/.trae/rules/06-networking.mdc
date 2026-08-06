@@ -10,11 +10,11 @@
 
 - **所有网络包只能在物理端分隔的类中使用**
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
-- 禁止在客户端包类中直接访问服务端独有类（如 `WorldServer`）
+- 禁止在 `AbstractClientPacket` 等客户端包类中直接访问服务端独有类（如 `ServerWorld`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
 - 使用 `world.isRemote` 判断当前逻辑端
 
-### SimpleNetworkWrapper 配置
+### NetworkRegistry 配置
 
 ```java
 private static final String PROTOCOL_VERSION = "1.0";
@@ -28,11 +28,11 @@ public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleCha
 
 ### 消息类（IMessage）规范
 
-- 实现 `IMessage`（含 `writeBytes`/`readBytes`）
-- 无需实现 `IMessageHandler`，处理器通过 `INSTANCE.registerMessage` 的第 5 参数（`BiConsumer<MSG, Supplier<NetworkEvent.Context>>`）注入
+- 实现 `IMessage`（含 `toBytes`/`fromBytes`）
+- 无需实现 `IMessageHandler`，处理器通过 `registerMessage` 的第 5 参数注入
 - 消息类必须有无参构造函数（用于反序列化）
 - **禁止**在消息类中存储对世界或实体的直接引用（序列化后引用会断开）
-- 使用 `ByteBuf` 手动读写基础类型和 `ResourceLocation`
+- 使用 `PacketBuffer` 手动读写基础类型和 `ResourceLocation`
 
 ### 注册时机
 
@@ -48,20 +48,19 @@ public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleCha
 
 ```
 IF 需要服务端主动推送给客户端（服务器通知客户端）
-  → 使用带 Reply 的 Request 模式（服务端发送，客户端回复）
-  → 或使用 ServerToClientPacket（单向）
+  → 使用 ServerToClientPacket 或 SimpleNetworkWrapper.sendTo()
 
 IF 需要客户端主动请求服务端（客户端触发服务端逻辑）
   → 使用 ClientToServerPacket（单向）
   → 验证客户端发送的数据（永远不要信任客户端！）
 
 IF 需要双向同步（游戏内实时同步）
-  → 使用带 Reply 的 Request 模式
-  → Reply 消息作为服务端对客户端的响应
+  → 使用双向消息
+  → 服务端发送后可能回复
 
 IF 同步大量数据
   → ❌ 不要逐字段发送（高网络开销）
-  → 使用 `NBTTagCompound` 或自定义 `ByteBuf` 批量序列化
+  → 使用 `NBTTagCompound` 或自定义 `PacketBuffer` 批量序列化
   → 或考虑用 `EntityDataManager`（实体数据同步）
 ```
 
@@ -73,16 +72,16 @@ IF 同步大量数据
 │                     │
 │  INSTANCE.sendTo()   │──────────→ 客户端（指定 Player）
 │                     │
-│  INSTANCE.send()     │──────────→ 所有客户端（服务器广播）
+│  INSTANCE.sendToAll() │──────────→ 所有客户端
 │                     │
 │  客户端发来消息 ────────→│ 客户端发来消息
 └─────────────────────┘
 ```
 
-- `sendTo(ServerPlayerEntity, msg)` 或 `send(PacketDistributor.PLAYER.with(() -> player), msg)` — 服务端发送给指定玩家
-- `send(PacketDistributor.ALL.noArg(), msg)` — 服务端广播给所有玩家
-- `send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)` — 发送给追踪该实体的玩家
-- 客户端直接调用 `sendToServer(msg)` — 客户端发送给服务端
+- `sendTo(Packet, EntityPlayerMP)` — 服务端发送给指定玩家
+- `sendToAll(Packet)` — 服务端广播给所有玩家
+- `sendToAllTracking(Packet, Entity)` — 发送给追踪该实体的玩家
+- 客户端直接调用 `INSTANCE.sendToServer(Packet)` — 客户端发送给服务端
 
 ### Decision: 什么时候用网络包
 
@@ -94,9 +93,9 @@ IF 实现实体状态同步（属性修改）
   → 服务端修改 → 发送数据给客户端 → 客户端更新渲染
   → 优先考虑 EntityDataManager
 
-IF 实现 TileEntity 数据同步
+IF 实现方块实体数据同步
   → 使用 TileEntity.syncable 机制
-  → 在 `getUpdatePacket()` / `handleUpdatePacket()` 中处理
+  → 在 `write` / `read` NBT 中处理
 
 IF 需要玩家交互确认（如打开门）
   → 使用 PlayerInteractEvent（在服务端自然处理，无需网络包）
@@ -124,15 +123,15 @@ public class MyMessage implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(PacketBuffer buf) {
         buf.writeInt(value);
-        ResourceLocation.CODEC.encode(buf, targetId);
+        buf.writeResourceLocation(targetId);
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(PacketBuffer buf) {
         this.value = buf.readInt();
-        this.targetId = ResourceLocation.CODEC.decode(buf);
+        this.targetId = buf.readResourceLocation();
     }
 }
 ```
@@ -141,20 +140,17 @@ public class MyMessage implements IMessage {
 
 ```java
 // messages/MyMessageHandler.java
-// 处理器是 BiConsumer<MSG, Supplier<NetworkEvent.Context>>，无需实现接口
-public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
-    // 从网络上下文获取逻辑端
-    ctx.get().enqueueWork(() -> {
-        // 始终检查逻辑端
-        if (ctx.get().getDirection().getReceptionSide().isServer()) {
-            // 这是服务端收到消息的处理器
-            ServerPlayerEntity sender = ctx.get().getSender();
-            if (sender != null) {
-                // 服务端处理逻辑
+public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
+    @Override
+    public IMessage onMessage(MyMessage msg, MessageContext ctx) {
+        ctx.getServerHandler().execute(() -> {
+            // 始终检查逻辑端
+            if (ctx.getServerHandler().player.getServerWorld().isRemote) {
+                // 这是客户端收到消息
             }
-        }
-    });
-    ctx.get().setPacketHandled(true);
+        });
+        return null;
+    }
 }
 ```
 
@@ -183,20 +179,12 @@ public class NetworkHandler {
             MyOpenGuiMessage.class,
             MyOpenGuiMessage::toBytes,
             MyOpenGuiMessage::new,
-            MyOpenGuiHandler::handle
-        );
-
-        INSTANCE.registerMessage(
-            SYNC_DATA_ID,
-            MySyncDataMessage.class,
-            MySyncDataMessage::toBytes,
-            MySyncDataMessage::new,
-            MySyncDataHandler::handle
+            MyOpenGuiHandler::onMessage
         );
     }
 
     // 服务端发送消息给指定玩家
-    public static void sendTo(ServerPlayerEntity player, MyOpenGuiMessage message) {
+    public static void sendTo(EntityPlayerMP player, MyOpenGuiMessage message) {
         INSTANCE.sendTo(message, player);
     }
 
@@ -218,8 +206,9 @@ NetworkHandler.INSTANCE.sendToServer(new MyOpenGuiMessage(targetId, value));
 
 ```java
 // 在服务端逻辑中广播给所有玩家
-INSTANCE.sendToAll(new MyBroadcastMessage(data));
+NetworkHandler.INSTANCE.sendToAll(new MyBroadcastMessage(data));
 ```
 
-> 重要：收到消息后**永远不要**直接修改世界或实体。必须用 `enqueueWork()` 将操作排队到主线程执行。
-> 注意：`DistExecutor.unsafeRunWhenOn` 用于服务端发往客户端的单向消息（BiConsumer 直接引用客户端类，避免跨物理端类加载）。
+> 重要：收到消息后**永远不要**直接修改世界或实体。必须用 `ctx.getServerHandler().execute()` 将操作排队到主线程执行。
+> 注意：`DistExecutor.unsafeRunWhenOn` 用于服务端发往客户端的单向消息。
+

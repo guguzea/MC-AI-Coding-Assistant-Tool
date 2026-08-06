@@ -68,7 +68,7 @@ IF 监听生物死亡
   → 注意：此事件仅在服务端触发
 
 IF 监听物品被使用完成（食物吃完等）
-  → ItemUseFinishEvent
+  → LivingEntityUseItemEvent.Stop / Finish
 
 IF 监听实体掉落物品
   → LivingDropsEvent
@@ -80,14 +80,14 @@ IF 监听玩家登录/登出
   → PlayerEvent.PlayerRespawnEvent
 
 IF 监听玩家数据保存/加载
-  → PlayerEvent.SavePlayerDataEvent / PlayerEvent.LoadPlayerDataEvent
+  → PlayerEvent.SaveToFile / LoadFromFile
 
 IF 监听方块放置/破坏
   → BlockEvent.BreakEvent
   → BlockEvent.PlaceEvent
 
 IF 监听配方解锁（合成/烧炼/烟熏等）
-  → `ItemCraftedEvent`（玩家完成合成时）
+  → `CraftingEvent`（玩家完成合成时）
   → `FurnaceSmeltEvent`（物品被烧炼时）
   → 优先使用数据生成器注册配方，而非监听事件
 
@@ -100,7 +100,7 @@ IF 监听 Tick（每帧逻辑）
   → 注意：不要在 Tick 中做重操作，会导致卡顿
 
 IF 监听 Capability 附加
-  → AttachCapabilitiesEvent<Entity> / AttachCapabilitiesEvent<TileEntity>
+  → AttachCapabilitiesEvent<Entity / TileEntity / ItemStack>
 
 IF 监听服务端/客户端启动
   → FMLCommonSetupEvent
@@ -135,11 +135,11 @@ IF 不确定
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
-| 添加合成配方 | `ItemCraftedEvent` 或数据生成器 | 优先用数据生成器 |
-| 监听烧炼 | `FurnaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
+| 添加合成配方 | `CraftingEvent` 或数据生成器 | 优先用数据生成器 |
+| 监听烧炼 | `FurnaceSmeltEvent` | 熔炉烧炼时触发 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `EntityJoinWorldEvent` | 注意不要做重操作 |
-| 修改物品 NBT | `ItemCraftedEvent` 或 `AnvilProcessEvent` | |
+| 修改物品 NBT | `CraftingEvent` 或 `AnvilUpdateEvent` | |
 
 ---
 
@@ -198,10 +198,13 @@ public class ModSetup {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // 在这里注册 KeyBinding
+        // KeyBinding 注册
+        ClientRegistry.registerKeyBinding(EXAMPLE_KEY);
     }
 }
 ```
+
+KeyBinding 注册应使用 `ClientRegistry.registerKeyBinding()`，而非直接调用 `KeyBinding`。
 
 ## 示例：Capability 附加事件
 
@@ -211,7 +214,7 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
     if (event.getObject() instanceof PlayerEntity player) {
         event.addCapability(
             new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
-            new ICapabilityProvider() {
+            new ICapabilityProvider<>() {
                 private final MyCapability instance = new MyCapability();
 
                 @Override
@@ -234,4 +237,4 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、TileEntity 上附加 Capability，每个只能附加一次（ID 唯一）。
+> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、TileEntity、ItemStack 上附加 Capability，每个只能附加一次（ID 唯一）。`deserializeNBT` 在 `isInvalid()` 返回 true 时不会被调用。

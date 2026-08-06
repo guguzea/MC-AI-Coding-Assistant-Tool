@@ -3,6 +3,9 @@
 > 本规则集适用于 **Fabric 1.20.4**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -12,7 +15,7 @@
 | 平台 | Fabric |
 | Minecraft 版本 | 1.20.4 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 17**（Fabric 1.20.4 最低要求） |
+| Java 版本 | **Java 17**（Fabric 1.20.x 最低要求） |
 | Gradle | Gradle 8.x + Loom |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.20.4+build.3:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
@@ -39,10 +42,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.claude/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.claude/commands/` 下的命令参考
-4. 遇到问题查 `.claude/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -148,6 +162,10 @@ fabric-mod/
 - Fabric Loader 0.15.x（推荐 0.15.11）
 - Fabric API 0.91.x for 1.20.4
 - Java 17+
+- **注意**：Fabric API 0.91.x 相比 0.86.x（1.20.1）有如下改进：
+  - `fabric-screen-api-v1` 改进
+  - `fabric-object-builder-api-v1` 新引入
+  - 其他模块版本也有小幅更新
 
 ---
 
@@ -156,18 +174,34 @@ fabric-mod/
 按编号顺序加载（建议）：
 
 ```
-.claude/rules/00-project-setup.mdc    → 项目结构与构建（Loom、Gradle）
-.claude/rules/01-registry.mdc         → 注册系统（最重要，优先读）
-.claude/rules/02-block.mdc            → 方块开发
-.claude/rules/03-item.mdc             → 物品开发
-.claude/rules/04-entity.mdc          → 实体开发
-.claude/rules/05-events.mdc          → 事件系统
-.claude/rules/06-networking.mdc      → 网络通信
-.claude/rules/07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
-.claude/rules/08-client-server.mdc    → 客户端/服务端分离
-.claude/rules/09-anti-patterns.mdc   → 反模式库
-.claude/rules/10-gui.mdc              → GUI / Screen 开发
+00-project-setup.mdc    → 项目结构与构建（Loom、Gradle）
+01-registry.mdc         → 注册系统（最重要，优先读）
+02-block.mdc            → 方块开发
+03-item.mdc             → 物品开发
+04-entity.mdc           → 实体开发
+05-events.mdc           → 事件系统
+06-networking.mdc       → 网络通信
+07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
+08-client-server.mdc    → 客户端/服务端分离
+09-anti-patterns.mdc    → 反模式库
+10-gui.mdc              → GUI / Screen 开发
 ```
+
+---
+
+## MCP Server 工具
+
+当 `mcp-server/` 存在时，可使用以下工具：
+
+| 工具 | 功能 |
+|------|------|
+| `search_fabric_docs` | 搜索 Fabric Docs + Wiki |
+| `get_fabric_doc_summary` | 获取文档摘要 |
+| `get_fabric_doc_full` | 获取文档全文 |
+| `query_api` | 按类名查询 Yarn API 签名 |
+| `get_method_params` | 查询方法参数名 |
+| `convert_mapping` | Yarn ↔ Parchment ↔ Mojang 映射互转 |
+| `diagnose_gradle` | 诊断 Gradle/Loom 构建问题 |
 
 ---
 

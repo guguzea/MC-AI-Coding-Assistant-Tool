@@ -86,6 +86,7 @@ ClientPlayNetworking.send(MyPacket.ID, new MyPacket(value));
 // 服务端向客户端发送
 ServerPlayNetworking.send(player, MyPacket.ID, new MyPacket(value));
 ```
+```
 
 ## fabric.mod.json 配置
 

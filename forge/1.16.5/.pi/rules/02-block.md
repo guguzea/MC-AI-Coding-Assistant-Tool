@@ -1,0 +1,215 @@
+﻿---
+description: 02 — 方块开发
+---
+
+# 02 — 方块开发
+
+> 适用版本：Forge 1.16.5
+
+---
+
+## 约束
+
+### Block 子类规范
+
+- 方块类必须继承 `Block`（`net.minecraft.block.Block`）
+- 使用 `Block.Properties.of(Material)` 创建属性（Forge 1.16.x 风格）
+- 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法
+
+### Block.Properties 常用配置
+
+```java
+Block.Properties.of(Material material)
+    .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
+    .requiresTool()                                          // 需要正确工具才能掉落
+    .noOcclusion()                                          // 不阻挡光
+    .isRedstoneConductor((state, reader, pos) -> true)     // 红石导体
+    .sound(SoundType type)                                 // 放置/破坏音效
+```
+
+### 注册约束
+
+- **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
+- 必须通过 `DeferredRegister<Block>` 注册（参见 `01-registry.mdc`）
+- 注册名称必须全小写
+- ItemBlock 需要单独注册（与方块使用相同 registry name）
+
+### 方块实体（BlockEntity）约束
+
+- 有状态或需要持久化的方块必须使用 BlockEntity（而非仅靠 Block）
+- BlockEntity 必须在方块类中重写 `newBlockEntity()` 方法
+- BlockEntity 的 `saveAdditional`/`load` 方法处理 NBT 序列化（使用 `CompoundNBT`，不是 `CompoundTag`）
+- **禁止**在 `load()` 中直接读取世界数据（会导致 NPE）
+
+### BlockState 配置
+
+- 使用 `stateDefinition` 定义所有方块状态属性
+- 使用 `defaultBlockState()` 设置默认状态
+- `getStateForPlacement()` 处理放置时的状态变化
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的方块？
+
+```
+IF 需要可放置物品、不可交互的基础方块
+  → 基础方块（extends Block）
+  → 注册后注册 ItemBlock
+  → 创建 blockstates JSON 和 models JSON
+
+IF 需要存储数据（箱子、熔炉等）
+  → 方块实体方块（Block + BlockEntity）
+  → 需要在方块类重写 newBlockEntity()
+  → 需要注册 BlockEntityType
+  → 需要在 mods.toml 中添加 blockEntity 字段
+
+IF 需要可交互（右键打开 GUI、触发事件）
+  → 基础方块 + onBlockActivated 事件
+  → 或使用 ContainerProvider + ITickableBlockEntity 实现 GUI
+
+IF 需要流体
+  → 使用 Forge 专用流体系统
+  → 注册 Fluid + FluidType 两个类型
+  → 参考 05-events.mdc 中的流体相关事件
+
+IF 需要特殊渲染（多面材质、透明度、动画）
+  → 使用自定义 BlockState + BakedQuad
+  → 参考 08-client-server.mdc 中的渲染规则
+```
+
+### Decision: 方块属性（Material）选择
+
+```
+IF 自然方块（石头、木头、草）
+  → Material.STONE / Material.WOOD / Material.GRASS
+  → 需要 .requiresTool() 时用 STONE/WOOD
+
+IF 泥土类
+  → Material.DIRT / Material.SAND / Material.SNOW
+
+IF 玻璃/冰/透明
+  → Material.GLASS / Material.ICE
+  → 需要 .noOcclusion() 和 .isSuffocating((s,r,p)->false)
+
+IF 植物
+  → Material.PLANT / Material.REPLACEABLE_PLANT
+  → 不能放置方块，需要特殊放置逻辑
+
+IF 液体
+  → 不在 Block 中实现，使用 Fluid 系统
+```
+
+### Decision: BlockEntity vs 普通方块
+
+```
+IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
+  → 必须使用 BlockEntity
+  → 在方块类重写 newBlockEntity()
+  → 注册时先注册方块再注册 BlockEntityType
+
+IF 需要每 tick 逻辑（自动机、计时器）
+  → 必须使用 BlockEntity + ITickable<BlockEntity>
+  → 在 ModBlocks 中注册 BlockEntityType 时关联 Block
+
+IF 只需要静态方块（装饰、完整方块）
+  → 普通 Block 即可，不需要 BlockEntity
+  → 减少内存占用和复杂度
+```
+
+---
+
+## 示例：基础方块（带 ItemBlock）
+
+```java
+// blocks/MyBlock.java
+public class MyBlock extends Block {
+    public MyBlock() {
+        super(Block.Properties.of(Material.STONE)
+            .hardnessAndResistance(1.5f, 6.0f)
+            .requiresTool()
+            .sound(SoundType.STONE)
+        );
+    }
+
+    @Override
+    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+        // 方块放置时的逻辑
+    }
+
+    @Override
+    public void wasExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+        // 方块被爆炸破坏时的逻辑
+    }
+}
+```
+
+```java
+// Registration using DeferredRegister (recommended)
+public static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+
+public static final RegistryObject<Block> MY_BLOCK =
+    BLOCKS.register("my_block", MyBlock::new);
+```
+
+```java
+// ❌ 错误示例：setRegistryName + 直接 new（已过时）
+event.getRegistry().register(
+    new MyBlock().setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
+);
+```
+
+## 示例：带 BlockEntity 的方块
+
+```java
+// blocks/MyBlockEntityBlock.java
+public class MyBlockEntityBlock extends Block {
+    public MyBlockEntityBlock() {
+        super(Block.Properties.of(Material.WOOD).noOcclusion());
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntities.MY_BLOCK_ENTITY.get().create(pos, state);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING);  // 示例：添加一个 FACING 属性
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    }
+}
+```
+
+```java
+// entities/MyBlockEntity.java
+public class MyBlockEntity extends BlockEntity {
+    private CompoundNBT data = new CompoundNBT();
+
+    public MyBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.MY_BLOCK_ENTITY.get(), pos, state);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundNBT nbt) {
+        super.saveAdditional(nbt);
+        nbt.put("data", data.copy());
+    }
+
+    @Override
+    public void load(CompoundNBT nbt) {
+        super.load(nbt);
+        if (nbt.contains("data", 10)) { // 10 = TAG_COMPOUND
+            this.data = nbt.getCompound("data");
+        }
+    }
+}
+```
+
+> 注意：`load()` 中读取 NBT 是安全的，但你**不能**在 `load()` 中读取世界数据（如 `world.getBlockState(pos)`）。如需基于世界的逻辑，在 `onLoad()` 中处理。

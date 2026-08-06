@@ -11,7 +11,9 @@
 - 实体必须在 `Registry.register(Registries.ENTITY_TYPE, id, type)` 中注册
 - 实体渲染器在客户端单独注册（`EntityRendererRegistry`）
 - 实体类继承 `Entity` 或其子类
-- 实体必须有 `FabricEntityTypeBuilder` 或 `EntityType.Builder`
+- 使用 `MobCategory`（1.21 使用此枚举）
+- 使用 `EntityDimensions.changing()` 表示可变化尺寸的实体
+- 属性注册使用 `DefaultAttributeRegistry`
 - 实体 ID 必须在 `fabric.mod.json` 的 `entrypoints` 中正确配置
 
 ---
@@ -25,7 +27,7 @@ IF 静态实体（不移动、不交互）
   → EntityType.Builder.of(Entity::new, MobCategory.MISC)
 
 IF 有行为实体（动物、怪物）
-  → EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+  → EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
   → 重写 registerAttributes() 和 init() 方法
 
 IF 需要在服务端和客户端分别初始化
@@ -47,7 +49,7 @@ public class MyPigEntity extends CowEntity {
     }
 }
 
-// 2. 在 onInitialize() 中注册
+// 2. 在类加载时注册实体
 public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.register(
     Registries.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
@@ -60,36 +62,31 @@ public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.
     .trackRangeBlocks(10)
     .build()
 );
-```
 
-## Entity Attributes（属性）
-
-```java
-// 在 onInitialize() 中设置属性
+// 3. 在 onInitialize() 中注册属性
 @Override
 public void onInitialize() {
-    // 注册属性
     DefaultAttributeRegistry.register(MY_PIG.get(),
-        PlayerEntity.createPlayerAttributes()
+        MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
     );
-
-    // 注册实体...
-    Registry.register(Registries.ENTITY_TYPE, new Identifier(MOD_ID, "my_pig"), MY_PIG.get());
 }
 ```
 
 ## Spawn Restriction（生成限制）
 
 ```java
-SpawnRestriction.register(
-    MY_PIG,
-    SpawnRestriction.Location.ON_GROUND,
-    Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-    MyPigEntity::canSpawn
-);
+@Override
+public void onInitialize() {
+    // ...属性注册后
+    SpawnRestriction.register(MY_PIG.get(),
+        SpawnRestriction.Location.ON_GROUND,
+        Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+        MyPigEntity::canSpawn
+    );
+}
 ```
 
 ## 实体渲染器（客户端）
@@ -125,6 +122,8 @@ public class ExampleModClient implements ClientModInitializer {
 - ❌ `EntityDimensions` 使用错误的 `changing` vs `fixed` — 导致实体碰撞异常
 - ❌忘记设置 `SpawnRestriction` — 实体无法在世界中自然生成
 - ❌在 `onInitialize()` 外注册 — 注册不会生效
+- ❌忘记注册属性 — 实体使用默认 20 HP，可能不符合预期
+- ❌混用 `MobCategory.CREATURE` 和 `EntityCategory.CREATURE` — 1.21 使用 `MobCategory`
 
 ## 扩展点
 

@@ -12,9 +12,9 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.16.5 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
-| Java 版本 | **Java 11**（Forge 1.16.5 最低要求，推荐 Java 16） |
+| Java 版本 | **Java 11**（Forge 1.16.5 推荐）/ Java 16 |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`1.16.5-2021.06.09-18`） |
+| Mappings | **Parchment**（`1.16.5-2021.06.09`，带参数名） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -36,9 +36,29 @@ Decision: 本规则集是否适用？
 → ELSE → 询问用户确认平台和版本
 ```
 
+### 本规则集的 IDE 加载优先级
+
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
+
 ---
 
 ## 规则文件索引
+
+按以下顺序加载，编号越大越专精：
 
 | 编号 | 文件 | 何时阅读 |
 |------|------|----------|
@@ -58,17 +78,72 @@ Decision: 本规则集是否适用？
 
 ## Mod ID 规范
 
+本规则集强制约束：
+
 - **必须**与 `mods.toml` 中的 `modId` 完全一致
 - 全部**小写**
 - 仅使用字母和下划线（`[a-z0-9_]`）
-- 禁止使用 `-`
+- 禁止使用 `-`，否则 Forge 会拒绝加载
+- 推荐格式：`yourmodid` 或 `your_mod_id`
+
+---
+
+## 目录结构约定
+
+Forge 1.16.5 标准项目的包结构：
+
+```
+src/main/java/
+└── com/example/mod/
+    ├── ExampleMod.java        # @Mod 入口类
+    ├── registry/              # 注册相关
+    │   ├── ModBlocks.java
+    │   ├── ModItems.java
+    │   ├── ModEntities.java
+    │   └── ModMessages.java   # 网络包
+    ├── blocks/                 # 方块
+    │   └── MyBlock.java
+    ├── items/                  # 物品
+    │   └── MyItem.java
+    ├── entities/               # 实体
+    │   └── MyEntity.java
+    ├── init/                   # 事件订阅
+    │   └── ModEvents.java
+    └── client/                  # 客户端专用
+        ├── ClientSetup.java
+        └── rendering/
+            └── MyBlockRenderer.java
+```
 
 ---
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**
-2. **不要在 TileEntity 构造函数中访问 world**
-3. **CompoundNBT** 用于 NBT 数据（1.17+ 改名为 CompoundTag）
-4. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**
-5. **Item.Properties.tab(ItemGroup)** 方式（1.17+ 无 .tab() 方法）
+1. **推荐使用 DeferredRegister**：`DeferredRegister` 自 Forge 1.16.2 起可用于所有注册表，1.16.5 完全支持
+2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
+3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
+4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
+5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
+
+---
+
+## 扩展新内容时的流程
+
+1. 先读 `01-registry.mdc` 确认注册方式
+2. 再读对应主题的规则文件（如 `02-block.mdc`）
+3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
+
+---
+
+## 关于 1.16.5 与其他版本的差异
+
+| 功能 | 1.16.5 Forge | 1.20.1+ Forge | 备注 |
+|------|---------------|----------------|------|
+| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
+| Java 版本 | Java 11/16 | Java 17+ | 1.16.5 不支持 Java 17 |
+| Mappings | Parchment（推荐） | MCP / Parchment | 1.16.5 推荐 Parchment |
+| pack_format | **8** | 15+ | 资源包格式不同 |
+| DataGen | 存在但 API 简化 | 完整 DataGen | 1.16.5 DataGen 有限 |
+| Fluid 注册 | `FluidType` | `FluidType` | 相同 |
+
+如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

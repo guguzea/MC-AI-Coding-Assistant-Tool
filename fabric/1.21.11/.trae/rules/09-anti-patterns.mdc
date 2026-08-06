@@ -169,7 +169,7 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 // ❌ 错误：缺少 fabricloader 依赖
 {
   "depends": {
-    "minecraft": ">=1.21"
+    "minecraft": ">=1.20.1"
   }
 }
 
@@ -202,12 +202,12 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 ```groovy
 // ❌ 错误：依赖传递性混淆
 dependencies {
-    modImplementation("net.fabricmc:fabric-api:0.200.1+build.3")  // 不传递依赖
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.200.1+build.3")  // 不传递依赖
 }
 
 // ✅ 正确：API 需要传递，实现不需要
 dependencies {
-    modApi("net.fabricmc:fabric-api:0.200.1+build.3")  // 传递依赖
+    modApi("net.fabricmc.fabric-api:fabric-api:0.200.1+build.3")  // 传递依赖
     modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
 }
 ```
@@ -259,7 +259,7 @@ public class MyMixin { ... }
 |---------|------|---------|
 | `NullPointerException` at `Registry.register` | 注册在 `onInitialize()` 外执行 | 将注册移入 `onInitialize()` |
 | `Mixin did not apply` | mixin 包名不匹配或 `fabric.mixins.json` 配置错误 | 检查 package 和配置 |
-| `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.21.11+build.6` |
+| `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.20.1+build.10` |
 | `FabricLoader not found` | 依赖缺失 | 检查 `fabricloader` 在 depends 中 |
 | `No such registry` | Registry 类型错误 | 确认 `Registries.XXX` 正确 |
 | `duplicate id` | 注册 ID 重复 | 检查 mod ID 是否冲突 |

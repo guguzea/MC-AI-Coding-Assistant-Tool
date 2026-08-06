@@ -120,3 +120,140 @@ IF 需要客户端触发服务端逻辑
 客户端查询 → 服务端响应：
   SimpleNetworkWrapper（Request-Reply 模式）
 ```
+
+---
+
+## 示例：客户端初始化
+
+```java
+// client/ClientSetup.java
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // FMLClientSetupEvent 仅用于客户端特有初始化
+    }
+}
+```
+
+## 示例：KeyBinding 处理
+
+```java
+// client/input/ModKeyBindings.java
+public class ModKeyBindings {
+    // KeyMapping 定义
+    public static KeyBinding TEST_KEY = new KeyBinding(
+        "key.examplemod.test",
+        KeyConflictContext.IN_GAME,
+        InputMappings.Type.KEYSYM,
+        Keyboard.KEY_G,
+        "key.categories.examplemod"
+    );
+
+    @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
+    public static class ClientEvents {
+        @SubscribeEvent
+        public static void onKeyInput(KeyInputEvent event) {
+            // 检测按键按下
+        }
+    }
+}
+```
+
+## 示例：服务端数据同步（EntityData）
+
+```java
+// entities/MyEntity.java（服务端设置，客户端自动同步）
+public class MyEntity extends LivingEntity {
+    private static final DataManager.Entry<Integer> DATA_CUSTOM =
+        new DataManager.Entry<>(new DataSerializers.VARINT);
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(DATA_CUSTOM, 0);
+    }
+
+    public void setCustomValue(int value) {
+        // 服务端设置
+        this.dataManager.set(DATA_CUSTOM, value);
+    }
+
+    public int getCustomValue() {
+        // 两端都可以读取
+        return this.dataManager.get(DATA_CUSTOM);
+    }
+}
+```
+
+## 示例：TileEntity 数据同步
+
+```java
+// tiles/MyTileEntity.java
+public class MyTileEntity extends TileEntity {
+    private int syncData = 0;
+
+    public MyTileEntity() {
+        super(ModTileEntities.MY_TILE_ENTITY.get());
+    }
+
+    @Override
+    public void read(NBTTagCompound nbt) {
+        super.read(nbt);
+        this.syncData = nbt.getInt("syncData");
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound nbt) {
+        super.write(nbt);
+        nbt.putInt("syncData", this.syncData);
+        return nbt;
+    }
+
+    @Override
+    public NBTTagCompound getUpdatePacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        write(nbt);
+        return nbt;
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        read(pkt.getNbtCompound());
+    }
+
+    // 在服务端逻辑中修改数据后，同步到客户端
+    public void modifyData(int newValue) {
+        this.syncData = newValue;
+        this.markDirty();
+        this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+    }
+}
+```
+
+> 注意：
+> - `markDirty()` 标记数据已修改
+> - `world.notifyBlockUpdate()` 将更新通知发送给客户端
+> - `getUpdatePacket()` 返回同步数据
+> - `onDataPacket()` 处理接收到的数据
+
+## 示例：运行时物理端检测
+
+```java
+import net.minecraftforge.fml.util.thread.SidedThreadGroups;
+
+// 在代码中判断物理端
+if (LogicalSide.CLIENT.equals(ctx.get().getDirection().getReceptionSide())) {
+    // 客户端收到消息
+} else {
+    // 服务端收到消息
+}
+
+// 或者
+if (DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> this::clientOnlyMethod) != null) {
+    // ...
+}
+```
+
+> 注意：`DistExecutor.unsafeRunForDist` 和类似方法用于在不同物理端运行不同代码。但**强烈建议**避免使用这些方法——更好的设计是让每端的代码完全分离，不在同一条执行路径上混合。

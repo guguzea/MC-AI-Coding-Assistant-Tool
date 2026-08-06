@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-entity
-description: Forge 1.12.2 Entity skill (EntityLiving, EntityEntry, RenderingRegistry)
+description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、EntityLiving、EntityEntry、RenderingRegistry
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -12,6 +12,7 @@ mappings: mcp
 ## 快速开始
 
 ```java
+// 实体类
 public class MyEntity extends EntityLiving {
     public MyEntity(World world) {
         super(world);
@@ -27,6 +28,7 @@ public class MyEntity extends EntityLiving {
     }
 }
 
+// 注册（参见 mc-registry Skill）
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModEntities {
     @SubscribeEvent
@@ -93,11 +95,13 @@ public class RenderMyEntity extends RenderLiving<MyEntity> {
 - ❌ 忘记注册渲染器
 - ❌ `applyEntityAttributes()` 不调用 `super`
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- EntityLiving (not LivingEntity)
-- EntityEntry (not EntityType)
-- RenderingRegistry.registerEntityRenderingHandler()
-- @SideOnly(Side.CLIENT) (not @OnlyIn(Dist.CLIENT))
-- world.isRemote (not level.isClientSide)
-- EntityClassification (not MobCategory)
+- 详细示例：参见 `04-entity.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | 实体类型通过 RegistryEvent 注册 |
+| `mc-capability` | 实体可附加 Capability |

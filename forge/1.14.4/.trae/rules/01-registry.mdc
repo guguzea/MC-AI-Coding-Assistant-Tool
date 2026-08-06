@@ -10,22 +10,23 @@
 ### 核心原则
 
 - **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
-- 所有注册必须通过 **Forge 事件系统**（最终由 `RegistryEvent.Register` 触发）
+- 所有注册必须通过 **Forge 事件系统**（最终由 `RegisterEvent` 触发）
 - mod ID 必须与 `mods.toml` 中的 `modId` 完全一致
-- **推荐使用 `DeferredRegister`**：`DeferredRegister` 自 Forge 1.13 起可用于所有注册表，1.14.4 支持
-- `RegistryEvent.Register` 仍可用，但 `DeferredRegister` 更简洁
+- **推荐使用 `DeferredRegister`**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.14 起引入，1.14.4 完全支持
+- `RegisterEvent` 仍可用，但不推荐（`DeferredRegister` 封装了它，更安全）
 
 ### 注册时机
 
-`DeferredRegister` 通过 modEventBus 在正确的 `RegistryEvent.Register` 时机自动执行注册，无需手动监听。
+`DeferredRegister` 通过 modEventBus 在正确的 `RegisterEvent` 时机自动执行注册，无需手动监听。
 
-||| 注册内容 | DeferredRegister 工厂方法 | 注册到 |
-|----------|---------------------------|--------|
+| 注册内容 | DeferredRegister 工厂方法 | 注册到 |
+|---------|---------------------------|--------|
 | 方块 | `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
 | 物品 | `DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
-| 方块实体 | `DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID)` | modEventBus |
-| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)` | modEventBus |
+| 方块实体 | `DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID)` | modEventBus |
+| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)` | modEventBus |
 | 附魔 | `DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MOD_ID)` | modEventBus |
+| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidType` | modEventBus |
 | 粒子类型 | `DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID)` | modEventBus |
 | 声音事件 | `DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
 
@@ -99,15 +100,19 @@ IF 注册 物品
   → 使用 DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)
   → 在 ITEMS.register() 中注册
 
-IF 注册 方块实体（TileEntity）
-  → 方块实现 ITileEntityProvider 接口，重写 createNewTileEntity()
-  → 使用 DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)
-  → 在 TILE_ENTITIES.register() 中注册 TileEntityType
+IF 注册 方块实体（BlockEntity）
+  → 方块实现 EntityBlock 接口，重写 newBlockEntity()
+  → 使用 DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID)
+  → 在 BLOCK_ENTITY_TYPES.register() 中注册 BlockEntityType
 
 IF 注册 实体（Entity）
-  → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
-  → 在 ENTITIES.register() 中注册 EntityType
+  → 使用 DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)
+  → 在 ENTITY_TYPES.register() 中注册 EntityType
   → 必须在 mods.toml 中声明 entity 字段
+
+IF 注册 流体
+  → Fluid 注册 + FluidType 注册（两个 DeferredRegister）
+  → Fluid 提供流体属性，FluidType 提供交互行为
 
 IF 注册 其他内容（附魔/粒子/声音等）
   → 确认对应的 Registry 类型
@@ -121,9 +126,9 @@ IF 一个方块有对应的 ItemBlock
   → 必须先注册 Block，再注册 ItemBlock
   → ItemBlock 的 registry name 必须与 Block 完全相同
 
-IF 一个方块有 TileEntity
-  → 必须先注册 TileEntityType，再注册方块
-  → TileEntityType 的 registry name 必须与方块关联的 TileEntity 匹配
+IF 一个方块有 BlockEntity
+  → 必须先注册 Block，再注册 BlockEntityType
+  → Block 的 registry name 必须与 BlockEntityType 关联的 Block 匹配
 
 IF 一个物品有 Capability
   → Capability 注册应在 FMLCommonSetupEvent 中执行
@@ -156,21 +161,20 @@ IF 运行时物品/方块显示为紫色黑色方块（缺失模型）
 @Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     // 创建 DeferredRegister（持有某类对象的延迟注册器）
     public static final DeferredRegister<Block> BLOCKS =
         DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
-        DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+        DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(Block.Properties.create(Material.ROCK)
             .hardnessAndResistance(1.5f, 6.0f)
-            .harvestTool(ToolType.PICKAXE)
         )
     );
 
@@ -191,7 +195,7 @@ public class ExampleMod {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
-        TILE_ENTITIES.register(modEventBus);
+        BLOCK_ENTITIES.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
@@ -221,7 +225,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(Block.Properties.create(Material.ROCK)
             .hardnessAndResistance(1.5f, 6.0f)
-            .harvestTool(ToolType.PICKAXE)
         )
     );
 }
@@ -257,7 +260,7 @@ public class ExampleMod {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
-        ModTileEntities.TILE_ENTITIES.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         // ...
     }
 }
@@ -272,10 +275,10 @@ public class ExampleMod {
 
 ## Forge 1.14.4 注册方式对比
 
-| 特性 | `DeferredRegister`（推荐） | `RegistryEvent.Register`（备选） |
+| 特性 | `DeferredRegister`（推荐） | `RegisterEvent`（备选） |
 |------|--------------------------|------------------------|
 | 代码风格 | 静态声明，集中在类顶部 | 事件监听回调中手动注册 |
-| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `new ResourceLocation(MOD_ID, name)` |
+| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `ResourceLocation.fromNamespaceAndPath()` |
 | IDE 补全 | 好（声明集中） | 一般（分散在事件回调中） |
 | 适用场景 | 所有标准 Forge 注册 | 高级自定义或遗留代码迁移 |
 | 官方推荐 | **是**（Docs 明确说明） | 可用，但不推荐 |

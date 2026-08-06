@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-fluid
-description: Forge 1.12.2 Fluid skill (FluidRegistry, BlockFluidClassic)
+description: Minecraft Forge 流体开发。创建流体 Fluid、FluidRegistry、桶物品。触发词：Fluid、FluidRegistry、FluidStack、BucketHandler
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -69,10 +69,13 @@ public class MyBucket extends ItemBucket {
 - ❌ 只注册 Fluid 而不创建方块 → 流体无法放置
 - ❌ 忘记 BucketHandler 注册 → 桶无法装填
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- FluidRegistry for fluid registration
-- BlockFluidClassic (not FlowingFluidBlock)
-- ItemBucket (not BucketItem)
-- RegistryEvent.Register<Fluid>
-- NBTTagCompound (not CompoundTag)
+- 详细示例：参见 `02-block.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | Fluid 通过 RegistryEvent 注册 |
+| `mc-block` | 流体方块本质是 BlockFluidClassic |

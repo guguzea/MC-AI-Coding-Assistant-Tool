@@ -1,117 +1,180 @@
-# Fabric Mixin 开发命令参考
+﻿---
+name: mc-mixin
+description: Fabric Mixin 注入。Loom 一流支持，fabric.mixins.json，@Mixin、@Inject、@At。触发词：Mixin、@Inject、@At、fabric.mixins.json、AccessWidener
+platform: fabric
+version: "1.20.1"
+dependencies: []
+mappings: yarn
+---
 
-本文件描述 Fabric 1.20.1 平台上进行 Mixin（字节码注入）开发时所需掌握的核心 API 和常用命令。
+# Mixin 注入（Fabric 1.20.1）
 
-## 基础配置命令
+## 快速开始
 
-### fabric.mixins.json 创建命令
+Fabric 使用 Loom 编译器，Mixin 支持是一等的。只需在 `fabric.mixins.json` 中配置即可。
 
-Mixin 配置文件位于 `src/main/resources/` 目录，文件名必须与 `fabric.mod.json` 的 `mixins` 字段中声明的名称一致。基本配置命令：
+### 1. 配置 fabric.mixins.json
 
 ```json
 {
   "required": true,
+  "minVersion": "0.8",
   "package": "com.example.examplemod.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": ["client.ClientMixin"],
+  "client": ["client.MyClientMixin"],
   "server": [],
-  "mixins": ["common.CommonMixin", "common.AnotherMixin"]
+  "mixins": ["common.MyCommonMixin"]
 }
 ```
 
-`required` 设置为 `true` 表示如果 mixin 注入失败则游戏终止。`package` 指定 mixin 类的包名前缀。`compatibilityLevel` 必须匹配项目使用的 Java 版本。`client` 数组包含仅在客户端注入的 mixin 类名（相对于 `package`），`mixins` 数组包含在服务端和客户端都注入的 mixin。
-
-### Loom mixin 配置命令
-
-在 `build.gradle` 中需要确保 Loom 插件正确配置。Loom 原生支持 Mixin，不需要额外的插件配置。如果需要访问非公共成员，可以在 `loom { }` 块中添加 `accessWidenerPath = file("src/main/resources/examplemod.accesswidener")`。Access Widener 文件语法：`accessWidener v2 named` 开头，每行一个规则：`accessifier class_or_member_type net/minecraft/package/ClassName fieldName` 或 `accessifier class net/minecraft/package/ClassName`。
-
-### @Mixin 注解命令
-
-Mixin 类使用 `@Mixin` 注解标记目标类。基本命令：`@Mixin(TargetClass.class)`。Mixin 类应该是抽象的，不需要构造函数。`TargetClass` 可以是任何 Minecraft 类，使用 Yarn 映射的命名（如 `MinecraftClient`、`WorldRenderer`）。`value` 参数可以指定更精确的目标：`@Mixin(value = TargetClass.class, client = true)` 仅在客户端注入。
-
-### @At 注入点命令
-
-`@At` 注解指定注入的目标位置。常用值包括：`@At("HEAD")` 在方法开头注入，`@At("RETURN")` 在方法返回前注入，`@At("TAIL")` 在方法末尾注入，`@At("INVOKE")` 在指定方法调用处注入，`@At("NEW")` 在 `new` 表达式处注入。`@At("INVOKE")` 需要配合 `shift` 参数：`shift = At.Shift.AFTER` 或 `shift = At.Shift.BEFORE`。
-
-### @Inject 注入命令
-
-`@Inject` 注解定义注入的方法。基本命令：`@Inject(at = @At("HEAD"), method = "targetMethod")`。`method` 参数指定要注入的目标方法名（使用 Yarn 映射名）。`at` 参数指定注入点。`locals` 参数声明要捕获的局部变量：`@Inject(method = "tick", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)`。`cancellable` 参数设置为 `true` 使注入方法可以取消事件。
-
-### @Shadow 阴影命令
-
-`@Shadow` 注解用于引用目标类中已存在的字段或方法，而不需要重新声明。基本命令：`@Shadow private World world;` 或 `@Shadow(method = "methodName") private void shadowedMethod() {}`。被 shadow 的成员不能被调用它们的代码直接访问，但可以在 mixin 内部使用。字段类型和方法签名必须与目标类完全一致。
-
-### @Overwrite 重写命令
-
-`@Overwrite` 注解用于完全替换目标方法。谨慎使用，因为可能破坏游戏的内部状态。基本命令：`@Overwrite public void targetMethod() { // 新实现 }`。使用前必须完全理解目标方法的实现和所有副作用。
-
-## CallbackInfo 命令
-
-### CallbackInfo 参数命令
-
-注入方法必须接受 `CallbackInfo`（或 `CallbackInfoReturnable<T>`）作为最后一个参数。基本命令：`private void myMethod(Args..., CallbackInfo ci) { ci.cancel(); }`。`CallbackInfo` 提供了 `cancel()` 方法用于取消后续代码执行，`isCancelled()` 检查是否已取消。
-
-### CallbackInfoReturnable 返回值命令
-
-如果目标方法有返回值，使用 `CallbackInfoReturnable<T>` 替代 `CallbackInfo`。基本命令：`private void myMethod(Args..., CallbackInfoReturnable<T> cir) { cir.setReturnValue(customValue); cir.cancel(); }`。`setReturnValue()` 设置返回值，`cancel()` 阻止原始代码执行。
-
-## 常见 Mixin 模式命令
-
-### 修改字段值命令
-
-使用 `@Inject` 和 `@At("FIELD")` 修改字段值，或在方法中通过 shadowed 字段访问并修改：
+### 2. 创建 Mixin 类
 
 ```java
-@Shadow private int fieldToModify;
+@Mixin(PlayerEntity.class)
+public class MixinPlayerEntity {
+    @Shadow
+    public abstract int getHealth();
 
-@Inject(method = "someMethod", at = @At("HEAD"))
-private void modifyField(CallbackInfo ci) {
-    this.fieldToModify = 42;
+    @Inject(at = @At("HEAD"), method = "tick")
+    private void onTick(CallbackInfoReturnable ci) {
+        // 在 tick 方法开头执行
+    }
+
+    @Inject(at = @At("RETURN"), method = "getHealth")
+    private void onGetHealth(CallbackInfoReturnable<Integer> cir) {
+        // 在 getHealth 返回后执行
+        System.out.println("Health: " + cir.getReturnValue());
+    }
 }
 ```
 
-### 修改方法参数命令
+### 3. 在 fabric.mod.json 中声明
 
-在 `locals` 中捕获参数后可以修改：
+```json
+{
+  "mixins": ["examplemod.mixins.json"]
+}
+```
+
+## Decision: 选择注入目标
+
+```
+IF 注入到类方法
+  → @Inject + CallbackInfo
+
+IF 修改方法返回值
+  → @ModifyReturnValue
+
+IF 修改方法参数
+  → @ModifyVariable
+
+IF 在方法特定位置注入
+  → @At(value = "INVOKE", target = "...")
+```
+
+## @Inject 用法
 
 ```java
-@Inject(method = "takeDamage", at = @At("HEAD"), locals = LocalCapture.CAPTURE_FAILHARD)
-private void modifyDamage(float amount, CallbackInfoReturnable<Integer> cir) {
-    // amount 是局部变量，可以在这里修改后再使用
+@Mixin(PlayerEntity.class)
+public class MixinPlayerEntity {
+    @Inject(
+        at = @At(value = "HEAD"),
+        method = "jump")
+    private void onJump(CallbackInfo ci) {
+        // 在 jump 方法开头执行
+    }
+
+    @Inject(
+        at = @At(value = "TAIL"),
+        method = "jump")
+    private void afterJump(CallbackInfo ci) {
+        // 在 jump 方法末尾执行
+    }
 }
 ```
 
-### 插入新逻辑命令
+## @At 位置选项
 
-在目标方法的特定位置插入新逻辑：
+| value | 含义 |
+|-------|------|
+| `HEAD` | 方法第一条指令 |
+| `RETURN` | return 之前 |
+| `TAIL` | 方法最后一条指令 |
+| `INVOKE` | 调用特定方法时 |
+| `NEW` | new 指令时 |
+
+## @Shadow 用法
 
 ```java
-@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getTime()J"))
-private void onWorldTick(CallbackInfo ci) {
-    // 在 World.getTime() 调用之后执行
+@Mixin(PlayerEntity.class)
+public abstract class MixinPlayerEntity {
+    @Shadow
+    public abstract Vec3d getRotationVector();
+
+    @Shadow
+    @Final
+    private int score;
+
+    @Shadow
+    public abstract boolean isSneaking();
 }
 ```
 
-## 调试命令
+## @ModifyReturnValue
 
-### Mixin 调试配置命令
+```java
+@Mixin(PlayerEntity.class)
+public class MixinPlayerEntity {
+    @ModifyReturnValue(
+        method = "getHealth()I",
+        at = @At("RETURN")
+    )
+    private int addHealthBonus(int original) {
+        return original + 10;  // 生命值 +10
+    }
+}
+```
 
-在 `src/main/resources/` 目录创建 `mixin.refmap.json` 的同目录配置文件可以启用调试。在 gradle.properties 中添加 `org.spongepowered.mixin.debug=true` 启用详细日志。使用 `./gradlew clean loom` 重新生成 mixin 映射。Loom 会自动生成 sourcemap，在 IDE 中可以设置断点调试 mixin 代码。
+## Access Widener（轻量替代 Mixin）
 
-### Mixin 验证命令
+Access Widener 可以将 `private` / `protected` 成员开放为 `public`，无需字节码注入。
 
-如果 mixin 没有正确应用，检查控制台输出中的 `[Mixin] ` 前缀日志。常见错误包括：包名不匹配（`fabric.mixins.json` 中的 `package` 与实际包名不一致）、类名拼写错误、目标方法不存在（检查 Yarn 映射名是否正确）。使用 `MixinBootstrap.init()` 可以在早期阶段初始化 mixin 系统并显示更详细的错误信息。
+### 1. 创建 .accesswidener 文件
 
-## 高级命令
+```
+# examplemod.accesswidener
+accessWidener v2
+accessWidener class net/minecraft/entity/LivingEntity health # 开放 health 字段
+accessWidener method net/minecraft/entity/LivingEntity getHealth()I public # 开放 getHealth 方法
+```
 
-### Accessor Mixin 命令
+### 2. 在 build.gradle 中配置 Loom
 
-创建访问器接口用于访问私有成员：`@Mixin(TargetClass.class) public interface TargetClassAccessor { @Accessor("privateField") static int getPrivateField(); }`。使用 `@Accessor` 注解自动生成 getter/setter。方法名必须与目标字段名匹配。
+```groovy
+loom {
+    accessWidenerPath = file("src/main/resources/examplemod.accesswidener")
+}
+```
 
-### Invoker Mixin 命令
+## 与 Forge Mixin 的区别
 
-创建调用器用于调用私有方法：`@Mixin(TargetClass.class) public interface TargetClassInvoker { @Invoker("privateMethod") private void invokePrivateMethod(); }`。使用 `@Invoker` 注解自动生成调用方法。方法签名必须与目标方法完全一致。
+| 维度 | Forge | Fabric |
+|------|-------|--------|
+| 配置方式 | `mixin {}` 块 + `mixins.json` | `fabric.mixins.json` |
+| 编译器 | 需配置 `org.spongepowered.mixin` 插件 | **Loom 原生支持** |
+| 注入时机 | mods.toml 中声明 | `fabric.mod.json` 中 `mixins` 字段 |
+| Access Widener | `META-INF/accesstransformer.cfg` | `.accesswidener` + Loom 配置 |
 
-### Mixin 优先级命令
+## 常见错误
 
-Mixin 应用顺序默认按照配置文件中的声明顺序。使用 `priority` 参数调整：`@Mixin(value = TargetClass.class, priority = 1000)`。数值越低越先应用（更接近目标代码）。高优先级 mixin 的修改会被低优先级的覆盖。
+- ❌ 忘记在 `fabric.mixins.json` 中声明 mixin — 注入不生效
+- ❌ mixin 包名与 `fabric.mixins.json` 中的 `package` 不一致 — 注入失败
+- ❌ 在 `fabric.mixins.json` 的 `mixins` 中声明客户端 mixin — 应该在 `client` 中
+- ❌ 在 Mixin 中 `new` 实例 — 禁止
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | Mixin 访问已注册对象的 private 成员 |
+| `mc-entity` | Mixin 用于修改实体行为 |

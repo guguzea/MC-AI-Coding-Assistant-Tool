@@ -44,7 +44,7 @@ IF 生成自定义数据包
 ```groovy
 // build.gradle
 dependencies {
-    modApi "net.fabricmc:fabric-api:${project.fabric_api_version}"
+    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:4.2.1+1.21.11"
 }
 ```
 

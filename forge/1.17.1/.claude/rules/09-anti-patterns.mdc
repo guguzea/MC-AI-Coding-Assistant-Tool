@@ -19,14 +19,14 @@ public MyEntity(EntityType<?> type, Level level) {
 
 **错误症状**：`NullPointerException` 或属性不生效
 
-**正确方案**：使用 `RegistryEvent.Register<Attribute>` 在 mod 初始化时注册
+**正确方案**：使用 `DeferredRegister<Attribute>` + modEventBus（在 mod 构造函数中完成）
 
 ```java
-@SubscribeEvent
-public static void register(RegistryEvent.Register<Attribute> event) {
-    EXAMPLE_HEALTH = new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0);
-    EXAMPLE_HEALTH.setRegistryName(new ResourceLocation(MOD_ID, "example.health"));
-    event.getRegistry().register(EXAMPLE_HEALTH);
+public static final DeferredRegister<Attribute> ATTRIBUTES =
+    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
+
+public static void register(IEventBus eventBus) {
+    ATTRIBUTES.register(eventBus);
 }
 ```
 
@@ -41,17 +41,14 @@ public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到�
 
 **错误症状**：方块在世界中显示为缺失方块（紫色黑色格子）
 
-**正确方案**：通过 `RegistryEvent.Register<Block>` 注册
+**正确方案**：通过 `DeferredRegister<Block>` 注册
 
 ```java
-public static Block MY_BLOCK;
+public static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
-@SubscribeEvent
-public static void register(RegistryEvent.Register<Block> event) {
-    MY_BLOCK = new Block(...);
-    MY_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "my_block"));
-    event.getRegistry().register(MY_BLOCK);
-}
+public static final RegistryObject<Block> MY_BLOCK =
+    BLOCKS.register("my_block", () -> new Block(...));
 ```
 
 ---

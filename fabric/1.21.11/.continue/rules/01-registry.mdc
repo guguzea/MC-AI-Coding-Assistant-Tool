@@ -70,7 +70,7 @@ IF 注册 Mixin
   → 在 fabric.mixins.json 中声明，不需要在 onInitialize() 中注册
 
 IF 平台 = Forge
-  → 跳转 ../forge/1.21.11/AGENTS.md（Forge 使用 DeferredRegister）
+  → 跳转 ../forge/1.20.1/AGENTS.md（Forge 使用 DeferredRegister）
 ```
 
 ### Decision: 注册顺序（依赖关系）

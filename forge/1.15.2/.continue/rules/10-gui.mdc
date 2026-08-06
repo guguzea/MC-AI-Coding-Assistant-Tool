@@ -24,7 +24,12 @@ DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
 
 // Run on the DEDICATED_SERVER only
 DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+
+// Safe version with supplier (avoids classloading issues on wrong side)
+DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
 ```
+
+**Note:** `@OnlyIn` exists but **there is NO reason for using this annotation directly. Use `DistExecutor` or a check on `FMLEnvironment#dist` instead.**
 
 ## FMLEnvironment
 
@@ -64,7 +69,7 @@ IF just a simple interaction (no data)
   → ContainerScreen directly (without Container)
 
 IF inventory with multiple slots
-  → Container (for slot management and transferStackInSlot)
+  → Container (for slot management and transferHandler)
 ```
 
 ## Container Registration
@@ -80,7 +85,7 @@ public class MyContainer extends Container {
     // Shift-click transfer logic
     @Override
     public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-        return ItemStack.EMPTY;
+        return ItemStack.EMPTY; // or implement slot transfer
     }
 
     @Override
@@ -111,6 +116,7 @@ public class ClientSetup {
 ## Data Synchronization
 
 ```java
+// Define synced data
 // In TileEntity:
 private int syncData;
 
@@ -134,10 +140,31 @@ public void setSyncData(int value) {
 }
 ```
 
+## Block → Container binding
+
+```java
+public class MyBlock extends Block {
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isRemote) {
+            NetworkHooks.openGui(
+                (ServerPlayerEntity) player,
+                new SimpleNamedContainerProvider(
+                    (id, inv, p) -> new MyContainer(id, inv, target),
+                    Component.translatable("container.my_container")
+                )
+            );
+        }
+        return true;
+    }
+}
+```
+
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `ContainerScreens.register()` called on server → `FMLClientSetupEvent` already prevents this
+- ❌ `ContainerScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ `transferStackInSlot` not implemented → Shift-click does nothing
-- ❌ Modifying world state in `Container` constructor → too early
+- ❌ Modifying world state in `Container` constructor → too early, use `onContainerOpened()`
 - ❌ Data set from client → must be set server-side only

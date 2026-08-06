@@ -8,18 +8,18 @@
 
 ### Java 版本
 
-- **必须使用 Java 8**（Forge 1.12.2 要求；Java 9+ 不兼容）
-- `build.gradle` 中使用 `sourceCompatibility = '1.8'` 和 `targetCompatibility = '1.8'`
-- IDE（IDEA / VSCode）需配置 JDK 8
+- **必须使用 Java 8**（Forge 1.12.2 要求；Java 8 是 1.12.2 的标准版本）
+- `build.gradle` 中声明 `sourceCompatibility = 1.8` 和 `targetCompatibility = 1.8`
+- Gradle Wrapper 版本不低于 **Gradle 4.9**
+- IDE（IDEA / Eclipse）需配置相同的 JDK 版本
 
 ### Gradle 约束
 
 #### 禁止的操作
 
-- ❌ 不要手动运行 `build` 任务以外的 Gradle 命令
-- ❌ 不要修改 `build.gradle` 中的 `version` 和 `mc_version` 配置块
-- ❌ 不要混用 Fabric 的 `loom` 插件和 Forge 的 `forge` 插件
-- ❌ 不要使用 Java 9+ 语法（lambda 表达式可以，但不要用 `var`、模块系统等）
+- ❌ 不要修改 `build.gradle` 中的 `minecraft` 和 `forge` 版本号
+- ❌ 不要删除或注释 `minecraft` 和 `forge` 配置块中的任何必需行
+- ❌ 不要混用 Fabric 的 `fabric-loom` 插件和 Forge 的 `forge` 插件
 
 #### 正确的构建命令
 
@@ -33,39 +33,42 @@
 # 仅重新编译资源文件
 ./gradlew processResources
 
-# 在 IDEA 中同步项目后，使用 IDE 内置构建
+# 生成 Eclipse 项目
+./gradlew eclipse
+
+# 生成 IntelliJ 项目
+./gradlew idea
 ```
 
 ### 版本号管理
 
-- 所有版本号集中在 `gradle.properties` 管理，不硬编码在 `build.gradle`
+- 所有版本号集中在 `gradle.properties` 管理
 - `gradle.properties` 必须包含：
+  ```properties
+  minecraft_version=1.12.2
+  forge_version=14.23.5.2847
+  ```
 
-```properties
-# ---- Minecraft / Forge 版本（必须与 Forge 版本匹配）----
-mc_version=1.12.2
-forge_version=14.23.5.2847
-mcp_version=stable_22
-```
+### MCP Mappings
 
-### Mappings 约束
-
-- Forge 1.12.2 使用 **MCP SRG** 映射
-- `gradle.properties` 中的 `mcp_version` 对应 MCP 版本
-- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_70024_e` → `getHealth`
+- Forge 1.12.2 使用 **MCP SRG** 格式
+- `mappings = 'SRG'` 在 `minecraft` 块中设置
+- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 
 ### 项目目录结构（强制规范）
 
 ```
 src/main/java/
 └── {groupId}/           # 例：com.example.mod
-    ├── ExampleMod.java  # @Mod 入口类，@Init 方法
-    ├── registry/        # 注册类（@EventBusSubscriber）
+    ├── ExampleMod.java  # @Mod 入口类
+    ├── CommonProxy.java # 通用代理
+    ├── registry/        # 注册类
     ├── blocks/         # 方块类
     ├── items/          # 物品类
-    ├── entities/       # 实体类
+    ├── entities/        # 实体类
     ├── init/           # 事件订阅类
-    └── client/         # 客户端专用代码（可选）
+    └── client/         # 客户端专用代码
+        └── ClientProxy.java
 
 src/main/resources/
 ├── mcmod.info          # Forge 元数据（必需）
@@ -96,7 +99,7 @@ IF 这是已有项目
 
 IF 构建失败且报错涉及版本号
   → 检查 gradle.properties 中的版本是否匹配
-  → 典型错误：「net.minecraftforge.fml.loading.FMLError」通常是 forge_version 不兼容
+  → 典型错误：「Incompatible Java version」通常是 Java 版本不对
 ```
 
 ### Decision: 遇到 Gradle 构建报错时的处理顺序
@@ -107,11 +110,11 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 8，不兼容 Java 9+
+  → 确认使用 Java 8，不是 Java 11 或更高版本
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
-  → 确认 build.gradle 中 mc_version 和 forge_version 版本匹配
-  → Forge 版本对应关系：1.12.2 → 14.23.5.x
+  → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
+  → Forge 版本对应关系：1.12.2 → 14.23.5.xxxx
 
 IF 以上都不匹配
   → 将完整报错信息提供给用户，并指出可能的解决方向
@@ -128,21 +131,23 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
-apply plugin: 'forge'
+
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = mod_version
 group = mod_group_id
 archivesBaseName = mod_id
 
-sourceCompatibility = targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = 1.8
 
 minecraft {
-    version = "${mc_version}-${forge_version}"
+    version = minecraft_version
     runDir = "run"
-    mappings = "${mcp_channel},${mcp_version}"
+    mappings = 'SRG'
+    makeObfSourceJar = false
 }
 
 repositories {
@@ -150,25 +155,21 @@ repositories {
 }
 
 dependencies {
-    // mod 依赖
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", mc_version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':mc_version
+jar {
+    manifest {
+        attributes([
+            "Specification-Title"     : mod_id,
+            "Specification-Vendor"    : mod_authors,
+            "Specification-Version"   : "1",
+            "Implementation-Title"   : project.name,
+            "Implementation-Version" : project.jar.archiveVersion,
+            "Implementation-Vendor"  : mod_authors,
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
 }
 ```
 
@@ -179,22 +180,24 @@ tasks.withType(JavaCompile) {
 生成或修改 `mcmod.info` 时，关注以下字段：
 
 ```json
-[{
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example mod description.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["YourNameHere"],
-  "credits": "",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": ["forge@[${forge_version},)"]
-}]
+[
+  {
+    "modid": "examplemod",
+    "name": "Example Mod",
+    "description": "Example mod description.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["AuthorName"],
+    "credits": "Created by mod author",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
 ```
 
 - `modId` 禁止包含 `-`，必须全小写
-- `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
-- `dependencies` 中的 Forge 版本范围格式：`forge@[14.23.5,)`
+- `mcversion` 必须与 Minecraft 版本匹配
+- `dependencies` 可以包含其他 mod 的 modId

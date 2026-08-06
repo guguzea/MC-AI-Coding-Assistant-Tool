@@ -1,112 +1,91 @@
-# 10 — GUI / Menu / Screen 开发
+# Client-Server separation and GUI (Forge 1.17.1)
 
-> 适用版本：Forge 1.17.1
+## Physical Side vs Logical Side
 
----
+| Side | Meaning |
+|------|---------|
+| Physical CLIENT | The game process rendering the world |
+| Physical SERVER | Dedicated server process (or integrated server in single-player) |
+| Logical CLIENT | Code running on the client that can ONLY observe/render |
+| Logical SERVER | Code running on the dedicated server that manages world state |
 
-## 约束
+### Rules
 
-### 基础规范
+- **Never** call client-only code from a logical server context
+- **Never** modify server-side world data from the logical client
+- Use `@OnlyIn(Dist.CLIENT)` for client-only code
+- Use `DistExecutor` for safe side-aware execution without annotations
 
-- GUI 相关代码必须放在 `client` 包下
-- Menu（ContainerMenu）处理服务端数据
-- Screen 处理客户端渲染
-- 数据同步通过 `ContainerData` 或 `DataSlot`
-
-### 物理端约束
-
-- Menu 只在服务端创建
-- Screen 只在客户端创建
-- `MenuScreens.register()` 必须在 `FMLClientSetupEvent` 中调用
-
----
-
-## Decision Flow
-
-### Decision: 选择 GUI 类型
-
-```
-IF 需要持久数据存储（机器进度、箱子物品）
-  → 使用 AbstractContainerMenu + MenuType + Screen
-
-IF 只是显示 UI（无数据）
-  → 直接使用 Screen（无需 Menu）
-
-IF 需要物品栏槽位（多格容器）
-  → AbstractContainerMenu（slot 管理 + quickMoveStack）
-```
-
-### Decision: 选择同步方式
-
-```
-IF 简单整数/布尔值同步
-  → ContainerData / SimpleContainerData（推荐）
-
-IF 需要自定义同步逻辑
-  → DataSlot（已过时）
-
-IF 大量数据
-  → BlockEntity 数据同步 + Screen 读取
-```
-
----
-
-## 示例：MenuType 注册
+## DistExecutor
 
 ```java
-public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
-    MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
-    );
+// Run on the CLIENT only
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
 
-@SubscribeEvent
-public static void register(RegistryEvent.Register<MenuType<?>> event) {
-    MY_MENU = new MenuType<>(MyMenu::new);
-    MY_MENU.setRegistryName(new ResourceLocation(MOD_ID, "my_menu"));
-    event.getRegistry().register(MY_MENU);
+// Run on the DEDICATED_SERVER only
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+
+// Safe version with supplier (avoids classloading issues on wrong side)
+DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
+```
+
+**Note:** `@OnlyIn` exists but **there is NO reason for using this annotation directly. Use `DistExecutor` or a check on `FMLEnvironment#dist` instead.**
+
+## FMLEnvironment
+
+```java
+// Quick side check
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // client-only initialization
 }
+
+// NEVER use for game logic — only for initialization/setup
 ```
 
-## 示例：AbstractContainerMenu
+## GUI System Overview
+
+```
+Player interacts
+      │
+      ▼
+Block#use (Server) ──► creates MenuProvider ──► openContainer (Server)
+                                                       │
+                                                       ▼
+                                              ContainerMenu + Screen pair
+                                                       │
+                                               MenuScreens.register()
+                                                       │
+                                                       ▼
+                                                   Renders Screen
+```
+
+## Decision: Container/Menu type
+
+```
+IF interactable block with persistent data (machine, chest)
+  → AbstractContainerMenu + MenuType + Screen
+
+IF just a simple interaction (no data)
+  → Screen directly (without Menu)
+
+IF inventory with multiple slots
+  → AbstractContainerMenu (for slot management and quickMoveStack)
+```
+
+## MenuType Registration
 
 ```java
+// 1. Define the Menu class
 public class MyMenu extends AbstractContainerMenu {
-    private final SimpleContainerData data;
-
-    public MyMenu(int windowId, Inventory inv, Player player) {
-        super(MY_MENU.get(), windowId);
-        // 添加槽位
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(inv, col + row * 9, 8 + col * 18, 18 + row * 18));
-            }
-        }
-        // 同步数据
-        this.data = new SimpleContainerData(1);
-        this.addDataSlots(this.data);
+    public MyMenu(int windowId, Inventory inv, FriendlyByteBuf extraData) {
+        super(MY_MENU_TYPE.get(), windowId);
+        // slot layout...
     }
 
-    public SimpleContainerData getData() { return data; }
-
+    // Shift-click transfer logic
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
-        ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(slotIndex);
-        if (slot.hasItem()) {
-            ItemStack slotStack = slot.getItem();
-            stack = slotStack.copy();
-            if (slotIndex < 36) {
-                if (!this.moveItemStackTo(slotStack, 36, this.slots.size(), false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else {
-                if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            slot.setChanged();
-        }
-        return stack;
+        return ItemStack.EMPTY; // or implement slot transfer
     }
 
     @Override
@@ -114,93 +93,92 @@ public class MyMenu extends AbstractContainerMenu {
         return true;
     }
 }
+
+// 2. Register MenuType
+public static final DeferredRegister<MenuType<?>> MENUS =
+    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+
+public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
+    MENUS.register("my_menu",
+        () -> IContainerFactory.of(MyMenu::new)
+    );
 ```
 
-## 示例：方块打开 Menu
-
-```java
-public class MyBlock extends Block implements EntityBlock {
-    @Override
-    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider(
-            (id, inv, player) -> new MyMenu(id, inv, player),
-            Component.translatable("block." + MOD_ID + ".my_block")
-        );
-    }
-
-    @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos,
-            Player player, InteractionHand hand, BlockHitResult result) {
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            MenuProvider p = state.getMenuProvider(level, pos);
-            if (p != null) {
-                NetworkHooks.openScreen(serverPlayer, p);
-            }
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide);
-    }
-}
-```
-
-## 示例：Screen 注册（客户端）
+## Screen registration (CLIENT ONLY)
 
 ```java
 @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        event.enqueueWork(() ->
-            MenuScreens.register(MY_MENU.get(), MyScreen::new)
-        );
+        MenuScreens.register(MyMenuTypes.MY_MENU.get(), MyScreen::new);
     }
 }
 ```
 
-## 示例：Screen 类
+## Data Synchronization (ContainerData)
 
 ```java
-public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
-    private int progress;
+// Define synced data
+private final ContainerData dataSlots = new ContainerData() {
+    @Override public int get(int index) { return /* ... */; }
+    @Override public void set(int index, int value) { /* ... */; }
+    @Override public int getCount() { return 1; }
+};
 
-    public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.progress = 0;
+// In Menu constructor
+super(menuType, windowId, inventory, extraData, dataSlots);
+
+// Set from server
+menu.dataSlots.set(0, newValue); // Triggers sync to client automatically
+
+// Read on client in Screen
+int value = menu.dataSlots.get(0);
+```
+
+## Block → Menu binding
+
+```java
+public class MyBlock extends Block {
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult result) {
+        if (!level.isClientSide) {
+            MenuProvider menuProvider = state.getMenuProvider(level, pos);
+            if (menuProvider != null) {
+                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(),
+                    SoundSource.BLOCKS, 0.5f, 0.8f);
+                player.openMenu(menuProvider);
+            }
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
-    protected void containerTick() {
-        super.containerTick();
-        this.progress = this.menu.getData().get(0);
+    public MenuProvider getMenuProvider(BlockState state, Level level,
+            BlockPos pos) {
+        return new SimpleMenuProvider(
+            (windowId, inv, player) -> new MyMenu(windowId, inv, InvMenu.noGlobalStd()), // wrong
+            Component.literal("My Menu")
+        );
+        // Better: use IContainerFactory with the registered MenuType
+        return new MenuProvider() {
+            @Override public Component getDisplayName() {
+                return Component.literal("My Menu");
+            }
+            @Override public AbstractContainerMenu createMenu(int windowId,
+                    Inventory inv, Player player) {
+                return new MyMenu(windowId, inv, player);
+            }
+        };
     }
-
-    @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
-        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
-            0, 0, this.imageWidth, this.imageHeight);
-        // 叠加进度条
-        int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
-        graphics.fill(this.leftPos, this.topPos,
-            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
-    }
-
-    private static final ResourceLocation BACKGROUND_TEXTURE =
-        new ResourceLocation(MOD_ID, "textures/gui/container/my_gui.png");
 }
 ```
 
----
+## Common errors
 
-## 常见错误
-
-- ❌ `MenuScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
-- ❌ `quickMoveStack` 返回空导致物品丢失 → 始终实现完整的转移逻辑
-- ❌ 方块 `getMenuProvider` 返回 null → `use()` 中检查 null
-- ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `broadcastChanges()` 批量同步
-- ❌ `stillValid()` 始终返回 true → 添加距离检查 `player.distanceToSqr(...) <= 8.0`
-
----
-
-## 参考资料
-
-- 详细示例：参见 `08-client-server.mdc`
+- ❌ Opening a Menu on the server without a registered `MenuType` → crash
+- ❌ `MenuScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `quickMoveStack` not implemented → Shift-click does nothing
+- ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `broadcastChanges()`
+- ❌ `ContainerData` set from client → must be set server-side only

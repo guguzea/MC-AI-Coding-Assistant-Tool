@@ -3,6 +3,9 @@
 > 本规则集适用于 **Forge 1.19.4**，推荐使用 `DeferredRegister` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_forge_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -15,7 +18,6 @@
 | Java 版本 | **Java 17**（Forge 1.19.4 最低要求） |
 | Gradle | Gradle 8.x + ForgeGradle 6.x |
 | Mappings | **Parchment**（`1.19.4-2023.04.04`，带参数名和文档） |
-| pack_format | **9** |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -47,8 +49,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -120,7 +127,6 @@ src/main/java/
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
 5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
-6. **1.19.4 使用 MobCategory**：实体生物分类使用 `MobCategory`（1.20.7+ 重命名为 `SpawnGroup`）
 
 ---
 
@@ -135,13 +141,14 @@ src/main/java/
 
 ## 关于 1.19.4 与其他版本的差异
 
-| 功能 | 1.19.4 Forge | 1.20.1 Forge | 1.20.4+ NeoForge | 备注 |
-|------|---------------|---------------|-------------------|------|
-| 注册方式 | `DeferredRegister` | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| MobCategory | 使用 | 使用 | 使用 | 1.20.7+ 重命名为 SpawnGroup |
-| Fluid 注册 | `FluidType` | `FluidType` | 有 Breaking Changes | 1.19.4 有 FluidType |
-| pack_format | **9** | 15 | 15 | 注意差异 |
-| Mappings | Parchment | Parchment | Parchment | 推荐使用 |
-| DataGen | `DataGenerators` | 相同 | 相同 | - |
+| 功能 | 1.19.4 Forge | 1.20.1+ Forge | 备注 |
+|------|---------------|----------------|------|
+| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
+| Fluid 注册 | `FluidType` | `FluidType` | 一致 |
+| BlockEntity | 相同 | 相同 | - |
+| DataGen | `DataGenerators` | 相同 | - |
+| SpawnGroup | `MobCategory`（1.19.4） | `SpawnGroup`（1.20.7+） | 1.19.4 用 `MobCategory` |
+
+> **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，而 1.20.7+ 重命名为 `SpawnGroup`。两者功能完全相同，只是类名不同。
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

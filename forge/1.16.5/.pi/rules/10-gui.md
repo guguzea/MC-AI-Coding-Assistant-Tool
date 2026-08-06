@@ -1,0 +1,164 @@
+﻿---
+description: Client-Server separation and GUI (Forge 1.16.5)
+---
+
+# Client-Server separation and GUI (Forge 1.16.5)
+
+## Physical Side vs Logical Side
+
+| Side | Meaning |
+|------|---------|
+| Physical CLIENT | The game process rendering the world |
+| Physical SERVER | Dedicated server process (or integrated server in single-player) |
+| Logical CLIENT | Code running on the client that can ONLY observe/render |
+| Logical SERVER | Code running on the dedicated server that manages world state |
+
+### Rules
+
+- **Never** call client-only code from a logical server context
+- **Never** modify server-side world data from the logical client
+- Use `@OnlyIn(Dist.CLIENT)` for client-only code
+- Use `DistExecutor` for safe side-aware execution without annotations
+
+## DistExecutor
+
+```java
+// Run on the CLIENT only
+DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
+
+// Run on the DEDICATED_SERVER only
+DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+
+// Safe version with supplier (avoids classloading issues on wrong side)
+DistExecutor.safeCallWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
+```
+
+## FMLEnvironment
+
+```java
+// Quick side check
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // client-only initialization
+}
+
+// NEVER use for game logic — only for initialization/setup
+```
+
+## GUI System Overview
+
+```
+Player interacts
+      │
+      ▼
+Block#onBlockActivated (Server) ──► creates IContainerProvider ──► openGui (Server)
+                                                                    │
+                                                                    ▼
+                                                          AbstractContainerMenu + ContainerScreen
+                                                                    │
+                                                          MenuScreens.register()
+                                                                    │
+                                                                    ▼
+                                                                Renders Screen
+```
+
+## Decision: Container/Menu type
+
+```
+IF interactable block with persistent data (machine, chest)
+  → AbstractContainerMenu + ContainerType + ContainerScreen
+
+IF just a simple interaction (no data)
+  → IScreen / Screen directly (without Menu)
+
+IF inventory with multiple slots
+  → AbstractContainerMenu (for slot management and transferHandler)
+```
+
+## ContainerType Registration
+
+```java
+// 1. Define the Container class
+public class MyContainer extends AbstractContainerMenu {
+    public MyContainer(int windowId, PlayerInventory inv, PacketBuffer extraData) {
+        super(MyContainerTypes.MY_CONTAINER.get(), windowId);
+        // slot layout...
+    }
+
+    @Override
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        return true; // or add distance check
+    }
+}
+
+// 2. Register ContainerType
+public static final DeferredRegister<ContainerType<?>> CONTAINERS =
+    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+
+public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
+    CONTAINERS.register("my_container",
+        () -> IContainerFactory.of(MyContainer::new)
+    );
+```
+
+## Screen registration (CLIENT ONLY)
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void init(FMLClientSetupEvent event) {
+        event.enqueueWork(() ->
+            ContainerScreens.register(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
+        );
+    }
+}
+```
+
+## Data Synchronization (IIntArray / ContainerData)
+
+```java
+// Define synced data in Container
+private final IIntArray dataSlots;
+
+public MyContainer(int windowId, PlayerInventory inv, PacketBuffer extraData) {
+    this.dataSlots = new IIntArray(1);
+    this.trackIntArray(this.dataSlots);
+}
+
+// Set from server
+this.dataSlots.set(0, newValue); // Triggers sync to client automatically
+
+// Read on client in Screen
+int value = this.dataSlots.get(0);
+```
+
+## Block → Container binding
+
+```java
+public class MyBlock extends Block {
+    @Override
+    public ActionResult onBlockActivated(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isRemote) {
+            // Server side: open the container
+            NetworkHooks.openGui(
+                (ServerPlayerEntity) player,
+                new SimpleNamedContainerProvider(
+                    (id, inv, p) -> new MyContainer(id, inv, world, pos),
+                    Text.of("My Container")
+                ),
+                pos
+            );
+        }
+        return ActionResult.func_233537_a_(world.isRemote);
+    }
+}
+```
+
+## Common errors
+
+- ❌ Opening a Container on the server without a registered `ContainerType` → crash
+- ❌ `ContainerScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ Container not implementing `canInteractWith` properly → any player can access
+- ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `detectAndSendChanges()`
+- ❌ ContainerData set from client → must be set server-side only

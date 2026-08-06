@@ -44,7 +44,7 @@
   ```properties
   minecraft_version=1.14.4
   forge_version=28.2.0
-  mappings_version=20191213.143200
+  mappings_version=1.14.4
   loader_version=28.2.0
   ```
   > 注意：
@@ -67,7 +67,6 @@ src/main/java/
     ├── ExampleMod.java  # @Mod 入口类
     ├── registry/        # 注册类
     ├── blocks/         # 方块类
-    ├── tiles/          # TileEntity 类
     ├── items/          # 物品类
     ├── entities/       # 实体类
     ├── init/           # 事件订阅类

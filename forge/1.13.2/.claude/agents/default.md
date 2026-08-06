@@ -12,19 +12,59 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.13.2 |
 | 注册模式 | `@EventBusSubscriber` + `RegistryEvent.Register<T>` |
-| Java 版本 | **Java 11** |
+| Java 版本 | **Java 11**（Forge 1.13.2 最低要求） |
 | Gradle | Gradle 6.x + ForgeGradle 3.x |
-| Mappings | **MCP SRG** |
-| Modules | **YES**（25.0+） |
+| Mappings | **MCP SRG**（`1.13.2` SRG 格式） |
+| Modules | **YES**（Forge 25.0+ 引入的模块系统） |
+| 构建工具 | ForgeGradle（`build.gradle`） |
+
+---
+
+## Decision Flow：确认规则集适用性
+
+在加载本规则集之前，先确认以下条件：
+
+```
+Decision: 本规则集是否适用？
+→ IF 项目中存在 src/main/resources/META-INF/mods.toml
+    → IF mods.toml 中 modLoader = "javafml"
+        → IF build.gradle 中 minecraft = "1.13.2"
+            → 继续加载本规则集（Forge 1.13.2）
+        → ELSE → 跳转到对应版本的 forge/版本号/AGENTS.md
+    → ELSE → 不是 Forge，跳转到 fabric/ 或 neoforge/ 对应版本
+→ ELSE IF 项目中存在 src/main/resources/fabric.mod.json
+    → 跳转到 fabric/对应版本/AGENTS.md
+→ ELSE → 询问用户确认平台和版本
+```
+
+### 本规则集的 IDE 加载优先级
+
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
 ## 规则文件索引
 
+按以下顺序加载，编号越大越专精：
+
 | 编号 | 文件 | 何时阅读 |
 |------|------|----------|
 | 00 | `00-project-setup.mdc` | 首次接触项目时必读 |
-| 01 | `01-registry.mdc` | 任何涉及注册的操作必读 |
+| 01 | `01-registry.mdc` | 任何涉及注册的操作必读（**最重要**） |
 | 02 | `02-block.mdc` | 创建或修改方块时 |
 | 03 | `03-item.mdc` | 创建或修改物品时 |
 | 04 | `04-entity.mdc` | 创建或修改实体时 |
@@ -33,21 +73,72 @@
 | 07 | `07-datagen.mdc` | 生成数据包时 |
 | 08 | `08-client-server.mdc` | 涉及客户端渲染或服务端逻辑分离时 |
 | 09 | `09-anti-patterns.mdc` | 遇到错误或不确定最佳实践时 |
-| 10 | `10-gui.mdc` | GUI、Container 开发时 |
+| 10 | `10-gui.mdc` | GUI、Menu、Screen 开发时 |
 
 ---
 
-## 常见陷阱
+## Mod ID 规范
 
-1. **使用 `@EventBusSubscriber` 注册**：`RegistryEvent.Register<T>` 是 Forge 1.13.2 的标准注册方式
-2. **DeferredRegister 在 1.13.2 中不可用**
-3. **使用 `setRegistryName` 设置注册名**
-4. **Java 11**（不支持 Java 17）
+本规则集强制约束：
+
+- **必须**与 `mods.toml` 中的 `modId` 完全一致
+- 全部**小写**
+- 仅使用字母和下划线（`[a-z0-9_]`）
+- 禁止使用 `-`，否则 Forge 会拒绝加载
+- 推荐格式：`yourmodid` 或 `your_mod_id`
+
+---
+
+## 目录结构约定
+
+Forge 1.13.2 标准项目的包结构：
+
+```
+src/main/java/
+└── com/example/mod/
+    ├── ExampleMod.java        # @Mod 入口类
+    ├── registry/              # 注册相关
+    │   ├── ModBlocks.java
+    │   ├── ModItems.java
+    │   └── ModEntities.java
+    ├── blocks/                 # 方块
+    │   └── MyBlock.java
+    ├── items/                  # 物品
+    │   └── MyItem.java
+    ├── entities/               # 实体
+    │   └── MyEntity.java
+    └── init/                   # 事件订阅
+        └── ModEvents.java
+```
+
+---
+
+## 常见陷阱（必读）
+
+1. **使用 `@EventBusSubscriber` 注册**：`@EventBusSubscriber` + `RegistryEvent.Register<T>` 是 Forge 1.13.2 的标准注册方式
+2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
+3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
+4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
+5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
+6. **DeferredRegister 在 1.13.2 中不可用**：此版本使用 `RegistryEvent.Register<T>` 而非 DeferredRegister
 
 ---
 
 ## 扩展新内容时的流程
 
 1. 先读 `01-registry.mdc` 确认注册方式
-2. 再读对应主题的规则文件
+2. 再读对应主题的规则文件（如 `02-block.mdc`）
 3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
+
+---
+
+## 关于 1.13.2 与其他版本的差异
+
+| 功能 | 1.13.2 Forge | 1.14+ Forge | 备注 |
+|------|---------------|--------------|------|
+| 注册方式 | `@EventBusSubscriber` + `RegistryEvent` | DeferredRegister（推荐）或 RegistryEvent | 1.14+ 推荐使用 DeferredRegister |
+| Modules | YES（25.0+） | YES | 模块系统引入 |
+| Java 版本 | Java 11 | Java 17（1.20+） | 旧版本需要 Java 11 |
+| Gradle | Gradle 6.x | Gradle 8.x（1.20+） | 旧版本 Gradle |
+
+如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

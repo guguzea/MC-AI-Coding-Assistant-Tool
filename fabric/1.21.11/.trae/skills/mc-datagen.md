@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-datagen
 description: Fabric 数据生成器。DataGeneratorInitializer、fabric-datagen-api。触发词：DataGen、DataGenerator、ModelProvider、RecipeProvider
 platform: fabric
@@ -14,7 +14,7 @@ mappings: yarn
 ```groovy
 // build.gradle 添加依赖
 dependencies {
-    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:4.4.0+1.21"
+    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:0.200.1+build.3"
 }
 ```
 

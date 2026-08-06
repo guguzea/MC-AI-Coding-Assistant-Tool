@@ -146,7 +146,7 @@ public void openScreen(PlayerEntity player) {
 ## Fabric Screen API（fabric-screen-api-v0）
 
 ```groovy
-modImplementation "net.fabricmc:fabric-api:${project.fabric_api_version}"
+modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:9.1.1+1.21.11"
 ```
 
 ```java

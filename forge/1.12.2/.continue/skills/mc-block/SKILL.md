@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-block
-description: Forge 1.12.2 Block skill (Block.Properties, TileEntity, IBlockState, no BlockBehaviour.Properties)
+description: Minecraft Forge 方块开发。创建方块、TileEntity、方块状态属性、实体方块接口。触发词：方块、Block、TierEntity、IBlockState、BlockState
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -12,6 +12,7 @@ mappings: mcp
 ## 快速开始
 
 ```java
+// 方块类
 public class MyBlock extends Block {
     public MyBlock() {
         super(Block.Properties.create(Material.ROCK)
@@ -21,6 +22,7 @@ public class MyBlock extends Block {
     }
 }
 
+// 注册（参见 mc-registry Skill）
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModBlocks {
     @SubscribeEvent
@@ -42,18 +44,18 @@ IF 只是静态显示（无状态）
   → 普通方块
 
 IF 需要流体
-  → 流体（Fluid）→ 参考 Fluid 系统
+  → 流体（Fluid）→ 参考 `02-block.mdc`
 ```
 
 ## Block.Properties 常用配置
 
 ```java
 Block.Properties.create(Material.WOOD)
-    .hardnessAndResistance(1.5f, 6.0f)
-    .harvestLevel("pickaxe", 0)
-    .harvestTool("pickaxe")
-    .lightValue(0)
-    .sound(SoundType.WOOD)
+    .hardnessAndResistance(1.5f, 6.0f)    // 硬度和抗爆性
+    .harvestLevel("pickaxe", 0)            // 挖掘等级
+    .harvestTool("pickaxe")                // 工具类型
+    .lightValue(0)                          // 发光值
+    .sound(SoundType.WOOD)                  // 音效
 ```
 
 ## TileEntity 方块
@@ -61,7 +63,9 @@ Block.Properties.create(Material.WOOD)
 ```java
 public class MyTileBlock extends Block {
     @Override
-    public boolean hasTileEntity(IBlockState state) { return true; }
+    public boolean hasTileEntity(IBlockState state) {
+        return true;
+    }
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -75,7 +79,9 @@ public class MyTileEntity extends TileEntity implements ITickable {
     public MyTileEntity() { super(); }
 
     @Override
-    public void update() { /* 每 tick 执行 */ }
+    public void update() {
+        // 每 tick 执行
+    }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -104,15 +110,17 @@ public class MyTileEntity extends TileEntity implements ITickable {
 
 ## 常见错误
 
-- ❌ `createTileEntity()` 返回 null
+- ❌ `createTileEntity()` 返回 null（必须返回新实例）
 - ❌ 在 TileEntity 构造函数中访问 world
 - ❌ 忘记注册 TileEntity
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- IBlockState (not BlockState)
-- TileEntity (not BlockEntity)
-- NBTTagCompound (not CompoundTag)
-- @SideOnly(Side.CLIENT)
-- world.isRemote
-- pack_format = 4
+- 详细决策流和示例：参见 `02-block.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | 方块注册后方块实体类型需要引用方块类型 |
+| `mc-capability` | TileEntity 可附加 Capability 存储数据 |

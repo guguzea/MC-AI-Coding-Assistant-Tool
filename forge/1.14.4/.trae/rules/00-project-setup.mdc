@@ -8,9 +8,9 @@
 
 ### Java 版本
 
-- **必须使用 Java 11**（Forge 1.14.4 要求；更高版本会不兼容）
+- **必须使用 Java 11**（Forge 1.14.4 要求；Java 8 已被废弃，Java 17 在 1.18+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_11` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(11)`
-- Gradle Wrapper 版本不低于 **Gradle 7.x**（推荐 7.6）
+- Gradle Wrapper 版本不低于 **Gradle 7.6**（Forge 1.14.4 使用 ForgeGradle 3.x）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -43,9 +43,9 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.14.4
-  forge_version=26.0.63
-  mappings_version=snapshot_20190719
-  loader_version=26.0.63
+  forge_version=28.2.0
+  mappings_version=1.14.4
+  loader_version=28.2.0
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -54,10 +54,10 @@
 
 ### Mappings 约束
 
-- Forge 1.14.4 使用 **MCP**（但使用 SRG 名称更常见）
+- Forge 1.14.4 默认使用 **MCP**
 - `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
 - **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
-- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_175198_a_` → `getBlockState`
+- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 
 ### 项目目录结构（强制规范）
 
@@ -67,17 +67,17 @@ src/main/java/
     ├── ExampleMod.java  # @Mod 入口类
     ├── registry/        # 注册类
     ├── blocks/         # 方块类
-    ├── items/         # 物品类
-    ├── entities/      # 实体类
-    ├── init/          # 事件订阅类
-    └── client/        # 客户端专用代码（可选）
+    ├── items/          # 物品类
+    ├── entities/       # 实体类
+    ├── init/           # 事件订阅类
+    └── client/         # 客户端专用代码（可选）
 
 src/main/resources/
 ├── META-INF/
-│   └── mods.toml      # Forge 元数据（必需）
-├── pack.mcmeta        # 资源包标识（必需）
+│   └── mods.toml       # Forge 元数据（必需）
+├── pack.mcmeta         # 资源包标识（必需）
 └── assets/
-    └── {modid}/       # 资源文件
+    └── {modid}/        # 资源文件
         ├── lang/
         ├── models/
         ├── blockstates/
@@ -116,11 +116,11 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 11，不兼容 Java 8（太低）或 Java 17（太高）
+  → 确认使用 Java 11，不兼容 Java 8 或 Java 17（仅 1.18+ 才需要 17）
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
-  → Forge 版本对应关系：1.14.4 → 26.x.x
+  → Forge 版本对应关系：1.14.4 → 28.x.x
 
 IF 报错包含 "No resource bundling found"
   → 这是正常的（非客户端打包时），可忽略
@@ -138,7 +138,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[3.1.2,3.2)'
+    id 'net.minecraftforge.gradle' version '[3.0.0,3.2)'
 }
 
 version = mod_version
@@ -212,7 +212,7 @@ tasks.named('jar').configure {
             'Specification-Version'   : '1',
             'Implementation-Title'    : project.name,
             'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'   : mod_authors,
+            'Implementation-Vendor'  : mod_authors,
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -228,19 +228,19 @@ tasks.named('jar').configure {
 ```toml
 [[mods]]
 modId = "examplemod"          # 必需：必须小写，无横杠
-version = "${mod_version}"     # 必需：建议使用 gradle 占位符
-displayName = "Example Mod"    # 必需
-description = '''多行描述'''   # 必需
+version = "${mod_version}"    # 必需：建议使用 gradle 占位符
+displayName = "Example Mod"   # 必需
+description = '''多行描述'''  # 必需
 
 # 可选字段
-authors = "YourNameHere"       # 可选，作者列表
+authors = "YourNameHere"      # 可选，作者列表
 license = "MIT"               # 可选，许可证
 
 # dependencies 块（可选但推荐）
 [[dependencies.examplemod]]
 modId = "forge"               # 必需
 mandatory = true              # 必需
-versionRange = "[26,)"         # 必需：Forge 版本范围
+versionRange = "[28,)"        # 必需：Forge 版本范围
 ordering = "NONE"             # 可选：NONE / BEFORE / AFTER
 side = "BOTH"                # 可选：BOTH / CLIENT / SERVER
 
@@ -255,4 +255,4 @@ side = "BOTH"
 - `modId` 禁止包含 `-`，必须全小写
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
-- `loaderVersion` 的格式：`"[26,)"` 表示 Forge 26 及以上
+- `loaderVersion` 的格式：`"[28,)"` 表示 Forge 28 及以上

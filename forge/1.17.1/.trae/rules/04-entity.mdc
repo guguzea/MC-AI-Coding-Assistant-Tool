@@ -39,8 +39,8 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 ### 渲染器规范
 
 - 渲染器必须放在 `client` 包下
-- 必须通过 `EntityRenderersEvent.RegisterRenderers` 注册
-- 必须在 `FMLClientSetupEvent` 中订阅渲染器注册
+- 必须通过 `EntityRenderersEvent.RegisterRenderers` 注册（不是直接调用 `EntityRenderers.register()`）
+- 必须在 `FMLClientSetupEvent` 中订阅 `EntityRenderersEvent.RegisterRenderers`（不是 `FMLCommonSetupEvent`）
 - 纹理文件路径：`textures/entity/{entity_path}/{name}.png`
 
 ---
@@ -93,6 +93,21 @@ IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
   → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
 ```
 
+### Decision: 渲染器选择
+
+```
+IF 基础实体（无自定义模型）
+  → 使用 Layers 或直接注册空的 EntityRenderer
+
+IF 覆盖默认 Steve 模型
+  → 覆盖 PlayerRenderer
+
+IF 自定义模型（Biped、Quadruped 等）
+  → 继承对应基类：LivingRenderer<Entity, Model>
+  → 在 BakedModel 中实现自定义模型
+  → 需要提供 .json 模型文件和材质贴图
+```
+
 ---
 
 ## 示例：定义实体属性
@@ -100,17 +115,18 @@ IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
 ```java
 // init/ModAttributes.java
 public class ModAttributes {
+    // 推荐：使用 DeferredRegister（需 modEventBus）
     public static final DeferredRegister<Attribute> ATTRIBUTES =
         DeferredRegister.create(ForgeRegistries.ATTRIBUTES, ExampleMod.MOD_ID);
 
     public static final RegistryObject<Attribute> EXAMPLE_HEALTH =
         ATTRIBUTES.register("example.health",
-            () -> new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0).setSyncable(true));
+            () -> new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0));
 
     public static final RegistryObject<Attribute> EXAMPLE_DAMAGE =
         ATTRIBUTES.register("example.damage",
             () -> ((RangedAttribute) new RangedAttribute("attribute.examplemod.damage", 2.0, 0.0, 1024.0))
-                .setSyncable(true));
+                .setSyncable(true));;
 
     public static void register(IEventBus eventBus) {
         ATTRIBUTES.register(eventBus);
@@ -126,6 +142,8 @@ public ExampleMod() {
     // ... 其他注册
 }
 ```
+
+> 注意：`ForgeRegistries.ATTRIBUTES` 是注册表的持有类，`DeferredRegister.create()` 需要传入 `IRegistry<Attribute>`。属性注册在 mod 构造函数中通过 modEventBus 完成，而不是在 `FMLCommonSetupEvent` 中。
 
 ## 示例：实体类
 
@@ -149,6 +167,11 @@ public class MyEntity extends LivingEntity {
 
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
+
+    @Override
+    protected void onChangedPotionHolder(MobEffectInstance effectInstance) {
+        // 药水效果变化时
+    }
 }
 ```
 
@@ -157,11 +180,11 @@ public class MyEntity extends LivingEntity {
 ```java
 // registry/ModEntities.java
 public class ModEntities {
-    public static final DeferredRegister<EntityType<?>> ENTITIES =
-        DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
+        DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
-        ENTITIES.register("my_entity", () ->
+        ENTITY_TYPES.register("my_entity", () ->
             EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
                 .sized(0.6f, 1.8f)
                 .clientTrackingRange(8)
@@ -171,7 +194,7 @@ public class ModEntities {
         );
 
     public static void register(IEventBus eventBus) {
-        ENTITIES.register(eventBus);
+        ENTITY_TYPES.register(eventBus);
     }
 }
 ```
@@ -184,6 +207,16 @@ public ExampleMod() {
 }
 ```
 
+```java
+// ❌ 错误示例：setRegistryName + 直接 new（已过时）
+event.getRegistry().register(
+    EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+        ...
+        .build("my_mod:my_entity")
+);
+type.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
+```
+
 ## 示例：客户端渲染器注册
 
 ```java
@@ -193,6 +226,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         // 渲染器通过 EntityRenderersEvent.RegisterRenderers 注册
+        // 参见 ClientSetup 中的 subscribe
     }
 
     @SubscribeEvent
@@ -220,6 +254,7 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 ```
 
 > 注意：
-> 1. 渲染器注册通过 `EntityRenderersEvent.RegisterRenderers` 事件
+> 1. `EntityRenderers` 在 Forge 1.17.1 中通过 `EntityRenderersEvent.RegisterRenderers` 事件注册（不是 `ClientSetup` 中直接调用）
 > 2. `ItemInHandLayer` 需要 `EntityRendererProvider.Context` 中的 `ItemRenderer` 和 `BlockRenderer`
-> 3. 纹理文件路径：`textures/entity/my_entity.png`
+> 3. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）
+> 4. `EntityModelLayer` 用于定义层标识，通过 `EntityRenderersEvent.RegisterLayerDefinitions` 注册，渲染器中用 `context.bakeLayer()` 获取

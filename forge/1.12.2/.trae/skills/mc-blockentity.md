@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-blockentity
-description: Forge 1.12.2 BlockEntity/TileEntity skill (ITickable, NBTTagCompound)
+description: Minecraft Forge TileEntity 开发。TileEntity 注册、Ticker、NBT 序列化。触发词：TileEntity、TileEntityType、ITickable、writeToNBT、readFromNBT
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -12,6 +12,7 @@ mappings: mcp
 ## 快速开始
 
 ```java
+// 注册 TileEntity
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModTileEntities {
     @SubscribeEvent
@@ -80,11 +81,14 @@ public class MyTileBlock extends Block {
 - ❌ 在构造函数中访问 world
 - ❌ 忘记注册 TileEntity
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- TileEntity (not BlockEntity)
-- ITickable (for per-tick logic)
-- NBTTagCompound (not CompoundTag)
-- writeToNBT/readFromNBT (not save/load)
-- TileEntity.register() (not Registry)
-- world.isRemote (not level.isClientSide)
+- 详细示例：参见 `02-block.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-gui` | Container 与 TileEntity 联动 |
+| `mc-networking` | TileEntity 数据同步 |
+| `mc-registry` | TileEntity 通过 RegistryEvent 注册 |

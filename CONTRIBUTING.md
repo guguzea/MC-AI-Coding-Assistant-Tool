@@ -57,6 +57,15 @@ cd <平台>/<版本>
 ./sync-skills.ps1
 ```
 
+或在仓库根目录批量同步全部版本（统一 8 IDE）：
+
+```powershell
+.\scripts\sync-skills.ps1 -All
+.\scripts\sync-skills.ps1 -TargetDir .\forge\1.19.4
+```
+
+各版本下的 `sync-skills.ps1` 是对 `scripts/sync-skills.ps1` 的薄包装；逻辑以仓库根脚本为准。
+
 ### 步骤 4：数据与总览
 
 1. 在 `data/` 下按约定建立 `forge_<ver>/`、`fabric_<ver>/` 或 `neoforge_<ver>/`

@@ -10,18 +10,18 @@
 
 - 基础物品类继承 `Item`（`net.minecraft.world.item.Item`）
 - 禁止重写已废弃的 `onCreated()` 等方法
-- 物品必须通过 `RegistryEvent.Register<Item>` 注册
+- 物品必须通过 `DeferredRegister<Item>` 注册
 
 ### Item.Properties 配置
 
 ```java
 new Item.Properties()
     .stacksTo(int maxStackSize)                 // 默认 64
-    .durability(int maxDamage)                  // 有耐久物品
+    .durability(int maxDamage)                   // 有耐久物品
     .craftRemainder(Item copyFrom)              // 消耗后保留物品
     .fireResistant()                            // 防火（鞘翅等）
     .rarity(Rarity.RARE)                        // 稀有度（COMMON, UNCOMMON, RARE, EPIC）
-    .tab(CreativeModeTab tab)                   // 创造模式标签
+    .tab(CreativeModeTab)                       // 创意模式标签（1.17.1 可用）
 ```
 
 ### ItemTier（工具材料）规范
@@ -58,7 +58,7 @@ new Item.Properties()
 
 - ItemBlock 关联方块时，registry name 必须与方块完全相同
 - 工具/盔甲使用 `Tier` 时，需要在构造中传入 `.defaultDurability(durability)`
-- **物品的创造模式标签通过 `Item.Properties.tab()` 设置**
+- **物品的创意模式标签通过 `BuildCreativeModeTabContentsEvent` 注册**（在 Mod 构造函数的 modEventBus 上），或通过 `.tab()` 直接写在 Properties 里
 
 ---
 
@@ -119,7 +119,7 @@ IF 复用现有材料
 
 ```
 IF 建筑方块 → CreativeModeTab.BUILDING_BLOCKS
-IF 自然方块 → CreativeModeTab.NATURAL_BLOCKS
+IF 自然方块 → CreativeModeTab.DECORATIONS
 IF 工具 → CreativeModeTab.TOOLS
 IF 武器 → CreativeModeTab.COMBAT
 IF 食物 → CreativeModeTab.FOOD_AND_DRINK
@@ -133,9 +133,20 @@ IF 搜索 → CreativeModeTab.SEARCH（不推荐）
 注册方式（示例）：
 
 ```java
-// 在 Item.Properties 中设置
-new Item.Properties()
-    .tab(CreativeModeTab.TAB_COMBAT)
+// 方式 1：通过 .tab() 直接在 Properties 中指定
+new Item.Properties().tab(CreativeModeTab.TAB_MISC)
+
+// 方式 2：通过 BuildCreativeModeTabContentsEvent 注册
+// 在 Mod 构造函数中：
+FMLJavaModLoadingContext.get().getModEventBus().addListener(MyMod::onBuildContents);
+
+// 事件处理：
+public static void onBuildContents(BuildCreativeModeTabContentsEvent event) {
+    if (event.getTabKey() == CreativeModeTab.TAB_MISC) {
+        event.accept(MY_BLOCK_ITEM);        // BlockItem 接受 ItemLike
+        event.accept(MY_ITEM);             // 普通物品
+    }
+}
 ```
 
 ---
@@ -170,7 +181,7 @@ public enum MyTier implements Tier {
     private final int level;
     private final int uses;
     private final float speed;
-    private final float damage;         // 工具的基础伤害加成（不含类型加成）
+    private final float damage;
     private final int enchantmentValue;
     private final Supplier<Ingredient> repairIngredient;
 
@@ -195,14 +206,15 @@ public enum MyTier implements Tier {
 ```java
 // 注册剑：4 参数构造函数
 // Tier.getAttackDamageBonus() + 3.0f（剑的类型加成）= 总攻击伤害
-// 例如：damage=3.0f → 总攻击伤害 = 3.0f + 3.0f = 6.0f
-// 注意：attackDamageModifier 参数类型是 int，不是 float
+// 注意：attackDamageModifier 参数类型是 float
 public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
-    () -> new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f, new Item.Properties())
+    () -> new SwordItem(MyTier.MY_MATERIAL, 3.0f, 1.6f, new Item.Properties()
+        .tab(CreativeModeTab.TAB_COMBAT)
+        .durability(1561)
+    )
 );
-//                           ^^^ int 参数：基础攻击加成
+//                           ^^^ float 参数：基础攻击加成
 //                                    ^^^^ float 参数：攻击速度
-// 创造模式标签通过 .tab(CreativeModeTab.TAB_COMBAT) 设置
 ```
 
 ## 示例：盔甲
@@ -250,7 +262,6 @@ public class MyFoodItem extends Item {
         return stack;
     }
 }
-// 创造模式标签通过 .tab(CreativeModeTab.TAB_FOOD_AND_DRINK) 设置
 ```
 
 > 注：`effect()` 中的 `MobEffectInstance` 第一个参数是 `MobEffect`（如 `MobEffects.JUMP`），不是 `int` ID。

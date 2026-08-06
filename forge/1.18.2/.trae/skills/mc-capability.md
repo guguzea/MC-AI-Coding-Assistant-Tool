@@ -1,29 +1,118 @@
----
+﻿---
 name: mc-capability
-description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、getCapability。触发词：Capability、IStorage、AttachCapabilitiesEvent、LazyOptional
+description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、IStorageSerializable、getCapability 存储和查询模式。触发词：Capability、IStorage、IStorageSerializable、AttachCapabilitiesEvent、LazyOptional、getCapability
 platform: forge
 version: "1.18.2"
+dependencies: []
+mappings: parchment
 ---
 
 # Capability 系统（Forge 1.18.2）
 
-## 注册 Capability
+## 快速开始
 
 ```java
-@SubscribeEvent
-public static void registerCaps(RegisterCapabilitiesEvent event) {
-    event.register(IExampleData.class);
+// 1. 定义接口
+public interface IExampleData {
+    int getValue();
+    void setValue(int value);
+}
+
+// 2. 实现 IStorageSerializable
+public class ExampleData implements IExampleData, IStorageSerializable<CompoundTag> {
+    private int value = 0;
+
+    @Override
+    public int getValue() { return value; }
+    @Override
+    public void setValue(int v) { this.value = v; }
+
+    @Override
+    public CompoundTag serializeNBT(CompoundTag nbt) {
+        nbt.putInt("value", value);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        this.value = nbt.getInt("value");
+    }
 }
 ```
 
-## 查询 Capability
+## 注册 Capability
 
 ```java
-player.getCapability(Capabilities.ITEM_HANDLER).ifPresent(handler -> {
-    // 使用 handler
-});
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class CapabilityEvents {
+    @SubscribeEvent
+    public static void registerCaps(RegisterCapabilitiesEvent event) {
+        event.register(IExampleData.class);
+    }
+
+    // 附加到玩家
+    @SubscribeEvent
+    public static void attachToPlayer(AttachCapabilitiesEvent<Entity> event) {
+        if (!(event.getObject() instanceof Player)) return;
+        event.addCapability(
+            new ResourceLocation(MOD_ID, "example_data"),
+            new ICapabilityProvider<>() {
+                private final ExampleData instance = new ExampleData();
+                private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
+
+                @Override
+                public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                    return cap == ModCapabilities.EXAMPLE_DATA ? opt.cast() : LazyOptional.empty();
+                }
+            }
+        );
+    }
+}
 ```
+
+## 查询 Capability（必须用 LazyOptional）
+
+```java
+// ✅ 推荐：ifPresent 模式
+player.getCapability(ModCapabilities.EXAMPLE_DATA).ifPresent(data -> {
+    data.setValue(10);
+});
+
+// ✅ 安全读取（带默认值）
+int val = player.getCapability(ModCapabilities.EXAMPLE_DATA)
+    .map(IExampleData::getValue)
+    .orElse(0);
+
+// ❌ 错误：直接调用（cap 可能不存在）
+int val = player.getCapability(CAP).get().getValue(); // NPE!
+```
+
+## 内置 Capability
+
+```java
+// ItemHandler（物品栏）
+player.getCapability(Capabilities.ITEM_HANDLER)
+// FluidHandler（流体栏）
+player.getCapability(Capabilities.FLUID_HANDLER)
+// EnergyStorage（能量）
+player.getCapability(Capabilities.ENERGY)
+```
+
+## 常见错误
+
+- ❌ `getCapability()` 返回 null（永远返回 `LazyOptional`，用 `ifPresent`）
+- ❌ 在 `AttachCapabilitiesEvent` 中修改数据（只注册 Provider）
+- ❌ `LazyOptional` 泄漏：`invalidateCaps()` 中必须调用 `opt.invalidate()`
+- ❌ 自定义 Capability 未注册：`event.register(MyCapability.class)`
 
 ## 参考资料
 
-参见 `05-events.mdc`
+- Forge 官方文档：https://docs.minecraftforge.net/en/1.18.2/
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | Capability 附加到注册后的实体或方块实体 |
+| `mc-item` | ItemStack 可通过 initCapabilities 附加 Capability |
+| `mc-networking` | Capability 数据可通过数据包同步到客户端 |

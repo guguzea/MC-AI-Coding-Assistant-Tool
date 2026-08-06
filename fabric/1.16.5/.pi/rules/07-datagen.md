@@ -1,0 +1,113 @@
+﻿---
+description: 07 — 数据生成器
+---
+
+# 07 — 数据生成器
+
+> 适用版本：Fabric 1.16.5
+
+---
+
+## 约束
+
+### 核心原则
+
+- Fabric 1.16.5 **没有**内置的 DataGenerator 框架（如 1.17+ 的 `fabric-datagen-api`）
+- 数据生成主要通过**手动编写 JSON 文件**到 `src/main/resources/data/`
+- 标签（Tags）通过 `FabricTagRegistry` 或手动 JSON 生成
+
+---
+
+## Decision Flow
+
+### Decision: 选择数据生成方式
+
+```
+IF 生成物品/方块模型 JSON
+  → 手动创建 JSON 文件到 assets/{modid}/models/
+
+IF 生成语言文件
+  → 手动创建 JSON 文件到 assets/{modid}/lang/
+
+IF 生成配方/战利品表/进度
+  → 手动创建 JSON 文件到 data/{modid}/
+
+IF 生成标签（tags）
+  → 使用 FabricTagRegistry 或手动创建 JSON
+```
+
+---
+
+## 手动生成数据文件
+
+### 目录结构
+
+```
+src/main/resources/
+├── data/{modid}/
+│   ├── advancements/{id}.json
+│   ├── loot_tables/{id}.json
+│   ├── recipes/{id}.json
+│   └── tags/
+│       ├── block/{id}.json
+│       └── item/{id}.json
+├── assets/{modid}/
+│   ├── models/
+│   │   ├── item/{id}.json
+│   │   └── block/{id}.json
+│   └── lang/en_us.json
+└── pack.mcmeta
+```
+
+### 物品模型
+
+```json
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "examplemod:item/my_item"
+  }
+}
+```
+
+### 方块模型
+
+```json
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "examplemod:block/my_block"
+  }
+}
+```
+
+### 语言文件
+
+```json
+{
+  "item.examplemod.my_item": "My Item",
+  "block.examplemod.my_block": "My Block"
+}
+```
+
+---
+
+## 使用 TagRegistry（Fabric API）
+
+```java
+public class MyTags {
+    public static final Tag.Identified<Block> MY_BLOCK_TAG =
+        TagRegistry.block(new Identifier(MOD_ID, "my_block_tag"));
+
+    public static final Tag.Identified<Item> MY_ITEM_TAG =
+        TagRegistry.item(new Identifier(MOD_ID, "my_item_tag"));
+}
+```
+
+---
+
+## 常见错误
+
+- ❌ 期望有 1.17+ 风格的 DataGenerator — 1.16.5 需要手动生成 JSON
+- ❌ 忘记 `pack.mcmeta` — Minecraft 无法识别资源包
+- ❌ 语言文件放在错误位置 — 应在 `assets/{modid}/lang/`

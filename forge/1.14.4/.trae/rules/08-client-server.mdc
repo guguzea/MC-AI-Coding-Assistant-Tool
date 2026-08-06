@@ -27,13 +27,13 @@
 src/main/java/
 ├── MyMod.java                    # 两端都加载
 ├── registry/
-│   └── ModBlocks.java          # 两端都加载
+│   └── ModBlocks.java           # 两端都加载
 ├── client/
-│   └── ClientSetup.java        # 仅客户端（@Mod.EventBusSubscriber(bus=MOD, value=Dist.CLIENT)）
-│       └── rendering/
-│           └── MyBlockRenderer.java # 仅客户端
+│   ├── ClientSetup.java          # 仅客户端（@Mod.EventBusSubscriber(value=Dist.CLIENT)）
+│   └── rendering/
+│       └── MyBlockRenderer.java # 仅客户端
 └── init/
-    └── ModEvents.java          # 两端都加载
+    └── ModEvents.java           # 两端都加载
 ```
 
 - **禁止**将 `@OnlyIn(Dist.CLIENT)` 的类放在 `client` 包以外
@@ -56,7 +56,7 @@ IF 代码涉及渲染（Model、BakedQuad、RenderType）
   → 放在 client/ 包下
   → 使用 @OnlyIn(Dist.CLIENT)
 
-IF 代码涉及输入（KeyBinding、InputHandler）
+IF 代码涉及输入（KeyBinding、MouseInput、KeyboardInput）
   → 客户端
   → 放在 client/ 包下
   → 使用 @OnlyIn(Dist.CLIENT)
@@ -93,12 +93,12 @@ IF 只需在客户端显示额外信息（如 GUI 覆盖层）
   → 检查 OverlayMessage 来判断状态
 
 IF 需要在客户端渲染自定义模型
-  → 继承 BlockModel / ItemModel
+  → 继承 Model 或 ItemModel
   → 在 ClientSetup 中注册
 
 IF 需要服务端数据同步到客户端
   → 使用 EntityDataManager（实体数据）
-  → 使用 TileEntity.syncable（TileEntity 数据）
+  → 使用 TileEntity.syncable（方块数据）
   → 使用 SimpleNetworkWrapper（自定义数据）
 
 IF 需要客户端触发服务端逻辑
@@ -115,11 +115,11 @@ IF 需要客户端触发服务端逻辑
 
 服务端推送 → 客户端更新：
   EntityDataManager（实体属性）
-  TileEntity.syncable()（TileEntity 数据）
+  TileEntity.syncable()（方块数据）
   SimpleNetworkWrapper 消息（自定义数据）
 
 客户端查询 → 服务端响应：
-  SimpleNetworkWrapper（Request-Reply 模式）
+  SimpleNetworkWrapper（双向消息）
 ```
 
 ---
@@ -128,18 +128,14 @@ IF 需要客户端触发服务端逻辑
 
 ```java
 // client/ClientSetup.java
-@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // FMLClientSetupEvent 仅用于客户端特有初始化
-        // KeyBinding 注册应在 FMLClientSetupEvent 中完成
-    }
-
-    @SubscribeEvent
-    public static void onRegisterRenderers(RenderRegistry event) {
-        // 注册实体渲染器
+        // KeyBinding 注册
+        ClientRegistry.registerKeyBinding(EXAMPLE_KEY);
+        
+        // 实体渲染器注册
         RenderingRegistry.registerEntityRenderingHandler(
             ModEntities.MY_ENTITY.get(),
             MyEntityRenderer::new
@@ -152,7 +148,7 @@ public class ClientSetup {
 
 ```java
 // client/input/ModKeyBindings.java
-// KeyBinding 定义（静态字段）
+// KeyBinding 定义（静态字段，在 ClientRegistry 中注册）
 public static final KeyBinding TEST_KEY = new KeyBinding(
     "key.examplemod.test",
     KeyConflictContext.IN_GAME,
@@ -163,19 +159,18 @@ public static final KeyBinding TEST_KEY = new KeyBinding(
 
 @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ModKeyBindings {
+    // 注册 KeyMapping
     @SubscribeEvent
-    public static void init(RegistryEvent.Register<KeyBinding> event) {
-        // 注册 KeyBinding
-        event.getRegistry().register(TEST_KEY);
+    public static void onSetup(FMLClientSetupEvent event) {
+        ClientRegistry.registerKeyBinding(TEST_KEY);
     }
 
     // 检测按键
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            while (TEST_KEY.isPressed()) {
+            if (TEST_KEY.isPressed()) {
                 // 按键按下时的逻辑
-                // 发送到服务端用网络包
             }
         }
     }
@@ -187,12 +182,11 @@ public class ModKeyBindings {
 ```java
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
-    private static final DataParameter<Integer> DATA_CUSTOM =
+    private static final EntityDataManager<Integer> DATA_CUSTOM =
         EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
 
     @Override
     protected void registerData() {
-        super.registerData();
         this.dataManager.register(DATA_CUSTOM, 0);
     }
 
@@ -233,26 +227,31 @@ public class MyTileEntity extends TileEntity {
     }
 
     @Override
-    public NBTTagCompound getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        write(nbt);
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = super.getUpdateTag();
+        nbt.putInteger("syncData", syncData);
         return nbt;
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        read(pkt.getNbtCompound());
+    public void handleUpdateTag(NBTTagCompound nbt) {
+        super.handleUpdateTag(nbt);
+        this.syncData = nbt.getInteger("syncData");
     }
 
     // 在服务端逻辑中修改数据后，同步到客户端
-    public void modifyData(int newValue) {
+    public void modifyData(int newValue, World world, BlockPos pos) {
         this.syncData = newValue;
         this.markDirty();
-        // 通知客户端该方块数据已更新
-        this.world.notifyBlockUpdate(this.getPos(), this.getBlockState(), this.getBlockState(), 3);
+        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), 3);
     }
 }
 ```
+
+> 注意：
+> - 1.14.4 的 TileEntity 同步使用 `getUpdateTag()` / `handleUpdateTag()`（无需手动实现 `getUpdatePacket`）
+> - `markDirty()` 标记数据已修改
+> - `world.notifyBlockUpdate()` 将更新通知发送给客户端
 
 ## 示例：运行时物理端检测
 

@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-registry
-description: Forge 1.12.2 Registry skill (RegistryEvent, @EventBusSubscriber, no DeferredRegister)
+description: Minecraft Forge 注册系统。注册方块、物品、实体、方块实体等。触发词：注册、register、RegistryEvent、@EventBusSubscriber、ForgeRegistries、@Mod
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -14,8 +14,10 @@ mappings: mcp
 **Forge 1.12.2 必须使用 `@EventBusSubscriber` + `RegistryEvent`：**
 
 ```java
+// 1. 创建 @EventBusSubscriber 类
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModRegistry {
+    // 2. 使用 @SubscribeEvent 监听 RegistryEvent
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(
@@ -69,18 +71,15 @@ public class ModTileEntities {
 - ❌ 忘记 `@SubscribeEvent` 注解
 - ❌ Registry 名称含大写或横杠
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- RegistryEvent.Register<T> instead of DeferredRegister
-- @EventBusSubscriber + @SubscribeEvent
-- NBTTagCompound (not CompoundTag)
-- @SideOnly(Side.CLIENT) (not @OnlyIn(Dist.CLIENT))
-- world.isRemote (not level.isClientSide)
-- pack_format = 4
-- No DataGen API
-- SimpleNetworkWrapper (not SimpleChannel)
-- IGuiHandler (not MenuType)
-- FMLInitializationEvent (not modEventBus)
-- IBlockState (not BlockState)
-- TileEntity (not BlockEntity)
-- IItemTier (not Tier)
+- Forge 官方文档：https://docs.minecraftforge.net/en/1.12.2/
+- 详细示例：参见 `01-registry.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-block` | 方块注册后方块实体注册需要先有方块 |
+| `mc-item` | 物品注册后方块物品（ItemBlock）需要先有方块 |
+| `mc-entity` | 实体注册后方块实体类型引用实体类型 |

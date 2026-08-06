@@ -1,0 +1,224 @@
+﻿---
+description: 02 — 方块开发
+---
+
+# 02 — 方块开发
+
+> 适用版本：Forge 1.12.2
+
+---
+
+## 约束
+
+### Block 子类规范
+
+- 方块类必须继承 `Block`（`net.minecraft.block.Block`）
+- 推荐使用 `Block.Properties.create(Material)` 创建属性
+- 禁止重写已废弃的方法
+
+### Block.Properties 常用配置
+
+```java
+Block.Properties.create(Material material)
+    .hardness(float hardness)                    // 破坏时间
+    .resistance(float resistance)                 // 抗爆性
+    .harvestLevel(String toolClass, int level)  // 挖掘等级
+    .harvestTool(ToolType tool)                 // 工具类型
+    .sound(SoundType sound)                     // 放置/破坏音效
+```
+
+### 注册约束
+
+- **禁止**通过 `new Block(...)` 构造后直接使用
+- 必须通过 `RegistryEvent.Register<Block>` 注册
+- 注册名称必须全小写
+- ItemBlock 需要单独注册
+
+### 方块实体（BlockContainer）约束
+
+- 有状态或需要持久化的方块必须使用 `BlockContainer`（而非仅靠 `Block`）
+- BlockContainer 在方块类中重写 `createNewTileEntity(World, IBlockState)` 方法
+- BlockContainer 的 `readFromNBT/writeToNBT` 方法处理 NBT 序列化
+- **禁止**在 `readFromNBT` 中直接读取世界数据
+
+### IBlockState 配置
+
+- 使用 `defaultState` 设置默认状态
+- 使用 `withProperty()` 设置属性值
+- 属性通过 `createBlockState()` 定义
+
+---
+
+## Decision Flow
+
+### Decision: 需要什么类型的方块？
+
+```
+IF 需要可放置物品、不可交互的基础方块
+  → 基础方块（extends Block）
+  → 注册后注册 ItemBlock
+  → 创建 blockstates JSON 和 models JSON
+
+IF 需要存储数据（箱子、熔炉等）
+  → 方块实体方块（Block + BlockContainer）
+  → 需要在方块类重写 createNewTileEntity()
+  → 需要注册 TileEntityType
+
+IF 需要可交互（右键打开 GUI、触发事件）
+  → 基础方块 + onBlockActivated 事件
+  → 或使用 IGuiHandler + Container
+
+IF 需要特殊渲染（多面材质、透明度、动画）
+  → 自定义 BlockState + BakedQuad
+```
+
+### Decision: 方块属性（Material）选择
+
+```
+IF 自然方块（石头、木头、草）
+  → Material.STONE / Material.WOOD / Material.GRASS
+
+IF 泥土类
+  → Material.GROUND / Material.SAND / Material.SNOW
+
+IF 玻璃/冰/透明
+  → Material.GLASS / Material.ICE
+  → 需要 .doesNotBlockMovement() 和 .notSolid()
+
+IF 植物
+  → Material.PLANT / Material.VINE
+  → 不能放置方块，需要特殊放置逻辑
+
+IF 液体
+  → 不在 Block 中实现，使用 Fluid 系统
+```
+
+### Decision: BlockContainer vs 普通方块
+
+```
+IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
+  → 必须使用 BlockContainer
+  → 在方块类重写 createNewTileEntity()
+
+IF 需要每 tick 逻辑（自动机、计时器）
+  → 必须使用 BlockContainer + TileEntity
+  → TileEntity 使用 @SuppressWarnings("deprecation") 标记
+
+IF 只需要静态方块（装饰、完整方块）
+  → 普通 Block 即可，不需要 BlockContainer
+```
+
+---
+
+## 示例：基础方块（带 ItemBlock）
+
+```java
+// blocks/BlockExample.java
+public class BlockExample extends Block {
+    public BlockExample() {
+        super(Block.Properties.create(Material.ROCK)
+                .hardness(1.5f)
+                .resistance(6.0f)
+        );
+    }
+}
+```
+
+```java
+// registry/ModBlocks.java
+@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+public class ModBlocks {
+    public static Block EXAMPLE_BLOCK;
+
+    @SubscribeEvent
+    public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        EXAMPLE_BLOCK = new BlockExample()
+                .setRegistryName(ExampleMod.MODID, "example_block");
+        event.getRegistry().register(EXAMPLE_BLOCK);
+    }
+}
+```
+
+```java
+// registry/ModItems.java
+@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+public class ModItems {
+    public static Item EXAMPLE_BLOCK_ITEM;
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> event) {
+        EXAMPLE_BLOCK_ITEM = new ItemBlock(ModBlocks.EXAMPLE_BLOCK)
+                .setRegistryName(ExampleMod.MODID, "example_block");
+        event.getRegistry().register(EXAMPLE_BLOCK_ITEM);
+    }
+}
+```
+
+## 示例：带 BlockContainer 的方块
+
+```java
+// blocks/BlockExampleContainer.java
+public class BlockExampleContainer extends BlockContainer {
+    public BlockExampleContainer() {
+        super(Block.Properties.create(Material.WOOD), BlockExampleContainer.class);
+        setDefaultState(blockState.getBaseState());
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileEntityExample();
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
+            EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote) {
+            player.openGui(ExampleMod.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+        }
+        return true;
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileEntityExample) {
+            player.addItemStackToInventory(((TileEntityExample) tile).getStack());
+        }
+        super.breakBlock(world, pos, state, player);
+    }
+}
+```
+
+```java
+// tiles/TileEntityExample.java
+public class TileEntityExample extends TileEntity {
+    private ItemStack stack = ItemStack.EMPTY;
+
+    public TileEntityExample() {
+        super();
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        if (!this.stack.isEmpty()) {
+            compound.setTag("stack", this.stack.serializeNBT());
+        }
+        return compound;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        if (compound.hasKey("stack", 10)) {
+            this.stack = new ItemStack(compound.getCompoundTag("stack"));
+        }
+    }
+
+    public ItemStack getStack() {
+        return this.stack;
+    }
+}
+```
+
+> 注意：`readFromNBT` 中读取 NBT 是安全的，但你**不能**在 `readFromNBT` 中读取世界数据。如需基于世界的逻辑，在 `validate()` 或 `onLoad()` 中处理。

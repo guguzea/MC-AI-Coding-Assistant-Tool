@@ -1,0 +1,178 @@
+﻿---
+description: 05 — 事件系统
+---
+
+# 05 — 事件系统
+
+> 适用版本：Fabric 1.21.11
+
+---
+
+## 约束
+
+### 核心原则
+
+- Fabric 使用**事件回调**（Event Callback）而非 Forge 的 `@SubscribeEvent`
+- 每个事件类型有自己的回调接口（如 `PlayerTickEvents.END`）
+- 回调在 `onInitialize()` 中通过 `EventHandler` 注册
+- Fabric 事件系统是**静态单例**模式
+
+### 与 Forge 事件系统的区别
+
+| Forge | Fabric |
+|-------|--------|
+| `@SubscribeEvent` 注解 | `EventHandler` 注解或 lambda |
+| `MinecraftForge.EVENT_BUS` | 各事件类型的静态字段 |
+| `EventPriority` | `EventHandler` 不支持优先级 |
+| `CanceledEvent` | 事件不自动传播取消 |
+
+---
+
+## Decision Flow
+
+### Decision: 选择事件类型
+
+```
+IF 处理玩家每 tick 逻辑
+  → PlayerTickEvents.END / START
+
+IF 处理实体每 tick 逻辑
+  → EntityTickEvents
+
+IF 处理方块放置/破坏
+  → BlockEvents.BLOCK_BREAK / BLOCK_PLACE
+
+IF 处理物品使用
+  → ItemEvents.USE_ITEM_ON_BLOCK / USE_ITEM
+
+IF 处理实体死亡/伤害
+  → LivingEntityEvents
+
+IF 处理服务端启动/关闭
+  → ServerLifecycleEvents.SERVER_STARTED / SERVER_STOPPING
+
+IF 处理数据包加载
+  → CallbackEvaluator + DataPackRegistry
+```
+
+---
+
+## 常用 Fabric 事件
+
+### PlayerTickEvents
+
+```java
+@Environment(EnvType.CLIENT)
+public class ExampleModClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        PlayerTickEvents.END.register(player -> {
+            // 每 tick 结束时执行（客户端）
+        });
+    }
+}
+
+// 服务端
+public class ExampleMod implements FabricMod {
+    @Override
+    public void onInitialize() {
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            // 每 server tick 执行
+        });
+    }
+}
+```
+
+### EntityEvents
+
+```java
+// 实体伤害
+EntityEvents.ENTITY_HURT.register((entity, source, amount, flag) -> {
+    if (entity instanceof PlayerEntity && amount > 1.0f) {
+        // 玩家受伤逻辑
+    }
+    return amount;  // 返回修改后的伤害值
+});
+
+// 实体死亡
+EntityEvents.ENTITY_DEATH.register((entity, source) -> {
+    if (entity instanceof PlayerEntity player) {
+        // 玩家死亡逻辑
+    }
+});
+```
+
+### BlockEvents
+
+```java
+BlockEvents.BEFORE_BREAK.register((player, world, pos, state, blockEntity) -> {
+    if (world.getBlockState(pos).isOf(Blocks.DIAMOND_ORE)) {
+        // 防止挖掘钻石矿
+        return ActionResult.FAIL;  // 阻止破坏
+    }
+    return ActionResult.PASS;  // 允许破坏
+});
+
+BlockEvents.BEFORE_PLACE.register((world, pos, state, player, hand, itemStack, hitResult) -> {
+    // 方块放置前逻辑
+    return ActionResult.PASS;
+});
+```
+
+### ItemEvents
+
+```java
+ItemEvents.USE_ITEM_ON_BLOCK.register((player, world, hand, hitResult) -> {
+    ItemStack stack = player.getStackInHand(hand);
+    if (stack.isOf(Items.DIAMOND) && !world.isClient) {
+        // 使用钻石右键方块
+        return ActionResult.SUCCESS;
+    }
+    return ActionResult.PISTON;
+});
+```
+
+### ServerLifecycleEvents
+
+```java
+ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+    LOGGER.info("Server started: " + server.getName());
+});
+
+ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+    LOGGER.info("Server stopping...");
+});
+```
+
+## Fabric API 事件（fabric-events）
+
+```groovy
+modImplementation "net.fabricmc.fabric-api:fabric-events-attack-v0:0.2.4"
+modImplementation "net.fabricmc.fabric-api:fabric-events-interaction-v0:0.6.1"
+modImplementation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:1.17.0"
+```
+
+```java
+// Fabric Events API 扩展
+AttackEvents.AFTER_DAMAGE.register((entity, source, amount, source, flag) -> {
+    // 攻击后逻辑
+    return ActionResult.PASS;
+});
+```
+
+## 常见错误
+
+- ❌ `EventHandler` 注解在非 static 字段上 — 回调不会被注册
+- ❌ 在 `onInitialize()` 外注册事件 — 不会生效
+- ❌ 混淆 `PlayerTickEvents.START` 和 `END` — 逻辑时序错误
+- ❌ 在客户端处理服务端逻辑 — 使用 `world.isClient` 区分
+- ❌忘记处理 `ActionResult` — 返回值决定事件是否被"消费"
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | 事件处理中引用已注册的对象 |
+| `mc-item` | ItemEvents 用于物品交互逻辑 |
+| `mc-entity` | EntityEvents 用于实体行为修改 |
+| `mc-networking` | 事件中发送网络包 |

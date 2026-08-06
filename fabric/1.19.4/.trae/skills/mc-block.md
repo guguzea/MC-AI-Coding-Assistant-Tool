@@ -1,13 +1,13 @@
----
+﻿---
 name: mc-block
 description: Fabric 方块开发。FabricBlockSettings、Block、BlockItem、BlockEntity。触发词：方块、Block、FabricBlockSettings、BlockEntity
 platform: fabric
-version: "1.20.1"
+version: "1.19.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 方块开发（Fabric 1.20.1）
+# 方块开发（Fabric 1.19.4）
 
 ## 快速开始
 

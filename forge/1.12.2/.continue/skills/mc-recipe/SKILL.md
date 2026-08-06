@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-recipe
-description: Forge 1.12.2 Recipe skill (IRecipe, RecipeSorter)
+description: Minecraft Forge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现。触发词：Recipe、RecipeType、RecipeSorter、IRecipe
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -89,10 +89,14 @@ public void init(FMLInitializationEvent event) {
 - ❌ `getCraftingResult` 返回原对象而非副本
 - ❌ `matches()` 不正确实现
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- IRecipe interface
-- RecipeSorter for registration order
-- RecipeType.register() for custom types
-- FMLInitializationEvent (not modEventBus)
-- Ingredient (not Tag)
+- Minecraft Wiki: https://minecraft.wiki/w/Custom_recipes
+- 详细示例：参见 `03-item.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-item` | 配方输出物品 |
+| `mc-block` | 工作台方块 |

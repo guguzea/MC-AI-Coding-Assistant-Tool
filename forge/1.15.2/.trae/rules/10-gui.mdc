@@ -24,7 +24,12 @@ DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
 
 // Run on the DEDICATED_SERVER only
 DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
+
+// Safe version with supplier (avoids classloading issues on wrong side)
+DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
 ```
+
+**Note:** `@OnlyIn` exists but **there is NO reason for using this annotation directly. Use `DistExecutor` or a check on `FMLEnvironment#dist` instead.**
 
 ## FMLEnvironment
 
@@ -132,6 +137,27 @@ public void setSyncData(int value) {
     this.syncData = value;
     this.markDirty();
     this.world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+}
+```
+
+## Block → Container binding
+
+```java
+public class MyBlock extends Block {
+    @Override
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isRemote) {
+            NetworkHooks.openGui(
+                (ServerPlayerEntity) player,
+                new SimpleNamedContainerProvider(
+                    (id, inv, p) -> new MyContainer(id, inv, target),
+                    Component.translatable("container.my_container")
+                )
+            );
+        }
+        return true;
+    }
 }
 ```
 

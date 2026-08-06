@@ -8,9 +8,9 @@
 
 ### Java 版本
 
-- **必须使用 Java 16**（Forge 1.17.1 要求）
+- **必须使用 Java 16**（Forge 1.17.1 要求；Java 17 仅在 Minecraft 1.18+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_16` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(16)`
-- Gradle Wrapper 版本不低于 **Gradle 7.x**
+- Gradle Wrapper 版本不低于 **Gradle 7.4**
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -43,9 +43,9 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.17.1
-  forge_version=37.1.0
-  mappings_version=20210624.103621
-  loader_version=37.1.0
+  forge_version=37.1.68
+  mappings_version=20210626.163703
+  loader_version=37.1.68
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -54,10 +54,10 @@
 
 ### Mappings 约束
 
-- Forge 1.17.1 默认使用 **MCP**
-- `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
-- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
-- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_225597_b_` → `getHealth`
+- Forge 1.17.1 推荐使用 **Parchment**
+- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本（`Parchment 1.17.1-2021.09.06`）
+- **禁止**在 `build.gradle` 中切换到 `yarn`（Fabric 专属）
+- Parchment 映射将混淆的 Minecraft 方法映射为可读名称，并附带参数名
 
 ### 项目目录结构（强制规范）
 
@@ -116,7 +116,7 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 16，不兼容 Java 8 或 Java 21（仅 1.20.6+ 才需要 21）
+  → 确认使用 Java 16，不兼容 Java 8 或 Java 17（仅 1.18+ 才需要 17）
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
@@ -138,7 +138,8 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[4.1.5,4.2)'
+    id 'net.minecraftforge.gradle' version '[4.1,4.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 version = mod_version
@@ -150,8 +151,10 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
+// Mappings channel and version — parchment is community-sourced with parameter names and javadocs
+mappings channel: 'parchment', version: mapping_version
+
 minecraft {
-    mappings channel: 'official', version: mapping_version
     copyIdeResources = true
 
     runs {
@@ -173,49 +176,77 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', mod_id, '--all',
+                '--output', file('src/generated/resources/'),
+                '--existing', file('src/main/resources/')
+        }
     }
 }
 
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 repositories {
     mavenCentral()
+    maven { url = 'https://maven.parchmentmc.org' }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
-tasks.named('processResources').configure {
+tasks.named('processResources', ProcessResources).configure {
     def replaceProperties = [
-        minecraft_version   : minecraft_version,
+        minecraft_version      : minecraft_version,
         minecraft_version_range: "[${minecraft_version},)",
-        forge_version       : forge_version,
-        forge_version_range : "[${forge_version},)",
-        loader_version_range: "[${loader_version},)",
+        forge_version          : forge_version,
+        forge_version_range    : "[${forge_version},)",
+        loader_version_range   : "[${loader_version},)",
         mod_id              : mod_id,
         mod_name            : mod_name,
         mod_license         : mod_license,
         mod_version         : mod_version,
         mod_authors         : mod_authors,
-        mod_description     : mod_description
+        mod_description     : mod_description,
     ]
     inputs.properties replaceProperties
+
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties
+        expand replaceProperties + [project: project]
     }
 }
 
-tasks.named('jar').configure {
+tasks.named('jar', Jar).configure {
     manifest {
-        attributes([
+        attributes(
             'Specification-Title'     : mod_id,
-            'Specification-Vendor'    : mod_authors,
-            'Specification-Version'   : '1',
-            'Implementation-Title'    : project.name,
+            'Specification-Vendor'     : mod_authors,
+            'Specification-Version' : '1',
+            'Implementation-Title'   : project.name,
             'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'   : mod_authors,
+            'Implementation-Vendor'  : mod_authors,
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+        )
     }
+    finalizedBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 ```
 
@@ -256,16 +287,3 @@ side = "BOTH"
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
 - `loaderVersion` 的格式：`"[37,)"` 表示 Forge 37 及以上
-
-## pack.mcmeta
-
-Forge 1.17.1 使用 pack_format 8：
-
-```json
-{
-  "pack": {
-    "description": "Forge 1.17.1",
-    "pack_format": 8
-  }
-}
-```

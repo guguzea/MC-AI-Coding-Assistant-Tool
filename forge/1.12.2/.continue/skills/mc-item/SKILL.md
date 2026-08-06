@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-item
-description: Forge 1.12.2 Item skill (Item.Properties, IItemTier, no Tier, FoodStats)
+description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物。触发词：物品、Item、ItemStack、Item.Properties、ToolMaterial、ItemSword
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -12,6 +12,7 @@ mappings: mcp
 ## 快速开始
 
 ```java
+// 注册（参见 mc-registry Skill）
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModItems {
     @SubscribeEvent
@@ -34,7 +35,7 @@ IF 剑/工具
   → 继承 ItemSword 或自定义 Item
 
 IF 盔甲
-  → 继承 ItemArmor + IArmorMaterial
+  → 继承 ItemArmor + ArmorMaterial
 
 IF 可食用
   → 继承 Item + onItemRightClick() 中使用 player.getFoodStats()
@@ -43,7 +44,7 @@ IF 可在创造模式标签中找到
   → 使用 .setCreativeTab()
 ```
 
-## IItemTier 枚举（工具材料）
+## ToolMaterial 枚举
 
 ```java
 public enum MyTier implements IItemTier {
@@ -70,30 +71,18 @@ public class MySword extends ItemSword {
 }
 ```
 
-## 食物（FoodStats）
-
-```java
-@Override
-public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-    if (!player.getFoodStats().needFood()) {
-        return ActionResult.newActionResult(EnumActionResult.FAIL, stack);
-    }
-    player.getFoodStats().addStats(4, 0.3f);  // hunger, saturation
-    stack.shrink(1);
-    return ActionResult.newActionResult(EnumActionResult.SUCCESS, stack);
-}
-```
-
 ## 常见错误
 
-- ❌ 使用 `Tier` 接口（1.12.2 用 `IItemTier`）
+- ❌ 使用 `DeferredRegister`（1.12.2 没有）
 - ❌ 忘记 `setRegistryName`
-- ❌ 工具材料接口方法不完整
+- ❌ `ToolMaterial` 接口方法不完整
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- IItemTier (not Tier)
-- Item.Properties (not default maxStackSize)
-- FoodStats (not FoodComponent)
-- NBTTagCompound (not CompoundTag)
-- @SideOnly(Side.CLIENT)
+- 详细示例：参见 `03-item.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | 物品通过 RegistryEvent 注册，ItemBlock 需要方块引用 |

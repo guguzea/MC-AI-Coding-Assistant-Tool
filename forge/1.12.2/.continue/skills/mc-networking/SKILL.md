@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-networking
-description: Forge 1.12.2 Networking skill (SimpleNetworkWrapper, IMessage, PacketBuffer)
+description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleNetworkWrapper。触发词：网络、消息、Network、SimpleNetworkWrapper、PacketBuffer、IMessage
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -12,9 +12,11 @@ mappings: mcp
 ## 快速开始
 
 ```java
+// 创建 SimpleNetworkWrapper
 public static final SimpleNetworkWrapper INSTANCE =
     NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID + ":main");
 
+// 注册消息
 public static void register() {
     INSTANCE.registerMessage(
         0, MyMessageHandler.class, MyMessage::encode, MyMessage::new, MyMessage::handle
@@ -73,6 +75,7 @@ public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
 ## 服务端发送广播
 
 ```java
+// 在 NetworkHandler 类中
 public static void broadcast(MyMessage msg) {
     INSTANCE.sendToAll(msg);
 }
@@ -84,10 +87,14 @@ public static void broadcast(MyMessage msg) {
 - ❌ 消息 ID 冲突
 - ❌ `sendToServer` 在服务端调用
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- SimpleNetworkWrapper (not SimpleChannel)
-- IMessage (not record classes)
-- PacketBuffer (not ByteBuf)
-- MessageContext (not Supplier<Context>)
-- addScheduledTask() for main thread execution
+- 详细示例：参见 `06-networking.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | 网络相关注册 |
+| `mc-capability` | Capability 数据可通过数据包同步 |
+| `mc-entity` | 实体数据同步基于网络消息机制 |

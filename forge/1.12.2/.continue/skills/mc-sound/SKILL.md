@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-sound
-description: Forge 1.12.2 Sound skill (SoundEvent, sounds.json, SoundCategory)
+description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、sounds.json、playSound
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -42,6 +42,8 @@ public class ModSounds {
 - `examplemod:my_sound_file` → `assets/examplemod/sounds/my_sound_file.ogg`
 
 ## SoundType（方块音效）
+
+用于自定义方块被破坏/放置/踩踏时的音效：
 
 ```java
 public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
@@ -92,9 +94,13 @@ player.playSound(ModSounds.my_sound, 1.0f, 1.0f);
 - ❌ `sounds.json` 中 sounds 写成对象而非数组 → 必须是 `["ns:sound"]` 格式
 - ❌ 忘记在 `sounds.json` 中注册事件名
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- SoundEvent registration via RegistryEvent
-- sounds.json format
-- SoundCategory enum (not SoundSource)
-- world.playSound() with null player for location-based
+- 详细示例：参见 `02-block.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-block` | 方块音效 |
+| `mc-entity` | 生物声音 |

@@ -44,17 +44,17 @@ FabricBlockSettings.create()
     .strength(1.5f)                              // 硬度和抗爆性
     .strength(1.5f, 6.0f)                        // hardness, resistance
     .breakByTool(FabricToolTags.PICKAXES)         // 需要镐挖掘
-    .requiresTool()                              // 需要工具
-    .breakByHand(false)                          // 不能空手破坏
-    .dropsLike(Blocks.STONE)                    // 掉落物同另一个方块
-    .mapColor(MapColor.STONE)                    // 地图颜色
-    .solidBlock(Blocks::isSolid)                // 是否为固体
-    .suffocates(Blocks::isSolid, bound)        // 是否窒息
-    .blockVision(Blocks::isSolid)               // 是否阻挡视线
-    .noCollision()                              // 无碰撞箱
-    .slipperiness(0.98f)                        // 摩擦力
-    .velocityMultiplier(0.98f)                  // 速度倍率
-    .jumpVelocityMultiplier(0.95f)              // 跳跃倍率
+    .requiresTool()                               // 需要工具
+    .breakByHand(false)                           // 不能空手破坏
+    .dropsLike(Blocks.STONE)                      // 掉落物同另一个方块
+    .mapColor(MapColor.STONE)                     // 地图颜色
+    .solidBlock(Blocks::isSolid)                  // 是否为固体
+    .suffocates(Blocks::isSolid, bound)           // 是否窒息
+    .blockVision(Blocks::isSolid)                 // 是否阻挡视线
+    .noCollision()                               // 无碰撞箱
+    .slipperiness(0.98f)                         // 摩擦力
+    .velocityMultiplier(0.98f)                    // 速度倍率
+    .jumpVelocityMultiplier(0.95f)               // 跳跃倍率
 ```
 
 ## 常用方块创建

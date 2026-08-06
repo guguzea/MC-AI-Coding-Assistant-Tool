@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-registry
 description: Fabric 注册系统。Registry.register、RegistrySupplier、Identifier。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
 platform: fabric
@@ -42,7 +42,7 @@ IF 注册 客户端专用组件（渲染器/快捷键）
   → 在 ClientModInitializer 中处理
 
 IF 平台 = Forge
-  → 跳转 forge/1.21.4/.cursor/rules/01-registry.mdc
+  → 跳转 forge/1.20.1/.cursor/rules/01-registry.mdc
 ```
 
 ## Registry 类型

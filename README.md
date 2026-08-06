@@ -33,7 +33,7 @@ MC_skill/
 
 ## 多 IDE 支持
 
-以各平台版本目录下的 `.cursor/` 为源，用 `sync-skills.ps1` 同步到其他 IDE：
+以各平台版本目录下的 `.cursor/` 为源，同步到其他 IDE（**各版本均应具备完整 8 IDE 目录**）：
 
 ```
 平台/版本/
@@ -45,6 +45,15 @@ MC_skill/
 ├── .agents/     → Codex（skills；规则读 AGENTS.md）
 ├── .zcode/      → ZCode（skills；规则读 AGENTS.md）
 └── .pi/         → Pi（rules/*.md）
+```
+
+修改 `.cursor/` 后，在版本目录执行 `./sync-skills.ps1`（薄包装）。批量同步：
+
+```powershell
+# 仓库根目录
+.\scripts\sync-skills.ps1 -All
+# 或指定版本
+.\scripts\sync-skills.ps1 -TargetDir .\forge\1.19.4
 ```
 
 | IDE | Rules | Skills / Commands | Agent |

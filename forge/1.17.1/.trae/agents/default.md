@@ -12,10 +12,9 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.17.1 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
-| Java 版本 | **Java 16**（Forge 1.17.1 要求） |
+| Java 版本 | **Java 16**（Forge 1.17.1 最低要求） |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`minecraft "1.17.1"` 下推荐） |
-| pack_format | **8** |
+| Mappings | **Parchment**（`Parchment 1.17.1-2021.09.06`） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -47,8 +46,13 @@ Decision: 本规则集是否适用？
 | Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
 | Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
 | Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
 
 当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -115,7 +119,7 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，1.17.1 支持
+1. **推荐使用 DeferredRegister**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.16 起部分支持，1.17.1 稳定支持所有注册表
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
@@ -134,11 +138,13 @@ src/main/java/
 
 ## 关于 1.17.1 与其他版本的差异
 
-| 功能 | 1.17.1 Forge | 1.20.1 Forge | 备注 |
-|------|---------------|---------------|------|
-| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致 |
-| pack_format | **8** | 15 | 1.17.1 使用 pack_format=8 |
-| DataGen | 有 | 有 | API 基本一致 |
-| BlockBehaviour.Properties | `Block.Properties` | `BlockBehaviour.Properties` | 1.17.x 用旧名 |
+| 功能 | 1.17.1 Forge | 1.20.x Forge | 备注 |
+|------|----------------|---------------|------|
+| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
+| Fluid 注册 | `FluidType` | `FluidType` | 一致 |
+| BlockEntity | 签名一致 | 签名一致 | - |
+| DataGen | 基础支持 | 完整支持 | 1.17.1 API 较基础 |
+| Java 版本 | Java 16 | Java 17+ | 关键差异 |
+| Mappings | Parchment | MCP 或 Parchment | 1.17.1 推荐 Parchment |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

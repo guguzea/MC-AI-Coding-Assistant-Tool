@@ -83,7 +83,7 @@ private static final String MOD_ID = "examplemod";
 public void read(NBTTagCompound compound) {
     super.read(compound);
     BlockState state = world.getBlockState(pos); // ❌ world 可能为 null 或 world 未完全加载
-    if (state.get(BlockStateProperties.POWERED)) {
+    if (state.getValue(BlockStateProperties.POWERED)) {
         this.activate();
     }
 }
@@ -91,24 +91,25 @@ public void read(NBTTagCompound compound) {
 
 **错误症状**：`NullPointerException`，游戏崩溃在 `TileEntity.read`
 
-**正确方案**：在 `validate()` 或 `onLoad()` 中处理需要世界数据的逻辑（`read()` 仅用于读写 NBT）
+**正确方案**：在 `onLoad()` 中处理需要世界数据的逻辑（`read()` 仅用于读写 NBT）
 
 ```java
 // read() 只读写 NBT，不访问 world
 @Override
 public void read(NBTTagCompound compound) {
     super.read(compound);
-    this.data = compound;
+    if (compound.contains("data", Constants.NBT.TAG_COMPOUND)) {
+        this.data = compound.getCompound("data");
+    }
 }
 
-// validate() 在 TileEntity 进入 world 后调用，此时 world 已可用
+// onLoad() 在 TileEntity 进入 world 后调用，此时 world 已可用
 @Override
-public boolean validate() {
-    super.validate();
+public void onLoad() {
+    super.onLoad();
     if (this.world != null && this.world.isRemote) {
         // 基于世界的初始化逻辑
     }
-    return true;
 }
 ```
 
@@ -146,14 +147,15 @@ public void invalidate() {
 
 ## 网络通信相关
 
-### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+### ❌ 在消息处理器中直接修改世界（未用 execute）
 
 ```java
 // 错误
 @SubscribeEvent
-public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ServerPlayerEntity player = ctx.get().getSender();
-    player.getWorldWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState()); // ❌ 不安全
+public static void onMessage(MyMessage message, MessageContext ctx) {
+    ctx.getServerHandler().player.getServerWorld().setBlockState(
+        ctx.getServerHandler().player.getPosition(), Blocks.AIR.getDefaultState()
+    ); // ❌ 不安全
 }
 ```
 
@@ -163,14 +165,11 @@ public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> c
 
 ```java
 @SubscribeEvent
-public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-        ServerPlayerEntity player = ctx.get().getSender();
-        if (player != null) {
-            player.getWorldWorld().setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
-        }
+public static void onMessage(MyMessage message, MessageContext ctx) {
+    ctx.getServerHandler().execute(() -> {
+        ServerWorld world = ctx.getServerHandler().player.getServerWorld();
+        world.setBlockState(ctx.getServerHandler().player.getPosition(), Blocks.AIR.getDefaultState());
     });
-    ctx.get().setPacketHandled(true);
 }
 ```
 
@@ -187,19 +186,19 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **错误症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟
 
-**正确方案**：使用 `NBTTagCompound` 或自定义 `ByteBuf` 批量序列化
+**正确方案**：使用 `NBTTagCompound` 或自定义 `PacketBuffer` 批量序列化
 
 ```java
 // 正确：单次批量同步
 public class SyncAllDataMessage implements IMessage {
     private NBTTagCompound data;
 
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, data);
+    public void toBytes(PacketBuffer buf) {
+        buf.writeCompoundTag(data);
     }
 
-    public void fromBytes(ByteBuf buf) {
-        data = ByteBufUtils.readTag(buf);
+    public void fromBytes(PacketBuffer buf) {
+        data = buf.readCompoundTag();
     }
 }
 ```
@@ -215,7 +214,7 @@ public class SyncAllDataMessage implements IMessage {
 @SubscribeEvent
 public void onServerTick(TickEvent.ServerTickEvent event) {
     if (event.phase == TickEvent.Phase.END) {
-        for (Entity entity : world.getAllEntities()) { // ❌ 每 tick 遍历所有实体
+        for (Entity entity : world.getEntities()) { // ❌ 每 tick 遍历所有实体
             processHeavy(entity);
         }
     }
@@ -225,6 +224,7 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 **错误症状**：服务端严重卡顿，TPS 下降
 
 **正确方案**：
+- 使用 `scheduledTasks` 分散负载
 - 使用计数器，每 N tick 处理一批
 - 优先使用事件驱动而非轮询
 
@@ -309,12 +309,31 @@ if (player.getCapability(ModCapabilities.MY_CAP).isPresent()) {
     });
 }
 
-// 或使用 resolve
-Optional<IMyCapability> cap = player.getCapability(ModCapabilities.MY_CAP).resolve();
-if (cap.isPresent()) {
-    cap.get().setData(someData);
+// 或使用 orElse
+IMyCapability cap = player.getCapability(ModCapabilities.MY_CAP).orElse(null);
+if (cap != null) {
+    cap.setData(someData);
 }
 ```
+
+---
+
+### ❌ Mixin 中在 `@Inject` 的构造函数里修改 final 字段
+
+```java
+// Mixin 错误示例
+@Mixin(Entity.class)
+public class MixinEntity {
+    @Inject(at = At("TAIL"), method = "<init>")
+    private void init(CallbackInfo ci) {
+        this.someFinalField = value; // ❌ 不能修改 final 字段
+    }
+}
+```
+
+**错误症状**：游戏崩溃，JVM 报错
+
+**正确方案**：Mixin 中避免修改 final 字段，在 `@Inject` 方法的参数中操作
 
 ---
 
@@ -355,5 +374,5 @@ if (cap.isPresent()) {
 2. 检查 `mods.toml` 语法和 mod ID 是否一致
 3. 检查资源文件路径是否全小写
 4. 检查是否混用了服务端和客户端线程
-5. 检查 `enqueueWork` 是否正确使用
+5. 检查 `execute()` 是否正确使用（网络消息中）
 6. 检查 Registry 注册是否通过事件系统

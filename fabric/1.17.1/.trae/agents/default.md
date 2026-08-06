@@ -3,6 +3,9 @@
 > 本规则集适用于 **Fabric 1.17.1**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -21,18 +24,9 @@
 
 ---
 
-## ⚠️ 1.17.x 特殊注意事项
-
-1. **没有 `Registries` 类！** 使用 `Registry.BLOCK`、`Registry.ITEM` 等静态字段
-2. **没有 `RegistrySupplier`！** 直接用静态字段持有注册后的对象
-3. **没有 `FabricMod` 接口！** 使用 `ModInitializer` 接口
-4. **Loom 版本必须是 `0.11-SNAPSHOT`**（不是 `1.4-SNAPSHOT`）
-5. **Fabric API maven 是 `net.fabricmc.fabric-api`**（不是 `net.fabric.sdk`）
-6. **Fabric API 版本是 `0.31.x`**（如 `0.31.1+build.1`）
-
----
-
 ## Decision Flow：确认规则集适用性
+
+在加载本规则集之前，先确认以下条件：
 
 ```
 Decision: 本规则集是否适用？
@@ -46,6 +40,24 @@ Decision: 本规则集是否适用？
 → ELSE → 无法判断，询问用户确认平台和版本
 ```
 
+### 本规则集的 IDE 加载优先级
+
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
+
 ---
 
 ## 与 Forge 的核心差异
@@ -55,24 +67,76 @@ Decision: 本规则集是否适用？
 | 注册时机 | modEventBus + `RegisterEvent` | `onInitialize()` 中直接调用 |
 | 注册 API | `DeferredRegister.create(...)` | `Registry.register(Registry.ITEM, id, item)` |
 | Mod 入口 | `@Mod` 注解 + `FMLJavaModLoadingContext` | `ModInitializer` 接口 + `fabric.mod.json` entrypoints |
-| Mixin | 需配置 `org.spongepowered.mixin` 插件 | **Loom 原生支持** |
-| Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（方法名如 `getHealth`）|
+| Mixin | 需配置 `org.spongepowered.mixin` 插件 | **Loom 原生支持**，无需额外插件 |
+| Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（方法名如 `method_12345`）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
-| 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调** |
+| 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`EventDispatcher`）|
 
 ---
 
-## 注册系统速查（1.17.x）
+## Yarn 映射约定
 
-```java
-// ✅ 正确：使用 Registry.ITEM 静态字段
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(...));
+Yarn 使用清晰的命名风格：
 
-// ❌ 错误：1.17.x 没有 Registries 类！
-Registry.register(Registry.ITEM, ...);
+| 类型 | 格式 | 示例 |
+|------|------|------|
+| 类名 | `ClassName` | `MinecraftClient`、`ItemStack` |
+| 方法名 | `camelCase` | `getHealth()`、`setPosition()` |
+| 字段名 | `camelCase` | `inventory`、`health` |
+| 混淆保留 | `class_NNNNN` / `method_NNNNN` | `class_12345` — 仅在 Yarn 未解析时出现 |
 
-// ❌ 错误：1.17.x 没有 RegistrySupplier！
-RegistrySupplier<Item> MY_ITEM = Registry.register(...);
+> **注意**：Forge 的 MCP 映射风格不同（如 `func_XXXXX`、`field_XXXXX`），混用会出错。
+
+---
+
+## 项目目录结构
+
+```
+fabric-mod/
+├── build.gradle              # Loom 配置，依赖声明
+├── settings.gradle           # 项目名称
+├── gradle.properties         # 版本号集中管理
+├── .gitignore
+│
+└── src/main/
+    ├── java/
+    │   └── com/example/examplemod/
+    │       ├── ExampleMod.java    # implements FabricMod 入口类
+    │       ├── registry/          # 注册类（可选）
+    │       ├── mixins/            # Mixin 类（可选）
+    │       └── ...
+    │
+    └── resources/
+        ├── fabric.mod.json         # Fabric 元数据（必需）
+        ├── pack.mcmeta            # 资源包标识
+        └── assets/{modid}/
+            ├── lang/
+            ├── models/
+            └── textures/
+```
+
+---
+
+## 常用 Loom / Gradle 命令
+
+```bash
+# 首次构建
+./gradlew build
+
+# 运行客户端
+./gradlew runClient
+
+# 运行服务端
+./gradlew runServer
+
+# 刷新 Loom（修复混淆映射问题）
+./gradlew clean
+./gradlew loom
+
+# 生成 IDE 项目文件
+./gradlew idea   # IntelliJ IDEA
+./gradlew eclipse # Eclipse
+./gradlew vscode  # VS Code
 ```
 
 ---
@@ -85,7 +149,6 @@ RegistrySupplier<Item> MY_ITEM = Registry.register(...);
 - ❌ 不要在 Fabric 项目中使用 `@Mod` 或 `mods.toml`
 - ❌ 不要混用 Yarn 和 MCP 映射
 - ❌ 不要在 `onInitialize()` 之外注册内容（Mixin 初始化除外）
-- ❌ 不要使用 `Registries.ITEM` — 应使用 `Registry.ITEM`
 
 ### 命名规范
 
@@ -104,17 +167,19 @@ RegistrySupplier<Item> MY_ITEM = Registry.register(...);
 
 ## 规则文件索引
 
+按编号顺序加载（建议）：
+
 ```
-00-project-setup.mdc    → 项目结构与构建（Loom 0.11-SNAPSHOT）
-01-registry.mdc         → 注册系统（Registry.XXX 静态字段）
+00-project-setup.mdc    → 项目结构与构建（Loom、Gradle）
+01-registry.mdc         → 注册系统（最重要，优先读）
 02-block.mdc            → 方块开发
 03-item.mdc             → 物品开发
 04-entity.mdc           → 实体开发
 05-events.mdc           → 事件系统
 06-networking.mdc       → 网络通信
-07-datagen.mdc          → 数据生成（推荐手写 JSON）
+07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 
@@ -138,7 +203,9 @@ RegistrySupplier<Item> MY_ITEM = Registry.register(...);
 
 ## 参考资料
 
-- [Fabric Wiki](https://fabricmc.net/wiki/) — 官方教程
+- [Fabric Wiki](https://fabricmc.net/wiki/) — 官方教程（Fabric Wiki DokuWiki）
 - [Fabric API](https://fabricmc.net/wiki/documentation:fabric_api) — 模块化 API 文档
+- [Fabric Docs](https://github.com/FabricMC/fabric-docs) — GitHub 文档仓库
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
+- [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）

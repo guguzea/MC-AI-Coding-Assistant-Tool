@@ -98,7 +98,7 @@ IF 需要在客户端渲染自定义模型
 
 IF 需要服务端数据同步到客户端
   → 使用 SynchedEntityData（实体数据）
-  → 使用 BlockEntity.syncable（方块数据）
+  → 使用 BlockEntity.syncable（方块实体）
   → 使用 SimpleChannel（自定义数据）
 
 IF 需要客户端触发服务端逻辑
@@ -128,7 +128,7 @@ IF 需要客户端触发服务端逻辑
 
 ```java
 // client/ClientSetup.java
-@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
 
     @SubscribeEvent
@@ -264,7 +264,7 @@ public class MyBlockEntity extends BlockEntity {
 ```
 
 > 注意：
-> - 1.17.1 的 BlockEntity 同步推荐使用 `getUpdateTag()` / `handleUpdateTag()`（无需手动实现 `getUpdatePacket`）
+> - 1.17.1 的 BlockEntity 同步推荐使用 `getUpdateTag()` / `handleUpdateTag()`（无需手动 implement `getUpdatePacket`）
 > - `setChanged()` 标记数据已修改
 > - `level.sendBlockUpdated()` 将更新通知发送给客户端，客户端会自动调用 `getUpdateTag()` 同步数据
 > - `Block.UPDATE_ALL` 标志确保所有相关客户端更新到位

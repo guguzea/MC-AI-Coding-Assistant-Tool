@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-compat-jei
-description: Forge 1.12.2 JEI compat skill (JEI API, IRecipeHandler)
+description: Minecraft Forge JEI 兼容层。让 JEI 自动读取配方，或使用 JEI API 添加自定义显示。触发词：JEI、RecipeRegistry、IContainer
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -61,10 +61,7 @@ public class JEIPlugin {
 - ❌ 配方 JSON 放在错误路径 → 应在 `assets/{modid}/recipes/`
 - ❌ 忘记刷新 JEI 缓存
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- JEI 1.12.2 version: 4.16.1.302
-- IRecipeHandler API
-- IRecipeCategory API
-- JEI only runs on client
-- Recipe files in assets/{modid}/recipes/
+- JEI GitHub：https://github.com/mezz/JustEnoughItems
+- JEI Wiki：https://github.com/mezz/JustEnoughItems/wiki

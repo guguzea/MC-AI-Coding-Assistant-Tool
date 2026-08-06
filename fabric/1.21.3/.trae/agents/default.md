@@ -1,7 +1,10 @@
-# Fabric 1.20.1 — Agent 总纲
+# Fabric 1.21.3 — Agent 总纲
 
-> 本规则集适用于 **Fabric 1.20.1**，推荐使用 `Registry.register()` 注册模式。
+> 本规则集适用于 **Fabric 1.21.3**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
+
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
 
 ---
 
@@ -10,14 +13,25 @@
 | 项目 | 值 |
 |------|-----|
 | 平台 | Fabric |
-| Minecraft 版本 | 1.20.1 |
+| Minecraft 版本 | 1.21.3 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 17**（Fabric 1.20.1 最低要求） |
-| Gradle | Gradle 8.x + Loom |
-| Mappings | **Yarn**（`net.fabricmc:yarn:1.20.1+build.10:v2`）|
+| Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
+| Gradle | Gradle 8.5+ / 8.6+ |
+| Mappings | **Yarn**（`net.fabricmc:yarn:1.21.3+build.2:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
+
+### 重要版本变化（1.20.1 → 1.21.3）
+
+> ⚠️ **Fabric API 0.200.x 重大变化**：
+> - `fabric-networking-api-v1` 方法签名变更（`ServerPlayNetworking` 等）
+> - `fabric-attachment-api-v1` 取代 `fabric-capability-api-v1`（Capability 系统被移除）
+> - `fabric-language-kotlin` 需要特定版本兼容 1.21+
+>
+> ⚠️ **Pack Format**: `pack 34`（从 pack 22 升级）
+>
+> ⚠️ **Java**: 必须使用 Java 21（不再支持 Java 17）
 
 ---
 
@@ -30,7 +44,7 @@ Decision: 本规则集是否适用？
 → IF 项目中存在 src/main/resources/fabric.mod.json
     → IF fabric.mod.json 中 id 字段存在
         → 检查 build.gradle 中 Loom 配置
-        → 继续加载本规则集（Fabric 1.20.1）
+        → 继续加载本规则集（Fabric 1.21.3）
     → ELSE → fabric.mod.json schema 版本不匹配，跳转根目录 AGENTS.md
 → ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
     → 这是 Forge 项目，跳转到 ../forge/1.20.1/AGENTS.md
@@ -39,10 +53,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -144,10 +169,10 @@ fabric-mod/
 
 ### Minecraft 版本兼容性
 
-- Fabric 1.20.1 支持 Minecraft 1.20.1
-- Fabric Loader 0.15.x（推荐 0.15.11）
-- Fabric API 0.91.x for 1.20.1
-- Java 17+
+- Fabric 1.21.3 支持 Minecraft 1.21.3
+- Fabric Loader 0.16.x（推荐 0.16.9）
+- Fabric API 0.200.1+build.3 for 1.21.3
+- Java 21+
 
 ---
 
@@ -161,11 +186,11 @@ fabric-mod/
 02-block.mdc            → 方块开发
 03-item.mdc             → 物品开发
 04-entity.mdc           → 实体开发
-05-events.mdc           → 事件系统
+05-events.mdc            → 事件系统
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 

@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-capability
-description: Forge 1.12.2 Capability skill (ICapabilitySerializable, NBTTagCompound, LazyOptional)
+description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、ICapabilityProvider、ICapabilitySerializable。触发词：Capability、IStorage、ICapabilitySerializable、AttachCapabilitiesEvent、getCapability
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -105,10 +105,14 @@ player.getCapability(CapabilityEnergy.ENERGY).ifPresent(...);
 - ❌ 在 `AttachCapabilitiesEvent` 中修改数据 → 只注册 Provider
 - ❌ 自定义 Capability 未存储到 NBT
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- ICapabilitySerializable<NBTTagCompound> (not NBT)
-- LazyOptional (not Holder)
-- NBTTagCompound (not CompoundTag)
-- serializeNBT()/deserializeNBT() (not save()/load())
-- CapabilityManager.get() (not CapabilityToken)
+- Forge 官方文档：https://docs.minecraftforge.net/en/1.12.2/capabilities/
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | Capability 附加到注册后的实体或 TileEntity |
+| `mc-item` | ItemStack 可通过 initCapabilities 附加 Capability |
+| `mc-networking` | Capability 数据可通过数据包同步 |

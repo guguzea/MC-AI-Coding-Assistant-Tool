@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-blockentity
 description: Fabric 方块实体开发。BlockEntity、BlockEntityType、DefaultedList。触发词：BlockEntity、BlockEntityType、NbtCompound
 platform: fabric

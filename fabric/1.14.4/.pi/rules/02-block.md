@@ -1,0 +1,160 @@
+﻿---
+description: 02 — 方块开发
+---
+
+# 02 — 方块开发
+
+> 适用版本：Fabric 1.14.4
+
+---
+
+## 约束
+
+### 核心原则
+
+- 方块必须在 `Registry.register(Registry.BLOCK, id, block)` 中注册
+- 如需方块物品形态，在 `Registry.ITEM` 中注册同名 `BlockItem`
+- 方块类继承 `Block` 或其子类
+- 使用 `Block.Properties` 配置方块属性
+- **禁止**在服务端直接创建客户端专用对象
+
+---
+
+## Decision Flow
+
+### Decision: 选择方块类型
+
+```
+IF 简单静态方块
+  → new Block(Block.Properties.create(Material.STONE))
+
+IF 可配置方块（如可交互、可放置）
+  → 自定义 Block 子类
+
+IF 方块需要存储数据（inventory、energy 等）
+  → 方块实现 BlockEntityProvider + 注册 BlockEntityType
+
+IF 需要自定义渲染
+  → 注册自定义 BlockRenderType 或使用 BlockEntity + custom renderer
+```
+
+---
+
+## Block.Properties
+
+```java
+// 基础配置
+Block.Properties.create(Material.STONE)
+    .hardnessAndResistance(1.5f)                  // 硬度和抗爆性
+    .hardnessAndResistance(1.5f, 6.0f)           // hardness, resistance
+    .breakByTool(ToolType.PICKAXE)                // 需要镐挖掘（Fabric API）
+    .requiresTool()                               // 需要工具
+    .breakByHand(false)                           // 不能空手破坏
+    .dropsFrom(Blocks.STONE)                      // 掉落物同另一个方块（Fabric API）
+    .mapColor(MapColor.STONE)                     // 地图颜色
+    .noCollission()                               // 无碰撞箱（注意：1.14 中是 noCollission）
+    .slipperiness(0.98f)                         // 摩擦力
+    .velocityMultiplier(0.98f)                    // 速度倍率
+    .jumpVelocityMultiplier(0.95f)                // 跳跃倍率
+```
+
+## 常用方块创建
+
+```java
+// 普通方块
+private static final Block MY_STONE = Registry.register(
+    Registry.BLOCK,
+    new Identifier(MOD_ID, "my_stone"),
+    new Block(Block.Properties.create(Material.STONE).hardnessAndResistance(1.5f))
+);
+
+// 注册同名 BlockItem
+private static final Item MY_STONE_ITEM = Registry.register(
+    Registry.ITEM,
+    new Identifier(MOD_ID, "my_stone"),
+    new BlockItem(MY_STONE, new Item.Properties())
+);
+
+// 无碰撞方块（如草、花）
+private static final Block MY_PLANT = Registry.register(
+    Registry.BLOCK,
+    new Identifier(MOD_ID, "my_plant"),
+    new Block(Block.Properties.create(Material.PLANTS).doesNotBlockMovement())
+);
+
+// 可配置方块
+public class MySlabBlock extends Block {
+    public MySlabBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+}
+```
+
+## BlockItem 注册
+
+```java
+// ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
+    new BlockItem(MY_BLOCK, new Item.Properties()));
+
+// ❌ 错误：BlockItem 使用不同的 registry name
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 错误！
+    new BlockItem(MY_BLOCK, new Item.Properties()));
+```
+
+## BlockEntity（带数据存储的方块）
+
+```java
+// 1. 创建 BlockEntity 类
+public class MyChestBlockEntity extends BlockEntity {
+    private NonNullList<ItemStack> inventory;
+
+    public MyChestBlockEntity(TileEntityType<?> type) {
+        super(type);
+        this.inventory = NonNullList.withSize(27, ItemStack.EMPTY);
+    }
+
+    // ... read/write 方法
+}
+
+// 2. 方块实现 BlockEntityProvider
+public class MyChestBlock extends Block implements BlockEntityProvider {
+    @Override
+    public BlockEntity createBlockEntity(BlockBlockEntityType<?> type) {
+        return type.create(MyBlockEntities.MY_CHEST);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState();
+    }
+}
+
+// 3. 注册 BlockEntityType
+public static final RegistryObject<BlockEntityType<MyChestBlockEntity>> MY_CHEST =
+    Registry.register(Registry.BLOCK_ENTITY_TYPE,
+        new Identifier(MOD_ID, "my_chest"),
+        BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK)
+            .build(null));
+```
+
+## 常见错误
+
+- ❌ `BlockItem` 与 `Block` 使用不同的 registry name — 物品会显示为缺失
+- ❌忘记注册 `BlockItem` — 方块在世界中存在但无法放入物品栏
+- ❌ 在 `onInitialize()` 外注册 — 注册不会生效
+- ❌ 在服务端创建 `BlockRenderType` — 渲染相关只能在客户端
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-registry` | 方块通过 Registry.register() 注册，BlockItem 需要同名注册 |
+| `mc-datagen` | 方块注册后可生成方块模型 JSON |
+| `mc-gui` | BlockEntity 用于 GUI 交互（如箱子） |
+| `mc-item` | BlockItem 关联方块和物品 |

@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-datagen
-description: Forge 1.12.2 Datagen skill (manual JSON, no DataGen API, .lang format)
+description: Minecraft Forge 数据生成。Forge 1.12.2 无 DataGen API，必须手动编写 JSON 数据包文件。触发词：数据包、recipes、loot_tables、lang、blockstates
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -71,10 +71,6 @@ entity.examplemod.my_entity.name=My Entity
 - ❌ pack_format 错误（1.12.2 = 4）
 - ❌ 资源路径含大写
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- No DataGen API (manual JSON only)
-- .lang format for languages (not .json)
-- pack_format = 4
-- Recipes in assets/{modid}/recipes/
-- Loot tables in assets/{modid}/loot_tables/
+- 详细示例：参见 `07-datagen.mdc`

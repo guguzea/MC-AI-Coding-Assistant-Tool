@@ -143,10 +143,9 @@ ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
 ## Fabric API 事件（fabric-events）
 
 ```groovy
-modImplementation "net.fabricmc:fabric-api:${project.fabric_api_version}"
-modImplementation "net.fabricmc:fabric-events-attack-v0:0.2.4"
-modImplementation "net.fabricmc:fabric-events-interaction-v0:0.6.1"
-modImplementation "net.fabricmc:fabric-events-lifecycle-v0:1.17.0"
+modImplementation "net.fabricmc.fabric-api:fabric-events-attack-v0:0.2.4"
+modImplementation "net.fabricmc.fabric-api:fabric-events-interaction-v0:0.6.1"
+modImplementation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:1.17.0"
 ```
 
 ```java

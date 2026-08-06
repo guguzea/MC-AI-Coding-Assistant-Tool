@@ -1,6 +1,6 @@
----
+﻿---
 name: mc-particle
-description: Forge 1.12.2 Particle skill (EntityFX, @SideOnly)
+description: Minecraft Forge 粒子效果开发。粒子注册、粒子渲染。触发词：Particle、ParticleType、EntityFX、RenderingRegistry
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -74,9 +74,13 @@ public static void spawnParticle(World world, double x, double y, double z) {
 - ❌ 在服务端调用 `world.spawnParticle()` → 服务端没有客户端粒子系统
 - ❌ 粒子 lifetime 设为 0 → 粒子立即消失
 
-## Key Forge 1.12.2 Specs
+## 参考资料
 
-- EntityFX (not Particle)
-- @SideOnly(Side.CLIENT) (not @OnlyIn(Dist.CLIENT))
-- world.spawnParticle() (not level.addParticle())
-- RenderingRegistry (for advanced particle registration)
+- 详细示例：参见 `05-events.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|------------|---------|
+| `mc-block` | 方块工作时在 tick 中生成粒子 |
+| `mc-entity` | 生物死亡/攻击时生成粒子 |

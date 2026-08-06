@@ -9,26 +9,24 @@
 ### Item 子类规范
 
 - 基础物品类继承 `Item`（`net.minecraft.item.Item`）
-- 禁止重写已废弃的方法
+- 禁止重写已废弃的 `onCreated()` 等方法
 - 物品必须通过 `DeferredRegister<Item>` 注册
 
 ### Item.Properties 配置
 
 ```java
 new Item.Properties()
-    .maxStackSize(int maxStackSize)        // 默认 64
-    .durability(int maxDamage)              // 有耐久物品
-    .food(Food)                            // 食物属性
-    .setTEISR(T EISR)                      // 渲染器（可选）
-    .group(ItemGroup group)                 // 创造模式标签
+    .maxStackSize(int maxStackSize)                 // 默认 64
+    .maxDamage(int maxDamage)                      // 有耐久物品
+    .containerItem(Item copyFrom)                  // 消耗后保留物品
+    .fireResistant()                               // 防火（鞘翅等）
+    .rarity(EnumRarity rarity)                     // 稀有度（COMMON, UNCOMMON, RARE, EPIC）
 ```
-
-> **注意**：物品的创造模式标签通过 `.group(ItemGroup)` 设置在 Properties 中。
 
 ### ItemTier（工具材料）规范
 
 ```java
-public enum MyItemTier implements ITier {
+public enum MyItemTier implements IItemTier {
     MY_MATERIAL(3, 2000, 10.0f, 4.0f, 20, () -> Ingredient.fromItems(Items.DIAMOND));
 
     // getHarvestLevel(), getMaxUses(), getEfficiency(), getAttackDamage(), getEnchantability(), getRepairMaterial()
@@ -47,10 +45,10 @@ public enum MyItemTier implements ITier {
 new Item.Properties()
     .food(new Food.Builder()
         .hunger(int saturation)        // 饱食度（0-20）
-        .saturation(float modifier)    // 饱和度修正
-        .meat()                       // 狗可食用
-        .alwaysEat()                  // 总是可食用（即使饱食）
-        .effect(new EffectInstance(Effects.JUMP, 200, 1), 1.0f)
+        .saturation(float modifier)     // 饱和度修正
+        .meat()                         // 狗可食用
+        .alwaysEat()                    // 总是可食用（即使饱食）
+        .effect(new MobEffectInstance(MobEffects.JUMP, 200), 1.0f)
         .build()
     )
 ```
@@ -58,8 +56,8 @@ new Item.Properties()
 ### 注册约束
 
 - ItemBlock 关联方块时，registry name 必须与方块完全相同
-- 工具/盔甲使用 `ITooltipFlag` 时，需要在构造中传入属性
-- **物品的创造模式标签通过 `.group(ItemGroup)` 注册**，写在 `Item.Properties` 里
+- 工具/盔甲使用 `IItemTier` 时，需要在构造中传入 `.defaultMaxDamage(durability)`
+- **物品不显示在创造模式标签中**（1.14.4 没有 CreativeTabs，需要使用 ItemGroup）
 
 ---
 
@@ -77,48 +75,42 @@ IF 需要普通物品（无特殊功能）
   → 最简单的物品
 
 IF 需要工具（剑、镐、斧、铲）
-  → extends PickaxeItem / AxeItem / ShovelItem / SwordItem
-  → 需要定义 ITier
-  → 需要在 constructor 传入：speed, damage, durability, tier, attackSpeed属性
+  → extends PickaxeItem / AxeItem / SwordItem / ShovelItem
+  → 需要定义 IItemTier
+  → 需要在 constructor 传入：speed, damage, durability, tier
 
 IF 需要盔甲
   → extends ArmorItem
   → 需要定义 IArmorMaterial
-  → 需要在 constructor 传入：material, slot, properties
+  → 需要在 constructor 传入：material, slotIndex, properties
 
 IF 需要食物（可食用物品）
   → extends Item + 设置 .food()
-  → 或 extends Item 覆盖 onFoodEaten() 方法实现自定义食用逻辑
+  → 或 extends Item 覆盖 onItemUseFinish() 方法实现自定义食用逻辑
 
 IF 需要可耐久物品
-  → 设置 .durability(maxDamage)
+  → 设置 .maxDamage(maxDamage)
   → 覆盖 hitEntity() 处理使用逻辑
-  → 覆盖 onItemUse() 处理方块交互（右键放置等）
+  → 覆盖 onBlockDestroyed() 处理方块交互
 
 IF 需要附魔书以外的附魔物品
   → 不支持，Forge 1.14.4 附魔只能通过附魔台/附魔桌
-
-IF 需要鞘翅、火焰弹等特殊物品
-  → 参考 Forge 源码或示例模组
-  → 通常需要自定义渲染器
 ```
 
-### Decision: ItemTier 定义
+### Decision: IItemTier 定义
 
 ```
 IF 自定义工具材料
-  → 定义枚举实现 ITier 接口
+  → 定义枚举实现 IItemTier 接口
   → 6 个必需方法全部实现
   → getRepairMaterial() 必须返回有效的 Ingredient
-  → 在物品类中引用
+  → 在物品类中引用：super(speed, damage, durability, tier)
 
 IF 复用现有材料
-  → Tier.WOOD / Tier.STONE / Tier.IRON / Tier.DIAMOND / Tier.GOLD（静态字段）
+  → Tier.STONE / Tier.IRON / Tier.DIAMOND / Tier.GOLD（静态字段）
 ```
 
-### Decision: 物品放置在哪个 Creative Tab
-
-> **重要**：物品通过 `.group(ItemGroup)` 设置在 `Item.Properties` 中。
+### Decision: 物品放置在哪个 ItemGroup
 
 ```
 IF 建筑方块 → ItemGroup.BUILDING_BLOCKS
@@ -132,6 +124,19 @@ IF 交通 → ItemGroup.TRANSPORTATION
 IF 杂项 → ItemGroup.MISC
 ```
 
+注册方式（示例）：
+
+```java
+// 在 Mod 构造函数中设置物品组
+@Mod.EventBusSubscriber(modid = MOD_ID)
+public class ModSetup {
+    @SubscribeEvent
+    public static void onSetup(FMLSetupEvent event) {
+        // 设置创造模式物品组
+    }
+}
+```
+
 ---
 
 ## 示例：基础物品
@@ -142,14 +147,14 @@ public class MyItem extends Item {
     public MyItem() {
         super(new Item.Properties()
             .maxStackSize(64)
-            .group(ItemGroup.MISC)
+            .rarity(EnumRarity.COMMON)
         );
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResult onItemUse(UseOnContext context) {
         // 右键点击方块时的逻辑
-        return ActionResultType.SUCCESS;
+        return ActionResult.SUCCESS;
     }
 }
 ```
@@ -158,45 +163,42 @@ public class MyItem extends Item {
 
 ```java
 // items/MyTier.java
-public enum MyTier implements ITier {
+public enum MyTier implements IItemTier {
     MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
 
     private final int level;
     private final int uses;
-    private final float efficiency;
+    private final float speed;
     private final float damage;
-    private final int enchantmentValue;
-    private final Supplier<Ingredient> repair;
+    private final int enchantability;
+    private final Supplier<Ingredient> repairMaterial;
 
-    MyTier(int level, int uses, float efficiency, float damage, int enchantmentValue, Supplier<Ingredient> repair) {
+    MyTier(int level, int uses, float speed, float damage, int enchantability, Supplier<Ingredient> repairMaterial) {
         this.level = level;
         this.uses = uses;
-        this.efficiency = efficiency;
+        this.speed = speed;
         this.damage = damage;
-        this.enchantmentValue = enchantmentValue;
-        this.repair = repair;
+        this.enchantability = enchantability;
+        this.repairMaterial = repairMaterial;
     }
 
-    @Override public int getHarvestLevel() { return level; }
-    @Override public float getMaxUses() { return uses; }
-    @Override public float getEfficiency() { return efficiency; }
+    @Override public int getMaxUses() { return uses; }
+    @Override public float getEfficiency() { return speed; }
     @Override public float getAttackDamage() { return damage; }
-    @Override public int getEnchantability() { return enchantmentValue; }
-    @Override public Ingredient getRepairMaterial() { return repair.get(); }
+    @Override public int getHarvestLevel() { return level; }
+    @Override public int getEnchantability() { return enchantability; }
+    @Override public Ingredient getRepairMaterial() { return repairMaterial.get(); }
 }
 ```
 
 ```java
-// 注册剑：3 参数构造函数（Tier, attackSpeed, Properties）
-// Tier.getAttackDamage() + 3.0f（剑的类型加成）= 总攻击伤害
-// 例如：damage=3.0f → 总攻击伤害 = 3.0f + 3.0f = 6.0f
+// 注册剑：构造函数参数
+// IItemTier.getAttackDamage() + 1.0f（剑的类型加成）= 总攻击伤害
+// 例如：damage=3.0f → 总攻击伤害 = 3.0f + 1.0f = 4.0f
 public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
-    () -> new SwordItem(MyTier.MY_MATERIAL, 1.6f, new Item.Properties()
-        .group(ItemGroup.COMBAT)
-    )
+    () -> new SwordItem(MyTier.MY_MATERIAL, 3, -2.4f, new Item.Properties())
 );
-//                           ^^^^ float 参数：攻击速度（1.6f 是标准剑速）
-// 创造模式标签通过 .group(ItemGroup.COMBAT) 设置
+//                           ^^^ IItemTier   ^^^ int: 攻击伤害加成   ^^^^ float: 攻击速度
 ```
 
 ## 示例：盔甲
@@ -207,15 +209,15 @@ public enum MyArmorMaterial implements IArmorMaterial {
     MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
         SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0f, 0.1f);
 
-    // getDurability(SlotType), getDamageReductionAmount(SlotType), getEnchantability(),
-    // getEquipSound(), getToughness(), getKnockbackResistance(), getRepairMaterial()
+    // getDurability(), getDamageReductionAmount(), getEnchantability(),
+    // getSoundEvent(), getToughness(), getKnockbackResistance()
 }
 ```
 
 ```java
 // items/MyArmorItem.java
 public class MyArmorItem extends ArmorItem {
-    public MyArmorItem(ArmorMaterial material, EquipmentSlotType slot, Item.Properties properties) {
+    public MyArmorItem(MyArmorMaterial material, EquipmentSlotType slot, Item.Properties properties) {
         super(material, slot, properties);
     }
 }
@@ -228,12 +230,11 @@ public class MyArmorItem extends ArmorItem {
 public class MyFoodItem extends Item {
     public MyFoodItem() {
         super(new Item.Properties()
-            .group(ItemGroup.FOOD)
             .food(new Food.Builder()
                 .hunger(4)
                 .saturation(0.3f)
                 .meat()
-                .effect(new EffectInstance(Effects.JUMP, 200, 1), 1.0f)
+                .effect(() -> new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
                 .build())
         );
     }
@@ -244,7 +245,6 @@ public class MyFoodItem extends Item {
         return stack;
     }
 }
-// 创造模式标签通过 .group(ItemGroup.FOOD) 设置
 ```
 
-> 注：`EffectInstance` 第一个参数是 `Effect`（如 `Effects.JUMP`），不是 `int` ID。
+> 注：`effect()` 中的 `MobEffectInstance` 第一个参数是 `MobEffect`（如 `MobEffects.JUMP`），不是 `int` ID。

@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-capability
 description: Fabric 实体事件系统。fabric-entity-events-v1。触发词：EntityEvent、fabric-entity-events
 platform: fabric

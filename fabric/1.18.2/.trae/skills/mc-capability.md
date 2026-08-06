@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-capability
 description: Fabric Capability 系统。fabric-item-group-api-v1 用于物品分组，fabric-entity-events-v2 用于实体事件。触发词：Capability、FabricCapability
 platform: fabric

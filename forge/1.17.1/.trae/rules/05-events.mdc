@@ -48,7 +48,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 - 在普通方法上直接使用 `@OnlyIn` 不是推荐做法，应优先使用 `DistExecutor`
 - `@OnlyIn` 是编译器级别的物理端隔离，会导致另一端完全无法加载该类
 
-> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `level.isClientSide`）
+> **警告**：`FMLEnvironment.dist` 返回物理端，但单玩家世界（逻辑服务端+逻辑客户端在同一物理客户端内）的 `dist` 恒为 `Dist.CLIENT`，不要用此判断逻辑端（用 `level.isClientSide`）
 
 ---
 
@@ -111,6 +111,36 @@ IF 监听 Registry 注册
   → 参考 01-registry.mdc
 ```
 
+### Decision: 事件应在哪个物理端监听
+
+```
+IF 事件涉及世界修改（放置方块、生成实体）
+  → 服务端处理
+  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或确保在服务端线程
+
+IF 事件涉及渲染、输入
+  → 客户端处理
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 不确定
+  → 优先考虑服务端处理（更安全）
+  → 用 `level.isClientSide` 进行逻辑端检查
+```
+
+### Decision: 常用事件选择对照
+
+| 需求 | 推荐事件 | 注意事项 |
+|------|----------|----------|
+| 玩家右键触发动作 | `PlayerInteractEvent` | 注意 `use` 方法的返回值 |
+| 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
+| 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
+| 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
+| 添加合成配方 | `ItemCraftedEvent` 或数据生成器 | 优先用数据生成器 |
+| 监听烧炼 | `FurnaceSmeltEvent` | 熔炉/烟熏炉烧炼时触发 |
+| 监听药水效果 | `PotionEvent` | 多个子事件 |
+| 监听实体生成 | `EntityJoinLevelEvent` | 注意不要做重操作 |
+| 修改物品 NBT | `ItemCraftedEvent` 或 `AnvilUpdateEvent` | |
+
 ---
 
 ## 示例：事件订阅类结构
@@ -163,6 +193,7 @@ public class ModSetup {
 ## 示例：FMLClientSetupEvent（客户端初始化）
 
 ```java
+// 注意：必须在 @OnlyIn(Dist.CLIENT) 标记的类或方法中
 @Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
@@ -177,7 +208,7 @@ public class ClientSetup {
 }
 ```
 
-KeyBinding 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`，而非旧的 KeyMappingRegistry。
+KeyBinding 注册应使用 `RegisterKeyMappingsEvent` + `event.register()`，而非 `KeyMappingRegistry.registerKeyBinding()`。
 
 ## 示例：Capability 附加事件
 
