@@ -1,5 +1,3 @@
-> GitHub 路径：develop/mixins/bytecode.md
-> 抓取源：github_raw
 
 ---
 title: Java Bytecode

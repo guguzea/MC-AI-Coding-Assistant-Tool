@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "resources"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:55:45.116Z"
+fetchedAt: "2026-08-06T04:46:29.704Z"
 ---
 # Resources
 
@@ -43,7 +43,6 @@ Data packs may contain folders with files affecting the following things:
 
 | Folder name | Contents |
 | --- | --- |
-| Folder name | Contents |
 | advancements | Advancements |
 | damage_type | Damage types |
 | loot_tables | Loot tables |
@@ -57,7 +56,6 @@ Additionally, they may also contain subfolders for some systems that integrate w
 
 | Folder name | Contents |
 | --- | --- |
-| Folder name | Contents |
 | chat_type | Chat types |
 | functions | Functions |
 | item_modifiers | Item modifiers |
@@ -79,7 +77,6 @@ All data providers extend the `DataProvider` interface and usually require one m
 
 | Class | Method | Generates | Side | Notes |
 | --- | --- | --- | --- | --- |
-| Class | Method | Generates | Side | Notes |
 | BlockStateProvider | registerStatesAndModels() | Blockstate files, block models | Client |  |
 | ItemModelProvider | registerModels() | Item models | Client |  |
 | LanguageProvider | addTranslations() | Translations | Client | Also requires passing the language in the constructor. |

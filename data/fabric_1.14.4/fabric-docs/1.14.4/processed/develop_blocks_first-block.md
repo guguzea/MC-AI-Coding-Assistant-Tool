@@ -1,5 +1,3 @@
-> GitHub 路径：develop/blocks/first-block.md
-> 抓取源：github_raw
 
 ---
 title: Creating Your First Block

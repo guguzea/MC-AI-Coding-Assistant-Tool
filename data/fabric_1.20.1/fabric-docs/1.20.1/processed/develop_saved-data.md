@@ -1,5 +1,3 @@
-> GitHub 路径：develop/saved-data.md
-> 抓取源：github_raw
 
 ---
 title: Saved Data

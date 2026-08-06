@@ -1,5 +1,3 @@
-> GitHub 路径：develop/events.md
-> 抓取源：github_raw
 
 ---
 title: Events

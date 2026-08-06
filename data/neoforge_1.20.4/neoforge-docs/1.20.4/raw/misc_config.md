@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "misc/config"
 url: "https://docs.neoforged.net/docs/1.20.4/misc/config/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:55:40.880Z"
+fetchedAt: "2026-08-06T04:46:27.768Z"
 ---
 # Configuration
 
@@ -16,7 +16,6 @@ A configuration can be created using a subtype of `IConfigSpec`. NeoForge implem
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | build | Creates the ModConfigSpec. |
 | configure | Creates a pair of the class holding the config values and the ModConfigSpec. |
 
@@ -53,7 +52,6 @@ Each config value can be supplied with additional context to provide additional 
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | comment | Provides a description of what the config value does. Can provide multiple strings for a multiline comment. |
 | translation | Provides a translation key for the name of the config value. |
 | worldRestart | The world must be restarted before the config value can be changed. |
@@ -174,7 +172,6 @@ Here is a list of the available configuration types:
 
 | Type | Loaded | Synced to Client | Client Location | Server Location | Default File Suffix |
 | --- | --- | --- | --- | --- | --- |
-| Type | Loaded | Synced to Client | Client Location | Server Location | Default File Suffix |
 | CLIENT | Client Side Only | No | .minecraft/config | N/A | -client |
 | COMMON | On Both Sides | No | .minecraft/config | <server_folder>/config | -common |
 | SERVER | Server Side Only | Yes | .minecraft/saves/<level_name>/serverconfig | <server_folder>/world/serverconfig | -server |

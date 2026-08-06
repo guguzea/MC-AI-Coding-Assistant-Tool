@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "1.20.4",
-    "label": "Getting Started with Neo",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
     "tags": [
       "getting-started",
@@ -61,7 +61,7 @@
   {
     "id": "advanced/accesstransformers",
     "version": "1.20.4",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/1.20.4/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -122,7 +122,7 @@
   {
     "id": "concepts/events",
     "version": "1.20.4",
-    "label": "Concepts",
+    "label": "Events",
     "url": "https://docs.neoforged.net/docs/1.20.4/concepts/events/",
     "tags": [
       "core",
@@ -138,7 +138,7 @@
   {
     "id": "datagen/advancements",
     "version": "1.20.4",
-    "label": "Datagen",
+    "label": "Advancement Generation",
     "url": "https://docs.neoforged.net/docs/1.20.4/datagen/advancements/",
     "tags": [
       "datagen",
@@ -167,7 +167,7 @@
   {
     "id": "datastorage/attachments",
     "version": "1.20.4",
-    "label": "Data Storage",
+    "label": "Data Attachments",
     "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/attachments/",
     "tags": [
       "nbt",
@@ -183,7 +183,7 @@
   {
     "id": "gui/menus",
     "version": "1.20.4",
-    "label": "GUIs",
+    "label": "Menus",
     "url": "https://docs.neoforged.net/docs/1.20.4/gui/menus/",
     "tags": [
       "gui",
@@ -216,7 +216,7 @@
   {
     "id": "misc/config",
     "version": "1.20.4",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/1.20.4/misc/config/",
     "tags": [
       "misc",
@@ -262,7 +262,7 @@
   {
     "id": "resources/client/i18n",
     "version": "1.20.4",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/i18n/",
     "tags": [
       "resources",
@@ -288,5 +288,22 @@
     ],
     "priority": "normal",
     "sectionCount": 1
+  },
+  {
+    "id": "concepts/registries",
+    "version": "1.20.4",
+    "label": "Registries",
+    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/registries/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registerevent"
+    ],
+    "priority": "high",
+    "sectionCount": 9
   }
 ]

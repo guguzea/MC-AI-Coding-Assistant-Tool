@@ -93,6 +93,9 @@ function inferTags(pageId, content) {
   if (lower.includes("deferredregister")) tags.add("deferredregister");
   if (lower.includes("registerevent")) tags.add("registerevent");
   if (lower.includes("datacomponent")) tags.add("data-components");
+  if (pageId.includes("registr") || lower.includes("registry") || lower.includes("registries")) {
+    tags.add("registry");
+  }
 
   return [...tags];
 }
@@ -104,11 +107,12 @@ function stripFrontmatter(text) {
 }
 
 function extractTitle(frontmatter, content) {
-  if (frontmatter.match(/title:\s*"([^"]+)"/)) {
-    return frontmatter.match(/title:\s*"([^"]+)"/)[1];
-  }
+  // 优先正文 H1（Docusaurus 分类页 frontmatter title 常为侧栏分类名，如 Concepts）
   const h1 = content.match(/^#\s+(.+)$/m);
-  return h1 ? h1[1] : "Untitled";
+  if (h1) return h1[1].trim();
+  const fm = frontmatter.match(/title:\s*"([^"]+)"/);
+  if (fm) return fm[1];
+  return "Untitled";
 }
 
 function extractFirstParagraph(content) {

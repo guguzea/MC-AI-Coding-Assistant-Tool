@@ -1,5 +1,3 @@
-> GitHub 路径：develop/commands/basics.md
-> 抓取源：github_raw
 
 ---
 title: Creating Commands

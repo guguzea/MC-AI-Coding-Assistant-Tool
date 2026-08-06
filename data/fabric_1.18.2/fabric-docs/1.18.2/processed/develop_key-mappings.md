@@ -1,5 +1,3 @@
-> GitHub 路径：develop/key-mappings.md
-> 抓取源：github_raw
 
 ---
 title: Key Mappings

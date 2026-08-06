@@ -95,14 +95,43 @@ const PRIORITY_TAGS = [
   { priority: "🟢", keywords: ["client", "client-side", "clientonly"] },
 ];
 
+/** 路径/关键词 → 语义 tags（写入 L0，不仅用于 priority） */
+const SEMANTIC_TAG_RULES = [
+  { tag: "registry", keywords: ["registry", "registries", "registry.register", "identifier"] },
+  { tag: "entrypoint", keywords: ["entrypoint", "modinitializer", "clientmodinitializer"] },
+  { tag: "networking", keywords: ["networking", "custompacketpayload", "serverplaynetworking", "clientplaynetworking"] },
+  { tag: "event", keywords: ["events", "event", "callback"] },
+  { tag: "datagen", keywords: ["datagen", "data generation", "datagenerator", "fabricdata"] },
+  { tag: "sides", keywords: ["sides", "environment", "dist", "client-side", "server-side"] },
+  { tag: "item", keywords: ["items", "itemstack", "armoritem"] },
+  { tag: "block", keywords: ["blocks", "blockbehaviour"] },
+  { tag: "blockentity", keywords: ["blockentities", "block entity", "blockentity"] },
+  { tag: "entity", keywords: ["entities", "entitytype"] },
+  { tag: "recipe", keywords: ["recipes", "recipeserializer", "recipeprovider"] },
+  { tag: "loot", keywords: ["loottables", "loot table", "loottable"] },
+  { tag: "tag", keywords: ["tagkey", "taggroup"] },
+  { tag: "command", keywords: ["commands", "brigadier", "commanddispatcher"] },
+  { tag: "mixin", keywords: ["mixin", "mixinjson"] },
+  { tag: "resource", keywords: ["resources", "resourcepack", "data pack"] },
+  { tag: "rendering", keywords: ["renderer", "rendering", "renderlayer"] },
+  { tag: "config", keywords: ["config", "configuration"] },
+  { tag: "particle", keywords: ["particles", "particle"] },
+];
+
 function inferTags(filename, title, content) {
   const text = `${filename} ${title} ${content}`.toLowerCase();
   const tags = new Set();
   const priorities = new Set();
 
   for (const { priority, keywords } of PRIORITY_TAGS) {
-    if (keywords.some(k => text.includes(k))) {
+    if (keywords.some(k => text.includes(k.toLowerCase()))) {
       priorities.add(priority);
+    }
+  }
+
+  for (const { tag, keywords } of SEMANTIC_TAG_RULES) {
+    if (keywords.some(k => text.includes(k))) {
+      tags.add(tag);
     }
   }
 
@@ -130,6 +159,29 @@ function inferTags(filename, title, content) {
   if (name.includes("particle")) tags.add("particle");
 
   return { tags: [...tags], priorities: [...priorities] };
+}
+
+/**
+ * 标题解析：优先 YAML frontmatter title:，其次首个 H1，最后文件名。
+ */
+function extractTitle(raw, file) {
+  const fm = raw.match(/---\r?\n([\s\S]*?)\r?\n---/);
+  if (fm) {
+    const titleLine = fm[1].match(/^title:\s*(.+)$/m);
+    if (titleLine) {
+      let t = titleLine[1].trim();
+      if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+        t = t.slice(1, -1);
+      }
+      if (t) return t;
+    }
+  }
+  const h1 = raw.match(/^#\s+(.+)$/m);
+  if (h1) {
+    const t = h1[1].replace(/\s*\{#.*\}\s*$/, "").trim();
+    if (t) return t;
+  }
+  return file.replace(/\.md$/, "").replace(/_/g, " ");
 }
 
 // ── Markdown 解析工具（与 process-forge-docs.js 完全一致）──────────────────────
@@ -345,8 +397,7 @@ function processVersion(version) {
 
     const content = metaMatch ? raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length) : raw;
 
-    const titleMatch = content.match(/^# (.+)/);
-    const title = titleMatch?.[1] || file.replace(".md", "");
+    const title = extractTitle(raw, file);
 
     const sectionSummaries = extractSectionSummaries(content);
     const firstPara = extractFirstParagraph(content);

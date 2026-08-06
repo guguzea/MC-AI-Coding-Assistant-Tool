@@ -1,9 +1,12 @@
-# getting started creating a project
+# Creating a Project
 
-> 来源：https://docs.fabricmc.net/develop/getting-started/creating-a-project
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/getting-started/creating-a-project.md
 > 版本：1.20.1
 > GitHub 路径：develop/getting-started/creating-a-project.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:44.346Z
+> SHA256：a129886ed5553f7b68bbce966e94b7c1036da48cc55ab288df51217a426e34bd
+> 分支：main
 
 ---
 title: Creating a Project

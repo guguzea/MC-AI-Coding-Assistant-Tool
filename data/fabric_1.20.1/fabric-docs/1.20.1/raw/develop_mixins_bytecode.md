@@ -1,9 +1,12 @@
-# mixins bytecode
+# Java Bytecode
 
-> 来源：https://docs.fabricmc.net/develop/mixins/bytecode
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/mixins/bytecode.md
 > 版本：1.20.1
 > GitHub 路径：develop/mixins/bytecode.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:43.648Z
+> SHA256：fe6d0a21441e70bd8a0fbd53fda6f4fe0a1c0f14bafa6a2af9f228c521a8a47c
+> 分支：main
 
 ---
 title: Java Bytecode

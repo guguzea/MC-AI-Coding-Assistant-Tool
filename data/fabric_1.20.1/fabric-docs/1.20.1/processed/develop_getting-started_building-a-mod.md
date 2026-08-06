@@ -1,5 +1,3 @@
-> GitHub 路径：develop/getting-started/building-a-mod.md
-> 抓取源：github_raw
 
 ---
 title: Building a Mod

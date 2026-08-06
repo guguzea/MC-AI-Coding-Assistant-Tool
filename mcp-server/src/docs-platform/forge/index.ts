@@ -16,6 +16,8 @@ import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
 import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform } from "../store.js";
+import { createFabricDocStore } from "../fabric/store.js";
+import { resolveDataDir } from "../../utils/path.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -540,7 +542,8 @@ export const searchDocsSchema = {
   - query: 搜索关键词
   - version: Minecraft 版本（必填）
   - platform: 平台，默认 forge
-  - tags: 可选标签过滤`,
+  - tags: 可选标签过滤
+  - source: 仅 platform=fabric 时有效：fabric-docs（默认）/ fabric-wiki / all`,
   inputSchema: z.object({
     query: z.string().describe("搜索关键词（支持 | OR 分组、class:/event:/method: 前缀）"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -550,6 +553,10 @@ export const searchDocsSchema = {
       .default("forge")
       .describe("平台，默认 forge"),
     tags: z.array(z.string()).optional().describe("标签过滤"),
+    source: z
+      .enum(["fabric-docs", "fabric-wiki", "all"])
+      .optional()
+      .describe("仅 platform=fabric：数据源，默认 fabric-docs"),
   }),
 } as const;
 
@@ -558,6 +565,63 @@ export async function searchDocs(
 ): Promise<CallToolResult> {
   try {
     const platform = args.platform ?? "forge";
+    const fabricSource = args.source ?? "fabric-docs";
+
+    if (platform === "fabric") {
+      const dataRoot = resolveDataDir();
+      let results: Array<Record<string, unknown>>;
+      let resolvedVersion = args.version;
+      let versionFallback = false;
+
+      if (fabricSource === "all") {
+        const docs = createFabricDocStore(args.version, "fabric-docs", dataRoot)
+          .searchIndexDetailed(args.query, args.version, args.tags);
+        const wiki = createFabricDocStore(args.version, "fabric-wiki", dataRoot)
+          .searchIndexDetailed(args.query, args.version, args.tags);
+        const merged = [
+          ...docs.results.map((r) => ({ ...r, _source: "fabric-docs" as const })),
+          ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
+        ];
+        merged.sort((a, b) => ((b as { score?: number }).score ?? 0) - ((a as { score?: number }).score ?? 0));
+        results = merged.slice(0, 20) as Array<Record<string, unknown>>;
+        resolvedVersion = docs.resolvedVersion;
+        versionFallback = docs.versionFallback || wiki.versionFallback;
+      } else {
+        const detailed = createFabricDocStore(args.version, fabricSource, dataRoot)
+          .searchIndexDetailed(args.query, args.version, args.tags);
+        results = detailed.results as unknown as Array<Record<string, unknown>>;
+        resolvedVersion = detailed.resolvedVersion;
+        versionFallback = detailed.versionFallback;
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                ok: true,
+                query: args.query,
+                version: args.version,
+                resolvedVersion,
+                versionFallback,
+                warning: versionFallback
+                  ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
+                  : undefined,
+                platform,
+                source: fabricSource,
+                tags: args.tags,
+                total: results.length,
+                results,
+              },
+              null,
+              2,
+            ),
+          },
+        ],
+      };
+    }
+
     const store = getGenericStore(platform);
     const result = store.searchIndex(
       args.query,
@@ -596,10 +660,6 @@ export async function searchDocs(
               tags: args.tags,
               total: result.length,
               results: result,
-              notes:
-                platform === "fabric"
-                  ? "Fabric 的 docs/wiki 数据源请优先用 search_fabric_docs 的 source 参数"
-                  : undefined,
             },
             null,
             2,

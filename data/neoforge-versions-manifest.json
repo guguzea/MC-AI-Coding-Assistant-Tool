@@ -405,7 +405,10 @@
         { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
           { "text": "Blockstates", "href": "blocks/states", "level": 2 }
         ]},
-        { "text": "Concepts", "href": "concepts/events", "level": 1, "isCategory": true },
+        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true, "subPages": [
+          { "text": "Registries", "href": "concepts/registries", "level": 2 },
+          { "text": "Events", "href": "concepts/events", "level": 2 }
+        ]},
         { "text": "Datagen", "href": "datagen/advancements", "level": 1, "isCategory": true },
         { "text": "Data Maps", "href": "datamaps", "level": 1, "isCategory": true },
         { "text": "Data Storage", "href": "datastorage/attachments", "level": 1, "isCategory": true },

@@ -6,11 +6,10 @@ The mod files are responsible for determining what mods are packaged into your J
 
 The `gradle.properties` file holds various common properties of your mod, such as the mod id or mod version. During building, Gradle reads the values in these files and inlines them in various places, such as the [mods.toml](#modstoml) file. This way, you only need to change values in one place, and they are then applied everywhere for you.
 
-Most values are also explained as comments in [the MDK's `gradle.properties` file].
+Most values are also explained as comments in [the MDK's gradle.properties file](https://github.com/neoforged/MDK/blob/main/gradle.properties).
 
 | Property | Description | Example |
 | --- | --- | --- |
-| Property | Description | Example |
 | org.gradle.jvmargs | Allows you to pass extra JVM arguments to Gradle. Most commonly, this is used to assign more/less memory to Gradle. Note that this is for Gradle itself, not Minecraft. | org.gradle.jvmargs=-Xmx3G |
 | org.gradle.daemon | Whether Gradle should use the daemon when building. | org.gradle.daemon=false |
 | org.gradle.debug | Whether Gradle is set to debug mode. Debug mode mainly means more Gradle log output. Note that this is for Gradle itself, not Minecraft. | org.gradle.debug=false |
@@ -73,7 +72,6 @@ Non-mod-specific properties are properties associated with the JAR itself, indic
 
 | Property | Type | Default | Description | Example |
 | --- | --- | --- | --- | --- |
-| Property | Type | Default | Description | Example |
 | modLoader | string | mandatory | The language loader used by the mod(s). Can be used to support alternative language structures, such as Kotlin objects for the main file, or different methods of determining the entrypoint, such as an interface or method. NeoForge provides the Java loader "javafml" and the lowcode/nocode loader "lowcodefml". | modLoader="javafml" |
 | loaderVersion | string | mandatory | The acceptable version range of the language loader, expressed as a Maven Version Range. For javafml and lowcodefml, this is currently version 1. | loaderVersion="[1,)" |
 | license | string | mandatory | The license the mod(s) in this JAR are provided under. It is suggested that this is set to the SPDX identifier you are using and/or a link to the license. You can visit https://choosealicense.com/ to help pick the license you want to use. | license="MIT" |
@@ -111,7 +109,6 @@ modId = "examplemod2"
 
 | Property | Type | Default | Description | Example |
 | --- | --- | --- | --- | --- |
-| Property | Type | Default | Description | Example |
 | modId | string | mandatory | The unique identifier representing this mod. The id must match ^[a-z][a-z0-9_]{1,63}$ (a string 2-64 characters; starts with a lowercase letter; made up of lowercase letters, numbers, or underscores). | modId="examplemod" |
 | namespace | string | value of modId | An override namespace for the mod. The namespace much match ^[a-z][a-z0-9_.-]{1,63}$ (a string 2-64 characters; starts with a lowercase letter; made up of lowercase letters, numbers, underscores, dots, or dashes). Currently unused. | namespace="example" |
 | version | string | "1" | The version of the mod, preferably in a variation of Maven versioning. When set to ${file.jarVersion}, it will be replaced with the value of the Implementation-Version property in the JAR's manifest (displays as 0.0NONE in a development environment). | version="1.20.2-1.0.0" |
@@ -133,27 +130,26 @@ Some properties (`displayName` and `description`) can also be localized using la
 
 #### Features
 
-The features system allows mods to demand that certain settings, software, or hardware are available when loading the system. When a feature is not satisfied, mod loading will fail, informing the user about the requirement. These configurations are created using the [array of tables](https://toml.io/en/v1.0.0#array-of-tables) `[[features.]]`, where `modid` is the identifier of the mod that consumes the feature. Currently, NeoForge provides the following features:
+The features system allows mods to demand that certain settings, software, or hardware are available when loading the system. When a feature is not satisfied, mod loading will fail, informing the user about the requirement. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[features.]`, where `modid` is the identifier of the mod that consumes the feature. Currently, NeoForge provides the following features:
 
 | Feature | Description | Example |
 | --- | --- | --- |
-| Feature | Description | Example |
 | javaVersion | The acceptable version range of the Java version, expressed as a Maven Version Range. This should be the supported version used by Minecraft. | javaVersion="[17,)" |
 | openGLVersion | The acceptable version range of the OpenGL version, expressed as a Maven Version Range. Minecraft requires OpenGL 3.2 or newer. If you want to require a newer OpenGL version, you can do so here. | openGLVersion="[4.6,)" |
 
 #### Mod Properties
 
-The mod properties system is a map of arbitrary keys to values that are associated with a particular mod. These can be useful when a mod file defines multiple mods that provide different metadata. From there, the specific property value for some key can be obtained by getting the object value from the map via `IModInfo#getModProperties`. These configurations are created using the [array of tables](https://toml.io/en/v1.0.0#array-of-tables) `[[modproperties.]]`, where `modid` is the identifier of the mod that consumes the defined properties.
+The mod properties system is a map of arbitrary keys to values that are associated with a particular mod. These can be useful when mod files define identical keys that provide different metadata. From there, the specific property value for some key can be obtained by getting the object value from the map via `IModInfo#getModProperties`. These configurations are created using a [table](https://toml.io/en/v1.0.0#table) `[modproperties.]`, where `modid` is the identifier of the mod that consumes the defined properties.
 
 ```java
 
-// Assume we have two mods `mod1` and `mod2` with the following property configuration
+// Assume we have two mods `mod1` and `mod2` with the following property configuration in separate files
 
-// [[modproperties.mod1]]
+// [modproperties.mod1]
 
 // key="value1"
 
-// [[modproperties.mod2]]
+// [modproperties.mod2]
 
 // key="value2"
 
@@ -197,7 +193,6 @@ Mods can specify their dependencies, which are checked by NeoForge before loadin
 
 | Property | Type | Default | Description | Example |
 | --- | --- | --- | --- | --- |
-| Property | Type | Default | Description | Example |
 | modId | string | mandatory | The identifier of the mod added as a dependency. | modId="jei" |
 | type | string | "required" | Specifies the nature of this dependency: "required" is the default and prevents the mod from loading if this dependency is missing; "optional" will not prevent the mod from loading if the dependency is missing, but still validates that the dependency is compatible; "incompatible" prevents the mod from loading if this dependency is present; "discouraged" still allows the mod to load if the dependency is present, but presents a warning to the user. | type="incompatible" |
 | reason | string | nothing | An optional user-facing message to describe why this dependency is required, or why it is incompatible. |  |

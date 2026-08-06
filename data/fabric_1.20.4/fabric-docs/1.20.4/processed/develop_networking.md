@@ -1,7 +1,5 @@
-> GitHub 路径：develop/networking.md
-> 抓取源：vitepress
 
-# Networking 26.1.2 ​
+# Networking 26.2 ​
 A general guide on networking using Fabric API.Networking in Minecraft is used so the client and server can communicate with each other. Networking is a broad topic, so this page is split up into a few categories.
 
 ## Why Is Networking Important? ​
@@ -25,14 +23,16 @@ This can be done by creating a Java Record with a BlockPos parameter that implem
 
 javapublic record ClientboundSummonLightningPayload(BlockPos pos) implements CustomPacketPayload {
 	public static final Identifier SUMMON_LIGHTNING_PAYLOAD_ID = Identifier.fromNamespaceAndPath(ExampleMod.MOD_ID, "summon_lightning");
+
 	public static final CustomPacketPayload.Type<ClientboundSummonLightningPayload> TYPE = new CustomPacketPayload.Type<>(SUMMON_LIGHTNING_PAYLOAD_ID);
+
 	public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSummonLightningPayload> CODEC = StreamCodec.composite(BlockPos.STREAM_CODEC, ClientboundSummonLightningPayload::pos, ClientboundSummonLightningPayload::new);
 
 	@Override
 	public Type<? extends CustomPacketPayload> type() {
 		return TYPE;
 	}
-}12345678910At the same time, we've defined:
+}123456789101112At the same time, we've defined:
 
 - An Identifier used to identify our packet's payload. For this example our identifier will be example-mod:summon_lightning.
 javapublic static final Identifier SUMMON_LIGHTNING_PAYLOAD_ID = Identifier.fromNamespaceAndPath(ExampleMod.MOD_ID, "summon_lightning");1- A public static instance of CustomPayload.Type to uniquely identify this custom payload. We will be referencing this ID in both our common and client code.
@@ -107,19 +107,20 @@ javaClientPlayNetworking.registerGlobalReceiver(ClientboundSummonLightningPayloa
 	}
 
 	BlockPos lightningPos = payload.pos();
-	LightningBolt entity = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
+
+	LightningBolt entity = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
 
 	if (entity != null) {
 		entity.setPos(lightningPos.getX(), lightningPos.getY(), lightningPos.getZ());
 		level.addEntity(entity);
 	}
-});123456789101112131415Let's examine the code above.
+});12345678910111213141516Let's examine the code above.
 
 We can access the data from our payload by calling the Record's getter methods. In this case payload.pos(). Which then can be used to get the x, y and z positions.
 
 javaBlockPos lightningPos = payload.pos();1Finally, we create a LightningBolt and add it to the level.
 
-javaLightningBolt entity = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
+javaLightningBolt entity = EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
 
 if (entity != null) {
 	entity.setPos(lightningPos.getX(), lightningPos.getY(), lightningPos.getZ());
@@ -155,13 +156,14 @@ javaUseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) ->
 
 	if (entity instanceof LivingEntity && usedItemStack.is(Items.POISONOUS_POTATO) && hand == InteractionHand.MAIN_HAND) {
 		GiveGlowingEffectServerboundPayload payload = new GiveGlowingEffectServerboundPayload(hitResult.getEntity().getId());
+
 		ClientPlayNetworking.send(payload);
 
 		return InteractionResult.SUCCESS;
 	}
 
 	return InteractionResult.PASS;
-});12345678910111213141516We create an instance of our GiveGlowingEffectServerboundPayload with the necessary arguments. In this case, the network ID of the targeted entity.
+});1234567891011121314151617We create an instance of our GiveGlowingEffectServerboundPayload with the necessary arguments. In this case, the network ID of the targeted entity.
 
 javaGiveGlowingEffectServerboundPayload payload = new GiveGlowingEffectServerboundPayload(hitResult.getEntity().getId());1Finally, we send a packet to the server by calling ClientPlayNetworking.send with the instance of our GiveGlowingEffectServerboundPayload.
 
@@ -179,6 +181,10 @@ javaServerPlayNetworking.registerGlobalReceiver(GiveGlowingEffectServerboundPayl
 
 In this case, we validate if the entity exists based on its network ID.
 
-javaEntity entity = context.player().level().getEntity(payload.entityId());1Additionally, the targeted entity has to be a living entity, and we restrict the range of the target entity from the player to 5.
+javaEntity entity = context.player().level().getEntity(payload.entityId());1Additionally, the targeted entity has to be a living entity, and we restrict the range of the target entity from the player to 5. If those conditions are met, we'll apply the effect:
 
-javalivingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 100));1Now when any player tries to use a Poisonous Potato on a living entity, the glowing effect will be applied to it.
+javaif (entity instanceof LivingEntity livingEntity && livingEntity.closerThan(context.player(), 5)) {
+	livingEntity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 100));
+}123Now when any player tries to use a Poisonous Potato on a living entity, the glowing effect will be applied to it.
+
+Copied

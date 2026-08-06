@@ -1,9 +1,12 @@
-# getting started building a mod
+# Building a Mod
 
-> 来源：https://docs.fabricmc.net/develop/getting-started/building-a-mod
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/getting-started/building-a-mod.md
 > 版本：1.20.1
 > GitHub 路径：develop/getting-started/building-a-mod.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:44.674Z
+> SHA256：6426a2804ac4dcda6ef325a4433b9604ed918cdc377406f09c2762b64f6414ec
+> 分支：main
 
 ---
 title: Building a Mod

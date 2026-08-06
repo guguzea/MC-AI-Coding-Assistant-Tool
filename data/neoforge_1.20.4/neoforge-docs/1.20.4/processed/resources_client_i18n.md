@@ -8,7 +8,6 @@ A `Component` is a piece of text with metadata, with the metadata including thin
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | empty | Creates an empty component. |
 | literal | Creates a component with the given text and directly displays that text without translating. |
 | nullToEmpty | Creates an empty component when given null, and a literal component otherwise. |
@@ -166,7 +165,6 @@ Starting with NeoForge 20.4.179, translation files can override certain parts of
 
 |  | Translation Key | Overriding |
 | --- | --- | --- |
-|  | Translation Key | Overriding |
 | Display Name | fml.menu.mods.info.displayname.modid | A field named displayName may be placed in the [[mods]] section instead. |
 | Description | fml.menu.mods.info.description.modid | A field named description may be placed in the [[mods]] section instead. |
 

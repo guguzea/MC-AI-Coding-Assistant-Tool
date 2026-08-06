@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "items"
 url: "https://docs.neoforged.net/docs/1.20.4/items/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:55:39.072Z"
+fetchedAt: "2026-08-06T04:46:26.627Z"
 ---
 # Items
 

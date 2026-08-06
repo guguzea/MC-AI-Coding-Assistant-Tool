@@ -1,5 +1,3 @@
-> GitHub 路径：develop/loader/fabric-mod-json.md
-> 抓取源：vitepress
 
 # fabric.mod.json 26.1.2 ​
 A guide to the `fabric.mod.json` specification.The fabric.mod.json file is a metadata file used by Fabric Loader to load mods. It must be placed in the JAR's root directory for the mod to get loaded.

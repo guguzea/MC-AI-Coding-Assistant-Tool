@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "resources/client/i18n"
 url: "https://docs.neoforged.net/docs/1.20.4/resources/client/i18n/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:55:47.897Z"
+fetchedAt: "2026-08-06T04:46:30.943Z"
 ---
 # I18n and L10n
 
@@ -16,7 +16,6 @@ A `Component` is a piece of text with metadata, with the metadata including thin
 
 | Method | Description |
 | --- | --- |
-| Method | Description |
 | empty | Creates an empty component. |
 | literal | Creates a component with the given text and directly displays that text without translating. |
 | nullToEmpty | Creates an empty component when given null, and a literal component otherwise. |
@@ -174,7 +173,6 @@ Starting with NeoForge 20.4.179, translation files can override certain parts of
 
 |  | Translation Key | Overriding |
 | --- | --- | --- |
-|  | Translation Key | Overriding |
 | Display Name | fml.menu.mods.info.displayname.modid | A field named displayName may be placed in the [[mods]] section instead. |
 | Description | fml.menu.mods.info.description.modid | A field named description may be placed in the [[mods]] section instead. |
 

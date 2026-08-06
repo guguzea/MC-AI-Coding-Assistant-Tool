@@ -1,5 +1,3 @@
-> GitHub 路径：develop/items/item-models.md
-> 抓取源：vitepress
 
 # Item Models 26.1.2 ​
 A guide to writing and understanding item models.This page will guide you through writing your own item models and understanding all their options and possibilities.
@@ -170,3 +168,4 @@ json{
 3. cullface: String. Can be: down, up, north, south, west, or east. Specifies whether a face does not need to be rendered when there is a block touching it in the specified position. It also determines the side of the block to use the light level from for lighting the face, and if unset, defaults to the side.
 4. rotation: Integer. Rotates the texture by the specified number of degrees in 90 degree increments. Rotation does not affect which part of the texture is used. Instead, it amounts to permutation of the selected texture vertices (selected implicitly, or explicitly though uv).
 5. tintidex: Integer. Tints the texture on that face using a tint value referenced from the client item. If no tint color (or white) is provided, the texture isn't tinted.
+Copied

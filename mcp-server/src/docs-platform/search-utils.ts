@@ -103,7 +103,14 @@ export function expandQueryTerms(raw: string): string[] {
   const out = new Set<string>();
   const lower = raw.toLowerCase();
   out.add(lower);
-  out.add(stemToken(lower));
+  const stem = stemToken(lower);
+  out.add(stem);
+  // 双向展开词干组（registry ↔ registries），否则搜 registry 打不中 label「Registries」
+  for (const g of STEM_GROUPS) {
+    if (g.includes(lower) || g[0] === stem) {
+      for (const w of g) out.add(w);
+    }
+  }
   for (const p of splitCamelCase(raw)) {
     out.add(p);
     out.add(stemToken(p));
@@ -207,16 +214,32 @@ function l0FieldHit(e: L0Like, term: string): number {
   const url = (e.url ?? "").toLowerCase();
 
   const match = (hay: string, weight: number) => {
-    if (hay.includes(t) || hay.includes(stemmed)) score += weight;
+    if (hay.includes(t) || hay.includes(stemmed)) {
+      score += weight;
+      return;
+    }
+    // 词级词干相等：registries ↔ registry
+    for (const part of hay.split(/[^a-z0-9]+/).filter(Boolean)) {
+      if (stemToken(part) === stemmed) {
+        score += weight;
+        return;
+      }
+    }
   };
   match(label, 5);
   match(id, 3);
   match(tags, 2);
   match(url, 1);
 
-  // Fabric L0 常缺 registry tag：用路径/同义词增强
+  // Fabric/NeoForge L0 常缺 registry tag：用路径/同义词增强
   if (stemmed === "registry" || stemmed === "datagen") {
-    if (id.includes(stemmed) || id.includes("register") || label.includes("register")) {
+    if (
+      id.includes(stemmed) ||
+      id.includes("register") ||
+      id.includes("registr") ||
+      label.includes("register") ||
+      label.includes("registr")
+    ) {
       score += 2;
     }
   }
@@ -260,8 +283,9 @@ export function enhancedSearch(
       .filter((w) => {
         if (!w) return false;
         const lower = w.toLowerCase();
-        if (QUERY_STOP_WORDS.has(lower)) return false;
+        // 白名单优先于停用词（AT/BE 等短缩写不可被 the/at/be 表误杀）
         if (SHORT_QUERY_WHITELIST.has(lower)) return true;
+        if (QUERY_STOP_WORDS.has(lower)) return false;
         return w.length >= minLen;
       });
     if (words.length > 0) processedTerms.push(words);

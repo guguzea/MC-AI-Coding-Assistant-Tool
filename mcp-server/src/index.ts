@@ -646,6 +646,7 @@ server.registerTool(
       version: args.version,
       platform: args.platform,
       tags: args.tags,
+      source: args.source,
     });
   }
 );

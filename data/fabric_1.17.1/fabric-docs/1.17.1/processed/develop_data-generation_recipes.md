@@ -1,5 +1,3 @@
-> GitHub 路径：develop/data-generation/recipes.md
-> 抓取源：github_raw
 
 ---
 title: Recipe Generation

@@ -1,5 +1,3 @@
-> GitHub 路径：develop/loader/fabric-mod-json.md
-> 抓取源：vitepress
 
 # fabric.mod.json 26.1.2 ​
 A guide to the `fabric.mod.json` specification.The fabric.mod.json file is a metadata file used by Fabric Loader to load mods. It must be placed in the JAR's root directory for the mod to get loaded.
@@ -38,7 +36,9 @@ You can consult the source code of the specification for fabric.mod.json v1. You
       "com.example.docs.entity.attribute.ExampleModAttributes",
       "com.example.docs.recipe.ExampleModRecipes",
       "com.example.docs.entity.ExampleModEntity",
-      "com.example.docs.gamerule.ExampleModGameRules"
+      "com.example.docs.gamerule.ExampleModGameRules",
+      "com.example.docs.conditions.ExampleModResourceConditions",
+      "com.example.docs.stats.ExampleModStats"
     ],
     "client": [
       "com.example.docs.client.command.ExampleModClientCommands",
@@ -71,7 +71,7 @@ You can consult the source code of the specification for fabric.mod.json v1. You
     "fabric-api": "*"
   },
   "accessWidener": "example-mod.classtweaker"
-}12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364
+}123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566
 ## Mandatory Fields ​
 The following fields are mandatory for Fabric to load your mod.
 
@@ -212,3 +212,5 @@ RangeDescriptionMatchesClashes[*](https://jubianchi.github.io/semver-check/#/*/2
 <!-- key:🟠 role:常见错误 -->
 
 You can add any field you want to add inside custom field. Loader would ignore them. However, it's highly recommended to namespace your fields to avoid conflicts with other mods.
+
+Copied

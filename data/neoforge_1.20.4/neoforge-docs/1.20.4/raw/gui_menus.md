@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "gui/menus"
 url: "https://docs.neoforged.net/docs/1.20.4/gui/menus/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:55:35.044Z"
+fetchedAt: "2026-08-06T04:46:24.889Z"
 ---
 # Menus
 

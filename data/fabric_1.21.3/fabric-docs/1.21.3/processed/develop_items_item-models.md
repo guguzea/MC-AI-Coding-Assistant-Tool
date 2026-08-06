@@ -1,5 +1,3 @@
-> GitHub 路径：develop/items/item-models.md
-> 抓取源：vitepress
 
 # Item Models 26.1.2 ​
 A guide to writing and understanding item models.This page will guide you through writing your own item models and understanding all their options and possibilities.

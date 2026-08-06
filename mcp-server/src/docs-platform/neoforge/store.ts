@@ -21,7 +21,6 @@ import { join, dirname, basename } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
-  stripScores,
   type SymbolIndex,
 } from "../search-utils.js";
 
@@ -35,6 +34,8 @@ export interface SearchResult {
   tags: string[];
   priority: string;
   sectionCount: number;
+  /** 相关性评分（searchIndexDetailed 保留；与工具描述一致） */
+  score?: number;
 }
 
 export interface SummaryResult {
@@ -340,7 +341,8 @@ export class NeoForgeDocStore {
       limit: 20,
       minTokenLength: 2,
     });
-    const top = stripScores(scored).map((e) => ({
+    // 保留 score，与 search_neoforge_docs 描述中的「相关性评分」一致
+    const top = scored.map((e) => ({
       ...e,
       version: effectiveVersion,
     })) as SearchResult[];

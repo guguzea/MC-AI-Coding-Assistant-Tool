@@ -2,9 +2,25 @@
   {
     "id": "1.14.4/develop_loader_fabric-mod-json",
     "version": "1.14.4",
-    "label": "develop_loader_fabric-mod-json",
+    "label": "fabric mod json",
     "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json",
-    "tags": [],
+    "tags": [
+      "registry",
+      "entrypoint",
+      "networking",
+      "event",
+      "datagen",
+      "sides",
+      "item",
+      "block",
+      "blockentity",
+      "entity",
+      "recipe",
+      "command",
+      "mixin",
+      "rendering",
+      "config"
+    ],
     "firstParagraph": "The following fields are mandatory for Fabric to load your mod.",
     "sections": [
       {
@@ -32,15 +48,21 @@
         "level": 2,
         "summary": "You can add any field you want to add inside custom field. Loader would ignore them. However, it's highly recommended to namespace your fields to avoid conflicts with other mods."
       }
-    ]
+    ],
+    "source": "vitepress"
   },
   {
     "id": "1.14.4/develop_items_first-item",
     "version": "1.14.4",
-    "label": "develop_items_first-item",
+    "label": "items first item",
     "url": "https://docs.fabricmc.net/develop/items/first-item",
     "tags": [
-      "item"
+      "registry",
+      "entrypoint",
+      "event",
+      "item",
+      "resource",
+      "config"
     ],
     "firstParagraph": "To simplify the registering of items, you can create a method that accepts a string identifier, some item properties and a factory to create the Item instance.",
     "sections": [
@@ -84,15 +106,20 @@
         "level": 2,
         "summary": "If you want your item to have a custom tooltip, you will need to create a class that extends Item and override the appendHoverText method."
       }
-    ]
+    ],
+    "source": "vitepress"
   },
   {
     "id": "1.14.4/develop_items_item-models",
     "version": "1.14.4",
-    "label": "develop_items_item-models",
+    "label": "items item models",
     "url": "https://docs.fabricmc.net/develop/items/item-models",
     "tags": [
-      "item"
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
     ],
     "firstParagraph": "Item models are essentially the definition of an item's looks and visuals. They specify a texture, model translation, rotation, scale and other attributes.",
     "sections": [
@@ -106,15 +133,19 @@
         "level": 2,
         "summary": "Every item model file has a defined structure that has to be followed. It starts with empty curly brackets, which represent the root tag of the model."
       }
-    ]
+    ],
+    "source": "vitepress"
   },
   {
     "id": "1.14.4/develop_items_custom-tools",
     "version": "1.14.4",
-    "label": "develop_items_custom-tools",
+    "label": "Tools and Weapons",
     "url": "https://docs.fabricmc.net/develop/items/custom-tools",
     "tags": [
-      "item"
+      "item",
+      "block",
+      "resource",
+      "config"
     ],
     "firstParagraph": "You can create a tool material by instantiating a new ToolMaterial object and storing it in a field that can be used later to create the tool items that use the material.",
     "sections": [
@@ -128,15 +159,22 @@
         "level": 2,
         "summary": "Using the same utility function as in the Creating Your First Item guide, you can create your tool items: @code transcludeWith=:::7"
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_blocks_first-block",
     "version": "1.14.4",
-    "label": "develop_blocks_first-block",
+    "label": "Creating Your First Block",
     "url": "https://docs.fabricmc.net/develop/blocks/first-block",
     "tags": [
-      "block"
+      "registry",
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "loot",
+      "resource"
     ],
     "firstParagraph": "If you've completed the Creating Your First Item page, this process will feel extremely familiar - you will need to create a method that registers your block, and its block item.",
     "sections": [
@@ -185,15 +223,20 @@
         "level": 2,
         "summary": "If you're adding multiple blocks to your mod, you may want to consider using Data Generation to automate the process of creating block and item models, blockstate definitions, and loot tables."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_blocks_block-models",
     "version": "1.14.4",
-    "label": "develop_blocks_block-models",
+    "label": "Block Models",
     "url": "https://docs.fabricmc.net/develop/blocks/block-models",
     "tags": [
-      "block"
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
     ],
     "firstParagraph": "Block models are essentially the definition of a block's looks and visuals. They specify a texture, model translation, rotation, scale and other attributes.",
     "sections": [
@@ -207,15 +250,20 @@
         "level": 2,
         "summary": "Every block model file has a defined structure that has to be followed. It starts with empty curly brackets, which represent the root tag of the model."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_blocks_block-entities",
     "version": "1.14.4",
-    "label": "develop_blocks_block-entities",
+    "label": "Block Entities",
     "url": "https://docs.fabricmc.net/develop/blocks/block-entities",
     "tags": [
-      "block"
+      "registry",
+      "block",
+      "blockentity",
+      "entity",
+      "resource"
     ],
     "firstParagraph": "To make Minecraft recognize and load the new block entities, we need to create a block entity type. This is done by extending the BlockEntity class and registering it in a new ModBlockEntities class.",
     "sections": [
@@ -249,15 +297,21 @@
         "level": 2,
         "summary": "The EntityBlock interface also defines a method called getTicker, which can be used to run code every tick for each instance of the block."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_events",
     "version": "1.14.4",
-    "label": "develop_events",
+    "label": "Events",
     "url": "https://docs.fabricmc.net/develop/events",
     "tags": [
-      "event"
+      "entrypoint",
+      "event",
+      "item",
+      "block",
+      "loot",
+      "mixin"
     ],
     "firstParagraph": "Callbacks are a piece of code that is passed as an argument to an event. When the event is triggered by the game, the passed piece of code will be executed.",
     "sections": [
@@ -276,15 +330,22 @@
         "level": 2,
         "summary": "Some areas of the game do not have hooks provided by the Fabric API, so you can either use a mixin or create your own event. We'll look at creating an event that is triggered when sheep are sheared."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_entities_first-entity",
     "version": "1.14.4",
-    "label": "develop_entities_first-entity",
+    "label": "Creating Your First Entity",
     "url": "https://docs.fabricmc.net/develop/entities/first-entity",
     "tags": [
-      "entity"
+      "networking",
+      "sides",
+      "item",
+      "block",
+      "entity",
+      "resource",
+      "rendering"
     ],
     "firstParagraph": "The first step in creating a custom entity is defining its class and registering it with the game.",
     "sections": [
@@ -323,15 +384,22 @@
         "level": 2,
         "summary": "To add a spawn egg for the Mini Golem entity, refer to the full article on Creating a Spawn Egg."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_commands_basics",
     "version": "1.14.4",
-    "label": "develop_commands_basics",
+    "label": "Creating Commands",
     "url": "https://docs.fabricmc.net/develop/commands/basics",
     "tags": [
-      "command"
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "block",
+      "command",
+      "resource"
     ],
     "firstParagraph": "com.mojang.brigadier.Command is a functional interface, which runs some specific code, and throws a CommandSyntaxException in certain cases.",
     "sections": [
@@ -360,14 +428,21 @@
         "level": 2,
         "summary": "- Catch or throw a CommandSyntaxException - CommandSyntaxException is not a RuntimeException. If you throw it, that should be in methods that throw CommandSyntaxException in method signatures, or i..."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_data-generation_setup",
     "version": "1.14.4",
-    "label": "develop_data-generation_setup",
+    "label": "Data Generation Setup",
     "url": "https://docs.fabricmc.net/develop/data-generation/setup",
-    "tags": [],
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "recipe",
+      "loot",
+      "config"
+    ],
     "firstParagraph": "Data generation (or datagen) is an API for programmatically generating recipes, advancements, tags, item models, language files, loot tables, and basically anything JSON-based.",
     "sections": [
       {
@@ -395,14 +470,17 @@
         "level": 2,
         "summary": "Now that datagen is set up, we need to add providers. These are what generate the data to add to your Pack. The following pages outline how to do this."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_data-generation_recipes",
     "version": "1.14.4",
-    "label": "develop_data-generation_recipes",
+    "label": "Recipe Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/recipes",
     "tags": [
+      "entrypoint",
+      "datagen",
       "recipe"
     ],
     "firstParagraph": "First, we'll need our provider. Make a class that extends FabricRecipeProvider. All our recipe generation will happen inside the buildRecipes method of our provider.",
@@ -427,14 +505,20 @@
         "level": 2,
         "summary": "Other recipes work similarly, but require a few extra parameters. For example, smelting recipes need to know how much experience to award. @code lang=java transcludeWith=:::datagen-recipes:other"
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_data-generation_loot-tables",
     "version": "1.14.4",
-    "label": "develop_data-generation_loot-tables",
+    "label": "Loot Table Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables",
     "tags": [
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "entity",
       "loot"
     ],
     "firstParagraph": "Loot tables define what you get from breaking a block (not including contents, like in chests), killing an entity, or opening a newly-generated container.",
@@ -454,15 +538,21 @@
         "level": 2,
         "summary": "Chest loot is a little bit tricker than block loot. Create a class that extends SimpleFabricLootTableProvider similar to the example below and add it to your pack."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_data-generation_tags",
     "version": "1.14.4",
-    "label": "develop_data-generation_tags",
+    "label": "Tag Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/tags",
     "tags": [
-      "tag"
+      "entrypoint",
+      "datagen",
+      "item",
+      "entity",
+      "tag",
+      "config"
     ],
     "firstParagraph": "Here we'll show how to create Item tags, but the same principle applies for other things.",
     "sections": [
@@ -476,14 +566,16 @@
         "level": 2,
         "summary": "Now that you've created a provider, let's add a tag to it. First, create a TagKey<T>: @code lang=java transcludeWith=:::datagen-tags:tag-key"
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_mixins_bytecode",
     "version": "1.14.4",
-    "label": "develop_mixins_bytecode",
+    "label": "mixins bytecode",
     "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
     "tags": [
+      "sides",
       "mixin"
     ],
     "firstParagraph": "Many things in bytecode, like classes, fields, and methods, are still identified by the name (and the descriptor for fields and methods, we'll get to that), just like they are in source code.",
@@ -513,14 +605,18 @@
         "level": 2,
         "summary": "Here's a reference for the most common bytecode instructions and patterns you'll encounter while developing mixins."
       }
-    ]
+    ],
+    "source": "vitepress"
   },
   {
     "id": "1.14.4/develop_getting-started_creating-a-project",
     "version": "1.14.4",
-    "label": "develop_getting-started_creating-a-project",
+    "label": "getting started creating a project",
     "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project",
-    "tags": [],
+    "tags": [
+      "resource",
+      "config"
+    ],
     "firstParagraph": "You can use the Fabric Template Mod Generator to generate a new project for your mod - you should fill in the required fields, such as the mod name, package name, and the Minecraft version that you...",
     "sections": [
       {
@@ -533,14 +629,17 @@
         "level": 2,
         "summary": "PREREQUISITESYou will need Git installed in order to clone the example mod repository. If you cannot use the Fabric Template Mod Generator, you can create a new project manually by following these ..."
       }
-    ]
+    ],
+    "source": "vitepress"
   },
   {
     "id": "1.14.4/develop_getting-started_building-a-mod",
     "version": "1.14.4",
-    "label": "develop_getting-started_building-a-mod",
+    "label": "Building a Mod",
     "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod",
-    "tags": [],
+    "tags": [
+      "sides"
+    ],
     "firstParagraph": "<ChoiceComponent :choices=\"[ { name: 'IntelliJ IDEA', href: './intellij-idea/building-a-mod', icon: 'simple-icons:intellijidea', color: '#FE2857', }, { name: 'Visual Studio Code', icon: 'codicon:vs...",
     "sections": [
       {
@@ -558,14 +657,20 @@
         "level": 2,
         "summary": "From there, the mod can be installed as normal, or uploaded to trustworthy mod hosting sites like CurseForge and Modrinth."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_loom_index",
     "version": "1.14.4",
-    "label": "develop_loom_index",
+    "label": "Loom",
     "url": "https://docs.fabricmc.net/develop/loom",
-    "tags": [],
+    "tags": [
+      "sides",
+      "mixin",
+      "resource",
+      "config"
+    ],
     "firstParagraph": "Loom uses multiple different plugin IDs:",
     "sections": [
       {
@@ -608,15 +713,19 @@
         "level": 2,
         "summary": "- Applies the following plugins: java, eclipse - Adds the following Maven repositories: Fabric, Mojang and Maven Central - Configures the eclipse task to be finalized by the genEclipseRuns task - I..."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_rendering_basic-concepts",
     "version": "1.14.4",
-    "label": "develop_rendering_basic-concepts",
+    "label": "Basic Rendering Concepts",
     "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts",
     "tags": [
-      "rendering"
+      "registry",
+      "entrypoint",
+      "rendering",
+      "particle"
     ],
     "firstParagraph": "The Tesselator is the main class used to render things in Minecraft. It is a singleton, meaning that there is only one instance of it in the game. You can get the instance using Tesselator.",
     "sections": [
@@ -640,12 +749,13 @@
         "level": 2,
         "summary": "This section's code and the text are discussing different things! The code showcases rendering on the HUD, while the text describes rendering the 3D world space."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_rendering_gui_custom-screens",
     "version": "1.14.4",
-    "label": "develop_rendering_gui_custom-screens",
+    "label": "Custom Screens",
     "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens",
     "tags": [
       "rendering"
@@ -667,14 +777,20 @@
         "level": 2,
         "summary": "If you want to close the screen, simply set the screen to null: If you want to be fancy, and return to the previous screen, you can pass the current screen into the CustomScreen constructor and sto..."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_saved-data",
     "version": "1.14.4",
-    "label": "develop_saved-data",
+    "label": "Saved Data",
     "url": "https://docs.fabricmc.net/develop/saved-data",
-    "tags": [],
+    "tags": [
+      "event",
+      "block",
+      "blockentity",
+      "resource"
+    ],
     "firstParagraph": "SavedData is the main class responsible for managing the saving/loading of data. As it is an abstract class, you're expected to provide an implementation.",
     "sections": [
       {
@@ -682,14 +798,22 @@
         "level": 2,
         "summary": "SavedData is the main class responsible for managing the saving/loading of data. As it is an abstract class, you're expected to provide an implementation."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_codecs",
     "version": "1.14.4",
-    "label": "develop_codecs",
+    "label": "Codecs",
     "url": "https://docs.fabricmc.net/develop/codecs",
-    "tags": [],
+    "tags": [
+      "registry",
+      "networking",
+      "datagen",
+      "item",
+      "block",
+      "resource"
+    ],
     "firstParagraph": "The basic usage of a codec is to serialize and deserialize objects to and from a specific format.",
     "sections": [
       {
@@ -702,14 +826,20 @@
         "level": 2,
         "summary": "Now that we've seen how to use codecs, let's take a look at how we can build our own. Suppose we have the following class, and we want to deserialize instances of it from JSON files: <<< @/referenc..."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_key-mappings",
     "version": "1.14.4",
-    "label": "develop_key-mappings",
+    "label": "Key Mappings",
     "url": "https://docs.fabricmc.net/develop/key-mappings",
-    "tags": [],
+    "tags": [
+      "event",
+      "datagen",
+      "resource",
+      "config"
+    ],
     "firstParagraph": "A key mapping consists of two parts: the mapping to a key, and the category it belongs to.",
     "sections": [
       {
@@ -727,14 +857,17 @@
         "level": 2,
         "summary": "Now that we have a key mapping, we can react to it using a client tick event. @code lang=java transcludeWith=:::clienttickevent"
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_porting_index",
     "version": "1.14.4",
-    "label": "develop_porting_index",
+    "label": "Porting to 26.1",
     "url": "https://docs.fabricmc.net/develop/porting",
-    "tags": [],
+    "tags": [
+      "resource"
+    ],
     "firstParagraph": "If your mod is still using Fabric's Yarn Mappings, you'll first need to migrate your mod to Mojang's official mappings before porting to 26.1.",
     "sections": [
       {
@@ -752,15 +885,22 @@
         "level": 2,
         "summary": "After the build script has been updated to 26.1, you can now go through your mod and update any code that has changed to make it compatible with the snapshot. - Fabric for Minecraft 26."
       }
-    ]
+    ],
+    "source": "github_raw"
   },
   {
     "id": "1.14.4/develop_networking",
     "version": "1.14.4",
-    "label": "develop_networking",
+    "label": "networking",
     "url": "https://docs.fabricmc.net/develop/networking",
     "tags": [
-      "networking"
+      "registry",
+      "networking",
+      "event",
+      "sides",
+      "item",
+      "blockentity",
+      "entity"
     ],
     "firstParagraph": "Packets are the core concept of networking in Minecraft. Packets are made up of arbitrary data that can be sent either from server to client or from client to server.",
     "sections": [
@@ -774,6 +914,7 @@
         "level": 2,
         "summary": "INFOA payload is the data that is sent within a packet. This can be done by creating a Java Record with a BlockPos parameter that implements CustomPacketPayload."
       }
-    ]
+    ],
+    "source": "vitepress"
   }
 ]

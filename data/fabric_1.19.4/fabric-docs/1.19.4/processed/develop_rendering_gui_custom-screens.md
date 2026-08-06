@@ -1,5 +1,3 @@
-> GitHub 路径：develop/rendering/gui/custom-screens.md
-> 抓取源：github_raw
 
 ---
 title: Custom Screens

@@ -1,9 +1,12 @@
-# data generation setup
+# Data Generation Setup
 
-> 来源：https://docs.fabricmc.net/develop/data-generation/setup
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/data-generation/setup.md
 > 版本：1.20.4
 > GitHub 路径：develop/data-generation/setup.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:40:36.338Z
+> SHA256：7968fa4c08acea80e85021c0fdd8a7ebb524d3ee85bbd0029c3431e1976d1895
+> 分支：main
 
 ---
 title: Data Generation Setup
@@ -45,11 +48,11 @@ If datagen is enabled, you should have a "Data Generation" run configuration and
 
 First, we need to enable datagen in the `build.gradle` file.
 
-@[code transcludeWith=:::datagen-setup:configure](@/reference/build.gradle)
+<<< @/reference/build.gradle#datagen_setup_configure
 
 Next, we need an entrypoint class. This is where our datagen starts. Place this somewhere in the `client` package - this example places it at `src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java`.
 
-@[code lang=java transcludeWith=:::datagen-setup:generator](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java#datagen_setup_generator
 
 Finally, we need to tell Fabric about the entrypoint in our `fabric.mod.json`:
 
@@ -81,7 +84,7 @@ Close and reopen IntelliJ to create a run configuration for datagen.
 
 Inside your datagen entrypoint's `onInitializeDataGenerator` method, we need to create a `Pack`. Later, you'll add **providers**, which put generated data into this `Pack`.
 
-@[code lang=java transcludeWith=:::datagen-setup:pack](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java#datagen_setup_pack
 
 ## Running Data Generation {#running-data-generation}
 

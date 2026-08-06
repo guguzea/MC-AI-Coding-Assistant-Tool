@@ -1,5 +1,3 @@
-> GitHub 路径：develop/mixins/bytecode.md
-> 抓取源：vitepress
 
 # Java Bytecode 26.1.2 ​
 Learn about Java bytecode so that you can write mixins effectively.Mixins operate on Java bytecode, so to understand them one needs a grasp on their fundamentals.

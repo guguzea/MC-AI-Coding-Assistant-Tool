@@ -379,20 +379,28 @@ function collectPages(version) {
   const cfg = manifest.versions[version];
   if (!cfg) return [];
 
-  const seen = new Set();
+  const seen = new Map(); // href -> { href, text, level }
   const pages = [];
 
-  for (const chapter of cfg.chapters) {
-    if (chapter.href && !seen.has(chapter.href)) {
-      seen.add(chapter.href);
-      pages.push({ href: chapter.href, text: chapter.text, level: chapter.level });
+  const upsert = (href, text, level) => {
+    if (!href) return;
+    const prev = seen.get(href);
+    // 同 href 时优先保留更具体的叶子标题（level 更大），避免分类名覆盖 Registries
+    if (!prev) {
+      const entry = { href, text, level };
+      seen.set(href, entry);
+      pages.push(entry);
+    } else if (level > prev.level) {
+      prev.text = text;
+      prev.level = level;
     }
+  };
+
+  for (const chapter of cfg.chapters) {
+    upsert(chapter.href, chapter.text, chapter.level ?? 1);
     if (chapter.subPages) {
       for (const sub of chapter.subPages) {
-        if (!seen.has(sub.href)) {
-          seen.add(sub.href);
-          pages.push({ href: sub.href, text: sub.text, level: sub.level });
-        }
+        upsert(sub.href, sub.text, sub.level ?? 2);
       }
     }
   }

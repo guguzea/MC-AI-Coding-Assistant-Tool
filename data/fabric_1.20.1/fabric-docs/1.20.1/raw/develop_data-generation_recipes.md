@@ -1,9 +1,12 @@
-# data generation recipes
+# Recipe Generation
 
-> 来源：https://docs.fabricmc.net/develop/data-generation/recipes
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/data-generation/recipes.md
 > 版本：1.20.1
 > GitHub 路径：develop/data-generation/recipes.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:42.344Z
+> SHA256：66f9cb6b3ca195715e28abf9654eb9cc36190337c207436c6302bbc995d6784a
+> 分支：main
 
 ---
 title: Recipe Generation
@@ -29,23 +32,29 @@ Make sure you've completed the [datagen setup](./setup) process first.
 
 First, we'll need our provider. Make a class that extends `FabricRecipeProvider`. All our recipe generation will happen inside the `buildRecipes` method of our provider.
 
-@[code lang=java transcludeWith=:::datagen-recipes:provider](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_provider
 
 To finish setup, add this provider to your `DataGeneratorEntrypoint` within the `onInitializeDataGenerator` method.
 
-@[code lang=java transcludeWith=:::datagen-recipes:register](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java#datagen_recipes_register
 
 ## Shapeless Recipes {#shapeless-recipes}
 
 Shapeless recipes are fairly straightforward. Just add them to the `buildRecipes` method in your provider:
 
-@[code lang=java transcludeWith=:::datagen-recipes:shapeless](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_shapeless
+
+### Dye Recipes {#dye-recipes}
+
+Dye recipes are used to dye items in your inventory.
+
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_dye
 
 ## Shaped Recipes {#shaped-recipes}
 
 For a shaped recipe, you define the shape using a `String`, then define what each `char` in the `String` represents.
 
-@[code lang=java transcludeWith=:::datagen-recipes:shaped](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_shaped
 
 ::: tip
 
@@ -57,4 +66,14 @@ There's a lot of helper methods for creating common recipes. Check out what `Rec
 
 Other recipes work similarly, but require a few extra parameters. For example, smelting recipes need to know how much experience to award.
 
-@[code lang=java transcludeWith=:::datagen-recipes:other](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_smelting
+
+Smoking is a little different, it does not use the same recipe generator as smelter-like blocks do.
+
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_smoking
+
+## Resource Conditions {#resource-conditions}
+
+To apply a [resource condition](../resource-conditions) to a data generated recipe, wrap the output with `withConditions` and provide any resource conditions you want to apply. This will then generate a recipe and an advancement that has resource conditions applied:
+
+<<< @/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java#datagen_recipes_conditions

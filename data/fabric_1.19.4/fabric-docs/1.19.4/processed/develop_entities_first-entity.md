@@ -1,5 +1,3 @@
-> GitHub 路径：develop/entities/first-entity.md
-> 抓取源：github_raw
 
 ---
 title: Creating Your First Entity

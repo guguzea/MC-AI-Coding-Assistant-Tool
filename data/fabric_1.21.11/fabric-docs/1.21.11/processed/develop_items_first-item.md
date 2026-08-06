@@ -1,5 +1,3 @@
-> GitHub 路径：develop/items/first-item.md
-> 抓取源：vitepress
 
 # Creating Your First Item 26.1.2 ​
 Learn how to register a simple item and how to texture, model and name it.This page will introduce you into some key concepts relating to items, and how you can register, texture, model and name them.

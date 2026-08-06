@@ -1,5 +1,3 @@
-> GitHub 路径：develop/rendering/basic-concepts.md
-> 抓取源：github_raw
 
 ---
 title: Basic Rendering Concepts

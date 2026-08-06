@@ -1,5 +1,3 @@
-> GitHub 路径：develop/porting/index.md
-> 抓取源：github_raw
 
 ---
 title: Porting to 26.1

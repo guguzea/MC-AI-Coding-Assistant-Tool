@@ -1,5 +1,3 @@
-> GitHub 路径：develop/items/custom-tools.md
-> 抓取源：github_raw
 
 ---
 title: Tools and Weapons

@@ -1,5 +1,3 @@
-> GitHub 路径：develop/items/first-item.md
-> 抓取源：vitepress
 
 # Creating Your First Item 26.1.2 ​
 Learn how to register a simple item and how to texture, model and name it.This page will introduce you into some key concepts relating to items, and how you can register, texture, model and name them.
@@ -166,3 +164,5 @@ java@Override
 public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
 	textConsumer.accept(Component.translatable("itemTooltip.example-mod.lightning_stick").withStyle(ChatFormatting.GOLD));
 }1234Each call to accept() will add one line to the tooltip.
+
+Copied

@@ -359,6 +359,44 @@ async function testSearchEnhancements() {
       `neoforge registry hit should be topical: ${r.id}`,
     );
   }
+  assert.ok(
+    nf.results.some((r) => typeof r.score === "number" && r.score > 0),
+    "NeoForge search results must retain relevance score",
+  );
+
+  // AT 短查询白名单：不得被停用词表丢弃
+  const { enhancedSearch } = await import("./dist/docs-platform/search-utils.js");
+  const atHits = enhancedSearch({
+    query: "AT",
+    l0: [
+      {
+        id: "advanced/accesstransformers",
+        label: "Access Transformers",
+        tags: ["at", "accesstransformer"],
+        priority: "⭐",
+      },
+      {
+        id: "blocks",
+        label: "Blocks",
+        tags: ["block"],
+        priority: "🟢",
+      },
+    ],
+    limit: 5,
+    minTokenLength: 2,
+  });
+  assert.ok(atHits.length >= 1, "AT whitelist query must not be dropped as stop word");
+  assert.ok(
+    atHits.some((h) => /accesstransformer|at/i.test(h.id + h.label + h.tags.join(" "))),
+    "AT should match access transformer page",
+  );
+
+  const fabricViaDocs = parseToolText(
+    await searchDocs({ query: "Identifier", version: "1.20.1", platform: "fabric", source: "fabric-docs" }),
+  );
+  assert.equal(fabricViaDocs.ok, true);
+  assert.equal(fabricViaDocs.source, "fabric-docs");
+  assert.ok(fabricViaDocs.total >= 1 || fabricViaDocs.results?.length >= 1);
 
   const nfFb = parseToolText(await searchNeoForgeDocs({ query: "block", version: "26.2" }));
   assert.equal(nfFb.versionFallback, true);
@@ -370,6 +408,29 @@ async function testSearchEnhancements() {
 
   const docsFb = parseToolText(await searchDocs({ query: "block", version: "9.9.9", platform: "forge" }));
   assert.equal(docsFb.versionFallback, true);
+
+  // 数据层验收：Fabric label 可读；NeoForge 1.20.4 含 concepts/registries
+  const fabricL0Path = join(dataRoot, "fabric_1.20.1", "fabric-docs", "1.20.1", "index-l0.json");
+  const fabricL0 = JSON.parse(readFileSync(fabricL0Path, "utf8"));
+  const eventsEntry = fabricL0.find((e) => String(e.id).includes("develop_events"));
+  assert.ok(eventsEntry, "fabric L0 must include develop_events");
+  assert.equal(eventsEntry.label, "Events", "FAB-05: label must be readable title not slug");
+  assert.ok(
+    fabricL0.some((e) => (e.tags ?? []).includes("registry") || (e.tags ?? []).includes("datagen")),
+    "fabric L0 should carry semantic tags like registry/datagen",
+  );
+
+  const nfL0Path = join(dataRoot, "neoforge_1.20.4", "neoforge-docs", "1.20.4", "index-l0.json");
+  const nfL0 = JSON.parse(readFileSync(nfL0Path, "utf8"));
+  assert.ok(
+    nfL0.some((e) => e.id === "concepts/registries" || String(e.id).endsWith("concepts/registries")),
+    "NeoForge 1.20.4 index-l0 must include concepts/registries",
+  );
+  const nfReg = parseToolText(await searchNeoForgeDocs({ query: "registry", version: "1.20.4" }));
+  assert.ok(
+    nfReg.results.some((r) => /concepts\/registries|registries/i.test(r.id + r.label)),
+    "search_neoforge_docs registry@1.20.4 should hit concepts/registries",
+  );
 }
 
 async function testDatagenAndMappingGates() {

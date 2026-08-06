@@ -1,5 +1,3 @@
-> GitHub 路径：develop/data-generation/setup.md
-> 抓取源：github_raw
 
 ---
 title: Data Generation Setup

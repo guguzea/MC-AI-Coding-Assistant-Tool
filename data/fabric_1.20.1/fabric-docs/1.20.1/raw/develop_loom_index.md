@@ -1,9 +1,12 @@
-# loom
+# Loom
 
-> 来源：https://docs.fabricmc.net/develop/loom
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/loom/index.md
 > 版本：1.20.1
 > GitHub 路径：develop/loom/index.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:45.146Z
+> SHA256：661472a4f5da3c5322ab4da451d0831e2781b7fbf48635764c9f3cc4159027bb
+> 分支：main
 
 ---
 title: Loom
@@ -68,7 +71,7 @@ The following snippet from a `build.gradle` file shows how you can enable this f
 
 Minecraft 1.18 (1.19 recommended), Loader 0.14 and Loom 1.0 or later are required to split the client and common code.
 
-<<< @/reference/build.gradle#split-sources
+<<< @/reference/build.gradle#split_sources
 
 ## Resolving Issues {#issues}
 

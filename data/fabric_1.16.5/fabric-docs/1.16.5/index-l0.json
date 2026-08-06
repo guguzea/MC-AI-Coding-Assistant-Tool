@@ -2,258 +2,399 @@
   {
     "id": "1.16.5/develop_loader_fabric-mod-json",
     "version": "1.16.5",
-    "label": "develop_loader_fabric-mod-json",
+    "label": "fabric mod json",
     "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json",
-    "tags": [],
+    "tags": [
+      "registry",
+      "entrypoint",
+      "networking",
+      "event",
+      "datagen",
+      "sides",
+      "item",
+      "block",
+      "blockentity",
+      "entity",
+      "recipe",
+      "command",
+      "mixin",
+      "rendering",
+      "config"
+    ],
     "priority": "⭐",
-    "sectionCount": 5
+    "sectionCount": 5,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_items_first-item",
     "version": "1.16.5",
-    "label": "develop_items_first-item",
+    "label": "items first item",
     "url": "https://docs.fabricmc.net/develop/items/first-item",
     "tags": [
-      "item"
+      "registry",
+      "entrypoint",
+      "event",
+      "item",
+      "resource",
+      "config"
     ],
     "priority": "⭐",
-    "sectionCount": 8
+    "sectionCount": 8,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_items_item-models",
     "version": "1.16.5",
-    "label": "develop_items_item-models",
+    "label": "items item models",
     "url": "https://docs.fabricmc.net/develop/items/item-models",
     "tags": [
-      "item"
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 2,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_blocks_first-block",
     "version": "1.16.5",
-    "label": "develop_blocks_first-block",
+    "label": "Creating Your First Block",
     "url": "https://docs.fabricmc.net/develop/blocks/first-block",
     "tags": [
-      "block"
+      "registry",
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "loot",
+      "resource"
     ],
     "priority": "⭐",
-    "sectionCount": 9
+    "sectionCount": 9,
+    "source": "github_raw"
+  },
+  {
+    "id": "1.16.5/develop_blocks_block-models",
+    "version": "1.16.5",
+    "label": "Block Models",
+    "url": "https://docs.fabricmc.net/develop/blocks/block-models",
+    "tags": [
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_blocks_block-entities",
     "version": "1.16.5",
-    "label": "develop_blocks_block-entities",
+    "label": "Block Entities",
     "url": "https://docs.fabricmc.net/develop/blocks/block-entities",
     "tags": [
-      "block"
+      "registry",
+      "block",
+      "blockentity",
+      "entity",
+      "resource"
     ],
     "priority": "⭐",
-    "sectionCount": 6
+    "sectionCount": 6,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_events",
     "version": "1.16.5",
-    "label": "develop_events",
+    "label": "Events",
     "url": "https://docs.fabricmc.net/develop/events",
     "tags": [
-      "event"
+      "entrypoint",
+      "event",
+      "item",
+      "block",
+      "loot",
+      "mixin"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_entities_first-entity",
     "version": "1.16.5",
-    "label": "develop_entities_first-entity",
+    "label": "Creating Your First Entity",
     "url": "https://docs.fabricmc.net/develop/entities/first-entity",
     "tags": [
-      "entity"
+      "networking",
+      "sides",
+      "item",
+      "block",
+      "entity",
+      "resource",
+      "rendering"
     ],
     "priority": "⭐",
-    "sectionCount": 7
+    "sectionCount": 7,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_commands_basics",
     "version": "1.16.5",
-    "label": "develop_commands_basics",
+    "label": "Creating Commands",
     "url": "https://docs.fabricmc.net/develop/commands/basics",
     "tags": [
-      "command"
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "block",
+      "command",
+      "resource"
     ],
     "priority": "⭐",
-    "sectionCount": 5
+    "sectionCount": 5,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_data-generation_setup",
     "version": "1.16.5",
-    "label": "develop_data-generation_setup",
+    "label": "Data Generation Setup",
     "url": "https://docs.fabricmc.net/develop/data-generation/setup",
-    "tags": [],
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "recipe",
+      "loot",
+      "config"
+    ],
     "priority": "⭐",
-    "sectionCount": 5
+    "sectionCount": 5,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_data-generation_recipes",
     "version": "1.16.5",
-    "label": "develop_data-generation_recipes",
+    "label": "Recipe Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/recipes",
     "tags": [
+      "entrypoint",
+      "datagen",
       "recipe"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 4,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_data-generation_loot-tables",
     "version": "1.16.5",
-    "label": "develop_data-generation_loot-tables",
+    "label": "Loot Table Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables",
     "tags": [
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "entity",
       "loot"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_data-generation_tags",
     "version": "1.16.5",
-    "label": "develop_data-generation_tags",
+    "label": "Tag Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/tags",
     "tags": [
-      "tag"
+      "entrypoint",
+      "datagen",
+      "item",
+      "entity",
+      "tag",
+      "config"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 2,
+    "source": "github_raw"
+  },
+  {
+    "id": "1.16.5/develop_mixins_bytecode",
+    "version": "1.16.5",
+    "label": "mixins bytecode",
+    "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
+    "tags": [
+      "sides",
+      "mixin"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_getting-started_building-a-mod",
     "version": "1.16.5",
-    "label": "develop_getting-started_building-a-mod",
+    "label": "Building a Mod",
     "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod",
-    "tags": [],
+    "tags": [
+      "sides"
+    ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_loom_index",
     "version": "1.16.5",
-    "label": "develop_loom_index",
+    "label": "Loom",
     "url": "https://docs.fabricmc.net/develop/loom",
-    "tags": [],
+    "tags": [
+      "sides",
+      "mixin",
+      "resource",
+      "config"
+    ],
     "priority": "⭐",
-    "sectionCount": 8
+    "sectionCount": 8,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_rendering_basic-concepts",
     "version": "1.16.5",
-    "label": "develop_rendering_basic-concepts",
+    "label": "Basic Rendering Concepts",
     "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts",
     "tags": [
-      "rendering"
+      "registry",
+      "entrypoint",
+      "rendering",
+      "particle"
     ],
     "priority": "⭐",
-    "sectionCount": 4
+    "sectionCount": 4,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_rendering_gui_custom-screens",
     "version": "1.16.5",
-    "label": "develop_rendering_gui_custom-screens",
+    "label": "Custom Screens",
     "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens",
     "tags": [
       "rendering"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_saved-data",
     "version": "1.16.5",
-    "label": "develop_saved-data",
+    "label": "Saved Data",
     "url": "https://docs.fabricmc.net/develop/saved-data",
-    "tags": [],
+    "tags": [
+      "event",
+      "block",
+      "blockentity",
+      "resource"
+    ],
     "priority": "⭐",
-    "sectionCount": 1
+    "sectionCount": 1,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_codecs",
     "version": "1.16.5",
-    "label": "develop_codecs",
+    "label": "Codecs",
     "url": "https://docs.fabricmc.net/develop/codecs",
-    "tags": [],
+    "tags": [
+      "registry",
+      "networking",
+      "datagen",
+      "item",
+      "block",
+      "resource"
+    ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 2,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_key-mappings",
     "version": "1.16.5",
-    "label": "develop_key-mappings",
+    "label": "Key Mappings",
     "url": "https://docs.fabricmc.net/develop/key-mappings",
-    "tags": [],
+    "tags": [
+      "event",
+      "datagen",
+      "resource",
+      "config"
+    ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_networking",
     "version": "1.16.5",
-    "label": "develop_networking",
+    "label": "networking",
     "url": "https://docs.fabricmc.net/develop/networking",
     "tags": [
-      "networking"
+      "registry",
+      "networking",
+      "event",
+      "sides",
+      "item",
+      "blockentity",
+      "entity"
     ],
     "priority": "⭐",
-    "sectionCount": 2
+    "sectionCount": 2,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_items_custom-tools",
     "version": "1.16.5",
-    "label": "develop_items_custom-tools",
+    "label": "Tools and Weapons",
     "url": "https://docs.fabricmc.net/develop/items/custom-tools",
     "tags": [
-      "item"
+      "item",
+      "block",
+      "resource",
+      "config"
     ],
     "priority": "🟡",
-    "sectionCount": 2
-  },
-  {
-    "id": "1.16.5/develop_blocks_block-models",
-    "version": "1.16.5",
-    "label": "develop_blocks_block-models",
-    "url": "https://docs.fabricmc.net/develop/blocks/block-models",
-    "tags": [
-      "block"
-    ],
-    "priority": "🟡",
-    "sectionCount": 2
-  },
-  {
-    "id": "1.16.5/develop_mixins_bytecode",
-    "version": "1.16.5",
-    "label": "develop_mixins_bytecode",
-    "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
-    "tags": [
-      "mixin"
-    ],
-    "priority": "🟡",
-    "sectionCount": 5
+    "sectionCount": 2,
+    "source": "github_raw"
   },
   {
     "id": "1.16.5/develop_getting-started_creating-a-project",
     "version": "1.16.5",
-    "label": "develop_getting-started_creating-a-project",
+    "label": "getting started creating a project",
     "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project",
-    "tags": [],
+    "tags": [
+      "resource",
+      "config"
+    ],
     "priority": "🟢",
-    "sectionCount": 2
+    "sectionCount": 2,
+    "source": "vitepress"
   },
   {
     "id": "1.16.5/develop_porting_index",
     "version": "1.16.5",
-    "label": "develop_porting_index",
+    "label": "Porting to 26.1",
     "url": "https://docs.fabricmc.net/develop/porting",
-    "tags": [],
+    "tags": [
+      "resource"
+    ],
     "priority": "🟢",
-    "sectionCount": 3
+    "sectionCount": 3,
+    "source": "github_raw"
   }
 ]

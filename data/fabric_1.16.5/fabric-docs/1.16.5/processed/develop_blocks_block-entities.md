@@ -1,5 +1,3 @@
-> GitHub 路径：develop/blocks/block-entities.md
-> 抓取源：github_raw
 
 ---
 title: Block Entities

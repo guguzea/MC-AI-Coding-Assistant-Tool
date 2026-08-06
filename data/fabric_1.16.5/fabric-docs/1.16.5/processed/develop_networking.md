@@ -1,5 +1,3 @@
-> GitHub 路径：develop/networking.md
-> 抓取源：vitepress
 
 # Networking 26.1.2 ​
 A general guide on networking using Fabric API.Networking in Minecraft is used so the client and server can communicate with each other. Networking is a broad topic, so this page is split up into a few categories.

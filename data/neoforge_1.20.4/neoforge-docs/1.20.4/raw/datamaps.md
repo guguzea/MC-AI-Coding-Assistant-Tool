@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "datamaps"
 url: "https://docs.neoforged.net/docs/1.20.4/datamaps/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:54:46.075Z"
+fetchedAt: "2026-08-06T04:46:21.977Z"
 ---
 # Data Maps
 

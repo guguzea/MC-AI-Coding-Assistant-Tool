@@ -1,14 +1,18 @@
-# items first item
+# Creating Your First Item
 
-> 来源：https://docs.fabricmc.net/develop/items/first-item
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/develop/items/first-item.md
 > 版本：1.20.1
 > GitHub 路径：develop/items/first-item.md
 > 抓取源：github_raw
+> 抓取时间：2026-08-06T04:39:37.057Z
+> SHA256：bb61ae92ef61e43be33986d8a4a43b2b4f6b661fc3ad092a11a214f85c9daf06
+> 分支：main
 
 ---
 title: Creating Your First Item
 description: Learn how to register a simple item and how to texture, model and name it.
 authors:
+  - cassiancc
   - dicedpixels
   - Earthcomputer
   - IMB11
@@ -19,17 +23,35 @@ This page will introduce you into some key concepts relating to items, and how y
 
 If you aren't aware, everything in Minecraft is stored in registries, and items are no exception to that.
 
+## Preparing Your Item IDs Class {#preparing-your-item-ids-classes}
+
+We'll start by creating a class that holds the name of our item, stored as a `ResourceKey`. A `ResourceKey` holds the name of the mod, the name of the item, and what registry it is for.
+
+We'll implement a helper method that creates a `ResourceKey` given an item's name; it will fill in the rest of the data with constants, like the item registry and the mod's ID.
+
+These references to the item are used for [data-generating item tags](../data-generation/tags).
+
+You can put this method in a class called `ModItemIds` (or whatever you want to name the class).
+
+::: tip
+
+Mojang does this with their items as well! Check out the `ItemIds` class for inspiration.
+
+:::
+
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItemIds.java#mod_item_ids_class
+
 ## Preparing Your Items Class {#preparing-your-items-class}
 
-To simplify the registering of items, you can create a method that accepts a string identifier, some item properties and a factory to create the `Item` instance.
+To simplify the registering of items, you can create a method that accepts a resource key, some item properties, and a factory to create the `Item` instance.
 
-This method will create an item with the provided identifier and register it with the game's item registry.
+This method will create an item with the provided key and register it with the game's item registry.
 
 You can put this method in a class called `ModItems` (or whatever you want to name the class).
 
 Mojang does this with their items as well! Check out the `Items` class for inspiration.
 
-@[code transcludeWith=:::1](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#mod_items_class
 
 Notice how we're using `T`, a [generic type](https://docs.oracle.com/javase/tutorial/java/generics/types.html) that extends `Item`. This allows us to use the same method `register` for registering any type of item that extends `Item`. We're also using a [`Function`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html) for the factory, which allows us to specify how we want our item to be created given the item properties.
 
@@ -47,7 +69,9 @@ This will not work if you've marked the item as damageable, as the stack size is
 
 :::
 
-@[code transcludeWith=:::2](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItemIds.java#suspicious_substance
+
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#suspicious_substance
 
 `Item::new` tells the register function to create an `Item` instance from an `Item.Properties` by calling the `Item` constructor (`new Item(...)`), which takes an `Item.Properties` as a parameter.
 
@@ -55,9 +79,9 @@ However, if you now try to run the modified client, you can see that our item do
 
 To do this, you can add a public static initialize method to your class and call it from your [mod's initializer](../getting-started/project-structure#entrypoints) class. Currently, this method doesn't need anything inside it.
 
-@[code transcludeWith=:::3](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#initialize
 
-@[code transcludeWith=:::1](@/reference/latest/src/main/java/com/example/docs/item/ExampleModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ExampleModItems.java#initialize
 
 Calling a method on a class statically initializes it if it hasn't been previously loaded - this means that all `static` fields are evaluated. This is what this dummy `initialize` method is for.
 
@@ -73,7 +97,7 @@ For example purposes, we will add this item to the ingredients `CreativeModeTab`
 
 This can be done in the `initialize` method of your items class.
 
-@[code transcludeWith=:::4](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#add_to_creative_tab
 
 Loading into the game, you can see that our item has been registered, and is in the Ingredients creative tab:
 
@@ -129,7 +153,7 @@ You're going to create a simple `item/generated` model, which takes in an input 
 
 Create the model JSON in the `assets/example-mod/models/item` folder, with the same name as the item; `suspicious_substance.json`
 
-@[code](@/reference/latest/src/main/generated/assets/example-mod/models/item/suspicious_substance.json)
+<<< @/reference/latest/src/main/generated/assets/example-mod/models/item/suspicious_substance.json
 
 #### Breaking Down the Model JSON {#breaking-down-the-model-json}
 
@@ -146,7 +170,7 @@ Minecraft doesn't automatically know where your items' model files can be found,
 
 Create the client item JSON in the `assets/example-mod/items`, with the same file name as the identifier of the item: `suspicious_substance.json`.
 
-@[code](@/reference/latest/src/main/generated/assets/example-mod/items/suspicious_substance.json)
+<<< @/reference/latest/src/main/generated/assets/example-mod/items/suspicious_substance.json
 
 #### Breaking Down the Client Item JSON {#breaking-down-the-client-item-json}
 
@@ -164,11 +188,11 @@ Fabric API provides various registries that can be used to add additional proper
 
 For example, if you want to make your item compostable, you can use the `CompostableRegistry`:
 
-@[code transcludeWith=:::\_10](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#compostable_item
 
 Alternatively, if you want to make your item a fuel, you can use the `FuelValueEvents.BUILD` event:
 
-@[code transcludeWith=:::\_11](@/reference/latest/src/main/java/com/example/docs/item/ModItems.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/ModItems.java#fuel_item
 
 ## Adding a Basic Crafting Recipe {#adding-a-basic-crafting-recipe}
 
@@ -191,7 +215,7 @@ This example uses the `LightningStick` class created in the [Custom Item Interac
 
 :::
 
-@[code lang=java transcludeWith=:::3](@/reference/latest/src/main/java/com/example/docs/item/custom/LightningStick.java)
+<<< @/reference/latest/src/main/java/com/example/docs/item/custom/LightningStick.java#custom_tooltip
 
 Each call to `accept()` will add one line to the tooltip.
 

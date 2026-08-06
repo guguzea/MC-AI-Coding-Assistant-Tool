@@ -1,5 +1,3 @@
-> GitHub 路径：develop/data-generation/loot-tables.md
-> 抓取源：github_raw
 
 ---
 title: Loot Table Generation

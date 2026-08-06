@@ -2,7 +2,7 @@
   {
     "id": "gettingstarted",
     "version": "1.20.4",
-    "label": "Getting Started with Neo",
+    "label": "Getting Started with NeoForge",
     "url": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
     "tags": [
       "getting-started",
@@ -210,7 +210,7 @@
   {
     "id": "advanced/accesstransformers",
     "version": "1.20.4",
-    "label": "Advanced Topics",
+    "label": "Access Transformers",
     "url": "https://docs.neoforged.net/docs/1.20.4/advanced/accesstransformers/",
     "tags": [
       "advanced",
@@ -440,7 +440,7 @@
   {
     "id": "concepts/events",
     "version": "1.20.4",
-    "label": "Concepts",
+    "label": "Events",
     "url": "https://docs.neoforged.net/docs/1.20.4/concepts/events/",
     "tags": [
       "core",
@@ -527,7 +527,7 @@
   {
     "id": "datagen/advancements",
     "version": "1.20.4",
-    "label": "Datagen",
+    "label": "Advancement Generation",
     "url": "https://docs.neoforged.net/docs/1.20.4/datagen/advancements/",
     "tags": [
       "datagen",
@@ -613,7 +613,7 @@
   {
     "id": "datastorage/attachments",
     "version": "1.20.4",
-    "label": "Data Storage",
+    "label": "Data Attachments",
     "url": "https://docs.neoforged.net/docs/1.20.4/datastorage/attachments/",
     "tags": [
       "nbt",
@@ -650,7 +650,7 @@
   {
     "id": "gui/menus",
     "version": "1.20.4",
-    "label": "GUIs",
+    "label": "Menus",
     "url": "https://docs.neoforged.net/docs/1.20.4/gui/menus/",
     "tags": [
       "gui",
@@ -780,7 +780,7 @@
   {
     "id": "misc/config",
     "version": "1.20.4",
-    "label": "Miscellaneous",
+    "label": "Configuration",
     "url": "https://docs.neoforged.net/docs/1.20.4/misc/config/",
     "tags": [
       "misc",
@@ -873,7 +873,7 @@
   {
     "id": "resources/client/i18n",
     "version": "1.20.4",
-    "label": "Client",
+    "label": "I18n and L10n",
     "url": "https://docs.neoforged.net/docs/1.20.4/resources/client/i18n/",
     "tags": [
       "resources",
@@ -932,6 +932,69 @@
     "sections": [
       {
         "title": "Creating a Datapack",
+        "level": 3,
+        "summary": ""
+      }
+    ]
+  },
+  {
+    "id": "concepts/registries",
+    "version": "1.20.4",
+    "label": "Registries",
+    "url": "https://docs.neoforged.net/docs/1.20.4/concepts/registries/",
+    "tags": [
+      "core",
+      "concepts",
+      "fundamentals",
+      "neoforge-core",
+      "has-code",
+      "deferredregister",
+      "registerevent"
+    ],
+    "firstParagraph": "Registration is the process of taking the objects of a mod (such as [items](/docs/1.20.4/items/), [blocks](/docs/1.20.4/blocks/), entities, etc.) and making them known to the game. Registering things is important, as without registration the game will simply not know about these objects, which will ",
+    "sections": [
+      {
+        "title": "Vanilla vs. Modded",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Methods for Registering",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "DeferredRegister",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "RegisterEvent",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Querying Registries",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Custom Registries",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Datapack Registries",
+        "level": 2,
+        "summary": ""
+      },
+      {
+        "title": "Custom Datapack Registries",
+        "level": 3,
+        "summary": ""
+      },
+      {
+        "title": "Data Generation for Datapack Registries",
         "level": 3,
         "summary": ""
       }

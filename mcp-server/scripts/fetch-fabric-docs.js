@@ -317,6 +317,28 @@ function decodeEntities(str) {
 }
 
 /**
+ * 从 Markdown 正文（含 YAML frontmatter）提取可读标题。
+ * 优先 frontmatter title:，其次正文首个 H1，最后 fallback 到 slug id。
+ */
+function extractDocTitle(content, fallbackId) {
+  const fm = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (fm) {
+    const titleLine = fm[1].match(/^title:\s*(.+)$/m);
+    if (titleLine) {
+      let t = titleLine[1].trim();
+      // 去掉包裹引号
+      if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+        t = t.slice(1, -1);
+      }
+      if (t) return t;
+    }
+  }
+  const h1 = content.match(/^#\s+(.+)$/m);
+  if (h1) return h1[1].replace(/\{#.*\}$/, "").trim();
+  return fallbackId.replace(/-/g, " ");
+}
+
+/**
  * 写入 raw 文件，顶部加上元数据行。
  * 元数据行格式与 audit 脚本的正则兼容：RAW_VERSION_RX = />\s*版本：\s*(\S+)/
  */
@@ -327,8 +349,10 @@ function writeRawFile(entry, content, source, fetchedAt, sha, finalUrl, branch) 
 
   ensureDir(dirname(filepath));
 
+  const title = extractDocTitle(content, id);
+
   const lines = [
-    `# ${id.replace(/-/g, " ")}`,
+    `# ${title}`,
     "",
     `> 来源：${finalUrl}`,
     `> 版本：${VERSION}`,

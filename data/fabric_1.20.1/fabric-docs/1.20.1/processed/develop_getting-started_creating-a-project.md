@@ -1,5 +1,3 @@
-> GitHub 路径：develop/getting-started/creating-a-project.md
-> 抓取源：github_raw
 
 ---
 title: Creating a Project

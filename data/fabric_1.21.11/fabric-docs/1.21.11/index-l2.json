@@ -2,9 +2,25 @@
   {
     "id": "1.21.11/develop_loader_fabric-mod-json",
     "version": "1.21.11",
-    "label": "develop_loader_fabric-mod-json",
+    "label": "fabric mod json",
     "url": "https://docs.fabricmc.net/develop/loader/fabric-mod-json",
-    "tags": [],
+    "tags": [
+      "registry",
+      "entrypoint",
+      "networking",
+      "event",
+      "datagen",
+      "sides",
+      "item",
+      "block",
+      "blockentity",
+      "entity",
+      "recipe",
+      "command",
+      "mixin",
+      "rendering",
+      "config"
+    ],
     "sections": [
       {
         "title": "Mandatory Fields ​",
@@ -36,15 +52,21 @@
     "codeBlockCount": 0,
     "keySections": 2,
     "file": "develop_loader_fabric-mod-json.md",
-    "processedFile": "processed/develop_loader_fabric-mod-json.md"
+    "processedFile": "processed/develop_loader_fabric-mod-json.md",
+    "source": "vitepress"
   },
   {
     "id": "1.21.11/develop_items_first-item",
     "version": "1.21.11",
-    "label": "develop_items_first-item",
+    "label": "items first item",
     "url": "https://docs.fabricmc.net/develop/items/first-item",
     "tags": [
-      "item"
+      "registry",
+      "entrypoint",
+      "event",
+      "item",
+      "resource",
+      "config"
     ],
     "sections": [
       {
@@ -92,15 +114,20 @@
     "codeBlockCount": 0,
     "keySections": 1,
     "file": "develop_items_first-item.md",
-    "processedFile": "processed/develop_items_first-item.md"
+    "processedFile": "processed/develop_items_first-item.md",
+    "source": "vitepress"
   },
   {
     "id": "1.21.11/develop_items_item-models",
     "version": "1.21.11",
-    "label": "develop_items_item-models",
+    "label": "items item models",
     "url": "https://docs.fabricmc.net/develop/items/item-models",
     "tags": [
-      "item"
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
     ],
     "sections": [
       {
@@ -118,15 +145,19 @@
     "codeBlockCount": 0,
     "keySections": 0,
     "file": "develop_items_item-models.md",
-    "processedFile": "processed/develop_items_item-models.md"
+    "processedFile": "processed/develop_items_item-models.md",
+    "source": "vitepress"
   },
   {
     "id": "1.21.11/develop_items_custom-tools",
     "version": "1.21.11",
-    "label": "develop_items_custom-tools",
+    "label": "Tools and Weapons",
     "url": "https://docs.fabricmc.net/develop/items/custom-tools",
     "tags": [
-      "item"
+      "item",
+      "block",
+      "resource",
+      "config"
     ],
     "sections": [
       {
@@ -144,15 +175,22 @@
     "codeBlockCount": 0,
     "keySections": 1,
     "file": "develop_items_custom-tools.md",
-    "processedFile": "processed/develop_items_custom-tools.md"
+    "processedFile": "processed/develop_items_custom-tools.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_blocks_first-block",
     "version": "1.21.11",
-    "label": "develop_blocks_first-block",
+    "label": "Creating Your First Block",
     "url": "https://docs.fabricmc.net/develop/blocks/first-block",
     "tags": [
-      "block"
+      "registry",
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "loot",
+      "resource"
     ],
     "sections": [
       {
@@ -205,15 +243,20 @@
     "codeBlockCount": 2,
     "keySections": 1,
     "file": "develop_blocks_first-block.md",
-    "processedFile": "processed/develop_blocks_first-block.md"
+    "processedFile": "processed/develop_blocks_first-block.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_blocks_block-models",
     "version": "1.21.11",
-    "label": "develop_blocks_block-models",
+    "label": "Block Models",
     "url": "https://docs.fabricmc.net/develop/blocks/block-models",
     "tags": [
-      "block"
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
     ],
     "sections": [
       {
@@ -231,15 +274,20 @@
     "codeBlockCount": 3,
     "keySections": 0,
     "file": "develop_blocks_block-models.md",
-    "processedFile": "processed/develop_blocks_block-models.md"
+    "processedFile": "processed/develop_blocks_block-models.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_blocks_block-entities",
     "version": "1.21.11",
-    "label": "develop_blocks_block-entities",
+    "label": "Block Entities",
     "url": "https://docs.fabricmc.net/develop/blocks/block-entities",
     "tags": [
-      "block"
+      "registry",
+      "block",
+      "blockentity",
+      "entity",
+      "resource"
     ],
     "sections": [
       {
@@ -277,15 +325,21 @@
     "codeBlockCount": 1,
     "keySections": 3,
     "file": "develop_blocks_block-entities.md",
-    "processedFile": "processed/develop_blocks_block-entities.md"
+    "processedFile": "processed/develop_blocks_block-entities.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_events",
     "version": "1.21.11",
-    "label": "develop_events",
+    "label": "Events",
     "url": "https://docs.fabricmc.net/develop/events",
     "tags": [
-      "event"
+      "entrypoint",
+      "event",
+      "item",
+      "block",
+      "loot",
+      "mixin"
     ],
     "sections": [
       {
@@ -308,15 +362,22 @@
     "codeBlockCount": 0,
     "keySections": 3,
     "file": "develop_events.md",
-    "processedFile": "processed/develop_events.md"
+    "processedFile": "processed/develop_events.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_entities_first-entity",
     "version": "1.21.11",
-    "label": "develop_entities_first-entity",
+    "label": "Creating Your First Entity",
     "url": "https://docs.fabricmc.net/develop/entities/first-entity",
     "tags": [
-      "entity"
+      "networking",
+      "sides",
+      "item",
+      "block",
+      "entity",
+      "resource",
+      "rendering"
     ],
     "sections": [
       {
@@ -359,15 +420,22 @@
     "codeBlockCount": 0,
     "keySections": 3,
     "file": "develop_entities_first-entity.md",
-    "processedFile": "processed/develop_entities_first-entity.md"
+    "processedFile": "processed/develop_entities_first-entity.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_commands_basics",
     "version": "1.21.11",
-    "label": "develop_commands_basics",
+    "label": "Creating Commands",
     "url": "https://docs.fabricmc.net/develop/commands/basics",
     "tags": [
-      "command"
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "block",
+      "command",
+      "resource"
     ],
     "sections": [
       {
@@ -400,14 +468,21 @@
     "codeBlockCount": 2,
     "keySections": 5,
     "file": "develop_commands_basics.md",
-    "processedFile": "processed/develop_commands_basics.md"
+    "processedFile": "processed/develop_commands_basics.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_data-generation_setup",
     "version": "1.21.11",
-    "label": "develop_data-generation_setup",
+    "label": "Data Generation Setup",
     "url": "https://docs.fabricmc.net/develop/data-generation/setup",
-    "tags": [],
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "recipe",
+      "loot",
+      "config"
+    ],
     "sections": [
       {
         "title": "What Is Data Generation? {#what-is-data-generation}",
@@ -439,14 +514,17 @@
     "codeBlockCount": 1,
     "keySections": 1,
     "file": "develop_data-generation_setup.md",
-    "processedFile": "processed/develop_data-generation_setup.md"
+    "processedFile": "processed/develop_data-generation_setup.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_data-generation_recipes",
     "version": "1.21.11",
-    "label": "develop_data-generation_recipes",
+    "label": "Recipe Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/recipes",
     "tags": [
+      "entrypoint",
+      "datagen",
       "recipe"
     ],
     "sections": [
@@ -475,14 +553,20 @@
     "codeBlockCount": 0,
     "keySections": 0,
     "file": "develop_data-generation_recipes.md",
-    "processedFile": "processed/develop_data-generation_recipes.md"
+    "processedFile": "processed/develop_data-generation_recipes.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_data-generation_loot-tables",
     "version": "1.21.11",
-    "label": "develop_data-generation_loot-tables",
+    "label": "Loot Table Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/loot-tables",
     "tags": [
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "entity",
       "loot"
     ],
     "sections": [
@@ -506,15 +590,21 @@
     "codeBlockCount": 0,
     "keySections": 0,
     "file": "develop_data-generation_loot-tables.md",
-    "processedFile": "processed/develop_data-generation_loot-tables.md"
+    "processedFile": "processed/develop_data-generation_loot-tables.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_data-generation_tags",
     "version": "1.21.11",
-    "label": "develop_data-generation_tags",
+    "label": "Tag Generation",
     "url": "https://docs.fabricmc.net/develop/data-generation/tags",
     "tags": [
-      "tag"
+      "entrypoint",
+      "datagen",
+      "item",
+      "entity",
+      "tag",
+      "config"
     ],
     "sections": [
       {
@@ -532,14 +622,16 @@
     "codeBlockCount": 0,
     "keySections": 0,
     "file": "develop_data-generation_tags.md",
-    "processedFile": "processed/develop_data-generation_tags.md"
+    "processedFile": "processed/develop_data-generation_tags.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_mixins_bytecode",
     "version": "1.21.11",
-    "label": "develop_mixins_bytecode",
+    "label": "mixins bytecode",
     "url": "https://docs.fabricmc.net/develop/mixins/bytecode",
     "tags": [
+      "sides",
       "mixin"
     ],
     "sections": [
@@ -573,14 +665,18 @@
     "codeBlockCount": 0,
     "keySections": 2,
     "file": "develop_mixins_bytecode.md",
-    "processedFile": "processed/develop_mixins_bytecode.md"
+    "processedFile": "processed/develop_mixins_bytecode.md",
+    "source": "vitepress"
   },
   {
     "id": "1.21.11/develop_getting-started_creating-a-project",
     "version": "1.21.11",
-    "label": "develop_getting-started_creating-a-project",
+    "label": "getting started creating a project",
     "url": "https://docs.fabricmc.net/develop/getting-started/creating-a-project",
-    "tags": [],
+    "tags": [
+      "resource",
+      "config"
+    ],
     "sections": [
       {
         "title": "Generating a Project ​",
@@ -597,14 +693,17 @@
     "codeBlockCount": 0,
     "keySections": 5,
     "file": "develop_getting-started_creating-a-project.md",
-    "processedFile": "processed/develop_getting-started_creating-a-project.md"
+    "processedFile": "processed/develop_getting-started_creating-a-project.md",
+    "source": "vitepress"
   },
   {
     "id": "1.21.11/develop_getting-started_building-a-mod",
     "version": "1.21.11",
-    "label": "develop_getting-started_building-a-mod",
+    "label": "Building a Mod",
     "url": "https://docs.fabricmc.net/develop/getting-started/building-a-mod",
-    "tags": [],
+    "tags": [
+      "sides"
+    ],
     "sections": [
       {
         "title": "Choose Your IDE {#choose-your-ide}",
@@ -626,14 +725,20 @@
     "codeBlockCount": 2,
     "keySections": 0,
     "file": "develop_getting-started_building-a-mod.md",
-    "processedFile": "processed/develop_getting-started_building-a-mod.md"
+    "processedFile": "processed/develop_getting-started_building-a-mod.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_loom_index",
     "version": "1.21.11",
-    "label": "develop_loom_index",
+    "label": "Loom",
     "url": "https://docs.fabricmc.net/develop/loom",
-    "tags": [],
+    "tags": [
+      "sides",
+      "mixin",
+      "resource",
+      "config"
+    ],
     "sections": [
       {
         "title": "Plugin IDs {#plugin-ids}",
@@ -680,15 +785,19 @@
     "codeBlockCount": 2,
     "keySections": 0,
     "file": "develop_loom_index.md",
-    "processedFile": "processed/develop_loom_index.md"
+    "processedFile": "processed/develop_loom_index.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_rendering_basic-concepts",
     "version": "1.21.11",
-    "label": "develop_rendering_basic-concepts",
+    "label": "Basic Rendering Concepts",
     "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts",
     "tags": [
-      "rendering"
+      "registry",
+      "entrypoint",
+      "rendering",
+      "particle"
     ],
     "sections": [
       {
@@ -716,12 +825,13 @@
     "codeBlockCount": 1,
     "keySections": 3,
     "file": "develop_rendering_basic-concepts.md",
-    "processedFile": "processed/develop_rendering_basic-concepts.md"
+    "processedFile": "processed/develop_rendering_basic-concepts.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_rendering_gui_custom-screens",
     "version": "1.21.11",
-    "label": "develop_rendering_gui_custom-screens",
+    "label": "Custom Screens",
     "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens",
     "tags": [
       "rendering"
@@ -747,14 +857,20 @@
     "codeBlockCount": 3,
     "keySections": 0,
     "file": "develop_rendering_gui_custom-screens.md",
-    "processedFile": "processed/develop_rendering_gui_custom-screens.md"
+    "processedFile": "processed/develop_rendering_gui_custom-screens.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_saved-data",
     "version": "1.21.11",
-    "label": "develop_saved-data",
+    "label": "Saved Data",
     "url": "https://docs.fabricmc.net/develop/saved-data",
-    "tags": [],
+    "tags": [
+      "event",
+      "block",
+      "blockentity",
+      "resource"
+    ],
     "sections": [
       {
         "title": "Saving Data {#saving-data}",
@@ -766,14 +882,22 @@
     "codeBlockCount": 1,
     "keySections": 0,
     "file": "develop_saved-data.md",
-    "processedFile": "processed/develop_saved-data.md"
+    "processedFile": "processed/develop_saved-data.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_codecs",
     "version": "1.21.11",
-    "label": "develop_codecs",
+    "label": "Codecs",
     "url": "https://docs.fabricmc.net/develop/codecs",
-    "tags": [],
+    "tags": [
+      "registry",
+      "networking",
+      "datagen",
+      "item",
+      "block",
+      "resource"
+    ],
     "sections": [
       {
         "title": "Using Codecs {#using-codecs}",
@@ -790,14 +914,20 @@
     "codeBlockCount": 0,
     "keySections": 5,
     "file": "develop_codecs.md",
-    "processedFile": "processed/develop_codecs.md"
+    "processedFile": "processed/develop_codecs.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_key-mappings",
     "version": "1.21.11",
-    "label": "develop_key-mappings",
+    "label": "Key Mappings",
     "url": "https://docs.fabricmc.net/develop/key-mappings",
-    "tags": [],
+    "tags": [
+      "event",
+      "datagen",
+      "resource",
+      "config"
+    ],
     "sections": [
       {
         "title": "Creating a Key Mapping {#creating-a-key-mapping}",
@@ -819,14 +949,17 @@
     "codeBlockCount": 1,
     "keySections": 0,
     "file": "develop_key-mappings.md",
-    "processedFile": "processed/develop_key-mappings.md"
+    "processedFile": "processed/develop_key-mappings.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_porting_index",
     "version": "1.21.11",
-    "label": "develop_porting_index",
+    "label": "Porting to 26.1",
     "url": "https://docs.fabricmc.net/develop/porting",
-    "tags": [],
+    "tags": [
+      "resource"
+    ],
     "sections": [
       {
         "title": "Prerequisites {#prerequisites}",
@@ -848,15 +981,22 @@
     "codeBlockCount": 0,
     "keySections": 0,
     "file": "develop_porting_index.md",
-    "processedFile": "processed/develop_porting_index.md"
+    "processedFile": "processed/develop_porting_index.md",
+    "source": "github_raw"
   },
   {
     "id": "1.21.11/develop_networking",
     "version": "1.21.11",
-    "label": "develop_networking",
+    "label": "networking",
     "url": "https://docs.fabricmc.net/develop/networking",
     "tags": [
-      "networking"
+      "registry",
+      "networking",
+      "event",
+      "sides",
+      "item",
+      "blockentity",
+      "entity"
     ],
     "sections": [
       {
@@ -874,6 +1014,7 @@
     "codeBlockCount": 0,
     "keySections": 1,
     "file": "develop_networking.md",
-    "processedFile": "processed/develop_networking.md"
+    "processedFile": "processed/develop_networking.md",
+    "source": "vitepress"
   }
 ]

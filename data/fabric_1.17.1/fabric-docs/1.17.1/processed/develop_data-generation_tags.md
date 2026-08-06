@@ -1,5 +1,3 @@
-> GitHub 路径：develop/data-generation/tags.md
-> 抓取源：github_raw
 
 ---
 title: Tag Generation

@@ -4,7 +4,7 @@ version: "1.20.4"
 pageId: "blocks/states"
 url: "https://docs.neoforged.net/docs/1.20.4/blocks/states/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:54:41.122Z"
+fetchedAt: "2026-08-06T04:46:16.464Z"
 ---
 # Blockstates
 
