@@ -202,7 +202,11 @@ async function main() {
     ownerClass: "net.minecraft.world.entity.LivingEntity",
     version: "1.20.1",
   });
-  note("info", "convert_mapping", "mcp→mojang getHealth", safe(r));
+  if (!r.found || !r.converted || r.converted === "getHealth") {
+    note("error", "convert_mapping", "mcp→mojang getHealth must return official short name", safe(r));
+  } else {
+    note("info", "convert_mapping", "mcp→mojang getHealth", safe(r));
+  }
 
   note("warn", "convert_mapping", "semantic asymmetry: enum 'mojang' means named when FROM, official/obf when TO", {
     evidence: "yarn→mojang=cpn vs mojang→yarn accepts net.minecraft.world.level.block.Block",

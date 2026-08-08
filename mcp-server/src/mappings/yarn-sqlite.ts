@@ -12,6 +12,7 @@ type MappingDb = DatabaseSync;
 
 const _dbs = new Map<string, MappingDb>();
 const _pathCache = new Map<string, string | null>();
+const _csvPathCache = new Map<string, string | null>();
 
 export function normalizeMcVersion(input: string): string {
   let v = input.trim();
@@ -52,6 +53,14 @@ function methodCountOf(db: MappingDb): number {
   }
 }
 
+function openDbCached(dbPath: string): MappingDb {
+  const cached = _dbs.get(dbPath);
+  if (cached) return cached;
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  _dbs.set(dbPath, db);
+  return db;
+}
+
 /** Resolve best sqlite path for version (fabric preferred when useful). */
 export function resolveMappingDbPath(version: string): string | null {
   const v = normalizeMcVersion(version);
@@ -75,7 +84,6 @@ export function resolveMappingDbPath(version: string): string | null {
   if (!chosen && existsSync(forge)) {
     chosen = forge;
   }
-  // If fabric exists but methodCount=0 and forge has methods, prefer forge
   if (chosen === fabric && existsSync(forge)) {
     try {
       const fdb = new DatabaseSync(fabric, { readOnly: true });
@@ -94,15 +102,36 @@ export function resolveMappingDbPath(version: string): string | null {
   return chosen;
 }
 
-export function getYarnDb(version: string): MappingDb | null {
+/** Forge mcp-csv sqlite for searge↔named (even when fabric yarn-tiny exists). */
+export function resolveCsvMappingDbPath(version: string): string | null {
   const v = normalizeMcVersion(version);
-  const cached = _dbs.get(v);
-  if (cached) return cached;
-  const dbPath = resolveMappingDbPath(v);
+  if (_csvPathCache.has(v)) return _csvPathCache.get(v) ?? null;
+  const forge = forgeSqlitePath(v);
+  let chosen: string | null = null;
+  if (existsSync(forge)) {
+    try {
+      const db = new DatabaseSync(forge, { readOnly: true });
+      const era = readMeta(db, "mappingEra");
+      db.close();
+      if (era === "mcp-csv") chosen = forge;
+    } catch {
+      /* ignore */
+    }
+  }
+  _csvPathCache.set(v, chosen);
+  return chosen;
+}
+
+export function getYarnDb(version: string): MappingDb | null {
+  const dbPath = resolveMappingDbPath(version);
   if (!dbPath || !existsSync(dbPath)) return null;
-  const db = new DatabaseSync(dbPath, { readOnly: true });
-  _dbs.set(v, db);
-  return db;
+  return openDbCached(dbPath);
+}
+
+export function getCsvDb(version: string): MappingDb | null {
+  const dbPath = resolveCsvMappingDbPath(version);
+  if (!dbPath || !existsSync(dbPath)) return null;
+  return openDbCached(dbPath);
 }
 
 export function closeAllYarnDbs(): void {
@@ -115,10 +144,12 @@ export function closeAllYarnDbs(): void {
   }
   _dbs.clear();
   _pathCache.clear();
+  _csvPathCache.clear();
 }
 
 export function yarnDbIsOpen(version: string): boolean {
-  return _dbs.has(normalizeMcVersion(version));
+  const p = resolveMappingDbPath(version);
+  return p ? _dbs.has(p) : false;
 }
 
 function toSlash(name: string): string {
@@ -290,6 +321,98 @@ export function lookupMethod(
 ): LookupMethodResult {
   const db = getYarnDb(version);
   const era = db ? readMeta(db, "mappingEra") : null;
+  const csvDb = getCsvDb(version);
+  const { memberName, descriptor, from } = opts;
+
+  // Prefer Forge mcp-csv for global searge↔named when no ownerClass
+  // (even if fabric yarn-tiny exists for the same MC version).
+  const useCsv = Boolean(csvDb) && !opts.ownerClass;
+  if (useCsv && csvDb) {
+    if (opts.ownerClass) {
+      return {
+        found: false,
+        mappingEra: "mcp-csv",
+        resultKind: "csv-no-owner",
+        notes: [
+          "此版本 CSV 仅有全局 searge↔name，无类路径；请用不带 owner 的 searge/named，或升级到 1.16+ Yarn",
+        ],
+      };
+    }
+    const isSearge = /^func_/.test(memberName) || /^field_/.test(memberName);
+    if (isSearge || from === "mojang") {
+      const row = csvDb
+        .prepare("SELECT searge, name_named, descriptor_named FROM searge_methods WHERE searge = ?")
+        .get(memberName) as
+        | { searge: string; name_named: string; descriptor_named: string }
+        | undefined;
+      if (row) {
+        return {
+          found: true,
+          mappingEra: "mcp-csv",
+          row: {
+            owner_named: "",
+            name_named: row.name_named,
+            descriptor_named: row.descriptor_named || "",
+            name_official: row.searge,
+            descriptor_official: row.descriptor_named || "",
+            name_intermediary: null,
+          },
+        };
+      }
+      // fall through to yarn-tiny if available
+    } else {
+      const rows = csvDb
+        .prepare(
+          "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? LIMIT 20",
+        )
+        .all(memberName) as Array<{
+        searge: string;
+        name_named: string;
+        descriptor_named: string;
+      }>;
+      if (rows.length === 1) {
+        const row = rows[0];
+        return {
+          found: true,
+          mappingEra: "mcp-csv",
+          row: {
+            owner_named: "",
+            name_named: row.name_named,
+            descriptor_named: row.descriptor_named || "",
+            name_official: row.searge,
+            descriptor_official: row.descriptor_named || "",
+            name_intermediary: null,
+          },
+        };
+      }
+      if (rows.length > 1) {
+        return {
+          found: false,
+          ambiguous: true,
+          mappingEra: "mcp-csv",
+          candidates: rows.map((r) => ({
+            name: r.name_named,
+            descriptor: r.descriptor_named || "",
+            official: r.searge,
+          })),
+          notes: ["CSV 同名多条 searge，请改用 searge 主键查询"],
+        };
+      }
+    }
+  }
+
+  // Explicit reject ownerClass against pure csv-only DB
+  if (era === "mcp-csv" && opts.ownerClass) {
+    return {
+      found: false,
+      mappingEra: era,
+      resultKind: "csv-no-owner",
+      notes: [
+        "此版本仅有全局 searge↔name，无类路径；请用不带 owner 的 searge/named，或升级到 1.16+ Yarn",
+      ],
+    };
+  }
+
   if (!db) {
     return {
       found: false,
@@ -298,74 +421,9 @@ export function lookupMethod(
     };
   }
 
-  const { memberName, descriptor, from } = opts;
-
-  // CSV era
   if (era === "mcp-csv") {
-    if (opts.ownerClass) {
-      return {
-        found: false,
-        mappingEra: era,
-        resultKind: "csv-no-owner",
-        notes: [
-          "此版本仅有全局 searge↔name，无类路径；请用不带 owner 的 searge/named，或升级到 1.16+ Yarn",
-        ],
-      };
-    }
-    const isSearge = /^func_/.test(memberName) || /^field_/.test(memberName);
-    if (isSearge || from === "mojang") {
-      const row = db
-        .prepare("SELECT searge, name_named, descriptor_named FROM searge_methods WHERE searge = ?")
-        .get(memberName) as
-        | { searge: string; name_named: string; descriptor_named: string }
-        | undefined;
-      if (!row) return { found: false, mappingEra: era };
-      return {
-        found: true,
-        mappingEra: era,
-        row: {
-          owner_named: "",
-          name_named: row.name_named,
-          descriptor_named: row.descriptor_named || "",
-          name_official: row.searge,
-          descriptor_official: row.descriptor_named || "",
-          name_intermediary: null,
-        },
-      };
-    }
-    // named → searge
-    const rows = db
-      .prepare(
-        "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? LIMIT 20",
-      )
-      .all(memberName) as Array<{ searge: string; name_named: string; descriptor_named: string }>;
-    if (rows.length === 0) return { found: false, mappingEra: era };
-    if (rows.length > 1) {
-      return {
-        found: false,
-        ambiguous: true,
-        mappingEra: era,
-        candidates: rows.map((r) => ({
-          name: r.name_named,
-          descriptor: r.descriptor_named || "",
-          official: r.searge,
-        })),
-        notes: ["CSV 同名多条 searge，请改用 searge 主键查询"],
-      };
-    }
-    const row = rows[0];
-    return {
-      found: true,
-      mappingEra: era,
-      row: {
-        owner_named: "",
-        name_named: row.name_named,
-        descriptor_named: row.descriptor_named || "",
-        name_official: row.searge,
-        descriptor_official: row.descriptor_named || "",
-        name_intermediary: null,
-      },
-    };
+    // already handled above via csvDb; if still here, miss
+    return { found: false, mappingEra: era };
   }
 
   if (!opts.ownerClass) {

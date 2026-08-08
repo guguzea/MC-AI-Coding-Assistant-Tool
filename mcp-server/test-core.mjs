@@ -450,6 +450,14 @@ async function testDatagenAndMappingGates() {
   assert.equal(soft.usedTargetName, "my_block");
   assert.ok(soft.warnings?.length >= 1);
 
+  for (const t of /** @type {const} */ (["recipe", "blockstate", "itemmodel", "loottable", "tag"])) {
+    const d = generateDatagen({ providerType: t, modId: "demo", targetName: "stone_block" });
+    assert.ok(d.code?.includes("net.minecraft.data.PackOutput"), `${t} PackOutput`);
+    assert.ok(!d.code?.includes("data.pack.PackOutput"), `${t} wrong PackOutput package`);
+    assert.ok(!d.code?.includes("::iterator"), `${t} must not use ::iterator`);
+    if (t === "loottable") assert.ok(d.code?.includes("void generate()"), "loot generate()");
+  }
+
   const sugg = suggestSimilarMethods("getHealth", ["getMaxHealth", "getHunger", "hurt"]);
   assert.ok(sugg.includes("getMaxHealth"));
   const short = suggestSimilarMethods("getH", ["getHunger", "getMaxHealth", "getHealth"]);
@@ -462,10 +470,86 @@ async function testDatagenAndMappingGates() {
     ownerClass: "net.minecraft.world.entity.LivingEntity",
     version: "1.20.1",
   });
+  assert.equal(mapped.found, true);
   assert.equal(mapped.mappingType, "method");
-  if (mapped.suggestions?.length) {
-    assert.ok(!mapped.suggestions.some((s) => s === "getHunger" && !s.toLowerCase().includes("health")));
-  }
+  assert.ok(mapped.converted && mapped.converted !== "getHealth", "mcp→mojang must convert official");
+  assert.equal(mapped.fallbackUsed, false);
+
+  const csvFwd = convertMapping({
+    from: "mojang",
+    to: "mcp",
+    memberName: "func_110143_aJ",
+    version: "1.14.4",
+  });
+  assert.equal(csvFwd.found, true);
+  assert.equal(csvFwd.converted, "getHealth");
+  assert.equal(csvFwd.mappingEra, "mcp-csv");
+
+  const csvRev = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "getHealth",
+    version: "1.14.4",
+  });
+  // getHealth 在 CSV 中对应多条 searge → ambiguous（符合 R2/R3）
+  assert.equal(csvRev.found, false);
+  assert.equal(csvRev.ambiguous, true);
+  assert.ok(
+    csvRev.candidates?.some((c) => c.official === "func_110143_aJ"),
+    "candidates should include LivingEntity getHealth searge",
+  );
+
+  const csvRevUnique = convertMapping({
+    from: "mojang",
+    to: "mcp",
+    memberName: "func_110143_aJ",
+    version: "1.14.4",
+  });
+  assert.equal(csvRevUnique.found, true);
+  assert.equal(csvRevUnique.converted, "getHealth");
+
+  const csvOwner = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.14.4",
+  });
+  // 1.14.4 同时有 fabric yarn-tiny：带 owner 走 Yarn；未命中则 found:false（不走 CSV owner）
+  assert.equal(csvOwner.found, false);
+  assert.equal(csvOwner.converted, null);
+
+  const miss = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "noSuchMethodZZZ",
+    ownerClass: "net.minecraft.world.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(miss.found, false);
+  assert.equal(miss.converted, null);
+  assert.equal(miss.fallbackUsed, false);
+
+  const fb = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "noSuchMethodZZZ",
+    ownerClass: "net.minecraft.world.entity.LivingEntity",
+    version: "1.20.1",
+    allow_fallback: true,
+  });
+  assert.equal(fb.found, false);
+  assert.equal(fb.converted, "noSuchMethodZZZ");
+  assert.equal(fb.fallbackUsed, true);
+
+  const { queryApi } = await import("./dist/api/index.js");
+  const api = await queryApi({
+    className: "net.minecraft.world.entity.LivingEntity",
+    methodName: "getHealth",
+    version: "1.20.1",
+  });
+  assert.equal(api.found, true);
+  assert.ok(api.methods?.some((m) => m.name === "getHealth" && m.descriptor === "()F"));
 
   const gradle = diagnoseGradle({
     buildGradle: `

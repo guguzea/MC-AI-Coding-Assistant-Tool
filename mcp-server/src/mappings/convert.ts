@@ -8,6 +8,7 @@ import {
   convertYarnMember,
   getMappingEra,
   lookupMethod,
+  resolveCsvMappingDbPath,
   resolveMappingDbPath,
 } from "./yarn-sqlite.js";
 import { suggestSimilarMethods } from "./suggest.js";
@@ -184,6 +185,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
   const wantMethod =
     Boolean(ownerClass) ||
     era === "mcp-csv" ||
+    Boolean(resolveCsvMappingDbPath(version) && !ownerClass) ||
     /^func_/.test(memberName) ||
     Boolean(descriptor);
 

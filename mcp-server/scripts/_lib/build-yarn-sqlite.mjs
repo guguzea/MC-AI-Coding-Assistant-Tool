@@ -83,7 +83,6 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
   initYarnSchema(db);
   clearMappingTables(db);
   const parsed = await parseTiny(tinyPath, { strict });
-  console.error(`[importTiny] parsed classes=${parsed.classes.length} methods=${parsed.methods.length}`);
   const insertClass = db.prepare(
     "INSERT OR REPLACE INTO classes(named, intermediary, official) VALUES (?, ?, ?)",
   );
@@ -99,7 +98,6 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
     if (!c.named) continue;
     insertClass.run(c.named, c.intermediary || "", c.official || "");
   }
-  let i = 0;
   for (const m of parsed.methods) {
     if (!m.ownerNamed || !m.nameNamed) continue;
     if (m.nameNamed.startsWith("<")) continue;
@@ -111,10 +109,7 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
       m.descriptorOfficial || "",
       m.nameIntermediary || null,
     );
-    i++;
-    if (i % 10000 === 0) console.error(`[importTiny] inserted methods ${i}`);
   }
-  console.error(`[importTiny] commit methods=${i}`);
   setMeta(db, {
     schemaVersion: "2",
     version: meta.version ?? "",
@@ -397,7 +392,7 @@ function sleepSync(ms) {
   }
 }
 
-/** Windows-safe replace: retry unlink/rename when AV or IDE locks the target. */
+/** Windows-safe replace. Supports cross-drive (os.tmpdir → H:) via copy. */
 function replaceSqliteAtomically(tmpPath, outPath) {
   const bak = outPath + ".bak";
   let lastErr;
@@ -414,10 +409,24 @@ function replaceSqliteAtomically(tmpPath, outPath) {
         try {
           fs.renameSync(outPath, bak);
         } catch {
-          fs.unlinkSync(outPath);
+          try {
+            fs.unlinkSync(outPath);
+          } catch {
+            /* keep trying */
+          }
         }
       }
-      fs.renameSync(tmpPath, outPath);
+      try {
+        fs.renameSync(tmpPath, outPath);
+      } catch {
+        // Cross-device rename fails — copy then unlink tmp
+        fs.copyFileSync(tmpPath, outPath);
+        try {
+          fs.unlinkSync(tmpPath);
+        } catch {
+          /* ignore */
+        }
+      }
       if (fs.existsSync(bak)) {
         try {
           fs.unlinkSync(bak);
@@ -431,18 +440,7 @@ function replaceSqliteAtomically(tmpPath, outPath) {
       sleepSync(200 * (i + 1));
     }
   }
-  // Last resort: copy then unlink tmp
-  try {
-    fs.copyFileSync(tmpPath, outPath);
-    try {
-      fs.unlinkSync(tmpPath);
-    } catch {
-      /* ignore */
-    }
-    return;
-  } catch (err) {
-    throw lastErr || err;
-  }
+  throw lastErr || new Error(`Failed to place sqlite at ${outPath}`);
 }
 
 export async function buildAllMappingSqlite(dataRoot) {
@@ -534,3 +532,5 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         console.error(err);
         process.exit(1);
       });
+  }
+}

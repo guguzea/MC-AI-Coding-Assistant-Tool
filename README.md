@@ -115,8 +115,19 @@ MC_skill/
 
 ### 映射转换（`convert_mapping` + Yarn）
 
-1. Yarn 走预建 **`yarn-mappings.sqlite` 惰性点查**，运行时**禁止**全量加载 `yarn-mappings.json`。
-2. 类名可用 Yarn 路径、简单类名或混淆短名；不确定时看返回的 `notes` / 候选。
+1. 走预建 **`yarn-mappings.sqlite`（schema v2）惰性点查**，运行时**禁止**全量加载 `yarn-mappings.json`。
+2. **支持矩阵（摘要）**：
+
+| 版本区间 | 数据源 / era | 类互转 | 方法互转 | 备注 |
+|---------|--------------|--------|----------|------|
+| 1.16+（有 Fabric tiny） | `yarn-tiny` | ✅ | ✅ 需 `ownerClass`；重载建议 `descriptor` | `to=mojang` = Tiny official 短名 |
+| 1.13 Forge | `tsrg` | ✅ | ✅ | `joined.tsrg` |
+| 1.7–1.12 Forge | `forge-srg` | ✅ | ✅ | `joined.srg` |
+| 1.14–1.15 | `mcp-csv`（partial） | ❌ | 仅全局 `searge↔named` | **勿传** `ownerClass`；同版本若有 Fabric Yarn 仍可用 Yarn 方法表 |
+
+3. `mcp↔parchment` 为同名层（identity）；参数名用 `get_method_params`。
+4. 失败默认 `found:false`、`converted:null`；过渡参数 `allow_fallback` 可回传原名并设 `fallbackUsed`（禁止假成功）。
+5. 构建：`cd mcp-server && npm run build:yarn-sqlite`（本地 temp 写入后复制，避免盘符 I/O 问题）。
 
 ### 移植分析（`analyze_porting_path`）
 
@@ -201,7 +212,7 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 |------|------|
 | `query_api` | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。 |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。 |
-| `convert_mapping` | 在 **mojang / mcp / yarn / parchment** 之间互转成员名；返回方向、置信度、可选 suggestions。Yarn 仅适用于 Fabric；`to=mojang` 时多为 Tiny official 短名，不是可读 FQCN。 |
+| `convert_mapping` | 在 **mojang / mcp / yarn / parchment** 间互转类/方法名（SQLite v2）。`to=mojang` 为 Tiny official 短名；重载传 `descriptor`；CSV 时代仅全局 searge↔named；失败默认 `converted:null`（可选 `allow_fallback`）。 |
 | `get_version_info` | **【Forge only】** 按 MC 版本 + 操作（如「注册方块」）给出推荐做法、关键变更、gotchas 与官方 Changelog 链接。 |
 
 ### 2. 工程辅助（4）
