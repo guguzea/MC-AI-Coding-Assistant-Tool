@@ -1,7 +1,7 @@
 /**
  * 数据生成辅助模块
  *
- * 生成 DataGen 类代码模板
+ * 生成 DataGen 类代码模板（Forge 1.20.1 可编译）
  *
  * 模板依据：data/forge_1.20.1/forge-docs/
  *   - datagen_server_recipes.md
@@ -36,7 +36,6 @@ export function normalizeModIdentifier(raw: string): { value: string; warned: bo
   let v = trimmed.toLowerCase().replace(/[.\-]+/g, "_").replace(/[^a-z0-9_]/g, "_");
   v = v.replace(/_+/g, "_").replace(/^_|_$/g, "");
   if (!v || !/^[a-z]/.test(v)) {
-    // 若以数字开头，前缀 m_
     if (/^[0-9]/.test(v)) {
       v = `m_${v}`;
       warned = true;
@@ -114,14 +113,19 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
 
 function generateRecipe(modId: string, targetName: string): string {
   const pascalName = toPascalCase(modId);
-  return `// Recipe Provider — DeferredRegister 模式
-// 适用于 Forge 1.20.1
+  return `// Recipe Provider — Forge 1.20.1
+package com.example.${modId}.datagen;
 
+import java.util.function.Consumer;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
 public class ${pascalName}RecipeProvider extends RecipeProvider {
@@ -131,7 +135,6 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        // 有序合成配方示例
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.DIAMOND, 1)
             .pattern("ABA")
             .pattern("CDC")
@@ -143,7 +146,6 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
             .unlockedBy("has_diamond", has(Items.DIAMOND))
             .save(consumer);
 
-        // 熔炉配方示例
         SimpleCookingRecipeBuilder.smelting(
             Ingredient.of(Items.DIRT),
             RecipeCategory.MISC,
@@ -155,241 +157,218 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            output -> new ${pascalName}RecipeProvider(output));
+            ${pascalName}RecipeProvider::new);
     }
-}`;
+}
+`;
 }
 
 function generateBlockState(modId: string, targetName: string): string {
   const pascalName = toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Block State Provider — DeferredRegister 模式
-// 适用于 Forge 1.20.1
+  return `// Block State Provider — Forge 1.20.1
+package com.example.${modId}.datagen;
 
-import net.minecraft.data.pack.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-// DeferredRegister 定义（通常在独立类或主类中）
-public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
-
-public static final RegistryObject<Block> ${upperName}_BLOCK =
-    BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
-
-// Block State Provider（通常在独立类中）
 public class ${pascalName}BlockStatesProvider extends BlockStateProvider {
-    public ${pascalName}BlockStatesProvider(PackOutput output) {
-        super(output);
+    public static final DeferredRegister<Block> BLOCKS =
+        DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
+
+    public static final RegistryObject<Block> ${upperName}_BLOCK =
+        BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
+
+    public ${pascalName}BlockStatesProvider(PackOutput output, ExistingFileHelper efh) {
+        super(output, "${modId}", efh);
     }
 
     @Override
     protected void registerStatesAndModels() {
-        // 使用 RegistryObject.get() 获取已注册的方块
-        simpleBlock(${upperName}_BLOCK.get(),
-            models().cubeAll("${modId}:${targetName}",
-                modLoc("block/${targetName}")));
+        simpleBlock(${upperName}_BLOCK.get());
     }
 
     public static void gatherData(GatherDataEvent event) {
+        ExistingFileHelper efh = event.getExistingFileHelper();
         event.getGenerator().addProvider(
             event.includeClient(),
-            output -> new ${pascalName}BlockStatesProvider(output));
+            (PackOutput output) -> new ${pascalName}BlockStatesProvider(output, efh));
     }
-}`;
+}
+`;
 }
 
 function generateItemModel(modId: string, targetName: string): string {
   const upperName = toUpperSnake(targetName);
   const pascalName = toPascalCase(modId);
-  return `// Item Model Provider — DeferredRegister 模式
-// 适用于 Forge 1.20.1
+  return `// Item Model Provider — Forge 1.20.1
+package com.example.${modId}.datagen;
 
-import net.minecraft.data.pack.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-// DeferredRegister 定义
-public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(ForgeRegistries.ITEMS, "${modId}");
-
-public static final RegistryObject<Item> ${upperName}_ITEM =
-    ITEMS.register("${targetName}", () -> new Item(new Item.Properties()));
-
-// Item Model Provider
 public class ${pascalName}ItemModelProvider extends ItemModelProvider {
-    public ${pascalName}ItemModelProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, "${modId}", exFileHelper);
+    public static final DeferredRegister<Item> ITEMS =
+        DeferredRegister.create(ForgeRegistries.ITEMS, "${modId}");
+
+    public static final RegistryObject<Item> ${upperName}_ITEM =
+        ITEMS.register("${targetName}", () -> new Item(new Item.Properties()));
+
+    public ${pascalName}ItemModelProvider(PackOutput output, ExistingFileHelper efh) {
+        super(output, "${modId}", efh);
     }
 
     @Override
-    public void registerModels() {
-        // 继承方块模型（用于方块物品）
-        withExistingParent("${modId}:${targetName}",
-            modLoc("block/${targetName}"));
-
-        // 或者独立物品模型（用于非方块物品）
-        // basicItem(${upperName}_ITEM.get());
+    protected void registerModels() {
+        basicItem(${upperName}_ITEM.get());
     }
 
     public static void gatherData(GatherDataEvent event) {
+        ExistingFileHelper efh = event.getExistingFileHelper();
         event.getGenerator().addProvider(
             event.includeClient(),
-            output -> new ${pascalName}ItemModelProvider(
-                output,
-                event.getExistingFileHelper()));
+            (PackOutput output) -> new ${pascalName}ItemModelProvider(output, efh));
     }
-}`;
+}
+`;
 }
 
 function generateLootTable(modId: string, targetName: string): string {
   const pascalName = toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Loot Table Provider — DeferredRegister 模式
-// 适用于 Forge 1.20.1
+  return `// Loot Table Provider — Forge 1.20.1
+package com.example.${modId}.datagen;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.pack.DatapackBuiltinEntriesProvider;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
-// DeferredRegister 定义
-public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
-
-public static final RegistryObject<Block> ${upperName}_BLOCK =
-    BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
-
-// Loot Table Provider
 public class ${pascalName}LootTableProvider extends LootTableProvider {
-    public ${pascalName}LootTableProvider(
-            PackOutput output,
-            Set<ResourceLocation> requiredTables,
-            List<SubProviderEntry> subProviders,
-            CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, requiredTables, subProviders, registries);
+    public static final DeferredRegister<Block> BLOCKS =
+        DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
+
+    public static final RegistryObject<Block> ${upperName}_BLOCK =
+        BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
+
+    public ${pascalName}LootTableProvider(PackOutput output) {
+        super(
+            output,
+            Set.of(),
+            List.of(
+                new LootTableProvider.SubProviderEntry(
+                    ${pascalName}BlockLoot::new,
+                    LootContextParamSets.BLOCK)));
     }
 
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            output -> new ${pascalName}LootTableProvider(
-                output,
-                Collections.emptySet(),
-                List.of(
-                    new SubProviderEntry(
-                        ${pascalName}BlockLootSubProvider::new,
-                        LootContextParamSets.BLOCK)),
-                event.getLookupProvider()));
+            ${pascalName}LootTableProvider::new);
     }
 }
 
-// Block Loot Sub Provider
-public class ${pascalName}BlockLootSubProvider extends BlockLootSubProvider {
-    public ${pascalName}BlockLootSubProvider() {
-        super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags());
+class ${pascalName}BlockLoot extends BlockLootSubProvider {
+    public ${pascalName}BlockLoot() {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
     }
 
     @Override
-    protected void addTables() {
-        // 方块直接掉落自身
-        dropSelf(${upperName}_BLOCK.get());
-
-        // 或者带附魔掉落（如矿物）
-        // this.add(${upperName}_BLOCK.get(),
-        //     createOreDrop(${upperName}_BLOCK.get(), Items.DIAMOND));
+    public void generate() {
+        dropSelf(${pascalName}LootTableProvider.${upperName}_BLOCK.get());
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return BLOCKS.getEntries()
-            .stream()
-            .flatMap(RegistryObject::stream)
-            ::iterator;
+        return ${pascalName}LootTableProvider.BLOCKS.getEntries().stream()
+            .map(RegistryObject::get)
+            .collect(Collectors.toList());
     }
-}`;
+}
+`;
 }
 
 function generateTag(modId: string, targetName: string): string {
   const pascalName = toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
-  return `// Block Tags Provider — DeferredRegister 模式
-// 适用于 Forge 1.20.1
+  return `// Block Tags Provider — Forge 1.20.1
+package com.example.${modId}.datagen;
 
-import net.minecraft.core.Holder;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.Nullable;
 
-// DeferredRegister 定义
-public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
-
-public static final RegistryObject<Block> ${upperName}_BLOCK =
-    BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
-
-// Block Tags Provider
 public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
+    public static final DeferredRegister<Block> BLOCKS =
+        DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
+
+    public static final RegistryObject<Block> ${upperName}_BLOCK =
+        BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
+
     public ${pascalName}BlockTagsProvider(
             PackOutput output,
-            CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, "${modId}", registries);
+            CompletableFuture<HolderLookup.Provider> lookup,
+            @Nullable ExistingFileHelper efh) {
+        super(output, lookup, "${modId}", efh);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        // 引用 Minecraft 标签
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(${upperName}_BLOCK.get());
-
-        // 自定义标签
-        tag(new ResourceLocation("${modId}", "mineable/pickaxe"))
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(${upperName}_BLOCK.get());
-
-        // 更多标签示例：
-        // tag(BlockTags.MINEABLE_WITH_PICKAXE).add(${upperName}_BLOCK.get());
-        // tag(BlockTags.SOLID).add(${upperName}_BLOCK.get());
     }
 
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            output -> new ${pascalName}BlockTagsProvider(
+            (PackOutput output) -> new ${pascalName}BlockTagsProvider(
                 output,
-                event.getLookupProvider()));
+                event.getLookupProvider(),
+                event.getExistingFileHelper()));
     }
-}`;
+}
+`;
 }
 
 function toPascalCase(modId: string): string {
-  return modId.split(/[_-]/).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("");
+  return modId.split(/[_-]/).map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join("");
 }
 
 function toUpperSnake(name: string): string {

@@ -152,21 +152,39 @@ server.registerTool(
   {
     title: "Convert Between Mapping Systems",
     description:
-      "在 mojang / mcp / yarn / parchment 四种映射之间互转成员名。" +
-      "适用于：混淆堆栈中看到的方法名需要转换、或者需要确认当前项目使用的是哪种映射时。" +
-      "注意：Yarn 仅适用于 Fabric 项目，在 Forge 项目中无法直接使用。" +
-      "to=mojang 时 converted 为 Tiny official（混淆短名），不是可读 Mojang FQCN。" +
-      "返回转换方向、置信度、可选 suggestions（高门槛相似名）和用法示例。",
+      "在 mojang / mcp / yarn / parchment 间互转类或方法名（预建 yarn-mappings.sqlite）。\n" +
+      "to=mojang 输出 Tiny official 混淆短名，不是可读 Mojang FQCN。\n" +
+      "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
+      "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
+      "1.14–1.15 CSV 仅支持全局 searge↔named（勿传 ownerClass）。\n" +
+      "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
+      "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
+      "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
+      "@example CSV：1.14.4 memberName=getHealth（无 owner）→ func_110143_aJ；传 ownerClass → csv-no-owner\n" +
+      "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true",
     inputSchema: z.object({
       from: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("源映射类型"),
       to: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("目标映射类型"),
       memberName: z.string().describe("成员名（字段或方法）"),
-      ownerClass: z.string().optional().describe("所属类，用于精确匹配方法"),
-      version: z.string().optional().describe("Minecraft 版本（Yarn 查询必填建议，默认 1.20.1）"),
+      ownerClass: z.string().optional().describe("所属类，用于精确匹配方法（CSV 时代勿传）"),
+      descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
+      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+      allow_fallback: z
+        .boolean()
+        .optional()
+        .describe("过渡参数：无映射时回传原名（found 仍为 false，fallbackUsed=true）"),
     }),
   },
-  async ({ from, to, memberName, ownerClass, version }): Promise<CallToolResult> => {
-    const result = convertMapping({ from, to, memberName, ownerClass, version });
+  async ({ from, to, memberName, ownerClass, descriptor, version, allow_fallback }): Promise<CallToolResult> => {
+    const result = convertMapping({
+      from,
+      to,
+      memberName,
+      ownerClass,
+      descriptor,
+      version,
+      allow_fallback,
+    });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );

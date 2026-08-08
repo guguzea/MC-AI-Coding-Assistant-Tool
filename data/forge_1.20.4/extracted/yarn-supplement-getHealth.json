@@ -1,0 +1,8 @@
+{
+  "ownerNamed": "net/minecraft/entity/LivingEntity",
+  "ownerOfficial": "bml",
+  "nameNamed": "getHealth",
+  "nameOfficial": "ev",
+  "descriptor": "()F",
+  "parchmentClass": "net/minecraft/world/entity/LivingEntity"
+}

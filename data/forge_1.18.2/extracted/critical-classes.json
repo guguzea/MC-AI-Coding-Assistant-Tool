@@ -4,15 +4,15 @@
   "net/minecraftforge/registries/RegistryObject": null,
   "net/minecraftforge/registries/IForgeRegistry": null,
   "net/minecraft/world/item/Item": {
-    "methods": 48,
+    "methods": 107,
     "fields": 0
   },
   "net/minecraft/world/item/BlockItem": {
-    "methods": 20,
+    "methods": 36,
     "fields": 0
   },
   "net/minecraft/world/item/SwordItem": {
-    "methods": 9,
+    "methods": 12,
     "fields": 1
   },
   "net/minecraft/world/item/PickaxeItem": {
@@ -20,19 +20,19 @@
     "fields": 0
   },
   "net/minecraft/world/item/AxeItem": {
-    "methods": 6,
+    "methods": 10,
     "fields": 0
   },
   "net/minecraft/world/item/HoeItem": {
-    "methods": 8,
+    "methods": 15,
     "fields": 0
   },
   "net/minecraft/world/item/ShovelItem": {
-    "methods": 3,
+    "methods": 4,
     "fields": 1
   },
   "net/minecraft/world/item/ArmorItem": {
-    "methods": 7,
+    "methods": 12,
     "fields": 0
   },
   "net/minecraft/world/item/FoodProperties": null,
@@ -41,11 +41,11 @@
   "net/minecraft/world/tileentity/BlockEntity": null,
   "net/minecraft/world/tileentity/BlockEntityType": null,
   "net/minecraft/world/entity/Entity": {
-    "methods": 245,
+    "methods": 600,
     "fields": 0
   },
   "net/minecraft/world/entity/LivingEntity": {
-    "methods": 190,
+    "methods": 416,
     "fields": 2
   },
   "net/minecraft/world/entity/Mob": {
@@ -61,7 +61,7 @@
     "fields": 0
   },
   "net/minecraft/world/entity/EntityType": {
-    "methods": 24,
+    "methods": 64,
     "fields": 0
   },
   "net/minecraft/world/entity/ai/attributes/Attribute": {
@@ -83,11 +83,11 @@
   "net/minecraftforge/network/simple/SimpleChannel": null,
   "net/minecraftforge/network/handshake/NetworkDispatcher": null,
   "net/minecraft/world/item/crafting/RecipeSerializer": {
-    "methods": 4,
+    "methods": 8,
     "fields": 0
   },
   "net/minecraft/data/recipes/RecipeProvider": {
-    "methods": 70,
+    "methods": 156,
     "fields": 0
   },
   "net/minecraft/data/recipes/ShapedRecipeBuilder": {
@@ -99,7 +99,7 @@
     "fields": 0
   },
   "net/minecraft/data/loot/LootTableProvider": {
-    "methods": 4,
+    "methods": 11,
     "fields": 0
   },
   "net/minecraft/data/loot/LootPool": null,

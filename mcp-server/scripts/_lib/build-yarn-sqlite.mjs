@@ -1,12 +1,7 @@
 /**
- * Build per-version yarn-mappings.sqlite from tiny (preferred) or legacy JSON.
+ * Build per-version yarn-mappings.sqlite (schema v2) from Tiny / TSRG / SRG / CSV.
  *
  * Runtime MUST NOT load yarn-mappings.json; only the sqlite artefact is queried.
- *
- * Schema:
- *   meta(key TEXT PRIMARY KEY, value TEXT)
- *   classes(named TEXT PRIMARY KEY, intermediary TEXT NOT NULL, official TEXT)
- *   INDEX on intermediary, official
  *
  * Usage:
  *   node scripts/_lib/build-yarn-sqlite.mjs <mappingsDir> [--version=1.20.1]
@@ -14,10 +9,13 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import zlib from "node:zlib";
-import readline from "node:readline";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+import { parseTiny, findTinyPath } from "./parse-tiny.mjs";
+import { importTsrgStream } from "./import-tsrg.mjs";
+import { importForgeSrgStream } from "./import-forge-srg.mjs";
+import { importMcpCsvMethods } from "./import-mcp-csv.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,6 +38,27 @@ export function initYarnSchema(db) {
     );
     CREATE INDEX IF NOT EXISTS idx_classes_intermediary ON classes(intermediary);
     CREATE INDEX IF NOT EXISTS idx_classes_official ON classes(official);
+
+    CREATE TABLE IF NOT EXISTS methods (
+      owner_named TEXT NOT NULL,
+      name_named TEXT NOT NULL,
+      descriptor_named TEXT NOT NULL DEFAULT '',
+      name_official TEXT NOT NULL,
+      descriptor_official TEXT NOT NULL DEFAULT '',
+      name_intermediary TEXT,
+      PRIMARY KEY (owner_named, name_named, descriptor_named)
+    );
+    CREATE INDEX IF NOT EXISTS idx_methods_official
+      ON methods(owner_named, name_official, descriptor_official);
+    CREATE INDEX IF NOT EXISTS idx_methods_named
+      ON methods(owner_named, name_named);
+
+    CREATE TABLE IF NOT EXISTS searge_methods (
+      searge TEXT PRIMARY KEY,
+      name_named TEXT NOT NULL,
+      descriptor_named TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS idx_searge_methods_name ON searge_methods(name_named);
   `);
 }
 
@@ -50,53 +69,130 @@ function setMeta(db, entries) {
   }
 }
 
-/** Import CLASS rows from a yarn tiny v1 text stream (async line reader). */
-export async function importTinyStream(db, input, meta = {}) {
+function clearMappingTables(db) {
+  db.exec(`
+    DELETE FROM methods;
+    DELETE FROM searge_methods;
+    DELETE FROM classes;
+    DELETE FROM meta;
+  `);
+}
+
+/** Import Tiny via shared parse-tiny (writes classes + methods). */
+export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false } = {}) {
   initYarnSchema(db);
-  db.exec("DELETE FROM classes; DELETE FROM meta;");
-  const insert = db.prepare(
+  clearMappingTables(db);
+  const parsed = await parseTiny(tinyPath, { strict });
+  console.error(`[importTiny] parsed classes=${parsed.classes.length} methods=${parsed.methods.length}`);
+  const insertClass = db.prepare(
     "INSERT OR REPLACE INTO classes(named, intermediary, official) VALUES (?, ?, ?)",
   );
-  let classCount = 0;
-  let methodCount = 0;
+  const insertMethod = db.prepare(
+    `INSERT OR REPLACE INTO methods(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
 
   db.exec("BEGIN");
-  const rl = readline.createInterface({ input, crlfDelay: Infinity });
-  for await (const line of rl) {
-    if (!line || line.startsWith("v1\t")) continue;
-    const cols = line.split("\t");
-    const tag = cols[0];
-    if (tag === "CLASS") {
-      const official = cols[1] ?? "";
-      const intermediary = cols[2] ?? "";
-      const named = cols[3] ?? "";
-      if (named) {
-        insert.run(named, intermediary, official);
-        classCount++;
-      }
-    } else if (tag === "METHOD") {
-      methodCount++;
-    }
+  for (const c of parsed.classes) {
+    if (!c.named) continue;
+    insertClass.run(c.named, c.intermediary || "", c.official || "");
   }
+  let i = 0;
+  for (const m of parsed.methods) {
+    if (!m.ownerNamed || !m.nameNamed) continue;
+    if (m.nameNamed.startsWith("<")) continue;
+    insertMethod.run(
+      m.ownerNamed,
+      m.nameNamed,
+      m.descriptorNamed || "",
+      m.nameOfficial || "",
+      m.descriptorOfficial || "",
+      m.nameIntermediary || null,
+    );
+    i++;
+    if (i % 10000 === 0) console.error(`[importTiny] inserted methods ${i}`);
+  }
+  console.error(`[importTiny] commit methods=${i}`);
   setMeta(db, {
+    schemaVersion: "2",
     version: meta.version ?? "",
-    format: meta.format ?? "yarn-tiny-v1",
-    source: meta.source ?? "",
+    format: "yarn-tiny-v1",
+    mappingEra: "yarn-tiny",
+    source: meta.source ?? tinyPath,
+    sourceFile: meta.source ?? tinyPath,
     builtAt: new Date().toISOString(),
-    classCount: String(classCount),
-    methodCount: String(methodCount),
+    classCount: String(parsed.classes.length),
+    methodCount: String(parsed.methods.length),
+    buildWarnings: JSON.stringify(parsed.warnings ?? []),
   });
   db.exec("COMMIT");
-  return { classCount, methodCount };
+  return {
+    classCount: parsed.classes.length,
+    methodCount: parsed.methods.length,
+    mappingEra: "yarn-tiny",
+    warnings: parsed.warnings,
+    parsed,
+  };
+}
+
+/** @deprecated Prefer importTinyIntoDb; kept for stream-based unit tests. */
+export async function importTinyStream(db, input, meta = {}) {
+  const { parseTinyStream } = await import("./parse-tiny.mjs");
+  initYarnSchema(db);
+  clearMappingTables(db);
+  const parsed = await parseTinyStream(input, { strict: false });
+  const insertClass = db.prepare(
+    "INSERT OR REPLACE INTO classes(named, intermediary, official) VALUES (?, ?, ?)",
+  );
+  const insertMethod = db.prepare(
+    `INSERT OR REPLACE INTO methods(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
+  db.exec("BEGIN");
+  for (const c of parsed.classes) {
+    if (!c.named) continue;
+    insertClass.run(c.named, c.intermediary || "", c.official || "");
+  }
+  for (const m of parsed.methods) {
+    if (!m.ownerNamed || !m.nameNamed || m.nameNamed.startsWith("<")) continue;
+    insertMethod.run(
+      m.ownerNamed,
+      m.nameNamed,
+      m.descriptorNamed || "",
+      m.nameOfficial || "",
+      m.descriptorOfficial || "",
+      m.nameIntermediary || null,
+    );
+  }
+  setMeta(db, {
+    schemaVersion: "2",
+    version: meta.version ?? "",
+    format: meta.format ?? "yarn-tiny-v1",
+    mappingEra: "yarn-tiny",
+    source: meta.source ?? "",
+    builtAt: new Date().toISOString(),
+    classCount: String(parsed.classes.length),
+    methodCount: String(parsed.methods.length),
+  });
+  db.exec("COMMIT");
+  return {
+    classCount: parsed.classes.length,
+    methodCount: parsed.methods.length,
+    mappingEra: "yarn-tiny",
+    warnings: parsed.warnings,
+  };
 }
 
 /**
- * Stream-scan legacy yarn-mappings.json for classMap entries without JSON.parse of the whole file.
- * Matches: "named/path":{"officialClass":"a","intermediaryClass":"...","namedClass":"..."}
+ * Stream-scan legacy yarn-mappings.json for classMap entries (class-only, methodCount=0).
  */
 export async function importLegacyJsonStream(db, jsonPath, meta = {}) {
   initYarnSchema(db);
-  db.exec("DELETE FROM classes; DELETE FROM meta;");
+  clearMappingTables(db);
   const insert = db.prepare(
     "INSERT OR REPLACE INTO classes(named, intermediary, official) VALUES (?, ?, ?)",
   );
@@ -120,114 +216,288 @@ export async function importLegacyJsonStream(db, jsonPath, meta = {}) {
       classCount++;
       lastEnd = match.index + match[0].length;
     }
-    // Keep a tail large enough for a max-size entry (~1KB)
     carry = text.slice(Math.max(0, lastEnd - 64, text.length - 2048));
   }
   setMeta(db, {
+    schemaVersion: "2",
     version: meta.version ?? "",
     format: meta.format ?? "yarn-json-import",
+    mappingEra: "yarn-tiny",
     source: meta.source ?? jsonPath,
+    sourceFile: jsonPath,
     builtAt: new Date().toISOString(),
     classCount: String(classCount),
-    methodCount: meta.methodCount != null ? String(meta.methodCount) : "",
+    methodCount: "0",
+    buildWarnings: JSON.stringify(["legacy json: methodCount=0; prefer tiny rebuild"]),
   });
   db.exec("COMMIT");
-  return { classCount, methodCount: 0 };
+  return { classCount, methodCount: 0, mappingEra: "yarn-tiny" };
 }
 
-function findTinyPath(mappingsDir) {
-  const names = fs.readdirSync(mappingsDir);
-  const gz = names.find((n) => n.endsWith("-tiny.gz") || n === "mappings.tiny.gz");
-  if (gz) return { path: path.join(mappingsDir, gz), gzip: true };
-  const tiny = names.find((n) => n === "mappings.tiny" || n.endsWith(".tiny"));
-  if (tiny) return { path: path.join(mappingsDir, tiny), gzip: false };
-  return null;
+function listCandidateSources(mappingsDir) {
+  const candidates = [];
+  const tiny = findTinyPath(mappingsDir);
+  if (tiny) candidates.push({ kind: "tiny", ...tiny });
+  const tsrg = path.join(mappingsDir, "joined.tsrg");
+  if (fs.existsSync(tsrg)) candidates.push({ kind: "tsrg", path: tsrg });
+  const srg = path.join(mappingsDir, "joined.srg");
+  if (fs.existsSync(srg)) candidates.push({ kind: "srg", path: srg });
+  const csv = path.join(mappingsDir, "methods.csv");
+  if (fs.existsSync(csv)) candidates.push({ kind: "csv", path: csv });
+  const json = path.join(mappingsDir, "yarn-mappings.json");
+  if (fs.existsSync(json)) candidates.push({ kind: "json", path: json });
+  return candidates;
 }
 
-function peekJsonMeta(jsonPath) {
-  // Read only the first 512 bytes for version/format/source/methodCount headers
-  const fd = fs.openSync(jsonPath, "r");
-  try {
-    const buf = Buffer.alloc(800);
-    const n = fs.readSync(fd, buf, 0, 800, 0);
-    const head = buf.slice(0, n).toString("utf8");
-    const version = /"version"\s*:\s*"([^"]+)"/.exec(head)?.[1];
-    const format = /"format"\s*:\s*"([^"]+)"/.exec(head)?.[1];
-    const source = /"source"\s*:\s*"([^"]+)"/.exec(head)?.[1];
-    const methodCount = /"methodCount"\s*:\s*(\d+)/.exec(head)?.[1];
-    return { version, format, source, methodCount };
-  } finally {
-    fs.closeSync(fd);
+async function tryImportSource(db, source, opts) {
+  if (source.kind === "tiny") {
+    return importTinyIntoDb(db, source.path, {
+      version: opts.version,
+      source: source.path,
+    });
   }
+  if (source.kind === "tsrg") {
+    initYarnSchema(db);
+    clearMappingTables(db);
+    const input = fs.createReadStream(source.path, { encoding: "utf8" });
+    const r = await importTsrgStream(db, input, { version: opts.version, source: source.path });
+    setMeta(db, {
+      schemaVersion: "2",
+      version: opts.version ?? "",
+      mappingEra: "tsrg",
+      format: "joined-tsrg",
+      source: source.path,
+      sourceFile: source.path,
+      builtAt: new Date().toISOString(),
+      classCount: String(r.classCount),
+      methodCount: String(r.methodCount),
+    });
+    return r;
+  }
+  if (source.kind === "srg") {
+    initYarnSchema(db);
+    clearMappingTables(db);
+    const input = fs.createReadStream(source.path, { encoding: "utf8" });
+    const r = await importForgeSrgStream(db, input, { version: opts.version, source: source.path });
+    setMeta(db, {
+      schemaVersion: "2",
+      version: opts.version ?? "",
+      mappingEra: "forge-srg",
+      format: "joined-srg",
+      source: source.path,
+      sourceFile: source.path,
+      builtAt: new Date().toISOString(),
+      classCount: String(r.classCount),
+      methodCount: String(r.methodCount),
+    });
+    return r;
+  }
+  if (source.kind === "csv") {
+    initYarnSchema(db);
+    clearMappingTables(db);
+    const r = importMcpCsvMethods(db, source.path, { version: opts.version, source: source.path });
+    setMeta(db, {
+      schemaVersion: "2",
+      version: opts.version ?? "",
+      mappingEra: "mcp-csv",
+      format: "mcp-methods-csv",
+      source: source.path,
+      sourceFile: source.path,
+      builtAt: new Date().toISOString(),
+      classCount: "0",
+      methodCount: String(r.methodCount),
+    });
+    return r;
+  }
+  if (source.kind === "json") {
+    return importLegacyJsonStream(db, source.path, { version: opts.version, source: source.path });
+  }
+  throw new Error(`Unknown source kind: ${source.kind}`);
 }
 
 /** Build sqlite for one mappings directory. Returns output path. */
 export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
   const outPath = opts.outPath ?? path.join(mappingsDir, "yarn-mappings.sqlite");
-  const tmpPath = outPath + ".tmp";
-  if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
-  if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
+  // Build on local temp disk first — avoids H:/ network-drive SQLITE_IOERR during bulk insert.
+  const tmpPath = path.join(
+    os.tmpdir(),
+    `yarn-mappings-${process.pid}-${Date.now()}.sqlite`,
+  );
+
+  const candidates = listCandidateSources(mappingsDir);
+  if (candidates.length === 0) {
+    throw new Error(`No mapping sources in ${mappingsDir}`);
+  }
 
   const db = openYarnDb(tmpPath, { readonly: false });
+  const attempts = [];
+  let result = null;
+  let used = null;
   try {
-    const tiny = findTinyPath(mappingsDir);
-    const jsonPath = path.join(mappingsDir, "yarn-mappings.json");
-    let result;
-    if (tiny) {
-      const input = tiny.gzip
-        ? fs.createReadStream(tiny.path).pipe(zlib.createGunzip())
-        : fs.createReadStream(tiny.path, { encoding: "utf8" });
-      const meta = {
-        version: opts.version,
-        source: tiny.path,
-        format: "yarn-tiny-v1",
-      };
-      if (fs.existsSync(jsonPath)) {
-        const peeked = peekJsonMeta(jsonPath);
-        meta.version = meta.version || peeked.version;
-        meta.source = peeked.source || meta.source;
+    for (const source of candidates) {
+      try {
+        initYarnSchema(db);
+        clearMappingTables(db);
+        result = await tryImportSource(db, source, opts);
+        used = source;
+        attempts.push({ source: source.path || source.kind, ok: true, era: result.mappingEra });
+        break;
+      } catch (err) {
+        attempts.push({
+          source: source.path || source.kind,
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
-      result = await importTinyStream(db, input, meta);
-    } else if (fs.existsSync(jsonPath)) {
-      const peeked = peekJsonMeta(jsonPath);
-      result = await importLegacyJsonStream(db, jsonPath, {
-        version: opts.version || peeked.version,
-        format: peeked.format,
-        source: peeked.source,
-        methodCount: peeked.methodCount,
+    }
+    if (!result || !used) {
+      throw new Error(
+        `All mapping sources failed for ${mappingsDir}: ${JSON.stringify(attempts)}`,
+      );
+    }
+    if (attempts.some((a) => !a.ok)) {
+      setMeta(db, {
+        fellBackTo: used.path || used.kind,
+        primaryFailed: "true",
+        buildAttempts: JSON.stringify(attempts),
       });
-    } else {
-      throw new Error(`No yarn tiny or yarn-mappings.json in ${mappingsDir}`);
     }
     db.close();
-    fs.renameSync(tmpPath, outPath);
-    return { outPath, ...result };
+    replaceSqliteAtomically(tmpPath, outPath);
+    return {
+      outPath,
+      classCount: result.classCount,
+      methodCount: result.methodCount,
+      mappingEra: result.mappingEra,
+      source: used.path || used.kind,
+      attempts,
+      fellBackTo: attempts.some((a) => !a.ok) ? used.path || used.kind : undefined,
+    };
   } catch (err) {
     try {
       db.close();
     } catch {
       /* ignore */
     }
-    if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+    if (fs.existsSync(tmpPath)) {
+      try {
+        fs.unlinkSync(tmpPath);
+      } catch {
+        /* ignore */
+      }
+    }
     throw err;
   }
 }
 
-export async function buildAllFabricYarnSqlite(dataRoot) {
+function sleepSync(ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    /* spin */
+  }
+}
+
+/** Windows-safe replace: retry unlink/rename when AV or IDE locks the target. */
+function replaceSqliteAtomically(tmpPath, outPath) {
+  const bak = outPath + ".bak";
+  let lastErr;
+  for (let i = 0; i < 10; i++) {
+    try {
+      if (fs.existsSync(bak)) {
+        try {
+          fs.unlinkSync(bak);
+        } catch {
+          /* ignore */
+        }
+      }
+      if (fs.existsSync(outPath)) {
+        try {
+          fs.renameSync(outPath, bak);
+        } catch {
+          fs.unlinkSync(outPath);
+        }
+      }
+      fs.renameSync(tmpPath, outPath);
+      if (fs.existsSync(bak)) {
+        try {
+          fs.unlinkSync(bak);
+        } catch {
+          /* leave bak */
+        }
+      }
+      return;
+    } catch (err) {
+      lastErr = err;
+      sleepSync(200 * (i + 1));
+    }
+  }
+  // Last resort: copy then unlink tmp
+  try {
+    fs.copyFileSync(tmpPath, outPath);
+    try {
+      fs.unlinkSync(tmpPath);
+    } catch {
+      /* ignore */
+    }
+    return;
+  } catch (err) {
+    throw lastErr || err;
+  }
+}
+
+export async function buildAllMappingSqlite(dataRoot) {
   const results = [];
+  const report = [];
   for (const entry of fs.readdirSync(dataRoot, { withFileTypes: true })) {
-    if (!entry.isDirectory() || !entry.name.startsWith("fabric_")) continue;
-    const ver = entry.name.slice("fabric_".length);
+    if (!entry.isDirectory()) continue;
+    const isFabric = entry.name.startsWith("fabric_");
+    const isForge = entry.name.startsWith("forge_");
+    if (!isFabric && !isForge) continue;
+    const ver = entry.name.replace(/^fabric_/, "").replace(/^forge_/, "");
     const mappingsDir = path.join(dataRoot, entry.name, "mappings");
     if (!fs.existsSync(mappingsDir)) continue;
-    const hasYarn =
-      fs.existsSync(path.join(mappingsDir, "yarn-mappings.json")) || findTinyPath(mappingsDir);
-    if (!hasYarn) continue;
-    const r = await buildYarnSqliteForDir(mappingsDir, { version: ver });
-    results.push({ version: ver, ...r });
-    console.error(`built ${r.outPath}: classes=${r.classCount}`);
+    if (listCandidateSources(mappingsDir).length === 0) continue;
+
+    const started = Date.now();
+    try {
+      const r = await buildYarnSqliteForDir(mappingsDir, { version: ver });
+      results.push({ platform: isFabric ? "fabric" : "forge", version: ver, ...r });
+      report.push({
+        version: ver,
+        platform: isFabric ? "fabric" : "forge",
+        source: r.source,
+        era: r.mappingEra,
+        methodCount: r.methodCount,
+        classCount: r.classCount,
+        ok: true,
+        fellBackTo: r.fellBackTo,
+        durationMs: Date.now() - started,
+      });
+      console.error(
+        `built ${r.outPath}: era=${r.mappingEra} classes=${r.classCount} methods=${r.methodCount}`,
+      );
+    } catch (err) {
+      report.push({
+        version: ver,
+        platform: isFabric ? "fabric" : "forge",
+        ok: false,
+        error: err instanceof Error ? err.message : String(err),
+        durationMs: Date.now() - started,
+      });
+      console.error(`FAIL ${entry.name}: ${err instanceof Error ? err.message : err}`);
+    }
   }
-  return results;
+
+  const reportPath = path.join(__dirname, "mapping-sqlite-build-report.json");
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+  const failed = report.filter((r) => !r.ok).length;
+  return { results, report, reportPath, failed };
+}
+
+/** @deprecated alias */
+export async function buildAllFabricYarnSqlite(dataRoot) {
+  const all = await buildAllMappingSqlite(dataRoot);
+  return all.results.filter((r) => r.platform === "fabric");
 }
 
 function defaultDataRoot() {
@@ -238,9 +508,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const args = process.argv.slice(2);
   if (args.includes("--all")) {
     const dataRoot = defaultDataRoot();
-    buildAllFabricYarnSqlite(dataRoot)
-      .then((rows) => {
-        console.log(JSON.stringify({ ok: true, built: rows.length, rows }, null, 2));
+    buildAllMappingSqlite(dataRoot)
+      .then(({ results, reportPath, failed }) => {
+        console.log(
+          JSON.stringify({ ok: failed === 0, built: results.length, failed, reportPath }, null, 2),
+        );
+        if (failed > 0) process.exit(1);
       })
       .catch((err) => {
         console.error(err);
@@ -261,5 +534,3 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
         console.error(err);
         process.exit(1);
       });
-  }
-}

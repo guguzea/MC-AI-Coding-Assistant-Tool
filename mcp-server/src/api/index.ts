@@ -645,6 +645,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           ],
           notes: [
             `${version} Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
+            "Parchment 可能未收录无 javadoc 的无参方法；若已跑 Yarn supplement 仍缺失，请用 mappings.xhyrom.dev 外链核对",
             `提示：如果你看到的是混淆名（如 aqm），请访问 https://mappings.xhyrom.dev/${version}/ 反查`,
           ],
         };
@@ -660,6 +661,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         ],
         notes: [
           `${version} Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
+          "Parchment 可能未收录无 javadoc 的无参方法；请确认已用 parchment-extractor Yarn supplement 重建 extracted",
         ],
       };
     }
