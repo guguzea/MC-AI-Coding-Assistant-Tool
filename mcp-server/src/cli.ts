@@ -13,7 +13,8 @@ async function load() {
   const mappings = await import(pathToFileURL(join(root, "dist/mappings/index.js")).href);
   const descriptor = await import(pathToFileURL(join(root, "dist/utils/descriptor.js")).href);
   const pathUtil = await import(pathToFileURL(join(root, "dist/utils/path.js")).href);
-  return { api, mappings, descriptor, pathUtil };
+  const update = await import(pathToFileURL(join(root, "dist/update/index.js")).href);
+  return { api, mappings, descriptor, pathUtil, update };
 }
 
 function printJson(obj: unknown) {
@@ -28,6 +29,7 @@ function usage() {
       "mc-skill query <className> [methodName] [--version=1.20.1]",
       "mc-skill convert --from=mcp --to=mojang --name=getHealth [--owner=...] [--descriptor=()F] [--kind=method|field|class] [--version=1.20.1]",
       "mc-skill descriptor <jniDescriptor> [--name=method]",
+      "mc-skill update check|apply [--scope=all|tooling|data] [--channel=stable|latest|tag] [--tag=vX.Y.Z] [--dry-run|--confirm] [--allow-dirty] [--stash-dirty]",
     ],
   });
 }
@@ -53,7 +55,7 @@ async function main() {
   }
   const cmd = argv[0];
   const { flags, positional } = parseFlags(argv.slice(1));
-  const { api, mappings, descriptor, pathUtil } = await load();
+  const { api, mappings, descriptor, pathUtil, update } = await load();
 
   if (cmd === "status") {
     const version = String(flags.version ?? "1.20.1");
@@ -63,6 +65,7 @@ async function main() {
       dataPaths: pathUtil.diagnoseDataPaths(),
       api: api.listApiPreloadStatuses(),
       focus: api.getApiPreloadStatus(version),
+      updateHint: update.getUpdateHint(),
     });
     api.disposeApiData();
     return;
@@ -127,6 +130,28 @@ async function main() {
       parameterTypes: descriptor.parameterTypes(desc),
       readableSignature: descriptor.readableSignature(name, desc),
     });
+    return;
+  }
+
+  if (cmd === "update") {
+    const action = positional[0] === "apply" ? "apply" : positional[0] === "check" ? "check" : null;
+    if (!action) {
+      usage();
+      process.exit(2);
+    }
+    const dryRun = flags.confirm === true || flags.confirm === "true" ? false : flags["dry-run"] !== false;
+    const result = await update.mcSkillUpdate({
+      action,
+      scope: flags.scope ? String(flags.scope) : "all",
+      channel: flags.channel ? String(flags.channel) : "stable",
+      tagName: flags.tag ? String(flags.tag) : flags.tagName ? String(flags.tagName) : undefined,
+      dryRun: action === "apply" ? dryRun : undefined,
+      confirmed: flags.confirm === true || flags.confirm === "true",
+      allowDirty: flags["allow-dirty"] === true || flags["allow-dirty"] === "true",
+      stashDirty: flags["stash-dirty"] === true || flags["stash-dirty"] === "true",
+      includePrerelease: flags["include-prerelease"] === true || flags["include-prerelease"] === "true",
+    });
+    printJson(result);
     return;
   }
 

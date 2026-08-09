@@ -164,3 +164,5 @@ src/main/java/
 | 网络包 | `SimpleChannel` | 包名变为 `net.neoforged.neoforge.network` |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本和 NeoForge 版本。
+
+社区实务可用 MCP `search_community_docs`；用到短文时若不清楚，按仓库根 `community_knowledge/AGENT_USAGE.md` 打开原文 / 官方文档，禁止臆造 API。

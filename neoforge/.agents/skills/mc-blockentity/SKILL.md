@@ -1,20 +1,20 @@
 ﻿---
 name: mc-blockentity
-description: Minecraft NeoNeoneoforge 方块实体开发。BlockEntity 注册、Ticker、ContainerData/Menu 联动、BlockEntityRenderer。触发词：BlockEntity、BlockEntityType、EntityBlock、getTicker、saveAdditional、load、getUpdateTag、getUpdatePacket
-platform: neoNeoneoforge
+description: Minecraft NeoForge 方块实体开发。BlockEntity 注册、Ticker、ContainerData/Menu 联动、BlockEntityRenderer。触发词：BlockEntity、BlockEntityType、EntityBlock、getTicker、saveAdditional、load、getUpdateTag、getUpdatePacket
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 方块实体开发（NeoNeoneoforge 1.20.4）
+# 方块实体开发（NeoForge 1.20.4）
 
 ## 快速开始
 
 ```java
 // 注册 BlockEntityType（用 DeferredRegister）
 public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
 public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
     BLOCK_ENTITY_TYPES.register("mybe",
@@ -84,7 +84,7 @@ public class MyBE extends BlockEntity {
 }
 ```
 
-> **保留字段名**：`id`、`x`、`y`、`z`、`NeoneoforgeData`、`NeoneoforgeCaps` 不能用作自己的 key。
+> **保留字段名**：`id`、`x`、`y`、`z`、`ForgeData`、`ForgeCaps` 不能用作自己的 key。
 
 **当数据变化时必须调用 `setChanged()`**，否则该 BE 所在的 Chunk 保存时可能被跳过：
 
@@ -234,8 +234,8 @@ IF 数据属于 Container/Menu 展示用
 
 ## 参考资料
 
-- 官方文档：https://docs.neoNeoneoforged.net/
-- BER 文档：https://docs.neoNeoneoforged.net/
+- 官方文档：https://docs.neoforged.net/
+- BER 文档：https://docs.neoforged.net/
 
 ## 扩展点
 

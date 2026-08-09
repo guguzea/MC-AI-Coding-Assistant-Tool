@@ -1,23 +1,23 @@
 ﻿---
 name: mc-events
-description: Minecraft NeoNeoneoforge 事件系统。@SubscribeEvent、事件总线、物理端检测。触发词：事件、@SubscribeEvent、Bus.Neoneoforge、Bus.MOD、DistExecutor、AttachCapabilitiesEvent
-platform: neoNeoneoforge
+description: Minecraft NeoForge 事件系统。@SubscribeEvent、事件总线、物理端检测。触发词：事件、@SubscribeEvent、Bus.FORGE、Bus.MOD、DistExecutor、AttachCapabilitiesEvent
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 事件系统（NeoNeoneoforge 1.20.4）
+# 事件系统（NeoForge 1.20.4）
 
 ## 快速总览
 
-NeoNeoneoforge 使用与 Neoneoforge 相同的事件系统，但包名从 `net.minecraftNeoneoforge` 变为 `net.neoNeoneoforged`。
+NeoForge 使用与 Forge 相同的事件系统，但包名从 `net.minecraftforge` 变为 `net.neoforged`。
 
 ## 事件订阅基础
 
 ```java
-// Neoneoforge 总线：用于 NeoNeoneoforge 原生事件
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.Neoneoforge)
+// FORGE 总线：用于 NeoForge 原生事件
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Bus.FORGE)
 public class ModEvents {
     @SubscribeEvent
     public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
@@ -51,14 +51,14 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ## Decision: 选择事件总线
 
 ```
-IF 事件来自 NeoNeoneoforge/Minecraft（LivingDeath、BlockBreak、PlayerInteract 等）
-  → Bus.Neoneoforge
+IF 事件来自 NeoForge/Minecraft（LivingDeath、BlockBreak、PlayerInteract 等）
+  → Bus.FORGE
 
 IF 事件来自 mod 自定义
   → Bus.MOD
 
 IF 不确定
-  → 优先尝试 Bus.Neoneoforge
+  → 优先尝试 Bus.FORGE
 ```
 
 ## 常见错误

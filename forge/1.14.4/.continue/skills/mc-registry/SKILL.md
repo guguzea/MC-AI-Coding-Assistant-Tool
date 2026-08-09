@@ -1,143 +1,142 @@
----
+﻿---
 name: mc-registry
-description: Minecraft Forge 注册系统。注册方块、物品、实体、TileEntity 等。触发词：注册、register、RegistryEvent、ForgeRegistries、@Mod
+description: Minecraft Forge 注册系统。注册方块、物品、实体、方块实体等。触发词：注册、register、RegistryObject、DeferredRegister、ForgeRegistries、@Mod
 platform: forge
 version: "1.14.4"
+dependencies: []
+mappings: parchment
 ---
 
-# Registry 注册系统（Forge 1.14.4）
+# Registry 注册系统（Forge 1.19.4）
 
 ## 快速开始
 
-**使用 RegistryEvent**，这是 Forge 1.14.4 的标准注册方式：
+**始终使用 DeferredRegister**，这是 Forge 1.19.4 官方推荐的注册方式：
 
 ```java
-// 1. 在事件类中注册
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public static class RegistryEvents {
-    // 2. 使用 @SubscribeEvent 监听 RegistryEvent
-    @SubscribeEvent
-    public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-        IForgeRegistry<Block> registry = event.getRegistry();
-        // 3. 必须使用 .setRegistryName()
-        registry.register(
-            new Block(Block.Properties.create(Material.STONE))
-                .setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
-        );
-    }
+// 1. 创建 DeferredRegister（通常在 mod 主类或单独的注册类中）
+public static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
-    @SubscribeEvent
-    public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(
-            new Item(new Item.Properties().maxStackSize(64))
-                .setRegistryName(new ResourceLocation(MOD_ID, "my_item"))
-        );
-    }
-}
+// 2. 创建 RegistryObject 持有引用
+public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
+    () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE))
+);
+
+// 3. 在 mod 构造函数中注册到 modEventBus
+BLOCKS.register(modEventBus);
 ```
 
 ## Decision: 选择注册方式
 
 ```
-IF 注册方块/物品/实体/声音等
-  → 使用 RegistryEvent.Register<T>（标准方式）
-
-IF 使用 DeferredRegister（可选，但功能有限）
-  → 注意：Forge 1.14.4 的 DeferredRegister 功能有限
+IF 注册方块/物品/实体/Biomes/SoundEvents 等
+  → 使用 DeferredRegister<T> + RegistryObject<T>
 
 IF 注册自定义 Registry（全新注册表）
-  → 使用 RegistryEvent.NewRegistry + RegistryBuilder
+  → 使用 RegistryEvent.NewRegistry + DeferredRegister.create(ResourceKey)
 
 IF 需要在 mod constructor 执行前引用已注册对象
-  → ❌ 禁止：在静态字段初始化中引用另一个静态字段
-  → ✅ 正确：在 RegistryEvent 回调中使用
+  → ❌ 禁止：在静态字段初始化中引用另一个 DeferredRegister 的 RegistryObject
+  → ✅ 正确：在 RegistryObject 的 lambda 内部使用 .get() 获取
 ```
 
 ## Decision: 常用注册表
 
-| 注册内容 | 事件类型 | 备注 |
-|----------|----------|------|
-| 方块 | `RegistryEvent.Register<Block>` | |
-| 物品 | `RegistryEvent.Register<Item>` | |
-| TileEntity | `RegistryEvent.Register<TileEntityType>` | |
-| 实体类型 | `RegistryEvent.Register<EntityType>` | |
-| 声音事件 | `RegistryEvent.Register<SoundEvent>` | |
-| 附魔 | `RegistryEvent.Register<Enchantment>` | |
-| 容器类型 | `RegistryEvent.Register<ContainerType>` | |
+| 注册内容 | ForgeRegistries 字段 | 备注 |
+|----------|---------------------|------|
+| 方块 | `ForgeRegistries.BLOCKS` | |
+| 物品 | `ForgeRegistries.ITEMS` | |
+| 方块实体 | `ForgeRegistries.BLOCK_ENTITY_TYPES` | |
+| 实体类型 | `ForgeRegistries.ENTITY_TYPES` | |
+| 生物群系 | `Registries.BIOME`（Vanilla） | 用 `ResourceKey` |
+| 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
+| 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
+| 药水 | `ForgeRegistries.POTIONS` | |
+| 创造模式标签 | `Registries.CREATIVE_MODE_TAB` | Vanilla |
 
 ## 注册 ItemBlock
 
-ItemBlock 需要与方块**相同的注册名**：
+方块的 ItemBlock 与方块同名注册，Forge 自动关联：
 
 ```java
-@SubscribeEvent
-public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-    // BlockItem - registry name 必须匹配方块
-    event.getRegistry().register(
-        new BlockItem(ModBlocks.MY_BLOCK, new Item.Properties())
-            .setRegistryName(new ResourceLocation(MOD_ID, "my_block"))  // 与方块相同！
-    );
-}
+public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",
+    () -> new BlockItem(MY_BLOCK.get(), new Item.Properties())
+);
 ```
 
-## 注册 TileEntity（TileEntityType）
+## 注册方块实体（BlockEntity）
 
 ```java
-// 方块实现 hasTileEntity() + createTileEntity()
-public class MyBlock extends Block {
+// 方块实现 EntityBlock
+public class MyBlock extends Block implements EntityBlock {
     @Override
-    public boolean hasTileEntity(BlockState state) { return true; }
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new MyBlockEntity(pos, state);
+    }
+
+    @Nullable
     @Override
-    public TileEntity createTileEntity(World world, BlockState state) {
-        return new MyTileEntity();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level, BlockState state, BlockEntityType<T> type) {
+        return type == MY_BLOCK_ENTITY.get() ? MyBlockEntity::tick : null;
     }
 }
 
-// TileEntityType 注册
-public static final TileEntityType<MyTileEntity> MY_TILE_ENTITY =
-    TileEntityType.Builder.create(MyTileEntity::new, Blocks.STONE)
-        .build(null);
+// 注册 BlockEntityType
+public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
-@SubscribeEvent
-public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType> event) {
-    event.getRegistry().register(
-        MY_TILE_ENTITY.setRegistryName(new ResourceLocation(MOD_ID, "my_tile_entity"))
+public static final RegistryObject<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
+    BLOCK_ENTITIES.register("my_block",
+        () -> BlockEntityType.Builder.of(MyBlockEntity::new, EXAMPLE_BLOCK.get())
+            .build(null)
     );
-}
 ```
 
 ## 注册实体属性
 
 ```java
-// 在实体的 registerAttributes() 方法中
+// 在 mod 构造函数中注册（非 FMLCommonSetupEvent）
+public static final DeferredRegister<Attribute> ATTRIBUTES =
+    DeferredRegister.create(ForgeRegistries.Keys.ATTRIBUTES, MOD_ID);
+
+public static final RegistryObject<Attribute> MY_ATTRIBUTE =
+    ATTRIBUTES.register("my_attribute",
+        () -> new RangedAttribute("attribute.modid.my_attribute", 100.0, 1.0, 1024.0)
+    );
+
+// 在 mod 构造函数中
+ATTRIBUTES.register(modEventBus);
+
+// 实体上使用属性
 @Override
 protected void registerAttributes() {
     super.registerAttributes();
-    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+    this.getAttribute(ATTRIBUTES.get("my_attribute")).ifPresent(attr ->
+        this.getAttributeMap().registerAttribute(attr)
+    );
 }
 ```
 
 ## 常见错误
 
-- ❌ 忘记 `.setRegistryName()`：注册名称必须设置
-- ❌ Registry name 使用大写或横杠：必须全小写、下划线分隔
+- ❌ 在 lambda 外引用 RegistryObject：`new BlockItem(MY_BLOCK, ...)`（此时 MY_BLOCK 为 null）
+- ❌ 硬编码 registry name：`registry.register(new Block(...).setRegistryName("my_mod:my_block"))`（禁止）
 - ❌ mod ID 与 mods.toml 不一致
-- ❌ ItemBlock 与方块 registry name 不匹配
-- ❌ 在构造函数中引用其他 RegistryObject（此时尚未注册）
+- ❌ Registry 名称含大写或横杠：必须全小写、下划线分隔
 
 ## 参考资料
 
-- Forge 官方文档：https://docs.minecraftforge.net/en/1.14.4/concepts/registries/
+- Forge 官方文档：https://docs.minecraftforge.net/en/1.19.4/concepts/registries/
 - 详细示例：参见 `01-registry.mdc`
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-block` | 方块注册后方块实体注册需要先有方块 |
+|-------------|-----------|
+| `mc-block` | 方块注册后方块实体注册需要先有方块类型 |
 | `mc-item` | 物品注册后方块物品（BlockItem）需要先有方块 |
 | `mc-entity` | 实体注册后方块实体类型引用实体类型 |
-| `mc-datagen` | 注册完成后可通过手动 JSON 生成标签和配方 |
+| `mc-datagen` | 注册完成后可通过 DataGen 生成标签和配方 |
 | `mc-networking` | 自定义数据包可传输注册表数据 |

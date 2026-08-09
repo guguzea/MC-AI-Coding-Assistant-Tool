@@ -1,13 +1,13 @@
 ﻿---
 name: mc-capability
-description: Minecraft NeoNeoneoforge Capability 系统。AttachCapabilitiesEvent、ICapabilitySerializable、getCapability 存储和查询模式。触发词：Capability、IStorage、ICapabilitySerializable、AttachCapabilitiesEvent、LazyOptional、getCapability
-platform: neoNeoneoforge
+description: Minecraft NeoForge Capability 系统。AttachCapabilitiesEvent、ICapabilitySerializable、getCapability 存储和查询模式。触发词：Capability、IStorage、ICapabilitySerializable、AttachCapabilitiesEvent、LazyOptional、getCapability
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# Capability 系统（NeoNeoneoforge 1.20.4）
+# Capability 系统（NeoForge 1.20.4）
 
 ## 快速开始
 
@@ -99,11 +99,11 @@ int val = player.getCapability(CAP).get().getValue(); // NPE!
 
 ```java
 // ItemHandler（物品栏）
-player.getCapability(NeoNeoneoforgeCapabilities.ITEM_HANDLER)
+player.getCapability(NeoForgeCapabilities.ITEM_HANDLER)
 // FluidHandler（流体栏）
-player.getCapability(NeoNeoneoforgeCapabilities.FLUID_HANDLER)
+player.getCapability(NeoForgeCapabilities.FLUID_HANDLER)
 // EnergyStorage（能量）
-player.getCapability(NeoNeoneoforgeCapabilities.ENERGY)
+player.getCapability(NeoForgeCapabilities.ENERGY)
 ```
 
 ## 持久化注意
@@ -111,12 +111,12 @@ player.getCapability(NeoNeoneoforgeCapabilities.ENERGY)
 - LevelChunk 和 BlockEntity 的 Capability 数据只在 dirty 时写入存档
 - 每次数据变化后调用 `setChanged()` 标记 dirty
 
-## NeoNeoneoforge 1.20.4 与 Neoneoforge 的差异
+## NeoForge 1.20.4 与 Forge 的差异
 
-| 项目 | Neoneoforge 1.20.4 | NeoNeoneoforge 1.20.4 |
+| 项目 | Forge 1.20.1 | NeoForge 1.20.4 |
 |------|---------------|------------------|
-| Capability 持有类 | `NeoneoforgeCapabilities` | `NeoNeoneoforgeCapabilities` |
-| 包名空间 | `net.minecraftNeoneoforge` | `net.neoNeoneoforged` |
+| Capability 持有类 | `ForgeCapabilities` | `NeoForgeCapabilities` |
+| 包名空间 | `net.minecraftforge` | `net.neoforged` |
 
 ## 常见错误
 
@@ -128,7 +128,7 @@ player.getCapability(NeoNeoneoforgeCapabilities.ENERGY)
 
 ## 参考资料
 
-- NeoNeoneoforge 官方文档：https://docs.neoNeoneoforged.net/
+- NeoForge 官方文档：https://docs.neoforged.net/
 
 ## 扩展点
 

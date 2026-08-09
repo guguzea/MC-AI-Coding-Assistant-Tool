@@ -1,9 +1,9 @@
 ﻿---
 name: mc-datagen
-description: Minecraft NeoNeoneoforge 数据生成器。生成方块状态、物品模型、配方、战利品表、标签、进度、语言文件。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
+description: Minecraft NeoForge 数据生成器。生成方块状态、物品模型、配方、战利品表、标签、进度、语言文件。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
 ---
 
-# 数据生成器（NeoNeoneoforge 1.20.4）
+# 数据生成器（NeoForge 1.20.4）
 
 ## 快速开始
 

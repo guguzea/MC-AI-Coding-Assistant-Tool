@@ -1,13 +1,13 @@
 ﻿---
 name: mc-item
-description: Minecraft NeoNeoneoforge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、Tier、SwordItem、DiggerItem、ArmorItem
-platform: neoNeoneoforge
+description: Minecraft NeoForge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、Tier、SwordItem、DiggerItem、ArmorItem
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 物品开发（NeoNeoneoforge 1.20.4）
+# 物品开发（NeoForge 1.20.4）
 
 ## 快速开始
 
@@ -144,11 +144,11 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 
 ## 常见错误
 
-- ❌ `SwordItem(Tier, Item.Properties)` — NeoNeoneoforge 1.20.4 **只有 4 参数版本**，不存在 2 参数版本
+- ❌ `SwordItem(Tier, Item.Properties)` — NeoForge 1.20.4 **只有 4 参数版本**，不存在 2 参数版本
 - ❌ `SwordItem(Tier, float attackDamage, float attackSpeed, Properties)` — `attackDamage` 类型应为 `int`，不是 `float`
 - ❌ `Tier.getAttackDamageBonus()` 返回值含工具类型加成（剑已内置 +3.0f）
 - ❌ 忘记 `durability` 在 Item.Properties 中设置（默认 Integer.MAX_VALUE）
-- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ NeoNeoneoforge 用 `MobEffects.JUMP`
+- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ NeoForge 用 `MobEffects.JUMP`
 - ❌ `LivingEntity.getSlotForHand()` 不存在 → 使用 lambda 形式
 
 ## 参考资料

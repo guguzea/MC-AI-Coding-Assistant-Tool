@@ -5,6 +5,7 @@ import * as z from "zod";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { convertMapping, getMethodParams } from "./mappings/index.js";
 import { readableSignature, returnType, parameterTypes } from "./utils/descriptor.js";
+import { getUpdateHint } from "./update/index.js";
 import { getVersionInfo } from "./version/index.js";
 import { diagnoseGradle } from "./gradle/index.js";
 import { generateDatagen } from "./datagen/index.js";
@@ -220,6 +221,7 @@ server.registerTool(
       focus: getApiPreloadStatus(v),
       api: listApiPreloadStatuses(),
       dataPaths: diagnoseDataPaths(),
+      updateHint: getUpdateHint(),
       descriptorSelfCheck: {
         sample: "()F",
         returnType: returnType("()F"),

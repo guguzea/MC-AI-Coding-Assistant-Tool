@@ -1,13 +1,13 @@
 ﻿---
 name: mc-particle
-description: Minecraft NeoNeoneoforge 粒子效果开发。ParticleType 注册、ParticleProvider、particles.json、SpriteSet、渲染。触发词：Particle、ParticleType、ParticleProvider、RegisterParticleProvidersEvent、ParticleRenderType
-platform: neoNeoneoforge
+description: Minecraft NeoForge 粒子效果开发。ParticleType 注册、ParticleProvider、particles.json、SpriteSet、渲染。触发词：Particle、ParticleType、ParticleProvider、RegisterParticleProvidersEvent、ParticleRenderType
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 粒子开发（NeoNeoneoforge 1.20.4）
+# 粒子开发（NeoForge 1.20.4）
 
 粒子分为两部分：**通用端**（引用/注册粒子类型）和**客户端**（渲染逻辑）。
 
@@ -17,7 +17,7 @@ mappings: mcp
 
 ```java
 private static final DeferredRegister<ParticleType<?>> PARTICLES =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.PARTICLE_TYPES, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.PARTICLE_TYPES, MOD_ID);
 
 public static final RegistryObject<SimpleParticleType> MY_PARTICLE =
     PARTICLES.register("my_particle",
@@ -148,7 +148,7 @@ level.sendParticles(
 
 ## 参考资料
 
-- 官方文档：https://docs.neoNeoneoforged.net/
+- 官方文档：https://docs.neoforged.net/
 
 ## 扩展点
 

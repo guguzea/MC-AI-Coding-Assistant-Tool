@@ -1,4 +1,4 @@
-# MC AI Coding Assistant Tool
+﻿# MC AI Coding Assistant Tool
 
 让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包。
 
@@ -19,7 +19,7 @@ MC_skill/
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
-├── mcp-server/                  # 本地 stdio MCP Server（53 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（54 个工具）
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -116,7 +116,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**53** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**54** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -213,10 +213,16 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 
 
-## Agent Skills（**38** 个唯一名，多 IDE 镜像）
+## Agent Skills（**38** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
 
-路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。
+路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
 
+| 平台/版本 | 数量 | 结构 | 说明 |
+|-----------|------|------|------|
+| `forge/1.20.1` 及多数 Forge 版本 | **38** | 目录（每 skill 一目录） | 15 核心 + 23 Wave D |
+| `forge/1.15.2` | **39** | 目录 | 上表 + `mc-events` |
+| `fabric/*`（10 个版本） | **41** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 23 Wave D |
+| `neoforge` | **39** | 目录 | 16 基础（含 `mc-events`）+ 23 Wave D |
 
 | 分类           | Skills                                                                                                                           |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -227,10 +233,9 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 配置 / 测试 / 能源 | `mc-config`、`mc-gametest`、`mc-energy`、`mc-multiblock`                                                                            |
 | 兼容 / 文档库     | `mc-compat-jei`、`mc-curios`、`mc-patchouli`                                                                                       |
 
+Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Config 等平台专有 Skill。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
-
-## MCP Server 工具（53 个）
+## MCP Server 工具（54 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
 
@@ -255,7 +260,7 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。               |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。                                                                                                 |
 | `convert_mapping`   | 在 **mojang / mcp / yarn / parchment** 间互转类/方法/**字段**（SQLite **v3**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名；失败默认 `converted:null`（可选 `allow_fallback`）。 |
-| `get_server_status` | API 索引预热状态、`diagnose_data_paths` 摘要与 descriptor 自检；可选 `warmup` 先加载指定版本。                                                                                           |
+| `get_server_status` | API 索引预热状态、`diagnose_data_paths` 摘要、descriptor 自检与 **updateHint**；可选 `warmup` 先加载指定版本。                                                                                           |
 | `get_version_info`  | **【Forge only】** 按 MC 版本 + 操作（如「注册方块」）给出推荐做法、关键变更、gotchas 与官方 Changelog 链接。                                                                                       |
 
 
@@ -387,9 +392,15 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | `get_migration_guide` | 内置版本迁移路线摘要。                             |
 | `check_dependencies`  | 根据 `build.gradle` / `mods.toml` 提示依赖问题。 |
 
+### 12. 自我更新（1）
+
+| 工具 | 作用 |
+|------|------|
+| `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`mc-skill update check\|apply`。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
+
+`get_server_status` 附带 `updateHint`（上次 check 缓存，默认 TTL 1h）与 `pendingRestart`。
 
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
-
 ### 工作流模板（MCP Prompts）
 
 5 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
@@ -433,7 +444,7 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | Phase 1   | ✅ 完成  | Forge / Fabric / NeoForge 规则集与多版本扩展                   |
 | Phase 1.5 | ✅ 完成  | 模组脚手架 + 校验 CLI                                        |
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
-| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C 扩展，**53** 工具） |
+| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C 扩展，**54** 工具） |
 | Phase 4   | ✅ 进行中 | 知识库 / 反模式 / 数据审计与 Release 分发                          |
 | Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |
 

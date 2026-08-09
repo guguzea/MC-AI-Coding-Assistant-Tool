@@ -1,155 +1,240 @@
----
+﻿---
 name: mc-recipe
-description: Minecraft Forge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、IRecipe、Ingredient
+description: Minecraft Forge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现、Datagen。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、ProcessingRecipe、Ingredient
 platform: forge
 version: "1.14.4"
+dependencies: []
+mappings: parchment
 ---
 
-# 自定义配方开发（Forge 1.14.4）
+# 自定义配方开发（Forge 1.19.4）
 
 ## 快速总览
 
 ```
-注册 RecipeType（RegistryEvent） → 实现 Recipe 类 → 注册 RecipeSerializer（RegistryEvent） → 注册 Container（可选）
+注册 RecipeType（静态） → 实现 Recipe 类 → 注册 RecipeSerializer（静态） → DataGen（可选）
 ```
 
 ## 1. 注册 RecipeType
 
-`RecipeType` 使用**静态注册**：
+`RecipeType` 不支持 `DeferredRegister`，使用**静态注册**：
 
 ```java
 public static final RecipeType<MyRecipe> MILLING =
-    IRecipe.RECIPE_TYPE.register(new ResourceLocation(MOD_ID, "milling").toString(),
-        new RecipeType<MyRecipe>() {
-            @Override
-            public String toString() {
-                return MOD_ID + ":milling";
-            }
-        }
-    );
+    RecipeType.register(MOD_ID + ":milling");
 ```
 
 ## 2. 实现 Recipe 类
 
+推荐使用 **record**（简洁、无 setter）：
+
 ```java
-public class MyRecipe implements IRecipe<Inventory> {
-    private final ResourceLocation id;
-    private final Ingredient input;
-    private final ItemStack output;
-    private final int processingTime;
+public record MyRecipe(
+    ResourceLocation id,
+    Ingredient input,
+    ItemStack output,
+    int processingTime
+) implements Recipe<Container> {
 
-    public MyRecipe(ResourceLocation id, Ingredient input, ItemStack output, int processingTime) {
-        this.id = id;
-        this.input = input;
-        this.output = output;
-        this.processingTime = processingTime;
+    @Override
+    public boolean matches(Container container, Level level) {
+        return input.test(container.getItem(0));
     }
 
     @Override
-    public boolean matches(Inventory inv, World world) {
-        return input.test(inv.getStackInSlot(0));
+    public ItemStack assemble(Container container, RegistryAccess access) {
+        return output.copy();  // 必须返回副本！
     }
 
     @Override
-    public ItemStack getCraftingResult(Inventory inv) {
+    public ItemStack getResultItem(RegistryAccess access) {
         return output.copy();
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
-        return output.copy();
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModRecipeSerializers.MY_SERIALIZER;
-    }
-
-    @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return ModRecipes.MILLING;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return ModRecipeSerializers.MY_SERIALIZER.get();
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int w, int h) {
+        return w * h >= 1;
     }
 }
 ```
 
-> `getCraftingResult` 和 `getRecipeOutput` **必须返回副本**（`output.copy()`），否则同一个 ItemStack 实例被修改会影响原配方。
+> `assemble` 和 `getResultItem` **必须返回副本**（`output.copy()`），否则同一个 ItemStack 实例被修改会影响原配方。
 
 ## 3. 注册 RecipeSerializer
 
-`RecipeSerializer` 使用**静态注册**：
+`RecipeSerializer` 同样使用**静态注册**：
 
 ```java
-public static final RecipeSerializer<MyRecipe> MY_SERIALIZER =
-    new RecipeSerializer<MyRecipe>() {
-        @Override
-        public MyRecipe read(ResourceLocation id, JsonObject json) {
-            Ingredient input = Ingredient.deserialize(json.get("input"));
-            ItemStack output = CraftingHelper.getItemStack(
-                json.getAsJsonObject("output"), true
-            );
-            int time = JsonUtils.getInt(json, "processingTime", 200);
-            return new MyRecipe(id, input, output, time);
-        }
-
-        @Override
-        public MyRecipe read(ResourceLocation id, PacketBuffer buf) {
-            return new MyRecipe(id,
-                Ingredient.read(buf),
-                buf.readItemStack(),
-                buf.readVarInt()
-            );
-        }
-
-        @Override
-        public void write(PacketBuffer buf, MyRecipe recipe) {
-            recipe.getIngredients().get(0).write(buf);
-            buf.writeItemStack(recipe.getRecipeOutput());
-            buf.writeVarInt(recipe.processingTime);
-        }
-    };
-
-@SubscribeEvent
-public static void onRecipeSerializerRegistry(final RegistryEvent.Register<IRecipeSerializer> event) {
-    event.getRegistry().register(
-        MY_SERIALIZER.setRegistryName(new ResourceLocation(MOD_ID, "my_recipe"))
+// ModRecipeSerializers.java
+public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
+    RECIPE_SERIALIZERS.register("my_recipe",
+        () -> MyRecipeSerializer.INSTANCE
     );
+
+// MyRecipeSerializer.java
+public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
+    public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
+
+    @Override
+    public MyRecipe fromJson(ResourceLocation id, JsonObject json) {
+        Ingredient input = Ingredient.fromJson(JsonHelpers.getAsArray(json, "input"));
+        ItemStack output = CraftingHelper.getItemStack(
+            JsonHelpers.getAsObject(json, "output"), true
+        );
+        int time = JsonHelpers.getAsInt(json, "processingTime", 200);
+        return new MyRecipe(id, input, output, time);
+    }
+
+    @Override
+    public MyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        Ingredient input = Ingredient.STREAM_CODEC.fromNetwork(buf);
+        ItemStack output = buf.readItem();
+        int time = buf.readInt();
+        return new MyRecipe(id, input, output, time);
+    }
+
+    @Override
+    public void toNetwork(FriendlyByteBuf buf, MyRecipe recipe) {
+        recipe.input().toNetwork(buf);
+        buf.writeItem(recipe.output());
+        buf.writeInt(recipe.processingTime());
+    }
 }
 ```
 
-## 4. 配方 JSON 格式
+> `Ingredient.fromJson` 接收的 JSON 必须是**数组**：`[{ "item": "minecraft:diamond" }]`，不是 `{ "item": "..." }`。
+
+## 4. 在 mod 初始化时调用注册
+
+```java
+public class MyMod {
+    public MyMod() {
+        // 静态注册（static 块或构造函数）
+        ModRecipes.register();        // 注册 RecipeType
+        ModRecipeSerializers.register(); // 注册 RecipeSerializer
+    }
+}
+```
+
+## 5. 配方 JSON 格式
 
 ```json
 {
   "type": "mymod:my_recipe",
-  "input": { "item": "minecraft:diamond" },
+  "input": [{ "item": "minecraft:diamond" }],
   "output": { "item": "mymod:processed_diamond", "count": 2 },
   "processingTime": 400
 }
 ```
 
-- `"type"` 必须与 RecipeType 注册名一致
-- `"input"` 可以是对象或数组
+- `"type"` 必须与 `RecipeSerializer` 注册名一致
+- `"input"` 必须是数组
+
+## 6. DataGen（自定义 Serializer）
+
+> 注意：官方文档未覆盖自定义 Serializer 的 DataGen 流程，以下方案基于社区最佳实践。
+
+```java
+public class MyRecipeProvider extends RecipeProvider {
+    public MyRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries,
+                            CompletableFuture<HolderLookup.Provider> builtins) {
+        super(output, registries);
+    }
+
+    @Override
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+        // 手动构造 FinishedRecipe
+        ShapedRecipePattern pattern = ShapedRecipePattern.of(
+            Ingredient.of(Items.DIAMOND), 1,
+            "", "",
+            "", ""
+        );
+        ShapedRecipeBuilder.shaped(result, pattern)
+            .unlockedBy("has_diamond", has(Items.DIAMOND))
+            .save(consumer, MOD_ID + ":my_recipe");
+    }
+}
+```
+
+对于自定义 Serializer，需要手动实现 `FinishedRecipe`：
+
+```java
+public class MyFinishedRecipe implements FinishedRecipe {
+    private final ResourceLocation id;
+    private final Ingredient input;
+    private final ItemStack output;
+    private final int time;
+
+    public MyFinishedRecipe(ResourceLocation id, Ingredient input, ItemStack output, int time) {
+        this.id = id;
+        this.input = input;
+        this.output = output;
+        this.time = time;
+    }
+
+    @Override
+    public void serializeRecipeData(JsonObject json) {
+        json.add("input", input.toJson());
+        json.addProperty("output", BuiltInRegistries.ITEM.getKey(output.getItem()).toString());
+        json.addProperty("count", output.getCount());
+        json.addProperty("processingTime", time);
+    }
+
+    @Override
+    public ResourceLocation id() { return id; }
+
+    @Override
+    public RecipeSerializer<?> type() { return MyRecipeSerializer.INSTANCE; }
+
+    @Override
+    public JsonObject advancement() { return null; }
+
+    @Override
+    public void serializeAdvancement(JsonObject advancement) {}
+}
+```
+
+## Decision: 选择配方方式
+
+```
+IF 配方逻辑简单（物品 → 物品）
+  → 继承 SimpleRecipe + 注册 Serializer
+
+IF 处理机配方（有时间参数）
+  → 创建 record MyRecipe implements Recipe<Container>
+
+IF 配方数量多、固定格式
+  → DataGen 生成 JSON（RecipeProvider）
+```
 
 ## 常见错误
 
-- ❌ `getCraftingResult` / `getRecipeOutput` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
-- ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `IRecipe.RECIPE_TYPE.register()`
-- ❌ `RecipeSerializer` 忘了在 mod 初始化时注册 → 配方无法被加载
-- ❌ `Ingredient.deserialize()` 接收对象 → 必须是 `Ingredient` 实例或数组
+- ❌ `Ingredient.fromJson` 参数不是数组 → `{ "item": "..." }` 改为 `[{ "item": "..." }]`
+- ❌ `assemble` / `getResultItem` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
+- ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
+- ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
+- ❌ `RecipeProvider` 中硬编码数据 → 使用 `FinishedRecipe` 接口自定义序列化
 
 ## 参考资料
 
-- 官方文档：https://docs.minecraftforge.net/en/1.14.4/
+- 官方文档：https://docs.minecraftforge.net/en/1.19.4/resources/server/recipes/
+- 非数据包配方：https://docs.minecraftforge.net/en/1.19.4/resources/server/recipes/incode/
+- DataGen：https://docs.minecraftforge.net/en/1.19.4/datagen/server/recipes/
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-datagen` | 手动编写配方 JSON |
+|-------------|-----------|
+| `mc-datagen` | DataGen 生成配方 JSON |
 | `mc-networking` | 配方相关网络同步 |
 | `mc-blockentity` | 机器方块内处理配方的 tick 逻辑 |

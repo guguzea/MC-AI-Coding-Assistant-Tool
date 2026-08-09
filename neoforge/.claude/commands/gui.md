@@ -1,13 +1,13 @@
 ﻿---
 name: mc-gui
-description: Minecraft NeoNeoneoforge GUI/菜单开发。创建自定义 ContainerMenu、Screen、DataSlot 数据同步。触发词：Screen、Menu、ContainerMenu、MenuType、MenuScreens、quickMoveStack、IContainerFactory、ContainerData、DataSlot
-platform: neoNeoneoforge
+description: Minecraft NeoForge GUI/菜单开发。创建自定义 ContainerMenu、Screen、DataSlot 数据同步。触发词：Screen、Menu、ContainerMenu、MenuType、MenuScreens、quickMoveStack、IContainerFactory、ContainerData、DataSlot
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# GUI/菜单开发（NeoNeoneoforge 1.20.4）
+# GUI/菜单开发（NeoForge 1.20.4）
 
 ## Decision: 是否需要 Menu
 
@@ -28,7 +28,7 @@ IF 需要物品栏槽位（多格容器）
 
 ```java
 public static final DeferredRegister<MenuType<?>> MENUS =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.MENU_TYPES, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.MENU_TYPES, MOD_ID);
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",

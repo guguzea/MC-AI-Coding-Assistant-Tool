@@ -1,13 +1,13 @@
 ﻿---
 name: mc-block
-description: Minecraft NeoNeoneoforge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、BlockBehaviour.Properties、方块实体
-platform: neoNeoneoforge
+description: Minecraft NeoForge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、BlockBehaviour.Properties、方块实体
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 方块开发（NeoNeoneoforge 1.20.4）
+# 方块开发（NeoForge 1.20.4）
 
 ## 快速开始
 
@@ -54,7 +54,7 @@ BlockBehaviour.Properties.of(Material.WOOD)
 
 ```
 IF 方块在创意模式标签中有对应物品
-  → 注册同名 ItemBlock（NeoNeoneoforge 自动关联显示）
+  → 注册同名 ItemBlock（NeoForge 自动关联显示）
 
 IF 方块不应出现在物品栏（如空气、光源方块）
   → 不注册 ItemBlock
@@ -100,8 +100,8 @@ public class MyMachineBlockEntity extends BlockEntity {
     }
 
     // 同步（服务端 → 客户端）
-    // NeoNeoneoforge 1.20.4 推荐直接实现 getUpdateTag() / handleUpdateTag()
-    // NeoNeoneoforge 会自动处理数据包同步，无需手动 override getUpdatePacket()
+    // NeoForge 1.20.4 推荐直接实现 getUpdateTag() / handleUpdateTag()
+    // NeoForge 会自动处理数据包同步，无需手动 override getUpdatePacket()
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = super.getUpdateTag();

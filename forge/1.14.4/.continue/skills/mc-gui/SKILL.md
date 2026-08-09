@@ -1,216 +1,212 @@
----
+﻿---
 name: mc-gui
-description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、IInventory 数据同步。触发词：Screen、Container、IContainer、ContainerScreen、transferStackInSlot
+description: Minecraft Forge GUI/菜单开发。创建自定义 ContainerMenu、Screen、DataSlot 数据同步。触发词：Screen、Menu、ContainerMenu、MenuType、MenuScreens、quickMoveStack、IContainerFactory、ContainerData、DataSlot
 platform: forge
 version: "1.14.4"
+dependencies: []
+mappings: parchment
 ---
 
-# GUI/菜单开发（Forge 1.14.4）
+# GUI/菜单开发（Forge 1.19.4）
 
-## Decision: 是否需要 Container
+## Decision: 是否需要 Menu
 
 ```
 IF 交互时需要持久数据存储（机器进度、箱子物品）
-  → 使用 Container + IInventory + ContainerScreen
+  → 使用 AbstractContainerMenu + MenuType + Screen
 
 IF 只是显示 UI（无数据）
-  → 直接使用 Screen（无需 Container）
+  → 直接使用 Screen（无需 Menu）
 
 IF 需要物品栏槽位（多格容器）
-  → Container（slot 管理 + transferStackInSlot）
+  → AbstractContainerMenu（slot 管理 + quickMoveStack）
 ```
 
 ## 完整示例：方块交互打开 GUI
 
-### 1. TileEntity 实现 IInventory
+### 1. 注册 MenuType
 
 ```java
-public class MyBE extends TileEntity implements IInventory {
-    private ItemStack[] inventory = new ItemStack[9];
+public static final DeferredRegister<MenuType<?>> MENUS =
+    DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
 
-    @Override
-    public int getSizeInventory() { return 9; }
+public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
+    MENUS.register("my_menu",
+        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
+    );
 
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return inventory[index];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack stack = getStackInSlot(index);
-        if (!stack.isEmpty()) {
-            if (stack.getCount() <= count) {
-                setInventorySlotContents(index, ItemStack.EMPTY);
-            } else {
-                stack.shrink(count);
-            }
-        }
-        return stack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        inventory[index] = stack;
-        markDirty();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        for (ItemStack stack : inventory) {
-            if (!stack.isEmpty()) return false;
-        }
-        return true;
-    }
-}
+// 在 mod 构造函数中
+MENUS.register(modEventBus);
 ```
 
-### 2. 实现 Container
+### 2. 实现 AbstractContainerMenu
 
 ```java
-public class MyContainer extends Container {
-    private final IInventory tileInventory;
+public class MyMenu extends AbstractContainerMenu {
+    private final SimpleContainerData dataSlots;
 
-    public MyContainer(int windowId, PlayerInventory playerInv, IInventory tileInv) {
-        super(null, windowId);
-        this.tileInventory = tileInv;
-        // 添加槽位
+    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用）
+    public MyMenu(int windowId, Inventory inv, Player player) {
+        super(MY_MENU.get(), windowId);
+        // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(tileInv, col + row * 9, 8 + col * 18, 18 + row * 18));
+                this.addSlot(new Slot(inv, col + row * 9, 8 + col * 18, 18 + row * 18));
             }
         }
-        // 玩家物品栏
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInv, col + row * 9, 8 + col * 18, 84 + row * 18));
-            }
-        }
+
+        // 同步数据（服务端 → 客户端）
+        this.dataSlots = new SimpleContainerData(1); // 1 个整数同步
+        this.addDataSlots(this.dataSlots);
+    }
+
+    // 提供 getter 让 Screen 读取数据
+    public SimpleContainerData getData() {
+        return this.dataSlots;
     }
 
     // Shift-点击转移物品
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = this.slots.get(slotIndex);
 
-        if (slot != null && slot.getHasStack()) {
-            ItemStack stack1 = slot.getStack();
-            stack = stack1.copy();
+        if (slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
+            stack = slotStack.copy();
 
-            if (index < 9) {  // 从 TileEntity 到玩家
-                if (!mergeItemStack(stack1, 9, 36, true)) {
+            // 从玩家物品栏（索引 0-35）→ 容器（索引 36 开始）
+            if (slotIndex < 36) {
+                if (!this.moveItemStackTo(slotStack, 36, this.slots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(stack1, stack);
-            } else {  // 从玩家到 TileEntity
-                if (!mergeItemStack(stack1, 0, 9, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-
-            if (stack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                // 从容器 → 玩家物品栏
+                if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
+
+            slot.setChanged();
         }
         return stack;
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player) {
-        return tileInventory.isUsableByPlayer(player);
+    public boolean stillValid(Player player) {
+        return true; // 或添加距离检查
     }
 }
 ```
 
-### 3. 注册 ContainerType
+### 3. 方块绑定 MenuProvider
 
 ```java
-public static final ContainerType<MyContainer> MY_CONTAINER =
-    IForgeContainerType.create((windowId, inv, extraData) -> {
-        IWorld world = inv.player.world;
-        BlockPos pos = extraData.readBlockPos();
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof MyBE) {
-            return new MyContainer(windowId, inv, (IInventory) tile);
-        }
-        return null;
-    });
-
-@SubscribeEvent
-public static void onContainerRegistry(final RegistryEvent.Register<IContainer>> event) {
-    event.getRegistry().register(
-        MY_CONTAINER.setRegistryName(new ResourceLocation(MOD_ID, "my_container"))
-    );
-}
-```
-
-### 4. 方块绑定
-
-```java
-public class MyBlock extends Block {
+public class MyBlock extends Block implements EntityBlock {
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, BlockState state,
-            PlayerEntity player, Hand hand, RayTraceResult hit) {
-        if (!world.isRemote) {
-            TileEntity tile = world.getTileEntity(pos);
-            if (tile instanceof MyBE) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, tile);
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new SimpleMenuProvider(
+            (id, inv, player) -> new MyMenu(id, inv, player),
+            Component.translatable("block." + MOD_ID + ".my_block")
+        );
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult result) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            MenuProvider p = state.getMenuProvider(level, pos);
+            if (p != null) {
+                NetworkHooks.openScreen(serverPlayer, p);
             }
         }
-        return true;
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 }
 ```
 
-### 5. 客户端 Screen 注册
+### 4. 客户端 Screen 注册
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(
-            ModContainers.MY_CONTAINER, MyScreen::new
+        event.enqueueWork(() ->
+            MenuScreens.register(MY_MENU.get(), MyScreen::new)
         );
     }
 }
 ```
 
-### 6. Screen 类（CLIENT ONLY）
+### 5. Screen 类（CLIENT ONLY）
 
 ```java
-public class MyScreen extends ContainerScreen<MyContainer> {
-    public MyScreen(MyContainer container, PlayerInventory playerInv, ITextComponent title) {
-        super(container, playerInv, title);
+public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
+    private int progress; // 本地缓存，用于渲染
+
+    public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+        this.progress = 0;
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        // blit 在 this.guiLeft / this.guiTop 位置绘制背景 PNG
-        this.blit(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+    protected void init() {
+        super.init();
+        // 初始化 GUI 布局
     }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        // 每帧同步数据
+        this.progress = this.menu.getData().get(0);
+    }
+
+    @Override
+    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
+        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
+            0, 0, this.imageWidth, this.imageHeight);
+        // 叠加进度条
+        int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
+        graphics.fill(this.leftPos, this.topPos,
+            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
+    }
+
+    private static final ResourceLocation BACKGROUND_TEXTURE =
+        new ResourceLocation(MOD_ID, "textures/gui/container/my_gui.png");
 }
 ```
 
+## ContainerData 同步（服务端 ↔ 客户端）
+
+Menu 自己持有 `SimpleContainerData` 并提供 `getData()` getter，Screen 通过 `menu.getData()` 访问：
+
+```java
+// 服务端设置
+this.menu.getData().set(0, newValue); // 自动同步到客户端
+
+// 客户端读取（Screen 中）
+int value = this.menu.getData().get(0);
+```
+
+## DataSlot（槽位级别同步，已过时）
+
+Forge 1.19.4 推荐使用 `ContainerData`/`SimpleContainerData` 而非 `DataSlot`。
+
 ## 常见错误
 
-- ❌ `Container` vs `AbstractContainerMenu`：1.14.4 用 `Container`
-- ❌ `IInventory` vs `Container`：1.14.4 用 `IInventory`
-- ❌ `IContainer` vs `ContainerType`：注意正确的类名
-- ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
-- ❌ `canInteractWith` 返回 false → GUI 无法打开
-
-## 参考资料
-
-- 详细示例：参见 `10-gui.mdc`
+- ❌ `MenuScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `quickMoveStack` 返回空导致物品丢失 → 始终实现完整的转移逻辑
+- ❌ 方块 `getMenuProvider` 返回 null → `use()` 中检查 null
+- ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `broadcastChanges()` 批量同步
+- ❌ `stillValid()` 始终返回 true → 添加距离检查 `player.distanceToSqr(...) <= 8.0`
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-registry` | ContainerType 需要 RegistryEvent 注册 |
+|-------------|-----------|
+| `mc-registry` | MenuType、Slot 等需要 DeferredRegister 注册 |
 | `mc-item` | 物品栏槽位中的 ItemStack 交互 |
-| `mc-capability` | TileEntity 可附加 Capability 管理自定义数据 |
+| `mc-capability` | Container 可附加 Capability 管理自定义数据 |

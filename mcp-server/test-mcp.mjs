@@ -1,4 +1,4 @@
-/**
+﻿/**
  * MCP Server 测试脚本
  *
  * 特性：
@@ -402,7 +402,7 @@ async function runTests() {
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 53, `expected 53 tools, got ${toolNames.length}`);
+  assert.equal(toolNames.length, 54, `expected 54 tools, got ${toolNames.length}`);
   console.log(`  tools=${toolNames.length}`);
   console.log();
 

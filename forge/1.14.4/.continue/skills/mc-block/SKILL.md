@@ -1,115 +1,118 @@
----
+﻿---
 name: mc-block
-description: Minecraft Forge 方块开发。创建方块、TileEntity、方块状态属性、实体方块接口。触发词：方块、Block、TileEntity、EntityBlock、Block.Properties、方块实体
+description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、BlockBehaviour.Properties、方块实体
 platform: forge
 version: "1.14.4"
+dependencies: []
+mappings: parchment
 ---
 
-# 方块开发（Forge 1.14.4）
+# 方块开发（Forge 1.19.4）
 
 ## 快速开始
 
 ```java
 // 注册（参见 mc-registry Skill）
-// 注意：1.14.4 使用 Block.Properties，不是 BlockBehaviour.Properties
-public static final Block MY_BLOCK = new Block(
-    Block.Properties.create(Material.STONE)
-        .hardnessAndResistance(1.5f, 6.0f)
-        .harvestTool(ToolType.PICKAXE)
+public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
+    () -> new Block(BlockBehaviour.Properties.of()
+        .mapColor(MapColor.STONE)
+        .strength(1.5f, 6.0f)
+        .requiresCorrectToolForDrops()
+    )
 );
-
-// 注册方式（RegistryEvent）
-@SubscribeEvent
-public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-    event.getRegistry().register(
-        MY_BLOCK.setRegistryName(new ResourceLocation(MOD_ID, "my_block"))
-    );
-}
 ```
 
 ## Decision: 选择方块类型
 
 ```
-IF 需要持久的 extra data（如机器存储）
-  → TileEntity → 方块实现 hasTileEntity() + createTileEntity()
+IF 需要持久的 extra data（如机器存储、村民记忆）
+  → 方块实体（BlockEntity）→ 实现 EntityBlock 接口
 
 IF 只是静态显示（无状态）
   → 普通方块
 
 IF 需要流体
-  → 流体 → 参考 `02-block.mdc`（注意：1.14.4 无 FluidType）
+  → 流体（Fluid）→ 参考 `02-block.mdc`
 ```
 
-## Block.Properties 常用配置
+## BlockBehaviour.Properties 常用配置
 
 ```java
-Block.Properties.create(Material.WOOD)
-    .hardnessAndResistance(1.5f, 6.0f)         // 硬度和抗爆性
-    .harvestTool(ToolType.PICKAXE)              // 需要正确工具
-    .harvestLevel(2)                           // 挖掘等级
-    .sound(SoundType.WOOD)                     // 音效
-    .notSolid()                                // 非固体
-    .noDrops()                                 // 无掉落物
+BlockBehaviour.Properties.of(Material.WOOD)
+    .strength(1.5f, 6.0f)              // 硬度和抗爆性
+    .requiresCorrectToolForDrops()       // 需要正确工具才能掉落
+    .noOcclusion()                      // 不阻挡光影
+    .isRedstoneConductor(...)          // 红石导体
+    .isSuffocating(...)                // 窒息方块
+    .isViewBlocking(...)                // 阻挡视角
+    .hasPostProcess(...)               // 后处理效果
+    .emissiveRendering(...)            // 自发光
+    .noLootTablePoolsBuilder()         // 无掉落表
 ```
 
 ## Decision: 物品形态（ItemBlock）
 
 ```
-IF 方块在创造模式标签中有对应物品
-  → 注册同名 ItemBlock（需要手动 setRegistryName 匹配方块）
+IF 方块在创意模式标签中有对应物品
+  → 注册同名 ItemBlock（Forge 自动关联显示）
 
 IF 方块不应出现在物品栏（如空气、光源方块）
   → 不注册 ItemBlock
 ```
 
-## TileEntity 方块
+## EntityBlock 方块
 
 ```java
-public class MyMachineBlock extends Block {
-    public MyMachineBlock() {
-        super(Block.Properties.create(Material.WOOD));
+public class MyMachineBlock extends Block implements EntityBlock {
+    // 返回新的方块实体实例
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new MyMachineBlockEntity(pos, state);
     }
 
+    // 返回方块刻处理器（如果需要定时逻辑）
+    @Nullable
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, BlockState state) {
-        return new MyMachineTileEntity();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level, BlockState state, BlockEntityType<T> type) {
+        // 仅在服务端执行
+        return level.isClientSide ? null :
+            (type == MyMachineBlockEntity.TYPE.get() ? MyMachineBlockEntity::tick : null);
     }
 }
 ```
 
-## TileEntity 基础结构
+## BlockEntity 基础结构
 
 ```java
-public class MyMachineTileEntity extends TileEntity {
+public class MyMachineBlockEntity extends BlockEntity {
     private int progress = 0;
 
-    public MyMachineTileEntity() {
-        super(TileEntityType.byId(0)); // 实际使用注册的 TileEntityType
+    public MyMachineBlockEntity(BlockPos pos, BlockState state) {
+        super(MyMachineBlockEntity.TYPE.get(), pos, state);
     }
 
-    // tick 逻辑（服务端）
-    @Override
-    public void tick() {
-        if (world.isRemote) return;
+    // 刻处理逻辑（服务端）
+    public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
+            BlockState state, T blockEntity) {
+        if (level.isClientSide) return;
         // 定时逻辑...
     }
 
-    // NBT 同步（服务端 → 客户端）
+    // 同步（服务端 → 客户端）
+    // 1.19.4 推荐直接实现 getUpdateTag() / handleUpdateTag()
+    // Forge 会自动处理数据包同步，无需手动 override getUpdatePacket()
     @Override
-    public NBTTagCompound getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
         nbt.putInt("progress", progress);
         return nbt;
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketCustomPayload pkt) {
-        readFromNBT(pkt.getNbtCompound());
+    public void handleUpdateTag(CompoundTag nbt) {
+        super.handleUpdateTag(nbt);
+        this.progress = nbt.getInt("progress");
     }
 }
 ```
@@ -137,11 +140,10 @@ public class MyMachineTileEntity extends TileEntity {
 
 ## 常见错误
 
-- ❌ `Block.Properties.create()` vs `BlockBehaviour.Properties.of()`：1.14.4 用前者
-- ❌ TileEntity.newBlockEntity() 返回 null（必须返回新实例）
-- ❌ 在 TileEntity 构造函数中访问 world（world 可能为 null）
-- ❌ `markDirty()` 忘记调用导致数据不保存
-- ❌ 忘记 `harvestTool()` 导致任何物品都能掉落
+- ❌ `BlockEntity.newBlockEntity()` 返回 null（必须返回新实例）
+- ❌ 在 BlockEntity 构造函数中访问 world（world 可能为 null）
+- ❌ `getTicker()` 在客户端返回非 null（tick 只应在服务端执行）
+- ❌忘记 `requiresCorrectToolForDrops()` 导致任何物品都能掉落
 
 ## 参考资料
 
@@ -150,7 +152,7 @@ public class MyMachineTileEntity extends TileEntity {
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|-----------|---------|
+|-------------|-----------|
 | `mc-registry` | 方块注册后方块实体类型需要引用方块类型 |
-| `mc-datagen` | 方块注册后可生成方块状态和模型 JSON（手动） |
-| `mc-capability` | TileEntity 可附加 Capability 存储数据 |
+| `mc-datagen` | 方块注册后可生成方块状态和模型 JSON |
+| `mc-capability` | 方块实体可附加 Capability 存储数据 |

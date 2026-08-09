@@ -1,4 +1,4 @@
-# AUTO SETUP — MC Skill MCP Server
+﻿# AUTO SETUP — MC Skill MCP Server
 
 > **给 AI Agent 看的自动配置脚本。**  
 > 当用户把这个文件拖入 Cursor（或其他 AI IDE）时，AI 应该自动执行以下所有步骤，无需用户干预。
@@ -9,7 +9,7 @@
 
 把本仓库的本地 **stdio MCP Server** 编译好，并**生成** Cursor MCP 配置草稿供用户确认后粘贴（不要静默改写用户的 `mcp.json`，不要自动执行 `mklink`）。
 
-完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，**53** 个工具可用，覆盖：
+完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，**54** 个工具可用，覆盖：
 
 | 模块 | 代表工具 |
 |------|----------|
@@ -26,6 +26,7 @@
 | 生成器 | `generate_model`、`generate_lang`、`generate_network_packet` 等 7 个 `generate_*` |
 | 诊断扩展 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
 | 服务状态 | `get_server_status` |
+| 自我更新 | `mc_skill_update` |
 
 本仓库还包含 `forge/` / `fabric/` / `neoforge/` 规则集、`data/` 离线数据包，以及根目录 `community_knowledge/`（社区实务，与官方文档分离）；MCP 负责运行时查询，规则集负责写代码时的约束与决策流。
 
@@ -167,7 +168,7 @@ node -e "console.log(require('path').resolve('data'))"
 配置粘贴完成后，请用户**完全退出并重新打开** Cursor，再在 MCP 面板确认：
 
 1. 出现 `MC-AI-Coding-Assistant-Tool`
-2. 工具数量 **53**（`index.ts` 36 + `wave/register.ts` 17）
+2. 工具数量 **54**（`index.ts` 36 + `wave/register.ts` 18）
 3. 可试调：`list_doc_versions` 或 `diagnose_data_paths`（应能看到 forge / fabric / neoforge 相关数据）
 
 ---

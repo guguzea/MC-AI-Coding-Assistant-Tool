@@ -1,4 +1,4 @@
-# MC MCP Server
+﻿# MC MCP Server
 
 本地 **stdio** MCP Server，供 Cursor 等 AI 助手查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。
 
@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **53** 个 MCP 工具：`src/index.ts` **36** + `src/wave/register.ts` **17**
+- 共 **54** 个 MCP 工具：`src/index.ts` **36** + `src/wave/register.ts` **18**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -71,7 +71,7 @@ npm run build
 
 ### 3. 验收
 
-重启 Cursor 后应看到 **`MC-AI-Coding-Assistant-Tool`**，工具数 **53**。可试：`get_server_status`、`diagnose_data_paths`。
+重启 Cursor 后应看到 **`MC-AI-Coding-Assistant-Tool`**，工具数 **54**。可试：`get_server_status`、`diagnose_data_paths`。
 
 ### 4. 环境变量
 
@@ -79,8 +79,13 @@ npm run build
 |------|------|------|
 | `MC_SKILL_DATA` | data 根目录（非版本子目录） | `H:/MC_skill/data` |
 | `MC_SKILL_COMMUNITY` | 社区知识库根（可选） | `H:/MC_skill/community_knowledge` |
-| `MC_SKILL_ALLOW_WRITE` | `1` 允许 port_project 写盘 | `1` |
-| `MC_SKILL_PROJECT_ROOT` | 允许写入的模组根 | `H:/mods/my-mod` |
+| `MC_SKILL_ALLOW_WRITE` | `1` 允许 `port_project` / `mc_skill_update` 写盘 | `1` |
+| `MC_SKILL_PROJECT_ROOT` | 允许写入的根（更新工具须为 **MC_skill 仓库根**） | `H:/MC_skill` |
+| `MC_SKILL_UPDATE_REPO` | GitHub `owner/repo`（默认本仓库） | `guguzea/MC-AI-Coding-Assistant-Tool` |
+| `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
+| `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |
+| `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | data zip 下载超时 | `600000` |
+| `MC_SKILL_GITHUB_TOKEN` / `GITHUB_TOKEN` | 可选，提高 API 限额 | |
 | `MC_SKILL_STRICT` | `1` 数据无效则启动失败 | `1` |
 | `MC_SKILL_DEBUG_PATHS` | `1` 打印路径解析 | `1` |
 
@@ -114,8 +119,9 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
 | Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen` |
 | Wave C 诊断 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
+| 自我更新 | `mc_skill_update` |
 
-补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`。
+补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`。
 
 ### 字段映射（`convert_mapping`）
 

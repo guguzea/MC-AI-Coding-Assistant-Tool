@@ -1,15 +1,15 @@
 ﻿---
 name: mc-mixin
-description: Minecraft NeoNeoneoforge Mixin 注入。安全使用 @Mixin、@Inject、@At、@ModifyVariable。触发词：Mixin、@Inject、@At、mixins.json、AccessWidener、ASM
-platform: neoNeoneoforge
+description: Minecraft NeoForge Mixin 注入。安全使用 @Mixin、@Inject、@At、@ModifyVariable。触发词：Mixin、@Inject、@At、mixins.json、AccessWidener、ASM
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# Mixin 注入（NeoNeoneoforge 1.20.4）
+# Mixin 注入（NeoForge 1.20.4）
 
-Mixin 通过修改已编译的字节码实现运行时注入。NeoNeoneoforge 使用 Mixin 框架。
+Mixin 通过修改已编译的字节码实现运行时注入。NeoForge 使用 Mixin 框架。
 
 ## 快速开始
 
@@ -42,7 +42,7 @@ mixin {
 }
 ```
 
-### 3. neoNeoneoforge.mods.toml 中声明
+### 3. neoforge.mods.toml 中声明
 
 ```toml
 [[mixins]]
@@ -125,12 +125,12 @@ public abstract class MixinPlayer {
 }
 ```
 
-## NeoNeoneoforge 1.20.4 Mixin 配置
+## NeoForge 1.20.4 Mixin 配置
 
-NeoNeoneoforge 1.20.4 使用 NeoGradle，Mixin 配置略有不同：
+NeoForge 1.20.4 使用 NeoGradle，Mixin 配置略有不同：
 
 ```toml
-# neoNeoneoforge.mods.toml
+# neoforge.mods.toml
 [[mixins]]
 config = "${mod_id}.mixins.json"
 ```
@@ -146,7 +146,7 @@ config = "${mod_id}.mixins.json"
 ## 参考资料
 
 - Mixin 文档：https://github.com/SpongePowered/Mixin
-- NeoNeoneoforge Mixin 配置：https://docs.neoNeoneoforged.net/
+- NeoForge Mixin 配置：https://docs.neoforged.net/
 
 ## 扩展点
 

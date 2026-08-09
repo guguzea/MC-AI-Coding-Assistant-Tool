@@ -1,20 +1,20 @@
 ﻿---
 name: mc-entity
-description: Minecraft NeoNeoneoforge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、MobCategory、EntityRenderer
-platform: neoNeoneoforge
+description: Minecraft NeoForge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、MobCategory、EntityRenderer
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 实体开发（NeoNeoneoforge 1.20.4）
+# 实体开发（NeoForge 1.20.4）
 
 ## 快速开始
 
 ```java
 // 注册 EntityType（参见 mc-registry Skill）
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.ENTITY_TYPES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)

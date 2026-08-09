@@ -1,17 +1,19 @@
----
+﻿---
 name: mc-networking
-description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleNetworkWrapper。触发词：网络、消息、Network、SimpleNetworkWrapper、PacketDistributor、IMessage
+description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、IMessage
 platform: forge
 version: "1.14.4"
+dependencies: []
+mappings: parchment
 ---
 
-# 网络通信（Forge 1.14.4）
+# 网络通信（Forge 1.19.4）
 
 ## 快速开始
 
 ```java
-// 创建 SimpleNetworkWrapper
-public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleChannel(
+// 创建 SimpleChannel
+public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
     new ResourceLocation(MOD_ID, "main"),
     () -> PROTOCOL_VERSION,
     PROTOCOL_VERSION::equals,
@@ -21,11 +23,9 @@ public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleCha
 // 注册消息
 private static int msgId = 0;
 public static void register() {
-    INSTANCE.registerMessage(
-        msgId++, MyMessage.class,
+    CHANNEL.registerMessage(msgId++, MyMessage.class,
         MyMessage::toBytes, MyMessage::new,
-        MyMessage::handle
-    );
+        MyMessage::handle);
 }
 ```
 
@@ -33,23 +33,23 @@ public static void register() {
 
 ```
 IF 客户端 → 服务端（玩家发起）
-  → 在客户端调用 INSTANCE.sendToServer(msg)
+  → 在客户端调用 CHANNEL.sendToServer(msg)
 
 IF 服务端 → 玩家（精准发送）
-  → INSTANCE.sendTo(msg, player, NetworkDirection.PLAY_TO_CLIENT)
+  → CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg)
 
 IF 服务端 → 全服广播
-  → INSTANCE.sendToAll(msg)
+  → CHANNEL.send(PacketDistributor.ALL.noArg(), msg)
 
 IF 服务端 → 区域内所有玩家
-  → 使用 EntityTracker 或手动发送
+  → CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)
 ```
 
 ## 消息类结构
 
 ```java
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 public class MyMessage implements IMessage {
     private int value;
@@ -63,13 +63,13 @@ public class MyMessage implements IMessage {
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeInt(value);
         buf.writeResourceLocation(targetId);
     }
 
     @Override
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         this.value = buf.readInt();
         this.targetId = buf.readResourceLocation();
     }
@@ -82,7 +82,7 @@ public class MyMessage implements IMessage {
 public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
         // 在主线程执行游戏逻辑
-        ServerPlayerEntity sender = ctx.get().getSender();
+        ServerPlayer sender = ctx.get().getSender();
         if (sender != null) {
             // 服务端处理
         }
@@ -96,22 +96,16 @@ public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
 ```java
 // 在 NetworkHandler 类中
 public static void broadcast(MyBroadcastMessage msg) {
-    INSTANCE.sendToAll(msg);
-}
-
-// 发送给指定玩家
-public static void sendTo(PlayerEntity player, MyBroadcastMessage msg) {
-    INSTANCE.sendTo(msg, player, NetworkDirection.PLAY_TO_CLIENT);
+    CHANNEL.send(PacketDistributor.ALL.noArg(), msg);
 }
 ```
 
 ## 常见错误
 
-- ❌ `SimpleChannel`（1.20.1）→ Forge 1.14.4 用 `SimpleNetworkWrapper`
-- ❌ `PacketByteBuf`（1.20.1）→ Forge 1.14.4 用 `PacketBuffer`
+- ❌ `IMessageHandler` vs `IClientHandler`：确认方向（C2S 用 IMessageHandler，S2C 消息自动忽略）
 - ❌ 在网络线程直接修改世界：所有游戏逻辑必须在 `enqueueWork()` 回调中执行
 - ❌ 消息 ID 冲突：每个消息 ID 在同一 channel 中必须唯一
-- ❌ `sendToServer()` 在服务端调用：检查逻辑端
+- ❌ `sendToServer()` 在服务端调用：检查 `LogicalSide`
 
 ## 参考资料
 
@@ -120,7 +114,7 @@ public static void sendTo(PlayerEntity player, MyBroadcastMessage msg) {
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|-----------|---------|
+|-------------|-----------|
 | `mc-registry` | 注册表数据可通过网络同步 |
 | `mc-capability` | Capability 数据可通过数据包同步 |
 | `mc-entity` | 实体数据同步基于网络消息机制 |

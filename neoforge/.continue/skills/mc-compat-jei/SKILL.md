@@ -1,9 +1,9 @@
 ﻿---
 name: mc-compat-jei
-description: Minecraft NeoNeoneoforge JEI/EMI 兼容层。让 JEI/EMI 自动读取 DataGen 配方，或使用现代 API 添加自定义显示。触发词：JEI、EMI、RecipeCategory、jei_plugins、EMI、emi
+description: Minecraft NeoForge JEI/EMI 兼容层。让 JEI/EMI 自动读取 DataGen 配方，或使用现代 API 添加自定义显示。触发词：JEI、EMI、RecipeCategory、jei_plugins、EMI、emi
 ---
 
-# JEI/EMI 兼容（NeoNeoneoforge 1.20.4）
+# JEI/EMI 兼容（NeoForge 1.20.4）
 
 ## Decision: 选择兼容方案
 
@@ -32,15 +32,15 @@ generator.addProvider(true, new ModRecipeProvider(output, registries));
 
 ## 方案 B：使用 EMI（现代推荐）
 
-EMI 是 JEI 12.x 的现代替代品，API 简洁，在 NeoNeoneoforge 社区更流行。
+EMI 是 JEI 12.x 的现代替代品，API 简洁，在 NeoForge 社区更流行。
 
 ### 添加 EMI 依赖
 
 在 `build.gradle` 中：
 ```groovy
 dependencies {
-    minecraft "net.neoNeoneoforged:neoNeoneoforge:${neoform_version}"
-    // NeoNeoneoforge 使用 fg.deobf 或直接引用
+    minecraft "net.neoforged:neoforge:${neoform_version}"
+    // NeoForge 使用 fg.deobf 或直接引用
     implementation "dev.emi:EMI:1.0+1.20.4"
 }
 ```

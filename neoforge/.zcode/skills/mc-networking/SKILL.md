@@ -1,13 +1,13 @@
 ﻿---
 name: mc-networking
-description: Minecraft NeoNeoneoforge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、IMessage
-platform: neoNeoneoforge
+description: Minecraft NeoForge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、IMessage
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 网络通信（NeoNeoneoforge 1.20.4）
+# 网络通信（NeoForge 1.20.4）
 
 ## 快速开始
 
@@ -88,14 +88,14 @@ public static void handle(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
 }
 ```
 
-## NeoNeoneoforge 1.20.4 网络包包名
+## NeoForge 1.20.4 网络包包名
 
-NeoNeoneoforge 1.20.4 的网络包在 `net.neoNeoneoforged.neoNeoneoforge.network` 包下：
+NeoForge 1.20.4 的网络包在 `net.neoforged.neoforge.network` 包下：
 
 ```java
-import net.neoNeoneoforged.neoNeoneoforge.network.NetworkRegistry;
-import net.neoNeoneoforged.neoNeoneoforge.network.PacketDistributor;
-import net.neoNeoneoforged.neoNeoneoforge.network.handling.NetworkContext;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.handling.NetworkContext;
 ```
 
 ## 常见错误

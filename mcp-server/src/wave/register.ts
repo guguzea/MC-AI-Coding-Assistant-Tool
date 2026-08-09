@@ -20,6 +20,7 @@ import {
 import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics/index.js";
 import { getWorkflowTemplate, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
 import { WORKFLOW_TEMPLATES } from "../prompts/templates.js";
+import { mcSkillUpdate } from "../update/index.js";
 
 function jsonResult(obj: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] };
@@ -197,6 +198,28 @@ export function registerWaveExtensions(server: McpServer): void {
       modsToml: z.string().optional(),
     }),
   }, async (a) => jsonResult(checkDependencies(a.buildGradle, a.modsToml)));
+
+  server.registerTool(
+    "mc_skill_update",
+    {
+      title: "Check / apply MC_skill tooling+data updates",
+      description:
+        "检查 GitHub Release 是否有新版本；确认后可更新 tooling（git ff-only + npm build）与 data（zip+SHA256）。" +
+        "默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。",
+      inputSchema: z.object({
+        action: z.enum(["check", "apply"]).describe("check=只读探测；apply=预演或执行更新"),
+        scope: z.enum(["tooling", "data", "all"]).optional().describe("默认 all"),
+        dryRun: z.boolean().optional().describe("仅 apply：默认 true"),
+        confirmed: z.boolean().optional().describe("apply 且 dryRun=false 时必须 true"),
+        allowDirty: z.boolean().optional(),
+        stashDirty: z.boolean().optional().describe("allowDirty 时可选先 stash 再 merge 再 pop"),
+        channel: z.enum(["stable", "latest", "tag"]).optional().describe("默认 stable"),
+        tagName: z.string().optional(),
+        includePrerelease: z.boolean().optional().describe("true 时等价 channel=latest"),
+      }),
+    },
+    async (args): Promise<CallToolResult> => jsonResult(await mcSkillUpdate(args)),
+  );
 
   // ── Wave B: Prompts + Resources (protocol) ───────────────────────────────
   for (const [name, meta] of Object.entries(WORKFLOW_TEMPLATES)) {

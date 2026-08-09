@@ -1,13 +1,13 @@
 ﻿---
 name: mc-recipe
-description: Minecraft NeoNeoneoforge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现、Datagen。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、ProcessingRecipe、Ingredient
-platform: neoNeoneoforge
+description: Minecraft NeoForge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现、Datagen。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、ProcessingRecipe、Ingredient
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 自定义配方开发（NeoNeoneoforge 1.20.4）
+# 自定义配方开发（NeoForge 1.20.4）
 
 ## 快速总览
 
@@ -137,7 +137,7 @@ public class MyRecipeSerializer implements RecipeSerializer<MyRecipe> {
 
 ## 参考资料
 
-- 官方文档：https://docs.neoNeoneoforged.net/
+- 官方文档：https://docs.neoforged.net/
 
 ## 扩展点
 

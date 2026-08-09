@@ -1,13 +1,13 @@
 ﻿---
 name: mc-sound
-description: Minecraft NeoNeoneoforge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、SoundSource、sounds.json、playSound
-platform: neoNeoneoforge
+description: Minecraft NeoForge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、SoundSource、sounds.json、playSound
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 声音开发（NeoNeoneoforge 1.20.4）
+# 声音开发（NeoForge 1.20.4）
 
 ## 快速开始
 
@@ -15,7 +15,7 @@ mappings: mcp
 
 ```java
 private static final DeferredRegister<SoundEvent> SOUNDS =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.SOUND_EVENTS, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.SOUND_EVENTS, MOD_ID);
 
 public static final RegistryObject<SoundEvent> MY_SOUND =
     SOUNDS.register("my_sound",
@@ -111,7 +111,7 @@ level.playSound(
 
 ## 参考资料
 
-- 官方文档：https://docs.neoNeoneoforged.net/
+- 官方文档：https://docs.neoforged.net/
 
 ## 扩展点
 

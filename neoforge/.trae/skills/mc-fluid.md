@@ -1,13 +1,13 @@
 ﻿---
 name: mc-fluid
-description: Minecraft NeoNeoneoforge 流体开发。创建流体 Fluid、FluidType、FlowingFluid、桶物品。触发词：Fluid、FluidType、FlowingFluid、BucketItem、桶、bucket、流体
-platform: neoNeoneoforge
+description: Minecraft NeoForge 流体开发。创建流体 Fluid、FluidType、FlowingFluid、桶物品。触发词：Fluid、FluidType、FlowingFluid、BucketItem、桶、bucket、流体
+platform: neoforge
 version: "1.20.4"
 dependencies: []
 mappings: mcp
 ---
 
-# 流体开发（NeoNeoneoforge 1.20.4）
+# 流体开发（NeoForge 1.20.4）
 
 ## Decision: 创建流体类型
 
@@ -24,8 +24,8 @@ IF 需要流动、填装、无限水源
 ### 1. 定义流体属性
 
 ```java
-public static final NeoneoforgeFlowingFluid.Properties FLUID_PROPERTIES =
-    new NeoneoforgeFlowingFluid.Properties(
+public static final ForgeFlowingFluid.Properties FLUID_PROPERTIES =
+    new ForgeFlowingFluid.Properties(
         MY_FLUID_TYPE,     // source fluid type
         MY_FLUID,          // flowing fluid
         MY_FLUID_SOURCE    // source fluid
@@ -38,7 +38,7 @@ public static final NeoneoforgeFlowingFluid.Properties FLUID_PROPERTIES =
 
 ```java
 public static final DeferredRegister<FluidType> FLUID_TYPES =
-    DeferredRegister.create(NeoNeoneoforgeRegistries.Keys.FLUID_TYPES, MOD_ID);
+    DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, MOD_ID);
 
 public static final RegistryObject<FluidType> MY_FLUID_TYPE =
     FLUID_TYPES.register("my_fluid_type",
@@ -58,7 +58,7 @@ public static final RegistryObject<FluidType> MY_FLUID_TYPE =
 ```java
 public static final RegistryObject<FlowingFluid> MY_FLUID_SOURCE =
     FLUIDS.register("my_fluid",
-        () -> new NeoneoforgeFlowingFluid.Source(FLUID_PROPERTIES)
+        () -> new ForgeFlowingFluid.Source(FLUID_PROPERTIES)
     );
 ```
 
@@ -67,7 +67,7 @@ public static final RegistryObject<FlowingFluid> MY_FLUID_SOURCE =
 ```java
 public static final RegistryObject<FlowingFluid> MY_FLUID =
     FLUIDS.register("my_fluid_flowing",
-        () -> new NeoneoforgeFlowingFluid.Flowing(FLUID_PROPERTIES)
+        () -> new ForgeFlowingFluid.Flowing(FLUID_PROPERTIES)
     );
 ```
 
@@ -101,16 +101,16 @@ public static final RegistryObject<BUCKET_ITEM> MY_BUCKET =
 
 | 类型 | 注册表 | 备注 |
 |------|--------|------|
-| `FluidType` | `NeoNeoneoforgeRegistries.Keys.FLUID_TYPES` | 必须先注册 |
-| `Fluid`（Source） | `NeoNeoneoforgeRegistries.FLUIDS` | Source 用 `new NeoneoforgeFlowingFluid.Source()` |
-| `Fluid`（Flowing） | `NeoNeoneoforgeRegistries.FLUIDS` | Flowing 用 `new NeoneoforgeFlowingFluid.Flowing()` |
-| `Block` | `NeoNeoneoforgeRegistries.BLOCKS` | 用 `LiquidBlock` |
-| `Item` | `NeoNeoneoforgeRegistries.ITEMS` | 用 `BucketItem` |
+| `FluidType` | `NeoForgeRegistries.Keys.FLUID_TYPES` | 必须先注册 |
+| `Fluid`（Source） | `NeoForgeRegistries.FLUIDS` | Source 用 `new ForgeFlowingFluid.Source()` |
+| `Fluid`（Flowing） | `NeoForgeRegistries.FLUIDS` | Flowing 用 `new ForgeFlowingFluid.Flowing()` |
+| `Block` | `NeoForgeRegistries.BLOCKS` | 用 `LiquidBlock` |
+| `Item` | `NeoForgeRegistries.ITEMS` | 用 `BucketItem` |
 
 ## 常见错误
 
 - ❌ 只注册 `Fluid` 而不注册 `FluidType` → 流体无法加载
-- ❌ `FluidType` 在 `NeoNeoneoforgeRegistries.FLUIDS` 中注册 → 必须在 `NeoNeoneoforgeRegistries.Keys.FLUID_TYPES` 中注册
+- ❌ `FluidType` 在 `NeoForgeRegistries.FLUIDS` 中注册 → 必须在 `NeoForgeRegistries.Keys.FLUID_TYPES` 中注册
 - ❌ `BucketItem` 引用了未注册的 `Fluid` → 桶无法装填
 - ❌ `LiquidBlock` 使用 `Material.WATER` 但未设置 `noDrops()` → 挖掘时掉落水桶物品
 - ❌ 密度/黏度设为 0 → 流体行为异常
