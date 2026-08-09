@@ -4,5 +4,7 @@
   "nameNamed": "getHealth",
   "nameOfficial": "ev",
   "descriptor": "()F",
+  "nameMojang": "getHealth",
+  "descriptorMojang": "()F",
   "parchmentClass": "net/minecraft/world/entity/LivingEntity"
 }
