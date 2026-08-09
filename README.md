@@ -159,7 +159,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 | 能力   | 工具                         | 说明                                                                                                   |
 | ---- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 工作流  | `get_workflow_template`    | 模板名：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod`（与 Prompt 同名） |
+| 工作流  | `get_workflow_template`    | 模板名：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate`（与 Prompt 同名） |
 | 知识列表 | `list_knowledge_resources` | 列出 `mcskill://` URI                                                                                  |
 | 知识读取 | `read_knowledge_resource`  | 按 URI 读正文                                                                                            |
 
@@ -373,7 +373,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `mixin_analyze`                                        | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。              |
 | `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           |
 | `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验。                  |
-| `get_workflow_template`                                | 工作流全文（`mc-new-block` 等 5 个；与 MCP Prompt 同名；Cursor tools 兜底）。         |
+| `get_workflow_template`                                | 工作流全文（`mc-new-block` 等 7 个；与 MCP Prompt 同名；Cursor tools 兜底）。         |
 | `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          |
 
 
@@ -403,7 +403,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
 ### 工作流模板（MCP Prompts）
 
-5 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
+7 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
 
 
 | 模板名               | 标题      | 流程要点                                                                                                              |
@@ -413,8 +413,8 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `mc-new-gui`      | GUI 工作流 | MenuType + AbstractContainerMenu → Screen 注册 → SimpleChannel 同步槽位                                                 |
 | `mc-crash-triage` | 崩溃分诊    | analyze_log/crash_analyze → search_community_docs → validate_project + mixin_analyze → diagnose_gradle            |
 | `mc-port-mod`     | 移植模组    | analyze_porting_path → 确认目标 → port_project dryRun → get_migration_guide                                           |
-
-
+| `mc-build-mod`    | 模组构建流程  | validate_project / diagnose_gradle → gradlew build → 确认 build/libs jar → 失败则分析日志；可接真机循环                          |
+| `mc-ingame-iterate` | 真机测试与修复循环 | 索取启动器与路径（官方/HMCL/PCL2 版本隔离）→ 装 jar → 复现 → 修 → 再测；可选兼容性测试。路径约定见模板正文与 [HMCL 隔离文档](https://docs.hmcl.net/launcher/isolation.html) |
 
 
 ### 知识暴露（MCP Resources）
@@ -429,7 +429,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `mcskill://version-changes/1.21`        | 1.21 变更专章（知识库）                                             |
 | `mcskill://antipatterns/registry`       | 注册反模式短文                                                    |
 | `mcskill://patterns/README`             | 代码模式库索引（community_knowledge/patterns/）                     |
-| `mcskill://workflow/mc-new-block` 等 5 个 | 与 Prompt 同名的工作流正文                                          |
+| `mcskill://workflow/mc-new-block` 等 7 个 | 与 Prompt 同名的工作流正文                                          |
 
 
 ---

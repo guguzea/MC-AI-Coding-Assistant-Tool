@@ -133,7 +133,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` |
+| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -149,7 +149,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | `mcskill://version-changes/1.21` | 1.21 变更专章（知识库） |
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（5 个） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（7 个；含构建与真机循环，PCL2/HMCL/官方版本隔离路径） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 

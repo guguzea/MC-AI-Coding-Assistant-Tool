@@ -100,6 +100,8 @@ export function registerWaveExtensions(server: McpServer): void {
           "mc-new-gui",
           "mc-crash-triage",
           "mc-port-mod",
+          "mc-build-mod",
+          "mc-ingame-iterate",
         ]),
       }),
     },

@@ -81,6 +81,19 @@ function testWorkflow() {
   const t = getWorkflowTemplate("mc-new-block");
   assert.equal(t.found, true);
   assert.ok(t.body?.includes("DeferredRegister"));
+
+  const build = getWorkflowTemplate("mc-build-mod");
+  assert.equal(build.found, true);
+  assert.ok(build.body?.includes("validate_project"));
+  assert.ok(build.body?.includes("build/libs"));
+
+  const ingame = getWorkflowTemplate("mc-ingame-iterate");
+  assert.equal(ingame.found, true);
+  assert.ok(ingame.body?.includes("HMCL"));
+  assert.ok(ingame.body?.includes("PCL"));
+  assert.ok(ingame.body?.includes("versions/"));
+  assert.ok(ingame.body?.includes("各实例独立"));
+  assert.ok(ingame.body?.includes("minecraftRoot") || ingame.body?.includes("modsDir"));
 }
 
 function testPatternsResource() {
