@@ -117,6 +117,36 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`。
 
+### 字段映射（`convert_mapping`）
+
+- SQLite **schema v3** 含 `fields` / `searge_fields`；查询时设 `memberKind: "field"`（建议 `ownerClass`）。
+- v2 库读字段 → `SCHEMA_FIELDS_UNAVAILABLE`（重建：`npm run build:yarn-sqlite`）。
+- CLI：`npx mc-skill convert --kind field ...`（见 `src/cli.ts`）。
+
+### 工作流 / 知识曝露（Prompts + Resources + 工具兜底）
+
+| 入口 | 说明 |
+|------|------|
+| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` |
+| 工具兜底 | `get_workflow_template`（同名正文） |
+| MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
+| 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
+
+`mcskill://patterns/README` 读取 **`community_knowledge/patterns/README.md`**（`MC_SKILL_COMMUNITY`）。客户端兼容表见 `docs/prompts-client-compat.md`。
+
+**资源 URI 列表**（`list_knowledge_resources` 可列出全部）：
+
+| URI | 内容 |
+|-----|------|
+| `mcskill://matrix/mixin-support` | mixin_analyze 支持矩阵 |
+| `mcskill://schema/sqlite` | yarn-mappings.sqlite v2/v3 字段说明 |
+| `mcskill://version-changes/1.21` | 1.21 变更专章（知识库） |
+| `mcskill://antipatterns/registry` | 注册反模式短文 |
+| `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（5 个） |
+
+**客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
+
 ---
 
 ## FAQ

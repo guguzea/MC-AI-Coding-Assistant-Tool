@@ -1,0 +1,192 @@
+[
+  {
+    "version": "1.21.1",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.1\\mappings\\yarn-1.21.1+build.3-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 41282,
+    "classCount": 8262,
+    "ok": true,
+    "durationMs": 30153
+  },
+  {
+    "version": "1.20.1",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.20.1\\mappings\\yarn-1.20.1+build.10-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 40911,
+    "classCount": 7431,
+    "ok": true,
+    "durationMs": 26788
+  },
+  {
+    "version": "1.14.4",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.14.4\\mappings\\yarn-1.14.4+build.18-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 21982,
+    "classCount": 4976,
+    "ok": true,
+    "durationMs": 24877
+  },
+  {
+    "version": "1.16.5",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.16.5\\mappings\\yarn-1.16.5+build.10-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 27094,
+    "classCount": 5445,
+    "ok": true,
+    "durationMs": 20308
+  },
+  {
+    "version": "1.17.1",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.17.1\\mappings\\yarn-1.17.1+build.65-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 28016,
+    "classCount": 6107,
+    "ok": true,
+    "durationMs": 22200
+  },
+  {
+    "version": "1.18.2",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.18.2\\mappings\\yarn-1.18.2+build.4-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 29716,
+    "classCount": 6391,
+    "ok": true,
+    "durationMs": 21968
+  },
+  {
+    "version": "1.19.4",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.19.4\\mappings\\yarn-1.19.4+build.2-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 39820,
+    "classCount": 7326,
+    "ok": true,
+    "durationMs": 38104
+  },
+  {
+    "version": "1.20.4",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.20.4\\mappings\\yarn-1.20.4+build.3-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 43440,
+    "classCount": 7782,
+    "ok": true,
+    "durationMs": 67708
+  },
+  {
+    "version": "1.21.3",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.3\\mappings\\yarn-1.21.3+build.2-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 43811,
+    "classCount": 8719,
+    "ok": true,
+    "durationMs": 2539
+  },
+  {
+    "version": "1.21.11",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.11\\mappings\\yarn-1.21.11+build.6-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 49730,
+    "classCount": 10274,
+    "ok": true,
+    "durationMs": 7808
+  },
+  {
+    "version": "1.14.4",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.14.4\\mappings\\methods.csv",
+    "era": "mcp-csv",
+    "methodCount": 11445,
+    "classCount": 0,
+    "ok": true,
+    "durationMs": 2010
+  },
+  {
+    "version": "1.15.2",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.15.2\\mappings\\methods.csv",
+    "era": "mcp-csv",
+    "methodCount": 10598,
+    "classCount": 0,
+    "ok": true,
+    "durationMs": 1880
+  },
+  {
+    "version": "1.12.2",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.12.2\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 20817,
+    "classCount": 3313,
+    "ok": true,
+    "durationMs": 1064
+  },
+  {
+    "version": "1.13.2",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.13.2\\mappings\\joined.tsrg",
+    "era": "tsrg",
+    "methodCount": 26093,
+    "classCount": 3993,
+    "ok": true,
+    "durationMs": 4731
+  },
+  {
+    "version": "1.7.10",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.7.10\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 13263,
+    "classCount": 1815,
+    "ok": true,
+    "durationMs": 708
+  },
+  {
+    "version": "1.8.9",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.8.9\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 16426,
+    "classCount": 2507,
+    "ok": true,
+    "durationMs": 561
+  },
+  {
+    "version": "1.9.4",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.9.4\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 18228,
+    "classCount": 2908,
+    "ok": true,
+    "durationMs": 1207
+  },
+  {
+    "version": "1.10.2",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.10.2\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 18571,
+    "classCount": 2949,
+    "ok": true,
+    "durationMs": 4097
+  },
+  {
+    "version": "1.11.2",
+    "platform": "forge",
+    "source": "H:\\MC_skill\\data\\forge_1.11.2\\mappings\\joined.srg",
+    "era": "forge-srg",
+    "methodCount": 19334,
+    "classCount": 3091,
+    "ok": true,
+    "durationMs": 7257
+  }
+]

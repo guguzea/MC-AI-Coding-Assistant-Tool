@@ -95,15 +95,15 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
   }
 
   if (uri === "mcskill://patterns/README") {
-    const p = join(resolveRepoRoot(), "knowledge", "patterns", "README.md");
+    const p = join(resolveCommunityDir(), "patterns", "README.md");
     if (existsSync(p)) {
       return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
     }
     return {
-      found: true,
+      found: false,
       uri,
       mimeType: "text/markdown",
-      text: "# patterns\n\n示范模式见 forge/1.20.1/knowledge 与各 mc-* skills。",
+      text: "# patterns\n\n未找到 community_knowledge/patterns/README.md（检查 MC_SKILL_COMMUNITY）。",
     };
   }
 

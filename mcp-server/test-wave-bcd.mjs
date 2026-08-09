@@ -11,7 +11,7 @@ import {
   generateModel,
   generateNetworkPacket,
 } from "./dist/generators/index.js";
-import { getWorkflowTemplate } from "./dist/prompts/index.js";
+import { getWorkflowTemplate, readKnowledgeResource } from "./dist/prompts/index.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
 import { resolveDataDir } from "./dist/utils/path.js";
 
@@ -83,6 +83,16 @@ function testWorkflow() {
   assert.ok(t.body?.includes("DeferredRegister"));
 }
 
+function testPatternsResource() {
+  const res = readKnowledgeResource("mcskill://patterns/README");
+  assert.equal(res.found, true);
+  assert.ok(
+    res.text.includes("community_knowledge/patterns") || res.text.includes("示范索引"),
+    "patterns URI must resolve community_knowledge/patterns/README.md",
+  );
+  assert.ok(!res.text.includes("示范模式见 forge/1.20.1/knowledge"));
+}
+
 async function testMixinAnalyzeMissing() {
   const java = `
 @Mixin(net.minecraft.world.entity.LivingEntity.class)
@@ -118,6 +128,7 @@ async function main() {
   testDatapack();
   testGenerators();
   testWorkflow();
+  testPatternsResource();
   testMixinsJson();
   await testMixinAnalyzeMissing();
   console.log("test-wave-bcd: ok");
