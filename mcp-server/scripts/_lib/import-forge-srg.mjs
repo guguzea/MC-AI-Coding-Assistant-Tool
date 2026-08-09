@@ -19,6 +19,12 @@ export async function importForgeSrgStream(db, input, meta = {}) {
       name_official, descriptor_official, name_intermediary
     ) VALUES (?, ?, ?, ?, ?, ?)`,
   );
+  const insertField = db.prepare(
+    `INSERT OR REPLACE INTO fields(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
 
   let classCount = 0;
   let methodCount = 0;
@@ -84,7 +90,18 @@ export async function importForgeSrgStream(db, input, meta = {}) {
     }
 
     if (code === "FD:") {
-      fieldCount++;
+      // FD: obfClass/obfField mappedClass/mappedField
+      if (tokens.length >= 2) {
+        const obfFull = tokens[0];
+        const mappedFull = tokens[1];
+        const slash = obfFull.lastIndexOf("/");
+        const mappedSlash = mappedFull.lastIndexOf("/");
+        const obfField = slash >= 0 ? obfFull.slice(slash + 1) : obfFull;
+        const mappedClass = mappedSlash >= 0 ? mappedFull.slice(0, mappedSlash) : mappedFull;
+        const mappedField = mappedSlash >= 0 ? mappedFull.slice(mappedSlash + 1) : mappedFull;
+        insertField.run(mappedClass, mappedField, "", obfField, "", null);
+        fieldCount++;
+      }
       continue;
     }
   }

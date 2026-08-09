@@ -2,7 +2,8 @@
 /**
  * parchment-extractor.js
  * 从 parchment.json 提取关键 Forge 类和方法的映射数据，
- * 并用同版本 Yarn Tiny（经 parse-tiny.mjs）补全缺失无参方法。
+ * 并用同版本 Mojang client.txt 补全缺失方法（写入 Mojang/Parchment 名；
+ * Yarn Tiny 仅作 yarnName 交叉元数据）。
  *
  * 运行：
  *   node scripts/parchment-extractor.js --version=1.20.1
@@ -12,6 +13,11 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parseTiny, findTinyPath, findNamedMethod } from "./_lib/parse-tiny.mjs";
+import {
+  parseMojangProguardFile,
+  lookupMojangMethod,
+} from "./_lib/parse-mojang-proguard.mjs";
+import { ensureMojangClientMappings } from "./_lib/ensure-mojang-mappings.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -141,115 +147,115 @@ for (const cls of classes) {
   }
 }
 
-/** Build official -> parchment class name map using Yarn Tiny. */
-async function mergeYarnSupplement() {
-  if (!existsSync(FABRIC_MAPPINGS)) {
-    console.warn(`WARN: no fabric_${versionArg}/mappings — skip Yarn supplement`);
+/** Supplement missing methods from Mojang client.txt (Forge/Parchment names). */
+async function mergeMojangSupplement() {
+  console.log(`Ensuring Mojang client mappings for ${versionArg}...`);
+  const mojangFile = await ensureMojangClientMappings(DATA_DIR, versionArg);
+  if (!mojangFile.path) {
+    console.warn(
+      `WARN: no Mojang client.txt (${mojangFile.error ?? "missing"}) — skip supplement`,
+    );
     return { added: 0, tinyParsed: null };
   }
-  const tiny = findTinyPath(FABRIC_MAPPINGS);
-  if (!tiny) {
-    console.warn(`WARN: no tiny in ${FABRIC_MAPPINGS} — skip Yarn supplement`);
-    return { added: 0, tinyParsed: null };
-  }
-  console.log(`Merging Yarn tiny: ${tiny.path}`);
-  const parsed = await parseTiny(tiny.path, { strict: false });
+  console.log(
+    `Mojang mappings: ${mojangFile.path}${mojangFile.downloaded ? " (downloaded)" : ""}`,
+  );
+  const mojangMaps = await parseMojangProguardFile(mojangFile.path);
 
-  // Map Tiny official -> Tiny named, then align to Parchment classes:
-  // Prefer matching by official: for each parchment class, find Tiny class whose named
-  // simple name matches OR whose named path ends with same simple name, using official as key.
-  /** @type {Map<string, typeof parsed.classes[0]>} */
-  const byOfficial = new Map();
-  /** @type {Map<string, string[]>} simpleName -> parchment class paths */
-  const parchmentBySimple = new Map();
-  for (const pName of Object.keys(apiIndex)) {
-    const simple = pName.split("/").pop();
-    if (!parchmentBySimple.has(simple)) parchmentBySimple.set(simple, []);
-    parchmentBySimple.get(simple).push(pName);
-  }
-
-  for (const c of parsed.classes) {
-    if (c.official) byOfficial.set(c.official, c);
-  }
-
-  // official -> best parchment class path
+  // Optional Yarn crosswalk: official triple → yarn name (for yarnName metadata)
   /** @type {Map<string, string>} */
-  const officialToParchment = new Map();
-  for (const c of parsed.classes) {
-    if (!c.official || !c.named) continue;
-    const simple = c.named.split("/").pop();
-    const candidates = parchmentBySimple.get(simple) || [];
-    if (candidates.length === 0) continue;
-    // Prefer path containing same trailing segments as yarn named under net/minecraft
-    let best = candidates[0];
-    let bestScore = -1;
-    const yarnTokens = new Set(c.named.split("/").filter(Boolean));
-    for (const cand of candidates) {
-      const score = cand.split("/").filter((t) => yarnTokens.has(t)).length;
-      if (score > bestScore) {
-        bestScore = score;
-        best = cand;
-      }
+  const yarnNameByObf = new Map();
+  /** Fallback when Yarn declares method on interface (EntityLike) but Mojang on class */
+  /** @type {Map<string, string>} */
+  const yarnNameByObfMember = new Map();
+  let tinyParsed = null;
+  const tiny = existsSync(FABRIC_MAPPINGS) ? findTinyPath(FABRIC_MAPPINGS) : null;
+  if (tiny) {
+    console.log(`Loading Yarn tiny for name crosswalk: ${tiny.path}`);
+    tinyParsed = await parseTiny(tiny.path, { strict: false });
+    for (const m of tinyParsed.methods) {
+      if (!m.nameOfficial || !m.nameNamed) continue;
+      if (/^method_\d+$/.test(m.nameNamed)) continue;
+      const key = `${m.ownerOfficial}\t${m.descriptorOfficial}\t${m.nameOfficial}`;
+      if (!yarnNameByObf.has(key)) yarnNameByObf.set(key, m.nameNamed);
+      const memberKey = `${m.descriptorOfficial}\t${m.nameOfficial}`;
+      if (!yarnNameByObfMember.has(memberKey)) yarnNameByObfMember.set(memberKey, m.nameNamed);
     }
-    // Prefer world/entity over entity when both exist for LivingEntity
-    officialToParchment.set(c.official, best);
   }
 
   let added = 0;
-  for (const m of parsed.methods) {
-    if (!m.nameNamed || m.nameNamed.startsWith("<")) continue;
-    const parchClass = officialToParchment.get(m.ownerOfficial);
+  for (const [obfKey, mojang] of mojangMaps.methodsByObf) {
+    const [obfOwner, obfDesc, obfName] = obfKey.split("\t");
+    if (!obfName || obfName.startsWith("<")) continue;
+    if (mojang.name.startsWith("lambda$") || mojang.name.includes("access$")) continue;
+
+    const parchClass = mojangMaps.obfToNamed.get(obfOwner);
     if (!parchClass || !apiIndex[parchClass]) continue;
-    const key = `${m.nameNamed}:${m.descriptorNamed}`;
+
     const exists = apiIndex[parchClass].methods.some(
-      (x) => x.name === m.nameNamed && x.descriptor === m.descriptorNamed,
+      (x) => x.name === mojang.name && x.descriptor === mojang.descriptor,
     );
     if (exists) continue;
+
+    const yarnName =
+      yarnNameByObf.get(obfKey) ?? yarnNameByObfMember.get(`${obfDesc}\t${obfName}`);
     apiIndex[parchClass].methods.push({
-      name: m.nameNamed,
-      descriptor: m.descriptorNamed,
+      name: mojang.name,
+      descriptor: mojang.descriptor,
       parameters: [],
       javadoc: null,
-      source: "yarn-supplement",
+      source: "mojang-supplement",
+      yarnName: yarnName && yarnName !== mojang.name ? yarnName : undefined,
     });
-    methodLookup[`${parchClass}.${m.nameNamed}:${m.descriptorNamed}`] = {
+    methodLookup[`${parchClass}.${mojang.name}:${mojang.descriptor}`] = {
       className: parchClass,
-      methodName: m.nameNamed,
-      descriptor: m.descriptorNamed,
+      methodName: mojang.name,
+      descriptor: mojang.descriptor,
       parameters: [],
       javadoc: null,
-      source: "yarn-supplement",
+      source: "mojang-supplement",
+      yarnName: yarnName && yarnName !== mojang.name ? yarnName : undefined,
     };
     totalMethods++;
     added++;
   }
 
-  // Export for cross-check tests
-  const gh = findNamedMethod(parsed, "getHealth", "LivingEntity");
-  if (gh) {
-    writeFileSync(
-      join(OUT_DIR, "yarn-supplement-getHealth.json"),
-      JSON.stringify(
-        {
-          ownerNamed: gh.ownerNamed,
-          ownerOfficial: gh.ownerOfficial,
-          nameNamed: gh.nameNamed,
-          nameOfficial: gh.nameOfficial,
-          descriptor: gh.descriptorNamed,
-          parchmentClass: officialToParchment.get(gh.ownerOfficial) ?? null,
-        },
-        null,
-        2,
-      ),
-    );
+  // Export LivingEntity.getHealth cross-check artefact
+  if (tinyParsed) {
+    const gh = findNamedMethod(tinyParsed, "getHealth", "LivingEntity");
+    if (gh) {
+      const mojang = lookupMojangMethod(
+        mojangMaps,
+        gh.ownerOfficial,
+        gh.descriptorOfficial,
+        gh.nameOfficial,
+      );
+      writeFileSync(
+        join(OUT_DIR, "yarn-supplement-getHealth.json"),
+        JSON.stringify(
+          {
+            ownerNamed: gh.ownerNamed,
+            ownerOfficial: gh.ownerOfficial,
+            nameNamed: gh.nameNamed,
+            nameOfficial: gh.nameOfficial,
+            descriptor: gh.descriptorNamed,
+            nameMojang: mojang?.name ?? null,
+            descriptorMojang: mojang?.descriptor ?? null,
+            parchmentClass: mojangMaps.obfToNamed.get(gh.ownerOfficial) ?? null,
+          },
+          null,
+          2,
+        ),
+      );
+    }
   }
 
-  console.log(`Yarn supplement: added ${added} methods`);
-  return { added, tinyParsed: parsed };
+  console.log(`Mojang supplement: added ${added} methods`);
+  return { added, tinyParsed };
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
-const mergeResult = await mergeYarnSupplement();
+const mergeResult = await mergeMojangSupplement();
 
 writeFileSync(join(OUT_DIR, "api-index.json"), JSON.stringify(apiIndex, null, 0));
 console.log(
@@ -259,25 +265,17 @@ console.log(
 writeFileSync(join(OUT_DIR, "method-lookup.json"), JSON.stringify(methodLookup, null, 0));
 console.log(`method-lookup.json — ${Object.keys(methodLookup).length} entries`);
 
-const criticalStats = {};
-let foundCritical = 0;
+const critical = {};
 for (const name of CRITICAL_CLASSES) {
-  if (apiIndex[name]) {
-    foundCritical++;
-    criticalStats[name] = {
-      methods: apiIndex[name].methods.length,
-      fields: apiIndex[name].fields.length,
-    };
-  } else {
-    criticalStats[name] = null;
-  }
+  if (apiIndex[name]) critical[name] = apiIndex[name];
 }
-writeFileSync(join(OUT_DIR, "critical-classes.json"), JSON.stringify(criticalStats, null, 2));
-console.log(`critical-classes.json — ${foundCritical}/${CRITICAL_CLASSES.size} found`);
+writeFileSync(join(OUT_DIR, "critical-classes.json"), JSON.stringify(critical, null, 2));
+console.log(`critical-classes.json — ${Object.keys(critical).length} classes`);
 
 const classNames = Object.keys(apiIndex).sort();
 writeFileSync(join(OUT_DIR, "class-names.json"), JSON.stringify(classNames, null, 0));
-console.log(`class-names.json   — ${classNames.length} names`);
-console.log(`Yarn merge added: ${mergeResult.added}`);
+console.log(`class-names.json — ${classNames.length} names`);
 
-console.log(`\nDONE! Output: ${OUT_DIR}`);
+if (mergeResult.added === 0) {
+  console.warn("WARN: supplement added 0 methods — check Mojang client.txt availability");
+}

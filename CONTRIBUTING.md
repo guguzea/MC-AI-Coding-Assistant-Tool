@@ -11,7 +11,7 @@
 | Forge 规则 / Skills | `forge/<version>/` | 多版本已完成（主推 1.20.1） | 扩展规则、Skill、scaffold |
 | Fabric 规则 / Skills | `fabric/<version>/` | 多版本已完成（主推 1.20.1 / 1.21.x） | 同上 + Fabric 专有 Skill |
 | NeoForge 规则 | `neoforge/` | 已完成（主推 1.20.4+） | 扩展规则与知识 |
-| MCP Server | `mcp-server/` | 约 31 个工具 | 新工具、脚本、测试 |
+| MCP Server | `mcp-server/` | **53** 个工具 | 新工具、脚本、测试 |
 | 离线数据 | `data/` | Forge / Fabric / NeoForge 多版本 | 抓取、索引、审计 |
 | 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` | 持续维护 | 修正与同步 |
 
@@ -183,7 +183,8 @@ data/
 ```
 mcp-server/
 ├── src/
-│   ├── index.ts                 # 入口，注册工具
+│   ├── index.ts                 # 入口，注册核心工具
+│   ├── wave/register.ts         # Wave B/C 扩展工具
 │   ├── api/                     # query_api、get_method_params、get_version_info
 │   ├── mappings/                # convert_mapping + yarn-sqlite
 │   ├── docs-platform/
@@ -201,7 +202,7 @@ mcp-server/
 ### 添加新工具
 
 1. 在对应模块实现并导出
-2. 在 `src/index.ts` 注册
+2. 在 `src/index.ts` 或 `src/wave/register.ts` 注册
 3. 补充测试（`npm test`）与 `assert-no-yarn-json-slurp` 相关约束（若触及 Yarn）
 4. 更新 `README.md`、`AUTO_SETUP.md`、`mcp-server/README.md` 的工具列表
 
@@ -229,7 +230,7 @@ npm run smoke:release   # 可选
 ```
 feat(forge/1.20.1): 添加方块实体注册规则
 fix(mcp-server): 修正 Yarn sqlite 路径解析
-docs(AUTO_SETUP): 同步 31 工具与配置草稿流程
+docs(AUTO_SETUP): 同步 53 工具与配置草稿流程
 chore(data): 忽略临时 plan 文件
 docs(fabric/1.21.1): 补充 mixin 反模式
 ```

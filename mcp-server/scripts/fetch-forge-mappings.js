@@ -36,9 +36,10 @@ const VERSION_CONFIG = {
   "1.9.4":   { mcp: { mavenVersion: "1.9.4",    suffix: "srg" } },
   "1.10.2":  { mcp: { mavenVersion: "1.10.2",   suffix: "srg" } },
   "1.11.2":  { mcp: { mavenVersion: "1.11.2",   suffix: "srg" } },
-  "1.12.2":  { mcp: { mavenVersion: "1.12.2",   suffix: "srg" } },
+  "1.12.2":  { mcp: { mavenVersion: "1.12.2",   suffix: "srg" }, mcpStable: { id: "39-1.12" } },
 
-  // MCP-stable — 1.14.4 / 1.15.2（Forge 稳定版 MCP）
+  // MCP-stable / snapshot — CSV named↔searge
+  "1.13.2":  { mcpSnapshot: { id: "20180921-1.13" } },
   "1.14.4":  { mcpStable: { id: "58-1.14.4" } },
   "1.15.2":  { mcpStable: { id: "60-1.15"   } },
 
@@ -104,7 +105,7 @@ async function main() {
       }
     }
 
-    // ── MCP-stable（Forge 稳定版，1.14.4 / 1.15.2）────────────────
+    // ── MCP-stable（Forge 稳定版 CSV，1.12 / 1.14.4 / 1.15.2）────────────────
     if (cfg.mcpStable) {
       const { id } = cfg.mcpStable;
       const filename = `mcp_stable_nodoc-${id}.zip`;
@@ -115,6 +116,26 @@ async function main() {
         console.log("  MCP-stable  SKIP (exists)");
       } else {
         process.stdout.write("  MCP-stable... ");
+        const res = await downloadFileAtomic(url, destPath, {
+          timeoutMs: 60_000,
+          maxRedirects: 5,
+          minBytes: 1024,
+        });
+        console.log(res.ok ? `OK (${res.bytes} bytes)` : `FAIL ${res.error ?? `HTTP ${res.status}`}`);
+      }
+    }
+
+    // ── MCP-snapshot（1.13 CSV named↔searge）────────────────────────
+    if (cfg.mcpSnapshot) {
+      const { id } = cfg.mcpSnapshot;
+      const filename = `mcp_snapshot-${id}.zip`;
+      const url      = `${MCP_MAVEN_BASE}/mcp_snapshot/${id}/${filename}`;
+      const destPath = join(versionDir, filename);
+
+      if (existsSync(destPath) && safeFileSize(destPath) > 0) {
+        console.log("  MCP-snapshot  SKIP (exists)");
+      } else {
+        process.stdout.write("  MCP-snapshot... ");
         const res = await downloadFileAtomic(url, destPath, {
           timeoutMs: 60_000,
           maxRedirects: 5,

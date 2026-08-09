@@ -21,6 +21,12 @@ export async function importTsrgStream(db, input, meta = {}) {
       name_official, descriptor_official, name_intermediary
     ) VALUES (?, ?, ?, ?, ?, ?)`,
   );
+  const insertField = db.prepare(
+    `INSERT OR REPLACE INTO fields(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
 
   let currentNamed = null;
   let currentObf = null;
@@ -57,11 +63,15 @@ export async function importTsrgStream(db, input, meta = {}) {
         insertMethod.run(currentNamed, mappedName, descriptor, obfName, descriptor, null);
         methodCount++;
       } else {
+        insertField.run(currentNamed, mappedName, descriptor || "", obfName, descriptor || "", null);
         fieldCount++;
       }
       continue;
     }
     if (tokens.length === 2) {
+      const [obfName, mappedName] = tokens;
+      if (!mappedName) continue;
+      insertField.run(currentNamed, mappedName, "", obfName, "", null);
       fieldCount++;
       continue;
     }
@@ -72,10 +82,12 @@ export async function importTsrgStream(db, input, meta = {}) {
         insertMethod.run(currentNamed, mappedName, descriptor, obfName, descriptor, null);
         methodCount++;
       } else {
+        insertField.run(currentNamed, mappedName, descriptor || "", obfName, descriptor || "", null);
         fieldCount++;
       }
     }
   }
+  void currentObf;
   db.exec("COMMIT");
   return { classCount, methodCount, fieldCount, mappingEra: "tsrg", source: meta.source ?? "" };
 }

@@ -16,11 +16,13 @@
  */
 
 import { Worker } from "worker_threads";
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import type { WorkerOutMessage } from "../workers/types.js";
 import { resolveDataDir } from "../utils/path.js";
+import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
+import { ActionCodes, actionable, withAction, type ActionEnvelope } from "../utils/actionable.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_VERSION = "1.20.1";
@@ -38,7 +40,12 @@ export interface MethodInfo {
   parameters: string[];
   descriptor: string;
   returnType: string;
+  /** Human-readable signature derived from JNI descriptor */
+  readableSignature?: string;
   javadoc?: string;
+  /** Present on mojang-supplement entries when Yarn name differs */
+  yarnName?: string;
+  source?: string;
 }
 
 export interface ApiResult {
@@ -51,6 +58,23 @@ export interface ApiResult {
   mappings: Record<string, string>;
   suggestions?: string[];
   notes?: string[];
+  action?: ActionEnvelope;
+}
+
+export type ApiPreloadStatus =
+  | "idle"
+  | "loading"
+  | "ready"
+  | "lazy"
+  | "missing_data"
+  | "error";
+
+export interface VersionPreloadStatus {
+  version: string;
+  status: ApiPreloadStatus;
+  classCount: number;
+  loaded: boolean;
+  preloading: boolean;
 }
 
 // ── LRU 缓存（搜索结果）──────────────────────────────────────────────────
@@ -175,6 +199,11 @@ interface VersionData {
   loaded: boolean;
   /** 该版本是否正在由 Worker 预加载中 */
   preloading: boolean;
+  /** Worker 超时后改走主线程惰性读盘 */
+  lazyMode: boolean;
+  /** 数据目录缺失 */
+  missingData: boolean;
+  lastError?: string;
   /** 该版本正在进行的 Worker（若已结束则为 null） */
   worker: Worker | null;
   /** 该版本的 Worker preload 完成 Promise */
@@ -189,6 +218,8 @@ const _defaultData: VersionData = {
   trieIndex: null,
   loaded: false,
   preloading: false,
+  lazyMode: false,
+  missingData: false,
   worker: null,
   preloadPromise: null,
 };
@@ -237,13 +268,14 @@ const _searchCache = new LRUCache(100, 5 * 60 * 1000);
 function startPreloader(version: string): Promise<void> {
   const dataDir = resolveVersionDataDir(version);
   if (!dataDir) {
-    // 该版本无 extracted 数据，立即标记为已加载（空数据），省掉 Worker 开销
     const empty: VersionData = {
       apiIndex: {},
       classNames: [],
       trieIndex: null,
       loaded: true,
       preloading: false,
+      lazyMode: false,
+      missingData: true,
       worker: null,
       preloadPromise: Promise.resolve(),
     };
@@ -260,6 +292,8 @@ function startPreloader(version: string): Promise<void> {
     trieIndex: null,
     loaded: false,
     preloading: true,
+    lazyMode: false,
+    missingData: false,
     worker: null,
     preloadPromise: null,
   };
@@ -270,7 +304,6 @@ function startPreloader(version: string): Promise<void> {
     const timeoutMs = 15000;
     const logPrefix = `[MCP/Api:${version}]`;
 
-    // 硬超时兜底：避免 Worker 永远卡死导致调用方无限等待
     const timer = setTimeout(() => {
       if (settled) return;
       settled = true;
@@ -281,6 +314,13 @@ function startPreloader(version: string): Promise<void> {
         vData.worker = null;
       }
       vData.preloading = false;
+      vData.lazyMode = true;
+      try {
+        lazyLoadVersionData(version, vData, dataDir);
+      } catch (e) {
+        vData.lastError = (e as Error).message;
+        vData.loaded = false;
+      }
       resolve();
     }, timeoutMs);
 
@@ -289,24 +329,33 @@ function startPreloader(version: string): Promise<void> {
         workerData: { dataDir },
       });
 
-
       vData.worker.on("message", (msg: WorkerOutMessage) => {
         if (msg.type === "ready") {
           if (settled) return;
           settled = true;
           clearTimeout(timer);
 
-          vData.apiIndex = msg.apiIndex as Record<string, { javadoc: string | null; methods: MethodInfo[]; fields: string[] }>;
+          vData.apiIndex = msg.apiIndex as Record<
+            string,
+            { javadoc: string | null; methods: MethodInfo[]; fields: string[] }
+          >;
           vData.classNames = msg.classNames;
 
           if (msg.trieFlat) {
-            vData.trieIndex = TrieIndex.fromFlat(msg.trieFlat as Array<{ children: [string, number][]; isEnd: boolean; score: number }>);
+            vData.trieIndex = TrieIndex.fromFlat(
+              msg.trieFlat as Array<{
+                children: [string, number][];
+                isEnd: boolean;
+                score: number;
+              }>,
+            );
           } else {
             vData.trieIndex = null;
           }
 
           vData.loaded = true;
           vData.preloading = false;
+          vData.lazyMode = false;
           resolve();
         } else if (msg.type === "error") {
           if (settled) return;
@@ -315,6 +364,13 @@ function startPreloader(version: string): Promise<void> {
           console.error(`${logPrefix} Worker preload failed:`, msg.errors);
           vData.worker = null;
           vData.preloading = false;
+          vData.lazyMode = true;
+          vData.lastError = msg.errors?.join("; ");
+          try {
+            lazyLoadVersionData(version, vData, dataDir);
+          } catch (e) {
+            vData.lastError = (e as Error).message;
+          }
           resolve();
         }
       });
@@ -325,6 +381,13 @@ function startPreloader(version: string): Promise<void> {
         clearTimeout(timer);
         console.error(`${logPrefix} Worker error:`, e);
         vData.preloading = false;
+        vData.lazyMode = true;
+        vData.lastError = (e as Error).message;
+        try {
+          lazyLoadVersionData(version, vData, dataDir);
+        } catch (err) {
+          vData.lastError = (err as Error).message;
+        }
         resolve();
       });
 
@@ -335,11 +398,37 @@ function startPreloader(version: string): Promise<void> {
       clearTimeout(timer);
       console.error(`${logPrefix} Failed to start preloader:`, e);
       vData.preloading = false;
+      vData.lazyMode = true;
+      vData.lastError = (e as Error).message;
+      try {
+        lazyLoadVersionData(version, vData, dataDir);
+      } catch (err) {
+        vData.lastError = (err as Error).message;
+      }
       resolve();
     }
   });
 
   return vData.preloadPromise;
+}
+
+/** Synchronous main-thread load used after Worker timeout/failure. */
+function lazyLoadVersionData(version: string, vData: VersionData, dataDir: string): void {
+  const apiIndexPath = join(dataDir, "api-index.json");
+  const classNamesPath = join(dataDir, "class-names.json");
+  if (!existsSync(apiIndexPath) || !existsSync(classNamesPath)) {
+    vData.missingData = true;
+    vData.loaded = true;
+    vData.apiIndex = {};
+    vData.classNames = [];
+    return;
+  }
+  vData.apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8"));
+  vData.classNames = JSON.parse(readFileSync(classNamesPath, "utf-8"));
+  vData.trieIndex = null;
+  vData.loaded = true;
+  vData.lazyMode = true;
+  vData.missingData = false;
 }
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────
@@ -350,15 +439,6 @@ function toSlash(className: string): string {
 
 function toDot(path: string): string {
   return path.replace(/\//g, ".");
-}
-
-function descriptorToReturnType(desc: string): string {
-  const map: Record<string, string> = {
-    "B": "byte", "C": "char", "D": "double", "F": "float",
-    "I": "int", "J": "long", "S": "short", "Z": "boolean", "V": "void",
-  };
-  const last = desc.slice(desc.lastIndexOf(")") + 1);
-  return map[last] ?? `Object(${last})`;
 }
 
 // ── 辅助：模糊类名搜索（优先 Trie，次选线性扫描）────────────────────────────
@@ -543,12 +623,15 @@ function buildMethodResult(
   cls: { javadoc: string | null; methods: MethodInfo[]; fields: string[] },
   methods: MethodInfo[]
 ): ApiResult {
-  const info = methods.map(m => ({
+  const info = methods.map((m) => ({
     name: m.name,
     parameters: m.parameters,
-    returnType: descriptorToReturnType(m.descriptor),
+    returnType: descriptorReturnType(m.descriptor),
+    readableSignature: readableSignature(m.name, m.descriptor),
     descriptor: m.descriptor,
     javadoc: m.javadoc ?? undefined,
+    yarnName: m.yarnName,
+    source: m.source,
   }));
 
   return {
@@ -576,15 +659,27 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
 
   // 数据不可用时的降级响应
   if (!vData.loaded) {
-    return {
-      found: false,
-      className,
-      mappings: { mojang: toSlash(className), parchment: toSlash(className) },
-      suggestions: [
-        `MCP Server 数据加载失败（${version} Worker 预加载失败），请重启 MCP Server`,
-        `若重启无效，请确认 data/forge_${version}/extracted/ 目录存在且包含 api-index.json 和 class-names.json`,
-      ],
-    };
+    return withAction(
+      {
+        found: false,
+        className,
+        mappings: { mojang: toSlash(className), parchment: toSlash(className) },
+        suggestions: [
+          `MCP Server 数据加载失败（${version}），请重启 MCP Server 或检查数据目录`,
+          `确认 data/forge_${version}/extracted/ 含 api-index.json 与 class-names.json`,
+        ],
+      },
+      actionable(
+        ActionCodes.DATA_UNAVAILABLE,
+        `API 索引未就绪（version=${version}）`,
+        [
+          "调用 get_server_status 查看 preload 状态",
+          "确认 MC_SKILL_DATA 指向仓库 data/ 目录",
+          "必要时重启 MCP Server",
+        ],
+        ["get_server_status", "diagnose_data_paths"],
+      ),
+    );
   }
 
   // 1. 精确类名查询
@@ -613,12 +708,18 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
       className,
       mappings: { mojang: slashName, parchment: slashName },
       suggestions: [`未找到类 ${className}，请检查类名是否正确`],
-      notes: [
-        /minecraftforge|neoforged/i.test(className)
-          ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
-          : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
-        `共收录 ${vData.classNames.length} 个类（版本 ${version}）。`,
-      ],
+        notes: [
+          /minecraftforge|neoforged/i.test(className)
+            ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
+            : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
+          `共收录 ${vData.classNames.length} 个类（版本 ${version}）。`,
+          ...(vData.classNames.length === 0
+            ? [
+                `query_api 的 api-index 目前覆盖 Forge Parchment extracted（约 1.16.5–1.20.4）。` +
+                  `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,
+              ]
+            : []),
+        ],
     };
   }
 
@@ -628,24 +729,33 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
       m => m.name === methodName || m.name === `<${methodName}>`
     );
     if (matched.length === 0) {
+      // Yarn 名 → Mojang 名：supplement 记录了 yarnName
+      const yarnHits = cls.methods.filter(
+        (m) => (m as MethodInfo & { yarnName?: string }).yarnName === methodName,
+      );
+      const yarnSuggestions = yarnHits.slice(0, 5).map(
+        (m) => `Yarn 名 '${methodName}' 对应 Mojang/Parchment 方法 '${m.name}'`,
+      );
       // 优先显示名称相似的方法（如 getHealth → getMaxHealth）
       const similar = fuzzyMethodSearch(methodName, cls.methods);
       const similarSuggestions = similar.map(m =>
         `你指的是 '${m.name}' 吗？`
       );
-      if (similarSuggestions.length > 0) {
+      const suggestions = [
+        `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
+        ...yarnSuggestions,
+        ...similarSuggestions,
+      ];
+      if (yarnSuggestions.length > 0 || similarSuggestions.length > 0) {
         return {
           found: false,
           className: toDot(slashName),
           methodName,
           mappings: { mojang: slashName, parchment: slashName },
-          suggestions: [
-            `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
-            ...similarSuggestions,
-          ],
+          suggestions,
           notes: [
-            `${version} Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
-            "Parchment 可能未收录无 javadoc 的无参方法；若已跑 Yarn supplement 仍缺失，请用 mappings.xhyrom.dev 外链核对",
+            `${version} 共收录 ${cls.methods.length} 个方法（含 Mojang supplement），方法名区分大小写`,
+            "Forge 1.17+ 使用 Mojang 映射名（如 Entity.level()），不是 Yarn（getWorld）",
             `提示：如果你看到的是混淆名（如 aqm），请访问 https://mappings.xhyrom.dev/${version}/ 反查`,
           ],
         };
@@ -660,8 +770,8 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           `可用方法（部分）：${cls.methods.slice(0, 8).map(m => m.name).join(", ")}${cls.methods.length > 8 ? "..." : ""}`,
         ],
         notes: [
-          `${version} Parchment 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
-          "Parchment 可能未收录无 javadoc 的无参方法；请确认已用 parchment-extractor Yarn supplement 重建 extracted",
+          `${version} 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
+          "请确认已用 parchment-extractor（Mojang client.txt supplement）重建 extracted",
         ],
       };
     }
@@ -679,4 +789,58 @@ export function getTrieIndex(): TrieIndex | null {
 
 export function setTrieIndex(trie: TrieIndex): void {
   getVersionData(DEFAULT_VERSION).trieIndex = trie;
+}
+
+/** Terminate preload Workers and drop caches so Node can exit (tests / CLI). */
+export function disposeApiData(): void {
+  for (const vData of _versionData.values()) {
+    if (vData.worker) {
+      try {
+        vData.worker.terminate();
+      } catch {
+        /* ignore */
+      }
+      vData.worker = null;
+    }
+    vData.preloading = false;
+    vData.preloadPromise = null;
+  }
+  _versionData.clear();
+}
+
+/** Warm up one or more versions (default 1.20.1). */
+export async function warmupApi(versions: string[] = [DEFAULT_VERSION]): Promise<VersionPreloadStatus[]> {
+  await Promise.all(versions.map((v) => startPreloader(v)));
+  return versions.map((v) => getApiPreloadStatus(v));
+}
+
+export function getApiPreloadStatus(version: string = DEFAULT_VERSION): VersionPreloadStatus {
+  const vData = _versionData.get(version);
+  if (!vData) {
+    return {
+      version,
+      status: "idle",
+      classCount: 0,
+      loaded: false,
+      preloading: false,
+    };
+  }
+  let status: ApiPreloadStatus = "idle";
+  if (vData.missingData) status = "missing_data";
+  else if (vData.lastError && !vData.loaded) status = "error";
+  else if (vData.preloading) status = "loading";
+  else if (vData.loaded && vData.lazyMode) status = "lazy";
+  else if (vData.loaded) status = "ready";
+  return {
+    version,
+    status,
+    classCount: vData.classNames.length,
+    loaded: vData.loaded,
+    preloading: vData.preloading,
+  };
+}
+
+export function listApiPreloadStatuses(): VersionPreloadStatus[] {
+  const versions = new Set<string>([DEFAULT_VERSION, ..._versionData.keys()]);
+  return [...versions].map((v) => getApiPreloadStatus(v));
 }

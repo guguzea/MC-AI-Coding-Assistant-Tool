@@ -1,0 +1,194 @@
+[
+  {
+    "id": "minecraft:badlands"
+  },
+  {
+    "id": "minecraft:bamboo_jungle"
+  },
+  {
+    "id": "minecraft:basalt_deltas"
+  },
+  {
+    "id": "minecraft:beach"
+  },
+  {
+    "id": "minecraft:birch_forest"
+  },
+  {
+    "id": "minecraft:cherry_grove"
+  },
+  {
+    "id": "minecraft:cold_ocean"
+  },
+  {
+    "id": "minecraft:crimson_forest"
+  },
+  {
+    "id": "minecraft:dark_forest"
+  },
+  {
+    "id": "minecraft:deep_cold_ocean"
+  },
+  {
+    "id": "minecraft:deep_dark"
+  },
+  {
+    "id": "minecraft:deep_frozen_ocean"
+  },
+  {
+    "id": "minecraft:deep_lukewarm_ocean"
+  },
+  {
+    "id": "minecraft:deep_ocean"
+  },
+  {
+    "id": "minecraft:desert"
+  },
+  {
+    "id": "minecraft:dripstone_caves"
+  },
+  {
+    "id": "minecraft:end_barrens"
+  },
+  {
+    "id": "minecraft:end_highlands"
+  },
+  {
+    "id": "minecraft:end_midlands"
+  },
+  {
+    "id": "minecraft:eroded_badlands"
+  },
+  {
+    "id": "minecraft:flower_forest"
+  },
+  {
+    "id": "minecraft:forest"
+  },
+  {
+    "id": "minecraft:frozen_ocean"
+  },
+  {
+    "id": "minecraft:frozen_peaks"
+  },
+  {
+    "id": "minecraft:frozen_river"
+  },
+  {
+    "id": "minecraft:grove"
+  },
+  {
+    "id": "minecraft:ice_spikes"
+  },
+  {
+    "id": "minecraft:jagged_peaks"
+  },
+  {
+    "id": "minecraft:jungle"
+  },
+  {
+    "id": "minecraft:lukewarm_ocean"
+  },
+  {
+    "id": "minecraft:lush_caves"
+  },
+  {
+    "id": "minecraft:mangrove_swamp"
+  },
+  {
+    "id": "minecraft:meadow"
+  },
+  {
+    "id": "minecraft:mushroom_fields"
+  },
+  {
+    "id": "minecraft:nether_wastes"
+  },
+  {
+    "id": "minecraft:ocean"
+  },
+  {
+    "id": "minecraft:old_growth_birch_forest"
+  },
+  {
+    "id": "minecraft:old_growth_pine_taiga"
+  },
+  {
+    "id": "minecraft:old_growth_spruce_taiga"
+  },
+  {
+    "id": "minecraft:plains"
+  },
+  {
+    "id": "minecraft:river"
+  },
+  {
+    "id": "minecraft:savanna"
+  },
+  {
+    "id": "minecraft:savanna_plateau"
+  },
+  {
+    "id": "minecraft:small_end_islands"
+  },
+  {
+    "id": "minecraft:snowy_beach"
+  },
+  {
+    "id": "minecraft:snowy_plains"
+  },
+  {
+    "id": "minecraft:snowy_slopes"
+  },
+  {
+    "id": "minecraft:snowy_taiga"
+  },
+  {
+    "id": "minecraft:soul_sand_valley"
+  },
+  {
+    "id": "minecraft:sparse_jungle"
+  },
+  {
+    "id": "minecraft:stony_peaks"
+  },
+  {
+    "id": "minecraft:stony_shore"
+  },
+  {
+    "id": "minecraft:sunflower_plains"
+  },
+  {
+    "id": "minecraft:swamp"
+  },
+  {
+    "id": "minecraft:taiga"
+  },
+  {
+    "id": "minecraft:the_end"
+  },
+  {
+    "id": "minecraft:the_void"
+  },
+  {
+    "id": "minecraft:warm_ocean"
+  },
+  {
+    "id": "minecraft:warped_forest"
+  },
+  {
+    "id": "minecraft:windswept_forest"
+  },
+  {
+    "id": "minecraft:windswept_gravelly_hills"
+  },
+  {
+    "id": "minecraft:windswept_hills"
+  },
+  {
+    "id": "minecraft:windswept_savanna"
+  },
+  {
+    "id": "minecraft:wooded_badlands"
+  }
+]

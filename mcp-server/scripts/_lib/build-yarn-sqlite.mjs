@@ -1,6 +1,7 @@
 /**
- * Build per-version yarn-mappings.sqlite (schema v2) from Tiny / TSRG / SRG / CSV.
+ * Build per-version yarn-mappings.sqlite (schema v3) from Tiny / TSRG / SRG / CSV.
  *
+ * schema v3 adds `fields` + `searge_fields` (v2 class/method tables unchanged).
  * Runtime MUST NOT load yarn-mappings.json; only the sqlite artefact is queried.
  *
  * Usage:
@@ -15,7 +16,9 @@ import { DatabaseSync } from "node:sqlite";
 import { parseTiny, findTinyPath } from "./parse-tiny.mjs";
 import { importTsrgStream } from "./import-tsrg.mjs";
 import { importForgeSrgStream } from "./import-forge-srg.mjs";
-import { importMcpCsvMethods } from "./import-mcp-csv.mjs";
+import { importMcpCsvMethods, importMcpCsvFields } from "./import-mcp-csv.mjs";
+
+const SCHEMA_VERSION = "3";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -53,12 +56,33 @@ export function initYarnSchema(db) {
     CREATE INDEX IF NOT EXISTS idx_methods_named
       ON methods(owner_named, name_named);
 
+    CREATE TABLE IF NOT EXISTS fields (
+      owner_named TEXT NOT NULL,
+      name_named TEXT NOT NULL,
+      descriptor_named TEXT NOT NULL DEFAULT '',
+      name_official TEXT NOT NULL,
+      descriptor_official TEXT NOT NULL DEFAULT '',
+      name_intermediary TEXT,
+      PRIMARY KEY (owner_named, name_named, descriptor_named)
+    );
+    CREATE INDEX IF NOT EXISTS idx_fields_official
+      ON fields(owner_named, name_official, descriptor_official);
+    CREATE INDEX IF NOT EXISTS idx_fields_named
+      ON fields(owner_named, name_named);
+
     CREATE TABLE IF NOT EXISTS searge_methods (
       searge TEXT PRIMARY KEY,
       name_named TEXT NOT NULL,
       descriptor_named TEXT NOT NULL DEFAULT ''
     );
     CREATE INDEX IF NOT EXISTS idx_searge_methods_name ON searge_methods(name_named);
+
+    CREATE TABLE IF NOT EXISTS searge_fields (
+      searge TEXT PRIMARY KEY,
+      name_named TEXT NOT NULL,
+      descriptor_named TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS idx_searge_fields_name ON searge_fields(name_named);
   `);
 }
 
@@ -72,7 +96,9 @@ function setMeta(db, entries) {
 function clearMappingTables(db) {
   db.exec(`
     DELETE FROM methods;
+    DELETE FROM fields;
     DELETE FROM searge_methods;
+    DELETE FROM searge_fields;
     DELETE FROM classes;
     DELETE FROM meta;
   `);
@@ -88,6 +114,12 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
   );
   const insertMethod = db.prepare(
     `INSERT OR REPLACE INTO methods(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
+  const insertField = db.prepare(
+    `INSERT OR REPLACE INTO fields(
       owner_named, name_named, descriptor_named,
       name_official, descriptor_official, name_intermediary
     ) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -110,8 +142,19 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
       m.nameIntermediary || null,
     );
   }
+  for (const f of parsed.fields) {
+    if (!f.ownerNamed || !f.nameNamed) continue;
+    insertField.run(
+      f.ownerNamed,
+      f.nameNamed,
+      f.descriptorNamed || "",
+      f.nameOfficial || "",
+      f.descriptorOfficial || "",
+      f.nameIntermediary || null,
+    );
+  }
   setMeta(db, {
-    schemaVersion: "2",
+    schemaVersion: SCHEMA_VERSION,
     version: meta.version ?? "",
     format: "yarn-tiny-v1",
     mappingEra: "yarn-tiny",
@@ -120,12 +163,14 @@ export async function importTinyIntoDb(db, tinyPath, meta = {}, { strict = false
     builtAt: new Date().toISOString(),
     classCount: String(parsed.classes.length),
     methodCount: String(parsed.methods.length),
+    fieldCount: String(parsed.fields.length),
     buildWarnings: JSON.stringify(parsed.warnings ?? []),
   });
   db.exec("COMMIT");
   return {
     classCount: parsed.classes.length,
     methodCount: parsed.methods.length,
+    fieldCount: parsed.fields.length,
     mappingEra: "yarn-tiny",
     warnings: parsed.warnings,
     parsed,
@@ -147,6 +192,12 @@ export async function importTinyStream(db, input, meta = {}) {
       name_official, descriptor_official, name_intermediary
     ) VALUES (?, ?, ?, ?, ?, ?)`,
   );
+  const insertField = db.prepare(
+    `INSERT OR REPLACE INTO fields(
+      owner_named, name_named, descriptor_named,
+      name_official, descriptor_official, name_intermediary
+    ) VALUES (?, ?, ?, ?, ?, ?)`,
+  );
   db.exec("BEGIN");
   for (const c of parsed.classes) {
     if (!c.named) continue;
@@ -163,8 +214,19 @@ export async function importTinyStream(db, input, meta = {}) {
       m.nameIntermediary || null,
     );
   }
+  for (const f of parsed.fields) {
+    if (!f.ownerNamed || !f.nameNamed) continue;
+    insertField.run(
+      f.ownerNamed,
+      f.nameNamed,
+      f.descriptorNamed || "",
+      f.nameOfficial || "",
+      f.descriptorOfficial || "",
+      f.nameIntermediary || null,
+    );
+  }
   setMeta(db, {
-    schemaVersion: "2",
+    schemaVersion: SCHEMA_VERSION,
     version: meta.version ?? "",
     format: meta.format ?? "yarn-tiny-v1",
     mappingEra: "yarn-tiny",
@@ -172,11 +234,13 @@ export async function importTinyStream(db, input, meta = {}) {
     builtAt: new Date().toISOString(),
     classCount: String(parsed.classes.length),
     methodCount: String(parsed.methods.length),
+    fieldCount: String(parsed.fields.length),
   });
   db.exec("COMMIT");
   return {
     classCount: parsed.classes.length,
     methodCount: parsed.methods.length,
+    fieldCount: parsed.fields.length,
     mappingEra: "yarn-tiny",
     warnings: parsed.warnings,
   };
@@ -214,7 +278,7 @@ export async function importLegacyJsonStream(db, jsonPath, meta = {}) {
     carry = text.slice(Math.max(0, lastEnd - 64, text.length - 2048));
   }
   setMeta(db, {
-    schemaVersion: "2",
+    schemaVersion: SCHEMA_VERSION,
     version: meta.version ?? "",
     format: meta.format ?? "yarn-json-import",
     mappingEra: "yarn-tiny",
@@ -223,10 +287,11 @@ export async function importLegacyJsonStream(db, jsonPath, meta = {}) {
     builtAt: new Date().toISOString(),
     classCount: String(classCount),
     methodCount: "0",
+    fieldCount: "0",
     buildWarnings: JSON.stringify(["legacy json: methodCount=0; prefer tiny rebuild"]),
   });
   db.exec("COMMIT");
-  return { classCount, methodCount: 0, mappingEra: "yarn-tiny" };
+  return { classCount, methodCount: 0, fieldCount: 0, mappingEra: "yarn-tiny" };
 }
 
 function listCandidateSources(mappingsDir) {
@@ -257,7 +322,7 @@ async function tryImportSource(db, source, opts) {
     const input = fs.createReadStream(source.path, { encoding: "utf8" });
     const r = await importTsrgStream(db, input, { version: opts.version, source: source.path });
     setMeta(db, {
-      schemaVersion: "2",
+      schemaVersion: SCHEMA_VERSION,
       version: opts.version ?? "",
       mappingEra: "tsrg",
       format: "joined-tsrg",
@@ -266,6 +331,7 @@ async function tryImportSource(db, source, opts) {
       builtAt: new Date().toISOString(),
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
+      fieldCount: String(r.fieldCount ?? 0),
     });
     return r;
   }
@@ -275,7 +341,7 @@ async function tryImportSource(db, source, opts) {
     const input = fs.createReadStream(source.path, { encoding: "utf8" });
     const r = await importForgeSrgStream(db, input, { version: opts.version, source: source.path });
     setMeta(db, {
-      schemaVersion: "2",
+      schemaVersion: SCHEMA_VERSION,
       version: opts.version ?? "",
       mappingEra: "forge-srg",
       format: "joined-srg",
@@ -284,25 +350,37 @@ async function tryImportSource(db, source, opts) {
       builtAt: new Date().toISOString(),
       classCount: String(r.classCount),
       methodCount: String(r.methodCount),
+      fieldCount: String(r.fieldCount ?? 0),
     });
     return r;
   }
   if (source.kind === "csv") {
     initYarnSchema(db);
     clearMappingTables(db);
-    const r = importMcpCsvMethods(db, source.path, { version: opts.version, source: source.path });
+    const methodsPath = source.path;
+    const fieldsPath = path.join(path.dirname(methodsPath), "fields.csv");
+    const r = importMcpCsvMethods(db, methodsPath, { version: opts.version, source: methodsPath });
+    let fieldCount = 0;
+    if (fs.existsSync(fieldsPath)) {
+      const fr = importMcpCsvFields(db, fieldsPath, { version: opts.version, source: fieldsPath });
+      fieldCount = fr.fieldCount;
+    }
     setMeta(db, {
-      schemaVersion: "2",
+      schemaVersion: SCHEMA_VERSION,
       version: opts.version ?? "",
       mappingEra: "mcp-csv",
       format: "mcp-methods-csv",
-      source: source.path,
-      sourceFile: source.path,
+      source: methodsPath,
+      sourceFile: methodsPath,
       builtAt: new Date().toISOString(),
       classCount: "0",
       methodCount: String(r.methodCount),
+      fieldCount: String(fieldCount),
+      ...(fs.existsSync(fieldsPath)
+        ? { seargeFieldsCsv: fieldsPath, seargeFieldCount: String(fieldCount) }
+        : {}),
     });
-    return r;
+    return { ...r, fieldCount };
   }
   if (source.kind === "json") {
     return importLegacyJsonStream(db, source.path, { version: opts.version, source: source.path });
@@ -350,6 +428,63 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
         `All mapping sources failed for ${mappingsDir}: ${JSON.stringify(attempts)}`,
       );
     }
+
+    // Layer MCP methods.csv onto SRG/TSRG DBs so searge↔MCP named works (1.7–1.13).
+    let seargeCount = 0;
+    let seargeFieldCount = 0;
+    if (
+      (result.mappingEra === "forge-srg" || result.mappingEra === "tsrg") &&
+      fs.existsSync(path.join(mappingsDir, "methods.csv"))
+    ) {
+      try {
+        const csv = importMcpCsvMethods(db, path.join(mappingsDir, "methods.csv"), {
+          version: opts.version,
+          source: path.join(mappingsDir, "methods.csv"),
+        });
+        seargeCount = csv.methodCount;
+        setMeta(db, {
+          seargeCsv: path.join(mappingsDir, "methods.csv"),
+          seargeMethodCount: String(seargeCount),
+        });
+        attempts.push({
+          source: path.join(mappingsDir, "methods.csv"),
+          ok: true,
+          era: "mcp-csv-layer",
+        });
+      } catch (err) {
+        attempts.push({
+          source: path.join(mappingsDir, "methods.csv"),
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+
+    const fieldsCsvPath = path.join(mappingsDir, "fields.csv");
+    if (
+      (result.mappingEra === "forge-srg" || result.mappingEra === "tsrg") &&
+      fs.existsSync(fieldsCsvPath)
+    ) {
+      try {
+        const csv = importMcpCsvFields(db, fieldsCsvPath, {
+          version: opts.version,
+          source: fieldsCsvPath,
+        });
+        seargeFieldCount = csv.fieldCount;
+        setMeta(db, {
+          seargeFieldsCsv: fieldsCsvPath,
+          seargeFieldCount: String(seargeFieldCount),
+        });
+        attempts.push({ source: fieldsCsvPath, ok: true, era: "mcp-csv-fields-layer" });
+      } catch (err) {
+        attempts.push({
+          source: fieldsCsvPath,
+          ok: false,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+
     if (attempts.some((a) => !a.ok)) {
       setMeta(db, {
         fellBackTo: used.path || used.kind,
@@ -363,6 +498,9 @@ export async function buildYarnSqliteForDir(mappingsDir, opts = {}) {
       outPath,
       classCount: result.classCount,
       methodCount: result.methodCount,
+      fieldCount: result.fieldCount > 0 ? result.fieldCount : undefined,
+      seargeMethodCount: seargeCount || undefined,
+      seargeFieldCount: seargeFieldCount || undefined,
       mappingEra: result.mappingEra,
       source: used.path || used.kind,
       attempts,
@@ -472,7 +610,7 @@ export async function buildAllMappingSqlite(dataRoot) {
         durationMs: Date.now() - started,
       });
       console.error(
-        `built ${r.outPath}: era=${r.mappingEra} classes=${r.classCount} methods=${r.methodCount}`,
+        `built ${r.outPath}: era=${r.mappingEra} classes=${r.classCount} methods=${r.methodCount} fields=${r.fieldCount ?? 0}`,
       );
     } catch (err) {
       report.push({

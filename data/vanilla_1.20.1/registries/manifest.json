@@ -1,0 +1,24 @@
+{
+  "version": "1.20.1",
+  "source": "minecraft-data@master",
+  "attribution": "PrismarineJS/minecraft-data (MIT). IDs are Mojang registry names.",
+  "registries": [
+    "blocks",
+    "items",
+    "biomes",
+    "particles",
+    "mob_effects",
+    "enchantments",
+    "sound_events"
+  ],
+  "counts": {
+    "blocks": 1003,
+    "items": 1255,
+    "biomes": 64,
+    "particles": 95,
+    "mob_effects": 33,
+    "enchantments": 39,
+    "sound_events": 1474
+  },
+  "fetchedAt": "2026-08-09T11:49:27.041Z"
+}

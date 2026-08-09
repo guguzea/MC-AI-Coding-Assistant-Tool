@@ -217,6 +217,30 @@ export async function parseTinyStream(input, opts = {}) {
     if (strict) throw new Error(msg);
     result.warnings.push(msg);
   }
+  // Tiny METHOD/FIELD descriptor column is always in the first namespace (official).
+  // Remap L...; refs to named class paths for descriptorNamed.
+  // Also resolve ownerNamed by ownerOfficial — required for "flat" Tiny layouts
+  // (Yarn 1.14–1.19: all CLASS lines first, then FIELD/METHOD) where currentClass
+  // would otherwise stick on the last CLASS.
+  const officialToNamed = new Map();
+  for (const c of result.classes) {
+    if (c.official && c.named) officialToNamed.set(c.official, c.named);
+  }
+  const remapDesc = (desc) =>
+    desc.replace(/L([^;]+);/g, (_, cls) => {
+      const named = officialToNamed.get(cls);
+      return named ? `L${named};` : `L${cls};`;
+    });
+  for (const m of result.methods) {
+    const ownerNamed = officialToNamed.get(m.ownerOfficial);
+    if (ownerNamed) m.ownerNamed = ownerNamed;
+    m.descriptorNamed = remapDesc(m.descriptorOfficial || m.descriptorNamed || "");
+  }
+  for (const f of result.fields) {
+    const ownerNamed = officialToNamed.get(f.ownerOfficial);
+    if (ownerNamed) f.ownerNamed = ownerNamed;
+    f.descriptorNamed = remapDesc(f.descriptorOfficial || f.descriptorNamed || "");
+  }
   return result;
 }
 

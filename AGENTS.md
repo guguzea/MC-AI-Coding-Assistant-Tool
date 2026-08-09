@@ -155,13 +155,14 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，约 **35** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，**53** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |
 | `query_api` | 按类名查询 Vanilla/Parchment API 签名 |
 | `get_method_params` | 查询方法参数名（可选 version） |
 | `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite） |
+| `get_server_status` | 预热/数据路径与 descriptor 自检 |
 | `get_version_info` | 查询版本支持的 API 范围 |
 | `diagnose_gradle` | 诊断 Gradle 构建问题 |
 | `generate_datagen` | 生成数据生成器代码 |
@@ -174,3 +175,7 @@ Decision: 选择注册方式
 | `list_community_sources` / `search_community_docs` / `get_community_doc_*` | 社区实务知识库（发布/崩溃/软依赖；不替代官方文档） |
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
+| `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
+| `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流与知识 URI（tools 兜底） |
+| `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
+| `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |

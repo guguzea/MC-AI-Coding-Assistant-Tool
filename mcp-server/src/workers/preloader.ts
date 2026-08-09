@@ -139,6 +139,7 @@ async function preload(timeoutMs = 15000): Promise<void> {
       null,
       results.classNames as string[] | null,
       skipTrie,
+      null,
       Date.now()
     );
     return;
@@ -160,6 +161,7 @@ async function preload(timeoutMs = 15000): Promise<void> {
     results.apiIndex as Record<string, unknown>,
     classNames,
     skipTrie,
+    skipTrie ? null : trieFlat,
     Date.now()
   );
 }
@@ -168,6 +170,7 @@ function sendResult(
   apiIndex: Record<string, unknown> | null,
   classNames: string[] | null,
   trieSkipped: boolean,
+  trieFlat: TrieNodeFlat[] | null,
   _sentAt: number
 ): void {
   const now = Date.now();
@@ -177,7 +180,7 @@ function sendResult(
     apiIndex: apiIndex ?? {},
     classNames: classNames ?? [],
     l0Index: undefined, // 兼容旧 WorkerOutMessage 消费者（外部搜索预加载仍可用）
-    trieFlat: trieSkipped ? null : undefined,
+    trieFlat: trieSkipped ? null : trieFlat,
     trieSkipped,
     elapsed: now,
     classCount: classNames?.length ?? 0,

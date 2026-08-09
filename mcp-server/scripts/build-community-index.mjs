@@ -86,9 +86,12 @@ const entries = [];
 for (const file of walkMd(ROOT)) {
   const rel = relative(ROOT, file).replace(/\\/g, "/");
   if (rel.startsWith("indexes/")) continue;
+  // patterns/ 是代码模式库框架，不进 community 搜索索引（避免 sourceKind=unknown）
+  if (rel.startsWith("patterns/")) continue;
   const text = readFileSync(file, "utf8");
   const { meta, body } = parseFrontmatter(text);
   const kind = meta.sourceKind || sourceKindOf(rel);
+  if (kind === "unknown") continue;
   const id =
     meta.id ||
     rel

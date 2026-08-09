@@ -2,15 +2,14 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
-import { queryApi } from "./api/index.js";
+import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { convertMapping, getMethodParams } from "./mappings/index.js";
+import { readableSignature, returnType, parameterTypes } from "./utils/descriptor.js";
 import { getVersionInfo } from "./version/index.js";
 import { diagnoseGradle } from "./gradle/index.js";
 import { generateDatagen } from "./datagen/index.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
-import { diagnoseDataPaths, hasAnyPlatformData } from "./utils/path.js";
-import { analyzePortingPath, portProject } from "./porting/index.js";
 import {
   // 旧 Forge 别名（向后兼容）
   listForgeVersions,
@@ -67,6 +66,9 @@ import {
   getCommunityDocFullSchema,
   CommunityDocNotFoundError,
 } from "./docs-platform/index.js";
+import { diagnoseDataPaths, hasAnyPlatformData } from "./utils/path.js";
+import { analyzePortingPath, portProject } from "./porting/index.js";
+import { registerWaveExtensions } from "./wave/register.js";
 
 function communityDocError(e: unknown): CallToolResult {
   if (e instanceof CommunityDocNotFoundError) {
@@ -156,26 +158,31 @@ server.registerTool(
       "to=mojang 输出 Tiny official 混淆短名，不是可读 Mojang FQCN。\n" +
       "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
       "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
-      "1.14–1.15 CSV 仅支持全局 searge↔named（勿传 ownerClass）。\n" +
+      "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
       "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
       "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
       "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
-      "@example CSV：1.14.4 memberName=getHealth（无 owner）→ func_110143_aJ；传 ownerClass → csv-no-owner\n" +
+      "@example 1.12.2：getHealth + EntityLivingBase → obf（如 cd）；无 owner 的 getHealth → ambiguous\n" +
+      "@example CSV：1.14.4 memberName=func_110143_aJ → getHealth；传 ownerClass → csv-no-owner\n" +
       "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true",
     inputSchema: z.object({
       from: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("源映射类型"),
       to: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("目标映射类型"),
       memberName: z.string().describe("成员名（字段或方法）"),
-      ownerClass: z.string().optional().describe("所属类，用于精确匹配方法（CSV 时代勿传）"),
+      ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
       descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
       version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+      memberKind: z
+        .enum(["class", "method", "field", "auto"])
+        .optional()
+        .describe("成员类型；field 需 schema v3；默认 auto 启发式"),
       allow_fallback: z
         .boolean()
         .optional()
         .describe("过渡参数：无映射时回传原名（found 仍为 false，fallbackUsed=true）"),
     }),
   },
-  async ({ from, to, memberName, ownerClass, descriptor, version, allow_fallback }): Promise<CallToolResult> => {
+  async ({ from, to, memberName, ownerClass, descriptor, version, memberKind, allow_fallback }): Promise<CallToolResult> => {
     const result = convertMapping({
       from,
       to,
@@ -183,8 +190,43 @@ server.registerTool(
       ownerClass,
       descriptor,
       version,
+      memberKind,
       allow_fallback,
     });
+    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+// ── 2b. 服务器状态 / 预热 ───────────────────────────────────────────────────
+server.registerTool(
+  "get_server_status",
+  {
+    title: "Get MCP Server / Data Preload Status",
+    description:
+      "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。" +
+      "适用于：调用失败排查、确认 schema/映射数据是否就绪。",
+    inputSchema: z.object({
+      version: z.string().optional().describe("关注的 MC 版本，默认 1.20.1"),
+      warmup: z.boolean().optional().describe("若 true，先预热该版本再返回状态"),
+    }),
+  },
+  async ({ version, warmup }): Promise<CallToolResult> => {
+    const v = version ?? "1.20.1";
+    if (warmup !== false) {
+      await warmupApi([v]);
+    }
+    const result = {
+      ok: true,
+      focus: getApiPreloadStatus(v),
+      api: listApiPreloadStatuses(),
+      dataPaths: diagnoseDataPaths(),
+      descriptorSelfCheck: {
+        sample: "()F",
+        returnType: returnType("()F"),
+        readableSignature: readableSignature("getHealth", "()F"),
+        parameterTypes: parameterTypes("(IF)V"),
+      },
+    };
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -238,16 +280,35 @@ server.registerTool(
     description:
       "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。" +
       "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
-      "注意：当前仅支持 1.20.1 版本的 DeferredRegister 模式。返回完整的 Java 代码模板。",
+      "注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。" +
+      "返回完整的 Java 代码模板。",
     inputSchema: z.object({
-      providerType: z.enum(["recipe", "blockstate", "itemmodel", "loottable", "tag"]).describe("Provider 类型"),
+      providerType: z
+        .enum([
+          "recipe",
+          "blockstate",
+          "itemmodel",
+          "loottable",
+          "tag",
+          "advancement",
+          "particle",
+          "sound",
+        ])
+        .describe("Provider 类型"),
       modId: z.string().describe("Mod ID（全小写），如 mymod"),
       targetName: z.string().describe("目标注册名（无 modId 前缀），如 my_block"),
       version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+      platform: z.enum(["forge", "neoforge"]).optional().describe("loader 平台；1.21 NeoForge 路径"),
     }),
   },
-  async ({ providerType, modId, targetName, version }): Promise<CallToolResult> => {
-    const result = generateDatagen({ providerType, modId, targetName, version: version ?? "1.20.1" });
+  async ({ providerType, modId, targetName, version, platform }): Promise<CallToolResult> => {
+    const result = generateDatagen({
+      providerType,
+      modId,
+      targetName,
+      version: version ?? "1.20.1",
+      platform: platform ?? "forge",
+    });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -787,6 +848,8 @@ server.registerTool(
   }
 );
 
+registerWaveExtensions(server);
+
 // ── 启动 ────────────────────────────────────────────────────────────────────
 
 process.on("unhandledRejection", (reason) => {
@@ -813,6 +876,10 @@ if (!hasAnyPlatformData()) {
 }
 
 try {
+  // Fire-and-forget warmup for default version (does not block connect)
+  void warmupApi(["1.20.1"]).catch((err) => {
+    console.error("[mc-mcp-server] warmup failed:", err);
+  });
   const transport = new StdioServerTransport();
   await server.connect(transport);
 } catch (err) {

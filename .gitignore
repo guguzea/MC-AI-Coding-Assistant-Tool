@@ -31,6 +31,13 @@ agent-tools/
 check-sources.txt
 临时文件*.md
 
+# Mapping build leftovers / large Mojang downloads (re-fetched by extractor)
+data/**/yarn-mappings.sqlite.tmp*
+data/**/mappings/test-build*.sqlite
+data/**/mappings/client.txt
+data/**/mappings/mojang-client.txt
+data/**/mappings/client-mappings-*.txt
+
 # Java / Minecraft
 *.class
 # Keep mapping zips / yarn jars under data/ tracked; ignore elsewhere

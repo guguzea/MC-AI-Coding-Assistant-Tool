@@ -1,0 +1,73 @@
+export interface ValidateDatapackInput {
+  jsonContent: string;
+  kind: "recipe" | "loot_table" | "advancement" | "tag";
+  version?: string;
+}
+
+export interface ValidateDatapackResult {
+  valid: boolean;
+  version: string;
+  kind: string;
+  errors: string[];
+  warnings: string[];
+}
+
+function requireKeys(obj: Record<string, unknown>, keys: string[], errors: string[]): void {
+  for (const k of keys) {
+    if (!(k in obj)) errors.push(`缺少必需字段: ${k}`);
+  }
+}
+
+export function validateDatapackJson(input: ValidateDatapackInput): ValidateDatapackResult {
+  const version = input.version ?? "1.20.1";
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  let data: Record<string, unknown>;
+  try {
+    data = JSON.parse(input.jsonContent) as Record<string, unknown>;
+  } catch (e) {
+    return {
+      valid: false,
+      version,
+      kind: input.kind,
+      errors: [`JSON 语法错误: ${(e as Error).message}`],
+      warnings,
+    };
+  }
+
+  switch (input.kind) {
+    case "recipe":
+      requireKeys(data, ["type", "result"], errors);
+      if (data.type === "minecraft:crafting_shaped" || data.type === "minecraft:crafting_shapeless") {
+        if (!("ingredients" in data) && !("key" in data)) {
+          errors.push("合成配方需要 key/ingredients");
+        }
+      }
+      break;
+    case "loot_table":
+      requireKeys(data, ["type", "pools"], errors);
+      if (!Array.isArray(data.pools)) errors.push("pools 必须为数组");
+      break;
+    case "advancement":
+      requireKeys(data, ["criteria"], errors);
+      if (version.startsWith("1.21") && !("rewards" in data)) {
+        warnings.push("1.21+ advancement 建议包含 rewards 或显式空对象");
+      }
+      break;
+    case "tag":
+      requireKeys(data, ["values"], errors);
+      if (!Array.isArray(data.values)) errors.push("values 必须为数组");
+      break;
+    default:
+      errors.push(`未知 kind: ${input.kind}`);
+  }
+
+  return {
+    valid: errors.length === 0,
+    version,
+    kind: input.kind,
+    errors,
+    warnings,
+  };
+}

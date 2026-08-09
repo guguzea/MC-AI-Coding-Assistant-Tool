@@ -53,6 +53,11 @@ function getRepoRootFromSelf(): string {
   return join(getSelfDir(), "..", "..", "..");
 }
 
+/** 仓库根目录（含 forge/、data/、community_knowledge/） */
+export function resolveRepoRoot(): string {
+  return getRepoRootFromSelf();
+}
+
 /**
  * 解析数据目录路径（外部调用接口）
  * 按以下优先级：

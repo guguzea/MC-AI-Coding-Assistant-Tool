@@ -1,0 +1,119 @@
+[
+  {
+    "id": "minecraft:absorption"
+  },
+  {
+    "id": "minecraft:bad_omen"
+  },
+  {
+    "id": "minecraft:blindness"
+  },
+  {
+    "id": "minecraft:conduit_power"
+  },
+  {
+    "id": "minecraft:darkness"
+  },
+  {
+    "id": "minecraft:dolphins_grace"
+  },
+  {
+    "id": "minecraft:fire_resistance"
+  },
+  {
+    "id": "minecraft:glowing"
+  },
+  {
+    "id": "minecraft:haste"
+  },
+  {
+    "id": "minecraft:health_boost"
+  },
+  {
+    "id": "minecraft:hero_of_the_village"
+  },
+  {
+    "id": "minecraft:hunger"
+  },
+  {
+    "id": "minecraft:infested"
+  },
+  {
+    "id": "minecraft:instant_damage"
+  },
+  {
+    "id": "minecraft:instant_health"
+  },
+  {
+    "id": "minecraft:invisibility"
+  },
+  {
+    "id": "minecraft:jump_boost"
+  },
+  {
+    "id": "minecraft:levitation"
+  },
+  {
+    "id": "minecraft:luck"
+  },
+  {
+    "id": "minecraft:mining_fatigue"
+  },
+  {
+    "id": "minecraft:nausea"
+  },
+  {
+    "id": "minecraft:night_vision"
+  },
+  {
+    "id": "minecraft:oozing"
+  },
+  {
+    "id": "minecraft:poison"
+  },
+  {
+    "id": "minecraft:raid_omen"
+  },
+  {
+    "id": "minecraft:regeneration"
+  },
+  {
+    "id": "minecraft:resistance"
+  },
+  {
+    "id": "minecraft:saturation"
+  },
+  {
+    "id": "minecraft:slow_falling"
+  },
+  {
+    "id": "minecraft:slowness"
+  },
+  {
+    "id": "minecraft:speed"
+  },
+  {
+    "id": "minecraft:strength"
+  },
+  {
+    "id": "minecraft:trial_omen"
+  },
+  {
+    "id": "minecraft:unluck"
+  },
+  {
+    "id": "minecraft:water_breathing"
+  },
+  {
+    "id": "minecraft:weakness"
+  },
+  {
+    "id": "minecraft:weaving"
+  },
+  {
+    "id": "minecraft:wind_charged"
+  },
+  {
+    "id": "minecraft:wither"
+  }
+]

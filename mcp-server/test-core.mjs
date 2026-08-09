@@ -455,7 +455,46 @@ async function testDatagenAndMappingGates() {
     assert.ok(d.code?.includes("net.minecraft.data.PackOutput"), `${t} PackOutput`);
     assert.ok(!d.code?.includes("data.pack.PackOutput"), `${t} wrong PackOutput package`);
     assert.ok(!d.code?.includes("::iterator"), `${t} must not use ::iterator`);
+    assert.ok(d.code?.includes("net.minecraftforge"), `${t} forge imports`);
+    assert.ok(!d.code?.includes("net.neoforged"), `${t} must not be NeoForge`);
     if (t === "loottable") assert.ok(d.code?.includes("void generate()"), "loot generate()");
+  }
+
+  const nfRecipe = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "stone_block",
+    platform: "neoforge",
+    version: "1.21.1",
+  });
+  assert.ok(nfRecipe.code?.includes("net.neoforged.neoforge.data.event.GatherDataEvent"));
+  assert.ok(nfRecipe.code?.includes("RecipeOutput"));
+  assert.ok(!nfRecipe.code?.includes("net.minecraftforge"));
+
+  for (const t of /** @type {const} */ (["advancement", "particle", "sound"])) {
+    const forgeExtra = generateDatagen({ providerType: t, modId: "demo", targetName: "spark" });
+    assert.ok(forgeExtra.code?.includes("net.minecraftforge"), `${t} forge path`);
+
+    const nfExtra = generateDatagen({
+      providerType: t,
+      modId: "demo",
+      targetName: "spark",
+      platform: "neoforge",
+      version: "1.21.1",
+    });
+    assert.ok(nfExtra.code?.includes("net.neoforged"), `${t} neoforge path`);
+    if (t === "advancement") {
+      assert.ok(
+        nfExtra.code?.includes("net.neoforged.neoforge.common.data.AdvancementProvider"),
+        "NeoForge AdvancementProvider",
+      );
+    }
+    if (t === "sound") {
+      assert.ok(nfExtra.code?.includes("SoundDefinitionsProvider"), "sound datagen provider");
+    }
+    if (t === "particle") {
+      assert.ok(nfExtra.code?.includes("ParticleDescriptionProvider"), "particle datagen provider");
+    }
   }
 
   const sugg = suggestSimilarMethods("getHealth", ["getMaxHealth", "getHunger", "hurt"]);
@@ -498,6 +537,32 @@ async function testDatagenAndMappingGates() {
     csvRev.candidates?.some((c) => c.official === "func_110143_aJ"),
     "candidates should include LivingEntity getHealth searge",
   );
+  assert.ok(csvRev.action?.code === "AMBIGUOUS" || csvRev.action?.code === "NOT_FOUND");
+
+  // schema v3 field: CSV searge field
+  const fieldCsv = convertMapping({
+    from: "mojang",
+    to: "mcp",
+    memberName: "field_100013_f",
+    version: "1.14.4",
+    memberKind: "field",
+  });
+  assert.equal(fieldCsv.found, true, "1.14.4 fields.csv should resolve field searge");
+  assert.equal(fieldCsv.converted, "isPotionDurationMax");
+  assert.equal(fieldCsv.mappingType, "field");
+  assert.equal(fieldCsv.schemaVersion, "3");
+
+  // yarn-tiny field path must not claim SCHEMA_FIELDS_UNAVAILABLE on v3
+  const fieldYarn = convertMapping({
+    from: "yarn",
+    to: "mojang",
+    memberName: "age",
+    ownerClass: "net.minecraft.world.entity.Entity",
+    version: "1.20.1",
+    memberKind: "field",
+  });
+  assert.notEqual(fieldYarn.resultKind, "SCHEMA_FIELDS_UNAVAILABLE");
+  assert.equal(fieldYarn.schemaVersion, "3");
 
   const csvRevUnique = convertMapping({
     from: "mojang",
@@ -515,9 +580,44 @@ async function testDatagenAndMappingGates() {
     ownerClass: "net.minecraft.entity.LivingEntity",
     version: "1.14.4",
   });
-  // 1.14.4 同时有 fabric yarn-tiny：带 owner 走 Yarn；未命中则 found:false（不走 CSV owner）
-  assert.equal(csvOwner.found, false);
-  assert.equal(csvOwner.converted, null);
+  // 1.14.4 有 fabric yarn-tiny：带 owner 走 Yarn（不走纯 CSV）
+  assert.equal(csvOwner.found, true);
+  assert.equal(csvOwner.mappingEra, "yarn-tiny");
+  assert.ok(
+    csvOwner.converted && !String(csvOwner.converted).startsWith("func_"),
+    "1.14.4 yarn owner path must return obf not searge",
+  );
+
+  // 1.12.2 / 1.13.2：SRG/TSRG + CSV — 带 owner 的 MCP 名 → 真正 obf（非 func_）
+  for (const [ver, obf] of [
+    ["1.12.2", "cd"],
+    ["1.13.2", "cq"],
+  ]) {
+    const legacyOwner = convertMapping({
+      from: "mcp",
+      to: "mojang",
+      memberName: "getHealth",
+      ownerClass: "net.minecraft.entity.EntityLivingBase",
+      version: ver,
+    });
+    assert.equal(legacyOwner.found, true, `${ver} owner+getHealth must hit`);
+    assert.equal(legacyOwner.converted, obf, `${ver} mcp→mojang must be obf not searge`);
+    assert.ok(
+      !String(legacyOwner.converted).startsWith("func_"),
+      `${ver} must not return searge as mojang`,
+    );
+    assert.equal(legacyOwner.named, "getHealth");
+
+    const legacySearge = convertMapping({
+      from: "mcp",
+      to: "mojang",
+      memberName: "func_110143_aJ",
+      version: ver,
+    });
+    assert.equal(legacySearge.found, true, `${ver} unique searge must hit`);
+    assert.equal(legacySearge.converted, obf, `${ver} searge→mojang must be obf`);
+    assert.equal(legacySearge.named, "getHealth");
+  }
 
   const miss = convertMapping({
     from: "mcp",
@@ -542,7 +642,7 @@ async function testDatagenAndMappingGates() {
   assert.equal(fb.converted, "noSuchMethodZZZ");
   assert.equal(fb.fallbackUsed, true);
 
-  const { queryApi } = await import("./dist/api/index.js");
+  const { queryApi, disposeApiData } = await import("./dist/api/index.js");
   const api = await queryApi({
     className: "net.minecraft.world.entity.LivingEntity",
     methodName: "getHealth",
@@ -550,6 +650,34 @@ async function testDatagenAndMappingGates() {
   });
   assert.equal(api.found, true);
   assert.ok(api.methods?.some((m) => m.name === "getHealth" && m.descriptor === "()F"));
+
+  // Forge/Parchment = Mojang named (1.20.1 Entity uses level() not getLevel/getWorld)
+  for (const [methodName, yarnWrong] of [
+    ["level", "getWorld"],
+    ["getDeltaMovement", "getVelocity"],
+    ["isUnderWater", "isSubmergedInWater"],
+    ["isCrouching", "isInSneakingPose"],
+    ["isShiftKeyDown", "isSneaking"],
+    ["getUUID", "getUuid"],
+  ]) {
+    const hit = await queryApi({
+      className: "net.minecraft.world.entity.Entity",
+      methodName,
+      version: "1.20.1",
+    });
+    assert.equal(hit.found, true, `Entity.${methodName} must be found (Mojang name)`);
+    const wrong = await queryApi({
+      className: "net.minecraft.world.entity.Entity",
+      methodName: yarnWrong,
+      version: "1.20.1",
+    });
+    assert.equal(
+      wrong.found,
+      false,
+      `Entity.${yarnWrong} is Yarn-only and must NOT be in Forge api-index`,
+    );
+  }
+  disposeApiData();
 
   const gradle = diagnoseGradle({
     buildGradle: `
@@ -736,3 +864,18 @@ await testSearchEnhancements();
 await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
 console.log("core regression tests passed");
+
+// queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.
+try {
+  const { closeAllYarnDbs } = await import("./dist/mappings/yarn-sqlite.js");
+  closeAllYarnDbs();
+} catch {
+  /* dist may omit if earlier import failed — ignore */
+}
+try {
+  const { disposeApiData } = await import("./dist/api/index.js");
+  disposeApiData();
+} catch {
+  /* ignore */
+}
+process.exit(0);

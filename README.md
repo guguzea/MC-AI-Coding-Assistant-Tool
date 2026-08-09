@@ -19,7 +19,7 @@ MC_skill/
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
-├── mcp-server/                  # 本地 stdio MCP Server（35 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（53 个工具）
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -100,7 +100,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（**35** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：**`MC-AI-Coding-Assistant-Tool`**（**53** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -115,15 +115,15 @@ MC_skill/
 
 ### 映射转换（`convert_mapping` + Yarn）
 
-1. 走预建 **`yarn-mappings.sqlite`（schema v2）惰性点查**，运行时**禁止**全量加载 `yarn-mappings.json`。
+1. 走预建 **`yarn-mappings.sqlite`（schema v3，含 fields）惰性点查**，运行时**禁止**全量加载 `yarn-mappings.json`。
 2. **支持矩阵（摘要）**：
 
-| 版本区间 | 数据源 / era | 类互转 | 方法互转 | 备注 |
-|---------|--------------|--------|----------|------|
-| 1.16+（有 Fabric tiny） | `yarn-tiny` | ✅ | ✅ 需 `ownerClass`；重载建议 `descriptor` | `to=mojang` = Tiny official 短名 |
-| 1.13 Forge | `tsrg` | ✅ | ✅ | `joined.tsrg` |
-| 1.7–1.12 Forge | `forge-srg` | ✅ | ✅ | `joined.srg` |
-| 1.14–1.15 | `mcp-csv`（partial） | ❌ | 仅全局 `searge↔named` | **勿传** `ownerClass`；同版本若有 Fabric Yarn 仍可用 Yarn 方法表 |
+| 版本区间 | 数据源 / era | 类互转 | 方法互转 | 字段互转 | 备注 |
+|---------|--------------|--------|----------|----------|------|
+| 1.16+（有 Fabric tiny） | `yarn-tiny` | ✅ | ✅ 需 `ownerClass`；重载建议 `descriptor` | ✅ `memberKind=field` | `to=mojang` = Tiny official 短名 |
+| 1.13 Forge | `tsrg` + MCP CSV | ✅ | ✅ 可带 `ownerClass` | ✅ + `fields.csv` | `joined.tsrg` + CSV |
+| 1.7–1.12 Forge | `forge-srg` + MCP CSV | ✅ | ✅ 可带 `ownerClass` | ✅ + `fields.csv` | `joined.srg` + CSV |
+| 1.14–1.15 | `mcp-csv`（partial） | ❌ | 仅全局 `searge↔named` | 仅全局 `field_*` | **勿传** `ownerClass` |
 
 3. `mcp↔parchment` 为同名层（identity）；参数名用 `get_method_params`。
 4. 失败默认 `found:false`、`converted:null`；过渡参数 `allow_fallback` 可回传原名并设 `fallbackUsed`（禁止假成功）。
@@ -192,7 +192,7 @@ MC_skill/
 
 Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Config 等平台专有 Skill。
 
-## MCP Server 工具（35 个）
+## MCP Server 工具（53 个）
 
 服务名：**`MC-AI-Coding-Assistant-Tool`**。安装与配置见 [`AUTO_SETUP.md`](./AUTO_SETUP.md)、[`mcp-server/README.md`](./mcp-server/README.md)。
 
@@ -206,13 +206,14 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 
 ---
 
-### 1. API 与映射（4）
+### 1. API 与映射 / 状态（5）
 
 | 工具 | 作用 |
 |------|------|
 | `query_api` | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。 |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。 |
-| `convert_mapping` | 在 **mojang / mcp / yarn / parchment** 间互转类/方法名（SQLite v2）。`to=mojang` 为 Tiny official 短名；重载传 `descriptor`；CSV 时代仅全局 searge↔named；失败默认 `converted:null`（可选 `allow_fallback`）。 |
+| `convert_mapping` | 在 **mojang / mcp / yarn / parchment** 间互转类/方法/**字段**（SQLite **v3**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名；失败默认 `converted:null`（可选 `allow_fallback`）。 |
+| `get_server_status` | API 索引预热状态、`diagnose_data_paths` 摘要与 descriptor 自检；可选 `warmup` 先加载指定版本。 |
 | `get_version_info` | **【Forge only】** 按 MC 版本 + 操作（如「注册方块」）给出推荐做法、关键变更、gotchas 与官方 Changelog 链接。 |
 
 ### 2. 工程辅助（4）
@@ -285,6 +286,31 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | `analyze_porting_path` | 扫描项目，识别平台/版本/Mappings/Architectury，输出风险、`routeSteps`、参考链接与建议的 `query_api` 调用。 |
 | `port_project` | 执行移植步骤：`init_architectury` / `extract_common` / `apply_version_migration`。默认 **dryRun**；真正写入需 `dryRun=false` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 路径在 `MC_SKILL_PROJECT_ROOT` 内。 |
 
+### 9. Registry / Mixin / 资源（7）
+
+| 工具 | 作用 |
+|------|------|
+| `query_registry` | 查询 Vanilla 资源 ID（`nameLayer: registry_id`）；类/方法名用 `convert_mapping`。 |
+| `mixin_analyze` | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。 |
+| `audit_resources` | 静态检查模型纹理引用、孤儿纹理、modId 命名等。 |
+| `validate_datapack_json` | recipe / loot_table / advancement / tag 精简 JSON 校验。 |
+| `get_workflow_template` | 工作流全文（与 MCP Prompt 同名；Cursor 等仅 tools 时用）。 |
+| `list_knowledge_resources` / `read_knowledge_resource` | 列出并读取 `mcskill://` 知识资源 URI。 |
+
+### 10. 代码生成模板（7）
+
+`generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`（骨架代码/JSON，非写盘）。
+
+### 11. 日志与依赖诊断（3）
+
+| 工具 | 作用 |
+|------|------|
+| `analyze_log` | 解析游戏/崩溃日志片段（可复用 `crash_analyze` 分类）。 |
+| `get_migration_guide` | 内置版本迁移路线摘要。 |
+| `check_dependencies` | 根据 `build.gradle` / `mods.toml` 提示依赖问题。 |
+
+另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
+
 ---
 
 
@@ -296,6 +322,6 @@ Fabric 版本在此基础上可能额外包含 Fabric API / Kotlin / Cloth Confi
 | Phase 1 | ✅ 完成 | Forge / Fabric / NeoForge 规则集与多版本扩展 |
 | Phase 1.5 | ✅ 完成 | 模组脚手架 + 校验 CLI |
 | Phase 2 | ✅ 完成 | Agent Skills + 代码模式库 |
-| Phase 3 | ✅ 完成 | MCP Server（Forge/Fabric/NeoForge 文档 + 映射 + 移植 + 社区，**35** 工具） |
+| Phase 3 | ✅ 完成 | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C 扩展，**53** 工具） |
 | Phase 4 | ✅ 进行中 | 知识库 / 反模式 / 数据审计与 Release 分发 |
 | Phase 5 | 📋 暂缓 | 微调数据集 + runtime-inspector |

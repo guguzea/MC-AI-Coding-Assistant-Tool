@@ -26,6 +26,9 @@
 | 主类 / 注册 helper / 创造页签 | `authored/mod-entry-init-structure`、`authored/register-helpers`、`authored/creative-tabs-1.20` |
 | 机器 / Menu / BE / Capability | `authored/machine-be-gui-working`、`authored/menu-screen-sync`、`authored/blockentity-persist-ticker`、`authored/itemhandler-capability` |
 | 模型 / 本地化 / 开发环境 | `authored/multi-face-block-models`、`authored/localization-lang`、`authored/forge-dev-env-pitfalls` |
+| 映射字段 schema v3 | `authored/mapping-fields-v3` |
+| 代码模式库 | `patterns/`（DeferredRegister / SimpleChannel / DataComponent / cube_all / ConfigSpec） |
+| 库集成 | `authored/lib-geckolib`、`lib-curios`、`lib-cloth-config`、`lib-architectury`、`lib-patchouli`；总览 `authored/library-integration` |
 
 ## 环境变量
 

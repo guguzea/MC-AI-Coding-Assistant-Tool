@@ -37,6 +37,13 @@ Follow each package’s license as published on npm.
 - License: follow Yarn / FabricMC mapping license terms
 - Note: the MCP server must use **SQLite point lookups** at runtime; do not treat the full JSON as a redistributable “load everything” database API
 
+## Vanilla registry ID dumps（`data/vanilla_*/registries/`）
+
+- Default build path: [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) via jsDelivr (`npm run fetch:vanilla-registries`)
+- Alternate: official Minecraft data-generator `reports/` (`--from-reports=<dir>`)
+- License: minecraft-data is MIT; Mojang registry IDs are game content names
+- See also `data/vanilla_ATTRIBUTION.md`
+
 ## Parchment mappings
 
 - Upstream: https://parchmentmc.org / https://github.com/ParchmentMC

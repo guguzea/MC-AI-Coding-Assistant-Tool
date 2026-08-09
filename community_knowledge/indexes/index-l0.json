@@ -108,6 +108,99 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/lib-architectury",
+      "label": "authored/lib-architectury",
+      "path": "authored/lib-architectury.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "同一套逻辑要同时发 Forge/Fabric（及 NeoForge）时。先做平台分析再脚手架。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/lib-cloth-config",
+      "label": "authored/lib-cloth-config",
+      "path": "authored/lib-cloth-config.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric（及部分跨平台）需要友好配置屏时。Forge 原生可用 `ForgeConfigSpec`（见 patterns `config-spec`）。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/lib-curios",
+      "label": "authored/lib-curios",
+      "path": "authored/lib-curios.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "需要饰品栏、额外装备槽。Forge 侧常见 **Curios API**；Fabric 常见 Trinkets（API 不同，勿混用）。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/lib-geckolib",
+      "label": "authored/lib-geckolib",
+      "path": "authored/lib-geckolib.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "实体/方块需要复杂动画、Geo 模型时。官方文档优先于任何二手教程。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/lib-patchouli",
+      "label": "authored/lib-patchouli",
+      "path": "authored/lib-patchouli.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "需要游戏内指南书 / 分类条目。以 Patchouli 数据包格式为主，少写死 Java UI。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/library-integration",
+      "label": "第三方库接入清单（Gradle → 运行时）",
+      "path": "authored/library-integration.md",
+      "url": "",
+      "tags": [
+        "interop",
+        "optional",
+        "gradle",
+        "modlist",
+        "dist",
+        "forge",
+        "library"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "硬/软依赖；Gradle 配置与 mods.toml；客户端专用 API；兼容类隔离；与 cursemaven、ModList 短文配合。",
+      "mcHint": "1.20.1+ Forge 为主"
+    },
+    {
+      "id": "authored/library-integration-jei-emi",
+      "label": "JEI / EMI 软依赖接入要点",
+      "path": "authored/library-integration-jei-emi.md",
+      "url": "",
+      "tags": [
+        "jei",
+        "emi",
+        "interop",
+        "optional",
+        "client",
+        "datagen",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "DataGen 配方常零代码；软依赖 Gradle；Dist.CLIENT 注册；自定义分类再查官方；与 library-integration 总清单配合。",
+      "mcHint": "1.20.1+ Forge"
+    },
+    {
       "id": "authored/localization-lang",
       "label": "本地化键与 lang JSON",
       "path": "authored/localization-lang.md",
@@ -142,6 +235,17 @@
       "priority": "⭐",
       "summary": "机器全链路；进度必须用 ContainerData；WORKING 仅在 ticker 对比后 setBlock；对外物流需 ITEM_HANDLER Capability。",
       "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/mapping-fields-v3",
+      "label": "authored/mapping-fields-v3",
+      "path": "authored/mapping-fields-v3.md",
+      "url": "",
+      "tags": [],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "需要在 **mojang / mcp / yarn / parchment** 之间互转**字段名**时（如 `field_110151_bq` ↔ `absorptionAmount`）。",
+      "mcHint": ""
     },
     {
       "id": "authored/menu-screen-sync",
@@ -196,6 +300,24 @@
       "priority": "⭐",
       "summary": "cube_all 局限；machine 贴图组织；HorizontalDirectionalBlock 三方法；逻辑朝向 vs JSON 旋转；复杂 BlockItem 用 cube 分面。",
       "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/patterns-framework",
+      "label": "代码模式库怎么用（knowledge/patterns）",
+      "path": "authored/patterns-framework.md",
+      "url": "",
+      "tags": [
+        "patterns",
+        "engineering",
+        "structure",
+        "skills",
+        "antipatterns",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "模式库 vs code-patterns vs 反模式；单文件结构；何时新增示范；MCP Resource mcskill://patterns/README。",
+      "mcHint": "1.20.1+（示例偏 Forge）"
     },
     {
       "id": "authored/publishing",
