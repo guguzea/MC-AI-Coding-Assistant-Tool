@@ -56,3 +56,8 @@ out/
 .env.local
 
 mcp-server/_temp_tool_probe/
+
+# SQLite journals (never commit)
+data/**/*.sqlite-journal
+data/**/*-journal
+
