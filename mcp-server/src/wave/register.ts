@@ -21,6 +21,7 @@ import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics
 import { getWorkflowTemplate, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
 import { WORKFLOW_TEMPLATES } from "../prompts/templates.js";
 import { mcSkillUpdate } from "../update/index.js";
+import { localizeMod } from "../localize/index.js";
 
 function jsonResult(obj: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] };
@@ -102,10 +103,37 @@ export function registerWaveExtensions(server: McpServer): void {
           "mc-port-mod",
           "mc-build-mod",
           "mc-ingame-iterate",
+          "mc-localize-mod",
         ]),
       }),
     },
     async ({ name }): Promise<CallToolResult> => jsonResult(getWorkflowTemplate(name)),
+  );
+
+  server.registerTool(
+    "localize_mod",
+    {
+      title: "Localize mod lang (diff / draft / jar pack)",
+      description:
+        "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。" +
+        "无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。",
+      inputSchema: z.object({
+        mode: z.enum(["own", "third_party"]),
+        action: z.enum(["diff", "draft_zh", "extract", "pack_draft"]),
+        modId: z.string().optional(),
+        sourceJson: z.union([z.string(), z.record(z.string())]).optional()
+          .describe("源语言 JSON（优先于 enUsJson）"),
+        enUsJson: z.union([z.string(), z.record(z.string())]).optional()
+          .describe("源语言 JSON（兼容名）"),
+        zhCnJson: z.union([z.string(), z.record(z.string())]).optional(),
+        jarPath: z.string().optional().describe("third_party：本地 jar 绝对路径"),
+        namespace: z.string().optional(),
+        sourceLocale: z.string().optional().describe("强制源语种，如 en_gb / de_de"),
+        existingZhJson: z.union([z.string(), z.record(z.string())]).optional(),
+        mcVersion: z.string().optional().describe("用于 pack_format 默认映射"),
+      }),
+    },
+    async (args): Promise<CallToolResult> => jsonResult(localizeMod(args)),
   );
 
   server.registerTool(

@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **54** 个 MCP 工具：`src/index.ts` **36** + `src/wave/register.ts` **18**
+- 共 **55** 个 MCP 工具：`src/index.ts` **36** + `src/wave/register.ts` **19**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -71,7 +71,7 @@ npm run build
 
 ### 3. 验收
 
-重启 Cursor 后应看到 **`MC-AI-Coding-Assistant-Tool`**，工具数 **54**。可试：`get_server_status`、`diagnose_data_paths`。
+重启 Cursor 后应看到 **`MC-AI-Coding-Assistant-Tool`**，工具数 **55**。可试：`get_server_status`、`diagnose_data_paths`。
 
 ### 4. 环境变量
 
@@ -117,7 +117,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*` |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
-| Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen` |
+| Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
 | Wave C 诊断 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
 | 自我更新 | `mc_skill_update` |
 
@@ -133,7 +133,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` |
+| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -149,7 +149,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | `mcskill://version-changes/1.21` | 1.21 变更专章（知识库） |
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（7 个；含构建与真机循环，PCL2/HMCL/官方版本隔离路径） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（8 个；含构建、真机循环与模组汉化） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 

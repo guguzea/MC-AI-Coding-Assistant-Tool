@@ -78,6 +78,29 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
 7. 可选兼容性测试：同实例或第二实例；基线（目标 mod + 硬依赖）→ 逐步加入其它 mod；记录冲突与加载顺序
    （HMCL 切换版本场景可参考「隐藏启动器并在游戏结束后重新打开」）`,
   },
+  "mc-localize-mod": {
+    title: "模组汉化工作流",
+    body: `【原则】不调用外网机翻 API；localize_mod 只做 diff/草稿/抽 jar；中文由 Agent 填写。默认不写游戏目录。
+社区短文：authored/localization-lang；新建骨架可用 generate_lang。
+
+1. 判定模式：
+   - own：自有工程 assets/<modid>/lang/
+   - third_party：用户提供本地模组 jar 绝对路径
+2. own：
+   - localize_mod mode=own action=diff（对比源与 zh_cn）
+   - 根据 keyRenameHint 人工判断 extraInZh / missingInZh 是否键重命名
+   - action=draft_zh → 保留已有中文，缺键用源文占位 + needsTranslation
+   - Agent 翻译 needsTranslation → 写回工程 zh_cn.json
+3. third_party：
+   - extract：查看 availableNamespaces / availableLocales / sourceLocaleUsed
+   - 多 ns 时必须显式 namespace（勿猜测）
+   - 若 sourceLocaleFallback=true：告知用户源不是 en_us，请对照语境
+   - 若 code=Chinese_ready_in：仅有中文，无法检测缺键；是否改写由用户决定
+   - pack_draft（可带 mcVersion）→ 复述 packFormatNeedsReview / pack_format 与源语言回退
+   - Agent 译 needsTranslation → 用户手动放入 resourcepacks/
+4. 自检：游戏内切简体中文；占位符 %s/%d；是否仍显示原始 key
+5. 可选：无 lang 骨架时先 generate_lang`,
+  },
 };
 
 export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {

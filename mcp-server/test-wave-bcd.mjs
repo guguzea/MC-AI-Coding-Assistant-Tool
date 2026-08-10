@@ -94,6 +94,10 @@ function testWorkflow() {
   assert.ok(ingame.body?.includes("versions/"));
   assert.ok(ingame.body?.includes("各实例独立"));
   assert.ok(ingame.body?.includes("minecraftRoot") || ingame.body?.includes("modsDir"));
+
+  const localize = getWorkflowTemplate("mc-localize-mod");
+  assert.equal(localize.found, true);
+  assert.ok(localize.body?.includes("localize_mod"));
 }
 
 function testPatternsResource() {

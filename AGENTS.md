@@ -155,7 +155,7 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，**54** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，**55** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |
@@ -179,4 +179,5 @@ Decision: 选择注册方式
 | `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
 | `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流与知识 URI（tools 兜底） |
 | `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
+| `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |

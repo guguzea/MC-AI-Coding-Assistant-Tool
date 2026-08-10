@@ -213,7 +213,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "禁止硬编码玩家可见文本；assets 下 lang 文件；item/block/itemGroup/advancements/自定义键；占位符与双语。",
+      "summary": "禁止硬编码玩家可见文本；assets 下 lang；占位符与双语；MCP localize_mod / mc-localize-mod。",
       "mcHint": ""
     },
     {

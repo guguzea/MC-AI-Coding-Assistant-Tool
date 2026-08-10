@@ -27,9 +27,14 @@ npm-debug.log*
 # Local-only audit / scratch artefacts
 mcp-server/audit-*.txt
 mcp-server/scripts/_temp/
+mcp-server/_temp_localize_test/
 agent-tools/
 check-sources.txt
 临时文件*.md
+
+# Local jar scratch (do not commit)
+temp/
+temp/mod-jars/
 
 # Mapping build leftovers / large Mojang downloads (re-fetched by extractor)
 data/**/yarn-mappings.sqlite.tmp*
