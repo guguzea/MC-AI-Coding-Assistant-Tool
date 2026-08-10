@@ -1,7 +1,0 @@
-{
-  "platform": "neoforge",
-  "requestedVersion": "26.2",
-  "provisionedFrom": "26.1",
-  "sourceNote": "Official /docs/26.2/ not published yet; cloned from 26.1 main docs. Prefer primer 26.2 for migration deltas.",
-  "provisionedAt": "2026-08-10T15:17:41.475Z"
-}

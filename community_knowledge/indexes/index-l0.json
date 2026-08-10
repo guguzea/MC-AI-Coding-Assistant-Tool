@@ -262,7 +262,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "26.1+ 游戏已去混淆；勿再灌 Yarn；文档查 search_*_docs（默认 26.2）；convert_mapping 拒绝 yarn。",
+      "summary": "26.1+ 游戏已去混淆；勿再灌 Yarn；文档用真实树 neoforge_26.1 / fabric_26.1.2；禁止把旧版克隆成 26.2；convert_mapping 拒绝 yarn。",
       "mcHint": ""
     },
     {

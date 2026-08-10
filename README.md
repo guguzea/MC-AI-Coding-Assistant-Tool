@@ -32,7 +32,7 @@ MC_skill/
 | -------- | ---- | -------------------------------------------------------- |
 | Forge    | ✅ 完成 | 多版本规则（主推 **1.20.1**）；数据目录 `data/forge_`*                 |
 | Fabric   | ✅ 完成 | 多版本规则（主推 **1.20.1 / 1.21.x / 26.x**）；数据目录 `data/fabric_*`；**26.1+ 仅 mojmap** |
-| NeoForge | ✅ 完成 | 规则集在 `neoforge/`（主推 **1.20.4+ / 26.x**）；文档数据见 `data/neoforge_*`（默认 **26.2**） |
+| NeoForge | ✅ 完成 | 规则集在 `neoforge/`（主推 **1.20.4+ / 26.x**）；文档数据见 `data/neoforge_*`（主文档默认 **26.1**；primer 可有 26.2） |
 
 
 
@@ -312,7 +312,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 | 工具                         | 作用                                                                    |
 | -------------------------- | --------------------------------------------------------------------- |
-| `list_neoforge_versions`   | 列出本地 NeoForge 文档版本；默认推荐 **26.2**；**1.20.1** 可回退使用 Forge 1.20.1 数据。 |
+| `list_neoforge_versions`   | 列出本地 NeoForge 文档版本；主文档默认 **26.1**（官方 26.2 主树未发布前不克隆冒充）；**1.20.1** 可回退 Forge 数据。 |
 | `search_neoforge_docs`     | NeoForge L0 搜索（DeferredRegister、Data Components、Payload 等）；结果可带相关性评分。 |
 | `get_neoforge_doc_summary` | NeoForge 页 L1 摘要。                                                     |
 | `get_neoforge_doc_full`    | NeoForge 页全文 + 关键段高亮。                                                 |

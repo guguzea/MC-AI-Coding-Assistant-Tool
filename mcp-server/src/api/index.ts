@@ -717,7 +717,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           ...(isUnobfuscatedMcVersion(version)
             ? [
                 UNOBFUSCATED_MAPPING_HINT,
-                `query_api 的 api-index 不覆盖 26.1+；请用 search_neoforge_docs / search_fabric_docs（version=26.2）。`,
+                `query_api 的 api-index 不覆盖 26.1+；请用 search_neoforge_docs（version=26.1）/ search_fabric_docs（先 list_fabric_versions，如 26.1.2）。`,
               ]
             : []),
           ...(vData.classNames.length === 0 && !isUnobfuscatedMcVersion(version)

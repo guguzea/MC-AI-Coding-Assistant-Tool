@@ -90,9 +90,9 @@ function handleError(e: unknown): CallToolResult {
 export const listNeoForgeVersionsSchema = {
   name: "list_neoforge_versions",
   description:
-    "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.2\", \"26.1\", \"1.21.11\", ...]）。" +
+    "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。" +
     "注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。" +
-    "默认推荐 26.2；官方 /docs/26.2/ 未独立发布时内容可能来自 26.1 克隆 + primer 26.2。",
+    "官方主文档当前最新多为 26.1；26.2 主站未发布时请用 26.1 + primer 26.2（勿把 26.1 克隆成 26.2）。",
   inputSchema: z.object({}),
 } as const;
 
@@ -125,7 +125,7 @@ export const searchNeoForgeDocsSchema = {
     "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。",
   inputSchema: z.object({
     query: z.string().describe("搜索查询关键词"),
-    version: z.string().optional().default("26.2").describe("NeoForge 版本，默认 26.2"),
+    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
     tags: z.array(z.string()).optional().describe("标签过滤（如 [\"deferredregister\", \"networking\"]）"),
   }),
 } as const;
@@ -140,7 +140,7 @@ export async function searchNeoForgeDocs(args: {
       return platformDataMissingResult("neoforge");
     }
     const s = getGenericStore() as NeoForgeDocStore;
-    const version = args.version ?? "26.2";
+    const version = args.version ?? "26.1";
     const detailed = s.searchIndexDetailed(args.query, version, args.tags);
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
     return {
@@ -179,7 +179,7 @@ export const getNeoForgeDocSummarySchema = {
     "返回每个 <h2> 章节的标题和 150-200 字摘要。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID（如 \"concepts/registries\"）"),
-    version: z.string().optional().default("26.2").describe("NeoForge 版本，默认 26.2"),
+    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
   }),
 } as const;
 
@@ -189,7 +189,7 @@ export async function getNeoForgeDocSummary(args: {
 }): Promise<CallToolResult> {
   try {
     const s = getGenericStore();
-    const summary = s.loadSummary(args.id, args.version ?? "26.2");
+    const summary = s.loadSummary(args.id, args.version ?? "26.1");
     return {
       content: [{
         type: "text",
@@ -212,7 +212,7 @@ export const getNeoForgeDocFullSchema = {
     "**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID"),
-    version: z.string().optional().default("26.2").describe("NeoForge 版本，默认 26.2"),
+    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
     highlight_key: z.boolean().optional().default(true).describe("是否突出显示关键段落"),
   }),
 } as const;
@@ -224,7 +224,7 @@ export async function getNeoForgeDocFull(args: {
 }): Promise<CallToolResult> {
   try {
     const s = getGenericStore();
-    const result = await s.loadFullDoc(args.id, args.version ?? "26.2", args.highlight_key ?? true);
+    const result = await s.loadFullDoc(args.id, args.version ?? "26.1", args.highlight_key ?? true);
     return {
       content: [{
         type: "text",
@@ -246,7 +246,7 @@ export const getNeoForgeDocRelatedSchema = {
     "返回与目标页面共享最多标签关键词的其他页面，按相关性降序排列。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID"),
-    version: z.string().optional().default("26.2").describe("NeoForge 版本，默认 26.2"),
+    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
     limit: z.number().optional().default(5).describe("返回数量，默认 5"),
   }),
 } as const;
@@ -258,7 +258,7 @@ export async function getNeoForgeDocRelated(args: {
 }): Promise<CallToolResult> {
   try {
     const s = getGenericStore();
-    const results = s.getRelatedDocs(args.id, args.version ?? "26.2", args.limit ?? 5);
+    const results = s.getRelatedDocs(args.id, args.version ?? "26.1", args.limit ?? 5);
     return {
       content: [{
         type: "text",

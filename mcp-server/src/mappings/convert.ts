@@ -241,7 +241,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
           `26.1+ 无 Yarn/混淆映射（version=${version}）`,
           [
             "符号直接使用 Mojang 名（mojmap）",
-            "查 search_neoforge_docs / search_fabric_docs（默认 26.2）",
+            "查 search_neoforge_docs（默认 26.1）/ search_fabric_docs（如 26.1.2）",
             "勿对 26.x 运行 build:yarn-sqlite",
           ],
           ["search_neoforge_docs", "search_fabric_docs", "query_api"],

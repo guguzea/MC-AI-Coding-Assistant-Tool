@@ -87,7 +87,7 @@ neoforge "20.4.237"
 - **Yarn**（Fabric 社区维护）— **仅 ≤1.21.11**（仍混淆的版本）
 - **Parchment**（MCP 的带文档版本）— 主要用于 ≤1.20.4 Forge extracted / query_api
 - **Mojang / mojmap** — 官方可读名
-- **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs / search_fabric_docs（默认 26.2）
+- **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs（默认 **26.1**）/ search_fabric_docs（先 `list_fabric_versions`，如 **26.1.2**）；**禁止**把 26.1 内容克隆成 26.2 冒充
 
 ### 物理端约束
 
