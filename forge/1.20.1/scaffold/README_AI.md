@@ -1,4 +1,4 @@
-# Forge 1.20.1 模组项目骨架说明
+﻿# Forge 1.20.1 模组项目骨架说明
 
 > 本文件供 AI 编程助手阅读，描述每个文件的职责、修改注意事项和扩展位置。
 > 当 AI 开始一个新的 Forge 1.20.1 项目时，先读本文件。
@@ -87,7 +87,7 @@ public static final DeferredRegister<Item> ITEMS = ...;  // 已存在
 
 // 在 RegistryObject 声明区域添加：
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
-    () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC))
+    () -> new Item(new Item.Properties())
 );
 ```
 

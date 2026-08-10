@@ -1,4 +1,4 @@
-# 方块代码模式（Forge 1.20.1）
+﻿# 方块代码模式（Forge 1.20.1）
 
 ```yaml
 模式: 普通方块（无变体）
@@ -24,7 +24,7 @@ public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_b
 // ItemBlock
 public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
     () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
-        .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
+        
     )
 );
 ```

@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-sound
 description: Minecraft Forge 声音开发。SoundEvent 注册、sounds.json、SoundType、播放声音。触发词：SoundEvent、SoundType、SoundSource、sounds.json、playSound
 platform: forge
@@ -73,7 +73,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
 );
 
 // 使用
-BlockBehaviour.Properties.of(Material.STONE)
+BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
     .sound(MY_BLOCK_SOUNDS)
 ```
 

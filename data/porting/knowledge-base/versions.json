@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdated": "2026-05-31",
-    "coverage": "Forge 1.7.10–1.20.4 (Javadoc 1.7–1.12, MkDocs 1.12.2–1.20.4), NeoForge 1.20.2–26.1, Fabric 0.76–26.1",
-    "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。"
+    "lastUpdated": "2026-08-10",
+    "coverage": "Forge 1.7.10–1.20.4 (Javadoc 1.7–1.12, MkDocs 1.12.2–1.20.4), NeoForge 1.20.2–26.2, Fabric 0.76–26.2 (26.2 may provision from 26.1.2 until official tree exists)",
+    "note": "Forge 1.20.4 为最后一个社区维护版本，后续转向 NeoForge。知识库由人工维护。scripts/generate-porting-breakdown.js 可自动生成版本间文档结构差异。26.1+ 仅 mojmap（无 Yarn）。"
   },
   "versions": {
     "1.7.10": {

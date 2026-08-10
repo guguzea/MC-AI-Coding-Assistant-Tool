@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "gettingstarted"
 url: "https://docs.neoforged.net/docs/gettingstarted/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:40:34.402Z"
+fetchedAt: "2026-08-10T15:16:50.361Z"
 ---
 # Getting Started with NeoForge
 

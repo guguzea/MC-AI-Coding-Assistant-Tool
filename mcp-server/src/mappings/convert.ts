@@ -16,6 +16,7 @@ import {
   resolveMappingDbPath,
 } from "./yarn-sqlite.js";
 import { suggestSimilarMethods } from "./suggest.js";
+import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscated.js";
 
 const DEFAULT_VERSION = "1.20.1";
 
@@ -219,6 +220,46 @@ function outputFromFieldRow(
 export function convertMapping(query: MappingQuery): MappingResult {
   const version = query.version ?? DEFAULT_VERSION;
   const { from, to, memberName, ownerClass, descriptor } = query;
+  const direction = `${from}→${to}`;
+
+  if (isUnobfuscatedMcVersion(version)) {
+    const usesLegacyLayer = from === "yarn" || to === "yarn" || from === "mcp" || to === "mcp";
+    const identityReadable =
+      (from === "mojang" || from === "parchment") && (to === "mojang" || to === "parchment");
+    if (usesLegacyLayer || !identityReadable) {
+      return {
+        found: false,
+        original: memberName,
+        converted: null,
+        direction,
+        confidence: "low",
+        mappingType: "class",
+        notes: [UNOBFUSCATED_MAPPING_HINT, `拒绝在 version=${version} 上做 Yarn/MCP/跨混淆层 remap。`],
+        resultKind: "UNOBFUSCATED_NO_YARN",
+        action: actionable(
+          ActionCodes.DATA_UNAVAILABLE,
+          `26.1+ 无 Yarn/混淆映射（version=${version}）`,
+          [
+            "符号直接使用 Mojang 名（mojmap）",
+            "查 search_neoforge_docs / search_fabric_docs（默认 26.2）",
+            "勿对 26.x 运行 build:yarn-sqlite",
+          ],
+          ["search_neoforge_docs", "search_fabric_docs", "query_api"],
+        ),
+      };
+    }
+    return {
+      found: true,
+      original: memberName,
+      converted: memberName,
+      direction,
+      confidence: "high",
+      mappingType: "class",
+      notes: [UNOBFUSCATED_MAPPING_HINT, "mojang/parchment 在去混淆版本上视为同一可读名（恒等）。"],
+      resultKind: "UNOBFUSCATED_IDENTITY",
+    };
+  }
+
   const era = getMappingEra(version);
   const dbPath = resolveMappingDbPath(version);
   const schemaVersion = getSchemaVersion(version);

@@ -84,9 +84,10 @@ neoforge "20.4.237"
 必须确认项目的 `mappings` 配置，禁止混用映射类型：
 
 - **MCP**（Forge 官方）— 1.20.x 默认
-- **Yarn**（Fabric 社区维护）
-- **Parchment**（MCP 的带文档版本）
-- **Mojang**（混淆名，通常仅用于 MCP 源码反编译）
+- **Yarn**（Fabric 社区维护）— **仅 ≤1.21.11**（仍混淆的版本）
+- **Parchment**（MCP 的带文档版本）— 主要用于 ≤1.20.4 Forge extracted / query_api
+- **Mojang / mojmap** — 官方可读名
+- **26.1+（去混淆）**：游戏 jar 已是 Mojang 名，**不再需要** Yarn / Intermediary remap；convert_mapping 拒绝 yarn；查文档用 search_neoforge_docs / search_fabric_docs（默认 26.2）
 
 ### 物理端约束
 
@@ -131,12 +132,13 @@ Decision: 选择注册方式
 ## 第五步：查阅知识库（遇到问题时）
 
 1. 先查阅 `09-anti-patterns.mdc` 看是否是已知错误模式
-2. 再查阅 `knowledge/` 下的通用知识：
-   - `knowledge/antipatterns/` — 按症状分类的反模式（registry / item / block / entity / events / networking / gradle）
-   - `knowledge/version-changes/` — 版本迁移指南（1.19.x / 1.20.x）
-   - `knowledge/common/` — 术语表、数据包/资源包格式速查
-3. 实务问题（发布 / 崩溃分类 / 软依赖 / 机器 GUI）→ MCP `search_community_docs`（仓库根 `community_knowledge/`）
-4. 如果仍无法解决，询问用户当前使用的具体版本和平台
+2. 再查阅 **确认平台与版本后** 的 `平台/版本/knowledge/`（例：`forge/1.20.1/knowledge/`）：
+   - `antipatterns/` — 按症状分类的反模式（registry / item / block / entity / events / networking / gradle）
+   - `version-changes/` — 版本迁移指南（1.19.x / 1.20.x 等）
+   - `common/` — 术语表、数据包/资源包格式速查
+3. 根目录 `knowledge/patterns/` 仅短片段模式库（非完整 antipatterns）
+4. 实务问题（发布 / 崩溃分类 / 软依赖 / 机器 GUI）→ MCP `search_community_docs`（仓库根 `community_knowledge/`）
+5. 如果仍无法解决，询问用户当前使用的具体版本和平台
 
 ### 使用社区自写短文时（强制）
 

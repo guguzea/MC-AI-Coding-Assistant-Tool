@@ -1,4 +1,4 @@
----
+﻿---
 name: mc-block
 description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、BlockBehaviour.Properties、方块实体
 platform: forge
@@ -38,7 +38,7 @@ IF 需要流体
 ## BlockBehaviour.Properties 常用配置
 
 ```java
-BlockBehaviour.Properties.of(Material.WOOD)
+BlockBehaviour.Properties.of().mapColor(MapColor.WOOD)
     .strength(1.5f, 6.0f)              // 硬度和抗爆性
     .requiresCorrectToolForDrops()       // 需要正确工具才能掉落
     .noOcclusion()                      // 不阻挡光影

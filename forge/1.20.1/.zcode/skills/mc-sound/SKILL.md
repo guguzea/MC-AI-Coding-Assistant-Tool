@@ -73,7 +73,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
 );
 
 // 使用
-BlockBehaviour.Properties.of(Material.STONE)
+BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
     .sound(MY_BLOCK_SOUNDS)
 ```
 

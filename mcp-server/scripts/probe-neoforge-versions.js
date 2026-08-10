@@ -223,18 +223,19 @@ const VERSION_CONFIG = [
     mcVersion: "26.2",
     neoforgeVersion: "26.2.x",
     javaVersion: 25,
-    mappings: "mojmaps+parchment",
+    mappings: "mojmap-only",
+    // Official /docs/26.2/ may 404; probe will fall back to unversioned /docs/ when labeled newer, else mark unavailable.
     route: "26.2",
     docBase: "https://docs.neoforged.net/docs/26.2/",
     testUrl: "https://docs.neoforged.net/docs/26.2/gettingstarted/",
-    available: false,
-    httpStatus: 404,
+    available: null,
+    httpStatus: null,
     versionLabel: null,
     chapters: [],
     type: "main-docs",
-    priority: "low",
+    priority: "high",
     fallbackVersion: "26.1",
-    note: "No 26.2 docs yet, content falls back to 26.1",
+    note: "If /docs/26.2/ missing, use primer 26.2 + main-docs fallback 26.1",
   },
   {
     version: "1.20.1",
@@ -258,6 +259,7 @@ const VERSION_CONFIG = [
 ];
 
 const PRIMER_CONFIG = [
+  { version: "26.2",    url: "https://docs.neoforged.net/primer/docs/26.2/",     from: "26.1",    to: "26.2"    },
   { version: "26.1",    url: "https://docs.neoforged.net/primer/docs/26.1/",     from: "1.21.11", to: "26.1"    },
   { version: "1.21",    url: "https://docs.neoforged.net/primer/docs/1.21/",       from: "1.20.6",  to: "1.21"     },
   { version: "1.21.2", url: "https://docs.neoforged.net/primer/docs/1.21.2/",   from: "1.21.1",  to: "1.21.2"  },
@@ -390,11 +392,6 @@ function extractVersionLabel(html) {
 // ── Probe logic ──────────────────────────────────────────────────────────────
 
 async function probeVersion(cfg) {
-  if (cfg.available === false) {
-    // Known unavailable versions (26.2, 1.20.1)
-    return { ...cfg };
-  }
-
   const res = await fetchHtml(cfg.testUrl);
   if (!res.ok) {
     console.log(`  ${cfg.version}: HTTP ${res.status}`);

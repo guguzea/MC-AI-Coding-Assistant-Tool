@@ -23,6 +23,7 @@ import type { WorkerOutMessage } from "../workers/types.js";
 import { resolveDataDir } from "../utils/path.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
 import { ActionCodes, actionable, withAction, type ActionEnvelope } from "../utils/actionable.js";
+import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_VERSION = "1.20.1";
@@ -713,7 +714,13 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
             ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
             : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
           `共收录 ${vData.classNames.length} 个类（版本 ${version}）。`,
-          ...(vData.classNames.length === 0
+          ...(isUnobfuscatedMcVersion(version)
+            ? [
+                UNOBFUSCATED_MAPPING_HINT,
+                `query_api 的 api-index 不覆盖 26.1+；请用 search_neoforge_docs / search_fabric_docs（version=26.2）。`,
+              ]
+            : []),
+          ...(vData.classNames.length === 0 && !isUnobfuscatedMcVersion(version)
             ? [
                 `query_api 的 api-index 目前覆盖 Forge Parchment extracted（约 1.16.5–1.20.4）。` +
                   `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,

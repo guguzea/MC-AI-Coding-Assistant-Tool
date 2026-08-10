@@ -1,22 +1,8 @@
 {
-  "lastChecked": "2026-06-01T10:09:02.264Z",
-  "phase6Repair": {
-    "patchedAt": "2026-07-11",
-    "fixes": [
-      {
-        "version": "1.20.4",
-        "field": "routeAuthority",
-        "before": null,
-        "after": "neoforged-docs",
-        "source": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/"
-      }
-    ],
-    "notes": "NeoForge 1.20.4 docusaurus route /docs/1.20.4/ is structurally independent from Forge /en/1.20.x/. AI must consult Forge 1.20.4 docs only via forge-versions-manifest.json; do not consume NeoForge manifest data for Forge projects."
-  },
+  "lastChecked": "2026-08-10T15:16:48.629Z",
   "probeScript": "probe-neoforge-versions.js",
   "docBaseUrl": "https://docs.neoforged.net/docs/",
   "primerBaseUrl": "https://docs.neoforged.net/primer/docs/",
-  "note": "Chapters extracted from downloaded HTML files. Docusaurus SSR does not render collapsed sidebar categories in initial HTML. Chapter lists verified against local HTML files.",
   "versions": {
     "26.1": {
       "version": "26.1",
@@ -30,39 +16,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 26.1",
-      "type": "main-docs",
-      "priority": "high",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registries", "href": "concepts/registries", "level": 2 }
-        ]},
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "high"
     },
     "1.21.11": {
       "version": "1.21.11",
@@ -76,38 +51,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21.11",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 26.1 (same codebase), verified from downloaded HTML",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.21.10": {
       "version": "1.21.10",
@@ -121,39 +86,29 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21.9 - 1.21.10",
+      "chapters": [
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
       "type": "main-docs",
       "priority": "medium",
-      "fallbackVersion": "1.21.10",
-      "note": "Chapter structure same as 26.1",
-      "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+      "fallbackVersion": "1.21.10"
     },
     "1.21.8": {
       "version": "1.21.8",
@@ -167,38 +122,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21.6 - 1.21.8",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 26.1",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.21.5": {
       "version": "1.21.5",
@@ -212,38 +157,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21.5",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 26.1",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.21.3": {
       "version": "1.21.3",
@@ -257,38 +192,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21.2 - 1.21.3",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 26.1",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.21.1": {
       "version": "1.21.1",
@@ -302,38 +227,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.21 - 1.21.1",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 26.1",
       "chapters": [
-        { "text": "Getting Started", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Entities", "href": "entities", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Server", "href": "resources/server/advancements", "level": 2 }
-        ]},
-        { "text": "Inventories & Transfers", "href": "inventories/container", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/nbt", "level": 1, "isCategory": true },
-        { "text": "Worldgen", "href": "worldgen/biomemodifier", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registering Payloads", "href": "networking/payload", "level": 2 },
-          { "text": "Stream Codecs", "href": "networking/streamcodecs", "level": 2 },
-          { "text": "Using Configuration Tasks", "href": "networking/configuration-tasks", "level": 2 }
-        ]},
-        { "text": "Rendering", "href": "rendering/feature", "level": 1, "isCategory": true },
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true }
-      ]
+        {
+          "text": "Getting Started",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.20.6": {
       "version": "1.20.6",
@@ -347,33 +262,28 @@
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.20.5 - 1.20.6",
-      "type": "main-docs",
-      "priority": "medium",
-      "note": "Chapter structure same as 1.20.4",
       "chapters": [
-        { "text": "Getting Started with Neo", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/events", "level": 1, "isCategory": true },
-        { "text": "Datagen", "href": "datagen/advancements", "level": 1, "isCategory": true },
-        { "text": "Data Maps", "href": "datamaps", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/attachments", "level": 1, "isCategory": true },
-        { "text": "GUIs", "href": "gui/menus", "level": 1, "isCategory": true },
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Datapacks", "href": "resources/server", "level": 2 }
-        ]}
-      ]
+        {
+          "text": "Getting Started with Neo",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
+      "type": "main-docs",
+      "priority": "medium"
     },
     "1.20.4": {
       "version": "1.20.4",
@@ -381,64 +291,53 @@
       "neoforgeVersion": "20.4.237",
       "javaVersion": 17,
       "mappings": "mojmaps+parchment",
-      "routeAuthority": "neoforged-docs",
-      "routeNote": "NeoForge maintains an explicit /docs/1.20.4/ docusaurus route that is structurally independent from Forge's /en/1.20.x/ mkdocs route. Content differs (NeoGradle vs ForgeGradle, data attachments, mod files). Forge rules should NOT be merged into this manifest.",
-      "routeNoteSource": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/ (verified 2026-07-11)",
-      "routeNoteVerified": "2026-07-11",
       "route": "1.20.4",
       "docBase": "https://docs.neoforged.net/docs/1.20.4/",
       "testUrl": "https://docs.neoforged.net/docs/1.20.4/gettingstarted/",
       "available": true,
       "httpStatus": 200,
       "versionLabel": "Version: 1.20.3 - 1.20.4",
+      "chapters": [
+        {
+          "text": "Getting Started with Neo",
+          "href": "gettingstarted",
+          "level": 1,
+          "isCategory": true
+        },
+        {
+          "text": "Structuring Your Mod",
+          "href": "gettingstarted/structuring",
+          "level": 2,
+          "isCategory": false
+        },
+        {
+          "text": "Versioning",
+          "href": "gettingstarted/versioning",
+          "level": 2,
+          "isCategory": false
+        }
+      ],
       "type": "main-docs",
       "priority": "high",
-      "fallbackVersion": "1.20.4",
-      "chapters": [
-        { "text": "Getting Started with Neo", "href": "gettingstarted", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Mod Files", "href": "gettingstarted/modfiles", "level": 2 },
-          { "text": "Structuring Your Mod", "href": "gettingstarted/structuring", "level": 2 },
-          { "text": "Versioning", "href": "gettingstarted/versioning", "level": 2 }
-        ]},
-        { "text": "Advanced Topics", "href": "advanced/accesstransformers", "level": 1, "isCategory": true },
-        { "text": "Block Entities", "href": "blockentities", "level": 1, "isCategory": true },
-        { "text": "Blocks", "href": "blocks", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Blockstates", "href": "blocks/states", "level": 2 }
-        ]},
-        { "text": "Concepts", "href": "concepts/registries", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Registries", "href": "concepts/registries", "level": 2 },
-          { "text": "Events", "href": "concepts/events", "level": 2 }
-        ]},
-        { "text": "Datagen", "href": "datagen/advancements", "level": 1, "isCategory": true },
-        { "text": "Data Maps", "href": "datamaps", "level": 1, "isCategory": true },
-        { "text": "Data Storage", "href": "datastorage/attachments", "level": 1, "isCategory": true },
-        { "text": "GUIs", "href": "gui/menus", "level": 1, "isCategory": true },
-        { "text": "Items", "href": "items", "level": 1, "isCategory": true },
-        { "text": "Miscellaneous", "href": "misc/config", "level": 1, "isCategory": true },
-        { "text": "Networking", "href": "networking", "level": 1, "isCategory": true },
-        { "text": "Resources", "href": "resources", "level": 1, "isCategory": true, "subPages": [
-          { "text": "Client", "href": "resources/client/i18n", "level": 2 },
-          { "text": "Datapacks", "href": "resources/server", "level": 2 }
-        ]}
-      ]
+      "fallbackVersion": "1.20.4"
     },
     "26.2": {
       "version": "26.2",
       "mcVersion": "26.2",
       "neoforgeVersion": "26.2.x",
       "javaVersion": 25,
-      "mappings": "mojmaps+parchment",
+      "mappings": "mojmap-only",
       "route": "26.2",
       "docBase": "https://docs.neoforged.net/docs/26.2/",
       "testUrl": "https://docs.neoforged.net/docs/26.2/gettingstarted/",
       "available": false,
       "httpStatus": 404,
       "versionLabel": null,
+      "chapters": [],
       "type": "main-docs",
-      "priority": "low",
+      "priority": "high",
       "fallbackVersion": "26.1",
-      "note": "No 26.2 docs yet, content falls back to 26.1",
-      "chapters": []
+      "note": "If /docs/26.2/ missing, use primer 26.2 + main-docs fallback 26.1"
     },
     "1.20.1": {
       "version": "1.20.1",
@@ -452,23 +351,84 @@
       "available": false,
       "httpStatus": 404,
       "versionLabel": null,
+      "chapters": [],
       "type": "forge-compatible",
       "priority": "high",
       "fallbackVersion": "1.20.4",
       "forgeVersion": "1.20.1",
-      "note": "NeoForge 1.20.1 is 100% API-compatible with Forge 1.20.1. Chapter structure mirrors Forge 1.20.1 docs.",
-      "chapters": []
+      "note": "NeoForge 1.20.1 is 100% API-compatible with Forge 1.20.1"
     }
   },
   "primers": {
-    "26.1":    { "url": "https://docs.neoforged.net/primer/docs/26.1/",     "from": "1.21.11", "to": "26.1",    "available": true,  "httpStatus": 200, "subPages": [{ "text": "Neo Changes", "href": "neo" }] },
-    "1.21":    { "url": "https://docs.neoforged.net/primer/docs/1.21/",       "from": "1.20.6",  "to": "1.21",     "available": true,  "httpStatus": 200 },
-    "1.21.2":  { "url": "https://docs.neoforged.net/primer/docs/1.21.2/",   "from": "1.21.1",  "to": "1.21.2",  "available": true,  "httpStatus": 200 },
-    "1.21.4":  { "url": "https://docs.neoforged.net/primer/docs/1.21.4/",   "from": "1.21.3",  "to": "1.21.4",  "available": true,  "httpStatus": 200 },
-    "1.21.6":  { "url": "https://docs.neoforged.net/primer/docs/1.21.6/",   "from": "1.21.5",  "to": "1.21.6",  "available": true,  "httpStatus": 200 },
-    "1.21.7":  { "url": "https://docs.neoforged.net/primer/docs/1.21.7/",   "from": "1.21.6",  "to": "1.21.7",  "available": true,  "httpStatus": 200 },
-    "1.21.9":  { "url": "https://docs.neoforged.net/primer/docs/1.21.9/",   "from": "1.21.8",  "to": "1.21.9",  "available": true,  "httpStatus": 200 },
-    "1.21.10": { "url": "https://docs.neoforged.net/primer/docs/1.21.10/",  "from": "1.21.9",  "to": "1.21.10", "available": true,  "httpStatus": 200 },
-    "1.20.6":  { "url": "https://docs.neoforged.net/primer/docs/1.20.6/",   "from": "1.20.5",  "to": "1.20.6",  "available": true,  "httpStatus": 200 }
+    "26.2": {
+      "url": "https://docs.neoforged.net/primer/docs/26.2/",
+      "from": "26.1",
+      "to": "26.2",
+      "available": true,
+      "httpStatus": 200
+    },
+    "26.1": {
+      "url": "https://docs.neoforged.net/primer/docs/26.1/",
+      "from": "1.21.11",
+      "to": "26.1",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21/",
+      "from": "1.20.6",
+      "to": "1.21",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.2": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.2/",
+      "from": "1.21.1",
+      "to": "1.21.2",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.4": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.4/",
+      "from": "1.21.3",
+      "to": "1.21.4",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.6": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.6/",
+      "from": "1.21.5",
+      "to": "1.21.6",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.7": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.7/",
+      "from": "1.21.6",
+      "to": "1.21.7",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.9": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.9/",
+      "from": "1.21.8",
+      "to": "1.21.9",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.21.10": {
+      "url": "https://docs.neoforged.net/primer/docs/1.21.10/",
+      "from": "1.21.9",
+      "to": "1.21.10",
+      "available": true,
+      "httpStatus": 200
+    },
+    "1.20.6": {
+      "url": "https://docs.neoforged.net/primer/docs/1.20.6/",
+      "from": "1.20.5",
+      "to": "1.20.6",
+      "available": true,
+      "httpStatus": 200
+    }
   }
 }

@@ -146,6 +146,23 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
   const { id, gitPath, url: vitepressUrl } = entry;
   const tried = [];
 
+  // 0. Versioned tree on main (26.x / recent): versions/<ver>/<gitPath>
+  if (branch === "main" && VERSION) {
+    const versionedPath = `versions/${VERSION}/${gitPath}`;
+    const versionedUrl = `${FABRIC_GH.baseRawUrl}/${branch}/${versionedPath}`;
+    tried.push(versionedUrl);
+    const vr = await tryRaw(versionedUrl);
+    if (vr) {
+      return {
+        ...vr,
+        source: "github_raw_versioned",
+        url: versionedUrl,
+        branch,
+        gitPathUsed: versionedPath,
+      };
+    }
+  }
+
   // 1. GitHub Raw（main 或指定 branch）
   const githubRawUrl = `${FABRIC_GH.baseRawUrl}/${branch}/${gitPath}`;
   tried.push(githubRawUrl);
@@ -176,15 +193,24 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
     }
   }
 
-  // 3. VitePress fallback
+  // 3. VitePress fallback（26.x 站点路径为 /<version>/develop/...）
+  const vpCandidates = [];
   if (vitepressUrl) {
-    tried.push(`vitepress:${vitepressUrl}`);
-    const vp = await tryVitepress(vitepressUrl);
+    if (VERSION && /^26\./.test(VERSION)) {
+      // https://docs.fabricmc.net/develop/foo → https://docs.fabricmc.net/26.1.2/develop/foo
+      const prefixed = vitepressUrl.replace("https://docs.fabricmc.net/", `https://docs.fabricmc.net/${VERSION}/`);
+      vpCandidates.push(prefixed);
+    }
+    vpCandidates.push(vitepressUrl);
+  }
+  for (const vpUrl of vpCandidates) {
+    tried.push(`vitepress:${vpUrl}`);
+    const vp = await tryVitepress(vpUrl);
     if (vp) {
       return {
         ...vp,
         source: "vitepress",
-        url: vitepressUrl,
+        url: vpUrl,
         branch,
       };
     }

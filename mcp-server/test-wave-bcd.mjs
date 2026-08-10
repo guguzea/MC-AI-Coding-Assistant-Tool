@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { existsSync, unlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   parseMethodReference,
   detectNamingStyle,
@@ -42,8 +45,18 @@ function testMethodStringForms() {
 }
 
 function testRegistry() {
-  const report = buildRegistryIndex("1.20.1", { force: true });
-  assert.ok(report.totalEntries > 0, "registry fixture should have entries");
+  const tmpSqlite = join(tmpdir(), `mc-skill-registry-test-${process.pid}.sqlite`);
+  try {
+    if (existsSync(tmpSqlite)) unlinkSync(tmpSqlite);
+    const report = buildRegistryIndex("1.20.1", { force: true, sqlitePath: tmpSqlite });
+    assert.ok(report.totalEntries > 0, "registry fixture should have entries");
+  } finally {
+    try {
+      if (existsSync(tmpSqlite)) unlinkSync(tmpSqlite);
+    } catch {
+      /* ignore */
+    }
+  }
 
   const stone = queryRegistry({ query: "minecraft:stone", version: "1.20.1" });
   assert.equal(stone.found, true);

@@ -15,7 +15,7 @@ mappings: mcp
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_MISC)
+        
         .stacksTo(64)
     )
 );
@@ -71,7 +71,7 @@ public enum MyTier implements Tier {
 // 参数：(Tier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
     () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .tab(CreativeModeTab.TAB_COMBAT)
+        
         .durability(1561)
     )
 );
@@ -91,7 +91,7 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 // 斧：同 DiggerItem
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
     () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
-        new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
+        new Item.Properties())
 );
 ```
 
@@ -109,7 +109,7 @@ public enum MyArmorMaterial implements ArmorMaterial {
 // 注册各部位
 public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet",
     () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.HELMET,
-        new Item.Properties().tab(CreativeModeTab.TAB_COMBAT))
+        new Item.Properties())
 );
 ```
 
@@ -118,7 +118,7 @@ public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_FOOD)
+        
         .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)

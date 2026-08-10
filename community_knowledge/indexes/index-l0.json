@@ -248,6 +248,24 @@
       "mcHint": ""
     },
     {
+      "id": "authored/mc-26-no-obfuscation",
+      "label": "Minecraft 26.1+ 去混淆与仅 mojmap",
+      "path": "authored/mc-26-no-obfuscation.md",
+      "url": "",
+      "tags": [
+        "26.x",
+        "mappings",
+        "mojmap",
+        "yarn",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "26.1+ 游戏已去混淆；勿再灌 Yarn；文档查 search_*_docs（默认 26.2）；convert_mapping 拒绝 yarn。",
+      "mcHint": ""
+    },
+    {
       "id": "authored/menu-screen-sync",
       "label": "Menu / Screen 与 ContainerData 同步",
       "path": "authored/menu-screen-sync.md",

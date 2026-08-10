@@ -8,7 +8,7 @@
 |------|----------|
 | 本目录 `examples/` | 需要最短可复制片段 |
 | `forge/1.20.1/code-patterns/` 等 | 需要某系统的完整模式集 |
-| `knowledge/antipatterns/` | 排错、症状对号入座 |
+| `forge/1.20.1/knowledge/antipatterns/` 等 | 排错、症状对号入座（在对应平台/版本下） |
 | `community_knowledge/authored/patterns-framework` | Agent 使用规则与维护约定 |
 
 MCP：`read_knowledge_resource` → `mcskill://patterns/README`（本文件）。

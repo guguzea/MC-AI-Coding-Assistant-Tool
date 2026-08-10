@@ -1,0 +1,7 @@
+{
+  "platform": "fabric",
+  "requestedVersion": "26.2",
+  "provisionedFrom": "26.1.2",
+  "sourceNote": "Official fabric-docs has versions/26.1.2 but not 26.2 yet; cloned for version=26.2 queries.",
+  "provisionedAt": "2026-08-10T15:17:51.717Z"
+}

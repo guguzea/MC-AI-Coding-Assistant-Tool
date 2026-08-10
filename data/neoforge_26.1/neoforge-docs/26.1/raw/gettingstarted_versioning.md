@@ -4,7 +4,7 @@ version: "26.1"
 pageId: "gettingstarted/versioning"
 url: "https://docs.neoforged.net/docs/gettingstarted/versioning/"
 platform: "neoforge"
-fetchedAt: "2026-06-01T10:40:38.796Z"
+fetchedAt: "2026-08-10T15:16:51.610Z"
 ---
 # Versioning
 

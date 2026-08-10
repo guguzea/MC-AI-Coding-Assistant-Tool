@@ -1,4 +1,4 @@
-# 方块开发反模式
+﻿# 方块开发反模式
 
 ## 注册相关
 
@@ -6,7 +6,7 @@
 
 ```java
 // 错误
-public static final Block MY_BLOCK = new Block(Properties.of(Material.STONE));
+public static final Block MY_BLOCK = new Block(Properties.of().mapColor(MapColor.STONE));
 ```
 
 **症状**：方块在世界显示为缺失方块（紫色黑色格子）。
@@ -18,7 +18,7 @@ public static final DeferredRegister<Block> BLOCKS =
     DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
-    BLOCKS.register("my_block", () -> new Block(Properties.of(Material.STONE)));
+    BLOCKS.register("my_block", () -> new Block(Properties.of().mapColor(MapColor.STONE)));
 ```
 
 ---
@@ -138,7 +138,7 @@ public void load(CompoundTag nbt) {
 
 **正确方案：**
 ```java
-BlockBehaviour.Properties.of(Material.STONE)
+BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
     .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
     .strength(3.0f, 3.0f)
 ```

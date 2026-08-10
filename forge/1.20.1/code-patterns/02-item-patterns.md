@@ -1,4 +1,4 @@
-# 物品代码模式（Forge 1.20.1）
+﻿# 物品代码模式（Forge 1.20.1）
 
 ```yaml
 模式: 物品/工具注册
@@ -10,7 +10,7 @@
 ```java
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_MISC)
+        
         .stacksTo(64)
     )
 );
@@ -49,7 +49,7 @@ public enum MyTier implements Tier {
 // 例如：attackDamageModifier=3 → 总伤害 = 3 + 3.0 = 6.0
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
     () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .tab(CreativeModeTab.TAB_COMBAT)
+        
         .durability(1561)
     )
 );
@@ -62,7 +62,7 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 // attackDamageBonus：类型加成外额外增加的攻击伤害（镐通常为 1.0f）
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
     () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
-        new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
+        new Item.Properties())
 );
 ```
 
@@ -95,7 +95,7 @@ public static RegistryObject<Item> COPPER_BOOTS      = ITEMS.register("copper_bo
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_FOOD)
+        
         .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
@@ -112,7 +112,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 public class MyUseItem extends Item {
     public MyUseItem() {
         super(new Item.Properties()
-            .tab(CreativeModeTab.TAB_BREWING)
+            
             .stacksTo(16)
         );
     }

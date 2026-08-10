@@ -45,12 +45,15 @@ function loadRegistryJson(filePath: string): RegistryJsonEntry[] {
 /**
  * Import all `*.json` files in registries/ (basename without .json = registry name).
  */
-export function buildRegistryIndex(version: string, options?: { force?: boolean }): BuildRegistryReport {
+export function buildRegistryIndex(
+  version: string,
+  options?: { force?: boolean; sqlitePath?: string },
+): BuildRegistryReport {
   const sourceDir = vanillaRegistryDir(version);
   if (!existsSync(sourceDir)) {
     throw new Error(`Registry source directory missing: ${sourceDir}`);
   }
-  const sqlitePath = vanillaRegistrySqlitePath(version);
+  const sqlitePath = options?.sqlitePath ?? vanillaRegistrySqlitePath(version);
   if (existsSync(sqlitePath) && !options?.force) {
     const db = new DatabaseSync(sqlitePath, { readOnly: true });
     const rows = db.prepare("SELECT registry, COUNT(*) AS c FROM entries GROUP BY registry").all() as Array<{

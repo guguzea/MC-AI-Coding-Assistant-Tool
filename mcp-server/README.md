@@ -112,7 +112,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project` |
 | Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
-| NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（`1.20.1` 可回退 Forge） |
+| NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.2**；`1.20.1` 可回退 Forge） |
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
 | 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*` |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |

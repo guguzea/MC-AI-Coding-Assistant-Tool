@@ -1,0 +1,39 @@
+name: CI (mcp-server)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: mcp-server
+        run: npm ci
+
+      - name: Build
+        working-directory: mcp-server
+        run: npm run build
+
+      - name: Test
+        working-directory: mcp-server
+        run: npm test
+        env:
+          MC_SKILL_DATA: ${{ github.workspace }}/data
+          MC_SKILL_COMMUNITY: ${{ github.workspace }}/community_knowledge
+          MCP_TIMEOUT_MS: 60000
