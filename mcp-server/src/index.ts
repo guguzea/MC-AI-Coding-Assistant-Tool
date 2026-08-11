@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { realpathSync } from "fs";
+import { fileURLToPath } from "url";
 import * as z from "zod";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { convertMapping, getMethodParams } from "./mappings/index.js";
@@ -67,9 +69,114 @@ import {
   getCommunityDocFullSchema,
   CommunityDocNotFoundError,
 } from "./docs-platform/index.js";
-import { diagnoseDataPaths, hasAnyPlatformData } from "./utils/path.js";
+import { diagnoseDataPaths, hasAnyPlatformData, resolveDataDir } from "./utils/path.js";
+import { getSemanticIndexStatus } from "./docs-platform/semantic/status.js";
 import { analyzePortingPath, portProject } from "./porting/index.js";
-import { registerWaveExtensions } from "./wave/register.js";
+import { registerWaveExtensions, waveToolSchemas } from "./wave/register.js";
+
+// ── 工具 inputSchema 常量（导出供 CLI list-tools / schema 驱动解析复用）────────
+
+export const queryApiSchema = z.object({
+  className: z.string().describe("类全限定名，如 net.minecraft.world.entity.LivingEntity"),
+  methodName: z.string().optional().describe("方法名，可选，如 getHealth"),
+  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+});
+
+export const getMethodParamsSchema = z.object({
+  className: z.string().describe("类全限定名"),
+  methodName: z.string().describe("方法名（mcp/srg 层名，非 mojang official）"),
+  descriptor: z.string().optional().describe("完整 JNI 描述符（用于区分重载，如 (Lnet/minecraft/world/entity/LivingEntity;)V）"),
+  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+});
+
+export const convertMappingSchema = z.object({
+  from: z
+    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary"])
+    .describe("源映射类型；obfuscated=Tiny official 混淆短名；intermediary=method_6032 类"),
+  to: z
+    .enum(["mojang", "mcp", "yarn", "parchment", "obfuscated", "intermediary"])
+    .describe("目标映射类型；to=mojang 与 obfuscated 同为混淆短名（兼容旧行为）"),
+  memberName: z.string().describe("成员名（字段或方法）"),
+  ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
+  descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
+  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  memberKind: z
+    .enum(["class", "method", "field", "auto"])
+    .optional()
+    .describe("成员类型；field 需 schema v3；默认 auto 启发式"),
+  allow_fallback: z
+    .boolean()
+    .optional()
+    .describe("过渡参数：无映射时回传原名（found 仍为 false，fallbackUsed=true）"),
+});
+
+export const getServerStatusSchema = z.object({
+  version: z.string().optional().describe("关注的 MC 版本，默认 1.20.1"),
+  warmup: z.boolean().optional().describe("若 true，先预热该版本再返回状态"),
+});
+
+export const getVersionInfoSchema = z.object({
+  version: z.string().describe("Minecraft 版本，如 1.20.1"),
+  action: z.string().describe("要执行的操作，如 注册方块、创建方块实体、注册流体"),
+});
+
+export const diagnoseGradleSchema = z.object({
+  buildGradle: z.string().describe("build.gradle 文件内容"),
+  gradleProperties: z.string().optional().describe("gradle.properties 文件内容"),
+});
+
+export const generateDatagenSchema = z.object({
+  providerType: z
+    .enum([
+      "recipe",
+      "blockstate",
+      "itemmodel",
+      "loottable",
+      "tag",
+      "advancement",
+      "particle",
+      "sound",
+    ])
+    .describe("Provider 类型"),
+  modId: z.string().describe("Mod ID（全小写），如 mymod"),
+  targetName: z.string().describe("目标注册名（无 modId 前缀），如 my_block"),
+  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  platform: z.enum(["forge", "neoforge"]).optional().describe("loader 平台；1.21 NeoForge 路径"),
+});
+
+export const crashAnalyzeSchema = z.object({
+  crashReport: z.string().describe("崩溃报告全文（从 '---- Minecraft Crash Report ----' 开始）"),
+  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+});
+
+export const validateProjectSchema = z.object({
+  modsToml: z.string().optional().describe("mods.toml 文件内容（建议提供以启用 mods.toml 相关检查）"),
+  javaFiles: z.array(z.object({
+    path: z.string().describe("文件相对路径，如 src/main/java/com/example/ExampleMod.java"),
+    content: z.string().describe("文件完整内容"),
+  })).optional().describe("Java 源文件列表，建议包含所有注册相关类"),
+  buildGradle: z.string().optional().describe("build.gradle 文件内容（用于 Gradle 配置诊断）"),
+  gradleProperties: z.string().optional().describe("gradle.properties 文件内容（用于版本信息校验）"),
+  mixinsJson: z.string().optional().describe("mixins.json 文件内容（用于 Mixin 配置校验）"),
+});
+
+export const diagnoseDataPathsSchema = z.object({});
+
+export const analyzePortingPathSchema = z.object({
+  projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台（可选，未指定则自动推断）"),
+  targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
+});
+
+export const portProjectSchema = z.object({
+  projectPath: z.string().describe("项目根目录"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
+  targetVersion: z.string().optional().describe("目标 MC 版本"),
+  modId: z.string().optional().describe("init_architectury 的 modId（小写）；默认从目录名推导"),
+  dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
+  confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
+  action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
+});
 
 function communityDocError(e: unknown): CallToolResult {
   if (e instanceof CommunityDocNotFoundError) {
@@ -115,11 +222,7 @@ server.registerTool(
       "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。" +
       "适用于：需要确认某个 Minecraft API 的正确用法时。" +
       "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。",
-    inputSchema: z.object({
-      className: z.string().describe("类全限定名，如 net.minecraft.world.entity.LivingEntity"),
-      methodName: z.string().optional().describe("方法名，可选，如 getHealth"),
-      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
-    }),
+    inputSchema: queryApiSchema,
   },
   async ({ className, methodName, version }): Promise<CallToolResult> => {
     const result = await queryApi({ className, methodName, version: version ?? "1.20.1" });
@@ -136,12 +239,7 @@ server.registerTool(
       "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。" +
       "适用于：当知道方法名但不确定参数顺序和名称时。" +
       "需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。",
-    inputSchema: z.object({
-      className: z.string().describe("类全限定名"),
-      methodName: z.string().describe("方法名（mcp/srg 层名，非 mojang official）"),
-      descriptor: z.string().optional().describe("完整 JNI 描述符（用于区分重载，如 (Lnet/minecraft/world/entity/LivingEntity;)V）"),
-      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
-    }),
+    inputSchema: getMethodParamsSchema,
   },
   async ({ className, methodName, descriptor, version }): Promise<CallToolResult> => {
     const result = getMethodParams({ className, methodName, descriptor, version });
@@ -155,33 +253,20 @@ server.registerTool(
   {
     title: "Convert Between Mapping Systems",
     description:
-      "在 mojang / mcp / yarn / parchment 间互转类或方法名（预建 yarn-mappings.sqlite）。\n" +
-      "to=mojang 输出 Tiny official 混淆短名，不是可读 Mojang FQCN。\n" +
+      "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\n" +
+      "obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议改用 to=obfuscated；可读名请用 to=yarn / query_api。\n" +
+      "无 ownerClass 时 obfuscated/intermediary→yarn/mcp 走 method→field→class 全局反查（崩溃日志单 token）。26.1+ 无混淆层 → UNOBFUSCATED_NO_YARN。\n" +
       "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
       "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
       "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
       "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
       "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
+      "@example obfuscated：from=intermediary to=obfuscated memberName=method_6032 → er；崩溃日志可用 lookup_obfuscated\n" +
       "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
       "@example 1.12.2：getHealth + EntityLivingBase → obf（如 cd）；无 owner 的 getHealth → ambiguous\n" +
       "@example CSV：1.14.4 memberName=func_110143_aJ → getHealth；传 ownerClass → csv-no-owner\n" +
       "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true",
-    inputSchema: z.object({
-      from: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("源映射类型"),
-      to: z.enum(["mojang", "mcp", "yarn", "parchment"]).describe("目标映射类型"),
-      memberName: z.string().describe("成员名（字段或方法）"),
-      ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
-      descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
-      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
-      memberKind: z
-        .enum(["class", "method", "field", "auto"])
-        .optional()
-        .describe("成员类型；field 需 schema v3；默认 auto 启发式"),
-      allow_fallback: z
-        .boolean()
-        .optional()
-        .describe("过渡参数：无映射时回传原名（found 仍为 false，fallbackUsed=true）"),
-    }),
+    inputSchema: convertMappingSchema,
   },
   async ({ from, to, memberName, ownerClass, descriptor, version, memberKind, allow_fallback }): Promise<CallToolResult> => {
     const result = convertMapping({
@@ -206,10 +291,7 @@ server.registerTool(
     description:
       "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。" +
       "适用于：调用失败排查、确认 schema/映射数据是否就绪。",
-    inputSchema: z.object({
-      version: z.string().optional().describe("关注的 MC 版本，默认 1.20.1"),
-      warmup: z.boolean().optional().describe("若 true，先预热该版本再返回状态"),
-    }),
+    inputSchema: getServerStatusSchema,
   },
   async ({ version, warmup }): Promise<CallToolResult> => {
     const v = version ?? "1.20.1";
@@ -221,6 +303,8 @@ server.registerTool(
       focus: getApiPreloadStatus(v),
       api: listApiPreloadStatuses(),
       dataPaths: diagnoseDataPaths(),
+      /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错） */
+      semanticIndex: getSemanticIndexStatus(resolveDataDir()),
       updateHint: getUpdateHint(),
       descriptorSelfCheck: {
         sample: "()F",
@@ -242,10 +326,7 @@ server.registerTool(
       "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
       "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
       "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。",
-    inputSchema: z.object({
-      version: z.string().describe("Minecraft 版本，如 1.20.1"),
-      action: z.string().describe("要执行的操作，如 注册方块、创建方块实体、注册流体"),
-    }),
+    inputSchema: getVersionInfoSchema,
   },
   async ({ version, action }): Promise<CallToolResult> => {
     const result = await getVersionInfo({ version, action });
@@ -263,10 +344,7 @@ server.registerTool(
       "parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。" +
       "适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。" +
       "返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。",
-    inputSchema: z.object({
-      buildGradle: z.string().describe("build.gradle 文件内容"),
-      gradleProperties: z.string().optional().describe("gradle.properties 文件内容"),
-    }),
+    inputSchema: diagnoseGradleSchema,
   },
   async ({ buildGradle, gradleProperties }): Promise<CallToolResult> => {
     const result = diagnoseGradle({ buildGradle, gradleProperties });
@@ -284,24 +362,7 @@ server.registerTool(
       "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
       "注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。" +
       "返回完整的 Java 代码模板。",
-    inputSchema: z.object({
-      providerType: z
-        .enum([
-          "recipe",
-          "blockstate",
-          "itemmodel",
-          "loottable",
-          "tag",
-          "advancement",
-          "particle",
-          "sound",
-        ])
-        .describe("Provider 类型"),
-      modId: z.string().describe("Mod ID（全小写），如 mymod"),
-      targetName: z.string().describe("目标注册名（无 modId 前缀），如 my_block"),
-      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
-      platform: z.enum(["forge", "neoforge"]).optional().describe("loader 平台；1.21 NeoForge 路径"),
-    }),
+    inputSchema: generateDatagenSchema,
   },
   async ({ providerType, modId, targetName, version, platform }): Promise<CallToolResult> => {
     const result = generateDatagen({
@@ -327,10 +388,7 @@ server.registerTool(
       "BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），" +
       "并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。" +
       "**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。",
-    inputSchema: z.object({
-      crashReport: z.string().describe("崩溃报告全文（从 '---- Minecraft Crash Report ----' 开始）"),
-      version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
-    }),
+    inputSchema: crashAnalyzeSchema,
   },
   async ({ crashReport, version }): Promise<CallToolResult> => {
     const result = analyzeCrash({ crashReport, version: version ?? "1.20.1" });
@@ -351,16 +409,7 @@ server.registerTool(
       "DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、" +
       "@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、" +
       "Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。",
-    inputSchema: z.object({
-      modsToml: z.string().optional().describe("mods.toml 文件内容（建议提供以启用 mods.toml 相关检查）"),
-      javaFiles: z.array(z.object({
-        path: z.string().describe("文件相对路径，如 src/main/java/com/example/ExampleMod.java"),
-        content: z.string().describe("文件完整内容"),
-      })).optional().describe("Java 源文件列表，建议包含所有注册相关类"),
-      buildGradle: z.string().optional().describe("build.gradle 文件内容（用于 Gradle 配置诊断）"),
-      gradleProperties: z.string().optional().describe("gradle.properties 文件内容（用于版本信息校验）"),
-      mixinsJson: z.string().optional().describe("mixins.json 文件内容（用于 Mixin 配置校验）"),
-    }),
+    inputSchema: validateProjectSchema,
   },
   async ({ modsToml, javaFiles, buildGradle, gradleProperties, mixinsJson }): Promise<CallToolResult> => {
     const result = validateProject({ modsToml, javaFiles, buildGradle, gradleProperties, mixinsJson });
@@ -790,7 +839,7 @@ server.registerTool(
   {
     title: "Diagnose Data Path Configuration",
     description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。",
-    inputSchema: z.object({}),
+    inputSchema: diagnoseDataPathsSchema,
   },
   async (): Promise<CallToolResult> => {
     const result = diagnoseDataPaths();
@@ -810,11 +859,7 @@ server.registerTool(
       "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
       "参考链接和建议的 query_api 调用。" +
       "适用于：用户询问如何将 Mod 移植到其他平台或版本时。",
-    inputSchema: z.object({
-      projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
-      targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台（可选，未指定则自动推断）"),
-      targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
-    }),
+    inputSchema: analyzePortingPathSchema,
   },
   async (args): Promise<CallToolResult> => {
     const result = await analyzePortingPath(args);
@@ -834,15 +879,7 @@ server.registerTool(
       "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
       "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
       "apply_version_migration 在确认写入时会真实执行包名替换；冲突文件在 confirmed 写入时会被拒绝。",
-    inputSchema: z.object({
-      projectPath: z.string().describe("项目根目录"),
-      targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
-      targetVersion: z.string().optional().describe("目标 MC 版本"),
-      modId: z.string().optional().describe("init_architectury 的 modId（小写）；默认从目录名推导"),
-      dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
-      confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
-      action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
-    }),
+    inputSchema: portProjectSchema,
   },
   async (args): Promise<CallToolResult> => {
     const result = await portProject(args);
@@ -851,6 +888,58 @@ server.registerTool(
 );
 
 registerWaveExtensions(server);
+
+// ── 工具 schema 清单（供 CLI list-tools / schema 驱动解析；无副作用）──────────
+// description 需与上方各 registerTool 的 description 保持一致（改动时同步）。
+export type ToolSchemaEntry = {
+  name: string;
+  description: string;
+  inputSchema: z.ZodTypeAny;
+};
+
+export const indexToolSchemas: ToolSchemaEntry[] = [
+  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。", inputSchema: queryApiSchema },
+  { name: "get_method_params", description: "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。适用于：当知道方法名但不确定参数顺序和名称时。需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。", inputSchema: getMethodParamsSchema },
+  { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
+  { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
+  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。", inputSchema: getVersionInfoSchema },
+  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。", inputSchema: diagnoseGradleSchema },
+  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。返回完整的 Java 代码模板。", inputSchema: generateDatagenSchema },
+  { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
+  { name: "validate_project", description: "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。适用于：收到用户项目后首次审查、或修复问题后验证。支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。", inputSchema: validateProjectSchema },
+  { name: "search_forge_docs", description: "搜索 Forge 官方文档（L0 索引搜索）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。", inputSchema: searchForgeDocsSchema.inputSchema },
+  { name: "get_forge_doc_summary", description: "获取 Forge 文档页面的章节骨架与摘要。适用于：判断某篇文档是否包含所需内容时。返回每个 <h2> 章节的标题、150-200 字摘要和首段概述。建议：先 search_forge_docs 搜索关键词，再对相关页面取摘要，最后仅当摘要显示内容相关时才调用 get_forge_doc_full 获取全文。", inputSchema: getForgeDocSummarySchema.inputSchema },
+  { name: "get_forge_doc_full", description: "获取 Forge 文档页面全文。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示在开头。**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。", inputSchema: getForgeDocFullSchema.inputSchema },
+  { name: "get_forge_doc_related", description: "获取与指定 Forge 文档页面相关的其他页面列表。适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。", inputSchema: getForgeDocRelatedSchema.inputSchema },
+  { name: "list_forge_versions", description: "返回 data 目录下所有已加载的 Forge 文档版本列表（如 [\"1.20.1\"]）。用于确认当前 MCP 服务支持哪些版本，无需通过报错来发现。", inputSchema: listForgeVersionsSchema.inputSchema },
+  { name: "list_community_sources", description: "列出 community_knowledge 已收录条目（permitted / authored / links）。用于了解可用社区资料与署名来源；正式 API 仍优先 search_forge_docs / search_fabric_docs。", inputSchema: listCommunitySourcesSchema },
+  { name: "search_community_docs", description: "搜索社区知识库（许可提炼、自写笔记、外链索引）。不替代官方文档工具；适合发布/兼容/崩溃分类等实操问题。返回命中含 sourceKind、url、summary；links 仅外链。", inputSchema: searchCommunityDocsSchema },
+  { name: "get_community_doc_summary", description: "获取社区知识条目摘要（含署名与 sourceKind）。links 条目仅返回元数据与外链。", inputSchema: getCommunityDocSummarySchema },
+  { name: "get_community_doc_full", description: "获取社区知识全文。permitted/authored 返回仓库内 Markdown；links 仅返回 URL 与免责声明，不抓取网页正文。", inputSchema: getCommunityDocFullSchema },
+  { name: "search_fabric_docs", description: "搜索 Fabric 官方文档（L0 索引搜索）。适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。", inputSchema: searchFabricDocsSchema.inputSchema },
+  { name: "get_fabric_doc_summary", description: "获取 Fabric 文档页面的章节骨架与摘要，用于判断是否需要深入。", inputSchema: getFabricDocSummarySchema.inputSchema },
+  { name: "get_fabric_doc_full", description: "获取 Fabric 文档页面全文。highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。", inputSchema: getFabricDocFullSchema.inputSchema },
+  { name: "get_fabric_doc_related", description: "返回与目标 Fabric 文档共享最多关键词的其他页面，按相关性降序排列。", inputSchema: getFabricDocRelatedSchema.inputSchema },
+  { name: "list_fabric_versions", description: "返回 data 目录下所有已加载的 Fabric 文档版本列表（如 [\"1.20.1\"]）。", inputSchema: listFabricVersionsSchema.inputSchema },
+  { name: "search_neoforge_docs", description: "搜索 NeoForge 官方文档（L0 索引搜索）。适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。", inputSchema: searchNeoForgeDocsSchema.inputSchema },
+  { name: "get_neoforge_doc_summary", description: "获取 NeoForge 文档页面的章节骨架与摘要（L1），用于判断是否需要深入。", inputSchema: getNeoForgeDocSummarySchema.inputSchema },
+  { name: "get_neoforge_doc_full", description: "获取 NeoForge 文档页面全文（L2/L2+）。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。**永远不要一次性加载超过 2 个 full page**。", inputSchema: getNeoForgeDocFullSchema.inputSchema },
+  { name: "get_neoforge_doc_related", description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。", inputSchema: getNeoForgeDocRelatedSchema.inputSchema },
+  { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
+  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform 参数指定平台（forge/neoforge/fabric），默认 forge。", inputSchema: listVersionsSchema.inputSchema },
+  { name: "search_docs", description: "通用文档搜索，支持多平台（Forge/NeoForge/Fabric）。platform 参数指定平台，默认 forge。适用于：需要了解平台特有功能的官方说明时。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。", inputSchema: searchDocsSchema.inputSchema },
+  { name: "get_doc_summary", description: "获取文档页面的章节骨架与摘要，支持多平台（platform 参数）。适用于：判断某篇文档是否包含所需内容时。", inputSchema: getDocSummarySchema.inputSchema },
+  { name: "get_doc_full", description: "获取文档页面全文，支持多平台（platform 参数）。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。", inputSchema: getDocFullSchema.inputSchema },
+  { name: "get_doc_related", description: "获取与指定文档页面相关的其他页面列表，支持多平台（platform 参数）。返回共享最多关键词的其他页面，按相关性降序排列。", inputSchema: getDocRelatedSchema.inputSchema },
+  { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。", inputSchema: diagnoseDataPathsSchema },
+  { name: "analyze_porting_path", description: "分析 Minecraft Mod 项目，生成跨平台/跨版本移植路线图。扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、参考链接和建议的 query_api 调用。适用于：用户询问如何将 Mod 移植到其他平台或版本时。", inputSchema: analyzePortingPathSchema },
+  { name: "port_project", description: "执行移植步骤（init_architectury / extract_common / apply_version_migration）。所有写文件操作默认 dryRun=true，仅输出 diff 预览。实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。apply_version_migration 在确认写入时会真实执行包名替换；冲突文件在 confirmed 写入时会被拒绝。", inputSchema: portProjectSchema },
+];
+
+/** 全部 62 个工具的 schema 清单（index 36 + wave 26），供 CLI list-tools 与 schema 驱动解析使用。 */
+export function listAllToolSchemas(): ToolSchemaEntry[] {
+  return [...indexToolSchemas, ...waveToolSchemas];
+}
 
 // ── 启动 ────────────────────────────────────────────────────────────────────
 
@@ -866,25 +955,41 @@ if (process.env.MC_SKILL_DEBUG_PATHS === "1") {
   console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));
 }
 
-if (!hasAnyPlatformData()) {
-  const msg =
-    "[mc-mcp-server] WARN: 未在数据目录中找到 forge_*/fabric_*/neoforge_*。" +
-    "请设置 MC_SKILL_DATA 为 data 目录绝对路径并确认已解压数据。";
-  console.error(msg);
-  if (process.env.MC_SKILL_STRICT === "1") {
-    console.error("[mc-mcp-server] MC_SKILL_STRICT=1：数据缺失，退出。");
-    process.exit(1);
+// 仅直接执行时启动 stdio 服务（被 CLI 等 import 时不连接，避免副作用；
+// 用 realpath 比较以兼容 nvm-windows / npm link 的 symlink 安装）
+function isMainModule(): boolean {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  const here = fileURLToPath(import.meta.url);
+  if (entry === here) return true;
+  try {
+    return realpathSync(entry) === here;
+  } catch {
+    return false;
   }
 }
 
-try {
-  // Fire-and-forget warmup for default version (does not block connect)
-  void warmupApi(["1.20.1"]).catch((err) => {
-    console.error("[mc-mcp-server] warmup failed:", err);
-  });
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-} catch (err) {
-  console.error("[mc-mcp-server] failed to start:", err);
-  process.exit(1);
+if (isMainModule()) {
+  if (!hasAnyPlatformData()) {
+    const msg =
+      "[mc-mcp-server] WARN: 未在数据目录中找到 forge_*/fabric_*/neoforge_*。" +
+      "请设置 MC_SKILL_DATA 为 data 目录绝对路径并确认已解压数据。";
+    console.error(msg);
+    if (process.env.MC_SKILL_STRICT === "1") {
+      console.error("[mc-mcp-server] MC_SKILL_STRICT=1：数据缺失，退出。");
+      process.exit(1);
+    }
+  }
+
+  try {
+    // Fire-and-forget warmup for default version (does not block connect)
+    void warmupApi(["1.20.1"]).catch((err) => {
+      console.error("[mc-mcp-server] warmup failed:", err);
+    });
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+  } catch (err) {
+    console.error("[mc-mcp-server] failed to start:", err);
+    process.exit(1);
+  }
 }

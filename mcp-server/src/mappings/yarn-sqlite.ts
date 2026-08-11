@@ -175,6 +175,16 @@ function simpleClassName(name: string): string {
   return parts[parts.length - 1] ?? name;
 }
 
+/** 映射层名：obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。 */
+export type MappingLayer = "mojang" | "mcp" | "yarn" | "parchment" | "obfuscated" | "intermediary";
+
+/** 层名 → sqlite 列名（parchment 与 mcp 同层，走 name_named）。 */
+function layerColumn(from: MappingLayer): "name_official" | "name_intermediary" | "name_named" {
+  if (from === "mojang" || from === "obfuscated") return "name_official";
+  if (from === "intermediary") return "name_intermediary";
+  return "name_named";
+}
+
 export interface YarnClassRow {
   named: string;
   intermediary: string;
@@ -300,7 +310,7 @@ export function lookupField(
     ownerClass?: string;
     memberName: string;
     descriptor?: string;
-    from: "mojang" | "mcp" | "yarn" | "parchment";
+    from: MappingLayer;
   },
 ): LookupFieldResult {
   const db = getYarnDb(version);
@@ -466,42 +476,26 @@ export function lookupField(
     }
   }
 
-  const fromOfficial = from === "mojang";
+  const fromOfficial = from === "mojang" || from === "obfuscated";
+  const col = layerColumn(from);
+  const colDesc = col === "name_official" ? "descriptor_official" : "descriptor_named";
   if (descriptor) {
-    const row = (
-      fromOfficial
-        ? db
-            .prepare(
-              `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-               FROM fields WHERE owner_named = ? AND name_official = ? AND descriptor_official = ? LIMIT 1`,
-            )
-            .get(ownerNamed, memberName, descriptor)
-        : db
-            .prepare(
-              `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-               FROM fields WHERE owner_named = ? AND name_named = ? AND descriptor_named = ? LIMIT 1`,
-            )
-            .get(ownerNamed, memberName, descriptor)
-    ) as FieldRow | undefined;
+    const row = db
+      .prepare(
+        `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+         FROM fields WHERE owner_named = ? AND ${col} = ? AND ${colDesc} = ? LIMIT 1`,
+      )
+      .get(ownerNamed, memberName, descriptor) as FieldRow | undefined;
     if (!row) return { found: false, mappingEra: era };
     return { found: true, row, mappingEra: era };
   }
 
-  const rows = (
-    fromOfficial
-      ? db
-          .prepare(
-            `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-             FROM fields WHERE owner_named = ? AND name_official = ? LIMIT 20`,
-          )
-          .all(ownerNamed, memberName)
-      : db
-          .prepare(
-            `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-             FROM fields WHERE owner_named = ? AND name_named = ? LIMIT 20`,
-          )
-          .all(ownerNamed, memberName)
-  ) as unknown as FieldRow[];
+  const rows = db
+    .prepare(
+      `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+       FROM fields WHERE owner_named = ? AND ${col} = ? LIMIT 20`,
+    )
+    .all(ownerNamed, memberName) as unknown as FieldRow[];
 
   if (rows.length === 0) return { found: false, mappingEra: era };
   if (rows.length === 1) return { found: true, row: rows[0], mappingEra: era };
@@ -523,7 +517,7 @@ export function lookupField(
 export function lookupYarnClass(
   version: string,
   memberName: string,
-  from: "yarn" | "mojang" | "mcp" | "parchment",
+  from: "yarn" | "mojang" | "mcp" | "parchment" | "obfuscated" | "intermediary",
 ): YarnClassRow | null {
   const db = getYarnDb(version);
   if (!db) return null;
@@ -538,7 +532,7 @@ export function lookupYarnClass(
     if (byNamed) return byNamed;
   }
 
-  if (from === "mojang") {
+  if (from === "mojang" || from === "obfuscated") {
     const byOfficial = db
       .prepare("SELECT named, intermediary, official FROM classes WHERE official = ? LIMIT 1")
       .get(memberName) as YarnClassRow | undefined;
@@ -575,7 +569,7 @@ export function lookupYarnClass(
 export function resolveOwnerClassNamed(
   version: string,
   ownerClass: string,
-  from: "yarn" | "mojang" | "mcp" | "parchment",
+  from: MappingLayer,
 ): string | null {
   const row = lookupYarnClass(version, ownerClass, from === "parchment" ? "mcp" : from);
   if (row) return row.named;
@@ -687,7 +681,7 @@ function lookupMethodViaCsvOwner(
     ownerClass: string;
     memberName: string;
     descriptor?: string;
-    from: "mojang" | "mcp" | "yarn" | "parchment";
+    from: MappingLayer;
   },
 ): LookupMethodResult | null {
   if (!dbHasMethods(methodsDb)) return null;
@@ -794,7 +788,7 @@ export function lookupMethod(
     ownerClass?: string;
     memberName: string;
     descriptor?: string;
-    from: "mojang" | "mcp" | "yarn" | "parchment";
+    from: MappingLayer;
   },
 ): LookupMethodResult {
   const db = getYarnDb(version);
@@ -892,43 +886,27 @@ export function lookupMethod(
     return { found: false, mappingEra: era, notes: [`无法解析 ownerClass: ${opts.ownerClass}`] };
   }
 
-  const fromOfficial = from === "mojang";
+  const fromOfficial = from === "mojang" || from === "obfuscated";
+  const col = layerColumn(from);
+  const colDesc = col === "name_official" ? "descriptor_official" : "descriptor_named";
 
   if (descriptor) {
-    const row = (
-      fromOfficial
-        ? db
-            .prepare(
-              `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-               FROM methods WHERE owner_named = ? AND name_official = ? AND descriptor_official = ? LIMIT 1`,
-            )
-            .get(ownerNamed, memberName, descriptor)
-        : db
-            .prepare(
-              `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-               FROM methods WHERE owner_named = ? AND name_named = ? AND descriptor_named = ? LIMIT 1`,
-            )
-            .get(ownerNamed, memberName, descriptor)
-    ) as unknown as MethodRow | undefined;
+    const row = db
+      .prepare(
+        `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+         FROM methods WHERE owner_named = ? AND ${col} = ? AND ${colDesc} = ? LIMIT 1`,
+      )
+      .get(ownerNamed, memberName, descriptor) as unknown as MethodRow | undefined;
     if (!row) return { found: false, mappingEra: era };
     return { found: true, row, mappingEra: era };
   }
 
-  const rows = (
-    fromOfficial
-      ? db
-          .prepare(
-            `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-             FROM methods WHERE owner_named = ? AND name_official = ? LIMIT 20`,
-          )
-          .all(ownerNamed, memberName)
-      : db
-          .prepare(
-            `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
-             FROM methods WHERE owner_named = ? AND name_named = ? LIMIT 20`,
-          )
-          .all(ownerNamed, memberName)
-  ) as unknown as MethodRow[];
+  const rows = db
+    .prepare(
+      `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+       FROM methods WHERE owner_named = ? AND ${col} = ? LIMIT 20`,
+    )
+    .all(ownerNamed, memberName) as unknown as MethodRow[];
 
   if (rows.length === 0) return { found: false, mappingEra: era };
   if (rows.length === 1) {
@@ -956,8 +934,8 @@ export function lookupMethod(
 
 export function convertYarnMember(
   version: string,
-  from: "mojang" | "mcp" | "yarn" | "parchment",
-  to: "mojang" | "mcp" | "yarn" | "parchment",
+  from: MappingLayer,
+  to: MappingLayer,
   memberName: string,
 ): {
   found: boolean;
@@ -991,7 +969,8 @@ export function convertYarnMember(
 
   let converted = memberName;
   if (to === "yarn") converted = row.named;
-  else if (to === "mojang") converted = row.official || memberName;
+  else if (to === "mojang" || to === "obfuscated") converted = row.official || memberName;
+  else if (to === "intermediary") converted = row.intermediary || memberName;
   else if (to === "mcp" || to === "parchment") {
     // Prefer named (readable) for mcp/parchment when available from yarn-tiny
     converted = row.named.includes("/") ? toDot(row.named) : row.named;
@@ -1013,4 +992,115 @@ export function convertYarnMember(
 
 export function yarnSqlitePath(version: string): string {
   return resolveMappingDbPath(version) ?? fabricSqlitePath(normalizeMcVersion(version));
+}
+
+export interface ObfuscatedHitRow {
+  kind: "method" | "field";
+  ownerClass: string; // named slash path
+  yarn: string; // name_named
+  official: string; // name_official（混淆短名）
+  intermediary: string; // name_intermediary（method_6032 类）
+  descriptor: string; // descriptor_named
+}
+
+export interface LookupByObfuscatedResult {
+  found: boolean;
+  rows?: ObfuscatedHitRow[];
+  mappingEra?: string | null;
+  notes?: string[];
+}
+
+/**
+ * 全局反查（无需 ownerClass）：按 name_intermediary 或 name_official 命中方法/字段。
+ * SRG 风格（func_/field_）优先走 Forge CSV searge 表（1.14–1.15 等）。
+ */
+export function lookupByObfuscated(
+  version: string,
+  token: string,
+  kind: "method" | "field",
+): LookupByObfuscatedResult {
+  const era = getMappingEra(version);
+  const isSrg =
+    kind === "method" ? /^func_\d+_[a-z]$/i.test(token) : /^field_\d+_[a-z]$/i.test(token);
+
+  // SRG → Forge CSV searge 表全局反查
+  if (isSrg) {
+    const csvDb = getCsvDb(version);
+    if (csvDb) {
+      const table = kind === "method" ? "searge_methods" : "searge_fields";
+      try {
+        const rows = csvDb
+          .prepare(`SELECT searge, name_named, descriptor_named FROM ${table} WHERE searge = ? LIMIT 20`)
+          .all(token) as Array<{ searge: string; name_named: string; descriptor_named: string | null }>;
+        if (rows.length > 0) {
+          return {
+            found: true,
+            mappingEra: era ?? "mcp-csv",
+            rows: rows.map((r) => ({
+              kind,
+              ownerClass: "",
+              yarn: r.name_named,
+              official: r.searge,
+              intermediary: "",
+              descriptor: r.descriptor_named ?? "",
+            })),
+          };
+        }
+      } catch {
+        /* no searge table — fall through */
+      }
+    }
+  }
+
+  const db = getYarnDb(version);
+  if (!db) {
+    return {
+      found: false,
+      mappingEra: era,
+      notes: [`未找到 yarn-mappings.sqlite（version=${version}）`],
+    };
+  }
+
+  const table = kind === "method" ? "methods" : "fields";
+  let rows: Array<{
+    owner_named: string;
+    name_named: string;
+    descriptor_named: string | null;
+    name_official: string;
+    name_intermediary: string | null;
+  }>;
+  try {
+    rows = db
+      .prepare(
+        `SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
+         FROM ${table} WHERE name_intermediary = ? OR name_official = ? LIMIT 20`,
+      )
+      .all(token, token) as unknown as Array<{
+      owner_named: string;
+      name_named: string;
+      descriptor_named: string | null;
+      name_official: string;
+      name_intermediary: string | null;
+    }>;
+  } catch {
+    return {
+      found: false,
+      mappingEra: era,
+      notes: [`${kind} 表不可用（schema v2 无 ${table}）`],
+    };
+  }
+
+  if (rows.length === 0) return { found: false, mappingEra: era };
+  return {
+    found: true,
+    mappingEra: era,
+    rows: rows.map((r) => ({
+      kind,
+      ownerClass: r.owner_named,
+      yarn: r.name_named,
+      official: r.name_official,
+      intermediary: r.name_intermediary ?? "",
+      descriptor: r.descriptor_named ?? "",
+    })),
+  };
 }

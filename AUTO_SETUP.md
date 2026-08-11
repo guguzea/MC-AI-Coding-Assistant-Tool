@@ -9,7 +9,7 @@
 
 把本仓库的本地 **stdio MCP Server** 编译好，并**生成** Cursor MCP 配置草稿供用户确认后粘贴（不要静默改写用户的 `mcp.json`，不要自动执行 `mklink`）。
 
-完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，**54** 个工具可用，覆盖：
+完成后用户应能在 Cursor 中看到服务名 **`MC-AI-Coding-Assistant-Tool`**，**62** 个工具可用，覆盖：
 
 | 模块 | 代表工具 |
 |------|----------|
@@ -168,7 +168,7 @@ node -e "console.log(require('path').resolve('data'))"
 配置粘贴完成后，请用户**完全退出并重新打开** Cursor，再在 MCP 面板确认：
 
 1. 出现 `MC-AI-Coding-Assistant-Tool`
-2. 工具数量 **54**（`index.ts` 36 + `wave/register.ts` 18）
+2. 工具数量 **62**（`index.ts` 36 + `wave/register.ts` 26）
 3. 可试调：`list_doc_versions` 或 `diagnose_data_paths`（应能看到 forge / fabric / neoforge 相关数据）
 
 ---

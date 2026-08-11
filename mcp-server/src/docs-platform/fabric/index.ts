@@ -24,6 +24,8 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
 } from "../platform-data.js";
+import { semanticSearch } from "../semantic/search.js";
+import { mergeSemanticResults } from "../search-utils.js";
 
 function getDataRoot(): string {
   return resolveDataDir();
@@ -198,6 +200,25 @@ export async function searchFabricDocs(
       results = detailed.results;
     }
 
+    // 语义检索（按 source 查询对应语义库；all 时两源各自查询）；无语义库 → null，保持纯 L0
+    // 注意：source 未显式传入时为 undefined（直接函数调用绕过 zod default），需回退 "fabric-docs"
+    const resolvedSource = source ?? "fabric-docs";
+    const sources = resolvedSource === "all" ? ["fabric-docs", "fabric-wiki"] : [resolvedSource];
+    let semanticRanked = false;
+    const semanticList: NonNullable<Awaited<ReturnType<typeof semanticSearch>>> = [];
+    for (const src of sources) {
+      const hits = await semanticSearch(query, "fabric", version, src, getDataRoot());
+      if (hits !== null) semanticRanked = true;
+      if (hits) semanticList.push(...hits);
+    }
+    if (semanticRanked) {
+      results = mergeSemanticResults(results, semanticList, {
+        tags,
+        limit: 10,
+        version,
+      }) as typeof results;
+    }
+
     return {
       content: [
         {
@@ -211,6 +232,7 @@ export async function searchFabricDocs(
               versionFallback: false,
               source,
               tags,
+              semantic: semanticRanked,
               total: (results as unknown as Array<unknown>).length,
               results,
             },

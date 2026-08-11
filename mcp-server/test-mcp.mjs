@@ -15,6 +15,7 @@
 
 import assert from "node:assert/strict";
 import { spawn } from "child_process";
+import { tmpdir } from "os";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -76,6 +77,8 @@ function startServer() {
       ...process.env,
       MC_SKILL_DATA: DATA_DIR,
       MC_SKILL_COMMUNITY: COMMUNITY_DIR,
+      // 保证 deep 校验测试确定性：空缓存 → CACHE_MISS（不依赖本机真实缓存）
+      MC_SKILL_CACHE: join(tmpdir(), "mc-skill-test-empty-cache"),
     },
   });
 
@@ -402,8 +405,28 @@ async function runTests() {
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 55, `expected 55 tools, got ${toolNames.length}`);
+  assert.equal(toolNames.length, 62, `expected 62 tools, got ${toolNames.length}`);
+  for (const waveD of ["validate_at", "validate_aw"]) {
+    assert.ok(toolNames.includes(waveD), `tools/list missing ${waveD}`);
+  }
   console.log(`  tools=${toolNames.length}`);
+  console.log();
+
+  console.log("[Test L2] mixin_analyze deep:true → CACHE_MISS guidance (empty cache)");
+  const rl2 = await callTool("mixin_analyze", {
+    deep: true,
+    version: "1.20.1",
+    mixinsJson: JSON.stringify({ package: "com.example.mixin", mixins: ["com.example.mixin.FooMixin"] }),
+  });
+  const cl2 = JSON.parse(rl2.result.content[0].text);
+  assert.equal(cl2.ok, true, "static ok must stay true with deep:true");
+  assert.equal(cl2.deepResult.available, false, "empty cache → unavailable");
+  assert.equal(cl2.deepResult.action.code, "CACHE_MISS");
+  assert.ok(
+    cl2.deepResult.action.nextSteps.some((s) => s.includes("get_minecraft_source")),
+    "CACHE_MISS must guide to get_minecraft_source",
+  );
+  console.log(`  deepResult.available=${cl2.deepResult.available} action=${cl2.deepResult.action.code}`);
   console.log();
 
   // ── Community + diagnose + crash ────────────────────────────────────────────

@@ -121,11 +121,15 @@ export function parseMixinJavaSource(source: string, filePath?: string): ParsedM
   let targetClass: string | undefined;
   if (mixinAnn) {
     const inner = mixinAnn[1];
-    const valueMatch = inner.match(/value\s*=\s*([\w.]+\.class)/);
+    const valueMatch = inner.match(/value\s*=\s*([\w.$]+\.class)/);
     if (valueMatch) targetClass = valueMatch[1].replace(/\.class$/, "");
     else {
-      const simple = inner.match(/([\w.]+)\.class/);
-      if (simple) targetClass = simple[1];
+      const targetsMatch = inner.match(/targets\s*=\s*"([^"]+)"/);
+      if (targetsMatch) targetClass = targetsMatch[1];
+      else {
+        const simple = inner.match(/([\w.$]+)\.class/);
+        if (simple) targetClass = simple[1];
+      }
     }
   }
 

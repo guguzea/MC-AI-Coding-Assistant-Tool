@@ -1,0 +1,166 @@
+/**
+ * 语义索引可用性探测（轻量 existsSync / 只读 sqlite meta，不加载嵌入模型）。
+ */
+import { existsSync, readdirSync, statSync } from "fs";
+import { join } from "path";
+import { DatabaseSync } from "node:sqlite";
+import { EMBEDDING_MODEL } from "./embeddings.js";
+import { semanticDbPath } from "./search.js";
+
+export type SemanticModeHint = "hybrid" | "fts5-only" | "l0-only";
+
+export interface SemanticSample {
+  platform: string;
+  version: string;
+  source: string;
+  dbPath: string;
+  exists: boolean;
+  docs?: number;
+  chunks?: number;
+  embedded?: number;
+  mode: "hybrid" | "fts5-only" | "missing";
+}
+
+export interface SemanticIndexStatus {
+  modelsReady: boolean;
+  modelsPath: string;
+  embeddingModel: string;
+  modeHint: SemanticModeHint;
+  samples: SemanticSample[];
+  presentCount: number;
+  hybridCount: number;
+  fts5OnlyCount: number;
+}
+
+const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string }> = [
+  { platform: "forge", version: "1.20.1", source: "forge-docs" },
+  { platform: "fabric", version: "1.20.1", source: "fabric-docs" },
+  { platform: "fabric", version: "1.20.1", source: "fabric-wiki" },
+  { platform: "neoforge", version: "1.20.4", source: "neoforge-docs" },
+  { platform: "neoforge", version: "1.21.1", source: "neoforge-docs" },
+];
+
+function modelsDirReady(dataRoot: string): boolean {
+  const root = join(dataRoot, "_models", "Xenova", "all-MiniLM-L6-v2");
+  if (!existsSync(root)) return false;
+  // tokenizer + config 存在即视为可加载（onnx 权重可能较大，存在即可）
+  return (
+    existsSync(join(root, "config.json")) &&
+    existsSync(join(root, "tokenizer.json"))
+  );
+}
+
+function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> {
+  if (!existsSync(dbPath)) return { mode: "missing" };
+  try {
+    const db = new DatabaseSync(dbPath, { readOnly: true });
+    const meta = (key: string) => {
+      const row = db.prepare("SELECT value FROM meta WHERE key = ?").get(key) as
+        | { value: string }
+        | undefined;
+      return row?.value;
+    };
+    const docs = Number(meta("docs") ?? 0);
+    const chunks = Number(meta("chunks") ?? 0);
+    let embedded = Number(meta("embedded") ?? 0);
+    if (!embedded) {
+      try {
+        const row = db.prepare("SELECT COUNT(*) AS n FROM chunk_embeddings").get() as { n: number };
+        embedded = Number(row?.n ?? 0);
+      } catch {
+        embedded = 0;
+      }
+    }
+    db.close();
+    return {
+      docs,
+      chunks,
+      embedded,
+      mode: embedded > 0 ? "hybrid" : chunks > 0 || docs > 0 ? "fts5-only" : "missing",
+    };
+  } catch {
+    return { mode: "missing" };
+  }
+}
+
+/** 扫描 dataRoot 下各文档树旁的 semantic/db.sqlite（轻量，供 diagnose） */
+export function listSemanticDbPresence(dataRoot: string): Array<{
+  platform: string;
+  version: string;
+  source: string;
+  path: string;
+  exists: boolean;
+}> {
+  const out: Array<{ platform: string; version: string; source: string; path: string; exists: boolean }> = [];
+  if (!existsSync(dataRoot)) return out;
+  const sourcesByPrefix: Record<string, string[]> = {
+    forge_: ["forge-docs"],
+    fabric_: ["fabric-docs", "fabric-wiki"],
+    neoforge_: ["neoforge-docs"],
+  };
+  let entries: string[] = [];
+  try {
+    entries = readdirSync(dataRoot).filter((n) => {
+      try {
+        return statSync(join(dataRoot, n)).isDirectory();
+      } catch {
+        return false;
+      }
+    });
+  } catch {
+    return out;
+  }
+  for (const name of entries) {
+    for (const [prefix, sources] of Object.entries(sourcesByPrefix)) {
+      if (!name.startsWith(prefix)) continue;
+      const platform = prefix.slice(0, -1);
+      const version = name.slice(prefix.length);
+      for (const source of sources) {
+        const dbPath = semanticDbPath(dataRoot, platform, version, source);
+        out.push({
+          platform,
+          version,
+          source,
+          path: dbPath,
+          exists: existsSync(dbPath),
+        });
+      }
+    }
+  }
+  return out;
+}
+
+export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
+  const modelsPath = join(dataRoot, "_models");
+  const modelsReady = modelsDirReady(dataRoot);
+  const samples: SemanticSample[] = SAMPLE_TARGETS.map((t) => {
+    const dbPath = semanticDbPath(dataRoot, t.platform, t.version, t.source);
+    const info = inspectDb(dbPath);
+    return {
+      ...t,
+      dbPath,
+      exists: info.mode !== "missing",
+      docs: info.docs,
+      chunks: info.chunks,
+      embedded: info.embedded,
+      mode: info.mode,
+    };
+  });
+  const presentCount = samples.filter((s) => s.exists).length;
+  const hybridCount = samples.filter((s) => s.mode === "hybrid").length;
+  const fts5OnlyCount = samples.filter((s) => s.mode === "fts5-only").length;
+  let modeHint: SemanticModeHint = "l0-only";
+  if (hybridCount > 0 && modelsReady) modeHint = "hybrid";
+  else if (presentCount > 0) modeHint = "fts5-only";
+  else modeHint = "l0-only";
+  return {
+    modelsReady,
+    modelsPath,
+    embeddingModel: EMBEDDING_MODEL,
+    modeHint,
+    samples,
+    presentCount,
+    hybridCount,
+    fts5OnlyCount,
+  };
+}

@@ -499,3 +499,91 @@ export function stripScores<T extends { score: number }>(
 ): Array<Omit<T, "score">> {
   return rows.map(({ score: _s, ...rest }) => rest);
 }
+
+/** 语义检索命中（semanticSearch 结果）的最小结构 */
+export interface SemanticHitLike {
+  docId: string;
+  score?: number;
+  label: string;
+  url?: string;
+  tags?: string[];
+  priority?: string;
+  sectionCount?: number;
+  matches?: Array<{ sectionHeading?: string; snippet: string; score: number }>;
+}
+
+/** L0 搜索结果的最小结构（与各 store 的 SearchResult 结构兼容） */
+export interface SearchResultLike {
+  id: string;
+  version: string;
+  label: string;
+  url: string;
+  tags: string[];
+  priority: string;
+  sectionCount?: number;
+  score?: number;
+  matches?: Array<{ sectionHeading?: string; snippet: string; score: number }>;
+}
+
+/** 与 semantic/search.ts 的 rrfFuse 同公式（避免循环依赖，保持本地一份） */
+function rrfFuseIds(rankings: string[][], k = 60): string[] {
+  const scores = new Map<string, number>();
+  for (const rank of rankings) {
+    for (let i = 0; i < rank.length; i++) {
+      const id = rank[i];
+      if (id === undefined) continue;
+      scores.set(id, (scores.get(id) ?? 0) + 1 / (k + i + 1));
+    }
+  }
+  return [...scores.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id);
+}
+
+/**
+ * 将语义检索命中与 L0 结果再融合（handler 层使用）。
+ * - 有语义命中：对 L0 id 排行 ∪ 语义 id 排行做 **RRF 再融合**（非简单 append）
+ * - 无语义命中：保持纯 L0
+ * - 应用 tags 过滤（与 enhancedSearch 同语义：所有 tag 均需命中）
+ * - 语义侧的 matches 写入合并结果（L0 独有条目无 matches）
+ * - 截断到 limit
+ */
+export function mergeSemanticResults(
+  results: SearchResultLike[],
+  semanticHits: SemanticHitLike[],
+  opts: { tags?: string[]; limit?: number; version?: string },
+): SearchResultLike[] {
+  const limit = opts.limit ?? 10;
+  const normalizedTags = (opts.tags ?? []).map(normalizeTag);
+
+  const filteredHits = semanticHits.filter((h) => {
+    if (normalizedTags.length === 0) return true;
+    return normalizedTags.every((wanted) =>
+      (h.tags ?? []).some((t) => normalizeTag(t).includes(wanted)),
+    );
+  });
+
+  if (filteredHits.length === 0) {
+    return results.slice(0, limit);
+  }
+
+  const byId = new Map<string, SearchResultLike>();
+  for (const r of results) byId.set(r.id, { ...r });
+  for (const h of filteredHits) {
+    const prev = byId.get(h.docId);
+    byId.set(h.docId, {
+      id: h.docId,
+      version: opts.version ?? prev?.version ?? "unknown",
+      label: h.label || prev?.label || h.docId,
+      url: h.url ?? prev?.url ?? "",
+      tags: h.tags ?? prev?.tags ?? [],
+      priority: h.priority ?? prev?.priority ?? "🟢",
+      sectionCount: h.sectionCount ?? prev?.sectionCount ?? 0,
+      ...(h.score !== undefined ? { score: h.score } : prev?.score !== undefined ? { score: prev.score } : {}),
+      ...(h.matches && h.matches.length > 0 ? { matches: h.matches } : {}),
+    });
+  }
+
+  const l0Ids = results.map((r) => r.id);
+  const semIds = filteredHits.map((h) => h.docId);
+  const fused = rrfFuseIds([l0Ids, semIds], 60).slice(0, limit);
+  return fused.map((id) => byId.get(id)!).filter(Boolean);
+}

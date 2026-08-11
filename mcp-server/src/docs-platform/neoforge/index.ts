@@ -26,6 +26,8 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
 } from "../platform-data.js";
+import { semanticSearch } from "../semantic/search.js";
+import { mergeSemanticResults } from "../search-utils.js";
 
 const DATA_ROOT = resolveDataDir();
 
@@ -143,6 +145,21 @@ export async function searchNeoForgeDocs(args: {
     const version = args.version ?? "26.1";
     const detailed = s.searchIndexDetailed(args.query, version, args.tags);
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
+    // 语义检索（neoforge 语义库；1.20.1 兼容 Forge 时无语义库 → null，保持纯 L0）
+    const semanticHits = await semanticSearch(
+      args.query,
+      "neoforge",
+      detailed.resolvedVersion,
+      "neoforge-docs",
+      DATA_ROOT,
+    );
+    const results = semanticHits === null
+      ? detailed.results
+      : mergeSemanticResults(detailed.results, semanticHits, {
+          tags: args.tags,
+          limit: 20,
+          version: detailed.resolvedVersion,
+        });
     return {
       content: [{
         type: "text",
@@ -159,8 +176,9 @@ export async function searchNeoForgeDocs(args: {
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
             : undefined,
-          total: detailed.results.length,
-          results: detailed.results,
+          semantic: semanticHits !== null,
+          total: results.length,
+          results,
         }, null, 2),
       }],
     };

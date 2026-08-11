@@ -23,6 +23,8 @@ import {
   platformDataMissingResult,
   hasPlatformDocData,
 } from "../platform-data.js";
+import { semanticSearch } from "../semantic/search.js";
+import { mergeSemanticResults, type SearchResultLike } from "../search-utils.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -146,6 +148,21 @@ export async function searchForgeDocs(
       args.version,
       args.tags,
     );
+    // 语义检索（FTS5 全文 + 本地向量，RRF 融合）；无语义库/失败 → null，保持纯 L0
+    const semanticHits = await semanticSearch(
+      args.query,
+      "forge",
+      detailed.resolvedVersion,
+      "forge-docs",
+      resolveDataDir(),
+    );
+    const results = semanticHits === null
+      ? detailed.results
+      : mergeSemanticResults(detailed.results, semanticHits, {
+          tags: args.tags,
+          limit: 10,
+          version: detailed.resolvedVersion,
+        });
     return {
       content: [
         {
@@ -161,8 +178,9 @@ export async function searchForgeDocs(
                 ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
                 : undefined,
               tags: args.tags,
-              total: detailed.results.length,
-              results: detailed.results,
+              semantic: semanticHits !== null,
+              total: results.length,
+              results,
             },
             null,
             2,
@@ -607,7 +625,7 @@ export async function searchDocs(
 
     if (platform === "fabric") {
       const dataRoot = resolveDataDir();
-      let results: Array<Record<string, unknown>>;
+      let results: SearchResultLike[];
       let resolvedVersion = args.version;
       let versionFallback = false;
 
@@ -621,15 +639,40 @@ export async function searchDocs(
           ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
         ];
         merged.sort((a, b) => ((b as { score?: number }).score ?? 0) - ((a as { score?: number }).score ?? 0));
-        results = merged.slice(0, 20) as Array<Record<string, unknown>>;
+        results = merged.slice(0, 20);
         resolvedVersion = docs.resolvedVersion;
         versionFallback = docs.versionFallback || wiki.versionFallback;
       } else {
         const detailed = createFabricDocStore(args.version, fabricSource, dataRoot)
           .searchIndexDetailed(args.query, args.version, args.tags);
-        results = detailed.results as unknown as Array<Record<string, unknown>>;
+        results = detailed.results;
         resolvedVersion = detailed.resolvedVersion;
         versionFallback = detailed.versionFallback;
+      }
+
+      // 语义检索（两源各自查询）；无语义库 → null，保持纯 L0
+      const sources = fabricSource === "all" ? ["fabric-docs", "fabric-wiki"] : [fabricSource];
+      let semanticRanked = false;
+      const semanticList: Array<{
+        docId: string;
+        score?: number;
+        label: string;
+        url?: string;
+        tags?: string[];
+        priority?: string;
+        sectionCount?: number;
+      }> = [];
+      for (const src of sources) {
+        const hits = await semanticSearch(args.query, "fabric", args.version, src, dataRoot);
+        if (hits !== null) semanticRanked = true;
+        if (hits) semanticList.push(...hits);
+      }
+      if (semanticRanked) {
+        results = mergeSemanticResults(results, semanticList, {
+          tags: args.tags,
+          limit: 20,
+          version: resolvedVersion,
+        });
       }
 
       return {
@@ -649,6 +692,7 @@ export async function searchDocs(
                 platform,
                 source: fabricSource,
                 tags: args.tags,
+                semantic: semanticRanked,
                 total: results.length,
                 results,
               },
@@ -680,6 +724,21 @@ export async function searchDocs(
         : null;
     const resolvedVersion = meta?.resolvedVersion ?? args.version;
     const versionFallback = meta?.versionFallback ?? false;
+    // 语义检索（forge/neoforge 各自语义库）；无语义库 → null，保持纯 L0
+    const semanticHits = await semanticSearch(
+      args.query,
+      platform,
+      resolvedVersion,
+      platform === "neoforge" ? "neoforge-docs" : "forge-docs",
+      resolveDataDir(),
+    );
+    const finalResults = semanticHits === null
+      ? result
+      : mergeSemanticResults(result, semanticHits, {
+          tags: args.tags,
+          limit: 20,
+          version: resolvedVersion,
+        });
     return {
       content: [
         {
@@ -696,8 +755,9 @@ export async function searchDocs(
                 : undefined,
               platform,
               tags: args.tags,
-              total: result.length,
-              results: result,
+              semantic: semanticHits !== null,
+              total: finalResults.length,
+              results: finalResults,
             },
             null,
             2,

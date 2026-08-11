@@ -10,19 +10,22 @@ import {
   convertYarnMember,
   getMappingEra,
   getSchemaVersion,
+  lookupByObfuscated,
   lookupField,
   lookupMethod,
   resolveCsvMappingDbPath,
   resolveMappingDbPath,
+  type MappingLayer,
 } from "./yarn-sqlite.js";
+import { resolveObfuscatedThreeWay } from "./lookup-obfuscated.js";
 import { suggestSimilarMethods } from "./suggest.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscated.js";
 
 const DEFAULT_VERSION = "1.20.1";
 
 export interface MappingQuery {
-  from: "mojang" | "mcp" | "yarn" | "parchment";
-  to: "mojang" | "mcp" | "yarn" | "parchment";
+  from: MappingLayer;
+  to: MappingLayer;
   memberName: string;
   ownerClass?: string;
   descriptor?: string;
@@ -197,9 +200,10 @@ function outputFromMethodRow(
     name_intermediary: string | null;
     descriptor_named?: string;
   },
-  to: MappingQuery["to"],
+  to: MappingLayer,
 ): string {
-  if (to === "mojang") return row.name_official;
+  if (to === "mojang" || to === "obfuscated") return row.name_official;
+  if (to === "intermediary") return row.name_intermediary ?? row.name_named;
   if (to === "yarn") return row.name_named;
   return row.name_named;
 }
@@ -210,9 +214,10 @@ function outputFromFieldRow(
     name_official: string;
     name_intermediary: string | null;
   },
-  to: MappingQuery["to"],
+  to: MappingLayer,
 ): string {
-  if (to === "mojang") return row.name_official;
+  if (to === "mojang" || to === "obfuscated") return row.name_official;
+  if (to === "intermediary") return row.name_intermediary ?? row.name_named;
   if (to === "yarn") return row.name_named;
   return row.name_named;
 }
@@ -222,8 +227,15 @@ export function convertMapping(query: MappingQuery): MappingResult {
   const { from, to, memberName, ownerClass, descriptor } = query;
   const direction = `${from}→${to}`;
 
+  // 5.5 兼容：to=mojang 保持旧行为（混淆短名），notes 提示改用 obfuscated 层
+  const mojangHint =
+    to === "mojang"
+      ? ["to=mojang 返回混淆短名（obfuscated 层）；如需可读名请用 to=yarn / query_api"]
+      : [];
+
   if (isUnobfuscatedMcVersion(version)) {
-    const usesLegacyLayer = from === "yarn" || to === "yarn" || from === "mcp" || to === "mcp";
+    const legacyLayers: MappingLayer[] = ["yarn", "mcp", "obfuscated", "intermediary"];
+    const usesLegacyLayer = legacyLayers.includes(from) || legacyLayers.includes(to);
     const identityReadable =
       (from === "mojang" || from === "parchment") && (to === "mojang" || to === "parchment");
     if (usesLegacyLayer || !identityReadable) {
@@ -301,7 +313,167 @@ export function convertMapping(query: MappingQuery): MappingResult {
     };
   }
 
+  // 无 owner + obfuscated/intermediary + auto：method→field→class 三路（与 lookup_obfuscated 同语义）
+  // 禁止仅判 class 后假 NOT_FOUND（短名 er 既可能是方法也可能是类）
+  const autoKind = !query.memberKind || query.memberKind === "auto";
+  if (
+    !ownerClass &&
+    autoKind &&
+    (from === "obfuscated" || from === "intermediary") &&
+    dbPath
+  ) {
+    const hit = resolveObfuscatedThreeWay(version, memberName);
+    if (hit.found && hit.kind === "method") {
+      const r = hit.row;
+      const converted = outputFromMethodRow(
+        {
+          name_named: r.yarn,
+          name_official: r.official,
+          name_intermediary: r.intermediary,
+          descriptor_named: r.descriptor,
+        },
+        to,
+      );
+      return {
+        found: true,
+        original: memberName,
+        converted,
+        direction: `${from}→${to}`,
+        confidence: "high",
+        mappingType: "method",
+        memberKind: "method",
+        fallbackUsed: false,
+        mappingEra: hit.mappingEra ?? era,
+        official: r.official,
+        named: r.yarn,
+        intermediary: r.intermediary || undefined,
+        notes: mojangHint.length ? [...(hit.notes ?? []), ...mojangHint] : hit.notes,
+        schemaVersion,
+        ...(r.descriptor
+          ? {
+              readableSignature: readableSignature(converted, r.descriptor),
+              returnType: descriptorReturnType(r.descriptor),
+            }
+          : {}),
+      };
+    }
+    if (hit.found && hit.kind === "field") {
+      const r = hit.row;
+      const converted = outputFromFieldRow(
+        {
+          name_named: r.yarn,
+          name_official: r.official,
+          name_intermediary: r.intermediary,
+        },
+        to,
+      );
+      return {
+        found: true,
+        original: memberName,
+        converted,
+        direction: `${from}→${to}`,
+        confidence: "high",
+        mappingType: "field",
+        memberKind: "field",
+        fallbackUsed: false,
+        mappingEra: hit.mappingEra ?? era,
+        official: r.official,
+        named: r.yarn,
+        intermediary: r.intermediary || undefined,
+        notes: mojangHint.length ? [...(hit.notes ?? []), ...mojangHint] : hit.notes,
+        schemaVersion,
+      };
+    }
+    if (hit.found && hit.kind === "class") {
+      let converted: string;
+      if (to === "mojang" || to === "obfuscated") converted = hit.official ?? memberName;
+      else if (to === "intermediary") converted = hit.intermediary ?? hit.named;
+      else converted = hit.named.replace(/\//g, ".");
+      return {
+        found: true,
+        original: memberName,
+        converted,
+        direction: `${from}→${to}`,
+        confidence: "high",
+        mappingType: "class",
+        memberKind: "class",
+        fallbackUsed: false,
+        mappingEra: hit.mappingEra ?? era,
+        official: hit.official ?? undefined,
+        named: hit.named.replace(/\//g, "."),
+        intermediary: hit.intermediary ?? undefined,
+        notes: mojangHint.length ? [...(hit.notes ?? []), ...mojangHint] : hit.notes,
+        schemaVersion,
+      };
+    }
+    if (!hit.found && hit.ambiguous) {
+      return fail(query, {
+        ambiguous: true,
+        candidates: hit.rows.map((r) => ({
+          name: r.yarn,
+          descriptor: r.descriptor,
+          official: r.official,
+          intermediary: r.intermediary,
+          owner: r.ownerClass,
+        })),
+        mappingEra: hit.mappingEra ?? era,
+        mappingType: hit.kind,
+        notes: hit.notes,
+        schemaVersion,
+      });
+    }
+    return fail(query, {
+      mappingType: kind,
+      mappingEra: hit.mappingEra ?? era,
+      notes: hit.notes ?? [`未找到映射: ${memberName}`],
+      schemaVersion,
+    });
+  }
+
   if (kind === "field") {
+    // obfuscated/intermediary 层支持无 owner 全局反查（崩溃日志单 token）
+    if (!ownerClass && (from === "obfuscated" || from === "intermediary")) {
+      const hit = lookupByObfuscated(version, memberName, "field");
+      if (hit.found && hit.rows && hit.rows.length === 1) {
+        const r = hit.rows[0];
+        const converted = outputFromFieldRow(
+          { name_named: r.yarn, name_official: r.official, name_intermediary: r.intermediary },
+          to,
+        );
+        return {
+          found: true,
+          original: memberName,
+          converted,
+          direction: `${from}→${to}`,
+          confidence: "high",
+          mappingType: "field",
+          memberKind: "field",
+          fallbackUsed: false,
+          mappingEra: hit.mappingEra ?? era,
+          official: r.official,
+          named: r.yarn,
+          intermediary: r.intermediary || undefined,
+          notes: mojangHint.length ? [...(hit.notes ?? []), ...mojangHint] : hit.notes,
+          schemaVersion,
+        };
+      }
+      if (hit.found && hit.rows && hit.rows.length > 1) {
+        return fail(query, {
+          ambiguous: true,
+          candidates: hit.rows.map((r) => ({
+            name: r.yarn,
+            descriptor: r.descriptor,
+            official: r.official,
+            intermediary: r.intermediary,
+            owner: r.ownerClass,
+          })),
+          mappingEra: hit.mappingEra ?? era,
+          mappingType: "field",
+          notes: hit.notes,
+          schemaVersion,
+        });
+      }
+    }
     const looked = lookupField(version, {
       ownerClass,
       memberName,
@@ -342,7 +514,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         official: looked.row.name_official,
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
-        notes: looked.notes,
+        notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
         schemaVersion,
       };
     }
@@ -365,6 +537,60 @@ export function convertMapping(query: MappingQuery): MappingResult {
   // 有全局 CSV（1.14–1.15 Forge）时，即使启发式判成 class 也要走方法表（getHealth 等裸名）
   const allowCsvMethodPath = Boolean(resolveCsvMappingDbPath(version) && !ownerClass);
   if (wantMethod && dbPath && (kind !== "class" || allowCsvMethodPath)) {
+    // obfuscated/intermediary 层支持无 owner 全局反查（崩溃日志单 token）
+    if (!ownerClass && (from === "obfuscated" || from === "intermediary")) {
+      const hit = lookupByObfuscated(version, memberName, "method");
+      if (hit.found && hit.rows && hit.rows.length === 1) {
+        const r = hit.rows[0];
+        const converted = outputFromMethodRow(
+          {
+            name_named: r.yarn,
+            name_official: r.official,
+            name_intermediary: r.intermediary,
+            descriptor_named: r.descriptor,
+          },
+          to,
+        );
+        return {
+          found: true,
+          original: memberName,
+          converted,
+          direction: `${from}→${to}`,
+          confidence: "high",
+          mappingType: "method",
+          memberKind: "method",
+          fallbackUsed: false,
+          mappingEra: hit.mappingEra ?? era,
+          official: r.official,
+          named: r.yarn,
+          intermediary: r.intermediary || undefined,
+          notes: mojangHint.length ? [...(hit.notes ?? []), ...mojangHint] : hit.notes,
+          schemaVersion,
+          ...(r.descriptor
+            ? {
+                readableSignature: readableSignature(converted, r.descriptor),
+                returnType: descriptorReturnType(r.descriptor),
+              }
+            : {}),
+        };
+      }
+      if (hit.found && hit.rows && hit.rows.length > 1) {
+        return fail(query, {
+          ambiguous: true,
+          candidates: hit.rows.map((r) => ({
+            name: r.yarn,
+            descriptor: r.descriptor,
+            official: r.official,
+            intermediary: r.intermediary,
+            owner: r.ownerClass,
+          })),
+          mappingEra: hit.mappingEra ?? era,
+          mappingType: "method",
+          notes: hit.notes,
+          schemaVersion,
+        });
+      }
+    }
     const looked = lookupMethod(version, {
       ownerClass,
       memberName,
@@ -406,7 +632,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         official: looked.row.name_official,
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
-        notes: looked.notes,
+        notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
         schemaVersion,
         ...(desc
           ? {
@@ -462,7 +688,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         official: yarn.row?.official ?? undefined,
         named: yarn.row?.named,
         intermediary: yarn.row?.intermediary,
-        notes: yarn.notes,
+        notes: mojangHint.length ? [...yarn.notes, ...mojangHint] : yarn.notes,
         schemaVersion,
       };
     }

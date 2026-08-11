@@ -11,6 +11,10 @@
 import { existsSync, readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import {
+  getSemanticIndexStatus,
+  listSemanticDbPresence,
+} from "../docs-platform/semantic/status.js";
 
 function getSelfDir(): string {
   try {
@@ -113,6 +117,14 @@ export function diagnoseDataPaths(): {
   sources: string[];
   platforms: Record<string, { status: string; path: string; details: string }>;
   community: { status: string; path: string; details: string; env: string | null };
+  /** 各文档树旁 semantic/db.sqlite 存在性（轻量，不加载模型） */
+  semantic: {
+    modeHint: string;
+    modelsReady: boolean;
+    present: number;
+    totalChecked: number;
+    samples: ReturnType<typeof listSemanticDbPresence>;
+  };
 } {
   const sources: string[] = [];
   const envPath = process.env.MC_SKILL_DATA;
@@ -175,6 +187,10 @@ export function diagnoseDataPaths(): {
     communityDetails = String(err);
   }
 
+  const semanticPresence = listSemanticDbPresence(dataDir);
+  const semanticStatus = getSemanticIndexStatus(dataDir);
+  const present = semanticPresence.filter((s) => s.exists).length;
+
   return {
     resolvedDataDir: dataDir,
     sources,
@@ -184,6 +200,13 @@ export function diagnoseDataPaths(): {
       path: communityPath,
       details: communityDetails,
       env: communityEnv ?? null,
+    },
+    semantic: {
+      modeHint: semanticStatus.modeHint,
+      modelsReady: semanticStatus.modelsReady,
+      present,
+      totalChecked: semanticPresence.length,
+      samples: semanticPresence.filter((s) => s.exists).slice(0, 40),
     },
   };
 }

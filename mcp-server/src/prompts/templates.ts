@@ -101,6 +101,21 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
 4. 自检：游戏内切简体中文；占位符 %s/%d；是否仍显示原始 key
 5. 可选：无 lang 骨架时先 generate_lang`,
   },
+  "mc-decompile-mod": {
+    title: "模组反编译研究（定位真实实现 → 修改建议）",
+    body: `【前置】反编译是显式用户动作：默认零下载、仅写 $MC_SKILL_CACHE（不写项目目录）。
+先确认用户意图：查签名 → query_api / get_method_params（勿触发下载）；要完整源码 → 本工作流。
+Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin/releases/?version=17）；缺失时工具会返回 TOOLCHAIN_MISSING 指引。
+
+1. 定位 jar：请用户给出本地 mod jar 绝对路径（或 MC 版本号，用于 get_minecraft_source）
+2. 摸清元数据：analyze_mod_jar { jarPath } → modId / loaders / entrypoints / mixins / 依赖
+3. 反编译：decompile_mod_jar { jarPath, version?, mapping? } → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/ 源码树摘要
+   - 或查 MC 原生源码：get_minecraft_source { version, className, mapping:"auto" }
+4. 检索目标：search_mod_code { jarPath | decompiledDir, query } 定位目标类/方法/字段（可正则）
+5. 读源码 → 定位真实实现 → 给出修改建议（涉及 API 用法用 query_api 核对签名）
+6. 衔接：进入 mc-build-mod（构建验证）→ mc-ingame-iterate（真机测试循环）；移植场景先走 mc-port-mod
+7. 提示用户：首次反编译 3–10 分钟，二次缓存命中 <1s；MC_SKILL_SKIP_DOWNLOAD=1 时下载类工具会诚实失败`,
+  },
 };
 
 export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {

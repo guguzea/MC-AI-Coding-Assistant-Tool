@@ -34,6 +34,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { DatabaseSync } from "node:sqlite";
 
 const PLATFORMS = ["forge", "fabric", "neoforge"];
 const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
@@ -322,6 +323,61 @@ function checkVersionedDocScope(platform, name, version, versionDir, doc, docRoo
         }
       }
     }
+  }
+
+  // S: semantic index（有 processed/*.md 时建议有 db；fts5-only 记 WARN 非硬失败；javadoc 不在 docSubDirs）
+  checkSemanticIndex(docRoot, doc.processedFiles, issues);
+}
+
+function checkSemanticIndex(docRoot, processedFiles, issues) {
+  const processedMd = (processedFiles ?? []).filter((f) => f.endsWith(".md"));
+  if (processedMd.length === 0) return;
+  const dbPath = path.join(docRoot, "semantic", "db.sqlite");
+  if (!safeStat(dbPath)) {
+    issues.push(rec(
+      "S-semantic-db",
+      "WARN",
+      dbPath,
+      "semantic/db.sqlite present for docs with processed/*.md",
+      "missing",
+      "Run: npm run fetch:embedding-model && npm run build:semantic-index -- --platform=… --version=…",
+    ));
+    return;
+  }
+  try {
+    const db = new DatabaseSync(dbPath, { readOnly: true });
+    const meta = (key) => {
+      const row = db.prepare("SELECT value FROM meta WHERE key = ?").get(key);
+      return row?.value;
+    };
+    const chunks = Number(meta("chunks") ?? 0);
+    const docs = Number(meta("docs") ?? 0);
+    const embedded = Number(meta("embedded") ?? 0);
+    if (!meta("chunks") && !meta("docs")) {
+      issues.push(rec("S-semantic-meta", "WARN", dbPath, "readable meta", "empty/unreadable"));
+    }
+    if (docs > 0 && processedMd.length > 0 && docs / processedMd.length < 0.3) {
+      issues.push(rec(
+        "S-semantic-docs",
+        "WARN",
+        dbPath,
+        `docs≈processed md (${processedMd.length})`,
+        `docs=${docs}`,
+      ));
+    }
+    if (chunks > 0 && embedded === 0) {
+      issues.push(rec(
+        "S-semantic-fts5-only",
+        "WARN",
+        dbPath,
+        "hybrid embeddings preferred",
+        "fts5-only (no embedding rows)",
+        "Optional: npm run fetch:embedding-model && rebuild with embed",
+      ));
+    }
+    db.close();
+  } catch (e) {
+    issues.push(rec("S-semantic-meta", "WARN", dbPath, "readable sqlite meta", `error: ${e.message}`));
   }
 }
 

@@ -12,3 +12,8 @@ export {
   type ParamQuery,
   type ParamResult,
 } from "./convert.js";
+export {
+  lookupObfuscated,
+  type LookupObfuscatedQuery,
+  type LookupObfuscatedResult,
+} from "./lookup-obfuscated.js";

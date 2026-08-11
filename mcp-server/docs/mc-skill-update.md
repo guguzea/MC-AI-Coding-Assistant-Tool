@@ -15,7 +15,7 @@ mc_skill_update
   allowDirty / stashDirty       # git 脏工作区选项
 ```
 
-CLI：`mc-skill update check|apply [--scope=…] [--channel=…] [--confirm] …`
+CLI：`mc-skill update --action check|apply [--scope=…] [--channel=…] [--confirm] …`（旧位置参数 `check|apply` 仍兼容，stderr 有迁移提示）
 
 真写门禁（与 `port_project` 相同）：
 

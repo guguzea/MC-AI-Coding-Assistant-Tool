@@ -104,10 +104,26 @@ try {
   });
 
   const list = await rpc("tools/list", {});
-  const names = (list.result?.tools ?? []).map((t) => t.name);
+  const tools = list.result?.tools ?? [];
+  const names = tools.map((t) => t.name);
   assert.ok(names.includes("search_fabric_docs"));
   assert.ok(names.includes("convert_mapping"));
-  assert.equal(names.length, 31);
+  assert.ok(names.includes("lookup_obfuscated"));
+  assert.ok(names.includes("get_minecraft_source"));
+  assert.ok(names.includes("validate_at"));
+  assert.ok(names.includes("validate_aw"));
+  assert.ok(names.includes("analyze_mod_jar"));
+  assert.equal(names.length, 62);
+
+  const convertSchema = tools.find((t) => t.name === "convert_mapping")?.inputSchema;
+  const fromEnum = convertSchema?.properties?.from?.enum ?? convertSchema?.properties?.from?.anyOf;
+  const enumVals = Array.isArray(fromEnum)
+    ? fromEnum.flatMap((x) => (typeof x === "string" ? [x] : x?.enum ?? []))
+    : convertSchema?.properties?.from?.enum;
+  assert.ok(
+    Array.isArray(enumVals) && enumVals.includes("obfuscated") && enumVals.includes("intermediary"),
+    "convert_mapping schema must expose obfuscated/intermediary",
+  );
 
   const fabric = await rpc("tools/call", {
     name: "search_fabric_docs",
@@ -128,6 +144,46 @@ try {
   const yarnBody = JSON.parse(yarn.result.content[0].text);
   assert.equal(yarnBody.found, true);
   assert.ok(!(yarnBody.notes ?? []).join(" ").includes("JSON.parse"));
+
+  const obf = await rpc("tools/call", {
+    name: "convert_mapping",
+    arguments: {
+      from: "intermediary",
+      to: "obfuscated",
+      memberName: "method_6032",
+      version: "1.20.1",
+    },
+  });
+  const obfBody = JSON.parse(obf.result.content[0].text);
+  assert.equal(obfBody.found, true);
+  assert.equal(obfBody.converted, "er");
+
+  const lookup = await rpc("tools/call", {
+    name: "lookup_obfuscated",
+    arguments: { name: "method_6032", version: "1.20.1" },
+  });
+  const lookupBody = JSON.parse(lookup.result.content[0].text);
+  assert.equal(lookupBody.found, true);
+
+  const atMiss = await rpc("tools/call", {
+    name: "validate_at",
+    arguments: {
+      atContent: "public net.minecraft.world.entity.LivingEntity getHealth()F",
+      version: "1.20.1",
+    },
+  });
+  const atBody = JSON.parse(atMiss.result.content[0].text);
+  assert.ok(
+    atBody.action?.code === "CACHE_MISS" || atBody.found === false || Array.isArray(atBody.errors),
+    "validate_at should return CACHE_MISS or structured result",
+  );
+
+  const analyzeBad = await rpc("tools/call", {
+    name: "analyze_mod_jar",
+    arguments: { jarPath: "relative/not-absolute.jar" },
+  });
+  const analyzeBody = JSON.parse(analyzeBad.result.content[0].text);
+  assert.equal(analyzeBody.found, false);
 
   const rss = process.memoryUsage().rss;
   console.log(JSON.stringify({ ok: true, tools: names.length, rssMb: Math.round(rss / 1024 / 1024), staging }, null, 2));

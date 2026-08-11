@@ -1,11 +1,27 @@
 import { parseMixinsJson, parseMixinJavaSource, findMixinClassInFiles } from "./parser.js";
 import { resolveMixinMethodTarget } from "./resolve.js";
 import { actionable } from "../utils/actionable.js";
+import { deepValidateMixins, resolveValidationJar, cacheMissActionable } from "./deep-validate.js";
 
 export interface MixinAnalyzeInput {
   javaFiles?: Array<{ path: string; content: string }>;
   mixinsJson?: string;
   version?: string;
+  /** deep: true 时基于已缓存 remapped 客户端 jar 做字节码级校验（默认 false，静态路径零影响） */
+  deep?: boolean;
+  /** 显式指定客户端 jar 绝对路径（优先于缓存扫描） */
+  jarPath?: string;
+}
+
+export interface DeepAnalysisResult {
+  available: boolean;
+  verified?: boolean;
+  errors?: Array<{ target: string; issue: string; suggestion: string }>;
+  warnings?: string[];
+  checkedTargets?: number;
+  jarPath?: string;
+  mapping?: string;
+  action?: ReturnType<typeof actionable>;
 }
 
 export interface MixinAnalyzeResult {
@@ -31,6 +47,8 @@ export interface MixinAnalyzeResult {
   warnings: string[];
   errors: string[];
   supportMatrix: string[];
+  /** 仅 deep:true 时附加（纯增量字段，静态结果不变） */
+  deepResult?: DeepAnalysisResult;
 }
 
 const SUPPORT_MATRIX = [
@@ -97,6 +115,42 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
     errors.push(`${missing.length} 个注入点未能解析目标方法`);
   }
 
+  // ── deep:true 字节码级校验（纯附加：jar 未缓存 → CACHE_MISS 引导，绝不自动下载）──
+  let deepResult: DeepAnalysisResult | undefined;
+  if (input.deep === true) {
+    const jar = resolveValidationJar(version, input.jarPath);
+    if (!jar) {
+      deepResult = { available: false, action: cacheMissActionable(version) };
+    } else if (jar.error) {
+      deepResult = {
+        available: false,
+        action: actionable("NOT_FOUND", jar.error, ["核对 jarPath 后重试"]),
+      };
+    } else {
+      try {
+        const deep = deepValidateMixins({ javaFiles, version, jarPath: jar.jarPath });
+        deepResult = {
+          available: true,
+          verified: deep.verified,
+          errors: deep.errors,
+          warnings: deep.warnings,
+          checkedTargets: deep.checkedTargets,
+          jarPath: deep.jarPath,
+          mapping: deep.mapping,
+        };
+      } catch (err) {
+        deepResult = {
+          available: false,
+          action: actionable(
+            "DEEP_VALIDATION_FAILED",
+            `字节码校验失败: ${(err as Error).message ?? String(err)}`,
+            ["确认 jarPath 指向完整客户端 jar（非 mod jar / 非源码目录）"],
+          ),
+        };
+      }
+    }
+  }
+
   return {
     ok: errors.length === 0,
     version,
@@ -110,8 +164,10 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
           // top-level hint when any missing
         }
       : {}),
+    ...(deepResult ? { deepResult } : {}),
   };
 }
 
 export { parseMethodReference, detectNamingStyle, mergeInjectMethodAndDesc } from "./method-string.js";
 export { parseMixinsJson, parseMixinJavaSource } from "./parser.js";
+export { validateAtHandler, validateAwHandler } from "./deep-validate.js";

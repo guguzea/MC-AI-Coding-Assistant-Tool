@@ -846,6 +846,165 @@ async function testNeoForgeResolveDirForgeCompat() {
   }
 }
 
+// T5: obfuscated/intermediary 映射层 + lookup_obfuscated（断言值已对照 fabric_1.20.1 sqlite 实证）
+async function testObfuscatedLayerAndLookup() {
+  const { lookupObfuscated } = await import("./dist/mappings/index.js");
+
+  // 1. intermediary→obfuscated（无 owner，走全局反查）：method_6032 → er
+  const obf = convertMapping({
+    from: "intermediary",
+    to: "obfuscated",
+    memberName: "method_6032",
+    version: "1.20.1",
+  });
+  assert.equal(obf.found, true);
+  assert.equal(obf.converted, "er", "intermediary→obfuscated must yield official short name");
+  assert.equal(obf.mappingType, "method");
+
+  // 2. obfuscated→yarn（带 owner）：er → getHealth
+  const obfToYarn = convertMapping({
+    from: "obfuscated",
+    to: "yarn",
+    memberName: "er",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(obfToYarn.found, true);
+  assert.equal(obfToYarn.converted, "getHealth", "obfuscated→yarn must reverse via official");
+
+  // 3. yarn→obfuscated：getHealth → er（与 to=mojang 同值）
+  const yarnToObf = convertMapping({
+    from: "yarn",
+    to: "obfuscated",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(yarnToObf.found, true);
+  assert.equal(yarnToObf.converted, "er");
+
+  // 4. obfuscated→obfuscated = identity
+  const obfId = convertMapping({
+    from: "obfuscated",
+    to: "obfuscated",
+    memberName: "er",
+    version: "1.20.1",
+  });
+  assert.equal(obfId.found, true);
+  assert.equal(obfId.converted, "er");
+  assert.equal(obfId.resultKind, "identity");
+
+  // 5. 字段：field_6247 → bI（无 owner 全局反查）
+  const obfField = convertMapping({
+    from: "intermediary",
+    to: "obfuscated",
+    memberName: "field_6247",
+    memberKind: "field",
+    version: "1.20.1",
+  });
+  assert.equal(obfField.found, true);
+  assert.equal(obfField.converted, "bI", "field intermediary→obfuscated must yield bI");
+
+  // 6. 5.5 兼容：to=mojang 值不变，notes 增加 obfuscated 提示
+  const moj = convertMapping({
+    from: "yarn",
+    to: "mojang",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.20.1",
+  });
+  assert.equal(moj.found, true);
+  assert.equal(moj.converted, "er", "to=mojang must keep legacy value");
+  assert.ok(
+    (moj.notes ?? []).some((n) => n.includes("obfuscated")),
+    "to=mojang notes must hint obfuscated layer",
+  );
+
+  // 7. 26.1 守卫：obfuscated 层拒绝 remap
+  const obf26 = convertMapping({
+    from: "obfuscated",
+    to: "yarn",
+    memberName: "er",
+    version: "26.1",
+  });
+  assert.equal(obf26.found, false);
+  assert.equal(obf26.resultKind, "UNOBFUSCATED_NO_YARN");
+
+  // ── lookup_obfuscated ────────────────────────────────────────────────
+  const lo1 = lookupObfuscated({ name: "method_6032", version: "1.20.1" });
+  assert.equal(lo1.found, true);
+  assert.equal(lo1.kind, "method");
+  assert.equal(lo1.yarn, "getHealth");
+  assert.equal(lo1.obfuscated, "er");
+  assert.equal(lo1.intermediary, "method_6032");
+  assert.equal(lo1.ownerClass, "net.minecraft.entity.LivingEntity");
+  assert.equal(lo1.descriptor, "()F");
+
+  const lo2 = lookupObfuscated({ name: "er", version: "1.20.1" });
+  assert.equal(lo2.found, true, "bare obfuscated short name must hit");
+  assert.equal(lo2.yarn, "getHealth", "method hit must take priority over field hits");
+  assert.equal(lo2.intermediary, "method_6032");
+
+  const lo3 = lookupObfuscated({ name: "field_6247", version: "1.20.1" });
+  assert.equal(lo3.found, true);
+  assert.equal(lo3.kind, "field");
+  assert.equal(lo3.yarn, "HEALTH");
+  assert.equal(lo3.obfuscated, "bI");
+
+  const lo4 = lookupObfuscated({ name: "afl", version: "1.20.1" });
+  assert.equal(lo4.found, true, "obfuscated class short name must hit");
+  assert.equal(lo4.kind, "class");
+  assert.equal(lo4.yarn, "net.minecraft.server.command.PlaySoundCommand");
+
+  const lo5 = lookupObfuscated({ name: "m_46859_", version: "1.20.1" });
+  assert.equal(lo5.found, false, "mojang-hashed names not in yarn sqlite");
+  assert.equal(lo5.action?.code, "NOT_FOUND");
+
+  const lo6 = lookupObfuscated({ name: "er", version: "26.1" });
+  assert.equal(lo6.found, false);
+  assert.equal(lo6.resultKind, "UNOBFUSCATED_NO_YARN");
+
+  // SRG func_ 反查
+  const loSrg = lookupObfuscated({ name: "func_110143_aJ", version: "1.20.1" });
+  // 1.20.1 yarn sqlite 可能无 SRG 列；若 found 则必须是 method
+  if (loSrg.found) {
+    assert.equal(loSrg.kind, "method");
+    assert.ok(loSrg.yarn);
+  } else {
+    assert.equal(loSrg.action?.code, "NOT_FOUND");
+  }
+
+  // convert 无 owner：裸 er 三路回退（方法优先 → getHealth，不得假 NOT_FOUND）
+  const convEr = convertMapping({
+    from: "obfuscated",
+    to: "yarn",
+    memberName: "er",
+    version: "1.20.1",
+  });
+  assert.ok(
+    (convEr.found && convEr.converted === "getHealth") ||
+      (convEr.found === false && convEr.ambiguous === true),
+    "bare er obfuscated→yarn must succeed or AMBIGUOUS, never silent NOT_FOUND",
+  );
+  if (convEr.found) {
+    assert.equal(convEr.memberKind, "method");
+  }
+
+  // convert 无 owner：类短名 afl → class 回退
+  const convCls = convertMapping({
+    from: "obfuscated",
+    to: "yarn",
+    memberName: "afl",
+    version: "1.20.1",
+  });
+  assert.equal(convCls.found, true, "class short name afl must resolve via class fallback");
+  assert.equal(convCls.memberKind, "class");
+  assert.ok(
+    String(convCls.converted).includes("PlaySoundCommand"),
+    `expected PlaySoundCommand, got ${convCls.converted}`,
+  );
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -863,6 +1022,7 @@ await testNeoForgeResolveDirForgeCompat();
 await testSearchEnhancements();
 await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
+await testObfuscatedLayerAndLookup();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

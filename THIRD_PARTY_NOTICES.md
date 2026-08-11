@@ -12,9 +12,17 @@ Declared in `mcp-server/package.json` (install via `npm ci`; not vendored in git
 |---------|------|----------|
 | `@modelcontextprotocol/sdk` | MCP stdio protocol SDK | https://github.com/modelcontextprotocol |
 | `zod` | Schema validation | https://github.com/colinhacks/zod |
+| `@xenova/transformers` | 本地语义嵌入（feature-extraction） | https://github.com/xenova/transformers.js |
+| `onnxruntime-node` | Transformers.js ONNX 后端 | https://onnxruntime.ai |
 | `typescript` / `@types/node` / `tsx` (dev) | Build & types | respective upstreams |
 
-Follow each package’s license as published on npm.
+Follow each package’s license as published on npm（transformers / onnxruntime-node 为 Apache-2.0）。
+
+**嵌入模型缓存**（不进 npm；由 `npm run fetch:embedding-model` 写入）：
+
+- Model: `Xenova/all-MiniLM-L6-v2`（Apache-2.0）
+- Path: `data/_models/Xenova/all-MiniLM-L6-v2/`
+- Runtime: `allowRemoteModels=false`（禁止静默联网）；缺模型时检索降级 FTS5 / L0
 
 ## Minecraft Forge documentation / Javadoc extracts
 
@@ -61,6 +69,24 @@ Follow each package’s license as published on npm.
 - Typical local paths: `data/neoforge_*/`（及文档子目录）
 - License: follow NeoForged terms
 - Note: some NeoForge `1.20.1` doc queries may surface Forge 1.20.1 content via a compatibility fallback in this tool
+
+## Code reuse（MIT，适配改写）
+
+| 来源 | 借用内容 | 落点 |
+|------|---------|------|
+| [MCDxAI/minecraft-dev-mcp](https://github.com/MCDxAI/minecraft-dev-mcp)（MIT） | CLI flags-only / coerceFlagValue / `{success,tool,result\|error}` / isMainModule；反编译与 Mixin 字节码校验思路参照 | `mcp-server/src/cli.ts`、`src/decompile/`、`src/mixin/`（适配改写，非整体拷贝） |
+| [OGMatrix/mcmodding-mcp](https://github.com/OGMatrix/mcmodding-mcp)（MIT） | 文档分块（title/section/code/full）与 RRF 混合检索思路 | `mcp-server/src/docs-platform/semantic/`、`scripts/_lib/build-semantic-index.mjs` |
+
+遵守 MIT 许可：以上借用保留原作者版权声明与本署名；原项目 License 见其 GitHub 仓库。
+
+## Runtime Java tools（按需下载至 `$MC_SKILL_CACHE/resources/`，不进 git）
+
+| 工具 | License | 用途 |
+|------|---------|------|
+| [VineFlower](https://github.com/Vineflower/vineflower) | LGPL-3.0 | MC / 模组 jar 反编译 |
+| [Fabric tiny-remapper](https://github.com/FabricMC/tiny-remapper) | Apache-2.0 | official→intermediary→named / mojmap 重映射 |
+
+分发时保留本通知；LGPL 工具以独立 jar 形式按需下载，不静态链接进本仓库代码。
 
 ## Release assets
 

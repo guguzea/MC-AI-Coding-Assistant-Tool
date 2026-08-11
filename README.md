@@ -19,7 +19,7 @@ MC_skill/
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
-├── mcp-server/                  # 本地 stdio MCP Server（55 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（62 个工具）
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -109,6 +109,8 @@ MC_skill/
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `H:/mods/my-mod`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程                           | `1`                               |
+| `MC_SKILL_CACHE`        | 反编译/下载缓存根目录（默认 `%APPDATA%/mc-skill-cache` / `~/.config/mc-skill-cache`） | `H:/mc-skill-cache` |
+| `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义）       | `1`                               |
 | `MCP_TIMEOUT_MS`        | 测试脚本超时毫秒数                              | `30000`                           |
 
 
@@ -116,7 +118,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**55** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**62** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -146,9 +148,10 @@ MC_skill/
 
 
 1. `mcp↔parchment` 为同名层（identity）；参数名用 `get_method_params`。
-2. **字段查询**：传 `memberKind: "field"`（或 `"auto"` 时按名称风格推断），建议带 `ownerClass`；1.14–1.15 仅全局 `field_`*/`searge↔named`。schema 仍为 v2 时返回 `SCHEMA_FIELDS_UNAVAILABLE`（需重建 sqlite）。CLI：`mc-skill convert --kind field ...`。
-3. 失败默认 `found:false`、`converted:null`；过渡参数 `allow_fallback` 可回传原名并设 `fallbackUsed`（禁止假成功）。
-4. 构建：`cd mcp-server && npm run build:yarn-sqlite`（本地 temp 写入后复制，避免盘符 I/O 问题）。
+2. **obfuscated / intermediary 层**（T5）：`obfuscated` = Tiny official 混淆短名（`er`），`intermediary` = `method_6032` 类；`yarn/mcp→obfuscated` 与 `to=mojang` 同值，`obfuscated/intermediary→yarn/mcp` 支持**无 ownerClass 全局反查**（崩溃日志单 token）。`to=mojang` 保持旧行为，notes 提示改用 `to=obfuscated`。**26.1+ 无混淆层**：obfuscated/intermediary 请求返回 `UNOBFUSCATED_NO_YARN`（仅 1.14–1.21.11 可用）。
+3. **字段查询**：传 `memberKind: "field"`（或 `"auto"` 时按名称风格推断），建议带 `ownerClass`；1.14–1.15 仅全局 `field_`*/`searge↔named`。schema 仍为 v2 时返回 `SCHEMA_FIELDS_UNAVAILABLE`（需重建 sqlite）。CLI：`mc-skill convert --kind field ...`。
+4. 失败默认 `found:false`、`converted:null`；过渡参数 `allow_fallback` 可回传原名并设 `fallbackUsed`（禁止假成功）。
+5. 构建：`cd mcp-server && npm run build:yarn-sqlite`（本地 temp 写入后复制，避免盘符 I/O 问题）。
 
 
 
@@ -159,7 +162,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 | 能力   | 工具                         | 说明                                                                                                   |
 | ---- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 工作流  | `get_workflow_template`    | 模板名：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod`（与 Prompt 同名） |
+| 工作流  | `get_workflow_template`    | 模板名：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod`（与 Prompt 同名） |
 | 知识列表 | `list_knowledge_resources` | 列出 `mcskill://` URI                                                                                  |
 | 知识读取 | `read_knowledge_resource`  | 按 URI 读正文                                                                                            |
 
@@ -235,7 +238,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（55 个）
+## MCP Server 工具（62 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
 
@@ -252,14 +255,15 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 
 
-### 1. API 与映射 / 状态（5）
+### 1. API 与映射 / 状态（6）
 
 
 | 工具                  | 作用                                                                                                                                                                |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。               |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。                                                                                                 |
-| `convert_mapping`   | 在 **mojang / mcp / yarn / parchment** 间互转类/方法/**字段**（SQLite **v3**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名；失败默认 `converted:null`（可选 `allow_fallback`）。 |
+| `convert_mapping`   | 在 **mojang / mcp / yarn / parchment / obfuscated / intermediary** 间互转类/方法/**字段**（SQLite **v3**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名（同 obfuscated 层）；失败默认 `converted:null`（可选 `allow_fallback`）。 |
+| `lookup_obfuscated` | 崩溃日志反混淆：单 token（`method_6032` / `er` / `func_110143_aJ` / `field_100013_f`）反查 → yarn 可读名 + ownerClass + descriptor。方法→字段→类；多命中 AMBIGUOUS；26.1+ 返回 `UNOBFUSCATED_NO_YARN`。 |
 | `get_server_status` | API 索引预热状态、`diagnose_data_paths` 摘要、descriptor 自检与 **updateHint**；可选 `warmup` 先加载指定版本。                                                                                           |
 | `get_version_info`  | **【Forge only】** 按 MC 版本 + 操作（如「注册方块」）给出推荐做法、关键变更、gotchas 与官方 Changelog 链接。                                                                                       |
 
@@ -364,17 +368,23 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 
 
-### 9. Registry / Mixin / 资源（7）
+### 9. Registry / Mixin / 资源（9）
 
 
 | 工具                                                     | 作用                                                                   |
 | ------------------------------------------------------ | -------------------------------------------------------------------- |
 | `query_registry`                                       | 查询 Vanilla 资源 ID（`nameLayer: registry_id`）；类/方法名用 `convert_mapping`。 |
-| `mixin_analyze`                                        | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。              |
+| `mixin_analyze`                                        | 解析 mixins.json 与 @Mixin 注入目标（多映射层；高风险，见 supportMatrix）。`deep:true` 时基于已缓存 remapped 客户端 jar 做字节码级校验（目标类/选择器/@At 调用点）；jar 未缓存 → CACHE_MISS 引导（不自动下载）。 |
+| `validate_at`                                          | 字节码级校验 Forge/NeoForge `*_at.cfg`：类/成员存在性（继承链/record/内部类）、映射层不匹配建议、跨文件冲突。 |
+| `validate_aw`                                          | 字节码级校验 Fabric `.accesswidener`：header/namespace、条目类型、存在性、transitive、跨文件冲突。 |
 | `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           |
 | `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验。                  |
-| `get_workflow_template`                                | 工作流全文（`mc-new-block` 等 8 个；与 MCP Prompt 同名；Cursor tools 兜底）。         |
+| `get_workflow_template`                                | 工作流全文（`mc-new-block` 等 9 个；与 MCP Prompt 同名；Cursor tools 兜底）。         |
 | `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          |
+
+字节码级校验（`mixin_analyze deep` / `validate_at` / `validate_aw`）依赖 T2 缓存管线：
+jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），**绝不自动大下载**。
+详见 `mcp-server/docs/mixin-support.md`。
 
 
 
@@ -398,14 +408,34 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 | 工具 | 作用 |
 |------|------|
-| `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`mc-skill update check\|apply`。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
+| `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`mc-skill update --action check\|apply`（旧位置参数 `check\|apply` 仍兼容，stderr 有迁移提示）。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
 
 `get_server_status` 附带 `updateHint`（上次 check 缓存，默认 TTL 1h）与 `pendingRestart`。
+
+### 13. 反编译与模组源码（4）— T2 Wave C
+
+**默认零下载**：不预热、不预取；仅显式调用时按需下载到 `$MC_SKILL_CACHE`（默认 `%APPDATA%/mc-skill-cache` / `~/.config/mc-skill-cache`），**绝不写项目目录**。`MC_SKILL_SKIP_DOWNLOAD=1`（CI）时下载类工具诚实失败并给出指引。**Java 17+ 前置**（VineFlower / tiny-remapper）：缺失时返回 `TOOLCHAIN_MISSING` + Adoptium 安装指引，进程不崩溃。
+
+| 工具 | 作用 |
+|------|------|
+| `get_minecraft_source` | 按需下载+重映射+反编译真实 MC 源码，返回类源码片段（支持行区间 / `force` 重编译）。首次 3–10 分钟，同版本缓存命中 <1s。 |
+| `analyze_mod_jar` | 纯 Node 解析本地 mod jar：fabric.mod.json / mods.toml / neoforge.mods.toml、mixins.json 引用、entrypoints、依赖、AW/AT。无 Java、零下载。 |
+| `decompile_mod_jar` | VineFlower 按需反编译本地 jar → `$MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/`，返回源码树摘要；可选 remap（需匹配 MC 版本）。 |
+| `search_mod_code` | 对已反编译源码做行级 grep（子串/正则），返回 file:line 命中；入口：`decompiledDir` 或已反编译过的 `jarPath`。 |
+
+**版本支持矩阵**（与 26.x 现状对齐）：
+
+| 版本区间 | Yarn | Mojmap | 说明 |
+|---|---|---|---|
+| 1.14 – 1.21.11 | ✅ | ✅ | 两步 remap（official→intermediary→named） |
+| 26.1+ | ❌（已停更） | ✅ | 去混淆，免 remap |
+
+**与 `query_api` 的分工**：`query_api` / `get_method_params` 查签名（快、离线）；以上 4 工具仅在**确实需要完整源码/反编译**时使用（下载量大），各工具 description 均带 ⚠️ 提示。
 
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
 ### 工作流模板（MCP Prompts）
 
-8 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
+9 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
 
 
 | 模板名               | 标题      | 流程要点                                                                                                              |
@@ -418,6 +448,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `mc-build-mod`    | 模组构建流程  | validate_project / diagnose_gradle → gradlew build → 确认 build/libs jar → 失败则分析日志；可接真机循环                          |
 | `mc-ingame-iterate` | 真机测试与修复循环 | 索取启动器与路径（官方/HMCL/PCL2 版本隔离）→ 装 jar → 复现 → 修 → 再测；可选兼容性测试。路径约定见模板正文与 [HMCL 隔离文档](https://docs.hmcl.net/launcher/isolation.html) |
 | `mc-localize-mod` | 模组汉化 | 判定 own/third_party → `localize_mod` diff/draft 或 extract/pack_draft → Agent 填中文 → 自检；见 `authored/localization-lang` |
+| `mc-decompile-mod` | 模组反编译研究 | 定位 jar → `analyze_mod_jar` → `decompile_mod_jar` / `get_minecraft_source` → `search_mod_code` → 定位目标类 → 修改建议 → 衔接 `mc-build-mod` / `mc-ingame-iterate` |
 
 
 ### 知识暴露（MCP Resources）
@@ -447,7 +478,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | Phase 1   | ✅ 完成  | Forge / Fabric / NeoForge 规则集与多版本扩展                   |
 | Phase 1.5 | ✅ 完成  | 模组脚手架 + 校验 CLI                                        |
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
-| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C 扩展，**55** 工具） |
+| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展，**62** 工具） |
 | Phase 4   | ✅ 进行中 | 知识库 / 反模式 / 数据审计与 Release 分发                          |
 | Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |
 
