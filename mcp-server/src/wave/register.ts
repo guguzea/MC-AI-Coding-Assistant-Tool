@@ -119,8 +119,10 @@ export const analyzeLogSchema = z.object({
 });
 export const getMigrationGuideSchema = z.object({ route: z.string() });
 export const checkDependenciesSchema = z.object({
-  buildGradle: z.string(),
-  modsToml: z.string().optional(),
+  buildGradle: z.string().describe("build.gradle 全文"),
+  modsToml: z.string().optional().describe("mods.toml 全文（Forge；NeoForge 内容也可并入）"),
+  fabricModJson: z.string().optional().describe("fabric.mod.json 全文（Fabric 工程；loader 冲突检测必需）"),
+  neoModsToml: z.string().optional().describe("neoforge.mods.toml 全文（可选；亦可并入 modsToml）"),
 });
 export const mcSkillUpdateSchema = z.object({
   action: z.enum(["check", "apply"]).describe("check=只读探测；apply=预演或执行更新"),
@@ -341,8 +343,12 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("check_dependencies", {
     title: "Check Gradle / mods.toml dependency hints",
+    description:
+      "根据 build.gradle / mods.toml / fabric.mod.json / neoforge.mods.toml 提示依赖问题：loader 判定、" +
+      "库模组识别（library-catalog 接线）、跨加载器冲突（owo/CCA/Polymer/Trinkets 等）与陷阱（Trinkets 停更、Bookshelf 重名、Cloth 冷冻）。" +
+      "请传入与工程匹配的清单文件（buildGradle 必填；Fabric 工程建议 fabricModJson，Forge 工程建议 modsToml），以便 loader 冲突检测。",
     inputSchema: checkDependenciesSchema,
-  }, async (a) => jsonResult(checkDependencies(a.buildGradle, a.modsToml)));
+  }, async (a) => jsonResult(checkDependencies(a.buildGradle, a.modsToml, a.fabricModJson, a.neoModsToml)));
 
   server.registerTool(
     "mc_skill_update",
@@ -508,7 +514,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_worldgen", description: "Generate worldgen JSON templates", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: "Analyze game / crash log excerpt", inputSchema: analyzeLogSchema },
   { name: "get_migration_guide", description: "Get built-in migration guide summary", inputSchema: getMigrationGuideSchema },
-  { name: "check_dependencies", description: "Check Gradle / mods.toml dependency hints", inputSchema: checkDependenciesSchema },
+  { name: "check_dependencies", description: "根据 build.gradle / mods.toml / fabric.mod.json / neoforge.mods.toml 提示依赖问题：loader 判定、库模组识别（library-catalog 接线）、跨加载器冲突（owo/CCA/Polymer/Trinkets 等）与陷阱（Trinkets 停更、Bookshelf 重名、Cloth 冷冻）。请传入与工程匹配的清单文件（buildGradle 必填；Fabric 工程建议 fabricModJson，Forge 工程建议 modsToml），以便 loader 冲突检测。", inputSchema: checkDependenciesSchema },
   { name: "mc_skill_update", description: "检查 GitHub Release 是否有新版本；确认后可更新 tooling（git ff-only + npm build）与 data（zip+SHA256）。默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。", inputSchema: mcSkillUpdateSchema },
   { name: "lookup_obfuscated", description: "崩溃日志反混淆：单 token 反查混淆短名（er）/ intermediary（method_6032）/ SRG（func_110143_aJ）→ yarn 可读名 + ownerClass + descriptor。\n方法优先 → 字段 → 类；多命中返回 AMBIGUOUS。26.1+ 无混淆层，返回 UNOBFUSCATED_NO_YARN。", inputSchema: lookupObfuscatedSchema },
   { name: "get_minecraft_source", description: "按需下载/重映射/反编译真实 MC 源码并返回类源码片段（支持行区间）。默认零下载：仅显式调用才下载到 $MC_SKILL_CACHE。\n支持矩阵：1.14–1.21.11 → yarn（两步 remap official→intermediary→named）或 mojmap；26.1+ → mojmap-only（免 remap）。\n首次约 3–10 分钟，同版本缓存命中 <1s。需 Java 17+；缺失时返回 TOOLCHAIN_MISSING 安装指引。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params", inputSchema: getMinecraftSourceSchema },

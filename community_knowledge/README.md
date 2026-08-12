@@ -28,7 +28,18 @@
 | 模型 / 本地化 / 开发环境 | `authored/multi-face-block-models`、`authored/localization-lang`、`authored/forge-dev-env-pitfalls` |
 | 映射字段 schema v3 | `authored/mapping-fields-v3` |
 | 代码模式库 | `patterns/`（DeferredRegister / SimpleChannel / DataComponent / cube_all / ConfigSpec） |
-| 库集成 | `authored/lib-geckolib`、`lib-curios`、`lib-cloth-config`、`lib-architectury`、`lib-patchouli`；总览 `authored/library-integration` |
+| 库集成（总览/索引/陷阱） | `authored/library-catalog-2026`（总览目录）、`library-integration`（分类索引）、`library-integration-jei-emi`（JEI/EMI/REI）、`lib-traps-2026`（陷阱专篇） |
+| 库集成 · 配置 | `lib-cloth-config`、`lib-config-legacy`、`lib-forge-config-api-port`、`lib-fzzy-config`、`lib-midnightlib`、`lib-owo`、`lib-yacl` |
+| 库集成 · 动画 | `lib-geckolib`、`lib-playeranimator`、`lib-satin` |
+| 库集成 · 跨加载器 | `lib-architectury`、`lib-balm`、`lib-moonlight`、`lib-resourceful` |
+| 库集成 · 饰品 | `lib-caelus`、`lib-curios`、`lib-trinkets` |
+| 库集成 · 世界生成 | `lib-terrablender` |
+| 库集成 · GUI | `lib-libgui`、`lib-modern-ui`、`lib-spruceui-obsidianui` |
+| 库集成 · 数据附加 | `lib-cca`、`lib-player-ability-lib` |
+| 库集成 · 服务端/网络/文本 | `lib-impersonate`、`lib-pehkui`、`lib-polymer`、`lib-server-translations`、`lib-text-placeholder-api` |
+| 库集成 · 脚本/语言 | `lib-fabric-language-kotlin`、`lib-kotlin-for-forge`、`lib-kubejs` |
+| 库集成 · 指南书 | `lib-patchouli` |
+| 库集成 · 全家桶共享库 | `lib-bookshelf`、`lib-collective`、`lib-corgilib`、`lib-creativecore`、`lib-glitchcore`、`lib-iceberg`、`lib-kiwi`、`lib-libx`、`lib-libz`、`lib-malilib`、`lib-mantle`、`lib-necronomicon`、`lib-placebo`、`lib-puzzles-lib`、`lib-sophisticated-core` |
 
 ## 环境变量
 

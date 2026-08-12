@@ -109,57 +109,974 @@
     },
     {
       "id": "authored/lib-architectury",
-      "label": "authored/lib-architectury",
+      "label": "Architectury 跨加载器抽象要点",
       "path": "authored/lib-architectury.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "architectury",
+        "multiloader",
+        "expectplatform",
+        "common",
+        "forge",
+        "fabric",
+        "neoforge",
+        "quilt"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "同一套逻辑要同时发 Forge/Fabric（及 NeoForge）时。先做平台分析再脚手架。",
-      "mcHint": ""
+      "summary": "一码多端抽象层（9170 万下载，F/Forge/Neo/Quilt 1.16.5-26.2），@ExpectPlatform + common 源集纪律 + 90+ 事件钩子，配合 Architectury Loom/Plugin；与 Balm 二选一。",
+      "mcHint": "1.16.5-26.2"
+    },
+    {
+      "id": "authored/lib-balm",
+      "label": "Balm 跨平台抽象层集成要点",
+      "path": "authored/lib-balm.md",
+      "url": "",
+      "tags": [
+        "balm",
+        "cross-platform",
+        "abstraction",
+        "waystones",
+        "comforts",
+        "forge",
+        "fabric",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Blay 的跨加载器抽象层（5420 万下载，F/Forge/Neo 1.18-26.2，零第三方依赖）。Waystones/Comforts 等 Blay 20+ 模组共用；注册/事件/网络/配置/按键等抽象，跟随 Blay 生态的一码多端方案。",
+      "mcHint": "1.18-26.2"
+    },
+    {
+      "id": "authored/lib-bookshelf",
+      "label": "Bookshelf（Darkhax）共享库要点",
+      "path": "authored/lib-bookshelf.md",
+      "url": "",
+      "tags": [
+        "bookshelf",
+        "darkhax",
+        "bookshelf-lib",
+        "shared-lib",
+        "enchantment-descriptions",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Darkhax 全家桶共享库（Modrinth 4230 万、CF 3.94 亿下载）。Enchantment Descriptions、Botany Pots、Tips 等的共同前置；⚠️ Modrinth 上 bookshelf 是 Spigot 插件，Darkhax 库的 slug 是 bookshelf-lib。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-caelus",
+      "label": "Caelus API 鞘翅飞行抽象集成要点",
+      "path": "authored/lib-caelus.md",
+      "url": "",
+      "tags": [
+        "caelus",
+        "elytra",
+        "flight",
+        "attribute",
+        "forge",
+        "fabric",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "将鞘翅飞行抽象为实体属性的 API（690 万下载，F/Forge/Neo 1.13.2-1.21.5），支持自定义飞行能力。⚠️ 26.x 新版号未跟进（全览 §五 陷阱 8），选依赖注意版本窗口。",
+      "mcHint": "1.13.2-1.21.5"
+    },
+    {
+      "id": "authored/lib-cca",
+      "label": "Cardinal Components API (CCA) 数据附加要点",
+      "path": "authored/lib-cca.md",
+      "url": "",
+      "tags": [
+        "cca",
+        "cardinal-components",
+        "data-attachment",
+        "fabric",
+        "quilt",
+        "ladysnake"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric/Quilt 给实体/方块/区块/世界挂数据的标准方案（1420 万，1.18-26.2），ASM 生成扩展。Ladysnake 生态基石（Impersonate/PAL 依赖）。1.20.5+ 部分场景可被原版 Data Component/Attachment 替代。",
+      "mcHint": "1.18-26.2"
     },
     {
       "id": "authored/lib-cloth-config",
-      "label": "authored/lib-cloth-config",
+      "label": "Cloth Config 配置库集成要点",
       "path": "authored/lib-cloth-config.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "cloth-config",
+        "config",
+        "gui",
+        "client",
+        "modmenu",
+        "fabric",
+        "forge",
+        "neoforge"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "Fabric（及部分跨平台）需要友好配置屏时。Forge 原生可用 `ForgeConfigSpec`（见 patterns `config-spec`）。",
-      "mcHint": ""
+      "summary": "老牌配置 GUI 库（1.53 亿下载，F/Forge/Neo 1.14-26.2，已冷冻）。新项目优先评估 YACL / Fzzy / owo-config；选用 Cloth 时 ConfigBuilder 建屏、Screen 仅客户端、Mod Menu 软依赖。",
+      "mcHint": "1.14-26.2"
+    },
+    {
+      "id": "authored/lib-collective",
+      "label": "Collective 全家桶共享库要点",
+      "path": "authored/lib-collective.md",
+      "url": "",
+      "tags": [
+        "collective",
+        "serilum",
+        "shared-lib",
+        "qol",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Serilum 100+ 模组的共享库（Modrinth 5980 万下载）。装任意 Serilum 模组都会自动拉入它；这是作者全家桶的内部依赖，不是通用 API，第三方集成需谨慎。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-config-legacy",
+      "label": "历史配置库（Auto Config / Fiber / Omega / Oro / Tweed / Simple）识别与迁移",
+      "path": "authored/lib-config-legacy.md",
+      "url": "",
+      "tags": [
+        "auto-config",
+        "fiber",
+        "omega-config",
+        "oro-config",
+        "tweed",
+        "simple-config",
+        "config",
+        "legacy",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "旧 Fabric 生态配置库（Auto Config / Fiber / Omega Config / Oro Config / Tweed / Simple Config）少用：多数停更或生态萎缩，新项目迁移到 YACL / Cloth / Fzzy。全览未逐一列版本与加载器，以各库官方为准。",
+      "mcHint": "以各库官方为准"
+    },
+    {
+      "id": "authored/lib-corgilib",
+      "label": "CorgiLib 全家桶共享库要点",
+      "path": "authored/lib-corgilib.md",
+      "url": "",
+      "tags": [
+        "corgilib",
+        "corgi-taco",
+        "shared-lib",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Corgi Taco 全家桶共享库（Modrinth 1370 万下载）。其全部模组的共同前置；以服务作者自家生态为主，第三方集成需谨慎。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-creativecore",
+      "label": "CreativeCore 全家桶共享库要点",
+      "path": "authored/lib-creativecore.md",
+      "url": "",
+      "tags": [
+        "creativecore",
+        "creativemd",
+        "shared-lib",
+        "littletiles",
+        "ambient-sounds",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "CreativeMD 全家桶共享库（CurseForge 5.22 亿下载，全览为 CF 口径）。LittleTiles、AmbientSounds 的共同前置；全家桶中最\"重\"的基座之一，第三方集成更需谨慎。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
     },
     {
       "id": "authored/lib-curios",
-      "label": "authored/lib-curios",
+      "label": "Curios 饰品槽集成要点",
       "path": "authored/lib-curios.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "curios",
+        "trinkets",
+        "accessory",
+        "equipment",
+        "slot",
+        "forge",
+        "neoforge"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "需要饰品栏、额外装备槽。Forge 侧常见 **Curios API**；Fabric 常见 Trinkets（API 不同，勿混用）。",
-      "mcHint": ""
+      "summary": "Forge 系饰品槽标准（2850 万下载，Forge/Neo 1.13.2-26.2），tag 驱动扩展槽位、自带 GUI。Fabric 用户读 lib-trinkets，禁止把 Curios 代码拷到 Fabric。",
+      "mcHint": "1.13.2-26.2"
+    },
+    {
+      "id": "authored/lib-fabric-language-kotlin",
+      "label": "Fabric Language Kotlin 语言加载器集成要点",
+      "path": "authored/lib-fabric-language-kotlin.md",
+      "url": "",
+      "tags": [
+        "fabric-language-kotlin",
+        "kotlin",
+        "language-loader",
+        "coroutines",
+        "fabric",
+        "fabricmc"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric 的 Kotlin 语言支持（1.07 亿下载，Fabric 1.14-26.2，通用库 Top 3）：让 Fabric 模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Forge/Neo 平台用 Kotlin for Forge。",
+      "mcHint": "1.14-26.2"
+    },
+    {
+      "id": "authored/lib-forge-config-api-port",
+      "label": "Forge Config API Port 集成要点",
+      "path": "authored/lib-forge-config-api-port.md",
+      "url": "",
+      "tags": [
+        "forgeconfigapiport",
+        "config",
+        "fabric",
+        "fuzs",
+        "puzzles-lib",
+        "migration"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "把 Forge 配置系统（ForgeConfigSpec 等）搬到 Fabric 的移植库，Fabric 为主。常见于从 Forge 移植到 Fabric 的模组与 Puzzles Lib 的 Fabric 依赖链。",
+      "mcHint": "以官方为准（全览未列版本窗口）"
+    },
+    {
+      "id": "authored/lib-fzzy-config",
+      "label": "Fzzy Config 配置库集成要点",
+      "path": "authored/lib-fzzy-config.md",
+      "url": "",
+      "tags": [
+        "fzzy-config",
+        "fzzy",
+        "config",
+        "gui",
+        "client",
+        "validation",
+        "sync",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "自动 GUI、强校验、服务端-客户端同步的配置库（3420 万下载，2024-04 发布增速极快；F/Forge/Neo/Quilt，1.20.1-26.2）。新项目配置库评估选项之一。",
+      "mcHint": "1.20.1-26.2"
     },
     {
       "id": "authored/lib-geckolib",
-      "label": "authored/lib-geckolib",
+      "label": "GeckoLib 3D 动画集成要点",
       "path": "authored/lib-geckolib.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "geckolib",
+        "animation",
+        "blockbench",
+        "renderer",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "实体/方块需要复杂动画、Geo 模型时。官方文档优先于任何二手教程。",
-      "mcHint": ""
+      "summary": "3D 骨骼动画引擎（6270 万下载，F/Forge/Neo/Quilt 1.12.2-26.2），Blockbench 建模、客户端必需/服务端可选；玩家动作类需求对比 playerAnimator。",
+      "mcHint": "1.12.2-26.2"
+    },
+    {
+      "id": "authored/lib-glitchcore",
+      "label": "GlitchCore 全家桶共享库要点",
+      "path": "authored/lib-glitchcore.md",
+      "url": "",
+      "tags": [
+        "glitchcore",
+        "glitchfiend",
+        "shared-lib",
+        "biomes-o-plenty",
+        "serene-seasons",
+        "tough-as-nails",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Glitchfiend 全家桶共享库（CurseForge 4.04 亿下载，全览为 CF 口径）。Biomes O' Plenty、Serene Seasons、Tough As Nails 的共同前置；以服务作者大型内容模组为主。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-iceberg",
+      "label": "Iceberg 全家桶共享库要点",
+      "path": "authored/lib-iceberg.md",
+      "url": "",
+      "tags": [
+        "iceberg",
+        "grend",
+        "shared-lib",
+        "visual-workbench",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Grend 全家桶共享库（CurseForge 2.33 亿下载，全览为 CF 口径）。Visual Workbench 等模组的共同前置；以服务作者自家生态为主，第三方集成需谨慎。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-impersonate",
+      "label": "Impersonate 玩家伪装 API 集成要点",
+      "path": "authored/lib-impersonate.md",
+      "url": "",
+      "tags": [
+        "impersonate",
+        "disguise",
+        "player",
+        "cardinal-components",
+        "cca",
+        "fabric",
+        "quilt",
+        "ladysnake"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "玩家伪装 API（5.1 万下载，F/Quilt 服务端 1.16.3-1.21.11）：服务端给玩家换皮肤/名牌/身份，基于 Cardinal Components API 挂玩家数据；适合角色扮演服、NPC 伪装类玩法。",
+      "mcHint": "1.16.3-1.21.11"
+    },
+    {
+      "id": "authored/lib-kiwi",
+      "label": "Kiwi 全家桶共享库要点",
+      "path": "authored/lib-kiwi.md",
+      "url": "",
+      "tags": [
+        "kiwi",
+        "snownee",
+        "shared-lib",
+        "sculk-horde",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Snownee 全家桶共享库（Modrinth 1970 万下载）。Sculk Horde、Smarter Farmers、Frozen Up 等的共同前置；提供注解式注册等能力，但以服务自家模组为主。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-kotlin-for-forge",
+      "label": "Kotlin for Forge 语言加载器集成要点",
+      "path": "authored/lib-kotlin-for-forge.md",
+      "url": "",
+      "tags": [
+        "kotlin-for-forge",
+        "kotlin",
+        "language-loader",
+        "coroutines",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Forge/NeoForge 的 Kotlin 语言加载器（4410 万下载，Forge/Neo 1.14-26.2）：让模组用 Kotlin 编写，提供 Kotlin 标准库与协程运行时；Fabric 平台用 Fabric Language Kotlin。",
+      "mcHint": "1.14-26.2"
+    },
+    {
+      "id": "authored/lib-kubejs",
+      "label": "KubeJS 整合包脚本引擎集成要点",
+      "path": "authored/lib-kubejs.md",
+      "url": "",
+      "tags": [
+        "kubejs",
+        "javascript",
+        "script",
+        "recipe",
+        "tag",
+        "reload",
+        "probejs",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "JavaScript 脚本引擎（1900 万下载，F/Forge/Neo/Quilt 1.18.2-26.1.2）：脚本改配方、注册物品方块、改 tag、热重载；ATM/E2E 等大型整合包依赖它，开发期配 ProbeJS 补全。",
+      "mcHint": "1.18.2-26.1.2"
+    },
+    {
+      "id": "authored/lib-libgui",
+      "label": "LibGui 声明式 GUI 库集成要点",
+      "path": "authored/lib-libgui.md",
+      "url": "",
+      "tags": [
+        "libgui",
+        "gui",
+        "fabric",
+        "declarative-ui",
+        "cotton"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "老牌声明式 GUI 库（Fabric，GitHub 活跃至 26.2）。Modrinth 已下架(404)，分发走 Cotton maven + Jar-in-Jar；Panel/Widget 树声明式建 UI，服务器侧仍需原版容器/网络同步。",
+      "mcHint": "≤26.2（以 GitHub Releases 为准）"
+    },
+    {
+      "id": "authored/lib-libx",
+      "label": "LibX 全家桶共享库要点",
+      "path": "authored/lib-libx.md",
+      "url": "",
+      "tags": [
+        "libx",
+        "noeppi-noeppi",
+        "shared-lib",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "noeppi_noeppi 全家桶共享库（Modrinth 210 万下载）。其全部模组的共同前置；以服务作者自家生态为主，第三方集成需谨慎。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-libz",
+      "label": "LibZ 全家桶共享库要点",
+      "path": "authored/lib-libz.md",
+      "url": "",
+      "tags": [
+        "libz",
+        "globox",
+        "shared-lib",
+        "village-spawn-point",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Globox 全家桶共享库（Modrinth 380 万下载），仅 Fabric。Village Spawn Point 等模组的共同前置；Fabric 项目之外不用考虑。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-malilib",
+      "label": "MaLiLib 全家桶共享库要点",
+      "path": "authored/lib-malilib.md",
+      "url": "",
+      "tags": [
+        "malilib",
+        "masa",
+        "shared-lib",
+        "client",
+        "litematica",
+        "minihud",
+        "tweakeroo",
+        "fabric",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "masa 全家桶共享库（Modrinth 3140 万下载），客户端专用。Litematica、MiniHUD、Tweakeroo 等工具模组的共同前置；服务端不需要也不该装。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-mantle",
+      "label": "Mantle 全家桶共享库要点",
+      "path": "authored/lib-mantle.md",
+      "url": "",
+      "tags": [
+        "mantle",
+        "slimeknights",
+        "shared-lib",
+        "tinkers-construct",
+        "natura",
+        "ceramics",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "SlimeKnights 全家桶共享库（Modrinth 320 万下载，Forge 系）。Tinkers' Construct、Natura、Ceramics 的共同前置；⚠️ 1.21+ / 26.x 无版本。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准（1.21+ 无版本）"
+    },
+    {
+      "id": "authored/lib-midnightlib",
+      "label": "MidnightLib 配置库集成要点",
+      "path": "authored/lib-midnightlib.md",
+      "url": "",
+      "tags": [
+        "midnightlib",
+        "config",
+        "gui",
+        "client",
+        "jar-in-jar",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "轻量配置库（2510 万下载；F/Forge/Neo/Quilt，1.17-26.2）。API 简单，鼓励以 Jar-in-Jar 方式打包进宿主模组分发。",
+      "mcHint": "1.17-26.2"
+    },
+    {
+      "id": "authored/lib-modern-ui",
+      "label": "Modern UI 现代文本排版与 GUI 库要点",
+      "path": "authored/lib-modern-ui.md",
+      "url": "",
+      "tags": [
+        "modern-ui",
+        "modernui",
+        "gui",
+        "text-rendering",
+        "unicode",
+        "fabric",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "现代文本排版引擎（中文/Unicode 渲染友好：SDF 抗锯齿、字体回退、HarfBuzz 整形）+ GUI API，F/Forge/Neo，中文模组圈使用率高。官方仓库 BloCamLimb/ModernUI-MC。",
+      "mcHint": "1.18.2+（以官方 Releases 为准）"
+    },
+    {
+      "id": "authored/lib-moonlight",
+      "label": "Moonlight Lib（原 Selene）集成要点",
+      "path": "authored/lib-moonlight.md",
+      "url": "",
+      "tags": [
+        "moonlight",
+        "selene",
+        "dynamic-registration",
+        "blockset",
+        "villager",
+        "fluid",
+        "forge",
+        "fabric",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "MehVahdJukaar 的动态注册/资源库（3690 万下载，CF 2.33 亿，F/Forge/Neo 1.16.5-1.21.1）。动态注册、BlockSetAPI、村民 AI、流体系统；⚠️ 版本上限 1.21.1，26.x 无构建。Supplementaries/Sawmill 依赖。",
+      "mcHint": "1.16.5-1.21.1"
+    },
+    {
+      "id": "authored/lib-necronomicon",
+      "label": "Necronomicon 全家桶共享库要点",
+      "path": "authored/lib-necronomicon.md",
+      "url": "",
+      "tags": [
+        "necronomicon",
+        "elocindev",
+        "shared-lib",
+        "api",
+        "forge",
+        "neoforge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "ElocinDev 全家桶共享库（Modrinth 1230 万下载）。其全部模组的共同前置；较新、迭代快的 API 型共享库，版本窗口滚动快，以页面为准。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-owo",
+      "label": "owo-config 配置集成要点（owo-lib）",
+      "path": "authored/lib-owo.md",
+      "url": "",
+      "tags": [
+        "owo-lib",
+        "owo-config",
+        "owo-ui",
+        "config",
+        "gui",
+        "client",
+        "network",
+        "fabric",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "owo-lib 内的注解式配置（owo-config）+ 自动 GUI + 配置同步（owo-lib 4380 万下载；F/Neo/Quilt，1.17-26.1.2）。⚠️ 不支持 Forge，纯 Forge 项目不可用。",
+      "mcHint": "1.17-26.1.2"
     },
     {
       "id": "authored/lib-patchouli",
-      "label": "authored/lib-patchouli",
+      "label": "Patchouli 指南书集成要点",
       "path": "authored/lib-patchouli.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "patchouli",
+        "guidebook",
+        "documentation",
+        "datapack",
+        "fabric",
+        "forge",
+        "neoforge"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "需要游戏内指南书 / 分类条目。以 Patchouli 数据包格式为主，少写死 Java UI。",
+      "summary": "游戏内指南书库，book 资源放 data/<modid>/patchouli_books/，数据包为主、自定义页面类型才写 Java；解锁与进度联动可选；1.21.1 起弃 Forge 转 NeoForge。",
+      "mcHint": "1.14.4-26.1"
+    },
+    {
+      "id": "authored/lib-pehkui",
+      "label": "Pehkui 实体缩放 API 集成要点",
+      "path": "authored/lib-pehkui.md",
+      "url": "",
+      "tags": [
+        "pehkui",
+        "scale",
+        "entity",
+        "resize",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt",
+        "virtuoel"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "实体缩放 API（920 万下载，F/Forge/Neo/Quilt 1.14.4-1.21.1）：20+ 缩放类型（身高/宽度/视距/命中盒等）可分别设置并带平滑过渡；注意版本窗口停在 1.21.1。",
+      "mcHint": "1.14.4-1.21.1"
+    },
+    {
+      "id": "authored/lib-placebo",
+      "label": "Placebo 全家桶共享库要点",
+      "path": "authored/lib-placebo.md",
+      "url": "",
+      "tags": [
+        "placebo",
+        "shadows-of-fire",
+        "shared-lib",
+        "apotheosis",
+        "zenith",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Shadows_of_Fire 全家桶共享库（Modrinth 57 万下载，CF 口径更大）。Apotheosis（神化）、Zenith 的共同前置；版本跟随作者发布节奏，以页面为准。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-player-ability-lib",
+      "label": "PlayerAbilityLib (PAL) 玩家能力库要点",
+      "path": "authored/lib-player-ability-lib.md",
+      "url": "",
+      "tags": [
+        "playerabilitylib",
+        "pal",
+        "ability",
+        "ladysnake",
+        "fabric",
+        "quilt",
+        "server"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Ladysnake 玩家能力库（42 万，F/Quilt 服务端，1.20-26.1）：飞行/缩放等玩家能力的注册与兼容修正；常依赖 CCA。服务端注册能力，客户端经网络/属性同步表现。",
+      "mcHint": "1.20-26.1"
+    },
+    {
+      "id": "authored/lib-playeranimator",
+      "label": "playerAnimator 玩家动画库集成要点",
+      "path": "authored/lib-playeranimator.md",
+      "url": "",
+      "tags": [
+        "playeranimator",
+        "animation",
+        "keyframe",
+        "player",
+        "renderer",
+        "bendy-lib",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "玩家关键帧动画库（2480 万下载；F/Forge/Neo/Quilt，1.16.4-1.21.7），第一/第三人称玩家动画，配套 bendy-lib 弯曲增强，战斗模组（Better Combat、Iron's Spells 等）常见。",
+      "mcHint": "1.16.4-1.21.7"
+    },
+    {
+      "id": "authored/lib-polymer",
+      "label": "Polymer 纯服务端内容库集成要点",
+      "path": "authored/lib-polymer.md",
+      "url": "",
+      "tags": [
+        "polymer",
+        "server-side",
+        "virtual-block",
+        "autohost",
+        "fabric",
+        "quilt",
+        "patbox"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "纯服务端生成内容的库（356 万下载，F/Quilt 1.18-26.2）：服务端注册虚拟方块/物品/实体，原版客户端免装 mod 即可见；AutoHost 托管自定义模型纹理；适合定制服务器与\"客户端零 mod\"内容分发。",
+      "mcHint": "1.18-26.2"
+    },
+    {
+      "id": "authored/lib-puzzles-lib",
+      "label": "Puzzles Lib 全家桶共享库要点",
+      "path": "authored/lib-puzzles-lib.md",
+      "url": "",
+      "tags": [
+        "puzzles-lib",
+        "fuzs",
+        "shared-lib",
+        "forge-config-api-port",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fuzs 全家桶共享库（Modrinth 5630 万下载）。装 Bag of Holding、TrashSlot 等任一 Fuzs 模组自动拉入；与 Forge Config API Port 构成依赖链；面向作者自家模组，非通用 API。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-resourceful",
+      "label": "Resourceful Lib 集成要点",
+      "path": "authored/lib-resourceful.md",
+      "url": "",
+      "tags": [
+        "resourceful-lib",
+        "network",
+        "codec",
+        "resourcepack",
+        "highlight",
+        "forge",
+        "fabric",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Team Resourceful 的跨平台工具库（3220 万下载，F/Forge/Neo 1.19.2-26.2）。跨平台网络、codec 工具、内存资源包、Highlight API；Resourceful Bees 与 Ad Astra 生态在用。",
+      "mcHint": "1.19.2-26.2"
+    },
+    {
+      "id": "authored/lib-satin",
+      "label": "Satin 后期处理着色器库集成要点",
+      "path": "authored/lib-satin.md",
+      "url": "",
+      "tags": [
+        "satin",
+        "shader",
+        "post-processing",
+        "renderer",
+        "client",
+        "fabric",
+        "ladysnake"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric 后期处理着色器包装库（170 万下载；仅 Fabric，1.18-1.21.4），把原版后期处理管线封装成易用 API。加载器只有 Fabric。",
+      "mcHint": "1.18-1.21.4"
+    },
+    {
+      "id": "authored/lib-server-translations",
+      "label": "Server Translations API 服务端翻译库集成要点",
+      "path": "authored/lib-server-translations.md",
+      "url": "",
+      "tags": [
+        "server-translations-api",
+        "server-i18n",
+        "translation",
+        "text",
+        "nucleoid",
+        "fabric",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "服务端按玩家语言渲染可翻译文本的库（F/Forge/Neo，版本以 GitHub Releases 为准）。Modrinth 页面已下架，分发走 maven.nucleoid.xyz；替代品 Server I18n API。",
+      "mcHint": "以 GitHub Releases 为准（目录未标注版本区间）"
+    },
+    {
+      "id": "authored/lib-sophisticated-core",
+      "label": "Sophisticated Core 全家桶共享库要点",
+      "path": "authored/lib-sophisticated-core.md",
+      "url": "",
+      "tags": [
+        "sophisticated-core",
+        "p3pp3r1y",
+        "shared-lib",
+        "sophisticated-backpacks",
+        "sophisticated-storage",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "P3pp3rF1y 全家桶共享库（Modrinth 1630 万下载）。Sophisticated Backpacks、Sophisticated Storage 的共同前置；Fabric 版背包为社区移植，别与官方库混用。",
+      "mcHint": "以 Modrinth/CurseForge 页面为准"
+    },
+    {
+      "id": "authored/lib-spruceui-obsidianui",
+      "label": "SpruceUI / ObsidianUI GUI 抽象库要点",
+      "path": "authored/lib-spruceui-obsidianui.md",
+      "url": "",
+      "tags": [
+        "spruceui",
+        "obsidianui",
+        "gui",
+        "architectury",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "GUI 抽象库（245 万，1.16.4-1.21.5）。SpruceUI 原版已下架，ObsidianUI 是 Architectury 移植延续（跨加载器）。新项目优先 ObsidianUI，或评估 Modern UI / owo-ui。",
+      "mcHint": "1.16.4-1.21.5"
+    },
+    {
+      "id": "authored/lib-terrablender",
+      "label": "TerraBlender 生物群系 API 集成要点",
+      "path": "authored/lib-terrablender.md",
+      "url": "",
+      "tags": [
+        "terrablender",
+        "biome",
+        "worldgen",
+        "region",
+        "surface-rule",
+        "forge",
+        "fabric",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "region 机制兼容式添加生物群系的 API（3610 万下载，F/Forge/Neo/Quilt 1.18.1-26.2），1.18+ 地形系统的标准方案。BOP/BYG/Regions Unexplored 等群系模组依赖。",
+      "mcHint": "1.18.1-26.2"
+    },
+    {
+      "id": "authored/lib-text-placeholder-api",
+      "label": "Text Placeholder API 占位符库集成要点",
+      "path": "authored/lib-text-placeholder-api.md",
+      "url": "",
+      "tags": [
+        "text-placeholder-api",
+        "placeholder",
+        "simplified-text-format",
+        "text",
+        "fabric",
+        "quilt",
+        "patbox"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "占位符解析库（5670 万下载，F/Quilt 1.17-26.2）：注册与消费 %modid:type% 占位符，配合 Simplified Text Format 简化文本构建；适合聊天、名牌、命令输出、GUI 与数据驱动文本。",
+      "mcHint": "1.17-26.2"
+    },
+    {
+      "id": "authored/lib-traps-2026",
+      "label": "库模组陷阱专篇（2026 版）",
+      "path": "authored/lib-traps-2026.md",
+      "url": "",
+      "tags": [
+        "traps",
+        "library",
+        "pitfalls",
+        "2026"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "选库依赖前必读的八条陷阱：ChocolateCore 不存在、owo-lib 无 Forge、Trinkets 停更、Bookshelf 重名、LibGui/Server Translations API/SpruceUI 下架、Botarium 停更、Cloth Config 冷冻、EMI 活跃窗口与 26.x 未跟进。数据来自《Minecraft 社区常用库模组全览（2026 版）》第五节。",
+      "mcHint": "1.17–26.x；选库依赖前先过这 8 条"
+    },
+    {
+      "id": "authored/lib-trinkets",
+      "label": "Trinkets 饰品槽集成要点",
+      "path": "authored/lib-trinkets.md",
+      "url": "",
+      "tags": [
+        "trinkets",
+        "accessory",
+        "slot",
+        "fabric",
+        "quilt",
+        "datadriven",
+        "stopped"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric/Quilt 系饰品槽标准（2260 万下载，F/Quilt 1.17-1.21.1，6 组槽位，数据驱动）。⚠️ 已停更于 1.21.1（2024-07 后无更新），1.21.4+ 新模组多自研槽位或用原版机制。Forge 用户读 lib-curios。",
+      "mcHint": "1.17-1.21.1"
+    },
+    {
+      "id": "authored/lib-yacl",
+      "label": "YACL 配置库集成要点",
+      "path": "authored/lib-yacl.md",
+      "url": "",
+      "tags": [
+        "yacl",
+        "yet-another-config-lib",
+        "config",
+        "gui",
+        "client",
+        "modmenu",
+        "fabric",
+        "forge",
+        "neoforge",
+        "quilt"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "新一代配置库（1.11 亿下载，官网全平台 1.77 亿；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。",
+      "mcHint": "1.19-26.3"
+    },
+    {
+      "id": "authored/library-catalog-2026",
+      "label": "库模组总目录（2026 版）",
+      "path": "authored/library-catalog-2026.md",
+      "url": "",
+      "tags": [
+        "library-catalog",
+        "cloth-config",
+        "yacl",
+        "fabric-language-kotlin",
+        "architectury",
+        "geckolib",
+        "collective",
+        "puzzles-lib",
+        "text-placeholder-api",
+        "balm",
+        "owo-lib",
+        "bookshelf",
+        "terrablender",
+        "curios",
+        "trinkets",
+        "cardinal-components",
+        "kubejs",
+        "jei",
+        "emi"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "社区常用库模组总目录与分类导航：Top 12、十大功能分类、作者全家桶共享库、平台推荐路线与八条陷阱，数据源自《Minecraft 社区常用库模组全览（2026 版）》。",
       "mcHint": ""
     },
     {
@@ -174,31 +1091,37 @@
         "modlist",
         "dist",
         "forge",
-        "library"
+        "fabric",
+        "neoforge",
+        "library",
+        "api"
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "硬/软依赖；Gradle 配置与 mods.toml；客户端专用 API；兼容类隔离；与 cursemaven、ModList 短文配合。",
-      "mcHint": "1.20.1+ Forge 为主"
+      "summary": "硬/软依赖；Gradle 配置与 mods.toml / fabric.mod.json 声明；客户端专用 API；兼容类隔离；配方查看器与 lib-* 专题索引。",
+      "mcHint": "1.20.1+ / 1.21+ / 26.x；F/Forge/Neo"
     },
     {
       "id": "authored/library-integration-jei-emi",
-      "label": "JEI / EMI 软依赖接入要点",
+      "label": "JEI / EMI / REI 配方查看器软依赖接入要点",
       "path": "authored/library-integration-jei-emi.md",
       "url": "",
       "tags": [
         "jei",
         "emi",
+        "rei",
         "interop",
         "optional",
         "client",
         "datagen",
-        "forge"
+        "forge",
+        "fabric",
+        "neoforge"
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "DataGen 配方常零代码；软依赖 Gradle；Dist.CLIENT 注册；自定义分类再查官方；与 library-integration 总清单配合。",
-      "mcHint": "1.20.1+ Forge"
+      "summary": "DataGen 配方常零代码；三查看器软依赖 Gradle；Dist.CLIENT 注册；REI 可与 JEI 同装；1.21.2+ JEI 服务端同步与 EMI 活跃窗口；自定义分类再查官方。",
+      "mcHint": "1.20.1+ / 1.21+ / 26.x"
     },
     {
       "id": "authored/localization-lang",

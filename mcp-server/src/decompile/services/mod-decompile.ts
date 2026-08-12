@@ -9,7 +9,7 @@
  */
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "fs";
-import { join, relative, sep } from "path";
+import { basename, join, relative, sep } from "path";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
 import { ensureCachePaths, openCacheDb, setArtifact, getArtifact } from "../cache.js";
@@ -142,7 +142,16 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     return withAction({ found: false, error: meta.action?.code ?? "NOT_FOUND", jarPath: args.jarPath }, meta.action);
   }
   const modId = (meta.modId ?? "unknown-mod").replace(/[^a-z0-9._-]/gi, "_");
-  const modVersion = (meta.modVersion ?? "unknown").replace(/[^a-z0-9._-]/gi, "_");
+  // Forge 的 mods.toml 版本可用 ${file.jarVersion} 占位符（加载时按 jar 文件名解析）。
+  // 此处按 FML 语义回退：去 .jar 后缀、取最后一个 '-' 之后的片段。避免把占位符
+  // 原样用作输出目录名（含 ".jar" 子串会让 VineFlower 走单文件保存路径而失败）。
+  let rawModVersion = meta.modVersion ?? "unknown";
+  if (rawModVersion.includes("${file.jarVersion}")) {
+    const stem = basename(args.jarPath).replace(/\.jar$/i, "");
+    const dash = stem.lastIndexOf("-");
+    rawModVersion = dash >= 0 ? stem.slice(dash + 1) : stem;
+  }
+  const modVersion = rawModVersion.replace(/[^a-z0-9._-]/gi, "_");
   const cache = ensureCachePaths();
   const outDir = join(cache.decompiledMods, modId, modVersion);
 

@@ -2,6 +2,9 @@
 /**
  * Propagate Wave D skills from forge/1.20.1 → other forge / fabric / neoforge.
  * Then run: pwsh scripts/sync-skills.ps1 -All
+ *
+ * 库模组 Skill（mc-config / mc-geckolib / mc-curios / mc-patchouli 等）
+ * 不再经本脚本传播：改走 knowledge/libs 源稿即用（不落盘，见 plan §3.6 解析规则）。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -19,11 +22,7 @@ const WAVE_D = [
   "mc-loottable",
   "mc-datapack",
   "mc-resourcepack",
-  "mc-config",
   "mc-gametest",
-  "mc-geckolib",
-  "mc-curios",
-  "mc-patchouli",
   "mc-enchantment",
   "mc-potion",
   "mc-effect",

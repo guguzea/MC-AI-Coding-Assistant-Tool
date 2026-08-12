@@ -216,25 +216,27 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 
 
-## Agent Skills（**38** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
+## Agent Skills（**34** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
 
 路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
 
+> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 4 + fabric-only 7 + forge-only 2 = **13**（以 `knowledge/libs` 实际源稿为准）。
+
 | 平台/版本 | 数量 | 结构 | 说明 |
 |-----------|------|------|------|
-| `forge/1.20.1` 及多数 Forge 版本 | **38** | 目录（每 skill 一目录） | 15 核心 + 23 Wave D |
-| `forge/1.15.2` | **39** | 目录 | 上表 + `mc-events` |
-| `fabric/*`（10 个版本） | **41** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 23 Wave D |
-| `neoforge` | **39** | 目录 | 16 基础（含 `mc-events`）+ 23 Wave D |
+| `forge/1.20.1` 及多数 Forge 版本 | **34** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D |
+| `forge/1.15.2` | **35** | 目录 | 上表 + `mc-events` |
+| `fabric/*`（10 个版本） | **37** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D |
+| `neoforge` | **35** | 目录 | 16 基础（含 `mc-events`）+ 19 Wave D |
 
 | 分类           | Skills                                                                                                                           |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
 | 核心           | `mc-registry`、`mc-block`、`mc-item`、`mc-blockentity`、`mc-entity`、`mc-mixin`、`mc-networking`、`mc-datagen`、`mc-capability`、`mc-gui` |
 | 内容           | `mc-fluid`、`mc-particle`、`mc-sound`、`mc-recipe`、`mc-enchantment`、`mc-potion`、`mc-effect`、`mc-command`、`mc-villager`、`mc-ai`      |
-| 渲染 / 模型      | `mc-renderer`、`mc-model`、`mc-geckolib`                                                                                           |
+| 渲染 / 模型      | `mc-renderer`、`mc-model`                                                                                                           |
 | 世界 / 数据包     | `mc-worldgen`、`mc-structure`、`mc-advancement`、`mc-loottable`、`mc-datapack`、`mc-resourcepack`、`mc-dimension`、`mc-weather`         |
-| 配置 / 测试 / 能源 | `mc-config`、`mc-gametest`、`mc-energy`、`mc-multiblock`                                                                            |
-| 兼容 / 文档库     | `mc-compat-jei`、`mc-curios`、`mc-patchouli`                                                                                       |
+| 配置 / 测试 / 能源 | `mc-gametest`、`mc-energy`、`mc-multiblock`                                                                                          |
+| 兼容 / 文档库     | `mc-compat-jei`（库类：`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` / `mc-trinkets` / `mc-cca` / `mc-yacl` / `mc-owo` / `mc-architectury` / `mc-lib-catalog` / `mc-author-shared-libs` 等 → `knowledge/libs` 源稿） |
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 

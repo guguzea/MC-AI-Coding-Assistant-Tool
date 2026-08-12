@@ -148,6 +148,19 @@ Decision: 选择注册方式
 - 依据某篇 `authored/` / `permitted/` / `links/` 写方案时，若 **不清楚、不会、缺方法名、与现象对不上** → **必须先打开短文给出的原文 URL 或官方文档**（`WebFetch` / 浏览器 / `get_*_doc_full`），禁止臆造
 - `links/`（如 6071）仅外链浏览，**禁止**把网页正文拷进回复当「已入库全文」
 
+## 库模组 Skill（knowledge/libs 源稿即用）
+
+涉及常用库模组（配置库 / 饰品 / GeckoLib / Patchouli / CCA / Polymer 等）的 Skill **不落盘**到平台 `.cursor/skills`，一律按解析规则直接读根目录源稿：
+
+1. 平台 → 组映射：
+   - `forge` → `forge-only` + `all-platforms`
+   - `fabric` / `quilt` → `fabric-only` + `all-platforms`
+   - `neoforge` → `neo-only` + `all-platforms`
+2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
+3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`minecraftVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本）
+4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`
+5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
+
 ## 不确定时
 
 永远选择**保守**方案：
