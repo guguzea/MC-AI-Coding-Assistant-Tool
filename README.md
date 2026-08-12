@@ -18,8 +18,10 @@ MC_skill/
 ├── forge/                       # Forge 规则 / skills / scaffold / knowledge（多版本）
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
-├── community_knowledge/         # 社区实务知识库（MCP search_community_docs）
-├── mcp-server/                  # 本地 stdio MCP Server（62 个工具）
+├── community_knowledge/         # 社区实务知识库（MCP search_community_docs；48 篇 lib-* 短文等）
+├── knowledge/                   # 知识源稿：patterns/（代码模式）+ libs/（四组 24 个库 Skill，不落盘）
+├── scripts/                     # 库模组脚本：manifest / 分批反编译 / catalog / API 摘要 / 传播
+├── mcp-server/                  # 本地 stdio MCP Server（62 个工具）；data/ 含 lib-manifests、lib-api-summaries
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -120,6 +122,19 @@ MC_skill/
 
 本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**62** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
+**测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
+
+### 向量 / 语义搜索（T1）
+
+1. 文档检索默认**混合检索**：L0 关键词排行 ∪ 语义向量排行做 **RRF 合并**，命中附带 `matches[]`（chunks 表 top-K：`sectionHeading` / `snippet` / `score`）。
+2. **三档降级**：`hybrid`（L0 + 语义）→ 缺模型时 `fts5-only` → 再缺则纯 `l0-only`（`allowRemoteModels=false`，**运行时不远程拉模型**）。构建期缺模型：警告并降级 FTS5-only（不 exit 1）。
+3. **状态查看**：`get_server_status.semanticIndex.modeHint` ∈ `hybrid | fts5-only | l0-only`；`diagnose_data_paths.semantic` 报告各文档树旁 `semantic/db.sqlite` 的存在性。
+4. **数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前已有 **40 个**；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。
+5. **构建 / 更新**：
+   - `npm run fetch:embedding-model`：拉取模型到 `data/_models/`
+   - `npm run build:semantic-index -- --all`：全平台构建（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force` 裁剪范围；可中断续跑）
+6. 产物清单：`data/semantic-index-manifest.json`；全平台嵌入可达数十分钟，建议放后台执行。
+
 ### 文档查询（Forge / Fabric / NeoForge）
 
 1. **页面 ID 必须用搜索结果里的** `id`，不要用网站 URL 路径。
@@ -168,6 +183,8 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 
 常用 URI：`mcskill://patterns/README`（→ `community_knowledge/patterns/README.md`）、`mcskill://schema/sqlite`、`mcskill://matrix/mixin-support`、`mcskill://version-changes/1.21`、`mcskill://antipatterns/registry`、`mcskill://workflow/<模板名>`、`mcskill://community/<authored-id>`。兼容说明见 `[mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md)`。
+
+**补充文档**（`mcp-server/docs/`）：`mixin-support.md`（字节码校验支持矩阵）、`vanilla-registries.md` / `registry-data-source.md`（Registry 数据源）、`mc-skill-update.md`（自更新机制）、`prompts-client-compat.md`（Prompt/Resource 客户端兼容）。
 
 ### 移植分析（`analyze_porting_path`）
 
@@ -545,7 +562,8 @@ node dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 1.5 | ✅ 完成  | 模组脚手架 + 校验 CLI                                        |
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
 | Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展，**62** 工具） |
-| Phase 4   | ✅ 进行中 | 知识库 / 反模式 / 数据审计与 Release 分发                          |
+| Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
+| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇短文 + 24 库 Skill（knowledge/libs）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
 | Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |
 
 
