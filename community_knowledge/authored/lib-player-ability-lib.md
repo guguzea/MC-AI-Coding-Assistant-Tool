@@ -83,3 +83,9 @@ Decision: 玩家能力用不用 PAL
 - 全览：§二.7 数据附加（PAL）；Ladysnake 生态见 `lib-cca`、`lib-impersonate`；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/Ladysnake/PlayerAbilityLib
 - 不清楚时：打开 PAL README + 示例 mod；`search_fabric_docs` 查能力/属性相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20/fabric：顶层 API 包 `io.github.ladysnake`，入口 io.github.ladysnake.pal.Pal
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

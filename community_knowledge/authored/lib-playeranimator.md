@@ -77,3 +77,9 @@ Decision: 要不要用 playerAnimator
 - 全览：§二.2 动画库、§四 平台推荐路线；`authored/library-catalog-2026`、`authored/lib-geckolib`、`authored/library-integration`、`authored/soft-deps-modlist`
 - 官方：https://github.com/KosmX/playerAnimator
 - 不清楚时：打开 playerAnimator README + 示例 mod，或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.16.4/fabric：顶层 API 包 `dev.kosmx.playerAnim`，入口 dev.kosmx.playerAnim.fabric.client.FabricClientInitializer
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

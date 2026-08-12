@@ -55,3 +55,11 @@ Decision: 要不要把 Kiwi 作为依赖
 - 全览：§三 全家桶共享库；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist
 - 官方：https://github.com/Snownee/Kiwi
 - 不清楚时：打开 Kiwi GitHub README；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/forge：顶层 API 包 `snownee.kiwi`
+  - 1.20.1/neoforge：顶层 API 包 `snownee.kiwi`
+  - 26.1/neoforge：顶层 API 包 `snownee.kiwi`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

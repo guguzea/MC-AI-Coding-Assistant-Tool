@@ -79,3 +79,10 @@ Decision: 要不要用 owo-config
 - 全览：§二.1 配置库、§二.6 GUI/UI（owo-lib）、§四 Fabric 路线、§五 陷阱 2（**owo-lib 不支持 Forge**）；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/lib-traps-2026`、`authored/library-integration`
 - 官方：https://docs.wispforest.io/
 - 不清楚时：打开 owo 文档站对应章节，或 `search_fabric_docs` / `search_neoforge_docs`；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 26.1/fabric：顶层 API 包 `io.wispforest.owo`，入口 `io.wispforest.owo.Owo`；`io.wispforest.owo.client.OwoClient`；`io.wispforest.owo.compat.emi.OwoEmiPlugin`；`io.wispforest.owo.compat.modmenu.OwoModMenuPlugin`；`io.wispforest.owo.compat.rei.OwoReiPlugin`
+  - 1.17/fabric：顶层 API 包 `com.glisco.owo`，入口 `com.glisco.owo.Owo`；`com.glisco.owo.client.OwoClient`；`com.glisco.owo.compat.rei.OwoReiPlugin`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

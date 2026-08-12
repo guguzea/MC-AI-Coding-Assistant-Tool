@@ -79,3 +79,7 @@ Decision: 服务端文本要不要按玩家语言渲染
 - 全览：§二.8 服务端/网络/文本、陷阱 5；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/NucleoidMC/server-translations-api ；替代品 Server I18n API 见 Nucleoid 生态（以官方仓库说明为准）
 - 不清楚时：打开 Server Translations API README + 示例；`search_fabric_docs` 查文本/服务端相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- ⚠️ 暂未反编译核对（catalog 无 verifiedApi）；细节以官方文档为准。

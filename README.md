@@ -93,7 +93,7 @@ MC_skill/
 
 **配置本地 MCP Server：**
 
-> 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入 Cursor，让 AI 编译 `mcp-server` 并**生成** `mcp.json` 配置草稿（需你确认后粘贴；不会静默覆盖已有配置）。  
+> 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入 对应AI IDE，让 AI 编译 `mcp-server` 并**生成** `mcp.json` 配置草稿（需你确认后粘贴；不会静默覆盖已有配置）。  
 > 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`。
 
 
@@ -220,7 +220,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
 
-> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 4 + fabric-only 7 + forge-only 2 = **13**（以 `knowledge/libs` 实际源稿为准）。
+> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 15 + fabric-only 7 + forge-only 2 = **24**（neo-only 空置；以 `knowledge/libs` 实际源稿为准）。
 
 | 平台/版本 | 数量 | 结构 | 说明 |
 |-----------|------|------|------|
@@ -236,7 +236,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 渲染 / 模型      | `mc-renderer`、`mc-model`                                                                                                           |
 | 世界 / 数据包     | `mc-worldgen`、`mc-structure`、`mc-advancement`、`mc-loottable`、`mc-datapack`、`mc-resourcepack`、`mc-dimension`、`mc-weather`         |
 | 配置 / 测试 / 能源 | `mc-gametest`、`mc-energy`、`mc-multiblock`                                                                                          |
-| 兼容 / 文档库     | `mc-compat-jei`（库类：`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` / `mc-trinkets` / `mc-cca` / `mc-yacl` / `mc-owo` / `mc-architectury` / `mc-lib-catalog` / `mc-author-shared-libs` 等 → `knowledge/libs` 源稿） |
+| 兼容 / 文档库     | 平台自有 `mc-compat-jei`；库类（`mc-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` = **23 个库 Skill** → `knowledge/libs` 源稿） |
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
@@ -356,6 +356,36 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `get_community_doc_full`    | permitted/authored 返回仓库内 Markdown；**links 只给 URL，不抓网页正文**。      |
 
 
+### 7.5 库模组知识体系（短文 + Skill + 数据链）
+
+三层结构，覆盖「库模组是什么 → 怎么用 → 数据从哪来」：
+
+**① 社区短文**（`community_knowledge/authored/`，经 `search_community_docs` 检索）
+
+- **48 篇 `lib-*.md`**，按功能分类：配置（Cloth/YACL/Fzzy/owo/MidnightLib…）、动画（GeckoLib/playerAnimator/Satin）、跨加载器（Architectury/Balm/Resourceful/Moonlight）、饰品（Curios/Trinkets/Caelus）、世界生成（TerraBlender）、GUI（LibGui/ObsidianUI/Modern UI）、数据附加（CCA/PAL）、服务端网络文本（Polymer/Text Placeholder/Server Translations/Impersonate/Pehkui）、脚本语言（KubeJS/Kotlin…）、配方（JEI/EMI/REI）、全家桶（Collective/Bookshelf/MaLiLib 等 15 篇）
+- 总目录 `library-catalog-2026`（全览导航）、陷阱专篇 `lib-traps-2026`（8 条选型陷阱）、配方集成 `library-integration` / `library-integration-jei-emi`
+- 每篇含「**核对（2026-08 反编译验证）**」小节：已反编译核对的 MC 版本 × loader 的顶层 API 包/入口，细节以官方为准
+
+**② 库 Skill 源稿**（`knowledge/libs/`，按 AGENTS.md「库模组 Skill」解析使用，**不落盘**平台目录）
+
+- 四组：`all-platforms` 15 / `fabric-only` 7 / `forge-only` 2 / `neo-only`（空置）= **24 个** `mc-*/SKILL.md`
+- 解析规则：platform → 组映射（forge→forge-only+all-platforms；fabric/quilt→fabric-only+all-platforms；neoforge→neo-only+all-platforms）+ frontmatter `platforms`/`minecraftVersions` 二次过滤
+
+**③ 数据链**（短文 frontmatter → 脚本生成 → MCP 消费）
+
+```
+authored/lib-*.md frontmatter
+  → build-library-catalog-from-authored.mjs → library-catalog.ts（45 库 / 1880 verifiedApi 键 / supportedVersions / officialUrls）
+  → build-lib-manifest.mjs（Modrinth API）→ lib-manifests/all.json（45 库 / 2867 版本条目）
+  → batch-decompile.mjs（分批反编译，源码按需生成到 $MC_SKILL_CACHE，不入库）
+  → merge-verified-api.mjs → 回填 verifiedApi
+  → build-api-summaries.mjs → lib-api-summaries/（44 库 API 摘要）
+  → check_dependencies 消费 catalog + manifest（库识别 / supportedVersions / 版本摘要）
+```
+
+相关脚本均在 `scripts/`；数据位置见「反编译数据产物」一节。
+
+
 
 
 ### 8. 移植与数据诊断（3）
@@ -404,7 +434,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | --------------------- | --------------------------------------- |
 | `analyze_log`         | 解析游戏/崩溃日志片段（可复用 `crash_analyze` 分类）。    |
 | `get_migration_guide` | 内置版本迁移路线摘要。                             |
-| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` 提示依赖问题。 |
+| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` 提示依赖问题：loader 判定（fabric/forge/neoforge）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 |
 
 ### 12. 自我更新（1）
 
@@ -412,7 +442,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 |------|------|
 | `mc_skill_update` | 检查 / 应用本仓库 **tooling + data** 更新（GitHub Release）。`action=check\|apply`；`scope=tooling\|data\|all`；默认 `channel=stable`（忽略预发布）。`apply` 默认 dryRun；真写需 `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + `MC_SKILL_PROJECT_ROOT`=**本仓库根**。返回 `filesToOverwrite` / `diskSpace` / `restartRequired`。CLI：`mc-skill update --action check\|apply`（旧位置参数 `check\|apply` 仍兼容，stderr 有迁移提示）。详见 [`mcp-server/docs/mc-skill-update.md`](./mcp-server/docs/mc-skill-update.md)。 |
 
-`get_server_status` 附带 `updateHint`（上次 check 缓存，默认 TTL 1h）与 `pendingRestart`。
+`get_server_status` 附带 `buildStatus`（src 比 dist 新时 `buildRequired=true`，提示重新 `npm run build`）、`updateHint`（上次 check 缓存，默认 TTL 1h）与 `pendingRestart`。
 
 ### 13. 反编译与模组源码（4）— T2 Wave C
 
@@ -433,6 +463,16 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 26.1+ | ❌（已停更） | ✅ | 去混淆，免 remap |
 
 **与 `query_api` 的分工**：`query_api` / `get_method_params` 查签名（快、离线）；以上 4 工具仅在**确实需要完整源码/反编译**时使用（下载量大），各工具 description 均带 ⚠️ 提示。
+
+**已入库的反编译数据产物**（供 `check_dependencies` 等消费，clone 后即用）：
+
+| 数据 | 位置 | 内容 |
+|---|---|---|
+| `library-catalog.ts` | `mcp-server/src/diagnostics/` | 45 库 / **1880 个 verifiedApi 键**（`gameVersion/loader → packages/entrypoints`）+ `supportedVersions` 版本窗口 + `officialUrls` |
+| `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 / 12,225 个 public 类 / 49,040 方法签名摘要（轻量 javadoc，约 4MB） |
+| `lib-manifests/all.json` | `mcp-server/data/` | 45 库 / 2867 版本条目（版本号/URL/hash/loader 矩阵，Modrinth API 生成） |
+
+反编译源码本体（28 万 .java）**不入库**（按需生成至 `$MC_SKILL_CACHE`）；`search_mod_code` 在源码缺失时返回 `NOT_FOUND` + 指引先调 `decompile_mod_jar`。相关脚本：`scripts/build-lib-manifest.mjs`（manifest）、`scripts/build-api-summaries.mjs`（API 摘要）、`scripts/batch-decompile.mjs`（分批反编译）、`scripts/merge-verified-api.mjs`（回填 catalog）。
 
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
 ### 工作流模板（MCP Prompts）
@@ -466,6 +506,30 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://antipatterns/registry`       | 注册反模式短文                                                    |
 | `mcskill://patterns/README`             | 代码模式库索引（community_knowledge/patterns/）                     |
 | `mcskill://workflow/mc-new-block` 等 8 个 | 与 Prompt 同名的工作流正文                                          |
+
+
+### 独立 CLI（`mc-skill`，62 工具全可用）
+
+flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误：
+
+```bash
+node dist/cli.js status --version 1.20.1            # 服务器状态（含 buildStatus）
+node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
+node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
+node dist/cli.js update --action check
+node dist/cli.js list-tools                          # 全部 62 个工具的 schema
+```
+
+**通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：
+
+```bash
+node dist/cli.js search_docs --platform forge --query DeferredRegister --version 1.20.1
+node dist/cli.js check_dependencies --buildGradle "..." --fabricModJson "{...}"
+node dist/cli.js analyze_mod_jar --jarPath <path>
+node dist/cli.js get_community_doc_summary --id authored/lib-curios
+```
+
+旧位置参数形式（`query <className>` / `convert ... <memberName>` 等）仍兼容；PowerShell 括号场景用单引号包裹（如 `'--descriptor=()F'`）。
 
 
 ---

@@ -55,3 +55,11 @@ Decision: 要不要把 Bookshelf 作为依赖
 - 全览：§三 全家桶共享库、§五 陷阱 4（Bookshelf 重名）；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist、authored/lib-traps-2026
 - 官方：https://github.com/Darkhax/Bookshelf
 - 不清楚时：打开 Bookshelf GitHub README；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/forge：顶层 API 包 `net.darkhax.bookshelf`
+  - 1.20.1/fabric：顶层 API 包 `net.darkhax.bookshelf`
+  - 26.1/neoforge：顶层 API 包 `net.darkhax.bookshelf`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

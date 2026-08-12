@@ -80,3 +80,9 @@ Decision: Fabric 用不用 Kotlin
 - 全览：§一 Top 3、§二.10 脚本/工具；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/FabricMC/fabric-language-kotlin ；Forge 侧见 `lib-kotlin-for-forge`
 - 不清楚时：打开 FLK README + 官方示例；`search_fabric_docs` 查入口点/开发环境相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.14-pre1/fabric：顶层 API 包 `net.fabricmc.language`，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

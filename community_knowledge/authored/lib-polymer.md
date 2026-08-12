@@ -81,3 +81,9 @@ Decision: 用不用 Polymer
 - 全览：§二.8 服务端/网络/文本；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/Patbox/polymer
 - 不清楚时：打开 Polymer README + 示例；`search_fabric_docs` 查服务端/资源相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.18.1/fabric：顶层 API 包 （无独立包），无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

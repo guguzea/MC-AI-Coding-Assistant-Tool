@@ -4,6 +4,8 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { realpathSync } from "fs";
 import { fileURLToPath } from "url";
 import * as z from "zod";
+import { getBuildStatus } from "./utils/build-status.js";
+import { patchToolCollection } from "./tool-handlers.js";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { convertMapping, getMethodParams } from "./mappings/index.js";
 import { readableSignature, returnType, parameterTypes } from "./utils/descriptor.js";
@@ -213,6 +215,9 @@ const server = new McpServer({
   name: "MC-AI-Coding-Assistant-Tool",
 });
 
+// 收集全部工具 handler 到模块级表（CLI 通用 dispatch 依赖；须在首个 registerTool 前）
+patchToolCollection(server);
+
 // ── 1. API 查询 ─────────────────────────────────────────────────────────────
 server.registerTool(
   "query_api",
@@ -305,6 +310,8 @@ server.registerTool(
       dataPaths: diagnoseDataPaths(),
       /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错） */
       semanticIndex: getSemanticIndexStatus(resolveDataDir()),
+      /** ② build 状态：dist 缺失/过期提示（src 修改未重新编译时 buildRequired=true） */
+      buildStatus: getBuildStatus(),
       updateHint: getUpdateHint(),
       descriptorSelfCheck: {
         sample: "()F",

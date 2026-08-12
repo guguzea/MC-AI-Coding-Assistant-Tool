@@ -85,3 +85,10 @@ Decision: 挂数据用 CCA 还是原版机制
 - 全览：§二.7 数据附加、§四 Fabric 推荐路线（CCA）；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/Ladysnake/cardinal-components-api ；生态：Impersonate（`lib-impersonate`）、PlayerAbilityLib（`lib-player-ability-lib`）
 - 不清楚时：打开 CCA README + 官方示例；`search_fabric_docs` 查 Data Components / Attachment 页面；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 26.1/fabric：顶层 API 包 无，入口 无 entrypoint
+  - 1.18/fabric：顶层 API 包 无，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

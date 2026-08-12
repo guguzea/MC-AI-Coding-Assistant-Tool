@@ -13,6 +13,10 @@ import { realpathSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import * as z from "zod";
+import { getBuildStatus } from "./utils/build-status.js";
+import { toolHandlers } from "./tool-handlers.js";
+// 副作用：加载全部工具注册（server 不 connect），填充 toolHandlers 供通用 dispatch
+import "./index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -57,6 +61,7 @@ function usage() {
       "mc-skill descriptor --descriptor=<jniDescriptor> [--name=method]",
       "mc-skill update --action=check|apply [--scope=all|tooling|data] [--channel=stable|latest|tag] [--tag=vX.Y.Z] [--dry-run] [--confirm] [--allow-dirty] [--stash-dirty]",
       "mc-skill list-tools",
+      "mc-skill <任意MCP工具名> --key=value ...   # 通用 dispatch：62 个工具全可用（如 search_docs / check_dependencies / analyze_mod_jar / diagnose_data_paths）",
     ],
   });
 }
@@ -251,6 +256,7 @@ async function runCommand(
         api: api.listApiPreloadStatuses(),
         focus: api.getApiPreloadStatus(version),
         updateHint: update.getUpdateHint(),
+        buildStatus: getBuildStatus(),
       };
       api.disposeApiData();
       return result;
@@ -363,8 +369,33 @@ async function runCommand(
       };
     }
 
-    default:
-      throw new CliToolError(cmd, `未知命令：${cmd}`);
+    default: {
+      // 通用 dispatch：任意 MCP 工具名直接可用（handler 由 import ./index.js 副作用收集）
+      const entry = toolHandlers.get(cmd);
+      if (!entry) throw new CliToolError(cmd, `未知命令：${cmd}`);
+      const schema = entry.inputSchema as z.ZodTypeAny;
+      const params = coerceFlags(flags, schema, {});
+      // zod 必填校验（coerceFlags 只转换不校验；缺参给出明确提示而非内部错误）
+      const parsed = schema.safeParse(params);
+      if (!parsed.success) {
+        const issues = parsed.error.issues
+          .map((i) => `${i.path.join(".") || "(root)"}：${i.message}`)
+          .join("；");
+        throw new CliToolError(cmd, `参数校验失败：${issues}（可用 list-tools 查看该工具 schema）`);
+      }
+      const raw = await entry.handler(parsed.data);
+      // MCP handler 返回 CallToolResult（{content:[{type:"text",text}]}）→ 提取文本并尽量解析 JSON
+      const content = (raw as { content?: Array<{ type?: string; text?: string }> } | null)?.content;
+      if (Array.isArray(content) && content.length > 0 && typeof content[0]?.text === "string") {
+        const text = content[0].text;
+        try {
+          return JSON.parse(text);
+        } catch {
+          return { text };
+        }
+      }
+      return raw;
+    }
   }
 }
 
@@ -375,7 +406,7 @@ async function main() {
     usage();
     return;
   }
-  if (!cmd || !COMMANDS.includes(cmd)) {
+  if (!cmd || (!COMMANDS.includes(cmd) && !toolHandlers.has(cmd))) {
     usage();
     process.exit(2);
   }

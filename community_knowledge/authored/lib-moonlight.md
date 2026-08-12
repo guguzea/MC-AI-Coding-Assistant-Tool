@@ -90,3 +90,10 @@ Decision: 要不要用 Moonlight Lib
 - 全览：§二.3 跨加载器抽象层；`authored/library-catalog-2026`、`authored/soft-deps-modlist`
 - 官方：https://github.com/MehVahdJukaar/Moonlight
 - 不清楚时：打开官方 README + 示例 mod（Supplementaries 源码是现成范例）；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/fabric：顶层 API 包 `net.mehvahdjukaar.moonlight`，入口 `net.mehvahdjukaar.moonlight.api.integration.mod_menu.ModMenuCompat`；`net.mehvahdjukaar.moonlight.fabric.MoonlightFabric`；`net.mehvahdjukaar.moonlight.fabric.MoonlightFabricClient`
+  - 1.16.5/forge：顶层 API 包 `net.darkhax.bookshelf`，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

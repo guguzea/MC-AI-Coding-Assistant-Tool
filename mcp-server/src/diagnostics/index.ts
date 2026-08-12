@@ -1,6 +1,9 @@
 import { analyzeCrash } from "../crash/index.js";
 import { actionable, ActionCodes } from "../utils/actionable.js";
 import { LIBRARY_CATALOG } from "./library-catalog.js";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export interface AnalyzeLogInput {
   logText: string;
@@ -71,6 +74,10 @@ export interface DetectedLibrary {
   communityDocId?: string;
   skillId?: string;
   matchReason: string;
+  /** 反编译验证过的 MC 版本窗口（catalog verifiedApi 键推导） */
+  supportedVersions?: string[];
+  /** manifest 版本摘要（lib-manifests/all.json） */
+  manifestSummary?: { versions: number; samples: string[]; loaders: string[] };
 }
 export interface LoaderConflict {
   libraryId: string;
@@ -139,13 +146,47 @@ function detectLibraryMatches(text: string): DetectedLibrary[] {
       loaders: entry.loaders,
       communityDocId: entry.communityDocId,
       ...(entry.skillId ? { skillId: entry.skillId } : {}),
+      ...(entry.supportedVersions && entry.supportedVersions.length > 0
+        ? { supportedVersions: entry.supportedVersions }
+        : {}),
       matchReason: `依赖坐标/modId 关键字「${hit}」匹配`,
     });
   }
   return out;
 }
 
-// §4.5 fabric-only 库 → forge 冲突（catalog 未覆盖的 CCA/Polymer/Trinkets 用硬编码关键字）
+/**
+ * ③ manifest 接线：从 lib-manifests/all.json 给 detectedLibraries 附版本摘要。
+ * 懒加载 + 容错（文件缺失/解析失败 → 静默跳过，不影响主流程）。
+ */
+let manifestCache: Array<{ slug: string; entries: Array<{ gameVersion: string; loader: string; versionNumber: string; versionType: string }> }> | null | undefined;
+function loadManifest(): typeof manifestCache {
+  if (manifestCache !== undefined) return manifestCache;
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const p = join(here, "..", "..", "data", "lib-manifests", "all.json");
+    if (!existsSync(p)) { manifestCache = null; return manifestCache; }
+    manifestCache = JSON.parse(readFileSync(p, "utf8")) as typeof manifestCache;
+  } catch {
+    manifestCache = null;
+  }
+  return manifestCache;
+}
+
+function attachManifestSummaries(libs: DetectedLibrary[]): void {
+  const manifest = loadManifest();
+  if (!manifest || libs.length === 0) return;
+  for (const lib of libs) {
+    const entry = LIBRARY_CATALOG.find((e) => e.id === lib.id);
+    if (!entry) continue;
+    const slugs = String(entry.modrinthSlug ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+    const rows = manifest.flatMap((m) => (slugs.includes(m.slug) ? m.entries : []));
+    if (rows.length === 0) continue;
+    const loaders = [...new Set(rows.map((r) => r.loader))].sort();
+    const samples = [...new Set(rows.map((r) => r.versionNumber))].filter((v) => /^\d/.test(v)).slice(0, 6);
+    lib.manifestSummary = { versions: rows.length, samples, loaders };
+  }
+}
 const FABRIC_ONLY_LIBS: Array<{ id: string; keywords: string[]; reason: string }> = [
   {
     id: "owo",
@@ -246,6 +287,7 @@ export function checkDependencies(
 
   // ── §4.4 catalog 接线 + §4.5 冲突/陷阱 ─────────────────────────────────
   const detectedLibraries = detectLibraryMatches(text);
+  attachManifestSummaries(detectedLibraries);
   const loaderConflicts = detectLoaderConflicts(detectedLoader, text);
   const traps = detectTraps(detectedLoader, text);
 

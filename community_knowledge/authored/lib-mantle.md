@@ -57,3 +57,11 @@ Decision: 要不要把 Mantle 作为依赖
 - 全览：§三 全家桶共享库、§五 陷阱 8（Mantle 等未跟进 26.x）；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist、authored/lib-traps-2026
 - 官方：https://github.com/SlimeKnights/Mantle
 - 不清楚时：打开 Mantle GitHub README；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/forge：顶层 API 包 `slimeknights.mantle`
+  - 1.20.1/neoforge：顶层 API 包 `slimeknights.mantle`
+  - 1.16.5/forge：顶层 API 包 `slimeknights.mantle`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

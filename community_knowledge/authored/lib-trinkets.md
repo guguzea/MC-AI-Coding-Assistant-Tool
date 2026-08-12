@@ -83,3 +83,9 @@ Decision: 饰品槽方案选择
 - 全览：§二.4 饰品/装备槽、§四 Fabric 路线、§五 陷阱 3（停更）；`authored/library-catalog-2026`、`authored/lib-curios`、`authored/soft-deps-modlist`
 - 官方：https://github.com/emilyploszaj/trinkets
 - 不清楚时：打开官方 README / wiki 与示例 mod；Forge 侧问题读 Curios 官方仓库；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.17.1/fabric：顶层 API 包 `dev.emi.trinkets`，入口 dev.emi.trinkets.TrinketsClient
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

@@ -75,3 +75,7 @@ Decision: 遇到历史配置库怎么办
 - 全览：§二.1 配置库（历史配置库段）；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/lib-fzzy-config`、`authored/library-integration`
 - 官方：各库页面以全览所指 Fabric Wiki 中文社区库列表为入口；活跃替代：https://github.com/isxander/yet-another-config-lib 、https://github.com/shedaniel/cloth-config 、https://github.com/fzzyhmstrs/fzzy_config
 - 不清楚时：先打开对应库官方页面；AGENT_USAGE.md 规则先行（本条目数据不完整，禁止补造）
+
+## 核对（2026-08 反编译验证）
+
+- ⚠️ 暂未反编译核对（catalog 无 verifiedApi）；细节以官方文档为准。

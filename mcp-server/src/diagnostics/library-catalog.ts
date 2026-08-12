@@ -1,5 +1,5 @@
 // 由 scripts/build-library-catalog-from-authored.mjs 自动生成，勿手改（D 波次只 patch verifiedApi）
-export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: "api" | "author_shared" | "trap"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; }
+export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: "api" | "author_shared" | "trap"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; supportedVersions: string[]; }
 export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
   {
     id: "authored/lib-architectury",
@@ -9,7 +9,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-architectury",
     skillId: "mc-architectury",
-    officialUrls: [],
+    officialUrls: ["https://docs.architectury.dev/","https://github.com/architectury/architectury-templates"],
     notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
@@ -1381,6 +1381,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.16.5","1.17.1","1.18.2","1.19","1.19.1","1.19.3","1.19.4","1.20","1.20-pre5","1.20.2","1.20.2-pre2","1.20.4","1.20.5-pre1","1.21","1.21.10","1.21.2","1.21.4","1.21.5-pre2","1.21.6","1.21.9","22w43a","23w13a","23w31a","23w35a","24w09a","24w14potato","26.1","26.2","1.18","1.19-pre1","1.19.2","1.20.2-pre4","1.20.5","1.20.6","1.21.11","1.21.5","1.21.5-rc1","1.21.7","22w44a","23w13a_or_b","23w32a","23w40a","24w12a","24w40a","26.1.2","1.19.3-pre2","1.19.4-pre3","1.20-pre1","1.20.2-pre1","1.20.3-pre1","22w42a","23w03a","23w18a","23w33a","23w41a","24w14a"],
   },
   {
     id: "authored/lib-balm",
@@ -1390,7 +1391,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-balm",
     skillId: "mc-balm",
-    officialUrls: [],
+    officialUrls: ["https://github.com/BlayTheNinth/Balm"],
     notes: "",
     verifiedApi: {
       "26.1.2/forge": {
@@ -1970,6 +1971,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["26.1.2","26.2","1.18","1.19","1.19.4","1.20","1.20.2","1.20.4","1.20.6","1.21","1.21.1","1.21.10","1.21.11","1.21.4","1.21.5","1.21.6","1.21.7","1.21.9","26.1","26.1.1","1.18.2","1.19.3","1.21.2"],
   },
   {
     id: "authored/lib-bookshelf",
@@ -1979,7 +1981,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-bookshelf",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Darkhax/Bookshelf"],
     notes: "",
     verifiedApi: {
       "1.11.2/forge": {
@@ -2597,6 +2599,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.11.2","1.13.2","1.14.4","1.16.2","1.16.5","1.18.1","1.18.2","1.19","1.19.2","1.19.3","1.20","1.20.1","1.20.2","1.20.3","1.20.4","1.21","1.21.1","1.9","26.1","1.10","1.12","1.14.2","1.15.2","1.16.3","1.17.1","1.19.1","1.19.4","1.7.10","1.9.4","26.2","1.10.2","1.12.2","1.14.3","1.16.1","1.16.4","1.8.9"],
   },
   {
     id: "authored/lib-caelus",
@@ -2606,7 +2609,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-caelus",
     skillId: "mc-caelus",
-    officialUrls: [],
+    officialUrls: ["https://github.com/TheIllusiveC4/Caelus"],
     notes: "",
     verifiedApi: {
       "1.13.2/forge": {
@@ -2779,6 +2782,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.13.2","1.16.4","1.17.1","1.19.3","1.20.4","1.20.6","1.21.4","1.14.4","1.16.5","1.18","1.20","1.21","1.15.2","1.19","1.20.2"],
   },
   {
     id: "authored/lib-cca",
@@ -2788,7 +2792,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-cca",
     skillId: "mc-cca",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Ladysnake/cardinal-components-api"],
     notes: "",
     verifiedApi: {
       "1.19-pre1/fabric": {
@@ -3050,6 +3054,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19-pre1","1.20","1.20.3","1.21","1.21.11","1.21.5-pre1","26.1","1.18","1.19.1","1.20-pre4","1.20.5","1.21-pre1","1.21.2","1.21.6","26.1-pre-2","1.19","1.19.3","1.20.2","1.20.5-rc2","1.21.10","1.21.5","1.21.9","26.1-rc-2"],
   },
   {
     id: "authored/lib-cloth-config",
@@ -3059,7 +3064,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-cloth-config",
     skillId: "mc-config",
-    officialUrls: [],
+    officialUrls: ["https://github.com/shedaniel/cloth-config","https://github.com/isxander/yet-another-config-lib"],
     notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
@@ -3659,6 +3664,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.14","1.15","1.16.2","1.16.4","1.18","1.19","1.19.3-pre2","1.19.4-pre1","1.20-pre6","1.20.2","1.20.3","1.20.5","1.21","1.21.11","1.21.2","1.21.4","1.21.6","23w13a_or_b","24w14a","26.1","26.2","1.16","1.17","1.19.3","1.19.4","1.20","1.21.10","1.21.5","23w31a","24w14potato","22w43a","24w09a","24w36a"],
   },
   {
     id: "authored/lib-collective",
@@ -3668,7 +3674,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-collective",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Serilum/Collective","https://modrinth.com/user/Serilum"],
     notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
@@ -4855,6 +4861,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.2","1.19.4","1.20.2","1.20.5","1.21.10","1.21.3","1.21.6","1.21.9","26.1.2","1.16.5","1.19.2","1.20","1.20.3","1.20.6","1.21.11","1.21.4","1.21.7","26.1","26.2","1.19.3","1.20.1","1.20.4","1.21","1.21.2","1.21.5","1.21.8","26.1.1"],
   },
   {
     id: "authored/lib-config-legacy",
@@ -4864,9 +4871,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-config-legacy",
     skillId: "mc-config",
-    officialUrls: [],
+    officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config","https://github.com/fzzyhmstrs/fzzy_config"],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/lib-corgilib",
@@ -4876,7 +4884,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-corgilib",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/CorgiTaco/CorgiLib"],
     notes: "",
     verifiedApi: {
       "1.19.2/forge": {
@@ -5128,6 +5136,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.2","1.19.4","1.20.1","1.21.1","1.21.11","1.21.4","1.21.8","1.19.3"],
   },
   {
     id: "authored/lib-creativecore",
@@ -5137,7 +5146,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-creativecore",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/CreativeMD/CreativeCore"],
     notes: "",
     verifiedApi: {
       "1.17.1/forge": {
@@ -5649,6 +5658,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17.1","1.18.2","1.19.3","1.19.4","1.20.1","1.20.2","1.20.6","1.21","1.21.10","1.21.11","1.21.4","1.21.5","1.21.8","26.1","26.2","1.12.2","1.18.1","1.19.2","1.20","1.20.4","1.21.1","1.21.3","1.21.6","26.1.2","1.16.5"],
   },
   {
     id: "authored/lib-curios",
@@ -5658,7 +5668,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-curios",
     skillId: "mc-curios",
-    officialUrls: [],
+    officialUrls: ["https://github.com/TheIllusiveC4/Curios","https://docs.illusivesoulworks.com/category/curios）为准。","https://github.com/emilyploszaj/trinkets"],
     notes: "",
     verifiedApi: {
       "1.20.1/forge": {
@@ -5902,6 +5912,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.14.4","1.16.5","1.19","1.20","1.20.3","1.20.6","1.21.10","1.21.5","26.2","1.15.2","1.17.1","1.19.3","1.20.2","1.20.4","1.21.11","1.21.6","1.13.2","1.16.4","1.18.2","1.19.4","1.21.1","1.21.4","26.1"],
   },
   {
     id: "authored/lib-fabric-language-kotlin",
@@ -5911,7 +5922,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-fabric-language-kotlin",
     skillId: "mc-kotlin",
-    officialUrls: [],
+    officialUrls: ["https://github.com/FabricMC/fabric-language-kotlin"],
     notes: "",
     verifiedApi: {
       "1.14/fabric": {
@@ -5931,6 +5942,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.14","1.14-pre1"],
   },
   {
     id: "authored/lib-forge-config-api-port",
@@ -5940,7 +5952,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-forge-config-api-port",
     skillId: "mc-config",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Fuzss/forgeconfigapiport"],
     notes: "",
     verifiedApi: {
       "1.16/fabric": {
@@ -6532,6 +6544,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.16","1.19","1.20","1.20.2","1.20.4","1.20.6","1.21","1.21.1","1.21.10","1.21.11","1.21.3","1.21.4","1.21.5","1.21.6","1.21.7","1.21.8","1.21.9","26.1","26.2","1.17","1.19.3","1.20.1","1.18","1.19.4"],
   },
   {
     id: "authored/lib-fzzy-config",
@@ -6541,7 +6554,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-fzzy-config",
     skillId: "mc-config",
-    officialUrls: [],
+    officialUrls: ["https://github.com/fzzyhmstrs/fzzy_config"],
     notes: "",
     verifiedApi: {
       "1.20.1/forge": {
@@ -6905,6 +6918,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.20.5","1.21","1.21.10","1.21.2","1.21.5","1.21.6","24w34a","26.1","1.20.4","1.21-pre1","1.21.11","1.21.7","24w40a","26.2","1.21.2-pre4","24w18a"],
   },
   {
     id: "authored/lib-geckolib",
@@ -6914,7 +6928,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-geckolib",
     skillId: "mc-geckolib",
-    officialUrls: [],
+    officialUrls: ["https://docs.geckolib.com/","https://github.com/bernie-g/geckolib"],
     notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
@@ -7705,6 +7719,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.12.2","1.16.5","1.18.2","1.19.2","1.19.3","1.19.3-pre2","1.19.4","1.20","1.20.2","1.20.3","1.20.4","1.20.5","1.20.6","1.21","1.21.1","1.21.10","1.21.11","1.21.3","1.21.4","1.21.5","1.21.6","1.21.7","1.21.8","26.1","26.1.2","26.2","1.19.1","1.15.2","1.17.1","1.19.3-pre3","1.19.3-rc2","22w42a"],
   },
   {
     id: "authored/lib-glitchcore",
@@ -7714,7 +7729,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-glitchcore",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Glitchfiend/GlitchCore"],
     notes: "",
     verifiedApi: {
       "1.20.1/fabric": {
@@ -8204,6 +8219,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.20.4","1.20.6","1.21","1.21.1","1.21.10","1.21.11","1.21.3","1.21.4","1.21.5","1.21.6","1.21.7","1.21.8","1.21.9","26.1","26.1.1","26.1.2","26.2","1.10.2"],
   },
   {
     id: "authored/lib-iceberg",
@@ -8213,7 +8229,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-iceberg",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Grend-G/Iceberg"],
     notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
@@ -8602,6 +8618,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.2","1.19","1.19.4","1.20","1.20.2","1.20.4","1.20.6","1.21","1.21.1","1.21.11","1.21.3","1.21.4","26.1","26.2","1.19.3","1.20.1","1.20.5","1.16.5"],
   },
   {
     id: "authored/lib-impersonate",
@@ -8611,7 +8628,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-impersonate",
     skillId: "mc-impersonate",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Ladysnake/Impersonate","https://github.com/Ladysnake/cardinal-components-api"],
     notes: "",
     verifiedApi: {
       "1.17-pre1/fabric": {
@@ -8835,6 +8852,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17-pre1","1.19","1.20","1.21","1.16.3","1.18","1.19.1","1.20.4","1.21.11","1.17","1.18.2","1.19.3","1.20.5","1.21.4"],
   },
   {
     id: "authored/lib-kiwi",
@@ -8844,7 +8862,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-kiwi",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Snownee/Kiwi"],
     notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
@@ -9248,6 +9266,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.2","1.19.1","1.19.4","1.20","1.20.3","1.20.6","1.21.1","26.1","1.19.3","1.20.1","1.20.5","1.21","24w11a","1.20.2","1.20.5-pre4","24w12a"],
   },
   {
     id: "authored/lib-kotlin-for-forge",
@@ -9257,7 +9276,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-kotlin-for-forge",
     skillId: "mc-kotlin",
-    officialUrls: [],
+    officialUrls: ["https://github.com/thedarkcolour/KotlinForForge"],
     notes: "",
     verifiedApi: {
       "1.17/forge": {
@@ -9353,6 +9372,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17","1.19.3","1.21.10","1.17.1","1.20.5","1.14","1.18","1.20.6"],
   },
   {
     id: "authored/lib-kubejs",
@@ -9362,7 +9382,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-kubejs",
     skillId: "mc-kubejs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/KubeJS-Mods/KubeJS"],
     notes: "",
     verifiedApi: {
       "1.18.2/forge": {
@@ -9518,6 +9538,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.2","1.19.2","1.20.1","1.21","1.19","26.1.2","1.20.4"],
   },
   {
     id: "authored/lib-libgui",
@@ -9527,9 +9548,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-libgui",
     skillId: "mc-libgui",
-    officialUrls: [],
+    officialUrls: ["https://github.com/CottonMC/LibGui"],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/lib-libx",
@@ -9539,7 +9561,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-libx",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/ModdingX/LibX"],
     notes: "",
     verifiedApi: {
       "1.17.1/forge": {
@@ -9658,6 +9680,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17.1","1.18.2","1.19.2","1.20.1","1.18","1.19","1.19.3","1.21.1","1.16.3","1.18.1","1.19.1","1.19.4","26.1.2"],
   },
   {
     id: "authored/lib-libz",
@@ -9667,7 +9690,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-libz",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Globox1997/LibZ"],
     notes: "",
     verifiedApi: {
       "1.19.2/fabric": {
@@ -9737,6 +9760,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.2","1.21","1.20","1.21.1","1.20.1"],
   },
   {
     id: "authored/lib-malilib",
@@ -9746,7 +9770,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-malilib",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/maruohon/malilib"],
     notes: "",
     verifiedApi: {
       "1.12/ornithe": {
@@ -10636,6 +10660,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.12","1.12.2","1.14.2","1.14.4","1.15-pre3","1.15.1","1.16","1.16.1","1.16.4","1.17","1.18","1.19.1","1.20","1.20.5","1.21.11","1.21.5","19w36a","19w39a","19w44a","20w09a","20w12a","20w15a","20w18a","20w21a","20w48a","21w05a","21w14a","26.1","1.12.1","1.13.2","1.14.3","1.15","1.15-pre4","1.15.2","1.16-pre2","1.16.2","1.16.5","1.17-pre4","1.18.2","1.19.3","1.20.2","1.21","1.21.2","1.21.6","19w37a","19w40a","19w46b","20w10a","20w13a","20w16a","20w19a","20w22a","20w49a","21w08b","21w18a","26.2","1.14","1.15-pre1","1.15-pre6","1.16-pre3","1.16.3","1.17.1","1.19","1.19.4","1.20.3","1.21.10","1.21.4","19w03c","19w38b","19w41a","20w06a","20w11a","20w14a","20w17a","20w20b","20w45a","20w51a","21w13a","23w43b"],
   },
   {
     id: "authored/lib-mantle",
@@ -10645,7 +10670,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-mantle",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/SlimeKnights/Mantle"],
     notes: "",
     verifiedApi: {
       "1.16.5/forge": {
@@ -10705,6 +10730,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.16.5","1.20.1","1.18.2","1.7.10","1.12.2","1.19.2"],
   },
   {
     id: "authored/lib-midnightlib",
@@ -10714,7 +10740,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-midnightlib",
     skillId: "mc-config",
-    officialUrls: [],
+    officialUrls: ["https://github.com/TeamMidnightDust/MidnightLib"],
     notes: "",
     verifiedApi: {
       "1.17-pre1/fabric": {
@@ -11440,6 +11466,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17-pre1","1.19","1.19-rc1","1.19.3","1.19.4","1.19.4-rc1","1.20.2","1.20.3","1.21","1.21.10","1.21.2","1.21.4","1.21.9-rc1","22w43a","26.1","26.2-pre-3","1.17.1-pre1","1.19-rc2","1.20","1.20.5","1.21.11","1.21.6","21w37a","23w06a","26.2","1.17","1.18-pre1","1.19-pre1","1.19.2","1.20.6","22w42a"],
   },
   {
     id: "authored/lib-modern-ui",
@@ -11449,7 +11476,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-modern-ui",
     skillId: "mc-modern-ui",
-    officialUrls: [],
+    officialUrls: ["https://github.com/BloCamLimb/ModernUI-MC","https://modrinth.com/mod/modern-ui"],
     notes: "",
     verifiedApi: {
       "1.19.4/forge": {
@@ -11799,6 +11826,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.4","1.20.2","1.20.4","1.20.6","1.21","1.21.2","1.21.4","1.21.6","26.1","1.18.1","1.21.3","1.20","1.19.2"],
   },
   {
     id: "authored/lib-moonlight",
@@ -11808,7 +11836,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-moonlight",
     skillId: "mc-moonlight-lib",
-    officialUrls: [],
+    officialUrls: ["https://github.com/MehVahdJukaar/Moonlight"],
     notes: "",
     verifiedApi: {
       "1.16.5/forge": {
@@ -12011,6 +12039,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.16.5","1.19.1","1.19.3","1.20","1.20.1","1.20.4","1.21.1","1.18","1.19.2","1.19.4","1.21","1.19"],
   },
   {
     id: "authored/lib-necronomicon",
@@ -12020,7 +12049,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-necronomicon",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/ElocinDev/Necronomicon"],
     notes: "",
     verifiedApi: {
       "1.17/forge": {
@@ -12110,6 +12139,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17","1.21","1.20"],
   },
   {
     id: "authored/lib-owo",
@@ -12119,7 +12149,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-owo",
     skillId: "mc-owo",
-    officialUrls: [],
+    officialUrls: ["https://docs.wispforest.io/"],
     notes: "",
     verifiedApi: {
       "1.18/fabric": {
@@ -12653,6 +12683,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18","1.19","1.20","1.20.5","1.21.10","1.21.2","1.21.4","1.21.6","21w43a","1.18-pre8","1.19.3","1.20.2","1.21","1.21.3","1.21.5","1.21.8","26.1","1.17","1.18.2","1.19.4","1.20.3","1.21.1","1.21.11","1.21.9"],
   },
   {
     id: "authored/lib-patchouli",
@@ -12662,7 +12693,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-patchouli",
     skillId: "mc-patchouli",
-    officialUrls: [],
+    officialUrls: ["https://github.com/VazkiiMods/Patchouli"],
     notes: "",
     verifiedApi: {
       "1.14.4/forge": {
@@ -13105,6 +13136,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.14.4","1.16.4","1.18.1","1.18.2","1.19.2","1.19.3","1.20.1","1.20.4","1.21","1.21.1","1.15.2","1.17.1","1.19","1.19.4","1.20.6","26.1","1.12.2"],
   },
   {
     id: "authored/lib-pehkui",
@@ -13114,7 +13146,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-pehkui",
     skillId: "mc-pehkui",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Virtuoel/Pehkui"],
     notes: "",
     verifiedApi: {
       "1.14.4/fabric": {
@@ -13633,6 +13665,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.14.4","1.17","1.18","1.18.2","1.19.2","1.19.4","1.20.1","1.20.6","21w08b","21w18a","21w42a","22w14a","22w43a","1.16.4","1.17.1","1.18.1","1.19","1.19.3","1.20-pre4","1.20.2","1.21","21w10a","21w20a","22w11a","22w17a","23w14a","1.16.5","1.20-pre6","1.20.4","21w03a","21w14a","21w41a","22w12a","22w19a"],
   },
   {
     id: "authored/lib-placebo",
@@ -13642,7 +13675,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-placebo",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Shadows-of-Fire/Placebo"],
     notes: "",
     verifiedApi: {
       "1.20.1/neoforge": {
@@ -13678,6 +13711,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20.1","1.21.1","26.1.2"],
   },
   {
     id: "authored/lib-player-ability-lib",
@@ -13687,7 +13721,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-player-ability-lib",
     skillId: "mc-player-ability-lib",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Ladysnake/PlayerAbilityLib"],
     notes: "",
     verifiedApi: {
       "1.20/fabric": {
@@ -13851,6 +13885,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.20","1.21.3","1.21.9","1.20.2","1.21.5","26.1","1.21","1.21.6"],
   },
   {
     id: "authored/lib-playeranimator",
@@ -13860,7 +13895,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-playeranimator",
     skillId: "mc-playeranimator",
-    officialUrls: [],
+    officialUrls: ["https://github.com/KosmX/playerAnimator"],
     notes: "",
     verifiedApi: {
       "1.16.4/fabric": {
@@ -14180,6 +14215,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.16.4","1.18","1.19.3","1.19.4","1.20","1.20.4","1.21.3","1.21.4","1.21.6","1.19","1.21","1.21.5","1.19.3-rc3","1.19.4-rc2"],
   },
   {
     id: "authored/lib-polymer",
@@ -14189,7 +14225,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-polymer",
     skillId: "mc-polymer",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Patbox/polymer"],
     notes: "",
     verifiedApi: {
       "1.18.1/fabric": {
@@ -14905,6 +14941,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.1","1.19","1.19-rc2","1.19.3","1.19.4","1.19.4-rc1","1.20-rc1","1.20.2","1.20.4","1.20.5-rc2","1.21","1.21-rc1","1.21.11","1.21.11-pre5","1.21.2-rc2","1.21.4-rc1","1.21.5-rc2","1.21.7","1.21.9-pre1","26.1-rc-2","1.18.2","1.19-pre4","1.19.1","1.19.3-rc1","1.19.4-pre3","1.19.4-rc2","1.20.2-rc2","1.20.5","1.20.5-rc3","1.21-pre3","1.21.1","1.21.11-pre3","1.21.11-rc2","1.21.3","1.21.5","1.21.6","1.21.8","1.21.9-rc1","26.2","1.18","1.19-pre5","1.19.2","1.19.3-rc3","1.19.4-pre4","1.20","1.20.1","1.20.3","1.20.5-rc1","1.20.6","1.21-pre4","1.21.10","1.21.11-pre4","1.21.2","1.21.4","1.21.5-rc1","1.21.6-pre2","1.21.9","26.1","26.2-rc-2"],
   },
   {
     id: "authored/lib-puzzles-lib",
@@ -14914,7 +14951,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-puzzles-lib",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Fuzss/PuzzlesLib"],
     notes: "",
     verifiedApi: {
       "1.18.2/fabric": {
@@ -15341,6 +15378,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.2","1.19","1.19.2","1.19.3","1.20","1.20.1","1.20.4","1.21.1","1.21.10","1.21.3","1.21.4","1.21.6","1.21.7","1.21.9","26.1","1.19.1","1.19.4","1.21","1.21.11","1.21.5","1.21.8","26.2"],
   },
   {
     id: "authored/lib-resourceful",
@@ -15350,7 +15388,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-resourceful",
     skillId: "mc-resourceful-lib",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Team-Resourceful/ResourcefulLib"],
     notes: "",
     verifiedApi: {
       "1.19.2/fabric": {
@@ -15713,6 +15751,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.2","1.19.3","1.20","1.20.1","1.20.2","1.20.4","1.20.5","1.21","1.21.11","1.21.3","1.21.5","1.21.6","26.2","1.19.4","1.21.10","1.21.4","26.1","1.20-pre6"],
   },
   {
     id: "authored/lib-satin",
@@ -15722,7 +15761,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-satin",
     skillId: "mc-satin",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Ladysnake/Satin"],
     notes: "",
     verifiedApi: {
       "1.18/fabric": {
@@ -15966,6 +16005,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18","1.19.2","1.20","1.20.5","1.19","1.19.3","1.20.3","1.21","1.19-pre1","1.19.4","1.20.4","1.21.2"],
   },
   {
     id: "authored/lib-server-translations",
@@ -15975,9 +16015,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-server-translations",
     skillId: "mc-server-translations",
-    officialUrls: [],
+    officialUrls: ["https://github.com/NucleoidMC/server-translations-api"],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/lib-sophisticated-core",
@@ -15987,7 +16028,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "author_shared",
     communityDocId: "authored/lib-sophisticated-core",
     skillId: "mc-author-shared-libs",
-    officialUrls: [],
+    officialUrls: ["https://github.com/P3pp3rF1y/SophisticatedCore"],
     notes: "",
     verifiedApi: {
       "1.19.2/forge": {
@@ -16103,6 +16144,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.2","1.21.1","1.21.4","26.1","1.20.1","1.21.10","1.21.5","26.1.2","1.18.2","1.21","1.21.11","1.21.8","26.2"],
   },
   {
     id: "authored/lib-spruceui-obsidianui",
@@ -16112,9 +16154,10 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-spruceui-obsidianui",
     skillId: "mc-spruceui",
-    officialUrls: [],
+    officialUrls: ["https://github.com/architectury/ObsidianUI","https://github.com/LambdAurora/SpruceUI"],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/lib-terrablender",
@@ -16124,7 +16167,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-terrablender",
     skillId: "mc-terrablender",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Glitchfiend/TerraBlender","https://github.com/Glitchfiend/BiomesOPlenty"],
     notes: "",
     verifiedApi: {
       "1.18.1/fabric": {
@@ -16812,6 +16855,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.18.1","1.18.2","1.19.1","1.19.2","1.19.4","1.20","1.20.2","1.20.3","1.20.4","1.20.5","1.20.6","1.21","1.21.1","1.21.10","1.21.11","1.21.3","1.21.4","1.21.5","1.21.6","1.21.7","1.21.8","1.21.9","26.1","26.1.1","26.1.2","26.2","1.19","1.19.3","1.20.1"],
   },
   {
     id: "authored/lib-text-placeholder-api",
@@ -16821,7 +16865,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-text-placeholder-api",
     skillId: "mc-text-placeholder",
-    officialUrls: [],
+    officialUrls: ["https://github.com/Patbox/text_placeholder_api"],
     notes: "",
     verifiedApi: {
       "1.19/fabric": {
@@ -17245,6 +17289,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19","1.20","1.20.3","1.20.5-rc1","1.21.10","1.21.2-rc1","1.21.6","1.21.9-rc1","26.1-pre-3","1.19.1","1.20.1","1.20.3-rc1","1.21","1.21.11-pre1","1.21.5","1.21.6-pre2","25w14craftmine","26.1-snapshot-7","1.17","1.19.3","1.20.2","1.20.5","1.21-pre2","1.21.2","1.21.5-rc1","1.21.9-pre1","26.1","26.2"],
   },
   {
     id: "authored/lib-traps-2026",
@@ -17256,6 +17301,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     officialUrls: [],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/lib-trinkets",
@@ -17265,7 +17311,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-trinkets",
     skillId: "mc-trinkets",
-    officialUrls: [],
+    officialUrls: ["https://github.com/emilyploszaj/trinkets"],
     notes: "",
     verifiedApi: {
       "1.17.1/fabric": {
@@ -17497,6 +17543,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.17.1","1.19","1.19.4","1.20.2","1.21","1.18","1.19.2","1.20","1.20.4","1.17-rc2","1.18.2","1.19.3","1.20.5"],
   },
   {
     id: "authored/lib-yacl",
@@ -17506,7 +17553,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-yacl",
     skillId: "mc-yacl",
-    officialUrls: [],
+    officialUrls: ["https://github.com/isxander/yet-another-config-lib","https://github.com/shedaniel/cloth-config"],
     notes: "",
     verifiedApi: {
       "1.19.3/fabric": {
@@ -18018,6 +18065,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.19.3","1.19.4-pre1","1.20","1.20.1","1.20.3","1.20.4","1.21","1.21.10","1.21.2","1.21.4","1.21.5-pre2","22w42a","25w33a","26.1-snapshot-2","26.2-snapshot-2","1.19","1.19.4","1.20-pre1","1.20.2","1.20.5","1.21.11","1.21.5","1.21.6","23w05a","26.1","26.2","26.3-snapshot-1","1.19.2","1.20-pre2","25w31a","26.3-snapshot-4"],
   },
   {
     id: "authored/library-integration",
@@ -18029,6 +18077,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     officialUrls: [],
     notes: "",
     verifiedApi: {},
+    supportedVersions: [],
   },
   {
     id: "authored/library-integration-jei-emi",
@@ -18038,7 +18087,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/library-integration-jei-emi",
     skillId: "mc-compat-jei",
-    officialUrls: [],
+    officialUrls: ["https://github.com/mezz/JustEnoughItems","https://github.com/emilyploszaj/emi","https://github.com/shedaniel/RoughlyEnoughItems"],
     notes: "",
     verifiedApi: {
       "1.10/forge": {
@@ -18856,5 +18905,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "notes": "自动反编译提取"
       }
     },
+    supportedVersions: ["1.10","1.11.2","1.13.2","1.14.4","1.16.1","1.16.4","1.18","1.18.2","1.19.1","1.19.2","1.19.4","1.20","1.20.2","1.20.4","1.20.6","1.21","1.21.10","1.21.4","1.21.8","1.8.8","1.9.4","26.2","1.19","1.19.3","1.20.1","1.10.2","1.12","1.14.2","1.15.1","1.16.2","1.16.5","1.18.1","1.21.11","1.21.5","1.21.9","1.8.9","26.1","1.21.1","1.11","1.12.2","1.14.3","1.15.2","1.16.3","1.17.1","1.21.7","1.8","1.9"],
   },
 ];

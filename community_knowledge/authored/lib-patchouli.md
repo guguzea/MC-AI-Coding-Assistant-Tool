@@ -91,3 +91,11 @@ data/<modid>/patchouli_books/<book_id>/
 - 全览：§四 Forge 路线；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/VazkiiMods/Patchouli 、https://vazkiimods.github.io/Patchouli/
 - 不清楚时：打开官方文档「Getting Started」与示例书；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/fabric：顶层 API 包 `vazkii.patchouli`，入口 `vazkii.patchouli.fabric.client.FabricClientInitializer`；`vazkii.patchouli.fabric.common.FabricModInitializer`；`vazkii.patchouli.fabric.common.PatchouliSmokeTest`
+  - 26.1/fabric：顶层 API 包 `vazkii.patchouli`，入口 `vazkii.patchouli.fabric.client.FabricClientInitializer`；`vazkii.patchouli.fabric.common.FabricModInitializer`；`vazkii.patchouli.fabric.common.PatchouliSmokeTest`
+  - 1.12.2/forge：顶层 API 包 `net.darkhax.bookshelf`，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

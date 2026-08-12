@@ -43,21 +43,34 @@ const keyMap = parseEntryKeys(text);
 const lines = text.split("\n");
 const out = [];
 let currentId = null;
-const insertedIds = new Set();
+let currentHasSv = false;
 let inserted = 0;
 let urlsFilled = 0;
 
 for (const line of lines) {
   // 跟踪当前条目 id
   const idM = line.match(/^    id: "([^"]+)",\r?$/);
-  if (idM) currentId = idM[1];
+  if (idM) { currentId = idM[1]; currentHasSv = false; }
+
+  // supportedVersions 行处理：空数组 [] → 替换为有值；非空 → 原样并标记
+  const svM = line.match(/^    supportedVersions: (\[[^\]]*\]),?\r?$/);
+  if (svM && currentId) {
+    if (svM[1] === "[]") {
+      const versions = [...new Set((keyMap.get(currentId) ?? []).map((k) => k.split("/")[0]))];
+      out.push(`    supportedVersions: ${JSON.stringify(versions)},`);
+      inserted++;
+    } else {
+      out.push(line);
+    }
+    currentHasSv = true; // 已输出该行，闭合行不再插入
+    continue;
+  }
 
   // 条目闭合行：2 空格缩进的 "}," 或 "}"（verifiedApi 内部闭合为 4+ 空格，不会误判）
   if (/^  \},?\r?$/.test(line) && currentId) {
-    if (!insertedIds.has(currentId)) {
+    if (!currentHasSv) {
       const versions = [...new Set((keyMap.get(currentId) ?? []).map((k) => k.split("/")[0]))];
       out.push(`    supportedVersions: ${JSON.stringify(versions)},`);
-      insertedIds.add(currentId);
       inserted++;
     }
     out.push(line);

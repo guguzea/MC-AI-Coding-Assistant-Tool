@@ -80,3 +80,9 @@ Decision: Forge 系用不用 Kotlin
 - 全览：§二.10 脚本/工具；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/thedarkcolour/KotlinForForge ；Fabric 侧见 `lib-fabric-language-kotlin`
 - 不清楚时：打开 KFF README + 示例项目；`search_forge_docs` / `search_neoforge_docs` 查语言加载器相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.14/forge：顶层 API 包 `kotlin.annotation`、`kotlinx.coroutines`、`net.minecraftforge.fml`、`org.intellij.lang`、`thedarkcolour.kotlinforforge`，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

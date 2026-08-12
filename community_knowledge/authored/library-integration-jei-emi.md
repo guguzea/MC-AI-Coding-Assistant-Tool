@@ -88,3 +88,11 @@ if (ModList.get().isLoaded("jei")) {
 - 总清单：`authored/library-integration`  
 - 官方仓库：文首 JEI / EMI / REI GitHub 链接与 `mc-compat-jei` Skill；`search_forge_docs` 查不到查看器细节时以官方为准  
 - `community_knowledge/AGENT_USAGE.md`：短文不能替代 API 查询
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/forge：顶层 API 包 `dev.emi.emi`（EMI）
+  - 1.20.1/fabric：顶层 API 包 `dev.emi.emi`（EMI）
+  - 26.2/fabric：顶层 API 包 `mezz.jei`（JEI）
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

@@ -55,3 +55,11 @@ Decision: 要不要把 LibZ 作为依赖
 - 全览：§三 全家桶共享库（仅 Fabric）；相关：authored/library-catalog-2026、authored/library-integration、authored/soft-deps-modlist
 - 官方：https://github.com/Globox1997/LibZ
 - 不清楚时：打开 LibZ GitHub README；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.19.2/fabric：顶层 API 包 `net.libz.api`
+  - 1.20.1/fabric：顶层 API 包 `net.libz.access`
+  - 1.21.1/fabric：顶层 API 包 `net.libz.access`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

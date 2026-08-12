@@ -77,3 +77,10 @@ Decision: 要不要用 Fzzy Config
 - 全览：§二.1 配置库、§五 陷阱 7；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/library-integration`
 - 官方：https://github.com/fzzyhmstrs/fzzy_config
 - 不清楚时：打开 Fzzy Config README + 示例，或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/fabric：顶层 API 包 `me.fzzyhmstrs`，入口 无 entrypoint
+  - 26.2/fabric：顶层 API 包 `me.fzzyhmstrs`，入口 无 entrypoint
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

@@ -80,3 +80,9 @@ Decision: 用不用 Pehkui
 - 全览：§二.8 服务端/网络/文本；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/Virtuoel/Pehkui
 - 不清楚时：打开 Pehkui README + 示例；`query_api` / `search_*_docs` 查实体缩放相关 API；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.14.4/fabric：顶层 API 包 `virtuoel.pehkui`，入口 virtuoel.pehkui.Pehkui
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

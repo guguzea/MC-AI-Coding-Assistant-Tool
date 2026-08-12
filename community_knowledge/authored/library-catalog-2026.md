@@ -180,3 +180,7 @@ skillId: mc-lib-catalog
 - 单个库的接入细节 → 打开对应 `lib-*.md` 短文 + 该库官方文档。
 - 数据与原文有出入 → 回看仓库根《Minecraft 社区常用库模组全览（2026 版）》。
 - API / 方法名 / 注册细节 → `search_*_docs` / `query_api`，社区短文不能替代 API 查询（见 `community_knowledge/AGENT_USAGE.md`）。
+
+## 核对（2026-08 反编译验证）
+
+- ⚠️ 未反编译核对（总目录，无单独核对）；细节以官方文档为准。

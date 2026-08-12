@@ -82,3 +82,11 @@ Decision: 用不用 KubeJS
 - 全览：§二.10 脚本/工具；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/KubeJS-Mods/KubeJS
 - 不清楚时：打开 docs.kubejs.com（对应 MC 版本）+ 官方示例；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/fabric：顶层 API 包 `dev.latvian.mods`，入口 `dev.latvian.mods.kubejs.fabric.KubeJSFabric`；`dev.latvian.mods.kubejs.integration.rei.KubeJSREIPlugin`
+  - 26.1.2/neoforge：顶层 API 包 `dev.latvian.mods`，入口 无 entrypoint
+  - 1.18.2/fabric：顶层 API 包 `dev.latvian.mods`，入口 `dev.latvian.mods.kubejs.fabric.KubeJSFabric`；`dev.latvian.mods.kubejs.integration.rei.KubeJSREIPlugin`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

@@ -76,3 +76,10 @@ Decision: 要不要用 MidnightLib
 - 全览：§二.1 配置库；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-yacl`、`authored/lib-fzzy-config`、`authored/library-integration`
 - 官方：https://github.com/TeamMidnightDust/MidnightLib
 - 不清楚时：打开 MidnightLib README（尤其 Jar-in-Jar 章节），或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 26.2/fabric：顶层 API 包 `eu.midnightdust`，入口 `eu.midnightdust.core.MidnightLib`；`eu.midnightdust.core.MidnightLib$ModMenuInit`；`eu.midnightdust.lib.config.AutoCommand`
+  - 1.17-pre1/fabric：顶层 API 包 `eu.midnightdust`，入口 `eu.midnightdust.core.MidnightLibClient`；`eu.midnightdust.hats.config.ModMenuIntegration`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

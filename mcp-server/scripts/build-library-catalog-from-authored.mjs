@@ -83,9 +83,10 @@ function loadExistingVerifiedApi() {
   const blocks = text.split(/\},\s*\n\s*\{/);
   for (const blk of blocks) {
     const idMatch = blk.match(/id:\s*"([^"]+)"/);
-    const vm = blk.match(/verifiedApi:/);
+    // 4 空格缩进锚定：跳过接口行（`export interface ... verifiedApi: Record...` 无缩进）
+    const vm = blk.match(/^\s{4}verifiedApi:/m);
     if (!idMatch || !vm) continue;
-    // 从 verifiedApi: 之后做平衡大括号扫描
+    // 从 verifiedApi: 之后做平衡大括号扫描，保留原始文本（避免 TS→JSON 转换的脆弱性）
     let depth = 0;
     let inStr = false;
     let i = vm.index + "verifiedApi:".length;
@@ -109,15 +110,49 @@ function loadExistingVerifiedApi() {
       }
     }
     if (open < 0 || depth !== 0) continue;
-    const raw = blk.slice(open, i + 1);
-    // TS 对象字面量 → JSON（引号键 + 单引号归一），解析失败则忽略该条
-    const json = raw
-      .replace(/([{,]\s*)([A-Za-z_$][\w$]*)\s*:/g, '$1"$2":')
-      .replace(/'/g, '"');
+    map.set(idMatch[1], blk.slice(open, i + 1));
+  }
+  return map;
+}
+
+/** 保留既有 supportedVersions（enhance-catalog 生成；重跑不丢） */
+function loadExistingSupportedVersions() {
+  const map = new Map();
+  if (!existsSync(OUT_FILE)) return map;
+  const text = readFileSync(OUT_FILE, "utf8");
+  const blocks = text.split(/\},\s*\n\s*\{/);
+  for (const blk of blocks) {
+    const idMatch = blk.match(/id:\s*"([^"]+)"/);
+    const sm = blk.match(/^\s{4}supportedVersions:\s*(\[[^\]]*\])/m);
+    if (!idMatch || !sm) continue;
     try {
-      map.set(idMatch[1], JSON.parse(json));
+      const arr = JSON.parse(sm[1].replace(/'/g, '"'));
+      if (Array.isArray(arr)) map.set(idMatch[1], arr);
     } catch {
-      /* 该条 verifiedApi 无法解析 → 视为未 patch，用 {} */
+      /* 解析失败忽略 */
+    }
+  }
+  return map;
+}
+
+/** 保留既有非空 officialUrls（enhance-catalog 填充；重跑不丢） */
+function loadExistingOfficialUrls() {
+  const map = new Map();
+  if (!existsSync(OUT_FILE)) return map;
+  const text = readFileSync(OUT_FILE, "utf8");
+  const blocks = text.split(/\},\s*\n\s*\{/);
+  for (const blk of blocks) {
+    const idMatch = blk.match(/id:\s*"([^"]+)"/);
+    const om = blk.match(/^\s{4}officialUrls:\s*(\[[^\]]*\])/m);
+    if (!idMatch || !om) continue;
+    const arr = om[1].replace(/'/g, '"');
+    if (arr.length > 2) {
+      try {
+        const parsed = JSON.parse(arr);
+        if (Array.isArray(parsed) && parsed.length > 0) map.set(idMatch[1], parsed);
+      } catch {
+        /* 忽略 */
+      }
     }
   }
   return map;
@@ -168,10 +203,12 @@ if (existsSync(AUTH_DIR)) {
 
 entries.sort((a, b) => a.id.localeCompare(b.id));
 const existingVerifiedApi = loadExistingVerifiedApi();
+const existingSupportedVersions = loadExistingSupportedVersions();
+const existingOfficialUrls = loadExistingOfficialUrls();
 
 const lines = [];
 lines.push("// 由 scripts/build-library-catalog-from-authored.mjs 自动生成，勿手改（D 波次只 patch verifiedApi）");
-lines.push("export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: \"api\" | \"author_shared\" | \"trap\"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; }");
+lines.push("export interface LibraryCatalogEntry { id: string; modIds: string[]; loaders: string[]; modrinthSlug: string; role: \"api\" | \"author_shared\" | \"trap\"; communityDocId: string; skillId?: string; officialUrls: string[]; notes: string; verifiedApi: Record<string, unknown>; supportedVersions: string[]; }");
 lines.push("export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [");
 for (const e of entries) {
   lines.push("  {");
@@ -182,11 +219,14 @@ for (const e of entries) {
   lines.push(`    role: ${JSON.stringify(e.role)},`);
   lines.push(`    communityDocId: ${JSON.stringify(e.communityDocId)},`);
   if (e.skillId) lines.push(`    skillId: ${JSON.stringify(e.skillId)},`);
-  lines.push(`    officialUrls: ${JSON.stringify(e.officialUrls)},`);
+  const ou = existingOfficialUrls.get(e.id);
+  lines.push(`    officialUrls: ${ou && ou.length > 0 ? JSON.stringify(ou) : "[]"},`);
   lines.push(`    notes: ${JSON.stringify(e.notes)},`);
   const va = existingVerifiedApi.get(e.id);
-  const vaRaw = va && Object.keys(va).length > 0 ? JSON.stringify(va) : "{}";
+  const vaRaw = va && va.length > 2 ? va : "{}";
   lines.push(`    verifiedApi: ${vaRaw},`);
+  const sv = existingSupportedVersions.get(e.id);
+  lines.push(`    supportedVersions: ${sv ? JSON.stringify(sv) : "[]"},`);
   lines.push("  },");
 }
 lines.push("];");
@@ -200,7 +240,7 @@ try {
 }
 
 const kept = [...existingVerifiedApi.entries()].filter(
-  ([id, va]) => entries.some((e) => e.id === id) && Object.keys(va).length > 0
+  ([id, va]) => entries.some((e) => e.id === id) && va.length > 2
 ).length;
 console.log(
   `[build-library-catalog] wrote ${entries.length} entries → ${OUT_FILE}` +

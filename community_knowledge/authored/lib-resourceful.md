@@ -90,3 +90,9 @@ Decision: 要不要用 Resourceful Lib
 - 全览：§二.3 跨加载器抽象层；`authored/library-catalog-2026`、`authored/soft-deps-modlist`、`authored/lib-architectury`
 - 官方：https://github.com/Team-Resourceful/ResourcefulLib
 - 不清楚时：打开官方 README + 示例 mod（Resourceful Bees / Ad Astra 源码可参考）；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.19.2/fabric：顶层 API 包 `com.teamresourceful.resourcefullib`，入口 com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricClient
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

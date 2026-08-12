@@ -73,3 +73,11 @@ Decision: 要不要用 Forge Config API Port
 - 全览：§二.1 配置库、§三（Puzzles Lib 全家桶）；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/library-integration`、`authored/soft-deps-modlist`
 - 官方：https://github.com/Fuzss/forgeconfigapiport
 - 不清楚时：打开官方 README + Modrinth 文件页，AGENT_USAGE.md 规则先行（下载量/版本数据未入库，禁止编造）
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.20.1/fabric：顶层 API 包 `com.electronwill.nightconfig`、`fuzs.forgeconfigapiport`、`net.minecraftforge.common`，入口 `fuzs.forgeconfigapiport.impl.ForgeConfigAPIPortFabric`；`fuzs.forgeconfigapiport.impl.client.ForgeConfigAPIPortFabricClient`
+  - 26.2/fabric：顶层 API 包 `fuzs.forgeconfigapiport`、`net.minecraftforge.common`，入口 `fuzs.forgeconfigapiport.fabric.impl.ForgeConfigAPIPortFabric`；`fuzs.forgeconfigapiport.fabric.impl.client.ForgeConfigAPIPortFabricClient`；`fuzs.forgeconfigapiport.fabric.impl.integration.modmenu.ModMenuApiImpl`
+  - 1.16/fabric：顶层 API 包 `net.minecraftforge.api`，入口 `net.minecraftforge.ForgeConfigAPIPort`；`net.minecraftforge.client.ForgeConfigAPIPortClient`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

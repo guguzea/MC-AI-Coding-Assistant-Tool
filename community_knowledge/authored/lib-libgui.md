@@ -82,3 +82,7 @@ Decision: 用不用 LibGui
 - 全览：§二.6 GUI/UI 库、陷阱 5；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/CottonMC/LibGui
 - 不清楚时：打开 LibGui README + 示例 mod；`search_fabric_docs` 查 GUI/Menu 相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- ⚠️ 暂未反编译核对（catalog 无 verifiedApi）；细节以官方文档为准。

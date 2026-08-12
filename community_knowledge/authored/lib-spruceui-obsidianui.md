@@ -81,3 +81,7 @@ Decision: 用不用 SpruceUI / ObsidianUI
 - 全览：§二.6 GUI/UI 库、陷阱 5；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/architectury/ObsidianUI ；原版：https://github.com/LambdAurora/SpruceUI
 - 不清楚时：打开 ObsidianUI README/源码；`search_fabric_docs` / `search_forge_docs` 查 GUI 相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- ⚠️ 暂未反编译核对（catalog 无 verifiedApi）；细节以官方文档为准。

@@ -77,3 +77,9 @@ Decision: 要不要用 Satin
 - 全览：§二.2 动画库（Satin API 条目）；`authored/library-catalog-2026`、`authored/library-integration`
 - 官方：https://github.com/Ladysnake/Satin
 - 不清楚时：打开 Satin README + 示例，或 `search_fabric_docs` 查渲染相关页；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 1.18/fabric：顶层 API 包 `ladysnake.satin`，入口 ladysnake.satin.Satin
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。

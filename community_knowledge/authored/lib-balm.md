@@ -82,3 +82,10 @@ Decision: 要不要用 Balm
 - 全览：§二.3 跨加载器抽象层、§四 一码多端路线；`authored/library-catalog-2026`、`authored/lib-architectury`、`authored/soft-deps-modlist`
 - 官方：https://github.com/BlayTheNinth/Balm
 - 不清楚时：打开 Balm README + 示例 mod（Waystones 源码是现成范例）；AGENT_USAGE.md 规则先行
+
+## 核对（2026-08 反编译验证）
+
+- 已对以下版本反编译核对（VineFlower + catalog verifiedApi）：
+  - 26.2/fabric：顶层 API 包 `net.blay09.mods`，入口 `net.blay09.mods.balm.fabric.client.internal.FabricBalmClient`；`net.blay09.mods.balm.fabric.internal.FabricBalm`；`net.blay09.mods.balm.fabric.platform.compatibility.modmenu.internal.ModMenuIntegration`；`net.blay09.mods.balm.platform.compatibility.hudinfo.internal.JadeModIntegration`；`net.blay09.mods.balm.platform.compatibility.recipeviewer.internal.jei.CommonJeiPlugin`
+  - 1.18/fabric：顶层 API 包 `net.blay09.mods`，入口 `net.blay09.mods.balm.fabric.FabricBalm`；`net.blay09.mods.balm.fabric.client.FabricBalmClient`
+- 版本/包名详情见 `mcp-server/src/diagnostics/library-catalog.ts` 对应条目；细节仍以官方文档为准。
