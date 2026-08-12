@@ -1,0 +1,3358 @@
+{
+  "slug": "kiwi",
+  "modId": "kiwi",
+  "id": "authored/lib-kiwi",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "kiwi"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:00.296Z",
+  "versions": {
+    "d68d76a4f082fc686063631faa558c6b421194f05ae9fab8c746d6a4c057f3648e09995eee2aac5dffc19ccb14a1b941dd06035690aa387610fd0b0bd9a0b570": {
+      "packages": [],
+      "classes": [
+        "snownee.kiwi.AbstractModule",
+        "snownee.kiwi.block.def.BlockDefinition",
+        "snownee.kiwi.block.def.SimpleBlockDefinition",
+        "snownee.kiwi.block.entity.BaseBlockEntity",
+        "snownee.kiwi.block.entity.RetextureBlockEntity",
+        "snownee.kiwi.block.entity.TagBasedBlockEntityType",
+        "snownee.kiwi.block.IKiwiBlock",
+        "snownee.kiwi.block.ModBlock",
+        "snownee.kiwi.build.KiwiAnnotationProcessor",
+        "snownee.kiwi.client.KiwiTextureManager",
+        "snownee.kiwi.client.model.RetextureModel",
+        "snownee.kiwi.client.TooltipEvents",
+        "snownee.kiwi.command.KiwiCommand",
+        "snownee.kiwi.config.ClothConfigIntegration",
+        "snownee.kiwi.config.ConfigHandler",
+        "snownee.kiwi.config.KiwiConfigManager",
+        "snownee.kiwi.contributor.client.CosmeticLayer",
+        "snownee.kiwi.contributor.client.gui.CosmeticScreen",
+        "snownee.kiwi.contributor.Contributors",
+        "snownee.kiwi.contributor.ContributorsClient",
+        "snownee.kiwi.contributor.ITierProvider",
+        "snownee.kiwi.contributor.network.CSetCosmeticPacket",
+        "snownee.kiwi.contributor.network.SSyncCosmeticPacket",
+        "snownee.kiwi.data.DataModule",
+        "snownee.kiwi.datagen.provider.KiwiBlockLoot",
+        "snownee.kiwi.datagen.provider.KiwiBlockTagsProvider",
+        "snownee.kiwi.datagen.provider.KiwiLootTableProvider",
+        "snownee.kiwi.datagen.provider.KiwiRecipeProvider",
+        "snownee.kiwi.datagen.provider.TagsProviderHelper",
+        "snownee.kiwi.handler.Battery",
+        "snownee.kiwi.handler.ExtractOnlyItemHandler",
+        "snownee.kiwi.inventory.container.ModSlot",
+        "snownee.kiwi.inventory.InvHandlerWrapper",
+        "snownee.kiwi.item.ModBlockItem",
+        "snownee.kiwi.item.ModItem",
+        "snownee.kiwi.Kiwi",
+        "snownee.kiwi.KiwiAnnotationData",
+        "snownee.kiwi.KiwiClientConfig",
+        "snownee.kiwi.KiwiGO",
+        "snownee.kiwi.KiwiModules",
+        "snownee.kiwi.loader.AnnotatedTypeLoader",
+        "snownee.kiwi.loader.DevEnvAnnotatedTypeLoader",
+        "snownee.kiwi.loader.event.ClientInitEvent",
+        "snownee.kiwi.loader.event.InitEvent",
+        "snownee.kiwi.loader.event.ParallelEvent",
+        "snownee.kiwi.loader.event.PostInitEvent",
+        "snownee.kiwi.loader.event.ServerInitEvent",
+        "snownee.kiwi.loader.Initializer",
+        "snownee.kiwi.loader.KiwiConfiguration",
+        "snownee.kiwi.loader.Platform",
+        "snownee.kiwi.LoadingContext",
+        "snownee.kiwi.ModContext",
+        "snownee.kiwi.ModuleInfo",
+        "snownee.kiwi.NamedEntry",
+        "snownee.kiwi.network.IPacketHandler",
+        "snownee.kiwi.network.Networking",
+        "snownee.kiwi.network.PacketHandler",
+        "snownee.kiwi.recipe.AlternativesIngredientSerializer",
+        "snownee.kiwi.recipe.crafting.DynamicShapedRecipe",
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipe",
+        "snownee.kiwi.recipe.crafting.NoContainersShapedRecipe",
+        "snownee.kiwi.recipe.crafting.RetextureRecipe",
+        "snownee.kiwi.recipe.EmptyInventory",
+        "snownee.kiwi.recipe.FullBlockIngredient",
+        "snownee.kiwi.recipe.ModuleLoadedCondition",
+        "snownee.kiwi.recipe.Simple",
+        "snownee.kiwi.recipe.TryParseCondition",
+        "snownee.kiwi.RegistryLookup",
+        "snownee.kiwi.schedule.ITicker",
+        "snownee.kiwi.schedule.Scheduler",
+        "snownee.kiwi.schedule.Task",
+        "snownee.kiwi.shadowed.com.moandjiezana.toml.Toml",
+        "snownee.kiwi.shadowed.com.moandjiezana.toml.TomlWriter",
+        "snownee.kiwi.util.BitBufferHelper",
+        "snownee.kiwi.util.EnumUtil",
+        "snownee.kiwi.util.InventoryUtil",
+        "snownee.kiwi.util.LocalizableItem",
+        "snownee.kiwi.util.MathUtil",
+        "snownee.kiwi.util.NBTHelper",
+        "snownee.kiwi.util.PlayerUtil",
+        "snownee.kiwi.util.SimulationBlockGetter",
+        "snownee.kiwi.util.Util",
+        "snownee.kiwi.util.VanillaActions",
+        "snownee.kiwi.util.VoxelUtil",
+        "snownee.kiwi.util.WrappedBlockGetter"
+      ],
+      "methods": {
+        "snownee.kiwi.AbstractModule": [
+          "preInit()",
+          "init(InitEvent)",
+          "clientInit(ClientInitEvent)",
+          "serverInit(ServerInitEvent)",
+          "postInit(PostInitEvent)",
+          "gatherData(GatherDataEvent)",
+          "go(Supplier<? extends T>)",
+          "go(Supplier<? extends T>, Supplier<Object>)",
+          "itemProp()",
+          "blockProp(Material)",
+          "blockProp(BlockBehaviour)",
+          "blockEntity(BlockEntitySupplier<? extends T>, Type<?>, Supplier<? extends Block>...)",
+          "blockEntity(BlockEntitySupplier<? extends T>, Type<?>, TagKey<Block>)",
+          "itemCategory(String, String, final Supplier<ItemStack>, final BiConsumer<List<ItemStack>, CreativeModeTab>)",
+          "itemTag(String, String)",
+          "entityTag(String, String)",
+          "blockTag(String, String)",
+          "fluidTag(String, String)",
+          "tag(ResourceKey<? extends Registry<T>>, String, String)",
+          "RL(String)"
+        ],
+        "snownee.kiwi.block.def.BlockDefinition": [
+          "modelData()",
+          "canRenderInLayer(RenderType)",
+          "getCamoDefinition()",
+          "getLightEmission(BlockGetter, BlockPos)"
+        ],
+        "snownee.kiwi.block.def.SimpleBlockDefinition": [
+          "of(BlockState)",
+          "getFactory()",
+          "model()",
+          "renderMaterial(Direction)",
+          "getRenderTypes()",
+          "canOcclude()",
+          "save(CompoundTag)",
+          "toString()",
+          "getColor(BlockState, BlockAndTintGetter, BlockPos, int)",
+          "getDescription()",
+          "place(Level, BlockPos)",
+          "createItem(HitResult, BlockGetter, BlockPos, Player)",
+          "getBlockState()",
+          "getSoundType()",
+          "reload()"
+        ],
+        "snownee.kiwi.block.entity.BaseBlockEntity": [
+          "m_58483_()",
+          "onDataPacket(Connection, ClientboundBlockEntityDataPacket)",
+          "m_5995_()",
+          "readPacketData(CompoundTag)",
+          "writePacketData(CompoundTag)",
+          "refresh()"
+        ],
+        "snownee.kiwi.block.entity.RetextureBlockEntity": [
+          "setTexture(Map<String, String>, String, String)",
+          "setTexture(String, BlockDefinition)",
+          "isValidTexture(BlockDefinition)",
+          "setTexture(Map<String, BlockDefinition>, String, BlockDefinition)",
+          "setTexture(Map<String, BlockDefinition>, String, Item)",
+          "refresh()",
+          "onLoad()",
+          "requestModelDataUpdate()",
+          "readPacketData(CompoundTag)",
+          "readTextures(Map<String, BlockDefinition>, CompoundTag, Predicate<BlockDefinition>)",
+          "writePacketData(CompoundTag)",
+          "writeTextures(Map<String, BlockDefinition>, CompoundTag)",
+          "getModelData()",
+          "getColor(BlockAndTintGetter, int)"
+        ],
+        "snownee.kiwi.block.entity.TagBasedBlockEntityType": [
+          "m_155262_(BlockState)"
+        ],
+        "snownee.kiwi.block.IKiwiBlock": [
+          "getName(ItemStack)",
+          "createItem(Properties)",
+          "getCloneItemStack(BlockState, HitResult, BlockGetter, BlockPos, Player)"
+        ],
+        "snownee.kiwi.block.ModBlock": [
+          "deduceSoundType(Material)",
+          "deduceHardness(Material)",
+          "pick(BlockState, HitResult, BlockGetter, BlockPos, Player)",
+          "setFireInfo(Block)"
+        ],
+        "snownee.kiwi.build.KiwiAnnotationProcessor": [
+          "init(ProcessingEnvironment)",
+          "process(Set<? extends TypeElement>, RoundEnvironment)",
+          "getSupportedSourceVersion()"
+        ],
+        "snownee.kiwi.client.KiwiTextureManager": [
+          "registerSprite(ResourceLocation)",
+          "m_7535_()",
+          "m_118901_(ResourceLocation)",
+          "getLocation()"
+        ],
+        "snownee.kiwi.client.model.RetextureModel": [
+          "m_7541_()",
+          "m_7539_()",
+          "m_7521_()",
+          "getParticleIcon(ModelData)",
+          "m_6160_()",
+          "m_7343_()",
+          "m_7442_()",
+          "getQuads(BlockState, Direction, RandomSource, ModelData, RenderType)",
+          "getModel(Map<String, BlockDefinition>)",
+          "m_7547_()",
+          "getColor(Map<String, BlockDefinition>, BlockState, BlockAndTintGetter, BlockPos, int)"
+        ],
+        "snownee.kiwi.client.TooltipEvents": [
+          "globalTooltip(ItemStack, List<Component>, TooltipFlag)",
+          "debugTooltip(ItemStack, List<Component>, TooltipFlag)"
+        ],
+        "snownee.kiwi.command.KiwiCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandSelection)"
+        ],
+        "snownee.kiwi.config.ClothConfigIntegration": [
+          "create(Screen, String)"
+        ],
+        "snownee.kiwi.config.ConfigHandler": [
+          "init()",
+          "refresh()",
+          "save()",
+          "define(String, T, Field, String)",
+          "setHasModules(boolean)",
+          "hasModules()",
+          "getModId()",
+          "getType()",
+          "getFileName()",
+          "getClazz()",
+          "get(String)",
+          "getValueMap()"
+        ],
+        "snownee.kiwi.config.KiwiConfigManager": [
+          "register(ConfigHandler)",
+          "init()",
+          "defineModules(String, ConfigHandler, boolean)",
+          "refresh()",
+          "getHandler(Class<?>)"
+        ],
+        "snownee.kiwi.contributor.client.CosmeticLayer": [
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, float, float, float, float, float)",
+          "getCache()"
+        ],
+        "snownee.kiwi.contributor.client.gui.CosmeticScreen": [
+          "m_7856_()",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_6348_(double, double, int)",
+          "m_6050_(double, double, double)",
+          "m_7933_(int, int, int)",
+          "m_7379_()"
+        ],
+        "snownee.kiwi.contributor.Contributors": [
+          "preInit()",
+          "init(InitEvent)",
+          "isContributor(String, String)",
+          "isContributor(String, String, String)",
+          "isContributor(String, Player)",
+          "isContributor(String, Player, String)",
+          "getPlayerTiers(String)",
+          "getTiers()",
+          "registerTierProvider(ITierProvider)",
+          "onPlayerLoggedIn(PlayerLoggedInEvent)",
+          "onPlayerLoggedOut(PlayerLoggedOutEvent)",
+          "changeCosmetic()",
+          "changeCosmetic(Map<String, ResourceLocation>)",
+          "changeCosmetic(ServerPlayer, ResourceLocation)",
+          "isRenderable(ResourceLocation)",
+          "getRenderableTiers()",
+          "canPlayerUseCosmetic(String, ResourceLocation)"
+        ],
+        "snownee.kiwi.contributor.ContributorsClient": [
+          "onClientPlayerLoggedIn(LoggingIn)",
+          "onClientPlayerLoggedOut(LoggingOut)",
+          "addLayers(AddLayers)",
+          "onKeyInput(Key)"
+        ],
+        "snownee.kiwi.contributor.ITierProvider": [
+          "refresh()",
+          "isContributor(String)",
+          "isContributor(String, String)"
+        ],
+        "snownee.kiwi.contributor.network.CSetCosmeticPacket": [
+          "receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>>, FriendlyByteBuf, ServerPlayer)",
+          "send(ResourceLocation)"
+        ],
+        "snownee.kiwi.contributor.network.SSyncCosmeticPacket": [
+          "receive(Function<Runnable, CompletableFuture<FriendlyByteBuf>>, FriendlyByteBuf, ServerPlayer)",
+          "send(Map<String, ResourceLocation>, ServerPlayer, boolean)"
+        ],
+        "snownee.kiwi.data.DataModule": [
+          "preInit()"
+        ],
+        "snownee.kiwi.datagen.provider.KiwiBlockLoot": [
+          "handle(Class<? extends Block>, Function<Block, Builder>)",
+          "handleDefault(Function<Block, Builder>)",
+          "addTables()",
+          "m_124165_(Block, Builder)",
+          "_addTables()",
+          "getKnownBlocks()",
+          "createShearsDispatchTable(Block, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "createShearsOnlyDrop(ItemLike)",
+          "createSilkTouchOrShearsDispatchTable(Block, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "createLeavesDrops(Block, Block, float...)"
+        ],
+        "snownee.kiwi.datagen.provider.KiwiBlockTagsProvider": [
+          "processTools(TagsProviderHelper.OptionalEntry<Block>)",
+          "processTools(TagsProviderHelper.OptionalEntry<Block>, boolean)",
+          "tag(String)"
+        ],
+        "snownee.kiwi.datagen.provider.KiwiLootTableProvider": [
+          "m_6055_()",
+          "getTables()",
+          "add(Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootContextParamSet)",
+          "validate(Map<ResourceLocation, LootTable>, ValidationContext)"
+        ],
+        "snownee.kiwi.datagen.provider.KiwiRecipeProvider": [
+          "m_213708_(CachedOutput)",
+          "addRecipes(Consumer<FinishedRecipe>)",
+          "save(CachedOutput, JsonObject, Path)",
+          "m_6055_()",
+          "oneToOneConversionRecipe(Consumer<FinishedRecipe>, ItemLike, ItemLike, String)",
+          "oneToOneConversionRecipe(Consumer<FinishedRecipe>, ItemLike, ItemLike, String, int)",
+          "oreSmelting(Consumer<FinishedRecipe>, List<ItemLike>, ItemLike, float, int, String)",
+          "oreBlasting(Consumer<FinishedRecipe>, List<ItemLike>, ItemLike, float, int, String)",
+          "oreCooking(Consumer<FinishedRecipe>, SimpleCookingSerializer<?>, List<ItemLike>, ItemLike, float, int, String, String)",
+          "netheriteSmithing(Consumer<FinishedRecipe>, Item, Item)",
+          "planksFromLog(Consumer<FinishedRecipe>, ItemLike, TagKey<Item>)",
+          "planksFromLogs(Consumer<FinishedRecipe>, ItemLike, TagKey<Item>)",
+          "woodFromLogs(Consumer<FinishedRecipe>, ItemLike, ItemLike)",
+          "woodenBoat(Consumer<FinishedRecipe>, ItemLike, ItemLike)",
+          "buttonBuilder(ItemLike, Ingredient)",
+          "doorBuilder(ItemLike, Ingredient)",
+          "fenceBuilder(ItemLike, Ingredient)",
+          "fenceGateBuilder(ItemLike, Ingredient)",
+          "pressurePlate(Consumer<FinishedRecipe>, ItemLike, ItemLike)",
+          "pressurePlateBuilder(ItemLike, Ingredient)"
+        ],
+        "snownee.kiwi.datagen.provider.TagsProviderHelper": [
+          "optional(TagKey<T>, Supplier<? extends T>...)",
+          "add(TagKey<T>, Supplier<? extends T>...)",
+          "add(TagKey<T>, TagsProviderHelper.OptionalEntry<T>)",
+          "getAllEntries()",
+          "getEntriesByModule(String...)"
+        ],
+        "snownee.kiwi.handler.Battery": [
+          "readFromNBT(CompoundTag)",
+          "writeToNBT(CompoundTag)",
+          "setEnergy(int)",
+          "extractEnergy(int, boolean)",
+          "receiveEnergy(int, boolean)",
+          "onEnergyChanged()"
+        ],
+        "snownee.kiwi.handler.ExtractOnlyItemHandler": [
+          "getSlots()",
+          "getStackInSlot(int)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "get()"
+        ],
+        "snownee.kiwi.inventory.container.ModSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "snownee.kiwi.inventory.InvHandlerWrapper": [
+          "m_6211_()",
+          "m_6643_()",
+          "m_7983_()",
+          "m_8020_(int)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6596_()",
+          "m_6542_(Player)",
+          "m_7013_(int, ItemStack)"
+        ],
+        "snownee.kiwi.item.ModBlockItem": [
+          "m_7274_(BlockPos, Level, Player, ItemStack, BlockState)",
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "m_7626_(ItemStack)"
+        ],
+        "snownee.kiwi.item.ModItem": [
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "addTip(ItemStack, List<Component>, TooltipFlag)"
+        ],
+        "snownee.kiwi.Kiwi": [
+          "preInit()",
+          "registerRegistry(Registry<?>, Class<?>)",
+          "registerRegistry(IForgeRegistry<?>, Class<?>)",
+          "isLoaded(ResourceLocation)",
+          "onTagsUpdated()",
+          "areTagsUpdated()"
+        ],
+        "snownee.kiwi.KiwiAnnotationData": [
+          "target()",
+          "data()"
+        ],
+        "snownee.kiwi.KiwiClientConfig": [],
+        "snownee.kiwi.KiwiGO": [
+          "get()",
+          "create(ResourceLocation)",
+          "is(Object)",
+          "is(ItemStack)",
+          "is(BlockState)",
+          "defaultBlockState()",
+          "itemStack()",
+          "itemStack(int)",
+          "key()",
+          "registry()"
+        ],
+        "snownee.kiwi.KiwiModules": [
+          "add(ResourceLocation, AbstractModule, ModContext)",
+          "handleRegister(RegisterEvent)",
+          "isLoaded(ResourceLocation)",
+          "get()",
+          "get(ResourceLocation)",
+          "clear()",
+          "fire(Consumer<ModuleInfo>)"
+        ],
+        "snownee.kiwi.loader.AnnotatedTypeLoader": [
+          "get()"
+        ],
+        "snownee.kiwi.loader.DevEnvAnnotatedTypeLoader": [
+          "get()"
+        ],
+        "snownee.kiwi.loader.event.ClientInitEvent": [],
+        "snownee.kiwi.loader.event.InitEvent": [],
+        "snownee.kiwi.loader.event.ParallelEvent": [
+          "enqueueWork(Runnable)",
+          "enqueueWork(Supplier<T>)"
+        ],
+        "snownee.kiwi.loader.event.PostInitEvent": [],
+        "snownee.kiwi.loader.event.ServerInitEvent": [],
+        "snownee.kiwi.loader.Initializer": [
+          "globalTooltip(ItemTooltipEvent)",
+          "debugTooltip(ItemTooltipEvent)"
+        ],
+        "snownee.kiwi.loader.KiwiConfiguration": [],
+        "snownee.kiwi.loader.Platform": [
+          "isModLoaded(String)",
+          "isPhysicalClient()",
+          "getServer()",
+          "isProduction()",
+          "isDataGen()"
+        ],
+        "snownee.kiwi.LoadingContext": [],
+        "snownee.kiwi.ModContext": [
+          "get(String)",
+          "setActiveContainer()"
+        ],
+        "snownee.kiwi.ModuleInfo": [
+          "register(Object, ResourceLocation, Object, Field)",
+          "handleRegister(Object)",
+          "preInit()",
+          "init(InitEvent)",
+          "clientInit(ClientInitEvent)",
+          "serverInit(ServerInitEvent)",
+          "postInit(PostInitEvent)",
+          "getRegistries(Object)"
+        ],
+        "snownee.kiwi.NamedEntry": [],
+        "snownee.kiwi.network.IPacketHandler": [
+          "getDirection()"
+        ],
+        "snownee.kiwi.network.Networking": [
+          "registerHandler(ResourceLocation, IPacketHandler)",
+          "send(PacketTarget, FriendlyByteBuf)",
+          "sendToServer(FriendlyByteBuf)",
+          "sendToPlayer(ServerPlayer, FriendlyByteBuf)",
+          "processClass(String, String)"
+        ],
+        "snownee.kiwi.network.PacketHandler": [
+          "getDirection()",
+          "send(PacketTarget, Consumer<FriendlyByteBuf>)",
+          "send(ServerPlayer, Consumer<FriendlyByteBuf>)",
+          "sendAllExcept(ServerPlayer, Consumer<FriendlyByteBuf>)",
+          "sendToServer(Consumer<FriendlyByteBuf>)"
+        ],
+        "snownee.kiwi.recipe.AlternativesIngredientSerializer": [
+          "parse(JsonObject)",
+          "getIngredient(JsonElement, IContext)",
+          "parse(FriendlyByteBuf)",
+          "write(FriendlyByteBuf, Ingredient)"
+        ],
+        "snownee.kiwi.recipe.crafting.DynamicShapedRecipe": [
+          "matches(CraftingContainer, Level)",
+          "search(CraftingContainer)",
+          "item(char, CraftingContainer, int[])",
+          "items(char, CraftingContainer, int[])",
+          "assemble(CraftingContainer)",
+          "getRecipeWidth()",
+          "getRecipeHeight()",
+          "m_8004_(int, int)",
+          "m_6076_()",
+          "m_7527_()",
+          "m_7707_()",
+          "checkMatch(CraftingContainer, int, int)",
+          "matches(CraftingContainer, int, int, int, int)",
+          "checkEmpty(CraftingContainer, int, int)",
+          "getEmpty()"
+        ],
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipe": [
+          "getRemainingItems(CraftingContainer)",
+          "m_7707_()"
+        ],
+        "snownee.kiwi.recipe.crafting.NoContainersShapedRecipe": [
+          "getRemainingItems(CraftingContainer)",
+          "m_7707_()"
+        ],
+        "snownee.kiwi.recipe.crafting.RetextureRecipe": [
+          "matches(CraftingContainer, int, int, int, int)",
+          "assemble(CraftingContainer)",
+          "m_7707_()"
+        ],
+        "snownee.kiwi.recipe.EmptyInventory": [
+          "m_6211_()",
+          "m_6643_()",
+          "m_7983_()",
+          "m_8020_(int)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6596_()",
+          "m_6542_(Player)"
+        ],
+        "snownee.kiwi.recipe.FullBlockIngredient": [
+          "isFullBlock(ItemStack)",
+          "isTextureBlock(ItemStack)",
+          "test(ItemStack)",
+          "getSerializer()",
+          "m_43947_()",
+          "isSimple()"
+        ],
+        "snownee.kiwi.recipe.ModuleLoadedCondition": [
+          "getID()",
+          "test(IContext)"
+        ],
+        "snownee.kiwi.recipe.Simple": [
+          "m_6423_()",
+          "m_8004_(int, int)",
+          "m_5874_(C)",
+          "m_8043_()"
+        ],
+        "snownee.kiwi.recipe.TryParseCondition": [
+          "getID()",
+          "test(IContext)"
+        ],
+        "snownee.kiwi.RegistryLookup": [
+          "findRegistry(Object)"
+        ],
+        "snownee.kiwi.schedule.ITicker": [
+          "destroy()"
+        ],
+        "snownee.kiwi.schedule.Scheduler": [
+          "register(ResourceLocation, Class<? extends Task>)",
+          "deserialize(CompoundTag)",
+          "serialize(Task)",
+          "add(Task<?>)",
+          "remove(Task<?>)",
+          "tick(T)",
+          "m_77764_()",
+          "load(CompoundTag)",
+          "m_7176_(CompoundTag)",
+          "clear()",
+          "clientLoggedOut(LoggingOut)",
+          "serverStopped(ServerStoppedEvent)"
+        ],
+        "snownee.kiwi.schedule.Task": [
+          "tick(T)",
+          "ticker()",
+          "shouldSave()"
+        ],
+        "snownee.kiwi.shadowed.com.moandjiezana.toml.Toml": [
+          "read(File)",
+          "read(InputStream)",
+          "read(Reader)",
+          "read(Toml)",
+          "read(String)",
+          "getString(String)",
+          "getString(String, String)",
+          "getLong(String)",
+          "getLong(String, Long)",
+          "getList(String)",
+          "getList(String, List<T>)",
+          "getBoolean(String)",
+          "getBoolean(String, Boolean)",
+          "getDate(String)",
+          "getDate(String, Date)",
+          "getDouble(String)",
+          "getDouble(String, Double)",
+          "getTable(String)",
+          "getTables(String)",
+          "contains(String)"
+        ],
+        "snownee.kiwi.shadowed.com.moandjiezana.toml.TomlWriter": [
+          "write(Object)",
+          "write(Object, File)",
+          "write(Object, OutputStream)",
+          "write(Object, Writer)"
+        ],
+        "snownee.kiwi.util.BitBufferHelper": [
+          "source(ByteBuf)",
+          "end()",
+          "readBoolean()",
+          "writeBoolean(boolean)",
+          "readBits(int)",
+          "writeBits(int, int)"
+        ],
+        "snownee.kiwi.util.EnumUtil": [],
+        "snownee.kiwi.util.InventoryUtil": [
+          "consumeItemStack(IItemHandler, ItemStack, boolean)"
+        ],
+        "snownee.kiwi.util.LocalizableItem": [
+          "getDescription()"
+        ],
+        "snownee.kiwi.util.MathUtil": [
+          "fibonacciSphere(Vec3, double, int, boolean)",
+          "posOnLine(Vec3, Vec3, Collection<BlockPos>)",
+          "RGBtoHSV(int)"
+        ],
+        "snownee.kiwi.util.NBTHelper": [
+          "getTag(String)",
+          "getTag(String, boolean)",
+          "setTag(String, Tag)",
+          "setInt(String, int)",
+          "getInt(String)",
+          "getInt(String, int)",
+          "setLong(String, long)",
+          "getLong(String)",
+          "getLong(String, long)",
+          "setShort(String, short)",
+          "getShort(String)",
+          "getShort(String, short)",
+          "setDouble(String, double)",
+          "getDouble(String)",
+          "getDouble(String, double)",
+          "setFloat(String, float)",
+          "getFloat(String)",
+          "getFloat(String, float)",
+          "setByte(String, byte)",
+          "getByte(String)"
+        ],
+        "snownee.kiwi.util.PlayerUtil": [
+          "tryPlace(Level, BlockPos, Direction, Player, InteractionHand, BlockState, ItemStack, boolean, boolean)",
+          "tryPlace(Level, BlockPos, Direction, Player, InteractionHand, BlockState, ItemStack, boolean)"
+        ],
+        "snownee.kiwi.util.SimulationBlockGetter": [
+          "setBlockEntity(BlockEntity)",
+          "setPos(BlockPos)",
+          "m_7702_(BlockPos)",
+          "useSelfLight(boolean)",
+          "m_8055_(BlockPos)",
+          "m_45517_(LightLayer, BlockPos)",
+          "setOverrideLight(int)"
+        ],
+        "snownee.kiwi.util.Util": [
+          "color(int)",
+          "formatComma(long)",
+          "formatCompact(long)",
+          "trimRL(ResourceLocation)",
+          "trimRL(String)",
+          "trimRL(ResourceLocation, String)",
+          "trimRL(String, String)",
+          "RL(String)",
+          "RL(String, String)",
+          "getBlockDefName(ItemStack, String)",
+          "getRecipeManager()",
+          "setRecipeManager(RecipeManager)",
+          "getRecipes(RecipeType<T>)",
+          "friendlyCompare(String, String)",
+          "friendlyText(String)",
+          "canPlayerBreak(Player, BlockState, BlockPos)",
+          "applyAlpha(int, float)",
+          "getPickRange(Player)",
+          "displayClientMessage(Player, boolean, String, Object...)",
+          "jsonList(JsonElement, Consumer<JsonElement>)"
+        ],
+        "snownee.kiwi.util.VanillaActions": [
+          "setFireInfo(Block, int, int)",
+          "registerHoeConversion(Block, Pair<Predicate<UseOnContext>, Consumer<UseOnContext>>)",
+          "registerAxeConversion(Block, Block)",
+          "registerShovelConversion(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerVillagerPickupable(ItemLike)",
+          "registerVillagerCompostable(ItemLike)",
+          "registerVillagerFood(ItemLike, int)"
+        ],
+        "snownee.kiwi.util.VoxelUtil": [
+          "rotate(AABB, Direction)",
+          "rotate(AABB, Rotation)",
+          "rotateHorizontal(AABB, Direction)",
+          "rotate(VoxelShape, Direction)",
+          "rotate(VoxelShape, Rotation)",
+          "rotateHorizontal(VoxelShape, Direction)",
+          "rotate(VoxelShape, UnaryOperator<AABB>)",
+          "combine(VoxelShape...)",
+          "combine(Collection<VoxelShape>)",
+          "exclude(VoxelShape...)",
+          "batchCombine(VoxelShape, BooleanOp, boolean, Collection<VoxelShape>)",
+          "batchCombine(VoxelShape, BooleanOp, boolean, VoxelShape...)",
+          "setShape(VoxelShape, VoxelShape[], boolean)",
+          "setShape(VoxelShape, VoxelShape[], boolean, boolean)",
+          "setShape(VoxelShape, VoxelShape[])"
+        ],
+        "snownee.kiwi.util.WrappedBlockGetter": [
+          "setLevel(BlockAndTintGetter)",
+          "m_7702_(BlockPos)",
+          "m_8055_(BlockPos)",
+          "m_6425_(BlockPos)",
+          "m_7717_(Direction, boolean)",
+          "m_5518_()",
+          "m_6171_(BlockPos, ColorResolver)",
+          "m_141928_()",
+          "m_141937_()"
+        ]
+      },
+      "sampleCount": 117
+    },
+    "d01c347febcb3d77bbfd2f44f38a80afbf4cf0b72a2aaa5d1875a38cbcd78be5a263fae4f63685256ea29c5f5f5d0f1c46892e2c78c4c1204863415dec9f4151": {
+      "packages": [],
+      "classes": [
+        "snownee.kiwi.AbstractModule",
+        "snownee.kiwi.block.entity.BlockEntityDataListener",
+        "snownee.kiwi.block.entity.InheritanceBlockEntityType",
+        "snownee.kiwi.block.entity.ModBlockEntity",
+        "snownee.kiwi.block.IKiwiBlock",
+        "snownee.kiwi.block.ModBlock",
+        "snownee.kiwi.build.KiwiAnnotationProcessor",
+        "snownee.kiwi.build.KiwiMetadata",
+        "snownee.kiwi.build.KiwiMetadataParser",
+        "snownee.kiwi.Categories",
+        "snownee.kiwi.client.TooltipEvents",
+        "snownee.kiwi.command.ClientCommandContext",
+        "snownee.kiwi.command.KalcCommand",
+        "snownee.kiwi.command.KiwiClientCommand",
+        "snownee.kiwi.command.KiwiCommand",
+        "snownee.kiwi.config.ClothConfigIntegration",
+        "snownee.kiwi.config.ConfigHandler",
+        "snownee.kiwi.config.ConfigLibAttributes",
+        "snownee.kiwi.config.KiwiConfigManager",
+        "snownee.kiwi.config.NeoClothConfigIntegration",
+        "snownee.kiwi.contributor.client.CosmeticLayer",
+        "snownee.kiwi.contributor.client.gui.CosmeticScreen",
+        "snownee.kiwi.contributor.Contributors",
+        "snownee.kiwi.contributor.ContributorsClient",
+        "snownee.kiwi.contributor.ITierProvider",
+        "snownee.kiwi.contributor.network.CSetCosmeticPacket",
+        "snownee.kiwi.contributor.network.SSyncCosmeticPacket",
+        "snownee.kiwi.customization.block.BasicBlock",
+        "snownee.kiwi.customization.block.behavior.BlockBehaviorRegistry",
+        "snownee.kiwi.customization.block.behavior.CanSurviveHandler",
+        "snownee.kiwi.customization.block.behavior.CanSurviveHandlerCodec",
+        "snownee.kiwi.customization.block.behavior.KSitCommonConfig",
+        "snownee.kiwi.customization.block.behavior.SitManager",
+        "snownee.kiwi.customization.block.behavior.UseHandler",
+        "snownee.kiwi.customization.block.BlockFundamentals",
+        "snownee.kiwi.customization.block.CheckedWaterloggedBlock",
+        "snownee.kiwi.customization.block.component.ConsumableComponent",
+        "snownee.kiwi.customization.block.component.CycleVariantsComponent",
+        "snownee.kiwi.customization.block.component.DirectionalComponent",
+        "snownee.kiwi.customization.block.component.FrontAndTopComponent",
+        "snownee.kiwi.customization.block.component.HorizontalAxisComponent",
+        "snownee.kiwi.customization.block.component.HorizontalComponent",
+        "snownee.kiwi.customization.block.component.KBlockComponent",
+        "snownee.kiwi.customization.block.component.LayeredComponent",
+        "snownee.kiwi.customization.block.component.MouldingComponent",
+        "snownee.kiwi.customization.block.component.SimplePropertiesComponent",
+        "snownee.kiwi.customization.block.component.StackableComponent",
+        "snownee.kiwi.customization.block.component.WaterLoggableComponent",
+        "snownee.kiwi.customization.block.family.BlockFamilies",
+        "snownee.kiwi.customization.block.family.BlockFamily",
+        "snownee.kiwi.customization.block.family.BlockFamilyInferrer",
+        "snownee.kiwi.customization.block.family.StonecutterRecipeMaker",
+        "snownee.kiwi.customization.block.GlassType",
+        "snownee.kiwi.customization.block.KBlockSettings",
+        "snownee.kiwi.customization.block.KBlockUtils",
+        "snownee.kiwi.customization.block.loader.BlockCodecs",
+        "snownee.kiwi.customization.block.loader.BlockDefinitionProperties",
+        "snownee.kiwi.customization.block.loader.BuiltInBlockTemplate",
+        "snownee.kiwi.customization.block.loader.ConfiguredBlockTemplate",
+        "snownee.kiwi.customization.block.loader.InjectedCodec",
+        "snownee.kiwi.customization.block.loader.KBlockComponents",
+        "snownee.kiwi.customization.block.loader.KBlockDefinition",
+        "snownee.kiwi.customization.block.loader.KBlockTemplate",
+        "snownee.kiwi.customization.block.loader.KBlockTemplates",
+        "snownee.kiwi.customization.block.loader.KMaterial",
+        "snownee.kiwi.customization.block.loader.SimpleBlockTemplate",
+        "snownee.kiwi.customization.block.soundtype.DeferredSoundType",
+        "snownee.kiwi.customization.block.soundtype.SoundTypes",
+        "snownee.kiwi.customization.block.StringProperty",
+        "snownee.kiwi.customization.block.tier.KiwiTiers",
+        "snownee.kiwi.customization.block.tier.SimpleTier",
+        "snownee.kiwi.customization.builder.BlockSpread",
+        "snownee.kiwi.customization.builder.BuilderModePreview",
+        "snownee.kiwi.customization.builder.BuilderRule",
+        "snownee.kiwi.customization.builder.BuilderRules",
+        "snownee.kiwi.customization.builder.BuilderRuleTypes",
+        "snownee.kiwi.customization.builder.BuildersButton",
+        "snownee.kiwi.customization.builder.ConvertScreen",
+        "snownee.kiwi.customization.builder.CyclePropertyRule",
+        "snownee.kiwi.customization.builder.FacingLimitation",
+        "snownee.kiwi.customization.builder.ItemButton",
+        "snownee.kiwi.customization.builder.PanelLayout",
+        "snownee.kiwi.customization.builder.ReplaceInHandRule",
+        "snownee.kiwi.customization.command.ExportBlocksCommand",
+        "snownee.kiwi.customization.command.ExportCreativeTabsCommand",
+        "snownee.kiwi.customization.command.ExportShapesCommand",
+        "snownee.kiwi.customization.command.PrintFamiliesCommand",
+        "snownee.kiwi.customization.command.ReloadBlockSettingsCommand",
+        "snownee.kiwi.customization.command.ReloadFamiliesAndRulesCommand",
+        "snownee.kiwi.customization.command.ReloadSlotsCommand",
+        "snownee.kiwi.customization.compat.emi.EMICompat",
+        "snownee.kiwi.customization.compat.emi.KEmiStonecutterRecipe",
+        "snownee.kiwi.customization.compat.emi.KSwitchGroupRecipe",
+        "snownee.kiwi.customization.compat.jade.JadeCompat",
+        "snownee.kiwi.customization.compat.jei.JEICompat",
+        "snownee.kiwi.customization.compat.jei.KSwitchGroupRecipe",
+        "snownee.kiwi.customization.compat.jei.KSwitchGroupRecipeCategory",
+        "snownee.kiwi.customization.compat.rei.REICompat",
+        "snownee.kiwi.customization.compat.rei.REICompatForge",
+        "snownee.kiwi.customization.CustomFeatureTags",
+        "snownee.kiwi.customization.CustomizationClient",
+        "snownee.kiwi.customization.CustomizationHooks",
+        "snownee.kiwi.customization.CustomizationMetadata",
+        "snownee.kiwi.customization.CustomizationRegistries",
+        "snownee.kiwi.customization.CustomizationServiceFinder",
+        "snownee.kiwi.customization.duck.KBlockProperties",
+        "snownee.kiwi.customization.duck.KPlayer",
+        "snownee.kiwi.customization.item.ItemFundamentals",
+        "snownee.kiwi.customization.item.KItemSettings",
+        "snownee.kiwi.customization.item.loader.BlockItemTemplate",
+        "snownee.kiwi.customization.item.loader.BuiltInItemTemplate",
+        "snownee.kiwi.customization.item.loader.ConfiguredItemTemplate",
+        "snownee.kiwi.customization.item.loader.ItemCodecs",
+        "snownee.kiwi.customization.item.loader.ItemDefinitionProperties",
+        "snownee.kiwi.customization.item.loader.KCreativeTab",
+        "snownee.kiwi.customization.item.loader.KItemDefinition",
+        "snownee.kiwi.customization.item.loader.KItemTemplate",
+        "snownee.kiwi.customization.item.loader.KItemTemplates",
+        "snownee.kiwi.customization.item.loader.SimpleItemTemplate",
+        "snownee.kiwi.customization.item.MultipleBlockItem",
+        "snownee.kiwi.customization.KiwiPackResourceManager",
+        "snownee.kiwi.customization.network.CApplyBuilderRulePacket",
+        "snownee.kiwi.customization.network.CConvertItemPacket",
+        "snownee.kiwi.customization.network.SItemPopTimePacket",
+        "snownee.kiwi.customization.network.SSyncPlaceCountPacket",
+        "snownee.kiwi.customization.placement.ParsedProtoTag",
+        "snownee.kiwi.customization.placement.PlaceChoices",
+        "snownee.kiwi.customization.placement.PlaceDebugRenderer",
+        "snownee.kiwi.customization.placement.PlaceMatchResult",
+        "snownee.kiwi.customization.placement.PlacementSystem",
+        "snownee.kiwi.customization.placement.PlaceSlot",
+        "snownee.kiwi.customization.placement.PlaceSlotProvider",
+        "snownee.kiwi.customization.placement.PlaceTarget",
+        "snownee.kiwi.customization.placement.SlotLink",
+        "snownee.kiwi.customization.placement.StatePropertiesPredicate",
+        "snownee.kiwi.customization.placement.TagTestOperator",
+        "snownee.kiwi.customization.shape.AbstractHorizontalShape",
+        "snownee.kiwi.customization.shape.BakingContext",
+        "snownee.kiwi.customization.shape.BlockShapeType",
+        "snownee.kiwi.customization.shape.ChoicesShape",
+        "snownee.kiwi.customization.shape.ConfigureCrossCollisionShape",
+        "snownee.kiwi.customization.shape.ConfigureWallShape",
+        "snownee.kiwi.customization.shape.ConfiguringShape",
+        "snownee.kiwi.customization.shape.DirectionalShape",
+        "snownee.kiwi.customization.shape.FrontAndTopShape",
+        "snownee.kiwi.customization.shape.HorizontalShape",
+        "snownee.kiwi.customization.shape.MergeConfiguredShape",
+        "snownee.kiwi.customization.shape.MouldingShape",
+        "snownee.kiwi.customization.shape.ShapeGenerator",
+        "snownee.kiwi.customization.shape.ShapeRef",
+        "snownee.kiwi.customization.shape.ShapeStorage",
+        "snownee.kiwi.customization.shape.SixWayShape",
+        "snownee.kiwi.customization.shape.UnbakedShape",
+        "snownee.kiwi.customization.shape.UnbakedShapeCodec",
+        "snownee.kiwi.data.DataModule",
+        "snownee.kiwi.datagen.KiwiBlockLoot",
+        "snownee.kiwi.datagen.KiwiLanguageProvider",
+        "snownee.kiwi.GroupSetting",
+        "snownee.kiwi.handler.ExtractOnlyItemHandler",
+        "snownee.kiwi.handler.KEnergyStorage",
+        "snownee.kiwi.inventory.container.ModSlot",
+        "snownee.kiwi.item.ItemCategoryFiller",
+        "snownee.kiwi.item.ModBlockItem",
+        "snownee.kiwi.item.ModItem",
+        "snownee.kiwi.Kiwi",
+        "snownee.kiwi.KiwiAnnotationData",
+        "snownee.kiwi.KiwiClientConfig",
+        "snownee.kiwi.KiwiCommonConfig",
+        "snownee.kiwi.KiwiGO",
+        "snownee.kiwi.KiwiModuleContainer",
+        "snownee.kiwi.KiwiModules",
+        "snownee.kiwi.loader.ClientInitializer",
+        "snownee.kiwi.loader.ClientPlatform",
+        "snownee.kiwi.loader.event.InitEvent",
+        "snownee.kiwi.loader.event.ParallelEvent",
+        "snownee.kiwi.loader.event.PostInitEvent",
+        "snownee.kiwi.loader.KiwiMetadataLoader",
+        "snownee.kiwi.loader.NeoDevEnvMetadataLoader",
+        "snownee.kiwi.loader.Platform",
+        "snownee.kiwi.LoadingContext",
+        "snownee.kiwi.ModContext",
+        "snownee.kiwi.network.KNetworking",
+        "snownee.kiwi.network.KPacketSender",
+        "snownee.kiwi.network.PayloadContext",
+        "snownee.kiwi.network.PlayPacketHandler",
+        "snownee.kiwi.network.ServerPayloadContext",
+        "snownee.kiwi.recipe.AlternativesIngredient",
+        "snownee.kiwi.recipe.AlternativesIngredientBuilder",
+        "snownee.kiwi.recipe.crafting.DynamicShapedRecipe",
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipe",
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipeBuilder",
+        "snownee.kiwi.recipe.crafting.NoContainersShapedRecipe",
+        "snownee.kiwi.recipe.CustomIngredient",
+        "snownee.kiwi.recipe.CustomIngredientImpl",
+        "snownee.kiwi.recipe.CustomIngredientSerializer",
+        "snownee.kiwi.recipe.EmptyRecipeInput",
+        "snownee.kiwi.recipe.EvalCondition",
+        "snownee.kiwi.recipe.ModuleLoadedCondition",
+        "snownee.kiwi.recipe.SimpleRecipe",
+        "snownee.kiwi.recipe.SizedIngredient",
+        "snownee.kiwi.RegistryLookup",
+        "snownee.kiwi.RenderLayerEnum",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.BaseException",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.ExpressionConfiguration",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.FunctionDictionaryIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.MapBasedFunctionDictionary",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.MapBasedOperatorDictionary",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.OperatorDictionaryIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ArrayConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.BinaryConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.BooleanConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ConverterIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DateTimeConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DefaultEvaluationValueConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DurationConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.EvaluationValueConverterIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ExpressionNodeConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.NumberConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.StringConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.StructureConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.DataAccessorIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.EvaluationValue",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.MapBasedDataAccessor",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.EvaluationException",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.Expression",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.AbstractFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AbsFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AbstractMinMaxFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AverageFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.CeilingFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.CoalesceFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.FactFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.FloorFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.IfFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.Log10Function",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.LogFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.MaxFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.MinFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.NotFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.RandomFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.RoundFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SqrtFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SumFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SwitchFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeFormatFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeNewFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeNowFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeParseFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeTodayFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeToEpochFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationFromMillisFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationNewFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationParseFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationToMillisFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.ZoneIdConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.FunctionIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.FunctionParameterDefinition",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringContains",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringEndsWithFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringFormatFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLeftFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLengthFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLowerFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringMatchesFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringRightFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringStartsWithFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringSubstringFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringTrimFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringUpperFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.Atan2Function",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.Atan2RFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.DegFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.RadFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanHFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanRFunction",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.AbstractOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixDivisionOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixMinusOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixModuloOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixMultiplicationOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixPlusOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixPowerOfOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.PrefixMinusOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.PrefixPlusOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixAndOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixEqualsOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixGreaterEqualsOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixGreaterOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixLessEqualsOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixLessOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixNotEqualsOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixOrOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.PrefixNotOperator",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.OperatorAnnotationNotFoundException",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.OperatorIfc",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ASTNode",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ParseException",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ShuntingYardConverter",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.Token",
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.Tokenizer",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentEventsCollector",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentLine",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentType",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.composer.Composer",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.composer.ComposerException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.AbstractConstruct",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.BaseConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.Construct",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.Constructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.ConstructorException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.DuplicateKeyException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.SafeConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.DumperOptions",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.Emitable",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.Emitter",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.EmitterException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.ScalarAnalysis",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.env.EnvScalarConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.Mark",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.MarkedYAMLException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.MissingEnvironmentVariableException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.YAMLException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.AliasEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CollectionEndEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CollectionStartEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CommentEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.DocumentEndEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.DocumentStartEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.Event",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.ImplicitTuple",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.MappingEndEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.MappingStartEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.NodeEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.ScalarEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.SequenceEndEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.SequenceStartEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.StreamEndEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.StreamStartEvent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.CompactConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.CompactData",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.PackageCompactConstructor",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TagInspector",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TrustedTagInspector",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.UnTrustedTagInspector",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.BeanAccess",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.FieldProperty",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.GenericProperty",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.MethodProperty",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.MissingProperty",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.Property",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.PropertySubstitute",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.PropertyUtils",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.LoaderOptions",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.AnchorNode",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.CollectionNode",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.MappingNode",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.Node",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.NodeId",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.NodeTuple",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.ScalarNode",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.SequenceNode",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.Tag",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.Parser",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.ParserException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.ParserImpl",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.ReaderException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.StreamReader",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.UnicodeReader",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.BaseRepresenter",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.Represent",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.Representer",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.resolver.Resolver",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.Constant",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.Scanner",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.ScannerException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.ScannerImpl",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.AnchorGenerator",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.NumberAnchorGenerator",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.Serializer",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.SerializerException",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.AliasToken",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.AnchorToken",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.BlockEndToken",
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.BlockEntryToken"
+      ],
+      "methods": {
+        "snownee.kiwi.AbstractModule": [
+          "go(Supplier<? extends T>)",
+          "go(Supplier<? extends T>, ResourceKey<? extends Registry<?>>)",
+          "ref(ResourceKey<? extends Registry<?>>)",
+          "itemProp()",
+          "blockProp()",
+          "blockProp(BlockBehaviour)",
+          "blockEntity(BlockEntitySupplier<? extends T>, Type<?>, Supplier<? extends Block>...)",
+          "blockEntity(BlockEntitySupplier<? extends T>, Type<?>, Class<? extends Block>)",
+          "itemCategory(ResourceLocation, Supplier<ItemStack>)",
+          "itemTag(String, String)",
+          "entityTag(String, String)",
+          "blockTag(String, String)",
+          "fluidTag(String, String)",
+          "tag(ResourceKey<? extends Registry<T>>, String, String)",
+          "itemTag(String)",
+          "entityTag(String)",
+          "blockTag(String)",
+          "fluidTag(String)",
+          "tag(ResourceKey<? extends Registry<T>>, String)",
+          "addRegistries()"
+        ],
+        "snownee.kiwi.block.entity.BlockEntityDataListener": [],
+        "snownee.kiwi.block.entity.InheritanceBlockEntityType": [
+          "isValid(BlockState)"
+        ],
+        "snownee.kiwi.block.entity.ModBlockEntity": [
+          "getUpdatePacket()",
+          "onDataPacket(Connection, ClientboundBlockEntityDataPacket, Provider)",
+          "getUpdateTag(Provider)",
+          "readPacketData(CompoundTag)",
+          "writePacketData(CompoundTag, Provider)",
+          "refresh()"
+        ],
+        "snownee.kiwi.block.IKiwiBlock": [
+          "getName(ItemStack)",
+          "createItem(Properties)",
+          "getCloneItemStack(LevelReader, BlockPos, BlockState, Player, HitResult)",
+          "getCloneItemStack(BlockState, HitResult, LevelReader, BlockPos, Player)"
+        ],
+        "snownee.kiwi.block.ModBlock": [
+          "pickBlockEntityData(LevelReader, BlockPos, BlockState, ItemStack)"
+        ],
+        "snownee.kiwi.build.KiwiAnnotationProcessor": [
+          "init(ProcessingEnvironment)",
+          "process(Set<? extends TypeElement>, RoundEnvironment)",
+          "getSupportedSourceVersion()"
+        ],
+        "snownee.kiwi.build.KiwiMetadata": [
+          "of(Map<String, Object>)",
+          "get(String)"
+        ],
+        "snownee.kiwi.build.KiwiMetadataParser": [
+          "dump(KiwiMetadata)",
+          "load(InputStream)",
+          "load(String)"
+        ],
+        "snownee.kiwi.Categories": [],
+        "snownee.kiwi.client.TooltipEvents": [
+          "globalTooltip(ItemStack, List<Component>, TooltipFlag)",
+          "debugTooltip(ItemStack, TooltipContext, TooltipFlag, List<Component>)"
+        ],
+        "snownee.kiwi.command.ClientCommandContext": [
+          "literal(String)",
+          "argument(String, ArgumentType<T>)",
+          "sendSuccess(S, Component)",
+          "sendFailure(S, Component)"
+        ],
+        "snownee.kiwi.command.KalcCommand": [
+          "create(ClientCommandContext<T>)"
+        ],
+        "snownee.kiwi.command.KiwiClientCommand": [
+          "create(ClientCommandContext<T>)"
+        ],
+        "snownee.kiwi.command.KiwiCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)",
+          "evalHelp(T, BiConsumer<T, Component>)",
+          "eval(String, boolean, T, BiConsumer<T, Component>, BiConsumer<T, Component>)"
+        ],
+        "snownee.kiwi.config.ClothConfigIntegration": [
+          "create(Screen, String)",
+          "attributes()"
+        ],
+        "snownee.kiwi.config.ConfigHandler": [
+          "init()",
+          "refresh()",
+          "save()",
+          "define(String, T, Field, String)",
+          "setHasModules(boolean)",
+          "hasModules()",
+          "getModId()",
+          "getType()",
+          "getFileName()",
+          "getTranslationKey()",
+          "getClazz()",
+          "get(String)",
+          "getValueMap()",
+          "providesConfigScreen(ConfigLibAttributes)"
+        ],
+        "snownee.kiwi.config.ConfigLibAttributes": [],
+        "snownee.kiwi.config.KiwiConfigManager": [
+          "register(ConfigHandler)",
+          "init()",
+          "defineModules(String, ConfigHandler, boolean)",
+          "refresh()",
+          "refresh(String)",
+          "getHandler(Class<?>)",
+          "getModsWithScreen(ConfigLibAttributes)",
+          "getModHandlersWithScreen(String, ConfigLibAttributes)"
+        ],
+        "snownee.kiwi.config.NeoClothConfigIntegration": [
+          "init()"
+        ],
+        "snownee.kiwi.contributor.client.CosmeticLayer": [
+          "render(PoseStack, MultiBufferSource, int, AbstractClientPlayer, float, float, float, float, float, float)",
+          "getCache()"
+        ],
+        "snownee.kiwi.contributor.client.gui.CosmeticScreen": [
+          "init()",
+          "render(GuiGraphics, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "mouseDragged(double, double, int, double, double)",
+          "mouseReleased(double, double, int)",
+          "mouseScrolled(double, double, double, double)",
+          "keyPressed(int, int, int)",
+          "onClose()"
+        ],
+        "snownee.kiwi.contributor.Contributors": [
+          "isContributor(String, String)",
+          "isContributor(String, String, String)",
+          "isContributor(String, Player)",
+          "isContributor(String, Player, String)",
+          "getPlayerTiers(String)",
+          "getTiers()",
+          "registerTierProvider(ITierProvider)",
+          "changeCosmetic(ServerPlayer, ResourceLocation)",
+          "isRenderable(ResourceLocation)",
+          "getRenderableTiers()",
+          "canPlayerUseCosmetic(String, ResourceLocation)",
+          "init(InitEvent)"
+        ],
+        "snownee.kiwi.contributor.ContributorsClient": [
+          "init(InitEvent)",
+          "onKeyInput(Minecraft)",
+          "changeCosmetic()",
+          "changeCosmetic(SSyncCosmeticPacket)",
+          "clear()"
+        ],
+        "snownee.kiwi.contributor.ITierProvider": [
+          "refresh()",
+          "isContributor(String)",
+          "isContributor(String, String)"
+        ],
+        "snownee.kiwi.contributor.network.CSetCosmeticPacket": [
+          "type()"
+        ],
+        "snownee.kiwi.contributor.network.SSyncCosmeticPacket": [
+          "type()"
+        ],
+        "snownee.kiwi.customization.block.BasicBlock": [
+          "codec()"
+        ],
+        "snownee.kiwi.customization.block.behavior.BlockBehaviorRegistry": [
+          "getInstance()",
+          "addUseHandler(UseHandler)",
+          "setContext(Block)",
+          "onUseBlock(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "snownee.kiwi.customization.block.behavior.CanSurviveHandler": [],
+        "snownee.kiwi.customization.block.behavior.CanSurviveHandlerCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(CanSurviveHandler, DynamicOps<T>, T)"
+        ],
+        "snownee.kiwi.customization.block.behavior.KSitCommonConfig": [],
+        "snownee.kiwi.customization.block.behavior.SitManager": [
+          "tick(BlockDisplay)",
+          "sit(Player, BlockHitResult)",
+          "guessBlockFacing(BlockState, Player)",
+          "isSeatEntity(Entity)",
+          "clampRotation(Player, Entity)",
+          "dismount(Entity, LivingEntity)"
+        ],
+        "snownee.kiwi.customization.block.behavior.UseHandler": [],
+        "snownee.kiwi.customization.block.BlockFundamentals": [
+          "reload(ResourceManager, OneTimeLoader.Context, boolean)",
+          "CodecCreationContext(MapCodec<Optional<KMaterial>>, MapCodec<Optional<GlassType>>)"
+        ],
+        "snownee.kiwi.customization.block.CheckedWaterloggedBlock": [
+          "canPlaceLiquid(Player, BlockGetter, BlockPos, BlockState, Fluid)",
+          "placeLiquid(LevelAccessor, BlockPos, BlockState, FluidState)",
+          "pickupBlock(Player, LevelAccessor, BlockPos, BlockState)"
+        ],
+        "snownee.kiwi.customization.block.component.ConsumableComponent": [
+          "create(int, int, Optional<FoodProperties>, Optional<ResourceKey<ResourceLocation>>)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "minValue()",
+          "maxValue()",
+          "hasAnalogOutputSignal()",
+          "getAnalogOutputSignal(BlockState)",
+          "addBehaviors(BlockBehaviorRegistry)",
+          "getLayerProperty()",
+          "getDefaultLayer()"
+        ],
+        "snownee.kiwi.customization.block.component.CycleVariantsComponent": [
+          "create(int)",
+          "create(int, boolean, Optional<String>)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "minValue()",
+          "maxValue()",
+          "getLayerProperty()",
+          "getDefaultLayer()",
+          "addBehaviors(BlockBehaviorRegistry)"
+        ],
+        "snownee.kiwi.customization.block.component.DirectionalComponent": [
+          "getInstance(boolean)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "getHorizontalFacing(BlockState)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)"
+        ],
+        "snownee.kiwi.customization.block.component.FrontAndTopComponent": [
+          "getInstance()",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "getHorizontalFacing(BlockState)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)"
+        ],
+        "snownee.kiwi.customization.block.component.HorizontalAxisComponent": [
+          "getInstance(boolean)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "rotate(BlockState, Rotation)"
+        ],
+        "snownee.kiwi.customization.block.component.HorizontalComponent": [
+          "getInstance(boolean)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "getHorizontalFacing(BlockState)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)"
+        ],
+        "snownee.kiwi.customization.block.component.KBlockComponent": [
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)",
+          "useShapeForLightOcclusion(BlockState)",
+          "hasAnalogOutputSignal()",
+          "getAnalogOutputSignal(BlockState)",
+          "addBehaviors(BlockBehaviorRegistry)",
+          "canBeReplaced(BlockState, BlockPlaceContext)",
+          "getHorizontalFacing(BlockState)"
+        ],
+        "snownee.kiwi.customization.block.component.LayeredComponent": [],
+        "snownee.kiwi.customization.block.component.MouldingComponent": [
+          "create(Optional<TagKey<Block>>)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "useShapeForLightOcclusion(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "getHorizontalFacing(BlockState)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)"
+        ],
+        "snownee.kiwi.customization.block.component.SimplePropertiesComponent": [
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)"
+        ],
+        "snownee.kiwi.customization.block.component.StackableComponent": [
+          "create(int)",
+          "create(int, int)",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "minValue()",
+          "maxValue()",
+          "hasAnalogOutputSignal()",
+          "getAnalogOutputSignal(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "canBeReplaced(BlockState, BlockPlaceContext)",
+          "getLayerProperty()",
+          "getDefaultLayer()"
+        ],
+        "snownee.kiwi.customization.block.component.WaterLoggableComponent": [
+          "getInstance()",
+          "type()",
+          "injectProperties(Block, Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(KBlockSettings, BlockState, BlockPlaceContext)",
+          "updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)"
+        ],
+        "snownee.kiwi.customization.block.family.BlockFamilies": [
+          "find(Item)",
+          "findQuickSwitch(Item, boolean)",
+          "findByStonecutterSource(Item)",
+          "reloadResources(ResourceManager, OneTimeLoader.Context)",
+          "reloadTags()",
+          "get(ResourceLocation)",
+          "all()",
+          "getConvertRatio(Item)",
+          "getKey(BlockFamily)"
+        ],
+        "snownee.kiwi.customization.block.family.BlockFamily": [
+          "blockHolders()",
+          "itemHolders()",
+          "exchangeInputsInViewer()",
+          "blocks()",
+          "hasBlock(Block)",
+          "items()",
+          "hasItem(Item)",
+          "stonecutterExchange()",
+          "stonecutterSource()",
+          "stonecutterSourceMultiplier()",
+          "stonecutterSourceIngredient()",
+          "switchAttrs()",
+          "toIngredient(List<? extends Holder<Item>>)",
+          "ingredient()",
+          "ingredientInViewer()",
+          "contains(Item)",
+          "toString()",
+          "SwitchAttrs(boolean, boolean, boolean)"
+        ],
+        "snownee.kiwi.customization.block.family.BlockFamilyInferrer": [
+          "generate()"
+        ],
+        "snownee.kiwi.customization.block.family.StonecutterRecipeMaker": [
+          "appendRecipesFor(List<RecipeHolder<T>>, C)",
+          "makeRecipes(String, KHolder<BlockFamily>)",
+          "invalidateCache()"
+        ],
+        "snownee.kiwi.customization.block.GlassType": [],
+        "snownee.kiwi.customization.block.KBlockSettings": [
+          "empty()",
+          "builder()",
+          "copyProperties(Block)",
+          "copyProperties(Block, MapColor)",
+          "of(Object)",
+          "getGlassFaceShape(BlockState, Direction)",
+          "hasComponent(KBlockComponent.Type<?>)",
+          "getComponent(KBlockComponent.Type<T>)",
+          "injectProperties(Block, net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState>)",
+          "registerDefaultState(BlockState)",
+          "getStateForPlacement(BlockState, BlockPlaceContext)",
+          "updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "rotate(BlockState, Rotation)",
+          "mirror(BlockState, Mirror)",
+          "useShapeForLightOcclusion(BlockState)",
+          "canBeReplaced(BlockState, BlockPlaceContext)",
+          "removeIfPossible(BlockShapeType)",
+          "getShape(BlockShapeType)",
+          "MoreInfo(ResourceLocation, ResourceLocation, ResourceLocation)"
+        ],
+        "snownee.kiwi.customization.block.KBlockUtils": [
+          "componentsUpdateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "componentsGetStateForPlacement(BlockState, BlockPlaceContext)"
+        ],
+        "snownee.kiwi.customization.block.loader.BlockCodecs": [
+          "register(String, MapCodec<? extends Block>)",
+          "register(ResourceLocation, MapCodec<? extends Block>)",
+          "get(ResourceLocation)",
+          "notImplemented(O)",
+          "woodTyped(BiFunction<WoodType, Properties, T>)"
+        ],
+        "snownee.kiwi.customization.block.loader.BlockDefinitionProperties": [
+          "mapCodec(BlockFundamentals.CodecCreationContext)",
+          "mapCodecField(BlockFundamentals.CodecCreationContext)",
+          "merge(BlockDefinitionProperties)",
+          "PartialVanillaProperties(Optional<ResourceKey<Block>>, Optional<Boolean>, Optional<Boolean>, Optional<Integer>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<PushReaction>, Optional<OffsetType>, Optional<Boolean>, Optional<StateArgumentPredicate<EntityType<?>>>, Optional<StatePredicate>, Optional<StatePredicate>, Optional<StatePredicate>, Optional<StatePredicate>, Optional<StatePredicate>)"
+        ],
+        "snownee.kiwi.customization.block.loader.BuiltInBlockTemplate": [
+          "directCodec(BlockFundamentals.CodecCreationContext)",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "createBlock(ResourceLocation, Properties, JsonObject)",
+          "key()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.block.loader.ConfiguredBlockTemplate": [
+          "codec(Map<ResourceLocation, KBlockTemplate>)"
+        ],
+        "snownee.kiwi.customization.block.loader.InjectedCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(I, DynamicOps<T>, T)"
+        ],
+        "snownee.kiwi.customization.block.loader.KBlockComponents": [
+          "getSimpleInstance(KBlockComponent.Type<?>)"
+        ],
+        "snownee.kiwi.customization.block.loader.KBlockDefinition": [
+          "codec(Map<ResourceLocation, KBlockTemplate>, BlockFundamentals.CodecCreationContext)",
+          "createSettings(ResourceLocation, ShapeStorage)",
+          "createBlock(ResourceLocation, ShapeStorage)",
+          "setConfiguringShape(Block, ShapeStorage)"
+        ],
+        "snownee.kiwi.customization.block.loader.KBlockTemplate": [
+          "codec(BlockFundamentals.CodecCreationContext)",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "properties()"
+        ],
+        "snownee.kiwi.customization.block.loader.KBlockTemplates": [],
+        "snownee.kiwi.customization.block.loader.KMaterial": [],
+        "snownee.kiwi.customization.block.loader.SimpleBlockTemplate": [
+          "directCodec(BlockFundamentals.CodecCreationContext)",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "createBlock(ResourceLocation, Properties, JsonObject)",
+          "clazz()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.block.soundtype.DeferredSoundType": [
+          "getBreakSound()",
+          "getStepSound()",
+          "getPlaceSound()",
+          "getHitSound()",
+          "getFallSound()"
+        ],
+        "snownee.kiwi.customization.block.soundtype.SoundTypes": [
+          "refreshWithValues(Map<ResourceLocation, ? extends SoundType>)"
+        ],
+        "snownee.kiwi.customization.block.StringProperty": [
+          "convert(EnumProperty<?>)",
+          "getPossibleValues()",
+          "getName(String)",
+          "getValue(String)",
+          "equals(Object)",
+          "generateHashCode()"
+        ],
+        "snownee.kiwi.customization.block.tier.KiwiTiers": [
+          "refreshWithValues(Map<ResourceLocation, ? extends Tier>)"
+        ],
+        "snownee.kiwi.customization.block.tier.SimpleTier": [
+          "getUses()",
+          "getSpeed()",
+          "getAttackDamageBonus()",
+          "getIncorrectBlocksForDrops()",
+          "getEnchantmentValue()",
+          "getRepairIngredient()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.builder.BlockSpread": [
+          "create(BlockSpread.Type, FacingLimitation, int)",
+          "collect(UseOnContext, Predicate<BlockState>, BiConsumer<BlockPos, BlockState>)",
+          "collect(BlockGetter, BlockPos, Player, Predicate<BlockState>, BiConsumer<BlockPos, BlockState>)"
+        ],
+        "snownee.kiwi.customization.builder.BuilderModePreview": [
+          "render(PoseStack, MultiBufferSource, double, double, double)"
+        ],
+        "snownee.kiwi.customization.builder.BuilderRule": [
+          "playPlaceSound(Player, BlockState)"
+        ],
+        "snownee.kiwi.customization.builder.BuilderRules": [
+          "find(Block)",
+          "reload(ResourceManager, OneTimeLoader.Context)",
+          "get(ResourceLocation)",
+          "all()"
+        ],
+        "snownee.kiwi.customization.builder.BuilderRuleTypes": [],
+        "snownee.kiwi.customization.builder.BuildersButton": [
+          "getPreviewRenderer()",
+          "isBuilderModeOn()",
+          "onLongPress()",
+          "onDoublePress()",
+          "onShortPress()",
+          "findConvertGroups(Player, ItemStack)",
+          "startDestroyBlock(BlockPos, Direction)",
+          "performUseItemOn(InteractionHand, BlockHitResult)",
+          "renderDebugText(List<String>, List<String>)",
+          "cancelRenderHighlight()"
+        ],
+        "snownee.kiwi.customization.builder.ConvertScreen": [
+          "init()",
+          "tick()",
+          "setFocused(GuiEventListener)",
+          "mouseClicked(double, double, int)",
+          "mouseScrolled(double, double, double, double)",
+          "render(GuiGraphics, int, int, float)",
+          "renderBackground(GuiGraphics, int, int, float)",
+          "setTooltipForNextRenderPass(List<FormattedCharSequence>, ClientTooltipPositioner, boolean)",
+          "onClose()",
+          "isClosing()",
+          "isPauseScreen()",
+          "renderLingering(GuiGraphics)",
+          "tickLingering()"
+        ],
+        "snownee.kiwi.customization.builder.CyclePropertyRule": [
+          "of(Map<BlockFamily, Map<String, String>>, BlockSpread)",
+          "type()",
+          "relatedBlocks()",
+          "matches(Player, ItemStack, BlockState)",
+          "apply(UseOnContext, List<BlockPos>)",
+          "searchPositions(BlockState, UseOnContext)"
+        ],
+        "snownee.kiwi.customization.builder.FacingLimitation": [
+          "getSerializedName()",
+          "test(Direction, Direction)"
+        ],
+        "snownee.kiwi.customization.builder.ItemButton": [
+          "builder(ItemStack, boolean, OnPress)",
+          "setTooltip(Tooltip)",
+          "getTooltip()",
+          "item()",
+          "pressTime()",
+          "unpress()",
+          "renderWidget(GuiGraphics, int, int, float)",
+          "onPress()",
+          "onRelease(double, double)",
+          "keyReleased(int, int, int)",
+          "onRelease()"
+        ],
+        "snownee.kiwi.customization.builder.PanelLayout": [
+          "addWidget(AbstractWidget)",
+          "bind(Screen, Vector2i, Vector2f)",
+          "getAnchoredPos()",
+          "update()",
+          "bounds()",
+          "widgets()"
+        ],
+        "snownee.kiwi.customization.builder.ReplaceInHandRule": [
+          "relatedBlocks()",
+          "matches(Player, ItemStack, BlockState)",
+          "apply(UseOnContext, List<BlockPos>)",
+          "searchPositions(BlockState, UseOnContext)",
+          "type()"
+        ],
+        "snownee.kiwi.customization.command.ExportBlocksCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "putMoreInfo(KBlockSettings, KBlockSettings.MoreInfo)",
+          "toYaml(Codec<T>, T, UnaryOperator<JsonElement>)"
+        ],
+        "snownee.kiwi.customization.command.ExportCreativeTabsCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "snownee.kiwi.customization.command.ExportShapesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "snownee.kiwi.customization.command.PrintFamiliesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "snownee.kiwi.customization.command.ReloadBlockSettingsCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "snownee.kiwi.customization.command.ReloadFamiliesAndRulesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "snownee.kiwi.customization.command.ReloadSlotsCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "reload(BlockFundamentals)"
+        ],
+        "snownee.kiwi.customization.compat.emi.EMICompat": [
+          "register(EmiRegistry)"
+        ],
+        "snownee.kiwi.customization.compat.emi.KEmiStonecutterRecipe": [
+          "getCategory()",
+          "getId()",
+          "getInputs()",
+          "getOutputs()",
+          "getDisplayWidth()",
+          "getDisplayHeight()",
+          "addWidgets(WidgetHolder)"
+        ],
+        "snownee.kiwi.customization.compat.emi.KSwitchGroupRecipe": [
+          "getIngredient()",
+          "getStacks()",
+          "getRecipeContext(EmiStack, int)",
+          "getCategory()",
+          "getId()"
+        ],
+        "snownee.kiwi.customization.compat.jade.JadeCompat": [
+          "registerClient(IWailaClientRegistration)"
+        ],
+        "snownee.kiwi.customization.compat.jei.JEICompat": [
+          "getPluginUid()",
+          "registerCategories(IRecipeCategoryRegistration)",
+          "registerRecipes(IRecipeRegistration)"
+        ],
+        "snownee.kiwi.customization.compat.jei.KSwitchGroupRecipe": [],
+        "snownee.kiwi.customization.compat.jei.KSwitchGroupRecipeCategory": [
+          "setRecipe(IRecipeLayoutBuilder, KSwitchGroupRecipe, IFocusGroup)",
+          "createRecipeExtras(IRecipeExtrasBuilder, KSwitchGroupRecipe, IFocusGroup)",
+          "getRegistryName(KSwitchGroupRecipe)"
+        ],
+        "snownee.kiwi.customization.compat.rei.REICompat": [
+          "registerDisplays(DisplayRegistry)"
+        ],
+        "snownee.kiwi.customization.compat.rei.REICompatForge": [],
+        "snownee.kiwi.customization.CustomFeatureTags": [],
+        "snownee.kiwi.customization.CustomizationClient": [
+          "init(IEventBus)",
+          "afterRegister(Map<ResourceLocation, KItemDefinition>, Map<ResourceLocation, KBlockDefinition>, ClientProxy.Context)"
+        ],
+        "snownee.kiwi.customization.CustomizationHooks": [
+          "isEnabled()",
+          "skipGlassRendering(BlockState, BlockState, Direction)",
+          "getGlassType(BlockState)",
+          "initLoader(IEventBus)",
+          "collectKiwiPacks()",
+          "getBlockNamespaces()",
+          "getLenientBETypeNamespaces()",
+          "isColorlessGlass(BlockState)",
+          "clearGlassType()",
+          "shouldLoad(LoadingContext)",
+          "frozen()"
+        ],
+        "snownee.kiwi.customization.CustomizationMetadata": [
+          "create(Map<String, List<String>>, List<String>)",
+          "loadMap(ResourceManager, OneTimeLoader.Context)",
+          "sortedForEach(Map<String, CustomizationMetadata>, String, Map<ResourceLocation, T>, BiConsumer<ResourceLocation, T>)",
+          "sortedForEach(Map<String, CustomizationMetadata>, List<String>, Map<ResourceLocation, T>, BiConsumer<ResourceLocation, T>)"
+        ],
+        "snownee.kiwi.customization.CustomizationRegistries": [],
+        "snownee.kiwi.customization.CustomizationServiceFinder": [
+          "shouldEnable(List<? extends IModInfo>)"
+        ],
+        "snownee.kiwi.customization.duck.KBlockProperties": [],
+        "snownee.kiwi.customization.duck.KPlayer": [],
+        "snownee.kiwi.customization.item.ItemFundamentals": [
+          "reload(ResourceManager, OneTimeLoader.Context, boolean)",
+          "addDefaultBlockItem(ResourceLocation)"
+        ],
+        "snownee.kiwi.customization.item.KItemSettings": [
+          "empty()",
+          "builder()"
+        ],
+        "snownee.kiwi.customization.item.loader.BlockItemTemplate": [
+          "directCodec()",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "createItem(ResourceLocation, Properties, JsonObject)",
+          "block()",
+          "clazz()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.item.loader.BuiltInItemTemplate": [
+          "directCodec()",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "createItem(ResourceLocation, Properties, JsonObject)",
+          "key()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.item.loader.ConfiguredItemTemplate": [
+          "codec(Map<ResourceLocation, KItemTemplate>)"
+        ],
+        "snownee.kiwi.customization.item.loader.ItemCodecs": [
+          "propertiesCodec()",
+          "simpleCodec(Function<Properties, I>)",
+          "tieredItemCodec(BiFunction<Tier, Properties, I>)",
+          "register(ResourceLocation, MapCodec<? extends Item>)",
+          "get(ResourceLocation)"
+        ],
+        "snownee.kiwi.customization.item.loader.ItemDefinitionProperties": [
+          "mapCodec()",
+          "mapCodecField()",
+          "empty()",
+          "merge(ItemDefinitionProperties)",
+          "PartialVanillaProperties(Optional<Integer>, Optional<Integer>, Optional<ResourceKey<Item>>, Optional<DataComponentMap>)"
+        ],
+        "snownee.kiwi.customization.item.loader.KCreativeTab": [
+          "create(int, Optional<ResourceKey<Item>>, Optional<ResourceKey<CreativeModeTab>>, List<ResourceKey<Item>>)"
+        ],
+        "snownee.kiwi.customization.item.loader.KItemDefinition": [
+          "codec(Map<ResourceLocation, KItemTemplate>)",
+          "createSettings(ResourceLocation)",
+          "createItem(ResourceLocation)"
+        ],
+        "snownee.kiwi.customization.item.loader.KItemTemplate": [
+          "codec()",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "properties()"
+        ],
+        "snownee.kiwi.customization.item.loader.KItemTemplates": [],
+        "snownee.kiwi.customization.item.loader.SimpleItemTemplate": [
+          "directCodec()",
+          "type()",
+          "resolve(ResourceLocation, OneTimeLoader.Context)",
+          "createItem(ResourceLocation, Properties, JsonObject)",
+          "clazz()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.item.MultipleBlockItem": [
+          "registerBlocks(Map<Block, Item>, Item)",
+          "removeFromBlockToItemMap(Map<Block, Item>, Item)",
+          "getBlock(String)"
+        ],
+        "snownee.kiwi.customization.KiwiPackResourceManager": [
+          "getNamespaces()",
+          "getResource(ResourceLocation)",
+          "getResourceStack(ResourceLocation)",
+          "listResources(String, Predicate<ResourceLocation>)",
+          "listResourceStacks(String, Predicate<ResourceLocation>)",
+          "listPacks()",
+          "close()"
+        ],
+        "snownee.kiwi.customization.network.CApplyBuilderRulePacket": [
+          "type()"
+        ],
+        "snownee.kiwi.customization.network.CConvertItemPacket": [
+          "type()",
+          "Entry(float, List<Pair<ResourceLocation, Item>>)",
+          "Group(List<CConvertItemPacket.Entry>)"
+        ],
+        "snownee.kiwi.customization.network.SItemPopTimePacket": [
+          "type()",
+          "send(ServerPlayer, int)"
+        ],
+        "snownee.kiwi.customization.network.SSyncPlaceCountPacket": [
+          "type()",
+          "sync(ServerPlayer)"
+        ],
+        "snownee.kiwi.customization.placement.ParsedProtoTag": [
+          "of(String)",
+          "prefixedKey()",
+          "resolve(BlockState)",
+          "resolve(BlockState, Rotation)",
+          "isResolved()",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.placement.PlaceChoices": [
+          "setTo(Block, KHolder<PlaceChoices>)",
+          "test(BlockState, BlockState)",
+          "getStateForPlacement(Level, BlockPos, BlockState)",
+          "Alter(List<PlaceChoices.AlterCondition>, String)",
+          "AlterCondition(String, PlaceChoices.BlockFaceType, BlockPredicate, List<ParsedProtoTag>)",
+          "Flow(Map<Direction, PlaceChoices.Limit>, SlotLink.ResultAction, boolean)",
+          "Interests(StatePropertiesPredicate, int)",
+          "Limit(String, List<ParsedProtoTag>)",
+          "Preparation(Map<ResourceLocation, PlaceChoices>, Map<KBlockTemplate, KHolder<PlaceChoices>>, Map<ResourceLocation, KHolder<PlaceChoices>>)"
+        ],
+        "snownee.kiwi.customization.placement.PlaceDebugRenderer": [
+          "getInstance()",
+          "render(PoseStack, MultiBufferSource, double, double, double)"
+        ],
+        "snownee.kiwi.customization.placement.PlaceMatchResult": [
+          "compareTo(PlaceMatchResult)"
+        ],
+        "snownee.kiwi.customization.placement.PlacementSystem": [
+          "isDebugEnabled(Player)",
+          "removeDebugBlocks(Level, BlockPos)",
+          "onPlace(BlockItem, BlockState, BlockPlaceContext)",
+          "getPlaceMatchResultAt(BlockState, Map<Direction, Collection<PlaceSlot>>, int)",
+          "onBlockPlaced(BlockPlaceContext)",
+          "onBlockRemoved(Level, BlockPos, BlockState, BlockState)"
+        ],
+        "snownee.kiwi.customization.placement.PlaceSlot": [
+          "find(BlockState, Direction)",
+          "find(BlockState, Direction, String)",
+          "hasNoSlots(Block)",
+          "renewData(PlaceSlotProvider.Preparation)",
+          "blockCount()",
+          "primaryTag()",
+          "tagList()",
+          "hasTag(ParsedProtoTag)"
+        ],
+        "snownee.kiwi.customization.placement.PlaceSlotProvider": [
+          "Preparation(Map<ResourceLocation, PlaceSlotProvider>, ListMultimap<KBlockTemplate, KHolder<PlaceSlotProvider>>, ListMultimap<ResourceLocation, KHolder<PlaceSlotProvider>>, ListMultimap<Pair<BlockState, Direction>, PlaceSlot>, Interner<PlaceSlot>, Set<Block>, Set<String>)",
+          "Side(List<String>)",
+          "Slot(List<StatePropertiesPredicate>, Optional<String>, List<String>, Map<Direction, PlaceSlotProvider.Side>)"
+        ],
+        "snownee.kiwi.customization.placement.PlaceTarget": [
+          "of(String)",
+          "toString()"
+        ],
+        "snownee.kiwi.customization.placement.SlotLink": [
+          "create(String, String, int, List<SlotLink.TagTest>, Pair<SlotLink.ResultAction, SlotLink.ResultAction>, Pair<SlotLink.ResultAction, SlotLink.ResultAction>)",
+          "find(PlaceSlot, PlaceSlot)",
+          "find(Collection<PlaceSlot>, Collection<PlaceSlot>)",
+          "find(BlockState, BlockState, Direction)",
+          "isUprightLink(PlaceSlot, PlaceSlot)",
+          "matches(PlaceSlot, PlaceSlot)",
+          "MatchResult(SlotLink, boolean)",
+          "Preparation(Map<ResourceLocation, SlotLink>, PlaceSlotProvider.Preparation)",
+          "ResultAction(Map<String, String>, boolean)",
+          "TagTest(String, TagTestOperator)"
+        ],
+        "snownee.kiwi.customization.placement.StatePropertiesPredicate": [
+          "test(BlockState)",
+          "smartTest(BlockState, BlockState)",
+          "PropertyMatcher(String, Either<Set<String>, Ints>)"
+        ],
+        "snownee.kiwi.customization.placement.TagTestOperator": [
+          "register(TagTestOperator)"
+        ],
+        "snownee.kiwi.customization.shape.AbstractHorizontalShape": [
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.BakingContext": [],
+        "snownee.kiwi.customization.shape.BlockShapeType": [
+          "getSerializedName()"
+        ],
+        "snownee.kiwi.customization.shape.ChoicesShape": [
+          "chooseOneProperty(Property<T>, Map<T, ShapeGenerator>)",
+          "chooseBooleanProperty(BooleanProperty, ShapeGenerator, ShapeGenerator)",
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.ConfigureCrossCollisionShape": [
+          "codec()",
+          "configure(Block, BlockShapeType, ShapeStorage)",
+          "replaceAll(Block, BlockShapeType, UnaryOperator<VoxelShape>)"
+        ],
+        "snownee.kiwi.customization.shape.ConfigureWallShape": [
+          "codec()",
+          "configure(Block, BlockShapeType, ShapeStorage)",
+          "replaceAll(Block, BlockShapeType, UnaryOperator<VoxelShape>)"
+        ],
+        "snownee.kiwi.customization.shape.ConfiguringShape": [
+          "getShape(BlockState, CollisionContext)",
+          "bake(BakingContext)",
+          "dependencies()"
+        ],
+        "snownee.kiwi.customization.shape.DirectionalShape": [
+          "create(ShapeGenerator, String)",
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.FrontAndTopShape": [
+          "create(ShapeGenerator, ShapeGenerator, ShapeGenerator)",
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.HorizontalShape": [
+          "create(ShapeGenerator)",
+          "getDirection(BlockState)"
+        ],
+        "snownee.kiwi.customization.shape.MergeConfiguredShape": [
+          "codec(UnbakedShapeCodec)",
+          "configure(Block, BlockShapeType, ShapeStorage)",
+          "replaceAll(Block, BlockShapeType, UnaryOperator<VoxelShape>)"
+        ],
+        "snownee.kiwi.customization.shape.MouldingShape": [
+          "create(ShapeGenerator)",
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.ShapeGenerator": [],
+        "snownee.kiwi.customization.shape.ShapeRef": [
+          "id()",
+          "bake(BakingContext)",
+          "dependencies()",
+          "isResolved()",
+          "bindValue(BakingContext)"
+        ],
+        "snownee.kiwi.customization.shape.ShapeStorage": [
+          "get(ResourceLocation)",
+          "reload(Supplier<Map<ResourceLocation, UnbakedShape>>)",
+          "forEach(BiConsumer<? super ResourceLocation, ? super ShapeGenerator>)",
+          "transform(ShapeGenerator, Object, UnaryOperator<ShapeGenerator>)"
+        ],
+        "snownee.kiwi.customization.shape.SixWayShape": [
+          "create(ShapeGenerator, ShapeGenerator, ShapeGenerator)",
+          "getShape(BlockState, CollisionContext)"
+        ],
+        "snownee.kiwi.customization.shape.UnbakedShape": [],
+        "snownee.kiwi.customization.shape.UnbakedShapeCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(UnbakedShape, DynamicOps<T>, T)",
+          "directDecode(DynamicOps<T>, T)",
+          "encodeVoxelShape(VoxelShape)"
+        ],
+        "snownee.kiwi.data.DataModule": [
+          "shouldLoad(LoadingContext)"
+        ],
+        "snownee.kiwi.datagen.KiwiBlockLoot": [
+          "handle(Class<T>, Function<T, Builder>)",
+          "handleDefault(Function<Block, Builder>)",
+          "generate()",
+          "addTables()",
+          "add(Block, Builder)",
+          "getKnownBlocks()",
+          "getName()"
+        ],
+        "snownee.kiwi.datagen.KiwiLanguageProvider": [
+          "generateTranslations(Provider, TranslationBuilder)",
+          "createPath(String, String)",
+          "putExistingTranslations(TranslationBuilder)",
+          "putExistingTranslations(TranslationBuilder, String)",
+          "putExistingYamlTranslations(TranslationBuilder)",
+          "putExistingYamlTranslations(TranslationBuilder, String)",
+          "run(CachedOutput)",
+          "postGenerate(TreeMap<String, String>)",
+          "preGenerate(TreeMap<String, String>)",
+          "generateConfigEntries(Map<String, String>)",
+          "generateGameObjectsEntries(Map<String, String>)",
+          "generateModNameAndDescription(Map<String, String>)",
+          "generateGameObjectEntries(Map<String, String>, ResourceKey<Registry<T>>, Function<T, String>)"
+        ],
+        "snownee.kiwi.GroupSetting": [
+          "of(KiwiModule.Category, GroupSetting)",
+          "toString()",
+          "apply(ItemCategoryFiller)",
+          "postApply()"
+        ],
+        "snownee.kiwi.handler.ExtractOnlyItemHandler": [
+          "getSlots()",
+          "getStackInSlot(int)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "get()"
+        ],
+        "snownee.kiwi.handler.KEnergyStorage": [
+          "readFromNBT(CompoundTag)",
+          "writeToNBT(CompoundTag)",
+          "setEnergy(int)",
+          "extractEnergy(int, boolean)",
+          "receiveEnergy(int, boolean)",
+          "onEnergyChanged()"
+        ],
+        "snownee.kiwi.inventory.container.ModSlot": [
+          "mayPlace(ItemStack)"
+        ],
+        "snownee.kiwi.item.ItemCategoryFiller": [],
+        "snownee.kiwi.item.ModBlockItem": [
+          "updateCustomBlockEntityTag(BlockPos, Level, Player, ItemStack, BlockState)",
+          "appendHoverText(ItemStack, TooltipContext, List<Component>, TooltipFlag)",
+          "getName(ItemStack)",
+          "fillItemCategory(CreativeModeTab, FeatureFlagSet, boolean, List<ItemStack>)"
+        ],
+        "snownee.kiwi.item.ModItem": [
+          "appendHoverText(ItemStack, TooltipContext, List<Component>, TooltipFlag)",
+          "addTip(ItemStack, List<Component>, TooltipFlag)"
+        ],
+        "snownee.kiwi.Kiwi": [
+          "initDataModuleWorkaround()",
+          "id(String)",
+          "preInit()",
+          "registerRegistry(ResourceKey<? extends Registry<?>>, Class<?>)",
+          "registerTab(String, ResourceKey<CreativeModeTab>)",
+          "isLoaded(ResourceLocation)",
+          "enableDataModule()"
+        ],
+        "snownee.kiwi.KiwiAnnotationData": [
+          "setTarget(String)",
+          "setData(Map<String, Object>)",
+          "getTarget()",
+          "getData()"
+        ],
+        "snownee.kiwi.KiwiClientConfig": [],
+        "snownee.kiwi.KiwiCommonConfig": [
+          "getBooleanVar(String)"
+        ],
+        "snownee.kiwi.KiwiGO": [
+          "get()",
+          "getOrCreate()",
+          "setKey(ResourceKey<T>)",
+          "is(Object)",
+          "is(ItemStack)",
+          "is(BlockState)",
+          "defaultBlockState()",
+          "itemStack()",
+          "itemStack(int)",
+          "key()",
+          "resourceKey()",
+          "field()",
+          "groupSetting()",
+          "findRegistry()",
+          "holder()",
+          "toString()"
+        ],
+        "snownee.kiwi.KiwiModuleContainer": [
+          "register(KiwiGO<T>)",
+          "loadGameObjects()",
+          "registerGameObjects(ResourceKey<? extends Registry<?>>)",
+          "addRegistries()",
+          "addEntries()",
+          "init(InitEvent)",
+          "postInit(PostInitEvent)",
+          "getRegistries(ResourceKey<Registry<T>>)",
+          "getRegistryEntries(ResourceKey<Registry<T>>)"
+        ],
+        "snownee.kiwi.KiwiModules": [
+          "add(ResourceLocation, AbstractModule, ModContext)",
+          "isLoaded(ResourceLocation)",
+          "get()",
+          "get(ResourceLocation)",
+          "clear()",
+          "fire(Consumer<KiwiModuleContainer>)"
+        ],
+        "snownee.kiwi.loader.ClientInitializer": [
+          "globalTooltip(ItemTooltipEvent)",
+          "debugTooltip(ItemTooltipEvent)",
+          "registerClientCommand(RegisterClientCommandsEvent)"
+        ],
+        "snownee.kiwi.loader.ClientPlatform": [
+          "getModel(ModelResourceLocation)",
+          "addExtraModels(List<? extends ModelResourceLocation>)",
+          "registerEntityRenderer(EntityType<? extends E>, EntityRendererProvider<E>)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerParticleType(ParticleType<T>, ParticleProvider<T>)",
+          "registerItemColor(ItemColor, ItemLike...)",
+          "registerBlockColor(BlockColor, Block...)",
+          "setRenderType(Block, RenderType)",
+          "getLocale()"
+        ],
+        "snownee.kiwi.loader.event.InitEvent": [],
+        "snownee.kiwi.loader.event.ParallelEvent": [
+          "enqueueWork(Runnable)",
+          "enqueueWork(Supplier<T>)"
+        ],
+        "snownee.kiwi.loader.event.PostInitEvent": [],
+        "snownee.kiwi.loader.KiwiMetadataLoader": [
+          "apply(KiwiMetadataParser)"
+        ],
+        "snownee.kiwi.loader.NeoDevEnvMetadataLoader": [
+          "apply(KiwiMetadataParser)"
+        ],
+        "snownee.kiwi.loader.Platform": [
+          "isModLoaded(String)",
+          "getModName(String)",
+          "getModDescription(String)",
+          "findResource(String, String)",
+          "isPhysicalClient()",
+          "getServer()",
+          "isProduction()",
+          "isDataGen()",
+          "getGameDir()",
+          "getConfigDir()",
+          "getCraftingRemainingItem(ItemStack)",
+          "isFakePlayer(Player)",
+          "defaultAddEntityPacket(Entity, ServerEntity)",
+          "isCurativeItem(MobEffectInstance, ItemStack)",
+          "isShearsLeftClickable(ItemStack)",
+          "isShearsRightClickable(ItemStack)",
+          "getFluidFromBucket(BucketItem)",
+          "format(String, Object...)",
+          "getTagTranslationKey(TagKey<?>)",
+          "getVersionNumber(String)"
+        ],
+        "snownee.kiwi.LoadingContext": [],
+        "snownee.kiwi.ModContext": [
+          "get(String)",
+          "setActiveContainer()"
+        ],
+        "snownee.kiwi.network.KNetworking": [
+          "registerPlayHandler(Type<T>, PlayPacketHandler<T>, KiwiPacket.Direction)",
+          "processClass(KiwiAnnotationData)"
+        ],
+        "snownee.kiwi.network.KPacketSender": [
+          "sendToTracking(CustomPacketPayload, Entity)",
+          "sendToTracking(CustomPacketPayload, BlockEntity)",
+          "sendToTracking(CustomPacketPayload, ServerLevel, ChunkPos)",
+          "sendToTracking(CustomPacketPayload, ServerLevel, BlockPos)",
+          "sendToWorld(CustomPacketPayload, ServerLevel)",
+          "sendToAll(CustomPacketPayload, MinecraftServer)",
+          "sendToAllExcept(CustomPacketPayload, ServerPlayer)",
+          "sendToAround(CustomPacketPayload, ServerLevel, ServerPlayer, Vec3, double)",
+          "sendToAround(CustomPacketPayload, ServerLevel, ServerPlayer, Vec3i, double)",
+          "send(CustomPacketPayload, Player)",
+          "send(CustomPacketPayload, Stream<ServerPlayer>)",
+          "sendToServer(CustomPacketPayload)"
+        ],
+        "snownee.kiwi.network.PayloadContext": [
+          "sendPacket(CustomPacketPayload)",
+          "serverPlayer()"
+        ],
+        "snownee.kiwi.network.PlayPacketHandler": [
+          "register(KNetworking, Type<?>, KiwiPacket.Direction)"
+        ],
+        "snownee.kiwi.network.ServerPayloadContext": [
+          "execute(Runnable)",
+          "sendPacket(CustomPacketPayload)"
+        ],
+        "snownee.kiwi.recipe.AlternativesIngredient": [
+          "test(ItemStack)",
+          "getMatchingStacks()",
+          "requiresTesting()",
+          "getSerializer()",
+          "internal()"
+        ],
+        "snownee.kiwi.recipe.AlternativesIngredientBuilder": [
+          "of()",
+          "add(Ingredient)",
+          "add(ItemLike)",
+          "add(TagKey<Item>)",
+          "add(ICustomIngredient)",
+          "add(String)",
+          "build()"
+        ],
+        "snownee.kiwi.recipe.crafting.DynamicShapedRecipe": [
+          "matches(CraftingInput, Level)",
+          "search(CraftingInput)",
+          "item(char, CraftingInput, int[])",
+          "items(char, CraftingInput, int[])",
+          "assemble(CraftingInput, Provider)",
+          "getWidth()",
+          "getHeight()",
+          "canCraftInDimensions(int, int)",
+          "getGroup()",
+          "showNotification()",
+          "result()",
+          "pattern()",
+          "allowDifferentInputs()",
+          "getIngredients()",
+          "getSerializer()",
+          "checkMatch(CraftingInput, int, int)",
+          "matches(CraftingInput, int, int, int, int)",
+          "checkEmpty(CraftingInput, int, int)",
+          "getEmptyPredicate()"
+        ],
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipe": [
+          "matches(CraftingInput, Level)",
+          "canCraftInDimensions(int, int)",
+          "getRemainingItems(CraftingInput)",
+          "getSerializer()"
+        ],
+        "snownee.kiwi.recipe.crafting.KiwiShapelessRecipeBuilder": [
+          "shapeless(RecipeCategory, ItemLike)",
+          "shapeless(RecipeCategory, ItemLike, int)",
+          "noContainers()",
+          "save(RecipeOutput, ResourceLocation)"
+        ],
+        "snownee.kiwi.recipe.crafting.NoContainersShapedRecipe": [
+          "getRemainingItems(CraftingInput)",
+          "getSerializer()",
+          "noContainers()"
+        ],
+        "snownee.kiwi.recipe.CustomIngredient": [],
+        "snownee.kiwi.recipe.CustomIngredientImpl": [
+          "registerSerializer(CustomIngredientSerializer<?>)",
+          "getSerializer(ResourceLocation)",
+          "test(ItemStack)",
+          "getItems()",
+          "isSimple()",
+          "getType()"
+        ],
+        "snownee.kiwi.recipe.CustomIngredientSerializer": [],
+        "snownee.kiwi.recipe.EmptyRecipeInput": [
+          "getItem(int)",
+          "size()"
+        ],
+        "snownee.kiwi.recipe.EvalCondition": [
+          "test(IContext)",
+          "codec()"
+        ],
+        "snownee.kiwi.recipe.ModuleLoadedCondition": [
+          "test(IContext)",
+          "codec()"
+        ],
+        "snownee.kiwi.recipe.SimpleRecipe": [
+          "canCraftInDimensions(int, int)",
+          "assemble(T, Provider)",
+          "getResultItem(Provider)"
+        ],
+        "snownee.kiwi.recipe.SizedIngredient": [
+          "of(ItemLike, int)",
+          "of(TagKey<Item>, int)",
+          "ingredient()",
+          "count()",
+          "test(ItemStack)",
+          "getItems()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "snownee.kiwi.RegistryLookup": [
+          "findRegistry(Object)"
+        ],
+        "snownee.kiwi.RenderLayerEnum": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.BaseException": [
+          "equals(Object)",
+          "canEqual(Object)",
+          "hashCode()",
+          "toString()",
+          "getStartPosition()",
+          "getEndPosition()",
+          "getTokenString()",
+          "getMessage()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.ExpressionConfiguration": [
+          "defaultConfiguration()",
+          "withAdditionalOperators(Entry<String, OperatorIfc>...)",
+          "withAdditionalFunctions(Entry<String, FunctionIfc>...)",
+          "builder()",
+          "toBuilder()",
+          "getOperatorDictionary()",
+          "getFunctionDictionary()",
+          "getMathContext()",
+          "getDataAccessorSupplier()",
+          "getDefaultConstants()",
+          "isArraysAllowed()",
+          "isStructuresAllowed()",
+          "isBinaryAllowed()",
+          "isImplicitMultiplicationAllowed()",
+          "isSingleQuoteStringLiteralsAllowed()",
+          "getPowerOfPrecedence()",
+          "getDecimalPlacesResult()",
+          "getDecimalPlacesRounding()",
+          "isStripTrailingZeros()",
+          "isAllowOverwriteConstants()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.FunctionDictionaryIfc": [
+          "hasFunction(String)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.MapBasedFunctionDictionary": [
+          "ofFunctions(Entry<String, FunctionIfc>...)",
+          "getFunction(String)",
+          "addFunction(String, FunctionIfc)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.MapBasedOperatorDictionary": [
+          "ofOperators(Entry<String, OperatorIfc>...)",
+          "addOperator(String, OperatorIfc)",
+          "getPrefixOperator(String)",
+          "getPostfixOperator(String)",
+          "getInfixOperator(String)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.config.OperatorDictionaryIfc": [
+          "hasPrefixOperator(String)",
+          "hasPostfixOperator(String)",
+          "hasInfixOperator(String)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ArrayConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.BinaryConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.BooleanConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ConverterIfc": [
+          "illegalArgument(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DateTimeConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "parseDateTime(String, ZoneId, List<DateTimeFormatter>)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DefaultEvaluationValueConverter": [
+          "convertObject(Object, ExpressionConfiguration)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.DurationConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.EvaluationValueConverterIfc": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.ExpressionNodeConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.NumberConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.StringConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.conversion.StructureConverter": [
+          "convert(Object, ExpressionConfiguration)",
+          "canConvert(Object)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.DataAccessorIfc": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.EvaluationValue": [
+          "of(Object, ExpressionConfiguration)",
+          "nullValue()",
+          "numberValue(BigDecimal)",
+          "stringValue(String)",
+          "booleanValue(Boolean)",
+          "dateTimeValue(Instant)",
+          "durationValue(Duration)",
+          "expressionNodeValue(ASTNode)",
+          "arrayValue(List<?>)",
+          "structureValue(Map<?, ?>)",
+          "binaryValue(Object)",
+          "isNumberValue()",
+          "isStringValue()",
+          "isBooleanValue()",
+          "isDateTimeValue()",
+          "isDurationValue()",
+          "isArrayValue()",
+          "isStructureValue()",
+          "isExpressionNode()",
+          "isNullValue()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.data.MapBasedDataAccessor": [
+          "getData(String)",
+          "setData(String, EvaluationValue)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.EvaluationException": [
+          "ofUnsupportedDataTypeInOperation(Token)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.Expression": [
+          "evaluate()",
+          "evaluateSubtree(ASTNode)",
+          "getAbstractSyntaxTree()",
+          "validate()",
+          "with(String, Object)",
+          "and(String, Object)",
+          "withValues(Map<String, ?>)",
+          "copy()",
+          "createExpressionNode(String)",
+          "convertDoubleValue(double)",
+          "convertValue(Object)",
+          "getAllASTNodes()",
+          "getUsedVariables()",
+          "getUndefinedVariables()",
+          "getConfiguration()",
+          "getExpressionString()",
+          "getDataAccessor()",
+          "getConstants()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.AbstractFunction": [
+          "validatePreEvaluation(Token, EvaluationValue...)",
+          "getFunctionParameterDefinitions()",
+          "hasVarArgs()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AbsFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AbstractMinMaxFunction": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.AverageFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.CeilingFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.CoalesceFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.FactFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.FloorFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.IfFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.Log10Function": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.LogFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.MaxFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.MinFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.NotFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.RandomFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.RoundFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SqrtFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SumFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.basic.SwitchFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeFormatFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)",
+          "validatePreEvaluation(Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeNewFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)",
+          "validatePreEvaluation(Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeNowFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeParseFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeTodayFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DateTimeToEpochFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationFromMillisFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationNewFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationParseFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.DurationToMillisFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.datetime.ZoneIdConverter": [
+          "convert(Token, String)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.FunctionIfc": [
+          "isParameterLazy(int)",
+          "getCountOfNonVarArgParameters()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.FunctionParameterDefinition": [
+          "builder()",
+          "getName()",
+          "isVarArg()",
+          "isLazy()",
+          "isNonZero()",
+          "isNonNegative()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringContains": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringEndsWithFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringFormatFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLeftFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLengthFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringLowerFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringMatchesFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringRightFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringStartsWithFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringSubstringFunction": [
+          "validatePreEvaluation(Token, EvaluationValue...)",
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringTrimFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.string.StringUpperFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcosRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AcotRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AsinRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.Atan2Function": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.Atan2RFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.AtanRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CosRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CotRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.CscRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.DegFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.RadFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SecRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.SinRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanHFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.functions.trigonometric.TanRFunction": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.AbstractOperator": [
+          "getPrecedence(ExpressionConfiguration)",
+          "isLeftAssociative()",
+          "isOperandLazy()",
+          "isPrefix()",
+          "isPostfix()",
+          "isInfix()",
+          "getPrecedence()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixDivisionOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixMinusOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixModuloOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixMultiplicationOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixPlusOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.InfixPowerOfOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)",
+          "getPrecedence(ExpressionConfiguration)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.PrefixMinusOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.arithmetic.PrefixPlusOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixAndOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixEqualsOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixGreaterEqualsOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixGreaterOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixLessEqualsOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixLessOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixNotEqualsOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.InfixOrOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.booleans.PrefixNotOperator": [
+          "evaluate(Expression, Token, EvaluationValue...)"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.OperatorAnnotationNotFoundException": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.operators.OperatorIfc": [],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ASTNode": [
+          "toJSON()",
+          "getParameters()",
+          "getToken()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ParseException": [
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.ShuntingYardConverter": [
+          "toAbstractSyntaxTree()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.Token": [
+          "getStartPosition()",
+          "getValue()",
+          "getType()",
+          "getFunctionDefinition()",
+          "getOperatorDefinition()",
+          "toString()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "snownee.kiwi.shadowed.com.ezylang.evalex.parser.Tokenizer": [
+          "parse()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentEventsCollector": [
+          "collectEvents()",
+          "collectEvents(Event)",
+          "collectEventsAndPoll(Event)",
+          "consume()",
+          "isEmpty()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentLine": [
+          "getEndMark()",
+          "getStartMark()",
+          "getCommentType()",
+          "getValue()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.comments.CommentType": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.composer.Composer": [
+          "checkNode()",
+          "getNode()",
+          "getSingleNode()",
+          "composeScalarNode(String, List<CommentLine>)",
+          "composeSequenceNode(String)",
+          "composeMappingNode(String)",
+          "composeMappingChildren(List<NodeTuple>, MappingNode)",
+          "composeKeyNode(MappingNode)",
+          "composeValueNode(MappingNode)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.composer.ComposerException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.AbstractConstruct": [
+          "construct2ndStep(Node, Object)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.BaseConstructor": [
+          "setComposer(Composer)",
+          "checkData()",
+          "getData()",
+          "getSingleData(Class<?>)",
+          "constructDocument(Node)",
+          "constructObject(Node)",
+          "constructObjectNoCheck(Node)",
+          "getConstructor(Node)",
+          "constructScalar(ScalarNode)",
+          "createDefaultList(int)",
+          "createDefaultSet(int)",
+          "createDefaultMap(int)",
+          "createArray(Class<?>, int)",
+          "finalizeConstruction(Node, Object)",
+          "newInstance(Node)",
+          "newInstance(Class<?>, Node)",
+          "newInstance(Class<?>, Node, boolean)",
+          "newSet(CollectionNode<?>)",
+          "newList(SequenceNode)",
+          "newMap(MappingNode)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.Construct": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.Constructor": [
+          "getClassForNode(Node)",
+          "getClassForName(String)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.ConstructorException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor": [
+          "getClassForName(String)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.DuplicateKeyException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.constructor.SafeConstructor": [
+          "flattenMapping(MappingNode)",
+          "flattenMapping(MappingNode, boolean)",
+          "processDuplicateKeys(MappingNode)",
+          "processDuplicateKeys(MappingNode, boolean)",
+          "constructMapping2ndStep(MappingNode, Map<Object, Object>)",
+          "constructSet2ndStep(MappingNode, Set<Object>)",
+          "createLongOrBigInteger(String, int)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.DumperOptions": [
+          "isAllowUnicode()",
+          "setAllowUnicode(boolean)",
+          "getDefaultScalarStyle()",
+          "setDefaultScalarStyle(DumperOptions.ScalarStyle)",
+          "setIndent(int)",
+          "getIndent()",
+          "setIndicatorIndent(int)",
+          "getIndicatorIndent()",
+          "getIndentWithIndicator()",
+          "setIndentWithIndicator(boolean)",
+          "setVersion(DumperOptions.Version)",
+          "getVersion()",
+          "setCanonical(boolean)",
+          "isCanonical()",
+          "setPrettyFlow(boolean)",
+          "isPrettyFlow()",
+          "setWidth(int)",
+          "getWidth()",
+          "setSplitLines(boolean)",
+          "getSplitLines()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.Emitable": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.Emitter": [
+          "emit(Event)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.EmitterException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.emitter.ScalarAnalysis": [
+          "getScalar()",
+          "isEmpty()",
+          "isMultiline()",
+          "isAllowFlowPlain()",
+          "isAllowBlockPlain()",
+          "isAllowSingleQuoted()",
+          "isAllowBlock()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.env.EnvScalarConstructor": [
+          "apply(String, String, String, String)",
+          "getEnv(String)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.Mark": [
+          "get_snippet(int, int)",
+          "get_snippet()",
+          "toString()",
+          "getName()",
+          "getLine()",
+          "getColumn()",
+          "getIndex()",
+          "getBuffer()",
+          "getPointer()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.MarkedYAMLException": [
+          "getMessage()",
+          "toString()",
+          "getContext()",
+          "getContextMark()",
+          "getProblem()",
+          "getProblemMark()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.MissingEnvironmentVariableException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.error.YAMLException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.AliasEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CollectionEndEvent": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CollectionStartEvent": [
+          "getTag()",
+          "getImplicit()",
+          "getFlowStyle()",
+          "getArguments()",
+          "isFlow()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.CommentEvent": [
+          "getValue()",
+          "getCommentType()",
+          "getArguments()",
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.DocumentEndEvent": [
+          "getExplicit()",
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.DocumentStartEvent": [
+          "getExplicit()",
+          "getVersion()",
+          "getTags()",
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.Event": [
+          "toString()",
+          "getStartMark()",
+          "getEndMark()",
+          "getArguments()",
+          "is(Event.ID)",
+          "getEventId()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.ImplicitTuple": [
+          "canOmitTagInPlainScalar()",
+          "canOmitTagInNonPlainScalar()",
+          "bothFalse()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.MappingEndEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.MappingStartEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.NodeEvent": [
+          "getAnchor()",
+          "getArguments()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.ScalarEvent": [
+          "getTag()",
+          "getScalarStyle()",
+          "getValue()",
+          "getImplicit()",
+          "getArguments()",
+          "getEventId()",
+          "isPlain()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.SequenceEndEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.SequenceStartEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.StreamEndEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.events.StreamStartEvent": [
+          "getEventId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.CompactConstructor": [
+          "constructCompactFormat(ScalarNode, CompactData)",
+          "createInstance(ScalarNode, CompactData)",
+          "setProperties(Object, Map<String, Object>)",
+          "getCompactData(String)",
+          "createCompactConstruct()",
+          "getConstructor(Node)",
+          "applySequence(Object, List<?>)",
+          "getSequencePropertyName(Class<?>)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.CompactData": [
+          "getPrefix()",
+          "getProperties()",
+          "getArguments()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.extensions.compactnotation.PackageCompactConstructor": [
+          "getClassForName(String)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder": [
+          "encodeString(String)",
+          "encodeLines(byte[])",
+          "encodeLines(byte[], int, int, int, String)",
+          "encode(byte[])",
+          "encode(byte[], int)",
+          "encode(byte[], int, int)",
+          "decodeString(String)",
+          "decodeLines(String)",
+          "decode(String)",
+          "decode(char[])",
+          "decode(char[], int, int)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TagInspector": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TrustedPrefixesTagInspector": [
+          "isGlobalTagAllowed(Tag)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.TrustedTagInspector": [
+          "isGlobalTagAllowed(Tag)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.inspector.UnTrustedTagInspector": [
+          "isGlobalTagAllowed(Tag)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.BeanAccess": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.FieldProperty": [
+          "set(Object, Object)",
+          "get(Object)",
+          "getAnnotations()",
+          "getAnnotation(Class<A>)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.GenericProperty": [
+          "getActualTypeArguments()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.MethodProperty": [
+          "set(Object, Object)",
+          "get(Object)",
+          "getAnnotations()",
+          "getAnnotation(Class<A>)",
+          "isWritable()",
+          "isReadable()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.MissingProperty": [
+          "getActualTypeArguments()",
+          "set(Object, Object)",
+          "get(Object)",
+          "getAnnotations()",
+          "getAnnotation(Class<A>)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.Property": [
+          "getType()",
+          "getActualTypeArguments()",
+          "getName()",
+          "toString()",
+          "compareTo(Property)",
+          "isWritable()",
+          "isReadable()",
+          "set(Object, Object)",
+          "get(Object)",
+          "getAnnotations()",
+          "getAnnotation(Class<A>)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.PropertySubstitute": [
+          "getActualTypeArguments()",
+          "setActualTypeArguments(Class<?>...)",
+          "set(Object, Object)",
+          "get(Object)",
+          "getAnnotations()",
+          "getAnnotation(Class<A>)",
+          "setTargetType(Class<?>)",
+          "getName()",
+          "getType()",
+          "isReadable()",
+          "isWritable()",
+          "setDelegate(Property)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.introspector.PropertyUtils": [
+          "getPropertiesMap(Class<?>, BeanAccess)",
+          "getProperties(Class<? extends Object>)",
+          "getProperties(Class<? extends Object>, BeanAccess)",
+          "createPropertySet(Class<? extends Object>, BeanAccess)",
+          "getProperty(Class<? extends Object>, String)",
+          "getProperty(Class<? extends Object>, String, BeanAccess)",
+          "setBeanAccess(BeanAccess)",
+          "setAllowReadOnlyProperties(boolean)",
+          "isAllowReadOnlyProperties()",
+          "setSkipMissingProperties(boolean)",
+          "isSkipMissingProperties()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.LoaderOptions": [
+          "isAllowDuplicateKeys()",
+          "setAllowDuplicateKeys(boolean)",
+          "isWrappedToRootException()",
+          "setWrappedToRootException(boolean)",
+          "getMaxAliasesForCollections()",
+          "setMaxAliasesForCollections(int)",
+          "getAllowRecursiveKeys()",
+          "setAllowRecursiveKeys(boolean)",
+          "isProcessComments()",
+          "setProcessComments(boolean)",
+          "isEnumCaseSensitive()",
+          "setEnumCaseSensitive(boolean)",
+          "getNestingDepthLimit()",
+          "setNestingDepthLimit(int)",
+          "getCodePointLimit()",
+          "setCodePointLimit(int)",
+          "getTagInspector()",
+          "setTagInspector(TagInspector)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.AnchorNode": [
+          "getNodeId()",
+          "getRealNode()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.CollectionNode": [
+          "getValue()",
+          "getFlowStyle()",
+          "setFlowStyle(DumperOptions.FlowStyle)",
+          "setEndMark(Mark)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.MappingNode": [
+          "getNodeId()",
+          "getValue()",
+          "setValue(List<NodeTuple>)",
+          "setOnlyKeyType(Class<? extends Object>)",
+          "setTypes(Class<? extends Object>, Class<? extends Object>)",
+          "toString()",
+          "setMerged(boolean)",
+          "isMerged()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.Node": [
+          "getTag()",
+          "getEndMark()",
+          "getNodeId()",
+          "getStartMark()",
+          "setTag(Tag)",
+          "equals(Object)",
+          "getType()",
+          "setType(Class<? extends Object>)",
+          "setTwoStepsConstruction(boolean)",
+          "isTwoStepsConstruction()",
+          "hashCode()",
+          "useClassConstructor()",
+          "setUseClassConstructor(Boolean)",
+          "getAnchor()",
+          "setAnchor(String)",
+          "getInLineComments()",
+          "setInLineComments(List<CommentLine>)",
+          "getBlockComments()",
+          "setBlockComments(List<CommentLine>)",
+          "getEndComments()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.NodeId": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.NodeTuple": [
+          "getKeyNode()",
+          "getValueNode()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.ScalarNode": [
+          "getScalarStyle()",
+          "getNodeId()",
+          "getValue()",
+          "toString()",
+          "isPlain()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.SequenceNode": [
+          "getNodeId()",
+          "getValue()",
+          "setListType(Class<? extends Object>)",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.nodes.Tag": [
+          "isSecondary()",
+          "getValue()",
+          "startsWith(String)",
+          "getClassName()",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "isCompatible(Class<?>)",
+          "matches(Class<? extends Object>)",
+          "isCustomGlobal()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.Parser": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.ParserException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.parser.ParserImpl": [
+          "checkEvent(Event.ID)",
+          "peekEvent()",
+          "getEvent()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.ReaderException": [
+          "getName()",
+          "getCodePoint()",
+          "getPosition()",
+          "toString()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.StreamReader": [
+          "isPrintable(String)",
+          "isPrintable(int)",
+          "getMark()",
+          "forward()",
+          "forward(int)",
+          "peek()",
+          "peek(int)",
+          "prefix(int)",
+          "prefixForward(int)",
+          "getColumn()",
+          "getIndex()",
+          "getLine()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.reader.UnicodeReader": [
+          "getEncoding()",
+          "init()",
+          "close()",
+          "read(char[], int, int)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.BaseRepresenter": [
+          "represent(Object)",
+          "representData(Object)",
+          "representScalar(Tag, String, DumperOptions.ScalarStyle)",
+          "representScalar(Tag, String)",
+          "representSequence(Tag, Iterable<?>, DumperOptions.FlowStyle)",
+          "representMapping(Tag, Map<?, ?>, DumperOptions.FlowStyle)",
+          "setDefaultScalarStyle(DumperOptions.ScalarStyle)",
+          "getDefaultScalarStyle()",
+          "setDefaultFlowStyle(DumperOptions.FlowStyle)",
+          "getDefaultFlowStyle()",
+          "setPropertyUtils(PropertyUtils)",
+          "getPropertyUtils()",
+          "isExplicitPropertyUtils()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.Represent": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.representer.Representer": [
+          "addTypeDescription(TypeDescription)",
+          "setPropertyUtils(PropertyUtils)",
+          "representJavaBean(Set<Property>, Object)",
+          "representJavaBeanProperty(Object, Property, Object, Tag)",
+          "checkGlobalTag(Property, Node, Object)",
+          "getProperties(Class<? extends Object>)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.resolver.Resolver": [
+          "addImplicitResolvers()",
+          "addImplicitResolver(Tag, Pattern, String)",
+          "addImplicitResolver(Tag, Pattern, String, int)",
+          "resolve(NodeId, String, boolean)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.Constant": [
+          "has(int)",
+          "hasNo(int)",
+          "has(int, String)",
+          "hasNo(int, String)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.Scanner": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.ScannerException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.scanner.ScannerImpl": [
+          "checkToken(Token.ID...)",
+          "peekToken()",
+          "getToken()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.AnchorGenerator": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.NumberAnchorGenerator": [
+          "nextAnchor(Node)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.Serializer": [
+          "open()",
+          "close()",
+          "serialize(Node)"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.serializer.SerializerException": [],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.AliasToken": [
+          "getValue()",
+          "getTokenId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.AnchorToken": [
+          "getValue()",
+          "getTokenId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.BlockEndToken": [
+          "getTokenId()"
+        ],
+        "snownee.kiwi.shadowed.org.yaml.snakeyaml.tokens.BlockEntryToken": [
+          "getTokenId()"
+        ]
+      },
+      "sampleCount": 486,
+      "truncated": true
+    },
+    "26.0.16_fabric": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "14.1.2_fabric": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "13.1.0": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "6.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "07efc67be82271660b940bf22cadfcc7cf2f54e3a8f9c1374842b7dc78329910a7e3204a5d61dc65261b66687f01391e99b0901f5d7852a1658d260675a02e70": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1843,
+  "truncated": true
+}

@@ -1,0 +1,3158 @@
+{
+  "slug": "architectury-api",
+  "modId": "architectury",
+  "id": "authored/lib-architectury",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "architectury"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:31.911Z",
+  "versions": {
+    "21.0.7": {
+      "packages": [],
+      "classes": [
+        "dev.architectury.compat.fabric.ModMenuCompatibility",
+        "dev.architectury.core.block.ArchitecturyLiquidBlock",
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid",
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes",
+        "dev.architectury.core.fluid.fabric.ArchitecturyFlowingFluidImpl",
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes",
+        "dev.architectury.core.item.ArchitecturyBucketItem",
+        "dev.architectury.event.CompoundEventResult",
+        "dev.architectury.event.Event",
+        "dev.architectury.event.EventActor",
+        "dev.architectury.event.EventFactory",
+        "dev.architectury.event.EventHandler",
+        "dev.architectury.event.EventPriority",
+        "dev.architectury.event.EventResult",
+        "dev.architectury.event.EventResultHolder",
+        "dev.architectury.event.events.client.ClientChatEvent",
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent",
+        "dev.architectury.event.events.client.ClientGuiEvent",
+        "dev.architectury.event.events.client.ClientLifecycleEvent",
+        "dev.architectury.event.events.client.ClientPlayerEvent",
+        "dev.architectury.event.events.client.ClientRawInputEvent",
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent",
+        "dev.architectury.event.events.client.ClientScreenInputEvent",
+        "dev.architectury.event.events.client.ClientSystemMessageEvent",
+        "dev.architectury.event.events.client.ClientTickEvent",
+        "dev.architectury.event.events.client.ClientTooltipEvent",
+        "dev.architectury.event.events.common.BlockEvent",
+        "dev.architectury.event.events.common.ChatEvent",
+        "dev.architectury.event.events.common.ChunkEvent",
+        "dev.architectury.event.events.common.CommandPerformEvent",
+        "dev.architectury.event.events.common.CommandRegistrationEvent",
+        "dev.architectury.event.events.common.EntityEvent",
+        "dev.architectury.event.events.common.ExplosionEvent",
+        "dev.architectury.event.events.common.InteractionEvent",
+        "dev.architectury.event.events.common.LifecycleEvent",
+        "dev.architectury.event.events.common.LightningEvent",
+        "dev.architectury.event.events.common.LootEvent",
+        "dev.architectury.event.events.common.PlayerEvent",
+        "dev.architectury.event.events.common.TickEvent",
+        "dev.architectury.event.fabric.EventFactoryImpl",
+        "dev.architectury.event.fabric.EventHandlerImpl",
+        "dev.architectury.extensions.injected.InjectedBlockExtension",
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension",
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension",
+        "dev.architectury.extensions.injected.InjectedFluidExtension",
+        "dev.architectury.extensions.injected.InjectedItemExtension",
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension",
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension",
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension",
+        "dev.architectury.extensions.network.EntitySpawnExtension",
+        "dev.architectury.fluid.fabric.FluidStackImpl",
+        "dev.architectury.fluid.fabric.FluidStackTemplateImpl",
+        "dev.architectury.fluid.FluidStack",
+        "dev.architectury.fluid.FluidStackTemplate",
+        "dev.architectury.hooks.block.BlockEntityHooks",
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks",
+        "dev.architectury.hooks.client.fluid.fabric.ClientFluidStackHooksImpl",
+        "dev.architectury.hooks.client.screen.fabric.ScreenHooksImpl",
+        "dev.architectury.hooks.client.screen.ScreenAccess",
+        "dev.architectury.hooks.client.screen.ScreenHooks",
+        "dev.architectury.hooks.DyeColorHooks",
+        "dev.architectury.hooks.fabric.DyeColorHooksImpl",
+        "dev.architectury.hooks.fabric.PackRepositoryHooksImpl",
+        "dev.architectury.hooks.fabric.PersistentEntitySectionManagerHooks",
+        "dev.architectury.hooks.fluid.fabric.FluidBucketHooksImpl",
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksFabric",
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl",
+        "dev.architectury.hooks.fluid.fabric.FluidStackTemplateHooksFabric",
+        "dev.architectury.hooks.fluid.fabric.FluidStackTemplateHooksImpl",
+        "dev.architectury.hooks.fluid.fabric.LiquidBlockHooksImpl",
+        "dev.architectury.hooks.fluid.FluidBucketHooks",
+        "dev.architectury.hooks.fluid.FluidStackHooks",
+        "dev.architectury.hooks.fluid.FluidStackTemplateHooks",
+        "dev.architectury.hooks.fluid.LiquidBlockHooks",
+        "dev.architectury.hooks.item.fabric.ItemStackHooksImpl",
+        "dev.architectury.hooks.item.ItemStackHooks",
+        "dev.architectury.hooks.item.tool.AxeItemHooks",
+        "dev.architectury.hooks.item.tool.fabric.HoeItemHooksImpl",
+        "dev.architectury.hooks.item.tool.HoeItemHooks",
+        "dev.architectury.hooks.item.tool.ShovelItemHooks",
+        "dev.architectury.hooks.level.biome.BiomeHooks",
+        "dev.architectury.hooks.level.biome.BiomeProperties",
+        "dev.architectury.hooks.level.biome.ClimateProperties",
+        "dev.architectury.hooks.level.biome.EffectsProperties",
+        "dev.architectury.hooks.level.biome.fabric.BiomeHooksImpl",
+        "dev.architectury.hooks.level.biome.GenerationProperties",
+        "dev.architectury.hooks.level.biome.SpawnProperties",
+        "dev.architectury.hooks.level.entity.EntityHooks",
+        "dev.architectury.hooks.level.entity.fabric.EntityHooksImpl",
+        "dev.architectury.hooks.level.entity.fabric.FakePlayers",
+        "dev.architectury.hooks.level.entity.fabric.ItemEntityHooksImpl",
+        "dev.architectury.hooks.level.entity.fabric.PlayerHooksImpl",
+        "dev.architectury.hooks.level.entity.ItemEntityHooks",
+        "dev.architectury.hooks.level.entity.PlayerHooks",
+        "dev.architectury.hooks.PackRepositoryHooks",
+        "dev.architectury.init.fabric.ArchitecturyClient",
+        "dev.architectury.init.fabric.ArchitecturyServer",
+        "dev.architectury.networking.client.fabric.ClientNetworkManagerImpl",
+        "dev.architectury.networking.ClientSpawnEntityPacket",
+        "dev.architectury.networking.fabric.NetworkManagerImpl",
+        "dev.architectury.networking.NetworkManager",
+        "dev.architectury.networking.SpawnEntityPacket",
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer",
+        "dev.architectury.networking.transformers.PacketCollector",
+        "dev.architectury.networking.transformers.PacketSink",
+        "dev.architectury.networking.transformers.PacketTransformer",
+        "dev.architectury.networking.transformers.SinglePacketCollector",
+        "dev.architectury.networking.transformers.SplitPacketTransformer",
+        "dev.architectury.platform.client.ConfigurationScreenRegistry",
+        "dev.architectury.platform.client.fabric.ConfigurationScreenRegistryImpl",
+        "dev.architectury.platform.fabric.PlatformImpl",
+        "dev.architectury.platform.Mod",
+        "dev.architectury.platform.Platform",
+        "dev.architectury.plugin.fabric.ArchitecturyMixinPlugin",
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry",
+        "dev.architectury.registry.client.gui.fabric.ClientTooltipComponentRegistryImpl",
+        "dev.architectury.registry.client.gui.fabric.MenuScreenRegistryImpl",
+        "dev.architectury.registry.client.gui.MenuScreenRegistry",
+        "dev.architectury.registry.client.keymappings.fabric.KeyMappingRegistryImpl",
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry",
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry",
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry",
+        "dev.architectury.registry.client.level.entity.fabric.EntityModelLayerRegistryImpl",
+        "dev.architectury.registry.client.level.entity.fabric.EntityRendererRegistryImpl",
+        "dev.architectury.registry.client.particle.fabric.ParticleProviderRegistryImpl",
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry",
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry",
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry",
+        "dev.architectury.registry.client.rendering.fabric.BlockEntityRendererRegistryImpl",
+        "dev.architectury.registry.client.rendering.fabric.ColorHandlerRegistryImpl",
+        "dev.architectury.registry.CreativeTabOutput",
+        "dev.architectury.registry.CreativeTabRegistry",
+        "dev.architectury.registry.fabric.CreativeTabRegistryImpl",
+        "dev.architectury.registry.fabric.ReloadListenerRegistryImpl",
+        "dev.architectury.registry.fuel.fabric.FuelRegistryImpl",
+        "dev.architectury.registry.fuel.FuelRegistry",
+        "dev.architectury.registry.level.biome.BiomeModifications",
+        "dev.architectury.registry.level.biome.fabric.BiomeModificationsImpl",
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry",
+        "dev.architectury.registry.level.entity.EntityDataSerializerRegistry",
+        "dev.architectury.registry.level.entity.fabric.EntityAttributeRegistryImpl",
+        "dev.architectury.registry.level.entity.fabric.EntityDataSerializerRegistryImpl",
+        "dev.architectury.registry.level.entity.fabric.SpawnPlacementsRegistryImpl",
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry",
+        "dev.architectury.registry.menu.ExtendedMenuProvider",
+        "dev.architectury.registry.menu.fabric.MenuRegistryImpl",
+        "dev.architectury.registry.menu.MenuRegistry",
+        "dev.architectury.registry.registries.DeferredRegister",
+        "dev.architectury.registry.registries.DeferredSupplier",
+        "dev.architectury.registry.registries.fabric.RegistrarManagerImpl",
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption",
+        "dev.architectury.registry.registries.options.RegistrarOption",
+        "dev.architectury.registry.registries.options.StandardRegistrarOption",
+        "dev.architectury.registry.registries.Registrar",
+        "dev.architectury.registry.registries.RegistrarBuilder",
+        "dev.architectury.registry.registries.RegistrarManager",
+        "dev.architectury.registry.registries.RegistrySupplier",
+        "dev.architectury.registry.ReloadListenerRegistry",
+        "dev.architectury.utils.Amount",
+        "dev.architectury.utils.ArchitecturyConstants",
+        "dev.architectury.utils.Env",
+        "dev.architectury.utils.EnvExecutor",
+        "dev.architectury.utils.fabric.GameInstanceImpl",
+        "dev.architectury.utils.GameInstance",
+        "dev.architectury.utils.OptionalSupplier",
+        "dev.architectury.utils.PlatformExpectedError",
+        "dev.architectury.utils.value.BooleanValue",
+        "dev.architectury.utils.value.DoubleValue",
+        "dev.architectury.utils.value.FloatSupplier",
+        "dev.architectury.utils.value.FloatValue",
+        "dev.architectury.utils.value.IntValue",
+        "dev.architectury.utils.value.LongValue",
+        "dev.architectury.utils.value.Value"
+      ],
+      "methods": {
+        "dev.architectury.compat.fabric.ModMenuCompatibility": [
+          "getProvidedConfigScreenFactories()"
+        ],
+        "dev.architectury.core.block.ArchitecturyLiquidBlock": [],
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid": [
+          "getFlowing()",
+          "getSource()",
+          "canConvertToSource(ServerLevel)",
+          "beforeDestroyingBlock(LevelAccessor, BlockPos, BlockState)",
+          "getSlopeFindDistance(LevelReader)",
+          "getDropOff(LevelReader)",
+          "getBucket()",
+          "canBeReplacedWith(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "getTickDelay(LevelReader)",
+          "getExplosionResistance()",
+          "createLegacyBlock(FluidState)",
+          "getPickupSound()",
+          "isSame(Fluid)"
+        ],
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes": [
+          "getTranslationKey()",
+          "getName(FluidStack)",
+          "getName()",
+          "getSlopeFindDistance()",
+          "getDropOff()",
+          "getTickDelay()",
+          "getSourceTexture(FluidState)",
+          "getSourceTexture()",
+          "getFlowingTexture(FluidState)",
+          "getFlowingTexture()",
+          "getOverlayTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getOverlayTexture(FluidStack)",
+          "getOverlayTexture()",
+          "getColor(FluidState)",
+          "getColor()",
+          "getLuminosity(FluidStack)",
+          "getLuminosity()",
+          "getDensity(FluidStack)",
+          "getDensity()",
+          "getTemperature(FluidStack)"
+        ],
+        "dev.architectury.core.fluid.fabric.ArchitecturyFlowingFluidImpl": [
+          "addFabricFluidAttributes(FlowingFluid, ArchitecturyFluidAttributes)",
+          "getAttributes(Fluid)"
+        ],
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes": [
+          "ofSupplier(Supplier<? extends Supplier<? extends Fluid>>, Supplier<? extends Supplier<? extends Fluid>>)",
+          "of(Supplier<? extends Fluid>, Supplier<? extends Fluid>)",
+          "convertToSource(boolean)",
+          "slopeFindDistance(int)",
+          "dropOff(int)",
+          "bucketItemSupplier(Supplier<RegistrySupplier<? extends Item>>)",
+          "bucketItem(RegistrySupplier<Item>)",
+          "bucketItem(Supplier<? extends Optional<? extends Item>>)",
+          "tickDelay(int)",
+          "explosionResistance(float)",
+          "blockSupplier(Supplier<RegistrySupplier<? extends LiquidBlock>>)",
+          "block(RegistrySupplier<? extends LiquidBlock>)",
+          "block(Supplier<? extends Optional<? extends LiquidBlock>>)",
+          "sourceTexture(Identifier)",
+          "flowingTexture(Identifier)",
+          "overlayTexture(Identifier)",
+          "color(int)",
+          "luminosity(int)",
+          "density(int)",
+          "temperature(int)"
+        ],
+        "dev.architectury.core.item.ArchitecturyBucketItem": [
+          "getContainedFluid()"
+        ],
+        "dev.architectury.event.CompoundEventResult": [
+          "pass()",
+          "interrupt(Boolean, T)",
+          "interruptTrue(T)",
+          "interruptDefault(T)",
+          "interruptFalse(T)",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "result()",
+          "asMinecraft()",
+          "object()"
+        ],
+        "dev.architectury.event.Event": [
+          "register(EventPriority, T)"
+        ],
+        "dev.architectury.event.EventActor": [],
+        "dev.architectury.event.EventFactory": [
+          "of(Function<List<T>, T>)",
+          "createLoop(T...)",
+          "createLoop(Class<T>)",
+          "createEventResult(T...)",
+          "createEventResult(Class<T>)",
+          "createCompoundEventResult(T...)",
+          "createCompoundEventResult(Class<T>)",
+          "createInteractionResult(T...)",
+          "createInteractionResult(Class<T>)",
+          "createConsumerLoop(T...)",
+          "createConsumerLoop(Class<T>)",
+          "createEventActorLoop(T...)",
+          "createEventActorLoop(Class<T>)",
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.EventHandler": [
+          "init()"
+        ],
+        "dev.architectury.event.EventPriority": [],
+        "dev.architectury.event.EventResult": [
+          "pass()",
+          "interrupt(Boolean)",
+          "interruptTrue()",
+          "interruptDefault()",
+          "interruptFalse()",
+          "fromMinecraft(InteractionResult)",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "asMinecraft()"
+        ],
+        "dev.architectury.event.EventResultHolder": [],
+        "dev.architectury.event.events.client.ClientChatEvent": [],
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent": [],
+        "dev.architectury.event.events.client.ClientGuiEvent": [],
+        "dev.architectury.event.events.client.ClientLifecycleEvent": [],
+        "dev.architectury.event.events.client.ClientPlayerEvent": [],
+        "dev.architectury.event.events.client.ClientRawInputEvent": [],
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent": [],
+        "dev.architectury.event.events.client.ClientScreenInputEvent": [],
+        "dev.architectury.event.events.client.ClientSystemMessageEvent": [],
+        "dev.architectury.event.events.client.ClientTickEvent": [],
+        "dev.architectury.event.events.client.ClientTooltipEvent": [],
+        "dev.architectury.event.events.common.BlockEvent": [],
+        "dev.architectury.event.events.common.ChatEvent": [],
+        "dev.architectury.event.events.common.ChunkEvent": [],
+        "dev.architectury.event.events.common.CommandPerformEvent": [
+          "getResults()",
+          "setResults(ParseResults<CommandSourceStack>)",
+          "getThrowable()",
+          "setThrowable(Throwable)"
+        ],
+        "dev.architectury.event.events.common.CommandRegistrationEvent": [],
+        "dev.architectury.event.events.common.EntityEvent": [],
+        "dev.architectury.event.events.common.ExplosionEvent": [],
+        "dev.architectury.event.events.common.InteractionEvent": [],
+        "dev.architectury.event.events.common.LifecycleEvent": [],
+        "dev.architectury.event.events.common.LightningEvent": [],
+        "dev.architectury.event.events.common.LootEvent": [],
+        "dev.architectury.event.events.common.PlayerEvent": [],
+        "dev.architectury.event.events.common.TickEvent": [],
+        "dev.architectury.event.fabric.EventFactoryImpl": [
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.fabric.EventHandlerImpl": [
+          "registerClient()",
+          "registerCommon()",
+          "registerServer()"
+        ],
+        "dev.architectury.extensions.injected.InjectedBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension": [],
+        "dev.architectury.extensions.injected.InjectedFluidExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension": [],
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension": [],
+        "dev.architectury.extensions.network.EntitySpawnExtension": [],
+        "dev.architectury.fluid.fabric.FluidStackImpl": [
+          "adapt(Function<FluidStack, Object>, Function<Object, FluidStack>)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "getRawFluidSupplier(FluidStackImpl.Pair)",
+          "getFluid(FluidStackImpl.Pair)",
+          "getAmount(FluidStackImpl.Pair)",
+          "setAmount(FluidStackImpl.Pair, long)",
+          "getPatch(FluidStackImpl.Pair)",
+          "getComponents(FluidStackImpl.Pair)",
+          "applyComponents(FluidStackImpl.Pair, DataComponentPatch)",
+          "applyComponents(FluidStackImpl.Pair, DataComponentMap)",
+          "set(FluidStackImpl.Pair, DataComponentType<D>, D)",
+          "remove(FluidStackImpl.Pair, DataComponentType<? extends D>)",
+          "update(FluidStackImpl.Pair, DataComponentType<D>, D, UnaryOperator<D>)",
+          "update(FluidStackImpl.Pair, DataComponentType<D>, D, U, BiFunction<D, U, D>)",
+          "copy(FluidStackImpl.Pair)",
+          "hashCode(FluidStackImpl.Pair)",
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.architectury.fluid.fabric.FluidStackTemplateImpl": [
+          "adapt(Function<FluidStackTemplate, Object>, Function<Object, FluidStackTemplate>)",
+          "of(Supplier<Fluid>, long, DataComponentPatch)",
+          "fluid(FluidStackTemplateImpl.Pair)",
+          "amount(FluidStackTemplateImpl.Pair)",
+          "withAmount(FluidStackTemplateImpl.Pair, int)",
+          "components(FluidStackTemplateImpl.Pair)",
+          "patch(FluidStackTemplateImpl.Pair)",
+          "apply(FluidStackTemplateImpl.Pair, DataComponentPatch)",
+          "apply(FluidStackTemplateImpl.Pair, int, DataComponentPatch)",
+          "get(FluidStackTemplateImpl.Pair, DataComponentType<D>)",
+          "get(FluidStackTemplateImpl.Pair, Supplier<DataComponentType<D>>)",
+          "copy(FluidStackTemplateImpl.Pair)",
+          "hashCode(FluidStackTemplateImpl.Pair)",
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.architectury.fluid.FluidStack": [
+          "empty()",
+          "create(Fluid, long, DataComponentPatch)",
+          "create(Fluid, long)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "create(Supplier<Fluid>, long)",
+          "create(Holder<Fluid>, long, DataComponentPatch)",
+          "create(Holder<Fluid>, long)",
+          "create(FluidStack, long)",
+          "bucketAmount()",
+          "getFluid()",
+          "getRawFluid()",
+          "getRawFluidSupplier()",
+          "isEmpty()",
+          "getAmount()",
+          "setAmount(long)",
+          "grow(long)",
+          "shrink(long)",
+          "getPatch()",
+          "getComponents()",
+          "applyComponents(DataComponentPatch)"
+        ],
+        "dev.architectury.fluid.FluidStackTemplate": [
+          "of(FluidStackTemplate)",
+          "of(Holder<Fluid>, long)",
+          "of(Holder<Fluid>, long, DataComponentPatch)",
+          "create()",
+          "fluid()",
+          "amount()",
+          "getComponents()",
+          "getPatch()",
+          "apply(DataComponentPatch)",
+          "apply(int, DataComponentPatch)",
+          "getTranslationKey()",
+          "copy()",
+          "hashCode()",
+          "equals(Object)",
+          "isFluidStackEqual(FluidStackTemplate)",
+          "isFluidEqual(FluidStackTemplate)",
+          "isComponentEqual(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(RegistryFriendlyByteBuf)"
+        ],
+        "dev.architectury.hooks.block.BlockEntityHooks": [
+          "syncData(BlockEntity)"
+        ],
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks": [
+          "getStillTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndLightGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.fluid.fabric.ClientFluidStackHooksImpl": [
+          "getStillTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndLightGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.screen.fabric.ScreenHooksImpl": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.client.screen.ScreenAccess": [],
+        "dev.architectury.hooks.client.screen.ScreenHooks": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.DyeColorHooks": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.fabric.DyeColorHooksImpl": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.fabric.PackRepositoryHooksImpl": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.hooks.fabric.PersistentEntitySectionManagerHooks": [],
+        "dev.architectury.hooks.fluid.fabric.FluidBucketHooksImpl": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksFabric": [
+          "fromFabric(StorageView<FluidVariant>)",
+          "fromFabric(FluidVariant, long)",
+          "toFabric(FluidStack)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackTemplateHooksFabric": [
+          "fromFabric(StorageView<FluidVariant>)",
+          "fromFabric(FluidVariant, long)",
+          "toFabric(FluidStackTemplate)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackTemplateHooksImpl": [
+          "getName(FluidStackTemplate)",
+          "getTranslationKey(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStackTemplate, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(Provider, FluidStackTemplate, Tag)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.LiquidBlockHooksImpl": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.fluid.FluidBucketHooks": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.FluidStackHooks": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.FluidStackTemplateHooks": [
+          "getName(FluidStackTemplate)",
+          "getTranslationKey(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStackTemplate, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(Provider, FluidStackTemplate, Tag)"
+        ],
+        "dev.architectury.hooks.fluid.LiquidBlockHooks": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.item.fabric.ItemStackHooksImpl": [
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.ItemStackHooks": [
+          "copyWithCount(ItemStack, int)",
+          "giveItem(ServerPlayer, ItemStack)",
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.tool.AxeItemHooks": [
+          "addStrippable(Block, Block)"
+        ],
+        "dev.architectury.hooks.item.tool.fabric.HoeItemHooksImpl": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.HoeItemHooks": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.ShovelItemHooks": [
+          "addFlattenable(Block, BlockState)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeHooks": [
+          "getBiomeProperties(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeProperties": [],
+        "dev.architectury.hooks.level.biome.ClimateProperties": [],
+        "dev.architectury.hooks.level.biome.EffectsProperties": [],
+        "dev.architectury.hooks.level.biome.fabric.BiomeHooksImpl": [
+          "extractClimateSettings(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.GenerationProperties": [],
+        "dev.architectury.hooks.level.biome.SpawnProperties": [],
+        "dev.architectury.hooks.level.entity.EntityHooks": [
+          "fromCollision(CollisionContext)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.EntityHooksImpl": [
+          "wrapEntityInLevelCallback(final Entity, final EntityInLevelCallback)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.FakePlayers": [],
+        "dev.architectury.hooks.level.entity.fabric.ItemEntityHooksImpl": [
+          "lifespan(ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.PlayerHooksImpl": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.level.entity.ItemEntityHooks": [
+          "lifespan(ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.PlayerHooks": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.PackRepositoryHooks": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.init.fabric.ArchitecturyClient": [
+          "init()"
+        ],
+        "dev.architectury.init.fabric.ArchitecturyServer": [
+          "init()"
+        ],
+        "dev.architectury.networking.client.fabric.ClientNetworkManagerImpl": [
+          "registerS2C(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)"
+        ],
+        "dev.architectury.networking.ClientSpawnEntityPacket": [
+          "register()"
+        ],
+        "dev.architectury.networking.fabric.NetworkManagerImpl": [
+          "getAdaptor()",
+          "context(final Player, final BlockableEventLoop<?>, final boolean)",
+          "canServerReceive(Identifier)",
+          "canPlayerReceive(ServerPlayer, Identifier)",
+          "sendToServer(T)",
+          "createAddEntityPacket(Entity, ServerEntity)"
+        ],
+        "dev.architectury.networking.NetworkManager": [
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>)",
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>, NetworkManager.NetworkReceiver<T>)",
+          "registerS2C(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)",
+          "registerC2S(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)",
+          "toPacket(NetworkManager.Side, T, RegistryAccess)",
+          "toPackets(NetworkManager.Side, T, RegistryAccess)",
+          "collectPackets(PacketSink, NetworkManager.Side, T, RegistryAccess)",
+          "sendToPlayer(ServerPlayer, T)",
+          "sendToPlayers(Iterable<ServerPlayer>, T)",
+          "sendToServer(T)",
+          "canServerReceive(Identifier)",
+          "canPlayerReceive(ServerPlayer, Identifier)",
+          "canServerReceive(Type<?>)",
+          "canPlayerReceive(ServerPlayer, Type<?>)",
+          "createAddEntityPacket(Entity, ServerEntity)",
+          "s2c()",
+          "c2s()"
+        ],
+        "dev.architectury.networking.SpawnEntityPacket": [
+          "create(Entity, ServerEntity)",
+          "register()"
+        ],
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer": [
+          "init(Map<SplitPacketTransformer.PartKey, SplitPacketTransformer.PartData>)"
+        ],
+        "dev.architectury.networking.transformers.PacketCollector": [
+          "accept(Packet<?>)",
+          "collect()"
+        ],
+        "dev.architectury.networking.transformers.PacketSink": [],
+        "dev.architectury.networking.transformers.PacketTransformer": [],
+        "dev.architectury.networking.transformers.SinglePacketCollector": [
+          "accept(Packet<?>)",
+          "getPacket()"
+        ],
+        "dev.architectury.networking.transformers.SplitPacketTransformer": [
+          "inbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, NetworkManager.PacketContext, PacketTransformer.TransformationSink)",
+          "outbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, PacketTransformer.TransformationSink)",
+          "PartData(Identifier, int, List<RegistryFriendlyByteBuf>)",
+          "PartKey(NetworkManager.Side, UUID)"
+        ],
+        "dev.architectury.platform.client.ConfigurationScreenRegistry": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.client.fabric.ConfigurationScreenRegistryImpl": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.fabric.PlatformImpl": [
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.platform.Mod": [],
+        "dev.architectury.platform.Platform": [
+          "isFabric()",
+          "isNeoForge()",
+          "getMinecraftVersion()",
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getOptionalMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.plugin.fabric.ArchitecturyMixinPlugin": [
+          "onLoad(String)",
+          "getRefMapperConfig()",
+          "shouldApplyMixin(String, String)",
+          "acceptTargets(Set<String>, Set<String>)",
+          "getMixins()",
+          "preApply(String, ClassNode, String, IMixinInfo)",
+          "postApply(String, ClassNode, String, IMixinInfo)"
+        ],
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.fabric.ClientTooltipComponentRegistryImpl": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.fabric.MenuScreenRegistryImpl": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.gui.MenuScreenRegistry": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.keymappings.fabric.KeyMappingRegistryImpl": [
+          "register(KeyMapping)"
+        ],
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry": [
+          "register(KeyMapping)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)"
+        ],
+        "dev.architectury.registry.client.level.entity.fabric.EntityModelLayerRegistryImpl": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "dev.architectury.registry.client.level.entity.fabric.EntityRendererRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)"
+        ],
+        "dev.architectury.registry.client.particle.fabric.ParticleProviderRegistryImpl": [
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)"
+        ],
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry": [
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProvider<T>)",
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProviderRegistry.DeferredParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)"
+        ],
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry": [
+          "registerBlockColors(BlockTintSource, Block...)",
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.client.rendering.fabric.BlockEntityRendererRegistryImpl": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.fabric.ColorHandlerRegistryImpl": [
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.CreativeTabOutput": [
+          "accept(ItemStack, TabVisibility)",
+          "acceptAfter(ItemStack, ItemStack)",
+          "acceptAfter(ItemStack, ItemLike, TabVisibility)",
+          "acceptAfter(ItemStack, ItemLike)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>)",
+          "acceptAfter(ItemLike, ItemStack)",
+          "acceptAfter(ItemLike, ItemLike, TabVisibility)",
+          "acceptAfter(ItemLike, ItemLike)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>)",
+          "acceptBefore(ItemStack, ItemStack)",
+          "acceptBefore(ItemStack, ItemLike, TabVisibility)",
+          "acceptBefore(ItemStack, ItemLike)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>)",
+          "acceptBefore(ItemLike, ItemStack)",
+          "acceptBefore(ItemLike, ItemLike, TabVisibility)",
+          "acceptBefore(ItemLike, ItemLike)",
+          "acceptAllBefore(ItemLike, Collection<ItemStack>, TabVisibility)"
+        ],
+        "dev.architectury.registry.CreativeTabRegistry": [
+          "create(Component, Supplier<ItemStack>)",
+          "create(Consumer<Builder>)",
+          "ofBuiltin(CreativeModeTab)",
+          "defer(Identifier)",
+          "defer(ResourceKey<CreativeModeTab>)",
+          "modifyBuiltin(CreativeModeTab, CreativeTabRegistry.ModifyTabCallback)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendBuiltin(CreativeModeTab, ItemLike...)",
+          "appendBuiltin(CreativeModeTab, T...)",
+          "appendBuiltinStack(CreativeModeTab, ItemStack...)",
+          "appendBuiltinStack(CreativeModeTab, Supplier<ItemStack>...)",
+          "append(DeferredSupplier<CreativeModeTab>, ItemLike...)",
+          "append(DeferredSupplier<CreativeModeTab>, T...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, ItemStack...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Stream<Supplier<ItemStack>>)",
+          "append(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "append(ResourceKey<CreativeModeTab>, T...)",
+          "appendStack(ResourceKey<CreativeModeTab>, ItemStack...)"
+        ],
+        "dev.architectury.registry.fabric.CreativeTabRegistryImpl": [
+          "create(Consumer<Builder>)",
+          "ofBuiltin(final CreativeModeTab)",
+          "defer(final Identifier)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)"
+        ],
+        "dev.architectury.registry.fabric.ReloadListenerRegistryImpl": [
+          "register(PackType, final PreparableReloadListener, Identifier, final Collection<Identifier>)"
+        ],
+        "dev.architectury.registry.fuel.fabric.FuelRegistryImpl": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)"
+        ],
+        "dev.architectury.registry.fuel.FuelRegistry": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)"
+        ],
+        "dev.architectury.registry.level.biome.BiomeModifications": [
+          "addProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.biome.fabric.BiomeModificationsImpl": [
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)"
+        ],
+        "dev.architectury.registry.level.entity.EntityDataSerializerRegistry": [
+          "register(Identifier, EntityDataSerializer<T>)"
+        ],
+        "dev.architectury.registry.level.entity.fabric.EntityAttributeRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)"
+        ],
+        "dev.architectury.registry.level.entity.fabric.EntityDataSerializerRegistryImpl": [
+          "register(Identifier, EntityDataSerializer<T>)"
+        ],
+        "dev.architectury.registry.level.entity.fabric.SpawnPlacementsRegistryImpl": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.menu.ExtendedMenuProvider": [],
+        "dev.architectury.registry.menu.fabric.MenuRegistryImpl": [
+          "openExtendedMenu(ServerPlayer, final ExtendedMenuProvider)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.menu.MenuRegistry": [
+          "openExtendedMenu(ServerPlayer, final MenuProvider, final Consumer<FriendlyByteBuf>)",
+          "openExtendedMenu(ServerPlayer, ExtendedMenuProvider)",
+          "openMenu(ServerPlayer, MenuProvider)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.registries.DeferredRegister": [
+          "create(String, ResourceKey<Registry<T>>)",
+          "register(String, Supplier<? extends R>)",
+          "register(Identifier, Supplier<? extends R>)",
+          "register()",
+          "iterator()",
+          "getRegistrarManager()",
+          "getRegistrar()"
+        ],
+        "dev.architectury.registry.registries.DeferredSupplier": [
+          "getRegistryKey()",
+          "getKey()"
+        ],
+        "dev.architectury.registry.registries.fabric.RegistrarManagerImpl": [
+          "_get(String)"
+        ],
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption": [],
+        "dev.architectury.registry.registries.options.RegistrarOption": [],
+        "dev.architectury.registry.registries.options.StandardRegistrarOption": [],
+        "dev.architectury.registry.registries.Registrar": [
+          "wrap(R)",
+          "getHolder(Identifier)",
+          "listen(RegistrySupplier<R>, Consumer<R>)"
+        ],
+        "dev.architectury.registry.registries.RegistrarBuilder": [
+          "syncToClients()"
+        ],
+        "dev.architectury.registry.registries.RegistrarManager": [
+          "get(String)",
+          "get(ResourceKey<Registry<T>>)",
+          "get(Registry<T>)",
+          "forRegistry(ResourceKey<Registry<T>>, Consumer<Registrar<T>>)",
+          "builder(Identifier, T...)",
+          "getId(T, ResourceKey<Registry<T>>)",
+          "getId(T, Registry<T>)",
+          "getModId()"
+        ],
+        "dev.architectury.registry.registries.RegistrySupplier": [
+          "listen(Consumer<T>)"
+        ],
+        "dev.architectury.registry.ReloadListenerRegistry": [
+          "register(PackType, PreparableReloadListener, Identifier)",
+          "register(PackType, PreparableReloadListener, Identifier, Collection<Identifier>)"
+        ],
+        "dev.architectury.utils.Amount": [
+          "toInt(long)"
+        ],
+        "dev.architectury.utils.ArchitecturyConstants": [],
+        "dev.architectury.utils.Env": [
+          "fromPlatform(Object)",
+          "toPlatform()"
+        ],
+        "dev.architectury.utils.EnvExecutor": [
+          "runInEnv(EnvType, Supplier<Runnable>)",
+          "runInEnv(Env, Supplier<Runnable>)",
+          "getInEnv(EnvType, Supplier<Supplier<T>>)",
+          "getInEnv(Env, Supplier<Supplier<T>>)",
+          "getEnvSpecific(Supplier<Supplier<T>>, Supplier<Supplier<T>>)"
+        ],
+        "dev.architectury.utils.fabric.GameInstanceImpl": [
+          "getServer()",
+          "init()"
+        ],
+        "dev.architectury.utils.GameInstance": [
+          "getServer()"
+        ],
+        "dev.architectury.utils.OptionalSupplier": [
+          "getOrNull()",
+          "toOptional()",
+          "ifPresent(Consumer<? super T>)",
+          "ifPresentOrElse(Consumer<? super T>, Runnable)",
+          "stream()",
+          "orElse(T)",
+          "orElseGet(Supplier<? extends T>)"
+        ],
+        "dev.architectury.utils.PlatformExpectedError": [],
+        "dev.architectury.utils.value.BooleanValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.DoubleValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.FloatSupplier": [],
+        "dev.architectury.utils.value.FloatValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.IntValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.LongValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.Value": []
+      },
+      "sampleCount": 178
+    },
+    "20.0.12": {
+      "packages": [],
+      "classes": [
+        "dev.architectury.core.block.ArchitecturyLiquidBlock",
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid",
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes",
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributesForge",
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes",
+        "dev.architectury.core.item.ArchitecturyBucketItem",
+        "dev.architectury.event.CompoundEventResult",
+        "dev.architectury.event.Event",
+        "dev.architectury.event.EventActor",
+        "dev.architectury.event.EventFactory",
+        "dev.architectury.event.EventHandler",
+        "dev.architectury.event.EventResult",
+        "dev.architectury.event.events.client.ClientChatEvent",
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent",
+        "dev.architectury.event.events.client.ClientGuiEvent",
+        "dev.architectury.event.events.client.ClientLifecycleEvent",
+        "dev.architectury.event.events.client.ClientPlayerEvent",
+        "dev.architectury.event.events.client.ClientRawInputEvent",
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent",
+        "dev.architectury.event.events.client.ClientScreenInputEvent",
+        "dev.architectury.event.events.client.ClientSystemMessageEvent",
+        "dev.architectury.event.events.client.ClientTickEvent",
+        "dev.architectury.event.events.client.ClientTooltipEvent",
+        "dev.architectury.event.events.common.BlockEvent",
+        "dev.architectury.event.events.common.ChatEvent",
+        "dev.architectury.event.events.common.ChunkEvent",
+        "dev.architectury.event.events.common.CommandPerformEvent",
+        "dev.architectury.event.events.common.CommandRegistrationEvent",
+        "dev.architectury.event.events.common.EntityEvent",
+        "dev.architectury.event.events.common.ExplosionEvent",
+        "dev.architectury.event.events.common.InteractionEvent",
+        "dev.architectury.event.events.common.LifecycleEvent",
+        "dev.architectury.event.events.common.LightningEvent",
+        "dev.architectury.event.events.common.LootEvent",
+        "dev.architectury.event.events.common.PlayerEvent",
+        "dev.architectury.event.events.common.TickEvent",
+        "dev.architectury.event.forge.EventFactoryImpl",
+        "dev.architectury.event.forge.EventHandlerImpl",
+        "dev.architectury.event.forge.EventHandlerImplClient",
+        "dev.architectury.event.forge.EventHandlerImplCommon",
+        "dev.architectury.event.forge.EventHandlerImplServer",
+        "dev.architectury.extensions.injected.InjectedBlockExtension",
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension",
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension",
+        "dev.architectury.extensions.injected.InjectedFluidExtension",
+        "dev.architectury.extensions.injected.InjectedItemExtension",
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension",
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension",
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension",
+        "dev.architectury.extensions.network.EntitySpawnExtension",
+        "dev.architectury.fluid.FluidStack",
+        "dev.architectury.fluid.FluidStackTemplate",
+        "dev.architectury.fluid.forge.ArchitecturyFluidAttributesClient",
+        "dev.architectury.fluid.forge.FluidStackImpl",
+        "dev.architectury.fluid.forge.FluidStackTemplateImpl",
+        "dev.architectury.hooks.block.BlockEntityHooks",
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks",
+        "dev.architectury.hooks.client.fluid.forge.ClientFluidStackHooksImpl",
+        "dev.architectury.hooks.client.forge.ClientExtensionsRegistryImpl",
+        "dev.architectury.hooks.client.screen.forge.ScreenHooksImpl",
+        "dev.architectury.hooks.client.screen.ScreenAccess",
+        "dev.architectury.hooks.client.screen.ScreenHooks",
+        "dev.architectury.hooks.DyeColorHooks",
+        "dev.architectury.hooks.fluid.FluidBucketHooks",
+        "dev.architectury.hooks.fluid.FluidStackHooks",
+        "dev.architectury.hooks.fluid.FluidStackTemplateHooks",
+        "dev.architectury.hooks.fluid.forge.FluidBucketHooksImpl",
+        "dev.architectury.hooks.fluid.forge.FluidStackHooksForge",
+        "dev.architectury.hooks.fluid.forge.FluidStackHooksImpl",
+        "dev.architectury.hooks.fluid.forge.FluidStackTemplateHooksForge",
+        "dev.architectury.hooks.fluid.forge.FluidStackTemplateHooksImpl",
+        "dev.architectury.hooks.fluid.forge.LiquidBlockHooksImpl",
+        "dev.architectury.hooks.fluid.LiquidBlockHooks",
+        "dev.architectury.hooks.forge.DyeColorHooksImpl",
+        "dev.architectury.hooks.forge.PackRepositoryHooksImpl",
+        "dev.architectury.hooks.item.forge.ItemStackHooksImpl",
+        "dev.architectury.hooks.item.ItemStackHooks",
+        "dev.architectury.hooks.item.tool.AxeItemHooks",
+        "dev.architectury.hooks.item.tool.forge.HoeItemHooksImpl",
+        "dev.architectury.hooks.item.tool.HoeItemHooks",
+        "dev.architectury.hooks.item.tool.ShovelItemHooks",
+        "dev.architectury.hooks.level.biome.BiomeHooks",
+        "dev.architectury.hooks.level.biome.BiomeProperties",
+        "dev.architectury.hooks.level.biome.ClimateProperties",
+        "dev.architectury.hooks.level.biome.EffectsProperties",
+        "dev.architectury.hooks.level.biome.forge.BiomeHooksImpl",
+        "dev.architectury.hooks.level.biome.GenerationProperties",
+        "dev.architectury.hooks.level.biome.SpawnProperties",
+        "dev.architectury.hooks.level.entity.EntityHooks",
+        "dev.architectury.hooks.level.entity.forge.ItemEntityHooksImpl",
+        "dev.architectury.hooks.level.entity.forge.PlayerHooksImpl",
+        "dev.architectury.hooks.level.entity.ItemEntityHooks",
+        "dev.architectury.hooks.level.entity.PlayerHooks",
+        "dev.architectury.hooks.PackRepositoryHooks",
+        "dev.architectury.neoforge.ArchitecturyNeoForge",
+        "dev.architectury.networking.ClientSpawnEntityPacket",
+        "dev.architectury.networking.forge.client.ClientNetworkManagerImpl",
+        "dev.architectury.networking.forge.NetworkManagerImpl",
+        "dev.architectury.networking.NetworkManager",
+        "dev.architectury.networking.SpawnEntityPacket",
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer",
+        "dev.architectury.networking.transformers.PacketCollector",
+        "dev.architectury.networking.transformers.PacketSink",
+        "dev.architectury.networking.transformers.PacketTransformer",
+        "dev.architectury.networking.transformers.SinglePacketCollector",
+        "dev.architectury.networking.transformers.SplitPacketTransformer",
+        "dev.architectury.platform.client.ConfigurationScreenRegistry",
+        "dev.architectury.platform.client.forge.ConfigurationScreenRegistryImpl",
+        "dev.architectury.platform.forge.PlatformImpl",
+        "dev.architectury.platform.hooks.EventBusesHooks",
+        "dev.architectury.platform.Mod",
+        "dev.architectury.platform.Platform",
+        "dev.architectury.plugin.forge.ArchitecturyMixinPlugin",
+        "dev.architectury.registry.client.forge.ClientReloadListenerRegistryImpl",
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry",
+        "dev.architectury.registry.client.gui.forge.ClientTooltipComponentRegistryImpl",
+        "dev.architectury.registry.client.gui.forge.MenuScreenRegistryImpl",
+        "dev.architectury.registry.client.gui.MenuScreenRegistry",
+        "dev.architectury.registry.client.keymappings.forge.KeyMappingRegistryImpl",
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry",
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry",
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry",
+        "dev.architectury.registry.client.level.entity.forge.EntityModelLayerRegistryImpl",
+        "dev.architectury.registry.client.level.entity.forge.EntityRendererRegistryImpl",
+        "dev.architectury.registry.client.particle.forge.ParticleProviderRegistryImpl",
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry",
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry",
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry",
+        "dev.architectury.registry.client.rendering.forge.BlockEntityRendererRegistryImpl",
+        "dev.architectury.registry.client.rendering.forge.ColorHandlerRegistryImpl",
+        "dev.architectury.registry.CreativeTabOutput",
+        "dev.architectury.registry.CreativeTabRegistry",
+        "dev.architectury.registry.forge.CreativeTabRegistryImpl",
+        "dev.architectury.registry.forge.ReloadListenerRegistryImpl",
+        "dev.architectury.registry.fuel.forge.FuelRegistryImpl",
+        "dev.architectury.registry.fuel.FuelRegistry",
+        "dev.architectury.registry.level.biome.BiomeModifications",
+        "dev.architectury.registry.level.biome.forge.BiomeModificationsImpl",
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry",
+        "dev.architectury.registry.level.entity.forge.EntityAttributeRegistryImpl",
+        "dev.architectury.registry.level.entity.forge.SpawnPlacementsRegistryImpl",
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry",
+        "dev.architectury.registry.menu.ExtendedMenuProvider",
+        "dev.architectury.registry.menu.forge.MenuRegistryImpl",
+        "dev.architectury.registry.menu.MenuRegistry",
+        "dev.architectury.registry.registries.DeferredRegister",
+        "dev.architectury.registry.registries.DeferredSupplier",
+        "dev.architectury.registry.registries.forge.RegistrarManagerImpl",
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption",
+        "dev.architectury.registry.registries.options.RegistrarOption",
+        "dev.architectury.registry.registries.options.StandardRegistrarOption",
+        "dev.architectury.registry.registries.Registrar",
+        "dev.architectury.registry.registries.RegistrarBuilder",
+        "dev.architectury.registry.registries.RegistrarManager",
+        "dev.architectury.registry.registries.RegistrySupplier",
+        "dev.architectury.registry.ReloadListenerRegistry",
+        "dev.architectury.utils.Amount",
+        "dev.architectury.utils.ArchitecturyConstants",
+        "dev.architectury.utils.Env",
+        "dev.architectury.utils.EnvExecutor",
+        "dev.architectury.utils.forge.GameInstanceImpl",
+        "dev.architectury.utils.GameInstance",
+        "dev.architectury.utils.OptionalSupplier",
+        "dev.architectury.utils.PlatformExpectedError",
+        "dev.architectury.utils.value.BooleanValue",
+        "dev.architectury.utils.value.DoubleValue",
+        "dev.architectury.utils.value.FloatSupplier",
+        "dev.architectury.utils.value.FloatValue",
+        "dev.architectury.utils.value.IntValue",
+        "dev.architectury.utils.value.LongValue",
+        "dev.architectury.utils.value.Value"
+      ],
+      "methods": {
+        "dev.architectury.core.block.ArchitecturyLiquidBlock": [],
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid": [
+          "getFlowing()",
+          "getSource()",
+          "canConvertToSource(ServerLevel)",
+          "beforeDestroyingBlock(LevelAccessor, BlockPos, BlockState)",
+          "getSlopeFindDistance(LevelReader)",
+          "getDropOff(LevelReader)",
+          "getBucket()",
+          "canBeReplacedWith(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "getTickDelay(LevelReader)",
+          "getExplosionResistance()",
+          "createLegacyBlock(FluidState)",
+          "getPickupSound()",
+          "isSame(Fluid)"
+        ],
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes": [
+          "getTranslationKey()",
+          "getName(FluidStack)",
+          "getName()",
+          "getSlopeFindDistance()",
+          "getDropOff()",
+          "getTickDelay()",
+          "getSourceTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getSourceTexture(FluidStack)",
+          "getSourceTexture()",
+          "getFlowingTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture()",
+          "getOverlayTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getOverlayTexture(FluidStack)",
+          "getOverlayTexture()",
+          "getColor(FluidState, BlockAndLightGetter, BlockPos)",
+          "getColor(FluidStack)",
+          "getColor()",
+          "getLuminosity(FluidStack)",
+          "getLuminosity()"
+        ],
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributesForge": [
+          "getBucket(FluidStack)",
+          "getLightLevel(FluidStack)",
+          "getLightLevel(FluidState, BlockAndLightGetter, BlockPos)",
+          "getDensity(FluidStack)",
+          "getDensity(FluidState, BlockAndLightGetter, BlockPos)",
+          "getTemperature(FluidStack)",
+          "getTemperature(FluidState, BlockAndLightGetter, BlockPos)",
+          "getViscosity(FluidStack)",
+          "getViscosity(FluidState, BlockAndLightGetter, BlockPos)",
+          "getRarity()",
+          "getRarity(FluidStack)",
+          "getDescription()",
+          "getDescription(FluidStack)",
+          "getDescriptionId()",
+          "getDescriptionId(FluidStack)",
+          "getSound(SoundAction)",
+          "getSound(FluidStack, SoundAction)",
+          "getSound(LivingEntity, BlockGetter, BlockPos, SoundAction)",
+          "canConvertToSource(FluidStack)",
+          "canConvertToSource(FluidState, LevelReader, BlockPos)"
+        ],
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes": [
+          "ofSupplier(Supplier<? extends Supplier<? extends Fluid>>, Supplier<? extends Supplier<? extends Fluid>>)",
+          "of(Supplier<? extends Fluid>, Supplier<? extends Fluid>)",
+          "convertToSource(boolean)",
+          "slopeFindDistance(int)",
+          "dropOff(int)",
+          "bucketItemSupplier(Supplier<RegistrySupplier<? extends Item>>)",
+          "bucketItem(RegistrySupplier<Item>)",
+          "bucketItem(Supplier<? extends Optional<? extends Item>>)",
+          "tickDelay(int)",
+          "explosionResistance(float)",
+          "blockSupplier(Supplier<RegistrySupplier<? extends LiquidBlock>>)",
+          "block(RegistrySupplier<? extends LiquidBlock>)",
+          "block(Supplier<? extends Optional<? extends LiquidBlock>>)",
+          "sourceTexture(Identifier)",
+          "flowingTexture(Identifier)",
+          "overlayTexture(Identifier)",
+          "color(int)",
+          "luminosity(int)",
+          "density(int)",
+          "temperature(int)"
+        ],
+        "dev.architectury.core.item.ArchitecturyBucketItem": [
+          "getContainedFluid()"
+        ],
+        "dev.architectury.event.CompoundEventResult": [
+          "pass()",
+          "interrupt(Boolean, T)",
+          "interruptTrue(T)",
+          "interruptDefault(T)",
+          "interruptFalse(T)",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "result()",
+          "object()"
+        ],
+        "dev.architectury.event.Event": [],
+        "dev.architectury.event.EventActor": [],
+        "dev.architectury.event.EventFactory": [
+          "of(Function<List<T>, T>)",
+          "createLoop(T...)",
+          "createLoop(Class<T>)",
+          "createEventResult(T...)",
+          "createEventResult(Class<T>)",
+          "createCompoundEventResult(T...)",
+          "createCompoundEventResult(Class<T>)",
+          "createInteractionResult(T...)",
+          "createInteractionResult(Class<T>)",
+          "createConsumerLoop(T...)",
+          "createConsumerLoop(Class<T>)",
+          "createEventActorLoop(T...)",
+          "createEventActorLoop(Class<T>)",
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.EventHandler": [
+          "init()"
+        ],
+        "dev.architectury.event.EventResult": [
+          "pass()",
+          "interrupt(Boolean)",
+          "interruptTrue()",
+          "interruptDefault()",
+          "interruptFalse()",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "asMinecraft()"
+        ],
+        "dev.architectury.event.events.client.ClientChatEvent": [],
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent": [],
+        "dev.architectury.event.events.client.ClientGuiEvent": [],
+        "dev.architectury.event.events.client.ClientLifecycleEvent": [],
+        "dev.architectury.event.events.client.ClientPlayerEvent": [],
+        "dev.architectury.event.events.client.ClientRawInputEvent": [],
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent": [],
+        "dev.architectury.event.events.client.ClientScreenInputEvent": [],
+        "dev.architectury.event.events.client.ClientSystemMessageEvent": [],
+        "dev.architectury.event.events.client.ClientTickEvent": [],
+        "dev.architectury.event.events.client.ClientTooltipEvent": [],
+        "dev.architectury.event.events.common.BlockEvent": [],
+        "dev.architectury.event.events.common.ChatEvent": [],
+        "dev.architectury.event.events.common.ChunkEvent": [],
+        "dev.architectury.event.events.common.CommandPerformEvent": [
+          "getResults()",
+          "setResults(ParseResults<CommandSourceStack>)",
+          "getThrowable()",
+          "setThrowable(Throwable)"
+        ],
+        "dev.architectury.event.events.common.CommandRegistrationEvent": [],
+        "dev.architectury.event.events.common.EntityEvent": [],
+        "dev.architectury.event.events.common.ExplosionEvent": [],
+        "dev.architectury.event.events.common.InteractionEvent": [],
+        "dev.architectury.event.events.common.LifecycleEvent": [],
+        "dev.architectury.event.events.common.LightningEvent": [],
+        "dev.architectury.event.events.common.LootEvent": [],
+        "dev.architectury.event.events.common.PlayerEvent": [],
+        "dev.architectury.event.events.common.TickEvent": [],
+        "dev.architectury.event.forge.EventFactoryImpl": [
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.forge.EventHandlerImpl": [
+          "registerClient()",
+          "registerCommon()",
+          "registerServer()"
+        ],
+        "dev.architectury.event.forge.EventHandlerImplClient": [
+          "event(ItemTooltipEvent)",
+          "event(Pre)",
+          "event(Post)",
+          "eventRenderGameOverlayEvent(net.neoforged.neoforge.client.event.RenderGuiEvent.Post)",
+          "event(LoggingIn)",
+          "event(LoggingOut)",
+          "event(Clone)",
+          "eventInitScreenEvent(net.neoforged.neoforge.client.event.ScreenEvent.Init.Pre)",
+          "eventInitScreenEvent(net.neoforged.neoforge.client.event.ScreenEvent.Init.Post)",
+          "event(ClientChatEvent)",
+          "event(ClientChatReceivedEvent)",
+          "eventWorldEvent(Load)",
+          "event(Opening)",
+          "eventDrawScreenEvent(net.neoforged.neoforge.client.event.ScreenEvent.Render.Pre)",
+          "eventDrawScreenEvent(net.neoforged.neoforge.client.event.ScreenEvent.Render.Post)",
+          "eventContainerScreenEvent(Foreground)",
+          "eventPlayerInteractEvent(RightClickEmpty)",
+          "eventPlayerInteractEvent(LeftClickEmpty)",
+          "eventRenderTooltipEvent(net.neoforged.neoforge.client.event.RenderTooltipEvent.Pre)",
+          "eventMouseScrollEvent(net.neoforged.neoforge.client.event.ScreenEvent.MouseScrolled.Pre)"
+        ],
+        "dev.architectury.event.forge.EventHandlerImplCommon": [
+          "event(Pre)",
+          "event(Post)",
+          "event(net.neoforged.neoforge.event.tick.LevelTickEvent.Pre)",
+          "event(net.neoforged.neoforge.event.tick.LevelTickEvent.Post)",
+          "event(ServerStartingEvent)",
+          "event(ServerStartedEvent)",
+          "event(ServerStoppingEvent)",
+          "event(ServerStoppedEvent)",
+          "event(RegisterCommandsEvent)",
+          "event(PlayerLoggedInEvent)",
+          "event(PlayerLoggedOutEvent)",
+          "event(PlayerRespawnEvent)",
+          "event(CommandEvent)",
+          "event(net.neoforged.neoforge.event.tick.PlayerTickEvent.Pre)",
+          "event(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post)",
+          "event(final ServerChatEvent)",
+          "eventAfter(ServerChatEvent)",
+          "eventWorldEvent(Load)",
+          "eventWorldEvent(Unload)",
+          "eventWorldEvent(Save)"
+        ],
+        "dev.architectury.event.forge.EventHandlerImplServer": [],
+        "dev.architectury.extensions.injected.InjectedBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension": [],
+        "dev.architectury.extensions.injected.InjectedFluidExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension": [],
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension": [],
+        "dev.architectury.extensions.network.EntitySpawnExtension": [],
+        "dev.architectury.fluid.FluidStack": [
+          "empty()",
+          "create(Fluid, long, DataComponentPatch)",
+          "create(Fluid, long)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "create(Supplier<Fluid>, long)",
+          "create(Holder<Fluid>, long, DataComponentPatch)",
+          "create(Holder<Fluid>, long)",
+          "create(FluidStack, long)",
+          "bucketAmount()",
+          "getFluid()",
+          "getRawFluid()",
+          "getRawFluidSupplier()",
+          "isEmpty()",
+          "getAmount()",
+          "setAmount(long)",
+          "grow(long)",
+          "shrink(long)",
+          "getPatch()",
+          "getComponents()",
+          "applyComponents(DataComponentPatch)"
+        ],
+        "dev.architectury.fluid.FluidStackTemplate": [
+          "of(FluidStackTemplate)",
+          "of(Holder<Fluid>, long)",
+          "of(Holder<Fluid>, long, DataComponentPatch)",
+          "create()",
+          "fluid()",
+          "amount()",
+          "getComponents()",
+          "getPatch()",
+          "apply(DataComponentPatch)",
+          "apply(int, DataComponentPatch)",
+          "getTranslationKey()",
+          "copy()",
+          "hashCode()",
+          "equals(Object)",
+          "isFluidStackEqual(FluidStackTemplate)",
+          "isFluidEqual(FluidStackTemplate)",
+          "isComponentEqual(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(RegistryFriendlyByteBuf)"
+        ],
+        "dev.architectury.fluid.forge.ArchitecturyFluidAttributesClient": [],
+        "dev.architectury.fluid.forge.FluidStackImpl": [
+          "adapt(Function<FluidStack, Object>, Function<Object, FluidStack>)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "getRawFluidSupplier(net.neoforged.neoforge.fluids.FluidStack)",
+          "getFluid(net.neoforged.neoforge.fluids.FluidStack)",
+          "getAmount(net.neoforged.neoforge.fluids.FluidStack)",
+          "setAmount(net.neoforged.neoforge.fluids.FluidStack, long)",
+          "getPatch(net.neoforged.neoforge.fluids.FluidStack)",
+          "getComponents(net.neoforged.neoforge.fluids.FluidStack)",
+          "applyComponents(net.neoforged.neoforge.fluids.FluidStack, DataComponentPatch)",
+          "applyComponents(net.neoforged.neoforge.fluids.FluidStack, DataComponentMap)",
+          "set(net.neoforged.neoforge.fluids.FluidStack, DataComponentType<D>, D)",
+          "remove(net.neoforged.neoforge.fluids.FluidStack, DataComponentType<? extends D>)",
+          "update(net.neoforged.neoforge.fluids.FluidStack, DataComponentType<D>, D, UnaryOperator<D>)",
+          "update(net.neoforged.neoforge.fluids.FluidStack, DataComponentType<D>, D, U, BiFunction<D, U, D>)",
+          "copy(net.neoforged.neoforge.fluids.FluidStack)",
+          "hashCode(net.neoforged.neoforge.fluids.FluidStack)",
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.architectury.fluid.forge.FluidStackTemplateImpl": [
+          "adapt(Function<FluidStackTemplate, Object>, Function<Object, FluidStackTemplate>)",
+          "of(Supplier<Fluid>, long, DataComponentPatch)",
+          "fluid(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "amount(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "withAmount(net.neoforged.neoforge.fluids.FluidStackTemplate, int)",
+          "components(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "patch(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "apply(net.neoforged.neoforge.fluids.FluidStackTemplate, DataComponentPatch)",
+          "apply(net.neoforged.neoforge.fluids.FluidStackTemplate, int, DataComponentPatch)",
+          "get(net.neoforged.neoforge.fluids.FluidStackTemplate, DataComponentType<D>)",
+          "get(net.neoforged.neoforge.fluids.FluidStackTemplate, Supplier<DataComponentType<D>>)",
+          "copy(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "hashCode(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.architectury.hooks.block.BlockEntityHooks": [
+          "syncData(BlockEntity)"
+        ],
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks": [
+          "getStillTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndLightGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.fluid.forge.ClientFluidStackHooksImpl": [
+          "getStillTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndTintGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.forge.ClientExtensionsRegistryImpl": [
+          "register(Consumer<RegisterClientExtensionsEvent>)",
+          "onEvent(RegisterClientExtensionsEvent)"
+        ],
+        "dev.architectury.hooks.client.screen.forge.ScreenHooksImpl": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.client.screen.ScreenAccess": [],
+        "dev.architectury.hooks.client.screen.ScreenHooks": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.DyeColorHooks": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.fluid.FluidBucketHooks": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.FluidStackHooks": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getLuminosity(Fluid, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.FluidStackTemplateHooks": [
+          "getName(FluidStackTemplate)",
+          "getTranslationKey(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStackTemplate, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(Provider, FluidStackTemplate, Tag)"
+        ],
+        "dev.architectury.hooks.fluid.forge.FluidBucketHooksImpl": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.forge.FluidStackHooksForge": [
+          "fromForge(net.neoforged.neoforge.fluids.FluidStack)",
+          "toForge(FluidStack)"
+        ],
+        "dev.architectury.hooks.fluid.forge.FluidStackHooksImpl": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getLuminosity(Fluid, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.forge.FluidStackTemplateHooksForge": [
+          "fromForge(net.neoforged.neoforge.fluids.FluidStackTemplate)",
+          "toForge(FluidStackTemplate)"
+        ],
+        "dev.architectury.hooks.fluid.forge.FluidStackTemplateHooksImpl": [
+          "getName(FluidStackTemplate)",
+          "getTranslationKey(FluidStackTemplate)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStackTemplate, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "write(Provider, FluidStackTemplate, Tag)"
+        ],
+        "dev.architectury.hooks.fluid.forge.LiquidBlockHooksImpl": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.fluid.LiquidBlockHooks": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.forge.DyeColorHooksImpl": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.forge.PackRepositoryHooksImpl": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.hooks.item.forge.ItemStackHooksImpl": [
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.ItemStackHooks": [
+          "copyWithCount(ItemStack, int)",
+          "giveItem(ServerPlayer, ItemStack)",
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.tool.AxeItemHooks": [
+          "addStrippable(Block, Block)"
+        ],
+        "dev.architectury.hooks.item.tool.forge.HoeItemHooksImpl": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.HoeItemHooks": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.ShovelItemHooks": [
+          "addFlattenable(Block, BlockState)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeHooks": [
+          "getBiomeProperties(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeProperties": [],
+        "dev.architectury.hooks.level.biome.ClimateProperties": [],
+        "dev.architectury.hooks.level.biome.EffectsProperties": [],
+        "dev.architectury.hooks.level.biome.forge.BiomeHooksImpl": [
+          "extractClimateSettings(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.GenerationProperties": [],
+        "dev.architectury.hooks.level.biome.SpawnProperties": [],
+        "dev.architectury.hooks.level.entity.EntityHooks": [
+          "fromCollision(CollisionContext)"
+        ],
+        "dev.architectury.hooks.level.entity.forge.ItemEntityHooksImpl": [
+          "lifespan(final ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.forge.PlayerHooksImpl": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.level.entity.ItemEntityHooks": [
+          "lifespan(ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.PlayerHooks": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.PackRepositoryHooks": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.neoforge.ArchitecturyNeoForge": [],
+        "dev.architectury.networking.ClientSpawnEntityPacket": [
+          "register()"
+        ],
+        "dev.architectury.networking.forge.client.ClientNetworkManagerImpl": [
+          "getClientPlayer()",
+          "getClientRegistryAccess()",
+          "canServerReceive(Identifier)",
+          "sendToServer(T)"
+        ],
+        "dev.architectury.networking.forge.NetworkManagerImpl": [
+          "getAdaptor()",
+          "canServerReceive(Identifier)",
+          "canPlayerReceive(ServerPlayer, Identifier)",
+          "sendToServer(T)",
+          "createAddEntityPacket(Entity, ServerEntity)"
+        ],
+        "dev.architectury.networking.NetworkManager": [
+          "registerS2CPayloadType(Identifier)",
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>)",
+          "registerS2CPayloadType(Identifier, List<PacketTransformer>)",
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>)",
+          "registerReceiver(NetworkManager.Side, Identifier, NetworkManager.NetworkReceiver<RegistryFriendlyByteBuf>)",
+          "registerReceiver(NetworkManager.Side, Identifier, List<PacketTransformer>, NetworkManager.NetworkReceiver<RegistryFriendlyByteBuf>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>, NetworkManager.NetworkReceiver<T>)",
+          "toPacket(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "toPackets(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "toPacket(NetworkManager.Side, T, RegistryAccess)",
+          "toPackets(NetworkManager.Side, T, RegistryAccess)",
+          "collectPackets(PacketSink, NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "collectPackets(PacketSink, NetworkManager.Side, T, RegistryAccess)",
+          "sendToPlayer(ServerPlayer, Identifier, RegistryFriendlyByteBuf)",
+          "sendToPlayers(Iterable<ServerPlayer>, Identifier, RegistryFriendlyByteBuf)",
+          "sendToServer(Identifier, RegistryFriendlyByteBuf)",
+          "sendToPlayer(ServerPlayer, T)",
+          "sendToPlayers(Iterable<ServerPlayer>, T)",
+          "sendToServer(T)"
+        ],
+        "dev.architectury.networking.SpawnEntityPacket": [
+          "create(Entity, ServerEntity)",
+          "register()"
+        ],
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer": [
+          "init(Map<SplitPacketTransformer.PartKey, SplitPacketTransformer.PartData>)"
+        ],
+        "dev.architectury.networking.transformers.PacketCollector": [
+          "accept(Packet<?>)",
+          "collect()"
+        ],
+        "dev.architectury.networking.transformers.PacketSink": [],
+        "dev.architectury.networking.transformers.PacketTransformer": [],
+        "dev.architectury.networking.transformers.SinglePacketCollector": [
+          "accept(Packet<?>)",
+          "getPacket()"
+        ],
+        "dev.architectury.networking.transformers.SplitPacketTransformer": [
+          "inbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, NetworkManager.PacketContext, PacketTransformer.TransformationSink)",
+          "outbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, PacketTransformer.TransformationSink)",
+          "PartData(Identifier, int, List<RegistryFriendlyByteBuf>)",
+          "PartKey(NetworkManager.Side, UUID)"
+        ],
+        "dev.architectury.platform.client.ConfigurationScreenRegistry": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.client.forge.ConfigurationScreenRegistryImpl": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.forge.PlatformImpl": [
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.platform.hooks.EventBusesHooks": [
+          "whenAvailable(String, Consumer<IEventBus>)",
+          "getModEventBus(String)"
+        ],
+        "dev.architectury.platform.Mod": [],
+        "dev.architectury.platform.Platform": [
+          "isFabric()",
+          "isForgeLike()",
+          "isNeoForge()",
+          "getMinecraftVersion()",
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getOptionalMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.plugin.forge.ArchitecturyMixinPlugin": [
+          "onLoad(String)",
+          "getRefMapperConfig()",
+          "shouldApplyMixin(String, String)",
+          "acceptTargets(Set<String>, Set<String>)",
+          "getMixins()",
+          "preApply(String, ClassNode, String, IMixinInfo)",
+          "postApply(String, ClassNode, String, IMixinInfo)"
+        ],
+        "dev.architectury.registry.client.forge.ClientReloadListenerRegistryImpl": [
+          "register(PreparableReloadListener, Identifier, Collection<Identifier>)",
+          "addClientReloadListeners(AddClientReloadListenersEvent)"
+        ],
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.forge.ClientTooltipComponentRegistryImpl": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.forge.MenuScreenRegistryImpl": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.gui.MenuScreenRegistry": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.keymappings.forge.KeyMappingRegistryImpl": [
+          "register(KeyMapping)",
+          "event(RegisterKeyMappingsEvent)"
+        ],
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry": [
+          "register(KeyMapping)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)"
+        ],
+        "dev.architectury.registry.client.level.entity.forge.EntityModelLayerRegistryImpl": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)",
+          "event(RegisterLayerDefinitions)"
+        ],
+        "dev.architectury.registry.client.level.entity.forge.EntityRendererRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)",
+          "event(RegisterRenderers)"
+        ],
+        "dev.architectury.registry.client.particle.forge.ParticleProviderRegistryImpl": [
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)",
+          "onParticleFactoryRegister(RegisterParticleProvidersEvent)"
+        ],
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry": [
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProvider<T>)",
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProviderRegistry.DeferredParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)"
+        ],
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry": [
+          "registerBlockColors(BlockTintSource, Block...)",
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.client.rendering.forge.BlockEntityRendererRegistryImpl": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.forge.ColorHandlerRegistryImpl": [
+          "onBlockColorEvent(BlockTintSources)",
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.CreativeTabOutput": [
+          "accept(ItemStack, TabVisibility)",
+          "acceptAfter(ItemStack, ItemStack)",
+          "acceptAfter(ItemStack, ItemLike, TabVisibility)",
+          "acceptAfter(ItemStack, ItemLike)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>)",
+          "acceptAfter(ItemLike, ItemStack)",
+          "acceptAfter(ItemLike, ItemLike, TabVisibility)",
+          "acceptAfter(ItemLike, ItemLike)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>)",
+          "acceptBefore(ItemStack, ItemStack)",
+          "acceptBefore(ItemStack, ItemLike, TabVisibility)",
+          "acceptBefore(ItemStack, ItemLike)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>)",
+          "acceptBefore(ItemLike, ItemStack)",
+          "acceptBefore(ItemLike, ItemLike, TabVisibility)",
+          "acceptBefore(ItemLike, ItemLike)",
+          "acceptAllBefore(ItemLike, Collection<ItemStack>, TabVisibility)"
+        ],
+        "dev.architectury.registry.CreativeTabRegistry": [
+          "create(Component, Supplier<ItemStack>)",
+          "create(Consumer<Builder>)",
+          "ofBuiltin(CreativeModeTab)",
+          "defer(Identifier)",
+          "defer(ResourceKey<CreativeModeTab>)",
+          "modifyBuiltin(CreativeModeTab, CreativeTabRegistry.ModifyTabCallback)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendBuiltin(CreativeModeTab, ItemLike...)",
+          "appendBuiltin(CreativeModeTab, T...)",
+          "appendBuiltinStack(CreativeModeTab, ItemStack...)",
+          "appendBuiltinStack(CreativeModeTab, Supplier<ItemStack>...)",
+          "append(DeferredSupplier<CreativeModeTab>, ItemLike...)",
+          "append(DeferredSupplier<CreativeModeTab>, T...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, ItemStack...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Stream<Supplier<ItemStack>>)",
+          "append(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "append(ResourceKey<CreativeModeTab>, T...)",
+          "appendStack(ResourceKey<CreativeModeTab>, ItemStack...)"
+        ],
+        "dev.architectury.registry.forge.CreativeTabRegistryImpl": [
+          "event(BuildCreativeModeTabContentsEvent)",
+          "create(Consumer<Builder>)",
+          "ofBuiltin(final CreativeModeTab)",
+          "defer(final Identifier)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)"
+        ],
+        "dev.architectury.registry.forge.ReloadListenerRegistryImpl": [
+          "register(PackType, PreparableReloadListener, Identifier, Collection<Identifier>)",
+          "addServerReloadListeners(AddServerReloadListenersEvent)"
+        ],
+        "dev.architectury.registry.fuel.forge.FuelRegistryImpl": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)",
+          "event(FurnaceFuelBurnTimeEvent)"
+        ],
+        "dev.architectury.registry.fuel.FuelRegistry": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)"
+        ],
+        "dev.architectury.registry.level.biome.BiomeModifications": [
+          "addProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.biome.forge.BiomeModificationsImpl": [
+          "init()",
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)"
+        ],
+        "dev.architectury.registry.level.entity.forge.EntityAttributeRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)",
+          "event(EntityAttributeCreationEvent)"
+        ],
+        "dev.architectury.registry.level.entity.forge.SpawnPlacementsRegistryImpl": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.menu.ExtendedMenuProvider": [],
+        "dev.architectury.registry.menu.forge.MenuRegistryImpl": [
+          "openExtendedMenu(ServerPlayer, ExtendedMenuProvider)",
+          "of(MenuRegistry.SimpleMenuTypeFactory<T>)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.menu.MenuRegistry": [
+          "openExtendedMenu(ServerPlayer, final MenuProvider, final Consumer<FriendlyByteBuf>)",
+          "openExtendedMenu(ServerPlayer, ExtendedMenuProvider)",
+          "openMenu(ServerPlayer, MenuProvider)",
+          "of(MenuRegistry.SimpleMenuTypeFactory<T>)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.registries.DeferredRegister": [
+          "create(String, ResourceKey<Registry<T>>)",
+          "register(String, Supplier<? extends R>)",
+          "register(Identifier, Supplier<? extends R>)",
+          "register()",
+          "iterator()",
+          "getRegistrarManager()",
+          "getRegistrar()"
+        ],
+        "dev.architectury.registry.registries.DeferredSupplier": [
+          "getRegistryKey()",
+          "getKey()"
+        ],
+        "dev.architectury.registry.registries.forge.RegistrarManagerImpl": [
+          "_get(String)"
+        ],
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption": [],
+        "dev.architectury.registry.registries.options.RegistrarOption": [],
+        "dev.architectury.registry.registries.options.StandardRegistrarOption": [],
+        "dev.architectury.registry.registries.Registrar": [
+          "wrap(R)",
+          "getHolder(Identifier)",
+          "listen(RegistrySupplier<R>, Consumer<R>)"
+        ],
+        "dev.architectury.registry.registries.RegistrarBuilder": [
+          "syncToClients()"
+        ],
+        "dev.architectury.registry.registries.RegistrarManager": [
+          "get(String)",
+          "get(ResourceKey<Registry<T>>)",
+          "get(Registry<T>)",
+          "forRegistry(ResourceKey<Registry<T>>, Consumer<Registrar<T>>)",
+          "builder(Identifier, T...)",
+          "getId(T, ResourceKey<Registry<T>>)",
+          "getId(T, Registry<T>)",
+          "getModId()"
+        ],
+        "dev.architectury.registry.registries.RegistrySupplier": [
+          "listen(Consumer<T>)"
+        ],
+        "dev.architectury.registry.ReloadListenerRegistry": [
+          "register(PackType, PreparableReloadListener, Identifier)",
+          "register(PackType, PreparableReloadListener, Identifier, Collection<Identifier>)"
+        ],
+        "dev.architectury.utils.Amount": [
+          "toInt(long)"
+        ],
+        "dev.architectury.utils.ArchitecturyConstants": [],
+        "dev.architectury.utils.Env": [
+          "fromPlatform(Object)",
+          "toPlatform()"
+        ],
+        "dev.architectury.utils.EnvExecutor": [
+          "runInEnv(Dist, Supplier<Runnable>)",
+          "runInEnv(Env, Supplier<Runnable>)",
+          "getInEnv(Dist, Supplier<Supplier<T>>)",
+          "getInEnv(Env, Supplier<Supplier<T>>)",
+          "getEnvSpecific(Supplier<Supplier<T>>, Supplier<Supplier<T>>)"
+        ],
+        "dev.architectury.utils.forge.GameInstanceImpl": [
+          "getServer()"
+        ],
+        "dev.architectury.utils.GameInstance": [
+          "getServer()"
+        ],
+        "dev.architectury.utils.OptionalSupplier": [
+          "getOrNull()",
+          "toOptional()",
+          "ifPresent(Consumer<? super T>)",
+          "ifPresentOrElse(Consumer<? super T>, Runnable)",
+          "stream()",
+          "orElse(T)",
+          "orElseGet(Supplier<? extends T>)"
+        ],
+        "dev.architectury.utils.PlatformExpectedError": [],
+        "dev.architectury.utils.value.BooleanValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.DoubleValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.FloatSupplier": [],
+        "dev.architectury.utils.value.FloatValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.IntValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.LongValue": [
+          "get()"
+        ],
+        "dev.architectury.utils.value.Value": []
+      },
+      "sampleCount": 174
+    },
+    "20.0.4": {
+      "packages": [],
+      "classes": [
+        "dev.architectury.compat.fabric.ModMenuCompatibility",
+        "dev.architectury.core.block.ArchitecturyLiquidBlock",
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid",
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes",
+        "dev.architectury.core.fluid.fabric.ArchitecturyFlowingFluidImpl",
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes",
+        "dev.architectury.core.item.ArchitecturyBucketItem",
+        "dev.architectury.event.CompoundEventResult",
+        "dev.architectury.event.Event",
+        "dev.architectury.event.EventActor",
+        "dev.architectury.event.EventFactory",
+        "dev.architectury.event.EventHandler",
+        "dev.architectury.event.EventResult",
+        "dev.architectury.event.events.client.ClientChatEvent",
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent",
+        "dev.architectury.event.events.client.ClientGuiEvent",
+        "dev.architectury.event.events.client.ClientLifecycleEvent",
+        "dev.architectury.event.events.client.ClientPlayerEvent",
+        "dev.architectury.event.events.client.ClientRawInputEvent",
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent",
+        "dev.architectury.event.events.client.ClientScreenInputEvent",
+        "dev.architectury.event.events.client.ClientSystemMessageEvent",
+        "dev.architectury.event.events.client.ClientTickEvent",
+        "dev.architectury.event.events.client.ClientTooltipEvent",
+        "dev.architectury.event.events.common.BlockEvent",
+        "dev.architectury.event.events.common.ChatEvent",
+        "dev.architectury.event.events.common.ChunkEvent",
+        "dev.architectury.event.events.common.CommandPerformEvent",
+        "dev.architectury.event.events.common.CommandRegistrationEvent",
+        "dev.architectury.event.events.common.EntityEvent",
+        "dev.architectury.event.events.common.ExplosionEvent",
+        "dev.architectury.event.events.common.InteractionEvent",
+        "dev.architectury.event.events.common.LifecycleEvent",
+        "dev.architectury.event.events.common.LightningEvent",
+        "dev.architectury.event.events.common.LootEvent",
+        "dev.architectury.event.events.common.PlayerEvent",
+        "dev.architectury.event.events.common.TickEvent",
+        "dev.architectury.event.fabric.EventFactoryImpl",
+        "dev.architectury.event.fabric.EventHandlerImpl",
+        "dev.architectury.extensions.injected.InjectedBlockExtension",
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension",
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension",
+        "dev.architectury.extensions.injected.InjectedFluidExtension",
+        "dev.architectury.extensions.injected.InjectedItemExtension",
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension",
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension",
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension",
+        "dev.architectury.extensions.network.EntitySpawnExtension",
+        "dev.architectury.fluid.fabric.FluidStackImpl",
+        "dev.architectury.fluid.FluidStack",
+        "dev.architectury.hooks.block.BlockEntityHooks",
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks",
+        "dev.architectury.hooks.client.fluid.fabric.ClientFluidStackHooksImpl",
+        "dev.architectury.hooks.client.screen.fabric.ScreenHooksImpl",
+        "dev.architectury.hooks.client.screen.ScreenAccess",
+        "dev.architectury.hooks.client.screen.ScreenHooks",
+        "dev.architectury.hooks.DyeColorHooks",
+        "dev.architectury.hooks.fabric.DyeColorHooksImpl",
+        "dev.architectury.hooks.fabric.PackRepositoryHooksImpl",
+        "dev.architectury.hooks.fabric.PersistentEntitySectionManagerHooks",
+        "dev.architectury.hooks.fluid.fabric.FluidBucketHooksImpl",
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksFabric",
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl",
+        "dev.architectury.hooks.fluid.fabric.LiquidBlockHooksImpl",
+        "dev.architectury.hooks.fluid.FluidBucketHooks",
+        "dev.architectury.hooks.fluid.FluidStackHooks",
+        "dev.architectury.hooks.fluid.LiquidBlockHooks",
+        "dev.architectury.hooks.item.fabric.ItemStackHooksImpl",
+        "dev.architectury.hooks.item.ItemStackHooks",
+        "dev.architectury.hooks.item.tool.AxeItemHooks",
+        "dev.architectury.hooks.item.tool.fabric.HoeItemHooksImpl",
+        "dev.architectury.hooks.item.tool.HoeItemHooks",
+        "dev.architectury.hooks.item.tool.ShovelItemHooks",
+        "dev.architectury.hooks.level.biome.BiomeHooks",
+        "dev.architectury.hooks.level.biome.BiomeProperties",
+        "dev.architectury.hooks.level.biome.ClimateProperties",
+        "dev.architectury.hooks.level.biome.EffectsProperties",
+        "dev.architectury.hooks.level.biome.fabric.BiomeHooksImpl",
+        "dev.architectury.hooks.level.biome.GenerationProperties",
+        "dev.architectury.hooks.level.biome.SpawnProperties",
+        "dev.architectury.hooks.level.entity.EntityHooks",
+        "dev.architectury.hooks.level.entity.fabric.EntityHooksImpl",
+        "dev.architectury.hooks.level.entity.fabric.FakePlayers",
+        "dev.architectury.hooks.level.entity.fabric.ItemEntityHooksImpl",
+        "dev.architectury.hooks.level.entity.fabric.PlayerHooksImpl",
+        "dev.architectury.hooks.level.entity.ItemEntityHooks",
+        "dev.architectury.hooks.level.entity.PlayerHooks",
+        "dev.architectury.hooks.PackRepositoryHooks",
+        "dev.architectury.init.fabric.ArchitecturyClient",
+        "dev.architectury.init.fabric.ArchitecturyServer",
+        "dev.architectury.networking.client.fabric.ClientNetworkManagerImpl",
+        "dev.architectury.networking.ClientSpawnEntityPacket",
+        "dev.architectury.networking.fabric.NetworkManagerImpl",
+        "dev.architectury.networking.NetworkManager",
+        "dev.architectury.networking.SpawnEntityPacket",
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer",
+        "dev.architectury.networking.transformers.PacketCollector",
+        "dev.architectury.networking.transformers.PacketSink",
+        "dev.architectury.networking.transformers.PacketTransformer",
+        "dev.architectury.networking.transformers.SinglePacketCollector",
+        "dev.architectury.networking.transformers.SplitPacketTransformer",
+        "dev.architectury.platform.client.ConfigurationScreenRegistry",
+        "dev.architectury.platform.client.fabric.ConfigurationScreenRegistryImpl",
+        "dev.architectury.platform.fabric.PlatformImpl",
+        "dev.architectury.platform.Mod",
+        "dev.architectury.platform.Platform",
+        "dev.architectury.plugin.fabric.ArchitecturyMixinPlugin",
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry",
+        "dev.architectury.registry.client.gui.fabric.ClientTooltipComponentRegistryImpl",
+        "dev.architectury.registry.client.gui.fabric.MenuScreenRegistryImpl",
+        "dev.architectury.registry.client.gui.MenuScreenRegistry",
+        "dev.architectury.registry.client.keymappings.fabric.KeyMappingRegistryImpl",
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry",
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry",
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry",
+        "dev.architectury.registry.client.level.entity.fabric.EntityModelLayerRegistryImpl",
+        "dev.architectury.registry.client.level.entity.fabric.EntityRendererRegistryImpl",
+        "dev.architectury.registry.client.particle.fabric.ParticleProviderRegistryImpl",
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry",
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry",
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry",
+        "dev.architectury.registry.client.rendering.fabric.BlockEntityRendererRegistryImpl",
+        "dev.architectury.registry.client.rendering.fabric.ColorHandlerRegistryImpl",
+        "dev.architectury.registry.CreativeTabOutput",
+        "dev.architectury.registry.CreativeTabRegistry",
+        "dev.architectury.registry.fabric.CreativeTabRegistryImpl",
+        "dev.architectury.registry.fabric.ReloadListenerRegistryImpl",
+        "dev.architectury.registry.fuel.fabric.FuelRegistryImpl",
+        "dev.architectury.registry.fuel.FuelRegistry",
+        "dev.architectury.registry.level.biome.BiomeModifications",
+        "dev.architectury.registry.level.biome.fabric.BiomeModificationsImpl",
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry",
+        "dev.architectury.registry.level.entity.fabric.EntityAttributeRegistryImpl",
+        "dev.architectury.registry.level.entity.fabric.SpawnPlacementsRegistryImpl",
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry",
+        "dev.architectury.registry.menu.ExtendedMenuProvider",
+        "dev.architectury.registry.menu.fabric.MenuRegistryImpl",
+        "dev.architectury.registry.menu.MenuRegistry",
+        "dev.architectury.registry.registries.DeferredRegister",
+        "dev.architectury.registry.registries.DeferredSupplier",
+        "dev.architectury.registry.registries.fabric.RegistrarManagerImpl",
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption",
+        "dev.architectury.registry.registries.options.RegistrarOption",
+        "dev.architectury.registry.registries.options.StandardRegistrarOption",
+        "dev.architectury.registry.registries.Registrar",
+        "dev.architectury.registry.registries.RegistrarBuilder",
+        "dev.architectury.registry.registries.RegistrarManager",
+        "dev.architectury.registry.registries.RegistrySupplier",
+        "dev.architectury.registry.ReloadListenerRegistry",
+        "dev.architectury.utils.Amount",
+        "dev.architectury.utils.ArchitecturyConstants",
+        "dev.architectury.utils.Env",
+        "dev.architectury.utils.EnvExecutor",
+        "dev.architectury.utils.fabric.GameInstanceImpl",
+        "dev.architectury.utils.GameInstance",
+        "dev.architectury.utils.OptionalSupplier"
+      ],
+      "methods": {
+        "dev.architectury.compat.fabric.ModMenuCompatibility": [
+          "getProvidedConfigScreenFactories()"
+        ],
+        "dev.architectury.core.block.ArchitecturyLiquidBlock": [],
+        "dev.architectury.core.fluid.ArchitecturyFlowingFluid": [
+          "getFlowing()",
+          "getSource()",
+          "canConvertToSource(ServerLevel)",
+          "beforeDestroyingBlock(LevelAccessor, BlockPos, BlockState)",
+          "getSlopeFindDistance(LevelReader)",
+          "getDropOff(LevelReader)",
+          "getBucket()",
+          "canBeReplacedWith(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "getTickDelay(LevelReader)",
+          "getExplosionResistance()",
+          "createLegacyBlock(FluidState)",
+          "getPickupSound()",
+          "isSame(Fluid)"
+        ],
+        "dev.architectury.core.fluid.ArchitecturyFluidAttributes": [
+          "getTranslationKey()",
+          "getName(FluidStack)",
+          "getName()",
+          "getSlopeFindDistance()",
+          "getDropOff()",
+          "getTickDelay()",
+          "getSourceTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getSourceTexture(FluidStack)",
+          "getSourceTexture()",
+          "getFlowingTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture()",
+          "getOverlayTexture(FluidState, BlockAndLightGetter, BlockPos)",
+          "getOverlayTexture(FluidStack)",
+          "getOverlayTexture()",
+          "getColor(FluidState, BlockAndLightGetter, BlockPos)",
+          "getColor(FluidStack)",
+          "getColor()",
+          "getLuminosity(FluidStack)",
+          "getLuminosity()"
+        ],
+        "dev.architectury.core.fluid.fabric.ArchitecturyFlowingFluidImpl": [
+          "addFabricFluidAttributes(FlowingFluid, ArchitecturyFluidAttributes)",
+          "getAttributes(Fluid)"
+        ],
+        "dev.architectury.core.fluid.SimpleArchitecturyFluidAttributes": [
+          "ofSupplier(Supplier<? extends Supplier<? extends Fluid>>, Supplier<? extends Supplier<? extends Fluid>>)",
+          "of(Supplier<? extends Fluid>, Supplier<? extends Fluid>)",
+          "convertToSource(boolean)",
+          "slopeFindDistance(int)",
+          "dropOff(int)",
+          "bucketItemSupplier(Supplier<RegistrySupplier<? extends Item>>)",
+          "bucketItem(RegistrySupplier<Item>)",
+          "bucketItem(Supplier<? extends Optional<? extends Item>>)",
+          "tickDelay(int)",
+          "explosionResistance(float)",
+          "blockSupplier(Supplier<RegistrySupplier<? extends LiquidBlock>>)",
+          "block(RegistrySupplier<? extends LiquidBlock>)",
+          "block(Supplier<? extends Optional<? extends LiquidBlock>>)",
+          "sourceTexture(Identifier)",
+          "flowingTexture(Identifier)",
+          "overlayTexture(Identifier)",
+          "color(int)",
+          "luminosity(int)",
+          "density(int)",
+          "temperature(int)"
+        ],
+        "dev.architectury.core.item.ArchitecturyBucketItem": [
+          "getContainedFluid()"
+        ],
+        "dev.architectury.event.CompoundEventResult": [
+          "pass()",
+          "interrupt(Boolean, T)",
+          "interruptTrue(T)",
+          "interruptDefault(T)",
+          "interruptFalse(T)",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "result()",
+          "object()"
+        ],
+        "dev.architectury.event.Event": [],
+        "dev.architectury.event.EventActor": [],
+        "dev.architectury.event.EventFactory": [
+          "of(Function<List<T>, T>)",
+          "createLoop(T...)",
+          "createLoop(Class<T>)",
+          "createEventResult(T...)",
+          "createEventResult(Class<T>)",
+          "createCompoundEventResult(T...)",
+          "createCompoundEventResult(Class<T>)",
+          "createInteractionResult(T...)",
+          "createInteractionResult(Class<T>)",
+          "createConsumerLoop(T...)",
+          "createConsumerLoop(Class<T>)",
+          "createEventActorLoop(T...)",
+          "createEventActorLoop(Class<T>)",
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.EventHandler": [
+          "init()"
+        ],
+        "dev.architectury.event.EventResult": [
+          "pass()",
+          "interrupt(Boolean)",
+          "interruptTrue()",
+          "interruptDefault()",
+          "interruptFalse()",
+          "interruptsFurtherEvaluation()",
+          "value()",
+          "isEmpty()",
+          "isPresent()",
+          "isTrue()",
+          "isFalse()",
+          "asMinecraft()"
+        ],
+        "dev.architectury.event.events.client.ClientChatEvent": [],
+        "dev.architectury.event.events.client.ClientCommandRegistrationEvent": [],
+        "dev.architectury.event.events.client.ClientGuiEvent": [],
+        "dev.architectury.event.events.client.ClientLifecycleEvent": [],
+        "dev.architectury.event.events.client.ClientPlayerEvent": [],
+        "dev.architectury.event.events.client.ClientRawInputEvent": [],
+        "dev.architectury.event.events.client.ClientRecipeUpdateEvent": [],
+        "dev.architectury.event.events.client.ClientScreenInputEvent": [],
+        "dev.architectury.event.events.client.ClientSystemMessageEvent": [],
+        "dev.architectury.event.events.client.ClientTickEvent": [],
+        "dev.architectury.event.events.client.ClientTooltipEvent": [],
+        "dev.architectury.event.events.common.BlockEvent": [],
+        "dev.architectury.event.events.common.ChatEvent": [],
+        "dev.architectury.event.events.common.ChunkEvent": [],
+        "dev.architectury.event.events.common.CommandPerformEvent": [
+          "getResults()",
+          "setResults(ParseResults<CommandSourceStack>)",
+          "getThrowable()",
+          "setThrowable(Throwable)"
+        ],
+        "dev.architectury.event.events.common.CommandRegistrationEvent": [],
+        "dev.architectury.event.events.common.EntityEvent": [],
+        "dev.architectury.event.events.common.ExplosionEvent": [],
+        "dev.architectury.event.events.common.InteractionEvent": [],
+        "dev.architectury.event.events.common.LifecycleEvent": [],
+        "dev.architectury.event.events.common.LightningEvent": [],
+        "dev.architectury.event.events.common.LootEvent": [],
+        "dev.architectury.event.events.common.PlayerEvent": [],
+        "dev.architectury.event.events.common.TickEvent": [],
+        "dev.architectury.event.fabric.EventFactoryImpl": [
+          "attachToForge(Event<Consumer<T>>)",
+          "attachToForgeEventActor(Event<EventActor<T>>)",
+          "attachToForgeEventActorCancellable(Event<EventActor<T>>)"
+        ],
+        "dev.architectury.event.fabric.EventHandlerImpl": [
+          "registerClient()",
+          "registerCommon()",
+          "registerServer()"
+        ],
+        "dev.architectury.extensions.injected.InjectedBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedBucketItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedEntityTypeExtension": [],
+        "dev.architectury.extensions.injected.InjectedFluidExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemExtension": [],
+        "dev.architectury.extensions.injected.InjectedItemPropertiesExtension": [],
+        "dev.architectury.extensions.injected.InjectedLiquidBlockExtension": [],
+        "dev.architectury.extensions.injected.InjectedRegistryEntryExtension": [],
+        "dev.architectury.extensions.network.EntitySpawnExtension": [],
+        "dev.architectury.fluid.fabric.FluidStackImpl": [
+          "adapt(Function<FluidStack, Object>, Function<Object, FluidStack>)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "getRawFluidSupplier(FluidStackImpl.Pair)",
+          "getFluid(FluidStackImpl.Pair)",
+          "getAmount(FluidStackImpl.Pair)",
+          "setAmount(FluidStackImpl.Pair, long)",
+          "getPatch(FluidStackImpl.Pair)",
+          "getComponents(FluidStackImpl.Pair)",
+          "applyComponents(FluidStackImpl.Pair, DataComponentPatch)",
+          "applyComponents(FluidStackImpl.Pair, DataComponentMap)",
+          "set(FluidStackImpl.Pair, DataComponentType<D>, D)",
+          "remove(FluidStackImpl.Pair, DataComponentType<? extends D>)",
+          "update(FluidStackImpl.Pair, DataComponentType<D>, D, UnaryOperator<D>)",
+          "update(FluidStackImpl.Pair, DataComponentType<D>, D, U, BiFunction<D, U, D>)",
+          "copy(FluidStackImpl.Pair)",
+          "hashCode(FluidStackImpl.Pair)",
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.architectury.fluid.FluidStack": [
+          "empty()",
+          "create(Fluid, long, DataComponentPatch)",
+          "create(Fluid, long)",
+          "create(Supplier<Fluid>, long, DataComponentPatch)",
+          "create(Supplier<Fluid>, long)",
+          "create(Holder<Fluid>, long, DataComponentPatch)",
+          "create(Holder<Fluid>, long)",
+          "create(FluidStack, long)",
+          "bucketAmount()",
+          "getFluid()",
+          "getRawFluid()",
+          "getRawFluidSupplier()",
+          "isEmpty()",
+          "getAmount()",
+          "setAmount(long)",
+          "grow(long)",
+          "shrink(long)",
+          "getPatch()",
+          "getComponents()",
+          "applyComponents(DataComponentPatch)"
+        ],
+        "dev.architectury.hooks.block.BlockEntityHooks": [
+          "syncData(BlockEntity)"
+        ],
+        "dev.architectury.hooks.client.fluid.ClientFluidStackHooks": [
+          "getStillTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndLightGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndLightGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.fluid.fabric.ClientFluidStackHooksImpl": [
+          "getStillTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(Fluid)",
+          "getFlowingTexture(BlockAndTintGetter, BlockPos, FluidState)",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(Fluid)",
+          "getColor(BlockAndLightGetter, BlockPos, FluidState)",
+          "getColor(FluidStack)",
+          "getColor(Fluid)"
+        ],
+        "dev.architectury.hooks.client.screen.fabric.ScreenHooksImpl": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.client.screen.ScreenAccess": [],
+        "dev.architectury.hooks.client.screen.ScreenHooks": [
+          "getNarratables(Screen)",
+          "getRenderables(Screen)",
+          "addRenderableWidget(Screen, T)",
+          "addRenderableOnly(Screen, T)",
+          "addWidget(Screen, T)"
+        ],
+        "dev.architectury.hooks.DyeColorHooks": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.fabric.DyeColorHooksImpl": [
+          "getColorValue(DyeColor)"
+        ],
+        "dev.architectury.hooks.fabric.PackRepositoryHooksImpl": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.hooks.fabric.PersistentEntitySectionManagerHooks": [],
+        "dev.architectury.hooks.fluid.fabric.FluidBucketHooksImpl": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksFabric": [
+          "fromFabric(StorageView<FluidVariant>)",
+          "fromFabric(FluidVariant, long)",
+          "toFabric(FluidStack)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.FluidStackHooksImpl": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getLuminosity(Fluid, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.fabric.LiquidBlockHooksImpl": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.fluid.FluidBucketHooks": [
+          "getFluid(BucketItem)"
+        ],
+        "dev.architectury.hooks.fluid.FluidStackHooks": [
+          "getName(FluidStack)",
+          "getTranslationKey(FluidStack)",
+          "read(RegistryFriendlyByteBuf)",
+          "write(FluidStack, RegistryFriendlyByteBuf)",
+          "read(Provider, Tag)",
+          "readOptional(Provider, CompoundTag)",
+          "write(Provider, FluidStack, Tag)",
+          "bucketAmount()",
+          "getLuminosity(FluidStack, Level, BlockPos)",
+          "getLuminosity(Fluid, Level, BlockPos)",
+          "getTemperature(FluidStack, Level, BlockPos)",
+          "getTemperature(Fluid, Level, BlockPos)",
+          "getViscosity(FluidStack, Level, BlockPos)",
+          "getViscosity(Fluid, Level, BlockPos)"
+        ],
+        "dev.architectury.hooks.fluid.LiquidBlockHooks": [
+          "getFluid(LiquidBlock)"
+        ],
+        "dev.architectury.hooks.item.fabric.ItemStackHooksImpl": [
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.ItemStackHooks": [
+          "copyWithCount(ItemStack, int)",
+          "giveItem(ServerPlayer, ItemStack)",
+          "hasCraftingRemainingItem(ItemStack)",
+          "getCraftingRemainingItem(ItemStack)"
+        ],
+        "dev.architectury.hooks.item.tool.AxeItemHooks": [
+          "addStrippable(Block, Block)"
+        ],
+        "dev.architectury.hooks.item.tool.fabric.HoeItemHooksImpl": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.HoeItemHooks": [
+          "addTillable(Block, Predicate<UseOnContext>, Consumer<UseOnContext>, Function<UseOnContext, BlockState>)"
+        ],
+        "dev.architectury.hooks.item.tool.ShovelItemHooks": [
+          "addFlattenable(Block, BlockState)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeHooks": [
+          "getBiomeProperties(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.BiomeProperties": [],
+        "dev.architectury.hooks.level.biome.ClimateProperties": [],
+        "dev.architectury.hooks.level.biome.EffectsProperties": [],
+        "dev.architectury.hooks.level.biome.fabric.BiomeHooksImpl": [
+          "extractClimateSettings(Biome)"
+        ],
+        "dev.architectury.hooks.level.biome.GenerationProperties": [],
+        "dev.architectury.hooks.level.biome.SpawnProperties": [],
+        "dev.architectury.hooks.level.entity.EntityHooks": [
+          "fromCollision(CollisionContext)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.EntityHooksImpl": [
+          "wrapEntityInLevelCallback(final Entity, final EntityInLevelCallback)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.FakePlayers": [],
+        "dev.architectury.hooks.level.entity.fabric.ItemEntityHooksImpl": [
+          "lifespan(ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.fabric.PlayerHooksImpl": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.level.entity.ItemEntityHooks": [
+          "lifespan(ItemEntity)"
+        ],
+        "dev.architectury.hooks.level.entity.PlayerHooks": [
+          "isFake(Player)"
+        ],
+        "dev.architectury.hooks.PackRepositoryHooks": [
+          "addSource(PackRepository, RepositorySource)"
+        ],
+        "dev.architectury.init.fabric.ArchitecturyClient": [
+          "init()"
+        ],
+        "dev.architectury.init.fabric.ArchitecturyServer": [
+          "init()"
+        ],
+        "dev.architectury.networking.client.fabric.ClientNetworkManagerImpl": [
+          "registerS2C(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)"
+        ],
+        "dev.architectury.networking.ClientSpawnEntityPacket": [
+          "register()"
+        ],
+        "dev.architectury.networking.fabric.NetworkManagerImpl": [
+          "getAdaptor()",
+          "context(final Player, final BlockableEventLoop<?>, final boolean)",
+          "canServerReceive(Identifier)",
+          "canPlayerReceive(ServerPlayer, Identifier)",
+          "sendToServer(T)",
+          "createAddEntityPacket(Entity, ServerEntity)"
+        ],
+        "dev.architectury.networking.NetworkManager": [
+          "registerS2CPayloadType(Identifier)",
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>)",
+          "registerS2CPayloadType(Identifier, List<PacketTransformer>)",
+          "registerS2CPayloadType(Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>)",
+          "registerReceiver(NetworkManager.Side, Identifier, NetworkManager.NetworkReceiver<RegistryFriendlyByteBuf>)",
+          "registerReceiver(NetworkManager.Side, Identifier, List<PacketTransformer>, NetworkManager.NetworkReceiver<RegistryFriendlyByteBuf>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, NetworkManager.NetworkReceiver<T>)",
+          "registerReceiver(NetworkManager.Side, Type<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>, List<PacketTransformer>, NetworkManager.NetworkReceiver<T>)",
+          "toPacket(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "toPackets(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "toPacket(NetworkManager.Side, T, RegistryAccess)",
+          "toPackets(NetworkManager.Side, T, RegistryAccess)",
+          "collectPackets(PacketSink, NetworkManager.Side, Identifier, RegistryFriendlyByteBuf)",
+          "collectPackets(PacketSink, NetworkManager.Side, T, RegistryAccess)",
+          "sendToPlayer(ServerPlayer, Identifier, RegistryFriendlyByteBuf)",
+          "sendToPlayers(Iterable<ServerPlayer>, Identifier, RegistryFriendlyByteBuf)",
+          "sendToServer(Identifier, RegistryFriendlyByteBuf)",
+          "sendToPlayer(ServerPlayer, T)",
+          "sendToPlayers(Iterable<ServerPlayer>, T)",
+          "sendToServer(T)"
+        ],
+        "dev.architectury.networking.SpawnEntityPacket": [
+          "create(Entity, ServerEntity)",
+          "register()"
+        ],
+        "dev.architectury.networking.transformers.client.ClientSplitPacketTransformer": [
+          "init(Map<SplitPacketTransformer.PartKey, SplitPacketTransformer.PartData>)"
+        ],
+        "dev.architectury.networking.transformers.PacketCollector": [
+          "accept(Packet<?>)",
+          "collect()"
+        ],
+        "dev.architectury.networking.transformers.PacketSink": [],
+        "dev.architectury.networking.transformers.PacketTransformer": [],
+        "dev.architectury.networking.transformers.SinglePacketCollector": [
+          "accept(Packet<?>)",
+          "getPacket()"
+        ],
+        "dev.architectury.networking.transformers.SplitPacketTransformer": [
+          "inbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, NetworkManager.PacketContext, PacketTransformer.TransformationSink)",
+          "outbound(NetworkManager.Side, Identifier, RegistryFriendlyByteBuf, PacketTransformer.TransformationSink)",
+          "PartData(Identifier, int, List<RegistryFriendlyByteBuf>)",
+          "PartKey(NetworkManager.Side, UUID)"
+        ],
+        "dev.architectury.platform.client.ConfigurationScreenRegistry": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.client.fabric.ConfigurationScreenRegistryImpl": [
+          "register(Mod, ConfigurationScreenRegistry.ConfigurationScreenProvider)"
+        ],
+        "dev.architectury.platform.fabric.PlatformImpl": [
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.platform.Mod": [],
+        "dev.architectury.platform.Platform": [
+          "isFabric()",
+          "isForgeLike()",
+          "isNeoForge()",
+          "getMinecraftVersion()",
+          "getGameFolder()",
+          "getConfigFolder()",
+          "getModsFolder()",
+          "getEnvironment()",
+          "getEnv()",
+          "isModLoaded(String)",
+          "getMod(String)",
+          "getOptionalMod(String)",
+          "getMods()",
+          "getModIds()",
+          "isDevelopmentEnvironment()"
+        ],
+        "dev.architectury.plugin.fabric.ArchitecturyMixinPlugin": [
+          "onLoad(String)",
+          "getRefMapperConfig()",
+          "shouldApplyMixin(String, String)",
+          "acceptTargets(Set<String>, Set<String>)",
+          "getMixins()",
+          "preApply(String, ClassNode, String, IMixinInfo)",
+          "postApply(String, ClassNode, String, IMixinInfo)"
+        ],
+        "dev.architectury.registry.client.gui.ClientTooltipComponentRegistry": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.fabric.ClientTooltipComponentRegistryImpl": [
+          "register(Class<T>, Function<? super T, ? extends ClientTooltipComponent>)"
+        ],
+        "dev.architectury.registry.client.gui.fabric.MenuScreenRegistryImpl": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.gui.MenuScreenRegistry": [
+          "registerScreenFactory(MenuType<? extends H>, MenuScreenRegistry.ScreenFactory<H, S>)"
+        ],
+        "dev.architectury.registry.client.keymappings.fabric.KeyMappingRegistryImpl": [
+          "register(KeyMapping)"
+        ],
+        "dev.architectury.registry.client.keymappings.KeyMappingRegistry": [
+          "register(KeyMapping)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityModelLayerRegistry": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "dev.architectury.registry.client.level.entity.EntityRendererRegistry": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)"
+        ],
+        "dev.architectury.registry.client.level.entity.fabric.EntityModelLayerRegistryImpl": [
+          "register(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "dev.architectury.registry.client.level.entity.fabric.EntityRendererRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends T>>, EntityRendererProvider<T>)"
+        ],
+        "dev.architectury.registry.client.particle.fabric.ParticleProviderRegistryImpl": [
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)"
+        ],
+        "dev.architectury.registry.client.particle.ParticleProviderRegistry": [
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProvider<T>)",
+          "register(RegistrySupplier<? extends ParticleType<T>>, ParticleProviderRegistry.DeferredParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProvider<T>)",
+          "register(ParticleType<T>, ParticleProviderRegistry.DeferredParticleProvider<T>)"
+        ],
+        "dev.architectury.registry.client.rendering.BlockEntityRendererRegistry": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.ColorHandlerRegistry": [
+          "registerBlockColors(BlockTintSource, Block...)",
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.client.rendering.fabric.BlockEntityRendererRegistryImpl": [
+          "register(BlockEntityType<E>, BlockEntityRendererProvider<? super E, ? super S>)"
+        ],
+        "dev.architectury.registry.client.rendering.fabric.ColorHandlerRegistryImpl": [
+          "registerBlockColors(BlockTintSource, Supplier<? extends Block>...)"
+        ],
+        "dev.architectury.registry.CreativeTabOutput": [
+          "accept(ItemStack, TabVisibility)",
+          "acceptAfter(ItemStack, ItemStack)",
+          "acceptAfter(ItemStack, ItemLike, TabVisibility)",
+          "acceptAfter(ItemStack, ItemLike)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemStack, Collection<ItemStack>)",
+          "acceptAfter(ItemLike, ItemStack)",
+          "acceptAfter(ItemLike, ItemLike, TabVisibility)",
+          "acceptAfter(ItemLike, ItemLike)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>, TabVisibility)",
+          "acceptAllAfter(ItemLike, Collection<ItemStack>)",
+          "acceptBefore(ItemStack, ItemStack)",
+          "acceptBefore(ItemStack, ItemLike, TabVisibility)",
+          "acceptBefore(ItemStack, ItemLike)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>, TabVisibility)",
+          "acceptAllBefore(ItemStack, Collection<ItemStack>)",
+          "acceptBefore(ItemLike, ItemStack)",
+          "acceptBefore(ItemLike, ItemLike, TabVisibility)",
+          "acceptBefore(ItemLike, ItemLike)",
+          "acceptAllBefore(ItemLike, Collection<ItemStack>, TabVisibility)"
+        ],
+        "dev.architectury.registry.CreativeTabRegistry": [
+          "create(Component, Supplier<ItemStack>)",
+          "create(Consumer<Builder>)",
+          "ofBuiltin(CreativeModeTab)",
+          "defer(Identifier)",
+          "defer(ResourceKey<CreativeModeTab>)",
+          "modifyBuiltin(CreativeModeTab, CreativeTabRegistry.ModifyTabCallback)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendBuiltin(CreativeModeTab, ItemLike...)",
+          "appendBuiltin(CreativeModeTab, T...)",
+          "appendBuiltinStack(CreativeModeTab, ItemStack...)",
+          "appendBuiltinStack(CreativeModeTab, Supplier<ItemStack>...)",
+          "append(DeferredSupplier<CreativeModeTab>, ItemLike...)",
+          "append(DeferredSupplier<CreativeModeTab>, T...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, ItemStack...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>...)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Stream<Supplier<ItemStack>>)",
+          "append(ResourceKey<CreativeModeTab>, ItemLike...)",
+          "append(ResourceKey<CreativeModeTab>, T...)",
+          "appendStack(ResourceKey<CreativeModeTab>, ItemStack...)"
+        ],
+        "dev.architectury.registry.fabric.CreativeTabRegistryImpl": [
+          "create(Consumer<Builder>)",
+          "ofBuiltin(final CreativeModeTab)",
+          "defer(final Identifier)",
+          "modify(DeferredSupplier<CreativeModeTab>, CreativeTabRegistry.ModifyTabCallback)",
+          "appendStack(DeferredSupplier<CreativeModeTab>, Supplier<ItemStack>)"
+        ],
+        "dev.architectury.registry.fabric.ReloadListenerRegistryImpl": [
+          "register(PackType, final PreparableReloadListener, Identifier, final Collection<Identifier>)"
+        ],
+        "dev.architectury.registry.fuel.fabric.FuelRegistryImpl": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)"
+        ],
+        "dev.architectury.registry.fuel.FuelRegistry": [
+          "register(int, ItemLike...)",
+          "get(ItemStack, RecipeType<?>, FuelValues)"
+        ],
+        "dev.architectury.registry.level.biome.BiomeModifications": [
+          "addProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.biome.fabric.BiomeModificationsImpl": [
+          "addProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "postProcessProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "removeProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)",
+          "replaceProperties(Predicate<BiomeModifications.BiomeContext>, BiConsumer<BiomeModifications.BiomeContext, BiomeProperties.Mutable>)"
+        ],
+        "dev.architectury.registry.level.entity.EntityAttributeRegistry": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)"
+        ],
+        "dev.architectury.registry.level.entity.fabric.EntityAttributeRegistryImpl": [
+          "register(Supplier<? extends EntityType<? extends LivingEntity>>, Supplier<Builder>)"
+        ],
+        "dev.architectury.registry.level.entity.fabric.SpawnPlacementsRegistryImpl": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.level.entity.SpawnPlacementsRegistry": [
+          "register(Supplier<? extends EntityType<T>>, SpawnPlacementType, Types, SpawnPredicate<T>)"
+        ],
+        "dev.architectury.registry.menu.ExtendedMenuProvider": [],
+        "dev.architectury.registry.menu.fabric.MenuRegistryImpl": [
+          "openExtendedMenu(ServerPlayer, final ExtendedMenuProvider)",
+          "of(MenuRegistry.SimpleMenuTypeFactory<T>)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.menu.MenuRegistry": [
+          "openExtendedMenu(ServerPlayer, final MenuProvider, final Consumer<FriendlyByteBuf>)",
+          "openExtendedMenu(ServerPlayer, ExtendedMenuProvider)",
+          "openMenu(ServerPlayer, MenuProvider)",
+          "of(MenuRegistry.SimpleMenuTypeFactory<T>)",
+          "ofExtended(MenuRegistry.ExtendedMenuTypeFactory<T>)"
+        ],
+        "dev.architectury.registry.registries.DeferredRegister": [
+          "create(String, ResourceKey<Registry<T>>)",
+          "register(String, Supplier<? extends R>)",
+          "register(Identifier, Supplier<? extends R>)",
+          "register()",
+          "iterator()",
+          "getRegistrarManager()",
+          "getRegistrar()"
+        ],
+        "dev.architectury.registry.registries.DeferredSupplier": [
+          "getRegistryKey()",
+          "getKey()"
+        ],
+        "dev.architectury.registry.registries.fabric.RegistrarManagerImpl": [
+          "_get(String)"
+        ],
+        "dev.architectury.registry.registries.options.DefaultIdRegistrarOption": [],
+        "dev.architectury.registry.registries.options.RegistrarOption": [],
+        "dev.architectury.registry.registries.options.StandardRegistrarOption": [],
+        "dev.architectury.registry.registries.Registrar": [
+          "wrap(R)",
+          "getHolder(Identifier)",
+          "listen(RegistrySupplier<R>, Consumer<R>)"
+        ],
+        "dev.architectury.registry.registries.RegistrarBuilder": [
+          "syncToClients()"
+        ],
+        "dev.architectury.registry.registries.RegistrarManager": [
+          "get(String)",
+          "get(ResourceKey<Registry<T>>)",
+          "get(Registry<T>)",
+          "forRegistry(ResourceKey<Registry<T>>, Consumer<Registrar<T>>)",
+          "builder(Identifier, T...)",
+          "getId(T, ResourceKey<Registry<T>>)",
+          "getId(T, Registry<T>)",
+          "getModId()"
+        ],
+        "dev.architectury.registry.registries.RegistrySupplier": [
+          "listen(Consumer<T>)"
+        ],
+        "dev.architectury.registry.ReloadListenerRegistry": [
+          "register(PackType, PreparableReloadListener, Identifier)",
+          "register(PackType, PreparableReloadListener, Identifier, Collection<Identifier>)"
+        ],
+        "dev.architectury.utils.Amount": [
+          "toInt(long)"
+        ],
+        "dev.architectury.utils.ArchitecturyConstants": [],
+        "dev.architectury.utils.Env": [
+          "fromPlatform(Object)",
+          "toPlatform()"
+        ],
+        "dev.architectury.utils.EnvExecutor": [
+          "runInEnv(EnvType, Supplier<Runnable>)",
+          "runInEnv(Env, Supplier<Runnable>)",
+          "getInEnv(EnvType, Supplier<Supplier<T>>)",
+          "getInEnv(Env, Supplier<Supplier<T>>)",
+          "getEnvSpecific(Supplier<Supplier<T>>, Supplier<Supplier<T>>)"
+        ],
+        "dev.architectury.utils.fabric.GameInstanceImpl": [
+          "getServer()",
+          "init()"
+        ],
+        "dev.architectury.utils.GameInstance": [
+          "getServer()"
+        ],
+        "dev.architectury.utils.OptionalSupplier": [
+          "getOrNull()",
+          "toOptional()",
+          "ifPresent(Consumer<? super T>)",
+          "ifPresentOrElse(Consumer<? super T>, Runnable)",
+          "stream()",
+          "orElse(T)",
+          "orElseGet(Supplier<? extends T>)"
+        ]
+      },
+      "sampleCount": 169,
+      "truncated": true
+    },
+    "19.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "18.0.8": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "18.0.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "17.0.8": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "17.0.6": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "16.1.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "16.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "16.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "15.0.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "14.0.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "14.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "13.0.11": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.1.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.29": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.25-beta": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.24-beta": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.19": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.18": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "12.0.16": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.1.17": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.0.11": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.0.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.1.20": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.17": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.7": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.6": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "10.0.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "9.2.14": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "9.0.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "9.0.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "9.0.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1516,
+  "truncated": true
+}

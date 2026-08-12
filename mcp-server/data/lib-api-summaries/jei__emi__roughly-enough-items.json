@@ -1,0 +1,2960 @@
+{
+  "slug": "jei__emi__roughly-enough-items",
+  "modId": "jei",
+  "id": "authored/library-integration-jei-emi",
+  "role": "api",
+  "source": {
+    "shard": "cache-s1",
+    "dirs": [
+      "jei"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:23.539Z",
+  "versions": {
+    "30.19.0.148": {
+      "packages": [],
+      "classes": [
+        "mezz.jei.api.constants.ModIds",
+        "mezz.jei.api.constants.RecipeTypes",
+        "mezz.jei.api.constants.Tags",
+        "mezz.jei.api.constants.VanillaTypes",
+        "mezz.jei.api.fabric.constants.FabricTypes",
+        "mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient",
+        "mezz.jei.api.fabric.ingredients.fluids.JeiFluidIngredient",
+        "mezz.jei.api.gui.builder.IClickableIngredientFactory",
+        "mezz.jei.api.gui.builder.IIngredientAcceptor",
+        "mezz.jei.api.gui.builder.IRecipeLayoutBuilder",
+        "mezz.jei.api.gui.builder.IRecipeSlotBuilder",
+        "mezz.jei.api.gui.builder.ITooltipBuilder",
+        "mezz.jei.api.gui.buttons.IButtonState",
+        "mezz.jei.api.gui.buttons.IIconButtonController",
+        "mezz.jei.api.gui.drawable.IDrawable",
+        "mezz.jei.api.gui.drawable.IDrawableAnimated",
+        "mezz.jei.api.gui.drawable.IDrawableBuilder",
+        "mezz.jei.api.gui.drawable.IDrawableStatic",
+        "mezz.jei.api.gui.drawable.IScalableDrawable",
+        "mezz.jei.api.gui.drawable.TilingDirection",
+        "mezz.jei.api.gui.handlers.IGhostIngredientHandler",
+        "mezz.jei.api.gui.handlers.IGlobalGuiHandler",
+        "mezz.jei.api.gui.handlers.IGuiClickableArea",
+        "mezz.jei.api.gui.handlers.IGuiContainerHandler",
+        "mezz.jei.api.gui.handlers.IGuiProperties",
+        "mezz.jei.api.gui.handlers.IScreenHandler",
+        "mezz.jei.api.gui.ingredient.ICraftingGridHelper",
+        "mezz.jei.api.gui.ingredient.IRecipeSlotDrawable",
+        "mezz.jei.api.gui.ingredient.IRecipeSlotDrawablesView",
+        "mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback",
+        "mezz.jei.api.gui.ingredient.IRecipeSlotsView",
+        "mezz.jei.api.gui.ingredient.IRecipeSlotView",
+        "mezz.jei.api.gui.inputs.IJeiGuiEventListener",
+        "mezz.jei.api.gui.inputs.IJeiInputHandler",
+        "mezz.jei.api.gui.inputs.IJeiUserInput",
+        "mezz.jei.api.gui.inputs.RecipeSlotUnderMouse",
+        "mezz.jei.api.gui.IRecipeLayoutDrawable",
+        "mezz.jei.api.gui.ITickTimer",
+        "mezz.jei.api.gui.placement.HorizontalAlignment",
+        "mezz.jei.api.gui.placement.IPlaceable",
+        "mezz.jei.api.gui.placement.VerticalAlignment",
+        "mezz.jei.api.gui.widgets.IRecipeExtrasBuilder",
+        "mezz.jei.api.gui.widgets.IRecipeWidget",
+        "mezz.jei.api.gui.widgets.IScrollBoxWidget",
+        "mezz.jei.api.gui.widgets.IScrollGridWidget",
+        "mezz.jei.api.gui.widgets.ISlottedRecipeWidget",
+        "mezz.jei.api.gui.widgets.ITextWidget",
+        "mezz.jei.api.helpers.ICodecHelper",
+        "mezz.jei.api.helpers.IColorHelper",
+        "mezz.jei.api.helpers.IGuiHelper",
+        "mezz.jei.api.helpers.IJeiHelpers",
+        "mezz.jei.api.helpers.IModIdHelper",
+        "mezz.jei.api.helpers.IPlatformFluidHelper",
+        "mezz.jei.api.helpers.IStackHelper",
+        "mezz.jei.api.IModPlugin",
+        "mezz.jei.api.ingredients.IIngredientHelper",
+        "mezz.jei.api.ingredients.IIngredientRenderer",
+        "mezz.jei.api.ingredients.IIngredientSupplier",
+        "mezz.jei.api.ingredients.IIngredientType",
+        "mezz.jei.api.ingredients.IIngredientTypeWithSubtypes",
+        "mezz.jei.api.ingredients.ITypedIngredient",
+        "mezz.jei.api.ingredients.rendering.BatchRenderElement",
+        "mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter",
+        "mezz.jei.api.ingredients.subtypes.ISubtypeManager",
+        "mezz.jei.api.ingredients.subtypes.UidContext",
+        "mezz.jei.api.recipe.advanced.IRecipeButtonControllerFactory",
+        "mezz.jei.api.recipe.advanced.IRecipeManagerPlugin",
+        "mezz.jei.api.recipe.advanced.IRecipeManagerPluginHelper",
+        "mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin",
+        "mezz.jei.api.recipe.category.AbstractRecipeCategory",
+        "mezz.jei.api.recipe.category.extensions.IRecipeCategoryDecorator",
+        "mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension",
+        "mezz.jei.api.recipe.category.extensions.vanilla.brewing.IBrewingCategoryExtension",
+        "mezz.jei.api.recipe.category.extensions.vanilla.brewing.IExtendableBrewingRecipeCategory",
+        "mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension",
+        "mezz.jei.api.recipe.category.extensions.vanilla.crafting.IExtendableCraftingRecipeCategory",
+        "mezz.jei.api.recipe.category.extensions.vanilla.smithing.IExtendableSmithingRecipeCategory",
+        "mezz.jei.api.recipe.category.extensions.vanilla.smithing.ISmithingCategoryExtension",
+        "mezz.jei.api.recipe.category.IRecipeCategory",
+        "mezz.jei.api.recipe.ICraftingStationLookup",
+        "mezz.jei.api.recipe.IFocus",
+        "mezz.jei.api.recipe.IFocusFactory",
+        "mezz.jei.api.recipe.IFocusGroup",
+        "mezz.jei.api.recipe.IRecipeCatalystLookup",
+        "mezz.jei.api.recipe.IRecipeCategoriesLookup",
+        "mezz.jei.api.recipe.IRecipeLookup",
+        "mezz.jei.api.recipe.IRecipeManager",
+        "mezz.jei.api.recipe.RecipeIngredientRole",
+        "mezz.jei.api.recipe.RecipeType",
+        "mezz.jei.api.recipe.transfer.IRecipeTransferError",
+        "mezz.jei.api.recipe.transfer.IRecipeTransferHandler",
+        "mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper",
+        "mezz.jei.api.recipe.transfer.IRecipeTransferInfo",
+        "mezz.jei.api.recipe.transfer.IRecipeTransferManager",
+        "mezz.jei.api.recipe.transfer.IUniversalRecipeTransferHandler",
+        "mezz.jei.api.recipe.types.IRecipeHolderType",
+        "mezz.jei.api.recipe.types.IRecipeType",
+        "mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiFuelingRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiGrindstoneRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiIngredientInfoRecipe",
+        "mezz.jei.api.recipe.vanilla.IJeiShapedRecipeBuilder",
+        "mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory",
+        "mezz.jei.api.registration.IAdvancedRegistration",
+        "mezz.jei.api.registration.IAdvancedSearchRegistration",
+        "mezz.jei.api.registration.IExtraIngredientRegistration",
+        "mezz.jei.api.registration.IGuiHandlerRegistration",
+        "mezz.jei.api.registration.IIngredientAliasRegistration",
+        "mezz.jei.api.registration.IModInfoRegistration",
+        "mezz.jei.api.registration.IModIngredientRegistration",
+        "mezz.jei.api.registration.IRecipeCatalystRegistration",
+        "mezz.jei.api.registration.IRecipeCategoryRegistration",
+        "mezz.jei.api.registration.IRecipeRegistration",
+        "mezz.jei.api.registration.IRecipeTransferRegistration",
+        "mezz.jei.api.registration.IRuntimeRegistration",
+        "mezz.jei.api.registration.ISubtypeRegistration",
+        "mezz.jei.api.registration.IVanillaCategoryExtensionRegistration",
+        "mezz.jei.api.runtime.config.IJeiConfigCategory",
+        "mezz.jei.api.runtime.config.IJeiConfigFile",
+        "mezz.jei.api.runtime.config.IJeiConfigListValueSerializer",
+        "mezz.jei.api.runtime.config.IJeiConfigManager",
+        "mezz.jei.api.runtime.config.IJeiConfigValue",
+        "mezz.jei.api.runtime.config.IJeiConfigValueSerializer",
+        "mezz.jei.api.runtime.IBookmarkOverlay",
+        "mezz.jei.api.runtime.IClickableIngredient",
+        "mezz.jei.api.runtime.IEditModeConfig",
+        "mezz.jei.api.runtime.IIngredientFilter",
+        "mezz.jei.api.runtime.IIngredientListOverlay",
+        "mezz.jei.api.runtime.IIngredientManager",
+        "mezz.jei.api.runtime.IIngredientVisibility",
+        "mezz.jei.api.runtime.IJeiFeatures",
+        "mezz.jei.api.runtime.IJeiKeyMapping",
+        "mezz.jei.api.runtime.IJeiKeyMappings",
+        "mezz.jei.api.runtime.IJeiRuntime",
+        "mezz.jei.api.runtime.IRecipesGui",
+        "mezz.jei.api.runtime.IScreenHelper",
+        "mezz.jei.api.search.ISearchStorage",
+        "mezz.jei.api.search.ISearchStorageBuilder",
+        "mezz.jei.api.search.ISearchStorageBuilderFactory",
+        "mezz.jei.api.search.ISearchStorageFactory",
+        "mezz.jei.common.chat.JeiChatItemLinkHover",
+        "mezz.jei.common.chat.JeiChatItemLinkRecipeLookup",
+        "mezz.jei.common.chat.JeiChatItemLinks",
+        "mezz.jei.common.codecs.EnumCodec",
+        "mezz.jei.common.codecs.TupleCodec",
+        "mezz.jei.common.codecs.TypedIngredientCodecs",
+        "mezz.jei.common.collect.ListMultiMap",
+        "mezz.jei.common.collect.MultiMap",
+        "mezz.jei.common.collect.SetMultiMap",
+        "mezz.jei.common.collect.Table",
+        "mezz.jei.common.config.BookmarkTooltipFeature",
+        "mezz.jei.common.config.ClientConfig",
+        "mezz.jei.common.config.ClientToggleState",
+        "mezz.jei.common.config.ConfigManager",
+        "mezz.jei.common.config.DebugConfig",
+        "mezz.jei.common.config.file.ConfigCategory",
+        "mezz.jei.common.config.file.ConfigCategoryBuilder",
+        "mezz.jei.common.config.file.ConfigSchema",
+        "mezz.jei.common.config.file.ConfigSchemaBuilder",
+        "mezz.jei.common.config.file.ConfigSerializer",
+        "mezz.jei.common.config.file.ConfigValue",
+        "mezz.jei.common.config.file.FileWatcher",
+        "mezz.jei.common.config.file.FileWatcherThread",
+        "mezz.jei.common.config.file.IConfigCategoryBuilder",
+        "mezz.jei.common.config.file.IConfigListener",
+        "mezz.jei.common.config.file.IConfigSchema",
+        "mezz.jei.common.config.file.IConfigSchemaBuilder",
+        "mezz.jei.common.config.file.JsonArrayFileHelper",
+        "mezz.jei.common.config.file.JsonArrayWriter",
+        "mezz.jei.common.config.file.serializers.BooleanSerializer",
+        "mezz.jei.common.config.file.serializers.DeserializeResult",
+        "mezz.jei.common.config.file.serializers.EnumSerializer",
+        "mezz.jei.common.config.file.serializers.IntegerSerializer",
+        "mezz.jei.common.config.file.serializers.ListSerializer",
+        "mezz.jei.common.config.GiveMode",
+        "mezz.jei.common.config.HistoryDisplaySide",
+        "mezz.jei.common.config.IClientConfig",
+        "mezz.jei.common.config.IClientToggleState",
+        "mezz.jei.common.config.IIngredientFilterConfig",
+        "mezz.jei.common.config.IIngredientGridConfig",
+        "mezz.jei.common.config.IJeiClientConfigs",
+        "mezz.jei.common.config.IngredientFilterConfig",
+        "mezz.jei.common.config.IngredientGridConfig",
+        "mezz.jei.common.config.IngredientGridLayoutMode",
+        "mezz.jei.common.config.IngredientGridNavigationMode",
+        "mezz.jei.common.config.IngredientSortStage",
+        "mezz.jei.common.config.IServerConfig",
+        "mezz.jei.common.config.JeiClientConfigs",
+        "mezz.jei.common.config.RecipeSorterStage",
+        "mezz.jei.common.config.sorting.MappedSortingConfig",
+        "mezz.jei.common.config.sorting.serializers.ISortingSerializer",
+        "mezz.jei.common.config.sorting.serializers.SortingSerializers",
+        "mezz.jei.common.config.sorting.SortingConfig",
+        "mezz.jei.common.Constants",
+        "mezz.jei.common.gui.elements.DrawableAnimated",
+        "mezz.jei.common.gui.elements.DrawableBlank",
+        "mezz.jei.common.gui.elements.DrawableCombined",
+        "mezz.jei.common.gui.elements.DrawableIngredient",
+        "mezz.jei.common.gui.elements.DrawableResource",
+        "mezz.jei.common.gui.elements.DrawableSprite",
+        "mezz.jei.common.gui.elements.DrawableText",
+        "mezz.jei.common.gui.elements.DrawableWrappedText",
+        "mezz.jei.common.gui.elements.HighResolutionDrawable",
+        "mezz.jei.common.gui.elements.OffsetDrawable",
+        "mezz.jei.common.gui.elements.ScalableDrawable",
+        "mezz.jei.common.gui.elements.TextWidget",
+        "mezz.jei.common.gui.IngredientsTooltipComponent",
+        "mezz.jei.common.gui.IngredientTooltipComponent",
+        "mezz.jei.common.gui.JeiGuiColors",
+        "mezz.jei.common.gui.JeiTooltip",
+        "mezz.jei.common.gui.OffsetJeiInputHandler",
+        "mezz.jei.common.gui.RecipeLayoutDrawableErrored",
+        "mezz.jei.common.gui.textures.JeiAtlasManager",
+        "mezz.jei.common.gui.textures.Textures",
+        "mezz.jei.common.ingredients.ITypedIngredientFactory",
+        "mezz.jei.common.input.ClickableIngredient",
+        "mezz.jei.common.input.ClickableIngredientFactory",
+        "mezz.jei.common.input.IInternalKeyMappings",
+        "mezz.jei.common.input.KeyNameUtil",
+        "mezz.jei.common.input.keys.AbstractJeiKeyMappingBuilder",
+        "mezz.jei.common.input.keys.IJeiKeyMappingBuilder",
+        "mezz.jei.common.input.keys.IJeiKeyMappingCategoryBuilder",
+        "mezz.jei.common.input.keys.IJeiKeyMappingInternal",
+        "mezz.jei.common.input.keys.JeiKeyConflictContext",
+        "mezz.jei.common.input.keys.JeiKeyModifier",
+        "mezz.jei.common.input.keys.JeiMultiKeyMapping",
+        "mezz.jei.common.input.MouseButtonEventData",
+        "mezz.jei.common.Internal",
+        "mezz.jei.common.JeiFeatures",
+        "mezz.jei.common.network.ClientConnectionHelper",
+        "mezz.jei.common.network.ClientPacketContext",
+        "mezz.jei.common.network.codecs.EnumStreamCodec",
+        "mezz.jei.common.network.IConnectionToClient",
+        "mezz.jei.common.network.IConnectionToServer",
+        "mezz.jei.common.network.packets.handlers.ClientCheatPermissionHandler",
+        "mezz.jei.common.network.packets.PacketCheatPermission",
+        "mezz.jei.common.network.packets.PacketDeletePlayerItem",
+        "mezz.jei.common.network.packets.PacketGiveItemStack",
+        "mezz.jei.common.network.packets.PacketRecipeTransfer",
+        "mezz.jei.common.network.packets.PacketRecipeTransferCounted",
+        "mezz.jei.common.network.packets.PacketRequestCheatPermission",
+        "mezz.jei.common.network.packets.PacketSetHotbarItemStack",
+        "mezz.jei.common.network.packets.PlayToClientPacket",
+        "mezz.jei.common.network.packets.PlayToServerPacket",
+        "mezz.jei.common.network.ServerPacketContext",
+        "mezz.jei.common.platform.IPlatformBrewingHelper",
+        "mezz.jei.common.platform.IPlatformConfigHelper",
+        "mezz.jei.common.platform.IPlatformFluidHelperInternal",
+        "mezz.jei.common.platform.IPlatformHelper",
+        "mezz.jei.common.platform.IPlatformIngredientHelper",
+        "mezz.jei.common.platform.IPlatformInputHelper",
+        "mezz.jei.common.platform.IPlatformItemStackHelper",
+        "mezz.jei.common.platform.IPlatformModHelper",
+        "mezz.jei.common.platform.IPlatformRecipeHelper",
+        "mezz.jei.common.platform.IPlatformRenderHelper",
+        "mezz.jei.common.platform.IPlatformScreenHelper",
+        "mezz.jei.common.platform.IPlatformWorldHelper",
+        "mezz.jei.common.platform.ITestHelper",
+        "mezz.jei.common.platform.Services",
+        "mezz.jei.common.recipes.BrewingExtensionHelper",
+        "mezz.jei.common.recipes.VanillaClientRecipeLoader",
+        "mezz.jei.common.search.BakedSubstringIndexBuilder",
+        "mezz.jei.common.search.BakedSubstringIndexSearchStorage",
+        "mezz.jei.common.search.CombinedSearchables",
+        "mezz.jei.common.search.GeneralizedSuffixTreeSearchStorage",
+        "mezz.jei.common.search.ISearchable",
+        "mezz.jei.common.search.LimitedStringStorage",
+        "mezz.jei.common.search.LimitedStringStorageBuilder",
+        "mezz.jei.common.search.PrefixedSearchable",
+        "mezz.jei.common.search.PrefixInfo",
+        "mezz.jei.common.search.SearchMode",
+        "mezz.jei.common.search.SearchStorageBuilderAdapter",
+        "mezz.jei.common.transfer.BasicRecipeTransferHandlerServer",
+        "mezz.jei.common.transfer.RecipeTransferErrorInternal",
+        "mezz.jei.common.transfer.RecipeTransferOperationsResult",
+        "mezz.jei.common.transfer.RecipeTransferUtil",
+        "mezz.jei.common.transfer.TransferOperation",
+        "mezz.jei.common.util.ChatUtil",
+        "mezz.jei.common.util.DeduplicatingRunner",
+        "mezz.jei.common.util.DelayedExecutor",
+        "mezz.jei.common.util.DelegatedFuture",
+        "mezz.jei.common.util.ErrorUtil",
+        "mezz.jei.common.util.ExpandNewLineTextAcceptor",
+        "mezz.jei.common.util.function.CachedFunction",
+        "mezz.jei.common.util.function.CachedSupplierTransformer",
+        "mezz.jei.common.util.function.LazySupplier",
+        "mezz.jei.common.util.IDelayedExecutor",
+        "mezz.jei.common.util.ImmutablePoint2i",
+        "mezz.jei.common.util.ImmutableRect2i",
+        "mezz.jei.common.util.ImmutableSize2i",
+        "mezz.jei.common.util.LimitedLogger",
+        "mezz.jei.common.util.LoggedTimer",
+        "mezz.jei.common.util.MathUtil",
+        "mezz.jei.common.util.MinecraftLocaleSupplier",
+        "mezz.jei.common.util.NavigationVisibility",
+        "mezz.jei.common.util.Pair",
+        "mezz.jei.common.util.PathUtil",
+        "mezz.jei.common.util.RectDebugger",
+        "mezz.jei.common.util.ReflectionUtil",
+        "mezz.jei.common.util.RegistryUtil",
+        "mezz.jei.common.util.SafeIngredientUtil",
+        "mezz.jei.common.util.ServerCommandUtil",
+        "mezz.jei.common.util.ServerConfigPathUtil",
+        "mezz.jei.common.util.StackHelper",
+        "mezz.jei.common.util.StringUtil",
+        "mezz.jei.common.util.TagUtil",
+        "mezz.jei.common.util.TextHistory",
+        "mezz.jei.common.util.TickTimer",
+        "mezz.jei.common.util.TimeUtil",
+        "mezz.jei.common.util.Translator",
+        "mezz.jei.common.util.WeakConsumer",
+        "mezz.jei.fabric.chat.JeiChatEventHandler",
+        "mezz.jei.fabric.chat.JeiInternalShowCommand",
+        "mezz.jei.fabric.config.ServerConfig",
+        "mezz.jei.fabric.events.JeiCharTypedEvents",
+        "mezz.jei.fabric.events.JeiLifecycleEvents",
+        "mezz.jei.fabric.events.JeiScreenEvents",
+        "mezz.jei.fabric.ingredients.fluid.JeiFluidIngredient",
+        "mezz.jei.fabric.input.AbstractJeiKeyMapping",
+        "mezz.jei.fabric.input.AmecsHelper",
+        "mezz.jei.fabric.input.AmecsJeiKeyMapping",
+        "mezz.jei.fabric.input.AmecsJeiKeyMappingBuilder",
+        "mezz.jei.fabric.input.AmecsJeiKeyMappingManagerLayer",
+        "mezz.jei.fabric.input.AmecsJeiKeyModifier",
+        "mezz.jei.fabric.input.AmecsKeyMappingWithContext",
+        "mezz.jei.fabric.input.FabricAmecsSupport",
+        "mezz.jei.fabric.input.FabricJeiKeyMapping",
+        "mezz.jei.fabric.input.FabricJeiKeyMappingBuilder",
+        "mezz.jei.fabric.input.FabricJeiKeyMappingCategoryBuilder",
+        "mezz.jei.fabric.input.FabricKeyMapping",
+        "mezz.jei.fabric.input.KeyboardHandlerExtension",
+        "mezz.jei.fabric.JustEnoughItems",
+        "mezz.jei.fabric.JustEnoughItemsClient",
+        "mezz.jei.fabric.network.ClientNetworkHandler",
+        "mezz.jei.fabric.network.ConnectionToClient",
+        "mezz.jei.fabric.network.ConnectionToServer",
+        "mezz.jei.fabric.network.ServerNetworkHandler",
+        "mezz.jei.fabric.platform.BrewingHelper",
+        "mezz.jei.fabric.platform.ConfigHelper",
+        "mezz.jei.fabric.platform.FluidHelper",
+        "mezz.jei.fabric.platform.IngredientHelper",
+        "mezz.jei.fabric.platform.InputHelper",
+        "mezz.jei.fabric.platform.ItemStackHelper",
+        "mezz.jei.fabric.platform.ModHelper",
+        "mezz.jei.fabric.platform.PlatformHelper",
+        "mezz.jei.fabric.platform.RecipeHelper",
+        "mezz.jei.fabric.platform.RenderHelper",
+        "mezz.jei.fabric.platform.ScreenHelper",
+        "mezz.jei.fabric.platform.TestHelper",
+        "mezz.jei.fabric.platform.WorldHelper",
+        "mezz.jei.fabric.plugins.fabric.FabricGuiPlugin",
+        "mezz.jei.fabric.startup.ClientLifecycleHandler",
+        "mezz.jei.fabric.startup.EventRegistration",
+        "mezz.jei.fabric.startup.FabricPluginFinder",
+        "mezz.jei.gui.bookmarks.BookmarkCodec",
+        "mezz.jei.gui.bookmarks.BookmarkFactory",
+        "mezz.jei.gui.bookmarks.BookmarkList",
+        "mezz.jei.gui.bookmarks.BookmarkType",
+        "mezz.jei.gui.bookmarks.IBookmark",
+        "mezz.jei.gui.bookmarks.IngredientBookmark",
+        "mezz.jei.gui.bookmarks.RecipeBookmark",
+        "mezz.jei.gui.chat.ChatIngredientTooltip",
+        "mezz.jei.gui.config.BookmarkJsonConfig",
+        "mezz.jei.gui.config.IBookmarkConfig",
+        "mezz.jei.gui.config.ILookupHistoryConfig",
+        "mezz.jei.gui.config.IngredientTypeSortingConfig",
+        "mezz.jei.gui.config.InternalKeyMappings",
+        "mezz.jei.gui.config.LookupHistoryJsonConfig",
+        "mezz.jei.gui.config.ModNameSortingConfig",
+        "mezz.jei.gui.elements.ButtonSprites",
+        "mezz.jei.gui.elements.IconButton",
+        "mezz.jei.gui.events.GuiEventHandler",
+        "mezz.jei.gui.filter.FilterTextSource",
+        "mezz.jei.gui.filter.IFilterTextSource",
+        "mezz.jei.gui.ghost.GhostIngredientDrag",
+        "mezz.jei.gui.ghost.GhostIngredientDragManager",
+        "mezz.jei.gui.ghost.GhostIngredientQuickMoveManager",
+        "mezz.jei.gui.ghost.GhostIngredientReturning",
+        "mezz.jei.gui.GuiProperties",
+        "mezz.jei.gui.ingredients.DisplayNameUtil",
+        "mezz.jei.gui.ingredients.GuiIngredientProperties",
+        "mezz.jei.gui.ingredients.IListElement",
+        "mezz.jei.gui.ingredients.IListElementInfo",
+        "mezz.jei.gui.ingredients.IngredientFilter",
+        "mezz.jei.gui.ingredients.IngredientFilterApi",
+        "mezz.jei.gui.ingredients.IngredientListElementFactory",
+        "mezz.jei.gui.ingredients.IngredientSorter",
+        "mezz.jei.gui.ingredients.IngredientSorterComparators",
+        "mezz.jei.gui.ingredients.ListElement",
+        "mezz.jei.gui.ingredients.ListElementInfo",
+        "mezz.jei.gui.input.ClickableIngredientInternal",
+        "mezz.jei.gui.input.ClientInputHandler",
+        "mezz.jei.gui.input.CombinedRecipeFocusSource",
+        "mezz.jei.gui.input.DelegatingClickableIngredientInternal",
+        "mezz.jei.gui.input.DraggableIngredientInternal",
+        "mezz.jei.gui.input.focus.EditBoxFocusHandler",
+        "mezz.jei.gui.input.focus.GuiEventListenerFocusHandler",
+        "mezz.jei.gui.input.focus.IFocusHandler",
+        "mezz.jei.gui.input.focus.ScreenFocusHandler",
+        "mezz.jei.gui.input.GuiContainerWrapper",
+        "mezz.jei.gui.input.GuiTextFieldFilter",
+        "mezz.jei.gui.input.handlers.BookmarkInputHandler",
+        "mezz.jei.gui.input.handlers.ChatLinkInputHandler",
+        "mezz.jei.gui.input.handlers.CombinedDragHandler",
+        "mezz.jei.gui.input.handlers.CombinedInputHandler",
+        "mezz.jei.gui.input.handlers.DeleteItemInputHandler",
+        "mezz.jei.gui.input.handlers.DragRouter",
+        "mezz.jei.gui.input.handlers.EditInputHandler",
+        "mezz.jei.gui.input.handlers.FocusInputHandler",
+        "mezz.jei.gui.input.handlers.GlobalInputHandler",
+        "mezz.jei.gui.input.handlers.GuiAreaInputHandler",
+        "mezz.jei.gui.input.handlers.NullDragHandler",
+        "mezz.jei.gui.input.handlers.NullInputHandler",
+        "mezz.jei.gui.input.handlers.ProxyDragHandler",
+        "mezz.jei.gui.input.handlers.ProxyInputHandler",
+        "mezz.jei.gui.input.handlers.SameElementInputHandler",
+        "mezz.jei.gui.input.handlers.TextFieldInputHandler",
+        "mezz.jei.gui.input.handlers.UserInputRouter",
+        "mezz.jei.gui.input.ICharTypedHandler",
+        "mezz.jei.gui.input.IClickableIngredientInternal",
+        "mezz.jei.gui.input.IDraggableIngredientInternal",
+        "mezz.jei.gui.input.IDragHandler",
+        "mezz.jei.gui.input.IMouseOverable",
+        "mezz.jei.gui.input.InputType",
+        "mezz.jei.gui.input.IPaged",
+        "mezz.jei.gui.input.IRecipeFocusSource",
+        "mezz.jei.gui.input.IUserInputHandler",
+        "mezz.jei.gui.input.KeyUserInput",
+        "mezz.jei.gui.input.MouseUserInput",
+        "mezz.jei.gui.input.MouseUtil",
+        "mezz.jei.gui.input.UserInput",
+        "mezz.jei.gui.overlay.bookmarks.BookmarkButtonController",
+        "mezz.jei.gui.overlay.bookmarks.BookmarkDrag",
+        "mezz.jei.gui.overlay.bookmarks.BookmarkDragManager",
+        "mezz.jei.gui.overlay.bookmarks.BookmarkOverlay",
+        "mezz.jei.gui.overlay.bookmarks.history.ILookupHistoryOverlay",
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistory",
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistoryButtonController",
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistoryOverlay",
+        "mezz.jei.gui.overlay.bookmarks.IBookmarkDragTarget",
+        "mezz.jei.gui.overlay.bookmarks.PreviewTooltipComponent",
+        "mezz.jei.gui.overlay.ConfigButtonController",
+        "mezz.jei.gui.overlay.elements.IElement",
+        "mezz.jei.gui.overlay.elements.IngredientBookmarkElement",
+        "mezz.jei.gui.overlay.elements.IngredientElement",
+        "mezz.jei.gui.overlay.elements.RecipeBookmarkElement",
+        "mezz.jei.gui.overlay.GuiPropertiesCache",
+        "mezz.jei.gui.overlay.history.LookupHistoryOverlayLayout",
+        "mezz.jei.gui.overlay.IConfigButton",
+        "mezz.jei.gui.overlay.IGuiPropertiesCache",
+        "mezz.jei.gui.overlay.IngredientListOverlay",
+        "mezz.jei.gui.overlay.ingredients.GuiExclusionAreaShadow",
+        "mezz.jei.gui.overlay.ingredients.IIngredientGrid",
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridPageNavigation",
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridSource",
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridView",
+        "mezz.jei.gui.overlay.ingredients.IIngredientListOverlayContents",
+        "mezz.jei.gui.overlay.ingredients.IngredientGrid",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridButtonNavigationLayout",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridLayout",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollbar",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollbarLayout",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollController",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollState",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridTooltipHelper",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigation",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigationController",
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigationLayout",
+        "mezz.jei.gui.overlay.ingredients.IngredientListRenderer",
+        "mezz.jei.gui.overlay.ingredients.IngredientListSlot",
+        "mezz.jei.gui.overlay.IScreenPropertiesUpdater",
+        "mezz.jei.gui.overlay.ISearchField",
+        "mezz.jei.gui.PageNavigation",
+        "mezz.jei.gui.plugins.AbstractContainerScreenHandler",
+        "mezz.jei.gui.plugins.ChatScreenHandler",
+        "mezz.jei.gui.plugins.JeiGuiPlugin",
+        "mezz.jei.gui.recipes.CraftingStations",
+        "mezz.jei.gui.recipes.IRecipeGuiLogic",
+        "mezz.jei.gui.recipes.IRecipeLayoutWithButtons",
+        "mezz.jei.gui.recipes.IRecipeLogicStateListener",
+        "mezz.jei.gui.recipes.layouts.IRecipeLayoutList",
+        "mezz.jei.gui.recipes.layouts.LazyRecipeLayoutList",
+        "mezz.jei.gui.recipes.lookups.FocusedRecipes",
+        "mezz.jei.gui.recipes.lookups.IFocusedRecipes",
+        "mezz.jei.gui.recipes.lookups.ILookupState",
+        "mezz.jei.gui.recipes.lookups.IngredientLookupState",
+        "mezz.jei.gui.recipes.lookups.SingleCategoryLookupState",
+        "mezz.jei.gui.recipes.lookups.StaticFocusedRecipes",
+        "mezz.jei.gui.recipes.RecipeBookmarkButtonController",
+        "mezz.jei.gui.recipes.RecipeCategoryIconUtil",
+        "mezz.jei.gui.recipes.RecipeCategoryTab",
+        "mezz.jei.gui.recipes.RecipeCategoryTitle",
+        "mezz.jei.gui.recipes.RecipeGuiLayouts",
+        "mezz.jei.gui.recipes.RecipeGuiLogic",
+        "mezz.jei.gui.recipes.RecipeGuiTab",
+        "mezz.jei.gui.recipes.RecipeGuiTabs",
+        "mezz.jei.gui.recipes.RecipeLayoutWithButtons",
+        "mezz.jei.gui.recipes.RecipeLayoutWithButtonsErrored"
+      ],
+      "methods": {
+        "mezz.jei.api.constants.ModIds": [],
+        "mezz.jei.api.constants.RecipeTypes": [],
+        "mezz.jei.api.constants.Tags": [],
+        "mezz.jei.api.constants.VanillaTypes": [],
+        "mezz.jei.api.fabric.constants.FabricTypes": [],
+        "mezz.jei.api.fabric.ingredients.fluids.IJeiFluidIngredient": [],
+        "mezz.jei.api.fabric.ingredients.fluids.JeiFluidIngredient": [
+          "getFluidVariant()",
+          "getAmount()"
+        ],
+        "mezz.jei.api.gui.builder.IClickableIngredientFactory": [
+          "createBuilder(ItemStack)"
+        ],
+        "mezz.jei.api.gui.builder.IIngredientAcceptor": [
+          "addIngredient(IIngredientType<I>, I)",
+          "addIngredients(Ingredient)",
+          "addTypedIngredient(ITypedIngredient<I>)",
+          "addItemStack(ItemStack)",
+          "addItemLike(ItemLike)",
+          "addFluidStack(Fluid)",
+          "addFluidStack(Fluid, long)",
+          "addFluidStack(Fluid, long, DataComponentPatch)"
+        ],
+        "mezz.jei.api.gui.builder.IRecipeLayoutBuilder": [
+          "addInputSlot(int, int)",
+          "addInputSlot()",
+          "addOutputSlot(int, int)",
+          "addOutputSlot()",
+          "addSlot(RecipeIngredientRole, int, int)"
+        ],
+        "mezz.jei.api.gui.builder.IRecipeSlotBuilder": [
+          "addFluidStack(Fluid, long)",
+          "addFluidStack(Fluid, long, DataComponentPatch)"
+        ],
+        "mezz.jei.api.gui.builder.ITooltipBuilder": [
+          "clear()"
+        ],
+        "mezz.jei.api.gui.buttons.IButtonState": [],
+        "mezz.jei.api.gui.buttons.IIconButtonController": [
+          "getTooltips(ITooltipBuilder)",
+          "initState(IButtonState)",
+          "updateState(IButtonState)",
+          "drawExtras(GuiGraphicsExtractor, Rect2i, int, int, float)"
+        ],
+        "mezz.jei.api.gui.drawable.IDrawable": [
+          "draw(GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.api.gui.drawable.IDrawableAnimated": [],
+        "mezz.jei.api.gui.drawable.IDrawableBuilder": [],
+        "mezz.jei.api.gui.drawable.IDrawableStatic": [],
+        "mezz.jei.api.gui.drawable.IScalableDrawable": [
+          "draw(GuiGraphicsExtractor, Rect2i)"
+        ],
+        "mezz.jei.api.gui.drawable.TilingDirection": [],
+        "mezz.jei.api.gui.handlers.IGhostIngredientHandler": [
+          "shouldHighlightTargets()",
+          "quickMove(T, ITypedIngredient<I>)"
+        ],
+        "mezz.jei.api.gui.handlers.IGlobalGuiHandler": [
+          "getGuiExtraAreas()",
+          "getClickableIngredientUnderMouse(IClickableIngredientFactory, double, double)",
+          "getClickableIngredientUnderMouse(double, double)"
+        ],
+        "mezz.jei.api.gui.handlers.IGuiClickableArea": [
+          "isTooltipEnabled()",
+          "getTooltip(ITooltipBuilder)"
+        ],
+        "mezz.jei.api.gui.handlers.IGuiContainerHandler": [
+          "getGuiExtraAreas(T)",
+          "getClickableIngredientUnderMouse(IClickableIngredientFactory, T, double, double)",
+          "getClickableIngredientUnderMouse(T, double, double)",
+          "getGuiClickableAreas(T, double, double)"
+        ],
+        "mezz.jei.api.gui.handlers.IGuiProperties": [
+          "guiRight()",
+          "guiBottom()"
+        ],
+        "mezz.jei.api.gui.handlers.IScreenHandler": [
+          "getClickableIngredientUnderMouse(IClickableIngredientFactory, T, double, double)"
+        ],
+        "mezz.jei.api.gui.ingredient.ICraftingGridHelper": [
+          "createAndSetNamedInputs(IRecipeLayoutBuilder, List<Pair<String, List<ItemStack>>>, int, int)",
+          "createAndSetInputs(IRecipeLayoutBuilder, List<List<ItemStack>>, int, int)",
+          "createAndSetOutputs(IRecipeLayoutBuilder, List<ItemStack>)"
+        ],
+        "mezz.jei.api.gui.ingredient.IRecipeSlotDrawable": [],
+        "mezz.jei.api.gui.ingredient.IRecipeSlotDrawablesView": [
+          "getSlots(RecipeIngredientRole)",
+          "findSlotByName(String)"
+        ],
+        "mezz.jei.api.gui.ingredient.IRecipeSlotRichTooltipCallback": [],
+        "mezz.jei.api.gui.ingredient.IRecipeSlotsView": [
+          "getSlotViews(RecipeIngredientRole)",
+          "findSlotByName(String)"
+        ],
+        "mezz.jei.api.gui.ingredient.IRecipeSlotView": [
+          "getIngredients(IIngredientType<T>)",
+          "getItemStacks()",
+          "isEmpty()",
+          "getDisplayedItemStack()",
+          "getDisplayedIngredient(IIngredientType<T>)"
+        ],
+        "mezz.jei.api.gui.inputs.IJeiGuiEventListener": [
+          "mouseMoved(double, double)",
+          "mouseClicked(double, double, int)",
+          "mouseReleased(double, double, int)",
+          "mouseDragged(double, double, int, double, double)",
+          "mouseScrolled(double, double, double, double)",
+          "keyPressed(double, double, int, int, int)"
+        ],
+        "mezz.jei.api.gui.inputs.IJeiInputHandler": [
+          "handleInput(double, double, IJeiUserInput)",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)",
+          "handleMouseMoved(double, double)"
+        ],
+        "mezz.jei.api.gui.inputs.IJeiUserInput": [],
+        "mezz.jei.api.gui.inputs.RecipeSlotUnderMouse": [
+          "addOffset(int, int)",
+          "isMouseOver(double, double)"
+        ],
+        "mezz.jei.api.gui.IRecipeLayoutDrawable": [
+          "getItemStackUnderMouse(int, int)",
+          "getRecipeTransferButtonArea()",
+          "getRecipeBookmarkButtonArea()"
+        ],
+        "mezz.jei.api.gui.ITickTimer": [],
+        "mezz.jei.api.gui.placement.HorizontalAlignment": [
+          "getXPos(int, int)"
+        ],
+        "mezz.jei.api.gui.placement.IPlaceable": [
+          "setPosition(int, int, int, int, HorizontalAlignment, VerticalAlignment)"
+        ],
+        "mezz.jei.api.gui.placement.VerticalAlignment": [
+          "getYPos(int, int)"
+        ],
+        "mezz.jei.api.gui.widgets.IRecipeExtrasBuilder": [
+          "addText(FormattedText, int, int)"
+        ],
+        "mezz.jei.api.gui.widgets.IRecipeWidget": [
+          "drawWidget(GuiGraphicsExtractor, double, double)",
+          "getTooltip(ITooltipBuilder, double, double)",
+          "tick()"
+        ],
+        "mezz.jei.api.gui.widgets.IScrollBoxWidget": [],
+        "mezz.jei.api.gui.widgets.IScrollGridWidget": [],
+        "mezz.jei.api.gui.widgets.ISlottedRecipeWidget": [],
+        "mezz.jei.api.gui.widgets.ITextWidget": [],
+        "mezz.jei.api.helpers.ICodecHelper": [],
+        "mezz.jei.api.helpers.IColorHelper": [],
+        "mezz.jei.api.helpers.IGuiHelper": [
+          "createDrawable(Identifier, int, int, int, int)",
+          "createDrawableSprite(TextureAtlas, Identifier, int, int)",
+          "createDrawableItemStack(ItemStack)",
+          "createDrawableItemLike(ItemLike)"
+        ],
+        "mezz.jei.api.helpers.IJeiHelpers": [],
+        "mezz.jei.api.helpers.IModIdHelper": [
+          "getFormattedModNameComponentForModId(String)"
+        ],
+        "mezz.jei.api.helpers.IPlatformFluidHelper": [],
+        "mezz.jei.api.helpers.IStackHelper": [],
+        "mezz.jei.api.IModPlugin": [
+          "configureJei(IJeiFeatures)",
+          "registerItemSubtypes(ISubtypeRegistration)",
+          "registerFluidSubtypes(ISubtypeRegistration, IPlatformFluidHelper<T>)",
+          "registerIngredients(IModIngredientRegistration)",
+          "registerExtraIngredients(IExtraIngredientRegistration)",
+          "registerIngredientAliases(IIngredientAliasRegistration)",
+          "registerAdvancedSearch(IAdvancedSearchRegistration)",
+          "registerModInfo(IModInfoRegistration)",
+          "registerCategories(IRecipeCategoryRegistration)",
+          "registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration)",
+          "registerRecipes(IRecipeRegistration)",
+          "registerRecipeTransferHandlers(IRecipeTransferRegistration)",
+          "registerRecipeCatalysts(IRecipeCatalystRegistration)",
+          "registerGuiHandlers(IGuiHandlerRegistration)",
+          "registerAdvanced(IAdvancedRegistration)",
+          "registerRuntime(IRuntimeRegistration)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "onRuntimeUnavailable()",
+          "onConfigManagerAvailable(IJeiConfigManager)"
+        ],
+        "mezz.jei.api.ingredients.IIngredientHelper": [
+          "getUid(ITypedIngredient<V>, UidContext)",
+          "getGroupingUid(V)",
+          "getGroupingUid(ITypedIngredient<V>)",
+          "hasSubtypes(V)",
+          "getDisplayModId(V)",
+          "getAmount(V)",
+          "copyWithAmount(V, long)",
+          "getColors(V)",
+          "getResourceLocation(V)",
+          "getCheatItemStack(V)",
+          "normalizeIngredient(V)",
+          "isValidIngredient(V)",
+          "isIngredientOnServer(V)",
+          "getTagStream(V)",
+          "isHiddenFromRecipeViewersByTags(V)",
+          "isHiddenFromRecipeViewersByTags(ITypedIngredient<V>)",
+          "getTagKeyEquivalent(Collection<V>)",
+          "getDisplayContentsFactory()"
+        ],
+        "mezz.jei.api.ingredients.IIngredientRenderer": [
+          "render(GuiGraphicsExtractor, T, int, int)",
+          "renderBatch(GuiGraphicsExtractor, List<BatchRenderElement<T>>)",
+          "getTooltip(ITooltipBuilder, T, TooltipFlag)",
+          "getFontRenderer(Minecraft, T)",
+          "getWidth()",
+          "getHeight()"
+        ],
+        "mezz.jei.api.ingredients.IIngredientSupplier": [],
+        "mezz.jei.api.ingredients.IIngredientType": [
+          "getUid()",
+          "castIngredient(Object)",
+          "getCastIngredient(Object)"
+        ],
+        "mezz.jei.api.ingredients.IIngredientTypeWithSubtypes": [
+          "getDefaultIngredient(B)"
+        ],
+        "mezz.jei.api.ingredients.ITypedIngredient": [
+          "getIngredient(IIngredientType<V>)",
+          "getCastIngredient(IIngredientType<V>)",
+          "cast(IIngredientType<V>)",
+          "castToItemStackType()",
+          "getBaseIngredient(IIngredientTypeWithSubtypes<B, T>)",
+          "getItemStack()"
+        ],
+        "mezz.jei.api.ingredients.rendering.BatchRenderElement": [],
+        "mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter": [],
+        "mezz.jei.api.ingredients.subtypes.ISubtypeManager": [
+          "getSubtypeData(ItemStack, UidContext)",
+          "hasSubtypes(ItemStack)"
+        ],
+        "mezz.jei.api.ingredients.subtypes.UidContext": [],
+        "mezz.jei.api.recipe.advanced.IRecipeButtonControllerFactory": [],
+        "mezz.jei.api.recipe.advanced.IRecipeManagerPlugin": [],
+        "mezz.jei.api.recipe.advanced.IRecipeManagerPluginHelper": [
+          "isRecipeCatalyst(IRecipeType<?>, IFocus<?>)"
+        ],
+        "mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin": [],
+        "mezz.jei.api.recipe.category.AbstractRecipeCategory": [
+          "getRecipeType()",
+          "getTitle()",
+          "getIcon()",
+          "getWidth()",
+          "getHeight()"
+        ],
+        "mezz.jei.api.recipe.category.extensions.IRecipeCategoryDecorator": [
+          "draw(T, IRecipeCategory<T>, IRecipeSlotsView, GuiGraphicsExtractor, double, double)",
+          "decorateTooltips(ITooltipBuilder, T, IRecipeCategory<T>, IRecipeSlotsView, double, double)"
+        ],
+        "mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension": [
+          "drawInfo(T, int, int, GuiGraphicsExtractor, double, double)",
+          "getTooltip(ITooltipBuilder, T, double, double)",
+          "createRecipeExtras(T, IRecipeExtrasBuilder, ICraftingGridHelper, IFocusGroup)",
+          "isHandled(T)"
+        ],
+        "mezz.jei.api.recipe.category.extensions.vanilla.brewing.IBrewingCategoryExtension": [],
+        "mezz.jei.api.recipe.category.extensions.vanilla.brewing.IExtendableBrewingRecipeCategory": [],
+        "mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension": [
+          "getWidth(RecipeHolder<R>)",
+          "getHeight(RecipeHolder<R>)",
+          "setRecipe(RecipeHolder<R>, IRecipeLayoutBuilder, ICraftingGridHelper, IFocusGroup)",
+          "onDisplayedIngredientsUpdate(RecipeHolder<R>, List<IRecipeSlotDrawable>, IFocusGroup)"
+        ],
+        "mezz.jei.api.recipe.category.extensions.vanilla.crafting.IExtendableCraftingRecipeCategory": [],
+        "mezz.jei.api.recipe.category.extensions.vanilla.smithing.IExtendableSmithingRecipeCategory": [],
+        "mezz.jei.api.recipe.category.extensions.vanilla.smithing.ISmithingCategoryExtension": [
+          "setOutput(R, T)",
+          "onDisplayedIngredientsUpdate(R, IRecipeSlotDrawable, IRecipeSlotDrawable, IRecipeSlotDrawable, IRecipeSlotDrawable, IFocusGroup)"
+        ],
+        "mezz.jei.api.recipe.category.IRecipeCategory": [
+          "createRecipeExtras(IRecipeExtrasBuilder, T, IFocusGroup)",
+          "draw(T, IRecipeSlotsView, GuiGraphicsExtractor, double, double)",
+          "onDisplayedIngredientsUpdate(T, List<IRecipeSlotDrawable>, IFocusGroup)",
+          "getTooltip(ITooltipBuilder, T, IRecipeSlotsView, double, double)",
+          "isHandled(T)",
+          "getIdentifier(T)",
+          "getRegistryName(T)",
+          "getCodec(ICodecHelper, IRecipeManager)",
+          "needsRecipeBorder()"
+        ],
+        "mezz.jei.api.recipe.ICraftingStationLookup": [
+          "getItemStack()"
+        ],
+        "mezz.jei.api.recipe.IFocus": [],
+        "mezz.jei.api.recipe.IFocusFactory": [],
+        "mezz.jei.api.recipe.IFocusGroup": [
+          "getItemStackFocuses()",
+          "getItemStackFocuses(RecipeIngredientRole)"
+        ],
+        "mezz.jei.api.recipe.IRecipeCatalystLookup": [
+          "getItemStack()"
+        ],
+        "mezz.jei.api.recipe.IRecipeCategoriesLookup": [],
+        "mezz.jei.api.recipe.IRecipeLookup": [],
+        "mezz.jei.api.recipe.IRecipeManager": [],
+        "mezz.jei.api.recipe.RecipeIngredientRole": [],
+        "mezz.jei.api.recipe.RecipeType": [
+          "create(String, String, Class<? extends T>)",
+          "createFromVanilla(net.minecraft.world.item.crafting.RecipeType<R>)",
+          "createRecipeHolderType(Identifier)",
+          "createFromDeferredVanilla(Supplier<net.minecraft.world.item.crafting.RecipeType<R>>)",
+          "getUid()",
+          "getRecipeClass()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "mezz.jei.api.recipe.transfer.IRecipeTransferError": [
+          "getButtonHighlightColor()",
+          "showError(GuiGraphicsExtractor, int, int, IRecipeSlotsView, int, int)",
+          "getTooltip(ITooltipBuilder)",
+          "getMissingCountHint()"
+        ],
+        "mezz.jei.api.recipe.transfer.IRecipeTransferHandler": [],
+        "mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper": [],
+        "mezz.jei.api.recipe.transfer.IRecipeTransferInfo": [
+          "getHandlingError(C, R)",
+          "requireCompleteSets(C, R)"
+        ],
+        "mezz.jei.api.recipe.transfer.IRecipeTransferManager": [],
+        "mezz.jei.api.recipe.transfer.IUniversalRecipeTransferHandler": [],
+        "mezz.jei.api.recipe.types.IRecipeHolderType": [],
+        "mezz.jei.api.recipe.types.IRecipeType": [],
+        "mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiFuelingRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiGrindstoneRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiIngredientInfoRecipe": [],
+        "mezz.jei.api.recipe.vanilla.IJeiShapedRecipeBuilder": [],
+        "mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory": [
+          "createSmeltingRecipe(Ingredient, ItemStack, int, float, Identifier)"
+        ],
+        "mezz.jei.api.registration.IAdvancedRegistration": [
+          "addTypedRecipeManagerPlugin(IRecipeType<T>, ISimpleRecipeManagerPlugin<T>)"
+        ],
+        "mezz.jei.api.registration.IAdvancedSearchRegistration": [],
+        "mezz.jei.api.registration.IExtraIngredientRegistration": [
+          "addExtraItemStacks(Collection<ItemStack>)"
+        ],
+        "mezz.jei.api.registration.IGuiHandlerRegistration": [
+          "addRecipeClickArea(Class<? extends T>, final int, final int, final int, final int, final IRecipeType<?>...)"
+        ],
+        "mezz.jei.api.registration.IIngredientAliasRegistration": [
+          "addAlias(ItemStack, String)",
+          "addAlias(Item, String)",
+          "addAliases(Item, Collection<String>)"
+        ],
+        "mezz.jei.api.registration.IModInfoRegistration": [
+          "addModAliases(String, String...)"
+        ],
+        "mezz.jei.api.registration.IModIngredientRegistration": [],
+        "mezz.jei.api.registration.IRecipeCatalystRegistration": [
+          "addCraftingStation(IRecipeType<?>, ItemStack...)",
+          "addRecipeCatalysts(IRecipeType<?>, ItemLike...)",
+          "addRecipeCatalysts(IRecipeType<?>, ItemStack...)",
+          "addRecipeCatalysts(IRecipeType<?>, IIngredientType<T>, List<T>)",
+          "addRecipeCatalyst(ItemLike, IRecipeType<?>...)",
+          "addRecipeCatalyst(ItemStack, IRecipeType<?>...)"
+        ],
+        "mezz.jei.api.registration.IRecipeCategoryRegistration": [],
+        "mezz.jei.api.registration.IRecipeRegistration": [
+          "addIngredientInfo(ItemLike, Component...)",
+          "addItemStackInfo(ItemStack, Component...)",
+          "addItemStackInfo(List<ItemStack>, Component...)"
+        ],
+        "mezz.jei.api.registration.IRecipeTransferRegistration": [],
+        "mezz.jei.api.registration.IRuntimeRegistration": [],
+        "mezz.jei.api.registration.ISubtypeRegistration": [
+          "registerSubtypeInterpreter(Item, ISubtypeInterpreter<ItemStack>)"
+        ],
+        "mezz.jei.api.registration.IVanillaCategoryExtensionRegistration": [],
+        "mezz.jei.api.runtime.config.IJeiConfigCategory": [],
+        "mezz.jei.api.runtime.config.IJeiConfigFile": [],
+        "mezz.jei.api.runtime.config.IJeiConfigListValueSerializer": [],
+        "mezz.jei.api.runtime.config.IJeiConfigManager": [],
+        "mezz.jei.api.runtime.config.IJeiConfigValue": [],
+        "mezz.jei.api.runtime.config.IJeiConfigValueSerializer": [],
+        "mezz.jei.api.runtime.IBookmarkOverlay": [
+          "getItemStackUnderMouse()"
+        ],
+        "mezz.jei.api.runtime.IClickableIngredient": [
+          "getIngredientType()",
+          "getIngredient()"
+        ],
+        "mezz.jei.api.runtime.IEditModeConfig": [],
+        "mezz.jei.api.runtime.IIngredientFilter": [
+          "getFilteredItemStacks()"
+        ],
+        "mezz.jei.api.runtime.IIngredientListOverlay": [],
+        "mezz.jei.api.runtime.IIngredientManager": [
+          "getAllItemStacks()",
+          "createTypedIngredient(T, boolean)",
+          "createTypedIngredient(IIngredientType<V>, V)",
+          "createTypedIngredient(V)",
+          "createClickableIngredient(V, Rect2i, boolean)"
+        ],
+        "mezz.jei.api.runtime.IIngredientVisibility": [],
+        "mezz.jei.api.runtime.IJeiFeatures": [
+          "disableJeiGui()"
+        ],
+        "mezz.jei.api.runtime.IJeiKeyMapping": [],
+        "mezz.jei.api.runtime.IJeiKeyMappings": [],
+        "mezz.jei.api.runtime.IJeiRuntime": [],
+        "mezz.jei.api.runtime.IRecipesGui": [
+          "show(IFocus<V>)"
+        ],
+        "mezz.jei.api.runtime.IScreenHelper": [],
+        "mezz.jei.api.search.ISearchStorage": [],
+        "mezz.jei.api.search.ISearchStorageBuilder": [],
+        "mezz.jei.api.search.ISearchStorageBuilderFactory": [
+          "create(String)"
+        ],
+        "mezz.jei.api.search.ISearchStorageFactory": [],
+        "mezz.jei.common.chat.JeiChatItemLinkHover": [
+          "getHoveredStyle(Screen, double, double)",
+          "getHoveredText(Screen, double, double)",
+          "getIngredientLink(Style)",
+          "HoveredText(Style, Rect2i)"
+        ],
+        "mezz.jei.common.chat.JeiChatItemLinkRecipeLookup": [
+          "executeShowRecipeCommand(String)",
+          "showRecipeForIngredient(IJeiRuntime, JeiChatItemLinks.IngredientLink)"
+        ],
+        "mezz.jei.common.chat.JeiChatItemLinks": [
+          "createLinkMarker(ITypedIngredient<?>, IIngredientManager)",
+          "parse(String)",
+          "parse(String, Function<JeiChatItemLinks.IngredientLink, Optional<String>>)",
+          "parseChatMessage(Component)",
+          "parseChatMessage(Component, Function<JeiChatItemLinks.IngredientLink, Optional<String>>)",
+          "hasLinkMarkers(String)",
+          "resolveTypedIngredient(JeiChatItemLinks.IngredientLink, IIngredientManager)",
+          "createCommandArgument(JeiChatItemLinks.IngredientLink)",
+          "parseCommandArgument(String)",
+          "createShowRecipeCommand(JeiChatItemLinks.IngredientLink)",
+          "parseShowRecipeCommand(String)",
+          "IngredientLink(String, String)"
+        ],
+        "mezz.jei.common.codecs.EnumCodec": [
+          "create(Class<T>)"
+        ],
+        "mezz.jei.common.codecs.TupleCodec": [
+          "of(Codec<F>, Codec<S>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Pair<F, S>, DynamicOps<T>, T)",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "mezz.jei.common.codecs.TypedIngredientCodecs": [
+          "getIngredientTypeCodec(IIngredientManager)",
+          "getIngredientCodec(IIngredientManager)",
+          "getIngredientCodec(IIngredientType<T>, IIngredientManager)"
+        ],
+        "mezz.jei.common.collect.ListMultiMap": [
+          "get(K)",
+          "toImmutable()"
+        ],
+        "mezz.jei.common.collect.MultiMap": [
+          "get(K)",
+          "put(K, V)",
+          "putAll(K, Collection<V>)",
+          "remove(K, V)",
+          "containsKey(K)",
+          "contains(K, V)",
+          "entrySet()",
+          "keySet()",
+          "allValues()",
+          "clear()",
+          "toImmutable()"
+        ],
+        "mezz.jei.common.collect.SetMultiMap": [
+          "get(K)",
+          "toImmutable()"
+        ],
+        "mezz.jei.common.collect.Table": [
+          "hashBasedTable()",
+          "identityHashBasedTable()",
+          "get(R, C)",
+          "computeIfAbsent(R, C, Supplier<V>)",
+          "put(R, C, V)",
+          "getRow(R)",
+          "contains(R, C)",
+          "clear()",
+          "toImmutable()"
+        ],
+        "mezz.jei.common.config.BookmarkTooltipFeature": [],
+        "mezz.jei.common.config.ClientConfig": [
+          "getInstance()",
+          "isCenterSearchBarEnabled()",
+          "isLowMemorySlowSearchEnabled()",
+          "isCatchRenderErrorsEnabled()",
+          "isCheatToHotbarUsingHotkeysEnabled()",
+          "isAddingBookmarksToFrontEnabled()",
+          "isBookmarkOutputAsRecipeEnabled()",
+          "isLookupFluidContentsEnabled()",
+          "isLookupBlockTagsEnabled()",
+          "getGiveMode()",
+          "getShowHiddenIngredients()",
+          "getBookmarkTooltipFeatures()",
+          "isHoldShiftToShowBookmarkTooltipFeaturesEnabled()",
+          "isDragToRearrangeBookmarksEnabled()",
+          "isLookupHistoryEnabled()",
+          "setLookupHistoryEnabled(boolean)",
+          "addLookupHistoryEnabledListener(IConfigListener<Boolean>)",
+          "getMaxLookupHistoryRows()",
+          "getMaxLookupHistoryIngredients()",
+          "getLookupHistoryDisplaySide()"
+        ],
+        "mezz.jei.common.config.ClientToggleState": [
+          "isOverlayEnabled()",
+          "toggleOverlayEnabled()",
+          "isBookmarkOverlayEnabled()",
+          "toggleBookmarkEnabled()",
+          "setBookmarkEnabled(boolean)",
+          "isCheatItemsEnabled()",
+          "toggleCheatItemsEnabled()",
+          "setCheatItemsEnabled(boolean)",
+          "isEditModeEnabled()",
+          "toggleEditModeEnabled()",
+          "addEditModeToggleListener(IClientToggleState.IEditModeListener)",
+          "clearListeners()"
+        ],
+        "mezz.jei.common.config.ConfigManager": [
+          "registerConfigFile(ConfigSchema)",
+          "getConfigFiles()",
+          "onJeiStarted()"
+        ],
+        "mezz.jei.common.config.DebugConfig": [
+          "create(IConfigSchemaBuilder)",
+          "isDebugIngredientsEnabled()",
+          "isDebugGuisEnabled()",
+          "isDebugInputsEnabled()",
+          "isDebugInfoTooltipsEnabled()",
+          "isLogSuffixTreeStatsEnabled()"
+        ],
+        "mezz.jei.common.config.file.ConfigCategory": [
+          "getName()",
+          "getConfigValue(String)",
+          "getConfigValues()",
+          "getValueNames()",
+          "clearListeners()"
+        ],
+        "mezz.jei.common.config.file.ConfigCategoryBuilder": [
+          "getName()",
+          "addValue(ConfigValue<T>)",
+          "addBoolean(String, boolean)",
+          "addEnum(String, T)",
+          "addInteger(String, int, int, int)",
+          "addList(String, List<T>, IJeiConfigValueSerializer<List<T>>)",
+          "build(ConfigSchema)"
+        ],
+        "mezz.jei.common.config.file.ConfigSchema": [
+          "loadIfNeeded()",
+          "register(FileWatcher, ConfigManager)",
+          "markDirty()",
+          "clearListeners()",
+          "getCategories()",
+          "getPath()"
+        ],
+        "mezz.jei.common.config.file.ConfigSchemaBuilder": [
+          "addCategory(String)",
+          "build()"
+        ],
+        "mezz.jei.common.config.file.ConfigSerializer": [
+          "load(Path, List<ConfigCategory>)",
+          "save(Path, List<ConfigCategory>)"
+        ],
+        "mezz.jei.common.config.file.ConfigValue": [
+          "setSchema(IConfigSchema)",
+          "getName()",
+          "getLocalizedDescription()",
+          "getLocalizedName()",
+          "getDefaultValue()",
+          "getValue()",
+          "get()",
+          "getSerializer()",
+          "setFromSerializedValue(String)",
+          "set(T)",
+          "addListener(IConfigListener<T>)",
+          "clearListeners()"
+        ],
+        "mezz.jei.common.config.file.FileWatcher": [
+          "addCallback(Path, Runnable)",
+          "start()"
+        ],
+        "mezz.jei.common.config.file.FileWatcherThread": [
+          "addCallback(Path, Runnable)",
+          "run()"
+        ],
+        "mezz.jei.common.config.file.IConfigCategoryBuilder": [],
+        "mezz.jei.common.config.file.IConfigListener": [],
+        "mezz.jei.common.config.file.IConfigSchema": [],
+        "mezz.jei.common.config.file.IConfigSchemaBuilder": [],
+        "mezz.jei.common.config.file.JsonArrayFileHelper": [
+          "write(Path, int, Collection<T>, Codec<T>, DynamicOps<JsonElement>, Consumer<? super Error<JsonElement>>, BiConsumer<T, RuntimeException>)",
+          "read(BufferedReader, Integer, Codec<T>, DynamicOps<JsonElement>, BiConsumer<JsonElement, ? super Error<Pair<T, JsonElement>>>, BiConsumer<JsonElement, RuntimeException>)"
+        ],
+        "mezz.jei.common.config.file.JsonArrayWriter": [
+          "start(BufferedWriter)",
+          "add(JsonElement)",
+          "end()"
+        ],
+        "mezz.jei.common.config.file.serializers.BooleanSerializer": [
+          "serialize(Boolean)",
+          "deserialize(String)",
+          "getValidValuesDescription()",
+          "isValid(Boolean)",
+          "getAllValidValues()"
+        ],
+        "mezz.jei.common.config.file.serializers.DeserializeResult": [
+          "getResult()",
+          "getErrors()"
+        ],
+        "mezz.jei.common.config.file.serializers.EnumSerializer": [
+          "serialize(T)",
+          "deserialize(String)",
+          "getValidValuesDescription()",
+          "isValid(T)",
+          "getAllValidValues()"
+        ],
+        "mezz.jei.common.config.file.serializers.IntegerSerializer": [
+          "serialize(Integer)",
+          "deserialize(String)",
+          "getValidValuesDescription()",
+          "isValid(Integer)",
+          "getAllValidValues()"
+        ],
+        "mezz.jei.common.config.file.serializers.ListSerializer": [
+          "serialize(List<T>)",
+          "deserialize(String)",
+          "getValidValuesDescription()",
+          "isValid(List<T>)",
+          "getListValueSerializer()",
+          "getAllValidValues()"
+        ],
+        "mezz.jei.common.config.GiveMode": [],
+        "mezz.jei.common.config.HistoryDisplaySide": [],
+        "mezz.jei.common.config.IClientConfig": [],
+        "mezz.jei.common.config.IClientToggleState": [],
+        "mezz.jei.common.config.IIngredientFilterConfig": [],
+        "mezz.jei.common.config.IIngredientGridConfig": [],
+        "mezz.jei.common.config.IJeiClientConfigs": [],
+        "mezz.jei.common.config.IngredientFilterConfig": [
+          "getModNameSearchMode()",
+          "getTooltipSearchMode()",
+          "getTagSearchMode()",
+          "getColorSearchMode()",
+          "getIdentifierSearchMode()",
+          "getCreativeTabSearchMode()",
+          "getSearchAdvancedTooltips()",
+          "getSearchModIds()",
+          "getSearchModAliases()",
+          "getSearchIngredientAliases()",
+          "getSearchShortModNames()"
+        ],
+        "mezz.jei.common.config.IngredientGridConfig": [
+          "getMinColumns()",
+          "getMinRows()",
+          "getHorizontalAlignment()",
+          "getVerticalAlignment()",
+          "drawBackground()",
+          "getLayoutMode()",
+          "getNavigationMode()",
+          "getMaxColumns()",
+          "getMaxRows()",
+          "getNavigationVisibility()"
+        ],
+        "mezz.jei.common.config.IngredientGridLayoutMode": [],
+        "mezz.jei.common.config.IngredientGridNavigationMode": [
+          "usesScrollbar()",
+          "usesSmoothScrolling()"
+        ],
+        "mezz.jei.common.config.IngredientSortStage": [],
+        "mezz.jei.common.config.IServerConfig": [],
+        "mezz.jei.common.config.JeiClientConfigs": [
+          "register(FileWatcher, ConfigManager)",
+          "getClientConfig()",
+          "getIngredientFilterConfig()",
+          "getIngredientListConfig()",
+          "getBookmarkListConfig()",
+          "onRuntimeStopped()"
+        ],
+        "mezz.jei.common.config.RecipeSorterStage": [],
+        "mezz.jei.common.config.sorting.MappedSortingConfig": [
+          "getComparator(Collection<T>)",
+          "getComparatorFromMappedValues(Collection<V>)"
+        ],
+        "mezz.jei.common.config.sorting.serializers.ISortingSerializer": [],
+        "mezz.jei.common.config.sorting.serializers.SortingSerializers": [],
+        "mezz.jei.common.config.sorting.SortingConfig": [
+          "getDefaultSortOrder()",
+          "getComparator(Collection<T>, Function<V, T>)"
+        ],
+        "mezz.jei.common.Constants": [],
+        "mezz.jei.common.gui.elements.DrawableAnimated": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableBlank": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor, int, int, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableCombined": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor)",
+          "draw(GuiGraphicsExtractor, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableIngredient": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableResource": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor, int, int, int, int, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableSprite": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor, int, int, int, int, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableText": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.DrawableWrappedText": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.HighResolutionDrawable": [
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.common.gui.elements.OffsetDrawable": [
+          "create(IDrawable, int, int)",
+          "getWidth()",
+          "getHeight()",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor)",
+          "setPosition(int, int)",
+          "getArea()"
+        ],
+        "mezz.jei.common.gui.elements.ScalableDrawable": [
+          "draw(GuiGraphicsExtractor, ImmutableRect2i)",
+          "draw(GuiGraphicsExtractor, int, int, int, int)"
+        ],
+        "mezz.jei.common.gui.elements.TextWidget": [
+          "getWidth()",
+          "getHeight()",
+          "setPosition(int, int)",
+          "setTextAlignment(HorizontalAlignment)",
+          "setTextAlignment(VerticalAlignment)",
+          "setFont(Font)",
+          "setColor(int)",
+          "setLineSpacing(int)",
+          "setShadow(boolean)",
+          "getPosition()",
+          "drawWidget(GuiGraphicsExtractor, double, double)",
+          "getTooltip(ITooltipBuilder, double, double)"
+        ],
+        "mezz.jei.common.gui.IngredientsTooltipComponent": [
+          "getHeight(Font)",
+          "getWidth(Font)",
+          "extractImage(Font, int, int, int, int, GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.common.gui.IngredientTooltipComponent": [
+          "getHeight(Font)",
+          "getWidth(Font)",
+          "extractImage(Font, int, int, int, int, GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.common.gui.JeiGuiColors": [
+          "onResourceManagerReload(ResourceManager)",
+          "getColor(JeiGuiColors.GuiColor)"
+        ],
+        "mezz.jei.common.gui.JeiTooltip": [
+          "add(FormattedText)",
+          "add(TooltipComponent)",
+          "setIngredient(ITypedIngredient<?>)",
+          "addKeyUsageComponent(String, IJeiKeyMapping)",
+          "addKeyUsageComponent(String, MutableComponent)",
+          "addAll(Collection<? extends FormattedText>)",
+          "clearIngredient()",
+          "getLines()",
+          "addAll(JeiTooltip)",
+          "isEmpty()",
+          "getLegacyComponents()",
+          "toString()",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "draw(GuiGraphicsExtractor, int, int, ITypedIngredient<T>, IIngredientRenderer<T>, IIngredientManager)",
+          "prepareForIngredientTooltip(ITypedIngredient<T>, IIngredientRenderer<T>, IIngredientManager)",
+          "TooltipRenderData(Font, ItemStack)"
+        ],
+        "mezz.jei.common.gui.OffsetJeiInputHandler": [
+          "handleInput(double, double, IJeiUserInput)",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)",
+          "handleMouseMoved(double, double)",
+          "getArea()"
+        ],
+        "mezz.jei.common.gui.RecipeLayoutDrawableErrored": [
+          "setPosition(int, int)",
+          "drawRecipe(GuiGraphicsExtractor, int, int)",
+          "drawOverlays(GuiGraphicsExtractor, int, int)",
+          "isMouseOver(double, double)",
+          "getIngredientUnderMouse(int, int, IIngredientType<T>)",
+          "getSlotUnderMouse(double, double)",
+          "getRect()",
+          "getRectWithBorder()",
+          "getSideButtonArea(int)",
+          "getRecipeSlotsView()",
+          "getRecipeCategory()",
+          "getRecipe()",
+          "getInputHandler()",
+          "tick()"
+        ],
+        "mezz.jei.common.gui.textures.JeiAtlasManager": [
+          "getAtlas()",
+          "close()",
+          "prepareSharedState(SharedState)",
+          "reload(SharedState, Executor, PreparationBarrier, Executor)",
+          "Config(Identifier, Identifier, Set<MetadataSectionType<?>>)"
+        ],
+        "mezz.jei.common.gui.textures.Textures": [
+          "getSlot()",
+          "getOutputSlot()",
+          "getTabSelected()",
+          "getTabUnselected()",
+          "getShapelessIcon()",
+          "getArrowPrevious()",
+          "getArrowNext()",
+          "getRecipeTransfer()",
+          "getRecipeBookmark()",
+          "getBookmarksFirst()",
+          "getCraftableFirst()",
+          "getConfigButtonIcon()",
+          "getConfigButtonCheatIcon()",
+          "getBookmarkButtonDisabledIcon()",
+          "getHistoryButtonDisabledIcon()",
+          "getHistoryButtonEnabledIcon()",
+          "getBookmarkButtonEnabledIcon()",
+          "getRecipeGuiBackground()",
+          "getIngredientListBackground()",
+          "getBookmarkListBackground()"
+        ],
+        "mezz.jei.common.ingredients.ITypedIngredientFactory": [],
+        "mezz.jei.common.input.ClickableIngredient": [
+          "getTypedIngredient()",
+          "getIngredientType()",
+          "getIngredient()",
+          "getArea()"
+        ],
+        "mezz.jei.common.input.ClickableIngredientFactory": [
+          "createBuilder(ITypedIngredient<T>)",
+          "createBuilder(IIngredientType<T>, T)"
+        ],
+        "mezz.jei.common.input.IInternalKeyMappings": [],
+        "mezz.jei.common.input.KeyNameUtil": [
+          "getKeyDisplayName(Key)"
+        ],
+        "mezz.jei.common.input.keys.AbstractJeiKeyMappingBuilder": [
+          "buildMouse(int)",
+          "buildMouseLeft()",
+          "buildMouseRight()",
+          "buildMouseMiddle()",
+          "buildUnbound()"
+        ],
+        "mezz.jei.common.input.keys.IJeiKeyMappingBuilder": [],
+        "mezz.jei.common.input.keys.IJeiKeyMappingCategoryBuilder": [],
+        "mezz.jei.common.input.keys.IJeiKeyMappingInternal": [],
+        "mezz.jei.common.input.keys.JeiKeyConflictContext": [
+          "isActive()",
+          "conflicts(JeiKeyConflictContext)"
+        ],
+        "mezz.jei.common.input.keys.JeiKeyModifier": [
+          "isActive(JeiKeyConflictContext)",
+          "getCombinedName(Component)"
+        ],
+        "mezz.jei.common.input.keys.JeiMultiKeyMapping": [
+          "isActiveAndMatches(Key)",
+          "isUnbound()",
+          "getTranslatedKeyMessage()"
+        ],
+        "mezz.jei.common.input.MouseButtonEventData": [],
+        "mezz.jei.common.Internal": [
+          "getTextures()",
+          "getServerConnection()",
+          "setServerConnection(IConnectionToServer)",
+          "getKeyMappings()",
+          "setKeyMappings(IInternalKeyMappings)",
+          "getClientToggleState()",
+          "getJeiClientConfigs()",
+          "getOptionalJeiClientConfigs()",
+          "setJeiClientConfigs(IJeiClientConfigs)",
+          "getJeiFeatures()",
+          "getDelayedExecutor()",
+          "setRuntime(IJeiRuntime)",
+          "getJeiRuntime()",
+          "getOptionalJeiRuntime()",
+          "setClientSyncedRecipes(RecipeMap)",
+          "setClientFallbackRecipes(RecipeMap)",
+          "getClientSyncedRecipes()",
+          "hasClientSyncedRecipes()",
+          "hasClientFallbackRecipes()",
+          "hasClientRecipes()"
+        ],
+        "mezz.jei.common.JeiFeatures": [
+          "disableJeiGui()",
+          "isJeiGuiEnabled()",
+          "disableInventoryEffectRendererGuiHandler()",
+          "getInventoryEffectRendererGuiHandlerEnabled()"
+        ],
+        "mezz.jei.common.network.ClientConnectionHelper": [
+          "getServerBrand()",
+          "hasServerBrand(String)",
+          "getConnectedClientPacketListener()"
+        ],
+        "mezz.jei.common.network.ClientPacketContext": [],
+        "mezz.jei.common.network.codecs.EnumStreamCodec": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "mezz.jei.common.network.IConnectionToClient": [],
+        "mezz.jei.common.network.IConnectionToServer": [],
+        "mezz.jei.common.network.packets.handlers.ClientCheatPermissionHandler": [
+          "handleHasCheatPermission(ClientPacketContext, boolean, List<String>)"
+        ],
+        "mezz.jei.common.network.packets.PacketCheatPermission": [
+          "type()",
+          "streamCodec()",
+          "process(ClientPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketDeletePlayerItem": [
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketGiveItemStack": [
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketRecipeTransfer": [
+          "fromSlots(List<TransferOperation>, List<Slot>, List<Slot>, boolean, boolean)",
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketRecipeTransferCounted": [
+          "fromSlots(List<TransferOperation>, List<Slot>, List<Slot>, boolean, boolean)",
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketRequestCheatPermission": [
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PacketSetHotbarItemStack": [
+          "process(ServerPacketContext)",
+          "type()",
+          "streamCodec()"
+        ],
+        "mezz.jei.common.network.packets.PlayToClientPacket": [
+          "type()",
+          "streamCodec()",
+          "process(ClientPacketContext)"
+        ],
+        "mezz.jei.common.network.packets.PlayToServerPacket": [
+          "type()",
+          "streamCodec()",
+          "process(ServerPacketContext)"
+        ],
+        "mezz.jei.common.network.ServerPacketContext": [],
+        "mezz.jei.common.platform.IPlatformBrewingHelper": [
+          "registerCategoryExtensions(IExtendableBrewingRecipeCategory, IIngredientManager)"
+        ],
+        "mezz.jei.common.platform.IPlatformConfigHelper": [
+          "createJeiConfigDir()"
+        ],
+        "mezz.jei.common.platform.IPlatformFluidHelperInternal": [],
+        "mezz.jei.common.platform.IPlatformHelper": [],
+        "mezz.jei.common.platform.IPlatformIngredientHelper": [],
+        "mezz.jei.common.platform.IPlatformInputHelper": [
+          "getClientTooltipFlag(TooltipFlag)",
+          "getSearchTooltipFlag(TooltipFlag)"
+        ],
+        "mezz.jei.common.platform.IPlatformItemStackHelper": [
+          "getItemAttributeModifiers(ItemStack)"
+        ],
+        "mezz.jei.common.platform.IPlatformModHelper": [],
+        "mezz.jei.common.platform.IPlatformRecipeHelper": [
+          "ShieldDecorationRecipeData(Ingredient, Ingredient, ItemStackTemplate)"
+        ],
+        "mezz.jei.common.platform.IPlatformRenderHelper": [],
+        "mezz.jei.common.platform.IPlatformScreenHelper": [],
+        "mezz.jei.common.platform.IPlatformWorldHelper": [],
+        "mezz.jei.common.platform.ITestHelper": [],
+        "mezz.jei.common.platform.Services": [
+          "load(Class<T>)"
+        ],
+        "mezz.jei.common.recipes.BrewingExtensionHelper": [
+          "addExtension(Class<? extends R>, IBrewingCategoryExtension<R>)",
+          "getRecipeExtension(R)",
+          "getBrewingRecipes(Collection<R>, IVanillaRecipeFactory, ContextMap)"
+        ],
+        "mezz.jei.common.recipes.VanillaClientRecipeLoader": [
+          "getVanillaRecipes(RegistryAccess)"
+        ],
+        "mezz.jei.common.search.BakedSubstringIndexBuilder": [
+          "put(String, T)",
+          "build()"
+        ],
+        "mezz.jei.common.search.BakedSubstringIndexSearchStorage": [
+          "getSearchResults(String, Consumer<Collection<T>>)",
+          "getAllElements(Consumer<Collection<T>>)",
+          "put(String, T)",
+          "statistics()"
+        ],
+        "mezz.jei.common.search.CombinedSearchables": [
+          "getSearchResults(String, Consumer<Collection<T>>)",
+          "getAllElements(Consumer<Collection<T>>)",
+          "addSearchable(ISearchable<T>)"
+        ],
+        "mezz.jei.common.search.GeneralizedSuffixTreeSearchStorage": [
+          "getSearchResults(String, Consumer<Collection<T>>)",
+          "getAllElements(Consumer<Collection<T>>)",
+          "put(String, T)",
+          "statistics()"
+        ],
+        "mezz.jei.common.search.ISearchable": [
+          "getMode()"
+        ],
+        "mezz.jei.common.search.LimitedStringStorage": [
+          "getSearchResults(String, Consumer<Collection<T>>)",
+          "getAllElements(Consumer<Collection<T>>)",
+          "put(String, T)",
+          "statistics()"
+        ],
+        "mezz.jei.common.search.LimitedStringStorageBuilder": [
+          "put(String, T)",
+          "build()"
+        ],
+        "mezz.jei.common.search.PrefixedSearchable": [
+          "getSearchStorage()",
+          "getStrings(T)",
+          "getMode()",
+          "getSearchResults(String, Consumer<Collection<I>>)",
+          "getAllElements(Consumer<Collection<I>>)"
+        ],
+        "mezz.jei.common.search.PrefixInfo": [
+          "getPrefix()",
+          "getMode()",
+          "createStorageBuilder()",
+          "getStrings(T)",
+          "toString()"
+        ],
+        "mezz.jei.common.search.SearchMode": [],
+        "mezz.jei.common.search.SearchStorageBuilderAdapter": [
+          "put(String, T)",
+          "build()"
+        ],
+        "mezz.jei.common.transfer.BasicRecipeTransferHandlerServer": [
+          "setItems(Player, List<TransferOperation>, List<Slot>, List<Slot>, boolean, boolean)"
+        ],
+        "mezz.jei.common.transfer.RecipeTransferErrorInternal": [
+          "getType()"
+        ],
+        "mezz.jei.common.transfer.RecipeTransferOperationsResult": [],
+        "mezz.jei.common.transfer.RecipeTransferUtil": [
+          "getTransferRecipeError(IRecipeTransferManager, AbstractContainerMenu, IRecipeLayoutDrawable<?>, Player)",
+          "transferRecipe(IRecipeTransferManager, AbstractContainerMenu, IRecipeLayoutDrawable<?>, Player, boolean)",
+          "validateSlots(Player, Collection<TransferOperation>, Collection<Slot>, Collection<Slot>)",
+          "getRecipeTransferOperations(IStackHelper, Map<Slot, ItemStack>, List<IRecipeSlotView>, List<Slot>)"
+        ],
+        "mezz.jei.common.transfer.TransferOperation": [
+          "inventorySlot(AbstractContainerMenu)",
+          "craftingSlot(AbstractContainerMenu)"
+        ],
+        "mezz.jei.common.util.ChatUtil": [
+          "writeChatMessage(Player, String, ChatFormatting)",
+          "writeChatMessage(Player, Component)"
+        ],
+        "mezz.jei.common.util.DeduplicatingRunner": [
+          "run(Runnable)"
+        ],
+        "mezz.jei.common.util.DelayedExecutor": [
+          "schedule(Runnable, Duration)",
+          "shutdown()"
+        ],
+        "mezz.jei.common.util.DelegatedFuture": [
+          "cancel(boolean)",
+          "isCancelled()",
+          "isDone()",
+          "get()",
+          "get(long, TimeUnit)",
+          "resultNow()",
+          "exceptionNow()",
+          "state()"
+        ],
+        "mezz.jei.common.util.ErrorUtil": [
+          "getIngredientInfo(T, IIngredientType<T>, IIngredientManager)",
+          "getItemStackInfo(ItemStack)",
+          "checkNotEmpty(ItemStack, String)",
+          "checkNotEmpty(T[], String)",
+          "checkNotEmpty(Collection<?>, String)",
+          "checkNotNull(T, String)",
+          "checkNotNull(Collection<?>, String)",
+          "assertMainThread()",
+          "validateRecipes(IRecipeType<T>, Iterable<? extends T>)",
+          "createIngredientCrashReport(Throwable, String, IIngredientManager, ITypedIngredient<T>)",
+          "createIngredientCrashReport(Throwable, String, IIngredientManager, IIngredientType<T>, T)",
+          "logIngredientCrash(Throwable, String, IIngredientManager, IIngredientType<T>, T)",
+          "getRecipeInfo(IRecipeLayoutDrawable<T>)",
+          "getRecipeInfo(IRecipeCategory<T>, T)"
+        ],
+        "mezz.jei.common.util.ExpandNewLineTextAcceptor": [
+          "accept(Style, String)",
+          "addLinesTo(List<FormattedText>)"
+        ],
+        "mezz.jei.common.util.function.CachedFunction": [
+          "apply(T)"
+        ],
+        "mezz.jei.common.util.function.CachedSupplierTransformer": [
+          "get()"
+        ],
+        "mezz.jei.common.util.function.LazySupplier": [
+          "get()"
+        ],
+        "mezz.jei.common.util.IDelayedExecutor": [],
+        "mezz.jei.common.util.ImmutablePoint2i": [],
+        "mezz.jei.common.util.ImmutableRect2i": [
+          "getX()",
+          "getY()",
+          "getWidth()",
+          "getHeight()",
+          "getSize()",
+          "isEmpty()",
+          "contains(ImmutablePoint2i)",
+          "contains(double, double)",
+          "intersects(ImmutableRect2i)",
+          "moveRight(int)",
+          "moveLeft(int)",
+          "moveDown(int)",
+          "moveUp(int)",
+          "insetBy(int)",
+          "expandBy(int)",
+          "cropRight(int)",
+          "cropLeft(int)",
+          "cropBottom(int)",
+          "cropTop(int)",
+          "keepTop(int)"
+        ],
+        "mezz.jei.common.util.ImmutableSize2i": [
+          "getArea()"
+        ],
+        "mezz.jei.common.util.LimitedLogger": [
+          "log(Level, String, String, Object...)",
+          "log(Level, String, Consumer<Logger>)"
+        ],
+        "mezz.jei.common.util.LoggedTimer": [
+          "start(String)",
+          "stop()"
+        ],
+        "mezz.jei.common.util.MathUtil": [
+          "divideCeil(int, int)",
+          "intersects(Collection<ImmutableRect2i>, ImmutableRect2i)",
+          "contains(ImmutableRect2i, double, double)",
+          "contains(Rect2i, double, double)",
+          "contains(ScreenRectangle, double, double)",
+          "union(ImmutableRect2i, ImmutableRect2i)",
+          "centerTextArea(ImmutableRect2i, Font, String)",
+          "centerTextArea(ImmutableRect2i, Font, FormattedCharSequence)",
+          "centerArea(ImmutableRect2i, int, int)",
+          "distance(Vec2, Vec2)"
+        ],
+        "mezz.jei.common.util.MinecraftLocaleSupplier": [
+          "get()"
+        ],
+        "mezz.jei.common.util.NavigationVisibility": [],
+        "mezz.jei.common.util.Pair": [],
+        "mezz.jei.common.util.PathUtil": [
+          "sanitizePathName(String)",
+          "sanitizePathNameLegacy(String)",
+          "writeUsingTempFile(Path, Iterable<? extends CharSequence>)",
+          "moveAtomicReplace(Path, Path)"
+        ],
+        "mezz.jei.common.util.RectDebugger": [
+          "add(ImmutableRect2i, int, String)",
+          "draw(GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.common.util.ReflectionUtil": [
+          "getFieldWithClass(Object, Class<? extends T>)"
+        ],
+        "mezz.jei.common.util.RegistryUtil": [
+          "getRegistry(ResourceKey<? extends Registry<T>>)",
+          "getRegistryAccess()",
+          "setRegistryAccess(RegistryAccess)"
+        ],
+        "mezz.jei.common.util.SafeIngredientUtil": [
+          "getRichTooltip(ITooltipBuilder, IIngredientManager, IIngredientRenderer<T>, ITypedIngredient<T>)",
+          "getRichTooltip(ITooltipBuilder, IIngredientManager, IIngredientRenderer<T>, ITypedIngredient<T>, TooltipFlag)",
+          "getPlainTooltipForSearch(IIngredientManager, IIngredientRenderer<T>, ITypedIngredient<T>, TooltipFlag)",
+          "renderBatch(GuiGraphicsExtractor, IIngredientType<T>, IIngredientRenderer<T>, List<BatchRenderElement<T>>)",
+          "render(GuiGraphicsExtractor, IIngredientRenderer<T>, ITypedIngredient<T>, int, int)",
+          "render(GuiGraphicsExtractor, IIngredientRenderer<T>, IIngredientType<T>, BatchRenderElement<T>)",
+          "render(GuiGraphicsExtractor, IIngredientRenderer<T>, IIngredientType<T>, T, int, int)"
+        ],
+        "mezz.jei.common.util.ServerCommandUtil": [
+          "hasPermissionForCheatMode(ServerPlayer, IServerConfig)",
+          "executeGive(ServerPacketContext, ItemStack, GiveMode)",
+          "setHotbarSlot(ServerPacketContext, ItemStack, int)",
+          "mousePickupItemStack(Player, ItemStack)",
+          "canStack(ItemStack, ItemStack)"
+        ],
+        "mezz.jei.common.util.ServerConfigPathUtil": [
+          "getWorldPath(Path)",
+          "getRealmsServerPath(String)",
+          "getServerPath(String, String)",
+          "getServerPath(String, String, boolean)",
+          "getServerDirPath()",
+          "getServerPath(Path, String, String)",
+          "getServerPath(Path, String, String, boolean)"
+        ],
+        "mezz.jei.common.util.StackHelper": [
+          "isEquivalent(ItemStack, ItemStack, UidContext)",
+          "getUidForStack(ItemStack, UidContext)",
+          "getUidForStack(ITypedIngredient<ItemStack>, UidContext)",
+          "hasSubtypes(ItemStack)"
+        ],
+        "mezz.jei.common.util.StringUtil": [
+          "stripStyling(Component)",
+          "removeChatFormatting(String)",
+          "truncateStringToWidth(FormattedText, int, Font)",
+          "getStyleAtEnd(FormattedText)",
+          "splitLines(Font, List<FormattedText>, int, int)",
+          "expandNewlines(Component...)",
+          "intsToString(Collection<Integer>)",
+          "drawCenteredStringWithShadow(GuiGraphicsExtractor, Font, String, ImmutableRect2i, int)",
+          "drawCenteredStringWithShadow(GuiGraphicsExtractor, Font, FormattedCharSequence, ImmutableRect2i, int)"
+        ],
+        "mezz.jei.common.util.TagUtil": [
+          "getTagEquivalent(Collection<STACK>, Function<STACK, VALUE>, Supplier<Stream<Named<VALUE>>>)"
+        ],
+        "mezz.jei.common.util.TextHistory": [
+          "add(String)",
+          "get(TextHistory.Direction, String)",
+          "getPrevious(String)",
+          "getNext(String)"
+        ],
+        "mezz.jei.common.util.TickTimer": [
+          "getValue()",
+          "getMaxValue()",
+          "getValue(long, long, int, int, boolean)"
+        ],
+        "mezz.jei.common.util.TimeUtil": [
+          "toHumanString(Duration)"
+        ],
+        "mezz.jei.common.util.Translator": [
+          "translateToLocal(String)",
+          "translateToLocalFormatted(String, Object...)",
+          "toLowercaseWithLocale(String)",
+          "setLocaleSupplier(Supplier<Locale>)"
+        ],
+        "mezz.jei.common.util.WeakConsumer": [
+          "accept(T)"
+        ],
+        "mezz.jei.fabric.chat.JeiChatEventHandler": [
+          "register()"
+        ],
+        "mezz.jei.fabric.chat.JeiInternalShowCommand": [
+          "register()"
+        ],
+        "mezz.jei.fabric.config.ServerConfig": [
+          "getInstance()",
+          "isCheatModeEnabledForOp()",
+          "isCheatModeEnabledForCreative()",
+          "isCheatModeEnabledForGive()"
+        ],
+        "mezz.jei.fabric.events.JeiCharTypedEvents": [],
+        "mezz.jei.fabric.events.JeiLifecycleEvents": [],
+        "mezz.jei.fabric.events.JeiScreenEvents": [],
+        "mezz.jei.fabric.ingredients.fluid.JeiFluidIngredient": [
+          "getFluidVariant()",
+          "getAmount()"
+        ],
+        "mezz.jei.fabric.input.AbstractJeiKeyMapping": [
+          "getMapping()",
+          "isUnbound()",
+          "getTranslatedKeyMessage()",
+          "isDown()",
+          "register(Consumer<KeyMapping>)"
+        ],
+        "mezz.jei.fabric.input.AmecsHelper": [
+          "initKeyMappingManagerLayer()",
+          "init()",
+          "setJeiModifier(AmecsKeyModifierCombination, JeiKeyModifier)",
+          "getJeiModifiers(AmecsKeyModifierCombination)",
+          "getCombinedName(AmecsKeyModifierCombination, Key)"
+        ],
+        "mezz.jei.fabric.input.AmecsJeiKeyMapping": [
+          "getMapping()",
+          "isActiveAndMatches(Key)",
+          "getTranslatedKeyMessage()"
+        ],
+        "mezz.jei.fabric.input.AmecsJeiKeyMappingBuilder": [
+          "setModifier(JeiKeyModifier)",
+          "buildMouse(int)",
+          "buildKeyboardKey(int)"
+        ],
+        "mezz.jei.fabric.input.AmecsJeiKeyMappingManagerLayer": [
+          "accepts(KeyMapping)",
+          "getAllMappings()",
+          "getMappingsForInput(Key)"
+        ],
+        "mezz.jei.fabric.input.AmecsJeiKeyModifier": [
+          "getTranslationKey()",
+          "getTextProvider()"
+        ],
+        "mezz.jei.fabric.input.AmecsKeyMappingWithContext": [
+          "same(KeyMapping)",
+          "setKey(Key)",
+          "isContextActive()"
+        ],
+        "mezz.jei.fabric.input.FabricAmecsSupport": [
+          "isEnabled()"
+        ],
+        "mezz.jei.fabric.input.FabricJeiKeyMapping": [
+          "getMapping()",
+          "isActiveAndMatches(Key)"
+        ],
+        "mezz.jei.fabric.input.FabricJeiKeyMappingBuilder": [
+          "setContext(JeiKeyConflictContext)",
+          "setModifier(JeiKeyModifier)",
+          "buildMouse(int)",
+          "buildKeyboardKey(int)"
+        ],
+        "mezz.jei.fabric.input.FabricJeiKeyMappingCategoryBuilder": [
+          "createMapping(String)"
+        ],
+        "mezz.jei.fabric.input.FabricKeyMapping": [
+          "same(KeyMapping)",
+          "isContextActive()"
+        ],
+        "mezz.jei.fabric.input.KeyboardHandlerExtension": [],
+        "mezz.jei.fabric.JustEnoughItems": [
+          "onInitialize()"
+        ],
+        "mezz.jei.fabric.JustEnoughItemsClient": [
+          "onInitializeClient()",
+          "createReloadListener()"
+        ],
+        "mezz.jei.fabric.network.ClientNetworkHandler": [
+          "registerClientPacketHandler(IConnectionToServer)"
+        ],
+        "mezz.jei.fabric.network.ConnectionToClient": [
+          "sendPacketToClient(T, ServerPlayer)"
+        ],
+        "mezz.jei.fabric.network.ConnectionToServer": [
+          "isJeiOnServer()",
+          "isSameModLoader()",
+          "canSendPacket(Type<?>)",
+          "sendPacketToServer(T)",
+          "onRuntimeStopped()"
+        ],
+        "mezz.jei.fabric.network.ServerNetworkHandler": [
+          "registerServerPacketHandlers(IConnectionToClient, IServerConfig)"
+        ],
+        "mezz.jei.fabric.platform.BrewingHelper": [
+          "getBrewingRecipes(IIngredientManager, IVanillaRecipeFactory, PotionBrewing, ContextMap, BrewingExtensionHelper)"
+        ],
+        "mezz.jei.fabric.platform.ConfigHelper": [
+          "getModConfigDir()",
+          "getConfigScreen()"
+        ],
+        "mezz.jei.fabric.platform.FluidHelper": [
+          "getFluidIngredientType()",
+          "getStillFluidSprite(IJeiFluidIngredient)",
+          "getDisplayName(IJeiFluidIngredient)",
+          "getColorTint(IJeiFluidIngredient)",
+          "getTooltip(IJeiFluidIngredient, Player, TooltipContext, TooltipFlag)",
+          "getAmount(IJeiFluidIngredient)",
+          "getComponentsPatch(IJeiFluidIngredient)",
+          "bucketVolume()",
+          "create(Holder<Fluid>, long, DataComponentPatch)",
+          "create(Holder<Fluid>, long)",
+          "copy(IJeiFluidIngredient)",
+          "normalize(IJeiFluidIngredient)",
+          "getContainedFluid(ITypedIngredient<?>)",
+          "copyWithAmount(IJeiFluidIngredient, long)",
+          "getCodec()",
+          "getDisplayContentsFactoryForStacks()"
+        ],
+        "mezz.jei.fabric.platform.IngredientHelper": [
+          "getPotionContainers(PotionBrewing)",
+          "getPotionIngredients(PotionBrewing)",
+          "getCompostValue(ItemStack)",
+          "getSupportedItems(Holder<Enchantment>)"
+        ],
+        "mezz.jei.fabric.platform.InputHelper": [
+          "isActiveAndMatches(KeyMapping, Key, Either<MouseButtonEventData, KeyEvent>)",
+          "createKeyMappingCategoryBuilder(Category)",
+          "getSearchTooltipFlag(TooltipFlag)"
+        ],
+        "mezz.jei.fabric.platform.ItemStackHelper": [
+          "getBurnTime(ItemStack, RecipeType<?>, FuelValues)",
+          "getCreatorModId(ItemStack)",
+          "canEnchant(Holder<Enchantment>, ItemStack)"
+        ],
+        "mezz.jei.fabric.platform.ModHelper": [
+          "getModNameForModId(String)",
+          "isInDev()"
+        ],
+        "mezz.jei.fabric.platform.PlatformHelper": [
+          "getItemStackHelper()",
+          "getFluidHelper()",
+          "getRenderHelper()",
+          "getRecipeHelper()",
+          "getBrewingHelper()",
+          "getConfigHelper()",
+          "getInputHelper()",
+          "getScreenHelper()",
+          "getIngredientHelper()",
+          "getModHelper()",
+          "getWorldHelper()",
+          "getTestHelper()"
+        ],
+        "mezz.jei.fabric.platform.RecipeHelper": [
+          "getBase(SmithingRecipe)",
+          "getAddition(SmithingRecipe)",
+          "getTemplate(SmithingRecipe)",
+          "getShieldDecorationRecipeData(ShieldDecorationRecipe)",
+          "getGrindstoneResult(GrindstoneMenu, ItemStack, ItemStack)",
+          "shrinkShapedRecipePattern(List<String>)",
+          "isItemEnchantable(ItemStack, Holder<Enchantment>)"
+        ],
+        "mezz.jei.fabric.platform.RenderHelper": [
+          "getFontRenderer(Minecraft, ItemStack)",
+          "shouldRender(MobEffectInstance)",
+          "getTextureAtlasSprite(BlockState)",
+          "blitSprite(GuiGraphicsExtractor, RenderPipeline, TextureAtlasSprite, int, int, int, int, int, int, int, int)",
+          "blitNineSlicedSprite(GuiGraphicsExtractor, RenderPipeline, TextureAtlasSprite, NineSlice, int, int, int, int)",
+          "blitTiledSprite(GuiGraphicsExtractor, RenderPipeline, TextureAtlasSprite, Tile, int, int, int, int, int)",
+          "getMainImage(TextureAtlasSprite)",
+          "renderTooltip(GuiGraphicsExtractor, List<Either<FormattedText, TooltipComponent>>, int, int, Font, ItemStack)",
+          "getName(TagKey<?>)"
+        ],
+        "mezz.jei.fabric.platform.ScreenHelper": [
+          "getHoveredSlot(AbstractContainerScreen<?>)",
+          "getLeftPos(AbstractContainerScreen<?>)",
+          "getTopPos(AbstractContainerScreen<?>)",
+          "getImageWidth(AbstractContainerScreen<?>)",
+          "getImageHeight(AbstractContainerScreen<?>)",
+          "getSlotHighlightBackSprite()",
+          "getSlotHighlightFrontSprite()",
+          "getBookArea(RecipeBookComponent<?>)",
+          "getToastsArea()",
+          "getTabButtons(RecipeBookComponent<?>)",
+          "getRecipeBookComponent(AbstractRecipeBookScreen<T>)",
+          "canLoseFocus(EditBox)"
+        ],
+        "mezz.jei.fabric.platform.TestHelper": [
+          "getReason(UnknownGameTestException)"
+        ],
+        "mezz.jei.fabric.platform.WorldHelper": [
+          "getLevelId(MinecraftServer)"
+        ],
+        "mezz.jei.fabric.plugins.fabric.FabricGuiPlugin": [
+          "getPluginUid()",
+          "configureJei(IJeiFeatures)",
+          "registerRuntime(IRuntimeRegistration)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "onRuntimeUnavailable()",
+          "getRuntime()",
+          "getResourceReloadHandler()"
+        ],
+        "mezz.jei.fabric.startup.ClientLifecycleHandler": [
+          "registerEvents()",
+          "getReloadListener()"
+        ],
+        "mezz.jei.fabric.startup.EventRegistration": [
+          "setEventHandlers(JeiEventHandlers)",
+          "clear()"
+        ],
+        "mezz.jei.fabric.startup.FabricPluginFinder": [
+          "getModPlugins()"
+        ],
+        "mezz.jei.gui.bookmarks.BookmarkCodec": [
+          "create(ICodecHelper, IIngredientManager, IRecipeManager, BookmarkFactory)"
+        ],
+        "mezz.jei.gui.bookmarks.BookmarkFactory": [
+          "create(ITypedIngredient<T>)"
+        ],
+        "mezz.jei.gui.bookmarks.BookmarkList": [
+          "add(IBookmark)",
+          "moveBookmark(IBookmark, IBookmark, int)",
+          "contains(IBookmark)",
+          "onElementBookmarked(IElement<T>, UserInput, BookmarkOverlay)",
+          "addIngredientBookmark(ITypedIngredient<T>)",
+          "toggleBookmark(IBookmark)",
+          "remove(IBookmark)",
+          "setFromConfigFile(List<IBookmark>)",
+          "getElements()",
+          "getMatchingBookmark(IRecipeType<R>, R)",
+          "isEmpty()",
+          "addSourceListChangedListener(IIngredientGridSource.SourceListChangedListener)"
+        ],
+        "mezz.jei.gui.bookmarks.BookmarkType": [],
+        "mezz.jei.gui.bookmarks.IBookmark": [],
+        "mezz.jei.gui.bookmarks.IngredientBookmark": [
+          "getType()",
+          "getIngredient()",
+          "getElement()",
+          "isVisible()",
+          "setVisible(boolean)",
+          "hashCode()",
+          "equals(Object)",
+          "toString()"
+        ],
+        "mezz.jei.gui.bookmarks.RecipeBookmark": [
+          "create(IRecipeLayoutDrawable<T>, IIngredientManager)",
+          "getType()",
+          "getRecipeCategory()",
+          "getRecipe()",
+          "getDisplayIngredient()",
+          "isDisplayIsOutput()",
+          "getElement()",
+          "isVisible()",
+          "setVisible(boolean)",
+          "hashCode()",
+          "equals(Object)",
+          "toString()",
+          "isRecipe(IRecipeType<T>, T)"
+        ],
+        "mezz.jei.gui.chat.ChatIngredientTooltip": [
+          "setTooltipForHoveredText(GuiGraphicsExtractor, Style, int, int)",
+          "getTooltipForHoveredChatLink(Screen, double, double)",
+          "getTooltipForHoveredText(Style)"
+        ],
+        "mezz.jei.gui.config.BookmarkJsonConfig": [
+          "saveBookmarks(IRecipeManager, IFocusFactory, IGuiHelper, IIngredientManager, RegistryAccess, ICodecHelper, List<IBookmark>, Codec<IBookmark>)",
+          "loadBookmarks(IRecipeManager, IFocusFactory, IGuiHelper, IIngredientManager, RegistryAccess, BookmarkList, ICodecHelper, Codec<IBookmark>)"
+        ],
+        "mezz.jei.gui.config.IBookmarkConfig": [],
+        "mezz.jei.gui.config.ILookupHistoryConfig": [],
+        "mezz.jei.gui.config.IngredientTypeSortingConfig": [
+          "getIngredientTypeString(IListElementInfo<?>)",
+          "getIngredientTypeString(IIngredientType<?>)",
+          "getDefaultSortOrder()"
+        ],
+        "mezz.jei.gui.config.InternalKeyMappings": [
+          "getToggleOverlay()",
+          "getFocusSearch()",
+          "getToggleCheatMode()",
+          "getToggleEditMode()",
+          "getToggleCheatModeConfigButton()",
+          "getRecipeBack()",
+          "getPreviousCategory()",
+          "getNextCategory()",
+          "getPreviousRecipePage()",
+          "getNextRecipePage()",
+          "getPauseRecipeCycling()",
+          "getPreviousPage()",
+          "getNextPage()",
+          "getCloseRecipeGui()",
+          "getBookmark()",
+          "getToggleBookmarkOverlay()",
+          "getShowRecipe()",
+          "getShowUses()",
+          "getTransferRecipeBookmark()",
+          "getMaxTransferRecipeBookmark()"
+        ],
+        "mezz.jei.gui.config.LookupHistoryJsonConfig": [
+          "save(IRecipeManager, IIngredientManager, RegistryAccess, ICodecHelper, List<IBookmark>, Codec<IBookmark>)",
+          "load(IRecipeManager, IIngredientManager, RegistryAccess, ICodecHelper, Codec<IBookmark>)"
+        ],
+        "mezz.jei.gui.config.ModNameSortingConfig": [
+          "getDefaultSortOrder()"
+        ],
+        "mezz.jei.gui.elements.ButtonSprites": [
+          "render(GuiGraphicsExtractor, boolean, boolean, boolean, int, int, int, int, int)"
+        ],
+        "mezz.jei.gui.elements.IconButton": [
+          "updateBounds(ImmutableRect2i)",
+          "getArea()",
+          "draw(GuiGraphicsExtractor, int, int, float)",
+          "isMouseOver(double, double)",
+          "createInputHandler()",
+          "tick()",
+          "drawTooltips(GuiGraphicsExtractor, int, int)",
+          "isVisible()",
+          "getX()",
+          "getY()",
+          "getWidth()",
+          "getHeight()"
+        ],
+        "mezz.jei.gui.events.GuiEventHandler": [
+          "onGuiInit(Screen)",
+          "onGuiOpen(Screen)",
+          "onClientTick()",
+          "drawForScreenBackground(Screen, GuiGraphicsExtractor)",
+          "drawForScreenForeground(Screen, GuiGraphicsExtractor, int, int)",
+          "renderCompactPotionIndicators()"
+        ],
+        "mezz.jei.gui.filter.FilterTextSource": [
+          "getFilterText()",
+          "setFilterText(String)",
+          "addListener(IFilterTextSource.Listener)"
+        ],
+        "mezz.jei.gui.filter.IFilterTextSource": [],
+        "mezz.jei.gui.ghost.GhostIngredientDrag": [
+          "drawTargets(GuiGraphicsExtractor, int, int)",
+          "canStart(GhostIngredientDrag<?>, double, double)",
+          "drawItem(GuiGraphicsExtractor, int, int)",
+          "drawTargets(GuiGraphicsExtractor, int, int, List<Rect2i>)",
+          "onClick(UserInput)",
+          "stop()",
+          "getIngredientRenderer()",
+          "getIngredient()",
+          "getOrigin()"
+        ],
+        "mezz.jei.gui.ghost.GhostIngredientDragManager": [
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "drawOnForeground(GuiGraphicsExtractor, int, int)",
+          "stopDrag()",
+          "createDragHandler()"
+        ],
+        "mezz.jei.gui.ghost.GhostIngredientQuickMoveManager": [
+          "quickMove(T, UserInput)"
+        ],
+        "mezz.jei.gui.ghost.GhostIngredientReturning": [
+          "create(GhostIngredientDrag<T>, double, double)",
+          "drawItem(GuiGraphicsExtractor)",
+          "isComplete()"
+        ],
+        "mezz.jei.gui.GuiProperties": [
+          "areEqual(IGuiProperties, IGuiProperties)"
+        ],
+        "mezz.jei.gui.ingredients.DisplayNameUtil": [
+          "getLowercaseDisplayNameForSearch(T, IIngredientHelper<T>)"
+        ],
+        "mezz.jei.gui.ingredients.GuiIngredientProperties": [
+          "getWidth(int)",
+          "getHeight(int)"
+        ],
+        "mezz.jei.gui.ingredients.IListElement": [],
+        "mezz.jei.gui.ingredients.IListElementInfo": [],
+        "mezz.jei.gui.ingredients.IngredientFilter": [
+          "addIngredient(IListElementInfo<V>)",
+          "invalidateCache()",
+          "rebuildItemFilter()",
+          "onEditModeChanged()",
+          "updateHidden()",
+          "onIngredientVisibilityChanged(ITypedIngredient<V>, boolean)",
+          "onIngredientsVisibilityChanged(Collection<ITypedIngredient<V>>, boolean)",
+          "getElements()",
+          "getFilteredIngredients(IIngredientType<T>)",
+          "onIngredientsAdded(IIngredientHelper<V>, Collection<ITypedIngredient<V>>)",
+          "onIngredientsRemoved(IIngredientHelper<V>, Collection<ITypedIngredient<V>>)",
+          "addSourceListChangedListener(IIngredientGridSource.SourceListChangedListener)"
+        ],
+        "mezz.jei.gui.ingredients.IngredientFilterApi": [
+          "getFilterText()",
+          "setFilterText(String)",
+          "getFilteredIngredients(IIngredientType<T>)"
+        ],
+        "mezz.jei.gui.ingredients.IngredientListElementFactory": [
+          "createBaseList(IIngredientManager, IModIdHelper)",
+          "createTestList(IIngredientManager, IIngredientType<V>, Collection<V>, IModIdHelper)",
+          "rebuildList(IIngredientManager, Collection<IListElement<?>>, IModIdHelper)"
+        ],
+        "mezz.jei.gui.ingredients.IngredientSorter": [
+          "sortIngredients(IClientConfig, ModNameSortingConfig, IngredientTypeSortingConfig, IIngredientManager, List<IListElementInfo<?>>)"
+        ],
+        "mezz.jei.gui.ingredients.IngredientSorterComparators": [
+          "getComparator(List<IngredientSortStage>)",
+          "getComparator(IngredientSortStage)",
+          "getDefault()",
+          "getItemStack(IListElementInfo<V>)"
+        ],
+        "mezz.jei.gui.ingredients.ListElement": [
+          "getTypedIngredient()",
+          "getSortedIndex()",
+          "setSortedIndex(int)",
+          "getCreatedIndex()",
+          "isVisible()",
+          "setVisible(boolean)"
+        ],
+        "mezz.jei.gui.ingredients.ListElementInfo": [
+          "create(ITypedIngredient<V>, IIngredientManager, IModIdHelper)",
+          "createFromElement(IListElement<V>, IIngredientManager, IModIdHelper)",
+          "getNames()",
+          "getModNameForSorting()",
+          "getModNames(IIngredientFilterConfig)",
+          "getTooltipStrings(IIngredientFilterConfig, IIngredientManager)",
+          "getStrings(List<Component>)",
+          "getTagStrings(IIngredientManager)",
+          "getTagIds(IIngredientManager)",
+          "getColors(IIngredientManager)",
+          "getColorNames(IIngredientManager, IColorHelper)",
+          "getCreativeTabsStrings(IIngredientManager)",
+          "getIdentifier()",
+          "getElement()",
+          "getTypedIngredient()",
+          "getCreatedIndex()"
+        ],
+        "mezz.jei.gui.input.ClickableIngredientInternal": [
+          "getTypedIngredient()",
+          "getElement()",
+          "isMouseOver(double, double)",
+          "canClickToFocus()",
+          "getCheatItemStack(IIngredientManager)"
+        ],
+        "mezz.jei.gui.input.ClientInputHandler": [
+          "onInitGui()",
+          "onKeyboardKeyPressedPre(Screen, UserInput)",
+          "onKeyboardKeyPressedPost(Screen, UserInput)",
+          "onKeyboardCharTypedPre(Screen, CharacterEvent)",
+          "onKeyboardCharTypedPost(Screen, CharacterEvent)",
+          "onGuiMouseClicked(Screen, UserInput)",
+          "onGuiMouseReleased(Screen, UserInput)",
+          "onGuiMouseScroll(double, double, double, double)",
+          "onGuiMouseDragged(Screen, MouseButtonEvent, double, double)"
+        ],
+        "mezz.jei.gui.input.CombinedRecipeFocusSource": [
+          "getIngredientUnderMouse(UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.DelegatingClickableIngredientInternal": [
+          "getTypedIngredient()",
+          "getElement()",
+          "isMouseOver(double, double)",
+          "getCheatItemStack(IIngredientManager)",
+          "canClickToFocus()",
+          "show(IRecipesGui, FocusUtil, List<RecipeIngredientRole>)"
+        ],
+        "mezz.jei.gui.input.DraggableIngredientInternal": [
+          "getTypedIngredient()",
+          "getElement()",
+          "getArea()"
+        ],
+        "mezz.jei.gui.input.focus.EditBoxFocusHandler": [
+          "unFocus()",
+          "focus()"
+        ],
+        "mezz.jei.gui.input.focus.GuiEventListenerFocusHandler": [
+          "create(GuiEventListener)",
+          "unFocus()",
+          "focus()"
+        ],
+        "mezz.jei.gui.input.focus.IFocusHandler": [],
+        "mezz.jei.gui.input.focus.ScreenFocusHandler": [
+          "create(Screen)",
+          "unFocus()",
+          "focus()"
+        ],
+        "mezz.jei.gui.input.GuiContainerWrapper": [
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)"
+        ],
+        "mezz.jei.gui.input.GuiTextFieldFilter": [
+          "updateBounds(ImmutableRect2i)",
+          "setValue(String)",
+          "getHistory(TextHistory.Direction)",
+          "isMouseOver(double, double)",
+          "createInputHandler()",
+          "setFocused(boolean)",
+          "extractWidgetRenderState(GuiGraphicsExtractor, int, int, float)",
+          "extractBackgroundRenderState(GuiGraphicsExtractor)",
+          "extractForegroundRenderState(GuiGraphicsExtractor, int, int, float)"
+        ],
+        "mezz.jei.gui.input.handlers.BookmarkInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.ChatLinkInputHandler": [
+          "handleUserInput(Screen, UserInput, IInternalKeyMappings)",
+          "handleGuiChange()"
+        ],
+        "mezz.jei.gui.input.handlers.CombinedDragHandler": [
+          "handleDragStart(Screen, UserInput)",
+          "handleDragComplete(Screen, UserInput)",
+          "handleDragCanceled()"
+        ],
+        "mezz.jei.gui.input.handlers.CombinedInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "unfocus()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)",
+          "toString()"
+        ],
+        "mezz.jei.gui.input.handlers.DeleteItemInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "drawTooltips(GuiGraphicsExtractor, int, int)",
+          "shouldDeleteItemOnClick(Minecraft, double, double)"
+        ],
+        "mezz.jei.gui.input.handlers.DragRouter": [
+          "handleGuiChange()",
+          "startDrag(Screen, UserInput)",
+          "completeDrag(Screen, UserInput)",
+          "cancelDrag()"
+        ],
+        "mezz.jei.gui.input.handlers.EditInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.FocusInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.GlobalInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.GuiAreaInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.NullDragHandler": [
+          "handleDragStart(Screen, UserInput)",
+          "handleDragComplete(Screen, UserInput)"
+        ],
+        "mezz.jei.gui.input.handlers.NullInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.input.handlers.ProxyDragHandler": [
+          "handleDragStart(Screen, UserInput)",
+          "handleDragComplete(Screen, UserInput)",
+          "handleDragCanceled()"
+        ],
+        "mezz.jei.gui.input.handlers.ProxyInputHandler": [
+          "toString()",
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "unfocus()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)"
+        ],
+        "mezz.jei.gui.input.handlers.SameElementInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "unfocus()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)"
+        ],
+        "mezz.jei.gui.input.handlers.TextFieldInputHandler": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "unfocus()"
+        ],
+        "mezz.jei.gui.input.handlers.UserInputRouter": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "handleGuiChange()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)",
+          "toString()"
+        ],
+        "mezz.jei.gui.input.ICharTypedHandler": [],
+        "mezz.jei.gui.input.IClickableIngredientInternal": [
+          "show(IRecipesGui, FocusUtil, List<RecipeIngredientRole>)"
+        ],
+        "mezz.jei.gui.input.IDraggableIngredientInternal": [],
+        "mezz.jei.gui.input.IDragHandler": [
+          "handleDragCanceled()"
+        ],
+        "mezz.jei.gui.input.IMouseOverable": [],
+        "mezz.jei.gui.input.InputType": [],
+        "mezz.jei.gui.input.IPaged": [],
+        "mezz.jei.gui.input.IRecipeFocusSource": [],
+        "mezz.jei.gui.input.IUserInputHandler": [
+          "unfocus()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleMouseDragged(double, double, Key, double, double)"
+        ],
+        "mezz.jei.gui.input.KeyUserInput": [
+          "getKey()",
+          "getMouseX()",
+          "getMouseY()",
+          "getInputType()",
+          "getModifiers()",
+          "getInputWithModifiers()",
+          "isSimulate()",
+          "isAllowedChatCharacter()",
+          "getEvent()",
+          "toString()"
+        ],
+        "mezz.jei.gui.input.MouseUserInput": [
+          "getKey()",
+          "getMouseX()",
+          "getMouseY()",
+          "getInputType()",
+          "getModifiers()",
+          "getInputWithModifiers()",
+          "isSimulate()",
+          "isAllowedChatCharacter()",
+          "getEvent()",
+          "toString()"
+        ],
+        "mezz.jei.gui.input.MouseUtil": [
+          "getX()",
+          "getY()"
+        ],
+        "mezz.jei.gui.input.UserInput": [
+          "fromVanilla(KeyEvent, InputType)",
+          "fromVanilla(MouseButtonEvent, boolean, InputType)",
+          "getMouseX()",
+          "getMouseY()",
+          "getInputType()",
+          "isAllowedChatCharacter()",
+          "is(IJeiKeyMapping)",
+          "is(KeyMapping)",
+          "getEvent()",
+          "ifMouseEvent(UserInput.MouseClickable)",
+          "callVanilla(ToBooleanBiFunction<Double, Double>, UserInput.MouseClickable, Function<KeyEvent, Boolean>)"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.BookmarkButtonController": [
+          "getTooltips(ITooltipBuilder)",
+          "updateState(IButtonState)",
+          "onPress(IJeiUserInput)"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.BookmarkDrag": [
+          "canStart(BookmarkDrag<?>, double, double)",
+          "update(int, int)",
+          "drawItem(GuiGraphicsExtractor, int, int)",
+          "onClick(UserInput)",
+          "stop()"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.BookmarkDragManager": [
+          "updateDrag(int, int)",
+          "drawDraggedItem(GuiGraphicsExtractor, int, int)",
+          "stopDrag()",
+          "createDragHandler()"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.BookmarkOverlay": [
+          "isListDisplayed()",
+          "hasRoom()",
+          "getScreenPropertiesUpdater()",
+          "drawScreen(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawBackground(GuiGraphicsExtractor)",
+          "drawForeground(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "tick()",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)",
+          "getIngredientUnderMouse()",
+          "getIngredientUnderMouse(IIngredientType<T>)",
+          "createInputHandler()",
+          "createDragHandler()",
+          "drawOnForeground(GuiGraphicsExtractor, int, int)",
+          "createBookmarkDragTargets()",
+          "isMouseOver(double, double)"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.history.ILookupHistoryOverlay": [],
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistory": [
+          "add(IBookmark)",
+          "getElements()",
+          "addSourceListChangedListener(IIngredientGridSource.SourceListChangedListener)"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistoryButtonController": [
+          "getTooltips(ITooltipBuilder)",
+          "updateState(IButtonState)",
+          "onPress(IJeiUserInput)"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.history.LookupHistoryOverlay": [
+          "isListDisplayed()",
+          "isDisplayedOnThisSide()",
+          "getLookupHistory()",
+          "getDisplayHeight()",
+          "getDisplayHeight(int, boolean)",
+          "updateBounds(ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i)",
+          "updateLayout()",
+          "draw(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawBackground(GuiGraphicsExtractor)",
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "tick()",
+          "getArea()",
+          "close()",
+          "drawOnForeground(GuiGraphicsExtractor, int, int)",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)",
+          "createDragHandler()"
+        ],
+        "mezz.jei.gui.overlay.bookmarks.IBookmarkDragTarget": [],
+        "mezz.jei.gui.overlay.bookmarks.PreviewTooltipComponent": [
+          "getHeight(Font)",
+          "getWidth(Font)",
+          "extractImage(Font, int, int, int, int, GuiGraphicsExtractor)",
+          "tick()"
+        ],
+        "mezz.jei.gui.overlay.ConfigButtonController": [
+          "updateState(IButtonState)",
+          "getTooltips(ITooltipBuilder)",
+          "onPress(IJeiUserInput)"
+        ],
+        "mezz.jei.gui.overlay.elements.IElement": [
+          "handleClick(UserInput, IInternalKeyMappings)"
+        ],
+        "mezz.jei.gui.overlay.elements.IngredientBookmarkElement": [
+          "getTypedIngredient()",
+          "getBookmark()",
+          "createRenderOverlay()",
+          "show(IRecipesGui, FocusUtil, List<RecipeIngredientRole>)",
+          "getTooltip(JeiTooltip, IngredientGridTooltipHelper, IIngredientRenderer<T>, IIngredientHelper<T>)",
+          "isVisible()",
+          "tick()"
+        ],
+        "mezz.jei.gui.overlay.elements.IngredientElement": [
+          "getTypedIngredient()",
+          "getBookmark()",
+          "createRenderOverlay()",
+          "show(IRecipesGui, FocusUtil, List<RecipeIngredientRole>)",
+          "getTooltip(JeiTooltip, IngredientGridTooltipHelper, IIngredientRenderer<T>, IIngredientHelper<T>)",
+          "isVisible()",
+          "tick()"
+        ],
+        "mezz.jei.gui.overlay.elements.RecipeBookmarkElement": [
+          "getTypedIngredient()",
+          "getBookmark()",
+          "createRenderOverlay()",
+          "handleClick(UserInput, IInternalKeyMappings)",
+          "show(IRecipesGui, FocusUtil, List<RecipeIngredientRole>)",
+          "getTooltip(JeiTooltip, IngredientGridTooltipHelper, IIngredientRenderer<I>, IIngredientHelper<I>)",
+          "isVisible()",
+          "tick()"
+        ],
+        "mezz.jei.gui.overlay.GuiPropertiesCache": [
+          "createUpdater(Runnable)",
+          "hasValidScreen()",
+          "getGuiProperties()",
+          "getGuiExclusionAreas()",
+          "getMouseExclusionArea()"
+        ],
+        "mezz.jei.gui.overlay.history.LookupHistoryOverlayLayout": [
+          "getDisplayHeight(int, boolean)",
+          "calculate(IIngredientGridConfig, ImmutableRect2i)"
+        ],
+        "mezz.jei.gui.overlay.IConfigButton": [],
+        "mezz.jei.gui.overlay.IGuiPropertiesCache": [],
+        "mezz.jei.gui.overlay.IngredientListOverlay": [
+          "isListDisplayed()",
+          "getScreenPropertiesUpdater()",
+          "drawScreen(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawBackground(GuiGraphicsExtractor)",
+          "drawForeground(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "drawOnForeground(GuiGraphicsExtractor, int, int)",
+          "tick()",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)",
+          "createInputHandler()",
+          "createDragHandler()",
+          "hasKeyboardFocus()",
+          "onCharTyped(CharacterEvent)",
+          "getIngredientUnderMouse()",
+          "getIngredientUnderMouse(IIngredientType<T>)",
+          "getVisibleIngredients(IIngredientType<T>)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.GuiExclusionAreaShadow": [
+          "draw(GuiGraphicsExtractor, ScalableDrawable, ImmutableRect2i, Set<ImmutableRect2i>)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IIngredientGrid": [
+          "set(int, int, List<IElement<?>>)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridPageNavigation": [],
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridSource": [],
+        "mezz.jei.gui.overlay.ingredients.IIngredientGridView": [],
+        "mezz.jei.gui.overlay.ingredients.IIngredientListOverlayContents": [],
+        "mezz.jei.gui.overlay.ingredients.IngredientGrid": [
+          "getInputHandler()",
+          "size()",
+          "getColumnCount()",
+          "getRowCount()",
+          "updateBounds(ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i)",
+          "getArea()",
+          "draw(Minecraft, GuiGraphicsExtractor, int, int)",
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "isMouseOver(double, double)",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)",
+          "getSlots()",
+          "getVisibleElements()",
+          "tick()",
+          "getVisibleIngredients(IIngredientType<T>)",
+          "set(int, List<IElement<?>>)",
+          "set(int, int, List<IElement<?>>)",
+          "hasRoom()"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridButtonNavigationLayout": [
+          "calculate(IIngredientGridConfig, ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i, int)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridLayout": [
+          "calculateSize(IIngredientGridConfig, ImmutableRect2i)",
+          "calculateBounds(IIngredientGridConfig, ImmutableRect2i)",
+          "calculateAvailableSlotCount(ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i)",
+          "calculateSlots(ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i, int)",
+          "SlotLayout(ImmutableRect2i, boolean)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollbar": [
+          "updateBounds(ImmutableRect2i)",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "handleMouseDragged(double, double, Key, double, double)",
+          "unfocus()"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollbarLayout": [
+          "calculate(IIngredientGridConfig, ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i, int)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollController": [
+          "updateLayoutStartingAt(int)",
+          "updateLayoutKeepingScrollAnchorVisible(IElement<?>)",
+          "getScrollAnchorElement()",
+          "setScrollAnchorElement(IElement<?>)",
+          "canScroll()",
+          "getVisibleScrollRows()",
+          "getHiddenScrollRows()",
+          "getVisibleScrollAmount()",
+          "getHiddenScrollAmount()",
+          "getScrollOffsetY()",
+          "setScrollOffsetY(float)",
+          "scrollByMouse(double)",
+          "scrollByRows(int)",
+          "getFirstVisibleScrollRow()",
+          "ScrollResult(boolean, boolean)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridScrollState": [
+          "getScrollOffsetY()",
+          "updateForScrollOffset(float, int, int, int, int)",
+          "updateKeepingScrollAnchorVisible(IElement<?>, List<IElement<?>>, int, int, int, boolean, int)",
+          "getScrollAnchorElement(List<IElement<?>>)",
+          "setScrollAnchorElement(IElement<?>, float)",
+          "getValidScrollOffsetY(float, int, int, int)",
+          "getValidScrollOffsetY(float, int, int, int, int)",
+          "getScrollOffsetYForFirstRow(int, int, int, int, int)",
+          "getScrollOffsetYKeepingAnchorVisible(int, int, int, int, float, boolean, int)",
+          "getScrollOffsetYKeepingAnchorVisible(int, int, int, int, int, float, boolean, int)",
+          "getFirstItemIndexForScrollOffset(float, int, int, int)",
+          "getFirstItemIndexForScrollOffset(float, int, int, int, int)",
+          "getFirstRowForScrollOffset(int, float)",
+          "getFirstItemIndexForRow(int, int, int)",
+          "getSmoothScrollPixelOffset(int, int, float)",
+          "getFirstRowForSmoothScrollPixelOffset(int, int)",
+          "getRowPixelOffset(int, int)",
+          "getHiddenRows(int, int, int)",
+          "getHiddenRows(int, int, int, int)",
+          "getMaxFirstItemIndex(int, int, int, int)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridTooltipHelper": [
+          "getIngredientTooltip(JeiTooltip, ITypedIngredient<T>, IIngredientRenderer<T>, IIngredientHelper<T>)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigation": [
+          "hasRoom()",
+          "updateLayoutToFirstPage()",
+          "updateLayoutKeepingPageAnchorVisible(IElement<?>)",
+          "getPageAnchorElement()",
+          "updateBounds(ImmutableRect2i, Set<ImmutableRect2i>, ImmutablePoint2i)",
+          "getBackgroundArea()",
+          "getSlotBackgroundArea()",
+          "getNextPageButtonArea()",
+          "getBackButtonArea()",
+          "getPageDelegate()",
+          "drawBackground(GuiGraphicsExtractor)",
+          "drawForeground(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "drawTooltips(Minecraft, GuiGraphicsExtractor, int, int)",
+          "tick()",
+          "isMouseOver(double, double)",
+          "createInputHandler()",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)",
+          "getVisibleIngredients(IIngredientType<T>)",
+          "isEmpty()"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigationController": [
+          "setOnLayoutChanged(Runnable)",
+          "updateLayoutToFirstPage()",
+          "updateLayoutKeepingPageAnchorVisible(IElement<?>)",
+          "getPageAnchorElement()",
+          "createPageAnchorIngredient(IClickableIngredientInternal<T>)",
+          "nextPage()",
+          "previousPage()",
+          "hasNext()",
+          "hasPrevious()",
+          "getPageCount()",
+          "getPageNumber()",
+          "handleMouseScrolled(double, double, double, double)",
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "canScroll()",
+          "getVisibleScrollAmount()",
+          "getHiddenScrollAmount()",
+          "getScrollOffsetY()",
+          "setScrollOffsetY(float)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientGridWithNavigationLayout": [
+          "getAvailableGridArea(IIngredientGridConfig, ImmutableRect2i)",
+          "getAvailableGridArea(IIngredientGridConfig, ImmutableRect2i, boolean)",
+          "fromGridArea(IIngredientGridConfig, ImmutableRect2i, boolean)",
+          "calculateSlotBackgroundArea(ImmutableRect2i, IIngredientGridConfig)",
+          "calculateNavigationArea(ImmutableRect2i, boolean)",
+          "hasRoom()"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientListRenderer": [
+          "clear()",
+          "size()",
+          "add(IngredientListSlot)",
+          "getSlots()",
+          "set(int, List<IElement<?>>)",
+          "render(GuiGraphicsExtractor)"
+        ],
+        "mezz.jei.gui.overlay.ingredients.IngredientListSlot": [
+          "getOptionalElement()",
+          "getClickableIngredient()",
+          "getDraggableIngredient()",
+          "clear()",
+          "isMouseOver(double, double)",
+          "setElement(IElement<?>)",
+          "getArea()",
+          "getRenderArea()",
+          "setBlocked(boolean)",
+          "isBlocked()",
+          "getPadding()"
+        ],
+        "mezz.jei.gui.overlay.IScreenPropertiesUpdater": [],
+        "mezz.jei.gui.overlay.ISearchField": [],
+        "mezz.jei.gui.PageNavigation": [
+          "updateBounds(ImmutableRect2i)",
+          "updatePageNumber()",
+          "draw(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "getNextButtonArea()",
+          "getBackButtonArea()",
+          "createInputHandler()"
+        ],
+        "mezz.jei.gui.plugins.AbstractContainerScreenHandler": [
+          "apply(AbstractContainerScreen<T>)"
+        ],
+        "mezz.jei.gui.plugins.ChatScreenHandler": [
+          "apply(ChatScreen)",
+          "getClickableIngredientUnderMouse(IClickableIngredientFactory, ChatScreen, double, double)"
+        ],
+        "mezz.jei.gui.plugins.JeiGuiPlugin": [
+          "getPluginUid()",
+          "configureJei(IJeiFeatures)",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "mezz.jei.gui.recipes.CraftingStations": [
+          "isEmpty()",
+          "getWidth()",
+          "updateLayout(List<ITypedIngredient<?>>, ImmutableRect2i, ImmutableRect2i)",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "getIngredientUnderMouse(double, double)",
+          "getDraggableIngredientUnderMouse(double, double)"
+        ],
+        "mezz.jei.gui.recipes.IRecipeGuiLogic": [],
+        "mezz.jei.gui.recipes.IRecipeLayoutWithButtons": [],
+        "mezz.jei.gui.recipes.IRecipeLogicStateListener": [],
+        "mezz.jei.gui.recipes.layouts.IRecipeLayoutList": [],
+        "mezz.jei.gui.recipes.layouts.LazyRecipeLayoutList": [
+          "size()",
+          "subList(int, int)",
+          "findFirst()",
+          "tick()"
+        ],
+        "mezz.jei.gui.recipes.lookups.FocusedRecipes": [
+          "create(IFocusGroup, IRecipeManager, IRecipeCategory<T>)",
+          "getRecipeCategory()",
+          "getRecipes()"
+        ],
+        "mezz.jei.gui.recipes.lookups.IFocusedRecipes": [],
+        "mezz.jei.gui.recipes.lookups.ILookupState": [
+          "getVisible(IRecipeLayoutList)"
+        ],
+        "mezz.jei.gui.recipes.lookups.IngredientLookupState": [
+          "create(IRecipeManager, IFocusGroup, List<IRecipeCategory<?>>, IRecipeTransferManager)",
+          "getFocuses()",
+          "getRecipeCategories()",
+          "getRecipeCategoryIndex()",
+          "moveToRecipeCategory(IRecipeCategory<?>)",
+          "nextRecipeCategory()",
+          "previousRecipeCategory()",
+          "goToFirstPage()",
+          "nextPage()",
+          "previousPage()",
+          "recipeCount()",
+          "pageCount()",
+          "getRecipeIndex()",
+          "getRecipesPerPage()",
+          "setRecipesPerPage(int)",
+          "getFocusedRecipes()"
+        ],
+        "mezz.jei.gui.recipes.lookups.SingleCategoryLookupState": [
+          "getRecipeCategories()",
+          "moveToRecipeCategory(IRecipeCategory<?>)",
+          "getRecipesPerPage()",
+          "setRecipesPerPage(int)",
+          "getRecipeIndex()",
+          "getFocuses()",
+          "getFocusedRecipes()",
+          "nextRecipeCategory()",
+          "previousRecipeCategory()",
+          "goToFirstPage()",
+          "nextPage()",
+          "previousPage()",
+          "recipeCount()",
+          "pageCount()"
+        ],
+        "mezz.jei.gui.recipes.lookups.StaticFocusedRecipes": [
+          "getRecipeCategory()",
+          "getRecipes()"
+        ],
+        "mezz.jei.gui.recipes.RecipeBookmarkButtonController": [
+          "getTooltips(ITooltipBuilder)",
+          "initState(IButtonState)",
+          "updateState(IButtonState)",
+          "onPress(IJeiUserInput)",
+          "drawExtras(GuiGraphicsExtractor, Rect2i, int, int, float)"
+        ],
+        "mezz.jei.gui.recipes.RecipeCategoryIconUtil": [
+          "create(IRecipeCategory<T>, IRecipeManager, IGuiHelper)"
+        ],
+        "mezz.jei.gui.recipes.RecipeCategoryTab": [
+          "handleUserInput(Screen, IGuiProperties, UserInput, IInternalKeyMappings)",
+          "draw(boolean, GuiGraphicsExtractor, int, int)",
+          "isSelected(IRecipeCategory<?>)",
+          "getTooltip()"
+        ],
+        "mezz.jei.gui.recipes.RecipeCategoryTitle": [
+          "create(IRecipeCategory<?>, Font, ImmutableRect2i)",
+          "isMouseOver(double, double)",
+          "getTooltip(JeiTooltip)",
+          "draw(GuiGraphicsExtractor, Font)"
+        ],
+        "mezz.jei.gui.recipes.RecipeGuiLayouts": [
+          "updateLayout(ImmutableRect2i, int)",
+          "createInputHandler()",
+          "tick()",
+          "setRecipeLayoutsWithButtons(List<IRecipeLayoutWithButtons<?>>)",
+          "getIngredientUnderMouse(double, double)",
+          "getRecipeLayoutUnderMouse(double, double)",
+          "mouseDragged(double, double, Key, double, double)",
+          "mouseMoved(double, double)",
+          "draw(GuiGraphicsExtractor, int, int)",
+          "drawTooltips(GuiGraphicsExtractor, int, int)",
+          "getWidth()"
+        ],
+        "mezz.jei.gui.recipes.RecipeGuiLogic": [
+          "tick()",
+          "showFocus(IFocusGroup)",
+          "showRecipes(IFocusedRecipes<?>, IFocusGroup)",
+          "back()",
+          "clearHistory()",
+          "showAllRecipes()",
+          "showCategories(List<IRecipeType<?>>)",
+          "getRecipeCatalysts()",
+          "getRecipeCatalysts(IRecipeCategory<?>)",
+          "getSelectedRecipeCategory()",
+          "getRecipeCategories()",
+          "getVisibleRecipeLayoutsWithButtons(int, int, AbstractContainerMenu, BookmarkList, RecipesGui)",
+          "getRecipesPerPage()",
+          "nextRecipeCategory()",
+          "setRecipeCategory(IRecipeCategory<?>)",
+          "hasMultiplePages()",
+          "previousRecipeCategory()",
+          "goToFirstPage()",
+          "nextPage()",
+          "previousPage()"
+        ],
+        "mezz.jei.gui.recipes.RecipeGuiTab": [
+          "isMouseOver(double, double)",
+          "isSelected(IRecipeCategory<?>)",
+          "draw(boolean, GuiGraphicsExtractor, int, int)",
+          "getTooltip()"
+        ],
+        "mezz.jei.gui.recipes.RecipeGuiTabs": [
+          "initLayout(ImmutableRect2i)",
+          "draw(Minecraft, GuiGraphicsExtractor, int, int, float)",
+          "createInputHandler()",
+          "nextPage()",
+          "hasNext()",
+          "previousPage()",
+          "hasPrevious()",
+          "getPageCount()",
+          "getPageNumber()"
+        ],
+        "mezz.jei.gui.recipes.RecipeLayoutWithButtons": [
+          "create(IRecipeLayoutDrawable<T>, RecipeBookmark<?, ?>, BookmarkList, RecipesGui, List<IRecipeButtonControllerFactory>)",
+          "draw(GuiGraphicsExtractor, int, int, float)",
+          "updateBounds(int, int)",
+          "totalWidth()",
+          "createUserInputHandler()",
+          "tick()",
+          "getRecipeLayout()",
+          "getRecipeBookmark()",
+          "drawTooltips(GuiGraphicsExtractor, int, int)",
+          "getMissingCountHint()"
+        ],
+        "mezz.jei.gui.recipes.RecipeLayoutWithButtonsErrored": [
+          "draw(GuiGraphicsExtractor, int, int, float)",
+          "updateBounds(int, int)",
+          "totalWidth()",
+          "createUserInputHandler()",
+          "tick()",
+          "getRecipeLayout()",
+          "getRecipeBookmark()",
+          "drawTooltips(GuiGraphicsExtractor, int, int)",
+          "getMissingCountHint()"
+        ]
+      },
+      "sampleCount": 714,
+      "truncated": true
+    },
+    "16.0.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "13.1.0.19": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.2.0.244": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1563,
+  "truncated": true
+}

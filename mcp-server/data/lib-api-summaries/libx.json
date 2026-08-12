@@ -1,0 +1,3406 @@
+{
+  "slug": "libx",
+  "modId": "libx",
+  "id": "authored/lib-libx",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "libx"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:04.413Z",
+  "versions": {
+    "e2b7f343d996026896cab610bd57f4448e311f6e777659acee8d56ac62afd5f55daa9ffd198cdfc1245f08334bf6d8d4ed93e1e8e4d472761977444b6bd9eff6": {
+      "packages": [],
+      "classes": [
+        "io.github.noeppi_noeppi.libx.annotation.codec.Codecs",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ArtifactVersion",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ExperimentalProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.LibXAPEnv",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.RemoveInProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.misc.ConfigProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.DynamicType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GeneratedCodec",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GetterSupplier",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.ParamType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.RegistryType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterConfigProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredConfig",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredMapper",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterMapperProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenEntry",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.FailureException",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.LoadableModel",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.ModelProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModEnv",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInit",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInitProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegistrationEntry",
+        "io.github.noeppi_noeppi.libx.annotation.processor.Processor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.ProcessorEnv",
+        "io.github.noeppi_noeppi.libx.base.BlockBase",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecoratedBlock",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationContext",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationType",
+        "io.github.noeppi_noeppi.libx.base.decoration.SignAccess",
+        "io.github.noeppi_noeppi.libx.base.FluidBase",
+        "io.github.noeppi_noeppi.libx.base.ItemBase",
+        "io.github.noeppi_noeppi.libx.base.ItemInventory",
+        "io.github.noeppi_noeppi.libx.base.tile.BlockBE",
+        "io.github.noeppi_noeppi.libx.base.tile.BlockEntityBase",
+        "io.github.noeppi_noeppi.libx.base.tile.BlockMenu",
+        "io.github.noeppi_noeppi.libx.base.tile.GameEventBlock",
+        "io.github.noeppi_noeppi.libx.base.tile.TickableBlock",
+        "io.github.noeppi_noeppi.libx.block.DirectionShape",
+        "io.github.noeppi_noeppi.libx.block.RotationShape",
+        "io.github.noeppi_noeppi.libx.capability.ItemCapabilities",
+        "io.github.noeppi_noeppi.libx.capability.LongEnergyStorage",
+        "io.github.noeppi_noeppi.libx.command.CommandUtil",
+        "io.github.noeppi_noeppi.libx.command.EnumArgument2",
+        "io.github.noeppi_noeppi.libx.CommonNetwork",
+        "io.github.noeppi_noeppi.libx.config.CommonValueMapper",
+        "io.github.noeppi_noeppi.libx.config.ConfigManager",
+        "io.github.noeppi_noeppi.libx.config.ConfigValidator",
+        "io.github.noeppi_noeppi.libx.config.correct.ConfigCorrection",
+        "io.github.noeppi_noeppi.libx.config.GenericValueMapper",
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigEditor",
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigScreenContent",
+        "io.github.noeppi_noeppi.libx.config.gui.EditorOps",
+        "io.github.noeppi_noeppi.libx.config.gui.InputProperties",
+        "io.github.noeppi_noeppi.libx.config.gui.WidgetProperties",
+        "io.github.noeppi_noeppi.libx.config.ValidatorInfo",
+        "io.github.noeppi_noeppi.libx.config.ValueMapper",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.EffectIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.MergedIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.NbtIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.PotionIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.IngredientStack",
+        "io.github.noeppi_noeppi.libx.crafting.recipe.RecipeHelper",
+        "io.github.noeppi_noeppi.libx.data.AlwaysExistentModelFile",
+        "io.github.noeppi_noeppi.libx.data.LootBuilders",
+        "io.github.noeppi_noeppi.libx.data.provider.AdvancementProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.BlockLootProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.BlockStateProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.CommonTagsProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.EntityLootProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.ItemModelProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CompressionExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CraftingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.ToolExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.DefaultExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RemovalExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmeltingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.SoundDefinitionProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.TagProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.texture.ImageHelper",
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureBuilder",
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureFactory",
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.texture.Textures",
+        "io.github.noeppi_noeppi.libx.datapack.DataLoader",
+        "io.github.noeppi_noeppi.libx.datapack.DynamicDatapacks",
+        "io.github.noeppi_noeppi.libx.datapack.ResourceEntry",
+        "io.github.noeppi_noeppi.libx.event.ClickBlockEmptyHandEvent",
+        "io.github.noeppi_noeppi.libx.event.ConfigLoadedEvent",
+        "io.github.noeppi_noeppi.libx.event.DataPacksReloadedEvent",
+        "io.github.noeppi_noeppi.libx.event.RandomTickEvent",
+        "io.github.noeppi_noeppi.libx.fi.Consumer3",
+        "io.github.noeppi_noeppi.libx.fi.Consumer4",
+        "io.github.noeppi_noeppi.libx.fi.Consumer5",
+        "io.github.noeppi_noeppi.libx.fi.Consumer6",
+        "io.github.noeppi_noeppi.libx.fi.Consumer7",
+        "io.github.noeppi_noeppi.libx.fi.Consumer8",
+        "io.github.noeppi_noeppi.libx.fi.Function3",
+        "io.github.noeppi_noeppi.libx.fi.Function4",
+        "io.github.noeppi_noeppi.libx.fi.Function5",
+        "io.github.noeppi_noeppi.libx.fi.Function6",
+        "io.github.noeppi_noeppi.libx.fi.Function7",
+        "io.github.noeppi_noeppi.libx.fi.Function8",
+        "io.github.noeppi_noeppi.libx.fi.Predicate3",
+        "io.github.noeppi_noeppi.libx.fi.Predicate4",
+        "io.github.noeppi_noeppi.libx.fi.Predicate5",
+        "io.github.noeppi_noeppi.libx.fi.Predicate6",
+        "io.github.noeppi_noeppi.libx.fi.Predicate7",
+        "io.github.noeppi_noeppi.libx.fi.Predicate8",
+        "io.github.noeppi_noeppi.libx.inventory.BaseItemStackHandler",
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandler",
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandlerModifiable",
+        "io.github.noeppi_noeppi.libx.inventory.VanillaWrapper",
+        "io.github.noeppi_noeppi.libx.LibX",
+        "io.github.noeppi_noeppi.libx.menu.BlockEntityMenu",
+        "io.github.noeppi_noeppi.libx.menu.DefaultMenu",
+        "io.github.noeppi_noeppi.libx.menu.EntityMenu",
+        "io.github.noeppi_noeppi.libx.menu.GenericMenu",
+        "io.github.noeppi_noeppi.libx.menu.MenuBase",
+        "io.github.noeppi_noeppi.libx.menu.slot.BaseSlot",
+        "io.github.noeppi_noeppi.libx.menu.slot.OutputSlot",
+        "io.github.noeppi_noeppi.libx.mod.ModX",
+        "io.github.noeppi_noeppi.libx.mod.registration.EnumObjects",
+        "io.github.noeppi_noeppi.libx.mod.registration.ModXRegistration",
+        "io.github.noeppi_noeppi.libx.mod.registration.Registerable",
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistrationBuilder",
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistryCondition",
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistryTransformer",
+        "io.github.noeppi_noeppi.libx.network.EnumDataSerializer",
+        "io.github.noeppi_noeppi.libx.network.NetworkX",
+        "io.github.noeppi_noeppi.libx.network.PacketSerializer",
+        "io.github.noeppi_noeppi.libx.render.block.DecoratedBlockRenderer",
+        "io.github.noeppi_noeppi.libx.render.block.DirectionalBlockRenderer",
+        "io.github.noeppi_noeppi.libx.render.block.RotatedBlockRenderer",
+        "io.github.noeppi_noeppi.libx.render.ClientTickHandler",
+        "io.github.noeppi_noeppi.libx.render.ItemStackRenderer",
+        "io.github.noeppi_noeppi.libx.render.RenderHelper",
+        "io.github.noeppi_noeppi.libx.render.RenderHelperBlock",
+        "io.github.noeppi_noeppi.libx.render.RenderHelperFluid",
+        "io.github.noeppi_noeppi.libx.render.RenderHelperItem",
+        "io.github.noeppi_noeppi.libx.render.RenderHelperLevel",
+        "io.github.noeppi_noeppi.libx.screen.ColorPicker",
+        "io.github.noeppi_noeppi.libx.screen.Panel",
+        "io.github.noeppi_noeppi.libx.util.CachedFunction",
+        "io.github.noeppi_noeppi.libx.util.CachedValue",
+        "io.github.noeppi_noeppi.libx.util.ClassUtil",
+        "io.github.noeppi_noeppi.libx.util.ComponentUtil",
+        "io.github.noeppi_noeppi.libx.util.JsonToText",
+        "io.github.noeppi_noeppi.libx.util.LazyImmutableMap",
+        "io.github.noeppi_noeppi.libx.util.LazyValue",
+        "io.github.noeppi_noeppi.libx.util.LongAmountToIntUtil",
+        "io.github.noeppi_noeppi.libx.util.Math2",
+        "io.github.noeppi_noeppi.libx.util.Misc",
+        "io.github.noeppi_noeppi.libx.util.NbtToJson",
+        "io.github.noeppi_noeppi.libx.util.NbtToText",
+        "io.github.noeppi_noeppi.libx.util.NBTX",
+        "io.github.noeppi_noeppi.libx.util.ResourceList",
+        "io.github.noeppi_noeppi.libx.util.ResourceToText",
+        "io.github.noeppi_noeppi.libx.util.ServerMessages",
+        "io.github.noeppi_noeppi.libx.util.TextProcessor",
+        "io.github.noeppi_noeppi.libx.world.WorldSeedHolder"
+      ],
+      "methods": {
+        "io.github.noeppi_noeppi.libx.annotation.codec.Codecs": [
+          "get(Class<? extends ModX>, Class<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ArtifactVersion": [
+          "equals(Object)",
+          "compareTo(ArtifactVersion)",
+          "toString()",
+          "parse(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ExperimentalProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.LibXAPEnv": [
+          "minecraftVersion(ProcessorEnv)",
+          "modVersion(ProcessorEnv)",
+          "release(ProcessorEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.RemoveInProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.misc.ConfigProcessor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecProcessor": [
+          "processAnyParam(Element, String, ModEnv)",
+          "processPrimaryConstructor(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecType": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.DynamicType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GeneratedCodec": [
+          "fieldGetter(String, String)",
+          "methodGetter(String, String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GetterSupplier": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.ParamType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)",
+          "genericMatches(TypeMirror, TypeMirror, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.RegistryType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterConfigProcessor": [
+          "processRegisterConfig(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredConfig": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredMapper": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterMapperProcessor": [
+          "processRegisterMapper(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenEntry": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenProcessor": [
+          "processDatagen(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.FailureException": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.LoadableModel": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.ModelProcessor": [
+          "processModel(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModEnv": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInit": [
+          "addRegistration(int, List<RegistrationEntry>)",
+          "addModel(String, String, String, String)",
+          "addConfigMapper(String, boolean)",
+          "addConfig(String, boolean, String)",
+          "addCodec(GeneratedCodec)",
+          "addDatagen(String, List<DatagenEntry.Arg>)",
+          "write(Filer, Messager)",
+          "quote(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInitProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)",
+          "getMod(Element)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassProcessor": [
+          "processRegisterClass(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegistrationEntry": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.Processor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "types()",
+          "elements()",
+          "filer()",
+          "messager()",
+          "options()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedSourceVersion()",
+          "forClass(Class<?>)",
+          "isSuppressed(Element, String)",
+          "contained(Element, Class<T>)",
+          "contained(Element, Class<T>, Predicate<T>)",
+          "sameErasure(TypeMirror, TypeMirror)",
+          "subTypeErasure(TypeMirror, TypeMirror)",
+          "classType(Supplier<Class<?>>)",
+          "classTypes(Supplier<List<Class<?>>>)",
+          "boxed(TypeMirror)",
+          "unboxed(TypeMirror)",
+          "process(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.ProcessorEnv": [],
+        "io.github.noeppi_noeppi.libx.base.BlockBase": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "initializeItemClient(Consumer<IItemRenderProperties>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecoratedBlock": [
+          "getNamedAdditionalRegisters(ResourceLocation)",
+          "getContext()",
+          "has(DecorationType<?>)",
+          "get(DecorationType<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationContext": [
+          "has(DecorationType<?>)",
+          "types()",
+          "register(ModX, DecoratedBlock)",
+          "toString()",
+          "RegistrationInfo(Map<DecorationType<?>, Object>, Map<String, Object>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationType": [
+          "additionalRegistration(ModX, DecorationContext, DecoratedBlock, T)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.SignAccess": [],
+        "io.github.noeppi_noeppi.libx.base.FluidBase": [
+          "getFluid()",
+          "getSource()",
+          "getFlowing()",
+          "getBlock()",
+          "getBucket()",
+          "getProperties()",
+          "m_5456_()",
+          "getAdditionalRegisters(ResourceLocation)",
+          "getNamedAdditionalRegisters(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.ItemBase": [],
+        "io.github.noeppi_noeppi.libx.base.ItemInventory": [
+          "initCapabilities(ItemStack, CompoundTag)",
+          "getInventory(ItemStack)",
+          "getInventoryStream(ItemStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.BlockBE": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "m_142194_(BlockPos, BlockState)",
+          "m_142354_(Level, BlockState, BlockEntityType<X>)",
+          "m_142226_(Level, X)",
+          "m_6810_(BlockState, Level, BlockPos, BlockState, boolean)",
+          "getBlockEntity(Level, BlockPos)",
+          "getBlockEntityType()",
+          "shouldDropInventory(Level, BlockPos, BlockState)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.BlockEntityBase": [
+          "getCapability(Capability<T>, Direction)",
+          "onLoad()",
+          "setDispatchable()"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.BlockMenu": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.GameEventBlock": [
+          "gameEventRange()"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.TickableBlock": [],
+        "io.github.noeppi_noeppi.libx.block.DirectionShape": [
+          "getShape(Direction)"
+        ],
+        "io.github.noeppi_noeppi.libx.block.RotationShape": [
+          "getShape(Direction)"
+        ],
+        "io.github.noeppi_noeppi.libx.capability.ItemCapabilities": [
+          "create(IItemHandlerModifiable)",
+          "create(IItemHandlerModifiable, Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "create(Supplier<IItemHandlerModifiable>)",
+          "create(Supplier<IItemHandlerModifiable>, Predicate<Integer>, BiPredicate<Integer, ItemStack>)"
+        ],
+        "io.github.noeppi_noeppi.libx.capability.LongEnergyStorage": [
+          "getEnergyStored()",
+          "getMaxEnergyStored()"
+        ],
+        "io.github.noeppi_noeppi.libx.command.CommandUtil": [
+          "registerGenericCommandArgument(String, Class<?>, ArgumentSerializer<?>)",
+          "getArgumentOrDefault(CommandContext<?>, String, Class<T>, T)"
+        ],
+        "io.github.noeppi_noeppi.libx.command.EnumArgument2": [
+          "enumArgument(Class<R>)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "io.github.noeppi_noeppi.libx.CommonNetwork": [
+          "updateBE(Level, BlockPos)",
+          "requestBE(Level, BlockPos)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.CommonValueMapper": [
+          "comment()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ConfigManager": [
+          "registerValueMapper(String, ValueMapper<?, ?>)",
+          "registerValueMapper(String, GenericValueMapper<?, ?, ?>)",
+          "registerConfigValidator(String, ConfigValidator<?, ?>)",
+          "registerConfig(String, Class<?>, boolean)",
+          "registerConfig(ResourceLocation, Class<?>, boolean)",
+          "reloadAll()",
+          "reloadConfig(Class<?>)",
+          "forceResync(ServerPlayer, Class<?>)",
+          "forceResync(ServerPlayer)",
+          "configs()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ConfigValidator": [
+          "comment(A)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.correct.ConfigCorrection": [
+          "correct(JsonElement, ValueMapper<U, ?>, Function<T, U>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.GenericValueMapper": [
+          "fromNetwork(FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "toNetwork(T, FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "correct(JsonElement, ValueMapper<C, JsonElement>, ConfigCorrection<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigEditor": [],
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigScreenContent": [
+          "message()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.EditorOps": [
+          "enabled(boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.InputProperties": [
+          "toString(T)",
+          "canInputChar(char)",
+          "isValid(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.WidgetProperties": [],
+        "io.github.noeppi_noeppi.libx.config.ValidatorInfo": [
+          "value(Class<A>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ValueMapper": [
+          "fromNetwork(FriendlyByteBuf)",
+          "toNetwork(T, FriendlyByteBuf)",
+          "correct(JsonElement, ConfigCorrection<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.EffectIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.MergedIngredient": [
+          "mergeIngredients(Ingredient...)",
+          "mergeIngredients(List<Ingredient>)",
+          "getIngredients()",
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.NbtIngredient": [
+          "test(ItemStack)",
+          "m_43908_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.PotionIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.IngredientStack": [
+          "test(ItemStack)",
+          "empty()",
+          "toJson()",
+          "toNetwork(FriendlyByteBuf)",
+          "fromJson(JsonObject)",
+          "fromNetwork(FriendlyByteBuf)"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.recipe.RecipeHelper": [
+          "isItemValidInput(RecipeManager, RecipeType<?>, ItemStack)",
+          "matches(Recipe<?>, List<ItemStack>, boolean)",
+          "stackUp(List<ItemStack>, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.AlwaysExistentModelFile": [
+          "exists()"
+        ],
+        "io.github.noeppi_noeppi.libx.data.LootBuilders": [
+          "all(Builder<?>...)",
+          "group(Builder<?>...)",
+          "alternative(Builder<?>...)",
+          "sequence(Builder<?>...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.AdvancementProviderBase": [
+          "setup()",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "root()",
+          "root(String)",
+          "root(String, String)",
+          "advancement(Advancement)",
+          "advancement(ResourceLocation)",
+          "advancement(String)",
+          "dummy(ResourceLocation)",
+          "dummy(ResourceLocation, boolean)",
+          "items(ItemLike...)",
+          "items(Tag<Item>...)",
+          "items(ItemPredicate...)",
+          "itemTasks(ItemLike...)",
+          "itemTasks(Tag<Item>...)",
+          "itemTasks(ItemPredicate...)",
+          "eat(ItemLike)",
+          "eat(Tag<Item>)",
+          "eat(ItemPredicate)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.BlockLootProviderBase": [
+          "customLootTable(Block)",
+          "customLootTable(Block, Builder)",
+          "customLootTable(Block, Function<Block, Builder>)",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "setup()",
+          "copyNBT(String...)",
+          "copyProperties(Property<?>...)",
+          "drops(Block, boolean, ItemStack...)",
+          "drops(Block, boolean, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>...)",
+          "drops(Block, boolean, BlockLootProviderBase.LootFactory...)",
+          "drops(Block, BlockLootProviderBase.LootFactory...)",
+          "drops(Block, BlockLootProviderBase.SilkModifier, BlockLootProviderBase.LootFactory...)",
+          "item()",
+          "silk(BlockLootProviderBase.GenericLootModifier)",
+          "noSilk()",
+          "repeat(BlockLootProviderBase.LootFactory, int)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.BlockStateProviderBase": [
+          "m_6055_()",
+          "manualState(Block)",
+          "manualModel(Block)",
+          "manualModel(Block, ModelFile)",
+          "registerStatesAndModels()",
+          "setup()",
+          "defaultState(ResourceLocation, Block, ModelFile)",
+          "defaultState(ResourceLocation, Block, Supplier<ModelFile>)",
+          "defaultModel(ResourceLocation, Block)",
+          "buttonBlock(Block, ResourceLocation)",
+          "pressurePlateBlock(Block, ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.CommonTagsProviderBase": [
+          "setup()",
+          "defaultItemTags(Item)",
+          "defaultBlockTags(Block)",
+          "defaultFluidTags(Fluid)",
+          "item(Named<Item>)",
+          "block(Named<Block>)",
+          "fluid(Named<Fluid>)",
+          "copyBlock(Named<Block>, Named<Item>)",
+          "copyFluid(Named<Fluid>, Named<Block>)",
+          "m_6055_()",
+          "m_6865_(HashCache)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.EntityLootProviderBase": [
+          "customLootTable(EntityType<?>, Builder)",
+          "customLootTable(EntityType<?>, Function<EntityType<?>, Builder>)",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "setup()",
+          "drops(EntityType<?>, ItemStack...)",
+          "drops(EntityType<?>, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>...)",
+          "drops(EntityType<?>, EntityLootProviderBase.LootFactory...)",
+          "repeat(EntityLootProviderBase.LootFactory, int)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>)",
+          "looting(int)",
+          "looting(int, int)",
+          "random(float)",
+          "count(int)",
+          "count(int, int)",
+          "countBinomial(float, int)",
+          "not(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder)",
+          "or(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.ItemModelProviderBase": [
+          "m_6055_()",
+          "handheld(Item)",
+          "manualModel(Item)",
+          "registerModels()",
+          "setup()",
+          "defaultItem(ResourceLocation, Item)",
+          "defaultBlock(ResourceLocation, BlockItem)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CompressionExtension": [
+          "compress(ItemLike, ItemLike)",
+          "compress(ItemLike, ItemLike, boolean)",
+          "smallCompress(ItemLike, ItemLike)",
+          "smallCompress(ItemLike, ItemLike, boolean)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CraftingExtension": [
+          "shaped(Object...)",
+          "shapeless(Object...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.ToolExtension": [
+          "makeTools(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)",
+          "makeArmor(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.DefaultExtension": [],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeExtension": [
+          "criteria(Ingredient)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeProviderBase": [
+          "m_6055_()",
+          "setup()",
+          "conditions()",
+          "m_176531_(Consumer<FinishedRecipe>)",
+          "loc(ItemLike)",
+          "loc(ItemLike, String)",
+          "provider()",
+          "consumer()",
+          "criterion(ItemLike)",
+          "criterion(Tag<Item>)",
+          "criterion(ItemPredicate...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RemovalExtension": [
+          "remove(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmeltingExtension": [
+          "smelting(ItemLike, ItemLike, float, int)",
+          "blasting(ItemLike, ItemLike, float, int)",
+          "cooking(ItemLike, ItemLike, float, int)",
+          "campfire(ItemLike, ItemLike, float, int)",
+          "smelting(Tag<Item>, ItemLike, float, int)",
+          "blasting(Tag<Item>, ItemLike, float, int)",
+          "cooking(Tag<Item>, ItemLike, float, int)",
+          "campfire(Tag<Item>, ItemLike, float, int)",
+          "smelting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "blasting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "cooking(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "campfire(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "smelting(ResourceLocation, Tag<Item>, ItemLike, float, int)",
+          "blasting(ResourceLocation, Tag<Item>, ItemLike, float, int)",
+          "cooking(ResourceLocation, Tag<Item>, ItemLike, float, int)",
+          "campfire(ResourceLocation, Tag<Item>, ItemLike, float, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.SoundDefinitionProviderBase": [
+          "m_6055_()",
+          "ignore(SoundEvent)",
+          "ignore(ResourceLocation)",
+          "setup()",
+          "defaultSound(ResourceLocation, SoundEvent)",
+          "settings()",
+          "sound(SoundEvent)",
+          "sound(ResourceLocation)",
+          "sound(SoundEvent, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "sound(ResourceLocation, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "m_6865_(HashCache)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.TagProviderBase": [
+          "m_6577_()",
+          "m_6055_()",
+          "setup()",
+          "defaultTags(T)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.texture.ImageHelper": [
+          "copyTexture(BufferedImage, Textures, String, int, int, int, int, int, int)",
+          "copyImage(BufferedImage, Textures, String, int, int, int, int, int, int)",
+          "copyTexture(BufferedImage, Textures, ResourceLocation, int, int, int, int, int, int)",
+          "copyImage(BufferedImage, Textures, ResourceLocation, int, int, int, int, int, int)",
+          "clear(BufferedImage, Textures, int, int, int, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureBuilder": [
+          "addTexture(String, int)",
+          "addImage(String, int)",
+          "addTexture(ResourceLocation, int)",
+          "addImage(ResourceLocation, int)",
+          "addTexture(String, int, int)",
+          "addImage(String, int, int)",
+          "addTexture(ResourceLocation, int, int)",
+          "addImage(ResourceLocation, int, int)",
+          "build()"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureFactory": [],
+        "io.github.noeppi_noeppi.libx.data.provider.texture.TextureProviderBase": [
+          "m_6055_()",
+          "setup()",
+          "texture(String, TextureFactory)",
+          "image(String, TextureFactory)",
+          "texture(ResourceLocation, TextureFactory)",
+          "image(ResourceLocation, TextureFactory)",
+          "sign(WoodType, ResourceLocation, ResourceLocation)",
+          "sign(ResourceLocation, ResourceLocation, ResourceLocation)",
+          "m_6865_(HashCache)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.texture.Textures": [
+          "scale()",
+          "textureScale(String)",
+          "imageScale(String)",
+          "textureScale(ResourceLocation)",
+          "imageScale(ResourceLocation)",
+          "texture(String)",
+          "image(String)",
+          "texture(ResourceLocation)",
+          "image(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DataLoader": [
+          "loadJson(ResourceManager, String, DataLoader.ResourceFactory<JsonElement, T>)",
+          "collect(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "collectText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "collectJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "join(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "joinText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "joinJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "locate(ResourceManager, String, String)",
+          "locate(ResourceManager, String, String, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DynamicDatapacks": [
+          "enablePack(String, String)",
+          "getEnabledPacks()"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.ResourceEntry": [
+          "id()",
+          "resource()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.ClickBlockEmptyHandEvent": [
+          "getPlayer()",
+          "getLevel()",
+          "getHand()",
+          "getHit()",
+          "getCancellationResult()",
+          "setCancellationResult(InteractionResult)",
+          "isCancelable()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.ConfigLoadedEvent": [
+          "getConfigId()",
+          "getConfigClass()",
+          "getReason()",
+          "isClientConfig()",
+          "getConfigPath()",
+          "getCurrentPath()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.DataPacksReloadedEvent": [
+          "getServer()",
+          "getResources()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.RandomTickEvent": [
+          "getLevel()",
+          "getPos()",
+          "getRand()",
+          "isCancelable()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer3": [
+          "andThen(Consumer3<A, B, C>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer4": [
+          "andThen(Consumer4<A, B, C, D>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer5": [
+          "andThen(Consumer5<A, B, C, D, E>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer6": [
+          "andThen(Consumer6<A, B, C, D, E, F>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer7": [
+          "andThen(Consumer7<A, B, C, D, E, F, G>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer8": [
+          "andThen(Consumer8<A, B, C, D, E, F, G, H>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function3": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function4": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function5": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function6": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function7": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function8": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate3": [
+          "and(Predicate3<A, B, C>)",
+          "or(Predicate3<A, B, C>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate4": [
+          "and(Predicate4<A, B, C, D>)",
+          "or(Predicate4<A, B, C, D>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate5": [
+          "and(Predicate5<A, B, C, D, E>)",
+          "or(Predicate5<A, B, C, D, E>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate6": [
+          "and(Predicate6<A, B, C, D, E, F>)",
+          "or(Predicate6<A, B, C, D, E, F>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate7": [
+          "and(Predicate7<A, B, C, D, E, F, G>)",
+          "or(Predicate7<A, B, C, D, E, F, G>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate8": [
+          "and(Predicate8<A, B, C, D, E, F, G, H>)",
+          "or(Predicate8<A, B, C, D, E, F, G, H>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.BaseItemStackHandler": [
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "onContentsChanged(int)",
+          "toVanilla()",
+          "getUnrestricted()",
+          "createCapability()",
+          "createUnrestrictedCapability()",
+          "createCapability(Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "builder(int)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandler": [
+          "insertItem(ItemStack, boolean)",
+          "hasSpaceFor(List<ItemStack>)",
+          "extractItem(int, boolean)",
+          "extractItem(Predicate<ItemStack>, int, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandlerModifiable": [
+          "clear()",
+          "clear(Predicate<ItemStack>)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.VanillaWrapper": [
+          "m_6643_()",
+          "m_7983_()",
+          "m_8020_(int)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6893_()",
+          "m_6596_()",
+          "m_6542_(Player)",
+          "m_5856_(Player)",
+          "m_5785_(Player)",
+          "m_7013_(int, ItemStack)",
+          "m_6211_()"
+        ],
+        "io.github.noeppi_noeppi.libx.LibX": [
+          "setup(FMLCommonSetupEvent)",
+          "clientSetup(FMLClientSetupEvent)",
+          "getInstance()",
+          "getNetwork()"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.BlockEntityMenu": [
+          "m_6875_(Player)",
+          "getPos()",
+          "getBlockEntity()",
+          "createMenuType(Function5<Integer, Level, BlockPos, Inventory, Player, T>)",
+          "createMenuType(Function6<MenuType<T>, Integer, Level, BlockPos, Inventory, Player, T>)",
+          "openMenu(ServerPlayer, final MenuType<? extends BlockEntityMenu<?>>, final Component, final BlockPos)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.DefaultMenu": [
+          "getLevel()",
+          "m_7648_(Player, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.EntityMenu": [
+          "m_6875_(Player)",
+          "getEntity()",
+          "createMenuType(Function5<Integer, Level, Integer, Inventory, Player, T>)",
+          "createMenuType(Function6<MenuType<T>, Integer, Level, Integer, Inventory, Player, T>)",
+          "openMenu(ServerPlayer, final MenuType<? extends BlockEntityMenu<?>>, final Component, final Entity)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.GenericMenu": [
+          "m_6875_(Player)",
+          "m_7648_(Player, int)",
+          "open(ServerPlayer, final IItemHandlerModifiable, final Component, final ResourceLocation)",
+          "registerSlotValidator(ResourceLocation, BiPredicate<Integer, ItemStack>)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.MenuBase": [
+          "layoutPlayerInventorySlots(int, int)",
+          "addSlotBox(IItemHandler, int, int, int, int, int, int, int)",
+          "addSlotRange(IItemHandler, int, int, int, int, int)",
+          "addSlotBox(IItemHandler, int, int, int, int, int, int, int, Function4<IItemHandler, Integer, Integer, Integer, Slot>)",
+          "addSlotRange(IItemHandler, int, int, int, int, int, Function4<IItemHandler, Integer, Integer, Integer, Slot>)",
+          "m_38903_(ItemStack, int, int, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.slot.BaseSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.slot.OutputSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.ModX": [
+          "setup(FMLCommonSetupEvent)",
+          "clientSetup(FMLClientSetupEvent)",
+          "resource(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.registration.EnumObjects": [
+          "get(E)",
+          "random(Random)",
+          "getNamedAdditionalRegisters(ResourceLocation)",
+          "colored(Function<DyeColor, T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.registration.ModXRegistration": [
+          "addRegistrationHandler(Runnable)",
+          "register(String, Object)",
+          "initRegistration(RegistrationBuilder)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.registration.Registerable": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "getNamedAdditionalRegisters(ResourceLocation)",
+          "registerCommon(ResourceLocation, Consumer<Runnable>)",
+          "registerClient(ResourceLocation, Consumer<Runnable>)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistrationBuilder": [
+          "setVersion(int)",
+          "addCondition(RegistryCondition)",
+          "addTransformer(RegistryTransformer)",
+          "build()",
+          "RegistrationSettings(List<RegistryCondition>, List<RegistryTransformer>, List<RegistryTransformer>)"
+        ],
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistryCondition": [],
+        "io.github.noeppi_noeppi.libx.mod.registration.RegistryTransformer": [],
+        "io.github.noeppi_noeppi.libx.network.EnumDataSerializer": [
+          "write(FriendlyByteBuf, T)",
+          "read(FriendlyByteBuf)",
+          "copy(T)"
+        ],
+        "io.github.noeppi_noeppi.libx.network.NetworkX": [
+          "register(PacketSerializer<T>, Supplier<BiConsumer<T, Supplier<Context>>>, NetworkDirection)",
+          "getProtocol()",
+          "registerPackets()",
+          "Protocol(String, NetworkX.ProtocolSide, NetworkX.ProtocolSide)"
+        ],
+        "io.github.noeppi_noeppi.libx.network.PacketSerializer": [],
+        "io.github.noeppi_noeppi.libx.render.block.DecoratedBlockRenderer": [
+          "m_6922_(T, float, PoseStack, MultiBufferSource, int, int)",
+          "decorate(T, float, PoseStack)",
+          "doRender(T, float, PoseStack, MultiBufferSource, int, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.block.DirectionalBlockRenderer": [
+          "decorate(T, float, PoseStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.block.RotatedBlockRenderer": [
+          "decorate(T, float, PoseStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.ClientTickHandler": [
+          "tick(ClientTickEvent)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.ItemStackRenderer": [
+          "addRenderBlock(BlockEntityType<T>, boolean)",
+          "m_108829_(ItemStack, TransformType, PoseStack, MultiBufferSource, int, int)",
+          "get()"
+        ],
+        "io.github.noeppi_noeppi.libx.render.RenderHelper": [
+          "repeatBlit(PoseStack, int, int, int, int, TextureAtlasSprite)",
+          "repeatBlit(PoseStack, int, int, int, int, int, int, TextureAtlasSprite)",
+          "repeatBlit(PoseStack, int, int, int, int, int, int, float, float, float, float)",
+          "renderIconColored(PoseStack, VertexConsumer, float, float, TextureAtlasSprite, float, float, float, int, int, int)",
+          "rgb(int)",
+          "argb(int)",
+          "resetColor()",
+          "renderText(String, PoseStack)",
+          "renderGuiBackground(PoseStack, int, int, int, int)",
+          "renderGuiBackground(PoseStack, int, int, int, int, ResourceLocation)",
+          "renderGuiBackground(PoseStack, int, int, int, int, ResourceLocation, int, int, int, int, int, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.RenderHelperBlock": [
+          "renderBlockBreak(BlockState, PoseStack, MultiBufferSource, int, int, int)",
+          "renderBlockBreak(BlockState, PoseStack, MultiBufferSource, int, int, int, long)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, MultiBufferSource, int, int, TextureAtlasSprite)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, MultiBufferSource, int, int, TextureAtlasSprite, long)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, MultiBufferSource, int, int, TextureAtlasSprite, Predicate<Direction>)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, MultiBufferSource, int, int, TextureAtlasSprite, long, Predicate<Direction>)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.RenderHelperFluid": [
+          "renderFluid(PoseStack, MultiBufferSource, FluidStack, int, int, int, int)",
+          "renderFluid(PoseStack, MultiBufferSource, int, int, int, int, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.RenderHelperItem": [
+          "renderItemGui(PoseStack, MultiBufferSource, ItemStack, int, int, int, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.render.RenderHelperLevel": [
+          "loadProjection(PoseStack, BlockPos)",
+          "loadProjection(PoseStack, Vec3)",
+          "loadProjection(PoseStack, double, double, double)"
+        ],
+        "io.github.noeppi_noeppi.libx.screen.ColorPicker": [
+          "getColor()",
+          "setColor(TextColor)",
+          "setResponder(Consumer<TextColor>)",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_7979_(double, double, int, double, double)"
+        ],
+        "io.github.noeppi_noeppi.libx.screen.Panel": [
+          "addRenderableWidget(T)",
+          "addRenderableOnly(T)",
+          "addWidget(T)",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_6348_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_7933_(int, int, int)",
+          "m_7920_(int, int, int)",
+          "m_5534_(char, int)",
+          "m_142291_(NarrationElementOutput)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.CachedFunction": [
+          "apply(T)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.CachedValue": [
+          "get()",
+          "invalidate()"
+        ],
+        "io.github.noeppi_noeppi.libx.util.ClassUtil": [
+          "boxed(Class<?>)",
+          "unboxed(Class<?>)",
+          "forName(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.ComponentUtil": [
+          "getConsoleString(Component)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.JsonToText": [
+          "toText(JsonElement)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.LazyImmutableMap": [
+          "size()",
+          "isEmpty()",
+          "containsKey(Object)",
+          "containsValue(Object)",
+          "get(Object)",
+          "put(K, V)",
+          "remove(Object)",
+          "putAll(Map)",
+          "clear()",
+          "keySet()",
+          "values()",
+          "entrySet()"
+        ],
+        "io.github.noeppi_noeppi.libx.util.LazyValue": [
+          "wrap(LazyLoadedValue<T>)",
+          "get()",
+          "asDefault(LazyOptional<T>)",
+          "map(Function<T, U>)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.LongAmountToIntUtil": [
+          "getValue(long, long)",
+          "getMaxValue(long)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.Math2": [
+          "isInBounds(double, double, double, double, double, double)",
+          "isInRect(double, double, double, double, double, double)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.Misc": [],
+        "io.github.noeppi_noeppi.libx.util.NbtToJson": [
+          "getJson(Tag, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.NbtToText": [
+          "toText(Tag)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.NBTX": [
+          "putPos(CompoundTag, String, BlockPos)",
+          "getPos(CompoundTag, String)",
+          "getPos(CompoundTag, String, BlockPos)",
+          "putRL(CompoundTag, String, ResourceLocation)",
+          "getRL(CompoundTag, String)",
+          "getRL(CompoundTag, String, ResourceLocation)",
+          "putKey(CompoundTag, String, ResourceKey<?>)",
+          "getKey(CompoundTag, String, ResourceKey<Registry<T>>)",
+          "getKey(CompoundTag, String, ResourceKey<Registry<T>>, ResourceKey<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.ResourceList": [
+          "toJson()",
+          "toNetwork(FriendlyByteBuf)",
+          "isWhitelist()",
+          "getRules()",
+          "test(ResourceLocation)",
+          "RuleEntry(String, boolean, Boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.ResourceToText": [
+          "toText(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.ServerMessages": [
+          "broadcast(Level, Component)",
+          "broadcastExcept(Level, Player, Component)",
+          "broadcastTo(Level, Predicate<? super ServerPlayer>, Component)"
+        ],
+        "io.github.noeppi_noeppi.libx.util.TextProcessor": [
+          "process(Component)",
+          "process(String)",
+          "processLine(Component)",
+          "processLine(String)",
+          "customCommand(Style, String)"
+        ],
+        "io.github.noeppi_noeppi.libx.world.WorldSeedHolder": [
+          "getSeed()",
+          "fieldOf(String)"
+        ]
+      },
+      "sampleCount": 189
+    },
+    "925e0d6fe61d22c30a6c4695076bc42c0fdcd4d871ea68c3df1a3d6a597d20e2217bbbbd25acf23ac859d903eaee0b8bc378771545ad8b38ac5f7434003ba2d6": {
+      "packages": [],
+      "classes": [
+        "org.moddingx.libx.annotation.api.Codecs",
+        "org.moddingx.libx.annotation.processor.Classes",
+        "org.moddingx.libx.annotation.processor.ExternalProperties",
+        "org.moddingx.libx.annotation.processor.meta.ArtifactVersion",
+        "org.moddingx.libx.annotation.processor.meta.ExperimentalProcessor",
+        "org.moddingx.libx.annotation.processor.meta.RemoveInProcessor",
+        "org.moddingx.libx.annotation.processor.meta.SuperProcessor",
+        "org.moddingx.libx.annotation.processor.misc.ConfigProcessor",
+        "org.moddingx.libx.annotation.processor.misc.FindBugsProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.codec.CodecProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.codec.CodecType",
+        "org.moddingx.libx.annotation.processor.modinit.codec.DynamicType",
+        "org.moddingx.libx.annotation.processor.modinit.codec.EnumType",
+        "org.moddingx.libx.annotation.processor.modinit.codec.GetterSupplier",
+        "org.moddingx.libx.annotation.processor.modinit.codec.ParamType",
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisterConfigProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisteredConfig",
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisteredMapper",
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisterMapperProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.data.DatagenEntry",
+        "org.moddingx.libx.annotation.processor.modinit.data.DatagenProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.FailureException",
+        "org.moddingx.libx.annotation.processor.modinit.model.LoadableModel",
+        "org.moddingx.libx.annotation.processor.modinit.model.ModelProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.ModEnv",
+        "org.moddingx.libx.annotation.processor.modinit.ModInit",
+        "org.moddingx.libx.annotation.processor.modinit.ModInitProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.register.RegisterClassProcessor",
+        "org.moddingx.libx.annotation.processor.modinit.register.RegistrationEntry",
+        "org.moddingx.libx.annotation.processor.onlyin.OnlyInProcessor",
+        "org.moddingx.libx.annotation.processor.Processor",
+        "org.moddingx.libx.annotation.processor.ProcessorEnv",
+        "org.moddingx.libx.base.BlockBase",
+        "org.moddingx.libx.base.decoration.DecoratedBlock",
+        "org.moddingx.libx.base.decoration.DecorationContext",
+        "org.moddingx.libx.base.decoration.DecorationType",
+        "org.moddingx.libx.base.decoration.SignAccess",
+        "org.moddingx.libx.base.FluidBase",
+        "org.moddingx.libx.base.ItemBase",
+        "org.moddingx.libx.base.ItemInventory",
+        "org.moddingx.libx.base.MenuBlock",
+        "org.moddingx.libx.base.tile.BlockBE",
+        "org.moddingx.libx.base.tile.BlockEntityBase",
+        "org.moddingx.libx.base.tile.GameEventBlock",
+        "org.moddingx.libx.base.tile.MenuBlockBE",
+        "org.moddingx.libx.base.tile.TickingBlock",
+        "org.moddingx.libx.block.DirectionShape",
+        "org.moddingx.libx.block.RotationShape",
+        "org.moddingx.libx.capability.ItemCapabilities",
+        "org.moddingx.libx.capability.LongEnergyStorage",
+        "org.moddingx.libx.capability.SimpleProvider",
+        "org.moddingx.libx.codec.CodecHelper",
+        "org.moddingx.libx.codec.CodecOps",
+        "org.moddingx.libx.codec.MoreCodecs",
+        "org.moddingx.libx.codec.TypedEncoder",
+        "org.moddingx.libx.command.CommandUtil",
+        "org.moddingx.libx.command.EnumArgument2",
+        "org.moddingx.libx.CommonNetwork",
+        "org.moddingx.libx.config.ConfigManager",
+        "org.moddingx.libx.config.correct.ConfigCorrection",
+        "org.moddingx.libx.config.gui.ConfigEditor",
+        "org.moddingx.libx.config.gui.ConfigScreenContent",
+        "org.moddingx.libx.config.gui.EditorOps",
+        "org.moddingx.libx.config.gui.InputProperties",
+        "org.moddingx.libx.config.gui.WidgetProperties",
+        "org.moddingx.libx.config.mapper.GenericValueMapper",
+        "org.moddingx.libx.config.mapper.MapperFactory",
+        "org.moddingx.libx.config.mapper.ValueMapper",
+        "org.moddingx.libx.config.validator.ConfigValidator",
+        "org.moddingx.libx.config.validator.ValidatorInfo",
+        "org.moddingx.libx.crafting.CraftingHelper2",
+        "org.moddingx.libx.crafting.ingredient.EffectIngredient",
+        "org.moddingx.libx.crafting.ingredient.PotionIngredient",
+        "org.moddingx.libx.crafting.IngredientStack",
+        "org.moddingx.libx.crafting.recipe.RecipeHelper",
+        "org.moddingx.libx.datagen.LootBuilders",
+        "org.moddingx.libx.datagen.provider.AdvancementProviderBase",
+        "org.moddingx.libx.datagen.provider.BlockStateProviderBase",
+        "org.moddingx.libx.datagen.provider.CommonTagsProviderBase",
+        "org.moddingx.libx.datagen.provider.ItemModelProviderBase",
+        "org.moddingx.libx.datagen.provider.loot.BlockLootProviderBase",
+        "org.moddingx.libx.datagen.provider.loot.ChestLootProviderBase",
+        "org.moddingx.libx.datagen.provider.loot.EntityLootProviderBase",
+        "org.moddingx.libx.datagen.provider.loot.entry.GenericLootModifier",
+        "org.moddingx.libx.datagen.provider.loot.entry.LootFactory",
+        "org.moddingx.libx.datagen.provider.loot.entry.LootModifier",
+        "org.moddingx.libx.datagen.provider.loot.entry.SimpleLootFactory",
+        "org.moddingx.libx.datagen.provider.loot.LootProviderBase",
+        "org.moddingx.libx.datagen.provider.patchouli.BookProperties",
+        "org.moddingx.libx.datagen.provider.patchouli.CategoryBuilder",
+        "org.moddingx.libx.datagen.provider.patchouli.content.CaptionContent",
+        "org.moddingx.libx.datagen.provider.patchouli.content.RecipePage",
+        "org.moddingx.libx.datagen.provider.patchouli.content.TextContent",
+        "org.moddingx.libx.datagen.provider.patchouli.EntryBuilder",
+        "org.moddingx.libx.datagen.provider.patchouli.page.Content",
+        "org.moddingx.libx.datagen.provider.patchouli.page.PageBuilder",
+        "org.moddingx.libx.datagen.provider.patchouli.page.PageJson",
+        "org.moddingx.libx.datagen.provider.patchouli.PatchouliProviderBase",
+        "org.moddingx.libx.datagen.provider.recipe.crafting.CompressionExtension",
+        "org.moddingx.libx.datagen.provider.recipe.crafting.CraftingExtension",
+        "org.moddingx.libx.datagen.provider.recipe.crafting.ToolExtension",
+        "org.moddingx.libx.datagen.provider.recipe.DefaultExtension",
+        "org.moddingx.libx.datagen.provider.recipe.RecipeExtension",
+        "org.moddingx.libx.datagen.provider.recipe.RecipeProviderBase",
+        "org.moddingx.libx.datagen.provider.recipe.RemovalExtension",
+        "org.moddingx.libx.datagen.provider.recipe.SmeltingExtension",
+        "org.moddingx.libx.datagen.provider.recipe.SmithingExtension",
+        "org.moddingx.libx.datagen.provider.recipe.StoneCuttingExtension",
+        "org.moddingx.libx.datagen.provider.SoundDefinitionProviderBase",
+        "org.moddingx.libx.datagen.provider.TagProviderBase",
+        "org.moddingx.libx.datagen.provider.texture.TextureBuilder",
+        "org.moddingx.libx.datagen.provider.texture.TextureFactory",
+        "org.moddingx.libx.datagen.provider.texture.TextureHelper",
+        "org.moddingx.libx.datagen.provider.texture.TextureProviderBase",
+        "org.moddingx.libx.datagen.provider.texture.Textures",
+        "org.moddingx.libx.datapack.DataLoader",
+        "org.moddingx.libx.datapack.DatapackHelper",
+        "org.moddingx.libx.datapack.DynamicDatapacks",
+        "org.moddingx.libx.datapack.ResourceEntry",
+        "org.moddingx.libx.event.ClickBlockEmptyHandEvent",
+        "org.moddingx.libx.event.ConfigLoadedEvent",
+        "org.moddingx.libx.fi.Consumer3",
+        "org.moddingx.libx.fi.Consumer4",
+        "org.moddingx.libx.fi.Consumer5",
+        "org.moddingx.libx.fi.Consumer6",
+        "org.moddingx.libx.fi.Consumer7",
+        "org.moddingx.libx.fi.Consumer8",
+        "org.moddingx.libx.fi.Function3",
+        "org.moddingx.libx.fi.Function4",
+        "org.moddingx.libx.fi.Function5",
+        "org.moddingx.libx.fi.Function6",
+        "org.moddingx.libx.fi.Function7",
+        "org.moddingx.libx.fi.Function8",
+        "org.moddingx.libx.fi.Predicate3",
+        "org.moddingx.libx.fi.Predicate4",
+        "org.moddingx.libx.fi.Predicate5",
+        "org.moddingx.libx.fi.Predicate6",
+        "org.moddingx.libx.fi.Predicate7",
+        "org.moddingx.libx.fi.Predicate8",
+        "org.moddingx.libx.inventory.BaseItemStackHandler",
+        "org.moddingx.libx.inventory.IAdvancedItemHandler",
+        "org.moddingx.libx.inventory.IAdvancedItemHandlerModifiable",
+        "org.moddingx.libx.inventory.VanillaWrapper",
+        "org.moddingx.libx.LibX",
+        "org.moddingx.libx.menu.BlockEntityMenu",
+        "org.moddingx.libx.menu.BlockMenu",
+        "org.moddingx.libx.menu.DefaultMenu",
+        "org.moddingx.libx.menu.EntityMenu",
+        "org.moddingx.libx.menu.GenericMenu",
+        "org.moddingx.libx.menu.MenuBase",
+        "org.moddingx.libx.menu.slot.BaseSlot",
+        "org.moddingx.libx.menu.slot.OutputSlot",
+        "org.moddingx.libx.mod.ModX",
+        "org.moddingx.libx.mod.ModXRegistration",
+        "org.moddingx.libx.network.EnumDataSerializer",
+        "org.moddingx.libx.network.LoginPacketSerializer",
+        "org.moddingx.libx.network.NetworkX",
+        "org.moddingx.libx.network.PacketHandler",
+        "org.moddingx.libx.network.PacketSerializer",
+        "org.moddingx.libx.network.RemoteModList",
+        "org.moddingx.libx.registration.MultiRegisterable",
+        "org.moddingx.libx.registration.Registerable",
+        "org.moddingx.libx.registration.RegistrationBuilder",
+        "org.moddingx.libx.registration.RegistrationContext",
+        "org.moddingx.libx.registration.RegistryCondition",
+        "org.moddingx.libx.registration.RegistryTransformer",
+        "org.moddingx.libx.registration.SetupContext",
+        "org.moddingx.libx.registration.tracking.RegistryTracker",
+        "org.moddingx.libx.registration.util.EnumObjects",
+        "org.moddingx.libx.render.block.DirectionalBlockRenderer",
+        "org.moddingx.libx.render.block.RotatedBlockRenderer",
+        "org.moddingx.libx.render.block.TransformingBlockRenderer",
+        "org.moddingx.libx.render.ClientTickHandler",
+        "org.moddingx.libx.render.ItemStackRenderer",
+        "org.moddingx.libx.render.RenderHelper",
+        "org.moddingx.libx.render.RenderHelperBlock",
+        "org.moddingx.libx.render.RenderHelperFluid",
+        "org.moddingx.libx.render.RenderHelperLevel",
+        "org.moddingx.libx.render.target.ImageHelper",
+        "org.moddingx.libx.render.target.RenderJob",
+        "org.moddingx.libx.render.target.RenderJobFailedException",
+        "org.moddingx.libx.screen.ColorPicker",
+        "org.moddingx.libx.screen.Panel",
+        "org.moddingx.libx.screen.text.AlignedComponent",
+        "org.moddingx.libx.screen.text.ComponentLayout",
+        "org.moddingx.libx.screen.text.TextScreen",
+        "org.moddingx.libx.util.ClassUtil",
+        "org.moddingx.libx.util.data.NbtX",
+        "org.moddingx.libx.util.data.ResourceList",
+        "org.moddingx.libx.util.data.TagAccess",
+        "org.moddingx.libx.util.game.ComponentUtil",
+        "org.moddingx.libx.util.game.LongAmountToIntUtil",
+        "org.moddingx.libx.util.game.ServerMessages",
+        "org.moddingx.libx.util.game.TextProcessor",
+        "org.moddingx.libx.util.lazy.CachedFunction",
+        "org.moddingx.libx.util.lazy.CachedValue",
+        "org.moddingx.libx.util.lazy.LazyImmutableMap",
+        "org.moddingx.libx.util.lazy.LazyValue",
+        "org.moddingx.libx.util.Misc",
+        "org.moddingx.libx.util.Ref"
+      ],
+      "methods": {
+        "org.moddingx.libx.annotation.api.Codecs": [
+          "get(Class<? extends ModX>, Class<T>)"
+        ],
+        "org.moddingx.libx.annotation.processor.Classes": [
+          "sourceName(String)"
+        ],
+        "org.moddingx.libx.annotation.processor.ExternalProperties": [
+          "minecraftVersion(ProcessorEnv)",
+          "modVersion(ProcessorEnv)",
+          "release(ProcessorEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.meta.ArtifactVersion": [
+          "equals(Object)",
+          "compareTo(ArtifactVersion)",
+          "toString()",
+          "parse(String)"
+        ],
+        "org.moddingx.libx.annotation.processor.meta.ExperimentalProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.meta.RemoveInProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.meta.SuperProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedOptions()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.misc.ConfigProcessor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.misc.FindBugsProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedOptions()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.codec.CodecProcessor": [
+          "processAnyParam(Element, String, ModEnv)",
+          "processPrimaryConstructor(Element, ModEnv)",
+          "getNestedListInfo(TypeMirror, ModEnv)",
+          "ListInfo(int, TypeMirror)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.codec.CodecType": [],
+        "org.moddingx.libx.annotation.processor.modinit.codec.DynamicType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.codec.EnumType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.codec.GetterSupplier": [],
+        "org.moddingx.libx.annotation.processor.modinit.codec.ParamType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)",
+          "genericMatches(TypeMirror, TypeMirror, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisterConfigProcessor": [
+          "processRegisterConfig(Element, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisteredConfig": [],
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisteredMapper": [],
+        "org.moddingx.libx.annotation.processor.modinit.config.RegisterMapperProcessor": [
+          "processRegisterMapper(Element, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.data.DatagenEntry": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.data.DatagenProcessor": [
+          "processDatagen(Element, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.FailureException": [],
+        "org.moddingx.libx.annotation.processor.modinit.model.LoadableModel": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.model.ModelProcessor": [
+          "processModel(Element, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.ModEnv": [],
+        "org.moddingx.libx.annotation.processor.modinit.ModInit": [
+          "addRegistration(int, List<RegistrationEntry>)",
+          "addModel(String, String, String, String)",
+          "addConfigMapper(String, String, String, boolean)",
+          "addConfig(String, boolean, String, String)",
+          "addCodec(GeneratedCodec)",
+          "addDatagen(String, List<DatagenEntry.Arg>)",
+          "write(Filer, Messager)",
+          "quote(String)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.ModInitProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)",
+          "getMod(Element)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.register.RegisterClassProcessor": [
+          "processRegisterClass(Element, ModEnv)"
+        ],
+        "org.moddingx.libx.annotation.processor.modinit.register.RegistrationEntry": [],
+        "org.moddingx.libx.annotation.processor.onlyin.OnlyInProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedOptions()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "org.moddingx.libx.annotation.processor.Processor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "types()",
+          "elements()",
+          "filer()",
+          "messager()",
+          "options()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedSourceVersion()",
+          "forClass(Class<?>)",
+          "forClass(String)",
+          "typeElement(TypeMirror)",
+          "typeElement(Class<?>)",
+          "typeElement(String)",
+          "isSuppressed(Element, String)",
+          "contained(Element, Class<T>)",
+          "contained(Element, Class<T>, Predicate<T>)",
+          "sameErasure(TypeMirror, TypeMirror)",
+          "subTypeErasure(TypeMirror, TypeMirror)",
+          "classType(Supplier<Class<?>>)"
+        ],
+        "org.moddingx.libx.annotation.processor.ProcessorEnv": [],
+        "org.moddingx.libx.base.BlockBase": [
+          "initializeItemClient(Consumer<IClientItemExtensions>)",
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)"
+        ],
+        "org.moddingx.libx.base.decoration.DecoratedBlock": [
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "getContext()",
+          "has(DecorationType<?>)",
+          "get(DecorationType<T>)"
+        ],
+        "org.moddingx.libx.base.decoration.DecorationContext": [
+          "baseMaterial()",
+          "has(DecorationType<?>)",
+          "types()",
+          "register(final ModX, final DecoratedBlock)",
+          "toString()",
+          "RegistrationInfo(Map<DecorationType<?>, DecorationType.DecorationElement<?, ?>>, Map<String, Registerable>)"
+        ],
+        "org.moddingx.libx.base.decoration.DecorationType": [
+          "registerAdditional(ModX, DecorationContext, DecoratedBlock, T, RegistrationContext, Registerable.EntryCollector)"
+        ],
+        "org.moddingx.libx.base.decoration.SignAccess": [],
+        "org.moddingx.libx.base.FluidBase": [
+          "getFluid()",
+          "getSource()",
+          "getType()",
+          "getFlowing()",
+          "getBlock()",
+          "getBucket()",
+          "getProperties()",
+          "m_5456_()",
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)",
+          "builder(ModX)"
+        ],
+        "org.moddingx.libx.base.ItemBase": [],
+        "org.moddingx.libx.base.ItemInventory": [
+          "initCapabilities(ItemStack, CompoundTag)",
+          "getInventory(ItemStack)",
+          "getInventoryOption(ItemStack)"
+        ],
+        "org.moddingx.libx.base.MenuBlock": [
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)"
+        ],
+        "org.moddingx.libx.base.tile.BlockBE": [
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)",
+          "m_142194_(BlockPos, BlockState)",
+          "m_142354_(Level, BlockState, BlockEntityType<X>)",
+          "m_214009_(ServerLevel, X)",
+          "m_6810_(BlockState, Level, BlockPos, BlockState, boolean)",
+          "getBlockEntity(Level, BlockPos)",
+          "getBlockEntityType()",
+          "shouldDropInventory(Level, BlockPos, BlockState)"
+        ],
+        "org.moddingx.libx.base.tile.BlockEntityBase": [
+          "getCapability(Capability<T>, Direction)",
+          "onLoad()",
+          "setDispatchable()"
+        ],
+        "org.moddingx.libx.base.tile.GameEventBlock": [
+          "gameEventRange()"
+        ],
+        "org.moddingx.libx.base.tile.MenuBlockBE": [
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)"
+        ],
+        "org.moddingx.libx.base.tile.TickingBlock": [],
+        "org.moddingx.libx.block.DirectionShape": [
+          "getShape(Direction)"
+        ],
+        "org.moddingx.libx.block.RotationShape": [
+          "getShape(Direction)"
+        ],
+        "org.moddingx.libx.capability.ItemCapabilities": [
+          "create(IItemHandlerModifiable)",
+          "create(IItemHandlerModifiable, Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "create(Supplier<IItemHandlerModifiable>)",
+          "create(Supplier<IItemHandlerModifiable>, Predicate<Integer>, BiPredicate<Integer, ItemStack>)"
+        ],
+        "org.moddingx.libx.capability.LongEnergyStorage": [
+          "getEnergyStored()",
+          "getMaxEnergyStored()"
+        ],
+        "org.moddingx.libx.capability.SimpleProvider": [
+          "getCapability(Capability<T>, Direction)"
+        ],
+        "org.moddingx.libx.codec.CodecHelper": [
+          "nonNull(T, String)",
+          "doesNotThrow(Callable<T>)",
+          "or(Supplier<DataResult<T>>...)",
+          "orPartial(Supplier<DataResult<T>>...)"
+        ],
+        "org.moddingx.libx.codec.CodecOps": [
+          "write(Codec<T>, T)",
+          "write(Codec<T>, T, RegistryAccess)",
+          "write(Codec<T>, T, Class<R>)",
+          "write(Codec<T>, T, Class<R>, RegistryAccess)",
+          "read(Codec<T>, E)",
+          "read(Codec<T>, E, RegistryAccess)"
+        ],
+        "org.moddingx.libx.codec.MoreCodecs": [
+          "error(String)",
+          "error(String, String)",
+          "option(Codec<T>)",
+          "enumCodec(Class<T>)",
+          "extend(Codec<M>, MapCodec<E>)",
+          "extend(Codec<M>, MapCodec<E>, Function<A, Pair<M, E>>, BiFunction<M, E, A>)",
+          "mapDispatch(MapCodec<K>, Function<K, DataResult<Codec<? extends V>>>, Function<A, Pair<K, V>>, BiFunction<K, V, DataResult<A>>)",
+          "lazy(Supplier<Codec<T>>)",
+          "typeMapped(TypedEncoder<T, ?>...)",
+          "typeMapped(Codec<T>, TypedEncoder<T, ?>...)"
+        ],
+        "org.moddingx.libx.codec.TypedEncoder": [
+          "cast(DynamicOps<N>)"
+        ],
+        "org.moddingx.libx.command.CommandUtil": [
+          "getArgumentOrDefault(CommandContext<?>, String, Class<T>, T)"
+        ],
+        "org.moddingx.libx.command.EnumArgument2": [
+          "enumArgument(Class<R>)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "org.moddingx.libx.CommonNetwork": [
+          "updateBE(Level, BlockPos)",
+          "requestBE(Level, BlockPos)"
+        ],
+        "org.moddingx.libx.config.ConfigManager": [
+          "registerValueMapper(String, ValueMapper<?, ?>)",
+          "registerValueMapper(String, GenericValueMapper<?, ?, ?>)",
+          "registerValueMapperFactory(String, MapperFactory<?>)",
+          "registerConfigValidator(String, ConfigValidator<?, ?>)",
+          "registerConfig(String, Class<?>, boolean)",
+          "registerConfig(ResourceLocation, Class<?>, boolean)",
+          "reloadCommon()",
+          "reloadClient()",
+          "reloadConfig(Class<?>)",
+          "forceResync(ServerPlayer, Class<?>)",
+          "forceResync(ServerPlayer)",
+          "configs()"
+        ],
+        "org.moddingx.libx.config.correct.ConfigCorrection": [
+          "correct(JsonElement, ValueMapper<U, ?>, Function<T, U>)"
+        ],
+        "org.moddingx.libx.config.gui.ConfigEditor": [],
+        "org.moddingx.libx.config.gui.ConfigScreenContent": [
+          "message()"
+        ],
+        "org.moddingx.libx.config.gui.EditorOps": [
+          "enabled(boolean)"
+        ],
+        "org.moddingx.libx.config.gui.InputProperties": [
+          "toString(T)",
+          "canInputChar(char)",
+          "isValid(String)"
+        ],
+        "org.moddingx.libx.config.gui.WidgetProperties": [],
+        "org.moddingx.libx.config.mapper.GenericValueMapper": [
+          "fromNetwork(FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "toNetwork(T, FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "comment()",
+          "correct(JsonElement, ValueMapper<C, JsonElement>, ConfigCorrection<T>)"
+        ],
+        "org.moddingx.libx.config.mapper.MapperFactory": [],
+        "org.moddingx.libx.config.mapper.ValueMapper": [
+          "fromNetwork(FriendlyByteBuf)",
+          "toNetwork(T, FriendlyByteBuf)",
+          "comment()",
+          "correct(JsonElement, ConfigCorrection<T>)"
+        ],
+        "org.moddingx.libx.config.validator.ConfigValidator": [
+          "comment(A)"
+        ],
+        "org.moddingx.libx.config.validator.ValidatorInfo": [
+          "value(Class<A>)"
+        ],
+        "org.moddingx.libx.crafting.CraftingHelper2": [
+          "serializeItemStack(ItemStack, boolean)"
+        ],
+        "org.moddingx.libx.crafting.ingredient.EffectIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "org.moddingx.libx.crafting.ingredient.PotionIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "org.moddingx.libx.crafting.IngredientStack": [
+          "test(ItemStack)",
+          "isEmpty()",
+          "toJson()",
+          "toNetwork(FriendlyByteBuf)",
+          "fromJson(JsonObject)",
+          "fromNetwork(FriendlyByteBuf)"
+        ],
+        "org.moddingx.libx.crafting.recipe.RecipeHelper": [
+          "isItemValidInput(RecipeManager, RecipeType<?>, ItemStack)",
+          "matches(Recipe<?>, List<ItemStack>, boolean)",
+          "stackUp(List<ItemStack>)"
+        ],
+        "org.moddingx.libx.datagen.LootBuilders": [
+          "all(List<Builder<?>>)",
+          "group(List<Builder<?>>)",
+          "alternative(List<Builder<?>>)",
+          "sequence(List<Builder<?>>)"
+        ],
+        "org.moddingx.libx.datagen.provider.AdvancementProviderBase": [
+          "setup()",
+          "m_6055_()",
+          "m_213708_(CachedOutput)",
+          "root()",
+          "root(String)",
+          "root(String, String)",
+          "advancement(Advancement)",
+          "advancement(ResourceLocation)",
+          "advancement(String)",
+          "dummy(ResourceLocation)",
+          "dummy(ResourceLocation, boolean)",
+          "items(ItemLike...)",
+          "items(TagKey<Item>...)",
+          "items(ItemPredicate...)",
+          "itemTasks(ItemLike...)",
+          "itemTasks(TagKey<Item>...)",
+          "itemTasks(ItemPredicate...)",
+          "eat(ItemLike)",
+          "eat(TagKey<Item>)",
+          "eat(ItemPredicate)"
+        ],
+        "org.moddingx.libx.datagen.provider.BlockStateProviderBase": [
+          "m_6055_()",
+          "manualState(Block)",
+          "manualModel(Block)",
+          "manualModel(Block, ModelFile)",
+          "models()",
+          "models(ResourceLocation)",
+          "setRenderType(ResourceLocation)",
+          "registerStatesAndModels()",
+          "m_213708_(CachedOutput)",
+          "setup()",
+          "defaultState(ResourceLocation, Block, Supplier<ModelFile>)",
+          "defaultModel(ResourceLocation, Block)",
+          "buttonBlock(Block, ResourceLocation)",
+          "pressurePlateBlock(Block, ResourceLocation)"
+        ],
+        "org.moddingx.libx.datagen.provider.CommonTagsProviderBase": [
+          "setup()",
+          "defaultItemTags(Item)",
+          "defaultBlockTags(Block)",
+          "defaultFluidTags(Fluid)",
+          "item(TagKey<Item>)",
+          "block(TagKey<Block>)",
+          "fluid(TagKey<Fluid>)",
+          "copyBlock(TagKey<Block>, TagKey<Item>)",
+          "copyFluid(TagKey<Fluid>, TagKey<Block>)",
+          "m_6055_()",
+          "m_213708_(CachedOutput)"
+        ],
+        "org.moddingx.libx.datagen.provider.ItemModelProviderBase": [
+          "m_6055_()",
+          "handheld(Item)",
+          "manualModel(Item)",
+          "registerModels()",
+          "setup()",
+          "defaultItem(ResourceLocation, Item)",
+          "defaultBlock(ResourceLocation, BlockItem)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.BlockLootProviderBase": [
+          "defaultBehavior(Block)",
+          "needsLootTable(BlockState)",
+          "generateBaseTable(Block, Builder<?>)",
+          "element()",
+          "drops(Block, ItemStack...)",
+          "drops(Block, List<LootFactory<Block>>)",
+          "drops(Block, boolean, ItemStack...)",
+          "drops(Block, boolean, LootFactory<Block>...)",
+          "drops(Block, boolean, List<LootFactory<Block>>)",
+          "drops(Block, BlockLootProviderBase.SilkModifier, ItemStack...)",
+          "drops(Block, BlockLootProviderBase.SilkModifier, LootFactory<Block>...)",
+          "drops(Block, BlockLootProviderBase.SilkModifier, List<LootFactory<Block>>)",
+          "silk(GenericLootModifier<Block>)",
+          "noSilk()",
+          "fortuneOres()",
+          "fortuneUniform()",
+          "fortuneUniform(int)",
+          "fortuneBinomial(float)",
+          "fortuneBinomial(float, int)",
+          "randomFortune(float)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.ChestLootProviderBase": [
+          "defaultBehavior(String)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.EntityLootProviderBase": [
+          "defaultBehavior(EntityType<?>)",
+          "looting(int)",
+          "looting(int, int)",
+          "fire()",
+          "smeltOnFire()"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.entry.GenericLootModifier": [
+          "build(T)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.entry.LootFactory": [
+          "with(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder...)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.entry.LootModifier": [
+          "build(T)",
+          "andThen(LootModifier<T>)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.entry.SimpleLootFactory": [
+          "withFinal(GenericLootModifier<T>)",
+          "with(LootModifier<T>...)",
+          "with(List<LootModifier<T>>)",
+          "with(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder...)",
+          "with(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>...)"
+        ],
+        "org.moddingx.libx.datagen.provider.loot.LootProviderBase": [
+          "setup()",
+          "customLootTable(T)",
+          "customLootTable(T, Builder)",
+          "customLootTable(T, Function<T, Builder>)",
+          "element()",
+          "defaultBehavior(T)",
+          "m_6055_()",
+          "m_213708_(CachedOutput)",
+          "modifier(BiFunction<T, net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>, net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>>)",
+          "genericModifier(BiFunction<T, net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>>)",
+          "identity()",
+          "drops(T, ItemStack...)",
+          "drops(T, LootFactory<T>...)",
+          "drops(T, List<LootFactory<T>>)",
+          "generateBaseTable(T, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>)",
+          "random(float)",
+          "count(int)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.BookProperties": [],
+        "org.moddingx.libx.datagen.provider.patchouli.CategoryBuilder": [
+          "name(String)",
+          "description(String)",
+          "icon(ItemLike)",
+          "icon(ItemStack)",
+          "sort(int)",
+          "postProcess(Consumer<JsonObject>)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.content.CaptionContent": [
+          "lineSkip()",
+          "withCaption(String)",
+          "specialPage(PageBuilder, String)",
+          "canTakeRegularText()",
+          "pages(PageBuilder)",
+          "with(Content)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.content.RecipePage": [
+          "addRecipeKey(JsonObject)",
+          "specialPage(PageBuilder, String)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.content.TextContent": [
+          "pages(PageBuilder)",
+          "with(Content)",
+          "addTextPages(PageBuilder, List<String>, boolean)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.EntryBuilder": [
+          "name(String)",
+          "icon(ItemLike)",
+          "icon(ItemStack)",
+          "advancement(String)",
+          "advancement(String, String)",
+          "advancement(ResourceLocation)",
+          "text(String)",
+          "caption(String)",
+          "flip()",
+          "flip(String)",
+          "image(String, String...)",
+          "image(String, ResourceLocation...)",
+          "crafting(String)",
+          "crafting(String, String)",
+          "crafting(ResourceLocation)",
+          "smelting(String)",
+          "smelting(String, String)",
+          "smelting(ResourceLocation)",
+          "item(ItemLike)",
+          "item(ItemLike, boolean)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.page.Content": [
+          "with(Content)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.page.PageBuilder": [],
+        "org.moddingx.libx.datagen.provider.patchouli.page.PageJson": [
+          "stack(ItemStack)",
+          "splitText(String)",
+          "splitText(String, boolean)",
+          "splitText(String, int)",
+          "splitText(String, int, int)"
+        ],
+        "org.moddingx.libx.datagen.provider.patchouli.PatchouliProviderBase": [
+          "setup()",
+          "category(String)",
+          "entry(String)",
+          "entry(String, String)",
+          "entry(String, ResourceLocation)",
+          "m_6055_()",
+          "m_213708_(CachedOutput)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.crafting.CompressionExtension": [
+          "compress(ItemLike, ItemLike)",
+          "compress(ItemLike, ItemLike, boolean)",
+          "smallCompress(ItemLike, ItemLike)",
+          "smallCompress(ItemLike, ItemLike, boolean)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike, boolean)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.crafting.CraftingExtension": [
+          "shaped(Object...)",
+          "shapeless(Object...)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.crafting.ToolExtension": [
+          "makeTools(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)",
+          "makeArmor(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.DefaultExtension": [],
+        "org.moddingx.libx.datagen.provider.recipe.RecipeExtension": [
+          "criteria(Ingredient)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.RecipeProviderBase": [
+          "m_6055_()",
+          "setup()",
+          "conditions()",
+          "m_176531_(Consumer<FinishedRecipe>)",
+          "loc(ItemLike)",
+          "loc(ItemLike, String)",
+          "provider()",
+          "consumer()",
+          "criterion(ItemLike)",
+          "criterion(TagKey<Item>)",
+          "criterion(ItemPredicate...)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.RemovalExtension": [
+          "remove(ResourceLocation)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.SmeltingExtension": [
+          "smelting(ItemLike, ItemLike, float, int)",
+          "blasting(ItemLike, ItemLike, float, int)",
+          "cooking(ItemLike, ItemLike, float, int)",
+          "campfire(ItemLike, ItemLike, float, int)",
+          "smelting(TagKey<Item>, ItemLike, float, int)",
+          "blasting(TagKey<Item>, ItemLike, float, int)",
+          "cooking(TagKey<Item>, ItemLike, float, int)",
+          "campfire(TagKey<Item>, ItemLike, float, int)",
+          "smelting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "blasting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "cooking(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "campfire(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "smelting(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "blasting(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "cooking(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "campfire(ResourceLocation, TagKey<Item>, ItemLike, float, int)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.SmithingExtension": [
+          "smithing(ItemLike, ItemLike, ItemLike)",
+          "smithing(ItemLike, TagKey<Item>, ItemLike)",
+          "smithing(ItemLike, Ingredient, ItemLike)",
+          "smithing(TagKey<Item>, ItemLike, ItemLike)",
+          "smithing(TagKey<Item>, TagKey<Item>, ItemLike)",
+          "smithing(TagKey<Item>, Ingredient, ItemLike)",
+          "smithing(Ingredient, ItemLike, ItemLike)",
+          "smithing(Ingredient, TagKey<Item>, ItemLike)",
+          "smithing(Ingredient, Ingredient, ItemLike)"
+        ],
+        "org.moddingx.libx.datagen.provider.recipe.StoneCuttingExtension": [
+          "stoneCutting(ItemLike, ItemLike)",
+          "stoneCutting(ItemLike, ItemLike, int)",
+          "stoneCutting(TagKey<Item>, ItemLike)",
+          "stoneCutting(TagKey<Item>, ItemLike, int)",
+          "stoneCutting(Ingredient, ItemLike)",
+          "stoneCutting(Ingredient, ItemLike, int)",
+          "stoneCutting(Ingredient, ItemLike, String)",
+          "stoneCutting(Ingredient, ItemLike, int, String)"
+        ],
+        "org.moddingx.libx.datagen.provider.SoundDefinitionProviderBase": [
+          "m_6055_()",
+          "ignore(SoundEvent)",
+          "ignore(ResourceLocation)",
+          "setup()",
+          "defaultSound(ResourceLocation, SoundEvent)",
+          "settings()",
+          "sound(SoundEvent)",
+          "sound(ResourceLocation)",
+          "sound(SoundEvent, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "sound(ResourceLocation, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "m_213708_(CachedOutput)"
+        ],
+        "org.moddingx.libx.datagen.provider.TagProviderBase": [
+          "m_6577_()",
+          "m_6055_()",
+          "setup()",
+          "defaultTags(T)"
+        ],
+        "org.moddingx.libx.datagen.provider.texture.TextureBuilder": [
+          "addTexture(String, int)",
+          "addImage(String, int)",
+          "addTexture(ResourceLocation, int)",
+          "addImage(ResourceLocation, int)",
+          "addTexture(String, int, int)",
+          "addImage(String, int, int)",
+          "addTexture(ResourceLocation, int, int)",
+          "addImage(ResourceLocation, int, int)",
+          "build()"
+        ],
+        "org.moddingx.libx.datagen.provider.texture.TextureFactory": [],
+        "org.moddingx.libx.datagen.provider.texture.TextureHelper": [
+          "copyTexture(BufferedImage, Textures, String, int, int, int, int, int, int)",
+          "copyImage(BufferedImage, Textures, String, int, int, int, int, int, int)",
+          "copyTexture(BufferedImage, Textures, ResourceLocation, int, int, int, int, int, int)",
+          "copyImage(BufferedImage, Textures, ResourceLocation, int, int, int, int, int, int)",
+          "clear(BufferedImage, Textures, int, int, int, int)"
+        ],
+        "org.moddingx.libx.datagen.provider.texture.TextureProviderBase": [
+          "m_6055_()",
+          "setup()",
+          "texture(String, TextureFactory)",
+          "image(String, TextureFactory)",
+          "texture(ResourceLocation, TextureFactory)",
+          "image(ResourceLocation, TextureFactory)",
+          "sign(WoodType, Block, Block)",
+          "sign(WoodType, ResourceLocation, ResourceLocation)",
+          "sign(ResourceLocation, ResourceLocation, ResourceLocation)",
+          "m_213708_(CachedOutput)"
+        ],
+        "org.moddingx.libx.datagen.provider.texture.Textures": [
+          "scale()",
+          "textureScale(String)",
+          "imageScale(String)",
+          "textureScale(ResourceLocation)",
+          "imageScale(ResourceLocation)",
+          "texture(String)",
+          "image(String)",
+          "texture(ResourceLocation)",
+          "image(ResourceLocation)"
+        ],
+        "org.moddingx.libx.datapack.DataLoader": [
+          "loadJson(ResourceManager, String, Codec<T>)",
+          "loadJson(ResourceManager, String, DataLoader.ResourceFactory<JsonElement, T>)",
+          "collect(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "collectText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "collectJson(List<ResourceEntry>, Codec<T>)",
+          "collectJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "join(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "joinText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "joinJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "locate(ResourceManager, String, String)",
+          "locate(ResourceManager, String, String, boolean)"
+        ],
+        "org.moddingx.libx.datapack.DatapackHelper": [
+          "generatePackMeta(IModFile, String, PackType)"
+        ],
+        "org.moddingx.libx.datapack.DynamicDatapacks": [
+          "enablePack(String, String)",
+          "isEnabled(String, String)"
+        ],
+        "org.moddingx.libx.datapack.ResourceEntry": [
+          "id()",
+          "resource()"
+        ],
+        "org.moddingx.libx.event.ClickBlockEmptyHandEvent": [
+          "getPlayer()",
+          "getLevel()",
+          "getHand()",
+          "getHit()",
+          "getCancellationResult()",
+          "setCancellationResult(InteractionResult)",
+          "isCancelable()"
+        ],
+        "org.moddingx.libx.event.ConfigLoadedEvent": [
+          "getConfigId()",
+          "getConfigClass()",
+          "getReason()",
+          "isClientConfig()",
+          "getConfigPath()",
+          "getCurrentPath()"
+        ],
+        "org.moddingx.libx.fi.Consumer3": [
+          "andThen(Consumer3<A, B, C>)"
+        ],
+        "org.moddingx.libx.fi.Consumer4": [
+          "andThen(Consumer4<A, B, C, D>)"
+        ],
+        "org.moddingx.libx.fi.Consumer5": [
+          "andThen(Consumer5<A, B, C, D, E>)"
+        ],
+        "org.moddingx.libx.fi.Consumer6": [
+          "andThen(Consumer6<A, B, C, D, E, F>)"
+        ],
+        "org.moddingx.libx.fi.Consumer7": [
+          "andThen(Consumer7<A, B, C, D, E, F, G>)"
+        ],
+        "org.moddingx.libx.fi.Consumer8": [
+          "andThen(Consumer8<A, B, C, D, E, F, G, H>)"
+        ],
+        "org.moddingx.libx.fi.Function3": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Function4": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Function5": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Function6": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Function7": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Function8": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "org.moddingx.libx.fi.Predicate3": [
+          "and(Predicate3<A, B, C>)",
+          "or(Predicate3<A, B, C>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.fi.Predicate4": [
+          "and(Predicate4<A, B, C, D>)",
+          "or(Predicate4<A, B, C, D>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.fi.Predicate5": [
+          "and(Predicate5<A, B, C, D, E>)",
+          "or(Predicate5<A, B, C, D, E>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.fi.Predicate6": [
+          "and(Predicate6<A, B, C, D, E, F>)",
+          "or(Predicate6<A, B, C, D, E, F>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.fi.Predicate7": [
+          "and(Predicate7<A, B, C, D, E, F, G>)",
+          "or(Predicate7<A, B, C, D, E, F, G>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.fi.Predicate8": [
+          "and(Predicate8<A, B, C, D, E, F, G, H>)",
+          "or(Predicate8<A, B, C, D, E, F, G, H>)",
+          "negate()"
+        ],
+        "org.moddingx.libx.inventory.BaseItemStackHandler": [
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "onContentsChanged(int)",
+          "onLoad()",
+          "toVanilla()",
+          "getUnrestricted()",
+          "createCapability()",
+          "createUnrestrictedCapability()",
+          "createCapability(Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "builder(int)"
+        ],
+        "org.moddingx.libx.inventory.IAdvancedItemHandler": [
+          "insertItem(ItemStack, boolean)",
+          "hasSpaceFor(List<ItemStack>)",
+          "hasSpaceFor(List<ItemStack>, int, int)",
+          "extractItem(int, boolean)",
+          "extractItem(Predicate<ItemStack>, int, boolean)"
+        ],
+        "org.moddingx.libx.inventory.IAdvancedItemHandlerModifiable": [
+          "clear()",
+          "clear(Predicate<ItemStack>)"
+        ],
+        "org.moddingx.libx.inventory.VanillaWrapper": [
+          "m_6643_()",
+          "m_7983_()",
+          "m_8020_(int)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6596_()",
+          "m_6542_(Player)",
+          "m_7013_(int, ItemStack)",
+          "m_6211_()"
+        ],
+        "org.moddingx.libx.LibX": [
+          "setup(FMLCommonSetupEvent)",
+          "clientSetup(FMLClientSetupEvent)",
+          "getInstance()",
+          "getNetwork()"
+        ],
+        "org.moddingx.libx.menu.BlockEntityMenu": [
+          "getBlockEntity()"
+        ],
+        "org.moddingx.libx.menu.BlockMenu": [
+          "m_6875_(Player)",
+          "getPos()",
+          "createMenuType(Function5<Integer, Level, BlockPos, Inventory, Player, T>)",
+          "createMenuType(Function6<MenuType<T>, Integer, Level, BlockPos, Inventory, Player, T>)",
+          "openMenu(ServerPlayer, final MenuType<? extends BlockMenu>, final Component, final BlockPos)"
+        ],
+        "org.moddingx.libx.menu.DefaultMenu": [
+          "getLevel()",
+          "m_7648_(Player, int)"
+        ],
+        "org.moddingx.libx.menu.EntityMenu": [
+          "m_6875_(Player)",
+          "getEntity()",
+          "createMenuType(Function5<Integer, Level, Integer, Inventory, Player, T>)",
+          "createMenuType(Function6<MenuType<T>, Integer, Level, Integer, Inventory, Player, T>)",
+          "openMenu(ServerPlayer, final MenuType<? extends BlockEntityMenu<?>>, final Component, final Entity)"
+        ],
+        "org.moddingx.libx.menu.GenericMenu": [
+          "m_6875_(Player)",
+          "m_7648_(Player, int)",
+          "open(ServerPlayer, final IItemHandlerModifiable, final Component, final ResourceLocation)",
+          "registerSlotValidator(ResourceLocation, BiPredicate<Integer, ItemStack>)"
+        ],
+        "org.moddingx.libx.menu.MenuBase": [
+          "layoutPlayerInventorySlots(int, int)",
+          "addSlotBox(IItemHandler, int, int, int, int, int, int, int)",
+          "addSlotRange(IItemHandler, int, int, int, int, int)",
+          "addSlotBox(IItemHandler, int, int, int, int, int, int, int, Function4<IItemHandler, Integer, Integer, Integer, Slot>)",
+          "addSlotRange(IItemHandler, int, int, int, int, int, Function4<IItemHandler, Integer, Integer, Integer, Slot>)",
+          "m_38903_(ItemStack, int, int, boolean)"
+        ],
+        "org.moddingx.libx.menu.slot.BaseSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "org.moddingx.libx.menu.slot.OutputSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "org.moddingx.libx.mod.ModX": [
+          "setup(FMLCommonSetupEvent)",
+          "clientSetup(FMLClientSetupEvent)",
+          "resource(String)"
+        ],
+        "org.moddingx.libx.mod.ModXRegistration": [
+          "initRegistration(RegistrationBuilder)",
+          "addRegistrationHandler(Runnable)",
+          "register(ResourceKey<? extends Registry<T>>, String, T)",
+          "registerMulti(ResourceKey<? extends Registry<T>>, String, MultiRegisterable<T>)",
+          "createHolder(ResourceKey<? extends Registry<T>>, String, T)"
+        ],
+        "org.moddingx.libx.network.EnumDataSerializer": [
+          "write(FriendlyByteBuf, T)",
+          "read(FriendlyByteBuf)",
+          "copy(T)"
+        ],
+        "org.moddingx.libx.network.LoginPacketSerializer": [
+          "buildLoginPackets(boolean)",
+          "needsResponse()"
+        ],
+        "org.moddingx.libx.network.NetworkX": [
+          "register(PacketSerializer<T>, Supplier<BiConsumer<T, Supplier<Context>>>, NetworkDirection)",
+          "getProtocol()",
+          "registerPackets()",
+          "registerGame(NetworkDirection, PacketSerializer<T>, Supplier<Supplier<PacketHandler<T>>>)",
+          "registerLogin(NetworkDirection, LoginPacketSerializer<T>, Supplier<Supplier<PacketHandler<T>>>)",
+          "Protocol(String, NetworkX.ProtocolSide, NetworkX.ProtocolSide)"
+        ],
+        "org.moddingx.libx.network.PacketHandler": [],
+        "org.moddingx.libx.network.PacketSerializer": [],
+        "org.moddingx.libx.network.RemoteModList": [
+          "hasMod(ServerPlayer, String)",
+          "translate(ServerPlayer, String, String, Object...)"
+        ],
+        "org.moddingx.libx.registration.MultiRegisterable": [
+          "registerAdditional(RegistrationContext, MultiRegisterable.EntryCollector<T>)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)"
+        ],
+        "org.moddingx.libx.registration.Registerable": [
+          "registerCommon(SetupContext)",
+          "registerClient(SetupContext)",
+          "registerAdditional(RegistrationContext, Registerable.EntryCollector)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)"
+        ],
+        "org.moddingx.libx.registration.RegistrationBuilder": [
+          "enableRegistryTracking()",
+          "condition(RegistryCondition)",
+          "transformer(RegistryTransformer)",
+          "build()",
+          "Result(boolean, List<RegistryCondition>, List<RegistryTransformer>)"
+        ],
+        "org.moddingx.libx.registration.RegistrationContext": [
+          "mod()",
+          "id()",
+          "key()",
+          "registry()"
+        ],
+        "org.moddingx.libx.registration.RegistryCondition": [
+          "shouldRegister(RegistrationContext, Object)",
+          "shouldRegisterMulti(RegistrationContext, ResourceKey<? extends Registry<T>>, MultiRegisterable<T>)"
+        ],
+        "org.moddingx.libx.registration.RegistryTransformer": [
+          "transform(RegistrationContext, Object, Registerable.EntryCollector)",
+          "transformMulti(RegistrationContext, ResourceKey<? extends Registry<T>>, Object, MultiRegisterable.EntryCollector<T>)"
+        ],
+        "org.moddingx.libx.registration.SetupContext": [
+          "enqueue(Runnable)"
+        ],
+        "org.moddingx.libx.registration.tracking.RegistryTracker": [
+          "track(IForgeRegistry<T>, Field, ResourceLocation)",
+          "track(IForgeRegistry<T>, Field, Object, ResourceLocation)",
+          "run(IForgeRegistry<T>, Consumer<T>, Object, ResourceLocation)"
+        ],
+        "org.moddingx.libx.registration.util.EnumObjects": [
+          "get(E)",
+          "random(Random)",
+          "registerAdditional(RegistrationContext, MultiRegisterable.EntryCollector<T>)",
+          "initTracking(RegistrationContext, Registerable.TrackingCollector)"
+        ],
+        "org.moddingx.libx.render.block.DirectionalBlockRenderer": [
+          "transform(T, float, PoseStack)"
+        ],
+        "org.moddingx.libx.render.block.RotatedBlockRenderer": [
+          "transform(T, float, PoseStack)"
+        ],
+        "org.moddingx.libx.render.block.TransformingBlockRenderer": [
+          "m_6922_(T, float, PoseStack, MultiBufferSource, int, int)",
+          "transform(T, float, PoseStack)",
+          "doRender(T, float, PoseStack, MultiBufferSource, int, int)"
+        ],
+        "org.moddingx.libx.render.ClientTickHandler": [
+          "tick(ClientTickEvent)"
+        ],
+        "org.moddingx.libx.render.ItemStackRenderer": [
+          "addRenderBlock(BlockEntityType<T>, boolean)",
+          "m_108829_(ItemStack, TransformType, PoseStack, MultiBufferSource, int, int)",
+          "get()",
+          "createProperties()"
+        ],
+        "org.moddingx.libx.render.RenderHelper": [
+          "repeatBlit(PoseStack, int, int, int, int, TextureAtlasSprite)",
+          "repeatBlit(PoseStack, int, int, int, int, int, int, TextureAtlasSprite)",
+          "repeatBlit(PoseStack, int, int, int, int, int, int, float, float, float, float)",
+          "renderIconColored(PoseStack, VertexConsumer, float, float, TextureAtlasSprite, float, float, float, int, int, int)",
+          "rgb(int)",
+          "argb(int)",
+          "resetColor()",
+          "renderText(String, PoseStack)",
+          "renderText(Component, PoseStack)",
+          "renderText(FormattedCharSequence, PoseStack)",
+          "renderGuiBackground(PoseStack, int, int, int, int)",
+          "renderGuiBackground(PoseStack, int, int, int, int, ResourceLocation)",
+          "renderGuiBackground(PoseStack, int, int, int, int, ResourceLocation, int, int, int, int, int, int)"
+        ],
+        "org.moddingx.libx.render.RenderHelperBlock": [
+          "renderBlockBreak(BlockState, PoseStack, int, int, int)",
+          "renderBlockBreak(BlockState, PoseStack, int, int, int, long)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, int, int, TextureAtlasSprite)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, int, int, TextureAtlasSprite, long)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, int, int, TextureAtlasSprite, Predicate<Direction>)",
+          "renderBlockOverlaySprite(BlockState, PoseStack, int, int, TextureAtlasSprite, long, Predicate<Direction>)",
+          "endOverlayBatch()"
+        ],
+        "org.moddingx.libx.render.RenderHelperFluid": [
+          "renderFluid(PoseStack, MultiBufferSource, FluidStack, int, int, int, int)",
+          "renderFluid(PoseStack, MultiBufferSource, int, int, int, int, int)"
+        ],
+        "org.moddingx.libx.render.RenderHelperLevel": [
+          "loadCameraPosition(Camera, PoseStack, BlockPos)",
+          "loadCameraPosition(Camera, PoseStack, Vec3)",
+          "loadCameraPosition(Camera, PoseStack, double, double, double)"
+        ],
+        "org.moddingx.libx.render.target.ImageHelper": [
+          "render(RenderJob)"
+        ],
+        "org.moddingx.libx.render.target.RenderJob": [
+          "setupProjectionMatrix()",
+          "setupModelViewMatrix()",
+          "setupTransformation(PoseStack)",
+          "usesOverlay()",
+          "renderOverlay(PoseStack, MultiBufferSource, RenderJob.Projector)"
+        ],
+        "org.moddingx.libx.render.target.RenderJobFailedException": [],
+        "org.moddingx.libx.screen.ColorPicker": [
+          "getColor()",
+          "setColor(TextColor)",
+          "setResponder(Consumer<TextColor>)",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "enabled(boolean)"
+        ],
+        "org.moddingx.libx.screen.Panel": [
+          "addRenderableWidget(T)",
+          "addRenderableOnly(T)",
+          "addWidget(T)",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_6348_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_7933_(int, int, int)",
+          "m_7920_(int, int, int)",
+          "m_5534_(char, int)",
+          "m_142291_(NarrationElementOutput)",
+          "enabled(boolean)"
+        ],
+        "org.moddingx.libx.screen.text.AlignedComponent": [],
+        "org.moddingx.libx.screen.text.ComponentLayout": [
+          "title()"
+        ],
+        "org.moddingx.libx.screen.text.TextScreen": [
+          "m_7856_()",
+          "m_7043_()",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6375_(double, double, int)",
+          "m_6697_(String, boolean)"
+        ],
+        "org.moddingx.libx.util.ClassUtil": [
+          "boxed(Class<?>)",
+          "unboxed(Class<?>)",
+          "forName(String)",
+          "callerClass(int)",
+          "calledBy(Class<?>)",
+          "calledBy(Class<?>, String, Class<?>...)"
+        ],
+        "org.moddingx.libx.util.data.NbtX": [
+          "putRL(CompoundTag, String, ResourceLocation)",
+          "getResource(CompoundTag, String)",
+          "getResource(CompoundTag, String, ResourceLocation)",
+          "putResourceKey(CompoundTag, String, ResourceKey<?>)",
+          "getResourceKey(CompoundTag, String, ResourceKey<Registry<T>>)",
+          "getResourceKey(CompoundTag, String, ResourceKey<Registry<T>>, ResourceKey<T>)"
+        ],
+        "org.moddingx.libx.util.data.ResourceList": [
+          "toJson()",
+          "toNetwork(FriendlyByteBuf)",
+          "isAllowList()",
+          "getRules()",
+          "test(ResourceLocation)",
+          "RuleEntry(String, boolean, Boolean)"
+        ],
+        "org.moddingx.libx.util.data.TagAccess": [
+          "create(RegistryAccess)",
+          "create(MinecraftServer)",
+          "create(Level)",
+          "get(TagKey<T>)",
+          "tryGet(TagKey<T>)",
+          "has(TagKey<T>, T)",
+          "random(TagKey<T>, RandomSource)"
+        ],
+        "org.moddingx.libx.util.game.ComponentUtil": [
+          "getConsoleString(Component)",
+          "toPrettyComponent(JsonElement)",
+          "withCopyAction(Component, String)",
+          "subSequence(FormattedCharSequence, int)",
+          "subSequence(FormattedCharSequence, int, int)"
+        ],
+        "org.moddingx.libx.util.game.LongAmountToIntUtil": [
+          "getValue(long, long)",
+          "getMaxValue(long)"
+        ],
+        "org.moddingx.libx.util.game.ServerMessages": [
+          "broadcast(Level, Component)",
+          "broadcastTo(Level, Predicate<? super ServerPlayer>, Component)"
+        ],
+        "org.moddingx.libx.util.game.TextProcessor": [
+          "process(Component)",
+          "process(String)",
+          "processLine(Component)",
+          "processLine(String)",
+          "customCommand(Style, String)"
+        ],
+        "org.moddingx.libx.util.lazy.CachedFunction": [
+          "apply(T)"
+        ],
+        "org.moddingx.libx.util.lazy.CachedValue": [
+          "get()",
+          "copy()",
+          "invalidate()"
+        ],
+        "org.moddingx.libx.util.lazy.LazyImmutableMap": [
+          "size()",
+          "isEmpty()",
+          "containsKey(Object)",
+          "containsValue(Object)",
+          "get(Object)",
+          "put(K, V)",
+          "remove(Object)",
+          "putAll(Map)",
+          "clear()",
+          "keySet()",
+          "values()",
+          "entrySet()"
+        ],
+        "org.moddingx.libx.util.lazy.LazyValue": [
+          "wrap(LazyLoadedValue<T>)",
+          "get()",
+          "asDefault(LazyOptional<T>)",
+          "map(Function<T, U>)"
+        ],
+        "org.moddingx.libx.util.Misc": [],
+        "org.moddingx.libx.util.Ref": [
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ]
+      },
+      "sampleCount": 222
+    },
+    "288cba984798af683d722d695afdeec1f9e0eb90a990227b4d04b505a873fd12627948d0040143346a478a3f63ccdf904f3fcd40b5d188a097713375da1b3e0f": {
+      "packages": [],
+      "classes": [
+        "io.github.noeppi_noeppi.libx.annotation.api.Codecs",
+        "io.github.noeppi_noeppi.libx.annotation.processor.Classes",
+        "io.github.noeppi_noeppi.libx.annotation.processor.ExternalProperties",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ArtifactVersion",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ExperimentalProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.RemoveInProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.SuperProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.misc.ConfigProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.DynamicType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.EnumType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GetterSupplier",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.ParamType",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterConfigProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredConfig",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredMapper",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterMapperProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenEntry",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.FailureException",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.LoadableModel",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.ModelProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModEnv",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInit",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInitProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegistrationEntry",
+        "io.github.noeppi_noeppi.libx.annotation.processor.onlyin.OnlyInProcessor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.Processor",
+        "io.github.noeppi_noeppi.libx.annotation.processor.ProcessorEnv",
+        "io.github.noeppi_noeppi.libx.base.BlockBase",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecoratedBlock",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationContext",
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationType",
+        "io.github.noeppi_noeppi.libx.base.decoration.SignAccess",
+        "io.github.noeppi_noeppi.libx.base.FluidBase",
+        "io.github.noeppi_noeppi.libx.base.ItemBase",
+        "io.github.noeppi_noeppi.libx.base.ItemInventory",
+        "io.github.noeppi_noeppi.libx.base.MenuBlock",
+        "io.github.noeppi_noeppi.libx.base.tile.BlockBE",
+        "io.github.noeppi_noeppi.libx.base.tile.BlockEntityBase",
+        "io.github.noeppi_noeppi.libx.base.tile.GameEventBlock",
+        "io.github.noeppi_noeppi.libx.base.tile.MenuBlockBE",
+        "io.github.noeppi_noeppi.libx.base.tile.TickableBlock",
+        "io.github.noeppi_noeppi.libx.block.DirectionShape",
+        "io.github.noeppi_noeppi.libx.block.RotationShape",
+        "io.github.noeppi_noeppi.libx.capability.ItemCapabilities",
+        "io.github.noeppi_noeppi.libx.capability.LongEnergyStorage",
+        "io.github.noeppi_noeppi.libx.capability.SimpleProvider",
+        "io.github.noeppi_noeppi.libx.codec.CodecHelper",
+        "io.github.noeppi_noeppi.libx.codec.CodecOps",
+        "io.github.noeppi_noeppi.libx.codec.MoreCodecs",
+        "io.github.noeppi_noeppi.libx.codec.TypedEncoder",
+        "io.github.noeppi_noeppi.libx.command.CommandUtil",
+        "io.github.noeppi_noeppi.libx.command.EnumArgument2",
+        "io.github.noeppi_noeppi.libx.CommonNetwork",
+        "io.github.noeppi_noeppi.libx.config.CommonValueMapper",
+        "io.github.noeppi_noeppi.libx.config.ConfigManager",
+        "io.github.noeppi_noeppi.libx.config.ConfigValidator",
+        "io.github.noeppi_noeppi.libx.config.correct.ConfigCorrection",
+        "io.github.noeppi_noeppi.libx.config.GenericValueMapper",
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigEditor",
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigScreenContent",
+        "io.github.noeppi_noeppi.libx.config.gui.EditorOps",
+        "io.github.noeppi_noeppi.libx.config.gui.InputProperties",
+        "io.github.noeppi_noeppi.libx.config.gui.WidgetProperties",
+        "io.github.noeppi_noeppi.libx.config.ValidatorInfo",
+        "io.github.noeppi_noeppi.libx.config.ValueMapper",
+        "io.github.noeppi_noeppi.libx.crafting.CraftingHelper2",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.EffectIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.MergedIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.NbtIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.PotionIngredient",
+        "io.github.noeppi_noeppi.libx.crafting.IngredientStack",
+        "io.github.noeppi_noeppi.libx.crafting.recipe.RecipeHelper",
+        "io.github.noeppi_noeppi.libx.data.AlwaysExistentModelFile",
+        "io.github.noeppi_noeppi.libx.data.LootBuilders",
+        "io.github.noeppi_noeppi.libx.data.provider.AdvancementProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.BlockLootProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.BlockStateProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.CommonTagsProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.EntityLootProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.ItemModelProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CompressionExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CraftingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.ToolExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.DefaultExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RemovalExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmeltingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmithingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.StoneCuttingExtension",
+        "io.github.noeppi_noeppi.libx.data.provider.SoundDefinitionProviderBase",
+        "io.github.noeppi_noeppi.libx.data.provider.TagProviderBase",
+        "io.github.noeppi_noeppi.libx.datapack.DataLoader",
+        "io.github.noeppi_noeppi.libx.datapack.DatapackHelper",
+        "io.github.noeppi_noeppi.libx.datapack.DynamicDatapacks",
+        "io.github.noeppi_noeppi.libx.datapack.DynamicElementDatapack",
+        "io.github.noeppi_noeppi.libx.datapack.ResourceEntry",
+        "io.github.noeppi_noeppi.libx.event.ClickBlockEmptyHandEvent",
+        "io.github.noeppi_noeppi.libx.event.ConfigLoadedEvent",
+        "io.github.noeppi_noeppi.libx.event.RandomTickEvent",
+        "io.github.noeppi_noeppi.libx.fi.Consumer3",
+        "io.github.noeppi_noeppi.libx.fi.Consumer4",
+        "io.github.noeppi_noeppi.libx.fi.Consumer5",
+        "io.github.noeppi_noeppi.libx.fi.Consumer6",
+        "io.github.noeppi_noeppi.libx.fi.Consumer7",
+        "io.github.noeppi_noeppi.libx.fi.Consumer8",
+        "io.github.noeppi_noeppi.libx.fi.Function3",
+        "io.github.noeppi_noeppi.libx.fi.Function4",
+        "io.github.noeppi_noeppi.libx.fi.Function5",
+        "io.github.noeppi_noeppi.libx.fi.Function6",
+        "io.github.noeppi_noeppi.libx.fi.Function7",
+        "io.github.noeppi_noeppi.libx.fi.Function8",
+        "io.github.noeppi_noeppi.libx.fi.Predicate3",
+        "io.github.noeppi_noeppi.libx.fi.Predicate4",
+        "io.github.noeppi_noeppi.libx.fi.Predicate5",
+        "io.github.noeppi_noeppi.libx.fi.Predicate6",
+        "io.github.noeppi_noeppi.libx.fi.Predicate7",
+        "io.github.noeppi_noeppi.libx.fi.Predicate8",
+        "io.github.noeppi_noeppi.libx.inventory.BaseItemStackHandler",
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandler",
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandlerModifiable",
+        "io.github.noeppi_noeppi.libx.inventory.VanillaWrapper",
+        "io.github.noeppi_noeppi.libx.LibX",
+        "io.github.noeppi_noeppi.libx.menu.BlockEntityMenu",
+        "io.github.noeppi_noeppi.libx.menu.BlockMenu",
+        "io.github.noeppi_noeppi.libx.menu.DefaultMenu"
+      ],
+      "methods": {
+        "io.github.noeppi_noeppi.libx.annotation.api.Codecs": [
+          "get(Class<? extends ModX>, Class<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.Classes": [
+          "sourceName(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.ExternalProperties": [
+          "minecraftVersion(ProcessorEnv)",
+          "modVersion(ProcessorEnv)",
+          "release(ProcessorEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ArtifactVersion": [
+          "equals(Object)",
+          "compareTo(ArtifactVersion)",
+          "toString()",
+          "parse(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.ExperimentalProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.RemoveInProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.meta.SuperProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedOptions()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.misc.ConfigProcessor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecProcessor": [
+          "processAnyParam(Element, String, ModEnv)",
+          "processPrimaryConstructor(Element, ModEnv)",
+          "getNestedListInfo(TypeMirror, ModEnv)",
+          "ListInfo(int, TypeMirror)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.CodecType": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.DynamicType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.EnumType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.GetterSupplier": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.codec.ParamType": [
+          "matchesDirect(Element, String, ModEnv)",
+          "matches(Element, String, ModEnv)",
+          "generate(Element, String, GetterSupplier, ModEnv)",
+          "genericMatches(TypeMirror, TypeMirror, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterConfigProcessor": [
+          "processRegisterConfig(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredConfig": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisteredMapper": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.config.RegisterMapperProcessor": [
+          "processRegisterMapper(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenEntry": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.data.DatagenProcessor": [
+          "processDatagen(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.FailureException": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.LoadableModel": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.model.ModelProcessor": [
+          "processModel(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModEnv": [],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInit": [
+          "addRegistration(int, List<RegistrationEntry>)",
+          "addModel(String, String, String, String)",
+          "addConfigMapper(String, String, boolean)",
+          "addConfig(String, boolean, String, String)",
+          "addCodec(GeneratedCodec)",
+          "addDatagen(String, List<DatagenEntry.Arg>)",
+          "write(Filer, Messager)",
+          "quote(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.ModInitProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)",
+          "getMod(Element)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassModifyProcessor": [
+          "getTypes()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegisterClassProcessor": [
+          "processRegisterClass(Element, ModEnv)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.modinit.register.RegistrationEntry": [
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.onlyin.OnlyInProcessor": [
+          "getTypes()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedOptions()",
+          "run(Set<? extends TypeElement>, RoundEnvironment)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.Processor": [
+          "init(ProcessingEnvironment)",
+          "getTypes()",
+          "types()",
+          "elements()",
+          "filer()",
+          "messager()",
+          "options()",
+          "getSupportedAnnotationTypes()",
+          "getSupportedSourceVersion()",
+          "forClass(Class<?>)",
+          "forClass(String)",
+          "typeElement(Class<?>)",
+          "typeElement(String)",
+          "isSuppressed(Element, String)",
+          "contained(Element, Class<T>)",
+          "contained(Element, Class<T>, Predicate<T>)",
+          "sameErasure(TypeMirror, TypeMirror)",
+          "subTypeErasure(TypeMirror, TypeMirror)",
+          "classType(Supplier<Class<?>>)",
+          "classTypes(Supplier<List<Class<?>>>)"
+        ],
+        "io.github.noeppi_noeppi.libx.annotation.processor.ProcessorEnv": [],
+        "io.github.noeppi_noeppi.libx.base.BlockBase": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "initializeItemClient(Consumer<IItemRenderProperties>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecoratedBlock": [
+          "getNamedAdditionalRegisters(ResourceLocation)",
+          "getContext()",
+          "has(DecorationType<?>)",
+          "get(DecorationType<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationContext": [
+          "has(DecorationType<?>)",
+          "types()",
+          "register(ModX, DecoratedBlock)",
+          "toString()",
+          "RegistrationInfo(Map<DecorationType<?>, Object>, Map<String, Object>)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.DecorationType": [
+          "additionalRegistration(ModX, DecorationContext, DecoratedBlock, T)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.decoration.SignAccess": [],
+        "io.github.noeppi_noeppi.libx.base.FluidBase": [
+          "getFluid()",
+          "getSource()",
+          "getFlowing()",
+          "getBlock()",
+          "getBucket()",
+          "getProperties()",
+          "m_5456_()",
+          "getAdditionalRegisters(ResourceLocation)",
+          "getNamedAdditionalRegisters(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.ItemBase": [],
+        "io.github.noeppi_noeppi.libx.base.ItemInventory": [
+          "initCapabilities(ItemStack, CompoundTag)",
+          "getInventory(ItemStack)",
+          "getInventoryStream(ItemStack)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.MenuBlock": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.BlockBE": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "m_142194_(BlockPos, BlockState)",
+          "m_142354_(Level, BlockState, BlockEntityType<X>)",
+          "m_142226_(Level, X)",
+          "m_6810_(BlockState, Level, BlockPos, BlockState, boolean)",
+          "getBlockEntity(Level, BlockPos)",
+          "getBlockEntityType()",
+          "shouldDropInventory(Level, BlockPos, BlockState)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.BlockEntityBase": [
+          "getCapability(Capability<T>, Direction)",
+          "onLoad()",
+          "setDispatchable()"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.GameEventBlock": [
+          "gameEventRange()"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.MenuBlockBE": [
+          "getAdditionalRegisters(ResourceLocation)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)"
+        ],
+        "io.github.noeppi_noeppi.libx.base.tile.TickableBlock": [],
+        "io.github.noeppi_noeppi.libx.block.DirectionShape": [
+          "getShape(Direction)"
+        ],
+        "io.github.noeppi_noeppi.libx.block.RotationShape": [
+          "getShape(Direction)"
+        ],
+        "io.github.noeppi_noeppi.libx.capability.ItemCapabilities": [
+          "create(IItemHandlerModifiable)",
+          "create(IItemHandlerModifiable, Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "create(Supplier<IItemHandlerModifiable>)",
+          "create(Supplier<IItemHandlerModifiable>, Predicate<Integer>, BiPredicate<Integer, ItemStack>)"
+        ],
+        "io.github.noeppi_noeppi.libx.capability.LongEnergyStorage": [
+          "getEnergyStored()",
+          "getMaxEnergyStored()"
+        ],
+        "io.github.noeppi_noeppi.libx.capability.SimpleProvider": [
+          "getCapability(Capability<T>, Direction)"
+        ],
+        "io.github.noeppi_noeppi.libx.codec.CodecHelper": [
+          "nonNull(T, String)",
+          "doesNotThrow(Callable<T>)",
+          "or(Supplier<DataResult<T>>...)",
+          "orPartial(Supplier<DataResult<T>>...)"
+        ],
+        "io.github.noeppi_noeppi.libx.codec.CodecOps": [
+          "write(Codec<T>, T)",
+          "write(Codec<T>, T, RegistryAccess)",
+          "write(Codec<T>, T, Class<R>)",
+          "write(Codec<T>, T, Class<R>, RegistryAccess)",
+          "read(Codec<T>, E)",
+          "read(Codec<T>, E, RegistryAccess)"
+        ],
+        "io.github.noeppi_noeppi.libx.codec.MoreCodecs": [
+          "error(String)",
+          "error(String, String)",
+          "option(Codec<T>)",
+          "enumCodec(Class<T>)",
+          "registry(IForgeRegistry<T>)",
+          "typeMapped(TypedEncoder<T, ?>...)",
+          "typeMapped(Codec<T>, TypedEncoder<T, ?>...)"
+        ],
+        "io.github.noeppi_noeppi.libx.codec.TypedEncoder": [
+          "cast(DynamicOps<N>)"
+        ],
+        "io.github.noeppi_noeppi.libx.command.CommandUtil": [
+          "registerGenericCommandArgument(String, Class<?>, ArgumentSerializer<?>)",
+          "getArgumentOrDefault(CommandContext<?>, String, Class<T>, T)"
+        ],
+        "io.github.noeppi_noeppi.libx.command.EnumArgument2": [
+          "enumArgument(Class<R>)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "io.github.noeppi_noeppi.libx.CommonNetwork": [
+          "updateBE(Level, BlockPos)",
+          "requestBE(Level, BlockPos)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.CommonValueMapper": [
+          "comment()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ConfigManager": [
+          "registerValueMapper(String, ValueMapper<?, ?>)",
+          "registerValueMapper(String, GenericValueMapper<?, ?, ?>)",
+          "registerConfigValidator(String, ConfigValidator<?, ?>)",
+          "registerConfig(String, Class<?>, boolean)",
+          "registerConfig(ResourceLocation, Class<?>, boolean)",
+          "reloadAll()",
+          "reloadCommon()",
+          "reloadClient()",
+          "reloadConfig(Class<?>)",
+          "forceResync(ServerPlayer, Class<?>)",
+          "forceResync(ServerPlayer)",
+          "configs()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ConfigValidator": [
+          "comment(A)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.correct.ConfigCorrection": [
+          "correct(JsonElement, ValueMapper<U, ?>, Function<T, U>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.GenericValueMapper": [
+          "fromNetwork(FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "toNetwork(T, FriendlyByteBuf, ValueMapper<C, JsonElement>)",
+          "correct(JsonElement, ValueMapper<C, JsonElement>, ConfigCorrection<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigEditor": [],
+        "io.github.noeppi_noeppi.libx.config.gui.ConfigScreenContent": [
+          "message()"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.EditorOps": [
+          "enabled(boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.InputProperties": [
+          "toString(T)",
+          "canInputChar(char)",
+          "isValid(String)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.gui.WidgetProperties": [],
+        "io.github.noeppi_noeppi.libx.config.ValidatorInfo": [
+          "value(Class<A>)"
+        ],
+        "io.github.noeppi_noeppi.libx.config.ValueMapper": [
+          "fromNetwork(FriendlyByteBuf)",
+          "toNetwork(T, FriendlyByteBuf)",
+          "correct(JsonElement, ConfigCorrection<T>)"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.CraftingHelper2": [
+          "serializeItemStack(ItemStack, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.EffectIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.MergedIngredient": [
+          "mergeIngredients(Ingredient...)",
+          "mergeIngredients(List<Ingredient>)",
+          "getIngredients()",
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.NbtIngredient": [
+          "test(ItemStack)",
+          "m_43908_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.ingredient.PotionIngredient": [
+          "m_43908_()",
+          "test(ItemStack)",
+          "m_43931_()",
+          "isSimple()",
+          "getSerializer()",
+          "m_43947_()",
+          "m_43942_()"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.IngredientStack": [
+          "test(ItemStack)",
+          "empty()",
+          "isEmpty()",
+          "toJson()",
+          "toNetwork(FriendlyByteBuf)",
+          "fromJson(JsonObject)",
+          "fromNetwork(FriendlyByteBuf)"
+        ],
+        "io.github.noeppi_noeppi.libx.crafting.recipe.RecipeHelper": [
+          "isItemValidInput(RecipeManager, RecipeType<?>, ItemStack)",
+          "matches(Recipe<?>, List<ItemStack>, boolean)",
+          "stackUp(List<ItemStack>, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.AlwaysExistentModelFile": [
+          "exists()"
+        ],
+        "io.github.noeppi_noeppi.libx.data.LootBuilders": [
+          "all(Builder<?>...)",
+          "group(Builder<?>...)",
+          "alternative(Builder<?>...)",
+          "sequence(Builder<?>...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.AdvancementProviderBase": [
+          "setup()",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "root()",
+          "root(String)",
+          "root(String, String)",
+          "advancement(Advancement)",
+          "advancement(ResourceLocation)",
+          "advancement(String)",
+          "dummy(ResourceLocation)",
+          "dummy(ResourceLocation, boolean)",
+          "items(ItemLike...)",
+          "items(TagKey<Item>...)",
+          "items(ItemPredicate...)",
+          "itemTasks(ItemLike...)",
+          "itemTasks(TagKey<Item>...)",
+          "itemTasks(ItemPredicate...)",
+          "eat(ItemLike)",
+          "eat(TagKey<Item>)",
+          "eat(ItemPredicate)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.BlockLootProviderBase": [
+          "customLootTable(Block)",
+          "customLootTable(Block, Builder)",
+          "customLootTable(Block, Function<Block, Builder>)",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "setup()",
+          "copyNBT(String...)",
+          "copyProperties(Property<?>...)",
+          "drops(Block, boolean, ItemStack...)",
+          "drops(Block, boolean, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>...)",
+          "drops(Block, boolean, BlockLootProviderBase.LootFactory...)",
+          "drops(Block, BlockLootProviderBase.LootFactory...)",
+          "drops(Block, BlockLootProviderBase.SilkModifier, BlockLootProviderBase.LootFactory...)",
+          "item()",
+          "silk(BlockLootProviderBase.GenericLootModifier)",
+          "noSilk()",
+          "repeat(BlockLootProviderBase.LootFactory, int)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.BlockStateProviderBase": [
+          "m_6055_()",
+          "manualState(Block)",
+          "manualModel(Block)",
+          "manualModel(Block, ModelFile)",
+          "registerStatesAndModels()",
+          "setup()",
+          "defaultState(ResourceLocation, Block, Supplier<ModelFile>)",
+          "defaultModel(ResourceLocation, Block)",
+          "buttonBlock(Block, ResourceLocation)",
+          "pressurePlateBlock(Block, ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.CommonTagsProviderBase": [
+          "setup()",
+          "defaultItemTags(Item)",
+          "defaultBlockTags(Block)",
+          "defaultFluidTags(Fluid)",
+          "item(TagKey<Item>)",
+          "block(TagKey<Block>)",
+          "fluid(TagKey<Fluid>)",
+          "copyBlock(TagKey<Block>, TagKey<Item>)",
+          "copyFluid(TagKey<Fluid>, TagKey<Block>)",
+          "m_6055_()",
+          "m_6865_(HashCache)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.EntityLootProviderBase": [
+          "customLootTable(EntityType<?>, Builder)",
+          "customLootTable(EntityType<?>, Function<EntityType<?>, Builder>)",
+          "m_6055_()",
+          "m_6865_(HashCache)",
+          "setup()",
+          "drops(EntityType<?>, ItemStack...)",
+          "drops(EntityType<?>, net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>...)",
+          "drops(EntityType<?>, EntityLootProviderBase.LootFactory...)",
+          "repeat(EntityLootProviderBase.LootFactory, int)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "from(net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction.Builder<?>)",
+          "looting(int)",
+          "looting(int, int)",
+          "random(float)",
+          "count(int)",
+          "count(int, int)",
+          "countBinomial(float, int)",
+          "not(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder)",
+          "or(net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.ItemModelProviderBase": [
+          "m_6055_()",
+          "handheld(Item)",
+          "manualModel(Item)",
+          "registerModels()",
+          "setup()",
+          "defaultItem(ResourceLocation, Item)",
+          "defaultBlock(ResourceLocation, BlockItem)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CompressionExtension": [
+          "compress(ItemLike, ItemLike)",
+          "compress(ItemLike, ItemLike, boolean)",
+          "smallCompress(ItemLike, ItemLike)",
+          "smallCompress(ItemLike, ItemLike, boolean)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike)",
+          "doubleCompress(ItemLike, ItemLike, ItemLike, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.CraftingExtension": [
+          "shaped(Object...)",
+          "shapeless(Object...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.crafting.ToolExtension": [
+          "makeTools(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)",
+          "makeArmor(ItemLike, ItemLike, ItemLike, ItemLike, ItemLike)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.DefaultExtension": [],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeExtension": [
+          "criteria(Ingredient)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RecipeProviderBase": [
+          "m_6055_()",
+          "setup()",
+          "conditions()",
+          "m_176531_(Consumer<FinishedRecipe>)",
+          "loc(ItemLike)",
+          "loc(ItemLike, String)",
+          "provider()",
+          "consumer()",
+          "criterion(ItemLike)",
+          "criterion(TagKey<Item>)",
+          "criterion(ItemPredicate...)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.RemovalExtension": [
+          "remove(ResourceLocation)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmeltingExtension": [
+          "smelting(ItemLike, ItemLike, float, int)",
+          "blasting(ItemLike, ItemLike, float, int)",
+          "cooking(ItemLike, ItemLike, float, int)",
+          "campfire(ItemLike, ItemLike, float, int)",
+          "smelting(TagKey<Item>, ItemLike, float, int)",
+          "blasting(TagKey<Item>, ItemLike, float, int)",
+          "cooking(TagKey<Item>, ItemLike, float, int)",
+          "campfire(TagKey<Item>, ItemLike, float, int)",
+          "smelting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "blasting(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "cooking(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "campfire(ResourceLocation, ItemLike, ItemLike, float, int)",
+          "smelting(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "blasting(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "cooking(ResourceLocation, TagKey<Item>, ItemLike, float, int)",
+          "campfire(ResourceLocation, TagKey<Item>, ItemLike, float, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.SmithingExtension": [
+          "smithing(ItemLike, ItemLike, ItemLike)",
+          "smithing(ItemLike, TagKey<Item>, ItemLike)",
+          "smithing(ItemLike, Ingredient, ItemLike)",
+          "smithing(TagKey<Item>, ItemLike, ItemLike)",
+          "smithing(TagKey<Item>, TagKey<Item>, ItemLike)",
+          "smithing(TagKey<Item>, Ingredient, ItemLike)",
+          "smithing(Ingredient, ItemLike, ItemLike)",
+          "smithing(Ingredient, TagKey<Item>, ItemLike)",
+          "smithing(Ingredient, Ingredient, ItemLike)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.recipe.StoneCuttingExtension": [
+          "stoneCutting(ItemLike, ItemLike)",
+          "stoneCutting(ItemLike, ItemLike, int)",
+          "stoneCutting(TagKey<Item>, ItemLike)",
+          "stoneCutting(TagKey<Item>, ItemLike, int)",
+          "stoneCutting(Ingredient, ItemLike)",
+          "stoneCutting(Ingredient, ItemLike, int)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.SoundDefinitionProviderBase": [
+          "m_6055_()",
+          "ignore(SoundEvent)",
+          "ignore(ResourceLocation)",
+          "setup()",
+          "defaultSound(ResourceLocation, SoundEvent)",
+          "settings()",
+          "sound(SoundEvent)",
+          "sound(ResourceLocation)",
+          "sound(SoundEvent, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "sound(ResourceLocation, SoundDefinitionProviderBase.SoundSettingsBuilder)",
+          "m_6865_(HashCache)"
+        ],
+        "io.github.noeppi_noeppi.libx.data.provider.TagProviderBase": [
+          "m_6577_()",
+          "m_6055_()",
+          "setup()",
+          "defaultTags(T)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DataLoader": [
+          "loadJson(ResourceManager, String, DataLoader.ResourceFactory<JsonElement, T>)",
+          "collect(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "collectText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "collectJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "join(List<ResourceEntry>, DataLoader.ResourceFactory<Resource, T>)",
+          "joinText(List<ResourceEntry>, DataLoader.ResourceFactory<String, T>)",
+          "joinJson(List<ResourceEntry>, DataLoader.ResourceFactory<JsonElement, T>)",
+          "locate(ResourceManager, String, String)",
+          "locate(ResourceManager, String, String, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DatapackHelper": [
+          "generatePackMeta(IModFile, String)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DynamicDatapacks": [
+          "enablePack(String, String)",
+          "enablePack(String, String, DynamicDatapacks.PackFactory)",
+          "isEnabled(String, String)"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.DynamicElementDatapack": [
+          "addEntry(ResourceLocation, Codec<T>, Supplier<T>)",
+          "m_8017_()",
+          "m_5542_(String)",
+          "m_8031_(PackType, ResourceLocation)",
+          "m_7466_(PackType, String, String, int, Predicate<String>)",
+          "m_7211_(PackType, ResourceLocation)",
+          "m_5698_(PackType)",
+          "m_5550_(MetadataSectionSerializer<T>)",
+          "close()"
+        ],
+        "io.github.noeppi_noeppi.libx.datapack.ResourceEntry": [
+          "id()",
+          "resource()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.ClickBlockEmptyHandEvent": [
+          "getPlayer()",
+          "getLevel()",
+          "getHand()",
+          "getHit()",
+          "getCancellationResult()",
+          "setCancellationResult(InteractionResult)",
+          "isCancelable()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.ConfigLoadedEvent": [
+          "getConfigId()",
+          "getConfigClass()",
+          "getReason()",
+          "isClientConfig()",
+          "getConfigPath()",
+          "getCurrentPath()"
+        ],
+        "io.github.noeppi_noeppi.libx.event.RandomTickEvent": [
+          "getLevel()",
+          "getPos()",
+          "getRand()",
+          "isCancelable()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer3": [
+          "andThen(Consumer3<A, B, C>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer4": [
+          "andThen(Consumer4<A, B, C, D>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer5": [
+          "andThen(Consumer5<A, B, C, D, E>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer6": [
+          "andThen(Consumer6<A, B, C, D, E, F>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer7": [
+          "andThen(Consumer7<A, B, C, D, E, F, G>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Consumer8": [
+          "andThen(Consumer8<A, B, C, D, E, F, G, H>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function3": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function4": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function5": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function6": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function7": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Function8": [
+          "andThen(Function<? super R, ? extends V>)"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate3": [
+          "and(Predicate3<A, B, C>)",
+          "or(Predicate3<A, B, C>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate4": [
+          "and(Predicate4<A, B, C, D>)",
+          "or(Predicate4<A, B, C, D>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate5": [
+          "and(Predicate5<A, B, C, D, E>)",
+          "or(Predicate5<A, B, C, D, E>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate6": [
+          "and(Predicate6<A, B, C, D, E, F>)",
+          "or(Predicate6<A, B, C, D, E, F>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate7": [
+          "and(Predicate7<A, B, C, D, E, F, G>)",
+          "or(Predicate7<A, B, C, D, E, F, G>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.fi.Predicate8": [
+          "and(Predicate8<A, B, C, D, E, F, G, H>)",
+          "or(Predicate8<A, B, C, D, E, F, G, H>)",
+          "negate()"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.BaseItemStackHandler": [
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)",
+          "onContentsChanged(int)",
+          "onLoad()",
+          "toVanilla()",
+          "getUnrestricted()",
+          "createCapability()",
+          "createUnrestrictedCapability()",
+          "createCapability(Predicate<Integer>, BiPredicate<Integer, ItemStack>)",
+          "builder(int)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandler": [
+          "insertItem(ItemStack, boolean)",
+          "hasSpaceFor(List<ItemStack>)",
+          "hasSpaceFor(List<ItemStack>, int, int)",
+          "extractItem(int, boolean)",
+          "extractItem(Predicate<ItemStack>, int, boolean)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.IAdvancedItemHandlerModifiable": [
+          "clear()",
+          "clear(Predicate<ItemStack>)"
+        ],
+        "io.github.noeppi_noeppi.libx.inventory.VanillaWrapper": [
+          "m_6643_()",
+          "m_7983_()",
+          "m_8020_(int)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6596_()",
+          "m_6542_(Player)",
+          "m_7013_(int, ItemStack)",
+          "m_6211_()"
+        ],
+        "io.github.noeppi_noeppi.libx.LibX": [
+          "setup(FMLCommonSetupEvent)",
+          "clientSetup(FMLClientSetupEvent)",
+          "getInstance()",
+          "getNetwork()"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.BlockEntityMenu": [
+          "getBlockEntity()"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.BlockMenu": [
+          "m_6875_(Player)",
+          "getPos()",
+          "createMenuType(Function5<Integer, Level, BlockPos, Inventory, Player, T>)",
+          "createMenuType(Function6<MenuType<T>, Integer, Level, BlockPos, Inventory, Player, T>)",
+          "openMenu(ServerPlayer, final MenuType<? extends BlockMenu>, final Component, final BlockPos)"
+        ],
+        "io.github.noeppi_noeppi.libx.menu.DefaultMenu": [
+          "getLevel()",
+          "m_7648_(Player, int)"
+        ]
+      },
+      "sampleCount": 200,
+      "truncated": true
+    },
+    "1.20.1-5.0.12": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1907,
+  "truncated": true
+}

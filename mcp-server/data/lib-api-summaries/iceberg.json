@@ -1,0 +1,3078 @@
+{
+  "slug": "iceberg",
+  "modId": "iceberg",
+  "id": "authored/lib-iceberg",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "iceberg"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:57.938Z",
+  "versions": {
+    "ff1d137a4fa6879257cff9fec1094e83bd0c5ecbb7a218a267429a7c0b45ec0886edd6c80550011c89b33f8a0f037fd8dc88d68e792d9a6838463177320c6f48": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium",
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin": [
+          "update(IConfigEntry)",
+          "getRoot()",
+          "getType()",
+          "getFileName()",
+          "getModId()",
+          "loadWorldConfig(Path, Consumer<IModConfig>)",
+          "stopEditing()",
+          "isChanged()",
+          "restoreDefaults()"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider": [
+          "getConfigurationsForMod(ModContainer)"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry": [
+          "getChildren()",
+          "isRoot()",
+          "isLeaf()",
+          "getValue()",
+          "getEntryName()",
+          "getTooltip()",
+          "getTranslationKey()"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "setInstance(I)",
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(Loading)",
+          "onReloadEvent(Reloading)",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "getRaw(List<String>)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.CriterionEvent": [
+          "getAdvancement()",
+          "getCriterionKey()"
+        ],
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent": [
+          "getIndex()"
+        ],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent": [
+          "getItemStack()"
+        ],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent": [],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onClientSetup(FMLClientSetupEvent)",
+          "onGatherComponentsEventEnd(GatherComponents)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onCommonSetup(FMLCommonSetupEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "m_6299_(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium": [
+          "m_6299_(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(PoseStack, ItemStack, int, int, float)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "m_6299_(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium": [
+          "m_6299_(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "m_8017_(String...)",
+          "m_214146_(PackType, ResourceLocation)",
+          "m_8031_(PackType, String, String, ResourceOutput)",
+          "m_5698_(PackType)",
+          "m_5550_(MetadataSectionSerializer<T>)",
+          "m_5542_()",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "m_8055_(BlockPos)",
+          "m_45517_(LightLayer, BlockPos)",
+          "m_45756_(Entity, AABB)",
+          "m_7967_(Entity)",
+          "m_183326_()",
+          "m_183324_()",
+          "m_7726_()",
+          "m_5898_(Player, int, BlockPos, int)",
+          "m_214171_(GameEvent, Vec3, Context)",
+          "m_6907_()",
+          "m_203675_(int, int, int)",
+          "m_9598_()",
+          "m_246046_()",
+          "m_7717_(Direction, boolean)",
+          "m_7260_(BlockPos, BlockState, BlockState, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, BufferBuilder, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemNBT(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)"
+        ]
+      },
+      "sampleCount": 28
+    },
+    "fb027c74c52ad20edcd479fd4181ef23c4e7addfd57e484150b661a2f8f570de9833db6508cf7d015a5e97ebb60d26779b0962813a574bd3435dca27a0b62350": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium",
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin": [
+          "update(IConfigEntry)",
+          "getRoot()",
+          "getType()",
+          "getFileName()",
+          "getModId()",
+          "loadWorldConfig(Path, Consumer<IModConfig>)",
+          "stopEditing()",
+          "isChanged()",
+          "restoreDefaults()"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider": [
+          "getConfigurationsForMod(ModContainer)"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry": [
+          "getChildren()",
+          "isRoot()",
+          "isLeaf()",
+          "getValue()",
+          "getEntryName()",
+          "getTooltip()",
+          "getTranslationKey()"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "setInstance(I)",
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(Loading)",
+          "onReloadEvent(Reloading)",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "getRaw(List<String>)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.CriterionEvent": [
+          "getAdvancement()",
+          "getAdvancementHolder()",
+          "getCriterionKey()"
+        ],
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent": [
+          "getIndex()"
+        ],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent": [
+          "getItemStack()"
+        ],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent": [],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onClientSetup(FMLClientSetupEvent)",
+          "onGatherComponentsEventEnd(GatherComponents)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onCommonSetup(FMLCommonSetupEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "m_6299_(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium": [
+          "m_6299_(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(PoseStack, ItemStack, int, int, float)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "m_6299_(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium": [
+          "m_6299_(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "m_8017_(String...)",
+          "m_214146_(PackType, ResourceLocation)",
+          "m_8031_(PackType, String, String, ResourceOutput)",
+          "m_5698_(PackType)",
+          "m_5550_(MetadataSectionSerializer<T>)",
+          "m_5542_()",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "m_8055_(BlockPos)",
+          "m_45517_(LightLayer, BlockPos)",
+          "m_45756_(Entity, AABB)",
+          "m_7967_(Entity)",
+          "m_183326_()",
+          "m_183324_()",
+          "m_7726_()",
+          "m_5898_(Player, int, BlockPos, int)",
+          "m_214171_(GameEvent, Vec3, Context)",
+          "m_6907_()",
+          "m_203675_(int, int, int)",
+          "m_9598_()",
+          "m_246046_()",
+          "m_7717_(Direction, boolean)",
+          "m_7260_(BlockPos, BlockState, BlockState, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, BufferBuilder, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemNBT(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)"
+        ]
+      },
+      "sampleCount": 28
+    },
+    "5cfc45a1622e2c0ece90d76f6a95e33e50f981b4a3c3847334451192756a6d08b564793c8aa451156cb2fbe99c7254b705c921c1bdc072c4515e248952552c92": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin": [
+          "update(IConfigEntry)",
+          "getRoot()",
+          "getType()",
+          "getFileName()",
+          "getModId()",
+          "loadWorldConfig(Path, Consumer<IModConfig>)",
+          "stopEditing()",
+          "isChanged()",
+          "restoreDefaults()"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider": [
+          "getConfigurationsForMod(ModContainer)"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry": [
+          "getChildren()",
+          "isRoot()",
+          "isLeaf()",
+          "getValue()",
+          "getEntryName()",
+          "getTooltip()",
+          "getTranslationKey()"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "setInstance(I)",
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(Loading)",
+          "onReloadEvent(Reloading)",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "getRaw(List<String>)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.CriterionEvent": [
+          "getAdvancement()",
+          "getCriterionKey()"
+        ],
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent": [
+          "getIndex()"
+        ],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent": [
+          "getItemStack()"
+        ],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent": [],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onClientSetup(FMLClientSetupEvent)",
+          "onGatherComponentsEventEnd(GatherComponents)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onCommonSetup(FMLCommonSetupEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "m_6299_(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternion)",
+          "renderItemModelIntoGUIWithAlpha(ItemStack, int, int, float)",
+          "m_6213_(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "m_6299_(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, Supplier<InputStream>)",
+          "registerRootResource(String, Supplier<InputStream>)",
+          "m_5542_(String)",
+          "m_8031_(PackType, ResourceLocation)",
+          "m_214146_(PackType, String, String, Predicate<ResourceLocation>)",
+          "m_7211_(PackType, ResourceLocation)",
+          "m_5698_(PackType)",
+          "m_5550_(MetadataSectionSerializer<T>)",
+          "m_8017_()",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, BufferBuilder, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)"
+        ]
+      },
+      "sampleCount": 22
+    },
+    "24cc649a6bfb7620cee9f2084ec05de71f0d722c19e6b5b4d08435d6bded2a1ffd5cda5a778714acfef3f904961ff9eb321ba7178dfd120c5383863c9bae329c": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider",
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium",
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigPlugin": [
+          "update(IConfigEntry)",
+          "getRoot()",
+          "getType()",
+          "getFileName()",
+          "getModId()",
+          "loadWorldConfig(Path, Consumer<IModConfig>)",
+          "stopEditing()",
+          "isChanged()",
+          "restoreDefaults()"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergConfigProvider": [
+          "getConfigurationsForMod(ModContext)"
+        ],
+        "com.anthonyhilyard.iceberg.compat.configured.IcebergFolderEntry": [
+          "getChildren()",
+          "isRoot()",
+          "isLeaf()",
+          "getValue()",
+          "getEntryName()",
+          "getTooltip()",
+          "getTranslationKey()"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "setInstance(I)",
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(Loading)",
+          "onReloadEvent(Reloading)",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "getRaw(List<String>)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.CriterionEvent": [
+          "getAdvancement()",
+          "getAdvancementHolder()",
+          "getCriterionKey()"
+        ],
+        "com.anthonyhilyard.iceberg.events.GatherComponentsExtEvent": [
+          "getIndex()"
+        ],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupEvent": [
+          "getItemStack()"
+        ],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipExtEvent": [],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onClientSetup(FMLClientSetupEvent)",
+          "onGatherComponentsEventEnd(GatherComponents)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onCommonSetup(FMLCommonSetupEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium": [
+          "getBuffer(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(PoseStack, ItemStack, int, int, float)",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium": [
+          "getBuffer(RenderType)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, ResourceLocation)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionSerializer<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Player, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "registryAccess()",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, BufferBuilder, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, boolean, boolean)",
+          "renderItemTooltip(ItemStack, PoseStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)"
+        ]
+      },
+      "sampleCount": 28
+    },
+    "1.4.2.1": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess",
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int, boolean, boolean)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon": [
+          "levelLoadEvent(Load)",
+          "levelUnloadEvent(Unload)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, Identifier)",
+          "registerListener(Supplier<PreparableReloadListener>, Identifier)",
+          "addListeners(AddClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphicsExtractor)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphicsExtractor, ItemStack, int, int, float)",
+          "renderItemIntoGUI(GuiGraphicsExtractor, ItemStack, int, int, float, Quaternionf)",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)",
+          "createLazySupplier(final Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, Identifier)",
+          "registerResource(PackType, Identifier, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, Identifier)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionType<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack, Provider)",
+          "itemCreatesEntity(ItemStack, Class<T>, Provider)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Entity, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Entity, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)",
+          "playSeededSound(Entity, Entity, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, int, int, int, float, float, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, float, float, int, int, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, float, float, int, int, int, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess": [],
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderGradientBackground(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "renderGradientBorder(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphicsExtractor, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphicsExtractor, ClientTooltipPositioner, boolean, boolean, boolean, int, Identifier, boolean, boolean)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.4.1.1": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess",
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int, boolean, boolean)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon": [
+          "levelLoadEvent(Load)",
+          "levelUnloadEvent(Unload)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, Identifier)",
+          "registerListener(Supplier<PreparableReloadListener>, Identifier)",
+          "addListeners(AddClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphicsExtractor)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphicsExtractor, ItemStack, int, int, float)",
+          "renderItemIntoGUI(GuiGraphicsExtractor, ItemStack, int, int, float, Quaternionf)",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState": [],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)",
+          "createLazySupplier(final Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, Identifier)",
+          "registerResource(PackType, Identifier, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, Identifier)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionType<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack, Provider)",
+          "itemCreatesEntity(ItemStack, Class<T>, Provider)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Entity, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Entity, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)",
+          "playSeededSound(Entity, Entity, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, int, int, int, float, float, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, float, float, int, int, int, int)",
+          "blit(GuiGraphicsExtractor, Identifier, int, int, int, int, float, float, int, int, int, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess": [],
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderGradientBackground(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "renderGradientBorder(GuiGraphicsExtractor, int, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphicsExtractor, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphicsExtractor, ClientTooltipPositioner, boolean, boolean, boolean, int, Identifier, boolean, boolean)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphicsExtractor, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 53
+    },
+    "1.4.0.1": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess",
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int, boolean, boolean)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon": [
+          "levelLoadEvent(Load)",
+          "levelUnloadEvent(Unload)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, Identifier)",
+          "registerListener(Supplier<PreparableReloadListener>, Identifier)",
+          "addListeners(AddClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphics, ItemStack, int, int, float)",
+          "renderItemIntoGUI(GuiGraphics, ItemStack, int, int, float, Quaternionf)",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState": [],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)",
+          "createLazySupplier(Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, Identifier)",
+          "registerResource(PackType, Identifier, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, Identifier)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionType<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack, Provider)",
+          "itemCreatesEntity(ItemStack, Class<T>, Provider)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Entity, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Entity, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(GuiGraphics, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(GuiGraphics, int, int, int, int, int, int)",
+          "blit(GuiGraphics, Identifier, int, int, int, int, int, int, int, float, float, int, int)",
+          "blit(GuiGraphics, Identifier, int, int, int, int, float, float, int, int, int, int)",
+          "blit(GuiGraphics, Identifier, int, int, int, int, float, float, int, int, int, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.IGuiRenderStateAccess": [],
+        "com.anthonyhilyard.iceberg.util.INestedTooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderGradientBackground(GuiGraphics, int, int, int, int, int, int)",
+          "renderGradientBorder(GuiGraphics, int, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int, Identifier, boolean, boolean)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, GuiGraphics, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 53
+    },
+    "1.3.2": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.compat.EMIHandler",
+        "com.anthonyhilyard.iceberg.component.IExtendedText",
+        "com.anthonyhilyard.iceberg.component.TitleBreakComponent",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.compat.EMIHandler": [
+          "getTooltipStack(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.component.IExtendedText": [
+          "setPadding(int)",
+          "setPadding(int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.component.TitleBreakComponent": [
+          "getHeight()",
+          "getWidth(Font)",
+          "registerFactory()"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon": [
+          "levelLoadEvent(Load)",
+          "levelUnloadEvent(Unload)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "registerMapping(KeyMapping, IKeyMappingRegistrar.KeyMappingContext)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, ResourceLocation)",
+          "registerListener(Supplier<PreparableReloadListener>, ResourceLocation)",
+          "addListeners(RegisterClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "getInstance()",
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphics, ItemStack, int, int, float)",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)",
+          "createLazySupplier(Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, ResourceLocation)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionSerializer<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Player, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Player, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "getCurrentRenderContext()",
+          "setCurrentRect(int, int, int, int)",
+          "getCurrentRect()",
+          "anyTooltipsVisible()",
+          "setAnyTooltipsVisible(boolean)",
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "calculateTitleStart(List<ClientTooltipComponent>)",
+          "getTitleOffset(int, int, int, int, IExtendedText.TextAlignment)",
+          "getTitleWidth(ClientTextTooltip, Font)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, GuiGraphics, ClientTooltipPositioner, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Font, List<ClientTooltipComponent>, Rect2i, GuiGraphics, ClientTooltipPositioner, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, Font)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(int, int, int, int)",
+          "TooltipRenderContext(int, int, boolean, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 53
+    },
+    "1.2.13": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int, boolean, boolean)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.common.LevelEvents": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.common.IcebergNeoForgeCommon": [
+          "levelLoadEvent(Load)",
+          "levelUnloadEvent(Unload)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, ResourceLocation)",
+          "registerListener(Supplier<PreparableReloadListener>, ResourceLocation)",
+          "addListeners(AddClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "getInstance()",
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphics, ItemStack, int, int, float)",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.ILayerRenderState": [],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)",
+          "createLazySupplier(Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, ResourceLocation)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionType<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack, Provider)",
+          "itemCreatesEntity(ItemStack, Class<T>, Provider)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Player, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Player, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderGradientBackground(GuiGraphics, int, int, int, int, int, int, int)",
+          "renderGradientBorder(GuiGraphics, int, int, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int, ResourceLocation, boolean, boolean)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 51
+    },
+    "1.2.10": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int, boolean, boolean)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, ResourceLocation)",
+          "addListeners(RegisterClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphics, ItemStack, int, int, float)",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, ResourceLocation)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionSerializer<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Player, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Player, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderGradientBackground(GuiGraphics, int, int, int, int, int, int, int)",
+          "renderGradientBorder(GuiGraphics, int, int, int, int, int, int, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int, ResourceLocation, boolean, boolean)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.2.5": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.client.IcebergClient",
+        "com.anthonyhilyard.iceberg.config.IcebergConfig",
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent",
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent",
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent",
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents",
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent",
+        "com.anthonyhilyard.iceberg.events.Event",
+        "com.anthonyhilyard.iceberg.events.EventFactory",
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent",
+        "com.anthonyhilyard.iceberg.Iceberg",
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient",
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper",
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec",
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge",
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper",
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerEmbeddium",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory",
+        "com.anthonyhilyard.iceberg.services.IFontLookup",
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder",
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar",
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper",
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar",
+        "com.anthonyhilyard.iceberg.services.Services",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.client.IcebergClient": [
+          "init()",
+          "onGatherComponentsEventEnd(ItemStack, int, int, List<Either<FormattedText, TooltipComponent>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IcebergConfig": [
+          "onLoad()",
+          "onReload()",
+          "onLoadEvent(String)",
+          "onReloadEvent(String)",
+          "isLoaded()",
+          "register(Class<? extends IcebergConfig<?>>, String)"
+        ],
+        "com.anthonyhilyard.iceberg.config.IIcebergConfigSpec": [],
+        "com.anthonyhilyard.iceberg.events.client.ItemTooltipEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.NewItemPickupEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RegisterTooltipComponentFactoryEvent": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.client.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int)",
+          "GatherResult(InteractionResult, int, List<Either<FormattedText, TooltipComponent>>)",
+          "PreExtResult(InteractionResult, int, int, int, int, Font)"
+        ],
+        "com.anthonyhilyard.iceberg.events.common.ConfigEvents": [],
+        "com.anthonyhilyard.iceberg.events.common.CriterionEvent": [],
+        "com.anthonyhilyard.iceberg.events.Event": [
+          "invoker()",
+          "register(T)",
+          "listenerCount()"
+        ],
+        "com.anthonyhilyard.iceberg.events.EventFactory": [
+          "invalidate()",
+          "create(Class<? super T>, Function<T[], T>)",
+          "createTypeTracked(Class<? super T>, Function<T[], T>)"
+        ],
+        "com.anthonyhilyard.iceberg.events.server.PlayerLoginEvent": [],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.events.TypeTrackedEvent": [
+          "register(T)",
+          "register(Class<? extends S>, T)",
+          "getListenerTypes()"
+        ],
+        "com.anthonyhilyard.iceberg.Iceberg": [],
+        "com.anthonyhilyard.iceberg.neoforge.client.IcebergNeoForgeClient": [],
+        "com.anthonyhilyard.iceberg.neoforge.config.ConfigValueWrapper": [
+          "get()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.config.NeoForgeIcebergConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(ILoadedConfig)",
+          "validateSpec(ModConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "createValueSpec(String, String, boolean, Class<?>, Supplier<?>, Predicate<Object>, RestartType)",
+          "loadedConfig()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.IcebergNeoForge": [],
+        "com.anthonyhilyard.iceberg.neoforge.server.IcebergNeoForgeServer": [
+          "event(PlayerLoggedInEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeBufferSourceFactory": [
+          "createCheckedBufferSource(Object)",
+          "createVertexCollector()"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeFontLookup": [
+          "getTooltipFont(ItemStack, Screen)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeKeyMappingRegistrar": [
+          "registerMapping(KeyMapping)",
+          "onRegisterKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgePlatformHelper": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "getAllModIds()",
+          "modVersionMeets(String, String)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.NeoForgeReloadListenerRegistrar": [
+          "registerListener(PreparableReloadListener, ResourceLocation)",
+          "addListeners(RegisterClientReloadListenersEvent)"
+        ],
+        "com.anthonyhilyard.iceberg.neoforge.services.VertexConsumerEmbeddium": [],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(MultiBufferSource)",
+          "getBuffer(RenderType)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(ItemStack, int, int, Quaternionf, GuiGraphics)",
+          "renderItemModelIntoGUIWithAlpha(GuiGraphics, ItemStack, int, int, float)",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(RenderType)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.services.IBufferSourceFactory": [],
+        "com.anthonyhilyard.iceberg.services.IFontLookup": [],
+        "com.anthonyhilyard.iceberg.services.IIcebergConfigSpecBuilder": [],
+        "com.anthonyhilyard.iceberg.services.IKeyMappingRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.IPlatformHelper": [],
+        "com.anthonyhilyard.iceberg.services.IReloadListenerRegistrar": [],
+        "com.anthonyhilyard.iceberg.services.Services": [
+          "getPlatformHelper()",
+          "getBufferSourceFactory()",
+          "getConfigSpecBuilder()",
+          "getKeyMappingRegistrar()",
+          "getReloadListenerRegistrar()",
+          "getFontLookup()",
+          "load(Class<T>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(PackType, ResourceLocation)",
+          "registerResource(PackType, ResourceLocation, IoSupplier<InputStream>)",
+          "registerRootResource(String, IoSupplier<InputStream>)",
+          "getRootResource(String...)",
+          "getResource(PackType, ResourceLocation)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionSerializer<T>)",
+          "packId()",
+          "close()",
+          "location()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(TextColor, TextColor, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(Level)",
+          "collectEntitiesFromItem(ItemStack)",
+          "itemCreatesEntity(ItemStack, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(BlockState)",
+          "getBlockState(BlockPos)",
+          "getBrightness(LightLayer, BlockPos)",
+          "noCollision(Entity, AABB)",
+          "addFreshEntity(Entity)",
+          "getBlockTicks()",
+          "getFluidTicks()",
+          "getChunkSource()",
+          "levelEvent(Player, int, BlockPos, int)",
+          "gameEvent(Holder<GameEvent>, Vec3, Context)",
+          "players()",
+          "getUncachedNoiseBiome(int, int, int)",
+          "enabledFeatures()",
+          "getShade(Direction, boolean)",
+          "sendBlockUpdated(BlockPos, BlockState, BlockState, int)",
+          "playSeededSound(Player, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, VertexConsumer, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, float, float, int, int, int, int)",
+          "blit(PoseStack, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(Component)",
+          "getColorForItem(ItemStack, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemComponents(ItemStack)",
+          "getEquipmentSlot(ItemStack)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ITooltipAccess": [],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(ItemStack, String, Provider)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<ClientTooltipComponent>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<ClientTooltipComponent>)",
+          "renderItemTooltip(ItemStack, Tooltips.TooltipInfo, Rect2i, int, int, int, int, int, int, GuiGraphics, ClientTooltipPositioner, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int)",
+          "gatherTooltipComponents(ItemStack, List<? extends FormattedText>, Optional<TooltipComponent>, int, int, int, Font, Font, int, int)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font)",
+          "calculateRect(ItemStack, PoseStack, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "calculateRect(ItemStack, GuiGraphics, ClientTooltipPositioner, List<ClientTooltipComponent>, int, int, int, int, int, Font, int, boolean)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int)",
+          "centerTitle(List<ClientTooltipComponent>, Font, int, int)",
+          "TooltipColors(TextColor, TextColor, TextColor, TextColor)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)",
+          "newInstance(Class<T>)",
+          "setField(Field, Object, Object)",
+          "getField(Field, Object)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "1.1.18": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.events.CriterionCallback",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupCallback",
+        "com.anthonyhilyard.iceberg.events.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium",
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing",
+        "com.anthonyhilyard.iceberg.util.EntityCollector",
+        "com.anthonyhilyard.iceberg.util.GuiHelper",
+        "com.anthonyhilyard.iceberg.util.ItemColor",
+        "com.anthonyhilyard.iceberg.util.ItemUtil",
+        "com.anthonyhilyard.iceberg.util.Selectors",
+        "com.anthonyhilyard.iceberg.util.StringRecomposer",
+        "com.anthonyhilyard.iceberg.util.Tooltips",
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.events.CriterionCallback": [],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupCallback": [],
+        "com.anthonyhilyard.iceberg.events.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int)",
+          "GatherResult(class_1269, int, List<Either<class_5348, class_5632>>)",
+          "PreExtResult(class_1269, int, int, int, int, class_327)"
+        ],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onInitializeClient()",
+          "onGatherComponentsEventEnd(class_1799, int, int, List<Either<class_5348, class_5632>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [
+          "onInitializeServer()"
+        ],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onInitialize()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(class_4597)",
+          "getBuffer(class_1921)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium": [
+          "getBuffer(class_1921)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(class_1799, int, int, Quaternionf, class_332)",
+          "renderItemModelIntoGUIWithAlpha(class_4587, class_1799, int, int, float)",
+          "method_14491(class_3300)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(class_1921)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium": [
+          "getBuffer(class_1921)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(class_3264, class_2960)",
+          "registerResource(class_3264, class_2960, class_7367<InputStream>)",
+          "registerRootResource(String, class_7367<InputStream>)",
+          "method_14410(String...)",
+          "method_14405(class_3264, class_2960)",
+          "method_14408(class_3264, String, String, class_7664)",
+          "method_14406(class_3264)",
+          "method_14407(class_3270<T>)",
+          "method_14409()",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(class_5251, class_5251, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ],
+        "com.anthonyhilyard.iceberg.util.EntityCollector": [
+          "of(class_1937)",
+          "collectEntitiesFromItem(class_1799)",
+          "itemCreatesEntity(class_1799, Class<T>)",
+          "getCollectedEntities()",
+          "setBlockState(class_2680)",
+          "method_8320(class_2338)",
+          "method_8314(class_1944, class_2338)",
+          "method_8587(class_1297, class_238)",
+          "method_8649(class_1297)",
+          "method_8397()",
+          "method_8405()",
+          "method_8398()",
+          "method_8444(class_1657, int, class_2338, int)",
+          "method_32888(class_5712, class_243, class_7397)",
+          "method_18456()",
+          "method_22387(int, int, int)",
+          "method_30349()",
+          "method_45162()",
+          "method_24852(class_2350, boolean)",
+          "method_8413(class_2338, class_2680, class_2680, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.GuiHelper": [
+          "drawGradientRect(Matrix4f, int, int, int, int, int, int, int)",
+          "drawGradientRect(Matrix4f, class_287, int, int, int, int, int, int, int)",
+          "drawGradientRectHorizontal(Matrix4f, int, int, int, int, int, int, int)",
+          "blit(class_4587, int, int, int, int, float, float, int, int, int, int)",
+          "blit(class_4587, int, int, int, int, int, int, int, float, float, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemColor": [
+          "findFirstColorCode(class_2561)",
+          "getColorForItem(class_1799, class_5251)"
+        ],
+        "com.anthonyhilyard.iceberg.util.ItemUtil": [
+          "getItemNBT(class_1799)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Selectors": [
+          "selectorDocumentation()",
+          "validateSelector(String)",
+          "itemMatches(class_1799, String)",
+          "SelectorDocumentation(String, String, List<String>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.StringRecomposer": [
+          "recompose(List<class_5684>)"
+        ],
+        "com.anthonyhilyard.iceberg.util.Tooltips": [
+          "calculateTitleLines(List<class_5684>)",
+          "renderItemTooltip(class_1799, class_4587, Tooltips.TooltipInfo, class_768, int, int, int, int, int)",
+          "renderItemTooltip(class_1799, class_4587, Tooltips.TooltipInfo, class_768, int, int, int, int, int, boolean)",
+          "renderItemTooltip(class_1799, class_4587, Tooltips.TooltipInfo, class_768, int, int, int, int, int, boolean, boolean)",
+          "renderItemTooltip(class_1799, class_4587, Tooltips.TooltipInfo, class_768, int, int, int, int, int, int, boolean, boolean, boolean, int)",
+          "renderItemTooltip(class_1799, Tooltips.TooltipInfo, class_768, int, int, int, int, int, int, class_332, class_8000, boolean, boolean, boolean, int)",
+          "gatherTooltipComponents(class_1799, List<? extends class_5348>, Optional<class_5632>, int, int, int, class_327, class_327, int)",
+          "gatherTooltipComponents(class_1799, List<? extends class_5348>, Optional<class_5632>, int, int, int, class_327, class_327, int, int)",
+          "calculateRect(class_1799, class_4587, List<class_5684>, int, int, int, int, int, class_327)",
+          "calculateRect(class_1799, class_4587, List<class_5684>, int, int, int, int, int, class_327, int, boolean)",
+          "calculateRect(class_1799, class_332, class_8000, List<class_5684>, int, int, int, int, int, class_327, int, boolean)",
+          "centerTitle(List<class_5684>, class_327, int)",
+          "centerTitle(List<class_5684>, class_327, int, int)",
+          "TooltipColors(class_5251, class_5251, class_5251, class_5251)"
+        ],
+        "com.anthonyhilyard.iceberg.util.UnsafeUtil": [
+          "readFloat(long)",
+          "readInt(long)",
+          "readByte(long)"
+        ]
+      },
+      "sampleCount": 24
+    },
+    "1.1.9.1": {
+      "packages": [],
+      "classes": [
+        "com.anthonyhilyard.iceberg.events.CriterionCallback",
+        "com.anthonyhilyard.iceberg.events.NewItemPickupCallback",
+        "com.anthonyhilyard.iceberg.events.RenderTickEvents",
+        "com.anthonyhilyard.iceberg.events.RenderTooltipEvents",
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent",
+        "com.anthonyhilyard.iceberg.IcebergClient",
+        "com.anthonyhilyard.iceberg.IcebergServer",
+        "com.anthonyhilyard.iceberg.Loader",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource",
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium",
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector",
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium",
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium",
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack",
+        "com.anthonyhilyard.iceberg.util.Easing"
+      ],
+      "methods": {
+        "com.anthonyhilyard.iceberg.events.CriterionCallback": [],
+        "com.anthonyhilyard.iceberg.events.NewItemPickupCallback": [],
+        "com.anthonyhilyard.iceberg.events.RenderTickEvents": [],
+        "com.anthonyhilyard.iceberg.events.RenderTooltipEvents": [
+          "ColorExtResult(int, int, int, int)",
+          "ColorResult(int, int, int)",
+          "GatherResult(class_1269, int, List<Either<class_5348, class_5632>>)",
+          "PreExtResult(class_1269, int, int, int, int, class_327)"
+        ],
+        "com.anthonyhilyard.iceberg.events.ToggleableEvent": [
+          "create(Class<? super T>, Function<T[], T>)",
+          "register(T)",
+          "invoker()",
+          "disable()",
+          "enable()"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergClient": [
+          "onInitializeClient()",
+          "onGatherComponentsEventEnd(class_1799, int, int, List<Either<class_5348, class_5632>>, int, int)"
+        ],
+        "com.anthonyhilyard.iceberg.IcebergServer": [
+          "onInitializeServer()"
+        ],
+        "com.anthonyhilyard.iceberg.Loader": [
+          "onInitialize()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSource": [
+          "create(class_4597)",
+          "getBuffer(class_1921)",
+          "hasRendered()",
+          "reset()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CheckedBufferSourceSodium": [
+          "getBuffer(class_1921)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.CustomItemRenderer": [
+          "renderDetailModelIntoGUI(class_1799, int, int, Quaternionf)",
+          "renderItemModelIntoGUIWithAlpha(class_4587, class_1799, int, int, float)",
+          "method_14491(class_3300)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollector": [
+          "create()",
+          "getBuffer(class_1921)",
+          "getVertices()"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexCollectorSodium": [
+          "getBuffer(class_1921)"
+        ],
+        "com.anthonyhilyard.iceberg.renderer.VertexConsumerSodium": [],
+        "com.anthonyhilyard.iceberg.util.DynamicResourcePack": [
+          "clear()",
+          "removeResource(class_3264, class_2960)",
+          "registerResource(class_3264, class_2960, class_7367<InputStream>)",
+          "registerRootResource(String, class_7367<InputStream>)",
+          "method_14410(String...)",
+          "method_14405(class_3264, class_2960)",
+          "method_14408(class_3264, String, String, class_7664)",
+          "method_14406(class_3264)",
+          "method_14407(class_3270<T>)",
+          "method_14409()",
+          "close()"
+        ],
+        "com.anthonyhilyard.iceberg.util.Easing": [
+          "Ease(float, float, float)",
+          "Ease(float, float, float, Easing.EasingType)",
+          "Ease(class_5251, class_5251, float, Easing.EasingType)",
+          "Ease(float, float, float, Easing.EasingType, Easing.EasingDirection)"
+        ]
+      },
+      "sampleCount": 23,
+      "truncated": true
+    },
+    "1.0.38": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1612,
+  "truncated": true
+}

@@ -1,0 +1,3021 @@
+{
+  "slug": "terrablender",
+  "modId": "terrablender",
+  "id": "authored/lib-terrablender",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "terrablender"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:16.806Z",
+  "versions": {
+    "d627bae5bc22918f6f107b7ed7f9176b837a2a4a0d9abfbf200bc2d675342806501d744cb324c50d89d54e7ea4259175504329e4dd40574256f7ee279640932f": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "baa4a830e73515b0224ae50e900aeb05d1986b147e175bdc1d7731b2e4c06be25fb28d98af20b851ea1c4526613e101bb2d1ba59211f7d5d5da28a440e682605": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "b1679043b63122e3e602e2bd57eeb29447fded4e346013f63e472e63aadd514f1e9b2f6f447f8d11bc812c1d8d2362e45fa60c1a4f71e94fb7e000df902e4b52": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.config.Config",
+        "terrablender.config.ConfigFile",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.config.Config": [
+          "addList(String, String, List<T>)",
+          "addSubConfig(String, String, Config)",
+          "addMap(String, String, Map<?, Number>)",
+          "add(String, String, T)",
+          "addNumber(String, String, T, T, T)",
+          "addEnum(String, String, T)",
+          "getValue(String)",
+          "getSubConfig(String)",
+          "getConfig()",
+          "sortConfig(CommentedConfig)"
+        ],
+        "terrablender.config.ConfigFile": [
+          "save()"
+        ],
+        "terrablender.config.TerraBlenderConfig": [],
+        "terrablender.core.TerraBlender": [
+          "registerBiome(BiConsumer<ResourceKey<Biome>, Supplier<? extends Biome>>)",
+          "registerRule(BiConsumer<String, Supplier<Codec<? extends RuleSource>>>)",
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "apply(AreaContext, int, int)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "m_183290_()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "air()"
+        ]
+      },
+      "sampleCount": 31
+    },
+    "ab79fdda18cc50888c767acf18693b80ea0bb3821565bcdf2d95b4c73ac8d3a5964822d5e08cbe0da61d321271b6ae9ee832db4f5a021f2e0e1c8e900baef810": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "biomeArea(RegistryAccess, long, int, List<Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 37
+    },
+    "8985881337fdc81aa12b72e154948c477b269ba62a49470a87706a926f71c0ff5ec730881f7265eec7bd1544ca0a142a7b847353bea2f479a9cd78c09943a647": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(Identifier, Region)",
+          "register(Identifier, int, Region)",
+          "register(Region)",
+          "remove(RegionType, Identifier)",
+          "get(RegionType)",
+          "getIndex(RegionType, Identifier)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "87a78c83bc504e909b018ea038ad06ed644d06ff05bbe898526a3e588e26b0e317caea1ee21a7e40f2f76985280ea305b17e444b4ff76ea69362a81d015670ed": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "8046b46abe9ce1800aa788c7f35e74e707bff0b31034ca51d03d9f417144d2b0d96bb2367427616641da63a4e467670fd0166e57ce3153846721134439956a80": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 38
+    },
+    "745c8345f95b919ec6c20727d7bbaf97572d3dd9a04aff84947986384f5916762eb0344e777ea62b180ef69c0d375c03e3476c953bf632122dc0cd58e0aa4084": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "6d20cd912baf0246487b0a9effe588c070b27277abdfd28a313ba48888681a8f4f4abad9ab1d81033af5705d1dec5aacb2983f4d905fac37e9627c04a3437f78": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "697468c009da8006ed416e64347dca516447ab8be52e80560192220751b66acc5770866dfa9c90a3e825427d6641a20576f62544c90c8306eaa6f164c857c0d2": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.Weight",
+        "terrablender.util.WeightedEntry",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.Weight": [
+          "of(int)",
+          "asInt()",
+          "toString()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "terrablender.util.WeightedEntry": [],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedMultiNoiseBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(WeightedEntry.Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "initialUniqueness(RegistryAccess, RegionType)",
+          "finalUniqueness(RegionType, long, InitialLayer)",
+          "biomeArea(RegistryAccess, long, int, List<WeightedEntry.Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 40
+    },
+    "5bbac0805e8eef60bdb508b1ce628bc053a0b0fb2ba593814e4fb63ccd104ac54a1742dfc9e911d87493ec09913b3c51b5ab0a274ad1606001e97bdbb18bb155": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "biomeArea(RegistryAccess, long, int, List<Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 37
+    },
+    "54d8adb0853271416c867a8d7c7079f6b6f32bdb7cf68a4459097c472c5afd0e5f34482c98b72e036eebaf36ea4c4b07e89dafce1f64703f81070cb65d5cad3a": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.config.Config",
+        "terrablender.config.ConfigFile",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedChunkGenerator",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.config.Config": [
+          "addList(String, String, List<T>)",
+          "addSubConfig(String, String, Config)",
+          "addMap(String, String, Map<?, Number>)",
+          "add(String, String, T)",
+          "addNumber(String, String, T, T, T)",
+          "addEnum(String, String, T)",
+          "getValue(String)",
+          "getSubConfig(String)",
+          "getConfig()",
+          "sortConfig(CommentedConfig)"
+        ],
+        "terrablender.config.ConfigFile": [
+          "save()"
+        ],
+        "terrablender.config.TerraBlenderConfig": [],
+        "terrablender.core.TerraBlender": [
+          "registerBiome(BiConsumer<ResourceKey<Biome>, Supplier<? extends Biome>>)",
+          "registerRule(BiConsumer<String, Supplier<Codec<? extends RuleSource>>>)",
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedChunkGenerator": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "apply(AreaContext, int, int)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "m_213795_()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "air()"
+        ]
+      },
+      "sampleCount": 32
+    },
+    "43a69944929d08b967b4fbd316b9914311debc3c1be12bc757a3f1e61ef9bdbae38c010270031475e3732086f66e58f6511f79e126307819dc3de2b9f97f89d6": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.EndBiomeRegistry",
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.TerrablenderOverworldBiomeBuilder",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config",
+        "terrablender.config.TerraBlenderConfig",
+        "terrablender.core.TerraBlender",
+        "terrablender.core.TerraBlenderForge",
+        "terrablender.DimensionTypeTags",
+        "terrablender.handler.InitializationHandler",
+        "terrablender.util.LevelUtils",
+        "terrablender.util.WeightedRandomList",
+        "terrablender.worldgen.DefaultNetherRegion",
+        "terrablender.worldgen.DefaultOverworldRegion",
+        "terrablender.worldgen.IExtendedBiomeSource",
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings",
+        "terrablender.worldgen.IExtendedParameterList",
+        "terrablender.worldgen.IExtendedTheEndBiomeSource",
+        "terrablender.worldgen.noise.Area",
+        "terrablender.worldgen.noise.AreaContext",
+        "terrablender.worldgen.noise.AreaFactory",
+        "terrablender.worldgen.noise.AreaTransformer0",
+        "terrablender.worldgen.noise.AreaTransformer1",
+        "terrablender.worldgen.noise.BiomeInitialLayer",
+        "terrablender.worldgen.noise.InitialLayer",
+        "terrablender.worldgen.noise.LayeredNoiseUtil",
+        "terrablender.worldgen.noise.PixelTransformer",
+        "terrablender.worldgen.noise.WeightedRandomLayer",
+        "terrablender.worldgen.noise.ZoomLayer",
+        "terrablender.worldgen.RegionUtils",
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource",
+        "terrablender.worldgen.TBSurfaceRuleData"
+      ],
+      "methods": {
+        "terrablender.api.EndBiomeRegistry": [
+          "registerHighlandsBiome(ResourceKey<Biome>, int)",
+          "registerMidlandsBiome(ResourceKey<Biome>, int)",
+          "registerEdgeBiome(ResourceKey<Biome>, int)",
+          "registerIslandBiome(ResourceKey<Biome>, int)",
+          "getHighlandsBiomes()",
+          "getMidlandsBiomes()",
+          "getEdgeBiomes()",
+          "getIslandBiomes()"
+        ],
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.TerrablenderOverworldBiomeBuilder": [
+          "pickBeachBiome(int, int)",
+          "pickPeakBiome(int, int, Parameter)",
+          "pickSlopeBiome(int, int, Parameter)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "terrablender.config.TerraBlenderConfig": [
+          "load()"
+        ],
+        "terrablender.core.TerraBlender": [
+          "setConfig(TerraBlenderConfig)"
+        ],
+        "terrablender.core.TerraBlenderForge": [],
+        "terrablender.DimensionTypeTags": [
+          "init()"
+        ],
+        "terrablender.handler.InitializationHandler": [
+          "onServerAboutToStart(ServerAboutToStartEvent)"
+        ],
+        "terrablender.util.LevelUtils": [
+          "initializeOnServerStart(MinecraftServer)",
+          "shouldApplyToChunkGenerator(ChunkGenerator)",
+          "shouldApplyToBiomeSource(BiomeSource)",
+          "getRegionTypeForDimension(Holder<DimensionType>)",
+          "initializeBiomes(RegistryAccess, Holder<DimensionType>, ResourceKey<LevelStem>, ChunkGenerator, long)"
+        ],
+        "terrablender.util.WeightedRandomList": [
+          "create()",
+          "create(E...)",
+          "create(List<E>)",
+          "getRandom(AreaContext)"
+        ],
+        "terrablender.worldgen.DefaultNetherRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.DefaultOverworldRegion": [
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)"
+        ],
+        "terrablender.worldgen.IExtendedBiomeSource": [],
+        "terrablender.worldgen.IExtendedNoiseGeneratorSettings": [],
+        "terrablender.worldgen.IExtendedParameterList": [],
+        "terrablender.worldgen.IExtendedTheEndBiomeSource": [],
+        "terrablender.worldgen.noise.Area": [
+          "get(int, int)",
+          "getMaxCache()"
+        ],
+        "terrablender.worldgen.noise.AreaContext": [
+          "createResult(PixelTransformer)",
+          "createResult(PixelTransformer, Area)",
+          "createResult(PixelTransformer, Area, Area)",
+          "initRandom(long, long)",
+          "nextRandom(int)",
+          "random(int, int)",
+          "random(int, int, int, int)"
+        ],
+        "terrablender.worldgen.noise.AreaFactory": [],
+        "terrablender.worldgen.noise.AreaTransformer0": [
+          "run(AreaContext)"
+        ],
+        "terrablender.worldgen.noise.AreaTransformer1": [
+          "run(AreaContext, AreaFactory)"
+        ],
+        "terrablender.worldgen.noise.BiomeInitialLayer": [
+          "getEntryIndex(Wrapper<ResourceKey<Biome>>)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.InitialLayer": [
+          "getEntryIndex(Wrapper<Region>)"
+        ],
+        "terrablender.worldgen.noise.LayeredNoiseUtil": [
+          "uniqueness(RegistryAccess, RegionType, long)",
+          "biomeArea(RegistryAccess, long, int, List<Wrapper<ResourceKey<Biome>>>)",
+          "createZoomedArea(long, int, AreaTransformer0)",
+          "zoom(long, AreaTransformer1, AreaFactory, int, LongFunction<AreaContext>)"
+        ],
+        "terrablender.worldgen.noise.PixelTransformer": [],
+        "terrablender.worldgen.noise.WeightedRandomLayer": [
+          "apply(AreaContext, int, int)",
+          "getEntryIndex(T)",
+          "getDefaultIndex()"
+        ],
+        "terrablender.worldgen.noise.ZoomLayer": [
+          "getParentX(int)",
+          "getParentY(int)",
+          "apply(AreaContext, Area, int, int)",
+          "modeOrRandom(AreaContext, int, int, int, int)"
+        ],
+        "terrablender.worldgen.RegionUtils": [
+          "getVanillaParameterPoints(ResourceKey<Biome>)"
+        ],
+        "terrablender.worldgen.surface.NamespacedSurfaceRuleSource": [
+          "codec()",
+          "apply(Context)"
+        ],
+        "terrablender.worldgen.TBSurfaceRuleData": [
+          "overworld()",
+          "overworldLike(boolean, boolean, boolean)",
+          "nether()",
+          "end()",
+          "air()"
+        ]
+      },
+      "sampleCount": 37
+    },
+    "3b24a526db45750221353f3129bb2bd64129e1bb6f92ee90fcb997863c539a8b43825e6afb9f994dc9eeb84e04cb3f0c123cf68984af3a331ba52293b589ba3c": {
+      "packages": [],
+      "classes": [
+        "terrablender.api.ModifiedVanillaOverworldBuilder",
+        "terrablender.api.ParameterUtils",
+        "terrablender.api.Region",
+        "terrablender.api.Regions",
+        "terrablender.api.RegionType",
+        "terrablender.api.SurfaceRuleManager",
+        "terrablender.api.VanillaParameterOverlayBuilder",
+        "terrablender.config.Config"
+      ],
+      "methods": {
+        "terrablender.api.ModifiedVanillaOverworldBuilder": [
+          "replaceBiome(ResourceKey<Biome>, ResourceKey<Biome>)",
+          "replaceBiome(ParameterPoint, ResourceKey<Biome>)",
+          "replaceParameter(ParameterPoint, ParameterPoint)",
+          "removeParameter(ParameterPoint)",
+          "build()"
+        ],
+        "terrablender.api.ParameterUtils": [],
+        "terrablender.api.Region": [
+          "getName()",
+          "getType()",
+          "getWeight()",
+          "addBiomes(Registry<Biome>, Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Parameter, Parameter, Parameter, Parameter, Parameter, Parameter, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterUtils.Temperature, ParameterUtils.Humidity, ParameterUtils.Continentalness, ParameterUtils.Erosion, ParameterUtils.Weirdness, ParameterUtils.Depth, float, ResourceKey<Biome>)",
+          "addBiome(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ParameterPoint, ResourceKey<Biome>)",
+          "addBiomeSimilar(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, ResourceKey<Biome>, ResourceKey<Biome>)",
+          "addModifiedVanillaOverworldBiomes(Consumer<Pair<ParameterPoint, ResourceKey<Biome>>>, Consumer<ModifiedVanillaOverworldBuilder>)"
+        ],
+        "terrablender.api.Regions": [
+          "register(ResourceLocation, Region)",
+          "register(ResourceLocation, int, Region)",
+          "register(Region)",
+          "remove(RegionType, ResourceLocation)",
+          "get(RegionType)",
+          "getIndex(RegionType, ResourceLocation)",
+          "getCount(RegionType)"
+        ],
+        "terrablender.api.RegionType": [],
+        "terrablender.api.SurfaceRuleManager": [
+          "addSurfaceRules(SurfaceRuleManager.RuleCategory, String, RuleSource)",
+          "addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage, int, RuleSource)",
+          "setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "removeSurfaceRules(SurfaceRuleManager.RuleCategory, String)",
+          "getNamespacedRules(SurfaceRuleManager.RuleCategory, RuleSource)",
+          "getDefaultSurfaceRuleAdditionsForStage(SurfaceRuleManager.RuleCategory, SurfaceRuleManager.RuleStage)",
+          "getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory)"
+        ],
+        "terrablender.api.VanillaParameterOverlayBuilder": [
+          "add(ParameterPoint, ResourceKey<Biome>)",
+          "build()"
+        ],
+        "terrablender.config.Config": [
+          "addList(String, String, List<T>)",
+          "addSubConfig(String, String, Config)",
+          "addMap(String, String, Map<?, Number>)",
+          "add(String, String, T)",
+          "addNumber(String, String, T, T, T)",
+          "addEnum(String, String, T)",
+          "getValue(String)",
+          "getSubConfig(String)",
+          "getConfig()",
+          "sortConfig(CommentedConfig)"
+        ]
+      },
+      "sampleCount": 32,
+      "truncated": true
+    },
+    "26.2.0.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "26.1.2.0.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "26.1.2.0.0": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "26.1.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.4.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.3.0.12": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.3.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.2.0.14": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.3.0.22": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.0.0.122": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.1.0.77": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "06a3572205042df7a950512617a42ffdb10b4b102d7f8c1a9ca8a541bc5b40bedcccdf5600bd66abc1a789067d063c77115448f16f682dd0cd924f29c0f2411e": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1440,
+  "truncated": true
+}

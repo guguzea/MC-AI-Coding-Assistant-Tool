@@ -1,0 +1,1144 @@
+{
+  "slug": "yacl",
+  "modId": "yacl",
+  "id": "authored/lib-yacl",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "yet-another-config-lib"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:21.953Z",
+  "versions": {
+    "2.3.0_beta.3": {
+      "packages": [],
+      "classes": [
+        "dev.isxander.yacl.api.Binding",
+        "dev.isxander.yacl.api.ButtonOption",
+        "dev.isxander.yacl.api.ConfigCategory",
+        "dev.isxander.yacl.api.Controller",
+        "dev.isxander.yacl.api.LabelOption",
+        "dev.isxander.yacl.api.ListOption",
+        "dev.isxander.yacl.api.ListOptionEntry",
+        "dev.isxander.yacl.api.NameableEnum",
+        "dev.isxander.yacl.api.Option",
+        "dev.isxander.yacl.api.OptionFlag",
+        "dev.isxander.yacl.api.OptionGroup",
+        "dev.isxander.yacl.api.PlaceholderCategory",
+        "dev.isxander.yacl.api.utils.Dimension",
+        "dev.isxander.yacl.api.utils.MutableDimension",
+        "dev.isxander.yacl.api.utils.OptionUtils",
+        "dev.isxander.yacl.api.YetAnotherConfigLib",
+        "dev.isxander.yacl.config.ConfigInstance",
+        "dev.isxander.yacl.config.GsonConfigInstance",
+        "dev.isxander.yacl.gui.AbstractWidget",
+        "dev.isxander.yacl.gui.CategoryListWidget",
+        "dev.isxander.yacl.gui.CategoryWidget",
+        "dev.isxander.yacl.gui.controllers.ActionController",
+        "dev.isxander.yacl.gui.controllers.BooleanController",
+        "dev.isxander.yacl.gui.controllers.ColorController",
+        "dev.isxander.yacl.gui.controllers.ControllerWidget",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController",
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController",
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController",
+        "dev.isxander.yacl.gui.controllers.LabelController",
+        "dev.isxander.yacl.gui.controllers.ListEntryWidget",
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController",
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement",
+        "dev.isxander.yacl.gui.controllers.string.IStringController",
+        "dev.isxander.yacl.gui.controllers.string.number.DoubleFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.FloatFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.IntegerFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.LongFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.NumberFieldController",
+        "dev.isxander.yacl.gui.controllers.string.StringController",
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement",
+        "dev.isxander.yacl.gui.controllers.TickBoxController",
+        "dev.isxander.yacl.gui.ElementListWidgetExt",
+        "dev.isxander.yacl.gui.LowProfileButtonWidget",
+        "dev.isxander.yacl.gui.OptionListWidget",
+        "dev.isxander.yacl.gui.RequireRestartScreen",
+        "dev.isxander.yacl.gui.SearchFieldWidget",
+        "dev.isxander.yacl.gui.TextScaledButtonWidget",
+        "dev.isxander.yacl.gui.TooltipButtonWidget",
+        "dev.isxander.yacl.gui.utils.GuiUtils",
+        "dev.isxander.yacl.gui.YACLScreen"
+      ],
+      "methods": {
+        "dev.isxander.yacl.api.Binding": [],
+        "dev.isxander.yacl.api.ButtonOption": [],
+        "dev.isxander.yacl.api.ConfigCategory": [],
+        "dev.isxander.yacl.api.Controller": [],
+        "dev.isxander.yacl.api.LabelOption": [],
+        "dev.isxander.yacl.api.ListOption": [],
+        "dev.isxander.yacl.api.ListOptionEntry": [
+          "typeClass()",
+          "flags()",
+          "available()"
+        ],
+        "dev.isxander.yacl.api.NameableEnum": [],
+        "dev.isxander.yacl.api.Option": [
+          "canResetToDefault()"
+        ],
+        "dev.isxander.yacl.api.OptionFlag": [],
+        "dev.isxander.yacl.api.OptionGroup": [],
+        "dev.isxander.yacl.api.PlaceholderCategory": [],
+        "dev.isxander.yacl.api.utils.Dimension": [],
+        "dev.isxander.yacl.api.utils.MutableDimension": [],
+        "dev.isxander.yacl.api.utils.OptionUtils": [
+          "consumeOptions(YetAnotherConfigLib, Function<Option<?>, Boolean>)",
+          "forEachOptions(YetAnotherConfigLib, Consumer<Option<?>>)"
+        ],
+        "dev.isxander.yacl.api.YetAnotherConfigLib": [],
+        "dev.isxander.yacl.config.ConfigInstance": [
+          "save()",
+          "load()",
+          "getConfig()",
+          "setConfig(T)",
+          "getDefaults()",
+          "getConfigClass()"
+        ],
+        "dev.isxander.yacl.config.GsonConfigInstance": [
+          "save()",
+          "load()",
+          "getPath()"
+        ],
+        "dev.isxander.yacl.gui.AbstractWidget": [
+          "postRender(class_4587, int, int, float)",
+          "canReset()",
+          "method_25405(double, double)",
+          "setDimension(Dimension<Integer>)",
+          "getDimension()",
+          "method_37018()",
+          "unfocus()",
+          "matchesSearch(String)",
+          "method_37020(class_6382)",
+          "drawButtonRect(class_4587, int, int, int, int, boolean, boolean)",
+          "multiplyColor(int, float)",
+          "playDownSound()"
+        ],
+        "dev.isxander.yacl.gui.CategoryListWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "method_25322()",
+          "method_25342()",
+          "method_25329()",
+          "method_25325(class_4587)"
+        ],
+        "dev.isxander.yacl.gui.CategoryWidget": [
+          "method_49602()",
+          "method_25354(class_1144)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ActionController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.BooleanController": [
+          "option()",
+          "formatValue()",
+          "coloured()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ColorController": [
+          "option()",
+          "allowAlpha()",
+          "getString()",
+          "formatValue()",
+          "setFromString(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ControllerWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "getControlWidth()",
+          "isHovered()",
+          "getHoveredControlWidth()",
+          "getUnhoveredControlWidth()",
+          "getXPadding()",
+          "getYPadding()",
+          "getValueText()",
+          "isAvailable()",
+          "getValueColor()",
+          "canReset()",
+          "drawOutline(class_4587, int, int, int, int, int, int)",
+          "getTextY()",
+          "method_48205(class_8023)",
+          "method_25370()",
+          "method_25365(boolean)",
+          "unfocus()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement": [
+          "cycleValue(int)",
+          "method_25402(double, double, int)",
+          "method_25404(int, int, int)",
+          "getHoveredControlWidth()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController": [
+          "option()",
+          "formatValue()",
+          "setPendingValue(int)",
+          "getPendingValue()",
+          "getCycleLength()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController": [
+          "getDefaultFormatter()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController": [
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.LabelController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ListEntryWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "updateButtonStates()",
+          "unfocus()",
+          "method_37020(class_6382)",
+          "matchesSearch(String)",
+          "method_25396()",
+          "method_25397()",
+          "method_25398(boolean)",
+          "method_25399()",
+          "method_25395(class_364)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController": [
+          "range()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement": [
+          "method_25394(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "method_25403(double, double, int, double, double)",
+          "incrementValue(double)",
+          "method_25401(double, double, double)",
+          "method_25406(double, double, int)",
+          "method_25404(int, int, int)",
+          "method_25405(double, double)",
+          "setValueFromMouse(double)",
+          "roundToInterval(double)",
+          "getHoveredControlWidth()",
+          "calculateInterpolation()",
+          "setDimension(Dimension<Integer>)",
+          "getThumbX()",
+          "getThumbWidth()",
+          "postRender(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.IStringController": [
+          "formatValue()",
+          "isInputValid(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.DoubleFieldController": [
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.FloatFieldController": [
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.IntegerFieldController": [
+          "isInputValid(String)",
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.LongFieldController": [
+          "isInputValid(String)",
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.NumberFieldController": [
+          "option()",
+          "setFromString(String)",
+          "pendingValue()",
+          "isInputValid(String)",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)",
+          "cleanupNumberString(String)",
+          "interval()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringController": [
+          "option()",
+          "getString()",
+          "setFromString(String)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement": [
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "getDefaultCaretPos()",
+          "method_25404(int, int, int)",
+          "doPaste()",
+          "doCopy()",
+          "doCut()",
+          "doSelectAll()",
+          "checkRenderOffset()",
+          "method_25400(char, int)",
+          "doBackspace()",
+          "doDelete()",
+          "write(String)",
+          "modifyInput(Consumer<StringBuilder>)",
+          "getUnshiftedLength()",
+          "getMaxUnwrapLength()",
+          "getSelectionStart()",
+          "getSelectionEnd()",
+          "getSelection()"
+        ],
+        "dev.isxander.yacl.gui.controllers.TickBoxController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.ElementListWidgetExt": [
+          "method_25401(double, double, double)",
+          "method_25325(class_4587)",
+          "method_25329()",
+          "method_25394(class_4587, int, int, float)",
+          "method_25341()",
+          "resetSmoothScrolling()",
+          "postRender(class_4587, int, int, float)",
+          "getEntryAtPosition(double, double)",
+          "method_25317()",
+          "centerScrollOn(E)",
+          "method_25337(int)",
+          "method_25311(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.LowProfileButtonWidget": [
+          "method_48579(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.OptionListWidget": [
+          "refreshOptions()",
+          "getDefaultEntryDimension()",
+          "expandAllGroups()",
+          "method_25322()",
+          "method_25402(double, double, int)",
+          "method_25401(double, double, double)",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "method_25329()",
+          "recacheViewableChildren()",
+          "method_25396()",
+          "addEntry(int, OptionListWidget.Entry)",
+          "addEntryBelow(OptionListWidget.Entry, OptionListWidget.Entry)",
+          "addEntryBelowWithoutScroll(OptionListWidget.Entry, OptionListWidget.Entry)",
+          "removeEntryFromTop(OptionListWidget.Entry)",
+          "removeEntry(OptionListWidget.Entry)"
+        ],
+        "dev.isxander.yacl.gui.RequireRestartScreen": [],
+        "dev.isxander.yacl.gui.SearchFieldWidget": [
+          "method_48579(class_4587, int, int, float)",
+          "getQuery()",
+          "isEmpty()",
+          "getEmptyText()",
+          "setEmptyText(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.TextScaledButtonWidget": [
+          "method_48589(class_4587, class_327, int)"
+        ],
+        "dev.isxander.yacl.gui.TooltipButtonWidget": [
+          "renderHoveredTooltip(class_4587)",
+          "setTooltip(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.utils.GuiUtils": [
+          "translatableFallback(String, class_2561)",
+          "enableScissor(int, int, int, int)",
+          "shortenString(String, class_327, int, String)"
+        ],
+        "dev.isxander.yacl.gui.YACLScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)",
+          "finishOrSave()",
+          "cancelOrReset()",
+          "undo()",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "changeCategory(int)",
+          "getCurrentCategoryIdx()",
+          "method_25393()",
+          "method_25422()",
+          "method_25419()",
+          "renderMultilineTooltip(class_4587, class_327, class_5489, int, int, int, int, int)"
+        ]
+      },
+      "sampleCount": 56
+    },
+    "2.2.0": {
+      "packages": [],
+      "classes": [
+        "dev.isxander.yacl.api.Binding",
+        "dev.isxander.yacl.api.ButtonOption",
+        "dev.isxander.yacl.api.ConfigCategory",
+        "dev.isxander.yacl.api.Controller",
+        "dev.isxander.yacl.api.LabelOption",
+        "dev.isxander.yacl.api.ListOption",
+        "dev.isxander.yacl.api.ListOptionEntry",
+        "dev.isxander.yacl.api.NameableEnum",
+        "dev.isxander.yacl.api.Option",
+        "dev.isxander.yacl.api.OptionFlag",
+        "dev.isxander.yacl.api.OptionGroup",
+        "dev.isxander.yacl.api.PlaceholderCategory",
+        "dev.isxander.yacl.api.utils.Dimension",
+        "dev.isxander.yacl.api.utils.MutableDimension",
+        "dev.isxander.yacl.api.utils.OptionUtils",
+        "dev.isxander.yacl.api.YetAnotherConfigLib",
+        "dev.isxander.yacl.config.ConfigInstance",
+        "dev.isxander.yacl.config.GsonConfigInstance",
+        "dev.isxander.yacl.config.NbtConfigInstance",
+        "dev.isxander.yacl.gui.AbstractWidget",
+        "dev.isxander.yacl.gui.CategoryListWidget",
+        "dev.isxander.yacl.gui.CategoryWidget",
+        "dev.isxander.yacl.gui.controllers.ActionController",
+        "dev.isxander.yacl.gui.controllers.BooleanController",
+        "dev.isxander.yacl.gui.controllers.ColorController",
+        "dev.isxander.yacl.gui.controllers.ControllerWidget",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController",
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController",
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController",
+        "dev.isxander.yacl.gui.controllers.LabelController",
+        "dev.isxander.yacl.gui.controllers.ListEntryWidget",
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController",
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement",
+        "dev.isxander.yacl.gui.controllers.string.IStringController",
+        "dev.isxander.yacl.gui.controllers.string.number.DoubleFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.FloatFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.IntegerFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.LongFieldController",
+        "dev.isxander.yacl.gui.controllers.string.number.NumberFieldController",
+        "dev.isxander.yacl.gui.controllers.string.StringController",
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement",
+        "dev.isxander.yacl.gui.controllers.TickBoxController",
+        "dev.isxander.yacl.gui.ElementListWidgetExt",
+        "dev.isxander.yacl.gui.LowProfileButtonWidget",
+        "dev.isxander.yacl.gui.OptionListWidget",
+        "dev.isxander.yacl.gui.RequireRestartScreen",
+        "dev.isxander.yacl.gui.SearchFieldWidget",
+        "dev.isxander.yacl.gui.TextScaledButtonWidget",
+        "dev.isxander.yacl.gui.TooltipButtonWidget",
+        "dev.isxander.yacl.gui.utils.GuiUtils",
+        "dev.isxander.yacl.gui.YACLScreen"
+      ],
+      "methods": {
+        "dev.isxander.yacl.api.Binding": [],
+        "dev.isxander.yacl.api.ButtonOption": [],
+        "dev.isxander.yacl.api.ConfigCategory": [],
+        "dev.isxander.yacl.api.Controller": [],
+        "dev.isxander.yacl.api.LabelOption": [],
+        "dev.isxander.yacl.api.ListOption": [],
+        "dev.isxander.yacl.api.ListOptionEntry": [
+          "typeClass()",
+          "flags()",
+          "available()"
+        ],
+        "dev.isxander.yacl.api.NameableEnum": [],
+        "dev.isxander.yacl.api.Option": [
+          "canResetToDefault()"
+        ],
+        "dev.isxander.yacl.api.OptionFlag": [],
+        "dev.isxander.yacl.api.OptionGroup": [],
+        "dev.isxander.yacl.api.PlaceholderCategory": [],
+        "dev.isxander.yacl.api.utils.Dimension": [],
+        "dev.isxander.yacl.api.utils.MutableDimension": [],
+        "dev.isxander.yacl.api.utils.OptionUtils": [
+          "consumeOptions(YetAnotherConfigLib, Function<Option<?>, Boolean>)",
+          "forEachOptions(YetAnotherConfigLib, Consumer<Option<?>>)"
+        ],
+        "dev.isxander.yacl.api.YetAnotherConfigLib": [],
+        "dev.isxander.yacl.config.ConfigInstance": [
+          "save()",
+          "load()",
+          "getConfig()",
+          "setConfig(T)",
+          "getDefaults()",
+          "getConfigClass()"
+        ],
+        "dev.isxander.yacl.config.GsonConfigInstance": [
+          "save()",
+          "load()",
+          "getPath()"
+        ],
+        "dev.isxander.yacl.config.NbtConfigInstance": [
+          "save()",
+          "load()",
+          "getPath()",
+          "isUsingCompression()"
+        ],
+        "dev.isxander.yacl.gui.AbstractWidget": [
+          "postRender(class_4587, int, int, float)",
+          "canReset()",
+          "method_25405(double, double)",
+          "setDimension(Dimension<Integer>)",
+          "getDimension()",
+          "method_37018()",
+          "unfocus()",
+          "matchesSearch(String)",
+          "method_37020(class_6382)",
+          "drawButtonRect(class_4587, int, int, int, int, boolean, boolean)",
+          "multiplyColor(int, float)",
+          "playDownSound()"
+        ],
+        "dev.isxander.yacl.gui.CategoryListWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "method_25322()",
+          "method_25342()",
+          "method_25329()",
+          "method_25325(class_4587)"
+        ],
+        "dev.isxander.yacl.gui.CategoryWidget": [
+          "method_25356(boolean)",
+          "method_25354(class_1144)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ActionController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.BooleanController": [
+          "option()",
+          "formatValue()",
+          "coloured()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ColorController": [
+          "option()",
+          "allowAlpha()",
+          "getString()",
+          "formatValue()",
+          "setFromString(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ControllerWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "getControlWidth()",
+          "isHovered()",
+          "getHoveredControlWidth()",
+          "getUnhoveredControlWidth()",
+          "getXPadding()",
+          "getYPadding()",
+          "getValueText()",
+          "isAvailable()",
+          "getValueColor()",
+          "canReset()",
+          "drawOutline(class_4587, int, int, int, int, int, int)",
+          "getTextY()",
+          "method_25407(boolean)",
+          "unfocus()",
+          "matchesSearch(String)",
+          "method_37018()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement": [
+          "cycleValue(int)",
+          "method_25402(double, double, int)",
+          "method_25404(int, int, int)",
+          "getHoveredControlWidth()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController": [
+          "option()",
+          "formatValue()",
+          "setPendingValue(int)",
+          "getPendingValue()",
+          "getCycleLength()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController": [
+          "getDefaultFormatter()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController": [
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.LabelController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ListEntryWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "updateButtonStates()",
+          "unfocus()",
+          "method_37020(class_6382)",
+          "matchesSearch(String)",
+          "method_25396()",
+          "method_25397()",
+          "method_25398(boolean)",
+          "method_25399()",
+          "method_25395(class_364)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController": [
+          "range()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement": [
+          "method_25394(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "method_25403(double, double, int, double, double)",
+          "incrementValue(double)",
+          "method_25401(double, double, double)",
+          "method_25406(double, double, int)",
+          "method_25404(int, int, int)",
+          "method_25405(double, double)",
+          "setValueFromMouse(double)",
+          "roundToInterval(double)",
+          "getHoveredControlWidth()",
+          "calculateInterpolation()",
+          "setDimension(Dimension<Integer>)",
+          "getThumbX()",
+          "getThumbWidth()",
+          "postRender(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.IStringController": [
+          "formatValue()",
+          "isInputValid(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.DoubleFieldController": [
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.FloatFieldController": [
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.IntegerFieldController": [
+          "isInputValid(String)",
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.LongFieldController": [
+          "isInputValid(String)",
+          "min()",
+          "max()",
+          "getString()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.number.NumberFieldController": [
+          "option()",
+          "setFromString(String)",
+          "pendingValue()",
+          "isInputValid(String)",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)",
+          "cleanupNumberString(String)",
+          "interval()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringController": [
+          "option()",
+          "getString()",
+          "setFromString(String)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement": [
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "getDefaultCaretPos()",
+          "method_25404(int, int, int)",
+          "doPaste()",
+          "doCopy()",
+          "doCut()",
+          "doSelectAll()",
+          "checkRenderOffset()",
+          "method_25400(char, int)",
+          "doBackspace()",
+          "doDelete()",
+          "write(String)",
+          "modifyInput(Consumer<StringBuilder>)",
+          "getUnshiftedLength()",
+          "getMaxUnwrapLength()",
+          "getSelectionStart()",
+          "getSelectionEnd()",
+          "getSelection()"
+        ],
+        "dev.isxander.yacl.gui.controllers.TickBoxController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.ElementListWidgetExt": [
+          "method_25401(double, double, double)",
+          "method_25325(class_4587)",
+          "method_25329()",
+          "method_25394(class_4587, int, int, float)",
+          "method_25341()",
+          "resetSmoothScrolling()",
+          "postRender(class_4587, int, int, float)",
+          "getEntryAtPosition(double, double)",
+          "method_25317()",
+          "centerScrollOn(E)",
+          "method_25337(int)",
+          "method_25311(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.LowProfileButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.OptionListWidget": [
+          "refreshOptions()",
+          "getDefaultEntryDimension()",
+          "expandAllGroups()",
+          "method_25322()",
+          "method_25402(double, double, int)",
+          "method_25401(double, double, double)",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "method_25329()",
+          "recacheViewableChildren()",
+          "method_25396()",
+          "addEntry(int, OptionListWidget.Entry)",
+          "addEntryBelow(OptionListWidget.Entry, OptionListWidget.Entry)",
+          "addEntryBelowWithoutScroll(OptionListWidget.Entry, OptionListWidget.Entry)",
+          "removeEntryWithoutScrolling(OptionListWidget.Entry)",
+          "removeEntry(OptionListWidget.Entry)"
+        ],
+        "dev.isxander.yacl.gui.RequireRestartScreen": [],
+        "dev.isxander.yacl.gui.SearchFieldWidget": [
+          "method_25359(class_4587, int, int, float)",
+          "getQuery()",
+          "isEmpty()",
+          "getEmptyText()",
+          "setEmptyText(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.TextScaledButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.TooltipButtonWidget": [
+          "renderHoveredTooltip(class_4587)",
+          "setTooltip(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.utils.GuiUtils": [
+          "translatableFallback(String, class_2561)",
+          "enableScissor(int, int, int, int)",
+          "shortenString(String, class_327, int, String)"
+        ],
+        "dev.isxander.yacl.gui.YACLScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)",
+          "finishOrSave()",
+          "cancelOrReset()",
+          "undo()",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "changeCategory(int)",
+          "getCurrentCategoryIdx()",
+          "method_25393()",
+          "method_25422()",
+          "method_25419()",
+          "renderMultilineTooltip(class_4587, class_327, class_5489, int, int, int, int, int)"
+        ]
+      },
+      "sampleCount": 57
+    },
+    "1.6.0": {
+      "packages": [],
+      "classes": [
+        "dev.isxander.yacl.api.Binding",
+        "dev.isxander.yacl.api.ButtonOption",
+        "dev.isxander.yacl.api.ConfigCategory",
+        "dev.isxander.yacl.api.Controller",
+        "dev.isxander.yacl.api.NameableEnum",
+        "dev.isxander.yacl.api.Option",
+        "dev.isxander.yacl.api.OptionFlag",
+        "dev.isxander.yacl.api.OptionGroup",
+        "dev.isxander.yacl.api.PlaceholderCategory",
+        "dev.isxander.yacl.api.utils.Dimension",
+        "dev.isxander.yacl.api.utils.OptionUtils",
+        "dev.isxander.yacl.api.YetAnotherConfigLib",
+        "dev.isxander.yacl.gui.AbstractWidget",
+        "dev.isxander.yacl.gui.CategoryListWidget",
+        "dev.isxander.yacl.gui.CategoryWidget",
+        "dev.isxander.yacl.gui.controllers.ActionController",
+        "dev.isxander.yacl.gui.controllers.BooleanController",
+        "dev.isxander.yacl.gui.controllers.ColorController",
+        "dev.isxander.yacl.gui.controllers.ControllerWidget",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement",
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController",
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController",
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController",
+        "dev.isxander.yacl.gui.controllers.EnumController",
+        "dev.isxander.yacl.gui.controllers.LabelController",
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController",
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController",
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement",
+        "dev.isxander.yacl.gui.controllers.string.IStringController",
+        "dev.isxander.yacl.gui.controllers.string.StringController",
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement",
+        "dev.isxander.yacl.gui.controllers.TickBoxController",
+        "dev.isxander.yacl.gui.LowProfileButtonWidget",
+        "dev.isxander.yacl.gui.OptionListWidget",
+        "dev.isxander.yacl.gui.RequireRestartScreen",
+        "dev.isxander.yacl.gui.SearchFieldWidget",
+        "dev.isxander.yacl.gui.TooltipButtonWidget",
+        "dev.isxander.yacl.gui.YACLScreen"
+      ],
+      "methods": {
+        "dev.isxander.yacl.api.Binding": [],
+        "dev.isxander.yacl.api.ButtonOption": [],
+        "dev.isxander.yacl.api.ConfigCategory": [],
+        "dev.isxander.yacl.api.Controller": [],
+        "dev.isxander.yacl.api.NameableEnum": [],
+        "dev.isxander.yacl.api.Option": [],
+        "dev.isxander.yacl.api.OptionFlag": [],
+        "dev.isxander.yacl.api.OptionGroup": [],
+        "dev.isxander.yacl.api.PlaceholderCategory": [],
+        "dev.isxander.yacl.api.utils.Dimension": [],
+        "dev.isxander.yacl.api.utils.OptionUtils": [
+          "consumeOptions(YetAnotherConfigLib, Function<Option<?>, Boolean>)",
+          "forEachOptions(YetAnotherConfigLib, Consumer<Option<?>>)"
+        ],
+        "dev.isxander.yacl.api.YetAnotherConfigLib": [],
+        "dev.isxander.yacl.gui.AbstractWidget": [
+          "postRender(class_4587, int, int, float)",
+          "method_25405(double, double)",
+          "setDimension(Dimension<Integer>)",
+          "getDimension()",
+          "method_37018()",
+          "unfocus()",
+          "matchesSearch(String)",
+          "method_37020(class_6382)",
+          "drawButtonRect(class_4587, int, int, int, int, boolean, boolean)",
+          "multiplyColor(int, float)",
+          "playDownSound()"
+        ],
+        "dev.isxander.yacl.gui.CategoryListWidget": [
+          "method_25311(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "method_25322()",
+          "method_25342()",
+          "method_25329()"
+        ],
+        "dev.isxander.yacl.gui.CategoryWidget": [
+          "method_25356(boolean)",
+          "method_25354(class_1144)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ActionController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.BooleanController": [
+          "option()",
+          "formatValue()",
+          "coloured()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ColorController": [
+          "option()",
+          "allowAlpha()",
+          "getString()",
+          "formatValue()",
+          "setFromString(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.ControllerWidget": [
+          "method_25394(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "getControlWidth()",
+          "isHovered()",
+          "getHoveredControlWidth()",
+          "getUnhoveredControlWidth()",
+          "getXPadding()",
+          "getYPadding()",
+          "getValueText()",
+          "isAvailable()",
+          "getValueColor()",
+          "drawOutline(class_4587, int, int, int, int, int, int)",
+          "getTextY()",
+          "method_25407(boolean)",
+          "unfocus()",
+          "matchesSearch(String)",
+          "method_37018()",
+          "method_37020(class_6382)"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingControllerElement": [
+          "cycleValue(int)",
+          "method_25402(double, double, int)",
+          "method_25404(int, int, int)",
+          "getHoveredControlWidth()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.CyclingListController": [
+          "option()",
+          "formatValue()",
+          "setPendingValue(int)",
+          "getPendingValue()",
+          "getCycleLength()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.EnumController": [
+          "getDefaultFormatter()"
+        ],
+        "dev.isxander.yacl.gui.controllers.cycling.ICyclingController": [
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.EnumController": [
+          "getDefaultFormatter()"
+        ],
+        "dev.isxander.yacl.gui.controllers.LabelController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.DoubleSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.FloatSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.IntegerSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.ISliderController": [
+          "range()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.LongSliderController": [
+          "option()",
+          "formatValue()",
+          "min()",
+          "max()",
+          "interval()",
+          "setPendingValue(double)",
+          "pendingValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.slider.SliderControllerElement": [
+          "method_25394(class_4587, int, int, float)",
+          "drawHoveredControl(class_4587, int, int, float)",
+          "drawValueText(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "method_25403(double, double, int, double, double)",
+          "incrementValue(double)",
+          "method_25401(double, double, double)",
+          "method_25406(double, double, int)",
+          "method_25404(int, int, int)",
+          "method_25405(double, double)",
+          "setValueFromMouse(double)",
+          "roundToInterval(double)",
+          "getHoveredControlWidth()",
+          "calculateInterpolation()",
+          "setDimension(Dimension<Integer>)",
+          "getThumbX()",
+          "getThumbWidth()",
+          "postRender(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.IStringController": [
+          "formatValue()"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringController": [
+          "option()",
+          "getString()",
+          "setFromString(String)",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.controllers.string.StringControllerElement": [
+          "drawHoveredControl(class_4587, int, int, float)",
+          "method_25402(double, double, int)",
+          "getDefaultCarotPos()",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "canUseShortcuts()",
+          "doBackspace()",
+          "doDelete()",
+          "write(String)",
+          "getMaxLength()",
+          "getSelectionStart()",
+          "getSelectionEnd()",
+          "getSelection()",
+          "findSpaceIndex(boolean)",
+          "method_25407(boolean)",
+          "unfocus()",
+          "setDimension(Dimension<Integer>)",
+          "isHovered()",
+          "updateControl()",
+          "getHoveredControlWidth()"
+        ],
+        "dev.isxander.yacl.gui.controllers.TickBoxController": [
+          "option()",
+          "formatValue()",
+          "provideWidget(YACLScreen, Dimension<Integer>)"
+        ],
+        "dev.isxander.yacl.gui.LowProfileButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ],
+        "dev.isxander.yacl.gui.OptionListWidget": [
+          "refreshOptions()",
+          "expandAllGroups()",
+          "getEntryAtPosition(double, double)",
+          "method_25317()",
+          "centerScrollOn(OptionListWidget.Entry)",
+          "method_25337(int)",
+          "method_25311(class_4587, int, int, float)",
+          "postRender(class_4587, int, int, float)",
+          "method_25322()",
+          "method_25402(double, double, int)",
+          "method_25401(double, double, double)",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "method_25329()",
+          "method_25325(class_4587)",
+          "recacheViewableChildren()",
+          "method_25396()"
+        ],
+        "dev.isxander.yacl.gui.RequireRestartScreen": [],
+        "dev.isxander.yacl.gui.SearchFieldWidget": [
+          "method_25359(class_4587, int, int, float)",
+          "isEmpty()",
+          "getEmptyText()",
+          "setEmptyText(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.TooltipButtonWidget": [
+          "renderHoveredTooltip(class_4587)",
+          "setTooltip(class_2561)"
+        ],
+        "dev.isxander.yacl.gui.YACLScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)",
+          "method_25404(int, int, int)",
+          "method_25400(char, int)",
+          "changeCategory(int)",
+          "getCurrentCategoryIdx()",
+          "method_25393()",
+          "method_25422()",
+          "method_25419()",
+          "renderMultilineTooltip(class_4587, class_327, class_5489, int, int, int, int, int)"
+        ]
+      },
+      "sampleCount": 41
+    }
+  },
+  "classCount": 152,
+  "methodCount": 686
+}

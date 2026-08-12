@@ -1,0 +1,178 @@
+{
+  "slug": "libz",
+  "modId": "libz",
+  "id": "authored/lib-libz",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "libz"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:04.509Z",
+  "versions": {
+    "1.0.3": {
+      "packages": [],
+      "classes": [
+        "net.libz.access.MouseAccessor",
+        "net.libz.access.ScreenHandlerAccess",
+        "net.libz.api.ConfigSync",
+        "net.libz.api.InventoryTab",
+        "net.libz.api.Tab",
+        "net.libz.compat.LibzEmiPlugin",
+        "net.libz.compat.LibzReiPlugin",
+        "net.libz.config.LibzConfig",
+        "net.libz.config.ModMenuIntegration",
+        "net.libz.init.ConfigInit",
+        "net.libz.init.EventInit",
+        "net.libz.init.KeyInit",
+        "net.libz.LibzClient",
+        "net.libz.LibzMain",
+        "net.libz.network.LibzClientPacket",
+        "net.libz.network.LibzServerPacket",
+        "net.libz.network.packet.ConfigPacket",
+        "net.libz.network.packet.MousePacket",
+        "net.libz.registry.TabRegistry",
+        "net.libz.util.ConfigHelper",
+        "net.libz.util.DrawTabHelper",
+        "net.libz.util.SortList"
+      ],
+      "methods": {
+        "net.libz.access.MouseAccessor": [],
+        "net.libz.access.ScreenHandlerAccess": [],
+        "net.libz.api.ConfigSync": [],
+        "net.libz.api.InventoryTab": [
+          "getTitle()",
+          "getTexture()",
+          "getItemStack(class_310)",
+          "getPreferedPos()",
+          "shouldShow(class_310)",
+          "onClick(class_310)",
+          "canClick(Class<?>, class_310)",
+          "isSelectedScreen(Class<?>)"
+        ],
+        "net.libz.api.Tab": [
+          "getParentScreenClass()"
+        ],
+        "net.libz.compat.LibzEmiPlugin": [
+          "register(EmiRegistry)"
+        ],
+        "net.libz.compat.LibzReiPlugin": [
+          "registerExclusionZones(ExclusionZones)"
+        ],
+        "net.libz.config.LibzConfig": [
+          "updateConfig(ConfigData)"
+        ],
+        "net.libz.config.ModMenuIntegration": [
+          "getModConfigScreenFactory()"
+        ],
+        "net.libz.init.ConfigInit": [
+          "init()"
+        ],
+        "net.libz.init.EventInit": [
+          "init()"
+        ],
+        "net.libz.init.KeyInit": [
+          "init()"
+        ],
+        "net.libz.LibzClient": [
+          "onInitializeClient()"
+        ],
+        "net.libz.LibzMain": [
+          "onInitialize()"
+        ],
+        "net.libz.network.LibzClientPacket": [
+          "init()"
+        ],
+        "net.libz.network.LibzServerPacket": [
+          "init()",
+          "writeS2CConfigPacket(class_3222, String, boolean)",
+          "writeS2CMousePositionPacket(class_3222, int, int)"
+        ],
+        "net.libz.network.packet.ConfigPacket": [
+          "method_56479()"
+        ],
+        "net.libz.network.packet.MousePacket": [
+          "method_56479()"
+        ],
+        "net.libz.registry.TabRegistry": [
+          "registerInventoryTab(InventoryTab)",
+          "registerOtherTab(InventoryTab, Class<?>)"
+        ],
+        "net.libz.util.ConfigHelper": [
+          "copyConfig(String, boolean)",
+          "readConfigFile(String, boolean, boolean)",
+          "getConfigNode(String, boolean, boolean)",
+          "getConfigBytes(String, boolean, boolean)",
+          "readJsonTree(ObjectMapper, byte[])"
+        ],
+        "net.libz.util.DrawTabHelper": [
+          "drawTab(class_310, class_332, class_437, int, int, int, int)",
+          "onTabButtonClick(class_310, class_437, int, int, double, double, boolean)"
+        ],
+        "net.libz.util.SortList": [
+          "concurrentSort(List<T>, List<?>...)"
+        ]
+      },
+      "sampleCount": 22
+    },
+    "1.0.0": {
+      "packages": [],
+      "classes": [
+        "net.libz.api.InventoryTab",
+        "net.libz.api.Tab",
+        "net.libz.config.LibzConfig",
+        "net.libz.config.ModMenuIntegration",
+        "net.libz.init.ConfigInit",
+        "net.libz.LibzClient",
+        "net.libz.LibzMain",
+        "net.libz.registry.TabRegistry",
+        "net.libz.util.DrawTabHelper",
+        "net.libz.util.SortList"
+      ],
+      "methods": {
+        "net.libz.api.InventoryTab": [
+          "getTitle()",
+          "getTexture()",
+          "getItemStack(class_310)",
+          "getPreferedPos()",
+          "shouldShow(class_310)",
+          "onClick(class_310)",
+          "canClick(Class<?>, class_310)",
+          "isSelectedScreen(Class<?>)"
+        ],
+        "net.libz.api.Tab": [
+          "getParentScreenClass()"
+        ],
+        "net.libz.config.LibzConfig": [],
+        "net.libz.config.ModMenuIntegration": [
+          "getModConfigScreenFactory()"
+        ],
+        "net.libz.init.ConfigInit": [
+          "init()"
+        ],
+        "net.libz.LibzClient": [
+          "onInitializeClient()"
+        ],
+        "net.libz.LibzMain": [
+          "onInitialize()"
+        ],
+        "net.libz.registry.TabRegistry": [
+          "registerInventoryTab(InventoryTab)",
+          "registerOtherTab(InventoryTab, Class<?>)"
+        ],
+        "net.libz.util.DrawTabHelper": [
+          "drawTab(class_310, class_4587, class_437, int, int, int, int)",
+          "onTabButtonClick(class_310, class_437, int, int, double, double, boolean)"
+        ],
+        "net.libz.util.SortList": [
+          "concurrentSort(List<T>, List<?>...)"
+        ]
+      },
+      "sampleCount": 10
+    }
+  },
+  "classCount": 32,
+  "methodCount": 52
+}

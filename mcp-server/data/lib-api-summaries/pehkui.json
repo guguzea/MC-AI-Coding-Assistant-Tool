@@ -1,0 +1,2042 @@
+{
+  "slug": "pehkui",
+  "modId": "pehkui",
+  "id": "authored/lib-pehkui",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "pehkui"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:10.539Z",
+  "versions": {
+    "3.8.3_1.14.4-1.21": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEasings",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleOperations",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.network.ConfigSyncPacket",
+        "virtuoel.pehkui.network.ConfigSyncPayload",
+        "virtuoel.pehkui.network.DebugPacket",
+        "virtuoel.pehkui.network.DebugPayload",
+        "virtuoel.pehkui.network.ScalePacket",
+        "virtuoel.pehkui.network.ScalePayload",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.BackwardsCompatibility",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.ConfigSyncUtils",
+        "virtuoel.pehkui.util.GravityChangerCompatibility",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleCachingUtils",
+        "virtuoel.pehkui.util.ScaleRenderUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils",
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "calculateScaleForTick(int, float)",
+          "calculateRemainingScaleTicks()",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)"
+        ],
+        "virtuoel.pehkui.api.ScaleEasings": [],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleOperations": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "getAffectsDimensions()",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "setDefaultEasing(Float2FloatFunction)",
+          "getDefaultEasing()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleEasing()",
+          "getScaleEasingArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.network.ConfigSyncPacket": [
+          "write(class_2540)"
+        ],
+        "virtuoel.pehkui.network.ConfigSyncPayload": [
+          "method_56479()"
+        ],
+        "virtuoel.pehkui.network.DebugPacket": [
+          "write(class_2540)"
+        ],
+        "virtuoel.pehkui.network.DebugPayload": [
+          "method_56479()"
+        ],
+        "virtuoel.pehkui.network.ScalePacket": [
+          "write(class_2540)"
+        ],
+        "virtuoel.pehkui.network.ScalePayload": [
+          "method_56479()"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()",
+          "handleScalePacket(class_310, class_634, class_2540, Object)",
+          "handleScalePacket(class_310, ScalePacket)",
+          "handleConfigSyncPacket(class_310, class_634, class_2540, Object)",
+          "handleDebugPacket(class_310, class_634, class_2540, Object)",
+          "handleDebugPacket(class_310, DebugCommand.PacketType)"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<class_2168>)",
+          "unmarkEntityForScaleReset(class_1297, class_2487)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "virtuoel.pehkui.util.BackwardsCompatibility": [
+          "addFieldsIfNeeded(Consumer<String>)",
+          "populateFieldsIfNeeded()"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "setPersistence(Boolean)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "registerCommands()",
+          "registerArgumentTypes()",
+          "registerCommands(CommandDispatcher<class_2168>)",
+          "registerV1ApiCommands(CommandDispatcher<class_2168>, boolean)",
+          "registerArgumentTypes(CommandUtils.ArgumentTypeConsumer)",
+          "sendFeedback(class_2168, Supplier<class_2561>, boolean)",
+          "testFloatRange(class_2099, float)",
+          "registerConstantArgumentType(class_2960, Class<? extends T>, Supplier<T>)",
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.ConfigSyncUtils": [
+          "resetSyncedConfigs()",
+          "syncConfigs(Collection<class_3222>)",
+          "syncConfigs(class_3244)",
+          "syncConfigs(class_3244, String...)",
+          "syncConfigs(class_3244, Collection<ConfigSyncUtils.SyncableConfigEntry<?>>)",
+          "createConfigSyncPacket(Collection<ConfigSyncUtils.SyncableConfigEntry<?>>)",
+          "write(Collection<ConfigSyncUtils.SyncableConfigEntry<?>>, class_2540)",
+          "readConfigs(class_2540)",
+          "createConfigEntry(String, T, Supplier<T>, Consumer<T>)",
+          "setupSyncableConfig(String, String)",
+          "registerConfigCommands()",
+          "registerConfigSyncCommands(ArgumentBuilder<class_2168, ?>)",
+          "registerConfigFileCommands(ArgumentBuilder<class_2168, ?>)",
+          "registerConfigGetterCommands(ArgumentBuilder<class_2168, ?>, boolean)",
+          "registerConfigSetterCommands(ArgumentBuilder<class_2168, ?>, boolean)",
+          "registerConfigResetCommands(ArgumentBuilder<class_2168, ?>, boolean)"
+        ],
+        "virtuoel.pehkui.util.GravityChangerCompatibility": [
+          "getGravityDirection(class_1657)",
+          "getXCorrection(class_1657)",
+          "getYCorrection(class_1657)",
+          "getZCorrection(class_1657)"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)",
+          "literal(String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility": [],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependentValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(class_1309, double)",
+          "getSquaredReachDistance(class_1309, double)",
+          "getAttackRange(class_1309, double)",
+          "getSquaredAttackRange(class_1309, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "createS2CPacket(class_2960, class_2540)",
+          "constructIdentifier(String)",
+          "constructIdentifier(String, String)",
+          "getHoldingEntity(class_1297)",
+          "getFlyingSpeed(class_1309)",
+          "setFlyingSpeed(class_1309, float)",
+          "getMountedHeightOffset(class_1297)",
+          "getDimensionsWidth(class_4048)",
+          "getDimensionsHeight(class_4048)",
+          "setOnGround(class_1297, boolean)",
+          "sendPacket(class_3244, class_2596<?>)",
+          "isDummy(class_2096<?>)",
+          "getField(Optional<Class<?>>, String)",
+          "setField(Optional<Class<?>>, String, Object, Object)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getConstructor(Optional<Class<T>>, Class<?>...)",
+          "getClass(String, String...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleCachingUtils": [
+          "getCachedData(ScaleData[], ScaleType)",
+          "setCachedData(ScaleData[], ScaleType, ScaleData)"
+        ],
+        "virtuoel.pehkui.util.ScaleRenderUtils": [
+          "registerPacketHandler(class_2960, Class<?>, String)",
+          "getTickDelta(class_310)",
+          "hasExtendedReach(class_636)",
+          "wasPlayerAlive(class_2724)",
+          "renderInteractionBox(Object, Object, class_238)",
+          "renderInteractionBox(Object, Object, class_238, float, float, float, float)",
+          "modifyProjectionMatrixDepthByWidth(float, class_1297, float)",
+          "modifyProjectionMatrixDepthByHeight(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, float, class_1297, float)",
+          "shouldSkipHeadItemScaling(class_1309, class_1799, Object)",
+          "logIfRenderCancelled()",
+          "logIfItemRenderCancelled()",
+          "saveLastRenderedItem(class_1799)",
+          "clearLastRenderedItem()",
+          "logIfEntityRenderCancelled()",
+          "saveLastRenderedEntity(class_1299<?>)",
+          "clearLastRenderedEntity()",
+          "addDetailsToCrashReport(class_129)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScaleOnRespawn(class_1297, class_1297, boolean)",
+          "loadScale(class_1297, class_1297)",
+          "modifyLimbDistance(float, class_1297)",
+          "divideClamped(float, float)",
+          "divideClamped(float, float, float, float)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, class_3244)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getEyePos(class_1297)",
+          "getEyePos(class_1657)",
+          "getEyePos(class_1297, class_2350)",
+          "getBlockXOffset(class_2338, class_1657)",
+          "getBlockYOffset(class_2338, class_1657)",
+          "getBlockZOffset(class_2338, class_1657)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ],
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions": [
+          "pehkui_getViewerSearchRange()"
+        ]
+      },
+      "sampleCount": 49
+    },
+    "3.6.0_1.14.4-1.19.3": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEasings",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.ConfigSyncUtils",
+        "virtuoel.pehkui.util.GravityChangerCompatibility",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.MixinTargetClasses",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleRenderUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils",
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "calculateScaleForTick(int, float)",
+          "calculateRemainingScaleTicks()",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)"
+        ],
+        "virtuoel.pehkui.api.ScaleEasings": [],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "getAffectsDimensions()",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "setDefaultEasing(Float2FloatFunction)",
+          "getDefaultEasing()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleEasing()",
+          "getScaleEasingArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<class_2168>)",
+          "unmarkEntityForScaleReset(class_1297, class_2487)",
+          "runMixinClassloadTests(Consumer<class_2561>, boolean, boolean, String[]...)",
+          "classloadMixinTargets(String[], boolean, Collection<String>, Collection<String>)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "setPersistence(Boolean)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "registerCommands()",
+          "registerArgumentTypes()",
+          "registerCommands(CommandDispatcher<class_2168>)",
+          "registerV1ApiCommands(CommandDispatcher<class_2168>, boolean)",
+          "registerArgumentTypes(CommandUtils.ArgumentTypeConsumer)",
+          "testFloatRange(class_2099, float)",
+          "registerConstantArgumentType(class_2960, Class<? extends T>, Supplier<T>)",
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.ConfigSyncUtils": [
+          "resetSyncedConfigs()",
+          "syncConfigs(Collection<class_3222>)",
+          "syncConfigs(class_3244)",
+          "syncConfigs(class_3244, String...)",
+          "syncConfigs(class_3244, Collection<ConfigSyncUtils.SyncableConfigEntry<?>>)",
+          "createConfigSyncPacket(Collection<ConfigSyncUtils.SyncableConfigEntry<?>>)",
+          "readConfigs(class_2540)",
+          "createConfigEntry(String, T, Supplier<T>, Consumer<T>)",
+          "setupSyncableConfig(String, String)",
+          "registerConfigCommands()",
+          "registerConfigSyncCommands(ArgumentBuilder<class_2168, ?>)",
+          "registerConfigFileCommands(ArgumentBuilder<class_2168, ?>)",
+          "registerConfigGetterCommands(ArgumentBuilder<class_2168, ?>, boolean)",
+          "registerConfigSetterCommands(ArgumentBuilder<class_2168, ?>, boolean)",
+          "registerConfigResetCommands(ArgumentBuilder<class_2168, ?>, boolean)"
+        ],
+        "virtuoel.pehkui.util.GravityChangerCompatibility": [
+          "getGravityDirection(class_1657)",
+          "getXCorrection(class_1657)",
+          "getYCorrection(class_1657)",
+          "getZCorrection(class_1657)"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)",
+          "literal(String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility": [],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.MixinTargetClasses": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependantValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(class_1309, double)",
+          "getSquaredReachDistance(class_1309, double)",
+          "getAttackRange(class_1309, double)",
+          "getSquaredAttackRange(class_1309, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "getField(Optional<Class<?>>, String)",
+          "setField(Optional<Class<?>>, String, Object, Object)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getClass(String, String...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleRenderUtils": [
+          "renderInteractionBox(class_238)",
+          "renderInteractionBox(class_238, float, float, float, float)",
+          "renderInteractionBox(Object, Object, class_238)",
+          "renderInteractionBox(Object, Object, class_238, float, float, float, float)",
+          "modifyProjectionMatrixDepthByWidth(float, class_1297, float)",
+          "modifyProjectionMatrixDepthByHeight(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, float, class_1297, float)",
+          "logIfItemRenderCancelled()",
+          "saveLastRenderedItem(class_1799)",
+          "clearLastRenderedItem()",
+          "logIfEntityRenderCancelled()",
+          "saveLastRenderedEntity(class_1299<?>)",
+          "clearLastRenderedEntity()",
+          "addDetailsToCrashReport(class_129)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScaleOnRespawn(class_1297, class_1297, boolean)",
+          "loadScale(class_1297, class_1297)",
+          "modifyLimbDistance(float, class_1297)",
+          "divideClamped(float, float, float)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, Consumer<class_2596<?>>)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getBlockXOffset(class_2338, class_1657)",
+          "getBlockYOffset(class_2338, class_1657)",
+          "getBlockZOffset(class_2338, class_1657)",
+          "getEyeHeightScale(class_1297)",
+          "getEyeHeightScale(class_1297, float)",
+          "getThirdPersonScale(class_1297, float)",
+          "getModelWidthScale(class_1297)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ],
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions": [
+          "pehkui_getViewerSearchRange()"
+        ]
+      },
+      "sampleCount": 41
+    },
+    "3.2.2_1.14.4-1.19": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.ConfigSyncUtils",
+        "virtuoel.pehkui.util.GravityChangerCompatibility",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.MixinTargetClasses",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils",
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "calculateNextTickScale()",
+          "calculateRemainingScaleTicks()",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)"
+        ],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)",
+          "readNbt(class_2487)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)",
+          "unmarkEntityForScaleReset(class_1297, class_2487)",
+          "runMixinClassloadTests(Consumer<class_2561>, boolean, boolean, String[]...)",
+          "classloadMixinTargets(String[], boolean, Collection<String>, Collection<String>)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "setPersistence(Boolean)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "registerArgumentTypes(CommandUtils.ArgumentTypeConsumer)",
+          "testFloatRange(class_2099, float)",
+          "registerConstantArgumentType(String, Class<? extends T>, Supplier<T>)",
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.ConfigSyncUtils": [
+          "resetSyncedConfigs()",
+          "writeConfigs(class_3244)",
+          "syncConfigs(class_3244, String...)",
+          "syncConfigs(class_3244, Collection<ConfigSyncUtils.SyncableConfigEntry<?>>)",
+          "readConfigs(class_2540)",
+          "createSyncedConfig(String, Supplier<T>, Consumer<T>)",
+          "setupSyncableConfig(String, String)"
+        ],
+        "virtuoel.pehkui.util.GravityChangerCompatibility": [
+          "getGravityDirection(class_1657)",
+          "getXCorrection(class_1657)",
+          "getYCorrection(class_1657)",
+          "getZCorrection(class_1657)"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility": [],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.MixinTargetClasses": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependantValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(class_1309, double)",
+          "getSquaredReachDistance(class_1309, double)",
+          "getAttackRange(class_1309, double)",
+          "getSquaredAttackRange(class_1309, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "getField(Optional<Class<?>>, String)",
+          "setField(Optional<Class<?>>, String, Object, Object)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getClass(String, String...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScaleOnRespawn(class_1297, class_1297, boolean)",
+          "loadScale(class_1297, class_1297)",
+          "modifyLimbDistance(float, class_1297)",
+          "divideClamped(float, float, float)",
+          "modifyProjectionMatrixDepthByWidth(float, class_1297, float)",
+          "modifyProjectionMatrixDepthByHeight(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, float, class_1297, float)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, Consumer<class_2596<?>>)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getBlockXOffset(class_2338, class_1657)",
+          "getBlockYOffset(class_2338, class_1657)",
+          "getBlockZOffset(class_2338, class_1657)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ],
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions": [
+          "pehkui_getViewerSearchRange()"
+        ]
+      },
+      "sampleCount": 38
+    },
+    "2.5.3_1.14.4-1.18": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.MixinTargetClasses",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "computeScale(float, Collection<ScaleModifier>, float)",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)",
+          "getPersistence()"
+        ],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "isPersistent()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)",
+          "unmarkEntityForScaleReset(class_1297, class_2487)",
+          "runMixinClassloadTests(Consumer<class_2561>, boolean, boolean, String[]...)",
+          "classloadMixinTargets(String[], boolean, Collection<String>, Collection<String>)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.MixinTargetClasses": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependantValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(class_1309, double)",
+          "getSquaredReachDistance(class_1309, double)",
+          "getAttackRange(class_1309, double)",
+          "getSquaredAttackRange(class_1309, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "getField(Optional<Class<?>>, String)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScaleOnRespawn(class_1297, class_1297, boolean)",
+          "loadScale(class_1297, class_1297)",
+          "modifyLimbDistance(float, class_1297)",
+          "modifyProjectionMatrixDepthByWidth(float, class_1297, float)",
+          "modifyProjectionMatrixDepthByHeight(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, float, class_1297, float)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, Consumer<class_2596<?>>)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getEyeHeightScale(class_1297)",
+          "getEyeHeightScale(class_1297, float)",
+          "getThirdPersonScale(class_1297, float)",
+          "getModelWidthScale(class_1297)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ]
+      },
+      "sampleCount": 34
+    },
+    "2.1.0_21w18a": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.entity.ResizableEntity",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.ConfigHandler",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.JsonConfigHandler",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "computeScale(float, Collection<ScaleModifier>, float)",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "markForSync(boolean)",
+          "shouldSync()"
+        ],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.entity.ResizableEntity": [
+          "pehkui_constructScaleData(ScaleType)",
+          "pehkui_getScaleData(ScaleType)"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)",
+          "unmarkEntityForScaleReset(class_1297, class_2487)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)",
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.ConfigHandler": [
+          "getNamespace()",
+          "get()",
+          "load()",
+          "save()",
+          "save(S)",
+          "readConfig(Stream<String>)",
+          "writeConfig(S)",
+          "mergeConfigs(S, S)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.JsonConfigHandler": [
+          "readConfig(Stream<String>)",
+          "writeConfig(JsonObject)",
+          "mergeConfigs(JsonObject, JsonObject)"
+        ],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScaleOnRespawn(class_1657, class_1657, boolean)",
+          "loadScale(class_1297, class_1297)",
+          "isAboveCollisionThreshold(class_1297)",
+          "modifyLimbDistance(float, class_1297)",
+          "modifyProjectionMatrixDepthByWidth(float, class_1297, float)",
+          "modifyProjectionMatrixDepthByHeight(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, class_1297, float)",
+          "modifyProjectionMatrixDepth(float, float, class_1297, float)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, Consumer<class_2596<?>>)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getWidthScale(class_1297)",
+          "getWidthScale(class_1297, float)",
+          "getHeightScale(class_1297)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ]
+      },
+      "sampleCount": 26
+    },
+    "1.8.0_21w08b": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.entity.ResizableEntity",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.PehkuiClient",
+        "virtuoel.pehkui.server.command.arguments.ScaleModifierArgumentType",
+        "virtuoel.pehkui.server.command.arguments.ScaleOperationArgumentType",
+        "virtuoel.pehkui.server.command.arguments.ScaleTypeArgumentType",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.ConfigHandler",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.JsonConfigHandler",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [],
+        "virtuoel.pehkui.api.ScaleData": [
+          "of(class_1297, ScaleType)",
+          "of(class_1297)",
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "computeScale(float, Collection<ScaleModifier>, float)",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "markForSync(boolean)"
+        ],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<class_2960, E>, class_2960, E)",
+          "getEntry(Map<class_2960, E>, class_2960)",
+          "getDefaultId(BiMap<class_2960, E>)",
+          "getId(BiMap<class_2960, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(class_1297)",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()",
+          "register(class_2960, ScaleType)"
+        ],
+        "virtuoel.pehkui.entity.ResizableEntity": [
+          "pehkui_constructScaleData(ScaleType)",
+          "pehkui_getScaleData(ScaleType)"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onInitialize()",
+          "id(String)"
+        ],
+        "virtuoel.pehkui.PehkuiClient": [
+          "onInitializeClient()"
+        ],
+        "virtuoel.pehkui.server.command.arguments.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.server.command.arguments.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<class_2168>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.server.command.arguments.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<class_2168>, String)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<class_2168>, boolean)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<class_2960>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, class_2960>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.ConfigHandler": [
+          "getNamespace()",
+          "get()",
+          "load()",
+          "save()",
+          "save(S)",
+          "readConfig(Stream<String>)",
+          "writeConfig(S)",
+          "mergeConfigs(S, S)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(class_1657)"
+        ],
+        "virtuoel.pehkui.util.JsonConfigHandler": [
+          "readConfig(Stream<String>)",
+          "writeConfig(JsonObject)",
+          "mergeConfigs(JsonObject, JsonObject)"
+        ],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(class_1297, class_1297, class_1297...)",
+          "loadScale(class_1297, class_1297)",
+          "setScaleOfDrop(class_1297, class_1297)",
+          "setScaleOfProjectile(class_1297, class_1297)",
+          "setScaleOnSpawn(class_1297, float)",
+          "buildScaleNbtFromPacketByteBuf(class_2540)",
+          "syncScalesIfNeeded(class_1297, Consumer<class_2596<?>>)",
+          "syncScalesOnTrackingStart(class_1297, Consumer<class_2596<?>>)",
+          "syncScales(class_1297, Consumer<class_2596<?>>, Predicate<ScaleData>, boolean)",
+          "getWidthScale(class_1297)",
+          "getWidthScale(class_1297, float)",
+          "getHeightScale(class_1297)",
+          "getHeightScale(class_1297, float)",
+          "getMotionScale(class_1297)",
+          "getMotionScale(class_1297, float)",
+          "getReachScale(class_1297)",
+          "getReachScale(class_1297, float)",
+          "getAttackScale(class_1297)",
+          "getAttackScale(class_1297, float)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ]
+      },
+      "sampleCount": 21
+    },
+    "0.0.0_neoforge": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEasings",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleOperations",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.network.DebugPacket",
+        "virtuoel.pehkui.network.DebugPayload",
+        "virtuoel.pehkui.network.PehkuiPacketHandler",
+        "virtuoel.pehkui.network.ScalePacket",
+        "virtuoel.pehkui.network.ScalePayload",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.FabricEntrypoint",
+        "virtuoel.pehkui.util.GravityChangerCompatibility",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleCachingUtils",
+        "virtuoel.pehkui.util.ScaleRenderUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils",
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [
+          "onLoad(Loading)",
+          "onFileChange(Reloading)"
+        ],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "calculateScaleForTick(int, float)",
+          "calculateRemainingScaleTicks()",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)"
+        ],
+        "virtuoel.pehkui.api.ScaleEasings": [],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleOperations": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<ResourceLocation, E>, ResourceLocation, E)",
+          "getEntry(Map<ResourceLocation, E>, ResourceLocation)",
+          "getDefaultId(BiMap<ResourceLocation, E>)",
+          "getId(BiMap<ResourceLocation, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(Entity)",
+          "getAffectsDimensions()",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "setDefaultEasing(Float2FloatFunction)",
+          "getDefaultEasing()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleEasingArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleEasing()",
+          "getScaleEasingArgument(CommandContext<CommandSourceStack>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<CommandSourceStack>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<CommandSourceStack>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<CommandSourceStack>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.network.DebugPacket": [
+          "write(FriendlyByteBuf)"
+        ],
+        "virtuoel.pehkui.network.DebugPayload": [
+          "type()",
+          "handle(DebugPayload, IPayloadContext)"
+        ],
+        "virtuoel.pehkui.network.PehkuiPacketHandler": [
+          "register(RegisterPayloadHandlersEvent)"
+        ],
+        "virtuoel.pehkui.network.ScalePacket": [
+          "write(FriendlyByteBuf)"
+        ],
+        "virtuoel.pehkui.network.ScalePayload": [
+          "type()",
+          "handle(ScalePayload, IPayloadContext)"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onRegisterCommands(RegisterCommandsEvent)",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)",
+          "unmarkEntityForScaleReset(Entity, CompoundTag)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "setPersistence(Boolean)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "registerArgumentTypes(ModLoadingContext)",
+          "registerCommands(CommandDispatcher<CommandSourceStack>)",
+          "registerArgumentTypes(CommandUtils.ArgumentTypeConsumer)",
+          "sendFeedback(CommandSourceStack, Supplier<Component>, boolean)",
+          "testFloatRange(Doubles, float)",
+          "registerConstantArgumentType(ResourceLocation, Class<T>, Supplier<T>)",
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<ResourceLocation>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, ResourceLocation>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.FabricEntrypoint": [
+          "onInitialize()"
+        ],
+        "virtuoel.pehkui.util.GravityChangerCompatibility": [
+          "getGravityDirection(Player)",
+          "getXCorrection(Player)",
+          "getYCorrection(Player)",
+          "getZCorrection(Player)"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)",
+          "literal(String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(Player)"
+        ],
+        "virtuoel.pehkui.util.ImmersivePortalsCompatibility": [],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependentValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(LivingEntity, double)",
+          "getSquaredReachDistance(LivingEntity, double)",
+          "getAttackRange(LivingEntity, double)",
+          "getSquaredAttackRange(LivingEntity, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "constructIdentifier(String)",
+          "constructIdentifier(String, String)",
+          "getHoldingEntity(Entity)",
+          "getFlyingSpeed(LivingEntity)",
+          "setFlyingSpeed(LivingEntity, float)",
+          "getMountedHeightOffset(Entity)",
+          "getDimensionsWidth(EntityDimensions)",
+          "getDimensionsHeight(EntityDimensions)",
+          "setOnGround(Entity, boolean)",
+          "sendPacket(ServerGamePacketListenerImpl, Packet<?>)",
+          "isDummy(MinMaxBounds<?>)",
+          "getField(Optional<Class<?>>, String)",
+          "setField(Optional<Class<?>>, String, Object, Object)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getConstructor(Optional<Class<T>>, Class<?>...)",
+          "getClass(String, String...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleCachingUtils": [
+          "getCachedData(ScaleData[], ScaleType)",
+          "setCachedData(ScaleData[], ScaleType, ScaleData)"
+        ],
+        "virtuoel.pehkui.util.ScaleRenderUtils": [
+          "getTickDelta(Minecraft)",
+          "hasExtendedReach(MultiPlayerGameMode)",
+          "wasPlayerAlive(ClientboundRespawnPacket)",
+          "renderInteractionBox(Object, Object, AABB)",
+          "renderInteractionBox(Object, Object, AABB, float, float, float, float)",
+          "modifyProjectionMatrixDepthByWidth(float, Entity, float)",
+          "modifyProjectionMatrixDepthByHeight(float, Entity, float)",
+          "modifyProjectionMatrixDepth(float, Entity, float)",
+          "modifyProjectionMatrixDepth(float, float, Entity, float)",
+          "shouldSkipHeadItemScaling(LivingEntity, ItemStack, Object)",
+          "logIfRenderCancelled()",
+          "logIfItemRenderCancelled()",
+          "saveLastRenderedItem(ItemStack)",
+          "clearLastRenderedItem()",
+          "logIfEntityRenderCancelled()",
+          "saveLastRenderedEntity(EntityType<?>)",
+          "clearLastRenderedEntity()",
+          "addDetailsToCrashReport(CrashReportCategory)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(Entity, Entity, Entity...)",
+          "loadScaleOnRespawn(Entity, Entity, boolean)",
+          "loadScale(Entity, Entity)",
+          "modifyLimbDistance(float, Entity)",
+          "divideClamped(float, float)",
+          "divideClamped(float, float, float, float)",
+          "setScaleOfDrop(Entity, Entity)",
+          "setScaleOfProjectile(Entity, Entity)",
+          "setScaleOnSpawn(Entity, float)",
+          "buildScaleNbtFromPacketByteBuf(FriendlyByteBuf)",
+          "syncScalesIfNeeded(Entity, Consumer<Packet<?>>)",
+          "syncScalesOnTrackingStart(Entity, ServerGamePacketListenerImpl)",
+          "syncScales(Entity, Consumer<Packet<?>>, Predicate<ScaleData>, boolean)",
+          "getEyePos(Entity)",
+          "getEyePos(Player)",
+          "getEyePos(Entity, Direction)",
+          "getBlockXOffset(BlockPos, Player)",
+          "getBlockYOffset(BlockPos, Player)",
+          "getBlockZOffset(BlockPos, Player)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ],
+        "virtuoel.pehkui.util.ViewerCountingBlockEntityExtensions": [
+          "pehkui_getViewerSearchRange()"
+        ]
+      },
+      "sampleCount": 46
+    },
+    "0.0.0_forge": {
+      "packages": [],
+      "classes": [
+        "virtuoel.pehkui.api.PehkuiConfig",
+        "virtuoel.pehkui.api.ScaleData",
+        "virtuoel.pehkui.api.ScaleEventCallback",
+        "virtuoel.pehkui.api.ScaleModifier",
+        "virtuoel.pehkui.api.ScaleModifiers",
+        "virtuoel.pehkui.api.ScaleRegistries",
+        "virtuoel.pehkui.api.ScaleType",
+        "virtuoel.pehkui.api.ScaleTypes",
+        "virtuoel.pehkui.api.TypedScaleModifier",
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType",
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType",
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions",
+        "virtuoel.pehkui.network.DebugPacket",
+        "virtuoel.pehkui.network.PehkuiPacketHandler",
+        "virtuoel.pehkui.network.ScalePacket",
+        "virtuoel.pehkui.Pehkui",
+        "virtuoel.pehkui.server.command.DebugCommand",
+        "virtuoel.pehkui.server.command.ScaleCommand",
+        "virtuoel.pehkui.util.ClampingScaleModifier",
+        "virtuoel.pehkui.util.CombinedScaleData",
+        "virtuoel.pehkui.util.CommandUtils",
+        "virtuoel.pehkui.util.FabricEntrypoint",
+        "virtuoel.pehkui.util.I18nUtils",
+        "virtuoel.pehkui.util.IdentityCompatibility",
+        "virtuoel.pehkui.util.MixinConstants",
+        "virtuoel.pehkui.util.MixinTargetClasses",
+        "virtuoel.pehkui.util.ModLoaderUtils",
+        "virtuoel.pehkui.util.MulticonnectCompatibility",
+        "virtuoel.pehkui.util.NbtCompoundExtensions",
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions",
+        "virtuoel.pehkui.util.PehkuiEntityExtensions",
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions",
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility",
+        "virtuoel.pehkui.util.ReflectionUtils",
+        "virtuoel.pehkui.util.ScaleUtils",
+        "virtuoel.pehkui.util.VersionUtils"
+      ],
+      "methods": {
+        "virtuoel.pehkui.api.PehkuiConfig": [
+          "onLoad(Loading)",
+          "onFileChange(Reloading)"
+        ],
+        "virtuoel.pehkui.api.ScaleData": [
+          "tick()",
+          "getScaleType()",
+          "getEntity()",
+          "getBaseValueModifiers()",
+          "getBaseScale()",
+          "getBaseScale(float)",
+          "setBaseScale(float)",
+          "getScale()",
+          "getScale(float)",
+          "setScale(float)",
+          "getInitialScale()",
+          "getTargetScale()",
+          "setTargetScale(float)",
+          "getScaleTickDelay()",
+          "setScaleTickDelay(int)",
+          "getPrevScale()",
+          "getPrevBaseScale()",
+          "setPersistence(Boolean)",
+          "getPersistence()",
+          "shouldPersist()"
+        ],
+        "virtuoel.pehkui.api.ScaleEventCallback": [],
+        "virtuoel.pehkui.api.ScaleModifier": [
+          "compareTo(ScaleModifier)",
+          "getPriority()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.api.ScaleModifiers": [],
+        "virtuoel.pehkui.api.ScaleRegistries": [
+          "register(Map<ResourceLocation, E>, ResourceLocation, E)",
+          "getEntry(Map<ResourceLocation, E>, ResourceLocation)",
+          "getDefaultId(BiMap<ResourceLocation, E>)",
+          "getId(BiMap<ResourceLocation, E>, E)"
+        ],
+        "virtuoel.pehkui.api.ScaleType": [
+          "getScaleData(Entity)",
+          "setDefaultPersistence(boolean)",
+          "getDefaultPersistence()",
+          "getDefaultBaseScale()",
+          "getDefaultTickDelay()",
+          "clampBaseScale(ScaleData, double)",
+          "clampTargetScale(ScaleData, double)",
+          "getDefaultBaseValueModifiers()",
+          "getScaleChangedEvent()",
+          "getPreTickEvent()",
+          "getPostTickEvent()"
+        ],
+        "virtuoel.pehkui.api.ScaleTypes": [],
+        "virtuoel.pehkui.api.TypedScaleModifier": [
+          "getType()",
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleModifierArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleModifier()",
+          "getScaleModifierArgument(CommandContext<CommandSourceStack>, String)"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleOperationArgumentType": [
+          "operation()",
+          "getOperation(CommandContext<CommandSourceStack>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "virtuoel.pehkui.command.argument.ScaleTypeArgumentType": [
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "scaleType()",
+          "getScaleTypeArgument(CommandContext<CommandSourceStack>, String)"
+        ],
+        "virtuoel.pehkui.command.PehkuiEntitySelectorOptions": [
+          "register()"
+        ],
+        "virtuoel.pehkui.network.DebugPacket": [
+          "handle(DebugPacket, Supplier<Context>)",
+          "encode(FriendlyByteBuf)"
+        ],
+        "virtuoel.pehkui.network.PehkuiPacketHandler": [
+          "init()"
+        ],
+        "virtuoel.pehkui.network.ScalePacket": [
+          "handle(ScalePacket, Supplier<Context>)",
+          "encode(FriendlyByteBuf)"
+        ],
+        "virtuoel.pehkui.Pehkui": [
+          "onRegisterCommands(RegisterCommandsEvent)",
+          "id(String)",
+          "id(String, String...)"
+        ],
+        "virtuoel.pehkui.server.command.DebugCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, boolean)",
+          "register(CommandDispatcher<CommandSourceStack>)",
+          "unmarkEntityForScaleReset(Entity, CompoundTag)"
+        ],
+        "virtuoel.pehkui.server.command.ScaleCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, boolean)",
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "virtuoel.pehkui.util.ClampingScaleModifier": [
+          "modifyScale(ScaleData, float, float)",
+          "modifyPrevScale(ScaleData, float)"
+        ],
+        "virtuoel.pehkui.util.CombinedScaleData": [
+          "getData()",
+          "tick()",
+          "setBaseScale(float)",
+          "setTargetScale(float)",
+          "setScaleTickDelay(int)",
+          "markForSync(boolean)",
+          "onUpdate()",
+          "resetScale(boolean)",
+          "fromScale(ScaleData, boolean)",
+          "averagedFromScales(ScaleData, ScaleData...)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "virtuoel.pehkui.util.CommandUtils": [
+          "suggestIdentifiersIgnoringNamespace(String, Iterable<ResourceLocation>, SuggestionsBuilder)",
+          "forEachMatchingIgnoringNamespace(String, Iterable<T>, String, Function<T, ResourceLocation>, Consumer<T>)",
+          "wordStartsWith(String, String, char)"
+        ],
+        "virtuoel.pehkui.util.FabricEntrypoint": [
+          "onInitialize()"
+        ],
+        "virtuoel.pehkui.util.I18nUtils": [
+          "translate(String, String)",
+          "translate(String, String, Object...)"
+        ],
+        "virtuoel.pehkui.util.IdentityCompatibility": [
+          "getIdentity(Player)"
+        ],
+        "virtuoel.pehkui.util.MixinConstants": [],
+        "virtuoel.pehkui.util.MixinTargetClasses": [],
+        "virtuoel.pehkui.util.ModLoaderUtils": [
+          "isModLoaded(String)"
+        ],
+        "virtuoel.pehkui.util.MulticonnectCompatibility": [
+          "getProtocolDependantValue(IntPredicate, T, T)"
+        ],
+        "virtuoel.pehkui.util.NbtCompoundExtensions": [],
+        "virtuoel.pehkui.util.PehkuiBlockStateExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntityExtensions": [],
+        "virtuoel.pehkui.util.PehkuiEntitySelectorReaderExtensions": [],
+        "virtuoel.pehkui.util.ReachEntityAttributesCompatibility": [
+          "getReachDistance(LivingEntity, double)",
+          "getSquaredReachDistance(LivingEntity, double)",
+          "getAttackRange(LivingEntity, double)",
+          "getSquaredAttackRange(LivingEntity, double)"
+        ],
+        "virtuoel.pehkui.util.ReflectionUtils": [
+          "getField(Optional<Class<?>>, String)",
+          "getMethod(Optional<Class<?>>, String, Class<?>...)",
+          "getClass(String)"
+        ],
+        "virtuoel.pehkui.util.ScaleUtils": [
+          "tickScale(ScaleData)",
+          "loadAverageScales(Entity, Entity, Entity...)",
+          "loadScaleOnRespawn(Entity, Entity, boolean)",
+          "loadScale(Entity, Entity)",
+          "modifyLimbDistance(float, Entity)",
+          "divideClamped(float, float, float)",
+          "modifyProjectionMatrixDepthByWidth(float, Entity, float)",
+          "modifyProjectionMatrixDepthByHeight(float, Entity, float)",
+          "modifyProjectionMatrixDepth(float, Entity, float)",
+          "modifyProjectionMatrixDepth(float, float, Entity, float)",
+          "setScaleOfDrop(Entity, Entity)",
+          "setScaleOfProjectile(Entity, Entity)",
+          "setScaleOnSpawn(Entity, float)",
+          "buildScaleNbtFromPacketByteBuf(FriendlyByteBuf)",
+          "syncScalesIfNeeded(Entity, Consumer<Packet<?>>)",
+          "syncScalesOnTrackingStart(Entity, Consumer<Packet<?>>)",
+          "syncScales(Entity, Consumer<Packet<?>>, Predicate<ScaleData>, boolean)",
+          "getEyeHeightScale(Entity)",
+          "getEyeHeightScale(Entity, float)",
+          "getThirdPersonScale(Entity, float)"
+        ],
+        "virtuoel.pehkui.util.VersionUtils": [
+          "shouldApplyCompatibilityMixin(String)"
+        ]
+      },
+      "sampleCount": 37
+    }
+  },
+  "classCount": 292,
+  "methodCount": 1157
+}

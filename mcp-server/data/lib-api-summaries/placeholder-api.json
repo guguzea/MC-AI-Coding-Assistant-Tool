@@ -1,0 +1,3167 @@
+{
+  "slug": "placeholder-api",
+  "modId": "text_placeholder_api",
+  "id": "authored/lib-text-placeholder-api",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "placeholder-api"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:19.202Z",
+  "versions": {
+    "3.0.0-beta.2_26.1": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.ArgumentParser",
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.client.ClientPlaceholderContext",
+        "eu.pb4.placeholders.api.client.ClientPlaceholders",
+        "eu.pb4.placeholders.api.node.DirectComponentNode",
+        "eu.pb4.placeholders.api.node.DynamicPlayerHeadNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.ObjectNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.ShadowNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.Placeholder",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.ServerPlaceholderContext"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.ArgumentParser": [],
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, CharPredicate)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, CharPredicate)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, CharPredicate)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "getNested(String)",
+          "getNestedOrEmpty(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "get(String, Codec<T>)",
+          "get(String, Codec<T>, Provider)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)"
+        ],
+        "eu.pb4.placeholders.api.client.ClientPlaceholderContext": [
+          "asParserContext()",
+          "addToContext(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.client.ClientPlaceholders": [
+          "getClientPlaceholder(Identifier.tryParse(placeholder))",
+          "parseClientPlaceholder(Identifier, String, ClientPlaceholderContext)",
+          "getClientPlaceholder(Identifier)",
+          "registerClient(Identifier, Placeholder.Handler<ClientPlaceholderContext, String>)",
+          "registerClient(Identifier, ArgumentParser<T>, Placeholder.Handler<ClientPlaceholderContext, T>)",
+          "registerClient(Placeholder<ClientPlaceholderContext, ?>)",
+          "getClientPlaceholders()",
+          "registerClientChangeEvent(Placeholders.PlaceholderListChangedCallback)"
+        ],
+        "eu.pb4.placeholders.api.node.DirectComponentNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicPlayerHeadNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, Component>>)",
+          "key(String)",
+          "toComponent(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toComponent(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toComponent(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.ObjectNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "clickEventAction()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(Component, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode": [
+          "extendedTextColorParse(Function<String, TextColor>)",
+          "isDynamicNoChildren()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "getDefaultShadowColor(Component, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode": [
+          "applyFormatting(MutableComponent, ParserContext)",
+          "modifiedColor(int, float, float)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(Component, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(Component, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(TextColor, TextColor, TextNode...)",
+          "colors(List<TextColor>, TextNode...)",
+          "colorsHard(TextColor, TextColor, TextNode...)",
+          "colorsHard(List<TextColor>, TextNode...)",
+          "applyFormatting(MutableComponent, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "applyShadowColors(Component, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toVanilla(HoverNode.Action<T, ?>, T, ParserContext)",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(EntityType<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toComponent(ParserContext, boolean)",
+          "applyFormatting(MutableComponent, ParserContext)",
+          "applyFormatting(Style, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ShadowNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(Style, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hover()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<Style, Style>, TextNode...)",
+          "applyFormatting(MutableComponent, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toComponent(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toComponent(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toComponent(ParserContext)",
+          "toComponent(PlaceholderContext)",
+          "toComponent()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toComponent(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)",
+          "getOrElse(ParserContext.Key<T>, T)",
+          "getOrElse(ParserContext.Key<T>, Supplier<T>)",
+          "getOrThrow(ParserContext.Key<T>)",
+          "contains(ParserContext.Key<?>)",
+          "copy()",
+          "copyWithoutNodeContext()",
+          "withIfNotSet(ParserContext.Key<T>, T)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseComponent(TextNode, ParserContext)",
+          "parseComponent(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "serverPlaceholders()",
+          "serverPlaceholders(TagLikeParser.Format)",
+          "serverPlaceholders(TagLikeParser.Format, ParserContext.Key<ServerPlaceholderContext>)",
+          "commonPlaceholders()",
+          "commonPlaceholders(TagLikeParser.Format)",
+          "commonPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "clientPlaceholders()",
+          "clientPlaceholders(TagLikeParser.Format)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Ctx>, Placeholders.PlaceholderGetter<Ctx>)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, Component>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, Component>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, ChatFormatting)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<Ctx>, Placeholders.PlaceholderGetter<Ctx>)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, Component>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, Component>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, Component>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholder": [
+          "onPlaceholderRequest(Ctx, String)",
+          "withArgument(T)",
+          "withParsedArgument(String)",
+          "withId(Identifier)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "hasLevel()",
+          "hasPlayer()",
+          "hasNameAndId()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "hasHolderLookup()",
+          "hasBlockPosition()",
+          "hasPosition()",
+          "asParserContext()",
+          "addToContext(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "component()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(Component)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "getServerPlaceholder(Identifier.tryParse(placeholder))",
+          "getCommonPlaceholder(Identifier.tryParse(placeholder))",
+          "parseServerPlaceholder(Identifier, String, ServerPlaceholderContext)",
+          "parseCommonPlaceholder(Identifier, String, PlaceholderContext)",
+          "getCommonPlaceholder(Identifier)",
+          "getServerPlaceholder(Identifier)",
+          "registerServer(Identifier, Placeholder.Handler<ServerPlaceholderContext, String>)",
+          "registerServer(Identifier, ArgumentParser<T>, Placeholder.Handler<ServerPlaceholderContext, T>)",
+          "registerServer(Placeholder<ServerPlaceholderContext, ?>)",
+          "registerCommon(Identifier, Placeholder.Handler<PlaceholderContext, String>)",
+          "registerCommon(Identifier, ArgumentParser<T>, Placeholder.Handler<PlaceholderContext, T>)",
+          "registerCommon(Placeholder<PlaceholderContext, ?>)",
+          "getCommonPlaceholders()",
+          "getServerPlaceholders()",
+          "registerServerChangeEvent(Placeholders.PlaceholderListChangedCallback)",
+          "registerCommonChangeEvent(Placeholders.PlaceholderListChangedCallback)"
+        ],
+        "eu.pb4.placeholders.api.ServerPlaceholderContext": [
+          "hasServerPlayer()",
+          "asParserContext()",
+          "addToContext(ParserContext)"
+        ]
+      },
+      "sampleCount": 60
+    },
+    "2.8.2_1.21.10": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicPlayerHeadNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.ObjectNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.ShadowNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.TextParserV1",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderHandler",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.TextParserUtils"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "getNested(String)",
+          "getNestedOrEmpty(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "get(String, Codec<T>)",
+          "get(String, Codec<T>, class_7874)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicPlayerHeadNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.ObjectNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "clickEventAction()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()",
+          "action()",
+          "Action(class_2559)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode": [
+          "extendedTextColorParse(Function<String, class_5251>)",
+          "isDynamicNoChildren()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode": [
+          "applyFormatting(class_5250, ParserContext)",
+          "modifiedColor(int, float, float)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "applyShadowColors(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toVanilla(HoverNode.Action<T, ?>, T, ParserContext)",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ShadowNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hoverValue()",
+          "hover()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<class_2583, class_2583>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toText(ParserContext)",
+          "toText(PlaceholderContext)",
+          "toText()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)",
+          "getOrElse(ParserContext.Key<T>, T)",
+          "getOrElse(ParserContext.Key<T>, Supplier<T>)",
+          "getOrThrow(ParserContext.Key<T>)",
+          "contains(ParserContext.Key<?>)",
+          "copy()",
+          "copyWithoutNodeContext()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseText(TextNode, ParserContext)",
+          "parseText(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "globalPlaceholders()",
+          "globalPlaceholders(TagLikeParser.Format)",
+          "globalPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "legacyColor()",
+          "legacyVanillaColor()",
+          "legacyAll()"
+        ],
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser": [
+          "of(Pattern, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "ofNodeMap(Pattern, Map<String, TextNode>)",
+          "ofTextMap(Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, class_124)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, class_2561>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.TextParserV1": [
+          "createDefault()",
+          "createSafe()",
+          "registerDefault(TextParserV1.TextTag)",
+          "register(TextParserV1.TextTag)",
+          "getTags()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "parseNodesWith(TextNode, TextParserV1.TagParserGetter)",
+          "parseNodesWith(String, TextParserV1.TagParserGetter, String)",
+          "getTagParser(String)",
+          "getTag(String)",
+          "NodeList(TextNode[], int)",
+          "TagNodeValue(TextNode, int)",
+          "TextTag(String, String[], String, boolean, TextParserV1.TagNodeBuilder)"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "source()",
+          "hasWorld()",
+          "hasPlayer()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "asParserContext()",
+          "withView(PlaceholderContext.ViewObject)",
+          "addToContext(ParserContext)",
+          "of(MinecraftServer)",
+          "of(MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(GameProfile, MinecraftServer)",
+          "of(GameProfile, MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(class_3222)",
+          "of(class_3222, PlaceholderContext.ViewObject)",
+          "of(class_2168)",
+          "of(class_2168, PlaceholderContext.ViewObject)",
+          "of(class_1297)",
+          "of(class_1297, PlaceholderContext.ViewObject)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderHandler": [],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "text()",
+          "string()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(class_2561)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "parsePlaceholder(class_2960, String, PlaceholderContext)",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext)",
+          "parseText(TextNode, PlaceholderContext)",
+          "parseNodes(TextNode, Pattern)",
+          "parseNodes(TextNode, Pattern, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext, Pattern)",
+          "parseText(class_2561, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(class_2561, Pattern, Map<String, class_2561>)",
+          "parseText(class_2561, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseText(TextNode, PlaceholderContext, Pattern)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Map<String, class_2561>)",
+          "parseText(TextNode, Pattern, Map<String, class_2561>)"
+        ],
+        "eu.pb4.placeholders.api.TextParserUtils": [
+          "formatText(String)",
+          "formatTextSafe(String)",
+          "formatText(String, TextParserV1.TagParserGetter)",
+          "formatNodes(String)",
+          "formatNodesSafe(String)",
+          "formatNodes(String, TextParserV1.TagParserGetter)"
+        ]
+      },
+      "sampleCount": 59
+    },
+    "2.8.0_1.21.9": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.ObjectNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.ShadowNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.TextParserV1",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderHandler",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.TextParserUtils"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "getNested(String)",
+          "getNestedOrEmpty(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "get(String, Codec<T>)",
+          "get(String, Codec<T>, class_7874)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.ObjectNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "clickEventAction()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()",
+          "action()",
+          "Action(class_2559)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode": [
+          "extendedTextColorParse(Function<String, class_5251>)",
+          "isDynamicNoChildren()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode": [
+          "applyFormatting(class_5250, ParserContext)",
+          "modifiedColor(int, float, float)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "applyShadowColors(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toVanilla(HoverNode.Action<T, ?>, T, ParserContext)",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ShadowNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hoverValue()",
+          "hover()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<class_2583, class_2583>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toText(ParserContext)",
+          "toText(PlaceholderContext)",
+          "toText()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)",
+          "getOrElse(ParserContext.Key<T>, T)",
+          "getOrElse(ParserContext.Key<T>, Supplier<T>)",
+          "getOrThrow(ParserContext.Key<T>)",
+          "contains(ParserContext.Key<?>)",
+          "copy()",
+          "copyWithoutNodeContext()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseText(TextNode, ParserContext)",
+          "parseText(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "globalPlaceholders()",
+          "globalPlaceholders(TagLikeParser.Format)",
+          "globalPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "legacyColor()",
+          "legacyVanillaColor()",
+          "legacyAll()"
+        ],
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser": [
+          "of(Pattern, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "ofNodeMap(Pattern, Map<String, TextNode>)",
+          "ofTextMap(Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, class_124)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, class_2561>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.TextParserV1": [
+          "createDefault()",
+          "createSafe()",
+          "registerDefault(TextParserV1.TextTag)",
+          "register(TextParserV1.TextTag)",
+          "getTags()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "parseNodesWith(TextNode, TextParserV1.TagParserGetter)",
+          "parseNodesWith(String, TextParserV1.TagParserGetter, String)",
+          "getTagParser(String)",
+          "getTag(String)",
+          "NodeList(TextNode[], int)",
+          "TagNodeValue(TextNode, int)",
+          "TextTag(String, String[], String, boolean, TextParserV1.TagNodeBuilder)"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "source()",
+          "hasWorld()",
+          "hasPlayer()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "asParserContext()",
+          "withView(PlaceholderContext.ViewObject)",
+          "addToContext(ParserContext)",
+          "of(MinecraftServer)",
+          "of(MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(GameProfile, MinecraftServer)",
+          "of(GameProfile, MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(class_3222)",
+          "of(class_3222, PlaceholderContext.ViewObject)",
+          "of(class_2168)",
+          "of(class_2168, PlaceholderContext.ViewObject)",
+          "of(class_1297)",
+          "of(class_1297, PlaceholderContext.ViewObject)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderHandler": [],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "text()",
+          "string()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(class_2561)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "parsePlaceholder(class_2960, String, PlaceholderContext)",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext)",
+          "parseText(TextNode, PlaceholderContext)",
+          "parseNodes(TextNode, Pattern)",
+          "parseNodes(TextNode, Pattern, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext, Pattern)",
+          "parseText(class_2561, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(class_2561, Pattern, Map<String, class_2561>)",
+          "parseText(class_2561, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseText(TextNode, PlaceholderContext, Pattern)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Map<String, class_2561>)",
+          "parseText(TextNode, Pattern, Map<String, class_2561>)"
+        ],
+        "eu.pb4.placeholders.api.TextParserUtils": [
+          "formatText(String)",
+          "formatTextSafe(String)",
+          "formatText(String, TextParserV1.TagParserGetter)",
+          "formatNodes(String)",
+          "formatNodesSafe(String)",
+          "formatNodes(String, TextParserV1.TagParserGetter)"
+        ]
+      },
+      "sampleCount": 58
+    },
+    "2.7.2_1.21.8": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.ShadowNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.TextParserV1",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderHandler",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.TextParserUtils"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "getNested(String)",
+          "getNestedOrEmpty(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "get(String, Codec<T>)",
+          "get(String, Codec<T>, class_7874)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "clickEventAction()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()",
+          "action()",
+          "Action(class_2559)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode": [
+          "extendedTextColorParse(Function<String, class_5251>)",
+          "isDynamicNoChildren()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicShadowNode": [
+          "applyFormatting(class_5250, ParserContext)",
+          "modifiedColor(int, float, float)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "getDefaultShadowColor(class_2561, float, float, ParserContext)",
+          "hasShadowColor(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()",
+          "applyShadowColors(class_2561, float, float, ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toVanilla(HoverNode.Action<T, ?>, T, ParserContext)",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ShadowNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hoverValue()",
+          "hover()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<class_2583, class_2583>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toText(ParserContext)",
+          "toText(PlaceholderContext)",
+          "toText()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)",
+          "getOrElse(ParserContext.Key<T>, T)",
+          "getOrElse(ParserContext.Key<T>, Supplier<T>)",
+          "getOrThrow(ParserContext.Key<T>)",
+          "contains(ParserContext.Key<?>)",
+          "copy()",
+          "copyWithoutNodeContext()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseText(TextNode, ParserContext)",
+          "parseText(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "globalPlaceholders()",
+          "globalPlaceholders(TagLikeParser.Format)",
+          "globalPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "legacyColor()",
+          "legacyVanillaColor()",
+          "legacyAll()"
+        ],
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser": [
+          "of(Pattern, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "ofNodeMap(Pattern, Map<String, TextNode>)",
+          "ofTextMap(Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, class_124)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, class_2561>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.TextParserV1": [
+          "createDefault()",
+          "createSafe()",
+          "registerDefault(TextParserV1.TextTag)",
+          "register(TextParserV1.TextTag)",
+          "getTags()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "parseNodesWith(TextNode, TextParserV1.TagParserGetter)",
+          "parseNodesWith(String, TextParserV1.TagParserGetter, String)",
+          "getTagParser(String)",
+          "getTag(String)",
+          "NodeList(TextNode[], int)",
+          "TagNodeValue(TextNode, int)",
+          "TextTag(String, String[], String, boolean, TextParserV1.TagNodeBuilder)"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "source()",
+          "hasWorld()",
+          "hasPlayer()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "asParserContext()",
+          "withView(PlaceholderContext.ViewObject)",
+          "addToContext(ParserContext)",
+          "of(MinecraftServer)",
+          "of(MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(GameProfile, MinecraftServer)",
+          "of(GameProfile, MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(class_3222)",
+          "of(class_3222, PlaceholderContext.ViewObject)",
+          "of(class_2168)",
+          "of(class_2168, PlaceholderContext.ViewObject)",
+          "of(class_1297)",
+          "of(class_1297, PlaceholderContext.ViewObject)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderHandler": [],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "text()",
+          "string()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(class_2561)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "parsePlaceholder(class_2960, String, PlaceholderContext)",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext)",
+          "parseText(TextNode, PlaceholderContext)",
+          "parseNodes(TextNode, Pattern)",
+          "parseNodes(TextNode, Pattern, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext, Pattern)",
+          "parseText(class_2561, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(class_2561, Pattern, Map<String, class_2561>)",
+          "parseText(class_2561, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseText(TextNode, PlaceholderContext, Pattern)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Map<String, class_2561>)",
+          "parseText(TextNode, Pattern, Map<String, class_2561>)"
+        ],
+        "eu.pb4.placeholders.api.TextParserUtils": [
+          "formatText(String)",
+          "formatTextSafe(String)",
+          "formatText(String, TextParserV1.TagParserGetter)",
+          "formatNodes(String)",
+          "formatNodesSafe(String)",
+          "formatNodes(String, TextParserV1.TagParserGetter)"
+        ]
+      },
+      "sampleCount": 57
+    },
+    "2.5.0_1.21.2": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.TextParserV1",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderHandler",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.TextParserUtils"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)",
+          "isEmpty()",
+          "ordered()",
+          "size()",
+          "unsafeOrdered()"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.DynamicColorNode": [
+          "isDynamicNoChildren()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "action()",
+          "value()",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hoverValue()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<class_2583, class_2583>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toText(ParserContext)",
+          "toText(PlaceholderContext)",
+          "toText()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseText(TextNode, ParserContext)",
+          "parseText(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "globalPlaceholders()",
+          "globalPlaceholders(TagLikeParser.Format)",
+          "globalPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "legacyColor()",
+          "legacyVanillaColor()",
+          "legacyAll()"
+        ],
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser": [
+          "of(Pattern, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "ofNodeMap(Pattern, Map<String, TextNode>)",
+          "ofTextMap(Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, class_124)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, class_2561>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.TextParserV1": [
+          "createDefault()",
+          "createSafe()",
+          "registerDefault(TextParserV1.TextTag)",
+          "register(TextParserV1.TextTag)",
+          "getTags()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "parseNodesWith(TextNode, TextParserV1.TagParserGetter)",
+          "parseNodesWith(String, TextParserV1.TagParserGetter, String)",
+          "getTagParser(String)",
+          "getTag(String)",
+          "NodeList(TextNode[], int)",
+          "TagNodeValue(TextNode, int)",
+          "TextTag(String, String[], String, boolean, TextParserV1.TagNodeBuilder)"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "source()",
+          "hasWorld()",
+          "hasPlayer()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "asParserContext()",
+          "withView(PlaceholderContext.ViewObject)",
+          "addToContext(ParserContext)",
+          "of(MinecraftServer)",
+          "of(MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(GameProfile, MinecraftServer)",
+          "of(GameProfile, MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(class_3222)",
+          "of(class_3222, PlaceholderContext.ViewObject)",
+          "of(class_2168)",
+          "of(class_2168, PlaceholderContext.ViewObject)",
+          "of(class_1297)",
+          "of(class_1297, PlaceholderContext.ViewObject)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderHandler": [],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "text()",
+          "string()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(class_2561)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "parsePlaceholder(class_2960, String, PlaceholderContext)",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext)",
+          "parseText(TextNode, PlaceholderContext)",
+          "parseNodes(TextNode, Pattern)",
+          "parseNodes(TextNode, Pattern, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext, Pattern)",
+          "parseText(class_2561, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(class_2561, Pattern, Map<String, class_2561>)",
+          "parseText(class_2561, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseText(TextNode, PlaceholderContext, Pattern)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Map<String, class_2561>)",
+          "parseText(TextNode, Pattern, Map<String, class_2561>)"
+        ],
+        "eu.pb4.placeholders.api.TextParserUtils": [
+          "formatText(String)",
+          "formatTextSafe(String)",
+          "formatText(String, TextParserV1.TagParserGetter)",
+          "formatNodes(String)",
+          "formatNodesSafe(String)",
+          "formatNodes(String, TextParserV1.TagParserGetter)"
+        ]
+      },
+      "sampleCount": 55
+    },
+    "2.4.0-pre.3_1.20.4": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode",
+        "eu.pb4.placeholders.api.node.parent.TransformNode",
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode",
+        "eu.pb4.placeholders.api.node.ScoreNode",
+        "eu.pb4.placeholders.api.node.SelectorNode",
+        "eu.pb4.placeholders.api.node.TextNode",
+        "eu.pb4.placeholders.api.node.TranslatedNode",
+        "eu.pb4.placeholders.api.ParserContext",
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat",
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat",
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser",
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1",
+        "eu.pb4.placeholders.api.parsers.NodeParser",
+        "eu.pb4.placeholders.api.parsers.ParserBuilder",
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser",
+        "eu.pb4.placeholders.api.parsers.StaticPreParser",
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator",
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags",
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry",
+        "eu.pb4.placeholders.api.parsers.tag.TextTag",
+        "eu.pb4.placeholders.api.parsers.TagLikeParser",
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper",
+        "eu.pb4.placeholders.api.parsers.TagParser",
+        "eu.pb4.placeholders.api.parsers.TextParserV1",
+        "eu.pb4.placeholders.api.parsers.WrappedText",
+        "eu.pb4.placeholders.api.PlaceholderContext",
+        "eu.pb4.placeholders.api.PlaceholderHandler",
+        "eu.pb4.placeholders.api.PlaceholderResult",
+        "eu.pb4.placeholders.api.Placeholders",
+        "eu.pb4.placeholders.api.TextParserUtils"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)",
+          "isEmpty()",
+          "ordered()",
+          "size()",
+          "unsafeOrdered()"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "action()",
+          "value()",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()",
+          "hoverValue()",
+          "clickValue()",
+          "insertion()",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.TransformNode": [
+          "deepStyle(Function<class_2583, class_2583>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.UnderlinedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.ScoreNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.SelectorNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TextNode": [
+          "toText(ParserContext)",
+          "toText(PlaceholderContext)",
+          "toText()",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.TranslatedNode": [
+          "of(String, Object...)",
+          "ofFallback(String, String, Object...)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()",
+          "transform(NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.ParserContext": [
+          "of()",
+          "of(ParserContext.Key<T>, T)",
+          "with(ParserContext.Key<T>, T)",
+          "get(ParserContext.Key<T>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.BaseFormat": [
+          "findAt(String, int, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.MultiCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.format.SingleCharacterFormat": [
+          "matchStart(String, int)",
+          "matchEnd(String, int)",
+          "matchArgument(String, int)",
+          "endLength()",
+          "index()",
+          "hasArgument()"
+        ],
+        "eu.pb4.placeholders.api.parsers.LegacyFormattingParser": [
+          "allowRGB()",
+          "formatting()",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, List<TextNode>)"
+        ],
+        "eu.pb4.placeholders.api.parsers.MarkdownLiteParserV1": [
+          "defaultSpoilerFormatting(TextNode[])",
+          "defaultQuoteFormatting(TextNode[])",
+          "defaultUrlFormatting(TextNode[], TextNode)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.NodeParser": [
+          "parseNode(TextNode)",
+          "parseNode(String)",
+          "parseText(TextNode, ParserContext)",
+          "parseText(String, ParserContext)",
+          "codec()"
+        ],
+        "eu.pb4.placeholders.api.parsers.ParserBuilder": [
+          "of()",
+          "globalPlaceholders()",
+          "globalPlaceholders(TagLikeParser.Format)",
+          "globalPlaceholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholders(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholders(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholders(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "quickText()",
+          "simplifiedTextFormat()",
+          "requireSafe()",
+          "customTagRegistry(TagRegistry)",
+          "markdown()",
+          "markdown(MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, MarkdownLiteParserV1.MarkdownFormat...)",
+          "markdown(Function<TextNode[], TextNode>, Function<TextNode[], TextNode>, BiFunction<TextNode[], TextNode, TextNode>, Collection<MarkdownLiteParserV1.MarkdownFormat>)",
+          "legacyColor()",
+          "legacyVanillaColor()",
+          "legacyAll()"
+        ],
+        "eu.pb4.placeholders.api.parsers.PatternPlaceholderParser": [
+          "of(Pattern, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "ofNodeMap(Pattern, Map<String, TextNode>)",
+          "ofTextMap(Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.StaticPreParser": [
+          "parseNodes(TextNode)",
+          "parse(TextNode)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.NodeCreator": [],
+        "eu.pb4.placeholders.api.parsers.tag.SimpleTags": [
+          "color(String, Collection<String>, class_124)",
+          "color(String, Collection<String>, int)"
+        ],
+        "eu.pb4.placeholders.api.parsers.tag.TagRegistry": [],
+        "eu.pb4.placeholders.api.parsers.tag.TextTag": [
+          "self(String, String, Function<StringArgs, TextNode>)",
+          "self(String, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, Collection<String>, String, boolean, Function<StringArgs, TextNode>)",
+          "self(String, String, NodeCreator)",
+          "self(String, String, boolean, NodeCreator)",
+          "self(String, Collection<String>, String, boolean, NodeCreator)",
+          "enclosing(String, String, NodeCreator)",
+          "enclosing(String, String, boolean, NodeCreator)",
+          "enclosing(String, Collection<String>, String, boolean, NodeCreator)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeParser": [
+          "placeholder(TagLikeParser.Format, ParserContext.Key<PlaceholderContext>, Placeholders.PlaceholderGetter)",
+          "placeholder(TagLikeParser.Format, Function<String, TextNode>)",
+          "placeholderText(TagLikeParser.Format, Function<String, class_2561>)",
+          "placeholderText(TagLikeParser.Format, ParserContext.Key<Function<String, class_2561>>)",
+          "placeholderText(TagLikeParser.Format, Set<String>, ParserContext.Key<Function<String, class_2561>>)",
+          "of(TagLikeParser.Format, TagLikeParser.Provider)",
+          "of(Pair<TagLikeParser.Format, TagLikeParser.Provider>...)",
+          "of(Map<TagLikeParser.Format, TagLikeParser.Provider>)",
+          "parseNodes(TextNode)",
+          "handleLiteral(String, TagLikeParser.Context)",
+          "asTagLikeParser()",
+          "handleTag(String, int, TagLikeParser.Format.Tag, TagLikeParser.Provider, TagLikeParser.Context)"
+        ],
+        "eu.pb4.placeholders.api.parsers.TagLikeWrapper": [],
+        "eu.pb4.placeholders.api.parsers.TagParser": [
+          "createQuickText()",
+          "createQuickTextWithSTF()",
+          "createSimplifiedTextFormat()",
+          "createQuickText(TagRegistry)",
+          "createQuickTextWithSTF(TagRegistry)",
+          "createSimplifiedTextFormat(TagRegistry)",
+          "register(TextTag)",
+          "asTagLikeParser()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "tagRegistry()",
+          "providerCreator()"
+        ],
+        "eu.pb4.placeholders.api.parsers.TextParserV1": [
+          "createDefault()",
+          "createSafe()",
+          "registerDefault(TextParserV1.TextTag)",
+          "register(TextParserV1.TextTag)",
+          "getTags()",
+          "parseNodes(TextNode)",
+          "copy()",
+          "parseNodesWith(TextNode, TextParserV1.TagParserGetter)",
+          "parseNodesWith(String, TextParserV1.TagParserGetter, String)",
+          "getTagParser(String)",
+          "getTag(String)",
+          "NodeList(TextNode[], int)",
+          "TagNodeValue(TextNode, int)",
+          "TextTag(String, String[], String, boolean, TextParserV1.TagNodeBuilder)"
+        ],
+        "eu.pb4.placeholders.api.parsers.WrappedText": [
+          "from(NodeParser, String)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderContext": [
+          "source()",
+          "hasWorld()",
+          "hasPlayer()",
+          "hasGameProfile()",
+          "hasEntity()",
+          "asParserContext()",
+          "withView(PlaceholderContext.ViewObject)",
+          "addToContext(ParserContext)",
+          "of(MinecraftServer)",
+          "of(MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(GameProfile, MinecraftServer)",
+          "of(GameProfile, MinecraftServer, PlaceholderContext.ViewObject)",
+          "of(class_3222)",
+          "of(class_3222, PlaceholderContext.ViewObject)",
+          "of(class_2168)",
+          "of(class_2168, PlaceholderContext.ViewObject)",
+          "of(class_1297)",
+          "of(class_1297, PlaceholderContext.ViewObject)"
+        ],
+        "eu.pb4.placeholders.api.PlaceholderHandler": [],
+        "eu.pb4.placeholders.api.PlaceholderResult": [
+          "text()",
+          "string()",
+          "isValid()",
+          "invalid(String)",
+          "invalid()",
+          "value(class_2561)",
+          "value(String)"
+        ],
+        "eu.pb4.placeholders.api.Placeholders": [
+          "parsePlaceholder(class_2960, String, PlaceholderContext)",
+          "parseNodes(TextNode)",
+          "parseNodes(TextNode, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext)",
+          "parseText(TextNode, PlaceholderContext)",
+          "parseNodes(TextNode, Pattern)",
+          "parseNodes(TextNode, Pattern, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter)",
+          "parseNodes(TextNode, Pattern, Placeholders.PlaceholderGetter, ParserContext.Key<PlaceholderContext>)",
+          "parseNodes(TextNode, Pattern, Map<String, class_2561>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseNodes(TextNode, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>, ParserContext.Key<PlaceholderContext>)",
+          "parseText(class_2561, PlaceholderContext, Pattern)",
+          "parseText(class_2561, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(class_2561, Pattern, Map<String, class_2561>)",
+          "parseText(class_2561, Pattern, Set<String>, ParserContext.Key<Placeholders.PlaceholderGetter>)",
+          "parseText(TextNode, PlaceholderContext, Pattern)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Placeholders.PlaceholderGetter)",
+          "parseText(TextNode, PlaceholderContext, Pattern, Map<String, class_2561>)",
+          "parseText(TextNode, Pattern, Map<String, class_2561>)"
+        ],
+        "eu.pb4.placeholders.api.TextParserUtils": [
+          "formatText(String)",
+          "formatTextSafe(String)",
+          "formatText(String, TextParserV1.TagParserGetter)",
+          "formatNodes(String)",
+          "formatNodesSafe(String)",
+          "formatNodes(String, TextParserV1.TagParserGetter)"
+        ]
+      },
+      "sampleCount": 54
+    },
+    "2.4.0-pre.2_1.20.5": {
+      "packages": [],
+      "classes": [
+        "eu.pb4.placeholders.api.arguments.SimpleArguments",
+        "eu.pb4.placeholders.api.arguments.StringArgs",
+        "eu.pb4.placeholders.api.node.DirectTextNode",
+        "eu.pb4.placeholders.api.node.DynamicTextNode",
+        "eu.pb4.placeholders.api.node.EmptyNode",
+        "eu.pb4.placeholders.api.node.KeybindNode",
+        "eu.pb4.placeholders.api.node.LiteralNode",
+        "eu.pb4.placeholders.api.node.NbtNode",
+        "eu.pb4.placeholders.api.node.NonTransformableNode",
+        "eu.pb4.placeholders.api.node.parent.BoldNode",
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode",
+        "eu.pb4.placeholders.api.node.parent.ColorNode",
+        "eu.pb4.placeholders.api.node.parent.FontNode",
+        "eu.pb4.placeholders.api.node.parent.FormattingNode",
+        "eu.pb4.placeholders.api.node.parent.GradientNode",
+        "eu.pb4.placeholders.api.node.parent.HoverNode",
+        "eu.pb4.placeholders.api.node.parent.InsertNode",
+        "eu.pb4.placeholders.api.node.parent.ItalicNode",
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode",
+        "eu.pb4.placeholders.api.node.parent.ParentNode",
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode",
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode",
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode",
+        "eu.pb4.placeholders.api.node.parent.StyledNode"
+      ],
+      "methods": {
+        "eu.pb4.placeholders.api.arguments.SimpleArguments": [
+          "isWrapCharacter(char)",
+          "unwrap(String)",
+          "unwrap(String, class_5462)",
+          "split(String, char)",
+          "split(String, char, boolean, boolean)",
+          "bool(String)",
+          "bool(String, boolean)",
+          "floatNumber(String)",
+          "floatNumber(String, float)",
+          "intNumber(String)",
+          "intNumber(String, int)"
+        ],
+        "eu.pb4.placeholders.api.arguments.StringArgs": [
+          "ordered(String, char)",
+          "keyed(String, char, char)",
+          "keyed(String, char, char, boolean, class_5462)",
+          "full(String, char, char)",
+          "full(String, char, char, boolean, class_5462)",
+          "empty()",
+          "emptyNew()",
+          "input()",
+          "get(String)",
+          "get(String, String)",
+          "get(String, int)",
+          "get(String, int, String)",
+          "getNext(String)",
+          "getNext(String, String)",
+          "ifPresent(String, Consumer<String>)",
+          "contains(String)",
+          "isEmpty()",
+          "ordered()",
+          "size()",
+          "unsafeOrdered()"
+        ],
+        "eu.pb4.placeholders.api.node.DirectTextNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.DynamicTextNode": [
+          "of(String, ParserContext.Key<Function<String, class_2561>>)",
+          "key(String)",
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.EmptyNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.KeybindNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.LiteralNode": [
+          "toText(ParserContext, boolean)"
+        ],
+        "eu.pb4.placeholders.api.node.NbtNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.NonTransformableNode": [
+          "toText(ParserContext, boolean)",
+          "isDynamic()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.BoldNode": [
+          "copyWith(TextNode[])",
+          "toString()",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ClickActionNode": [
+          "action()",
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "isDynamicNoChildren()",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ColorNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FontNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.FormattingNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.GradientNode": [
+          "apply(class_2561, GradientNode.GradientProvider)",
+          "rainbow(float, float, float, float, int, TextNode...)",
+          "rainbow(float, float, float, float, TextNode...)",
+          "rainbow(float, float, float, TextNode...)",
+          "rainbow(float, float, TextNode...)",
+          "rainbow(float, TextNode...)",
+          "rainbow(TextNode...)",
+          "colors(class_5251, class_5251, TextNode...)",
+          "colors(List<class_5251>, TextNode...)",
+          "colorsHard(class_5251, class_5251, TextNode...)",
+          "colorsHard(List<class_5251>, TextNode...)",
+          "applyFormatting(class_5250, ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.HoverNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "action()",
+          "value()",
+          "toString()",
+          "isDynamicNoChildren()",
+          "EntityNodeContent(class_1299<?>, UUID, TextNode)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.InsertNode": [
+          "value()",
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "copyWith(TextNode[], NodeParser)",
+          "toString()",
+          "isDynamicNoChildren()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ItalicNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ObfuscatedNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentNode": [
+          "getChildren()",
+          "copyWith(TextNode[])",
+          "toText(ParserContext, boolean)",
+          "applyFormatting(class_5250, ParserContext)",
+          "applyFormatting(class_2583, ParserContext)",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.ParentTextNode": [
+          "copyWith(Collection<TextNode>)",
+          "isDynamicNoChildren()",
+          "isDynamic()",
+          "copyWith(TextNode[], NodeParser)",
+          "copyWith(Collection<TextNode>, NodeParser)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.SimpleStylingNode": [
+          "applyFormatting(class_2583, ParserContext)",
+          "style(ParserContext)"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StrikethroughNode": [
+          "style(ParserContext)",
+          "copyWith(TextNode[])",
+          "toString()"
+        ],
+        "eu.pb4.placeholders.api.node.parent.StyledNode": [
+          "style(ParserContext)",
+          "rawStyle()"
+        ]
+      },
+      "sampleCount": 54,
+      "truncated": true
+    },
+    "2.1.1_1.20": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.0.0-beta.7_1.19": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 367,
+  "methodCount": 2000,
+  "truncated": true
+}

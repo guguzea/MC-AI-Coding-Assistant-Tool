@@ -1,0 +1,3017 @@
+{
+  "slug": "corgilib",
+  "modId": "corgilib",
+  "id": "authored/lib-corgilib",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "corgilib"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:47.143Z",
+  "versions": {
+    "e2c37e1294461e8e3be691c38ba0fed3d10630d110226a74af41a160392af7592fdd77eb436f80a052b6b7f8d33ec4dea020a10dff3b249d9c1d8be101ab9f45": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.CorgiLibForge",
+        "corgitaco.corgilib.CorgiLibForgeEventsHandler",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.entity.npc.VillagerTradeRegistry",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.ForgeNetworkHandler",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.ForgePlatform",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.reg.BlockRegistryObject",
+        "corgitaco.corgilib.reg.forge.ForgeBusGetter",
+        "corgitaco.corgilib.reg.forge.ForgeRegistrationFactory",
+        "corgitaco.corgilib.reg.RegistrationProvider",
+        "corgitaco.corgilib.reg.RegistryHolder",
+        "corgitaco.corgilib.reg.RegistryObject",
+        "corgitaco.corgilib.registries.PrintRegistries",
+        "corgitaco.corgilib.registries.WorldRegistryExportCommand",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.server.commands.CorgiLibCommands",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic",
+        "corgitaco.corgilib.world.level.feature.CorgiLibFeatures",
+        "corgitaco.corgilib.world.level.feature.gen.configurations.TreeFromStructureNBTConfig",
+        "corgitaco.corgilib.world.level.feature.gen.TreeFromStructureNBTFeature",
+        "corgitaco.corgilib.world.level.RandomTickScheduler"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(PoseStack, VertexConsumer, double, double, double)",
+          "onScroll(double)",
+          "getStructureWorldBox(StructureBlockEntity)",
+          "isKeyDown(Minecraft, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.CorgiLibForge": [],
+        "corgitaco.corgilib.CorgiLibForgeEventsHandler": [
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(Level, Entity, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(ItemStack)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.entity.npc.VillagerTradeRegistry": [
+          "register()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double)",
+          "easeInCirc(double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "readFromPacket(FriendlyByteBuf)",
+          "write(FriendlyByteBuf)",
+          "handle(Level, Player)"
+        ],
+        "corgitaco.corgilib.network.ForgeNetworkHandler": [
+          "init()",
+          "registerMessage(int, Packet.Handler<T>)",
+          "sendToPlayer(ServerPlayer, T)",
+          "sendToAllPlayers(List<ServerPlayer>, T)",
+          "sendToServer(T)",
+          "handle(T, Supplier<Context>, Packet.Handle<T>)"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "write(FriendlyByteBuf)",
+          "readFromPacket(FriendlyByteBuf)",
+          "handle(Level, Player)"
+        ],
+        "corgitaco.corgilib.platform.ForgePlatform": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "sendToClient(ServerPlayer, P)",
+          "sendToServer(P)",
+          "configDir()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "sendToAllClients(List<ServerPlayer>, P)",
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.reg.BlockRegistryObject": [
+          "defaultBlockState()",
+          "m_5456_()"
+        ],
+        "corgitaco.corgilib.reg.forge.ForgeBusGetter": [],
+        "corgitaco.corgilib.reg.forge.ForgeRegistrationFactory": [
+          "create(ResourceKey<? extends Registry<T>>, String)"
+        ],
+        "corgitaco.corgilib.reg.RegistrationProvider": [],
+        "corgitaco.corgilib.reg.RegistryHolder": [],
+        "corgitaco.corgilib.reg.RegistryObject": [],
+        "corgitaco.corgilib.registries.PrintRegistries": [
+          "printRegistry(RegistryAccess, Path)"
+        ],
+        "corgitaco.corgilib.registries.WorldRegistryExportCommand": [
+          "registerWorldRegistryExportCommand(CommandDispatcher<CommandSourceStack>)",
+          "registerWorldRegistryExportCommand(CommandDispatcher<CommandSourceStack>, String)",
+          "generateWorldRegistryExport(boolean, boolean, CommandContext<CommandSourceStack>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(Registry<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.server.commands.CorgiLibCommands": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandSelection)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper": [
+          "escapeString(String)",
+          "escapeString(String, char, Set<UnicodeBlock>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError": [
+          "getCompleteMessage()",
+          "getLineMessage()",
+          "setStartParsing(int, int)",
+          "setEndParsing(int, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson": [
+          "load(String)",
+          "load(File)",
+          "load(InputStream)",
+          "loadElement(String)",
+          "loadElement(File)",
+          "loadElement(InputStream)",
+          "fromJson(JsonObject, Class<T>)",
+          "fromJson(String, Class<T>)",
+          "fromJsonCarefully(String, Class<T>)",
+          "fromJsonCarefully(JsonObject, Class<T>)",
+          "toJson(T)",
+          "toJson(T, Marshaller)",
+          "push(ParserContext<T>, Consumer<T>)",
+          "getMarshaller()",
+          "builder()",
+          "throwDelayed(SyntaxError)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray": [
+          "get(int)",
+          "getString(int, String)",
+          "getBoolean(int, boolean)",
+          "getByte(int, byte)",
+          "getChar(int, char)",
+          "getShort(int, short)",
+          "getInt(int, int)",
+          "getLong(int, long)",
+          "getFloat(int, float)",
+          "getDouble(int, double)",
+          "getComment(int)",
+          "setComment(int, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "add(JsonElement, String)",
+          "equals(Object)",
+          "hashCode()",
+          "get(Class<E>, int)",
+          "setMarshaller(Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement": [
+          "clone()",
+          "toJson()",
+          "toJson(boolean, boolean)",
+          "toJson(boolean, boolean, int)",
+          "toJson(JsonGrammar, int)",
+          "toJson(JsonGrammar)",
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar": [
+          "hasComments()",
+          "shouldOutputWhitespace()",
+          "builder()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject": [
+          "getObject(String)",
+          "put(String, JsonElement, String)",
+          "putDefault(String, JsonElement, String)",
+          "putDefault(String, T, String)",
+          "putDefault(String, T, Class<? extends T>, String)",
+          "getDelta(JsonObject)",
+          "getComment(String)",
+          "setComment(String, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "setMarshaller(Marshaller)",
+          "getMarshaller()",
+          "get(Class<E>, String)",
+          "getBoolean(String, boolean)",
+          "getByte(String, byte)",
+          "getChar(String, char)",
+          "getShort(String, short)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive": [
+          "asString()",
+          "asBoolean(boolean)",
+          "asByte(byte)",
+          "asChar(char)",
+          "asShort(short)",
+          "asInt(int)",
+          "asLong(long)",
+          "asFloat(float)",
+          "asDouble(double)",
+          "asBigInteger(BigInteger)",
+          "asBigDecimal(BigDecimal)",
+          "toString()",
+          "getValue()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()",
+          "of(String)",
+          "of(BigInteger)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic": [
+          "classForType(Type)",
+          "createAndCast(Type)",
+          "createAndCastCarefully(Type)",
+          "createAndCast(Class<U>, boolean)",
+          "shoehorn(Object)"
+        ],
+        "corgitaco.corgilib.world.level.feature.CorgiLibFeatures": [
+          "register()"
+        ],
+        "corgitaco.corgilib.world.level.feature.gen.configurations.TreeFromStructureNBTConfig": [],
+        "corgitaco.corgilib.world.level.feature.gen.TreeFromStructureNBTFeature": [
+          "m_142674_(FeaturePlaceContext<TreeFromStructureNBTConfig>)",
+          "placeAdditional(TreeFromStructureNBTConfig, WorldGenLevel, BlockPos, StructurePlaceSettings, Palette, BlockPos)",
+          "placeTrunk(TreeFromStructureNBTConfig, BlockStateProvider, BlockStateProvider, WorldGenLevel, BlockPos, RandomSource, StructurePlaceSettings, Palette, BlockPos, List<StructureBlockInfo>, List<StructureBlockInfo>, Set<BlockPos>, Set<BlockPos>, int)",
+          "placeCanopy(TreeFromStructureNBTConfig, BlockStateProvider, BlockStateProvider, WorldGenLevel, BlockPos, RandomSource, StructurePlaceSettings, Palette, Set<BlockPos>, Set<BlockPos>, int, BlockPredicate)",
+          "placeLogsWithRotation(BlockStateProvider, WorldGenLevel, BlockPos, RandomSource, StructurePlaceSettings, BlockPos, List<StructureBlockInfo>, Set<BlockPos>)",
+          "placeTreeDecorations(Iterable<TreeDecorator>, WorldGenLevel, RandomSource, Set<BlockPos>, Set<BlockPos>)",
+          "placeLeavesWithCalculatedDistanceAndRotation(BlockStateProvider, WorldGenLevel, BlockPos, RandomSource, StructurePlaceSettings, List<StructureBlockInfo>, Set<BlockPos>, BlockPos, BlockPredicate)",
+          "fillLogsUnder(RandomSource, BlockStateProvider, WorldGenLevel, BlockPos, StructurePlaceSettings, BlockPos, List<StructureBlockInfo>, int, BlockPredicate)",
+          "getTransformedState(BlockState, BlockState, Rotation)",
+          "isOnGround(int, WorldGenLevel, BlockPos, BlockPredicate)",
+          "getModifiedPos(StructurePlaceSettings, StructureBlockInfo, BlockPos, BlockPos)",
+          "noTreePartPresent(ResourceLocation)",
+          "getStructureInfosInStructurePalletteFromBlockList(Iterable<Block>, Palette)"
+        ],
+        "corgitaco.corgilib.world.level.RandomTickScheduler": []
+      },
+      "sampleCount": 94
+    },
+    "3.0.0.0": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.CorgiLibFabric",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.entity.npc.VillagerTradeRegistry",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.FabricNetworkHandler",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.FabricPlatform",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.reg.ArgumentTypeHelper",
+        "corgitaco.corgilib.reg.BlockRegistryObject",
+        "corgitaco.corgilib.reg.fabric.FabricArgumentTypeHelper",
+        "corgitaco.corgilib.reg.fabric.FabricDatapackRegistryBuilder",
+        "corgitaco.corgilib.reg.fabric.FabricRegistrationFactory",
+        "corgitaco.corgilib.reg.RegistrationProvider",
+        "corgitaco.corgilib.reg.registries.DatapackRegistry",
+        "corgitaco.corgilib.reg.registries.DatapackRegistryBuilder",
+        "corgitaco.corgilib.reg.registries.RegistryBuilder",
+        "corgitaco.corgilib.reg.registries.RegistryFeatureType",
+        "corgitaco.corgilib.reg.RegistryHolder",
+        "corgitaco.corgilib.reg.RegistryObject",
+        "corgitaco.corgilib.reg.util.DatapackRegistryGenerator",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic",
+        "corgitaco.corgilib.world.level.feature.CorgiLibFeatures",
+        "corgitaco.corgilib.world.level.feature.gen.configurations.TreeFromStructureNBTConfig",
+        "corgitaco.corgilib.world.level.feature.gen.TreeFromStructureNBTFeature",
+        "corgitaco.corgilib.world.level.RandomTickScheduler"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(class_4587, class_4588, double, double, double)",
+          "onScroll(double)",
+          "getStructureWorldBox(class_2633)",
+          "isKeyDown(class_310, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.CorgiLibFabric": [
+          "onInitialize()",
+          "initializeCorgiLib(String)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(class_1937, class_1297, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(class_1799)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.entity.npc.VillagerTradeRegistry": [
+          "register()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double)",
+          "easeInCirc(double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "readFromPacket(class_2540)",
+          "write(class_2540)",
+          "handle(class_1937, class_1657)"
+        ],
+        "corgitaco.corgilib.network.FabricNetworkHandler": [
+          "init()",
+          "sendToPlayer(class_3222, MSG)",
+          "sendToAllPlayers(List<class_3222>, MSG)",
+          "sendToServer(MSG)",
+          "ClientProxy()"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "write(class_2540)",
+          "readFromPacket(class_2540)",
+          "handle(class_1937, class_1657)"
+        ],
+        "corgitaco.corgilib.platform.FabricPlatform": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "sendToClient(class_3222, P)",
+          "sendToServer(P)",
+          "configDir()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "sendToAllClients(List<class_3222>, P)",
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.reg.ArgumentTypeHelper": [],
+        "corgitaco.corgilib.reg.BlockRegistryObject": [
+          "defaultBlockState()",
+          "method_8389()"
+        ],
+        "corgitaco.corgilib.reg.fabric.FabricArgumentTypeHelper": [
+          "register(RegistrationProvider<class_2314<?, ?>>, String, Class<A>, Supplier<I>)"
+        ],
+        "corgitaco.corgilib.reg.fabric.FabricDatapackRegistryBuilder": [
+          "withElementCodec(Codec<T>)",
+          "withNetworkCodec(Codec<T>)",
+          "withBootstrap(class_7882<T>)",
+          "build()"
+        ],
+        "corgitaco.corgilib.reg.fabric.FabricRegistrationFactory": [
+          "create(class_5321<? extends class_2378<T>>, String)",
+          "create(class_2378<T>, String)"
+        ],
+        "corgitaco.corgilib.reg.RegistrationProvider": [],
+        "corgitaco.corgilib.reg.registries.DatapackRegistry": [
+          "bootstrapDataGenerator()"
+        ],
+        "corgitaco.corgilib.reg.registries.DatapackRegistryBuilder": [],
+        "corgitaco.corgilib.reg.registries.RegistryBuilder": [],
+        "corgitaco.corgilib.reg.registries.RegistryFeatureType": [
+          "get(class_2960, Class<X>)",
+          "getNoArgs(class_2960)",
+          "getId()",
+          "getArgumentType()"
+        ],
+        "corgitaco.corgilib.reg.RegistryHolder": [],
+        "corgitaco.corgilib.reg.RegistryObject": [],
+        "corgitaco.corgilib.reg.util.DatapackRegistryGenerator": [
+          "method_10319(class_7403)",
+          "method_10321()"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(class_2378<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper": [
+          "escapeString(String)",
+          "escapeString(String, char, Set<UnicodeBlock>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError": [
+          "getCompleteMessage()",
+          "getLineMessage()",
+          "setStartParsing(int, int)",
+          "setEndParsing(int, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson": [
+          "load(String)",
+          "load(File)",
+          "load(InputStream)",
+          "loadElement(String)",
+          "loadElement(File)",
+          "loadElement(InputStream)",
+          "fromJson(JsonObject, Class<T>)",
+          "fromJson(String, Class<T>)",
+          "fromJsonCarefully(String, Class<T>)",
+          "fromJsonCarefully(JsonObject, Class<T>)",
+          "toJson(T)",
+          "toJson(T, Marshaller)",
+          "push(ParserContext<T>, Consumer<T>)",
+          "getMarshaller()",
+          "builder()",
+          "throwDelayed(SyntaxError)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray": [
+          "get(int)",
+          "getString(int, String)",
+          "getBoolean(int, boolean)",
+          "getByte(int, byte)",
+          "getChar(int, char)",
+          "getShort(int, short)",
+          "getInt(int, int)",
+          "getLong(int, long)",
+          "getFloat(int, float)",
+          "getDouble(int, double)",
+          "getComment(int)",
+          "setComment(int, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "add(JsonElement, String)",
+          "equals(Object)",
+          "hashCode()",
+          "get(Class<E>, int)",
+          "setMarshaller(Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement": [
+          "clone()",
+          "toJson()",
+          "toJson(boolean, boolean)",
+          "toJson(boolean, boolean, int)",
+          "toJson(JsonGrammar, int)",
+          "toJson(JsonGrammar)",
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar": [
+          "hasComments()",
+          "shouldOutputWhitespace()",
+          "builder()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject": [
+          "getObject(String)",
+          "put(String, JsonElement, String)",
+          "putDefault(String, JsonElement, String)",
+          "putDefault(String, T, String)",
+          "putDefault(String, T, Class<? extends T>, String)",
+          "getDelta(JsonObject)",
+          "getComment(String)",
+          "setComment(String, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "setMarshaller(Marshaller)",
+          "getMarshaller()",
+          "get(Class<E>, String)",
+          "getBoolean(String, boolean)",
+          "getByte(String, byte)",
+          "getChar(String, char)",
+          "getShort(String, short)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive": [
+          "asString()",
+          "asBoolean(boolean)",
+          "asByte(byte)",
+          "asChar(char)",
+          "asShort(short)",
+          "asInt(int)",
+          "asLong(long)",
+          "asFloat(float)",
+          "asDouble(double)",
+          "asBigInteger(BigInteger)",
+          "asBigDecimal(BigDecimal)",
+          "toString()",
+          "getValue()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()",
+          "of(String)",
+          "of(BigInteger)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic": [
+          "classForType(Type)",
+          "createAndCast(Type)",
+          "createAndCastCarefully(Type)",
+          "createAndCast(Class<U>, boolean)",
+          "shoehorn(Object)"
+        ],
+        "corgitaco.corgilib.world.level.feature.CorgiLibFeatures": [
+          "register()"
+        ],
+        "corgitaco.corgilib.world.level.feature.gen.configurations.TreeFromStructureNBTConfig": [],
+        "corgitaco.corgilib.world.level.feature.gen.TreeFromStructureNBTFeature": [
+          "method_13151(class_5821<TreeFromStructureNBTConfig>)",
+          "placeAdditional(TreeFromStructureNBTConfig, class_5281, class_2338, class_3492, class_5162, class_2338)",
+          "placeTrunk(TreeFromStructureNBTConfig, class_4651, class_4651, class_5281, class_2338, class_5819, class_3492, class_5162, class_2338, List<class_3501>, List<class_3501>, Set<class_2338>, Set<class_2338>, int)",
+          "placeCanopy(TreeFromStructureNBTConfig, class_4651, class_4651, class_5281, class_2338, class_5819, class_3492, class_5162, Set<class_2338>, Set<class_2338>, int, class_6646)",
+          "placeLogsWithRotation(class_4651, class_5281, class_2338, class_5819, class_3492, class_2338, List<class_3501>, Set<class_2338>)",
+          "placeTreeDecorations(Iterable<class_4662>, class_5281, class_5819, Set<class_2338>, Set<class_2338>)",
+          "placeLeavesWithCalculatedDistanceAndRotation(class_4651, class_5281, class_2338, class_5819, class_3492, List<class_3501>, Set<class_2338>, class_2338, class_6646)",
+          "fillLogsUnder(class_5819, class_4651, class_5281, class_2338, class_3492, class_2338, List<class_3501>, int, class_6646)",
+          "getTransformedState(class_2680, class_2680, class_2470)",
+          "isOnGround(int, class_5281, class_2338, class_6646)",
+          "getModifiedPos(class_3492, class_3501, class_2338, class_2338)",
+          "noTreePartPresent(class_2960)",
+          "getStructureInfosInStructurePalletteFromBlockList(Iterable<class_2248>, class_5162)"
+        ],
+        "corgitaco.corgilib.world.level.RandomTickScheduler": []
+      },
+      "sampleCount": 99
+    },
+    "_9.0.0.0___mandatory": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.AnnouncementInfo",
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker",
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands",
+        "corgitaco.corgilib.client.RenderUtils",
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.config.AnnouncementConfig",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.platform.PlatformNetwork",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.server.commands.CorgiLibCommands",
+        "corgitaco.corgilib.server.commands.PlaceAllCommand",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic",
+        "corgitaco.corgilib.world.level.RandomTickScheduler",
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge",
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.AnnouncementInfo": [
+          "saveStoredAnnouncementInfo()",
+          "getInstance()"
+        ],
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker": [
+          "checkedAnnouncementTicker(Player)",
+          "canRunDismissCommand()",
+          "announcementTicker(Player)"
+        ],
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands": [
+          "registerClientCommands(CommandDispatcher<?>)"
+        ],
+        "corgitaco.corgilib.client.RenderUtils": [
+          "drawFlatColoredSphere(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawSphere(Matrix4f, VertexConsumer, float, float, float, float, float, float, RenderUtils.SphereDrawHandler)",
+          "drawRing(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawRing(Matrix4f, VertexConsumer, float, float, float, float, int, float, RenderUtils.RingDrawHandler)"
+        ],
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(PoseStack, VertexConsumer, double, double, double, boolean, LevelRenderer)",
+          "onScroll(double)",
+          "getStructureWorldBox(StructureBlockEntity)",
+          "isKeyDown(Minecraft, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.config.AnnouncementConfig": [],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(Level, Entity, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(ItemStack)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double, double)",
+          "easeInCirc(double, double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.platform.PlatformNetwork": [
+          "sendToAllClients(List<ServerPlayer>, P)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(Registry<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.server.commands.CorgiLibCommands": [
+          "registerCommands(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "corgitaco.corgilib.server.commands.PlaceAllCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)",
+          "dumpConfiguredFeatures(Vec3, ServerLevel, String, BlockState, int)",
+          "dumpStructures(Vec3, ServerLevel, String, BlockState, int)",
+          "generateObject(Vec3, ServerLevel, int, int, BlockState, int, BiConsumer<Integer, BlockPos>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper": [
+          "escapeString(String)",
+          "escapeString(String, char, Set<UnicodeBlock>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError": [
+          "getCompleteMessage()",
+          "getLineMessage()",
+          "setStartParsing(int, int)",
+          "setEndParsing(int, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson": [
+          "load(String)",
+          "load(File)",
+          "load(InputStream)",
+          "loadElement(String)",
+          "loadElement(File)",
+          "loadElement(InputStream)",
+          "fromJson(JsonObject, Class<T>)",
+          "fromJson(String, Class<T>)",
+          "fromJsonCarefully(String, Class<T>)",
+          "fromJsonCarefully(JsonObject, Class<T>)",
+          "toJson(T)",
+          "toJson(T, Marshaller)",
+          "push(ParserContext<T>, Consumer<T>)",
+          "getMarshaller()",
+          "builder()",
+          "throwDelayed(SyntaxError)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray": [
+          "get(int)",
+          "getString(int, String)",
+          "getBoolean(int, boolean)",
+          "getByte(int, byte)",
+          "getChar(int, char)",
+          "getShort(int, short)",
+          "getInt(int, int)",
+          "getLong(int, long)",
+          "getFloat(int, float)",
+          "getDouble(int, double)",
+          "getComment(int)",
+          "setComment(int, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "add(JsonElement, String)",
+          "equals(Object)",
+          "hashCode()",
+          "get(Class<E>, int)",
+          "setMarshaller(Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement": [
+          "clone()",
+          "toJson()",
+          "toJson(boolean, boolean)",
+          "toJson(boolean, boolean, int)",
+          "toJson(JsonGrammar, int)",
+          "toJson(JsonGrammar)",
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar": [
+          "hasComments()",
+          "shouldOutputWhitespace()",
+          "builder()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject": [
+          "getObject(String)",
+          "put(String, JsonElement, String)",
+          "putDefault(String, JsonElement, String)",
+          "putDefault(String, T, String)",
+          "putDefault(String, T, Class<? extends T>, String)",
+          "getDelta(JsonObject)",
+          "getComment(String)",
+          "setComment(String, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "setMarshaller(Marshaller)",
+          "getMarshaller()",
+          "get(Class<E>, String)",
+          "getBoolean(String, boolean)",
+          "getByte(String, byte)",
+          "getChar(String, char)",
+          "getShort(String, short)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive": [
+          "asString()",
+          "asBoolean(boolean)",
+          "asByte(byte)",
+          "asChar(char)",
+          "asShort(short)",
+          "asInt(int)",
+          "asLong(long)",
+          "asFloat(float)",
+          "asDouble(double)",
+          "asBigInteger(BigInteger)",
+          "asBigDecimal(BigDecimal)",
+          "toString()",
+          "getValue()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()",
+          "of(String)",
+          "of(BigInteger)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic": [
+          "classForType(Type)",
+          "createAndCast(Type)",
+          "createAndCastCarefully(Type)",
+          "createAndCast(Class<U>, boolean)",
+          "shoehorn(Object)"
+        ],
+        "corgitaco.corgilib.world.level.RandomTickScheduler": [],
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge": [],
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler": [
+          "register(RegisterPayloadHandlersEvent)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "getModIDS()",
+          "configDir()",
+          "register(Registry<T>, String, Supplier<T>)",
+          "createSimpleBuiltin(ResourceKey<Registry<T>>)",
+          "registerDatapackRegistry(ResourceKey<Registry<T>>, Supplier<Codec<T>>)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork": [
+          "sendToClient(ServerPlayer, P)",
+          "sendToServer(P)"
+        ]
+      },
+      "sampleCount": 90
+    },
+    "_7.0.0.0___mandatory": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.AnnouncementInfo",
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker",
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands",
+        "corgitaco.corgilib.client.RenderUtils",
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.config.AnnouncementConfig",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.platform.PlatformNetwork",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.server.commands.CorgiLibCommands",
+        "corgitaco.corgilib.server.commands.PlaceAllCommand",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic",
+        "corgitaco.corgilib.world.level.RandomTickScheduler",
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge",
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.AnnouncementInfo": [
+          "saveStoredAnnouncementInfo()",
+          "getInstance()"
+        ],
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker": [
+          "checkedAnnouncementTicker(Player)",
+          "canRunDismissCommand()",
+          "announcementTicker(Player)"
+        ],
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands": [
+          "registerClientCommands(CommandDispatcher<?>)"
+        ],
+        "corgitaco.corgilib.client.RenderUtils": [
+          "drawFlatColoredSphere(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawSphere(Matrix4f, VertexConsumer, float, float, float, float, float, float, RenderUtils.SphereDrawHandler)",
+          "drawRing(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawRing(Matrix4f, VertexConsumer, float, float, float, float, int, float, RenderUtils.RingDrawHandler)"
+        ],
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(PoseStack, VertexConsumer, double, double, double, boolean)",
+          "onScroll(double)",
+          "getStructureWorldBox(StructureBlockEntity)",
+          "isKeyDown(Minecraft, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.config.AnnouncementConfig": [],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(Level, Entity, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(ItemStack)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double, double)",
+          "easeInCirc(double, double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.platform.PlatformNetwork": [
+          "sendToAllClients(List<ServerPlayer>, P)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(Registry<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.server.commands.CorgiLibCommands": [
+          "registerCommands(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "corgitaco.corgilib.server.commands.PlaceAllCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)",
+          "dumpConfiguredFeatures(Vec3, ServerLevel, String, BlockState, int)",
+          "dumpStructures(Vec3, ServerLevel, String, BlockState, int)",
+          "generateObject(Vec3, ServerLevel, int, int, BlockState, int, BiConsumer<Integer, BlockPos>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper": [
+          "escapeString(String)",
+          "escapeString(String, char, Set<UnicodeBlock>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError": [
+          "getCompleteMessage()",
+          "getLineMessage()",
+          "setStartParsing(int, int)",
+          "setEndParsing(int, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson": [
+          "load(String)",
+          "load(File)",
+          "load(InputStream)",
+          "loadElement(String)",
+          "loadElement(File)",
+          "loadElement(InputStream)",
+          "fromJson(JsonObject, Class<T>)",
+          "fromJson(String, Class<T>)",
+          "fromJsonCarefully(String, Class<T>)",
+          "fromJsonCarefully(JsonObject, Class<T>)",
+          "toJson(T)",
+          "toJson(T, Marshaller)",
+          "push(ParserContext<T>, Consumer<T>)",
+          "getMarshaller()",
+          "builder()",
+          "throwDelayed(SyntaxError)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray": [
+          "get(int)",
+          "getString(int, String)",
+          "getBoolean(int, boolean)",
+          "getByte(int, byte)",
+          "getChar(int, char)",
+          "getShort(int, short)",
+          "getInt(int, int)",
+          "getLong(int, long)",
+          "getFloat(int, float)",
+          "getDouble(int, double)",
+          "getComment(int)",
+          "setComment(int, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "add(JsonElement, String)",
+          "equals(Object)",
+          "hashCode()",
+          "get(Class<E>, int)",
+          "setMarshaller(Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement": [
+          "clone()",
+          "toJson()",
+          "toJson(boolean, boolean)",
+          "toJson(boolean, boolean, int)",
+          "toJson(JsonGrammar, int)",
+          "toJson(JsonGrammar)",
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar": [
+          "hasComments()",
+          "shouldOutputWhitespace()",
+          "builder()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject": [
+          "getObject(String)",
+          "put(String, JsonElement, String)",
+          "putDefault(String, JsonElement, String)",
+          "putDefault(String, T, String)",
+          "putDefault(String, T, Class<? extends T>, String)",
+          "getDelta(JsonObject)",
+          "getComment(String)",
+          "setComment(String, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "setMarshaller(Marshaller)",
+          "getMarshaller()",
+          "get(Class<E>, String)",
+          "getBoolean(String, boolean)",
+          "getByte(String, byte)",
+          "getChar(String, char)",
+          "getShort(String, short)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive": [
+          "asString()",
+          "asBoolean(boolean)",
+          "asByte(byte)",
+          "asChar(char)",
+          "asShort(short)",
+          "asInt(int)",
+          "asLong(long)",
+          "asFloat(float)",
+          "asDouble(double)",
+          "asBigInteger(BigInteger)",
+          "asBigDecimal(BigDecimal)",
+          "toString()",
+          "getValue()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()",
+          "of(String)",
+          "of(BigInteger)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic": [
+          "classForType(Type)",
+          "createAndCast(Type)",
+          "createAndCastCarefully(Type)",
+          "createAndCast(Class<U>, boolean)",
+          "shoehorn(Object)"
+        ],
+        "corgitaco.corgilib.world.level.RandomTickScheduler": [],
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge": [],
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler": [
+          "register(RegisterPayloadHandlersEvent)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "getModIDS()",
+          "configDir()",
+          "register(Registry<T>, String, Supplier<T>)",
+          "createSimpleBuiltin(ResourceKey<Registry<T>>)",
+          "registerDatapackRegistry(ResourceKey<Registry<T>>, Supplier<Codec<T>>)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork": [
+          "sendToClient(ServerPlayer, P)",
+          "sendToServer(P)"
+        ]
+      },
+      "sampleCount": 91
+    },
+    "_6.0.0.3___mandatory": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.AnnouncementInfo",
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker",
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands",
+        "corgitaco.corgilib.client.RenderUtils",
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.config.AnnouncementConfig",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.platform.PlatformNetwork",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.server.commands.CorgiLibCommands",
+        "corgitaco.corgilib.server.commands.PlaceAllCommand",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic",
+        "corgitaco.corgilib.world.level.RandomTickScheduler",
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge",
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform",
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.AnnouncementInfo": [
+          "saveStoredAnnouncementInfo()",
+          "getInstance()"
+        ],
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker": [
+          "checkedAnnouncementTicker(Player)",
+          "canRunDismissCommand()",
+          "announcementTicker(Player)"
+        ],
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands": [
+          "registerClientCommands(CommandDispatcher<?>)"
+        ],
+        "corgitaco.corgilib.client.RenderUtils": [
+          "drawFlatColoredSphere(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawSphere(Matrix4f, VertexConsumer, float, float, float, float, float, float, RenderUtils.SphereDrawHandler)",
+          "drawRing(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawRing(Matrix4f, VertexConsumer, float, float, float, float, int, float, RenderUtils.RingDrawHandler)"
+        ],
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(PoseStack, VertexConsumer, double, double, double, boolean)",
+          "onScroll(double)",
+          "getStructureWorldBox(StructureBlockEntity)",
+          "isKeyDown(Minecraft, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.config.AnnouncementConfig": [],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(Level, Entity, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(ItemStack)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double, double)",
+          "easeInCirc(double, double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.platform.PlatformNetwork": [
+          "sendToAllClients(List<ServerPlayer>, P)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(Registry<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.server.commands.CorgiLibCommands": [
+          "registerCommands(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "corgitaco.corgilib.server.commands.PlaceAllCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)",
+          "dumpConfiguredFeatures(Vec3, ServerLevel, String, BlockState, int)",
+          "dumpStructures(Vec3, ServerLevel, String, BlockState, int)",
+          "generateObject(Vec3, ServerLevel, int, int, BlockState, int, BiConsumer<Integer, BlockPos>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Escaper": [
+          "escapeString(String)",
+          "escapeString(String, char, Set<UnicodeBlock>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.Marshaller": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.SyntaxError": [
+          "getCompleteMessage()",
+          "getLineMessage()",
+          "setStartParsing(int, int)",
+          "setEndParsing(int, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.Jankson": [
+          "load(String)",
+          "load(File)",
+          "load(InputStream)",
+          "loadElement(String)",
+          "loadElement(File)",
+          "loadElement(InputStream)",
+          "fromJson(JsonObject, Class<T>)",
+          "fromJson(String, Class<T>)",
+          "fromJsonCarefully(String, Class<T>)",
+          "fromJsonCarefully(JsonObject, Class<T>)",
+          "toJson(T)",
+          "toJson(T, Marshaller)",
+          "push(ParserContext<T>, Consumer<T>)",
+          "getMarshaller()",
+          "builder()",
+          "throwDelayed(SyntaxError)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonArray": [
+          "get(int)",
+          "getString(int, String)",
+          "getBoolean(int, boolean)",
+          "getByte(int, byte)",
+          "getChar(int, char)",
+          "getShort(int, short)",
+          "getInt(int, int)",
+          "getLong(int, long)",
+          "getFloat(int, float)",
+          "getDouble(int, double)",
+          "getComment(int)",
+          "setComment(int, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "add(JsonElement, String)",
+          "equals(Object)",
+          "hashCode()",
+          "get(Class<E>, int)",
+          "setMarshaller(Marshaller)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonElement": [
+          "clone()",
+          "toJson()",
+          "toJson(boolean, boolean)",
+          "toJson(boolean, boolean, int)",
+          "toJson(JsonGrammar, int)",
+          "toJson(JsonGrammar)",
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonGrammar": [
+          "hasComments()",
+          "shouldOutputWhitespace()",
+          "builder()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonNull": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonObject": [
+          "getObject(String)",
+          "put(String, JsonElement, String)",
+          "putDefault(String, JsonElement, String)",
+          "putDefault(String, T, String)",
+          "putDefault(String, T, Class<? extends T>, String)",
+          "getDelta(JsonObject)",
+          "getComment(String)",
+          "setComment(String, String)",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "setMarshaller(Marshaller)",
+          "getMarshaller()",
+          "get(Class<E>, String)",
+          "getBoolean(String, boolean)",
+          "getByte(String, byte)",
+          "getChar(String, char)",
+          "getShort(String, short)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.JsonPrimitive": [
+          "asString()",
+          "asBoolean(boolean)",
+          "asByte(byte)",
+          "asChar(char)",
+          "asShort(short)",
+          "asInt(int)",
+          "asLong(long)",
+          "asFloat(float)",
+          "asDouble(double)",
+          "asBigInteger(BigInteger)",
+          "asBigDecimal(BigDecimal)",
+          "toString()",
+          "getValue()",
+          "equals(Object)",
+          "hashCode()",
+          "toJson(boolean, boolean, int)",
+          "toJson(Writer, JsonGrammar, int)",
+          "clone()",
+          "of(String)",
+          "of(BigInteger)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.magic.TypeMagic": [
+          "classForType(Type)",
+          "createAndCast(Type)",
+          "createAndCastCarefully(Type)",
+          "createAndCast(Class<U>, boolean)",
+          "shoehorn(Object)"
+        ],
+        "corgitaco.corgilib.world.level.RandomTickScheduler": [],
+        "dev.corgitaco.corgilib.neoforge.CorgiLibNeoForge": [],
+        "dev.corgitaco.corgilib.neoforge.network.NeoForgeNetworkHandler": [
+          "register(RegisterPayloadHandlersEvent)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatform": [
+          "getPlatformName()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "getModIDS()",
+          "configDir()",
+          "register(Registry<T>, String, Supplier<T>)",
+          "createSimpleBuiltin(ResourceKey<Registry<T>>)",
+          "registerDatapackRegistry(ResourceKey<Registry<T>>, Supplier<Codec<T>>)"
+        ],
+        "dev.corgitaco.corgilib.neoforge.platform.NeoForgePlatformNetwork": [
+          "sendToClient(ServerPlayer, P)",
+          "sendToServer(P)"
+        ]
+      },
+      "sampleCount": 90
+    },
+    "_5.0.0.9___mandatory": {
+      "packages": [],
+      "classes": [
+        "corgitaco.corgilib.client.AnnouncementInfo",
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker",
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands",
+        "corgitaco.corgilib.client.RenderUtils",
+        "corgitaco.corgilib.client.screen.widget.EmergencyAnnouncementScreen",
+        "corgitaco.corgilib.client.StructureBoxEditor",
+        "corgitaco.corgilib.comparator.DoubleCheckType",
+        "corgitaco.corgilib.comparator.DoubleComparator",
+        "corgitaco.corgilib.config.AnnouncementConfig",
+        "corgitaco.corgilib.core.CorgiLibRegistry",
+        "corgitaco.corgilib.CorgiLib",
+        "corgitaco.corgilib.entity.condition.AnyCondition",
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition",
+        "corgitaco.corgilib.entity.condition.AttributeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeCondition",
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition",
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition",
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition",
+        "corgitaco.corgilib.entity.condition.ChanceCondition",
+        "corgitaco.corgilib.entity.condition.Condition",
+        "corgitaco.corgilib.entity.condition.ConditionContext",
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition",
+        "corgitaco.corgilib.entity.condition.DifficultyCondition",
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter",
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter",
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition",
+        "corgitaco.corgilib.entity.condition.FlipCondition",
+        "corgitaco.corgilib.entity.condition.HasEffectCondition",
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition",
+        "corgitaco.corgilib.entity.condition.InDimensionCondition",
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition",
+        "corgitaco.corgilib.entity.condition.IsBabyCondition",
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition",
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition",
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition",
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition",
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition",
+        "corgitaco.corgilib.entity.condition.MobifiersPassed",
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition",
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition",
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition",
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition",
+        "corgitaco.corgilib.entity.condition.YRangeCondition",
+        "corgitaco.corgilib.entity.IsInsideStructureTracker",
+        "corgitaco.corgilib.entity.ItemStackCheck",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction",
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions",
+        "corgitaco.corgilib.math.LongPair",
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket",
+        "corgitaco.corgilib.network.Packet",
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S",
+        "corgitaco.corgilib.platform.ModPlatform",
+        "corgitaco.corgilib.platform.PlatformNetwork",
+        "corgitaco.corgilib.serialization.codec.CodecUtil",
+        "corgitaco.corgilib.serialization.codec.CollectionCodec",
+        "corgitaco.corgilib.serialization.codec.CommentedCodec",
+        "corgitaco.corgilib.serialization.codec.CommentsTracker",
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike",
+        "corgitaco.corgilib.serialization.codec.FromFileCodec",
+        "corgitaco.corgilib.serialization.codec.FromFileOps",
+        "corgitaco.corgilib.serialization.codec.Wrapped",
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps",
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil",
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays",
+        "corgitaco.corgilib.server.commands.CorgiLibCommands",
+        "corgitaco.corgilib.server.commands.PlaceAllCommand",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException",
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction"
+      ],
+      "methods": {
+        "corgitaco.corgilib.client.AnnouncementInfo": [
+          "saveStoredAnnouncementInfo()",
+          "getInstance()"
+        ],
+        "corgitaco.corgilib.client.AnnouncementInfoClientTicker": [
+          "checkedAnnouncementTicker(Player)",
+          "canRunDismissCommand()",
+          "announcementTicker(Player)"
+        ],
+        "corgitaco.corgilib.client.commands.CorgiLibClientCommands": [
+          "registerClientCommands(CommandDispatcher<?>)"
+        ],
+        "corgitaco.corgilib.client.RenderUtils": [
+          "drawFlatColoredSphere(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawSphere(Matrix4f, VertexConsumer, float, float, float, float, float, float, RenderUtils.SphereDrawHandler)",
+          "drawRing(Matrix4f, MultiBufferSource, float, float, float, float, float, float, float, float)",
+          "drawRing(Matrix4f, VertexConsumer, float, float, float, float, int, float, RenderUtils.RingDrawHandler)"
+        ],
+        "corgitaco.corgilib.client.screen.widget.EmergencyAnnouncementScreen": [
+          "init()",
+          "render(GuiGraphics, int, int, float)",
+          "renderBackground(GuiGraphics, int, int, float)",
+          "createAlertWidget(Screen, int, int)"
+        ],
+        "corgitaco.corgilib.client.StructureBoxEditor": [
+          "render(PoseStack, VertexConsumer, double, double, double, boolean)",
+          "onScroll(double)",
+          "getStructureWorldBox(StructureBlockEntity)",
+          "isKeyDown(Minecraft, int)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleCheckType": [
+          "test(Double, Double)"
+        ],
+        "corgitaco.corgilib.comparator.DoubleComparator": [
+          "check(double)"
+        ],
+        "corgitaco.corgilib.config.AnnouncementConfig": [],
+        "corgitaco.corgilib.core.CorgiLibRegistry": [
+          "init()"
+        ],
+        "corgitaco.corgilib.CorgiLib": [
+          "init()",
+          "createLocation(String)"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.AnyConditionPassesCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.AttributeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BiomeTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlocksAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.BlockStatesAreCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.ChanceCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.Condition": [],
+        "corgitaco.corgilib.entity.condition.ConditionContext": [],
+        "corgitaco.corgilib.entity.condition.ConditionsPassCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.DifficultyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EntityTypeTagFilter": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.EveryAmountOfDaysCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.FlipCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEffectCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.HasEquippedCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InDimensionCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.InsideStructureTagCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsBabyCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsDeadOrDyingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.IsMobCategoryCondition": [
+          "codec()",
+          "passes(ConditionContext)"
+        ],
+        "corgitaco.corgilib.entity.condition.IsSwimmingCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerByTypeHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LastInjurerHasCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.LunarPhaseCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.MobifiersPassed": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PlayerInventoryCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.PrecipitationAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.SeeSkyAtCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.TimeOfDayCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.condition.YRangeCondition": [
+          "passes(ConditionContext)",
+          "codec()"
+        ],
+        "corgitaco.corgilib.entity.IsInsideStructureTracker": [
+          "setInside(Level, Entity, IsInsideStructureTracker.IsInside)",
+          "getTracker()"
+        ],
+        "corgitaco.corgilib.entity.ItemStackCheck": [
+          "test(ItemStack)",
+          "getItem()"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunction": [
+          "apply(double, double, double)"
+        ],
+        "corgitaco.corgilib.math.blendingfunction.BlendingFunctions": [
+          "easeInOutCirc(double)",
+          "easeOutCubic(double)",
+          "easeOutBounce(double)",
+          "easeOutElastic(double, double)",
+          "easeInCirc(double, double)",
+          "easeOutQuint(double)"
+        ],
+        "corgitaco.corgilib.math.LongPair": [
+          "getVal1()",
+          "getVal2()",
+          "isInBetween(long)",
+          "createLongPairCodec(String, String)",
+          "toString()"
+        ],
+        "corgitaco.corgilib.network.EntityIsInsideStructureTrackerUpdatePacket": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.network.Packet": [],
+        "corgitaco.corgilib.network.UpdateStructureBoxPacketC2S": [
+          "handle(Level, Player)",
+          "type()"
+        ],
+        "corgitaco.corgilib.platform.ModPlatform": [
+          "modConfigDir()"
+        ],
+        "corgitaco.corgilib.platform.PlatformNetwork": [
+          "sendToAllClients(List<ServerPlayer>, P)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CodecUtil": [
+          "validateColorHex()",
+          "intKeyRangeCodec(int, int)",
+          "createLoggedExceptionRegistryCodec(Registry<T>)",
+          "wrapCodecForCollectionSerializing(Codec<T>)",
+          "wrap(T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CollectionCodec": [
+          "encode(COLLECTION, DynamicOps<T>, T)",
+          "decode(DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentedCodec": [
+          "of(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String)",
+          "optionalOf(Codec<B>, String, String, B)",
+          "keys(DynamicOps<T>)",
+          "decode(DynamicOps<T>, MapLike<T>)",
+          "encode(A, DynamicOps<T>, RecordBuilder<T>)"
+        ],
+        "corgitaco.corgilib.serialization.codec.CommentsTracker": [],
+        "corgitaco.corgilib.serialization.codec.CommentsTrackerMapLike": [],
+        "corgitaco.corgilib.serialization.codec.FromFileCodec": [
+          "create(Codec<E>, String)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Wrapped<E>, DynamicOps<T>, T)"
+        ],
+        "corgitaco.corgilib.serialization.codec.FromFileOps": [
+          "listBuilder()",
+          "mapBuilder()",
+          "getAccess(String)"
+        ],
+        "corgitaco.corgilib.serialization.codec.Wrapped": [],
+        "corgitaco.corgilib.serialization.jankson.JanksonJsonOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, JsonElement)",
+          "getNumberValue(JsonElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(JsonElement)",
+          "createBoolean(boolean)",
+          "getStringValue(JsonElement)",
+          "createString(String)",
+          "mergeToList(JsonElement, JsonElement)",
+          "mergeToList(JsonElement, List<JsonElement>)",
+          "mergeToMap(JsonElement, JsonElement, JsonElement)",
+          "mergeToMap(JsonElement, MapLike<JsonElement>)",
+          "getMapValues(JsonElement)",
+          "getMapEntries(JsonElement)",
+          "getMap(JsonElement)",
+          "createMap(Stream<Pair<JsonElement, JsonElement>>)",
+          "getStream(JsonElement)",
+          "getList(JsonElement)",
+          "createList(Stream<JsonElement>)",
+          "remove(JsonElement, String)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JanksonUtil": [
+          "addCommentsAndAlphabeticallySortRecursively(Map<String, String>, JsonElement, String, boolean)",
+          "createConfig(Path, Codec<T>, String, Map<String, String>, DynamicOps<JsonElement>, T)",
+          "readConfig(Path, Codec<T>, DynamicOps<JsonElement>)"
+        ],
+        "corgitaco.corgilib.serialization.jankson.JsonArrayOfArrays": [
+          "toJson(Writer, JsonGrammar, int)"
+        ],
+        "corgitaco.corgilib.server.commands.CorgiLibCommands": [
+          "registerCommands(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "corgitaco.corgilib.server.commands.PlaceAllCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)",
+          "dumpConfiguredFeatures(Vec3, ServerLevel, String, BlockState, int)",
+          "dumpStructures(Vec3, ServerLevel, String, BlockState, int)",
+          "generateObject(Vec3, ServerLevel, int, int, BlockState, int, BiConsumer<Integer, BlockPos>)"
+        ],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializationException": [],
+        "corgitaco.corgilib.shadow.blue.endless.jankson.api.DeserializerFunction": [
+          "deserialize(Object, Marshaller)"
+        ]
+      },
+      "sampleCount": 91,
+      "truncated": true
+    },
+    "_4.0.3.5___mandatory": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1514,
+  "truncated": true
+}

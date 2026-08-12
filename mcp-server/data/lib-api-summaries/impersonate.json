@@ -1,0 +1,79 @@
+{
+  "slug": "impersonate",
+  "modId": "impersonate",
+  "id": "authored/lib-impersonate",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "impersonate"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:58.060Z",
+  "versions": {
+    "3.2.1": {
+      "packages": [],
+      "classes": [
+        "org.ladysnake.impersonate.Impersonate",
+        "org.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "org.ladysnake.impersonate.Impersonate": [
+          "id(String)",
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "org.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "2.10.3": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "2.6.1": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    },
+    "2.3.0": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.impersonate.Impersonate",
+        "io.github.ladysnake.impersonate.Impersonator"
+      ],
+      "methods": {
+        "io.github.ladysnake.impersonate.Impersonate": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "io.github.ladysnake.impersonate.Impersonator": []
+      },
+      "sampleCount": 2
+    }
+  },
+  "classCount": 8,
+  "methodCount": 9
+}

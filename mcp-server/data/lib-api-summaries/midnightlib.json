@@ -1,0 +1,1021 @@
+{
+  "slug": "midnightlib",
+  "modId": "midnightlib",
+  "id": "authored/lib-midnightlib",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "midnightlib"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:06.665Z",
+  "versions": {
+    "1.9.3": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLib",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.ButtonEntry",
+        "eu.midnightdust.lib.config.EntryInfo",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.config.MidnightConfigListWidget",
+        "eu.midnightdust.lib.config.MidnightConfigScreen",
+        "eu.midnightdust.lib.config.MidnightSliderWidget",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [
+          "shouldShowButton()"
+        ],
+        "eu.midnightdust.core.MidnightLib": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "getArgType()",
+          "setValueFromArg(CommandContext<class_2168>, String)",
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.lib.config.ButtonEntry": [
+          "method_25343(class_332, int, int, int, int, int, int, int, boolean, float)",
+          "method_25402(double, double, int)",
+          "method_25396()",
+          "method_37025()"
+        ],
+        "eu.midnightdust.lib.config.EntryInfo": [
+          "setValue(Object)",
+          "toTemporaryValue()",
+          "updateFieldValue()",
+          "updateConditions()",
+          "writeList(int, T)",
+          "getTooltip(boolean)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "createInstance(String, Class<? extends MidnightConfig>)",
+          "init(String, Class<? extends MidnightConfig>)",
+          "addClientEntry(Field, EntryInfo)",
+          "getUnderlyingType(Field)",
+          "textField(EntryInfo, Function<String, Number>, Pattern, double, double, boolean)",
+          "getEnumTranslatableText(Object, EntryInfo)",
+          "loadValuesFromJson()",
+          "write(String)",
+          "writeChanges(String)",
+          "writeChanges()",
+          "getJsonFilePath()",
+          "getDefaultValue(String, String)",
+          "onTabInit(String, MidnightConfigListWidget, MidnightConfigScreen)",
+          "getScreen(class_437, String)",
+          "getScreen(class_437)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfigListWidget": [
+          "method_25329()",
+          "method_57713(class_332)",
+          "addButton(List<class_339>, class_2561, EntryInfo)",
+          "clear()",
+          "method_25322()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfigScreen": [
+          "method_25393()",
+          "updateButtons()",
+          "method_25404(int, int, int)",
+          "method_25419()",
+          "method_25426()",
+          "updateList()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.lib.config.MidnightSliderWidget": [
+          "method_25346()",
+          "method_25344()"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getPlatformName()",
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ]
+      },
+      "sampleCount": 12
+    },
+    "1.8.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLib",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibFabric",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.ButtonEntry",
+        "eu.midnightdust.lib.config.EntryInfo",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.config.MidnightConfigListWidget",
+        "eu.midnightdust.lib.config.MidnightConfigScreen",
+        "eu.midnightdust.lib.config.MidnightSliderWidget",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [
+          "shouldShowButton()"
+        ],
+        "eu.midnightdust.core.MidnightLib": [
+          "onInitializeClient()",
+          "registerAutoCommand()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibFabric": [
+          "onInitializeClient()",
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "getArgType()",
+          "setValueFromArg(CommandContext<class_2168>, String)"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.ButtonEntry": [
+          "method_25343(class_332, int, int, boolean, float)",
+          "method_25402(class_11909, boolean)",
+          "method_25396()",
+          "method_37025()"
+        ],
+        "eu.midnightdust.lib.config.EntryInfo": [
+          "setValue(Object)",
+          "toTemporaryValue()",
+          "updateFieldValue()",
+          "updateConditions()",
+          "writeList(int, T)",
+          "getTooltip(boolean)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "createInstance(String, Class<? extends MidnightConfig>)",
+          "init(String, Class<? extends MidnightConfig>)",
+          "addClientEntry(Field, EntryInfo)",
+          "getUnderlyingType(Field)",
+          "getEnumTranslatableText(Object, EntryInfo)",
+          "loadValuesFromJson()",
+          "write(String)",
+          "writeChanges(String)",
+          "writeChanges()",
+          "getJsonFilePath()",
+          "getDefaultValue(String, String)",
+          "onTabInit(String, MidnightConfigListWidget, MidnightConfigScreen)",
+          "getScreen(class_437, String)",
+          "getScreen(class_437)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfigListWidget": [
+          "method_65507()",
+          "method_57713(class_332)",
+          "addButton(List<class_339>, class_2561, EntryInfo)",
+          "clear()",
+          "method_25322()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfigScreen": [
+          "method_25393()",
+          "updateButtons()",
+          "method_25404(class_11908)",
+          "method_25419()",
+          "method_25426()",
+          "updateList()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.lib.config.MidnightSliderWidget": [
+          "method_25346()",
+          "method_25344()"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getPlatformName()",
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getPlatformName()",
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ]
+      },
+      "sampleCount": 15
+    },
+    "1.6.4": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLib",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibFabric",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [
+          "shouldShowButton()"
+        ],
+        "eu.midnightdust.core.MidnightLib": [
+          "onInitializeClient()",
+          "registerAutoCommand()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibFabric": [
+          "onInitializeClient()",
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "getArgType()",
+          "setValueFromArg(CommandContext<class_2168>, String)"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "getDefaultValue(String, String)",
+          "init(String, Class<? extends MidnightConfig>)",
+          "getUnderlyingType(Field)",
+          "getTooltip(MidnightConfig.EntryInfo)",
+          "getClass(String)",
+          "write(String)",
+          "writeChanges(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getPlatformName()",
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getPlatformName()",
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ]
+      },
+      "sampleCount": 10
+    },
+    "1.5.2": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLib",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.neoforge.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.PlatformFunctions",
+        "eu.midnightdust.neoforge.MidnightLibNeoForge"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLib": [
+          "onInitializeClient()",
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "init()",
+          "render(GuiGraphics, int, int, float)",
+          "renderBackground(GuiGraphics, int, int, float)",
+          "addButtonToOptionsScreen(Screen, Minecraft)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<? extends MidnightConfig>)",
+          "getTooltip(MidnightConfig.EntryInfo)",
+          "getClass(String)",
+          "write(String)",
+          "writeChanges(String)",
+          "getScreen(Screen, String)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.neoforge.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "eu.midnightdust.neoforge.MidnightLibNeoForge": []
+      },
+      "sampleCount": 9
+    },
+    "1.5.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric",
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_332, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<? extends MidnightConfig>)",
+          "getTooltip(MidnightConfig.EntryInfo)",
+          "getClass(String)",
+          "write(String)",
+          "writeChanges(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ]
+      },
+      "sampleCount": 12
+    },
+    "1.3.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric",
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_48579(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 14
+    },
+    "1.2.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric",
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_48579(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 18
+    },
+    "1.1.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric",
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 18
+    },
+    "1.0.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric",
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.PlatformFunctions",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibClientFabric": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.fabric.core.MidnightLibServerFabric": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.fabric.PlatformFunctionsImpl": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.PlatformFunctions": [
+          "getConfigDirectory()",
+          "isClientEnv()",
+          "isModLoaded(String)",
+          "registerCommand(LiteralArgumentBuilder<class_2168>)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 18
+    },
+    "0.6.1-22w43a": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 14
+    },
+    "0.5.0": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.MidnightLibServer",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.AutoCommand",
+        "eu.midnightdust.lib.config.AutoModMenu",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil",
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.MidnightLibServer": [
+          "onInitializeServer()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.AutoCommand": [
+          "register()"
+        ],
+        "eu.midnightdust.lib.config.AutoModMenu": [
+          "getModConfigScreenFactory()",
+          "getProvidedConfigScreenFactories()",
+          "hideFromModMenu(String)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "tick()",
+          "hex2Rgb(String)",
+          "radialRainbow(float, float)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ],
+        "eu.midnightdust.lib.util.screen.TexturedOverlayButtonWidget": [
+          "method_25359(class_4587, int, int, float)"
+        ]
+      },
+      "sampleCount": 14
+    },
+    "0.2.2": {
+      "packages": [],
+      "classes": [
+        "eu.midnightdust.core.config.MidnightLibConfig",
+        "eu.midnightdust.core.MidnightLibClient",
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen",
+        "eu.midnightdust.hats.bunny.BunnyEarsFeatureRenderer",
+        "eu.midnightdust.hats.bunny.BunnyEarsModel",
+        "eu.midnightdust.hats.christmas.ChristmasHatFeatureRenderer",
+        "eu.midnightdust.hats.christmas.ChristmasHatModel",
+        "eu.midnightdust.hats.config.ModMenuIntegration",
+        "eu.midnightdust.hats.tater.TinyPotatoFeatureRenderer",
+        "eu.midnightdust.hats.tater.TinyPotatoModel",
+        "eu.midnightdust.hats.web.HatLoader",
+        "eu.midnightdust.hats.web.PlayerHatData",
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer",
+        "eu.midnightdust.hats.witch.WitchHatModel",
+        "eu.midnightdust.lib.config.MidnightConfig",
+        "eu.midnightdust.lib.config.MidnightConfigExample",
+        "eu.midnightdust.lib.util.MidnightColorUtil",
+        "eu.midnightdust.lib.util.MidnightMathUtil"
+      ],
+      "methods": {
+        "eu.midnightdust.core.config.MidnightLibConfig": [],
+        "eu.midnightdust.core.MidnightLibClient": [
+          "onInitializeClient()"
+        ],
+        "eu.midnightdust.core.screen.MidnightConfigOverviewScreen": [
+          "method_25426()",
+          "method_25394(class_4587, int, int, float)"
+        ],
+        "eu.midnightdust.hats.bunny.BunnyEarsFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.bunny.BunnyEarsModel": [
+          "getModelData()",
+          "method_32008()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.christmas.ChristmasHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.christmas.ChristmasHatModel": [
+          "getModelData()",
+          "method_32008()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.hats.config.ModMenuIntegration": [
+          "getModConfigScreenFactory()"
+        ],
+        "eu.midnightdust.hats.tater.TinyPotatoFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.tater.TinyPotatoModel": [
+          "getModelData()",
+          "method_32008()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.web.HatLoader": [
+          "init()"
+        ],
+        "eu.midnightdust.hats.web.PlayerHatData": [
+          "getHatType()"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatFeatureRenderer": [
+          "getTexturedModelData()",
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "eu.midnightdust.hats.witch.WitchHatModel": [
+          "getModelData()",
+          "setAngles(T, float, float, float, float, float)",
+          "method_2828(class_4587, class_4588, int, int, float, float, float, float)",
+          "method_32008()",
+          "setRotationAngle(class_630, float, float, float)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfig": [
+          "init(String, Class<?>)",
+          "initClient(String, Field, MidnightConfig.EntryInfo)",
+          "write(String)",
+          "getScreen(class_437, String)"
+        ],
+        "eu.midnightdust.lib.config.MidnightConfigExample": [],
+        "eu.midnightdust.lib.util.MidnightColorUtil": [
+          "hex2Rgb(String)"
+        ],
+        "eu.midnightdust.lib.util.MidnightMathUtil": [
+          "isEven(int)"
+        ]
+      },
+      "sampleCount": 18
+    }
+  },
+  "classCount": 172,
+  "methodCount": 402
+}

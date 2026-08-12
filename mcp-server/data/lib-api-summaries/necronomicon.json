@@ -1,0 +1,223 @@
+{
+  "slug": "necronomicon",
+  "modId": "necronomicon",
+  "id": "authored/lib-necronomicon",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "necronomicon"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:07.977Z",
+  "versions": {
+    "1.6.0": {
+      "packages": [],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier",
+        "elocindev.necronomicon.api.ResourceIdentifier",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedGradientName",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.IGradientName",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(class_1309)",
+          "getEntityId(class_1297)",
+          "getEntityIdentifier(class_1297)",
+          "getWorldTime(class_1309)",
+          "getWorldTime(class_1937)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack(FabricLoader, String, String, class_2561, boolean, boolean)",
+          "registerResourcePack(FabricLoader, String, String, class_2561, ResourcePackActivationType)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceIdentifier": [
+          "of(String, String)",
+          "of(String)"
+        ],
+        "elocindev.necronomicon.api.ResourceIdentifier": [
+          "get(String)",
+          "get(String, String)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(class_2561)",
+          "getText(class_2561, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedGradientName": [],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.IGradientName": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(class_5250, int, int)",
+          "setSlideGradient(class_5250, int, int, int, float)",
+          "setBreathingGradient(class_5250, int, int, int, float)",
+          "setRainbowGradient(class_5250, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "onInitialize()",
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [
+          "generateBlockStateModels(class_4910)",
+          "generateItemModels(class_4915)",
+          "registerSlabStairSet(class_4910, class_2248, class_2248, class_2248)",
+          "registerWoodset(class_4910, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248, class_2248)",
+          "registerBars(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerItemModel(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>)",
+          "registerFence(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerFenceGate(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerSlab(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerButton(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerStairs(class_2248, class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "registerFronds(class_2248, BiConsumer<class_2960, Supplier<JsonElement>>, Consumer<class_4917>)",
+          "createSingletonBlockState(class_2248, class_2960)",
+          "createSlabBlockState(class_2248, class_2960, class_2960, class_2960)",
+          "createStairsBlockState(class_2248, class_2960, class_2960, class_2960)",
+          "createButtonBlockState(class_2248, class_2960, class_2960)",
+          "registerParentedItemModel(class_2248, class_2960, BiConsumer<class_2960, Supplier<JsonElement>>)"
+        ],
+        "elocindev.necronomicon.item.FancyItem": [
+          "getAnimatedName(class_1799)"
+        ],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(class_1309)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 23
+    },
+    "1.4.2": {
+      "packages": [],
+      "classes": [
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI",
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI",
+        "elocindev.necronomicon.api.json.JsonFileAPI",
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI",
+        "elocindev.necronomicon.api.NecUtilsAPI",
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI",
+        "elocindev.necronomicon.api.text.AnimatedText",
+        "elocindev.necronomicon.api.text.IAnimatedText",
+        "elocindev.necronomicon.api.text.TextAPI",
+        "elocindev.necronomicon.CommonInitializer",
+        "elocindev.necronomicon.config.ConfigBuilder",
+        "elocindev.necronomicon.datagen.ModelGenerator",
+        "elocindev.necronomicon.item.FancyItem",
+        "elocindev.necronomicon.math.MathUtils",
+        "elocindev.necronomicon.NecronomiconConfig",
+        "elocindev.necronomicon.util.ColorUtils",
+        "elocindev.necronomicon.util.FileUtils"
+      ],
+      "methods": {
+        "elocindev.necronomicon.api.config.v1.NecConfigAPI": [
+          "registerConfig(Class<T>)",
+          "getFile(String)"
+        ],
+        "elocindev.necronomicon.api.datagen.v1.NecDatagenAPI": [],
+        "elocindev.necronomicon.api.datagen.v1.NecModelDatagenAPI": [
+          "makeItem(ItemModelProvider, RegistryObject<Item>, String)"
+        ],
+        "elocindev.necronomicon.api.json.JsonFileAPI": [
+          "setPrettyPrint(Path)"
+        ],
+        "elocindev.necronomicon.api.nbt.v1.NecNbtAPI": [],
+        "elocindev.necronomicon.api.NecUtilsAPI": [
+          "getLookVec(LivingEntity)",
+          "getEntityId(Entity)",
+          "getEntityIdentifier(Entity)",
+          "getWorldTime(LivingEntity)",
+          "getWorldTime(Level)",
+          "isModLoaded(String)"
+        ],
+        "elocindev.necronomicon.api.resource.v1.ResourceBuilderAPI": [
+          "registerBuiltinPack(String, Path, Component, boolean, Component, PackType, Position, boolean)",
+          "registerBuiltinPack(String, Path, Component, boolean, Component, PackType, Position, boolean, int)"
+        ],
+        "elocindev.necronomicon.api.text.AnimatedText": [
+          "getName()",
+          "getId()",
+          "getText(Component)",
+          "getText(Component, int)"
+        ],
+        "elocindev.necronomicon.api.text.IAnimatedText": [],
+        "elocindev.necronomicon.api.text.TextAPI": [
+          "setStaticGradient(MutableComponent, int, int)",
+          "setSlideGradient(MutableComponent, int, int, int, float)",
+          "setBreathingGradient(MutableComponent, int, int, int, float)",
+          "setRainbowGradient(MutableComponent, int, float)"
+        ],
+        "elocindev.necronomicon.CommonInitializer": [
+          "init()"
+        ],
+        "elocindev.necronomicon.config.ConfigBuilder": [
+          "registerConfig(Path, Class<T>)",
+          "initializeConfigs(Class<T>)"
+        ],
+        "elocindev.necronomicon.datagen.ModelGenerator": [],
+        "elocindev.necronomicon.item.FancyItem": [],
+        "elocindev.necronomicon.math.MathUtils": [
+          "getLookingVec(LivingEntity)"
+        ],
+        "elocindev.necronomicon.NecronomiconConfig": [
+          "getFile()"
+        ],
+        "elocindev.necronomicon.util.ColorUtils": [
+          "interpolate(int, int, double)",
+          "interpolateAnimation(int, int, double, double)",
+          "getRed(int)",
+          "getGreen(int)",
+          "getBlue(int)",
+          "gradientSlide(float, Color, Color)"
+        ],
+        "elocindev.necronomicon.util.FileUtils": [
+          "setPrettyPrint(Path)"
+        ]
+      },
+      "sampleCount": 22
+    }
+  },
+  "classCount": 37,
+  "methodCount": 86
+}

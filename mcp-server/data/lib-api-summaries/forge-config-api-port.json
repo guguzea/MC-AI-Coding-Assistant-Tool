@@ -1,0 +1,1722 @@
+{
+  "slug": "forge-config-api-port",
+  "modId": "forgeconfigapiport",
+  "id": "authored/lib-forge-config-api-port",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "forgeconfigapiport"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:50.172Z",
+  "versions": {
+    "26.2.1": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "26.1.5": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.11.1": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.10.1": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.9.8": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.8.2": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.7.0": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.6.4": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.5.3": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.v5.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.4.3": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.3.5": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.1.6": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "21.0.8": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec",
+        "net.neoforged.neoforge.common.TranslatableEnum"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [],
+        "net.neoforged.fml.config.IConfigSpec": [],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "isEmpty()",
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "acceptConfig(IConfigSpec.ILoadedConfig)",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "resetCaches(ModConfigSpec.RestartType)",
+          "save()",
+          "isCorrect(UnmodifiableCommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.neoforged.neoforge.common.TranslatableEnum": [
+          "getTranslatedName()"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "20.6.1": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [
+          "register(Type, IConfigSpec<?>)",
+          "register(Type, IConfigSpec<?>, String)"
+        ],
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter": [
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "afterReload()"
+        ],
+        "net.neoforged.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "20.4.3": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [
+          "register(Type, IConfigSpec<?>)",
+          "register(Type, IConfigSpec<?>, String)"
+        ],
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter": [
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "afterReload()"
+        ],
+        "net.neoforged.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "20.2.6": {
+      "packages": [],
+      "classes": [
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry",
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter",
+        "net.neoforged.fml.config.IConfigSpec",
+        "net.neoforged.neoforge.common.ModConfigSpec"
+      ],
+      "methods": {
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigRegistry": [
+          "register(Type, IConfigSpec<?>)",
+          "register(Type, IConfigSpec<?>, String)"
+        ],
+        "fuzs.forgeconfigapiport.forge.api.neoforge.v4.NeoForgeConfigSpecAdapter": [
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "afterReload()"
+        ],
+        "net.neoforged.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.neoforged.neoforge.common.ModConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ]
+      },
+      "sampleCount": 4
+    },
+    "7.0.0": {
+      "packages": [],
+      "classes": [
+        "com.electronwill.nightconfig.core.AbstractCommentedConfig",
+        "com.electronwill.nightconfig.core.AbstractConfig",
+        "com.electronwill.nightconfig.core.CommentedConfig",
+        "com.electronwill.nightconfig.core.ConcurrentConfigSpec",
+        "com.electronwill.nightconfig.core.Config",
+        "com.electronwill.nightconfig.core.ConfigFormat",
+        "com.electronwill.nightconfig.core.ConfigSpec",
+        "com.electronwill.nightconfig.core.conversion.ConversionTable",
+        "com.electronwill.nightconfig.core.conversion.ConvertedCommentedConfig",
+        "com.electronwill.nightconfig.core.conversion.ConvertedCommentedFileConfig",
+        "com.electronwill.nightconfig.core.conversion.ConvertedConfig",
+        "com.electronwill.nightconfig.core.conversion.ConvertedFileConfig",
+        "com.electronwill.nightconfig.core.conversion.ConvertedFormat",
+        "com.electronwill.nightconfig.core.conversion.Converter",
+        "com.electronwill.nightconfig.core.conversion.InvalidValueException",
+        "com.electronwill.nightconfig.core.conversion.ObjectBinder",
+        "com.electronwill.nightconfig.core.conversion.ObjectConverter",
+        "com.electronwill.nightconfig.core.conversion.ReflectionException",
+        "com.electronwill.nightconfig.core.EnumGetMethod",
+        "com.electronwill.nightconfig.core.file.CommentedFileConfig",
+        "com.electronwill.nightconfig.core.file.CommentedFileConfigBuilder",
+        "com.electronwill.nightconfig.core.file.FileConfig",
+        "com.electronwill.nightconfig.core.file.FileConfigBuilder",
+        "com.electronwill.nightconfig.core.file.FileNotFoundAction",
+        "com.electronwill.nightconfig.core.file.FileWatcher",
+        "com.electronwill.nightconfig.core.file.FormatDetector",
+        "com.electronwill.nightconfig.core.file.GenericBuilder",
+        "com.electronwill.nightconfig.core.file.NoFormatFoundException",
+        "com.electronwill.nightconfig.core.InMemoryCommentedFormat",
+        "com.electronwill.nightconfig.core.InMemoryFormat",
+        "com.electronwill.nightconfig.core.io.AbstractInput",
+        "com.electronwill.nightconfig.core.io.ArrayInput",
+        "com.electronwill.nightconfig.core.io.CharacterInput",
+        "com.electronwill.nightconfig.core.io.CharacterOutput",
+        "com.electronwill.nightconfig.core.io.CharsWrapper",
+        "com.electronwill.nightconfig.core.io.ConfigParser",
+        "com.electronwill.nightconfig.core.io.ConfigWriter",
+        "com.electronwill.nightconfig.core.io.IndentStyle",
+        "com.electronwill.nightconfig.core.io.NewlineStyle",
+        "com.electronwill.nightconfig.core.io.ParsingException",
+        "com.electronwill.nightconfig.core.io.ParsingMode",
+        "com.electronwill.nightconfig.core.io.ReaderInput",
+        "com.electronwill.nightconfig.core.io.Utils",
+        "com.electronwill.nightconfig.core.io.WriterOutput",
+        "com.electronwill.nightconfig.core.io.WritingException",
+        "com.electronwill.nightconfig.core.io.WritingMode",
+        "com.electronwill.nightconfig.core.NullObject",
+        "com.electronwill.nightconfig.core.UnmodifiableCommentedConfig",
+        "com.electronwill.nightconfig.core.UnmodifiableConfig",
+        "com.electronwill.nightconfig.core.utils.CommentedConfigWrapper",
+        "com.electronwill.nightconfig.core.utils.ConfigWrapper",
+        "com.electronwill.nightconfig.core.utils.FakeCommentedConfig",
+        "com.electronwill.nightconfig.core.utils.FakeUnmodifiableCommentedConfig",
+        "com.electronwill.nightconfig.core.utils.FastStringReader",
+        "com.electronwill.nightconfig.core.utils.IntDeque",
+        "com.electronwill.nightconfig.core.utils.ObservedEntry",
+        "com.electronwill.nightconfig.core.utils.ObservedIterator",
+        "com.electronwill.nightconfig.core.utils.ObservedMap",
+        "com.electronwill.nightconfig.core.utils.ObservedSet",
+        "com.electronwill.nightconfig.core.utils.StringUtils",
+        "com.electronwill.nightconfig.core.utils.TransformingCollection",
+        "com.electronwill.nightconfig.core.utils.TransformingIterator",
+        "com.electronwill.nightconfig.core.utils.TransformingMap",
+        "com.electronwill.nightconfig.core.utils.TransformingSet",
+        "com.electronwill.nightconfig.core.utils.TransformingSpliterator",
+        "com.electronwill.nightconfig.core.utils.UnmodifiableConfigWrapper",
+        "com.electronwill.nightconfig.core.utils.WriterSupplier",
+        "com.electronwill.nightconfig.toml.TomlFormat",
+        "com.electronwill.nightconfig.toml.TomlParser",
+        "com.electronwill.nightconfig.toml.TomlWriter",
+        "fuzs.forgeconfigapiport.api.config.v2.ForgeConfigPaths",
+        "fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry",
+        "fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents",
+        "net.minecraftforge.common.ForgeConfigSpec",
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler",
+        "net.minecraftforge.fml.config.ConfigTracker",
+        "net.minecraftforge.fml.config.IConfigSpec",
+        "net.minecraftforge.fml.config.ModConfig"
+      ],
+      "methods": {
+        "com.electronwill.nightconfig.core.AbstractCommentedConfig": [
+          "getDefaultCommentMap(boolean)",
+          "getComment(List<String>)",
+          "setComment(List<String>, String)",
+          "removeComment(List<String>)",
+          "containsComment(List<String>)",
+          "commentMap()",
+          "entrySet()",
+          "clone()",
+          "clear()",
+          "clearComments()"
+        ],
+        "com.electronwill.nightconfig.core.AbstractConfig": [
+          "getDefaultMapCreator(boolean)",
+          "getWildcardMapCreator(Supplier<Map<String, Object>>)",
+          "getRaw(List<String>)",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)",
+          "contains(List<String>)",
+          "isNull(List<String>)",
+          "clear()",
+          "size()",
+          "valueMap()",
+          "entrySet()",
+          "clone()",
+          "hashCode()",
+          "equals(Object)",
+          "toString()"
+        ],
+        "com.electronwill.nightconfig.core.CommentedConfig": [
+          "setComment(String, String)",
+          "removeComment(String)",
+          "putAllComments(Map<String, UnmodifiableCommentedConfig.CommentNode>)",
+          "putAllComments(UnmodifiableCommentedConfig)",
+          "unmodifiable()",
+          "checked()"
+        ],
+        "com.electronwill.nightconfig.core.ConcurrentConfigSpec": [],
+        "com.electronwill.nightconfig.core.Config": [
+          "set(String, Object)",
+          "add(String, Object)",
+          "addAll(UnmodifiableConfig)",
+          "putAll(UnmodifiableConfig)",
+          "remove(String)",
+          "removeAll(UnmodifiableConfig)",
+          "unmodifiable()",
+          "checked()",
+          "update(String, Object)",
+          "update(List<String>, Object)"
+        ],
+        "com.electronwill.nightconfig.core.ConfigFormat": [
+          "createConfig()",
+          "createConcurrentConfig()",
+          "supportsType(Class<?>)",
+          "isInMemory()",
+          "initEmptyFile(Path)",
+          "initEmptyFile(File)",
+          "initEmptyFile(WriterSupplier)"
+        ],
+        "com.electronwill.nightconfig.core.ConfigSpec": [
+          "define(String, Object)",
+          "define(List<String>, Object)",
+          "define(String, Object, Predicate<Object>)",
+          "define(String, Supplier<?>, Predicate<Object>)",
+          "define(List<String>, Object, Predicate<Object>)",
+          "define(List<String>, Supplier<?>, Predicate<Object>)",
+          "defineOfClass(String, V, Class<? super V>)",
+          "defineOfClass(String, Supplier<V>, Class<? super V>)",
+          "defineOfClass(List<String>, V, Class<? super V>)",
+          "defineOfClass(List<String>, Supplier<V>, Class<? super V>)",
+          "defineInList(String, Object, Collection<?>)",
+          "defineInList(String, Supplier<?>, Collection<?>)",
+          "defineInList(List<String>, Object, Collection<?>)",
+          "defineInList(List<String>, Supplier<?>, Collection<?>)",
+          "defineInRange(String, V, V, V)",
+          "defineInRange(String, Supplier<V>, V, V)",
+          "defineInRange(List<String>, V, V, V)",
+          "defineInRange(List<String>, Supplier<V>, V, V)",
+          "defineList(String, List<?>, Predicate<Object>)",
+          "defineList(String, Supplier<List<?>>, Predicate<Object>)"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ConversionTable": [
+          "put(Class<T>, Function<? super T, Object>)",
+          "remove(Class<?>)",
+          "contains(Class<?>)",
+          "convert(Object)",
+          "convertShallow(Config)",
+          "convertDeep(Config)",
+          "chainThen(ConversionTable)",
+          "wrap(UnmodifiableConfig)",
+          "wrapRead(Config)",
+          "wrapRead(CommentedConfig)",
+          "wrapRead(FileConfig)",
+          "wrapRead(CommentedFileConfig)",
+          "wrapWrite(Config, Predicate<Class<?>>)",
+          "wrapWrite(CommentedConfig, Predicate<Class<?>>)",
+          "wrapWrite(FileConfig, Predicate<Class<?>>)",
+          "wrapWrite(CommentedFileConfig, Predicate<Class<?>>)",
+          "clone()",
+          "toString()"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ConvertedCommentedConfig": [],
+        "com.electronwill.nightconfig.core.conversion.ConvertedCommentedFileConfig": [
+          "getFile()",
+          "getNioPath()",
+          "save()",
+          "load()",
+          "close()"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ConvertedConfig": [
+          "entrySet()"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ConvertedFileConfig": [
+          "getFile()",
+          "getNioPath()",
+          "save()",
+          "load()",
+          "close()"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ConvertedFormat": [
+          "createWriter()",
+          "createParser()",
+          "createConfig()",
+          "createConcurrentConfig()",
+          "createConfig(Supplier<Map<String, Object>>)",
+          "supportsComments()",
+          "supportsType(Class<?>)"
+        ],
+        "com.electronwill.nightconfig.core.conversion.Converter": [],
+        "com.electronwill.nightconfig.core.conversion.InvalidValueException": [],
+        "com.electronwill.nightconfig.core.conversion.ObjectBinder": [
+          "bind(Class<?>)",
+          "bind(Class<?>, ConfigFormat<?>)",
+          "bind(Object)",
+          "bind(Object, ConfigFormat<?>)"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ObjectConverter": [
+          "toConfig(Object, Config)",
+          "toConfig(Class<?>, Config)",
+          "toConfig(Object, Supplier<C>)",
+          "toConfig(Class<?>, Supplier<C>)",
+          "toObject(UnmodifiableConfig, Object)",
+          "toObject(UnmodifiableConfig, Supplier<O>)"
+        ],
+        "com.electronwill.nightconfig.core.conversion.ReflectionException": [],
+        "com.electronwill.nightconfig.core.EnumGetMethod": [
+          "isCaseSensitive()",
+          "isOrdinalOk()",
+          "get(Object, Class<T>)",
+          "validate(Object, Class<T>)"
+        ],
+        "com.electronwill.nightconfig.core.file.CommentedFileConfig": [
+          "checked()"
+        ],
+        "com.electronwill.nightconfig.core.file.CommentedFileConfigBuilder": [
+          "buildAutosave(FileConfig)",
+          "buildNormal(FileConfig)"
+        ],
+        "com.electronwill.nightconfig.core.file.FileConfig": [
+          "checked()"
+        ],
+        "com.electronwill.nightconfig.core.file.FileConfigBuilder": [
+          "buildAutosave(FileConfig)",
+          "buildNormal(FileConfig)"
+        ],
+        "com.electronwill.nightconfig.core.file.FileNotFoundAction": [],
+        "com.electronwill.nightconfig.core.file.FileWatcher": [
+          "defaultInstance()",
+          "addWatch(File, Runnable)",
+          "addWatch(Path, Runnable)",
+          "setWatch(File, Runnable)",
+          "setWatch(Path, Runnable)",
+          "removeWatch(File)",
+          "removeWatch(Path)",
+          "stop()"
+        ],
+        "com.electronwill.nightconfig.core.file.FormatDetector": [
+          "registerExtension(String, ConfigFormat<?>)",
+          "registerExtension(String, Supplier<ConfigFormat<?>>)",
+          "detect(File)",
+          "detect(Path)",
+          "detectByName(String)"
+        ],
+        "com.electronwill.nightconfig.core.file.GenericBuilder": [
+          "charset(Charset)",
+          "writingMode(WritingMode)",
+          "parsingMode(ParsingMode)",
+          "onFileNotFound(FileNotFoundAction)",
+          "defaultResource(String)",
+          "defaultData(File)",
+          "defaultData(Path)",
+          "defaultData(URL)",
+          "sync()",
+          "autosave()",
+          "autoreload()",
+          "concurrent()",
+          "preserveInsertionOrder()",
+          "backingMapCreator(Supplier<Map<String, Object>>)",
+          "build()",
+          "buildAutosave(FileConfig)",
+          "buildNormal(FileConfig)",
+          "getConfig()"
+        ],
+        "com.electronwill.nightconfig.core.file.NoFormatFoundException": [],
+        "com.electronwill.nightconfig.core.InMemoryCommentedFormat": [
+          "defaultInstance()",
+          "withSupport(Predicate<Class<?>>)",
+          "withUniversalSupport()",
+          "createWriter()",
+          "createParser()",
+          "createConfig(Supplier<Map<String, Object>>)",
+          "supportsComments()",
+          "supportsType(Class<?>)",
+          "isInMemory()"
+        ],
+        "com.electronwill.nightconfig.core.InMemoryFormat": [
+          "defaultInstance()",
+          "withSupport(Predicate<Class<?>>)",
+          "withUniversalSupport()",
+          "createWriter()",
+          "createParser()",
+          "createConfig(Supplier<Map<String, Object>>)",
+          "supportsComments()",
+          "supportsType(Class<?>)",
+          "isInMemory()"
+        ],
+        "com.electronwill.nightconfig.core.io.AbstractInput": [
+          "directRead()",
+          "directReadChar()",
+          "read()",
+          "readChar()",
+          "peek()",
+          "peek(int)",
+          "peekChar()",
+          "peekChar(int)",
+          "skipPeeks()",
+          "pushBack(char)",
+          "readUntil(char[])",
+          "readCharsUntil(char[])",
+          "consumeDeque(char[], int, boolean)"
+        ],
+        "com.electronwill.nightconfig.core.io.ArrayInput": [
+          "directRead()",
+          "directReadChar()",
+          "read(int)",
+          "readChars(int)"
+        ],
+        "com.electronwill.nightconfig.core.io.CharacterInput": [
+          "readAndSkip(char[])",
+          "readCharAndSkip(char[])",
+          "read(int)",
+          "readChars(int)"
+        ],
+        "com.electronwill.nightconfig.core.io.CharacterOutput": [
+          "write(char...)",
+          "write(String)",
+          "write(CharsWrapper)"
+        ],
+        "com.electronwill.nightconfig.core.io.CharsWrapper": [
+          "isEmpty()",
+          "length()",
+          "charAt(int)",
+          "get(int)",
+          "set(int, char)",
+          "replaceAll(char, char)",
+          "contains(char)",
+          "indexOf(char)",
+          "indexOfFirst(char...)",
+          "equals(Object)",
+          "equalsIgnoreCase(CharSequence)",
+          "contentEquals(CharSequence)",
+          "contentEquals(char[])",
+          "startsWith(CharSequence)",
+          "subSequence(int, int)",
+          "subView(int, int)",
+          "subView(int)",
+          "trimmedView()",
+          "toString()",
+          "hashCode()"
+        ],
+        "com.electronwill.nightconfig.core.io.ConfigParser": [
+          "parse(String)",
+          "parse(String, Config, ParsingMode)",
+          "parse(InputStream)",
+          "parse(InputStream, Charset)",
+          "parse(InputStream, Config, ParsingMode)",
+          "parse(InputStream, Config, ParsingMode, Charset)",
+          "parse(File, FileNotFoundAction)",
+          "parse(File, FileNotFoundAction, Charset)",
+          "parse(File, Config, ParsingMode, FileNotFoundAction)",
+          "parse(File, Config, ParsingMode, FileNotFoundAction, Charset)",
+          "parse(Path, FileNotFoundAction)",
+          "parse(Path, FileNotFoundAction, Charset)",
+          "parse(Path, Config, ParsingMode, FileNotFoundAction)",
+          "parse(Path, Config, ParsingMode, FileNotFoundAction, Charset)",
+          "parse(URL)",
+          "parse(URL, Config, ParsingMode)"
+        ],
+        "com.electronwill.nightconfig.core.io.ConfigWriter": [
+          "write(UnmodifiableConfig, OutputStream, Charset)",
+          "write(UnmodifiableConfig, OutputStream)",
+          "write(UnmodifiableConfig, Path, WritingMode)",
+          "write(UnmodifiableConfig, Path, WritingMode, Charset)",
+          "write(UnmodifiableConfig, File, WritingMode)",
+          "write(UnmodifiableConfig, File, WritingMode, Charset)",
+          "write(UnmodifiableConfig, URL)",
+          "writeToString(UnmodifiableConfig)"
+        ],
+        "com.electronwill.nightconfig.core.io.IndentStyle": [],
+        "com.electronwill.nightconfig.core.io.NewlineStyle": [
+          "system()"
+        ],
+        "com.electronwill.nightconfig.core.io.ParsingException": [
+          "readFailed(Throwable)",
+          "notEnoughData()"
+        ],
+        "com.electronwill.nightconfig.core.io.ParsingMode": [
+          "prepareParsing(Config)",
+          "put(Config, List<String>, Object)",
+          "put(Config, String, Object)",
+          "put(Map<String, Object>, String, Object)"
+        ],
+        "com.electronwill.nightconfig.core.io.ReaderInput": [
+          "directRead()",
+          "directReadChar()",
+          "read(int)",
+          "readChars(int)"
+        ],
+        "com.electronwill.nightconfig.core.io.Utils": [
+          "arrayContains(char[], char)",
+          "arrayIndexOf(char[], char)",
+          "parseLong(CharsWrapper, int)",
+          "parseInt(CharsWrapper, int)",
+          "parseDouble(CharsWrapper)"
+        ],
+        "com.electronwill.nightconfig.core.io.WriterOutput": [
+          "write(char)",
+          "write(char[], int, int)",
+          "write(String, int, int)"
+        ],
+        "com.electronwill.nightconfig.core.io.WritingException": [],
+        "com.electronwill.nightconfig.core.io.WritingMode": [],
+        "com.electronwill.nightconfig.core.NullObject": [
+          "toString()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "com.electronwill.nightconfig.core.UnmodifiableCommentedConfig": [
+          "getComment(String)",
+          "getOptionalComment(String)",
+          "getOptionalComment(List<String>)",
+          "containsComment(String)",
+          "getComments()",
+          "getComments(Map<String, UnmodifiableCommentedConfig.CommentNode>)"
+        ],
+        "com.electronwill.nightconfig.core.UnmodifiableConfig": [
+          "get(String)",
+          "get(List<String>)",
+          "getRaw(String)",
+          "getOptional(String)",
+          "getOptional(List<String>)",
+          "getOrElse(String, T)",
+          "getOrElse(List<String>, T)",
+          "getOrElse(List<String>, Supplier<T>)",
+          "getOrElse(String, Supplier<T>)",
+          "getEnum(String, Class<T>, EnumGetMethod)",
+          "getEnum(String, Class<T>)",
+          "getEnum(List<String>, Class<T>, EnumGetMethod)",
+          "getEnum(List<String>, Class<T>)",
+          "getOptionalEnum(String, Class<T>, EnumGetMethod)",
+          "getOptionalEnum(String, Class<T>)",
+          "getOptionalEnum(List<String>, Class<T>, EnumGetMethod)",
+          "getOptionalEnum(List<String>, Class<T>)",
+          "getEnumOrElse(String, T, EnumGetMethod)",
+          "getEnumOrElse(String, T)",
+          "getEnumOrElse(List<String>, T, EnumGetMethod)"
+        ],
+        "com.electronwill.nightconfig.core.utils.CommentedConfigWrapper": [
+          "getComment(List<String>)",
+          "containsComment(List<String>)",
+          "setComment(List<String>, String)",
+          "removeComment(List<String>)",
+          "commentMap()",
+          "entrySet()",
+          "clearComments()",
+          "putAllComments(Map<String, UnmodifiableCommentedConfig.CommentNode>)",
+          "putAllComments(UnmodifiableCommentedConfig)",
+          "getComments()",
+          "createSubConfig()",
+          "toString()"
+        ],
+        "com.electronwill.nightconfig.core.utils.ConfigWrapper": [
+          "entrySet()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)",
+          "clear()",
+          "createSubConfig()",
+          "toString()"
+        ],
+        "com.electronwill.nightconfig.core.utils.FakeCommentedConfig": [
+          "getComment(List<String>)",
+          "containsComment(List<String>)",
+          "setComment(List<String>, String)",
+          "removeComment(List<String>)",
+          "clearComments()",
+          "getComments()",
+          "putAllComments(Map<String, UnmodifiableCommentedConfig.CommentNode>)",
+          "putAllComments(UnmodifiableCommentedConfig)",
+          "commentMap()",
+          "entrySet()",
+          "createSubConfig()"
+        ],
+        "com.electronwill.nightconfig.core.utils.FakeUnmodifiableCommentedConfig": [
+          "getComment(List<String>)",
+          "containsComment(List<String>)",
+          "getComments()",
+          "commentMap()",
+          "entrySet()"
+        ],
+        "com.electronwill.nightconfig.core.utils.FastStringReader": [
+          "read()",
+          "read(char[], int, int)",
+          "skip(long)",
+          "markSupported()",
+          "mark(int)",
+          "reset()",
+          "ready()",
+          "close()"
+        ],
+        "com.electronwill.nightconfig.core.utils.IntDeque": [
+          "clear()",
+          "isEmpty()",
+          "size()",
+          "compact()",
+          "addFirst(int)",
+          "addLast(int)",
+          "get(int)",
+          "getFirst()",
+          "getLast()",
+          "removeFirst()",
+          "removeLast()"
+        ],
+        "com.electronwill.nightconfig.core.utils.ObservedEntry": [
+          "getKey()",
+          "getValue()",
+          "setValue(V)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "com.electronwill.nightconfig.core.utils.ObservedIterator": [
+          "hasNext()",
+          "next()",
+          "remove()",
+          "forEachRemaining(Consumer<? super E>)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "com.electronwill.nightconfig.core.utils.ObservedMap": [
+          "size()",
+          "isEmpty()",
+          "containsKey(Object)",
+          "containsValue(Object)",
+          "get(Object)",
+          "put(K, V)",
+          "remove(Object)",
+          "putAll(Map<? extends K, ? extends V>)",
+          "replaceAll(BiFunction<? super K, ? super V, ? extends V>)",
+          "putIfAbsent(K, V)",
+          "remove(Object, Object)",
+          "replace(K, V, V)",
+          "replace(K, V)",
+          "computeIfAbsent(K, Function<? super K, ? extends V>)",
+          "computeIfPresent(K, BiFunction<? super K, ? super V, ? extends V>)",
+          "compute(K, BiFunction<? super K, ? super V, ? extends V>)",
+          "merge(K, V, BiFunction<? super V, ? super V, ? extends V>)",
+          "clear()",
+          "keySet()",
+          "values()"
+        ],
+        "com.electronwill.nightconfig.core.utils.ObservedSet": [
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(K)",
+          "remove(Object)",
+          "containsAll(Collection<?>)",
+          "addAll(Collection<? extends K>)",
+          "retainAll(Collection<?>)",
+          "removeAll(Collection<?>)",
+          "clear()",
+          "removeIf(Predicate<? super K>)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "com.electronwill.nightconfig.core.utils.StringUtils": [
+          "split(String, char)",
+          "split(String, char, List<String>)",
+          "splitLines(String)",
+          "splitLines(String, List<String>)"
+        ],
+        "com.electronwill.nightconfig.core.utils.TransformingCollection": [
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(ExternalV)",
+          "remove(Object)",
+          "containsAll(Collection<?>)",
+          "addAll(Collection<? extends ExternalV>)",
+          "removeAll(Collection<?>)",
+          "removeIf(Predicate<? super ExternalV>)",
+          "retainAll(Collection<?>)",
+          "clear()",
+          "spliterator()",
+          "stream()",
+          "parallelStream()",
+          "forEach(Consumer<? super ExternalV>)"
+        ],
+        "com.electronwill.nightconfig.core.utils.TransformingIterator": [
+          "hasNext()",
+          "next()",
+          "remove()",
+          "forEachRemaining(Consumer<? super ExternalV>)"
+        ],
+        "com.electronwill.nightconfig.core.utils.TransformingMap": [
+          "size()",
+          "isEmpty()",
+          "containsKey(Object)",
+          "containsValue(Object)",
+          "get(Object)",
+          "put(K, ExternalV)",
+          "remove(Object)",
+          "putAll(Map<? extends K, ? extends ExternalV>)",
+          "clear()",
+          "keySet()",
+          "values()",
+          "entrySet()",
+          "getOrDefault(Object, ExternalV)",
+          "forEach(BiConsumer<? super K, ? super ExternalV>)",
+          "replaceAll(BiFunction<? super K, ? super ExternalV, ? extends ExternalV>)",
+          "putIfAbsent(K, ExternalV)",
+          "remove(Object, Object)",
+          "replace(K, ExternalV, ExternalV)",
+          "replace(K, ExternalV)",
+          "computeIfAbsent(K, Function<? super K, ? extends ExternalV>)"
+        ],
+        "com.electronwill.nightconfig.core.utils.TransformingSet": [],
+        "com.electronwill.nightconfig.core.utils.TransformingSpliterator": [
+          "tryAdvance(Consumer<? super ExternalV>)",
+          "forEachRemaining(Consumer<? super ExternalV>)",
+          "trySplit()",
+          "estimateSize()",
+          "getExactSizeIfKnown()",
+          "characteristics()",
+          "hasCharacteristics(int)",
+          "getComparator()"
+        ],
+        "com.electronwill.nightconfig.core.utils.UnmodifiableConfigWrapper": [
+          "getRaw(List<String>)",
+          "valueMap()",
+          "entrySet()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()"
+        ],
+        "com.electronwill.nightconfig.core.utils.WriterSupplier": [],
+        "com.electronwill.nightconfig.toml.TomlFormat": [
+          "instance()",
+          "newConfig()",
+          "newConfig(Supplier<Map<String, Object>>)",
+          "newConcurrentConfig()",
+          "createWriter()",
+          "createParser()",
+          "createConfig(Supplier<Map<String, Object>>)",
+          "supportsComments()",
+          "supportsType(Class<?>)"
+        ],
+        "com.electronwill.nightconfig.toml.TomlParser": [
+          "parse(Reader)",
+          "parse(Reader, Config, ParsingMode)",
+          "isLenientWithSeparators()",
+          "setLenientWithSeparators(boolean)",
+          "isLenientWithBareKeys()",
+          "setLenientWithBareKeys(boolean)",
+          "setInitialStringBuilderCapacity(int)",
+          "setInitialListCapacity(int)",
+          "getFormat()"
+        ],
+        "com.electronwill.nightconfig.toml.TomlWriter": [
+          "write(UnmodifiableConfig, Writer)",
+          "isLenientWithBareKeys()",
+          "setLenientWithBareKeys(boolean)",
+          "setWriteTableInlinePredicate(Predicate<UnmodifiableConfig>)",
+          "setWriteStringLiteralPredicate(Predicate<String>)",
+          "setIndentArrayElementsPredicate(Predicate<List<?>>)",
+          "setIndent(IndentStyle)",
+          "setIndent(String)",
+          "setNewline(NewlineStyle)",
+          "setNewline(String)"
+        ],
+        "fuzs.forgeconfigapiport.api.config.v2.ForgeConfigPaths": [],
+        "fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry": [],
+        "fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents": [
+          "loading(String)",
+          "reloading(String)",
+          "unloading(String)"
+        ],
+        "net.minecraftforge.common.ForgeConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, ConfigSpec.CorrectionListener)",
+          "correct(CommentedConfig, ConfigSpec.CorrectionListener, ConfigSpec.CorrectionListener)"
+        ],
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler": [
+          "reader(Path)",
+          "unload(Path, ModConfig)",
+          "backUpConfig(CommentedFileConfig)",
+          "backUpConfig(CommentedFileConfig, int)"
+        ],
+        "net.minecraftforge.fml.config.ConfigTracker": [
+          "loadConfigs(ModConfig.Type, Path)",
+          "unloadConfigs(ModConfig.Type, Path)",
+          "loadDefaultServerConfigs()",
+          "getConfigFileName(String, ModConfig.Type)",
+          "getConfigFileNames(String, ModConfig.Type)",
+          "configSets()",
+          "fileMap()"
+        ],
+        "net.minecraftforge.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.minecraftforge.fml.config.ModConfig": [
+          "getType()",
+          "getFileName()",
+          "getHandler()",
+          "getSpec()",
+          "getModId()",
+          "getConfigData()",
+          "save()",
+          "getFullPath()",
+          "acceptSyncedConfig(byte[])"
+        ]
+      },
+      "sampleCount": 121
+    },
+    "4.2.11": {
+      "packages": [],
+      "classes": [
+        "net.minecraftforge.api.ConfigPaths",
+        "net.minecraftforge.api.fml.config.IConfigTracker",
+        "net.minecraftforge.api.fml.event.config.ModConfigEvent",
+        "net.minecraftforge.api.fml.event.config.ModConfigEvents",
+        "net.minecraftforge.api.ModLoadingContext",
+        "net.minecraftforge.client.commands.ConfigCommand",
+        "net.minecraftforge.client.ForgeConfigAPIPortClient",
+        "net.minecraftforge.client.ForgeHooksClient",
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiScreen",
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiWidget",
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiWidgetFactory",
+        "net.minecraftforge.client.gui.config.widgets.SpecificationData",
+        "net.minecraftforge.client.gui.config.widgets.ValueManager",
+        "net.minecraftforge.client.gui.widget.ColoredEditBox",
+        "net.minecraftforge.client.gui.widget.DynamicCheckbox",
+        "net.minecraftforge.client.gui.widget.ImageContentButton",
+        "net.minecraftforge.common.ForgeConfigSpec",
+        "net.minecraftforge.configured.ForgeConfig",
+        "net.minecraftforge.configured.ForgeConfigHelper",
+        "net.minecraftforge.configured.ForgeConfigProvider",
+        "net.minecraftforge.configured.ForgeEnumValue",
+        "net.minecraftforge.configured.ForgeFolderEntry",
+        "net.minecraftforge.configured.ForgeListValue",
+        "net.minecraftforge.configured.ForgeValue",
+        "net.minecraftforge.configured.ReflectionHelperV2",
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler",
+        "net.minecraftforge.fml.config.ConfigTracker",
+        "net.minecraftforge.fml.config.IConfigSpec",
+        "net.minecraftforge.fml.config.ModConfig",
+        "net.minecraftforge.fml.loading.FileUtils",
+        "net.minecraftforge.fml.loading.FMLConfig",
+        "net.minecraftforge.fml.loading.LogMarkers",
+        "net.minecraftforge.fmllegacy.server.ServerLifecycleHooks",
+        "net.minecraftforge.ForgeConfigAPIPort",
+        "net.minecraftforge.modmenu.ConfigFactoryHandler",
+        "net.minecraftforge.network.client.config.ConfigSyncClient",
+        "net.minecraftforge.network.client.NetworkHooks",
+        "net.minecraftforge.network.config.ConfigSync",
+        "net.minecraftforge.server.command.ConfigCommand",
+        "net.minecraftforge.server.command.EnumArgument",
+        "net.minecraftforge.server.command.ModIdArgument"
+      ],
+      "methods": {
+        "net.minecraftforge.api.ConfigPaths": [],
+        "net.minecraftforge.api.fml.config.IConfigTracker": [],
+        "net.minecraftforge.api.fml.event.config.ModConfigEvent": [],
+        "net.minecraftforge.api.fml.event.config.ModConfigEvents": [
+          "loading(String)",
+          "reloading(String)",
+          "unloading(String)"
+        ],
+        "net.minecraftforge.api.ModLoadingContext": [
+          "registerConfig(String, ModConfig.Type, IConfigSpec<?>)",
+          "registerConfig(String, ModConfig.Type, IConfigSpec<?>, String)"
+        ],
+        "net.minecraftforge.client.commands.ConfigCommand": [
+          "register(CommandDispatcher<T>, BiConsumer<T, class_2561>)"
+        ],
+        "net.minecraftforge.client.ForgeConfigAPIPortClient": [
+          "onInitializeClient()"
+        ],
+        "net.minecraftforge.client.ForgeHooksClient": [
+          "handleClientLevelClosing(class_638)"
+        ],
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiScreen": [
+          "method_25419()",
+          "method_25404(int, int, int)",
+          "method_25426()",
+          "method_25432()",
+          "method_25394(class_4587, int, int, float)",
+          "method_25422()"
+        ],
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiWidget": [
+          "method_25397()",
+          "method_25398(boolean)",
+          "method_25399()",
+          "method_25395(class_364)",
+          "method_37020(class_6382)",
+          "getSpec()",
+          "getValueManager()",
+          "isValid()",
+          "setValue(Object)",
+          "getValue()",
+          "narratables()",
+          "render(class_4587, int, int, int, int, int, int, boolean, float)",
+          "getError()",
+          "resetToDefault()",
+          "resetToInitial()",
+          "method_37018()"
+        ],
+        "net.minecraftforge.client.gui.config.widgets.ConfigGuiWidgetFactory": [],
+        "net.minecraftforge.client.gui.config.widgets.SpecificationData": [],
+        "net.minecraftforge.client.gui.config.widgets.ValueManager": [],
+        "net.minecraftforge.client.gui.widget.ColoredEditBox": [
+          "method_25359(class_4587, int, int, float)",
+          "method_1858(boolean)",
+          "getBorderColor()",
+          "getBorderColorFocused()"
+        ],
+        "net.minecraftforge.client.gui.widget.DynamicCheckbox": [
+          "method_25359(class_4587, int, int, float)",
+          "getTexture()"
+        ],
+        "net.minecraftforge.client.gui.widget.ImageContentButton": [
+          "method_25359(class_4587, int, int, float)",
+          "setActive(boolean)"
+        ],
+        "net.minecraftforge.common.ForgeConfigSpec": [
+          "getLevelComment(List<String>)",
+          "getLevelTranslationKey(List<String>)",
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)",
+          "isVisibleOnModConfigScreen()"
+        ],
+        "net.minecraftforge.configured.ForgeConfig": [
+          "update(IConfigEntry)",
+          "getRoot()",
+          "getType()",
+          "getFileName()",
+          "getModId()",
+          "loadWorldConfig(Path, Consumer<IModConfig>)",
+          "stopEditing()",
+          "isChanged()",
+          "restoreDefaults()",
+          "getAllConfigValues(ModConfig)",
+          "ForgeValueEntry(ForgeConfigSpec.ConfigValue<?>, ForgeConfigSpec.ValueSpec)"
+        ],
+        "net.minecraftforge.configured.ForgeConfigHelper": [
+          "gatherAllForgeConfigValues(UnmodifiableConfig, ForgeConfigSpec)",
+          "setForgeConfigData(ModConfig, CommentedConfig)",
+          "gatherAllForgeConfigValues(ModConfig)"
+        ],
+        "net.minecraftforge.configured.ForgeConfigProvider": [
+          "getConfigurationsForMod(ModContainer)"
+        ],
+        "net.minecraftforge.configured.ForgeEnumValue": [
+          "getAllowedValues()"
+        ],
+        "net.minecraftforge.configured.ForgeFolderEntry": [
+          "getChildren()",
+          "isRoot()",
+          "isLeaf()",
+          "getValue()",
+          "getEntryName()",
+          "getTooltip()",
+          "getTranslationKey()"
+        ],
+        "net.minecraftforge.configured.ForgeListValue": [
+          "set(List<?>)",
+          "getConverter()"
+        ],
+        "net.minecraftforge.configured.ForgeValue": [
+          "get()",
+          "set(T)",
+          "isDefault()",
+          "isChanged()",
+          "restore()",
+          "getDefault()",
+          "isValid(T)",
+          "getComment()",
+          "getTranslationKey()",
+          "getValidationHint()",
+          "getName()",
+          "cleanCache()",
+          "requiresWorldRestart()",
+          "requiresGameRestart()",
+          "lastValue(List<V>, V)",
+          "loadRange()"
+        ],
+        "net.minecraftforge.configured.ReflectionHelperV2": [
+          "findField(Class<?>, String)",
+          "findField(Class<?>, String, boolean)",
+          "findField(String, String, boolean)",
+          "findMethod(Class<?>, String, Class<?>...)",
+          "findMethod(Class<?>, String, boolean, Class<?>...)",
+          "findMethod(String, String, boolean, Class<?>...)",
+          "findConstructor(Class<?>, Class<?>...)",
+          "findConstructor(Class<?>, boolean, Class<?>...)",
+          "findConstructor(String, boolean, Class<?>...)",
+          "getValue(Class<? super E>, String, E)",
+          "getValue(String, String, E)",
+          "setValue(Class<? super E>, String, E, T)",
+          "setValue(String, String, E, T)",
+          "getValue(Field, Object)",
+          "setValue(Field, Object, T)",
+          "invokeMethod(Class<? super E>, String, Class<?>[], E, Object[])",
+          "invokeMethod(Method, Object, Object...)",
+          "newInstance(Class<? super E>, Class<?>[], Object[])",
+          "newInstance(Constructor<T>, Object...)"
+        ],
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler": [
+          "reader(Path)",
+          "unload(Path, ModConfig)",
+          "backUpConfig(CommentedFileConfig)",
+          "backUpConfig(CommentedFileConfig, int)"
+        ],
+        "net.minecraftforge.fml.config.ConfigTracker": [
+          "loadConfigs(ModConfig.Type, Path)",
+          "unloadConfigs(ModConfig.Type, Path)",
+          "loadDefaultServerConfigs()",
+          "getConfigFileName(String, ModConfig.Type)",
+          "configSets()",
+          "fileMap()"
+        ],
+        "net.minecraftforge.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.minecraftforge.fml.config.ModConfig": [
+          "getType()",
+          "getFileName()",
+          "getHandler()",
+          "getSpec()",
+          "getModId()",
+          "getConfigData()",
+          "save()",
+          "getFullPath()",
+          "acceptSyncedConfig(byte[])"
+        ],
+        "net.minecraftforge.fml.loading.FileUtils": [
+          "getOrCreateDirectory(Path, String)",
+          "fileExtension(Path)"
+        ],
+        "net.minecraftforge.fml.loading.FMLConfig": [
+          "loadDefaultConfigPath()",
+          "load()",
+          "defaultConfigPath()"
+        ],
+        "net.minecraftforge.fml.loading.LogMarkers": [],
+        "net.minecraftforge.fmllegacy.server.ServerLifecycleHooks": [
+          "handleServerAboutToStart(MinecraftServer)",
+          "handleServerStopped(MinecraftServer)"
+        ],
+        "net.minecraftforge.ForgeConfigAPIPort": [
+          "onInitialize()"
+        ],
+        "net.minecraftforge.modmenu.ConfigFactoryHandler": [
+          "getProvidedConfigScreenFactories()"
+        ],
+        "net.minecraftforge.network.client.config.ConfigSyncClient": [
+          "clientInit()"
+        ],
+        "net.minecraftforge.network.client.NetworkHooks": [
+          "setModdedConnection()",
+          "isVanillaConnection(class_2535)",
+          "handleClientLoginSuccess(class_2535)"
+        ],
+        "net.minecraftforge.network.config.ConfigSync": [
+          "init()",
+          "unloadSyncedConfig()"
+        ],
+        "net.minecraftforge.server.command.ConfigCommand": [
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "net.minecraftforge.server.command.EnumArgument": [
+          "enumArgument(Class<R>)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "net.minecraftforge.server.command.ModIdArgument": [
+          "modIdArgument()",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ]
+      },
+      "sampleCount": 41
+    },
+    "1.0.2": {
+      "packages": [],
+      "classes": [
+        "net.minecraftforge.api.ConfigPaths",
+        "net.minecraftforge.api.fml.config.IConfigTracker",
+        "net.minecraftforge.api.fml.event.config.ModConfigEvent",
+        "net.minecraftforge.api.ModLoadingContext",
+        "net.minecraftforge.client.ForgeConfigAPIPortClient",
+        "net.minecraftforge.common.ForgeConfigSpec",
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler",
+        "net.minecraftforge.fml.config.ConfigTracker",
+        "net.minecraftforge.fml.config.IConfigSpec",
+        "net.minecraftforge.fml.config.ModConfig",
+        "net.minecraftforge.fml.loading.FileUtils",
+        "net.minecraftforge.fml.loading.FMLConfig",
+        "net.minecraftforge.fmllegacy.server.ServerLifecycleHooks",
+        "net.minecraftforge.ForgeConfigAPIPort",
+        "net.minecraftforge.network.client.config.ConfigSyncClient",
+        "net.minecraftforge.network.client.NetworkHooks",
+        "net.minecraftforge.network.config.ConfigSync",
+        "net.minecraftforge.server.command.ConfigCommand",
+        "net.minecraftforge.server.command.EnumArgument",
+        "net.minecraftforge.server.command.ModIdArgument"
+      ],
+      "methods": {
+        "net.minecraftforge.api.ConfigPaths": [],
+        "net.minecraftforge.api.fml.config.IConfigTracker": [],
+        "net.minecraftforge.api.fml.event.config.ModConfigEvent": [],
+        "net.minecraftforge.api.ModLoadingContext": [
+          "registerConfig(String, ModConfig.Type, IConfigSpec<?>)",
+          "registerConfig(String, ModConfig.Type, IConfigSpec<?>, String)"
+        ],
+        "net.minecraftforge.client.ForgeConfigAPIPortClient": [
+          "onInitializeClient()"
+        ],
+        "net.minecraftforge.common.ForgeConfigSpec": [
+          "setConfig(CommentedConfig)",
+          "acceptConfig(CommentedConfig)",
+          "isCorrecting()",
+          "isLoaded()",
+          "getSpec()",
+          "getValues()",
+          "afterReload()",
+          "save()",
+          "isCorrect(CommentedConfig)",
+          "correct(CommentedConfig)",
+          "correct(CommentedConfig, CorrectionListener)",
+          "correct(CommentedConfig, CorrectionListener, CorrectionListener)"
+        ],
+        "net.minecraftforge.fml.config.ConfigFileTypeHandler": [
+          "reader(Path)",
+          "unload(Path, ModConfig)",
+          "backUpConfig(CommentedFileConfig)",
+          "backUpConfig(CommentedFileConfig, int)"
+        ],
+        "net.minecraftforge.fml.config.ConfigTracker": [
+          "loadConfigs(ModConfig.Type, Path)",
+          "unloadConfigs(ModConfig.Type, Path)",
+          "loadDefaultServerConfigs()",
+          "getConfigFileName(String, ModConfig.Type)",
+          "configSets()",
+          "fileMap()"
+        ],
+        "net.minecraftforge.fml.config.IConfigSpec": [
+          "self()"
+        ],
+        "net.minecraftforge.fml.config.ModConfig": [
+          "getType()",
+          "getFileName()",
+          "getHandler()",
+          "getSpec()",
+          "getModId()",
+          "getConfigData()",
+          "save()",
+          "getFullPath()",
+          "acceptSyncedConfig(byte[])"
+        ],
+        "net.minecraftforge.fml.loading.FileUtils": [
+          "getOrCreateDirectory(Path, String)",
+          "fileExtension(Path)"
+        ],
+        "net.minecraftforge.fml.loading.FMLConfig": [
+          "loadDefaultConfigPath()"
+        ],
+        "net.minecraftforge.fmllegacy.server.ServerLifecycleHooks": [
+          "handleServerAboutToStart(MinecraftServer)",
+          "handleServerStopped(MinecraftServer)"
+        ],
+        "net.minecraftforge.ForgeConfigAPIPort": [
+          "onInitialize()"
+        ],
+        "net.minecraftforge.network.client.config.ConfigSyncClient": [
+          "clientInit()"
+        ],
+        "net.minecraftforge.network.client.NetworkHooks": [
+          "setModdedConnection()",
+          "isVanillaConnection(class_2535)",
+          "handleClientLoginSuccess(class_2535)"
+        ],
+        "net.minecraftforge.network.config.ConfigSync": [
+          "init()"
+        ],
+        "net.minecraftforge.server.command.ConfigCommand": [
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "net.minecraftforge.server.command.EnumArgument": [
+          "enumArgument(Class<R>)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ],
+        "net.minecraftforge.server.command.ModIdArgument": [
+          "modIdArgument()",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()"
+        ]
+      },
+      "sampleCount": 20
+    }
+  },
+  "classCount": 203,
+  "methodCount": 993
+}

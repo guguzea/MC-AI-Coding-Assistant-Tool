@@ -1,0 +1,3043 @@
+{
+  "slug": "resourceful-lib",
+  "modId": "resourcefullib",
+  "id": "authored/lib-resourceful",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "resourcefullib"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:14.276Z",
+  "versions": {
+    "5.0.3": {
+      "packages": [],
+      "classes": [
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose",
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor",
+        "com.teamresourceful.resourcefullib.client.fabric.BlockOutlineRenderStateExtension",
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties",
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.EntityFluidEyesHook",
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.FluidBlockTintSource",
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.ResourcefulFluidRenderHandler",
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable",
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine",
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler",
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightRenderState",
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates",
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType",
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen",
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen",
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory",
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder",
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils",
+        "com.teamresourceful.resourcefullib.common.ApiProxy",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction",
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs",
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders",
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder",
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList",
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList",
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection",
+        "com.teamresourceful.resourcefullib.common.color.Color",
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors",
+        "com.teamresourceful.resourcefullib.common.color.MutableColor",
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder",
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException",
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException",
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds",
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock",
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData",
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder",
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack",
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType",
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab",
+        "com.teamresourceful.resourcefullib.common.lib.Constants",
+        "com.teamresourceful.resourcefullib.common.lib.Platform",
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders",
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle",
+        "com.teamresourceful.resourcefullib.common.network.base.Networking",
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType",
+        "com.teamresourceful.resourcefullib.common.network.FabricClientNetworkHandler",
+        "com.teamresourceful.resourcefullib.common.network.FabricNetworking",
+        "com.teamresourceful.resourcefullib.common.network.Network",
+        "com.teamresourceful.resourcefullib.common.network.Packet",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredient",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredientHelper",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredientSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeEntry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeHolderEntry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulBlockRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulItemRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.EnumResourcefulRegistryChild",
+        "com.teamresourceful.resourcefullib.common.registry.FabricHolderRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.FabricRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.FabricResourcefulFluidRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.FabricResourcefulRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.HolderRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntries",
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryChild",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryType",
+        "com.teamresourceful.resourcefullib.common.utils.CommonUtils",
+        "com.teamresourceful.resourcefullib.common.utils.files.CodecSavedData",
+        "com.teamresourceful.resourcefullib.common.utils.files.GlobalStorage",
+        "com.teamresourceful.resourcefullib.common.utils.FileUtils",
+        "com.teamresourceful.resourcefullib.common.utils.GenericMemoryPack",
+        "com.teamresourceful.resourcefullib.common.utils.GsonHelpers",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfo",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoServiceFabricImpl",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoUtils",
+        "com.teamresourceful.resourcefullib.common.utils.Scheduling",
+        "com.teamresourceful.resourcefullib.common.utils.TriState",
+        "com.teamresourceful.resourcefullib.common.utils.UnsafeUtils",
+        "com.teamresourceful.resourcefullib.common.utils.WebUtils",
+        "com.teamresourceful.resourcefullib.fabric.FabricClientProxy",
+        "com.teamresourceful.resourcefullib.fabric.FabricResourcePackHandler",
+        "com.teamresourceful.resourcefullib.fabric.FabricServerProxy",
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricClient",
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricServer",
+        "com.teamresourceful.resourcefullib.mixins.fabric.BlockOutlineRenderStateMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.DedicatedServerMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.EntityMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.FogRendererMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelExtractorMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelRendererMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.MinecraftServerMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.ScreenEffectRendererMixin",
+        "com.teamresourceful.resourcefullib.ResourcefulLib"
+      ],
+      "methods": {
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.fabric.BlockOutlineRenderStateExtension": [],
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties": [
+          "renderOverlay(Minecraft, PoseStack, SubmitNodeCollector)",
+          "renderFluid(BlockPos, BlockAndTintGetter, Output, BlockState, FluidState)",
+          "modifyFogColor(Camera, float, ClientLevel, int, float, Vector4f)",
+          "modifyFogRender(Camera, float, float, FogData)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.EntityFluidEyesHook": [],
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.FluidBlockTintSource": [
+          "color(BlockState)",
+          "colorInWorld(BlockState, BlockAndTintGetter, BlockPos)",
+          "colorAsTerrainParticle(BlockState, BlockAndTintGetter, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.ResourcefulFluidRenderHandler": [
+          "register(Identifier, FluidData)",
+          "renderFluid(FluidRenderer, BlockPos, BlockAndTintGetter, Output, BlockState, FluidState)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry": [
+          "namespace()",
+          "register(String, ClientFluidProperties.Builder)",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<ClientFluidProperties>)",
+          "getEntries()",
+          "init()",
+          "get(Identifier)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight": [
+          "of(Identifier, List<HighlightLine>)",
+          "codec(Identifier)",
+          "copy()",
+          "render(VertexConsumer, PoseStack, Vec3, Vec3, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable": [],
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine": [
+          "getAsList()",
+          "copy()",
+          "recalculateNormal()",
+          "render(PoseStack, VertexConsumer, float, float, float)",
+          "render(PoseStack, VertexConsumer, int, float, float, float, float, float, float, float, float, float, float, float, float)",
+          "render(PoseStack, VertexConsumer, int, float, float, float, float, float, float, float, float, float, float, float, float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler": [
+          "apply(Map<Identifier, JsonElement>, ResourceManager, ProfilerFiller)",
+          "extractState(Level, BlockPos, BlockState)",
+          "canRender(HighlightRenderState)",
+          "onBlockHighlight(Vec3, PoseStack, BlockPos, HighlightRenderState, SubmitNodeCollector, RenderType, int, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightRenderState": [],
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates": [
+          "codec(Block)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant": [
+          "stateCodec(Block)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries": [
+          "create(ResourcefulClientRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType": [
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen": [
+          "setLastScreen(Screen)",
+          "getLastScreen()",
+          "canGoBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen": [
+          "addWidget(int, T)",
+          "addRenderableWidget(int, T)",
+          "addWidget(T)",
+          "rebuildWidgets()",
+          "removeWidget(GuiEventListener)",
+          "clearWidgets()",
+          "children()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory": [
+          "goBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager": [
+          "getScreen(Identifier, Supplier<Screen>)",
+          "getState(Identifier)",
+          "updateState(Identifier, T)",
+          "getOrAddState(Identifier, Supplier<T>, Class<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo": [
+          "addBuilder(String, Consumer<SystemInfoBuilder>)",
+          "buildForDiscord()"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder": [
+          "append(String, Object)",
+          "append(String, String, Object...)"
+        ],
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils": [
+          "sendCommand(String)",
+          "sendClick(int, int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.ApiProxy": [],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec": [
+          "encode(Optional<CompoundTag>, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs": [
+          "resourceKey(ResourceKey<R>)",
+          "registry(IdMap<T>)",
+          "pair(ByteCodec<A>, ByteCodec<B>)",
+          "either(ByteCodec<A>, ByteCodec<B>)",
+          "weightedCollection(ByteCodec<T>, ToDoubleFunction<T>)",
+          "toFriendly(ByteBuf)",
+          "toRegistry(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec": [
+          "encode(T, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec": [
+          "of(StreamCodec<ByteBuf, T>)",
+          "to(ByteCodec<T>)",
+          "ofFriendly(StreamCodec<FriendlyByteBuf, T>)",
+          "toFriendly(ByteCodec<T>)",
+          "ofRegistry(StreamCodec<RegistryFriendlyByteBuf, T>)",
+          "toRegistry(ByteCodec<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction": [
+          "apply(T, U)",
+          "clear()",
+          "concurrent(BiFunction<T, U, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction": [
+          "apply(T)",
+          "clear()",
+          "concurrent(Function<T, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction": [],
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs": [
+          "getIntCodec()",
+          "rangedUniformIntCodec(int, int)",
+          "rangedUniformFloatCodec(float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras": [
+          "optionalFor(Function<O, A>)",
+          "weightedCollection(Codec<T>, ToDoubleFunction<T>)",
+          "registryId(Registry<T>)",
+          "set(Codec<T>)",
+          "linkedSet(Codec<T>)",
+          "passthrough(Function<T, JsonElement>, Function<JsonElement, T>)",
+          "eitherRight(Codec<Either<S, S>>)",
+          "eitherLeft(Codec<Either<S, S>>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred": [
+          "get()",
+          "of(DynamicOps<T>, Codec<V>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Deferred<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec": [
+          "of(Class<T>)",
+          "ofRepresentable(Class<T>, Function<String, T>)",
+          "decode(DynamicOps<T1>, T1)",
+          "encode(T, DynamicOps<T1>, T1)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec": [
+          "of(Codec<A>, Function<A, Codec<B>>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Map<K, V>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate": [
+          "matches(ItemStack)",
+          "matches(Entity)",
+          "matches(Tag)",
+          "matches(Tag, boolean)",
+          "compareNbt(Tag, Tag)",
+          "isEmpty(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate": [
+          "construct(Block, RandomSource)",
+          "matches(BlockState)",
+          "matches(FluidState)",
+          "matches(StateDefinition<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher": [
+          "match(StateHolder<?, ?>, Property<T>)",
+          "codec()",
+          "value(RandomSource)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher": [
+          "match(String, StateDefinition<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher": [
+          "match(StateHolder<?, ?>, Property<T>)",
+          "codec()",
+          "value(RandomSource)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate": [
+          "getTag()",
+          "matches(ServerLevel, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate": [
+          "getTag()",
+          "matches(ServerLevel, Entity)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate": [
+          "getTag()",
+          "matches(ItemStack)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper": [
+          "create(final PrimitiveCodecHelper.Reader<T>, final PrimitiveCodecHelper.Writer<T>, final String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec": [],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders": [],
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec": [
+          "of(Registry<E>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(HolderSet<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder": [
+          "ops()",
+          "add(YabnElement)",
+          "add(DataResult<YabnElement>)",
+          "withErrorsFrom(DataResult<?>)",
+          "mapError(UnaryOperator<String>)",
+          "build(YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike": [
+          "get(YabnElement)",
+          "get(String)",
+          "entries()"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, YabnElement)",
+          "getNumberValue(YabnElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(YabnElement)",
+          "createBoolean(boolean)",
+          "getStringValue(YabnElement)",
+          "createString(String)",
+          "mergeToList(YabnElement, YabnElement)",
+          "mergeToList(YabnElement, List<YabnElement>)",
+          "mergeToMap(YabnElement, YabnElement, YabnElement)",
+          "mergeToMap(YabnElement, MapLike<YabnElement>)",
+          "getMapValues(YabnElement)",
+          "getMapEntries(YabnElement)",
+          "getMap(YabnElement)",
+          "createMap(Stream<Pair<YabnElement, YabnElement>>)",
+          "getStream(YabnElement)",
+          "getList(YabnElement)",
+          "createList(Stream<YabnElement>)",
+          "remove(YabnElement, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder": [
+          "initBuilder()",
+          "append(String, YabnElement, YabnObject)",
+          "build(YabnObject, YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList": [
+          "next()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList": [
+          "of(E, E...)",
+          "setSelectedIndex(int)",
+          "getSelected()",
+          "getSelectedIndex()",
+          "add(int, E)",
+          "get(int)",
+          "set(int, E)",
+          "remove(int)",
+          "size()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection": [
+          "add(double, E)",
+          "get(int)",
+          "next()",
+          "getMap()",
+          "getTotal()",
+          "getAdjustedWeight(double)",
+          "forEachWithSelf(BiConsumer<WeightedCollection<E>, ? super E>)",
+          "setRandom(WeightedCollection.WeightedCollectionRandom)",
+          "setRandom(Random)",
+          "setRandom(RandomSource)",
+          "stream()",
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(E)",
+          "remove(Object)",
+          "containsAll(Collection<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.Color": [
+          "createNamedColor(String, int)",
+          "createPulsingColor(String, int, Consumer<MutableColor>)",
+          "tryParse(String)",
+          "parse(String)",
+          "parseColor(String)",
+          "withAlpha(int)",
+          "getFloatRed()",
+          "getFloatGreen()",
+          "getFloatBlue()",
+          "getFloatAlpha()",
+          "getIntRed()",
+          "getIntGreen()",
+          "getIntBlue()",
+          "getIntAlpha()",
+          "getTextColor()",
+          "getValue()",
+          "getOpaqueValue()",
+          "isDefault()",
+          "isSpecial()",
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors": [],
+        "com.teamresourceful.resourcefullib.common.color.MutableColor": [
+          "setRed(int)",
+          "setGreen(int)",
+          "setBlue(int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder": [
+          "unlockedBy(String, Criterion<?>)",
+          "group(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds": [
+          "add(String, SoundEvent)",
+          "getOrDefault(String, SoundEvent)",
+          "has(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData": [
+          "id()",
+          "data()",
+          "properties()",
+          "still()",
+          "flowing()",
+          "bucket()",
+          "block()",
+          "setStill(Supplier<? extends FlowingFluid>)",
+          "setFlowing(Supplier<? extends FlowingFluid>)",
+          "setBucket(Supplier<? extends Item>)",
+          "setBlock(Supplier<? extends LiquidBlock>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry": [
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<FluidData>)",
+          "register(String, FluidProperties.Builder)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem": [
+          "use(Level, Player, InteractionHand)",
+          "playEmptySound(LivingEntity, LevelAccessor, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid": [
+          "getData()",
+          "getFlowing()",
+          "getSource()",
+          "canConvertToSource(ServerLevel)",
+          "beforeDestroyingBlock(LevelAccessor, BlockPos, BlockState)",
+          "getSlopeFindDistance(LevelReader)",
+          "getDropOff(LevelReader)",
+          "getBucket()",
+          "canBeReplacedWith(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "getTickDelay(LevelReader)",
+          "getExplosionResistance()",
+          "createLegacyBlock(FluidState)",
+          "isSame(Fluid)",
+          "getPickupSound()"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock": [],
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData": [
+          "set(int, int)",
+          "setInt(int, int)",
+          "get(int)",
+          "getInt(int)",
+          "getCount()",
+          "getSize()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder": [
+          "of(Registry<R>, Identifier)",
+          "of(Registry<R>, R)",
+          "getId()",
+          "getRegistry()",
+          "get()",
+          "map(Registry<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack": [
+          "of(ItemStack)",
+          "ofNullable(ItemStack)",
+          "empty()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType": [
+          "cacheEncoding()",
+          "persistent(Codec<T>)",
+          "networkSynchronized(ByteCodec<T>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab": [
+          "setItemIcon(Supplier<? extends ItemLike>)",
+          "setStackIcon(Supplier<ItemStack>)",
+          "hideTitle()",
+          "hideScrollBar()",
+          "addRegistry(T)",
+          "addStack(Supplier<ItemStack>)",
+          "addStack(ItemStack)",
+          "addStack(ItemLike)",
+          "addContent(Supplier<Stream<ItemStack>>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.lib.Constants": [],
+        "com.teamresourceful.resourcefullib.common.lib.Platform": [
+          "get()"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer": [
+          "from(FriendlyByteBuf)",
+          "to(FriendlyByteBuf, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider": [
+          "openMenu(ServerPlayer)",
+          "resetMouseOnOpen()"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent": [],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper": [
+          "create(MenuContentHelper.MenuFactory<T, C>, MenuContentSerializer<C>)",
+          "open(ServerPlayer, ContentMenuProvider<C>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer": [],
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader": [
+          "castRead(I, Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader": [
+          "addReader(String, NbtReader<I, ? extends Tag>)",
+          "type()",
+          "setDefault(I)",
+          "read(I, CompoundTag)",
+          "write(I)",
+          "write(I, CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders": [
+          "create(boolean)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader": [
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>)",
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>, byte)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>, short)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>, int)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>, long)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>, float)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>, double)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>, String)",
+          "type()",
+          "setDefault(I)",
+          "read(I, T)",
+          "write(I)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils": [
+          "tagWithData(String, Tag)",
+          "toListTag(List<T>)",
+          "fromListTag(ListTag, Class<T>)",
+          "mapTag(CompoundTag, Function<String, K>, BiFunction<String, CompoundTag, V>)",
+          "mapToCollection(Supplier<C>, ListTag, Function<Tag, T>)",
+          "mapToListTag(Collection<T>, Function<T, Tag>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<?>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator": [
+          "id()",
+          "test(CollectionTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator": [
+          "id()",
+          "test(CollectionTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator": [
+          "id()",
+          "test(NumericTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator": [
+          "id()",
+          "test(NumericTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator": [
+          "id()",
+          "test(CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator": [
+          "id()",
+          "test(CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType": [
+          "test(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator": [
+          "testAndValidate(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<I>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle": [
+          "handle(Consumer<T>)",
+          "handle(Function<T, O>, Consumer<O>)",
+          "handle(BiConsumer<T, Player>)",
+          "handle(Function<T, O>, BiConsumer<O, Player>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.Networking": [],
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType": [
+          "codec(Type<NetworkPacketPayload<T>>)",
+          "type(Identifier)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType": [
+          "id()"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType": [
+          "encode(T, RegistryFriendlyByteBuf)",
+          "decode(RegistryFriendlyByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType": [
+          "encode(T, RegistryFriendlyByteBuf)",
+          "decode(RegistryFriendlyByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.FabricClientNetworkHandler": [
+          "register(Type<NetworkPacketPayload<T>>, ClientboundPacketType<T>)",
+          "send(Identifier, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.FabricNetworking": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, ServerPlayer)",
+          "canSendToPlayer(ServerPlayer, PacketType<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Network": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToPlayer(T, Player)",
+          "sendToPlayers(T, Collection<? extends Player>)",
+          "sendToAllPlayers(T, MinecraftServer)",
+          "sendToPlayersInLevel(T, Level)",
+          "sendToAllLoaded(T, Level, BlockPos)",
+          "sendToPlayersInRange(T, Level, BlockPos, double)",
+          "canSendToPlayer(ServerPlayer, PacketType<?>)",
+          "canSendToPlayer(Player, PacketType<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Packet": [],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient": [
+          "isComplex()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer": [],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredient": [
+          "test(ItemStack)",
+          "items()",
+          "requiresTesting()",
+          "getSerializer()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredientHelper": [
+          "get(Identifier)",
+          "register(CodecIngredientSerializer<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.FabricIngredientSerializer": [
+          "getIdentifier()",
+          "getCodec()",
+          "getStreamCodec()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper": [
+          "getIngredient(T)",
+          "registerIngredient(T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeEntry": [
+          "get()",
+          "getId()",
+          "asItem()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeHolderEntry": [
+          "holder()",
+          "getId()",
+          "asItem()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulBlockRegistry": [
+          "register(String, Function<Properties, I>, Supplier<Properties>)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<Block>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulItemRegistry": [
+          "register(String, Function<Properties, I>, Supplier<Properties>)",
+          "register(String, Supplier<? extends Block>, Supplier<Properties>)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<Item>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.EnumResourcefulRegistryChild": [
+          "register(E, String, Supplier<I>)",
+          "getEntries(E)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.FabricHolderRegistryEntry": [
+          "of(Registry<T>, Identifier, Supplier<I>)",
+          "holder()",
+          "getId()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.FabricRegistryEntry": [
+          "of(Registry<T>, Identifier, Supplier<I>)",
+          "get()",
+          "getId()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.FabricResourcefulFluidRegistry": [
+          "namespace()",
+          "register(String, FluidProperties)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.FabricResourcefulRegistry": [
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<T>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.HolderRegistryEntry": [
+          "get()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntries": [
+          "add(E)",
+          "getEntries()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntry": [],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries": [
+          "create(ResourcefulRegistry<T>)",
+          "createForItems(String)",
+          "createForItems(ResourcefulRegistry<Item>)",
+          "createForBlocks(String)",
+          "createForBlocks(ResourcefulRegistry<Block>)",
+          "create(Registry<T>, String)",
+          "create(ResourcefulRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry": [
+          "namespace()",
+          "stream()",
+          "boundStream()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryChild": [
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<T>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryType": [
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.CommonUtils": [
+          "generate(Predicate<T>, Supplier<T>)",
+          "serverTranslatable(String, Object...)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.files.CodecSavedData": [
+          "isDirty()",
+          "get()",
+          "set(T)",
+          "create(Codec<T>, Identifier)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.files.GlobalStorage": [
+          "init()",
+          "getCacheDirectory(String)",
+          "getDataDirectory(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.FileUtils": [
+          "isJson(Path)",
+          "streamFilesAndParse(Path, BiConsumer<Reader, String>, Predicate<Path>)",
+          "copyDefaultFiles(String, Path, Path, Predicate<Path>)",
+          "setupDevResources(String, BiConsumer<Reader, String>, Path, Predicate<Path>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.GenericMemoryPack": [
+          "putData(PackType, Identifier, IoSupplier<InputStream>)",
+          "putJson(PackType, Identifier, JsonElement)",
+          "getRootResource(String...)",
+          "getResource(PackType, Identifier)",
+          "listResources(PackType, String, String, ResourceOutput)",
+          "getNamespaces(PackType)",
+          "getMetadataSection(MetadataSectionType<T>)",
+          "packId()",
+          "location()",
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.GsonHelpers": [
+          "parseJson(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfo": [],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoServiceFabricImpl": [
+          "isModLoaded(String)",
+          "isMixinModLoaded(String)",
+          "getModInfo(String)",
+          "getLoadedMods()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoUtils": [
+          "isModLoaded(String)",
+          "isMixinModLoaded(String)",
+          "getModInfo(String)",
+          "getLoadedMods()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.Scheduling": [
+          "schedule(Runnable, long, TimeUnit)",
+          "schedule(Runnable, long, long, TimeUnit)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.TriState": [
+          "of(boolean)",
+          "of(Boolean)",
+          "isTrue()",
+          "isFalse()",
+          "isUndefined()",
+          "isDefined()",
+          "map(boolean)",
+          "map(TriState, TriState)",
+          "of(Number)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.UnsafeUtils": [
+          "hasField(Object, String)",
+          "getField(Class<?>, Predicate<Field>)",
+          "setField(Object, String, Object)",
+          "setField(Object, Field, Object)",
+          "getStaticField(Class<?>, String)",
+          "getStaticField(Class<?>, Field)",
+          "setStaticField(Class<?>, String, Object)",
+          "unsafe()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.WebUtils": [
+          "get(String, boolean)",
+          "get(String)",
+          "getJson(String, boolean)",
+          "getJson(String)",
+          "get(String, BodyHandler<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricClientProxy": [
+          "getRegistryAccess()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricResourcePackHandler": [
+          "load()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricServerProxy": [
+          "getRegistryAccess()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricClient": [
+          "onInitializeClient()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricServer": [
+          "onInitializeServer()"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.BlockOutlineRenderStateMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.DedicatedServerMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.EntityMixin": [
+          "getEyeY()",
+          "getX()",
+          "getZ()",
+          "level()"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.FogRendererMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelExtractorMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelRendererMixin": [
+          "onRenderHitOutline(PoseStack, SubmitNodeCollector, LevelRenderState, CallbackInfo)"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.MinecraftServerMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.ScreenEffectRendererMixin": [],
+        "com.teamresourceful.resourcefullib.ResourcefulLib": [
+          "init()"
+        ]
+      },
+      "sampleCount": 189
+    },
+    "3.11.1": {
+      "packages": [],
+      "classes": [
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose",
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor",
+        "com.teamresourceful.resourcefullib.client.components.CursorWidget",
+        "com.teamresourceful.resourcefullib.client.fabric.BlockOutlineRenderStateExtension",
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties",
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.EntityFluidEyesHook",
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.ResourcefulFluidRenderHandler",
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable",
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine",
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler",
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightRenderState",
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates",
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType",
+        "com.teamresourceful.resourcefullib.client.screens.AbstractContainerCursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.BaseCursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.CursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen",
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen",
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory",
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder",
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils",
+        "com.teamresourceful.resourcefullib.common.ApiProxy",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction",
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs",
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders",
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder",
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList",
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList",
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection",
+        "com.teamresourceful.resourcefullib.common.color.Color",
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors",
+        "com.teamresourceful.resourcefullib.common.color.MutableColor",
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder",
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException",
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException",
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds",
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock",
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData",
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder",
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack",
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType",
+        "com.teamresourceful.resourcefullib.common.item.tabs.fabric.ResourcefulCreativeModeTabImpl",
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab",
+        "com.teamresourceful.resourcefullib.common.lib.Constants",
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider",
+        "com.teamresourceful.resourcefullib.common.menu.fabric.MenuContentHelperImpl",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders",
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle",
+        "com.teamresourceful.resourcefullib.common.network.base.Networking",
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType",
+        "com.teamresourceful.resourcefullib.common.network.fabric.FabricClientNetworkHandler",
+        "com.teamresourceful.resourcefullib.common.network.fabric.FabricNetworking",
+        "com.teamresourceful.resourcefullib.common.network.fabric.NetworkImpl",
+        "com.teamresourceful.resourcefullib.common.network.Network",
+        "com.teamresourceful.resourcefullib.common.network.Packet",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipe",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeType",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredient",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredientHelper",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredientSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.IngredientHelperImpl",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeEntry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeHolderEntry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulBlockRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulItemRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.EnumResourcefulRegistryChild",
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricHolderRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricResourcefulFluidRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricResourcefulRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.fabric.ResourcefulRegistriesImpl",
+        "com.teamresourceful.resourcefullib.common.registry.HolderRegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntries",
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntry",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryChild",
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryType",
+        "com.teamresourceful.resourcefullib.common.utils.CommonUtils",
+        "com.teamresourceful.resourcefullib.common.utils.files.CodecSavedData",
+        "com.teamresourceful.resourcefullib.common.utils.files.GlobalStorage",
+        "com.teamresourceful.resourcefullib.common.utils.FileUtils",
+        "com.teamresourceful.resourcefullib.common.utils.GenericMemoryPack",
+        "com.teamresourceful.resourcefullib.common.utils.GsonHelpers",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.fabric.ModInfoUtilsImpl",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfo",
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoUtils",
+        "com.teamresourceful.resourcefullib.common.utils.Scheduling",
+        "com.teamresourceful.resourcefullib.common.utils.TriState",
+        "com.teamresourceful.resourcefullib.common.utils.UnsafeUtils",
+        "com.teamresourceful.resourcefullib.common.utils.WebUtils",
+        "com.teamresourceful.resourcefullib.fabric.FabricClientProxy",
+        "com.teamresourceful.resourcefullib.fabric.FabricResourcePackHandler",
+        "com.teamresourceful.resourcefullib.fabric.FabricServerProxy",
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricClient",
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricServer",
+        "com.teamresourceful.resourcefullib.mixins.fabric.BlockOutlineRenderStateMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.DedicatedServerMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.EntityMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.FogRendererMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelRendererMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.MinecraftServerMixin",
+        "com.teamresourceful.resourcefullib.mixins.fabric.ScreenEffectRendererMixin",
+        "com.teamresourceful.resourcefullib.ResourcefulLib"
+      ],
+      "methods": {
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.components.CursorWidget": [],
+        "com.teamresourceful.resourcefullib.client.fabric.BlockOutlineRenderStateExtension": [],
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties": [
+          "renderOverlay(class_310, class_4587, class_4597)",
+          "renderFluid(class_2338, class_1920, class_4588, class_2680, class_3610, Function<class_2960, class_1058>)",
+          "modifyFogColor(class_4184, float, class_638, int, float, Vector4f)",
+          "modifyFogRender(class_4184, float, float, class_7285)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.EntityFluidEyesHook": [],
+        "com.teamresourceful.resourcefullib.client.fluid.fabric.ResourcefulFluidRenderHandler": [
+          "register(class_2960, FluidData)",
+          "getFluidSprites(class_1920, class_2338, class_3610)",
+          "reloadTextures(class_1059)",
+          "getFluidColor(class_1920, class_2338, class_3610)",
+          "renderFluid(class_2338, class_1920, class_4588, class_2680, class_3610)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry": [
+          "register(String, ClientFluidProperties.Builder)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<ClientFluidProperties>)",
+          "getEntries()",
+          "init()",
+          "get(class_2960)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight": [
+          "of(class_2960, List<HighlightLine>)",
+          "codec(class_2960)",
+          "copy()",
+          "render(class_4588, class_4587, class_243, class_243, class_2338)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable": [],
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine": [
+          "getAsList()",
+          "copy()",
+          "recalculateNormal()",
+          "render(class_4587, class_4588, float, float, float)",
+          "render(class_4587, class_4588, int, float, float, float, float, float, float, float, float, float, float, float, float)",
+          "render(class_4587, class_4588, int, float, float, float, float, float, float, float, float, float, float, float, float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler": [
+          "apply(Map<class_2960, JsonElement>, class_3300, class_3695)",
+          "extractState(class_1937, class_2338, class_2680)",
+          "canRender(HighlightRenderState)",
+          "onBlockHighlight(class_243, class_4587, class_2338, HighlightRenderState, class_4588, int)",
+          "onBlockHighlight(class_243, class_4587, class_2338, HighlightRenderState, class_4588, int, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightRenderState": [],
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates": [
+          "codec(class_2248)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant": [
+          "stateCodec(class_2248)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries": [
+          "create(ResourcefulClientRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType": [
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.AbstractContainerCursorScreen": [
+          "method_25394(class_332, int, int, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.BaseCursorScreen": [
+          "method_25394(class_332, int, int, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.CursorScreen": [
+          "applyCursor(class_332, List<? extends class_364>, double, double)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen": [
+          "setLastScreen(class_437)",
+          "getLastScreen()",
+          "canGoBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen": [
+          "addWidget(int, T)",
+          "addRenderableWidget(int, T)",
+          "method_25429(T)",
+          "method_41843()",
+          "method_37066(class_364)",
+          "method_37067()",
+          "method_25396()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory": [
+          "goBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager": [
+          "getScreen(class_2960, Supplier<class_437>)",
+          "getState(class_2960)",
+          "updateState(class_2960, T)",
+          "getOrAddState(class_2960, Supplier<T>, Class<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo": [
+          "addBuilder(String, Consumer<SystemInfoBuilder>)",
+          "buildForDiscord()"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder": [
+          "append(String, Object)",
+          "append(String, String, Object...)"
+        ],
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils": [
+          "sendCommand(String)",
+          "sendClick(int, int)",
+          "inBounds(class_8030, int, int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.ApiProxy": [],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec": [
+          "encode(Optional<class_2487>, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs": [
+          "resourceKey(class_5321<R>)",
+          "registry(class_2359<T>)",
+          "pair(ByteCodec<A>, ByteCodec<B>)",
+          "either(ByteCodec<A>, ByteCodec<B>)",
+          "toFriendly(ByteBuf)",
+          "toRegistry(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec": [
+          "encode(T, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec": [
+          "of(class_9139<ByteBuf, T>)",
+          "to(ByteCodec<T>)",
+          "ofFriendly(class_9139<class_2540, T>)",
+          "toFriendly(ByteCodec<T>)",
+          "ofRegistry(class_9139<class_9129, T>)",
+          "toRegistry(ByteCodec<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction": [
+          "apply(T, U)",
+          "clear()",
+          "concurrent(BiFunction<T, U, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction": [
+          "apply(T)",
+          "clear()",
+          "concurrent(Function<T, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction": [],
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs": [
+          "getIntCodec()",
+          "rangedUniformIntCodec(int, int)",
+          "rangedUniformFloatCodec(float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras": [
+          "optionalFor(Function<O, A>)",
+          "weightedCollection(Codec<T>, ToDoubleFunction<T>)",
+          "registryId(class_2378<T>)",
+          "set(Codec<T>)",
+          "linkedSet(Codec<T>)",
+          "passthrough(Function<T, JsonElement>, Function<JsonElement, T>)",
+          "eitherRight(Codec<Either<S, S>>)",
+          "eitherLeft(Codec<Either<S, S>>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred": [
+          "get()",
+          "of(DynamicOps<T>, Codec<V>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Deferred<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec": [
+          "of(Class<T>)",
+          "ofRepresentable(Class<T>, Function<String, T>)",
+          "decode(DynamicOps<T1>, T1)",
+          "encode(T, DynamicOps<T1>, T1)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec": [
+          "of(Codec<A>, Function<A, Codec<B>>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Map<K, V>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate": [
+          "matches(class_1799)",
+          "matches(class_1297)",
+          "matches(class_2520)",
+          "matches(class_2520, boolean)",
+          "compareNbt(class_2520, class_2520)",
+          "isEmpty(class_2520)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate": [
+          "construct(class_2248, class_5819)",
+          "matches(class_2680)",
+          "matches(class_3610)",
+          "matches(class_2689<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher": [
+          "match(class_2688<?, ?>, class_2769<T>)",
+          "codec()",
+          "value(class_5819)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher": [
+          "match(String, class_2689<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher": [
+          "match(class_2688<?, ?>, class_2769<T>)",
+          "codec()",
+          "value(class_5819)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate": [
+          "getTag()",
+          "matches(class_3218, class_2338)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate": [
+          "getTag()",
+          "matches(class_3218, class_1297)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate": [
+          "getTag()",
+          "matches(class_1799)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper": [
+          "create(PrimitiveCodecHelper.Reader<T>, PrimitiveCodecHelper.Writer<T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec": [],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders": [],
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec": [
+          "of(class_2378<E>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(class_6885<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder": [
+          "ops()",
+          "add(YabnElement)",
+          "add(DataResult<YabnElement>)",
+          "withErrorsFrom(DataResult<?>)",
+          "mapError(UnaryOperator<String>)",
+          "build(YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike": [
+          "get(YabnElement)",
+          "get(String)",
+          "entries()"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, YabnElement)",
+          "getNumberValue(YabnElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(YabnElement)",
+          "createBoolean(boolean)",
+          "getStringValue(YabnElement)",
+          "createString(String)",
+          "mergeToList(YabnElement, YabnElement)",
+          "mergeToList(YabnElement, List<YabnElement>)",
+          "mergeToMap(YabnElement, YabnElement, YabnElement)",
+          "mergeToMap(YabnElement, MapLike<YabnElement>)",
+          "getMapValues(YabnElement)",
+          "getMapEntries(YabnElement)",
+          "getMap(YabnElement)",
+          "createMap(Stream<Pair<YabnElement, YabnElement>>)",
+          "getStream(YabnElement)",
+          "getList(YabnElement)",
+          "createList(Stream<YabnElement>)",
+          "remove(YabnElement, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder": [
+          "initBuilder()",
+          "append(String, YabnElement, YabnObject)",
+          "build(YabnObject, YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList": [
+          "next()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList": [
+          "of(E, E...)",
+          "setSelectedIndex(int)",
+          "getSelected()",
+          "getSelectedIndex()",
+          "add(int, E)",
+          "get(int)",
+          "set(int, E)",
+          "remove(int)",
+          "size()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection": [
+          "add(double, E)",
+          "get(int)",
+          "next()",
+          "getMap()",
+          "getTotal()",
+          "getAdjustedWeight(double)",
+          "forEachWithSelf(BiConsumer<WeightedCollection<E>, ? super E>)",
+          "setRandom(WeightedCollection.WeightedCollectionRandom)",
+          "setRandom(Random)",
+          "setRandom(class_5819)",
+          "stream()",
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(E)",
+          "remove(Object)",
+          "containsAll(Collection<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.Color": [
+          "createNamedColor(String, int)",
+          "createPulsingColor(String, int, Consumer<MutableColor>)",
+          "tryParse(String)",
+          "parse(String)",
+          "parseColor(String)",
+          "withAlpha(int)",
+          "getFloatRed()",
+          "getFloatGreen()",
+          "getFloatBlue()",
+          "getFloatAlpha()",
+          "getIntRed()",
+          "getIntGreen()",
+          "getIntBlue()",
+          "getIntAlpha()",
+          "getTextColor()",
+          "getValue()",
+          "isDefault()",
+          "isSpecial()",
+          "toString()",
+          "hashCode()"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors": [],
+        "com.teamresourceful.resourcefullib.common.color.MutableColor": [
+          "setRed(int)",
+          "setGreen(int)",
+          "setBlue(int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder": [
+          "method_33530(String, class_175<?>)",
+          "method_33529(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds": [
+          "add(String, class_3414)",
+          "getOrDefault(String, class_3414)",
+          "has(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData": [
+          "id()",
+          "data()",
+          "properties()",
+          "still()",
+          "flowing()",
+          "bucket()",
+          "block()",
+          "setStill(Supplier<? extends class_3609>)",
+          "setFlowing(Supplier<? extends class_3609>)",
+          "setBucket(Supplier<? extends class_1792>)",
+          "setBlock(Supplier<? extends class_2404>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry": [
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<FluidData>)",
+          "register(String, FluidProperties.Builder)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "method_7727(class_1309, class_1936, class_2338)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid": [
+          "getData()",
+          "method_15750()",
+          "method_15751()",
+          "method_15737(class_3218)",
+          "method_15730(class_1936, class_2338, class_2680)",
+          "method_15733(class_4538)",
+          "method_15739(class_4538)",
+          "method_15774()",
+          "method_15777(class_3610, class_1922, class_2338, class_3611, class_2350)",
+          "method_15789(class_4538)",
+          "method_15784()",
+          "method_15790(class_3610)",
+          "method_15780(class_3611)",
+          "method_32359()"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock": [],
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData": [
+          "method_17391(int, int)",
+          "setInt(int, int)",
+          "method_17390(int)",
+          "getInt(int)",
+          "method_17389()",
+          "getSize()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder": [
+          "of(class_2378<R>, class_2960)",
+          "of(class_2378<R>, R)",
+          "getId()",
+          "getRegistry()",
+          "get()",
+          "map(class_2378<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack": [
+          "of(class_1799)",
+          "ofNullable(class_1799)",
+          "empty()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType": [
+          "cacheEncoding()",
+          "persistent(Codec<T>)",
+          "networkSynchronized(ByteCodec<T>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.tabs.fabric.ResourcefulCreativeModeTabImpl": [
+          "create(ResourcefulCreativeModeTab)"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab": [
+          "setItemIcon(Supplier<? extends class_1935>)",
+          "setStackIcon(Supplier<class_1799>)",
+          "hideTitle()",
+          "hideScrollBar()",
+          "addRegistry(T)",
+          "addStack(Supplier<class_1799>)",
+          "addStack(class_1799)",
+          "addStack(class_1935)",
+          "addContent(Supplier<Stream<class_1799>>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.lib.Constants": [],
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer": [
+          "from(class_2540)",
+          "to(class_2540, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider": [
+          "openMenu(class_3222)",
+          "resetMouseOnOpen()"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.fabric.MenuContentHelperImpl": [
+          "create(MenuContentHelper.MenuFactory<T, C>, MenuContentSerializer<C>)",
+          "open(class_3222, ContentMenuProvider<C>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent": [],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper": [
+          "create(MenuContentHelper.MenuFactory<T, C>, MenuContentSerializer<C>)",
+          "open(class_3222, ContentMenuProvider<C>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer": [],
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader": [
+          "castRead(I, class_2520)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader": [
+          "addReader(String, NbtReader<I, ? extends class_2520>)",
+          "type()",
+          "setDefault(I)",
+          "read(I, class_2487)",
+          "write(I)",
+          "write(I, class_2487)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders": [
+          "create(boolean)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)",
+          "create(boolean, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>, String, NbtReader<I, ? extends class_2520>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader": [
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>)",
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>, byte)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>, short)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>, int)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>, long)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>, float)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>, double)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>, String)",
+          "type()",
+          "setDefault(I)",
+          "read(I, T)",
+          "write(I)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils": [
+          "tagWithData(String, class_2520)",
+          "toListTag(List<T>)",
+          "fromListTag(class_2499, Class<T>)",
+          "mapTag(class_2487, Function<String, K>, BiFunction<String, class_2487, V>)",
+          "mapToCollection(Supplier<C>, class_2499, Function<class_2520, T>)",
+          "mapToListTag(Collection<T>, Function<T, class_2520>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<?>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator": [
+          "id()",
+          "test(class_2483)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator": [
+          "id()",
+          "test(class_2483)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator": [
+          "id()",
+          "test(class_2514)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator": [
+          "id()",
+          "test(class_2514)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator": [
+          "id()",
+          "test(class_2487)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator": [
+          "id()",
+          "test(class_2487)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator": [
+          "id()",
+          "test(class_2519)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator": [
+          "id()",
+          "test(class_2519)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator": [
+          "id()",
+          "test(class_2519)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator": [
+          "id()",
+          "test(class_2519)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator": [
+          "id()",
+          "test(class_2519)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType": [
+          "test(class_2520)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator": [
+          "testAndValidate(class_2520)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<I>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle": [
+          "handle(Consumer<T>)",
+          "handle(Function<T, O>, Consumer<O>)",
+          "handle(BiConsumer<T, class_1657>)",
+          "handle(Function<T, O>, BiConsumer<O, class_1657>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.Networking": [],
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType": [
+          "codec(class_9154<NetworkPacketPayload<T>>)",
+          "type(class_2960)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType": [
+          "id()"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType": [
+          "encode(T, class_9129)",
+          "decode(class_9129)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType": [
+          "encode(T, class_9129)",
+          "decode(class_9129)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.fabric.FabricClientNetworkHandler": [
+          "register(class_9154<NetworkPacketPayload<T>>, ClientboundPacketType<T>)",
+          "send(class_2960, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.fabric.FabricNetworking": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, class_3222)",
+          "canSendToPlayer(class_3222, PacketType<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.fabric.NetworkImpl": [
+          "getNetwork(class_2960, int, boolean)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Network": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, class_3222)",
+          "sendToPlayer(T, class_1657)",
+          "sendToPlayers(T, Collection<? extends class_1657>)",
+          "sendToAllPlayers(T, MinecraftServer)",
+          "sendToPlayersInLevel(T, class_1937)",
+          "sendToAllLoaded(T, class_1937, class_2338)",
+          "sendToPlayersInRange(T, class_1937, class_2338, double)",
+          "canSendToPlayer(class_3222, PacketType<?>)",
+          "canSendToPlayer(class_1657, PacketType<?>)",
+          "getNetwork(class_2960, int, boolean)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Packet": [],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipe": [
+          "method_8118()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeSerializer": [
+          "method_53736()",
+          "method_56104()",
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeType": [
+          "of(String)",
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient": [
+          "isComplex()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer": [],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredient": [
+          "test(class_1799)",
+          "getMatchingItems()",
+          "requiresTesting()",
+          "getSerializer()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredientHelper": [
+          "get(class_2960)",
+          "register(CodecIngredientSerializer<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.FabricIngredientSerializer": [
+          "getIdentifier()",
+          "getCodec()",
+          "getPacketCodec()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.fabric.IngredientHelperImpl": [
+          "getIngredient(T)",
+          "registerIngredient(T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper": [
+          "getIngredient(T)",
+          "registerIngredient(T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeEntry": [
+          "get()",
+          "getId()",
+          "method_8389()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.base.ItemLikeHolderEntry": [
+          "holder()",
+          "getId()",
+          "method_8389()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulBlockRegistry": [
+          "register(String, Function<class_2251, I>, Supplier<class_2251>)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<class_2248>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.builtin.ResourcefulItemRegistry": [
+          "register(String, Function<class_1793, I>, Supplier<class_1793>)",
+          "register(String, Supplier<? extends class_2248>, Supplier<class_1793>)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<class_1792>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.EnumResourcefulRegistryChild": [
+          "register(E, String, Supplier<I>)",
+          "getEntries(E)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricHolderRegistryEntry": [
+          "of(class_2378<T>, class_2960, Supplier<I>)",
+          "holder()",
+          "getId()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricRegistryEntry": [
+          "of(class_2378<T>, class_2960, Supplier<I>)",
+          "get()",
+          "getId()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricResourcefulFluidRegistry": [
+          "namespace()",
+          "register(String, FluidProperties)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.fabric.FabricResourcefulRegistry": [
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<T>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.fabric.ResourcefulRegistriesImpl": [
+          "create(class_2378<T>, String)",
+          "create(ResourcefulRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.HolderRegistryEntry": [
+          "get()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntries": [
+          "add(E)",
+          "getEntries()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.RegistryEntry": [],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistries": [
+          "create(ResourcefulRegistry<T>)",
+          "createForItems(String)",
+          "createForItems(ResourcefulRegistry<class_1792>)",
+          "createForBlocks(String)",
+          "createForBlocks(ResourcefulRegistry<class_2248>)",
+          "create(class_2378<T>, String)",
+          "create(ResourcefulRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistry": [
+          "namespace()",
+          "stream()",
+          "boundStream()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryChild": [
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<T>)",
+          "getEntries()",
+          "init()"
+        ],
+        "com.teamresourceful.resourcefullib.common.registry.ResourcefulRegistryType": [
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.CommonUtils": [
+          "generate(Predicate<T>, Supplier<T>)",
+          "serverTranslatable(String, Object...)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.files.CodecSavedData": [
+          "method_79()",
+          "get()",
+          "set(T)",
+          "create(Codec<T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.files.GlobalStorage": [
+          "init()",
+          "getCacheDirectory(String)",
+          "getDataDirectory(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.FileUtils": [
+          "isJson(Path)",
+          "streamFilesAndParse(Path, BiConsumer<Reader, String>, Predicate<Path>)",
+          "copyDefaultFiles(String, Path, Path, Predicate<Path>)",
+          "setupDevResources(String, BiConsumer<Reader, String>, Path, Predicate<Path>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.GenericMemoryPack": [
+          "putData(class_3264, class_2960, class_7367<InputStream>)",
+          "putJson(class_3264, class_2960, JsonElement)",
+          "method_14410(String...)",
+          "method_14405(class_3264, class_2960)",
+          "method_14408(class_3264, String, String, class_7664)",
+          "method_14406(class_3264)",
+          "method_14407(class_7677<T>)",
+          "method_14409()",
+          "method_56926()",
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.GsonHelpers": [
+          "parseJson(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.fabric.ModInfoUtilsImpl": [
+          "getModInfo(String)",
+          "getLoadedMods()",
+          "isModLoaded(String)",
+          "isMixinModLoaded(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfo": [],
+        "com.teamresourceful.resourcefullib.common.utils.modinfo.ModInfoUtils": [
+          "isModLoaded(String)",
+          "isMixinModLoaded(String)",
+          "getModInfo(String)",
+          "getLoadedMods()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.Scheduling": [
+          "schedule(Runnable, long, TimeUnit)",
+          "schedule(Runnable, long, long, TimeUnit)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.TriState": [
+          "of(boolean)",
+          "of(Boolean)",
+          "isTrue()",
+          "isFalse()",
+          "isUndefined()",
+          "isDefined()",
+          "map(boolean)",
+          "map(TriState, TriState)",
+          "of(Number)"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.UnsafeUtils": [
+          "hasField(Object, String)",
+          "getField(Class<?>, Predicate<Field>)",
+          "setField(Object, String, Object)",
+          "setField(Object, Field, Object)",
+          "getStaticField(Class<?>, String)",
+          "getStaticField(Class<?>, Field)",
+          "setStaticField(Class<?>, String, Object)",
+          "unsafe()"
+        ],
+        "com.teamresourceful.resourcefullib.common.utils.WebUtils": [
+          "get(String, boolean)",
+          "get(String)",
+          "getJson(String, boolean)",
+          "getJson(String)",
+          "get(String, BodyHandler<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricClientProxy": [
+          "getRegistryAccess()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricResourcePackHandler": [
+          "load()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.FabricServerProxy": [
+          "getRegistryAccess()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricClient": [
+          "onInitializeClient()"
+        ],
+        "com.teamresourceful.resourcefullib.fabric.ResourcefulLibFabricServer": [
+          "onInitializeServer()"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.BlockOutlineRenderStateMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.DedicatedServerMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.EntityMixin": [
+          "method_23320()",
+          "method_23317()",
+          "method_23321()",
+          "method_73183()"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.FogRendererMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.LevelRendererMixin": [
+          "onRenderHitOutline(class_4598, class_4587, boolean, class_11658, CallbackInfo)"
+        ],
+        "com.teamresourceful.resourcefullib.mixins.fabric.MinecraftServerMixin": [],
+        "com.teamresourceful.resourcefullib.mixins.fabric.ScreenEffectRendererMixin": [],
+        "com.teamresourceful.resourcefullib.ResourcefulLib": [
+          "init()"
+        ]
+      },
+      "sampleCount": 186
+    },
+    "3.6.0": {
+      "packages": [],
+      "classes": [
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose",
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor",
+        "com.teamresourceful.resourcefullib.client.components.CursorWidget",
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties",
+        "com.teamresourceful.resourcefullib.client.fluid.neoforge.ResourcefulClientFluidType",
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight",
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable",
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine",
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler",
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates",
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries",
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType",
+        "com.teamresourceful.resourcefullib.client.scissor.GuiCloseableScissor",
+        "com.teamresourceful.resourcefullib.client.screens.AbstractContainerCursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.BaseCursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.CursorScreen",
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen",
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen",
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory",
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState",
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo",
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder",
+        "com.teamresourceful.resourcefullib.client.utils.CursorUtils",
+        "com.teamresourceful.resourcefullib.client.utils.RenderUtils",
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils",
+        "com.teamresourceful.resourcefullib.common.ApiProxy",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec",
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction",
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction",
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs",
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred",
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate",
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders",
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps",
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder",
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList",
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList",
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection",
+        "com.teamresourceful.resourcefullib.common.color.Color",
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors",
+        "com.teamresourceful.resourcefullib.common.color.MutableColor",
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder",
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException",
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException",
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds",
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties",
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData",
+        "com.teamresourceful.resourcefullib.common.fluid.neoforge.ResourcefulFluidType",
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid",
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock",
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData",
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder",
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack",
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType",
+        "com.teamresourceful.resourcefullib.common.item.tabs.neoforge.ResourcefulCreativeModeTabImpl",
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab",
+        "com.teamresourceful.resourcefullib.common.lib.Constants",
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper",
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer",
+        "com.teamresourceful.resourcefullib.common.menu.neoforge.MenuContentHelperImpl",
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders",
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader",
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator",
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec",
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle",
+        "com.teamresourceful.resourcefullib.common.network.base.Networking",
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType",
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType",
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType",
+        "com.teamresourceful.resourcefullib.common.network.neoforge.NeoForgeNetworking",
+        "com.teamresourceful.resourcefullib.common.network.neoforge.NetworkImpl",
+        "com.teamresourceful.resourcefullib.common.network.Network",
+        "com.teamresourceful.resourcefullib.common.network.Packet",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipe",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeType",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper",
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.neoforge.IngredientHelperImpl"
+      ],
+      "methods": {
+        "com.teamresourceful.resourcefullib.client.closables.CloseablePose": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.closables.CloseableScissor": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.components.CursorWidget": [],
+        "com.teamresourceful.resourcefullib.client.fluid.data.ClientFluidProperties": [
+          "renderOverlay(Minecraft, PoseStack, MultiBufferSource)",
+          "renderFluid(BlockPos, BlockAndTintGetter, VertexConsumer, BlockState, FluidState, Function<ResourceLocation, TextureAtlasSprite>)",
+          "modifyFogColor(Camera, float, ClientLevel, int, float, Vector4f)",
+          "modifyFogRender(Camera, float, float, FogData)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.neoforge.ResourcefulClientFluidType": [
+          "getStillTexture()",
+          "getStillTexture(FluidStack)",
+          "getStillTexture(FluidState, BlockAndTintGetter, BlockPos)",
+          "getFlowingTexture()",
+          "getFlowingTexture(FluidStack)",
+          "getFlowingTexture(FluidState, BlockAndTintGetter, BlockPos)",
+          "getOverlayTexture()",
+          "getOverlayTexture(FluidStack)",
+          "getOverlayTexture(FluidState, BlockAndTintGetter, BlockPos)",
+          "renderOverlay(Minecraft, PoseStack, MultiBufferSource)",
+          "getTintColor()",
+          "getTintColor(FluidStack)",
+          "getTintColor(FluidState, BlockAndTintGetter, BlockPos)",
+          "renderFluid(FluidState, BlockAndTintGetter, BlockPos, VertexConsumer, BlockState)",
+          "modifyFogColor(Camera, float, ClientLevel, int, float, Vector4f)",
+          "modifyFogRender(Camera, FogEnvironment, float, float, FogData)"
+        ],
+        "com.teamresourceful.resourcefullib.client.fluid.registry.ResourcefulClientFluidRegistry": [
+          "register(String, ClientFluidProperties.Builder)",
+          "namespace()",
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<ClientFluidProperties>)",
+          "getEntries()",
+          "init()",
+          "get(ResourceLocation)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlight": [
+          "of(ResourceLocation, List<HighlightLine>)",
+          "codec(ResourceLocation)",
+          "copy()",
+          "render(VertexConsumer, PoseStack, Vec3, Vec3, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.base.Highlightable": [],
+        "com.teamresourceful.resourcefullib.client.highlights.base.HighlightLine": [
+          "getAsList()",
+          "copy()",
+          "recalculateNormal()",
+          "render(PoseStack, VertexConsumer, float, float, float)",
+          "render(PoseStack, VertexConsumer, int, float, float, float, float, float, float, float, float, float, float, float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.HighlightHandler": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "onBlockHighlight(Vec3, Entity, PoseStack, BlockPos, BlockState, VertexConsumer, int)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.state.HighlightStates": [
+          "codec(Block)"
+        ],
+        "com.teamresourceful.resourcefullib.client.highlights.state.StateVariant": [
+          "stateCodec(Block)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistries": [
+          "create(ResourcefulClientRegistryType<D, T>, String)"
+        ],
+        "com.teamresourceful.resourcefullib.client.registry.ResourcefulClientRegistryType": [
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.client.scissor.GuiCloseableScissor": [
+          "close()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.AbstractContainerCursorScreen": [
+          "render(GuiGraphics, int, int, float)",
+          "removed()",
+          "setCursor(CursorScreen.Cursor)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.BaseCursorScreen": [
+          "render(GuiGraphics, int, int, float)",
+          "actuallyRender(GuiGraphics, int, int, float)",
+          "removed()",
+          "setCursor(CursorScreen.Cursor)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.CursorScreen": [
+          "setCursor(List<? extends GuiEventListener>, double, double)"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.HistoryScreen": [
+          "setLastScreen(Screen)",
+          "getLastScreen()",
+          "canGoBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.PriorityScreen": [
+          "addWidget(int, T)",
+          "addRenderableWidget(int, T)",
+          "addWidget(T)",
+          "rebuildWidgets()",
+          "removeWidget(GuiEventListener)",
+          "clearWidgets()",
+          "children()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.ScreenHistory": [
+          "goBack()"
+        ],
+        "com.teamresourceful.resourcefullib.client.screens.state.PageState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenState": [],
+        "com.teamresourceful.resourcefullib.client.screens.state.ScreenStateManager": [
+          "getScreen(ResourceLocation, Supplier<Screen>)",
+          "getState(ResourceLocation)",
+          "updateState(ResourceLocation, T)",
+          "getOrAddState(ResourceLocation, Supplier<T>, Class<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.JavaInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.LauncherInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.MinecraftInfo": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.defaults.OperatingSystem": [
+          "register()",
+          "accept(SystemInfoBuilder)"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfo": [
+          "addBuilder(String, Consumer<SystemInfoBuilder>)",
+          "buildForDiscord()"
+        ],
+        "com.teamresourceful.resourcefullib.client.sysinfo.SystemInfoBuilder": [
+          "append(String, Object)",
+          "append(String, String, Object...)"
+        ],
+        "com.teamresourceful.resourcefullib.client.utils.CursorUtils": [
+          "setDefault()",
+          "setPointing()",
+          "setDisabled()",
+          "setText()",
+          "setCrosshair()",
+          "setResizeEastWest()",
+          "setResizeNorthSouth()",
+          "setResizeNorthWestSouthEast()",
+          "setResizeNorthEastSouthWest()",
+          "setResizeAll()",
+          "setCursor(boolean, CursorScreen.Cursor)"
+        ],
+        "com.teamresourceful.resourcefullib.client.utils.RenderUtils": [
+          "getScissorRect(Minecraft, PoseStack, int, int, int, int)",
+          "getTranslation(PoseStack)"
+        ],
+        "com.teamresourceful.resourcefullib.client.utils.ScreenUtils": [
+          "sendCommand(String)",
+          "sendClick(int, int)",
+          "inBounds(ScreenRectangle, int, int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.ApiProxy": [],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.CompoundTagByteCodec": [
+          "encode(Optional<CompoundTag>, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.ExtraByteCodecs": [
+          "resourceKey(ResourceKey<R>)",
+          "registry(IdMap<T>)",
+          "pair(ByteCodec<A>, ByteCodec<B>)",
+          "either(ByteCodec<A>, ByteCodec<B>)",
+          "toFriendly(ByteBuf)",
+          "toRegistry(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.IdMapByteCodec": [
+          "encode(T, ByteBuf)",
+          "decode(ByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.bytecodecs.StreamCodecByteCodec": [
+          "of(StreamCodec<ByteBuf, T>)",
+          "to(ByteCodec<T>)",
+          "ofFriendly(StreamCodec<FriendlyByteBuf, T>)",
+          "toFriendly(ByteCodec<T>)",
+          "ofRegistry(StreamCodec<RegistryFriendlyByteBuf, T>)",
+          "toRegistry(ByteCodec<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableBiFunction": [
+          "apply(T, U)",
+          "clear()",
+          "concurrent(BiFunction<T, U, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CacheableFunction": [
+          "apply(T)",
+          "clear()",
+          "concurrent(Function<T, R>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.caches.CachingFunction": [],
+        "com.teamresourceful.resourcefullib.common.codecs.bounds.UniformedNumberCodecs": [
+          "getIntCodec()",
+          "rangedUniformIntCodec(int, int)",
+          "rangedUniformFloatCodec(float, float)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.CodecExtras": [
+          "optionalFor(Function<O, A>)",
+          "weightedCollection(Codec<T>, ToDoubleFunction<T>)",
+          "registryId(Registry<T>)",
+          "set(Codec<T>)",
+          "linkedSet(Codec<T>)",
+          "passthrough(Function<T, JsonElement>, Function<JsonElement, T>)",
+          "eitherRight(Codec<Either<S, S>>)",
+          "eitherLeft(Codec<Either<S, S>>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.Deferred": [
+          "get()",
+          "of(DynamicOps<T>, Codec<V>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.deferred.DeferredCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Deferred<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.EnumCodec": [
+          "of(Class<T>)",
+          "ofRepresentable(Class<T>, Function<String, T>)",
+          "decode(DynamicOps<T1>, T1)",
+          "encode(T, DynamicOps<T1>, T1)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.maps.DispatchMapCodec": [
+          "of(Codec<A>, Function<A, Codec<B>>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(Map<K, V>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.NbtPredicate": [
+          "matches(ItemStack)",
+          "matches(Entity)",
+          "matches(Tag)",
+          "matches(Tag, boolean)",
+          "compareNbt(Tag, Tag)",
+          "isEmpty(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.BlockStatePredicate": [
+          "construct(Block, RandomSource)",
+          "matches(BlockState)",
+          "matches(FluidState)",
+          "matches(StateDefinition<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.ExactPropertyMatcher": [
+          "match(StateHolder<?, ?>, Property<T>)",
+          "codec()",
+          "value(RandomSource)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.PropertyMatcher": [
+          "match(String, StateDefinition<?, S>, S)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.properties.RangePropertyMatcher": [
+          "match(StateHolder<?, ?>, Property<T>)",
+          "codec()",
+          "value(RandomSource)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedBlockPredicate": [
+          "getTag()",
+          "matches(ServerLevel, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedEntityPredicate": [
+          "getTag()",
+          "matches(ServerLevel, Entity)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.predicates.RestrictedItemPredicate": [
+          "getTag()",
+          "matches(ItemStack)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.PrimitiveCodecHelper": [
+          "create(final PrimitiveCodecHelper.Reader<T>, final PrimitiveCodecHelper.Writer<T>, final String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.ItemStackCodec": [],
+        "com.teamresourceful.resourcefullib.common.codecs.recipes.LazyHolders": [],
+        "com.teamresourceful.resourcefullib.common.codecs.tags.HolderSetCodec": [
+          "of(Registry<E>)",
+          "decode(DynamicOps<T>, T)",
+          "encode(HolderSet<E>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnArrayBuilder": [
+          "ops()",
+          "add(YabnElement)",
+          "add(DataResult<YabnElement>)",
+          "withErrorsFrom(DataResult<?>)",
+          "mapError(UnaryOperator<String>)",
+          "build(YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnObjectMapLike": [
+          "get(YabnElement)",
+          "get(String)",
+          "entries()"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnOps": [
+          "empty()",
+          "convertTo(DynamicOps<U>, YabnElement)",
+          "getNumberValue(YabnElement)",
+          "createNumeric(Number)",
+          "getBooleanValue(YabnElement)",
+          "createBoolean(boolean)",
+          "getStringValue(YabnElement)",
+          "createString(String)",
+          "mergeToList(YabnElement, YabnElement)",
+          "mergeToList(YabnElement, List<YabnElement>)",
+          "mergeToMap(YabnElement, YabnElement, YabnElement)",
+          "mergeToMap(YabnElement, MapLike<YabnElement>)",
+          "getMapValues(YabnElement)",
+          "getMapEntries(YabnElement)",
+          "getMap(YabnElement)",
+          "createMap(Stream<Pair<YabnElement, YabnElement>>)",
+          "getStream(YabnElement)",
+          "getList(YabnElement)",
+          "createList(Stream<YabnElement>)",
+          "remove(YabnElement, String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.codecs.yabn.YabnRecordBuilder": [
+          "initBuilder()",
+          "append(String, YabnElement, YabnObject)",
+          "build(YabnObject, YabnElement)"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.CycleableList": [
+          "next()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.SelectableList": [
+          "of(E, E...)",
+          "setSelectedIndex(int)",
+          "getSelected()",
+          "getSelectedIndex()",
+          "add(int, E)",
+          "get(int)",
+          "set(int, E)",
+          "remove(int)",
+          "size()"
+        ],
+        "com.teamresourceful.resourcefullib.common.collections.WeightedCollection": [
+          "add(double, E)",
+          "get(int)",
+          "next()",
+          "getMap()",
+          "getTotal()",
+          "getAdjustedWeight(double)",
+          "forEachWithSelf(BiConsumer<WeightedCollection<E>, ? super E>)",
+          "setRandom(WeightedCollection.WeightedCollectionRandom)",
+          "setRandom(Random)",
+          "setRandom(RandomSource)",
+          "stream()",
+          "size()",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])",
+          "add(E)",
+          "remove(Object)",
+          "containsAll(Collection<?>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.Color": [
+          "createNamedColor(String, int)",
+          "createPulsingColor(String, int, Consumer<MutableColor>)",
+          "tryParse(String)",
+          "parse(String)",
+          "parseColor(String)",
+          "withAlpha(int)",
+          "getFloatRed()",
+          "getFloatGreen()",
+          "getFloatBlue()",
+          "getFloatAlpha()",
+          "getIntRed()",
+          "getIntGreen()",
+          "getIntBlue()",
+          "getIntAlpha()",
+          "getTextColor()",
+          "getValue()",
+          "isDefault()",
+          "isSpecial()",
+          "toString()",
+          "hashCode()"
+        ],
+        "com.teamresourceful.resourcefullib.common.color.ConstantColors": [],
+        "com.teamresourceful.resourcefullib.common.color.MutableColor": [
+          "setRed(int)",
+          "setGreen(int)",
+          "setBlue(int)"
+        ],
+        "com.teamresourceful.resourcefullib.common.datagen.CodecRecipeBuilder": [
+          "unlockedBy(String, Criterion<?>)",
+          "group(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.exceptions.NotImplementedException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.UtilityClassException": [],
+        "com.teamresourceful.resourcefullib.common.exceptions.ValidationException": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidData": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.FluidSounds": [
+          "add(String, SoundEvent)",
+          "getOrDefault(String, SoundEvent)",
+          "has(String)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.data.ImmutableFluidProperties": [],
+        "com.teamresourceful.resourcefullib.common.fluid.data.InternalFluidData": [
+          "id()",
+          "data()",
+          "properties()",
+          "still()",
+          "flowing()",
+          "bucket()",
+          "block()",
+          "setStill(Supplier<? extends FlowingFluid>)",
+          "setFlowing(Supplier<? extends FlowingFluid>)",
+          "setBucket(Supplier<? extends Item>)",
+          "setBlock(Supplier<? extends LiquidBlock>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.neoforge.ResourcefulFluidType": [],
+        "com.teamresourceful.resourcefullib.common.fluid.registry.ResourcefulFluidRegistry": [
+          "register(String, Supplier<I>)",
+          "registerHolder(String, Supplier<FluidData>)",
+          "register(String, FluidProperties.Builder)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulBucketItem": [
+          "use(Level, Player, InteractionHand)",
+          "playEmptySound(LivingEntity, LevelAccessor, BlockPos)"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulFlowingFluid": [
+          "getData()",
+          "getFlowing()",
+          "getSource()",
+          "canConvertToSource(ServerLevel)",
+          "beforeDestroyingBlock(LevelAccessor, BlockPos, BlockState)",
+          "getSlopeFindDistance(LevelReader)",
+          "getDropOff(LevelReader)",
+          "getBucket()",
+          "canBeReplacedWith(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "getTickDelay(LevelReader)",
+          "getExplosionResistance()",
+          "createLegacyBlock(FluidState)",
+          "isSame(Fluid)",
+          "getPickupSound()"
+        ],
+        "com.teamresourceful.resourcefullib.common.fluid.ResourcefulLiquidBlock": [],
+        "com.teamresourceful.resourcefullib.common.inventory.IntContainerData": [
+          "set(int, int)",
+          "setInt(int, int)",
+          "get(int)",
+          "getInt(int)",
+          "getCount()",
+          "getSize()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.LazyHolder": [
+          "of(Registry<R>, ResourceLocation)",
+          "of(Registry<R>, R)",
+          "getId()",
+          "getRegistry()",
+          "get()",
+          "map(Registry<T>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.OptionalItemStack": [
+          "of(ItemStack)",
+          "ofNullable(ItemStack)",
+          "empty()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.ResourcefulComponentType": [
+          "cacheEncoding()",
+          "persistent(Codec<T>)",
+          "networkSynchronized(ByteCodec<T>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.tabs.neoforge.ResourcefulCreativeModeTabImpl": [
+          "create(ResourcefulCreativeModeTab)"
+        ],
+        "com.teamresourceful.resourcefullib.common.item.tabs.ResourcefulCreativeModeTab": [
+          "setItemIcon(Supplier<? extends ItemLike>)",
+          "setStackIcon(Supplier<ItemStack>)",
+          "hideTitle()",
+          "hideScrollBar()",
+          "addRegistry(T)",
+          "addStack(Supplier<ItemStack>)",
+          "addStack(ItemStack)",
+          "addStack(ItemLike)",
+          "addContent(Supplier<Stream<ItemStack>>)",
+          "build()"
+        ],
+        "com.teamresourceful.resourcefullib.common.lib.Constants": [],
+        "com.teamresourceful.resourcefullib.common.menu.CodecMenuContentSerializer": [
+          "from(FriendlyByteBuf)",
+          "to(FriendlyByteBuf, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.ContentMenuProvider": [
+          "openMenu(ServerPlayer)",
+          "resetMouseOnOpen()"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContent": [],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentHelper": [
+          "create(MenuContentHelper.MenuFactory<T, C>, MenuContentSerializer<C>)",
+          "open(ServerPlayer, ContentMenuProvider<C>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.menu.MenuContentSerializer": [],
+        "com.teamresourceful.resourcefullib.common.menu.neoforge.MenuContentHelperImpl": [
+          "create(MenuContentHelper.MenuFactory<T, C>, MenuContentSerializer<C>)",
+          "open(ServerPlayer, ContentMenuProvider<C>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.NbtReader": [
+          "castRead(I, Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReader": [
+          "addReader(String, NbtReader<I, ? extends Tag>)",
+          "type()",
+          "setDefault(I)",
+          "read(I, CompoundTag)",
+          "write(I)",
+          "write(I, CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.ObjectTagReaders": [
+          "create(boolean)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)",
+          "create(boolean, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>, String, NbtReader<I, ? extends Tag>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagReader": [
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>)",
+          "byteTag(Function<I, Byte>, BiConsumer<I, Byte>, byte)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>)",
+          "shortTag(Function<I, Short>, BiConsumer<I, Short>, short)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>)",
+          "intTag(Function<I, Integer>, BiConsumer<I, Integer>, int)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>)",
+          "longTag(Function<I, Long>, BiConsumer<I, Long>, long)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>)",
+          "floatTag(Function<I, Float>, BiConsumer<I, Float>, float)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>)",
+          "doubleTag(Function<I, Double>, BiConsumer<I, Double>, double)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>)",
+          "stringTag(Function<I, String>, BiConsumer<I, String>, String)",
+          "type()",
+          "setDefault(I)",
+          "read(I, T)",
+          "write(I)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.TagUtils": [
+          "tagWithData(String, Tag)",
+          "toListTag(List<T>)",
+          "fromListTag(ListTag, Class<T>)",
+          "mapTag(CompoundTag, Function<String, K>, BiFunction<String, CompoundTag, V>)",
+          "mapToCollection(Supplier<C>, ListTag, Function<Tag, T>)",
+          "mapToListTag(Collection<T>, Function<T, Tag>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.FullValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<?>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ExactListValidator": [
+          "id()",
+          "test(CollectionTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.ListValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.list.MatchesListValidator": [
+          "id()",
+          "test(CollectionTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.BetweenNumericValidator": [
+          "id()",
+          "test(NumericTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.ExactNumericValidator": [
+          "id()",
+          "test(NumericTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.numeric.NumericValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ExactObjectValidator": [
+          "id()",
+          "test(CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.ObjectValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.object.PartialObjectValidator": [
+          "id()",
+          "test(CompoundTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ContainsStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.EndsWithStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.ExactStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.RegexStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StartsWithStringValidator": [
+          "id()",
+          "test(StringTag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.string.StringValidator": [
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.TagValidationType": [
+          "test(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.Validator": [
+          "testAndValidate(Tag)"
+        ],
+        "com.teamresourceful.resourcefullib.common.nbt.validators.ValidatorCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(Validator<I>, DynamicOps<T>, T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ClientboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.base.NetworkHandle": [
+          "handle(Consumer<T>)",
+          "handle(Function<T, O>, Consumer<O>)",
+          "handle(BiConsumer<T, Player>)",
+          "handle(Function<T, O>, BiConsumer<O, Player>)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.Networking": [],
+        "com.teamresourceful.resourcefullib.common.network.base.PacketType": [
+          "codec(Type<NetworkPacketPayload<T>>)",
+          "type(ResourceLocation)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.base.ServerboundPacketType": [],
+        "com.teamresourceful.resourcefullib.common.network.defaults.AbstractPacketType": [
+          "id()"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.CodecPacketType": [
+          "encode(T, RegistryFriendlyByteBuf)",
+          "decode(RegistryFriendlyByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.defaults.DatalessPacketType": [
+          "encode(T, RegistryFriendlyByteBuf)",
+          "decode(RegistryFriendlyByteBuf)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.neoforge.NeoForgeNetworking": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, ServerPlayer)",
+          "canSendToPlayer(ServerPlayer, PacketType<?>)",
+          "onNetworkSetup(RegisterPayloadHandlersEvent)",
+          "setupNetwork(RegisterPayloadHandlersEvent)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.neoforge.NetworkImpl": [
+          "getNetwork(ResourceLocation, int, boolean)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Network": [
+          "register(ClientboundPacketType<T>)",
+          "register(ServerboundPacketType<T>)",
+          "sendToServer(T)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToPlayer(T, Player)",
+          "sendToPlayers(T, Collection<? extends Player>)",
+          "sendToAllPlayers(T, MinecraftServer)",
+          "sendToPlayersInLevel(T, Level)",
+          "sendToAllLoaded(T, Level, BlockPos)",
+          "sendToPlayersInRange(T, Level, BlockPos, double)",
+          "canSendToPlayer(ServerPlayer, PacketType<?>)",
+          "canSendToPlayer(Player, PacketType<?>)",
+          "getNetwork(ResourceLocation, int, boolean)"
+        ],
+        "com.teamresourceful.resourcefullib.common.network.Packet": [],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipe": [
+          "isSpecial()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeSerializer": [
+          "codec()",
+          "streamCodec()",
+          "type()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.CodecRecipeType": [
+          "of(String)",
+          "toString()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredient": [
+          "isComplex()"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.CodecIngredientSerializer": [],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.IngredientHelper": [
+          "getIngredient(T)",
+          "registerIngredient(T)"
+        ],
+        "com.teamresourceful.resourcefullib.common.recipe.ingredient.neoforge.IngredientHelperImpl": [
+          "getIngredient(T)",
+          "registerIngredient(T)"
+        ]
+      },
+      "sampleCount": 180,
+      "truncated": true
+    },
+    "3.5.0": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.3.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "3.0.12": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.5.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.4.10": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.2.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.1.29": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.0.8": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.2.7": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.1.24": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1522,
+  "truncated": true
+}

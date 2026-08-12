@@ -1,0 +1,3176 @@
+{
+  "slug": "glitchcore",
+  "modId": "glitchcore",
+  "id": "authored/lib-glitchcore",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "glitchcore"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:55.932Z",
+  "versions": {
+    "26.2.0.0.0": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderHudEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.RemapperEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.Remapper",
+        "glitchcore.util.RenderHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(List<ObjColor>, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, RegisterParticleSpritesEvent.SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderHudEvent": [
+          "getType()",
+          "getHud()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(Identifier, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.RemapperEventHandler": [
+          "onMissingMapping(MissingMappingsEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(Identifier, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.Remapper": [
+          "remap(ResourceKey<T>, ResourceKey<T>)",
+          "getRemaps()",
+          "getRemaps(ResourceKey<? extends Registry<?>>)",
+          "hasRemap(Identifier)",
+          "getRemap(Identifier)",
+          "getRegistryKeys()",
+          "getNamespaces()"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ]
+      },
+      "sampleCount": 45
+    },
+    "26.1.2.0.2": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.RemapperEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.Remapper",
+        "glitchcore.util.RenderHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(List<ObjColor>, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, RegisterParticleSpritesEvent.SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(Identifier, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.RemapperEventHandler": [
+          "onMissingMapping(MissingMappingsEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(Identifier, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.Remapper": [
+          "remap(ResourceKey<T>, ResourceKey<T>)",
+          "getRemaps()",
+          "getRemaps(ResourceKey<? extends Registry<?>>)",
+          "hasRemap(Identifier)",
+          "getRemap(Identifier)",
+          "getRegistryKeys()",
+          "getNamespaces()"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ]
+      },
+      "sampleCount": 45
+    },
+    "26.1.1.0.7": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.RemapperEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.Remapper",
+        "glitchcore.util.RenderHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(List<ObjColor>, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, RegisterParticleSpritesEvent.SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(Identifier, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.RemapperEventHandler": [
+          "onMissingMapping(MissingMappingsEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(Identifier, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.Remapper": [
+          "remap(ResourceKey<T>, ResourceKey<T>)",
+          "getRemaps()",
+          "getRemaps(ResourceKey<? extends Registry<?>>)",
+          "hasRemap(Identifier)",
+          "getRemap(Identifier)",
+          "getRegistryKeys()",
+          "getNamespaces()"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ]
+      },
+      "sampleCount": 45
+    },
+    "26.1.0.4": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.RemapperEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.Remapper",
+        "glitchcore.util.RenderHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(List<ObjColor>, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, RegisterParticleSpritesEvent.SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(Identifier, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.RemapperEventHandler": [
+          "onMissingMapping(MissingMappingsEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(Identifier, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.Remapper": [
+          "remap(ResourceKey<T>, ResourceKey<T>)",
+          "getRemaps()",
+          "getRemaps(ResourceKey<? extends Registry<?>>)",
+          "hasRemap(Identifier)",
+          "getRemap(Identifier)",
+          "getRegistryKeys()",
+          "getNamespaces()"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ]
+      },
+      "sampleCount": 45
+    },
+    "21.11.0.4": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.RemapperEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.Remapper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<Identifier, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(Identifier, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.RemapperEventHandler": [
+          "onMissingMapping(MissingMappingsEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(Identifier, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.Remapper": [
+          "remap(ResourceKey<T>, ResourceKey<T>)",
+          "getRemaps()",
+          "getRemaps(ResourceKey<? extends Registry<?>>)",
+          "hasRemap(Identifier)",
+          "getRemap(Identifier)",
+          "getRegistryKeys()",
+          "getNamespaces()"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 50
+    },
+    "21.10.0.4": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)",
+          "addBlockEntityBlocks(BlockEntityType<T>, Block...)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "21.9.0.2": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, ?>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(Pre)",
+          "onLevelTick(Post)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T, S>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "21.8.0.0": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(LevelTickEvent)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "21.7.0.0": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(LevelTickEvent)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "2.6.0.5": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask",
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver",
+        "glitchcore.util.BlockHelper",
+        "glitchcore.util.Environment",
+        "glitchcore.util.GuiUtils",
+        "glitchcore.util.RegistryHelper",
+        "glitchcore.util.RenderHelper",
+        "glitchcore.util.SheetHelper"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(LevelTickEvent)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ],
+        "glitchcore.relocated.net.jodah.typetools.TypeResolver": [
+          "enableCache()",
+          "disableCache()",
+          "resolveRawArgument(Class<T>, Class<S>)",
+          "resolveRawArgument(Type, Class<?>)",
+          "resolveRawArguments(Class<T>, Class<S>)",
+          "reify(Class<T>, Class<S>)",
+          "reify(Type, Class<?>)",
+          "reify(Type)",
+          "resolveRawArguments(Type, Class<?>)",
+          "resolveGenericType(Class<?>, Type)",
+          "resolveRawClass(Type, Class<?>)",
+          "resolveBound(TypeVariable<?>)"
+        ],
+        "glitchcore.util.BlockHelper": [
+          "registerStrippable(Block, Block)",
+          "registerFlattenable(Block, BlockState)",
+          "registerCompostable(float, ItemLike)",
+          "registerFlammable(Block, int, int)",
+          "registerTillable(Block, Predicate<UseOnContext>, BlockState)"
+        ],
+        "glitchcore.util.Environment": [
+          "isClient()",
+          "getConfigPath()",
+          "isModLoaded(String)"
+        ],
+        "glitchcore.util.GuiUtils": [
+          "shouldDrawSurvivalElements()"
+        ],
+        "glitchcore.util.RegistryHelper": [
+          "create()",
+          "addRegistrar(ResourceKey<? extends Registry<T>>, RegistryHelper.Registrar<T>)",
+          "accept(RegistryEvent)"
+        ],
+        "glitchcore.util.RenderHelper": [
+          "setRenderType(Block, ChunkSectionLayer)",
+          "setRenderType(Fluid, ChunkSectionLayer)",
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)",
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.util.SheetHelper": [
+          "addWoodType(WoodType)"
+        ]
+      },
+      "sampleCount": 48
+    },
+    "2.5.0.1": {
+      "packages": [],
+      "classes": [
+        "glitchcore.config.Config",
+        "glitchcore.config.ConfigSync",
+        "glitchcore.core.GlitchCore",
+        "glitchcore.data.ModelProviderBase",
+        "glitchcore.event.client.InputEvent",
+        "glitchcore.event.client.ItemTooltipEvent",
+        "glitchcore.event.client.LevelRenderEvent",
+        "glitchcore.event.client.RegisterColorsEvent",
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent",
+        "glitchcore.event.client.RegisterParticleSpritesEvent",
+        "glitchcore.event.client.RegisterRenderersEvent",
+        "glitchcore.event.client.RenderGuiEvent",
+        "glitchcore.event.client.RenderTooltipEvent",
+        "glitchcore.event.entity.LivingEntityUseItemEvent",
+        "glitchcore.event.Event",
+        "glitchcore.event.EventManager",
+        "glitchcore.event.player.PlayerEvent",
+        "glitchcore.event.player.PlayerInteractEvent",
+        "glitchcore.event.RegistryEvent",
+        "glitchcore.event.server.RegisterCommandsEvent",
+        "glitchcore.event.TagsUpdatedEvent",
+        "glitchcore.event.TickEvent",
+        "glitchcore.event.village.VillagerTradesEvent",
+        "glitchcore.event.village.WandererTradesEvent",
+        "glitchcore.forge.GlitchCoreForge",
+        "glitchcore.forge.handlers.ColorsEventHandler",
+        "glitchcore.forge.handlers.EntityRenderersEventHandler",
+        "glitchcore.forge.handlers.InteractionEventHandler",
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler",
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler",
+        "glitchcore.forge.handlers.RegistryEventHandler",
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler",
+        "glitchcore.forge.handlers.TickEventHandler",
+        "glitchcore.forge.handlers.ToolModificationEventHandler",
+        "glitchcore.forge.handlers.TooltipEventHandler",
+        "glitchcore.forge.handlers.VillagerTradesEventHandler",
+        "glitchcore.network.CustomPacket",
+        "glitchcore.network.PacketHandler",
+        "glitchcore.network.SyncConfigPacket",
+        "glitchcore.network.SyncConfigTask"
+      ],
+      "methods": {
+        "glitchcore.config.Config": [
+          "add(String, T, String)",
+          "add(String, T, String, Predicate<T>)",
+          "addNumber(String, T, T, T, String)",
+          "load()",
+          "parse(String)",
+          "read()",
+          "write()",
+          "encode()",
+          "getPath()",
+          "getRaw(List<String>)",
+          "valueMap()",
+          "contains(List<String>)",
+          "size()",
+          "isEmpty()",
+          "equals(Object)",
+          "hashCode()",
+          "configFormat()",
+          "set(List<String>, Object)",
+          "add(List<String>, Object)",
+          "remove(List<String>)"
+        ],
+        "glitchcore.config.ConfigSync": [
+          "register(Config)",
+          "createPackets()",
+          "reload(String, String)"
+        ],
+        "glitchcore.core.GlitchCore": [
+          "init()"
+        ],
+        "glitchcore.data.ModelProviderBase": [
+          "createBlockModelGenerators(Consumer<BlockModelDefinitionGenerator>, ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "createItemModelGenerators(ItemModelOutput, BiConsumer<ResourceLocation, ModelInstance>)",
+          "run(CachedOutput)",
+          "getName()"
+        ],
+        "glitchcore.event.client.InputEvent": [],
+        "glitchcore.event.client.ItemTooltipEvent": [
+          "getPlayer()",
+          "getStack()",
+          "getTooltip()"
+        ],
+        "glitchcore.event.client.LevelRenderEvent": [
+          "getStage()",
+          "getLevelRenderer()",
+          "getPoseStack()",
+          "getProjectionMatrix()",
+          "getRenderTick()",
+          "getDeltaTracker()",
+          "getCamera()",
+          "getFrustum()"
+        ],
+        "glitchcore.event.client.RegisterColorsEvent": [
+          "register(ObjColor, Obj...)"
+        ],
+        "glitchcore.event.client.RegisterLayerDefinitionsEvent": [
+          "registerLayerDefinition(ModelLayerLocation, Supplier<LayerDefinition>)"
+        ],
+        "glitchcore.event.client.RegisterParticleSpritesEvent": [
+          "registerSpriteSet(ParticleType<T>, SpriteParticleRegistration<T>)"
+        ],
+        "glitchcore.event.client.RegisterRenderersEvent": [
+          "registerBlockEntityRenderer(BlockEntityType<? extends T>, BlockEntityRendererProvider<T>)",
+          "registerEntityRenderer(EntityType<? extends T>, EntityRendererProvider<T>)"
+        ],
+        "glitchcore.event.client.RenderGuiEvent": [
+          "getType()",
+          "getGui()",
+          "getGuiGraphics()",
+          "getDeltaTracker()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getRowTop()",
+          "setRowTop(int)"
+        ],
+        "glitchcore.event.client.RenderTooltipEvent": [
+          "getStack()",
+          "getGraphics()",
+          "getX()",
+          "getY()",
+          "getScreenWidth()",
+          "getScreenHeight()",
+          "getComponents()",
+          "getPositioner()"
+        ],
+        "glitchcore.event.entity.LivingEntityUseItemEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "glitchcore.event.Event": [
+          "isCancellable()",
+          "isCancelled()",
+          "setCancelled(boolean)"
+        ],
+        "glitchcore.event.EventManager": [
+          "addListener(Consumer<T>)",
+          "fire(T)",
+          "getRequiredEvents()"
+        ],
+        "glitchcore.event.player.PlayerEvent": [
+          "getPlayer()"
+        ],
+        "glitchcore.event.player.PlayerInteractEvent": [
+          "isCancellable()",
+          "getHand()",
+          "getItemStack()",
+          "getCancelResult()",
+          "setCancelResult(InteractionResult)"
+        ],
+        "glitchcore.event.RegistryEvent": [
+          "register(ResourceLocation, T)",
+          "getRegistryKey()"
+        ],
+        "glitchcore.event.server.RegisterCommandsEvent": [
+          "getDispatcher()",
+          "getCommandSelection()",
+          "getBuildContext()"
+        ],
+        "glitchcore.event.TagsUpdatedEvent": [
+          "getLookupProvider()",
+          "getUpdateCause()"
+        ],
+        "glitchcore.event.TickEvent": [
+          "getPhase()"
+        ],
+        "glitchcore.event.village.VillagerTradesEvent": [
+          "getProfession()",
+          "getLevel()",
+          "getTrades()"
+        ],
+        "glitchcore.event.village.WandererTradesEvent": [
+          "addGenericTrade(ItemListing...)",
+          "addGenericTrades(List<ItemListing>)",
+          "addRareTrade(ItemListing...)",
+          "addRareTrades(List<ItemListing>)",
+          "getGenericTrades()",
+          "getRareTrades()"
+        ],
+        "glitchcore.forge.GlitchCoreForge": [],
+        "glitchcore.forge.handlers.ColorsEventHandler": [
+          "onRegisterBlockColors(Block)"
+        ],
+        "glitchcore.forge.handlers.EntityRenderersEventHandler": [
+          "onRegisterLayerDefinitions(RegisterLayerDefinitions)",
+          "onRegisterRenderers(RegisterRenderers)"
+        ],
+        "glitchcore.forge.handlers.InteractionEventHandler": [
+          "onRightClickBlock(RightClickBlock)"
+        ],
+        "glitchcore.forge.handlers.RegisterCommandsEventHandler": [
+          "onRegisterCommands(RegisterCommandsEvent)"
+        ],
+        "glitchcore.forge.handlers.RegisterParticleProvidersEventHandler": [
+          "onRegisterParticleProviders(RegisterParticleProvidersEvent)"
+        ],
+        "glitchcore.forge.handlers.RegistryEventHandler": [
+          "onRegister(RegisterEvent)"
+        ],
+        "glitchcore.forge.handlers.TagsUpdatedEventHandler": [
+          "onTagsUpdated(TagsUpdatedEvent)"
+        ],
+        "glitchcore.forge.handlers.TickEventHandler": [
+          "onLevelTick(LevelTickEvent)"
+        ],
+        "glitchcore.forge.handlers.ToolModificationEventHandler": [
+          "onToolModification(BlockToolModificationEvent)"
+        ],
+        "glitchcore.forge.handlers.TooltipEventHandler": [
+          "onItemTooltip(ItemTooltipEvent)"
+        ],
+        "glitchcore.forge.handlers.VillagerTradesEventHandler": [
+          "onWandererTrades(WandererTradesEvent)",
+          "onVillagerTrades(VillagerTradesEvent)"
+        ],
+        "glitchcore.network.CustomPacket": [
+          "getPhase()"
+        ],
+        "glitchcore.network.PacketHandler": [
+          "register(ResourceLocation, CustomPacket<?>)",
+          "sendToPlayer(T, ServerPlayer)",
+          "sendToAll(T, MinecraftServer)",
+          "sendToHandler(T, ServerConfigurationPacketListenerImpl)",
+          "sendToServer(T)"
+        ],
+        "glitchcore.network.SyncConfigPacket": [
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SyncConfigPacket, CustomPacket.Context)",
+          "getPhase()"
+        ],
+        "glitchcore.network.SyncConfigTask": [
+          "start(Consumer<Packet<?>>)",
+          "type()"
+        ]
+      },
+      "sampleCount": 46,
+      "truncated": true
+    },
+    "2.3.0.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.2.0.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.1.0.2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "2.0.0.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.1.0.10": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.0.0.59": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "0.0.1.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1541,
+  "truncated": true
+}

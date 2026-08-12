@@ -1,0 +1,331 @@
+{
+  "slug": "caelus",
+  "modId": "caelus",
+  "id": "authored/lib-caelus",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "caelus"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:40.608Z",
+  "versions": {
+    "8.0.1_1.21.4": {
+      "packages": [],
+      "classes": [
+        "com.illusivesoulworks.caelus.api.CaelusApi",
+        "com.illusivesoulworks.caelus.api.GlidingDamageEvent",
+        "com.illusivesoulworks.caelus.api.RenderCapeEvent",
+        "com.illusivesoulworks.caelus.CaelusConstants",
+        "com.illusivesoulworks.caelus.CaelusNeoForgeMod",
+        "com.illusivesoulworks.caelus.common.CaelusApiImpl",
+        "com.illusivesoulworks.caelus.common.network.CaelusServerPayloadHandler",
+        "com.illusivesoulworks.caelus.common.network.CPacketFlight"
+      ],
+      "methods": {
+        "com.illusivesoulworks.caelus.api.CaelusApi": [
+          "getInstance()",
+          "getModId()",
+          "getFallFlyingAttribute()",
+          "getElytraModifier()",
+          "canFallFly(LivingEntity)",
+          "canFallFly(LivingEntity, boolean)"
+        ],
+        "com.illusivesoulworks.caelus.api.GlidingDamageEvent": [
+          "getOriginalGliders()",
+          "getGliders()",
+          "addGlider(ItemStack)",
+          "addGlider(ItemStack, Consumer<Item>)",
+          "getResults()",
+          "isModified()"
+        ],
+        "com.illusivesoulworks.caelus.api.RenderCapeEvent": [
+          "getPlayerRenderState()"
+        ],
+        "com.illusivesoulworks.caelus.CaelusConstants": [],
+        "com.illusivesoulworks.caelus.CaelusNeoForgeMod": [],
+        "com.illusivesoulworks.caelus.common.CaelusApiImpl": [
+          "setup(IEventBus)",
+          "getModId()",
+          "getFallFlyingAttribute()",
+          "getElytraModifier()",
+          "canFallFly(LivingEntity)",
+          "canFallFly(LivingEntity, boolean)"
+        ],
+        "com.illusivesoulworks.caelus.common.network.CaelusServerPayloadHandler": [
+          "getInstance()",
+          "handleFlight(CPacketFlight, IPayloadContext)"
+        ],
+        "com.illusivesoulworks.caelus.common.network.CPacketFlight": [
+          "encode(CPacketFlight, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(ServerPlayer)",
+          "type()"
+        ]
+      },
+      "sampleCount": 8
+    },
+    "6.0.0_1.20.6": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.caelus.api.CaelusApi",
+        "top.theillusivec4.caelus.api.RenderCapeEvent",
+        "top.theillusivec4.caelus.CaelusConstants",
+        "top.theillusivec4.caelus.CaelusNeoForgeMod",
+        "top.theillusivec4.caelus.common.CaelusApiImpl",
+        "top.theillusivec4.caelus.common.CaelusEvents",
+        "top.theillusivec4.caelus.common.network.CaelusServerPayloadHandler",
+        "top.theillusivec4.caelus.common.network.CPacketFlight",
+        "top.theillusivec4.caelus.common.registry.RegistryObject",
+        "top.theillusivec4.caelus.common.registry.RegistryProvider",
+        "top.theillusivec4.caelus.platform.services.CaelusNeoForge",
+        "top.theillusivec4.caelus.platform.services.CaelusNeoForgeRegistry",
+        "top.theillusivec4.caelus.platform.services.ICaelusPlatform",
+        "top.theillusivec4.caelus.platform.services.IRegistryFactory",
+        "top.theillusivec4.caelus.platform.Services"
+      ],
+      "methods": {
+        "top.theillusivec4.caelus.api.CaelusApi": [
+          "getInstance()",
+          "setInstance(CaelusApi)",
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFallFly(LivingEntity)",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.api.RenderCapeEvent": [],
+        "top.theillusivec4.caelus.CaelusConstants": [],
+        "top.theillusivec4.caelus.CaelusNeoForgeMod": [],
+        "top.theillusivec4.caelus.common.CaelusApiImpl": [
+          "setup()",
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFallFly(LivingEntity)",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.common.CaelusEvents": [
+          "livingTick(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.common.network.CaelusServerPayloadHandler": [
+          "getInstance()",
+          "handleFlight(CPacketFlight, IPayloadContext)"
+        ],
+        "top.theillusivec4.caelus.common.network.CPacketFlight": [
+          "encode(CPacketFlight, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(ServerPlayer)",
+          "type()"
+        ],
+        "top.theillusivec4.caelus.common.registry.RegistryObject": [],
+        "top.theillusivec4.caelus.common.registry.RegistryProvider": [],
+        "top.theillusivec4.caelus.platform.services.CaelusNeoForge": [
+          "canFly(ItemStack, LivingEntity)",
+          "sendFlightPacket()",
+          "canRenderCape(Player)"
+        ],
+        "top.theillusivec4.caelus.platform.services.CaelusNeoForgeRegistry": [
+          "create(ResourceKey<? extends Registry<T>>, String)"
+        ],
+        "top.theillusivec4.caelus.platform.services.ICaelusPlatform": [],
+        "top.theillusivec4.caelus.platform.services.IRegistryFactory": [
+          "create(Registry<T>, String)"
+        ],
+        "top.theillusivec4.caelus.platform.Services": [
+          "load(Class<T>)"
+        ]
+      },
+      "sampleCount": 15
+    },
+    "1.19.4-3.0.0.10": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.caelus.api.CaelusApi",
+        "top.theillusivec4.caelus.api.RenderCapeEvent",
+        "top.theillusivec4.caelus.Caelus",
+        "top.theillusivec4.caelus.common.CaelusApiImpl",
+        "top.theillusivec4.caelus.common.network.CaelusNetwork",
+        "top.theillusivec4.caelus.common.network.CPacketFlight"
+      ],
+      "methods": {
+        "top.theillusivec4.caelus.api.CaelusApi": [
+          "getInstance()",
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.api.RenderCapeEvent": [],
+        "top.theillusivec4.caelus.Caelus": [],
+        "top.theillusivec4.caelus.common.CaelusApiImpl": [
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.common.network.CaelusNetwork": [
+          "setup()",
+          "sendFlightC2S()"
+        ],
+        "top.theillusivec4.caelus.common.network.CPacketFlight": [
+          "encode(CPacketFlight, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketFlight, Supplier<Context>)"
+        ]
+      },
+      "sampleCount": 6
+    },
+    "1.17.1-3.0.0.2": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.caelus.api.CaelusApi",
+        "top.theillusivec4.caelus.api.RenderCapeEvent",
+        "top.theillusivec4.caelus.Caelus",
+        "top.theillusivec4.caelus.common.CaelusApiImpl",
+        "top.theillusivec4.caelus.common.network.CaelusNetwork",
+        "top.theillusivec4.caelus.common.network.CPacketFlight"
+      ],
+      "methods": {
+        "top.theillusivec4.caelus.api.CaelusApi": [
+          "getInstance()",
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.api.RenderCapeEvent": [],
+        "top.theillusivec4.caelus.Caelus": [],
+        "top.theillusivec4.caelus.common.CaelusApiImpl": [
+          "getModId()",
+          "getFlightAttribute()",
+          "getElytraModifier()",
+          "canFly(LivingEntity)"
+        ],
+        "top.theillusivec4.caelus.common.network.CaelusNetwork": [
+          "setup()",
+          "sendFlightC2S()"
+        ],
+        "top.theillusivec4.caelus.common.network.CPacketFlight": [
+          "encode(CPacketFlight, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketFlight, Supplier<Context>)"
+        ]
+      },
+      "sampleCount": 6
+    },
+    "1.13.2-0.5": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.caelus.api.CaelusAPI",
+        "top.theillusivec4.caelus.api.event.RenderCapeCheckEvent",
+        "top.theillusivec4.caelus.Caelus",
+        "top.theillusivec4.caelus.client.EventHandlerClient",
+        "top.theillusivec4.caelus.client.KeyRegistry",
+        "top.theillusivec4.caelus.client.renderer.LayerCaelusCape",
+        "top.theillusivec4.caelus.common.CaelusConfig",
+        "top.theillusivec4.caelus.common.network.CPacketToggleFlight",
+        "top.theillusivec4.caelus.common.network.NetworkHandler",
+        "top.theillusivec4.caelus.core.CaelusHooks"
+      ],
+      "methods": {
+        "top.theillusivec4.caelus.api.CaelusAPI": [
+          "canElytraFly(EntityLivingBase)"
+        ],
+        "top.theillusivec4.caelus.api.event.RenderCapeCheckEvent": [],
+        "top.theillusivec4.caelus.Caelus": [
+          "attachAttribute(EntityConstructing)",
+          "onLivingEquipmentChange(LivingEquipmentChangeEvent)"
+        ],
+        "top.theillusivec4.caelus.client.EventHandlerClient": [
+          "onKeyPress(ClientTickEvent)",
+          "onRenderGameOverlay(Post)"
+        ],
+        "top.theillusivec4.caelus.client.KeyRegistry": [
+          "register()"
+        ],
+        "top.theillusivec4.caelus.client.renderer.LayerCaelusCape": [
+          "render(AbstractClientPlayer, float, float, float, float, float, float, float)",
+          "func_177142_b()"
+        ],
+        "top.theillusivec4.caelus.common.CaelusConfig": [],
+        "top.theillusivec4.caelus.common.network.CPacketToggleFlight": [
+          "encode(CPacketToggleFlight, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(CPacketToggleFlight, Supplier<Context>)"
+        ],
+        "top.theillusivec4.caelus.common.network.NetworkHandler": [
+          "register()"
+        ],
+        "top.theillusivec4.caelus.core.CaelusHooks": [
+          "setElytraState(NetHandlerPlayServer)",
+          "sendElytraPacket(EntityPlayerSP)",
+          "fireRenderCapeCheckEvent(EntityPlayer)"
+        ]
+      },
+      "sampleCount": 10
+    },
+    "0.0.15-1.16.4": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.caelus.api.CaelusApi",
+        "top.theillusivec4.caelus.api.event.RenderElytraCallback",
+        "top.theillusivec4.caelus.api.RenderElytraInfo",
+        "top.theillusivec4.caelus.core.CaelusApiImpl",
+        "top.theillusivec4.caelus.core.client.CaelusElytraRenderer",
+        "top.theillusivec4.caelus.core.client.RenderElytraInfoImpl",
+        "top.theillusivec4.caelus.loader.client.ClientMixinHooks",
+        "top.theillusivec4.caelus.loader.common.CaelusMod",
+        "top.theillusivec4.caelus.loader.common.MixinHooks",
+        "top.theillusivec4.caelus.loader.common.NetworkHandler",
+        "top.theillusivec4.caelus.loader.integration.TrinketsIntegration"
+      ],
+      "methods": {
+        "top.theillusivec4.caelus.api.CaelusApi": [],
+        "top.theillusivec4.caelus.api.event.RenderElytraCallback": [],
+        "top.theillusivec4.caelus.api.RenderElytraInfo": [],
+        "top.theillusivec4.caelus.core.CaelusApiImpl": [
+          "canFly(class_1309)",
+          "isElytra(class_1792)"
+        ],
+        "top.theillusivec4.caelus.core.client.CaelusElytraRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.caelus.core.client.RenderElytraInfoImpl": [
+          "getPlayer()",
+          "canRender()",
+          "activateRender()",
+          "isGlowing()",
+          "activateGlow()",
+          "getTextureOverride()",
+          "setTextureOverride(class_2960)",
+          "getColor()",
+          "setColor(Color)"
+        ],
+        "top.theillusivec4.caelus.loader.client.ClientMixinHooks": [
+          "checkFlight()",
+          "canRenderCape(class_1657)"
+        ],
+        "top.theillusivec4.caelus.loader.common.CaelusMod": [
+          "onInitialize()"
+        ],
+        "top.theillusivec4.caelus.loader.common.MixinHooks": [
+          "canFly(class_1309, boolean)",
+          "startFlight(class_1657)",
+          "checkEquippedElytra(class_1657)"
+        ],
+        "top.theillusivec4.caelus.loader.common.NetworkHandler": [
+          "setup()"
+        ],
+        "top.theillusivec4.caelus.loader.integration.TrinketsIntegration": [
+          "getCapeStack(class_1657)"
+        ]
+      },
+      "sampleCount": 11
+    }
+  },
+  "classCount": 56,
+  "methodCount": 114
+}

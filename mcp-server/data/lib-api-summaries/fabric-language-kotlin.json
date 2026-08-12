@@ -1,0 +1,34 @@
+{
+  "slug": "fabric-language-kotlin",
+  "modId": "fabric-language-kotlin",
+  "id": "authored/lib-fabric-language-kotlin",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "fabric-language-kotlin"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:49.487Z",
+  "versions": {
+    "1.13.13_kotlin.2.4.10": {
+      "packages": [],
+      "classes": [
+        "net.fabricmc.language.kotlin.KotlinAdapter",
+        "net.fabricmc.language.kotlin.KotlinLanguageAdapter"
+      ],
+      "methods": {
+        "net.fabricmc.language.kotlin.KotlinAdapter": [
+          "create(ModContainer, String, Class<Any>)"
+        ],
+        "net.fabricmc.language.kotlin.KotlinLanguageAdapter": [
+          "createInstance(Class<*>, Options)"
+        ]
+      },
+      "sampleCount": 3
+    }
+  },
+  "classCount": 2,
+  "methodCount": 2
+}

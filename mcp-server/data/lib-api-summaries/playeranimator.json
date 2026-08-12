@@ -1,0 +1,1678 @@
+{
+  "slug": "playeranimator",
+  "modId": "player-animator",
+  "id": "authored/lib-playeranimator",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "player-animator"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:11.802Z",
+  "versions": {
+    "1.0.2-rc1_1.20": {
+      "packages": [],
+      "classes": [
+        "dev.kosmx.playerAnim.api.AnimUtils",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode",
+        "dev.kosmx.playerAnim.api.IPlayer",
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer",
+        "dev.kosmx.playerAnim.api.layered.AnimationStack",
+        "dev.kosmx.playerAnim.api.layered.IAnimation",
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier",
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer",
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame",
+        "dev.kosmx.playerAnim.api.TransformType",
+        "dev.kosmx.playerAnim.core.data.AnimationBinary",
+        "dev.kosmx.playerAnim.core.data.AnimationFormat",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing",
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer",
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils",
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket",
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer",
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase",
+        "dev.kosmx.playerAnim.core.data.quarktool.Move",
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable",
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader",
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat",
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset",
+        "dev.kosmx.playerAnim.core.data.quarktool.Section",
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo",
+        "dev.kosmx.playerAnim.core.util.Ease",
+        "dev.kosmx.playerAnim.core.util.Easing",
+        "dev.kosmx.playerAnim.core.util.MathHelper",
+        "dev.kosmx.playerAnim.core.util.NetworkHelper",
+        "dev.kosmx.playerAnim.core.util.Pair",
+        "dev.kosmx.playerAnim.core.util.SetableSupplier",
+        "dev.kosmx.playerAnim.core.util.UUIDMap",
+        "dev.kosmx.playerAnim.core.util.Vec3d",
+        "dev.kosmx.playerAnim.core.util.Vec3f",
+        "dev.kosmx.playerAnim.core.util.Vector3",
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer",
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry"
+      ],
+      "methods": {
+        "dev.kosmx.playerAnim.api.AnimUtils": [
+          "getPlayerAnimLayer(Object)"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration": [
+          "isShowRightArm()",
+          "isShowLeftArm()",
+          "isShowRightItem()",
+          "isShowLeftItem()",
+          "setShowRightArm(boolean)",
+          "setShowLeftArm(boolean)",
+          "setShowRightItem(boolean)",
+          "setShowLeftItem(boolean)",
+          "equals(Object)",
+          "canEqual(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode": [
+          "isFirstPersonPass()",
+          "setFirstPersonPass(boolean)",
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.api.IPlayer": [],
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer": [
+          "setAnim(T)",
+          "getAnim()",
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.AnimationStack": [
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "addAnimLayer(int, IAnimation)",
+          "removeLayer(IAnimation)",
+          "removeLayer(int)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.IAnimation": [
+          "tick()",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer": [
+          "getFirstPersonConfiguration(float)",
+          "getFirstPersonMode(float)",
+          "tick()",
+          "getTick()",
+          "stop()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "isLoopStarted()",
+          "getData()",
+          "getPart(String)",
+          "getStopTick()",
+          "getCurrentTick()",
+          "isInfinite()",
+          "setFirstPersonConfiguration(FirstPersonConfiguration)",
+          "setFirstPersonMode(FirstPersonMode)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier": [
+          "isActive()",
+          "canRemove()",
+          "setupAnim(float)",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "calculateProgress(float)",
+          "getAlpha(String, TransformType, float)",
+          "standardFadeIn(int, Ease)",
+          "functionalFadeIn(int, AbstractFadeModifier.EasingFunction)",
+          "setBeginAnimation(IAnimation)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier": [
+          "canRemove()",
+          "setHost(ModifierLayer)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier": [
+          "getFadeIn(float)",
+          "tick()",
+          "fadeOut(int)",
+          "getFadeOut(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "transformVector(Vec3f, TransformType, AdjustmentModifier.PartModifier, float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier": [
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "getFirstPersonConfiguration(float)",
+          "transformVector(Vec3f, TransformType)",
+          "isEnabled()",
+          "setEnabled(boolean)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier": [
+          "tick()",
+          "setupAnim(float)",
+          "step(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer": [
+          "tick()",
+          "addModifier(AbstractModifier, int)",
+          "addModifierBefore(AbstractModifier)",
+          "addModifierLast(AbstractModifier)",
+          "removeModifier(int)",
+          "setAnimation(T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T, boolean)",
+          "size()",
+          "linkModifiers()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)",
+          "getAnimation()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame": [
+          "tick()",
+          "isActive()",
+          "resetPose()",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.TransformType": [],
+        "dev.kosmx.playerAnim.core.data.AnimationBinary": [
+          "write(KeyframeAnimation, T, int)",
+          "write(KeyframeAnimation, T)",
+          "read(ByteBuffer, int)",
+          "getCurrentVersion()",
+          "calculateSize(KeyframeAnimation, int)",
+          "putBoolean(ByteBuffer, boolean)",
+          "getBoolean(ByteBuffer)",
+          "putString(ByteBuffer, String)",
+          "getString(ByteBuffer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.AnimationFormat": [
+          "getExtension()"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson": [
+          "getListedTypeToken()",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(KeyframeAnimation, Type, JsonSerializationContext)",
+          "asJson(String)",
+          "emoteSerializer(KeyframeAnimation)",
+          "moveSerializer(KeyframeAnimation)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing": [
+          "deserializeAnimation(Reader)",
+          "deserializeAnimation(InputStream)",
+          "serializeAnimation(KeyframeAnimation)",
+          "writeAnimation(KeyframeAnimation, Writer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer": [
+          "serialize(JsonObject)",
+          "getVector(JsonElement)",
+          "snake2Camel(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation": [
+          "equals(Object)",
+          "hashCode()",
+          "copy()",
+          "mutableCopy()",
+          "isPlayingAt(int)",
+          "getUuid()",
+          "get()",
+          "getLength()",
+          "isInfinite()",
+          "getPart(String)",
+          "getPartOptional(String)",
+          "toString()",
+          "getBodyParts()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument": [],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header": [
+          "Auto_saving()",
+          "Loop_on_off()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer": [
+          "getLock()",
+          "setLock(boolean)",
+          "findAtTick(int)",
+          "addNote(int)",
+          "getNotesFrom(int, int)",
+          "getNotesFrom(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS": [
+          "getLayers()",
+          "getLength()",
+          "setLength(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils": [
+          "read(DataInputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket": [
+          "getSong()",
+          "write(ByteBuffer)",
+          "writeLayersAndNotes(ByteBuffer)",
+          "read(ByteBuffer)",
+          "calculateMessageSize(NBS)",
+          "getLayerMessageSize(Layer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer": [
+          "tick()",
+          "stop()",
+          "isPlayingSong(SoundPlayer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase": [
+          "inverse(Ease)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Move": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader": [
+          "deserialize(BufferedReader, String)",
+          "getEmote()",
+          "read(String)",
+          "getMethod(List<String>, int, List<List<String>>)",
+          "getBPFromStr(String[])",
+          "getPFromStr(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Section": [
+          "setMoveOperator(Playable)",
+          "getLine()",
+          "getMoveOperator()",
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo": [
+          "playForward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Ease": [
+          "getId()",
+          "invoke(float)",
+          "getEase(byte)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Easing": [
+          "easingFromEnum(Ease, float)",
+          "easeFromString(String)",
+          "inSine(float)",
+          "outSine(float)",
+          "inOutSine(float)",
+          "inCubic(float)",
+          "outCubic(float)",
+          "inOutCubic(float)",
+          "inQuad(float)",
+          "outQuad(float)",
+          "inOutQuad(float)",
+          "inQuart(float)",
+          "outQuart(float)",
+          "inOutQuart(float)",
+          "inQuint(float)",
+          "outQuint(float)",
+          "inOutQuint(float)",
+          "inExpo(float)",
+          "outExpo(float)",
+          "inOutExpo(float)"
+        ],
+        "dev.kosmx.playerAnim.core.util.MathHelper": [
+          "lerp(float, float, float)",
+          "lerp(double, double, double)",
+          "colorHelper(int, int, int, int)",
+          "clampToRadian(float)",
+          "readFromIStream(InputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.util.NetworkHelper": [
+          "readString(ByteBuffer)",
+          "writeString(ByteBuffer, String)",
+          "readVarString(ByteBuffer)",
+          "writeVarString(ByteBuffer, String)",
+          "readUUID(ByteBuffer)",
+          "writeUUID(ByteBuffer, UUID)",
+          "readVarInt(ByteBuffer)",
+          "writeVarInt(ByteBuffer, int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Pair": [
+          "getLeft()",
+          "getRight()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.core.util.SetableSupplier": [
+          "set(T)",
+          "get()"
+        ],
+        "dev.kosmx.playerAnim.core.util.UUIDMap": [
+          "put(T)",
+          "addAll(Collection<T>)",
+          "iterator()",
+          "add(T)",
+          "contains(T)",
+          "removeIf(Predicate<T>)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3d": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(double)",
+          "add(Vec3d)",
+          "dotProduct(Vec3d)",
+          "crossProduct(Vec3d)",
+          "subtract(Vec3d)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3f": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(float)",
+          "add(Vec3f)",
+          "dotProduct(Vec3f)",
+          "crossProduct(Vec3f)",
+          "subtract(Vec3f)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vector3": [
+          "getX()",
+          "getY()",
+          "getZ()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer": [
+          "onInitializeClient()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier": [
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess": [
+          "getPlayerAnimLayer(class_742)",
+          "getPlayerAssociatedData(class_742)"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory": [],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry": [
+          "getAnimation(class_2960)",
+          "getAnimationOptional(class_2960)",
+          "getAnimations()",
+          "getModAnimations(String)",
+          "resourceLoaderCallback(class_3300, Logger)",
+          "serializeTextToString(String)"
+        ]
+      },
+      "sampleCount": 56
+    },
+    "1.0.2_1.19.4": {
+      "packages": [],
+      "classes": [
+        "dev.kosmx.playerAnim.api.AnimUtils",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode",
+        "dev.kosmx.playerAnim.api.IPlayer",
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer",
+        "dev.kosmx.playerAnim.api.layered.AnimationStack",
+        "dev.kosmx.playerAnim.api.layered.IAnimation",
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier",
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer",
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame",
+        "dev.kosmx.playerAnim.api.TransformType",
+        "dev.kosmx.playerAnim.core.data.AnimationBinary",
+        "dev.kosmx.playerAnim.core.data.AnimationFormat",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing",
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer",
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils",
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket",
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer",
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase",
+        "dev.kosmx.playerAnim.core.data.quarktool.Move",
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable",
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader",
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat",
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset",
+        "dev.kosmx.playerAnim.core.data.quarktool.Section",
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo",
+        "dev.kosmx.playerAnim.core.util.Ease",
+        "dev.kosmx.playerAnim.core.util.Easing",
+        "dev.kosmx.playerAnim.core.util.MathHelper",
+        "dev.kosmx.playerAnim.core.util.NetworkHelper",
+        "dev.kosmx.playerAnim.core.util.Pair",
+        "dev.kosmx.playerAnim.core.util.SetableSupplier",
+        "dev.kosmx.playerAnim.core.util.UUIDMap",
+        "dev.kosmx.playerAnim.core.util.Vec3d",
+        "dev.kosmx.playerAnim.core.util.Vec3f",
+        "dev.kosmx.playerAnim.core.util.Vector3",
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer",
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry"
+      ],
+      "methods": {
+        "dev.kosmx.playerAnim.api.AnimUtils": [
+          "getPlayerAnimLayer(Object)"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration": [
+          "isShowRightArm()",
+          "isShowLeftArm()",
+          "isShowRightItem()",
+          "isShowLeftItem()",
+          "setShowRightArm(boolean)",
+          "setShowLeftArm(boolean)",
+          "setShowRightItem(boolean)",
+          "setShowLeftItem(boolean)",
+          "equals(Object)",
+          "canEqual(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode": [
+          "isFirstPersonPass()",
+          "setFirstPersonPass(boolean)",
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.api.IPlayer": [],
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer": [
+          "setAnim(T)",
+          "getAnim()",
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.AnimationStack": [
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "addAnimLayer(int, IAnimation)",
+          "removeLayer(IAnimation)",
+          "removeLayer(int)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.IAnimation": [
+          "tick()",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer": [
+          "getFirstPersonConfiguration(float)",
+          "getFirstPersonMode(float)",
+          "tick()",
+          "getTick()",
+          "stop()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "isLoopStarted()",
+          "getData()",
+          "getPart(String)",
+          "getStopTick()",
+          "getCurrentTick()",
+          "isInfinite()",
+          "setFirstPersonConfiguration(FirstPersonConfiguration)",
+          "setFirstPersonMode(FirstPersonMode)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier": [
+          "isActive()",
+          "canRemove()",
+          "setupAnim(float)",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "calculateProgress(float)",
+          "getAlpha(String, TransformType, float)",
+          "standardFadeIn(int, Ease)",
+          "functionalFadeIn(int, AbstractFadeModifier.EasingFunction)",
+          "setBeginAnimation(IAnimation)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier": [
+          "canRemove()",
+          "setHost(ModifierLayer)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier": [
+          "getFadeIn(float)",
+          "tick()",
+          "fadeOut(int)",
+          "getFadeOut(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "transformVector(Vec3f, TransformType, AdjustmentModifier.PartModifier, float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier": [
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "getFirstPersonConfiguration(float)",
+          "transformVector(Vec3f, TransformType)",
+          "isEnabled()",
+          "setEnabled(boolean)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier": [
+          "tick()",
+          "setupAnim(float)",
+          "step(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer": [
+          "tick()",
+          "addModifier(AbstractModifier, int)",
+          "addModifierBefore(AbstractModifier)",
+          "addModifierLast(AbstractModifier)",
+          "removeModifier(int)",
+          "setAnimation(T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T, boolean)",
+          "size()",
+          "linkModifiers()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)",
+          "getAnimation()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame": [
+          "tick()",
+          "isActive()",
+          "resetPose()",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.TransformType": [],
+        "dev.kosmx.playerAnim.core.data.AnimationBinary": [
+          "write(KeyframeAnimation, T, int)",
+          "write(KeyframeAnimation, T)",
+          "read(ByteBuffer, int)",
+          "getCurrentVersion()",
+          "calculateSize(KeyframeAnimation, int)",
+          "putBoolean(ByteBuffer, boolean)",
+          "getBoolean(ByteBuffer)",
+          "putString(ByteBuffer, String)",
+          "getString(ByteBuffer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.AnimationFormat": [
+          "getExtension()"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson": [
+          "getListedTypeToken()",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(KeyframeAnimation, Type, JsonSerializationContext)",
+          "asJson(String)",
+          "emoteSerializer(KeyframeAnimation)",
+          "moveSerializer(KeyframeAnimation)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing": [
+          "deserializeAnimation(Reader)",
+          "deserializeAnimation(InputStream)",
+          "serializeAnimation(KeyframeAnimation)",
+          "writeAnimation(KeyframeAnimation, Writer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer": [
+          "serialize(JsonObject)",
+          "getVector(JsonElement)",
+          "snake2Camel(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation": [
+          "equals(Object)",
+          "hashCode()",
+          "copy()",
+          "mutableCopy()",
+          "isPlayingAt(int)",
+          "getUuid()",
+          "get()",
+          "getLength()",
+          "isInfinite()",
+          "getPart(String)",
+          "getPartOptional(String)",
+          "toString()",
+          "getBodyParts()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument": [],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header": [
+          "Auto_saving()",
+          "Loop_on_off()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer": [
+          "getLock()",
+          "setLock(boolean)",
+          "findAtTick(int)",
+          "addNote(int)",
+          "getNotesFrom(int, int)",
+          "getNotesFrom(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS": [
+          "getLayers()",
+          "getLength()",
+          "setLength(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils": [
+          "read(DataInputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket": [
+          "getSong()",
+          "write(ByteBuffer)",
+          "writeLayersAndNotes(ByteBuffer)",
+          "read(ByteBuffer)",
+          "calculateMessageSize(NBS)",
+          "getLayerMessageSize(Layer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer": [
+          "tick()",
+          "stop()",
+          "isPlayingSong(SoundPlayer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase": [
+          "inverse(Ease)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Move": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader": [
+          "deserialize(BufferedReader, String)",
+          "getEmote()",
+          "read(String)",
+          "getMethod(List<String>, int, List<List<String>>)",
+          "getBPFromStr(String[])",
+          "getPFromStr(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Section": [
+          "setMoveOperator(Playable)",
+          "getLine()",
+          "getMoveOperator()",
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo": [
+          "playForward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Ease": [
+          "getId()",
+          "invoke(float)",
+          "getEase(byte)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Easing": [
+          "easingFromEnum(Ease, float)",
+          "easeFromString(String)",
+          "inSine(float)",
+          "outSine(float)",
+          "inOutSine(float)",
+          "inCubic(float)",
+          "outCubic(float)",
+          "inOutCubic(float)",
+          "inQuad(float)",
+          "outQuad(float)",
+          "inOutQuad(float)",
+          "inQuart(float)",
+          "outQuart(float)",
+          "inOutQuart(float)",
+          "inQuint(float)",
+          "outQuint(float)",
+          "inOutQuint(float)",
+          "inExpo(float)",
+          "outExpo(float)",
+          "inOutExpo(float)"
+        ],
+        "dev.kosmx.playerAnim.core.util.MathHelper": [
+          "lerp(float, float, float)",
+          "lerp(double, double, double)",
+          "colorHelper(int, int, int, int)",
+          "clampToRadian(float)",
+          "readFromIStream(InputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.util.NetworkHelper": [
+          "readString(ByteBuffer)",
+          "writeString(ByteBuffer, String)",
+          "readVarString(ByteBuffer)",
+          "writeVarString(ByteBuffer, String)",
+          "readUUID(ByteBuffer)",
+          "writeUUID(ByteBuffer, UUID)",
+          "readVarInt(ByteBuffer)",
+          "writeVarInt(ByteBuffer, int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Pair": [
+          "getLeft()",
+          "getRight()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.core.util.SetableSupplier": [
+          "set(T)",
+          "get()"
+        ],
+        "dev.kosmx.playerAnim.core.util.UUIDMap": [
+          "put(T)",
+          "addAll(Collection<T>)",
+          "iterator()",
+          "add(T)",
+          "contains(T)",
+          "removeIf(Predicate<T>)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3d": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(double)",
+          "add(Vec3d)",
+          "dotProduct(Vec3d)",
+          "crossProduct(Vec3d)",
+          "subtract(Vec3d)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3f": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(float)",
+          "add(Vec3f)",
+          "dotProduct(Vec3f)",
+          "crossProduct(Vec3f)",
+          "subtract(Vec3f)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vector3": [
+          "getX()",
+          "getY()",
+          "getZ()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer": [
+          "onInitializeClient()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier": [
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess": [
+          "getPlayerAnimLayer(class_742)",
+          "getPlayerAssociatedData(class_742)"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory": [],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry": [
+          "getAnimation(class_2960)",
+          "getAnimationOptional(class_2960)",
+          "getAnimations()",
+          "getModAnimations(String)",
+          "resourceLoaderCallback(class_3300, Logger)",
+          "serializeTextToString(String)"
+        ]
+      },
+      "sampleCount": 56
+    },
+    "1.0.2_1.19.3": {
+      "packages": [],
+      "classes": [
+        "dev.kosmx.playerAnim.api.AnimUtils",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration",
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode",
+        "dev.kosmx.playerAnim.api.IPlayer",
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer",
+        "dev.kosmx.playerAnim.api.layered.AnimationStack",
+        "dev.kosmx.playerAnim.api.layered.IAnimation",
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier",
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer",
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame",
+        "dev.kosmx.playerAnim.api.TransformType",
+        "dev.kosmx.playerAnim.core.data.AnimationBinary",
+        "dev.kosmx.playerAnim.core.data.AnimationFormat",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing",
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer",
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils",
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket",
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer",
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase",
+        "dev.kosmx.playerAnim.core.data.quarktool.Move",
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable",
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader",
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat",
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset",
+        "dev.kosmx.playerAnim.core.data.quarktool.Section",
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo",
+        "dev.kosmx.playerAnim.core.util.Ease",
+        "dev.kosmx.playerAnim.core.util.Easing",
+        "dev.kosmx.playerAnim.core.util.MathHelper",
+        "dev.kosmx.playerAnim.core.util.NetworkHelper",
+        "dev.kosmx.playerAnim.core.util.Pair",
+        "dev.kosmx.playerAnim.core.util.SetableSupplier",
+        "dev.kosmx.playerAnim.core.util.UUIDMap",
+        "dev.kosmx.playerAnim.core.util.Vec3d",
+        "dev.kosmx.playerAnim.core.util.Vec3f",
+        "dev.kosmx.playerAnim.core.util.Vector3",
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer",
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry"
+      ],
+      "methods": {
+        "dev.kosmx.playerAnim.api.AnimUtils": [
+          "getPlayerAnimLayer(Object)"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonConfiguration": [
+          "isShowRightArm()",
+          "isShowLeftArm()",
+          "isShowRightItem()",
+          "isShowLeftItem()",
+          "setShowRightArm(boolean)",
+          "setShowLeftArm(boolean)",
+          "setShowRightItem(boolean)",
+          "setShowLeftItem(boolean)",
+          "equals(Object)",
+          "canEqual(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.api.firstPerson.FirstPersonMode": [
+          "isFirstPersonPass()",
+          "setFirstPersonPass(boolean)",
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.api.IPlayer": [],
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer": [
+          "setAnim(T)",
+          "getAnim()",
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.AnimationStack": [
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "addAnimLayer(int, IAnimation)",
+          "removeLayer(IAnimation)",
+          "removeLayer(int)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.IAnimation": [
+          "tick()",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer": [
+          "getFirstPersonConfiguration(float)",
+          "getFirstPersonMode(float)",
+          "tick()",
+          "getTick()",
+          "stop()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "isLoopStarted()",
+          "getData()",
+          "getPart(String)",
+          "getStopTick()",
+          "getCurrentTick()",
+          "isInfinite()",
+          "setFirstPersonConfiguration(FirstPersonConfiguration)",
+          "setFirstPersonMode(FirstPersonMode)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier": [
+          "isActive()",
+          "canRemove()",
+          "setupAnim(float)",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "calculateProgress(float)",
+          "getAlpha(String, TransformType, float)",
+          "standardFadeIn(int, Ease)",
+          "functionalFadeIn(int, AbstractFadeModifier.EasingFunction)",
+          "setBeginAnimation(IAnimation)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier": [
+          "canRemove()",
+          "setHost(ModifierLayer)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AdjustmentModifier": [
+          "getFadeIn(float)",
+          "tick()",
+          "fadeOut(int)",
+          "getFadeOut(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "transformVector(Vec3f, TransformType, AdjustmentModifier.PartModifier, float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier": [
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "getFirstPersonConfiguration(float)",
+          "transformVector(Vec3f, TransformType)",
+          "isEnabled()",
+          "setEnabled(boolean)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier": [
+          "tick()",
+          "setupAnim(float)",
+          "step(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer": [
+          "tick()",
+          "addModifier(AbstractModifier, int)",
+          "addModifierBefore(AbstractModifier)",
+          "addModifierLast(AbstractModifier)",
+          "removeModifier(int)",
+          "setAnimation(T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T, boolean)",
+          "size()",
+          "linkModifiers()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getFirstPersonMode(float)",
+          "getFirstPersonConfiguration(float)",
+          "getAnimation()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame": [
+          "tick()",
+          "isActive()",
+          "resetPose()",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.TransformType": [],
+        "dev.kosmx.playerAnim.core.data.AnimationBinary": [
+          "write(KeyframeAnimation, T, int)",
+          "write(KeyframeAnimation, T)",
+          "read(ByteBuffer, int)",
+          "getCurrentVersion()",
+          "calculateSize(KeyframeAnimation, int)",
+          "putBoolean(ByteBuffer, boolean)",
+          "getBoolean(ByteBuffer)",
+          "putString(ByteBuffer, String)",
+          "getString(ByteBuffer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.AnimationFormat": [
+          "getExtension()"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson": [
+          "getListedTypeToken()",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(KeyframeAnimation, Type, JsonSerializationContext)",
+          "asJson(String)",
+          "emoteSerializer(KeyframeAnimation)",
+          "moveSerializer(KeyframeAnimation)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing": [
+          "deserializeAnimation(Reader)",
+          "deserializeAnimation(InputStream)",
+          "serializeAnimation(KeyframeAnimation)",
+          "writeAnimation(KeyframeAnimation, Writer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer": [
+          "serialize(JsonObject)",
+          "getVector(JsonElement)",
+          "snake2Camel(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation": [
+          "equals(Object)",
+          "hashCode()",
+          "copy()",
+          "mutableCopy()",
+          "isPlayingAt(int)",
+          "getUuid()",
+          "get()",
+          "getLength()",
+          "isInfinite()",
+          "getPart(String)",
+          "getPartOptional(String)",
+          "toString()",
+          "getBodyParts()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument": [],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header": [
+          "Auto_saving()",
+          "Loop_on_off()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer": [
+          "getLock()",
+          "setLock(boolean)",
+          "findAtTick(int)",
+          "addNote(int)",
+          "getNotesFrom(int, int)",
+          "getNotesFrom(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS": [
+          "getLayers()",
+          "getLength()",
+          "setLength(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils": [
+          "read(DataInputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket": [
+          "getSong()",
+          "write(ByteBuffer)",
+          "writeLayersAndNotes(ByteBuffer)",
+          "read(ByteBuffer)",
+          "calculateMessageSize(NBS)",
+          "getLayerMessageSize(Layer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer": [
+          "tick()",
+          "stop()",
+          "isPlayingSong(SoundPlayer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase": [
+          "inverse(Ease)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Move": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader": [
+          "deserialize(BufferedReader, String)",
+          "getEmote()",
+          "read(String)",
+          "getMethod(List<String>, int, List<List<String>>)",
+          "getBPFromStr(String[])",
+          "getPFromStr(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Section": [
+          "setMoveOperator(Playable)",
+          "getLine()",
+          "getMoveOperator()",
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo": [
+          "playForward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Ease": [
+          "getId()",
+          "invoke(float)",
+          "getEase(byte)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Easing": [
+          "easingFromEnum(Ease, float)",
+          "easeFromString(String)",
+          "inSine(float)",
+          "outSine(float)",
+          "inOutSine(float)",
+          "inCubic(float)",
+          "outCubic(float)",
+          "inOutCubic(float)",
+          "inQuad(float)",
+          "outQuad(float)",
+          "inOutQuad(float)",
+          "inQuart(float)",
+          "outQuart(float)",
+          "inOutQuart(float)",
+          "inQuint(float)",
+          "outQuint(float)",
+          "inOutQuint(float)",
+          "inExpo(float)",
+          "outExpo(float)",
+          "inOutExpo(float)"
+        ],
+        "dev.kosmx.playerAnim.core.util.MathHelper": [
+          "lerp(float, float, float)",
+          "lerp(double, double, double)",
+          "colorHelper(int, int, int, int)",
+          "clampToRadian(float)",
+          "readFromIStream(InputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.util.NetworkHelper": [
+          "readString(ByteBuffer)",
+          "writeString(ByteBuffer, String)",
+          "readVarString(ByteBuffer)",
+          "writeVarString(ByteBuffer, String)",
+          "readUUID(ByteBuffer)",
+          "writeUUID(ByteBuffer, UUID)",
+          "readVarInt(ByteBuffer)",
+          "writeVarInt(ByteBuffer, int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Pair": [
+          "getLeft()",
+          "getRight()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.core.util.SetableSupplier": [
+          "set(T)",
+          "get()"
+        ],
+        "dev.kosmx.playerAnim.core.util.UUIDMap": [
+          "put(T)",
+          "addAll(Collection<T>)",
+          "iterator()",
+          "add(T)",
+          "contains(T)",
+          "removeIf(Predicate<T>)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3d": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(double)",
+          "add(Vec3d)",
+          "dotProduct(Vec3d)",
+          "crossProduct(Vec3d)",
+          "subtract(Vec3d)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3f": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(float)",
+          "add(Vec3f)",
+          "dotProduct(Vec3f)",
+          "crossProduct(Vec3f)",
+          "subtract(Vec3f)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vector3": [
+          "getX()",
+          "getY()",
+          "getZ()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer": [
+          "onInitializeClient()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.layers.LeftHandedHelperModifier": [
+          "isEnabled()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess": [
+          "getPlayerAnimLayer(class_742)",
+          "getPlayerAssociatedData(class_742)"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory": [],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry": [
+          "getAnimation(class_2960)",
+          "getAnimationOptional(class_2960)",
+          "getAnimations()",
+          "getModAnimations(String)",
+          "resourceLoaderCallback(class_3300, Logger)",
+          "serializeTextToString(String)"
+        ]
+      },
+      "sampleCount": 56
+    },
+    "0.4.0_1.16.5": {
+      "packages": [],
+      "classes": [
+        "dev.kosmx.playerAnim.api.AnimUtils",
+        "dev.kosmx.playerAnim.api.IPlayer",
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer",
+        "dev.kosmx.playerAnim.api.layered.AnimationStack",
+        "dev.kosmx.playerAnim.api.layered.IAnimation",
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier",
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier",
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer",
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame",
+        "dev.kosmx.playerAnim.api.TransformType",
+        "dev.kosmx.playerAnim.core.data.AnimationBinary",
+        "dev.kosmx.playerAnim.core.data.AnimationFormat",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson",
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing",
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer",
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header",
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS",
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils",
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket",
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer",
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase",
+        "dev.kosmx.playerAnim.core.data.quarktool.Move",
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause",
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable",
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError",
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader",
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat",
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset",
+        "dev.kosmx.playerAnim.core.data.quarktool.Section",
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo",
+        "dev.kosmx.playerAnim.core.util.Ease",
+        "dev.kosmx.playerAnim.core.util.Easing",
+        "dev.kosmx.playerAnim.core.util.MathHelper",
+        "dev.kosmx.playerAnim.core.util.NetworkHelper",
+        "dev.kosmx.playerAnim.core.util.Pair",
+        "dev.kosmx.playerAnim.core.util.SetableSupplier",
+        "dev.kosmx.playerAnim.core.util.UUIDMap",
+        "dev.kosmx.playerAnim.core.util.Vec3d",
+        "dev.kosmx.playerAnim.core.util.Vec3f",
+        "dev.kosmx.playerAnim.core.util.Vector3",
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory",
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry"
+      ],
+      "methods": {
+        "dev.kosmx.playerAnim.api.AnimUtils": [
+          "getPlayerAnimLayer(Object)"
+        ],
+        "dev.kosmx.playerAnim.api.IPlayer": [],
+        "dev.kosmx.playerAnim.api.layered.AnimationContainer": [
+          "setAnim(T)",
+          "getAnim()",
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.AnimationStack": [
+          "isActive()",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "addAnimLayer(int, IAnimation)",
+          "removeLayer(IAnimation)",
+          "removeLayer(int)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.IAnimation": [
+          "tick()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer": [
+          "tick()",
+          "getTick()",
+          "stop()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "isLoopStarted()",
+          "getData()",
+          "getPart(String)",
+          "getStopTick()",
+          "getCurrentTick()",
+          "isInfinite()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier": [
+          "isActive()",
+          "canRemove()",
+          "setupAnim(float)",
+          "tick()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "calculateProgress(float)",
+          "getAlpha(String, TransformType, float)",
+          "standardFadeIn(int, Ease)",
+          "functionalFadeIn(int, AbstractFadeModifier.EasingFunction)",
+          "setBeginAnimation(IAnimation)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.AbstractModifier": [
+          "canRemove()",
+          "setHost(ModifierLayer)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier": [
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "transformVector(Vec3f, TransformType)",
+          "isEnabled()",
+          "setEnabled(boolean)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier": [
+          "tick()",
+          "setupAnim(float)",
+          "step(float)",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.layered.ModifierLayer": [
+          "tick()",
+          "addModifier(AbstractModifier, int)",
+          "addModifierBefore(AbstractModifier)",
+          "addModifierLast(AbstractModifier)",
+          "removeModifier(int)",
+          "setAnimation(T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T)",
+          "replaceAnimationWithFade(AbstractFadeModifier, T, boolean)",
+          "size()",
+          "linkModifiers()",
+          "isActive()",
+          "get3DTransform(String, TransformType, float, Vec3f)",
+          "setupAnim(float)",
+          "getAnimation()"
+        ],
+        "dev.kosmx.playerAnim.api.layered.PlayerAnimationFrame": [
+          "tick()",
+          "isActive()",
+          "resetPose()",
+          "get3DTransform(String, TransformType, float, Vec3f)"
+        ],
+        "dev.kosmx.playerAnim.api.TransformType": [],
+        "dev.kosmx.playerAnim.core.data.AnimationBinary": [
+          "write(KeyframeAnimation, T, int)",
+          "write(KeyframeAnimation, T)",
+          "read(ByteBuffer, int)",
+          "getCurrentVersion()",
+          "calculateSize(KeyframeAnimation, int)",
+          "putBoolean(ByteBuffer, boolean)",
+          "getBoolean(ByteBuffer)",
+          "putString(ByteBuffer, String)",
+          "getString(ByteBuffer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.AnimationFormat": [
+          "getExtension()"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationJson": [
+          "getListedTypeToken()",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(KeyframeAnimation, Type, JsonSerializationContext)",
+          "asJson(String)",
+          "emoteSerializer(KeyframeAnimation)",
+          "moveSerializer(KeyframeAnimation)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.AnimationSerializing": [
+          "deserializeAnimation(Reader)",
+          "deserializeAnimation(InputStream)",
+          "serializeAnimation(KeyframeAnimation)",
+          "writeAnimation(KeyframeAnimation, Writer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.gson.GeckoLibSerializer": [
+          "serialize(JsonObject)",
+          "getVector(JsonElement)",
+          "snake2Camel(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.KeyframeAnimation": [
+          "equals(Object)",
+          "hashCode()",
+          "copy()",
+          "mutableCopy()",
+          "isPlayingAt(int)",
+          "getUuid()",
+          "get()",
+          "getLength()",
+          "isInfinite()",
+          "getPart(String)",
+          "getPartOptional(String)",
+          "toString()",
+          "getBodyParts()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.CustomInstrument": [],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Header": [
+          "Auto_saving()",
+          "Loop_on_off()"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.format.Layer": [
+          "getLock()",
+          "setLock(boolean)",
+          "findAtTick(int)",
+          "addNote(int)",
+          "getNotesFrom(int, int)",
+          "getNotesFrom(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBS": [
+          "getLayers()",
+          "getLength()",
+          "setLength(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.NBSFileUtils": [
+          "read(DataInputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.network.NBSPacket": [
+          "getSong()",
+          "write(ByteBuffer)",
+          "writeLayersAndNotes(ByteBuffer)",
+          "read(ByteBuffer)",
+          "calculateMessageSize(NBS)",
+          "getLayerMessageSize(Layer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.opennbs.SoundPlayer": [
+          "tick()",
+          "stop()",
+          "isPlayingSong(SoundPlayer)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.InverseEase": [
+          "inverse(Ease)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Move": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.PartMap": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pause": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Pauseable": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Playable": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkParsingError": [],
+        "dev.kosmx.playerAnim.core.data.quarktool.QuarkReader": [
+          "deserialize(BufferedReader, String)",
+          "getEmote()",
+          "read(String)",
+          "getMethod(List<String>, int, List<List<String>>)",
+          "getBPFromStr(String[])",
+          "getPFromStr(String)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Repeat": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Reset": [
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Section": [
+          "setMoveOperator(Playable)",
+          "getLine()",
+          "getMoveOperator()",
+          "playForward(int)",
+          "playBackward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.data.quarktool.Yoyo": [
+          "playForward(int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Ease": [
+          "getId()",
+          "getEase(byte)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Easing": [
+          "easingFromEnum(Ease, float)",
+          "easeFromString(String)",
+          "inSine(float)",
+          "outSine(float)",
+          "inOutSine(float)",
+          "inCubic(float)",
+          "outCubic(float)",
+          "inOutCubic(float)",
+          "inQuad(float)",
+          "outQuad(float)",
+          "inOutQuad(float)",
+          "inQuart(float)",
+          "outQuart(float)",
+          "inOutQuart(float)",
+          "inQuint(float)",
+          "outQuint(float)",
+          "inOutQuint(float)",
+          "inExpo(float)",
+          "outExpo(float)",
+          "inOutExpo(float)"
+        ],
+        "dev.kosmx.playerAnim.core.util.MathHelper": [
+          "lerp(float, float, float)",
+          "lerp(double, double, double)",
+          "colorHelper(int, int, int, int)",
+          "clampToRadian(float)",
+          "readFromIStream(InputStream)"
+        ],
+        "dev.kosmx.playerAnim.core.util.NetworkHelper": [
+          "readString(ByteBuffer)",
+          "writeString(ByteBuffer, String)",
+          "readVarString(ByteBuffer)",
+          "writeVarString(ByteBuffer, String)",
+          "readUUID(ByteBuffer)",
+          "writeUUID(ByteBuffer, UUID)",
+          "readVarInt(ByteBuffer)",
+          "writeVarInt(ByteBuffer, int)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Pair": [
+          "getLeft()",
+          "getRight()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.core.util.SetableSupplier": [
+          "set(T)",
+          "get()"
+        ],
+        "dev.kosmx.playerAnim.core.util.UUIDMap": [
+          "put(T)",
+          "addAll(Collection<T>)",
+          "iterator()",
+          "add(T)",
+          "contains(T)",
+          "removeIf(Predicate<T>)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3d": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(double)",
+          "add(Vec3d)",
+          "dotProduct(Vec3d)",
+          "crossProduct(Vec3d)",
+          "subtract(Vec3d)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vec3f": [
+          "squaredDistanceTo(Vec3d)",
+          "scale(float)",
+          "add(Vec3f)",
+          "dotProduct(Vec3f)",
+          "crossProduct(Vec3f)",
+          "subtract(Vec3f)",
+          "distanceTo(Vec3d)"
+        ],
+        "dev.kosmx.playerAnim.core.util.Vector3": [
+          "getX()",
+          "getY()",
+          "getZ()",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.kosmx.playerAnim.fabric.client.FabricClientInitializer": [
+          "onInitializeClient()"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess": [
+          "getPlayerAnimLayer(class_742)",
+          "getPlayerAssociatedData(class_742)"
+        ],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory": [],
+        "dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry": [
+          "getAnimation(class_2960)",
+          "getAnimationOptional(class_2960)",
+          "getAnimations()",
+          "getModAnimations(String)",
+          "resourceLoaderCallback(class_3300, Logger)",
+          "serializeTextToString(String)"
+        ]
+      },
+      "sampleCount": 52
+    }
+  },
+  "classCount": 220,
+  "methodCount": 996
+}

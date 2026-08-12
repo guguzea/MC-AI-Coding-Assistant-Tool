@@ -1,0 +1,204 @@
+{
+  "slug": "pal",
+  "modId": "playerabilitylib",
+  "id": "authored/lib-player-ability-lib",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "playerabilitylib"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:11.185Z",
+  "versions": {
+    "1.15.0": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.pal.AbilitySource",
+        "io.github.ladysnake.pal.AbilityTracker",
+        "io.github.ladysnake.pal.Pal",
+        "io.github.ladysnake.pal.PlayerAbility",
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback",
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback",
+        "io.github.ladysnake.pal.SimpleAbilityTracker",
+        "io.github.ladysnake.pal.VanillaAbilities"
+      ],
+      "methods": {
+        "io.github.ladysnake.pal.AbilitySource": [
+          "getId()",
+          "getPriority()",
+          "grantTo(class_1657, PlayerAbility)",
+          "revokeFrom(class_1657, PlayerAbility)",
+          "grants(class_1657, PlayerAbility)",
+          "isActivelyGranting(class_1657, PlayerAbility)",
+          "compareTo(AbilitySource)",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.AbilityTracker": [],
+        "io.github.ladysnake.pal.Pal": [
+          "grantAbility(class_1657, PlayerAbility, AbilitySource)",
+          "revokeAbility(class_1657, PlayerAbility, AbilitySource)",
+          "getAbilitySource(String, String)",
+          "getAbilitySource(class_2960)",
+          "getAbilitySource(class_2960, int)",
+          "registerAbility(String, String, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "registerAbility(class_2960, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "isAbilityRegistered(class_2960)",
+          "provideRegisteredAbility(class_2960)",
+          "onInitialize()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbility": [
+          "getTracker(class_1657)",
+          "isEnabledFor(class_1657)",
+          "createTracker(class_1657)",
+          "getId()",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback": [],
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback": [],
+        "io.github.ladysnake.pal.SimpleAbilityTracker": [
+          "addSource(AbilitySource)",
+          "removeSource(AbilitySource)",
+          "isGrantedBy(AbilitySource)",
+          "getActiveSource()",
+          "refresh(boolean)",
+          "shouldBeEnabled()",
+          "save(class_11372)",
+          "load(class_11368)",
+          "updateState(boolean)",
+          "sync()",
+          "isEnabled()"
+        ],
+        "io.github.ladysnake.pal.VanillaAbilities": []
+      },
+      "sampleCount": 8
+    },
+    "1.11.0": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.pal.AbilitySource",
+        "io.github.ladysnake.pal.AbilityTracker",
+        "io.github.ladysnake.pal.Pal",
+        "io.github.ladysnake.pal.PlayerAbility",
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback",
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback",
+        "io.github.ladysnake.pal.SimpleAbilityTracker",
+        "io.github.ladysnake.pal.VanillaAbilities"
+      ],
+      "methods": {
+        "io.github.ladysnake.pal.AbilitySource": [
+          "getId()",
+          "getPriority()",
+          "grantTo(class_1657, PlayerAbility)",
+          "revokeFrom(class_1657, PlayerAbility)",
+          "grants(class_1657, PlayerAbility)",
+          "isActivelyGranting(class_1657, PlayerAbility)",
+          "compareTo(AbilitySource)",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.AbilityTracker": [],
+        "io.github.ladysnake.pal.Pal": [
+          "grantAbility(class_1657, PlayerAbility, AbilitySource)",
+          "revokeAbility(class_1657, PlayerAbility, AbilitySource)",
+          "getAbilitySource(String, String)",
+          "getAbilitySource(class_2960)",
+          "getAbilitySource(class_2960, int)",
+          "registerAbility(String, String, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "registerAbility(class_2960, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "isAbilityRegistered(class_2960)",
+          "provideRegisteredAbility(class_2960)",
+          "onInitialize()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbility": [
+          "getTracker(class_1657)",
+          "isEnabledFor(class_1657)",
+          "createTracker(class_1657)",
+          "getId()",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback": [],
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback": [],
+        "io.github.ladysnake.pal.SimpleAbilityTracker": [
+          "addSource(AbilitySource)",
+          "removeSource(AbilitySource)",
+          "isGrantedBy(AbilitySource)",
+          "getActiveSource()",
+          "refresh(boolean)",
+          "shouldBeEnabled()",
+          "save(class_2487)",
+          "load(class_2487)",
+          "updateState(boolean)",
+          "sync()",
+          "isEnabled()"
+        ],
+        "io.github.ladysnake.pal.VanillaAbilities": []
+      },
+      "sampleCount": 8
+    },
+    "1.8.0": {
+      "packages": [],
+      "classes": [
+        "io.github.ladysnake.pal.AbilitySource",
+        "io.github.ladysnake.pal.AbilityTracker",
+        "io.github.ladysnake.pal.Pal",
+        "io.github.ladysnake.pal.PlayerAbility",
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback",
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback",
+        "io.github.ladysnake.pal.SimpleAbilityTracker",
+        "io.github.ladysnake.pal.VanillaAbilities"
+      ],
+      "methods": {
+        "io.github.ladysnake.pal.AbilitySource": [
+          "getId()",
+          "getPriority()",
+          "grantTo(class_1657, PlayerAbility)",
+          "revokeFrom(class_1657, PlayerAbility)",
+          "grants(class_1657, PlayerAbility)",
+          "isActivelyGranting(class_1657, PlayerAbility)",
+          "compareTo(AbilitySource)",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.AbilityTracker": [],
+        "io.github.ladysnake.pal.Pal": [
+          "grantAbility(class_1657, PlayerAbility, AbilitySource)",
+          "revokeAbility(class_1657, PlayerAbility, AbilitySource)",
+          "getAbilitySource(String, String)",
+          "getAbilitySource(class_2960)",
+          "getAbilitySource(class_2960, int)",
+          "registerAbility(String, String, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "registerAbility(class_2960, BiFunction<PlayerAbility, class_1657, AbilityTracker>)",
+          "isAbilityRegistered(class_2960)",
+          "provideRegisteredAbility(class_2960)",
+          "onInitialize()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbility": [
+          "getTracker(class_1657)",
+          "isEnabledFor(class_1657)",
+          "createTracker(class_1657)",
+          "getId()",
+          "toString()"
+        ],
+        "io.github.ladysnake.pal.PlayerAbilityEnableCallback": [],
+        "io.github.ladysnake.pal.PlayerAbilityUpdatedCallback": [],
+        "io.github.ladysnake.pal.SimpleAbilityTracker": [
+          "addSource(AbilitySource)",
+          "removeSource(AbilitySource)",
+          "isGrantedBy(AbilitySource)",
+          "getActiveSource()",
+          "refresh(boolean)",
+          "shouldBeEnabled()",
+          "save(class_2487)",
+          "load(class_2487)",
+          "updateState(boolean)",
+          "sync()",
+          "isEnabled()"
+        ],
+        "io.github.ladysnake.pal.VanillaAbilities": []
+      },
+      "sampleCount": 8
+    }
+  },
+  "classCount": 24,
+  "methodCount": 102
+}

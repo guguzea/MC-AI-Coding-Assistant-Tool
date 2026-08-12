@@ -1,0 +1,3483 @@
+{
+  "slug": "patchouli",
+  "modId": "patchouli",
+  "id": "authored/lib-patchouli",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "patchouli"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:09.846Z",
+  "versions": {
+    "ff5ca0df84c42dc2334269b1faf2020270b1f5aed12fc3ef18c749068257f488918918b18f92d12ebd65fd32dc305a513019a5856395ab562db0daf9ef6d4f7a": {
+      "packages": [],
+      "classes": [
+        "vazkii.patchouli.api.BookContentsReloadEvent",
+        "vazkii.patchouli.api.BookDrawScreenEvent",
+        "vazkii.patchouli.api.IComponentProcessor",
+        "vazkii.patchouli.api.IComponentRenderContext",
+        "vazkii.patchouli.api.ICustomComponent",
+        "vazkii.patchouli.api.IMultiblock",
+        "vazkii.patchouli.api.IStateMatcher",
+        "vazkii.patchouli.api.IStyleStack",
+        "vazkii.patchouli.api.IVariable",
+        "vazkii.patchouli.api.IVariableProvider",
+        "vazkii.patchouli.api.IVariablesAvailableCallback",
+        "vazkii.patchouli.api.IVariableSerializer",
+        "vazkii.patchouli.api.PatchouliAPI",
+        "vazkii.patchouli.api.stub.StubMatcher",
+        "vazkii.patchouli.api.stub.StubMultiblock",
+        "vazkii.patchouli.api.stub.StubPatchouliAPI",
+        "vazkii.patchouli.api.TriPredicate",
+        "vazkii.patchouli.api.VariableHelper",
+        "vazkii.patchouli.client.base.BookModel",
+        "vazkii.patchouli.client.base.ClientAdvancements",
+        "vazkii.patchouli.client.base.ClientTicker",
+        "vazkii.patchouli.client.base.PersistentData",
+        "vazkii.patchouli.client.book.AbstractReadStateHolder",
+        "vazkii.patchouli.client.book.BookCategory",
+        "vazkii.patchouli.client.book.BookContentClasspathLoader",
+        "vazkii.patchouli.client.book.BookContentExternalLoader",
+        "vazkii.patchouli.client.book.BookContentLoader",
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader",
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader",
+        "vazkii.patchouli.client.book.BookContents",
+        "vazkii.patchouli.client.book.BookContentsBuilder",
+        "vazkii.patchouli.client.book.BookEntry",
+        "vazkii.patchouli.client.book.BookIcon",
+        "vazkii.patchouli.client.book.BookPage",
+        "vazkii.patchouli.client.book.ClientBookRegistry",
+        "vazkii.patchouli.client.book.EntryDisplayState",
+        "vazkii.patchouli.client.book.gui.BookTextRenderer",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry",
+        "vazkii.patchouli.client.book.gui.GuiBook",
+        "vazkii.patchouli.client.book.gui.GuiBookCategory",
+        "vazkii.patchouli.client.book.gui.GuiBookEntry",
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList",
+        "vazkii.patchouli.client.book.gui.GuiBookHistory",
+        "vazkii.patchouli.client.book.gui.GuiBookIndex",
+        "vazkii.patchouli.client.book.gui.GuiBookLanding",
+        "vazkii.patchouli.client.book.gui.GuiBookWriter",
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry",
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageWithText",
+        "vazkii.patchouli.client.book.page.PageBlasting",
+        "vazkii.patchouli.client.book.page.PageCampfireCooking",
+        "vazkii.patchouli.client.book.page.PageCrafting",
+        "vazkii.patchouli.client.book.page.PageEmpty",
+        "vazkii.patchouli.client.book.page.PageEntity",
+        "vazkii.patchouli.client.book.page.PageImage",
+        "vazkii.patchouli.client.book.page.PageLink",
+        "vazkii.patchouli.client.book.page.PageMultiblock",
+        "vazkii.patchouli.client.book.page.PageQuest",
+        "vazkii.patchouli.client.book.page.PageRelations",
+        "vazkii.patchouli.client.book.page.PageSmelting",
+        "vazkii.patchouli.client.book.page.PageSmithing",
+        "vazkii.patchouli.client.book.page.PageSmoking",
+        "vazkii.patchouli.client.book.page.PageSpotlight",
+        "vazkii.patchouli.client.book.page.PageStonecutting",
+        "vazkii.patchouli.client.book.page.PageTemplate",
+        "vazkii.patchouli.client.book.page.PageText",
+        "vazkii.patchouli.client.book.template.BookTemplate",
+        "vazkii.patchouli.client.book.template.component.ComponentCustom",
+        "vazkii.patchouli.client.book.template.component.ComponentEntity",
+        "vazkii.patchouli.client.book.template.component.ComponentFrame",
+        "vazkii.patchouli.client.book.template.component.ComponentHeader",
+        "vazkii.patchouli.client.book.template.component.ComponentImage",
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack",
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator",
+        "vazkii.patchouli.client.book.template.component.ComponentText",
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip",
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper",
+        "vazkii.patchouli.client.book.template.TemplateComponent",
+        "vazkii.patchouli.client.book.template.TemplateInclusion",
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest",
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor",
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor",
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.Variable",
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl",
+        "vazkii.patchouli.client.book.template.VariableAssigner",
+        "vazkii.patchouli.client.book.text.BookTextParser",
+        "vazkii.patchouli.client.book.text.Span",
+        "vazkii.patchouli.client.book.text.SpanState",
+        "vazkii.patchouli.client.book.text.TextLayouter",
+        "vazkii.patchouli.client.book.text.Word",
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt",
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook",
+        "vazkii.patchouli.client.handler.BookCrashHandler",
+        "vazkii.patchouli.client.handler.BookRightClickHandler",
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler",
+        "vazkii.patchouli.client.handler.TooltipHandler",
+        "vazkii.patchouli.client.RenderHelper",
+        "vazkii.patchouli.common.base.PatchouliAPIImpl",
+        "vazkii.patchouli.common.base.PatchouliConfig",
+        "vazkii.patchouli.common.base.PatchouliSounds",
+        "vazkii.patchouli.common.book.Book",
+        "vazkii.patchouli.common.book.BookFolderLoader",
+        "vazkii.patchouli.common.book.BookRegistry",
+        "vazkii.patchouli.common.command.OpenBookCommand",
+        "vazkii.patchouli.common.handler.LecternEventHandler",
+        "vazkii.patchouli.common.handler.ReloadContentsHandler",
+        "vazkii.patchouli.common.item.ItemModBook",
+        "vazkii.patchouli.common.item.PatchouliItems",
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock",
+        "vazkii.patchouli.common.multiblock.DenseMultiblock",
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry",
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock",
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl",
+        "vazkii.patchouli.common.multiblock.SparseMultiblock",
+        "vazkii.patchouli.common.multiblock.StateMatcher",
+        "vazkii.patchouli.common.multiblock.StringStateMatcher",
+        "vazkii.patchouli.common.recipe.BookRecipeSerializer",
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe",
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe",
+        "vazkii.patchouli.common.util.EntityUtil",
+        "vazkii.patchouli.common.util.ItemStackUtil",
+        "vazkii.patchouli.common.util.RotationUtil",
+        "vazkii.patchouli.common.util.SerializationUtil",
+        "vazkii.patchouli.forge.client.ForgeClientInitializer",
+        "vazkii.patchouli.forge.client.ForgeClientXplatImpl",
+        "vazkii.patchouli.forge.client.jei.PatchouliJeiPlugin",
+        "vazkii.patchouli.forge.common.ForgeModInitializer",
+        "vazkii.patchouli.forge.common.ForgePatchouliConfig",
+        "vazkii.patchouli.forge.common.ForgeRecipeSerializerWrapper",
+        "vazkii.patchouli.forge.network.ForgeMessageOpenBookGui",
+        "vazkii.patchouli.forge.network.ForgeMessageReloadBookContents",
+        "vazkii.patchouli.forge.network.ForgeNetworkHandler",
+        "vazkii.patchouli.forge.xplat.ForgeXplatImpl",
+        "vazkii.patchouli.forge.xplat.ForgeXplatModContainer",
+        "vazkii.patchouli.xplat.IClientXplatAbstractions",
+        "vazkii.patchouli.xplat.IXplatAbstractions",
+        "vazkii.patchouli.xplat.XplatModContainer"
+      ],
+      "methods": {
+        "vazkii.patchouli.api.BookContentsReloadEvent": [
+          "getBook()"
+        ],
+        "vazkii.patchouli.api.BookDrawScreenEvent": [
+          "getBook()",
+          "getScreen()",
+          "getMouseX()",
+          "getMouseY()",
+          "getPartialTicks()",
+          "getPoseStack()"
+        ],
+        "vazkii.patchouli.api.IComponentProcessor": [
+          "refresh(Screen, int, int)",
+          "allowRender(String)"
+        ],
+        "vazkii.patchouli.api.IComponentRenderContext": [],
+        "vazkii.patchouli.api.ICustomComponent": [
+          "onDisplayed(IComponentRenderContext)",
+          "mouseClicked(IComponentRenderContext, double, double, int)"
+        ],
+        "vazkii.patchouli.api.IMultiblock": [],
+        "vazkii.patchouli.api.IStateMatcher": [],
+        "vazkii.patchouli.api.IStyleStack": [],
+        "vazkii.patchouli.api.IVariable": [
+          "as(Class<T>, T)",
+          "asString()",
+          "asString(String)",
+          "asNumber()",
+          "asNumber(Number)",
+          "asBoolean()",
+          "asBoolean(boolean)",
+          "asStream()",
+          "asStreamOrSingleton()",
+          "asList()",
+          "asListOrSingleton()"
+        ],
+        "vazkii.patchouli.api.IVariableProvider": [],
+        "vazkii.patchouli.api.IVariablesAvailableCallback": [],
+        "vazkii.patchouli.api.IVariableSerializer": [],
+        "vazkii.patchouli.api.PatchouliAPI": [
+          "get()"
+        ],
+        "vazkii.patchouli.api.stub.StubMatcher": [
+          "getDisplayedState(long)",
+          "getStatePredicate()"
+        ],
+        "vazkii.patchouli.api.stub.StubMultiblock": [
+          "offset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "isSymmetrical()",
+          "place(Level, BlockPos, Rotation)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "getSize()"
+        ],
+        "vazkii.patchouli.api.stub.StubPatchouliAPI": [
+          "isStub()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)",
+          "makeSparseMultiblock(Map<BlockPos, IStateMatcher>)"
+        ],
+        "vazkii.patchouli.api.TriPredicate": [],
+        "vazkii.patchouli.api.VariableHelper": [
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "serializerForClass(Class<T>)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.base.BookModel": [
+          "m_7343_()",
+          "m_6840_(BlockState, Direction, Random)",
+          "m_7541_()",
+          "m_7539_()",
+          "m_7547_()",
+          "m_7521_()",
+          "m_6160_()",
+          "m_7442_()"
+        ],
+        "vazkii.patchouli.client.base.ClientAdvancements": [
+          "onClientPacket()",
+          "hasDone(String)",
+          "playerLogout()",
+          "sendBookToast(Book)"
+        ],
+        "vazkii.patchouli.client.base.ClientTicker": [
+          "renderTickStart(float)",
+          "renderTickEnd()",
+          "endClientTick(Minecraft)"
+        ],
+        "vazkii.patchouli.client.base.PersistentData": [
+          "setup()",
+          "save()"
+        ],
+        "vazkii.patchouli.client.book.AbstractReadStateHolder": [
+          "getReadState()",
+          "markReadStateDirty()",
+          "computeReadState()",
+          "mostImportantState(Stream<EntryDisplayState>)"
+        ],
+        "vazkii.patchouli.client.book.BookCategory": [
+          "getName()",
+          "getDescription()",
+          "getIcon()",
+          "addEntry(BookEntry)",
+          "addChildCategory(BookCategory)",
+          "getEntries()",
+          "getParentCategory()",
+          "updateLockStatus(boolean)",
+          "isSecret()",
+          "shouldHide()",
+          "isLocked()",
+          "isRootCategory()",
+          "getId()",
+          "canAdd()",
+          "compareTo(BookCategory)",
+          "build(BookContentsBuilder)",
+          "getBook()",
+          "computeReadState()",
+          "markReadStateDirty()"
+        ],
+        "vazkii.patchouli.client.book.BookContentClasspathLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentExternalLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentLoader": [],
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContents": [
+          "empty(Book, Exception)",
+          "isErrored()",
+          "getException()",
+          "getEntryForStack(ItemStack)",
+          "getCurrentGui()",
+          "openLexiconGui(GuiBook, boolean)",
+          "computeReadState()",
+          "checkValidCurrentEntry()",
+          "setTopEntry(ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.BookContentsBuilder": [
+          "getCategory(ResourceLocation)",
+          "getEntry(ResourceLocation)",
+          "getTemplate(ResourceLocation)",
+          "addRecipeMapping(ItemStackUtil.StackWrapper, BookEntry, int)",
+          "loadFrom(Book)",
+          "build(Book)",
+          "getContentLoader(Book)"
+        ],
+        "vazkii.patchouli.client.book.BookEntry": [
+          "getName()",
+          "getPages()",
+          "getPageFromAnchor(String)",
+          "isPriority()",
+          "getIcon()",
+          "initCategory(ResourceLocation, Function<ResourceLocation, BookCategory>)",
+          "getCategory()",
+          "updateLockStatus()",
+          "isLocked()",
+          "isSecret()",
+          "shouldHide()",
+          "getEntryColor()",
+          "getId()",
+          "canAdd()",
+          "isFoundByQuery(String)",
+          "compareTo(BookEntry)",
+          "build(BookContentsBuilder)",
+          "addRelevantStack(BookContentsBuilder, ItemStack, int)",
+          "getBook()",
+          "getTrueProvider()"
+        ],
+        "vazkii.patchouli.client.book.BookIcon": [],
+        "vazkii.patchouli.client.book.BookPage": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "isPageUnlocked()",
+          "onHidden(GuiBookEntry)",
+          "addButton(Button)",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "canAdd(Book)",
+          "i18n(String)",
+          "i18nText(String)"
+        ],
+        "vazkii.patchouli.client.book.ClientBookRegistry": [
+          "init()",
+          "reload(boolean)",
+          "reloadLocks(boolean)",
+          "displayBookGui(ResourceLocation, ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.EntryDisplayState": [
+          "fromOrdinal(int)"
+        ],
+        "vazkii.patchouli.client.book.gui.BookTextRenderer": [
+          "render(PoseStack, int, int)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook": [
+          "m_6305_(PoseStack, int, int, float)",
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getTooltip()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark": [
+          "m_6303_(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye": [
+          "m_6303_(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_5691_()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize": [
+          "getTooltip()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getCategory()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getEntry()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBook": [
+          "m_7856_()",
+          "getMinecraft()",
+          "m_6305_(PoseStack, int, int, float)",
+          "addBookmarkButtons()",
+          "removeDrawablesIf(Predicate<Widget>)",
+          "removeDrawablesIn(Collection<?>)",
+          "m_142416_(T)",
+          "m_96570_(PoseStack, Style, int, int)",
+          "shouldAddAddBookmarkButton()",
+          "shouldAddMarkReadButton()",
+          "bookmarkThis()",
+          "onFirstOpened()",
+          "m_96624_()",
+          "drawFromTexture(PoseStack, Book, int, int, int, int, int, int)",
+          "m_7043_()",
+          "handleButtonArrow(Button)",
+          "handleButtonBookmark(Button)",
+          "m_6375_(double, double, int)",
+          "mouseClickedScaled(double, double, int)",
+          "m_7933_(int, int, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookCategory": [
+          "getDescriptionText()",
+          "getEntries()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "createSearchBar()",
+          "doesEntryCountForProgress(BookEntry)",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntry": [
+          "m_7856_()",
+          "onFirstOpened()",
+          "mouseClickedScaled(double, double, int)",
+          "getEntry()",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()",
+          "shouldAddAddBookmarkButton()",
+          "bookmarkThis()",
+          "displayOrBookmark(GuiBook, BookEntry)",
+          "getGui()",
+          "getFont()",
+          "renderItemStack(PoseStack, int, int, int, int, ItemStack)",
+          "renderIngredient(PoseStack, int, int, int, int, Ingredient)",
+          "setHoverTooltip(List<String>)",
+          "setHoverTooltipComponents(List<Component>)",
+          "isAreaHovered(int, int, int, int, int, int)",
+          "registerButton(Button, int, Runnable)",
+          "addWidget(AbstractWidget, int)",
+          "m_7933_(int, int, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList": [
+          "m_7856_()",
+          "createSearchBar()",
+          "getDescriptionText()",
+          "getEntries()",
+          "doesEntryCountForProgress(BookEntry)",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "mouseClickedScaled(double, double, int)",
+          "m_5534_(char, int)",
+          "m_7933_(int, int, int)",
+          "handleButtonCategory(Button)",
+          "handleButtonEntry(Button)",
+          "getSearchQuery()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookHistory": [
+          "getDescriptionText()",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookIndex": [
+          "getDescriptionText()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookLanding": [
+          "m_7856_()",
+          "mouseClickedScaled(double, double, int)",
+          "handleButtonIndex(Button)",
+          "handleButtonCategory(Button)",
+          "handleButtonResize(Button)",
+          "handleButtonPamphletEntry(Button)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookWriter": [
+          "m_7856_()",
+          "mouseClickedScaled(double, double, int)",
+          "m_7933_(int, int, int)",
+          "m_5534_(char, int)"
+        ],
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer": [
+          "m_5483_(double, double, double)",
+          "m_6122_(int, int, int, int)",
+          "m_7421_(float, float)",
+          "m_7122_(int, int)",
+          "m_7120_(int, int)",
+          "m_5601_(float, float, float)",
+          "m_5752_()",
+          "m_142461_(int, int, int, int)",
+          "m_141991_()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()",
+          "shouldRenderText()",
+          "drawRecipe(PoseStack, T, int, int, int, int, boolean)",
+          "loadRecipe(BookContentsBuilder, BookEntry, ResourceLocation)",
+          "getRecipeOutput(T)",
+          "getRecipeHeight()",
+          "getX()",
+          "getY()",
+          "getTitle(boolean)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry": [
+          "loadRecipe(BookContentsBuilder, BookEntry, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe": [
+          "drawRecipe(PoseStack, T, int, int, int, int, boolean)",
+          "getRecipeOutput(T)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageWithText": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "shouldRenderText()"
+        ],
+        "vazkii.patchouli.client.book.page.PageBlasting": [],
+        "vazkii.patchouli.client.book.page.PageCampfireCooking": [],
+        "vazkii.patchouli.client.book.page.PageCrafting": [
+          "drawRecipe(PoseStack, Recipe<?>, int, int, int, int, boolean)",
+          "getRecipeHeight()",
+          "getRecipeOutput(Recipe<?>)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEmpty": [
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEntity": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "renderEntity(PoseStack, Entity, Level, float, float, float, float, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageImage": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(PoseStack, int, int, float)",
+          "handleButtonArrow(Button)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageLink": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageMultiblock": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "handleButtonVisualize(Button)"
+        ],
+        "vazkii.patchouli.client.book.page.PageQuest": [
+          "getTextHeight()",
+          "build(BookEntry, BookContentsBuilder, int)",
+          "isCompleted(Book)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "questButtonClicked(Button)",
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageRelations": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "handleButtonEntry(Button)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmelting": [],
+        "vazkii.patchouli.client.book.page.PageSmithing": [
+          "drawRecipe(PoseStack, UpgradeRecipe, int, int, int, int, boolean)",
+          "getRecipeOutput(UpgradeRecipe)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmoking": [],
+        "vazkii.patchouli.client.book.page.PageSpotlight": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageStonecutting": [],
+        "vazkii.patchouli.client.book.page.PageTemplate": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageText": [
+          "setText(String)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.BookTemplate": [
+          "createTemplate(Book, BookContentsBuilder, String, TemplateInclusion)",
+          "compile(BookContentsBuilder, IVariableProvider)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "registerComponent(ResourceLocation, Class<? extends TemplateComponent>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentCustom": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentEntity": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentFrame": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentHeader": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentImage": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentText": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper": [
+          "get(String)",
+          "has(String)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateComponent": [
+          "compile(IVariableProvider, IComponentProcessor, TemplateInclusion)",
+          "getVisibleStatus(IComponentProcessor)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateInclusion": [
+          "upperMerge(TemplateInclusion)",
+          "process(IComponentProcessor)",
+          "qualifyName(String)",
+          "attemptVariableLookup(String)",
+          "isUpreference(IVariable)",
+          "wrapProvider(final IVariableProvider)"
+        ],
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest": [
+          "build(int, int, int)",
+          "render(PoseStack, IComponentRenderContext, float, int, int)",
+          "mouseClicked(IComponentRenderContext, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor": [
+          "setup(IVariableProvider)",
+          "process(String)"
+        ],
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor": [
+          "setup(IVariableProvider)",
+          "process(String)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(T[])"
+        ],
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Ingredient)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "fromNonArray(JsonElement)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(ItemStack)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Component)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.Variable": [
+          "as(Class<T>)",
+          "unwrap()",
+          "toString()"
+        ],
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl": [
+          "serializerForClass(Class<T>)",
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.book.template.VariableAssigner": [
+          "assignVariableHolders(IVariablesAvailableCallback, IVariableProvider, IComponentProcessor, TemplateInclusion)"
+        ],
+        "vazkii.patchouli.client.book.text.BookTextParser": [
+          "register(BookTextParser.CommandProcessor, String...)",
+          "register(BookTextParser.FunctionProcessor, String...)",
+          "parse(Component)",
+          "expandMacros(String)"
+        ],
+        "vazkii.patchouli.client.book.text.Span": [
+          "error(SpanState, String)",
+          "styledSubstring(int)",
+          "styledSubstring(int, int)"
+        ],
+        "vazkii.patchouli.client.book.text.SpanState": [
+          "getBase()",
+          "changeBaseStyle(Style)",
+          "color(TextColor)",
+          "baseColor()",
+          "modifyStyle(UnaryOperator<Style>)",
+          "pushStyle(Style)",
+          "popStyle()",
+          "reset()",
+          "peekStyle()"
+        ],
+        "vazkii.patchouli.client.book.text.TextLayouter": [
+          "layout(Font, List<Span>)",
+          "getScale()",
+          "flush()",
+          "getWords()"
+        ],
+        "vazkii.patchouli.client.book.text.Word": [
+          "render(PoseStack, Font, Style, int, int)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt": [
+          "m_7933_(int, int, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook": [
+          "m_6303_(PoseStack, int, int, float)",
+          "getBook()"
+        ],
+        "vazkii.patchouli.client.handler.BookCrashHandler": [
+          "appendToCrashReport(SystemReport)",
+          "get()"
+        ],
+        "vazkii.patchouli.client.handler.BookRightClickHandler": [
+          "onRenderHUD(PoseStack, float)",
+          "onRightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler": [
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean)",
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean, Function<BlockPos, BlockPos>)",
+          "onRenderHUD(PoseStack, float)",
+          "onWorldRenderLast(PoseStack)",
+          "anchorTo(BlockPos, Rotation)",
+          "onPlayerInteract(Player, Level, InteractionHand, BlockHitResult)",
+          "onClientTick(Minecraft)",
+          "renderMultiblock(Level, PoseStack)",
+          "renderBlock(Level, BlockState, BlockPos, float, PoseStack)",
+          "getMultiblock()",
+          "isAnchored()",
+          "getFacingRotation()",
+          "getStartPos()"
+        ],
+        "vazkii.patchouli.client.handler.TooltipHandler": [
+          "onTooltip(PoseStack, ItemStack, int, int)"
+        ],
+        "vazkii.patchouli.client.RenderHelper": [
+          "renderItemStackInGui(PoseStack, ItemStack, int, int)",
+          "transferMsToGl(PoseStack, Runnable)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliAPIImpl": [
+          "isStub()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)",
+          "makeSparseMultiblock(Map<BlockPos, IStateMatcher>)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliConfig": [
+          "get()",
+          "set(PatchouliConfig.ConfigAccess)",
+          "reloadBuiltinFlags()",
+          "getConfigFlag(String)",
+          "getConfigFlagAND(String[])",
+          "getConfigFlagOR(String[])",
+          "setFlag(String, boolean)",
+          "ConfigAccess(Supplier<Boolean>, Supplier<List<String>>, Supplier<Boolean>, Supplier<String>, Supplier<Boolean>, Supplier<PatchouliConfig.TextOverflowMode>)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliSounds": [
+          "submitRegistrations(BiConsumer<ResourceLocation, SoundEvent>)",
+          "getSound(ResourceLocation, SoundEvent)"
+        ],
+        "vazkii.patchouli.common.book.Book": [
+          "getModNamespace()",
+          "getBookItem()",
+          "markUpdated()",
+          "popUpdated()",
+          "reloadContents()",
+          "reloadContents(boolean)",
+          "advancementsEnabled()",
+          "reloadLocks(boolean)",
+          "getOwnerName()",
+          "getFontStyle()",
+          "getSubtitle()",
+          "getIcon()",
+          "getContents()"
+        ],
+        "vazkii.patchouli.common.book.BookFolderLoader": [
+          "findBooks()"
+        ],
+        "vazkii.patchouli.common.book.BookRegistry": [
+          "init()",
+          "loadBook(XplatModContainer, ResourceLocation, InputStream, boolean)",
+          "reloadContents(boolean)",
+          "isLoaded()",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean)",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean, int)"
+        ],
+        "vazkii.patchouli.common.command.OpenBookCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "vazkii.patchouli.common.handler.LecternEventHandler": [
+          "rightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.common.handler.ReloadContentsHandler": [
+          "dataReloaded(MinecraftServer)"
+        ],
+        "vazkii.patchouli.common.item.ItemModBook": [
+          "getCompletion(ItemStack)",
+          "forBook(Book)",
+          "forBook(ResourceLocation)",
+          "m_6787_(CreativeModeTab, NonNullList<ItemStack>)",
+          "getCreatorModId(ItemStack)",
+          "getBook(ItemStack)",
+          "m_7626_(ItemStack)",
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "m_7203_(Level, Player, InteractionHand)"
+        ],
+        "vazkii.patchouli.common.item.PatchouliItems": [
+          "submitItemRegistrations(BiConsumer<ResourceLocation, Item>)",
+          "submitRecipeSerializerRegistrations(BiConsumer<ResourceLocation, RecipeSerializer<?>>)"
+        ],
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock": [
+          "offset(int, int, int)",
+          "setOffset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setViewOffset(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "place(Level, BlockPos, Rotation)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "isSymmetrical()",
+          "setWorld(Level)",
+          "m_7702_(BlockPos)",
+          "m_6425_(BlockPos)",
+          "getSize()",
+          "m_7717_(Direction, boolean)",
+          "m_5518_()",
+          "m_6171_(BlockPos, ColorResolver)",
+          "m_45517_(LightLayer, BlockPos)",
+          "m_45524_(BlockPos, int)"
+        ],
+        "vazkii.patchouli.common.multiblock.DenseMultiblock": [
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "m_8055_(BlockPos)",
+          "getSize()",
+          "m_141928_()",
+          "m_141937_()"
+        ],
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry": [
+          "registerMultiblock(ResourceLocation, IMultiblock)"
+        ],
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock": [
+          "deserializeDense()",
+          "toMultiblock()"
+        ],
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl": [
+          "getWorldPosition()",
+          "getStateMatcher()",
+          "getCharacter()",
+          "test(Level, Rotation)"
+        ],
+        "vazkii.patchouli.common.multiblock.SparseMultiblock": [
+          "getSize()",
+          "m_8055_(BlockPos)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "m_141928_()",
+          "m_141937_()"
+        ],
+        "vazkii.patchouli.common.multiblock.StateMatcher": [
+          "fromPredicate(BlockState, Predicate<BlockState>)",
+          "fromPredicate(Block, Predicate<BlockState>)",
+          "fromPredicate(BlockState, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromPredicate(Block, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromState(BlockState, boolean)",
+          "fromStateWithFilter(BlockState, Predicate<Property<?>>)",
+          "fromState(BlockState)",
+          "fromBlockLoose(Block)",
+          "fromBlockStrict(Block)",
+          "displayOnly(BlockState)",
+          "displayOnly(Block)",
+          "getDisplayedState(long)",
+          "getStatePredicate()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "vazkii.patchouli.common.multiblock.StringStateMatcher": [
+          "fromString(String)"
+        ],
+        "vazkii.patchouli.common.recipe.BookRecipeSerializer": [
+          "m_6729_(ResourceLocation, JsonObject)",
+          "m_8005_(ResourceLocation, FriendlyByteBuf)",
+          "m_6178_(FriendlyByteBuf, U)"
+        ],
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe": [
+          "m_7707_()"
+        ],
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe": [
+          "m_7707_()"
+        ],
+        "vazkii.patchouli.common.util.EntityUtil": [
+          "getEntityName(String)",
+          "loadEntity(String)"
+        ],
+        "vazkii.patchouli.common.util.ItemStackUtil": [
+          "serializeStack(ItemStack)",
+          "parseItemStackString(String)",
+          "loadFromParsed(Triple<ResourceLocation, Integer, CompoundTag>)",
+          "loadStackFromString(String)",
+          "serializeIngredient(Ingredient)",
+          "loadIngredientFromString(String)",
+          "serializeStackList(List<ItemStack>)",
+          "loadStackListFromString(String)",
+          "wrapStack(ItemStack)",
+          "getBookFromStack(ItemStack)",
+          "loadStackFromJson(JsonObject)"
+        ],
+        "vazkii.patchouli.common.util.RotationUtil": [
+          "rotationFromFacing(Direction)",
+          "fixHorizontal(Rotation)"
+        ],
+        "vazkii.patchouli.common.util.SerializationUtil": [
+          "getAsResourceLocation(JsonObject, String, ResourceLocation)",
+          "getAsEnum(JsonObject, String, Class<T>, T)"
+        ],
+        "vazkii.patchouli.forge.client.ForgeClientInitializer": [
+          "signalBooksLoaded()",
+          "modelRegistry(ModelRegistryEvent)",
+          "registerReloadListeners(RegisterClientReloadListenersEvent)",
+          "onInitializeClient(FMLClientSetupEvent)",
+          "replaceBookModel(ModelBakeEvent)"
+        ],
+        "vazkii.patchouli.forge.client.ForgeClientXplatImpl": [
+          "renderForMultiblock(BlockState, BlockPos, BlockAndTintGetter, PoseStack, MultiBufferSource, Random)"
+        ],
+        "vazkii.patchouli.forge.client.jei.PatchouliJeiPlugin": [
+          "getPluginUid()",
+          "registerItemSubtypes(ISubtypeRegistration)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "handleRecipeKeybind(int, int, ItemStack)"
+        ],
+        "vazkii.patchouli.forge.common.ForgeModInitializer": [
+          "registerSound(Register<SoundEvent>)",
+          "registerItem(Register<Item>)",
+          "registerRecipeSerializer(Register<RecipeSerializer<?>>)",
+          "onInitialize(FMLCommonSetupEvent)"
+        ],
+        "vazkii.patchouli.forge.common.ForgePatchouliConfig": [
+          "setup()"
+        ],
+        "vazkii.patchouli.forge.common.ForgeRecipeSerializerWrapper": [
+          "getCompose()",
+          "getConverter()"
+        ],
+        "vazkii.patchouli.forge.network.ForgeMessageOpenBookGui": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf)",
+          "send(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "handle(Supplier<Context>)"
+        ],
+        "vazkii.patchouli.forge.network.ForgeMessageReloadBookContents": [
+          "sendToAll(MinecraftServer)",
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(Supplier<Context>)"
+        ],
+        "vazkii.patchouli.forge.network.ForgeNetworkHandler": [
+          "registerMessages()"
+        ],
+        "vazkii.patchouli.forge.xplat.ForgeXplatImpl": [
+          "fireDrawBookScreen(ResourceLocation, Screen, int, int, float, PoseStack)",
+          "fireBookReload(ResourceLocation)",
+          "sendReloadContentsMessage(MinecraftServer)",
+          "sendOpenBookGui(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "getAllMods()",
+          "getModContainer(String)",
+          "isDevEnvironment()",
+          "isPhysicalClient()",
+          "signalBooksLoaded()",
+          "handleRecipeKeybind(int, int, ItemStack)",
+          "makeWrapperSerializer(RecipeSerializer<T>, BiFunction<T, ResourceLocation, U>)"
+        ],
+        "vazkii.patchouli.forge.xplat.ForgeXplatModContainer": [
+          "getId()",
+          "getName()",
+          "getPath(String)",
+          "getRootPath()"
+        ],
+        "vazkii.patchouli.xplat.IClientXplatAbstractions": [],
+        "vazkii.patchouli.xplat.IXplatAbstractions": [
+          "signalBooksLoaded()"
+        ],
+        "vazkii.patchouli.xplat.XplatModContainer": []
+      },
+      "sampleCount": 153
+    },
+    "83de06f1566dacddd80f1ff5eeab5e1b2a2313e56e3d6b8f637538d440e8d3cf96c8c8fa25a946114584cfad82ed8fc7812b3d76e8ec7966e29ec8625ea068f3": {
+      "packages": [],
+      "classes": [
+        "vazkii.patchouli.api.BookContentsReloadEvent",
+        "vazkii.patchouli.api.BookDrawScreenEvent",
+        "vazkii.patchouli.api.IComponentProcessor",
+        "vazkii.patchouli.api.IComponentRenderContext",
+        "vazkii.patchouli.api.ICustomComponent",
+        "vazkii.patchouli.api.IMultiblock",
+        "vazkii.patchouli.api.IStateMatcher",
+        "vazkii.patchouli.api.IStyleStack",
+        "vazkii.patchouli.api.IVariable",
+        "vazkii.patchouli.api.IVariableProvider",
+        "vazkii.patchouli.api.IVariablesAvailableCallback",
+        "vazkii.patchouli.api.IVariableSerializer",
+        "vazkii.patchouli.api.PatchouliAPI",
+        "vazkii.patchouli.api.PatchouliConfigAccess",
+        "vazkii.patchouli.api.stub.StubMatcher",
+        "vazkii.patchouli.api.stub.StubMultiblock",
+        "vazkii.patchouli.api.stub.StubPatchouliAPI",
+        "vazkii.patchouli.api.TriPredicate",
+        "vazkii.patchouli.api.VariableHelper",
+        "vazkii.patchouli.client.base.BookModel",
+        "vazkii.patchouli.client.base.ClientAdvancements",
+        "vazkii.patchouli.client.base.ClientTicker",
+        "vazkii.patchouli.client.base.PersistentData",
+        "vazkii.patchouli.client.book.AbstractReadStateHolder",
+        "vazkii.patchouli.client.book.BookCategory",
+        "vazkii.patchouli.client.book.BookContentClasspathLoader",
+        "vazkii.patchouli.client.book.BookContentExternalLoader",
+        "vazkii.patchouli.client.book.BookContentLoader",
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader",
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader",
+        "vazkii.patchouli.client.book.BookContents",
+        "vazkii.patchouli.client.book.BookContentsBuilder",
+        "vazkii.patchouli.client.book.BookEntry",
+        "vazkii.patchouli.client.book.BookIcon",
+        "vazkii.patchouli.client.book.BookPage",
+        "vazkii.patchouli.client.book.ClientBookRegistry",
+        "vazkii.patchouli.client.book.EntryDisplayState",
+        "vazkii.patchouli.client.book.gui.BookTextRenderer",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry",
+        "vazkii.patchouli.client.book.gui.GuiBook",
+        "vazkii.patchouli.client.book.gui.GuiBookCategory",
+        "vazkii.patchouli.client.book.gui.GuiBookEntry",
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList",
+        "vazkii.patchouli.client.book.gui.GuiBookHistory",
+        "vazkii.patchouli.client.book.gui.GuiBookIndex",
+        "vazkii.patchouli.client.book.gui.GuiBookLanding",
+        "vazkii.patchouli.client.book.gui.GuiBookWriter",
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry",
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageWithText",
+        "vazkii.patchouli.client.book.page.PageBlasting",
+        "vazkii.patchouli.client.book.page.PageCampfireCooking",
+        "vazkii.patchouli.client.book.page.PageCrafting",
+        "vazkii.patchouli.client.book.page.PageEmpty",
+        "vazkii.patchouli.client.book.page.PageEntity",
+        "vazkii.patchouli.client.book.page.PageImage",
+        "vazkii.patchouli.client.book.page.PageLink",
+        "vazkii.patchouli.client.book.page.PageMultiblock",
+        "vazkii.patchouli.client.book.page.PageQuest",
+        "vazkii.patchouli.client.book.page.PageRelations",
+        "vazkii.patchouli.client.book.page.PageSmelting",
+        "vazkii.patchouli.client.book.page.PageSmithing",
+        "vazkii.patchouli.client.book.page.PageSmoking",
+        "vazkii.patchouli.client.book.page.PageSpotlight",
+        "vazkii.patchouli.client.book.page.PageStonecutting",
+        "vazkii.patchouli.client.book.page.PageTemplate",
+        "vazkii.patchouli.client.book.page.PageText",
+        "vazkii.patchouli.client.book.template.BookTemplate",
+        "vazkii.patchouli.client.book.template.component.ComponentCustom",
+        "vazkii.patchouli.client.book.template.component.ComponentEntity",
+        "vazkii.patchouli.client.book.template.component.ComponentFrame",
+        "vazkii.patchouli.client.book.template.component.ComponentHeader",
+        "vazkii.patchouli.client.book.template.component.ComponentImage",
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack",
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator",
+        "vazkii.patchouli.client.book.template.component.ComponentText",
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip",
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper",
+        "vazkii.patchouli.client.book.template.TemplateComponent",
+        "vazkii.patchouli.client.book.template.TemplateInclusion",
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest",
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor",
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor",
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.Variable",
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl",
+        "vazkii.patchouli.client.book.template.VariableAssigner",
+        "vazkii.patchouli.client.book.text.BookTextParser",
+        "vazkii.patchouli.client.book.text.Span",
+        "vazkii.patchouli.client.book.text.SpanState",
+        "vazkii.patchouli.client.book.text.TextLayouter",
+        "vazkii.patchouli.client.book.text.Word",
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt",
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook",
+        "vazkii.patchouli.client.handler.BookCrashHandler",
+        "vazkii.patchouli.client.handler.BookRightClickHandler",
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler",
+        "vazkii.patchouli.client.handler.TooltipHandler",
+        "vazkii.patchouli.client.jei.PatchouliJeiPlugin",
+        "vazkii.patchouli.client.RenderHelper",
+        "vazkii.patchouli.common.base.PatchouliAPIImpl",
+        "vazkii.patchouli.common.base.PatchouliConfig",
+        "vazkii.patchouli.common.base.PatchouliSounds",
+        "vazkii.patchouli.common.book.Book",
+        "vazkii.patchouli.common.book.BookFolderLoader",
+        "vazkii.patchouli.common.book.BookRegistry",
+        "vazkii.patchouli.common.command.OpenBookCommand",
+        "vazkii.patchouli.common.handler.LecternEventHandler",
+        "vazkii.patchouli.common.handler.ReloadContentsHandler",
+        "vazkii.patchouli.common.item.ItemModBook",
+        "vazkii.patchouli.common.item.PatchouliItems",
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock",
+        "vazkii.patchouli.common.multiblock.DenseMultiblock",
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry",
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock",
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl",
+        "vazkii.patchouli.common.multiblock.SparseMultiblock",
+        "vazkii.patchouli.common.multiblock.StateMatcher",
+        "vazkii.patchouli.common.multiblock.StringStateMatcher",
+        "vazkii.patchouli.common.recipe.BookRecipeSerializer",
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe",
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe",
+        "vazkii.patchouli.common.util.EntityUtil",
+        "vazkii.patchouli.common.util.ItemStackUtil",
+        "vazkii.patchouli.common.util.RotationUtil",
+        "vazkii.patchouli.common.util.SerializationUtil",
+        "vazkii.patchouli.forge.client.ForgeClientInitializer",
+        "vazkii.patchouli.forge.client.ForgeClientXplatImpl",
+        "vazkii.patchouli.forge.common.ForgeModInitializer",
+        "vazkii.patchouli.forge.common.ForgePatchouliConfig",
+        "vazkii.patchouli.forge.network.ForgeMessageOpenBookGui",
+        "vazkii.patchouli.forge.network.ForgeMessageReloadBookContents",
+        "vazkii.patchouli.forge.network.ForgeNetworkHandler",
+        "vazkii.patchouli.forge.xplat.ForgeXplatImpl",
+        "vazkii.patchouli.forge.xplat.ForgeXplatModContainer",
+        "vazkii.patchouli.xplat.IClientXplatAbstractions",
+        "vazkii.patchouli.xplat.IXplatAbstractions",
+        "vazkii.patchouli.xplat.XplatModContainer"
+      ],
+      "methods": {
+        "vazkii.patchouli.api.BookContentsReloadEvent": [
+          "getBook()"
+        ],
+        "vazkii.patchouli.api.BookDrawScreenEvent": [
+          "getBook()",
+          "getScreen()",
+          "getMouseX()",
+          "getMouseY()",
+          "getPartialTicks()",
+          "getPoseStack()"
+        ],
+        "vazkii.patchouli.api.IComponentProcessor": [
+          "refresh(Screen, int, int)",
+          "allowRender(String)"
+        ],
+        "vazkii.patchouli.api.IComponentRenderContext": [],
+        "vazkii.patchouli.api.ICustomComponent": [
+          "onDisplayed(IComponentRenderContext)",
+          "mouseClicked(IComponentRenderContext, double, double, int)"
+        ],
+        "vazkii.patchouli.api.IMultiblock": [],
+        "vazkii.patchouli.api.IStateMatcher": [],
+        "vazkii.patchouli.api.IStyleStack": [],
+        "vazkii.patchouli.api.IVariable": [
+          "as(Class<T>, T)",
+          "asString()",
+          "asString(String)",
+          "asNumber()",
+          "asNumber(Number)",
+          "asBoolean()",
+          "asBoolean(boolean)",
+          "asStream()",
+          "asStreamOrSingleton()",
+          "asList()",
+          "asListOrSingleton()"
+        ],
+        "vazkii.patchouli.api.IVariableProvider": [],
+        "vazkii.patchouli.api.IVariablesAvailableCallback": [],
+        "vazkii.patchouli.api.IVariableSerializer": [],
+        "vazkii.patchouli.api.PatchouliAPI": [
+          "get()"
+        ],
+        "vazkii.patchouli.api.PatchouliConfigAccess": [],
+        "vazkii.patchouli.api.stub.StubMatcher": [
+          "getDisplayedState(long)",
+          "getStatePredicate()"
+        ],
+        "vazkii.patchouli.api.stub.StubMultiblock": [
+          "offset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "isSymmetrical()",
+          "place(Level, BlockPos, Rotation)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "getSize()"
+        ],
+        "vazkii.patchouli.api.stub.StubPatchouliAPI": [
+          "isStub()",
+          "getConfig()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)"
+        ],
+        "vazkii.patchouli.api.TriPredicate": [],
+        "vazkii.patchouli.api.VariableHelper": [
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "serializerForClass(Class<T>)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.base.BookModel": [
+          "replace(Map<ResourceLocation, BakedModel>, ModelBakery)",
+          "m_7343_()",
+          "m_213637_(BlockState, Direction, RandomSource)",
+          "m_7541_()",
+          "m_7539_()",
+          "m_7547_()",
+          "m_7521_()",
+          "m_6160_()",
+          "m_7442_()"
+        ],
+        "vazkii.patchouli.client.base.ClientAdvancements": [
+          "onClientPacket()",
+          "hasDone(String)",
+          "playerLogout()",
+          "sendBookToast(Book)"
+        ],
+        "vazkii.patchouli.client.base.ClientTicker": [
+          "renderTickStart(float)",
+          "renderTickEnd()",
+          "endClientTick(Minecraft)"
+        ],
+        "vazkii.patchouli.client.base.PersistentData": [
+          "setup()",
+          "save()"
+        ],
+        "vazkii.patchouli.client.book.AbstractReadStateHolder": [
+          "getReadState()",
+          "markReadStateDirty()",
+          "computeReadState()",
+          "mostImportantState(Stream<EntryDisplayState>)"
+        ],
+        "vazkii.patchouli.client.book.BookCategory": [
+          "getName()",
+          "getDescription()",
+          "getIcon()",
+          "addEntry(BookEntry)",
+          "addChildCategory(BookCategory)",
+          "getEntries()",
+          "getParentCategory()",
+          "updateLockStatus(boolean)",
+          "isSecret()",
+          "shouldHide()",
+          "isLocked()",
+          "isRootCategory()",
+          "getId()",
+          "canAdd()",
+          "compareTo(BookCategory)",
+          "build(BookContentsBuilder)",
+          "getBook()",
+          "computeReadState()",
+          "markReadStateDirty()"
+        ],
+        "vazkii.patchouli.client.book.BookContentClasspathLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentExternalLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentLoader": [],
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContents": [
+          "empty(Book, Exception)",
+          "isErrored()",
+          "getException()",
+          "getEntryForStack(ItemStack)",
+          "getCurrentGui()",
+          "openLexiconGui(GuiBook, boolean)",
+          "computeReadState()",
+          "checkValidCurrentEntry()",
+          "setTopEntry(ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.BookContentsBuilder": [
+          "getCategory(ResourceLocation)",
+          "getEntry(ResourceLocation)",
+          "getTemplate(ResourceLocation)",
+          "addRecipeMapping(ItemStackUtil.StackWrapper, BookEntry, int)",
+          "loadFrom(Book)",
+          "build(Book)",
+          "getContentLoader(Book)"
+        ],
+        "vazkii.patchouli.client.book.BookEntry": [
+          "getName()",
+          "getPages()",
+          "getPageFromAnchor(String)",
+          "isPriority()",
+          "getIcon()",
+          "initCategory(ResourceLocation, Function<ResourceLocation, BookCategory>)",
+          "getCategory()",
+          "updateLockStatus()",
+          "isLocked()",
+          "isSecret()",
+          "shouldHide()",
+          "getEntryColor()",
+          "getId()",
+          "canAdd()",
+          "isFoundByQuery(String)",
+          "compareTo(BookEntry)",
+          "build(BookContentsBuilder)",
+          "addRelevantStack(BookContentsBuilder, ItemStack, int)",
+          "getBook()",
+          "getTrueProvider()"
+        ],
+        "vazkii.patchouli.client.book.BookIcon": [],
+        "vazkii.patchouli.client.book.BookPage": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "isPageUnlocked()",
+          "onHidden(GuiBookEntry)",
+          "addButton(Button)",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "canAdd(Book)",
+          "i18n(String)",
+          "i18nText(String)"
+        ],
+        "vazkii.patchouli.client.book.ClientBookRegistry": [
+          "init()",
+          "reload(boolean)",
+          "reloadLocks(boolean)",
+          "displayBookGui(ResourceLocation, ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.EntryDisplayState": [
+          "fromOrdinal(int)"
+        ],
+        "vazkii.patchouli.client.book.gui.BookTextRenderer": [
+          "render(PoseStack, int, int)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook": [
+          "m_86412_(PoseStack, int, int, float)",
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getTooltip()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark": [
+          "m_6303_(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye": [
+          "m_6303_(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_5691_()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize": [
+          "getTooltip()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getCategory()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry": [
+          "m_6303_(PoseStack, int, int, float)",
+          "m_7435_(SoundManager)",
+          "getEntry()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBook": [
+          "m_7856_()",
+          "getMinecraft()",
+          "m_86412_(PoseStack, int, int, float)",
+          "addBookmarkButtons()",
+          "removeDrawablesIf(Predicate<Renderable>)",
+          "removeDrawablesIn(Collection<?>)",
+          "m_142416_(T)",
+          "m_96570_(PoseStack, Style, int, int)",
+          "shouldAddAddBookmarkButton()",
+          "shouldAddMarkReadButton()",
+          "bookmarkThis()",
+          "onFirstOpened()",
+          "m_86600_()",
+          "drawFromTexture(PoseStack, Book, int, int, int, int, int, int)",
+          "m_7043_()",
+          "handleButtonArrow(Button)",
+          "handleButtonBookmark(Button)",
+          "m_6375_(double, double, int)",
+          "mouseClickedScaled(double, double, int)",
+          "m_7933_(int, int, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookCategory": [
+          "getDescriptionText()",
+          "getEntries()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "createSearchBar()",
+          "doesEntryCountForProgress(BookEntry)",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntry": [
+          "m_7856_()",
+          "onFirstOpened()",
+          "mouseClickedScaled(double, double, int)",
+          "getEntry()",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()",
+          "shouldAddAddBookmarkButton()",
+          "bookmarkThis()",
+          "displayOrBookmark(GuiBook, BookEntry)",
+          "getGui()",
+          "getFont()",
+          "renderItemStack(PoseStack, int, int, int, int, ItemStack)",
+          "renderIngredient(PoseStack, int, int, int, int, Ingredient)",
+          "setHoverTooltip(List<String>)",
+          "setHoverTooltipComponents(List<Component>)",
+          "isAreaHovered(int, int, int, int, int, int)",
+          "navigateToEntry(ResourceLocation, int, boolean)",
+          "registerButton(Button, int, Runnable)",
+          "addWidget(AbstractWidget, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList": [
+          "m_7856_()",
+          "createSearchBar()",
+          "getDescriptionText()",
+          "getEntries()",
+          "doesEntryCountForProgress(BookEntry)",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "mouseClickedScaled(double, double, int)",
+          "m_5534_(char, int)",
+          "m_7933_(int, int, int)",
+          "handleButtonCategory(Button)",
+          "handleButtonEntry(Button)",
+          "getSearchQuery()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookHistory": [
+          "getDescriptionText()",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookIndex": [
+          "getDescriptionText()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookLanding": [
+          "m_7856_()",
+          "mouseClickedScaled(double, double, int)",
+          "handleButtonIndex(Button)",
+          "handleButtonCategory(Button)",
+          "handleButtonResize(Button)",
+          "handleButtonPamphletEntry(Button)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookWriter": [
+          "m_7856_()",
+          "mouseClickedScaled(double, double, int)",
+          "m_7933_(int, int, int)",
+          "m_5534_(char, int)"
+        ],
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer": [
+          "m_5483_(double, double, double)",
+          "m_6122_(int, int, int, int)",
+          "m_7421_(float, float)",
+          "m_7122_(int, int)",
+          "m_7120_(int, int)",
+          "m_5601_(float, float, float)",
+          "m_5752_()",
+          "m_7404_(int, int, int, int)",
+          "m_141991_()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()",
+          "shouldRenderText()",
+          "drawRecipe(PoseStack, T, int, int, int, int, boolean)",
+          "loadRecipe(BookContentsBuilder, BookEntry, ResourceLocation)",
+          "getRecipeOutput(T)",
+          "getRecipeHeight()",
+          "getX()",
+          "getY()",
+          "getTitle(boolean)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry": [
+          "loadRecipe(BookContentsBuilder, BookEntry, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe": [
+          "drawRecipe(PoseStack, T, int, int, int, int, boolean)",
+          "getRecipeOutput(T)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageWithText": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "shouldRenderText()"
+        ],
+        "vazkii.patchouli.client.book.page.PageBlasting": [],
+        "vazkii.patchouli.client.book.page.PageCampfireCooking": [],
+        "vazkii.patchouli.client.book.page.PageCrafting": [
+          "drawRecipe(PoseStack, Recipe<?>, int, int, int, int, boolean)",
+          "getRecipeHeight()",
+          "getRecipeOutput(Recipe<?>)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEmpty": [
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEntity": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "renderEntity(PoseStack, Entity, Level, float, float, float, float, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageImage": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(PoseStack, int, int, float)",
+          "handleButtonArrow(Button)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageLink": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageMultiblock": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)",
+          "handleButtonVisualize(Button)"
+        ],
+        "vazkii.patchouli.client.book.page.PageQuest": [
+          "getTextHeight()",
+          "build(BookEntry, BookContentsBuilder, int)",
+          "isCompleted(Book)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "questButtonClicked(Button)",
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageRelations": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "handleButtonEntry(Button)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmelting": [],
+        "vazkii.patchouli.client.book.page.PageSmithing": [
+          "drawRecipe(PoseStack, UpgradeRecipe, int, int, int, int, boolean)",
+          "getRecipeOutput(UpgradeRecipe)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmoking": [],
+        "vazkii.patchouli.client.book.page.PageSpotlight": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "render(PoseStack, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageStonecutting": [],
+        "vazkii.patchouli.client.book.page.PageTemplate": [
+          "build(BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(PoseStack, int, int, float)",
+          "mouseClicked(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageText": [
+          "setText(String)",
+          "getTextHeight()",
+          "render(PoseStack, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.BookTemplate": [
+          "createTemplate(Book, BookContentsBuilder, String, TemplateInclusion)",
+          "compile(BookContentsBuilder, IVariableProvider)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "registerComponent(ResourceLocation, Class<? extends TemplateComponent>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentCustom": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentEntity": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentFrame": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentHeader": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentImage": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentText": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper": [
+          "get(String)",
+          "has(String)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateComponent": [
+          "compile(IVariableProvider, IComponentProcessor, TemplateInclusion)",
+          "getVisibleStatus(IComponentProcessor)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(PoseStack, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateInclusion": [
+          "upperMerge(TemplateInclusion)",
+          "process(IComponentProcessor)",
+          "qualifyName(String)",
+          "attemptVariableLookup(String)",
+          "isUpreference(IVariable)",
+          "wrapProvider(final IVariableProvider)"
+        ],
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest": [
+          "build(int, int, int)",
+          "render(PoseStack, IComponentRenderContext, float, int, int)",
+          "mouseClicked(IComponentRenderContext, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor": [
+          "setup(IVariableProvider)",
+          "process(String)"
+        ],
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor": [
+          "setup(IVariableProvider)",
+          "process(String)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(T[])"
+        ],
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Ingredient)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "fromNonArray(JsonElement)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(ItemStack)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Component)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.Variable": [
+          "as(Class<T>)",
+          "unwrap()",
+          "toString()"
+        ],
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl": [
+          "serializerForClass(Class<T>)",
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.book.template.VariableAssigner": [
+          "assignVariableHolders(IVariablesAvailableCallback, IVariableProvider, IComponentProcessor, TemplateInclusion)"
+        ],
+        "vazkii.patchouli.client.book.text.BookTextParser": [
+          "register(BookTextParser.CommandProcessor, String...)",
+          "register(BookTextParser.FunctionProcessor, String...)",
+          "parse(Component)",
+          "expandMacros(String)"
+        ],
+        "vazkii.patchouli.client.book.text.Span": [
+          "error(SpanState, String)",
+          "styledSubstring(int)",
+          "styledSubstring(int, int)"
+        ],
+        "vazkii.patchouli.client.book.text.SpanState": [
+          "getBase()",
+          "changeBaseStyle(Style)",
+          "color(TextColor)",
+          "baseColor()",
+          "modifyStyle(UnaryOperator<Style>)",
+          "pushStyle(Style)",
+          "popStyle()",
+          "reset()",
+          "peekStyle()"
+        ],
+        "vazkii.patchouli.client.book.text.TextLayouter": [
+          "layout(Font, List<Span>)",
+          "getScale()",
+          "flush()",
+          "getWords()"
+        ],
+        "vazkii.patchouli.client.book.text.Word": [
+          "render(PoseStack, Font, Style, int, int)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt": [
+          "m_7933_(int, int, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook": [
+          "m_6303_(PoseStack, int, int, float)",
+          "getBook()"
+        ],
+        "vazkii.patchouli.client.handler.BookCrashHandler": [
+          "appendToCrashReport(SystemReport)",
+          "get()"
+        ],
+        "vazkii.patchouli.client.handler.BookRightClickHandler": [
+          "onRenderHUD(PoseStack, float)",
+          "onRightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler": [
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean)",
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean, Function<BlockPos, BlockPos>)",
+          "onRenderHUD(PoseStack, float)",
+          "onWorldRenderLast(PoseStack)",
+          "anchorTo(BlockPos, Rotation)",
+          "onPlayerInteract(Player, Level, InteractionHand, BlockHitResult)",
+          "onClientTick(Minecraft)",
+          "renderMultiblock(Level, PoseStack)",
+          "renderBlock(Level, BlockState, BlockPos, float, PoseStack)",
+          "getMultiblock()",
+          "isAnchored()",
+          "getFacingRotation()",
+          "getStartPos()"
+        ],
+        "vazkii.patchouli.client.handler.TooltipHandler": [
+          "onTooltip(PoseStack, ItemStack, int, int)"
+        ],
+        "vazkii.patchouli.client.jei.PatchouliJeiPlugin": [
+          "getPluginUid()",
+          "registerItemSubtypes(ISubtypeRegistration)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "handleRecipeKeybind(int, int, ItemStack)"
+        ],
+        "vazkii.patchouli.client.RenderHelper": [
+          "renderItemStackInGui(PoseStack, ItemStack, int, int)",
+          "transferMsToGl(PoseStack, Runnable)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliAPIImpl": [
+          "isStub()",
+          "getConfig()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliConfig": [
+          "get()",
+          "set(PatchouliConfigAccess)",
+          "reloadBuiltinFlags()",
+          "getConfigFlag(String)",
+          "getConfigFlagAND(String[])",
+          "getConfigFlagOR(String[])",
+          "setFlag(String, boolean)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliSounds": [
+          "submitRegistrations(BiConsumer<ResourceLocation, SoundEvent>)",
+          "getSound(ResourceLocation, SoundEvent)"
+        ],
+        "vazkii.patchouli.common.book.Book": [
+          "getModNamespace()",
+          "getBookItem()",
+          "markUpdated()",
+          "popUpdated()",
+          "reloadContents()",
+          "reloadContents(boolean)",
+          "advancementsEnabled()",
+          "reloadLocks(boolean)",
+          "getOwnerName()",
+          "getFontStyle()",
+          "getSubtitle()",
+          "getIcon()",
+          "getContents()"
+        ],
+        "vazkii.patchouli.common.book.BookFolderLoader": [
+          "findBooks()"
+        ],
+        "vazkii.patchouli.common.book.BookRegistry": [
+          "init()",
+          "loadBook(XplatModContainer, ResourceLocation, InputStream, boolean)",
+          "reloadContents(boolean)",
+          "isLoaded()",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean)",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean, int)"
+        ],
+        "vazkii.patchouli.common.command.OpenBookCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "vazkii.patchouli.common.handler.LecternEventHandler": [
+          "rightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.common.handler.ReloadContentsHandler": [
+          "dataReloaded(MinecraftServer)"
+        ],
+        "vazkii.patchouli.common.item.ItemModBook": [
+          "getCompletion(ItemStack)",
+          "forBook(Book)",
+          "forBook(ResourceLocation)",
+          "getCreatorModId(ItemStack)",
+          "getBook(ItemStack)",
+          "m_7626_(ItemStack)",
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "m_7203_(Level, Player, InteractionHand)"
+        ],
+        "vazkii.patchouli.common.item.PatchouliItems": [
+          "submitItemRegistrations(BiConsumer<ResourceLocation, Item>)",
+          "submitRecipeSerializerRegistrations(BiConsumer<ResourceLocation, RecipeSerializer<?>>)"
+        ],
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock": [
+          "offset(int, int, int)",
+          "setOffset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setViewOffset(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "place(Level, BlockPos, Rotation)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "isSymmetrical()",
+          "setWorld(Level)",
+          "m_7702_(BlockPos)",
+          "m_6425_(BlockPos)",
+          "getSize()",
+          "m_7717_(Direction, boolean)",
+          "m_5518_()",
+          "m_6171_(BlockPos, ColorResolver)",
+          "m_45517_(LightLayer, BlockPos)",
+          "m_45524_(BlockPos, int)"
+        ],
+        "vazkii.patchouli.common.multiblock.DenseMultiblock": [
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "m_8055_(BlockPos)",
+          "getSize()",
+          "m_141928_()",
+          "m_141937_()"
+        ],
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry": [
+          "registerMultiblock(ResourceLocation, IMultiblock)"
+        ],
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock": [
+          "deserializeDense()",
+          "toMultiblock()"
+        ],
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl": [
+          "getWorldPosition()",
+          "getStateMatcher()",
+          "getCharacter()",
+          "test(Level, Rotation)"
+        ],
+        "vazkii.patchouli.common.multiblock.SparseMultiblock": [
+          "getSize()",
+          "m_8055_(BlockPos)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "m_141928_()",
+          "m_141937_()"
+        ],
+        "vazkii.patchouli.common.multiblock.StateMatcher": [
+          "fromPredicate(BlockState, Predicate<BlockState>)",
+          "fromPredicate(Block, Predicate<BlockState>)",
+          "fromPredicate(BlockState, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromPredicate(Block, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromState(BlockState, boolean)",
+          "fromStateWithFilter(BlockState, Predicate<Property<?>>)",
+          "fromState(BlockState)",
+          "fromBlockLoose(Block)",
+          "fromBlockStrict(Block)",
+          "displayOnly(BlockState)",
+          "displayOnly(Block)",
+          "getDisplayedState(long)",
+          "getStatePredicate()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "vazkii.patchouli.common.multiblock.StringStateMatcher": [
+          "fromString(String)"
+        ],
+        "vazkii.patchouli.common.recipe.BookRecipeSerializer": [
+          "m_6729_(ResourceLocation, JsonObject)",
+          "m_8005_(ResourceLocation, FriendlyByteBuf)",
+          "m_6178_(FriendlyByteBuf, U)"
+        ],
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe": [
+          "m_7707_()"
+        ],
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe": [
+          "m_7707_()"
+        ],
+        "vazkii.patchouli.common.util.EntityUtil": [
+          "getEntityName(String)",
+          "loadEntity(String)"
+        ],
+        "vazkii.patchouli.common.util.ItemStackUtil": [
+          "serializeStack(ItemStack)",
+          "parseItemStackString(String)",
+          "loadFromParsed(Triple<ResourceLocation, Integer, CompoundTag>)",
+          "loadStackFromString(String)",
+          "serializeIngredient(Ingredient)",
+          "loadIngredientFromString(String)",
+          "serializeStackList(List<ItemStack>)",
+          "loadStackListFromString(String)",
+          "wrapStack(ItemStack)",
+          "getBookFromStack(ItemStack)",
+          "loadStackFromJson(JsonObject)"
+        ],
+        "vazkii.patchouli.common.util.RotationUtil": [
+          "rotationFromFacing(Direction)",
+          "fixHorizontal(Rotation)"
+        ],
+        "vazkii.patchouli.common.util.SerializationUtil": [
+          "getAsResourceLocation(JsonObject, String, ResourceLocation)",
+          "getAsEnum(JsonObject, String, Class<T>, T)"
+        ],
+        "vazkii.patchouli.forge.client.ForgeClientInitializer": [
+          "signalBooksLoaded()",
+          "modelRegistry(RegisterAdditional)",
+          "registerReloadListeners(RegisterClientReloadListenersEvent)",
+          "registerOverlays(RegisterGuiOverlaysEvent)",
+          "onInitializeClient(FMLClientSetupEvent)",
+          "replaceBookModel(ModifyBakingResult)"
+        ],
+        "vazkii.patchouli.forge.client.ForgeClientXplatImpl": [
+          "renderForMultiblock(BlockState, BlockPos, BlockAndTintGetter, PoseStack, MultiBufferSource, RandomSource)"
+        ],
+        "vazkii.patchouli.forge.common.ForgeModInitializer": [
+          "register(RegisterEvent)",
+          "processCreativeTabs(BuildContents)",
+          "onInitialize(FMLCommonSetupEvent)"
+        ],
+        "vazkii.patchouli.forge.common.ForgePatchouliConfig": [
+          "setup()"
+        ],
+        "vazkii.patchouli.forge.network.ForgeMessageOpenBookGui": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf)",
+          "send(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "handle(Supplier<Context>)"
+        ],
+        "vazkii.patchouli.forge.network.ForgeMessageReloadBookContents": [
+          "sendToAll(MinecraftServer)",
+          "encode(FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(Supplier<Context>)"
+        ],
+        "vazkii.patchouli.forge.network.ForgeNetworkHandler": [
+          "registerMessages()"
+        ],
+        "vazkii.patchouli.forge.xplat.ForgeXplatImpl": [
+          "fireDrawBookScreen(ResourceLocation, Screen, int, int, float, PoseStack)",
+          "fireBookReload(ResourceLocation)",
+          "sendReloadContentsMessage(MinecraftServer)",
+          "sendOpenBookGui(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "getAllMods()",
+          "getModContainer(String)",
+          "isModLoaded(String)",
+          "isDevEnvironment()",
+          "isPhysicalClient()",
+          "signalBooksLoaded()",
+          "handleRecipeKeybind(int, int, ItemStack)"
+        ],
+        "vazkii.patchouli.forge.xplat.ForgeXplatModContainer": [
+          "getId()",
+          "getName()",
+          "getPath(String)",
+          "getRootPaths()"
+        ],
+        "vazkii.patchouli.xplat.IClientXplatAbstractions": [],
+        "vazkii.patchouli.xplat.IXplatAbstractions": [
+          "signalBooksLoaded()"
+        ],
+        "vazkii.patchouli.xplat.XplatModContainer": []
+      },
+      "sampleCount": 153
+    },
+    "839beb5e5d43cb8fd6a24e6722b47f47e7aad919c8dcd6c6637bda179931524f7d66a167ea56df4defb34416ee7f1bb684786269b84d67be71ae1ab893dbd9eb": {
+      "packages": [],
+      "classes": [
+        "vazkii.patchouli.api.BookContentsReloadEvent",
+        "vazkii.patchouli.api.BookDrawScreenEvent",
+        "vazkii.patchouli.api.IComponentProcessor",
+        "vazkii.patchouli.api.IComponentRenderContext",
+        "vazkii.patchouli.api.ICustomComponent",
+        "vazkii.patchouli.api.IMultiblock",
+        "vazkii.patchouli.api.IStateMatcher",
+        "vazkii.patchouli.api.IStyleStack",
+        "vazkii.patchouli.api.IVariable",
+        "vazkii.patchouli.api.IVariableProvider",
+        "vazkii.patchouli.api.IVariablesAvailableCallback",
+        "vazkii.patchouli.api.IVariableSerializer",
+        "vazkii.patchouli.api.PatchouliAPI",
+        "vazkii.patchouli.api.PatchouliConfigAccess",
+        "vazkii.patchouli.api.stub.StubMatcher",
+        "vazkii.patchouli.api.stub.StubMultiblock",
+        "vazkii.patchouli.api.stub.StubPatchouliAPI",
+        "vazkii.patchouli.api.TriPredicate",
+        "vazkii.patchouli.api.VariableHelper",
+        "vazkii.patchouli.client.base.BookModel",
+        "vazkii.patchouli.client.base.ClientAdvancements",
+        "vazkii.patchouli.client.base.ClientTicker",
+        "vazkii.patchouli.client.base.PersistentData",
+        "vazkii.patchouli.client.book.AbstractReadStateHolder",
+        "vazkii.patchouli.client.book.BookCategory",
+        "vazkii.patchouli.client.book.BookContentExternalLoader",
+        "vazkii.patchouli.client.book.BookContentLoader",
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader",
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader",
+        "vazkii.patchouli.client.book.BookContents",
+        "vazkii.patchouli.client.book.BookContentsBuilder",
+        "vazkii.patchouli.client.book.BookEntry",
+        "vazkii.patchouli.client.book.BookIcon",
+        "vazkii.patchouli.client.book.BookPage",
+        "vazkii.patchouli.client.book.ClientBookRegistry",
+        "vazkii.patchouli.client.book.EntryDisplayState",
+        "vazkii.patchouli.client.book.gui.BookTextRenderer",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory",
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry",
+        "vazkii.patchouli.client.book.gui.GuiBook",
+        "vazkii.patchouli.client.book.gui.GuiBookCategory",
+        "vazkii.patchouli.client.book.gui.GuiBookEntry",
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList",
+        "vazkii.patchouli.client.book.gui.GuiBookHistory",
+        "vazkii.patchouli.client.book.gui.GuiBookIndex",
+        "vazkii.patchouli.client.book.gui.GuiBookLanding",
+        "vazkii.patchouli.client.book.gui.GuiBookWriter",
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry",
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe",
+        "vazkii.patchouli.client.book.page.abstr.PageWithText",
+        "vazkii.patchouli.client.book.page.PageBlasting",
+        "vazkii.patchouli.client.book.page.PageCampfireCooking",
+        "vazkii.patchouli.client.book.page.PageCrafting",
+        "vazkii.patchouli.client.book.page.PageEmpty",
+        "vazkii.patchouli.client.book.page.PageEntity",
+        "vazkii.patchouli.client.book.page.PageImage",
+        "vazkii.patchouli.client.book.page.PageLink",
+        "vazkii.patchouli.client.book.page.PageMultiblock",
+        "vazkii.patchouli.client.book.page.PageQuest",
+        "vazkii.patchouli.client.book.page.PageRelations",
+        "vazkii.patchouli.client.book.page.PageSmelting",
+        "vazkii.patchouli.client.book.page.PageSmithing",
+        "vazkii.patchouli.client.book.page.PageSmoking",
+        "vazkii.patchouli.client.book.page.PageSpotlight",
+        "vazkii.patchouli.client.book.page.PageStonecutting",
+        "vazkii.patchouli.client.book.page.PageTemplate",
+        "vazkii.patchouli.client.book.page.PageText",
+        "vazkii.patchouli.client.book.template.BookTemplate",
+        "vazkii.patchouli.client.book.template.component.ComponentCustom",
+        "vazkii.patchouli.client.book.template.component.ComponentEntity",
+        "vazkii.patchouli.client.book.template.component.ComponentFrame",
+        "vazkii.patchouli.client.book.template.component.ComponentHeader",
+        "vazkii.patchouli.client.book.template.component.ComponentImage",
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack",
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator",
+        "vazkii.patchouli.client.book.template.component.ComponentText",
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip",
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper",
+        "vazkii.patchouli.client.book.template.TemplateComponent",
+        "vazkii.patchouli.client.book.template.TemplateInclusion",
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest",
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor",
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor",
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer",
+        "vazkii.patchouli.client.book.template.variable.Variable",
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl",
+        "vazkii.patchouli.client.book.template.VariableAssigner",
+        "vazkii.patchouli.client.book.text.BookTextParser",
+        "vazkii.patchouli.client.book.text.Span",
+        "vazkii.patchouli.client.book.text.SpanState",
+        "vazkii.patchouli.client.book.text.TextLayouter",
+        "vazkii.patchouli.client.book.text.Word",
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt",
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook",
+        "vazkii.patchouli.client.handler.BookCrashHandler",
+        "vazkii.patchouli.client.handler.BookRightClickHandler",
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler",
+        "vazkii.patchouli.client.handler.TooltipHandler",
+        "vazkii.patchouli.client.jei.PatchouliJeiPlugin",
+        "vazkii.patchouli.common.base.PatchouliAPIImpl",
+        "vazkii.patchouli.common.base.PatchouliConfig",
+        "vazkii.patchouli.common.base.PatchouliSounds",
+        "vazkii.patchouli.common.book.Book",
+        "vazkii.patchouli.common.book.BookFolderLoader",
+        "vazkii.patchouli.common.book.BookRegistry",
+        "vazkii.patchouli.common.command.OpenBookCommand",
+        "vazkii.patchouli.common.handler.LecternEventHandler",
+        "vazkii.patchouli.common.handler.ReloadContentsHandler",
+        "vazkii.patchouli.common.item.ItemModBook",
+        "vazkii.patchouli.common.item.PatchouliItems",
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock",
+        "vazkii.patchouli.common.multiblock.DenseMultiblock",
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry",
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock",
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl",
+        "vazkii.patchouli.common.multiblock.SparseMultiblock",
+        "vazkii.patchouli.common.multiblock.StateMatcher",
+        "vazkii.patchouli.common.multiblock.StringStateMatcher",
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe",
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe",
+        "vazkii.patchouli.common.util.EntityUtil",
+        "vazkii.patchouli.common.util.ItemStackUtil",
+        "vazkii.patchouli.common.util.RotationUtil",
+        "vazkii.patchouli.common.util.SerializationUtil",
+        "vazkii.patchouli.neoforge.client.NeoForgeClientInitializer",
+        "vazkii.patchouli.neoforge.client.NeoForgeClientXplatImpl",
+        "vazkii.patchouli.neoforge.common.NeoForgeModInitializer",
+        "vazkii.patchouli.neoforge.common.NeoForgePatchouliConfig",
+        "vazkii.patchouli.neoforge.network.handler.NeoForgeClientPayloadHandler",
+        "vazkii.patchouli.neoforge.network.NeoForgeMessageOpenBookGui",
+        "vazkii.patchouli.neoforge.network.NeoForgeMessageReloadBookContents",
+        "vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler",
+        "vazkii.patchouli.neoforge.xplat.NeoForgeXplatImpl",
+        "vazkii.patchouli.neoforge.xplat.NeoForgeXplatModContainer",
+        "vazkii.patchouli.xplat.IClientXplatAbstractions",
+        "vazkii.patchouli.xplat.IXplatAbstractions",
+        "vazkii.patchouli.xplat.XplatModContainer"
+      ],
+      "methods": {
+        "vazkii.patchouli.api.BookContentsReloadEvent": [
+          "getBook()"
+        ],
+        "vazkii.patchouli.api.BookDrawScreenEvent": [
+          "getBook()",
+          "getScreen()",
+          "getMouseX()",
+          "getMouseY()",
+          "getPartialTicks()",
+          "getGraphics()"
+        ],
+        "vazkii.patchouli.api.IComponentProcessor": [
+          "refresh(Screen, int, int)",
+          "allowRender(String)"
+        ],
+        "vazkii.patchouli.api.IComponentRenderContext": [],
+        "vazkii.patchouli.api.ICustomComponent": [
+          "onDisplayed(IComponentRenderContext)",
+          "mouseClicked(IComponentRenderContext, double, double, int)"
+        ],
+        "vazkii.patchouli.api.IMultiblock": [],
+        "vazkii.patchouli.api.IStateMatcher": [],
+        "vazkii.patchouli.api.IStyleStack": [],
+        "vazkii.patchouli.api.IVariable": [
+          "as(Class<T>, T)",
+          "asString()",
+          "asString(String)",
+          "asNumber()",
+          "asNumber(Number)",
+          "asBoolean()",
+          "asBoolean(boolean)",
+          "asStream()",
+          "asStreamOrSingleton()",
+          "asList()",
+          "asListOrSingleton()"
+        ],
+        "vazkii.patchouli.api.IVariableProvider": [],
+        "vazkii.patchouli.api.IVariablesAvailableCallback": [],
+        "vazkii.patchouli.api.IVariableSerializer": [],
+        "vazkii.patchouli.api.PatchouliAPI": [
+          "get()"
+        ],
+        "vazkii.patchouli.api.PatchouliConfigAccess": [],
+        "vazkii.patchouli.api.stub.StubMatcher": [
+          "getDisplayedState(long)",
+          "getStatePredicate()"
+        ],
+        "vazkii.patchouli.api.stub.StubMultiblock": [
+          "offset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "isSymmetrical()",
+          "place(Level, BlockPos, Rotation)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "getSize()"
+        ],
+        "vazkii.patchouli.api.stub.StubPatchouliAPI": [
+          "isStub()",
+          "getConfig()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)"
+        ],
+        "vazkii.patchouli.api.TriPredicate": [],
+        "vazkii.patchouli.api.VariableHelper": [
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "serializerForClass(Class<T>)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.base.BookModel": [
+          "getOverrides()",
+          "getQuads(BlockState, Direction, RandomSource)",
+          "useAmbientOcclusion()",
+          "isGui3d()",
+          "usesBlockLight()",
+          "isCustomRenderer()",
+          "getParticleIcon()",
+          "getTransforms()"
+        ],
+        "vazkii.patchouli.client.base.ClientAdvancements": [
+          "onClientPacket()",
+          "hasDone(String)",
+          "playerLogout()",
+          "sendBookToast(Book)"
+        ],
+        "vazkii.patchouli.client.base.ClientTicker": [
+          "renderTickStart(float)",
+          "renderTickEnd()",
+          "endClientTick(Minecraft)"
+        ],
+        "vazkii.patchouli.client.base.PersistentData": [
+          "setup()",
+          "save()"
+        ],
+        "vazkii.patchouli.client.book.AbstractReadStateHolder": [
+          "getReadState()",
+          "markReadStateDirty()",
+          "computeReadState()",
+          "mostImportantState(Stream<EntryDisplayState>)"
+        ],
+        "vazkii.patchouli.client.book.BookCategory": [
+          "getName()",
+          "getDescription()",
+          "getIcon()",
+          "addEntry(BookEntry)",
+          "addChildCategory(BookCategory)",
+          "getEntries()",
+          "getParentCategory()",
+          "updateLockStatus(boolean)",
+          "isSecret()",
+          "shouldHide()",
+          "isLocked()",
+          "isRootCategory()",
+          "getId()",
+          "canAdd()",
+          "compareTo(BookCategory)",
+          "build(BookContentsBuilder)",
+          "getBook()",
+          "computeReadState()",
+          "markReadStateDirty()"
+        ],
+        "vazkii.patchouli.client.book.BookContentExternalLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentLoader": [
+          "LoadResult(JsonElement, String)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader": [
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "findFiles(Book, String, List<ResourceLocation>)",
+          "loadJson(Book, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.BookContents": [
+          "empty(Book, Exception)",
+          "isErrored()",
+          "getException()",
+          "getEntryForStack(ItemStack)",
+          "getCurrentGui()",
+          "openLexiconGui(GuiBook, boolean)",
+          "computeReadState()",
+          "checkValidCurrentEntry()",
+          "setTopEntry(ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.BookContentsBuilder": [
+          "getCategory(ResourceLocation)",
+          "getEntry(ResourceLocation)",
+          "getTemplate(ResourceLocation)",
+          "addRecipeMapping(ItemStackUtil.StackWrapper, BookEntry, int)",
+          "loadAndBuildFor(Level, Book, boolean)",
+          "getContentLoader()"
+        ],
+        "vazkii.patchouli.client.book.BookEntry": [
+          "getName()",
+          "getPages()",
+          "getPageFromAnchor(String)",
+          "isPriority()",
+          "getIcon()",
+          "initCategory(ResourceLocation, Function<ResourceLocation, BookCategory>)",
+          "getCategory()",
+          "updateLockStatus()",
+          "isLocked()",
+          "isSecret()",
+          "shouldHide()",
+          "getEntryColor()",
+          "getId()",
+          "canAdd()",
+          "isFoundByQuery(String)",
+          "compareTo(BookEntry)",
+          "build(Level, BookContentsBuilder)",
+          "addRelevantStack(BookContentsBuilder, ItemStack, int)",
+          "getBook()",
+          "getAddedBy()"
+        ],
+        "vazkii.patchouli.client.book.BookIcon": [],
+        "vazkii.patchouli.client.book.BookPage": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "isPageUnlocked()",
+          "onHidden(GuiBookEntry)",
+          "addButton(Button)",
+          "render(GuiGraphics, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "canAdd(Book)",
+          "i18n(String)",
+          "i18nText(String)"
+        ],
+        "vazkii.patchouli.client.book.ClientBookRegistry": [
+          "init()",
+          "reload()",
+          "reloadLocks(boolean)",
+          "displayBookGui(ResourceLocation, ResourceLocation, int)"
+        ],
+        "vazkii.patchouli.client.book.EntryDisplayState": [
+          "fromOrdinal(int)"
+        ],
+        "vazkii.patchouli.client.book.gui.BookTextRenderer": [
+          "render(GuiGraphics, int, int, float)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBook": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "playDownSound(SoundManager)",
+          "getTooltipLines()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig": [],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookEye": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "onPress()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonBookResize": [
+          "getTooltipLines()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonCategory": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "playDownSound(SoundManager)",
+          "getCategory()"
+        ],
+        "vazkii.patchouli.client.book.gui.button.GuiButtonEntry": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "playDownSound(SoundManager)",
+          "getEntry()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBook": [
+          "init()",
+          "getMinecraft()",
+          "render(GuiGraphics, int, int, float)",
+          "renderBackground(GuiGraphics, int, int, float)",
+          "addBookmarkButtons()",
+          "removeDrawablesIf(Predicate<Renderable>)",
+          "removeDrawablesIn(Collection<?>)",
+          "addRenderableWidget(T)",
+          "shouldAddAddBookmarkButton()",
+          "shouldAddMarkReadButton()",
+          "bookmarkThis()",
+          "onFirstOpened()",
+          "tick()",
+          "drawFromTexture(GuiGraphics, Book, int, int, int, int, int, int)",
+          "isPauseScreen()",
+          "handleButtonArrow(Button)",
+          "handleButtonBookmark(Button)",
+          "mouseClicked(double, double, int)",
+          "mouseClickedScaled(double, double, int)",
+          "keyPressed(int, int, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookCategory": [
+          "getDescriptionText()",
+          "getEntries()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "createSearchBar()",
+          "doesEntryCountForProgress(BookEntry)",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntry": [
+          "init()",
+          "onFirstOpened()",
+          "mouseClickedScaled(double, double, int)",
+          "getEntry()",
+          "equals(Object)",
+          "hashCode()",
+          "canBeOpened()",
+          "shouldAddAddBookmarkButton()",
+          "bookmarkThis()",
+          "displayOrBookmark(GuiBook, BookEntry)",
+          "getGui()",
+          "getFont()",
+          "renderItemStack(GuiGraphics, int, int, int, int, ItemStack)",
+          "renderIngredient(GuiGraphics, int, int, int, int, Ingredient)",
+          "setHoverTooltip(List<String>)",
+          "setHoverTooltipComponents(List<Component>)",
+          "isAreaHovered(int, int, int, int, int, int)",
+          "navigateToEntry(ResourceLocation, int, boolean)",
+          "registerButton(Button, int, Runnable)",
+          "addWidget(AbstractWidget, int)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookEntryList": [
+          "init()",
+          "createSearchBar()",
+          "getDescriptionText()",
+          "getEntries()",
+          "doesEntryCountForProgress(BookEntry)",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "addSubcategoryButtons()",
+          "getChapterListTitle()",
+          "getNoEntryMessage()",
+          "mouseClickedScaled(double, double, int)",
+          "charTyped(char, int)",
+          "keyPressed(int, int, int)",
+          "handleButtonCategory(Button)",
+          "handleButtonEntry(Button)",
+          "getSearchQuery()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookHistory": [
+          "getDescriptionText()",
+          "shouldDrawProgressBar()",
+          "shouldSortEntryList()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookIndex": [
+          "getDescriptionText()",
+          "getEntries()"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookLanding": [
+          "init()",
+          "mouseClickedScaled(double, double, int)",
+          "handleButtonIndex(Button)",
+          "handleButtonCategory(Button)",
+          "handleButtonResize(Button)",
+          "handleButtonPamphletEntry(Button)"
+        ],
+        "vazkii.patchouli.client.book.gui.GuiBookWriter": [
+          "init()",
+          "mouseClickedScaled(double, double, int)",
+          "keyPressed(int, int, int)",
+          "charTyped(char, int)"
+        ],
+        "vazkii.patchouli.client.book.LiquidBlockVertexConsumer": [
+          "vertex(double, double, double)",
+          "color(int, int, int, int)",
+          "uv(float, float)",
+          "overlayCoords(int, int)",
+          "uv2(int, int)",
+          "normal(float, float, float)",
+          "endVertex()",
+          "defaultColor(int, int, int, int)",
+          "unsetDefaultColor()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "render(GuiGraphics, int, int, float)",
+          "getTextHeight()",
+          "shouldRenderText()",
+          "drawRecipe(GuiGraphics, T, int, int, int, int, boolean)",
+          "loadRecipe(Level, BookContentsBuilder, BookEntry, ResourceLocation)",
+          "getRecipeOutput(Level, T)",
+          "getRecipeHeight()",
+          "getX()",
+          "getY()",
+          "getTitle(boolean)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry": [
+          "loadRecipe(Level, BookContentsBuilder, BookEntry, ResourceLocation)"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe": [
+          "drawRecipe(GuiGraphics, T, int, int, int, int, boolean)",
+          "getRecipeOutput(Level, T)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.abstr.PageWithText": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(GuiGraphics, int, int, float)",
+          "mouseClicked(double, double, int)",
+          "shouldRenderText()"
+        ],
+        "vazkii.patchouli.client.book.page.PageBlasting": [],
+        "vazkii.patchouli.client.book.page.PageCampfireCooking": [],
+        "vazkii.patchouli.client.book.page.PageCrafting": [
+          "drawRecipe(GuiGraphics, Recipe<?>, int, int, int, int, boolean)",
+          "getRecipeHeight()",
+          "getRecipeOutput(Level, Recipe<?>)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEmpty": [
+          "render(GuiGraphics, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageEntity": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(GuiGraphics, int, int, float)",
+          "renderEntity(GuiGraphics, Entity, float, float, float, float, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageImage": [
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(GuiGraphics, int, int, float)",
+          "handleButtonArrow(Button)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageLink": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageMultiblock": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "getTextHeight()",
+          "render(GuiGraphics, int, int, float)",
+          "handleButtonVisualize(Button)"
+        ],
+        "vazkii.patchouli.client.book.page.PageQuest": [
+          "getTextHeight()",
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "isCompleted(Book)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "questButtonClicked(Button)",
+          "render(GuiGraphics, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.page.PageRelations": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "handleButtonEntry(Button)",
+          "render(GuiGraphics, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmelting": [],
+        "vazkii.patchouli.client.book.page.PageSmithing": [
+          "drawRecipe(GuiGraphics, SmithingRecipe, int, int, int, int, boolean)",
+          "getRecipeOutput(Level, SmithingRecipe)",
+          "getRecipeHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageSmoking": [],
+        "vazkii.patchouli.client.book.page.PageSpotlight": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "render(GuiGraphics, int, int, float)",
+          "getTextHeight()"
+        ],
+        "vazkii.patchouli.client.book.page.PageStonecutting": [],
+        "vazkii.patchouli.client.book.page.PageTemplate": [
+          "build(Level, BookEntry, BookContentsBuilder, int)",
+          "onDisplayed(GuiBookEntry, int, int)",
+          "render(GuiGraphics, int, int, float)",
+          "mouseClicked(double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.page.PageText": [
+          "setText(String)",
+          "getTextHeight()",
+          "render(GuiGraphics, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.BookTemplate": [
+          "createTemplate(Book, BookContentsBuilder, String, TemplateInclusion)",
+          "compile(Level, BookContentsBuilder, IVariableProvider)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "registerComponent(ResourceLocation, Class<? extends TemplateComponent>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentCustom": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentEntity": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentFrame": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(GuiGraphics, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentHeader": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentImage": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(GuiGraphics, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentItemStack": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "render(GuiGraphics, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentSeparator": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "render(GuiGraphics, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentText": [
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)"
+        ],
+        "vazkii.patchouli.client.book.template.component.ComponentTooltip": [
+          "onVariablesAvailable(UnaryOperator<IVariable>)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(GuiGraphics, BookPage, int, int, float)"
+        ],
+        "vazkii.patchouli.client.book.template.JsonVariableWrapper": [
+          "get(String)",
+          "has(String)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateComponent": [
+          "compile(Level, IVariableProvider, IComponentProcessor, TemplateInclusion)",
+          "getVisibleStatus(IComponentProcessor)",
+          "build(BookContentsBuilder, BookPage, BookEntry, int)",
+          "onDisplayed(BookPage, GuiBookEntry, int, int)",
+          "render(GuiGraphics, BookPage, int, int, float)",
+          "mouseClicked(BookPage, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.TemplateInclusion": [
+          "upperMerge(TemplateInclusion)",
+          "process(Level, IComponentProcessor)",
+          "qualifyName(String)",
+          "attemptVariableLookup(String)",
+          "isUpreference(IVariable)",
+          "wrapProvider(final IVariableProvider)"
+        ],
+        "vazkii.patchouli.client.book.template.test.ComponentCustomTest": [
+          "build(int, int, int)",
+          "render(GuiGraphics, IComponentRenderContext, float, int, int)",
+          "mouseClicked(IComponentRenderContext, double, double, int)",
+          "onVariablesAvailable(UnaryOperator<IVariable>)"
+        ],
+        "vazkii.patchouli.client.book.template.test.EntityTestProcessor": [
+          "setup(Level, IVariableProvider)",
+          "process(Level, String)"
+        ],
+        "vazkii.patchouli.client.book.template.test.RecipeTestProcessor": [
+          "setup(Level, IVariableProvider)",
+          "process(Level, String)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.GenericArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(T[])"
+        ],
+        "vazkii.patchouli.client.book.template.variable.IngredientVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Ingredient)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackArrayVariableSerializer": [
+          "fromJson(JsonElement)",
+          "fromNonArray(JsonElement)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.ItemStackVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(ItemStack)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.TextComponentVariableSerializer": [
+          "fromJson(JsonElement)",
+          "toJson(Component)"
+        ],
+        "vazkii.patchouli.client.book.template.variable.Variable": [
+          "as(Class<T>)",
+          "unwrap()",
+          "toString()"
+        ],
+        "vazkii.patchouli.client.book.template.variable.VariableHelperImpl": [
+          "serializerForClass(Class<T>)",
+          "createFromObject(T)",
+          "createFromJson(JsonElement)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.book.template.VariableAssigner": [
+          "assignVariableHolders(Level, IVariablesAvailableCallback, IVariableProvider, IComponentProcessor, TemplateInclusion)"
+        ],
+        "vazkii.patchouli.client.book.text.BookTextParser": [
+          "register(BookTextParser.CommandProcessor, String...)",
+          "register(BookTextParser.FunctionProcessor, String...)",
+          "parse(Component)",
+          "expandMacros(String)"
+        ],
+        "vazkii.patchouli.client.book.text.Span": [
+          "error(SpanState, String)",
+          "styledSubstring(int)",
+          "styledSubstring(int, int)"
+        ],
+        "vazkii.patchouli.client.book.text.SpanState": [
+          "getBase()",
+          "changeBaseStyle(Style)",
+          "color(TextColor)",
+          "baseColor()",
+          "modifyStyle(UnaryOperator<Style>)",
+          "pushStyle(Style)",
+          "popStyle()",
+          "reset()",
+          "peekStyle()"
+        ],
+        "vazkii.patchouli.client.book.text.TextLayouter": [
+          "layout(Font, List<Span>)",
+          "getScale()",
+          "flush()",
+          "getWords()"
+        ],
+        "vazkii.patchouli.client.book.text.Word": [
+          "render(GuiGraphics, Font, Style, int, int)",
+          "click(double, double, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiAdvancementsExt": [
+          "keyPressed(int, int, int)"
+        ],
+        "vazkii.patchouli.client.gui.GuiButtonInventoryBook": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "getBook()"
+        ],
+        "vazkii.patchouli.client.handler.BookCrashHandler": [
+          "appendToCrashReport(SystemReport)",
+          "get()"
+        ],
+        "vazkii.patchouli.client.handler.BookRightClickHandler": [
+          "onRenderHUD(GuiGraphics, float)",
+          "onRightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.client.handler.MultiblockVisualizationHandler": [
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean)",
+          "setMultiblock(IMultiblock, Component, PersistentData.Bookmark, boolean, Function<BlockPos, BlockPos>)",
+          "onRenderHUD(GuiGraphics, float)",
+          "onWorldRenderLast(PoseStack)",
+          "anchorTo(BlockPos, Rotation)",
+          "onPlayerInteract(Player, Level, InteractionHand, BlockHitResult)",
+          "onClientTick(Minecraft)",
+          "renderMultiblock(Level, PoseStack)",
+          "renderBlock(Level, BlockState, BlockPos, float, PoseStack)",
+          "getMultiblock()",
+          "isAnchored()",
+          "getFacingRotation()",
+          "getStartPos()"
+        ],
+        "vazkii.patchouli.client.handler.TooltipHandler": [
+          "onTooltip(GuiGraphics, ItemStack, int, int)"
+        ],
+        "vazkii.patchouli.client.jei.PatchouliJeiPlugin": [
+          "getPluginUid()",
+          "registerItemSubtypes(ISubtypeRegistration)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "handleRecipeKeybind(int, int, ItemStack)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliAPIImpl": [
+          "isStub()",
+          "getConfig()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(ServerPlayer, ResourceLocation)",
+          "openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "openBookGUI(ResourceLocation)",
+          "openBookEntry(ResourceLocation, ResourceLocation, int)",
+          "getOpenBookGui()",
+          "getSubtitle(ResourceLocation)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(ResourceLocation)",
+          "registerTemplateAsBuiltin(ResourceLocation, Supplier<InputStream>)",
+          "getMultiblock(ResourceLocation)",
+          "registerMultiblock(ResourceLocation, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, Component, BlockPos, Rotation)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliConfig": [
+          "get()",
+          "set(PatchouliConfigAccess)",
+          "reloadBuiltinFlags()",
+          "getConfigFlag(String)",
+          "getConfigFlagAND(String[])",
+          "getConfigFlagOR(String[])",
+          "setFlag(String, boolean)"
+        ],
+        "vazkii.patchouli.common.base.PatchouliSounds": [
+          "submitRegistrations(BiConsumer<ResourceLocation, SoundEvent>)",
+          "getSound(ResourceLocation, SoundEvent)"
+        ],
+        "vazkii.patchouli.common.book.Book": [
+          "getBookItem()",
+          "markUpdated()",
+          "popUpdated()",
+          "reloadContents(Level, boolean)",
+          "advancementsEnabled()",
+          "reloadLocks(boolean)",
+          "getOwnerName()",
+          "getFontStyle()",
+          "getSubtitle()",
+          "getIcon()",
+          "getContents()"
+        ],
+        "vazkii.patchouli.common.book.BookFolderLoader": [
+          "findBooks()"
+        ],
+        "vazkii.patchouli.common.book.BookRegistry": [
+          "init()",
+          "loadBook(XplatModContainer, ResourceLocation, InputStream, boolean)",
+          "reloadContents(Level)",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean)",
+          "findFiles(XplatModContainer, String, Predicate<Path>, BiFunction<Path, Path, Boolean>, boolean, int)"
+        ],
+        "vazkii.patchouli.common.command.OpenBookCommand": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "vazkii.patchouli.common.handler.LecternEventHandler": [
+          "rightClick(Player, Level, InteractionHand, BlockHitResult)"
+        ],
+        "vazkii.patchouli.common.handler.ReloadContentsHandler": [
+          "dataReloaded(MinecraftServer)"
+        ],
+        "vazkii.patchouli.common.item.ItemModBook": [
+          "getCompletion(ItemStack)",
+          "forBook(Book)",
+          "forBook(ResourceLocation)",
+          "getCreatorModId(ItemStack)",
+          "getBook(ItemStack)",
+          "getName(ItemStack)",
+          "appendHoverText(ItemStack, Level, List<Component>, TooltipFlag)",
+          "use(Level, Player, InteractionHand)"
+        ],
+        "vazkii.patchouli.common.item.PatchouliItems": [
+          "submitItemRegistrations(BiConsumer<ResourceLocation, Item>)",
+          "submitRecipeSerializerRegistrations(BiConsumer<ResourceLocation, RecipeSerializer<?>>)"
+        ],
+        "vazkii.patchouli.common.multiblock.AbstractMultiblock": [
+          "offset(int, int, int)",
+          "setOffset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setViewOffset(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(ResourceLocation)",
+          "place(Level, BlockPos, Rotation)",
+          "validate(Level, BlockPos)",
+          "validate(Level, BlockPos, Rotation)",
+          "isSymmetrical()",
+          "setWorld(Level)",
+          "getBlockEntity(BlockPos)",
+          "getFluidState(BlockPos)",
+          "getSize()",
+          "getShade(Direction, boolean)",
+          "getLightEngine()",
+          "getBlockTint(BlockPos, ColorResolver)",
+          "getBrightness(LightLayer, BlockPos)",
+          "getRawBrightness(BlockPos, int)"
+        ],
+        "vazkii.patchouli.common.multiblock.DenseMultiblock": [
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "getBlockState(BlockPos)",
+          "getSize()",
+          "getHeight()",
+          "getMinBuildHeight()"
+        ],
+        "vazkii.patchouli.common.multiblock.MultiblockRegistry": [
+          "registerMultiblock(ResourceLocation, IMultiblock)"
+        ],
+        "vazkii.patchouli.common.multiblock.SerializedMultiblock": [
+          "deserializeDense()",
+          "toMultiblock()"
+        ],
+        "vazkii.patchouli.common.multiblock.SimulateResultImpl": [
+          "getWorldPosition()",
+          "getStateMatcher()",
+          "getCharacter()",
+          "test(Level, Rotation)"
+        ],
+        "vazkii.patchouli.common.multiblock.SparseMultiblock": [
+          "getSize()",
+          "getBlockState(BlockPos)",
+          "simulate(Level, BlockPos, Rotation, boolean)",
+          "test(Level, BlockPos, int, int, int, Rotation)",
+          "getHeight()",
+          "getMinBuildHeight()"
+        ],
+        "vazkii.patchouli.common.multiblock.StateMatcher": [
+          "fromPredicate(BlockState, Predicate<BlockState>)",
+          "fromPredicate(Block, Predicate<BlockState>)",
+          "fromPredicate(BlockState, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromPredicate(Block, TriPredicate<BlockGetter, BlockPos, BlockState>)",
+          "fromState(BlockState, boolean)",
+          "fromStateWithFilter(BlockState, Predicate<Property<?>>)",
+          "fromState(BlockState)",
+          "fromBlockLoose(Block)",
+          "fromBlockStrict(Block)",
+          "displayOnly(BlockState)",
+          "displayOnly(Block)",
+          "getDisplayedState(long)",
+          "getStatePredicate()",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "vazkii.patchouli.common.multiblock.StringStateMatcher": [
+          "fromString(String)"
+        ],
+        "vazkii.patchouli.common.recipe.ShapedBookRecipe": [
+          "getSerializer()"
+        ],
+        "vazkii.patchouli.common.recipe.ShapelessBookRecipe": [
+          "getSerializer()"
+        ],
+        "vazkii.patchouli.common.util.EntityUtil": [
+          "getEntityName(String)",
+          "loadEntity(String)"
+        ],
+        "vazkii.patchouli.common.util.ItemStackUtil": [
+          "parseItemStackString(String)",
+          "loadFromParsed(Triple<ResourceLocation, Integer, CompoundTag>)",
+          "loadStackFromString(String)",
+          "loadIngredientFromString(String)",
+          "loadStackListFromString(String)",
+          "wrapStack(ItemStack)",
+          "getBookFromStack(ItemStack)",
+          "loadStackFromJson(JsonObject)"
+        ],
+        "vazkii.patchouli.common.util.RotationUtil": [
+          "rotationFromFacing(Direction)",
+          "fixHorizontal(Rotation)"
+        ],
+        "vazkii.patchouli.common.util.SerializationUtil": [
+          "getAsResourceLocation(JsonObject, String, ResourceLocation)",
+          "getAsEnum(JsonObject, String, Class<T>, T)"
+        ],
+        "vazkii.patchouli.neoforge.client.NeoForgeClientInitializer": [
+          "signalBooksLoaded()",
+          "modelRegistry(RegisterAdditional)",
+          "registerReloadListeners(RegisterClientReloadListenersEvent)",
+          "registerOverlays(RegisterGuiOverlaysEvent)",
+          "onInitializeClient(FMLClientSetupEvent)",
+          "replaceBookModel(ModifyBakingResult)"
+        ],
+        "vazkii.patchouli.neoforge.client.NeoForgeClientXplatImpl": [
+          "renderForMultiblock(BlockState, BlockPos, BlockAndTintGetter, PoseStack, MultiBufferSource, RandomSource)"
+        ],
+        "vazkii.patchouli.neoforge.common.NeoForgeModInitializer": [
+          "register(RegisterEvent)",
+          "processCreativeTabs(BuildCreativeModeTabContentsEvent)",
+          "onInitialize(FMLCommonSetupEvent)"
+        ],
+        "vazkii.patchouli.neoforge.common.NeoForgePatchouliConfig": [
+          "setup()"
+        ],
+        "vazkii.patchouli.neoforge.network.handler.NeoForgeClientPayloadHandler": [
+          "getInstance()",
+          "handleData(NeoForgeMessageOpenBookGui, PlayPayloadContext)",
+          "handleData(NeoForgeMessageReloadBookContents, PlayPayloadContext)"
+        ],
+        "vazkii.patchouli.neoforge.network.NeoForgeMessageOpenBookGui": [
+          "write(FriendlyByteBuf)",
+          "send(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "id()"
+        ],
+        "vazkii.patchouli.neoforge.network.NeoForgeMessageReloadBookContents": [
+          "sendToAll(MinecraftServer)",
+          "write(FriendlyByteBuf)",
+          "id()"
+        ],
+        "vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler": [
+          "setupPackets(RegisterPayloadHandlerEvent)"
+        ],
+        "vazkii.patchouli.neoforge.xplat.NeoForgeXplatImpl": [
+          "fireDrawBookScreen(ResourceLocation, Screen, int, int, float, GuiGraphics)",
+          "fireBookReload(ResourceLocation)",
+          "sendReloadContentsMessage(MinecraftServer)",
+          "sendOpenBookGui(ServerPlayer, ResourceLocation, ResourceLocation, int)",
+          "getAllMods()",
+          "getModContainer(String)",
+          "isModLoaded(String)",
+          "isDevEnvironment()",
+          "isPhysicalClient()",
+          "signalBooksLoaded()",
+          "handleRecipeKeybind(int, int, ItemStack)"
+        ],
+        "vazkii.patchouli.neoforge.xplat.NeoForgeXplatModContainer": [
+          "getId()",
+          "getName()",
+          "getPath(String)",
+          "getRootPaths()"
+        ],
+        "vazkii.patchouli.xplat.IClientXplatAbstractions": [],
+        "vazkii.patchouli.xplat.IXplatAbstractions": [
+          "signalBooksLoaded()"
+        ],
+        "vazkii.patchouli.xplat.XplatModContainer": []
+      },
+      "sampleCount": 151
+    },
+    "1.21-89-FABRIC": {
+      "packages": [],
+      "classes": [
+        "vazkii.patchouli.api.BookContentsReloadCallback",
+        "vazkii.patchouli.api.BookDrawScreenCallback",
+        "vazkii.patchouli.api.IComponentProcessor",
+        "vazkii.patchouli.api.IComponentRenderContext",
+        "vazkii.patchouli.api.ICustomComponent",
+        "vazkii.patchouli.api.IMultiblock",
+        "vazkii.patchouli.api.IStateMatcher",
+        "vazkii.patchouli.api.IStyleStack",
+        "vazkii.patchouli.api.IVariable",
+        "vazkii.patchouli.api.IVariableProvider",
+        "vazkii.patchouli.api.IVariablesAvailableCallback",
+        "vazkii.patchouli.api.IVariableSerializer",
+        "vazkii.patchouli.api.PatchouliAPI",
+        "vazkii.patchouli.api.PatchouliConfigAccess",
+        "vazkii.patchouli.api.stub.StubMatcher",
+        "vazkii.patchouli.api.stub.StubMultiblock",
+        "vazkii.patchouli.api.stub.StubPatchouliAPI",
+        "vazkii.patchouli.api.TriPredicate",
+        "vazkii.patchouli.api.VariableHelper",
+        "vazkii.patchouli.client.base.BookModel",
+        "vazkii.patchouli.client.base.ClientAdvancements",
+        "vazkii.patchouli.client.base.ClientTicker",
+        "vazkii.patchouli.client.base.PersistentData",
+        "vazkii.patchouli.client.book.AbstractReadStateHolder",
+        "vazkii.patchouli.client.book.BookCategory",
+        "vazkii.patchouli.client.book.BookContentExternalLoader",
+        "vazkii.patchouli.client.book.BookContentLoader",
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader",
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader",
+        "vazkii.patchouli.client.book.BookContents"
+      ],
+      "methods": {
+        "vazkii.patchouli.api.BookContentsReloadCallback": [],
+        "vazkii.patchouli.api.BookDrawScreenCallback": [],
+        "vazkii.patchouli.api.IComponentProcessor": [
+          "refresh(class_437, int, int)",
+          "allowRender(String)"
+        ],
+        "vazkii.patchouli.api.IComponentRenderContext": [],
+        "vazkii.patchouli.api.ICustomComponent": [
+          "onDisplayed(IComponentRenderContext)",
+          "mouseClicked(IComponentRenderContext, double, double, int)"
+        ],
+        "vazkii.patchouli.api.IMultiblock": [],
+        "vazkii.patchouli.api.IStateMatcher": [],
+        "vazkii.patchouli.api.IStyleStack": [],
+        "vazkii.patchouli.api.IVariable": [
+          "as(Class<T>, T)",
+          "asString()",
+          "asString(String)",
+          "asNumber()",
+          "asNumber(Number)",
+          "asBoolean()",
+          "asBoolean(boolean)",
+          "asStream(class_7874)",
+          "asStreamOrSingleton(class_7874)",
+          "asList(class_7874)",
+          "asListOrSingleton(class_7874)"
+        ],
+        "vazkii.patchouli.api.IVariableProvider": [],
+        "vazkii.patchouli.api.IVariablesAvailableCallback": [],
+        "vazkii.patchouli.api.IVariableSerializer": [],
+        "vazkii.patchouli.api.PatchouliAPI": [
+          "get()"
+        ],
+        "vazkii.patchouli.api.PatchouliConfigAccess": [],
+        "vazkii.patchouli.api.stub.StubMatcher": [
+          "getDisplayedState(long)",
+          "getStatePredicate()"
+        ],
+        "vazkii.patchouli.api.stub.StubMultiblock": [
+          "offset(int, int, int)",
+          "offsetView(int, int, int)",
+          "setSymmetrical(boolean)",
+          "getID()",
+          "setId(class_2960)",
+          "isSymmetrical()",
+          "place(class_1937, class_2338, class_2470)",
+          "simulate(class_1937, class_2338, class_2470, boolean)",
+          "validate(class_1937, class_2338)",
+          "validate(class_1937, class_2338, class_2470)",
+          "test(class_1937, class_2338, int, int, int, class_2470)",
+          "getSize()"
+        ],
+        "vazkii.patchouli.api.stub.StubPatchouliAPI": [
+          "isStub()",
+          "getConfig()",
+          "setConfigFlag(String, boolean)",
+          "getConfigFlag(String)",
+          "openBookGUI(class_3222, class_2960)",
+          "openBookEntry(class_3222, class_2960, class_2960, int)",
+          "openBookGUI(class_2960)",
+          "openBookEntry(class_2960, class_2960, int)",
+          "getOpenBookGui()",
+          "getSubtitle(class_2960)",
+          "registerCommand(String, Function<IStyleStack, String>)",
+          "registerFunction(String, BiFunction<String, IStyleStack, String>)",
+          "getBookStack(class_2960)",
+          "registerTemplateAsBuiltin(class_2960, Supplier<InputStream>)",
+          "getMultiblock(class_2960)",
+          "registerMultiblock(class_2960, IMultiblock)",
+          "getCurrentMultiblock()",
+          "showMultiblock(IMultiblock, class_2561, class_2338, class_2470)",
+          "clearMultiblock()",
+          "makeMultiblock(String[][], Object...)"
+        ],
+        "vazkii.patchouli.api.TriPredicate": [],
+        "vazkii.patchouli.api.VariableHelper": [
+          "createFromObject(T, class_7874)",
+          "createFromJson(JsonElement, class_7874)",
+          "serializerForClass(Class<T>)",
+          "registerSerializer(IVariableSerializer<T>, Class<T>)"
+        ],
+        "vazkii.patchouli.client.base.BookModel": [
+          "method_4710()",
+          "method_4707(class_2680, class_2350, class_5819)",
+          "method_4708()",
+          "method_4712()",
+          "method_24304()",
+          "method_4713()",
+          "method_4711()",
+          "method_4709()"
+        ],
+        "vazkii.patchouli.client.base.ClientAdvancements": [
+          "onClientPacket()",
+          "hasDone(String)",
+          "playerLogout()",
+          "sendBookToast(Book)"
+        ],
+        "vazkii.patchouli.client.base.ClientTicker": [
+          "renderTickStart(float)",
+          "renderTickEnd()",
+          "endClientTick(class_310)"
+        ],
+        "vazkii.patchouli.client.base.PersistentData": [
+          "setup()",
+          "save()"
+        ],
+        "vazkii.patchouli.client.book.AbstractReadStateHolder": [
+          "getReadState()",
+          "markReadStateDirty()",
+          "computeReadState()",
+          "mostImportantState(Stream<EntryDisplayState>)"
+        ],
+        "vazkii.patchouli.client.book.BookCategory": [
+          "getName()",
+          "getDescription()",
+          "getIcon()",
+          "addEntry(BookEntry)",
+          "addChildCategory(BookCategory)",
+          "getEntries()",
+          "getParentCategory()",
+          "updateLockStatus(boolean)",
+          "isSecret()",
+          "shouldHide()",
+          "isLocked()",
+          "isRootCategory()",
+          "getId()",
+          "canAdd()",
+          "compareTo(BookCategory)",
+          "build(BookContentsBuilder)",
+          "getBook()",
+          "computeReadState()",
+          "markReadStateDirty()"
+        ],
+        "vazkii.patchouli.client.book.BookContentExternalLoader": [
+          "findFiles(Book, String, List<class_2960>)",
+          "loadJson(Book, class_2960)"
+        ],
+        "vazkii.patchouli.client.book.BookContentLoader": [
+          "LoadResult(JsonElement, String)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceDirectLoader": [
+          "findFiles(Book, String, List<class_2960>)",
+          "loadJson(Book, class_2960)"
+        ],
+        "vazkii.patchouli.client.book.BookContentResourceListenerLoader": [
+          "apply(Map<class_2960, JsonElement>, class_3300, class_3695)",
+          "findFiles(Book, String, List<class_2960>)",
+          "loadJson(Book, class_2960)"
+        ],
+        "vazkii.patchouli.client.book.BookContents": [
+          "empty(Book, Exception)"
+        ]
+      },
+      "sampleCount": 154,
+      "truncated": true
+    },
+    "1.20.1-85-FABRIC": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.19.2-77-FABRIC": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.18.1-65-FABRIC": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.16.4-53.3": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1.14.4-1.1-27": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "0b5c172db9a6eeecb5ca44b359a83548c3a60be7ff313959acdfc1e5b8039736c18e57e947d435b52d06da31159d2d02ea36e5742668dbc826308a4c99e4039f": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 487,
+  "methodCount": 2000,
+  "truncated": true
+}

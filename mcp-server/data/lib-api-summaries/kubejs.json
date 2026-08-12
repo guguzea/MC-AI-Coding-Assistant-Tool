@@ -1,0 +1,3209 @@
+{
+  "slug": "kubejs",
+  "modId": "kubejs",
+  "id": "authored/lib-kubejs",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "kubejs"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:02.495Z",
+  "versions": {
+    "2101.7.2-build.368": {
+      "packages": [],
+      "classes": [
+        "dev.latvian.mods.kubejs.block.BlockBrokenKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockBuilder",
+        "dev.latvian.mods.kubejs.block.BlockDropsKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockItemBuilder",
+        "dev.latvian.mods.kubejs.block.BlockLeftClickedKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockModificationKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockPickedKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockPlacedKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockRenderType",
+        "dev.latvian.mods.kubejs.block.BlockRightClickedKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockRotationType",
+        "dev.latvian.mods.kubejs.block.BlockStartedFallingKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockStoppedFallingKubeEvent",
+        "dev.latvian.mods.kubejs.block.BlockTintFunction",
+        "dev.latvian.mods.kubejs.block.callback.AfterEntityFallenOnBlockCallback",
+        "dev.latvian.mods.kubejs.block.callback.BlockExplodedCallback",
+        "dev.latvian.mods.kubejs.block.callback.BlockStateMirrorCallback",
+        "dev.latvian.mods.kubejs.block.callback.BlockStateModifyCallback",
+        "dev.latvian.mods.kubejs.block.callback.BlockStateModifyPlacementCallback",
+        "dev.latvian.mods.kubejs.block.callback.BlockStateRotateCallback",
+        "dev.latvian.mods.kubejs.block.callback.CanBeReplacedCallback",
+        "dev.latvian.mods.kubejs.block.callback.EntityBlockCallback",
+        "dev.latvian.mods.kubejs.block.callback.EntityFallenOnBlockCallback",
+        "dev.latvian.mods.kubejs.block.callback.RandomTickCallback",
+        "dev.latvian.mods.kubejs.block.custom.BasicCropBlockJS",
+        "dev.latvian.mods.kubejs.block.custom.BasicKubeBlock",
+        "dev.latvian.mods.kubejs.block.custom.ButtonBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.ButtonOrPressurePlateBuilder",
+        "dev.latvian.mods.kubejs.block.custom.CardinalBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.CarpetBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.CropBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.DoorBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.FallingBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.FenceBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.FenceGateBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.PillarBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.PressurePlateBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.SlabBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.StairBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.TrapdoorBlockBuilder",
+        "dev.latvian.mods.kubejs.block.custom.WallBlockBuilder",
+        "dev.latvian.mods.kubejs.block.DetectorBlock",
+        "dev.latvian.mods.kubejs.block.DetectorBlockKubeEvent",
+        "dev.latvian.mods.kubejs.block.drop.BlockDrops",
+        "dev.latvian.mods.kubejs.block.drop.BlockDropSupplier",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachment",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentFactory",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentHandler",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentHolder",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentInfo",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentRegistry",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityBuilder",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityEventCallback",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityInfo",
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityTickKubeEvent",
+        "dev.latvian.mods.kubejs.block.entity.CustomCapabilityAttachment",
+        "dev.latvian.mods.kubejs.block.entity.EnergyStorageAttachment",
+        "dev.latvian.mods.kubejs.block.entity.FluidTankAttachment",
+        "dev.latvian.mods.kubejs.block.entity.InventoryAttachment",
+        "dev.latvian.mods.kubejs.block.entity.KubeBlockEntity",
+        "dev.latvian.mods.kubejs.block.FarmlandTrampledKubeEvent",
+        "dev.latvian.mods.kubejs.block.KubeJSBlockEventHandler",
+        "dev.latvian.mods.kubejs.block.KubeJSBlockProperties",
+        "dev.latvian.mods.kubejs.block.MapColorHelper",
+        "dev.latvian.mods.kubejs.block.predicate.BlockEntityPredicate",
+        "dev.latvian.mods.kubejs.block.predicate.BlockEntityPredicateDataCheck",
+        "dev.latvian.mods.kubejs.block.predicate.BlockIDPredicate",
+        "dev.latvian.mods.kubejs.block.predicate.BlockPredicate",
+        "dev.latvian.mods.kubejs.block.RandomTickKubeEvent",
+        "dev.latvian.mods.kubejs.block.SeedItemBuilder",
+        "dev.latvian.mods.kubejs.block.SoundTypeWrapper",
+        "dev.latvian.mods.kubejs.block.state.BlockStatePredicate",
+        "dev.latvian.mods.kubejs.client.AtlasSpriteRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.BlockEntityRendererRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.BlockTintFunctionWrapper",
+        "dev.latvian.mods.kubejs.client.ClientAssetPacks",
+        "dev.latvian.mods.kubejs.client.ClientKubeEvent",
+        "dev.latvian.mods.kubejs.client.ClientPlayerKubeEvent",
+        "dev.latvian.mods.kubejs.client.ClientProperties",
+        "dev.latvian.mods.kubejs.client.ClientScriptManager",
+        "dev.latvian.mods.kubejs.client.DebugInfoKubeEvent",
+        "dev.latvian.mods.kubejs.client.editor.EditorCallback",
+        "dev.latvian.mods.kubejs.client.editor.SelectItemStackScreen",
+        "dev.latvian.mods.kubejs.client.EditorExt",
+        "dev.latvian.mods.kubejs.client.EntityRendererRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.highlight.HighlightKubeEvent",
+        "dev.latvian.mods.kubejs.client.highlight.HighlightRenderer",
+        "dev.latvian.mods.kubejs.client.highlight.KubedexPayloadHandler",
+        "dev.latvian.mods.kubejs.client.icon.AtlasSpriteKubeIcon",
+        "dev.latvian.mods.kubejs.client.icon.ItemKubeIcon",
+        "dev.latvian.mods.kubejs.client.icon.KubeIcon",
+        "dev.latvian.mods.kubejs.client.icon.KubeIconRenderer",
+        "dev.latvian.mods.kubejs.client.icon.KubeIconType",
+        "dev.latvian.mods.kubejs.client.icon.KubeIconTypeRegistry",
+        "dev.latvian.mods.kubejs.client.icon.TextureKubeIcon",
+        "dev.latvian.mods.kubejs.client.ItemTintFunctionWrapper",
+        "dev.latvian.mods.kubejs.client.KeybindRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.KubeAnimatedParticle",
+        "dev.latvian.mods.kubejs.client.KubeJSClient",
+        "dev.latvian.mods.kubejs.client.KubeJSClientEventHandler",
+        "dev.latvian.mods.kubejs.client.KubeJSErrorScreen",
+        "dev.latvian.mods.kubejs.client.KubeJSKeybinds",
+        "dev.latvian.mods.kubejs.client.KubeJSResourcePackFinder",
+        "dev.latvian.mods.kubejs.client.KubeSessionData",
+        "dev.latvian.mods.kubejs.client.LangKubeEvent",
+        "dev.latvian.mods.kubejs.client.LoadedTexture",
+        "dev.latvian.mods.kubejs.client.MenuScreenRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.ModelGenerator",
+        "dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator",
+        "dev.latvian.mods.kubejs.client.NotificationToast",
+        "dev.latvian.mods.kubejs.client.ParticleGenerator",
+        "dev.latvian.mods.kubejs.client.ParticleProviderRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.client.ScheduledClientEvent",
+        "dev.latvian.mods.kubejs.client.SoundsGenerator",
+        "dev.latvian.mods.kubejs.client.VariantBlockStateGenerator",
+        "dev.latvian.mods.kubejs.codec.KubeJSCodecs",
+        "dev.latvian.mods.kubejs.codec.KubeJSStreamCodecs",
+        "dev.latvian.mods.kubejs.codec.OrCodec",
+        "dev.latvian.mods.kubejs.color.KubeColor",
+        "dev.latvian.mods.kubejs.color.NoColor",
+        "dev.latvian.mods.kubejs.color.SimpleColor",
+        "dev.latvian.mods.kubejs.color.SimpleColorWithAlpha",
+        "dev.latvian.mods.kubejs.command.ArgumentTypeWrapper",
+        "dev.latvian.mods.kubejs.command.ArgumentTypeWrappers",
+        "dev.latvian.mods.kubejs.command.CommandRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.command.DumpCommands",
+        "dev.latvian.mods.kubejs.command.InformationCommands",
+        "dev.latvian.mods.kubejs.command.KubeJSClientCommands",
+        "dev.latvian.mods.kubejs.command.KubeJSCommands",
+        "dev.latvian.mods.kubejs.command.PersistentDataCommands",
+        "dev.latvian.mods.kubejs.command.StageCommands",
+        "dev.latvian.mods.kubejs.CommonProperties",
+        "dev.latvian.mods.kubejs.component.AttributeModifierFunctions",
+        "dev.latvian.mods.kubejs.component.ComponentFunctions",
+        "dev.latvian.mods.kubejs.component.DataComponentWrapper",
+        "dev.latvian.mods.kubejs.component.ItemComponentFunctions",
+        "dev.latvian.mods.kubejs.component.MutableDataComponentHolderFunctions",
+        "dev.latvian.mods.kubejs.core.AdvancementNodeKJS",
+        "dev.latvian.mods.kubejs.core.BlockBehaviourKJS",
+        "dev.latvian.mods.kubejs.core.BlockBuilderProvider",
+        "dev.latvian.mods.kubejs.core.BlockKJS",
+        "dev.latvian.mods.kubejs.core.BlockProviderKJS",
+        "dev.latvian.mods.kubejs.core.BlockStateKJS",
+        "dev.latvian.mods.kubejs.core.ClientLevelKJS",
+        "dev.latvian.mods.kubejs.core.ClientPacketListenerKJS",
+        "dev.latvian.mods.kubejs.core.ClientPlayerKJS",
+        "dev.latvian.mods.kubejs.core.ComponentKJS",
+        "dev.latvian.mods.kubejs.core.ContainerKJS",
+        "dev.latvian.mods.kubejs.core.CreativeModeTabKJS",
+        "dev.latvian.mods.kubejs.core.CustomIngredientKJS",
+        "dev.latvian.mods.kubejs.core.DataSenderKJS",
+        "dev.latvian.mods.kubejs.core.DiggerItemKJS",
+        "dev.latvian.mods.kubejs.core.EntityCollectionKJS",
+        "dev.latvian.mods.kubejs.core.EntityGetterKJS",
+        "dev.latvian.mods.kubejs.core.EntityKJS",
+        "dev.latvian.mods.kubejs.core.EntityTypeKJS",
+        "dev.latvian.mods.kubejs.core.FireworkRocketEntityKJS",
+        "dev.latvian.mods.kubejs.core.FluidIngredientKJS",
+        "dev.latvian.mods.kubejs.core.FluidKJS",
+        "dev.latvian.mods.kubejs.core.FluidStackKJS",
+        "dev.latvian.mods.kubejs.core.GameRulesKJS",
+        "dev.latvian.mods.kubejs.core.IngredientKJS",
+        "dev.latvian.mods.kubejs.core.IngredientSupplierKJS",
+        "dev.latvian.mods.kubejs.core.InventoryKJS",
+        "dev.latvian.mods.kubejs.core.ItemEntityKJS",
+        "dev.latvian.mods.kubejs.core.ItemFrameEntityKJS",
+        "dev.latvian.mods.kubejs.core.ItemKJS",
+        "dev.latvian.mods.kubejs.core.ItemStackKJS",
+        "dev.latvian.mods.kubejs.core.LazyComponentKJS",
+        "dev.latvian.mods.kubejs.core.LevelKJS",
+        "dev.latvian.mods.kubejs.core.LivingEntityKJS",
+        "dev.latvian.mods.kubejs.core.LocalClientPlayerKJS",
+        "dev.latvian.mods.kubejs.core.MenuTypeKJS",
+        "dev.latvian.mods.kubejs.core.MessageSenderKJS",
+        "dev.latvian.mods.kubejs.core.MinecraftClientKJS",
+        "dev.latvian.mods.kubejs.core.MinecraftEnvironmentKJS",
+        "dev.latvian.mods.kubejs.core.MinecraftServerKJS",
+        "dev.latvian.mods.kubejs.core.NoMixinException",
+        "dev.latvian.mods.kubejs.core.PlayerKJS",
+        "dev.latvian.mods.kubejs.core.PlayerSelector",
+        "dev.latvian.mods.kubejs.core.RecipeHolderKJS",
+        "dev.latvian.mods.kubejs.core.RecipeInputKJS",
+        "dev.latvian.mods.kubejs.core.RecipeLikeKJS",
+        "dev.latvian.mods.kubejs.core.RecipeManagerKJS",
+        "dev.latvian.mods.kubejs.core.RegistryObjectKJS",
+        "dev.latvian.mods.kubejs.core.ReloadableServerResourceHolderKJS",
+        "dev.latvian.mods.kubejs.core.ReloadableServerResourcesKJS",
+        "dev.latvian.mods.kubejs.core.ServerLevelKJS",
+        "dev.latvian.mods.kubejs.core.ServerPlayerKJS",
+        "dev.latvian.mods.kubejs.core.SizedFluidIngredientKJS",
+        "dev.latvian.mods.kubejs.core.SizedIngredientKJS",
+        "dev.latvian.mods.kubejs.core.TagLoaderKJS",
+        "dev.latvian.mods.kubejs.core.TagManagerKJS",
+        "dev.latvian.mods.kubejs.core.WindowKJS",
+        "dev.latvian.mods.kubejs.core.WithAttachedData",
+        "dev.latvian.mods.kubejs.core.WithPersistentData",
+        "dev.latvian.mods.kubejs.DevProperties",
+        "dev.latvian.mods.kubejs.entity.AfterLivingEntityHurtKubeEvent",
+        "dev.latvian.mods.kubejs.entity.AttributeBuilder",
+        "dev.latvian.mods.kubejs.entity.BeforeLivingEntityHurtKubeEvent",
+        "dev.latvian.mods.kubejs.entity.CheckLivingEntitySpawnKubeEvent",
+        "dev.latvian.mods.kubejs.entity.EntityPotionEffectsJS",
+        "dev.latvian.mods.kubejs.entity.EntitySpawnedKubeEvent",
+        "dev.latvian.mods.kubejs.entity.KubeEntityEvent",
+        "dev.latvian.mods.kubejs.entity.KubeJSEntityEventHandler",
+        "dev.latvian.mods.kubejs.entity.KubeLivingEntityEvent",
+        "dev.latvian.mods.kubejs.entity.KubeRayTraceResult",
+        "dev.latvian.mods.kubejs.entity.LivingEntityDeathKubeEvent",
+        "dev.latvian.mods.kubejs.entity.LivingEntityDropsKubeEvent",
+        "dev.latvian.mods.kubejs.error.EmptyRecipeComponentException",
+        "dev.latvian.mods.kubejs.error.EmptyTagTargetException",
+        "dev.latvian.mods.kubejs.error.InvalidRecipeComponentException",
+        "dev.latvian.mods.kubejs.error.InvalidRecipeComponentValueException",
+        "dev.latvian.mods.kubejs.error.KubeRuntimeException",
+        "dev.latvian.mods.kubejs.error.LegacyError",
+        "dev.latvian.mods.kubejs.error.MissingComponentException",
+        "dev.latvian.mods.kubejs.error.MissingRequiredValueException",
+        "dev.latvian.mods.kubejs.error.RecipeComponentException",
+        "dev.latvian.mods.kubejs.error.RecipeComponentTooLargeException",
+        "dev.latvian.mods.kubejs.event.EventExceptionHandler",
+        "dev.latvian.mods.kubejs.event.EventExit",
+        "dev.latvian.mods.kubejs.event.EventGroup",
+        "dev.latvian.mods.kubejs.event.EventGroupRegistry",
+        "dev.latvian.mods.kubejs.event.EventGroups",
+        "dev.latvian.mods.kubejs.event.EventGroupWrapper",
+        "dev.latvian.mods.kubejs.event.EventHandler",
+        "dev.latvian.mods.kubejs.event.EventHandlerContainer",
+        "dev.latvian.mods.kubejs.event.EventResult",
+        "dev.latvian.mods.kubejs.event.EventTargetType",
+        "dev.latvian.mods.kubejs.event.IEventHandler",
+        "dev.latvian.mods.kubejs.event.KubeEvent",
+        "dev.latvian.mods.kubejs.event.KubeStartupEvent",
+        "dev.latvian.mods.kubejs.event.TargetedEventHandler",
+        "dev.latvian.mods.kubejs.fluid.FlowingFluidBuilder",
+        "dev.latvian.mods.kubejs.fluid.FluidBlockBuilder",
+        "dev.latvian.mods.kubejs.fluid.FluidBucketItemBuilder",
+        "dev.latvian.mods.kubejs.fluid.FluidBuilder",
+        "dev.latvian.mods.kubejs.fluid.FluidLike",
+        "dev.latvian.mods.kubejs.fluid.FluidTypeBuilder",
+        "dev.latvian.mods.kubejs.fluid.FluidWrapper",
+        "dev.latvian.mods.kubejs.fluid.KubeJSFluidIngredients",
+        "dev.latvian.mods.kubejs.fluid.NamespaceFluidIngredient",
+        "dev.latvian.mods.kubejs.fluid.RegExFluidIngredient",
+        "dev.latvian.mods.kubejs.fluid.ThickFluidBuilder",
+        "dev.latvian.mods.kubejs.fluid.ThinFluidBuilder",
+        "dev.latvian.mods.kubejs.generator.KubeAssetGenerator",
+        "dev.latvian.mods.kubejs.generator.KubeDataGenerator",
+        "dev.latvian.mods.kubejs.generator.KubeResourceGenerator",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuClickEvent",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuClickHandler",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuContainerSlot",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuData",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuInventoryClickEvent",
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuSlot",
+        "dev.latvian.mods.kubejs.gui.chest.CustomChestMenu",
+        "dev.latvian.mods.kubejs.gui.InventoryKJSSlot",
+        "dev.latvian.mods.kubejs.gui.KubeJSGUI",
+        "dev.latvian.mods.kubejs.gui.KubeJSMenu",
+        "dev.latvian.mods.kubejs.gui.KubeJSMenus",
+        "dev.latvian.mods.kubejs.gui.KubeJSScreen",
+        "dev.latvian.mods.kubejs.holder.HolderWrapper",
+        "dev.latvian.mods.kubejs.holder.KubeJSHolderSets",
+        "dev.latvian.mods.kubejs.holder.NamespaceHolderSet",
+        "dev.latvian.mods.kubejs.holder.RegExHolderSet",
+        "dev.latvian.mods.kubejs.ingredient.CreativeTabIngredient",
+        "dev.latvian.mods.kubejs.ingredient.KubeJSIngredient",
+        "dev.latvian.mods.kubejs.ingredient.KubeJSIngredients",
+        "dev.latvian.mods.kubejs.ingredient.NamespaceIngredient",
+        "dev.latvian.mods.kubejs.ingredient.RegExIngredient",
+        "dev.latvian.mods.kubejs.ingredient.WildcardIngredient",
+        "dev.latvian.mods.kubejs.integration.architectury.ArchitecturyIntegration",
+        "dev.latvian.mods.kubejs.integration.emi.EMIAddEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.emi.EMIAddInformationKubeEvent",
+        "dev.latvian.mods.kubejs.integration.emi.EMIIntegration",
+        "dev.latvian.mods.kubejs.integration.emi.EMIRemoveEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.emi.KubeJSEMIPlugin",
+        "dev.latvian.mods.kubejs.integration.gamestages.GameStageClientHelper",
+        "dev.latvian.mods.kubejs.integration.gamestages.GameStagesIntegration",
+        "dev.latvian.mods.kubejs.integration.jei.DataComponentTypeInterpreter",
+        "dev.latvian.mods.kubejs.integration.jei.JEIAddEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.JEIAddInformationKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.JEIIntegration",
+        "dev.latvian.mods.kubejs.integration.jei.JEIRegisterSubtypesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveCategoriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveRecipesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.jei.KubeJSJEIPlugin",
+        "dev.latvian.mods.kubejs.integration.rei.DataComponentComparator",
+        "dev.latvian.mods.kubejs.integration.rei.KubeJSREIPlugin",
+        "dev.latvian.mods.kubejs.integration.rei.REIAddEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIAddInformationKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIGroupEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIIntegration",
+        "dev.latvian.mods.kubejs.integration.rei.REIRegisterFluidSubtypesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIRegisterItemSubtypesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveCategoriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveEntriesCompletelyKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveEntriesKubeEvent",
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveRecipeKubeEvent",
+        "dev.latvian.mods.kubejs.item.ArmorMaterialBuilder",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabBuilder",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabCallback",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabCallbackForge",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabContentSupplier",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabIconSupplier",
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabKubeEvent",
+        "dev.latvian.mods.kubejs.item.creativetab.KubeJSCreativeTabs",
+        "dev.latvian.mods.kubejs.item.custom.ArmorItemBuilder",
+        "dev.latvian.mods.kubejs.item.custom.DiggerItemBuilder",
+        "dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder",
+        "dev.latvian.mods.kubejs.item.custom.ItemToolTierRegistryKubeEvent",
+        "dev.latvian.mods.kubejs.item.custom.ShearsItemBuilder",
+        "dev.latvian.mods.kubejs.item.custom.SmithingTemplateItemBuilder",
+        "dev.latvian.mods.kubejs.item.custom.SwordItemBuilder",
+        "dev.latvian.mods.kubejs.item.DynamicItemTooltipsKubeEvent",
+        "dev.latvian.mods.kubejs.item.FoodBuilder",
+        "dev.latvian.mods.kubejs.item.FoodEatenKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemBuilder",
+        "dev.latvian.mods.kubejs.item.ItemClickedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemCraftedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemDestroyedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemDroppedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemEnchantmentsWrapper",
+        "dev.latvian.mods.kubejs.item.ItemEntityInteractedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemHandlerUtils",
+        "dev.latvian.mods.kubejs.item.ItemModelPropertiesKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemModificationKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemPickedUpKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemPredicate",
+        "dev.latvian.mods.kubejs.item.ItemSmeltedKubeEvent",
+        "dev.latvian.mods.kubejs.item.ItemStackKey",
+        "dev.latvian.mods.kubejs.item.ItemStackSet",
+        "dev.latvian.mods.kubejs.item.ItemTintFunction",
+        "dev.latvian.mods.kubejs.item.ItemToolTiers",
+        "dev.latvian.mods.kubejs.item.JukeboxSongBuilder",
+        "dev.latvian.mods.kubejs.item.KubeJSItemEventHandler",
+        "dev.latvian.mods.kubejs.item.KubeJSItemProperties",
+        "dev.latvian.mods.kubejs.item.KubeJSItemStackData",
+        "dev.latvian.mods.kubejs.item.ModifyItemTooltipsKubeEvent",
+        "dev.latvian.mods.kubejs.item.MutableToolTier",
+        "dev.latvian.mods.kubejs.item.PlayerMainInvWrapper",
+        "dev.latvian.mods.kubejs.item.RangedWrapper",
+        "dev.latvian.mods.kubejs.KubeJS",
+        "dev.latvian.mods.kubejs.KubeJSCommon",
+        "dev.latvian.mods.kubejs.KubeJSComponents",
+        "dev.latvian.mods.kubejs.KubeJSMixinPlugin",
+        "dev.latvian.mods.kubejs.KubeJSModEventHandler",
+        "dev.latvian.mods.kubejs.KubeJSPaths",
+        "dev.latvian.mods.kubejs.level.CachedLevelBlock",
+        "dev.latvian.mods.kubejs.level.ExplosionKubeEvent",
+        "dev.latvian.mods.kubejs.level.ExplosionProperties",
+        "dev.latvian.mods.kubejs.level.KubeJSWorldEventHandler",
+        "dev.latvian.mods.kubejs.level.KubeLevelEvent",
+        "dev.latvian.mods.kubejs.level.LevelBlock",
+        "dev.latvian.mods.kubejs.level.ruletest.AllMatchRuleTest",
+        "dev.latvian.mods.kubejs.level.ruletest.AlwaysFalseRuleTest",
+        "dev.latvian.mods.kubejs.level.ruletest.AnyMatchRuleTest",
+        "dev.latvian.mods.kubejs.level.ruletest.InvertRuleTest",
+        "dev.latvian.mods.kubejs.level.ruletest.KubeJSRuleTests",
+        "dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent",
+        "dev.latvian.mods.kubejs.level.WrappedSpawner",
+        "dev.latvian.mods.kubejs.misc.BasicMobEffect",
+        "dev.latvian.mods.kubejs.misc.BasicParticleType",
+        "dev.latvian.mods.kubejs.misc.ComplexParticleType",
+        "dev.latvian.mods.kubejs.misc.CustomStatBuilder",
+        "dev.latvian.mods.kubejs.misc.MobEffectBuilder",
+        "dev.latvian.mods.kubejs.misc.PaintingVariantBuilder",
+        "dev.latvian.mods.kubejs.misc.ParticleTypeBuilder",
+        "dev.latvian.mods.kubejs.misc.PoiTypeBuilder",
+        "dev.latvian.mods.kubejs.misc.PotionBuilder",
+        "dev.latvian.mods.kubejs.misc.SoundEventBuilder",
+        "dev.latvian.mods.kubejs.misc.VillagerProfessionBuilder",
+        "dev.latvian.mods.kubejs.misc.VillagerTypeBuilder",
+        "dev.latvian.mods.kubejs.net.AddStagePayload",
+        "dev.latvian.mods.kubejs.net.DisplayClientErrorsPayload",
+        "dev.latvian.mods.kubejs.net.DisplayServerErrorsPayload",
+        "dev.latvian.mods.kubejs.net.FirstClickPayload",
+        "dev.latvian.mods.kubejs.net.KubeJSNet",
+        "dev.latvian.mods.kubejs.net.KubeServerData",
+        "dev.latvian.mods.kubejs.net.NetworkKubeEvent",
+        "dev.latvian.mods.kubejs.net.NotificationPayload",
+        "dev.latvian.mods.kubejs.net.ReloadStartupScriptsPayload",
+        "dev.latvian.mods.kubejs.net.RemoveStagePayload",
+        "dev.latvian.mods.kubejs.net.RequestBlockKubedexPayload",
+        "dev.latvian.mods.kubejs.net.RequestEntityKubedexPayload",
+        "dev.latvian.mods.kubejs.net.RequestInventoryKubedexPayload",
+        "dev.latvian.mods.kubejs.net.SendDataFromClientPayload",
+        "dev.latvian.mods.kubejs.net.SendDataFromServerPayload",
+        "dev.latvian.mods.kubejs.net.SetActivePostShaderPayload",
+        "dev.latvian.mods.kubejs.net.SyncServerDataPayload",
+        "dev.latvian.mods.kubejs.net.SyncStagesPayload",
+        "dev.latvian.mods.kubejs.net.WebServerUpdateJSONPayload",
+        "dev.latvian.mods.kubejs.net.WebServerUpdateNBTPayload",
+        "dev.latvian.mods.kubejs.player.ChestKubeEvent",
+        "dev.latvian.mods.kubejs.player.EntityArrayList",
+        "dev.latvian.mods.kubejs.player.InventoryChangedKubeEvent",
+        "dev.latvian.mods.kubejs.player.InventoryKubeEvent",
+        "dev.latvian.mods.kubejs.player.KubeJSInventoryListener",
+        "dev.latvian.mods.kubejs.player.KubeJSPlayerEventHandler",
+        "dev.latvian.mods.kubejs.player.KubePlayerEvent",
+        "dev.latvian.mods.kubejs.player.PlayerAdvancementKubeEvent",
+        "dev.latvian.mods.kubejs.player.PlayerChatReceivedKubeEvent",
+        "dev.latvian.mods.kubejs.player.PlayerClonedKubeEvent",
+        "dev.latvian.mods.kubejs.player.PlayerRespawnedKubeEvent",
+        "dev.latvian.mods.kubejs.player.PlayerStatsJS",
+        "dev.latvian.mods.kubejs.player.SimplePlayerKubeEvent",
+        "dev.latvian.mods.kubejs.player.StageChangedEvent",
+        "dev.latvian.mods.kubejs.plugin.builtin.BuiltinKubeJSClientPlugin",
+        "dev.latvian.mods.kubejs.plugin.builtin.BuiltinKubeJSPlugin",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.BlockEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ClientEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.EntityEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ItemEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.LevelEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.NetworkEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ServerEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.event.StartupEvents",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.AABBWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.BuildingMaterialProperties",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ColorWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DamageSourceWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DataMapWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DirectionWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.EntitySelectorWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.GLFWInputWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.HolderSetWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.IngredientWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ItemWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.JavaWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.KMath",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.MiscWrappers",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.NativeEventWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.NBTWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ParticleOptionsWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.RegistryWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.SizedIngredientWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.StringUtilsWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.TextIcons",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.TextWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.UtilsWrapper",
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.UUIDWrapper",
+        "dev.latvian.mods.kubejs.plugin.ClassFilter",
+        "dev.latvian.mods.kubejs.plugin.KubeJSPlugin",
+        "dev.latvian.mods.kubejs.plugin.KubeJSPluginEvent",
+        "dev.latvian.mods.kubejs.plugin.KubeJSPlugins",
+        "dev.latvian.mods.kubejs.recipe.AfterRecipesLoadedKubeEvent",
+        "dev.latvian.mods.kubejs.recipe.CachedItemTagLookup",
+        "dev.latvian.mods.kubejs.recipe.CachedTagLookup",
+        "dev.latvian.mods.kubejs.recipe.component.BlockComponent",
+        "dev.latvian.mods.kubejs.recipe.component.BlockStateComponent",
+        "dev.latvian.mods.kubejs.recipe.component.BookCategoryComponent",
+        "dev.latvian.mods.kubejs.recipe.component.BooleanComponent",
+        "dev.latvian.mods.kubejs.recipe.component.CharacterComponent",
+        "dev.latvian.mods.kubejs.recipe.component.ComponentRole",
+        "dev.latvian.mods.kubejs.recipe.component.ComponentValueMap",
+        "dev.latvian.mods.kubejs.recipe.component.CustomObjectRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.EitherRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.EnumComponent",
+        "dev.latvian.mods.kubejs.recipe.component.FluidIngredientComponent",
+        "dev.latvian.mods.kubejs.recipe.component.FluidStackComponent",
+        "dev.latvian.mods.kubejs.recipe.component.IgnoreComponent",
+        "dev.latvian.mods.kubejs.recipe.component.IngredientComponent",
+        "dev.latvian.mods.kubejs.recipe.component.ItemStackComponent",
+        "dev.latvian.mods.kubejs.recipe.component.ListRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.MapRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.NestedRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.NumberComponent",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentBuilder",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentCodecFactory",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentType",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValue",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValueFunction",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValueMap",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentWithCodec",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentWithParent",
+        "dev.latvian.mods.kubejs.recipe.component.RecipeValidationContext",
+        "dev.latvian.mods.kubejs.recipe.component.RegistryComponent",
+        "dev.latvian.mods.kubejs.recipe.component.ResourceKeyComponent",
+        "dev.latvian.mods.kubejs.recipe.component.SimpleRecipeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.SizedFluidIngredientComponent",
+        "dev.latvian.mods.kubejs.recipe.component.SizedIngredientComponent",
+        "dev.latvian.mods.kubejs.recipe.component.StringComponent",
+        "dev.latvian.mods.kubejs.recipe.component.TagKeyComponent",
+        "dev.latvian.mods.kubejs.recipe.component.TimeComponent",
+        "dev.latvian.mods.kubejs.recipe.component.UniqueIdBuilder",
+        "dev.latvian.mods.kubejs.recipe.CompostableRecipesKubeEvent",
+        "dev.latvian.mods.kubejs.recipe.filter.AndFilter",
+        "dev.latvian.mods.kubejs.recipe.filter.ConstantFilter",
+        "dev.latvian.mods.kubejs.recipe.filter.GroupFilter",
+        "dev.latvian.mods.kubejs.recipe.filter.IDFilter",
+        "dev.latvian.mods.kubejs.recipe.filter.InputFilter",
+        "dev.latvian.mods.kubejs.recipe.filter.ModFilter"
+      ],
+      "methods": {
+        "dev.latvian.mods.kubejs.block.BlockBrokenKubeEvent": [
+          "getEntity()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockBuilder": [
+          "transformObject(Block)",
+          "createAdditionalObjects(AdditionalObjectRegistry)",
+          "displayName(Component)",
+          "generateData(KubeDataGenerator)",
+          "generateLootTable()",
+          "generateLootTable(KubeDataGenerator)",
+          "generateAssets(KubeAssetGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "generateItemModel(ModelGenerator)",
+          "useMultipartBlockState()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateMultipartBlockState(MultipartBlockStateGenerator)",
+          "copyPropertiesFrom(Block)",
+          "soundType(SoundType)",
+          "noSoundType()",
+          "woodSoundType()",
+          "stoneSoundType()",
+          "gravelSoundType()",
+          "grassSoundType()",
+          "sandSoundType()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockDropsKubeEvent": [
+          "getLevel()",
+          "getEntity()",
+          "getBlock()",
+          "getXp()",
+          "setXp(int)",
+          "getItemEntities()",
+          "getItems()",
+          "containsItem(ItemPredicate)",
+          "addItem(ItemStack)",
+          "removeItem(ItemPredicate)",
+          "getTool()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockItemBuilder": [
+          "createObject()",
+          "getTranslationKeyGroup()",
+          "generateAssets(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockLeftClickedKubeEvent": [
+          "getEntity()",
+          "getBlock()",
+          "getItem()",
+          "getFacing()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockModificationKubeEvent": [
+          "modify(BlockStatePredicate, Consumer<BlockModificationKubeEvent.BlockModifications>)",
+          "BlockModifications(Block)"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockPickedKubeEvent": [
+          "getLevel()",
+          "getEntity()",
+          "getTarget()",
+          "handle(BlockState, HitResult, LevelReader, BlockPos, Player)"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockPlacedKubeEvent": [
+          "getLevel()",
+          "getEntity()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockRenderType": [],
+        "dev.latvian.mods.kubejs.block.BlockRightClickedKubeEvent": [
+          "getEntity()",
+          "getBlock()",
+          "getHand()",
+          "getItem()",
+          "getFacing()",
+          "getHitResult()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockRotationType": [
+          "getSerializedName()",
+          "generateBlockStateJson(VariantBlockStateGenerator, BlockBuilder)",
+          "generateBlockModelJsons(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockStartedFallingKubeEvent": [
+          "getLevel()",
+          "getEntity()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockStoppedFallingKubeEvent": [
+          "getLevel()",
+          "getEntity()"
+        ],
+        "dev.latvian.mods.kubejs.block.BlockTintFunction": [],
+        "dev.latvian.mods.kubejs.block.callback.AfterEntityFallenOnBlockCallback": [
+          "bounce(float)",
+          "getVelocity()",
+          "setVelocity(Vec3)",
+          "setVelocity(float, float, float)",
+          "hasChangedVelocity()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.BlockExplodedCallback": [
+          "getLevel()",
+          "getBlock()",
+          "getBlockState()",
+          "getExplosion()",
+          "getCause()",
+          "getIgniter()",
+          "getRadius()",
+          "getAffectedPlayers()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.BlockStateMirrorCallback": [
+          "mirror(Direction)",
+          "mirror(Mirror)",
+          "getRotation(Direction)",
+          "getMirror()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.BlockStateModifyCallback": [
+          "cycle(Property<T>)",
+          "getState()",
+          "toString()",
+          "getProperties()",
+          "hasProperty(Property<T>)",
+          "getValue(Property<T>)",
+          "get(Property<T>)",
+          "getOptionalValue(Property<T>)",
+          "setValue(Property<T>, V)",
+          "set(BooleanProperty, boolean)",
+          "set(IntegerProperty, Integer)",
+          "set(EnumProperty<T>, String)",
+          "populateNeighbours(Map<Map<Property<?>, Comparable<?>>, BlockState>)",
+          "getValues()",
+          "rotate(Rotation)",
+          "mirror(Mirror)",
+          "updateShape(Direction, BlockState, LevelAccessor, BlockPos, BlockPos)"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.BlockStateModifyPlacementCallback": [
+          "getClickedPos()",
+          "getClickedBlock()",
+          "canPlace()",
+          "replacingClickedOnBlock()",
+          "getNearestLookingDirection()",
+          "getNearestLookingVerticalDirection()",
+          "getNearestLookingDirections()",
+          "getClickedFace()",
+          "getClickLocation()",
+          "isInside()",
+          "getItem()",
+          "getPlayer()",
+          "getHand()",
+          "getLevel()",
+          "getHorizontalDirection()",
+          "isSecondaryUseActive()",
+          "getRotation()",
+          "getFluidStateAtClickedPos()",
+          "isClickedPosIn(Fluid)",
+          "waterlogged(boolean)"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.BlockStateRotateCallback": [
+          "rotate(Direction)",
+          "rotate(Rotation)",
+          "getRotation()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.CanBeReplacedCallback": [
+          "getClickedPos()",
+          "getClickedBlock()",
+          "getNearestLookingDirection()",
+          "getNearestLookingVerticalDirection()",
+          "getNearestLookingDirections()",
+          "getClickedFace()",
+          "getClickLocation()",
+          "isInside()",
+          "getItem()",
+          "getPlayer()",
+          "getHand()",
+          "getLevel()",
+          "getHorizontalDirection()",
+          "isSecondaryUseActive()",
+          "getRotation()",
+          "getFluidStateAtClickedPos()",
+          "isClickedPosIn(Fluid)",
+          "canBeReplaced()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.EntityBlockCallback": [
+          "getLevel()",
+          "getEntity()",
+          "getBlock()",
+          "getState()",
+          "getPos()",
+          "isSuppressingBounce()"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.EntityFallenOnBlockCallback": [
+          "getFallHeight()",
+          "applyFallDamage()",
+          "applyFallDamage(float)",
+          "applyFallDamage(float, float)",
+          "applyFallDamage(float, float, DamageSource)"
+        ],
+        "dev.latvian.mods.kubejs.block.callback.RandomTickCallback": [
+          "getLevel()",
+          "getServer()"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.BasicCropBlockJS": [
+          "getAgeProperty()",
+          "getMaxAge()",
+          "getBaseSeedId()",
+          "createBlockStateDefinition(Builder<Block, BlockState>)",
+          "getShape(BlockState, BlockGetter, BlockPos, CollisionContext)",
+          "randomTick(BlockState, ServerLevel, BlockPos, RandomSource)",
+          "growCrops(Level, BlockPos, BlockState)",
+          "canSurvive(BlockState, LevelReader, BlockPos)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.BasicKubeBlock": [
+          "getShape(BlockState, BlockGetter, BlockPos, CollisionContext)",
+          "createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState>)",
+          "getFluidState(BlockState)",
+          "getStateForPlacement(BlockPlaceContext)",
+          "canBeReplaced(BlockState, BlockPlaceContext)",
+          "updateShape(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "propagatesSkylightDown(BlockState, BlockGetter, BlockPos)",
+          "randomTick(BlockState, ServerLevel, BlockPos, RandomSource)",
+          "isRandomlyTicking(BlockState)",
+          "getVisualShape(BlockState, BlockGetter, BlockPos, CollisionContext)",
+          "getShadeBrightness(BlockState, BlockGetter, BlockPos)",
+          "skipRendering(BlockState, BlockState, Direction)",
+          "canPlaceLiquid(Player, BlockGetter, BlockPos, BlockState, Fluid)",
+          "placeLiquid(LevelAccessor, BlockPos, BlockState, FluidState)",
+          "pickupBlock(Player, LevelAccessor, BlockPos, BlockState)",
+          "getPickupSound()",
+          "entityInside(BlockState, Level, BlockPos, Entity)",
+          "stepOn(Level, BlockPos, BlockState, Entity)",
+          "fallOn(Level, BlockState, BlockPos, Entity, float)",
+          "updateEntityAfterFallOn(BlockGetter, Entity)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.ButtonBlockBuilder": [
+          "behaviour(BlockSetType)",
+          "ticksToStayPressed(TickDuration)",
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "generateItemModel(ModelGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.ButtonOrPressurePlateBuilder": [],
+        "dev.latvian.mods.kubejs.block.custom.CardinalBlockBuilder": [
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.CarpetBlockBuilder": [
+          "createObject()",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.CropBlockBuilder": [
+          "noItem()",
+          "noSeeds()",
+          "crop(Holder<Item>)",
+          "crop(Holder<Item>, NumberProvider)",
+          "age(int)",
+          "age(int, Consumer<CropBlockBuilder.ShapeBuilder>)",
+          "farmersCanPlant()",
+          "bonemeal(ToIntFunction<RandomTickCallback>)",
+          "survive(CropBlockBuilder.SurviveCallback)",
+          "growTick(ToDoubleFunction<RandomTickCallback>)",
+          "randomTick(Consumer<RandomTickCallback>)",
+          "generateLootTable(KubeDataGenerator)",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "generateItemModel(ModelGenerator)",
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.DoorBlockBuilder": [
+          "behaviour(BlockSetType)",
+          "wooden()",
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "generateLootTable(KubeDataGenerator)",
+          "generateItemModel(ModelGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.FallingBlockBuilder": [
+          "createObject()",
+          "dustColor(KubeColor)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.FenceBlockBuilder": [
+          "createObject()",
+          "useMultipartBlockState()",
+          "generateMultipartBlockState(MultipartBlockStateGenerator)",
+          "generateItemModel(ModelGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.FenceGateBlockBuilder": [
+          "behaviour(WoodType)",
+          "behaviour(String)",
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "generateItemModel(ModelGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.PillarBlockBuilder": [
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)",
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.PressurePlateBlockBuilder": [
+          "behaviour(BlockSetType)",
+          "ticksToStayPressed(TickDuration)",
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.ShapedBlockBuilder": [],
+        "dev.latvian.mods.kubejs.block.custom.SlabBlockBuilder": [
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.StairBlockBuilder": [
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.TrapdoorBlockBuilder": [
+          "behaviour(BlockSetType)",
+          "createObject()",
+          "generateBlockState(VariantBlockStateGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.custom.WallBlockBuilder": [
+          "createObject()",
+          "useMultipartBlockState()",
+          "generateMultipartBlockState(MultipartBlockStateGenerator)",
+          "generateItemModel(ModelGenerator)",
+          "generateBlockModels(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.block.DetectorBlock": [
+          "neighborChanged(BlockState, Level, BlockPos, Block, BlockPos, boolean)",
+          "createBlockStateDefinition(net.minecraft.world.level.block.state.StateDefinition.Builder<Block, BlockState>)"
+        ],
+        "dev.latvian.mods.kubejs.block.DetectorBlockKubeEvent": [
+          "getDetectorId()",
+          "getLevel()",
+          "isPowered()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.drop.BlockDrops": [
+          "createDefault(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.block.drop.BlockDropSupplier": [],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachment": [
+          "getWrappedObject()",
+          "getCapability(BlockCapability<CAP, SRC>)",
+          "serialize(Provider)",
+          "deserialize(Provider, Tag)",
+          "onRemove(ServerLevel, KubeBlockEntity, BlockState)",
+          "serverTick()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentFactory": [
+          "getCapabilities()",
+          "isTicking()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentHandler": [
+          "attach(Context, String, KubeResourceLocation, Set<Direction>, Object)",
+          "attachCustomCapability(String, Set<Direction>, BlockCapability<?, ?>, Supplier<?>)",
+          "inventory(String, Set<Direction>, int, int, ItemPredicate)",
+          "inventory(String, Set<Direction>, int, int)",
+          "fluidTank(String, Set<Direction>, int, FluidIngredient)",
+          "fluidTank(String, Set<Direction>, int)",
+          "energyStorage(String, Set<Direction>, int, int, int, int)"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentHolder": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentInfo": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentRegistry": [
+          "register(ResourceLocation, Class<? extends BlockEntityAttachmentFactory>)"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityAttachmentType": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityEventCallback": [],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityInfo": [
+          "initialData(CompoundTag)",
+          "serverTicking()",
+          "clientTicking()",
+          "ticking()",
+          "tickFrequency(int)",
+          "tickOffset(int)",
+          "enableSync()",
+          "attach(String, BlockEntityAttachmentType, Set<Direction>, BlockEntityAttachmentFactory)",
+          "eventHandler(int, BlockEntityEventCallback)",
+          "rightClickOpensInventory(String)",
+          "rightClickFillsTank(String)",
+          "createBlockEntity(BlockPos, BlockState)",
+          "getTicker(Level)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.BlockEntityTickKubeEvent": [
+          "getLevel()",
+          "getBlock()",
+          "getTick()",
+          "getCycle()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.CustomCapabilityAttachment": [
+          "getWrappedObject()",
+          "getCapability(BlockCapability<CAP, SRC>)"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.EnergyStorageAttachment": [
+          "getWrappedObject()",
+          "getCapability(BlockCapability<CAP, SRC>)",
+          "serverTick()"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.FluidTankAttachment": [
+          "getWrappedObject()",
+          "getCapability(BlockCapability<CAP, SRC>)",
+          "serialize(Provider)",
+          "deserialize(Provider, Tag)"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.InventoryAttachment": [
+          "createInventory()",
+          "getWrappedObject()",
+          "getCapability(BlockCapability<CAP, SRC>)",
+          "serialize(Provider)",
+          "deserialize(Provider, Tag)",
+          "onRemove(ServerLevel, KubeBlockEntity, BlockState)"
+        ],
+        "dev.latvian.mods.kubejs.block.entity.KubeBlockEntity": [
+          "setLevel(Level)",
+          "saveAdditional(CompoundTag, Provider)",
+          "loadAdditional(CompoundTag, Provider)",
+          "getUpdateTag(Provider)",
+          "getUpdatePacket()",
+          "save()",
+          "sync()",
+          "sendEvent(int, int)",
+          "triggerEvent(int, int)",
+          "getBlock()",
+          "getPlacer()"
+        ],
+        "dev.latvian.mods.kubejs.block.FarmlandTrampledKubeEvent": [
+          "getDistance()",
+          "getEntity()",
+          "getLevel()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.KubeJSBlockEventHandler": [
+          "rightClick(RightClickBlock)",
+          "leftClick(LeftClickBlock)",
+          "blockBreak(BreakEvent)",
+          "drops(BlockDropsEvent)",
+          "blockPlace(EntityPlaceEvent)",
+          "farmlandTrample(FarmlandTrampleEvent)"
+        ],
+        "dev.latvian.mods.kubejs.block.KubeJSBlockProperties": [],
+        "dev.latvian.mods.kubejs.block.MapColorHelper": [
+          "wrap(Object)",
+          "reverse(MapColor)",
+          "findClosest(int)",
+          "apply(BlockState)"
+        ],
+        "dev.latvian.mods.kubejs.block.predicate.BlockEntityPredicate": [
+          "data(BlockEntityPredicateDataCheck)",
+          "check(LevelBlock)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.block.predicate.BlockEntityPredicateDataCheck": [],
+        "dev.latvian.mods.kubejs.block.predicate.BlockIDPredicate": [
+          "toString()",
+          "with(String, String)",
+          "getBlockProperties()",
+          "getBlockState()",
+          "check(LevelBlock)",
+          "checkState(BlockState)",
+          "PropertyObject(Property<?>, Object)"
+        ],
+        "dev.latvian.mods.kubejs.block.predicate.BlockPredicate": [],
+        "dev.latvian.mods.kubejs.block.RandomTickKubeEvent": [
+          "getLevel()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.block.SeedItemBuilder": [
+          "getTranslationKeyGroup()",
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.block.SoundTypeWrapper": [
+          "getMap()",
+          "wrap(Context, Object, TypeInfo)"
+        ],
+        "dev.latvian.mods.kubejs.block.state.BlockStatePredicate": [
+          "testBlock(Block)",
+          "asRuleTest()",
+          "getBlockStates()",
+          "getBlocks()",
+          "getBlockIds()",
+          "check(List<TargetBlockState>)"
+        ],
+        "dev.latvian.mods.kubejs.client.AtlasSpriteRegistryKubeEvent": [
+          "register(ResourceLocation)"
+        ],
+        "dev.latvian.mods.kubejs.client.BlockEntityRendererRegistryKubeEvent": [
+          "register(BlockEntityType<?>, BlockEntityRendererProvider)"
+        ],
+        "dev.latvian.mods.kubejs.client.BlockTintFunctionWrapper": [
+          "getColor(BlockState, BlockAndTintGetter, BlockPos, int)"
+        ],
+        "dev.latvian.mods.kubejs.client.ClientAssetPacks": [
+          "inject(List<PackResources>)"
+        ],
+        "dev.latvian.mods.kubejs.client.ClientKubeEvent": [
+          "getClient()"
+        ],
+        "dev.latvian.mods.kubejs.client.ClientPlayerKubeEvent": [
+          "getEntity()",
+          "getPlayer()"
+        ],
+        "dev.latvian.mods.kubejs.client.ClientProperties": [
+          "get()",
+          "reload()",
+          "load()"
+        ],
+        "dev.latvian.mods.kubejs.client.ClientScriptManager": [],
+        "dev.latvian.mods.kubejs.client.DebugInfoKubeEvent": [
+          "getShowDebug()",
+          "getLines()"
+        ],
+        "dev.latvian.mods.kubejs.client.editor.EditorCallback": [],
+        "dev.latvian.mods.kubejs.client.editor.SelectItemStackScreen": [
+          "init()"
+        ],
+        "dev.latvian.mods.kubejs.client.EditorExt": [
+          "isKnownVSCode()",
+          "openFile(Path, int, int)"
+        ],
+        "dev.latvian.mods.kubejs.client.EntityRendererRegistryKubeEvent": [
+          "register(EntityType<?>, EntityRendererProvider)"
+        ],
+        "dev.latvian.mods.kubejs.client.highlight.HighlightKubeEvent": [
+          "getClient()",
+          "addBlock(BlockPos, KubeColor)",
+          "addBlocks(BlockPos, BlockPos, KubeColor)",
+          "addTargetBlock(KubeColor)",
+          "addEntity(Entity, KubeColor)",
+          "addEntities(EntitySelector, KubeColor)",
+          "addEntitiesByType(EntityType<?>, KubeColor)",
+          "addTargetEntity(KubeColor)",
+          "addTarget(KubeColor)",
+          "getTargetBlock()",
+          "getTargetEntity()"
+        ],
+        "dev.latvian.mods.kubejs.client.highlight.HighlightRenderer": [
+          "loadPostChains(Minecraft)",
+          "tickPre(Minecraft)",
+          "clearBuffers(Minecraft)",
+          "renderAfterLevel(Minecraft, RenderLevelStageEvent)",
+          "updateDepth(Minecraft)",
+          "resizePostChains(int, int)",
+          "renderAfterEntities(Minecraft, RenderLevelStageEvent)",
+          "screen(Minecraft, GuiGraphics, AbstractContainerScreen<?>, int, int, float)",
+          "hudPostDraw(Minecraft, GuiGraphics, float)",
+          "ShaderChain(PostChain, RenderTarget, RenderTarget, RenderTarget, MutableBoolean)"
+        ],
+        "dev.latvian.mods.kubejs.client.highlight.KubedexPayloadHandler": [
+          "block(ServerPlayer, BlockPos, int)",
+          "entity(ServerPlayer, int, int)",
+          "inventory(ServerPlayer, List<Integer>, List<ItemStack>, int)",
+          "itemStacks(ServerPlayer, Collection<KubedexPayloadHandler.SlotItem>, int)",
+          "SlotItem(ItemStack, int)"
+        ],
+        "dev.latvian.mods.kubejs.client.icon.AtlasSpriteKubeIcon": [
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.client.icon.ItemKubeIcon": [
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.client.icon.KubeIcon": [],
+        "dev.latvian.mods.kubejs.client.icon.KubeIconRenderer": [],
+        "dev.latvian.mods.kubejs.client.icon.KubeIconType": [],
+        "dev.latvian.mods.kubejs.client.icon.KubeIconTypeRegistry": [],
+        "dev.latvian.mods.kubejs.client.icon.TextureKubeIcon": [
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.client.ItemTintFunctionWrapper": [
+          "getColor(ItemStack, int)"
+        ],
+        "dev.latvian.mods.kubejs.client.KeybindRegistryKubeEvent": [
+          "register(String)",
+          "register(String, String)",
+          "build()"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeAnimatedParticle": [
+          "setGravity(float)",
+          "setFriction(float)",
+          "setColor(KubeColor, boolean)",
+          "setColor(KubeColor)",
+          "setPhysicality(boolean)",
+          "setFasterWhenYMotionBlocked(boolean)",
+          "setLightColor(Float2IntFunction)",
+          "onTick(Consumer<KubeAnimatedParticle>)",
+          "setSpeed(Vec3)",
+          "getLevel()",
+          "getX()",
+          "getY()",
+          "getZ()",
+          "getXSpeed()",
+          "getYSpeed()",
+          "getZSpeed()",
+          "getSpriteSet()",
+          "getRandom()",
+          "getLightColor(float)",
+          "tick()"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeJSClient": [
+          "reloadClientScripts()",
+          "copyDefaultOptionsFile(File)",
+          "handleDataFromServerPacket(String, CompoundTag)",
+          "getClientPlayer()",
+          "generateTypings(CommandSourceStack)",
+          "reloadConfig()",
+          "reloadStartupScripts(boolean)",
+          "export(List<ExportablePackResources>)",
+          "openErrors(ScriptType)",
+          "openErrors(ScriptType, List<ConsoleLine>, List<ConsoleLine>)",
+          "runInMainThread(Runnable)",
+          "updateServerData(KubeServerData)",
+          "getWebServerWindowTitle()",
+          "loadPostChains(Minecraft)",
+          "resizePostChains(int, int)",
+          "formatNumber(int)",
+          "drawStackSize(GuiGraphics, Font, int, int, int, int, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeJSClientEventHandler": [
+          "setupClient(FMLClientSetupEvent)",
+          "addClientPacks(AddPackFindersEvent)",
+          "blockColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Block)",
+          "itemColors(net.neoforged.neoforge.client.event.RegisterColorHandlersEvent.Item)",
+          "registerMenuScreens(RegisterMenuScreensEvent)",
+          "registerRenderers(RegisterRenderers)",
+          "registerKeyMappings(RegisterKeyMappingsEvent)",
+          "registerCoreShaders(RegisterShadersEvent)",
+          "registerClientExtensions(RegisterClientExtensionsEvent)",
+          "registerParticleProviders(RegisterParticleProvidersEvent)",
+          "onRegisterClientCommands(RegisterClientCommandsEvent)",
+          "debugInfo(DebugText)",
+          "testRequirements(Minecraft, DynamicItemTooltipsKubeEvent, TooltipRequirements)",
+          "onItemTooltip(ItemTooltipEvent)",
+          "loggingIn(LoggingIn)",
+          "loggingOut(LoggingOut)",
+          "hudPostDraw(Post)",
+          "screenPostDraw(net.neoforged.neoforge.client.event.ScreenEvent.Render.Post)",
+          "clientTick(Pre)",
+          "worldRender(RenderLevelStageEvent)"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeJSErrorScreen": [
+          "getNarrationMessage()",
+          "init()",
+          "render(GuiGraphics, int, int, float)",
+          "shouldCloseOnEsc()",
+          "onClose()"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeJSKeybinds": [
+          "triggerReload()",
+          "triggerKeyEvents(Minecraft)",
+          "get(String)",
+          "getOrCreate(String)",
+          "generateLang(LangKubeEvent)"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeJSResourcePackFinder": [
+          "loadPacks(Consumer<Pack>)"
+        ],
+        "dev.latvian.mods.kubejs.client.KubeSessionData": [
+          "of(ClientPacketListener)",
+          "of(Minecraft)",
+          "sync(KubeServerData)"
+        ],
+        "dev.latvian.mods.kubejs.client.LangKubeEvent": [
+          "add(String, String, String)",
+          "addAll(String, Map<String, String>)",
+          "add(String, String)",
+          "addAll(Map<String, String>)",
+          "renameItem(ItemStack, String)",
+          "renameBlock(Block, String)",
+          "renameEntity(ResourceLocation, String)",
+          "renameBiome(ResourceLocation, String)",
+          "painting(KubeResourceLocation, String, String)",
+          "Key(String, String, String)"
+        ],
+        "dev.latvian.mods.kubejs.client.LoadedTexture": [
+          "load(ResourceLocation)",
+          "toBytes()",
+          "copy()",
+          "remap(Map<KubeColor, KubeColor>)",
+          "resize(int, int)",
+          "tint(KubeColor)"
+        ],
+        "dev.latvian.mods.kubejs.client.MenuScreenRegistryKubeEvent": [
+          "register(MenuType<?>, ScreenConstructor)"
+        ],
+        "dev.latvian.mods.kubejs.client.ModelGenerator": [
+          "toJson()",
+          "parent(ResourceLocation)",
+          "texture(String, String)",
+          "texture(String[], String)",
+          "textures(Map<String, String>)",
+          "element(Consumer<ModelGenerator.Element>)",
+          "override(ResourceLocation, Consumer<ModelGenerator.Override>)",
+          "custom(Consumer<JsonObject>)",
+          "OverridePredicate(ResourceLocation, float)"
+        ],
+        "dev.latvian.mods.kubejs.client.MultipartBlockStateGenerator": [
+          "part(String, Consumer<MultipartBlockStateGenerator.Part>)",
+          "part(String, ResourceLocation)",
+          "toJson()"
+        ],
+        "dev.latvian.mods.kubejs.client.NotificationToast": [
+          "width()",
+          "height()",
+          "render(GuiGraphics, ToastComponent, long)"
+        ],
+        "dev.latvian.mods.kubejs.client.ParticleGenerator": [
+          "texture(String)",
+          "textures(List<String>)",
+          "toJson()"
+        ],
+        "dev.latvian.mods.kubejs.client.ParticleProviderRegistryKubeEvent": [
+          "register(ParticleType<T>, ParticleProviderRegistryKubeEvent.SpriteSetParticleProvider<T>)",
+          "register(ParticleType<T>, Consumer<KubeAnimatedParticle>)",
+          "register(ParticleType<T>)",
+          "registerSpecial(ParticleType<T>, ParticleProvider<T>)"
+        ],
+        "dev.latvian.mods.kubejs.client.ScheduledClientEvent": [
+          "getClient()"
+        ],
+        "dev.latvian.mods.kubejs.client.SoundsGenerator": [
+          "addSound(String, Consumer<SoundsGenerator.SoundGen>, boolean)",
+          "addSound(String, Consumer<SoundsGenerator.SoundGen>)",
+          "toJson()"
+        ],
+        "dev.latvian.mods.kubejs.client.VariantBlockStateGenerator": [
+          "variant(String, Consumer<VariantBlockStateGenerator.Variant>)",
+          "variant(String, ResourceLocation)",
+          "simpleVariant(String, ResourceLocation)",
+          "toJson()"
+        ],
+        "dev.latvian.mods.kubejs.codec.KubeJSCodecs": [],
+        "dev.latvian.mods.kubejs.codec.KubeJSStreamCodecs": [],
+        "dev.latvian.mods.kubejs.codec.OrCodec": [
+          "decode(DynamicOps<T>, T)",
+          "encode(V, DynamicOps<T>, T)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.color.KubeColor": [
+          "specialEquals(Context, Object, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.color.NoColor": [],
+        "dev.latvian.mods.kubejs.color.SimpleColor": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.color.SimpleColorWithAlpha": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.command.ArgumentTypeWrapper": [],
+        "dev.latvian.mods.kubejs.command.ArgumentTypeWrappers": [
+          "byName(ResourceLocation)",
+          "registry(CommandRegistryKubeEvent, ResourceLocation)",
+          "time(int)",
+          "printAll()",
+          "create(CommandRegistryKubeEvent)",
+          "getResult(CommandContext<CommandSourceStack>, String)"
+        ],
+        "dev.latvian.mods.kubejs.command.CommandRegistryKubeEvent": [
+          "isForSinglePlayer()",
+          "isForMultiPlayer()",
+          "getRegistry()",
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "getCommands()",
+          "getArguments()",
+          "getBuiltinSuggestions()"
+        ],
+        "dev.latvian.mods.kubejs.command.DumpCommands": [
+          "events(CommandSourceStack)",
+          "registry(CommandSourceStack, ResourceKey<Registry<T>>)"
+        ],
+        "dev.latvian.mods.kubejs.command.InformationCommands": [
+          "hand(ServerPlayer, InteractionHand)",
+          "inventory(ServerPlayer)",
+          "hotbar(ServerPlayer)",
+          "dump(List<ItemStack>, ServerPlayer, String)"
+        ],
+        "dev.latvian.mods.kubejs.command.KubeJSClientCommands": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "dev.latvian.mods.kubejs.command.KubeJSCommands": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "dev.latvian.mods.kubejs.command.PersistentDataCommands": [
+          "addPersistentDataCommands(ArgumentBuilder<CommandSourceStack, ?>, PersistentDataCommands.PersistentDataFactory)"
+        ],
+        "dev.latvian.mods.kubejs.command.StageCommands": [
+          "addStage(CommandSourceStack, Collection<ServerPlayer>, String)",
+          "removeStage(CommandSourceStack, Collection<ServerPlayer>, String)",
+          "clearStages(CommandSourceStack, Collection<ServerPlayer>)",
+          "listStages(CommandSourceStack, Collection<ServerPlayer>)"
+        ],
+        "dev.latvian.mods.kubejs.CommonProperties": [
+          "get()",
+          "reload()",
+          "load()",
+          "setPackMode(String)",
+          "getCreativeModeTabName()",
+          "getMaxSlotSize(int)",
+          "getMaxStackSize(int)"
+        ],
+        "dev.latvian.mods.kubejs.component.AttributeModifierFunctions": [],
+        "dev.latvian.mods.kubejs.component.ComponentFunctions": [],
+        "dev.latvian.mods.kubejs.component.DataComponentWrapper": [],
+        "dev.latvian.mods.kubejs.component.ItemComponentFunctions": [],
+        "dev.latvian.mods.kubejs.component.MutableDataComponentHolderFunctions": [],
+        "dev.latvian.mods.kubejs.core.AdvancementNodeKJS": [],
+        "dev.latvian.mods.kubejs.core.BlockBehaviourKJS": [],
+        "dev.latvian.mods.kubejs.core.BlockBuilderProvider": [],
+        "dev.latvian.mods.kubejs.core.BlockKJS": [
+          "replaceThisWith(RecipeScriptContext, Object)"
+        ],
+        "dev.latvian.mods.kubejs.core.BlockProviderKJS": [],
+        "dev.latvian.mods.kubejs.core.BlockStateKJS": [
+          "replaceThisWith(RecipeScriptContext, Object)"
+        ],
+        "dev.latvian.mods.kubejs.core.ClientLevelKJS": [
+          "kubeParticle(double, double, double, SpriteSet)"
+        ],
+        "dev.latvian.mods.kubejs.core.ClientPacketListenerKJS": [],
+        "dev.latvian.mods.kubejs.core.ClientPlayerKJS": [],
+        "dev.latvian.mods.kubejs.core.ComponentKJS": [
+          "getCodec(Context)",
+          "forEach(Consumer<? super Component>)"
+        ],
+        "dev.latvian.mods.kubejs.core.ContainerKJS": [],
+        "dev.latvian.mods.kubejs.core.CreativeModeTabKJS": [],
+        "dev.latvian.mods.kubejs.core.CustomIngredientKJS": [
+          "getItems()"
+        ],
+        "dev.latvian.mods.kubejs.core.DataSenderKJS": [],
+        "dev.latvian.mods.kubejs.core.DiggerItemKJS": [],
+        "dev.latvian.mods.kubejs.core.EntityCollectionKJS": [],
+        "dev.latvian.mods.kubejs.core.EntityGetterKJS": [],
+        "dev.latvian.mods.kubejs.core.EntityKJS": [],
+        "dev.latvian.mods.kubejs.core.EntityTypeKJS": [],
+        "dev.latvian.mods.kubejs.core.FireworkRocketEntityKJS": [],
+        "dev.latvian.mods.kubejs.core.FluidIngredientKJS": [
+          "getCodec(Context)",
+          "matches(RecipeMatchContext, FluidStack, boolean)",
+          "matches(RecipeMatchContext, FluidIngredient, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.FluidKJS": [],
+        "dev.latvian.mods.kubejs.core.FluidStackKJS": [
+          "specialEquals(Context, Object, boolean)",
+          "getCodec(Context)",
+          "replaceThisWith(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, FluidStack, boolean)",
+          "matches(RecipeMatchContext, FluidIngredient, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.GameRulesKJS": [],
+        "dev.latvian.mods.kubejs.core.IngredientKJS": [
+          "getCodec(Context)",
+          "replaceThisWith(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, ItemStack, boolean)",
+          "matches(RecipeMatchContext, Ingredient, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.IngredientSupplierKJS": [],
+        "dev.latvian.mods.kubejs.core.InventoryKJS": [],
+        "dev.latvian.mods.kubejs.core.ItemEntityKJS": [],
+        "dev.latvian.mods.kubejs.core.ItemFrameEntityKJS": [],
+        "dev.latvian.mods.kubejs.core.ItemKJS": [],
+        "dev.latvian.mods.kubejs.core.ItemStackKJS": [
+          "specialEquals(Context, Object, boolean)",
+          "toStringJS(Context)",
+          "getCodec(Context)",
+          "replaceThisWith(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, ItemStack, boolean)",
+          "matches(RecipeMatchContext, Ingredient, boolean)",
+          "matches(RecipeMatchContext, ItemLike, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.LazyComponentKJS": [],
+        "dev.latvian.mods.kubejs.core.LevelKJS": [
+          "spawnEntity(EntityType<?>, Consumer<Entity>)"
+        ],
+        "dev.latvian.mods.kubejs.core.LivingEntityKJS": [],
+        "dev.latvian.mods.kubejs.core.LocalClientPlayerKJS": [],
+        "dev.latvian.mods.kubejs.core.MenuTypeKJS": [],
+        "dev.latvian.mods.kubejs.core.MessageSenderKJS": [],
+        "dev.latvian.mods.kubejs.core.MinecraftClientKJS": [],
+        "dev.latvian.mods.kubejs.core.MinecraftEnvironmentKJS": [],
+        "dev.latvian.mods.kubejs.core.MinecraftServerKJS": [],
+        "dev.latvian.mods.kubejs.core.NoMixinException": [],
+        "dev.latvian.mods.kubejs.core.PlayerKJS": [],
+        "dev.latvian.mods.kubejs.core.PlayerSelector": [
+          "or(PlayerSelector)"
+        ],
+        "dev.latvian.mods.kubejs.core.RecipeHolderKJS": [
+          "hasInput(RecipeMatchContext, ReplacementMatchInfo)",
+          "replaceInput(RecipeScriptContext, ReplacementMatchInfo, Object)",
+          "hasOutput(RecipeMatchContext, ReplacementMatchInfo)",
+          "replaceOutput(RecipeScriptContext, ReplacementMatchInfo, Object)"
+        ],
+        "dev.latvian.mods.kubejs.core.RecipeInputKJS": [
+          "find(SlotFilter, int)",
+          "find(SlotFilter)"
+        ],
+        "dev.latvian.mods.kubejs.core.RecipeLikeKJS": [
+          "hasInput(RecipeMatchContext, ReplacementMatchInfo)",
+          "replaceInput(RecipeScriptContext, ReplacementMatchInfo, Object)",
+          "hasOutput(RecipeMatchContext, ReplacementMatchInfo)",
+          "replaceOutput(RecipeScriptContext, ReplacementMatchInfo, Object)"
+        ],
+        "dev.latvian.mods.kubejs.core.RecipeManagerKJS": [],
+        "dev.latvian.mods.kubejs.core.RegistryObjectKJS": [
+          "specialEquals(Context, Object, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.ReloadableServerResourceHolderKJS": [],
+        "dev.latvian.mods.kubejs.core.ReloadableServerResourcesKJS": [],
+        "dev.latvian.mods.kubejs.core.ServerLevelKJS": [],
+        "dev.latvian.mods.kubejs.core.ServerPlayerKJS": [],
+        "dev.latvian.mods.kubejs.core.SizedFluidIngredientKJS": [
+          "replaceThisWith(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, FluidStack, boolean)",
+          "matches(RecipeMatchContext, FluidIngredient, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.SizedIngredientKJS": [
+          "replaceThisWith(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, ItemStack, boolean)",
+          "matches(RecipeMatchContext, Ingredient, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.core.TagLoaderKJS": [],
+        "dev.latvian.mods.kubejs.core.TagManagerKJS": [],
+        "dev.latvian.mods.kubejs.core.WindowKJS": [],
+        "dev.latvian.mods.kubejs.core.WithAttachedData": [],
+        "dev.latvian.mods.kubejs.core.WithPersistentData": [],
+        "dev.latvian.mods.kubejs.DevProperties": [
+          "get()",
+          "reload()",
+          "load()"
+        ],
+        "dev.latvian.mods.kubejs.entity.AfterLivingEntityHurtKubeEvent": [
+          "getEntity()",
+          "getSource()",
+          "getDamage()"
+        ],
+        "dev.latvian.mods.kubejs.entity.AttributeBuilder": [
+          "bool(boolean)",
+          "range(double, double, double)",
+          "syncable(boolean)",
+          "sentiment(Sentiment)",
+          "negativeSentiment()",
+          "neutralSentiment()",
+          "attachTo(Predicate<EntityType<?>>)",
+          "attachToPlayers()",
+          "attachToMonsters()",
+          "attachToCategory(MobCategory)",
+          "getPredicateList()",
+          "createObject()",
+          "transformObject(Attribute)",
+          "Range(double, double, double)"
+        ],
+        "dev.latvian.mods.kubejs.entity.BeforeLivingEntityHurtKubeEvent": [
+          "getEntity()",
+          "getSource()",
+          "getDamage()",
+          "setDamage(float)"
+        ],
+        "dev.latvian.mods.kubejs.entity.CheckLivingEntitySpawnKubeEvent": [
+          "getLevel()",
+          "getEntity()",
+          "getBlock()",
+          "getType()",
+          "getSpawner()"
+        ],
+        "dev.latvian.mods.kubejs.entity.EntityPotionEffectsJS": [
+          "clear()",
+          "getActive()",
+          "getMap()",
+          "isActive(Holder<MobEffect>)",
+          "getDuration(Holder<MobEffect>)",
+          "getActive(Holder<MobEffect>)",
+          "add(Holder<MobEffect>)",
+          "add(Holder<MobEffect>, int)",
+          "add(Holder<MobEffect>, int, int)",
+          "add(Holder<MobEffect>, int, int, boolean, boolean)",
+          "isApplicable(MobEffectInstance)"
+        ],
+        "dev.latvian.mods.kubejs.entity.EntitySpawnedKubeEvent": [
+          "getLevel()",
+          "getEntity()"
+        ],
+        "dev.latvian.mods.kubejs.entity.KubeEntityEvent": [
+          "getPlayer()",
+          "getLevel()"
+        ],
+        "dev.latvian.mods.kubejs.entity.KubeJSEntityEventHandler": [
+          "checkSpawn(FinalizeSpawnEvent)",
+          "livingDeath(LivingDeathEvent)",
+          "beforeLivingHurt(Pre)",
+          "afterLivingHurt(Post)",
+          "entitySpawned(EntityJoinLevelEvent)",
+          "livingDrops(LivingDropsEvent)"
+        ],
+        "dev.latvian.mods.kubejs.entity.KubeLivingEntityEvent": [],
+        "dev.latvian.mods.kubejs.entity.KubeRayTraceResult": [
+          "getHitX()",
+          "getHitY()",
+          "getHitZ()"
+        ],
+        "dev.latvian.mods.kubejs.entity.LivingEntityDeathKubeEvent": [
+          "getEntity()",
+          "getSource()"
+        ],
+        "dev.latvian.mods.kubejs.entity.LivingEntityDropsKubeEvent": [
+          "getEntity()",
+          "getSource()",
+          "isRecentlyHit()",
+          "getDrops()",
+          "addDrop(ItemStack)",
+          "addDrop(ItemStack, float)"
+        ],
+        "dev.latvian.mods.kubejs.error.EmptyRecipeComponentException": [],
+        "dev.latvian.mods.kubejs.error.EmptyTagTargetException": [],
+        "dev.latvian.mods.kubejs.error.InvalidRecipeComponentException": [],
+        "dev.latvian.mods.kubejs.error.InvalidRecipeComponentValueException": [],
+        "dev.latvian.mods.kubejs.error.KubeRuntimeException": [
+          "toString()",
+          "source(SourceLine)",
+          "customData(String, Object)",
+          "apply(ConsoleLine)"
+        ],
+        "dev.latvian.mods.kubejs.error.LegacyError": [
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.error.MissingComponentException": [],
+        "dev.latvian.mods.kubejs.error.MissingRequiredValueException": [],
+        "dev.latvian.mods.kubejs.error.RecipeComponentException": [],
+        "dev.latvian.mods.kubejs.error.RecipeComponentTooLargeException": [],
+        "dev.latvian.mods.kubejs.event.EventExceptionHandler": [],
+        "dev.latvian.mods.kubejs.event.EventExit": [],
+        "dev.latvian.mods.kubejs.event.EventGroup": [
+          "of(String)",
+          "toString()",
+          "hashCode()",
+          "equals(Object)",
+          "add(String, ScriptTypePredicate, Supplier<Class<? extends KubeEvent>>)",
+          "startup(String, Supplier<Class<? extends KubeEvent>>)",
+          "server(String, Supplier<Class<? extends KubeEvent>>)",
+          "client(String, Supplier<Class<? extends KubeEvent>>)",
+          "common(String, Supplier<Class<? extends KubeEvent>>)",
+          "getHandlers()"
+        ],
+        "dev.latvian.mods.kubejs.event.EventGroupRegistry": [],
+        "dev.latvian.mods.kubejs.event.EventGroups": [
+          "register(EventGroup)"
+        ],
+        "dev.latvian.mods.kubejs.event.EventGroupWrapper": [
+          "get(Object)",
+          "containsKey(Object)",
+          "keySet()"
+        ],
+        "dev.latvian.mods.kubejs.event.EventHandler": [
+          "hasResult(TypeInfo)",
+          "hasResult()",
+          "getResult()",
+          "exceptionHandler(EventExceptionHandler)",
+          "requiredTarget(EventTargetType<E>)",
+          "supportsTarget(EventTargetType<E>)",
+          "clear(ScriptType)",
+          "hasListeners()",
+          "listen(Context, ScriptType, Object, IEventHandler)",
+          "createMap(Object)",
+          "listenJava(ScriptType, Object, IEventHandler)",
+          "post(KubeEvent)",
+          "post(ScriptTypeHolder, KubeEvent)",
+          "postInternal(ScriptTypeHolder, Object, KubeEvent)",
+          "toString()",
+          "call(Context, Scriptable, Scriptable, Object[])",
+          "forEachListener(ScriptType, Consumer<EventHandlerContainer>)"
+        ],
+        "dev.latvian.mods.kubejs.event.EventHandlerContainer": [
+          "isEmpty(EventHandlerContainer[])",
+          "handle(ConsoleJS, EventHandler, KubeEvent)",
+          "add(Object, IEventHandler, String, int)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.event.EventResult": [
+          "cx()",
+          "type()",
+          "value()",
+          "override()",
+          "pass()",
+          "interruptDefault()",
+          "interruptFalse()",
+          "interruptTrue()",
+          "applyCancel(ICancellableEvent)",
+          "applyTristate(Consumer<TriState>)"
+        ],
+        "dev.latvian.mods.kubejs.event.EventTargetType": [
+          "create(Class<T>)",
+          "registryKey(ResourceKey<Registry<T>>, Class<?>)",
+          "fromEnum(Class<T>)",
+          "transformer(EventTargetType.Transformer)",
+          "identity()",
+          "validator(Predicate<Object>)",
+          "describeType(TypeInfo)",
+          "toString(EventTargetType.Transformer)"
+        ],
+        "dev.latvian.mods.kubejs.event.IEventHandler": [],
+        "dev.latvian.mods.kubejs.event.KubeEvent": [
+          "defaultExitValue(Context)",
+          "mapExitValue(Context, Object)",
+          "getExitValueType()",
+          "cancel(Context)",
+          "success(Context)",
+          "exit(Context)",
+          "cancel(Context, Object)",
+          "success(Context, Object)",
+          "exit(Context, Object)",
+          "afterPosted(EventResult)"
+        ],
+        "dev.latvian.mods.kubejs.event.KubeStartupEvent": [],
+        "dev.latvian.mods.kubejs.event.TargetedEventHandler": [
+          "hasResult(TypeInfo)",
+          "hasResult()",
+          "exceptionHandler(EventExceptionHandler)",
+          "hasListeners()",
+          "hasListeners(E)",
+          "post(KubeEvent, E)",
+          "post(ScriptTypeHolder, E, KubeEvent)",
+          "clear(ScriptType)",
+          "createMap(Object)",
+          "forEachListener(ScriptType, Consumer<EventHandlerContainer>)",
+          "findUniqueExtraIds(ScriptType)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FlowingFluidBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FluidBlockBuilder": [
+          "createObject()",
+          "generateBlockModels(KubeAssetGenerator)",
+          "item(Consumer<ItemBuilder>)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FluidBucketItemBuilder": [
+          "createObject()",
+          "generateAssets(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FluidBuilder": [
+          "displayName(Component)",
+          "createProperties()",
+          "createObject()",
+          "createAdditionalObjects(AdditionalObjectRegistry)",
+          "tag(ResourceLocation[])",
+          "type(Consumer<FluidTypeBuilder>)",
+          "tint(KubeColor)",
+          "stillTexture(ResourceLocation)",
+          "flowingTexture(ResourceLocation)",
+          "renderType(BlockRenderType)",
+          "translucent()",
+          "slopeFindDistance(int)",
+          "levelDecreasePerBlock(int)",
+          "explosionResistance(float)",
+          "tickRate(int)",
+          "noBucket()",
+          "noBlock()",
+          "generateAssets(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FluidLike": [],
+        "dev.latvian.mods.kubejs.fluid.FluidTypeBuilder": [
+          "createObject()",
+          "stillTexture(ResourceLocation)",
+          "flowingTexture(ResourceLocation)",
+          "screenOverlayTexture(ResourceLocation)",
+          "blockOverlayTexture(ResourceLocation)",
+          "tint(KubeColor)",
+          "descriptionId(String)",
+          "motionScale(double)",
+          "canPushEntity(boolean)",
+          "canSwim(boolean)",
+          "canDrown(boolean)",
+          "fallDistanceModifier(float)",
+          "canExtinguish(boolean)",
+          "canConvertToSource(boolean)",
+          "supportsBoating(boolean)",
+          "pathType(PathType)",
+          "adjacentPathType(PathType)",
+          "sound(SoundAction, SoundEvent)",
+          "canHydrate(boolean)",
+          "lightLevel(int)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.FluidWrapper": [],
+        "dev.latvian.mods.kubejs.fluid.KubeJSFluidIngredients": [],
+        "dev.latvian.mods.kubejs.fluid.NamespaceFluidIngredient": [
+          "getType()",
+          "test(FluidStack)",
+          "generateStacks()",
+          "isSimple()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.RegExFluidIngredient": [
+          "getType()",
+          "test(FluidStack)",
+          "generateStacks()",
+          "isSimple()",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "dev.latvian.mods.kubejs.fluid.ThickFluidBuilder": [],
+        "dev.latvian.mods.kubejs.fluid.ThinFluidBuilder": [],
+        "dev.latvian.mods.kubejs.generator.KubeAssetGenerator": [
+          "loadTexture(ResourceLocation)",
+          "blockState(ResourceLocation, Consumer<VariantBlockStateGenerator>)",
+          "multipartState(ResourceLocation, Consumer<MultipartBlockStateGenerator>)",
+          "blockModel(ResourceLocation, Consumer<ModelGenerator>)",
+          "itemModel(ResourceLocation, Consumer<ModelGenerator>)",
+          "defaultItemModel(ResourceLocation)",
+          "defaultHandheldItemModel(ResourceLocation)",
+          "texture(ResourceLocation, LoadedTexture)",
+          "stencil(ResourceLocation, ResourceLocation, Map<KubeColor, KubeColor>)",
+          "mask(ResourceLocation, ResourceLocation, ResourceLocation)",
+          "particle(ResourceLocation, Consumer<ParticleGenerator>)",
+          "sounds(String, Consumer<SoundsGenerator>)"
+        ],
+        "dev.latvian.mods.kubejs.generator.KubeDataGenerator": [
+          "setCompostable(ItemPredicate, float, boolean)",
+          "removeCompostable(ItemPredicate)",
+          "setFurnaceFuel(ItemPredicate, TickDuration)",
+          "removeFurnaceFuel(ItemPredicate)",
+          "setMonsterRoomMobs(EntityType<?>, int)",
+          "setOxidizable(Block, Block)",
+          "setParrotImitation(EntityType<?>, SoundEvent)",
+          "setRaidHeroGifts(VillagerProfession, ResourceKey<LootTable>)",
+          "setVibrationFrequency(GameEvent, int)",
+          "setVillagerType(ResourceKey<Biome>, VillagerType)",
+          "setWaxable(Block, Block)"
+        ],
+        "dev.latvian.mods.kubejs.generator.KubeResourceGenerator": [
+          "flush()",
+          "text(ResourceLocation, String)",
+          "json(ResourceLocation, JsonElement)"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuClickEvent": [
+          "setHandled()"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuClickHandler": [
+          "test(ChestMenuClickEvent)"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuContainerSlot": [
+          "mayPlace(ItemStack)",
+          "getItem()",
+          "set(ItemStack)",
+          "onQuickCraft(ItemStack, ItemStack)",
+          "getMaxStackSize()",
+          "getMaxStackSize(ItemStack)",
+          "mayPickup(Player)",
+          "remove(int)"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuData": [
+          "getSlot(int, int)",
+          "slot(int, int, Consumer<ChestMenuSlot>)",
+          "slot(int, int, int, int, Consumer<ChestMenuSlot>)",
+          "button(int, int, ItemStack, Component, ChestMenuClickEvent.Callback)",
+          "handleClick(int, ClickType, int)",
+          "sync()"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuInventoryClickEvent": [
+          "getIndex()",
+          "getItem()",
+          "setItem(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.ChestMenuSlot": [
+          "toString()",
+          "setItem(ItemStack)",
+          "getItem()",
+          "resetClickHandlers()",
+          "clicked(ClickType, int, ChestMenuClickEvent.Callback, boolean)",
+          "setLeftClicked(ChestMenuClickEvent.Callback)",
+          "setRightClicked(ChestMenuClickEvent.Callback)",
+          "setMiddleClicked(ChestMenuClickEvent.Callback)",
+          "setSwapped(ChestMenuClickEvent.Callback)",
+          "setThrown(ChestMenuClickEvent.Callback)",
+          "setShiftLeftClicked(ChestMenuClickEvent.Callback)",
+          "setShiftRightClicked(ChestMenuClickEvent.Callback)",
+          "setDoubleClicked(ChestMenuClickEvent.Callback)"
+        ],
+        "dev.latvian.mods.kubejs.gui.chest.CustomChestMenu": [
+          "quickMoveStack(Player, int)",
+          "clicked(int, int, ClickType, Player)",
+          "stillValid(Player)",
+          "removed(Player)",
+          "getCarried()",
+          "setCarried(ItemStack)",
+          "initializeContents(int, List<ItemStack>, ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.gui.InventoryKJSSlot": [
+          "mayPlace(ItemStack)",
+          "getItem()",
+          "set(ItemStack)",
+          "onQuickCraft(ItemStack, ItemStack)",
+          "setChanged()",
+          "getMaxStackSize()",
+          "getMaxStackSize(ItemStack)",
+          "mayPickup(Player)",
+          "remove(int)"
+        ],
+        "dev.latvian.mods.kubejs.gui.KubeJSGUI": [
+          "write(FriendlyByteBuf)",
+          "setInventory(InventoryKJS)"
+        ],
+        "dev.latvian.mods.kubejs.gui.KubeJSMenu": [
+          "quickMoveStack(Player, int)",
+          "stillValid(Player)"
+        ],
+        "dev.latvian.mods.kubejs.gui.KubeJSMenus": [],
+        "dev.latvian.mods.kubejs.gui.KubeJSScreen": [
+          "render(GuiGraphics, int, int, float)",
+          "renderBg(GuiGraphics, float, int, int)"
+        ],
+        "dev.latvian.mods.kubejs.holder.HolderWrapper": [],
+        "dev.latvian.mods.kubejs.holder.KubeJSHolderSets": [],
+        "dev.latvian.mods.kubejs.holder.NamespaceHolderSet": [
+          "codec(ResourceKey<? extends Registry<T>>)",
+          "streamCodec(ResourceKey<? extends Registry<T>>)",
+          "of(RegistryLookup<T>, String)",
+          "type()",
+          "contents()",
+          "unwrap()",
+          "contains(Holder<T>)",
+          "unwrapKey()",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.holder.RegExHolderSet": [
+          "codec(ResourceKey<? extends Registry<T>>)",
+          "streamCodec(ResourceKey<? extends Registry<T>>)",
+          "of(RegistryLookup<T>, Pattern)",
+          "type()",
+          "contents()",
+          "unwrap()",
+          "contains(Holder<T>)",
+          "unwrapKey()",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.ingredient.CreativeTabIngredient": [
+          "getType()",
+          "test(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.ingredient.KubeJSIngredient": [
+          "getItems()",
+          "isSimple()"
+        ],
+        "dev.latvian.mods.kubejs.ingredient.KubeJSIngredients": [],
+        "dev.latvian.mods.kubejs.ingredient.NamespaceIngredient": [
+          "getType()",
+          "test(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.ingredient.RegExIngredient": [
+          "getType()",
+          "test(ItemStack)",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.ingredient.WildcardIngredient": [
+          "getType()",
+          "test(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.integration.architectury.ArchitecturyIntegration": [
+          "wrapArchFluid(Context, Object)",
+          "registerTypeWrappers(TypeWrapperRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.integration.emi.EMIAddEntriesKubeEvent": [
+          "add(Context, Object[])"
+        ],
+        "dev.latvian.mods.kubejs.integration.emi.EMIAddInformationKubeEvent": [
+          "add(Context, Object, List<Component>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.emi.EMIIntegration": [
+          "fluid(FluidStack)",
+          "fluidIngredient(FluidIngredient)",
+          "predicate(ItemPredicate)",
+          "predicate(FluidIngredient)"
+        ],
+        "dev.latvian.mods.kubejs.integration.emi.EMIRemoveEntriesKubeEvent": [
+          "remove(Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.integration.emi.KubeJSEMIPlugin": [
+          "register(EmiRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.integration.gamestages.GameStageClientHelper": [],
+        "dev.latvian.mods.kubejs.integration.gamestages.GameStagesIntegration": [
+          "override(StageCreationEvent)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.DataComponentTypeInterpreter": [
+          "of(List<DataComponentType<?>>)",
+          "apply(Object, UidContext)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIAddEntriesKubeEvent": [
+          "add(Context, Object[])",
+          "afterPosted(EventResult)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIAddInformationKubeEvent": [
+          "add(Context, Object, List<Component>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIIntegration": [
+          "typeOf(RecipeViewerEntryType)",
+          "getEntries(RecipeViewerEntryType, Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIRegisterSubtypesKubeEvent": [
+          "register(Context, Object, SubtypeInterpreter)",
+          "useComponents(Context, Object, List<DataComponentType<?>>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveCategoriesKubeEvent": [
+          "remove(Context, ResourceLocation[])"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveEntriesKubeEvent": [
+          "remove(Context, Object)",
+          "afterPosted(EventResult)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.JEIRemoveRecipesKubeEvent": [
+          "remove(Context, ResourceLocation[])",
+          "removeFromCategory(Context, ResourceLocation, ResourceLocation[])",
+          "afterPosted(EventResult)"
+        ],
+        "dev.latvian.mods.kubejs.integration.jei.KubeJSJEIPlugin": [
+          "getPluginUid()",
+          "loadRemote(RemoteRecipeViewerDataUpdatedEvent)",
+          "onRuntimeAvailable(IJeiRuntime)",
+          "registerRecipes(IRecipeRegistration)",
+          "registerItemSubtypes(ISubtypeRegistration)",
+          "registerFluidSubtypes(ISubtypeRegistration, IPlatformFluidHelper<T>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.DataComponentComparator": [
+          "of(List<DataComponentType<?>>)",
+          "hash(ComparisonContext, DataComponentHolder)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.KubeJSREIPlugin": [
+          "getPriority()",
+          "loadRemote(RemoteRecipeViewerDataUpdatedEvent)",
+          "registerEntries(EntryRegistry)",
+          "registerBasicEntryFiltering(BasicFilteringRule<?>)",
+          "registerDisplays(DisplayRegistry)",
+          "registerCategories(CategoryRegistry)",
+          "postStage(PluginManager<REIClientPlugin>, ReloadStage)",
+          "registerCollapsibleEntries(CollapsibleEntryRegistry)",
+          "registerItemComparators(ItemComparatorRegistry)",
+          "registerFluidComparators(FluidComparatorRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIAddEntriesKubeEvent": [
+          "add(Context, Object[])"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIAddInformationKubeEvent": [
+          "add(Context, Object, List<Component>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIGroupEntriesKubeEvent": [
+          "group(Context, Object, ResourceLocation, Component)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIIntegration": [
+          "typeOf(RecipeViewerEntryType)",
+          "stackOf(Context, RecipeViewerEntryType, Object)",
+          "fluidIngredient(FluidIngredient)",
+          "ingredientOf(Context, RecipeViewerEntryType, Object)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRegisterFluidSubtypesKubeEvent": [
+          "register(Context, Object, SubtypeInterpreter)",
+          "useComponents(Context, Object, List<DataComponentType<?>>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRegisterItemSubtypesKubeEvent": [
+          "register(Context, Object, SubtypeInterpreter)",
+          "useComponents(Context, Object, List<DataComponentType<?>>)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveCategoriesKubeEvent": [
+          "remove(Context, ResourceLocation[])"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveEntriesCompletelyKubeEvent": [
+          "remove(Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveEntriesKubeEvent": [
+          "remove(Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.integration.rei.REIRemoveRecipeKubeEvent": [
+          "remove(Context, ResourceLocation[])",
+          "removeFromCategory(Context, ResourceLocation, ResourceLocation[])"
+        ],
+        "dev.latvian.mods.kubejs.item.ArmorMaterialBuilder": [
+          "createObject()",
+          "defense(Map<Type, Integer>)",
+          "enchantmentValue(int)",
+          "equipSound(Holder<SoundEvent>)",
+          "repairIngredient(Supplier<Ingredient>)",
+          "layers(Layer[])",
+          "toughness(float)",
+          "knockbackResistance(float)"
+        ],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabBuilder": [
+          "createObject()",
+          "icon(CreativeTabIconSupplier)",
+          "content(CreativeTabContentSupplier)"
+        ],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabCallback": [],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabCallbackForge": [
+          "addAfter(ItemStack, ItemStack[], TabVisibility)",
+          "addBefore(ItemStack, ItemStack[], TabVisibility)",
+          "remove(ItemPredicate, boolean, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabContentSupplier": [],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabIconSupplier": [],
+        "dev.latvian.mods.kubejs.item.creativetab.CreativeTabKubeEvent": [
+          "setDisplayName(Component)",
+          "setIcon(ItemStack)",
+          "addAfter(ItemStack, ItemStack[], TabVisibility)",
+          "addAfter(ItemStack, ItemStack[])",
+          "add(ItemStack[], TabVisibility)",
+          "add(ItemStack[])",
+          "addBefore(ItemStack, ItemStack[], TabVisibility)",
+          "addBefore(ItemStack, ItemStack[])",
+          "removeFromParent(ItemPredicate)",
+          "removeFromSearch(ItemPredicate)",
+          "remove(ItemPredicate)"
+        ],
+        "dev.latvian.mods.kubejs.item.creativetab.KubeJSCreativeTabs": [],
+        "dev.latvian.mods.kubejs.item.custom.ArmorItemBuilder": [
+          "createObject()",
+          "material(Holder<ArmorMaterial>)"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.DiggerItemBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.HandheldItemBuilder": [
+          "tier(Tier)",
+          "attackDamageBaseline(float)",
+          "speedBaseline(float)",
+          "modifyTier(Consumer<MutableToolTier>)",
+          "attackDamageBonus(float)",
+          "speed(float)"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.ItemToolTierRegistryKubeEvent": [
+          "add(String, Consumer<MutableToolTier>)",
+          "addBasedOnExisting(String, String, Consumer<MutableToolTier>)",
+          "addExisting(String, Tier)"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.ShearsItemBuilder": [
+          "isCustomShears(ItemStack)",
+          "speedBaseline(float)",
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.SmithingTemplateItemBuilder": [
+          "appliesTo(String)",
+          "ingredients(String)",
+          "appliesToSlotDescription(String)",
+          "ingredientsSlotDescription(String)",
+          "addAppliesToSlotIcon(ResourceLocation)",
+          "addIngredientsSlotIcon(ResourceLocation)",
+          "armorIcons()",
+          "equipmentIcons()",
+          "toolIcons()",
+          "ingotAndCrystalIcons()",
+          "crystalIcons()",
+          "ingotIcon()",
+          "dustIcon()",
+          "shardIcon()",
+          "diamondIcon()",
+          "emeraldIcon()",
+          "quartzIcon()",
+          "lapisIcon()",
+          "swordIcon()",
+          "shovelIcon()"
+        ],
+        "dev.latvian.mods.kubejs.item.custom.SwordItemBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.item.DynamicItemTooltipsKubeEvent": [
+          "add(List<Component>)"
+        ],
+        "dev.latvian.mods.kubejs.item.FoodBuilder": [
+          "nutrition(int)",
+          "saturation(float)",
+          "alwaysEdible(boolean)",
+          "alwaysEdible()",
+          "eatSeconds(float)",
+          "fastToEat()",
+          "usingConvertsTo(ItemStack)",
+          "effect(ResourceLocation, int, int, float)",
+          "removeEffect(MobEffect)",
+          "eaten(Consumer<FoodEatenKubeEvent>)",
+          "build()"
+        ],
+        "dev.latvian.mods.kubejs.item.FoodEatenKubeEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemBuilder": [
+          "createObject()",
+          "transformObject(Item)",
+          "generateAssets(KubeAssetGenerator)",
+          "generateItemModels(KubeAssetGenerator)",
+          "component(DataComponentType<T>, T)",
+          "maxStackSize(int)",
+          "unstackable()",
+          "maxDamage(int)",
+          "burnTime(TickDuration)",
+          "containerItem(ResourceLocation)",
+          "subtypes(Function<ItemStack, Collection<ItemStack>>)",
+          "rarity(Rarity)",
+          "glow(boolean)",
+          "tooltip(Component)",
+          "group(String)",
+          "color(int, ItemTintFunction)",
+          "color(ItemTintFunction)",
+          "barColor(Function<ItemStack, KubeColor>)",
+          "barWidth(ToIntFunction<ItemStack>)",
+          "name(ItemBuilder.NameCallback)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemClickedKubeEvent": [
+          "getEntity()",
+          "getHand()",
+          "getItem()",
+          "getTarget()",
+          "defaultExitValue(Context)",
+          "getExitValueType()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemCraftedKubeEvent": [
+          "getEntity()",
+          "getItem()",
+          "getInventory()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemDestroyedKubeEvent": [
+          "getEntity()",
+          "getHand()",
+          "getItem()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemDroppedKubeEvent": [
+          "getEntity()",
+          "getItemEntity()",
+          "getItem()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemEnchantmentsWrapper": [
+          "wrap(Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemEntityInteractedKubeEvent": [
+          "getEntity()",
+          "getHand()",
+          "getItem()",
+          "getTarget()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemHandlerUtils": [
+          "giveItemToPlayer(Player, ItemStack, int)",
+          "insertItemStacked(InventoryKJS, ItemStack, boolean)",
+          "insertItem(InventoryKJS, ItemStack, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemModelPropertiesKubeEvent": [
+          "register(Ingredient, KubeResourceLocation, ClampedItemPropertyFunction)",
+          "registerAll(KubeResourceLocation, ClampedItemPropertyFunction)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemModificationKubeEvent": [
+          "modify(ItemPredicate, Consumer<ItemModificationKubeEvent.ItemModifications>)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemPickedUpKubeEvent": [
+          "getEntity()",
+          "getItemEntity()",
+          "getItem()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemPredicate": [],
+        "dev.latvian.mods.kubejs.item.ItemSmeltedKubeEvent": [
+          "getEntity()",
+          "getItem()"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemStackKey": [
+          "of(ItemStack)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemStackSet": [
+          "add(ItemStack)",
+          "addItem(Item)",
+          "remove(ItemStack)",
+          "contains(ItemStack)",
+          "addAll(ItemStackSet)",
+          "toList()",
+          "toArray()",
+          "isEmpty()",
+          "size()",
+          "iterator()",
+          "forEach(Consumer<? super ItemStack>)",
+          "getFirst()",
+          "stream()",
+          "merge(ItemStackSet, ItemStackSet)"
+        ],
+        "dev.latvian.mods.kubejs.item.ItemTintFunction": [],
+        "dev.latvian.mods.kubejs.item.ItemToolTiers": [
+          "wrap(Object)"
+        ],
+        "dev.latvian.mods.kubejs.item.JukeboxSongBuilder": [
+          "createObject()",
+          "song(Holder<SoundEvent>, float)",
+          "description(Component)",
+          "comparatorOutput(int)"
+        ],
+        "dev.latvian.mods.kubejs.item.KubeJSItemEventHandler": [
+          "rightClick(RightClickItem)",
+          "leftClickEmpty(LeftClickEmpty)",
+          "itemPickupPre(Pre)",
+          "itemPickupPost(Post)",
+          "itemDrop(ItemTossEvent)",
+          "entityInteract(EntityInteract)",
+          "crafted(ItemCraftedEvent)",
+          "smelted(ItemSmeltedEvent)",
+          "itemDestroyed(PlayerDestroyItemEvent)"
+        ],
+        "dev.latvian.mods.kubejs.item.KubeJSItemProperties": [],
+        "dev.latvian.mods.kubejs.item.KubeJSItemStackData": [],
+        "dev.latvian.mods.kubejs.item.ModifyItemTooltipsKubeEvent": [
+          "modify(Ingredient, TooltipRequirements, Consumer<TextActionBuilder>)",
+          "modify(Ingredient, Consumer<TextActionBuilder>)",
+          "modifyAll(TooltipRequirements, Consumer<TextActionBuilder>)",
+          "modifyAll(Consumer<TextActionBuilder>)",
+          "add(Ingredient, List<Component>)",
+          "add(Ingredient, TooltipRequirements, List<Component>)"
+        ],
+        "dev.latvian.mods.kubejs.item.MutableToolTier": [
+          "getUses()",
+          "setUses(int)",
+          "getSpeed()",
+          "setSpeed(float)",
+          "getAttackDamageBonus()",
+          "setIncorrectBlocksForDropsTag(ResourceLocation)",
+          "getIncorrectBlocksForDropsTag()",
+          "getIncorrectBlocksForDrops()",
+          "setAttackDamageBonus(float)",
+          "getEnchantmentValue()",
+          "setEnchantmentValue(int)",
+          "getRepairIngredient()",
+          "setRepairIngredient(Ingredient)"
+        ],
+        "dev.latvian.mods.kubejs.item.PlayerMainInvWrapper": [
+          "getInventoryPlayer()"
+        ],
+        "dev.latvian.mods.kubejs.item.RangedWrapper": [],
+        "dev.latvian.mods.kubejs.KubeJS": [
+          "id(String)",
+          "getStartupScriptManager()",
+          "getClientScriptManager()"
+        ],
+        "dev.latvian.mods.kubejs.KubeJSCommon": [
+          "handleDataFromServerPacket(String, CompoundTag)",
+          "getClientPlayer()",
+          "generateTypings(CommandSourceStack)",
+          "reloadConfig()",
+          "reloadStartupScripts(boolean)",
+          "export(List<ExportablePackResources>)",
+          "openErrors(ScriptType)",
+          "openErrors(ScriptType, List<ConsoleLine>, List<ConsoleLine>)",
+          "runInMainThread(Runnable)",
+          "updateServerData(KubeServerData)",
+          "getWebServerWindowTitle()"
+        ],
+        "dev.latvian.mods.kubejs.KubeJSComponents": [],
+        "dev.latvian.mods.kubejs.KubeJSMixinPlugin": [
+          "onLoad(String)",
+          "getRefMapperConfig()",
+          "shouldApplyMixin(String, String)",
+          "acceptTargets(Set<String>, Set<String>)",
+          "getMixins()",
+          "preApply(String, ClassNode, String, IMixinInfo)",
+          "postApply(String, ClassNode, String, IMixinInfo)"
+        ],
+        "dev.latvian.mods.kubejs.KubeJSModEventHandler": [
+          "creativeTab(BuildCreativeModeTabContentsEvent)",
+          "loadComplete(FMLLoadCompleteEvent)",
+          "registerCapabilities(RegisterCapabilitiesEvent)"
+        ],
+        "dev.latvian.mods.kubejs.KubeJSPaths": [],
+        "dev.latvian.mods.kubejs.level.CachedLevelBlock": [
+          "getLevel()",
+          "getPos()",
+          "cache(BlockState)",
+          "cache(BlockEntity)",
+          "clearCache()",
+          "getBlockState()",
+          "setBlockState(BlockState, int)",
+          "getEntity()",
+          "toString()",
+          "equals(Object)"
+        ],
+        "dev.latvian.mods.kubejs.level.ExplosionKubeEvent": [
+          "getLevel()",
+          "getPosition()",
+          "getX()",
+          "getY()",
+          "getZ()",
+          "getBlock()",
+          "getExploder()"
+        ],
+        "dev.latvian.mods.kubejs.level.ExplosionProperties": [
+          "explode(Level, double, double, double)"
+        ],
+        "dev.latvian.mods.kubejs.level.KubeJSWorldEventHandler": [
+          "serverLevelLoad(Load)",
+          "serverLevelUnload(Unload)",
+          "serverTickEvent(Post)",
+          "preExplosion(Start)",
+          "detonateExplosion(Detonate)"
+        ],
+        "dev.latvian.mods.kubejs.level.KubeLevelEvent": [
+          "getServer()",
+          "getRegistries()"
+        ],
+        "dev.latvian.mods.kubejs.level.LevelBlock": [
+          "cache(BlockState)",
+          "cache(BlockEntity)",
+          "getDimensionKey()",
+          "getDimension()",
+          "getX()",
+          "getY()",
+          "getZ()",
+          "getCenterX()",
+          "getCenterY()",
+          "getCenterZ()",
+          "offset(Direction, int)",
+          "offset(Direction)",
+          "offset(int, int, int)",
+          "getDown()",
+          "getUp()",
+          "getNorth()",
+          "getSouth()",
+          "getWest()",
+          "getEast()",
+          "getBlockState()"
+        ],
+        "dev.latvian.mods.kubejs.level.ruletest.AllMatchRuleTest": [
+          "test(BlockState, RandomSource)",
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.level.ruletest.AlwaysFalseRuleTest": [
+          "test(BlockState, RandomSource)",
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.level.ruletest.AnyMatchRuleTest": [
+          "test(BlockState, RandomSource)",
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.level.ruletest.InvertRuleTest": [
+          "test(BlockState, RandomSource)",
+          "getType()"
+        ],
+        "dev.latvian.mods.kubejs.level.ruletest.KubeJSRuleTests": [],
+        "dev.latvian.mods.kubejs.level.SimpleLevelKubeEvent": [
+          "getLevel()"
+        ],
+        "dev.latvian.mods.kubejs.level.WrappedSpawner": [
+          "of(Either<BlockEntity, Entity>)",
+          "isWorldgen()"
+        ],
+        "dev.latvian.mods.kubejs.misc.BasicMobEffect": [
+          "applyEffectTick(LivingEntity, int)",
+          "onEffectStarted(LivingEntity, int)",
+          "onMobRemoved(LivingEntity, int, RemovalReason)",
+          "removeAttributeModifiers(AttributeMap)",
+          "addAttributeModifier(Holder<Attribute>, ResourceLocation, double, Operation)",
+          "isInstantenous()",
+          "shouldApplyEffectTickThisTick(int, int)"
+        ],
+        "dev.latvian.mods.kubejs.misc.BasicParticleType": [],
+        "dev.latvian.mods.kubejs.misc.ComplexParticleType": [
+          "codec()",
+          "streamCodec()"
+        ],
+        "dev.latvian.mods.kubejs.misc.CustomStatBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.misc.MobEffectBuilder": [
+          "createObject()",
+          "getTranslationKeyGroup()",
+          "modifyAttribute(ResourceLocation, ResourceLocation, double, Operation)",
+          "category(MobEffectCategory)",
+          "harmful()",
+          "beneficial()",
+          "effectTick(MobEffectBuilder.EffectEntityCallback)",
+          "color(KubeColor)",
+          "instant()",
+          "instant(boolean)"
+        ],
+        "dev.latvian.mods.kubejs.misc.PaintingVariantBuilder": [
+          "createObject()",
+          "size(int, int)",
+          "assetId(KubeResourceLocation)"
+        ],
+        "dev.latvian.mods.kubejs.misc.ParticleTypeBuilder": [
+          "createObject()",
+          "overrideLimiter(boolean)",
+          "codec(MapCodec<ParticleOptions>)",
+          "streamCodec(StreamCodec<? super RegistryFriendlyByteBuf, ParticleOptions>)",
+          "textures(List<String>)",
+          "texture(String)",
+          "generateAssets(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.misc.PoiTypeBuilder": [
+          "createObject()",
+          "blocks(BlockState[])",
+          "block(Block)",
+          "maxTickets(int)",
+          "validRange(int)"
+        ],
+        "dev.latvian.mods.kubejs.misc.PotionBuilder": [
+          "createObject()",
+          "addEffect(MobEffectInstance)",
+          "effect(Holder<MobEffect>)",
+          "effect(Holder<MobEffect>, int)",
+          "effect(Holder<MobEffect>, int, int)",
+          "effect(Holder<MobEffect>, int, int, boolean, boolean)",
+          "effect(Holder<MobEffect>, int, int, boolean, boolean, boolean)",
+          "effect(Holder<MobEffect>, int, int, boolean, boolean, boolean, MobEffectInstance)"
+        ],
+        "dev.latvian.mods.kubejs.misc.SoundEventBuilder": [
+          "sounds(Consumer<SoundsGenerator.SoundGen>)",
+          "createObject()",
+          "generateAssets(KubeAssetGenerator)"
+        ],
+        "dev.latvian.mods.kubejs.misc.VillagerProfessionBuilder": [
+          "createObject()",
+          "poiType(ResourceLocation)",
+          "poiTypeTag(ResourceLocation)",
+          "requestedItems(Item[])",
+          "secondaryPoi(Block[])",
+          "workSound(SoundEvent)"
+        ],
+        "dev.latvian.mods.kubejs.misc.VillagerTypeBuilder": [
+          "createObject()"
+        ],
+        "dev.latvian.mods.kubejs.net.AddStagePayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.DisplayClientErrorsPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.DisplayServerErrorsPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.FirstClickPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.KubeJSNet": [],
+        "dev.latvian.mods.kubejs.net.KubeServerData": [
+          "collect()"
+        ],
+        "dev.latvian.mods.kubejs.net.NetworkKubeEvent": [
+          "getEntity()",
+          "getChannel()",
+          "getData()"
+        ],
+        "dev.latvian.mods.kubejs.net.NotificationPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.ReloadStartupScriptsPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.RemoveStagePayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.RequestBlockKubedexPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.RequestEntityKubedexPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.RequestInventoryKubedexPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.SendDataFromClientPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.SendDataFromServerPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.SetActivePostShaderPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.SyncServerDataPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.SyncStagesPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.WebServerUpdateJSONPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.net.WebServerUpdateNBTPayload": [
+          "type()",
+          "handle(IPayloadContext)"
+        ],
+        "dev.latvian.mods.kubejs.player.ChestKubeEvent": [
+          "getInventory()",
+          "getBlock()"
+        ],
+        "dev.latvian.mods.kubejs.player.EntityArrayList": [
+          "addAllIterable(Iterable<? extends Entity>)",
+          "kill()",
+          "playSound(SoundEvent, float, float)",
+          "playSound(SoundEvent)",
+          "filter(Predicate<Entity>)",
+          "filterList(List<Predicate<Entity>>)",
+          "filterSelector(EntitySelector)",
+          "filterDistance(double, double, double, double)",
+          "filterDistance(BlockPos, double)",
+          "filterPlayers()",
+          "filterItems()",
+          "filterType(EntityType<?>)",
+          "getFirst()"
+        ],
+        "dev.latvian.mods.kubejs.player.InventoryChangedKubeEvent": [
+          "getEntity()",
+          "getItem()",
+          "getSlot()"
+        ],
+        "dev.latvian.mods.kubejs.player.InventoryKubeEvent": [
+          "getEntity()",
+          "getInventoryContainer()"
+        ],
+        "dev.latvian.mods.kubejs.player.KubeJSInventoryListener": [
+          "slotChanged(AbstractContainerMenu, int, ItemStack)",
+          "dataChanged(AbstractContainerMenu, int, int)"
+        ],
+        "dev.latvian.mods.kubejs.player.KubeJSPlayerEventHandler": [
+          "datapackSync(OnDatapackSyncEvent)",
+          "loggedIn(PlayerLoggedInEvent)",
+          "cloned(Clone)",
+          "respawn(PlayerRespawnEvent)",
+          "loggedOut(PlayerLoggedOutEvent)",
+          "tick(Post)",
+          "chatDecorate(ServerChatEvent)",
+          "chatReceived(ServerChatEvent)",
+          "advancement(AdvancementEarnEvent)",
+          "inventoryOpened(Open)",
+          "inventoryClosed(Close)",
+          "dimensionChanged(PlayerChangedDimensionEvent)"
+        ],
+        "dev.latvian.mods.kubejs.player.KubePlayerEvent": [
+          "getPlayer()"
+        ],
+        "dev.latvian.mods.kubejs.player.PlayerAdvancementKubeEvent": [
+          "getEntity()",
+          "getAdvancement()"
+        ],
+        "dev.latvian.mods.kubejs.player.PlayerChatReceivedKubeEvent": [
+          "getEntity()",
+          "getUsername()",
+          "getMessage()",
+          "getComponent()",
+          "setComponent(Component)"
+        ],
+        "dev.latvian.mods.kubejs.player.PlayerClonedKubeEvent": [
+          "getEntity()",
+          "getOldPlayer()",
+          "getKeepData()"
+        ],
+        "dev.latvian.mods.kubejs.player.PlayerRespawnedKubeEvent": [
+          "getEntity()",
+          "isEndConquered()"
+        ],
+        "dev.latvian.mods.kubejs.player.PlayerStatsJS": [
+          "wrapStat(Object)",
+          "get(Stat<?>)",
+          "get(ResourceLocation)",
+          "getPlayTime()",
+          "getTimeSinceDeath()",
+          "getTimeSinceRest()",
+          "getTimeCrouchTime()",
+          "getJumps()",
+          "getWalkDistance()",
+          "getSprintDistance()",
+          "getSwimDistance()",
+          "getCrouchDistance()",
+          "getDamageDealt()",
+          "getDamageDealt_absorbed()",
+          "getDamageDealt_resisted()",
+          "getDamageTaken()",
+          "getDamageBlocked_by_shield()",
+          "getDamageAbsorbed()",
+          "getDamageResisted()",
+          "getDeaths()"
+        ],
+        "dev.latvian.mods.kubejs.player.SimplePlayerKubeEvent": [
+          "getEntity()"
+        ],
+        "dev.latvian.mods.kubejs.player.StageChangedEvent": [
+          "getEntity()",
+          "getPlayer()",
+          "getStage()",
+          "getPlayerStages()"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.BuiltinKubeJSClientPlugin": [
+          "registerEvents(EventGroupRegistry)",
+          "registerBindings(BindingRegistry)",
+          "registerLocalWebServerAPIs(LocalWebServerAPIRegistry)",
+          "registerLocalWebServer(LocalWebServerRegistry)",
+          "registerLocalWebServerWithAuth(LocalWebServerRegistry)",
+          "generateLang(LangKubeEvent)",
+          "afterScriptsLoaded(ScriptManager)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.BuiltinKubeJSPlugin": [
+          "registerBuilderTypes(BuilderTypeRegistry)",
+          "registerServerRegistries(ServerRegistryRegistry)",
+          "registerEvents(EventGroupRegistry)",
+          "registerBindings(BindingRegistry)",
+          "registerTypeWrappers(TypeWrapperRegistry)",
+          "registerRecordDefaults(RecordDefaultsRegistry)",
+          "registerTypeDescriptions(TypeDescriptionRegistry)",
+          "registerRecipeFactories(RecipeFactoryRegistry)",
+          "registerRecipeComponents(RecipeComponentTypeRegistry)",
+          "registerRecipeSchemaFunctionTypes(RecipeSchemaFunctionRegistry)",
+          "registerRecipePostProcessors(RecipePostProcessorTypeRegistry)",
+          "registerBlockEntityAttachments(BlockEntityAttachmentRegistry)",
+          "registerIngredientActionTypes(IngredientActionTypeRegistry)",
+          "clearCaches()",
+          "registerDataComponentTypeDescriptions(DataComponentTypeInfoRegistry)",
+          "registerLocalWebServer(LocalWebServerRegistry)",
+          "registerLocalWebServerWithAuth(LocalWebServerRegistry)",
+          "localWebServerStarted(LocalWebServer)",
+          "registerItemNameProviders(NameProvider.Registry<Item, ItemStack>)",
+          "registerIconTypes(KubeIconTypeRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.BlockEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ClientEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.EntityEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ItemEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.KeyBindEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.LevelEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.NetworkEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.PlayerEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.RecipeViewerEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.ServerEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.event.StartupEvents": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.AABBWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.BlockWrapper": [
+          "id(ResourceLocation)",
+          "id(ResourceLocation, Map<String, Object>)",
+          "entity(ResourceLocation)",
+          "custom(BlockPredicate)",
+          "getFacing()",
+          "getBlock(ResourceLocation)",
+          "getId(Block)",
+          "getTypeList()",
+          "getTaggedIds(ResourceLocation)",
+          "getAllBlockStates()",
+          "parseBlockState(RegistryAccessContainer, String)",
+          "wrapSetType(Context, Object, TypeInfo)",
+          "wrapBlockState(RegistryAccessContainer, Object)",
+          "withProperties(BlockState, Map<?, ?>)",
+          "registerBuildingMaterial(Context, RegistryKubeEvent<Block>, KubeResourceLocation, BuildingMaterialProperties)",
+          "registerBuildingMaterial(Context, RegistryKubeEvent<Block>, KubeResourceLocation)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.BuildingMaterialProperties": [
+          "register(Context, RegistryKubeEvent<Block>, KubeResourceLocation)",
+          "Blocks(Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>, Optional<Boolean>)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ColorWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DamageSourceWrapper": [
+          "wrap(RegistryAccessContainer, Object)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DataMapWrapper": [
+          "of(Context, ResourceLocation, ResourceLocation)",
+          "typeOf(Context, ResourceLocation, ResourceLocation)",
+          "of(RegistryWrapper<T>, ResourceLocation)",
+          "typeOf(RegistryWrapper<T>, ResourceLocation)",
+          "get(T)",
+          "keys()",
+          "iterator()",
+          "byKey()"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.DirectionWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.EntitySelectorWrapper": [
+          "of(EntitySelector)",
+          "wrap(Context, Object)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.GLFWInputWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.HolderSetWrapper": [
+          "size()",
+          "isEmpty()",
+          "contains(ResourceLocation)",
+          "containsValue(T)",
+          "getValues()",
+          "getKeys()",
+          "getRandom()",
+          "getRandom(RandomSource)",
+          "iterator()"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.IngredientWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ItemWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.JavaWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.KMath": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.MiscWrappers": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.NativeEventWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.NBTWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.ParticleOptionsWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.RegistryWrapper": [
+          "of(Context, ResourceLocation)",
+          "access()",
+          "get(ResourceLocation)",
+          "contains(ResourceLocation)",
+          "containsValue(T)",
+          "getEntrySet()",
+          "getValueMap()",
+          "getValues(Object)",
+          "getDataMap(ResourceLocation)",
+          "getValues()",
+          "getKeys()",
+          "getRandom()",
+          "getRandom(RandomSource)",
+          "getId(T)",
+          "getKey(T)",
+          "iterator()"
+        ],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.SizedIngredientWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.StringUtilsWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.TextIcons": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.TextWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.UtilsWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.builtin.wrapper.UUIDWrapper": [],
+        "dev.latvian.mods.kubejs.plugin.ClassFilter": [
+          "deny(String)",
+          "deny(Class<?>)",
+          "allow(String)",
+          "allow(Class<?>)",
+          "isAllowed(String)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.KubeJSPlugin": [
+          "init()",
+          "initStartup()",
+          "afterInit()",
+          "registerBuilderTypes(BuilderTypeRegistry)",
+          "registerServerRegistries(ServerRegistryRegistry)",
+          "registerEvents(EventGroupRegistry)",
+          "registerClasses(ClassFilter)",
+          "registerBindings(BindingRegistry)",
+          "registerTypeWrappers(TypeWrapperRegistry)",
+          "registerRecordDefaults(RecordDefaultsRegistry)",
+          "registerTypeDescriptions(TypeDescriptionRegistry)",
+          "registerRecipeFactories(RecipeFactoryRegistry)",
+          "registerRecipeMappings(RecipeMappingRegistry)",
+          "registerRecipeComponents(RecipeComponentTypeRegistry)",
+          "registerRecipeSchemas(RecipeSchemaRegistry)",
+          "registerRecipeSchemaFunctionTypes(RecipeSchemaFunctionRegistry)",
+          "registerCustomRecipeSchemaFunctions(CustomRecipeSchemaFunctionRegistry)",
+          "registerRecipePostProcessors(RecipePostProcessorTypeRegistry)",
+          "registerBlockEntityAttachments(BlockEntityAttachmentRegistry)",
+          "registerIngredientActionTypes(IngredientActionTypeRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.plugin.KubeJSPluginEvent": [],
+        "dev.latvian.mods.kubejs.plugin.KubeJSPlugins": [
+          "load(List<IModFile>, boolean)",
+          "createClassFilter(ScriptType)",
+          "forEachPlugin(Consumer<KubeJSPlugin>)",
+          "forEachPlugin(T, BiConsumer<KubeJSPlugin, T>)",
+          "getAll()",
+          "addSidedBindings(BindingRegistry)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.AfterRecipesLoadedKubeEvent": [
+          "forEachRecipe(Context, RecipeFilter, Consumer<RecipeLikeKJS>)",
+          "countRecipes(Context, RecipeFilter)",
+          "remove(Context, RecipeFilter)",
+          "afterPosted(EventResult)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.CachedItemTagLookup": [
+          "isEmpty(TagKey<Item>)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.CachedTagLookup": [
+          "build(Map<ResourceLocation, List<EntryWithSource>>)",
+          "keyToValue()",
+          "values(TagKey<T>)",
+          "isEmpty(TagKey<T>)",
+          "keys(T)",
+          "bindingMap()",
+          "tagMap()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.BlockComponent": [
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, Block, ReplacementMatchInfo)",
+          "isEmpty(Block)",
+          "buildUniqueId(UniqueIdBuilder, Block)",
+          "toString()",
+          "toString(OpsContainer, Block)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.BlockStateComponent": [
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, BlockState, ReplacementMatchInfo)",
+          "isEmpty(BlockState)",
+          "buildUniqueId(UniqueIdBuilder, BlockState)",
+          "toString()",
+          "toString(OpsContainer, BlockState)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.BookCategoryComponent": [],
+        "dev.latvian.mods.kubejs.recipe.component.BooleanComponent": [
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "hasPriority(RecipeMatchContext, Object)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.CharacterComponent": [
+          "hasPriority(RecipeMatchContext, Object)",
+          "isEmpty(Character)",
+          "toString(OpsContainer, Character)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.ComponentRole": [
+          "isInput()",
+          "isOutput()",
+          "isOther()",
+          "getSerializedName()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.ComponentValueMap": [
+          "getValue(RecipeScriptContext, RecipeKey<T>)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.CustomObjectRecipeComponent": [
+          "type()",
+          "keys()",
+          "hasPriority(Predicate<Set<String>>)",
+          "createCopy()",
+          "wrap(RecipeScriptContext, Object)",
+          "mapCodec()",
+          "codec()",
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, List<CustomObjectRecipeComponent.Value>, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, List<CustomObjectRecipeComponent.Value>, ReplacementMatchInfo, Object)",
+          "buildUniqueId(UniqueIdBuilder, List<CustomObjectRecipeComponent.Value>)",
+          "validate(RecipeValidationContext, List<CustomObjectRecipeComponent.Value>)",
+          "isEmpty(List<CustomObjectRecipeComponent.Value>)",
+          "toString()",
+          "Key(String, RecipeComponent<?>, boolean, boolean)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.EitherRecipeComponent": [
+          "type()",
+          "wrap(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, Either<H, L>, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, Either<H, L>, ReplacementMatchInfo, Object)",
+          "buildUniqueId(UniqueIdBuilder, Either<H, L>)",
+          "validate(RecipeValidationContext, Either<H, L>)",
+          "toString()",
+          "toString(OpsContainer, Either<H, L>)",
+          "spread(Either<H, L>)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.EnumComponent": [
+          "of(ResourceLocation, Class<T>, Codec<T>)",
+          "of(ResourceLocation, Class<T>)",
+          "type()",
+          "buildUniqueId(UniqueIdBuilder, T)",
+          "toString()",
+          "toString(OpsContainer, T)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.FluidIngredientComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, FluidIngredient, ReplacementMatchInfo)",
+          "isEmpty(FluidIngredient)",
+          "buildUniqueId(UniqueIdBuilder, FluidIngredient)",
+          "toString()",
+          "toString(OpsContainer, FluidIngredient)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.FluidStackComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, FluidStack, ReplacementMatchInfo)",
+          "isEmpty(FluidStack)",
+          "buildUniqueId(UniqueIdBuilder, FluidStack)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.IgnoreComponent": [
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "validate(RecipeValidationContext, Object)",
+          "allowEmpty()",
+          "isEmpty(Object)",
+          "toString()",
+          "buildUniqueId(UniqueIdBuilder, Object)",
+          "isIgnored()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.IngredientComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, Ingredient, ReplacementMatchInfo)",
+          "isEmpty(Ingredient)",
+          "buildUniqueId(UniqueIdBuilder, Ingredient)",
+          "toString()",
+          "toString(OpsContainer, Ingredient)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.ItemStackComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, ItemStack, ReplacementMatchInfo)",
+          "isEmpty(ItemStack)",
+          "buildUniqueId(UniqueIdBuilder, ItemStack)",
+          "toString()",
+          "toString(OpsContainer, ItemStack)",
+          "validate(RecipeValidationContext, ItemStack)",
+          "spread(ItemStack)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.ListRecipeComponent": [
+          "create(RecipeComponent<L>, boolean, boolean)",
+          "create(RecipeComponent<L>, boolean, boolean, IntBounds, Optional<RecipeComponent<?>>)",
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "wrap0(RecipeScriptContext, RecipeComponent<T>, Object)",
+          "wrap(RecipeScriptContext, Object)",
+          "matches(RecipeMatchContext, List<T>, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, List<T>, ReplacementMatchInfo, Object)",
+          "buildUniqueId(UniqueIdBuilder, List<T>)",
+          "toString()",
+          "validate(RecipeValidationContext, List<T>)",
+          "allowEmpty()",
+          "isEmpty(List<T>)",
+          "spread(List<T>)",
+          "withBounds(IntBounds)",
+          "orSelf()",
+          "asConditional()",
+          "withSpread(Optional<RecipeComponent<?>>)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.MapRecipeComponent": [
+          "of(RecipeComponent<K>, RecipeComponent<V>, IntBounds)",
+          "patternOf(RecipeComponent<V>, IntBounds)",
+          "type()",
+          "wrap(RecipeScriptContext, Object)",
+          "validate(RecipeValidationContext, TinyMap<K, V>)",
+          "allowEmpty()",
+          "isEmpty(TinyMap<K, V>)",
+          "matches(RecipeMatchContext, TinyMap<K, V>, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, TinyMap<K, V>, ReplacementMatchInfo, Object)",
+          "buildUniqueId(UniqueIdBuilder, TinyMap<K, V>)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.NestedRecipeComponent": [
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "hasPriority(RecipeMatchContext, Object)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.NumberComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "min(T)",
+          "max(T)",
+          "toString(RecipeComponentType<?>, String, T, T)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponent": [
+          "key(String, ComponentRole)",
+          "inputKey(String)",
+          "outputKey(String)",
+          "otherKey(String)",
+          "hasPriority(RecipeMatchContext, Object)",
+          "wrap(RecipeScriptContext, Object)",
+          "writeToJson(KubeRecipe, RecipeComponentValue<T>, JsonObject)",
+          "readFromJson(KubeRecipe, RecipeComponentValue<T>, JsonObject)",
+          "matches(RecipeMatchContext, T, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, T, ReplacementMatchInfo, Object)",
+          "allowEmpty()",
+          "validate(RecipeValidationContext, T)",
+          "isEmpty(T)",
+          "buildUniqueId(UniqueIdBuilder, T)",
+          "toString(OpsContainer, T)",
+          "asList()",
+          "asListOrSelf()",
+          "asConditionalList()",
+          "asConditionalListOrSelf()",
+          "orSelf()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentBuilder": [],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentCodecFactory": [],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentType": [
+          "unit(ResourceLocation, Function<RecipeComponentType<T>, RecipeComponent<T>>)",
+          "unit(ResourceLocation, RecipeComponent<T>)",
+          "dynamic(ResourceLocation, RecipeComponentCodecFactory<CT>)",
+          "dynamic(ResourceLocation, MapCodec<CT>)",
+          "id()",
+          "hashCode()",
+          "equals(Object)",
+          "toString()",
+          "isUnit()",
+          "instance()",
+          "mapCodec(RecipeTypeRegistryContext)",
+          "key(String, ComponentRole)",
+          "inputKey(String)",
+          "outputKey(String)",
+          "otherKey(String)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentTypeRegistry": [],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValue": [
+          "copy()",
+          "matches(RecipeMatchContext, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, ReplacementMatchInfo, Object)",
+          "getKey()",
+          "getIndex()",
+          "getValue()",
+          "setValue(T)",
+          "shouldWrite()",
+          "write()",
+          "toString()",
+          "equals(Object)",
+          "hashCode()",
+          "validate(RecipeValidationContext, SourceLine)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValueFunction": [
+          "call(Context, Scriptable, Scriptable, Object[])"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentValueMap": [
+          "entrySet()",
+          "put(RecipeKey<?>, Object)",
+          "getHolder(Object)",
+          "get(Object)",
+          "getOrDefault(Object, Object)",
+          "hashCode()",
+          "equals(Object)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentWithCodec": [
+          "type()",
+          "parentComponent()",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeComponentWithParent": [
+          "codec()",
+          "typeInfo()",
+          "wrap(RecipeScriptContext, Object)",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, T, ReplacementMatchInfo)",
+          "replace(RecipeScriptContext, T, ReplacementMatchInfo, Object)",
+          "allowEmpty()",
+          "validate(RecipeValidationContext, T)",
+          "isEmpty(T)",
+          "buildUniqueId(UniqueIdBuilder, T)",
+          "createBuilder()",
+          "spread(T)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.RecipeValidationContext": [],
+        "dev.latvian.mods.kubejs.recipe.component.RegistryComponent": [
+          "type()",
+          "wrap(RecipeScriptContext, Object)",
+          "hasPriority(RecipeMatchContext, Object)",
+          "buildUniqueId(UniqueIdBuilder, Holder<T>)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.ResourceKeyComponent": [
+          "type()",
+          "wrap(RecipeScriptContext, Object)",
+          "toString()",
+          "toString(OpsContainer, ResourceKey<T>)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.SimpleRecipeComponent": [
+          "type()",
+          "codec()",
+          "typeInfo()",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.SizedFluidIngredientComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, SizedFluidIngredient, ReplacementMatchInfo)",
+          "isEmpty(SizedFluidIngredient)",
+          "buildUniqueId(UniqueIdBuilder, SizedFluidIngredient)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.SizedIngredientComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "matches(RecipeMatchContext, SizedIngredient, ReplacementMatchInfo)",
+          "isEmpty(SizedIngredient)",
+          "buildUniqueId(UniqueIdBuilder, SizedIngredient)",
+          "toString()",
+          "spread(SizedIngredient)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.StringComponent": [
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "isEmpty(String)",
+          "toString()",
+          "spread(String)",
+          "toString(OpsContainer, String)"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.TagKeyComponent": [
+          "type()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "wrap(RecipeScriptContext, Object)",
+          "buildUniqueId(UniqueIdBuilder, TagKey<T>)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.TimeComponent": [
+          "codec()",
+          "typeInfo()",
+          "hasPriority(RecipeMatchContext, Object)",
+          "wrap(RecipeScriptContext, Object)",
+          "buildUniqueId(UniqueIdBuilder, TickDuration)",
+          "isEmpty(TickDuration)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.component.UniqueIdBuilder": [
+          "appendSeparator()",
+          "append(String)",
+          "append(ResourceLocation)",
+          "append(ResourceKey<?>)",
+          "build()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.CompostableRecipesKubeEvent": [
+          "add(ItemPredicate, float)",
+          "add(ItemPredicate, float, boolean)",
+          "addReplace(ItemPredicate, float)",
+          "addReplace(ItemPredicate, float, boolean)",
+          "replaceAll()",
+          "remove(ItemPredicate)",
+          "removeAll()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.AndFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.ConstantFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.GroupFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.IDFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.InputFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ],
+        "dev.latvian.mods.kubejs.recipe.filter.ModFilter": [
+          "test(RecipeMatchContext)",
+          "toString()"
+        ]
+      },
+      "sampleCount": 763,
+      "truncated": true
+    },
+    "2001.6.5-build.26": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1902.6.2-build.73": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "1802.5.5-build.569": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1799,
+  "truncated": true
+}

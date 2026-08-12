@@ -1,0 +1,36 @@
+{
+  "slug": "polymer",
+  "modId": "polymer",
+  "id": "authored/lib-polymer",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "polymer-all"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:11.901Z",
+  "versions": {
+    "0.2.10_1.19": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0
+    },
+    "0.2.0-rc.4_1.19-rc2": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0
+    },
+    "0.2.0-beta.27_1.18.1": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0
+    }
+  },
+  "classCount": 0,
+  "methodCount": 0
+}

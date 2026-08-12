@@ -1,0 +1,1051 @@
+{
+  "slug": "trinkets",
+  "modId": "trinkets",
+  "id": "authored/lib-trinkets",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "trinkets"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:20.527Z",
+  "versions": {
+    "3.10.0": {
+      "packages": [],
+      "classes": [
+        "dev.emi.trinkets.api.client.TrinketRenderer",
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry",
+        "dev.emi.trinkets.api.event.TrinketDropCallback",
+        "dev.emi.trinkets.api.event.TrinketEquipCallback",
+        "dev.emi.trinkets.api.event.TrinketUnequipCallback",
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent",
+        "dev.emi.trinkets.api.SlotAttributes",
+        "dev.emi.trinkets.api.SlotGroup",
+        "dev.emi.trinkets.api.SlotReference",
+        "dev.emi.trinkets.api.SlotType",
+        "dev.emi.trinkets.api.Trinket",
+        "dev.emi.trinkets.api.TrinketComponent",
+        "dev.emi.trinkets.api.TrinketEnums",
+        "dev.emi.trinkets.api.TrinketInventory",
+        "dev.emi.trinkets.api.TrinketItem",
+        "dev.emi.trinkets.api.TrinketsApi",
+        "dev.emi.trinkets.api.TrinketsAttributeModifiersComponent",
+        "dev.emi.trinkets.compat.TrinketsEmiPlugin",
+        "dev.emi.trinkets.compat.TrinketsExclusionAreas",
+        "dev.emi.trinkets.compat.TrinketsREIPlugin",
+        "dev.emi.trinkets.CreativeTrinketSlot",
+        "dev.emi.trinkets.data.EntitySlotLoader",
+        "dev.emi.trinkets.data.SlotLoader",
+        "dev.emi.trinkets.payload.BreakPayload",
+        "dev.emi.trinkets.payload.SyncInventoryPayload",
+        "dev.emi.trinkets.payload.SyncSlotsPayload",
+        "dev.emi.trinkets.Point",
+        "dev.emi.trinkets.SurvivalTrinketSlot",
+        "dev.emi.trinkets.TrinketFeatureRenderer",
+        "dev.emi.trinkets.TrinketModifiers",
+        "dev.emi.trinkets.TrinketPlayerScreenHandler",
+        "dev.emi.trinkets.TrinketsClient",
+        "dev.emi.trinkets.TrinketScreen",
+        "dev.emi.trinkets.TrinketScreenManager",
+        "dev.emi.trinkets.TrinketSlot",
+        "dev.emi.trinkets.TrinketSlotTarget",
+        "dev.emi.trinkets.TrinketsMain",
+        "dev.emi.trinkets.TrinketsNetwork"
+      ],
+      "methods": {
+        "dev.emi.trinkets.api.client.TrinketRenderer": [],
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry": [
+          "registerRenderer(class_1792, TrinketRenderer)",
+          "getRenderer(class_1792)"
+        ],
+        "dev.emi.trinkets.api.event.TrinketDropCallback": [],
+        "dev.emi.trinkets.api.event.TrinketEquipCallback": [],
+        "dev.emi.trinkets.api.event.TrinketUnequipCallback": [],
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent": [
+          "getEntity()",
+          "getGroups()",
+          "getInventory()",
+          "update()",
+          "clearCachedModifiers()",
+          "getTrackingUpdates()",
+          "addTemporaryModifiers(Multimap<String, class_1322>)",
+          "addPersistentModifiers(Multimap<String, class_1322>)",
+          "removeModifiers(Multimap<String, class_1322>)",
+          "getModifiers()",
+          "clearModifiers()",
+          "readFromNbt(class_2487, class_7874)",
+          "applySyncPacket(class_9129)",
+          "writeToNbt(class_2487, class_7874)",
+          "writeSyncPacket(class_9129, class_3222)",
+          "shouldCopyForRespawn(boolean, boolean, boolean)",
+          "isEquipped(Predicate<class_1799>)",
+          "getEquipped(Predicate<class_1799>)",
+          "forEach(BiConsumer<SlotReference, class_1799>)"
+        ],
+        "dev.emi.trinkets.api.SlotAttributes": [
+          "addSlotModifier(Multimap<class_6880<class_1320>, class_1322>, String, class_2960, double, class_1323)",
+          "getIdentifier(SlotReference)"
+        ],
+        "dev.emi.trinkets.api.SlotGroup": [
+          "getSlotId()",
+          "getOrder()",
+          "getName()",
+          "getSlots()",
+          "write(class_2487)",
+          "read(class_2487)"
+        ],
+        "dev.emi.trinkets.api.SlotReference": [
+          "getId()"
+        ],
+        "dev.emi.trinkets.api.SlotType": [
+          "getGroup()",
+          "getName()",
+          "getOrder()",
+          "getAmount()",
+          "getIcon()",
+          "getQuickMovePredicates()",
+          "getValidatorPredicates()",
+          "getTooltipPredicates()",
+          "getDropRule()",
+          "getTranslation()",
+          "write(class_2487)",
+          "read(class_2487)",
+          "equals(Object)",
+          "hashCode()",
+          "getId()"
+        ],
+        "dev.emi.trinkets.api.Trinket": [
+          "tick(class_1799, SlotReference, class_1309)",
+          "onEquip(class_1799, SlotReference, class_1309)",
+          "onUnequip(class_1799, SlotReference, class_1309)",
+          "canEquip(class_1799, SlotReference, class_1309)",
+          "canUnequip(class_1799, SlotReference, class_1309)",
+          "canEquipFromUse(class_1799, class_1309)",
+          "getEquipSound(class_1799, SlotReference, class_1309)",
+          "getModifiers(class_1799, SlotReference, class_1309, class_2960)",
+          "onBreak(class_1799, SlotReference, class_1309)",
+          "getDropRule(class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.api.TrinketComponent": [
+          "isEquipped(class_1792)",
+          "getEquipped(class_1792)",
+          "getAllEquipped()"
+        ],
+        "dev.emi.trinkets.api.TrinketEnums": [],
+        "dev.emi.trinkets.api.TrinketInventory": [
+          "getSlotType()",
+          "getComponent()",
+          "method_5448()",
+          "method_5439()",
+          "method_5442()",
+          "method_5438(int)",
+          "method_5434(int, int)",
+          "method_5441(int)",
+          "method_5447(int, class_1799)",
+          "method_5431()",
+          "markUpdate()",
+          "method_5443(class_1657)",
+          "getModifiers()",
+          "getModifiersByOperation(class_1323)",
+          "addModifier(class_1322)",
+          "addPersistentModifier(class_1322)",
+          "removeModifier(class_2960)",
+          "clearModifiers()",
+          "removeCachedModifier(class_1322)",
+          "clearCachedModifiers()"
+        ],
+        "dev.emi.trinkets.api.TrinketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "equipItem(class_1657, class_1799)",
+          "equipItem(class_1309, class_1799)"
+        ],
+        "dev.emi.trinkets.api.TrinketsApi": [
+          "registerTrinket(class_1792, Trinket)",
+          "getTrinket(class_1792)",
+          "getDefaultTrinket()",
+          "getTrinketComponent(class_1309)",
+          "onTrinketBroken(class_1799, SlotReference, class_1309)",
+          "getPlayerSlots()",
+          "getPlayerSlots(class_1937)",
+          "getPlayerSlots(class_1657)",
+          "getEntitySlots(class_1299<?>)",
+          "getEntitySlots(class_1937, class_1299<?>)",
+          "getEntitySlots(class_1297)",
+          "registerTrinketPredicate(class_2960, Function3<class_1799, SlotReference, class_1309, TriState>)",
+          "getTrinketPredicate(class_2960)",
+          "evaluatePredicateSet(Set<class_2960>, class_1799, SlotReference, class_1309)",
+          "withTrinketSlots(class_9427, Set<String>)"
+        ],
+        "dev.emi.trinkets.api.TrinketsAttributeModifiersComponent": [
+          "withShowInTooltip(boolean)",
+          "builder()",
+          "Entry(class_6880<class_1320>, class_1322, Optional<String>)"
+        ],
+        "dev.emi.trinkets.compat.TrinketsEmiPlugin": [
+          "register(EmiRegistry)"
+        ],
+        "dev.emi.trinkets.compat.TrinketsExclusionAreas": [
+          "create(class_437)"
+        ],
+        "dev.emi.trinkets.compat.TrinketsREIPlugin": [
+          "registerExclusionZones(ExclusionZones)"
+        ],
+        "dev.emi.trinkets.CreativeTrinketSlot": [
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.data.EntitySlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, Map<String, Set<String>>>, class_3300, class_3695)",
+          "getEntitySlots(class_1299<?>)",
+          "setSlots(Map<class_1299<?>, Map<String, SlotGroup>>)",
+          "sync(class_3222)",
+          "sync(List<? extends class_3222>)",
+          "getFabricId()",
+          "getFabricDependencies()"
+        ],
+        "dev.emi.trinkets.data.SlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, SlotLoader.GroupData>, class_3300, class_3695)",
+          "getSlots()",
+          "getFabricId()"
+        ],
+        "dev.emi.trinkets.payload.BreakPayload": [
+          "method_56479()"
+        ],
+        "dev.emi.trinkets.payload.SyncInventoryPayload": [
+          "method_56479()"
+        ],
+        "dev.emi.trinkets.payload.SyncSlotsPayload": [
+          "method_56479()"
+        ],
+        "dev.emi.trinkets.Point": [],
+        "dev.emi.trinkets.SurvivalTrinketSlot": [
+          "method_7680(class_1799)",
+          "method_7674(class_1657)",
+          "method_7682()",
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.TrinketFeatureRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "dev.emi.trinkets.TrinketModifiers": [
+          "get(class_1799, SlotReference, class_1309)",
+          "get(Trinket, class_1799, SlotReference, class_1309, class_2960)"
+        ],
+        "dev.emi.trinkets.TrinketPlayerScreenHandler": [],
+        "dev.emi.trinkets.TrinketsClient": [
+          "onInitializeClient()"
+        ],
+        "dev.emi.trinkets.TrinketScreen": [],
+        "dev.emi.trinkets.TrinketScreenManager": [
+          "init(TrinketScreen)",
+          "removeSelections()",
+          "update(float, float)",
+          "tick()",
+          "drawGroup(class_332, SlotGroup, SlotType)",
+          "drawActiveGroup(class_332)",
+          "drawExtraGroups(class_332)",
+          "isClickInsideTrinketBounds(double, double)"
+        ],
+        "dev.emi.trinkets.TrinketSlot": [],
+        "dev.emi.trinkets.TrinketSlotTarget": [],
+        "dev.emi.trinkets.TrinketsMain": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "dev.emi.trinkets.TrinketsNetwork": []
+      },
+      "sampleCount": 38
+    },
+    "3.8.0": {
+      "packages": [],
+      "classes": [
+        "dev.emi.trinkets.api.client.TrinketRenderer",
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry",
+        "dev.emi.trinkets.api.event.TrinketDropCallback",
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent",
+        "dev.emi.trinkets.api.SlotAttributes",
+        "dev.emi.trinkets.api.SlotGroup",
+        "dev.emi.trinkets.api.SlotReference",
+        "dev.emi.trinkets.api.SlotType",
+        "dev.emi.trinkets.api.Trinket",
+        "dev.emi.trinkets.api.TrinketComponent",
+        "dev.emi.trinkets.api.TrinketEnums",
+        "dev.emi.trinkets.api.TrinketInventory",
+        "dev.emi.trinkets.api.TrinketItem",
+        "dev.emi.trinkets.api.TrinketsApi",
+        "dev.emi.trinkets.CreativeTrinketSlot",
+        "dev.emi.trinkets.data.EntitySlotLoader",
+        "dev.emi.trinkets.data.SlotLoader",
+        "dev.emi.trinkets.Point",
+        "dev.emi.trinkets.SurvivalTrinketSlot",
+        "dev.emi.trinkets.TrinketFeatureRenderer",
+        "dev.emi.trinkets.TrinketPlayerScreenHandler",
+        "dev.emi.trinkets.TrinketsClient",
+        "dev.emi.trinkets.TrinketScreen",
+        "dev.emi.trinkets.TrinketScreenManager",
+        "dev.emi.trinkets.TrinketSlot",
+        "dev.emi.trinkets.TrinketsMain",
+        "dev.emi.trinkets.TrinketsNetwork"
+      ],
+      "methods": {
+        "dev.emi.trinkets.api.client.TrinketRenderer": [],
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry": [
+          "registerRenderer(class_1792, TrinketRenderer)",
+          "getRenderer(class_1792)"
+        ],
+        "dev.emi.trinkets.api.event.TrinketDropCallback": [],
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent": [
+          "getEntity()",
+          "getGroups()",
+          "getInventory()",
+          "update()",
+          "clearCachedModifiers()",
+          "getTrackingUpdates()",
+          "addTemporaryModifiers(Multimap<String, class_1322>)",
+          "addPersistentModifiers(Multimap<String, class_1322>)",
+          "removeModifiers(Multimap<String, class_1322>)",
+          "getModifiers()",
+          "clearModifiers()",
+          "readFromNbt(class_2487)",
+          "applySyncPacket(class_2540)",
+          "writeToNbt(class_2487)",
+          "writeSyncPacket(class_2540, class_3222)",
+          "isEquipped(Predicate<class_1799>)",
+          "getEquipped(Predicate<class_1799>)",
+          "forEach(BiConsumer<SlotReference, class_1799>)"
+        ],
+        "dev.emi.trinkets.api.SlotAttributes": [
+          "addSlotModifier(Multimap<class_1320, class_1322>, String, UUID, double, class_1323)",
+          "getUuid(SlotReference)"
+        ],
+        "dev.emi.trinkets.api.SlotGroup": [
+          "getSlotId()",
+          "getOrder()",
+          "getName()",
+          "getSlots()",
+          "write(class_2487)",
+          "read(class_2487)"
+        ],
+        "dev.emi.trinkets.api.SlotReference": [],
+        "dev.emi.trinkets.api.SlotType": [
+          "getGroup()",
+          "getName()",
+          "getOrder()",
+          "getAmount()",
+          "getIcon()",
+          "getQuickMovePredicates()",
+          "getValidatorPredicates()",
+          "getTooltipPredicates()",
+          "getDropRule()",
+          "getTranslation()",
+          "write(class_2487)",
+          "read(class_2487)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "dev.emi.trinkets.api.Trinket": [
+          "tick(class_1799, SlotReference, class_1309)",
+          "onEquip(class_1799, SlotReference, class_1309)",
+          "onUnequip(class_1799, SlotReference, class_1309)",
+          "canEquip(class_1799, SlotReference, class_1309)",
+          "canUnequip(class_1799, SlotReference, class_1309)",
+          "getModifiers(class_1799, SlotReference, class_1309, UUID)",
+          "onBreak(class_1799, SlotReference, class_1309)",
+          "getDropRule(class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.api.TrinketComponent": [
+          "isEquipped(class_1792)",
+          "getEquipped(class_1792)",
+          "getAllEquipped()"
+        ],
+        "dev.emi.trinkets.api.TrinketEnums": [],
+        "dev.emi.trinkets.api.TrinketInventory": [
+          "getSlotType()",
+          "getComponent()",
+          "method_5448()",
+          "method_5439()",
+          "method_5442()",
+          "method_5438(int)",
+          "method_5434(int, int)",
+          "method_5441(int)",
+          "method_5447(int, class_1799)",
+          "method_5431()",
+          "markUpdate()",
+          "method_5443(class_1657)",
+          "getModifiers()",
+          "getModifiersByOperation(class_1323)",
+          "addModifier(class_1322)",
+          "addPersistentModifier(class_1322)",
+          "removeModifier(UUID)",
+          "clearModifiers()",
+          "removeCachedModifier(class_1322)",
+          "clearCachedModifiers()"
+        ],
+        "dev.emi.trinkets.api.TrinketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "equipItem(class_1657, class_1799)"
+        ],
+        "dev.emi.trinkets.api.TrinketsApi": [
+          "registerTrinket(class_1792, Trinket)",
+          "getTrinket(class_1792)",
+          "getDefaultTrinket()",
+          "getTrinketComponent(class_1309)",
+          "onTrinketBroken(class_1799, SlotReference, class_1309)",
+          "getPlayerSlots()",
+          "getPlayerSlots(class_1937)",
+          "getPlayerSlots(class_1657)",
+          "getEntitySlots(class_1299<?>)",
+          "getEntitySlots(class_1937, class_1299<?>)",
+          "getEntitySlots(class_1297)",
+          "registerTrinketPredicate(class_2960, Function3<class_1799, SlotReference, class_1309, TriState>)",
+          "getTrinketPredicate(class_2960)",
+          "evaluatePredicateSet(Set<class_2960>, class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.CreativeTrinketSlot": [
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.data.EntitySlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, Map<String, Set<String>>>, class_3300, class_3695)",
+          "getEntitySlots(class_1299<?>)",
+          "setSlots(Map<class_1299<?>, Map<String, SlotGroup>>)",
+          "sync(class_3222)",
+          "sync(List<? extends class_3222>)",
+          "getFabricId()",
+          "getFabricDependencies()"
+        ],
+        "dev.emi.trinkets.data.SlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, SlotLoader.GroupData>, class_3300, class_3695)",
+          "getSlots()",
+          "getFabricId()"
+        ],
+        "dev.emi.trinkets.Point": [],
+        "dev.emi.trinkets.SurvivalTrinketSlot": [
+          "method_7680(class_1799)",
+          "method_7674(class_1657)",
+          "method_7682()",
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.TrinketFeatureRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "dev.emi.trinkets.TrinketPlayerScreenHandler": [],
+        "dev.emi.trinkets.TrinketsClient": [
+          "onInitializeClient()"
+        ],
+        "dev.emi.trinkets.TrinketScreen": [],
+        "dev.emi.trinkets.TrinketScreenManager": [
+          "init(TrinketScreen)",
+          "removeSelections()",
+          "update(float, float)",
+          "tick()",
+          "drawGroup(class_332, SlotGroup, SlotType)",
+          "drawActiveGroup(class_332)",
+          "drawExtraGroups(class_332)",
+          "isClickInsideTrinketBounds(double, double)"
+        ],
+        "dev.emi.trinkets.TrinketSlot": [],
+        "dev.emi.trinkets.TrinketsMain": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "dev.emi.trinkets.TrinketsNetwork": []
+      },
+      "sampleCount": 27
+    },
+    "3.6.0": {
+      "packages": [],
+      "classes": [
+        "dev.emi.trinkets.api.client.TrinketRenderer",
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry",
+        "dev.emi.trinkets.api.event.TrinketDropCallback",
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent",
+        "dev.emi.trinkets.api.SlotAttributes",
+        "dev.emi.trinkets.api.SlotGroup",
+        "dev.emi.trinkets.api.SlotReference",
+        "dev.emi.trinkets.api.SlotType",
+        "dev.emi.trinkets.api.Trinket",
+        "dev.emi.trinkets.api.TrinketComponent",
+        "dev.emi.trinkets.api.TrinketEnums",
+        "dev.emi.trinkets.api.TrinketInventory",
+        "dev.emi.trinkets.api.TrinketItem",
+        "dev.emi.trinkets.api.TrinketsApi",
+        "dev.emi.trinkets.CreativeTrinketSlot",
+        "dev.emi.trinkets.data.EntitySlotLoader",
+        "dev.emi.trinkets.data.SlotLoader",
+        "dev.emi.trinkets.Point",
+        "dev.emi.trinkets.SurvivalTrinketSlot",
+        "dev.emi.trinkets.TrinketFeatureRenderer",
+        "dev.emi.trinkets.TrinketPlayerScreenHandler",
+        "dev.emi.trinkets.TrinketsClient",
+        "dev.emi.trinkets.TrinketScreen",
+        "dev.emi.trinkets.TrinketScreenManager",
+        "dev.emi.trinkets.TrinketSlot",
+        "dev.emi.trinkets.TrinketsMain",
+        "dev.emi.trinkets.TrinketsNetwork"
+      ],
+      "methods": {
+        "dev.emi.trinkets.api.client.TrinketRenderer": [],
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry": [
+          "registerRenderer(class_1792, TrinketRenderer)",
+          "getRenderer(class_1792)"
+        ],
+        "dev.emi.trinkets.api.event.TrinketDropCallback": [],
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent": [
+          "getEntity()",
+          "getGroups()",
+          "getInventory()",
+          "update()",
+          "clearCachedModifiers()",
+          "getTrackingUpdates()",
+          "addTemporaryModifiers(Multimap<String, class_1322>)",
+          "addPersistentModifiers(Multimap<String, class_1322>)",
+          "removeModifiers(Multimap<String, class_1322>)",
+          "getModifiers()",
+          "clearModifiers()",
+          "readFromNbt(class_2487)",
+          "applySyncPacket(class_2540)",
+          "writeToNbt(class_2487)",
+          "writeSyncPacket(class_2540, class_3222)",
+          "isEquipped(Predicate<class_1799>)",
+          "getEquipped(Predicate<class_1799>)",
+          "forEach(BiConsumer<SlotReference, class_1799>)"
+        ],
+        "dev.emi.trinkets.api.SlotAttributes": [
+          "addSlotModifier(Multimap<class_1320, class_1322>, String, UUID, double, class_1323)",
+          "getUuid(SlotReference)"
+        ],
+        "dev.emi.trinkets.api.SlotGroup": [
+          "getSlotId()",
+          "getOrder()",
+          "getName()",
+          "getSlots()",
+          "write(class_2487)",
+          "read(class_2487)"
+        ],
+        "dev.emi.trinkets.api.SlotReference": [],
+        "dev.emi.trinkets.api.SlotType": [
+          "getGroup()",
+          "getName()",
+          "getOrder()",
+          "getAmount()",
+          "getIcon()",
+          "getQuickMovePredicates()",
+          "getValidatorPredicates()",
+          "getTooltipPredicates()",
+          "getDropRule()",
+          "getTranslation()",
+          "write(class_2487)",
+          "read(class_2487)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "dev.emi.trinkets.api.Trinket": [
+          "tick(class_1799, SlotReference, class_1309)",
+          "onEquip(class_1799, SlotReference, class_1309)",
+          "onUnequip(class_1799, SlotReference, class_1309)",
+          "canEquip(class_1799, SlotReference, class_1309)",
+          "canUnequip(class_1799, SlotReference, class_1309)",
+          "getModifiers(class_1799, SlotReference, class_1309, UUID)",
+          "onBreak(class_1799, SlotReference, class_1309)",
+          "getDropRule(class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.api.TrinketComponent": [
+          "isEquipped(class_1792)",
+          "getEquipped(class_1792)",
+          "getAllEquipped()"
+        ],
+        "dev.emi.trinkets.api.TrinketEnums": [],
+        "dev.emi.trinkets.api.TrinketInventory": [
+          "getSlotType()",
+          "getComponent()",
+          "method_5448()",
+          "method_5439()",
+          "method_5442()",
+          "method_5438(int)",
+          "method_5434(int, int)",
+          "method_5441(int)",
+          "method_5447(int, class_1799)",
+          "method_5431()",
+          "markUpdate()",
+          "method_5443(class_1657)",
+          "getModifiers()",
+          "getModifiersByOperation(class_1323)",
+          "addModifier(class_1322)",
+          "addPersistentModifier(class_1322)",
+          "removeModifier(UUID)",
+          "clearModifiers()",
+          "removeCachedModifier(class_1322)",
+          "clearCachedModifiers()"
+        ],
+        "dev.emi.trinkets.api.TrinketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "equipItem(class_1657, class_1799)"
+        ],
+        "dev.emi.trinkets.api.TrinketsApi": [
+          "registerTrinket(class_1792, Trinket)",
+          "getTrinket(class_1792)",
+          "getDefaultTrinket()",
+          "getTrinketComponent(class_1309)",
+          "onTrinketBroken(class_1799, SlotReference, class_1309)",
+          "getPlayerSlots()",
+          "getPlayerSlots(class_1937)",
+          "getPlayerSlots(class_1657)",
+          "getEntitySlots(class_1299<?>)",
+          "getEntitySlots(class_1937, class_1299<?>)",
+          "getEntitySlots(class_1297)",
+          "registerTrinketPredicate(class_2960, Function3<class_1799, SlotReference, class_1309, TriState>)",
+          "getTrinketPredicate(class_2960)",
+          "evaluatePredicateSet(Set<class_2960>, class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.CreativeTrinketSlot": [
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.data.EntitySlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, Map<String, Set<String>>>, class_3300, class_3695)",
+          "getEntitySlots(class_1299<?>)",
+          "setSlots(Map<class_1299<?>, Map<String, SlotGroup>>)",
+          "sync(class_3222)",
+          "sync(List<? extends class_3222>)",
+          "getFabricId()",
+          "getFabricDependencies()"
+        ],
+        "dev.emi.trinkets.data.SlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, SlotLoader.GroupData>, class_3300, class_3695)",
+          "getSlots()",
+          "getFabricId()"
+        ],
+        "dev.emi.trinkets.Point": [],
+        "dev.emi.trinkets.SurvivalTrinketSlot": [
+          "method_7680(class_1799)",
+          "method_7674(class_1657)",
+          "method_7682()",
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.TrinketFeatureRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "dev.emi.trinkets.TrinketPlayerScreenHandler": [],
+        "dev.emi.trinkets.TrinketsClient": [
+          "onInitializeClient()"
+        ],
+        "dev.emi.trinkets.TrinketScreen": [],
+        "dev.emi.trinkets.TrinketScreenManager": [
+          "init(TrinketScreen)",
+          "removeSelections()",
+          "update(float, float)",
+          "tick()",
+          "drawGroup(class_332, class_4587, SlotGroup, SlotType)",
+          "drawActiveGroup(class_332, class_4587)",
+          "drawExtraGroups(class_332, class_4587)",
+          "isClickInsideTrinketBounds(double, double)"
+        ],
+        "dev.emi.trinkets.TrinketSlot": [],
+        "dev.emi.trinkets.TrinketsMain": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "dev.emi.trinkets.TrinketsNetwork": []
+      },
+      "sampleCount": 27
+    },
+    "3.4.1": {
+      "packages": [],
+      "classes": [
+        "dev.emi.trinkets.api.client.TrinketRenderer",
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry",
+        "dev.emi.trinkets.api.event.TrinketDropCallback",
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent",
+        "dev.emi.trinkets.api.SlotAttributes",
+        "dev.emi.trinkets.api.SlotGroup",
+        "dev.emi.trinkets.api.SlotReference",
+        "dev.emi.trinkets.api.SlotType",
+        "dev.emi.trinkets.api.Trinket",
+        "dev.emi.trinkets.api.TrinketComponent",
+        "dev.emi.trinkets.api.TrinketEnums",
+        "dev.emi.trinkets.api.TrinketInventory",
+        "dev.emi.trinkets.api.TrinketItem",
+        "dev.emi.trinkets.api.TrinketsApi",
+        "dev.emi.trinkets.CreativeTrinketSlot",
+        "dev.emi.trinkets.data.EntitySlotLoader",
+        "dev.emi.trinkets.data.SlotLoader",
+        "dev.emi.trinkets.Point",
+        "dev.emi.trinkets.SurvivalTrinketSlot",
+        "dev.emi.trinkets.TrinketFeatureRenderer",
+        "dev.emi.trinkets.TrinketPlayerScreenHandler",
+        "dev.emi.trinkets.TrinketsClient",
+        "dev.emi.trinkets.TrinketScreen",
+        "dev.emi.trinkets.TrinketScreenManager",
+        "dev.emi.trinkets.TrinketSlot",
+        "dev.emi.trinkets.TrinketsMain",
+        "dev.emi.trinkets.TrinketsNetwork"
+      ],
+      "methods": {
+        "dev.emi.trinkets.api.client.TrinketRenderer": [],
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry": [
+          "registerRenderer(class_1792, TrinketRenderer)",
+          "getRenderer(class_1792)"
+        ],
+        "dev.emi.trinkets.api.event.TrinketDropCallback": [],
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent": [
+          "getEntity()",
+          "getGroups()",
+          "getInventory()",
+          "update()",
+          "clearCachedModifiers()",
+          "getTrackingUpdates()",
+          "addTemporaryModifiers(Multimap<String, class_1322>)",
+          "addPersistentModifiers(Multimap<String, class_1322>)",
+          "removeModifiers(Multimap<String, class_1322>)",
+          "getModifiers()",
+          "clearModifiers()",
+          "readFromNbt(class_2487)",
+          "applySyncPacket(class_2540)",
+          "writeToNbt(class_2487)",
+          "writeSyncPacket(class_2540, class_3222)",
+          "isEquipped(Predicate<class_1799>)",
+          "getEquipped(Predicate<class_1799>)",
+          "forEach(BiConsumer<SlotReference, class_1799>)"
+        ],
+        "dev.emi.trinkets.api.SlotAttributes": [
+          "addSlotModifier(Multimap<class_1320, class_1322>, String, UUID, double, class_1323)",
+          "getUuid(SlotReference)"
+        ],
+        "dev.emi.trinkets.api.SlotGroup": [
+          "getSlotId()",
+          "getOrder()",
+          "getName()",
+          "getSlots()",
+          "write(class_2487)",
+          "read(class_2487)"
+        ],
+        "dev.emi.trinkets.api.SlotReference": [],
+        "dev.emi.trinkets.api.SlotType": [
+          "getGroup()",
+          "getName()",
+          "getOrder()",
+          "getAmount()",
+          "getIcon()",
+          "getQuickMovePredicates()",
+          "getValidatorPredicates()",
+          "getTooltipPredicates()",
+          "getDropRule()",
+          "getTranslation()",
+          "write(class_2487)",
+          "read(class_2487)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "dev.emi.trinkets.api.Trinket": [
+          "tick(class_1799, SlotReference, class_1309)",
+          "onEquip(class_1799, SlotReference, class_1309)",
+          "onUnequip(class_1799, SlotReference, class_1309)",
+          "canEquip(class_1799, SlotReference, class_1309)",
+          "canUnequip(class_1799, SlotReference, class_1309)",
+          "getModifiers(class_1799, SlotReference, class_1309, UUID)",
+          "onBreak(class_1799, SlotReference, class_1309)",
+          "getDropRule(class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.api.TrinketComponent": [
+          "isEquipped(class_1792)",
+          "getEquipped(class_1792)",
+          "getAllEquipped()"
+        ],
+        "dev.emi.trinkets.api.TrinketEnums": [],
+        "dev.emi.trinkets.api.TrinketInventory": [
+          "getSlotType()",
+          "getComponent()",
+          "method_5448()",
+          "method_5439()",
+          "method_5442()",
+          "method_5438(int)",
+          "method_5434(int, int)",
+          "method_5441(int)",
+          "method_5447(int, class_1799)",
+          "method_5431()",
+          "markUpdate()",
+          "method_5443(class_1657)",
+          "getModifiers()",
+          "getModifiersByOperation(class_1323)",
+          "addModifier(class_1322)",
+          "addPersistentModifier(class_1322)",
+          "removeModifier(UUID)",
+          "clearModifiers()",
+          "removeCachedModifier(class_1322)",
+          "clearCachedModifiers()"
+        ],
+        "dev.emi.trinkets.api.TrinketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "equipItem(class_1657, class_1799)"
+        ],
+        "dev.emi.trinkets.api.TrinketsApi": [
+          "registerTrinket(class_1792, Trinket)",
+          "getTrinket(class_1792)",
+          "getDefaultTrinket()",
+          "getTrinketComponent(class_1309)",
+          "onTrinketBroken(class_1799, SlotReference, class_1309)",
+          "getPlayerSlots()",
+          "getPlayerSlots(class_1937)",
+          "getPlayerSlots(class_1657)",
+          "getEntitySlots(class_1299<?>)",
+          "getEntitySlots(class_1937, class_1299<?>)",
+          "getEntitySlots(class_1297)",
+          "registerTrinketPredicate(class_2960, Function3<class_1799, SlotReference, class_1309, TriState>)",
+          "getTrinketPredicate(class_2960)",
+          "evaluatePredicateSet(Set<class_2960>, class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.CreativeTrinketSlot": [
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.data.EntitySlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, Map<String, Set<String>>>, class_3300, class_3695)",
+          "getEntitySlots(class_1299<?>)",
+          "setSlots(Map<class_1299<?>, Map<String, SlotGroup>>)",
+          "sync(class_3222)",
+          "sync(List<? extends class_3222>)",
+          "getFabricId()",
+          "getFabricDependencies()"
+        ],
+        "dev.emi.trinkets.data.SlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, SlotLoader.GroupData>, class_3300, class_3695)",
+          "getSlots()",
+          "getFabricId()"
+        ],
+        "dev.emi.trinkets.Point": [],
+        "dev.emi.trinkets.SurvivalTrinketSlot": [
+          "method_7680(class_1799)",
+          "method_7674(class_1657)",
+          "method_7682()",
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.TrinketFeatureRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "dev.emi.trinkets.TrinketPlayerScreenHandler": [],
+        "dev.emi.trinkets.TrinketsClient": [
+          "onInitializeClient()"
+        ],
+        "dev.emi.trinkets.TrinketScreen": [],
+        "dev.emi.trinkets.TrinketScreenManager": [
+          "init(TrinketScreen)",
+          "removeSelections()",
+          "update(float, float)",
+          "tick()",
+          "drawGroup(class_332, class_4587, SlotGroup, SlotType)",
+          "drawActiveGroup(class_332, class_4587)",
+          "drawExtraGroups(class_332, class_4587)",
+          "isClickInsideTrinketBounds(double, double)"
+        ],
+        "dev.emi.trinkets.TrinketSlot": [],
+        "dev.emi.trinkets.TrinketsMain": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "dev.emi.trinkets.TrinketsNetwork": []
+      },
+      "sampleCount": 27
+    },
+    "3.0.4": {
+      "packages": [],
+      "classes": [
+        "dev.emi.trinkets.api.client.TrinketRenderer",
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry",
+        "dev.emi.trinkets.api.event.TrinketDropCallback",
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent",
+        "dev.emi.trinkets.api.SlotAttributes",
+        "dev.emi.trinkets.api.SlotGroup",
+        "dev.emi.trinkets.api.SlotReference",
+        "dev.emi.trinkets.api.SlotType",
+        "dev.emi.trinkets.api.Trinket",
+        "dev.emi.trinkets.api.TrinketComponent",
+        "dev.emi.trinkets.api.TrinketEnums",
+        "dev.emi.trinkets.api.TrinketInventory",
+        "dev.emi.trinkets.api.TrinketItem",
+        "dev.emi.trinkets.api.TrinketsApi",
+        "dev.emi.trinkets.data.EntitySlotLoader",
+        "dev.emi.trinkets.data.SlotLoader",
+        "dev.emi.trinkets.TrinketFeatureRenderer",
+        "dev.emi.trinkets.TrinketPlayerScreenHandler",
+        "dev.emi.trinkets.TrinketsClient",
+        "dev.emi.trinkets.TrinketSlot",
+        "dev.emi.trinkets.TrinketsMain",
+        "dev.emi.trinkets.TrinketsNetwork"
+      ],
+      "methods": {
+        "dev.emi.trinkets.api.client.TrinketRenderer": [],
+        "dev.emi.trinkets.api.client.TrinketRendererRegistry": [
+          "registerRenderer(class_1792, TrinketRenderer)",
+          "getRenderer(class_1792)"
+        ],
+        "dev.emi.trinkets.api.event.TrinketDropCallback": [],
+        "dev.emi.trinkets.api.LivingEntityTrinketComponent": [
+          "getEntity()",
+          "getGroups()",
+          "getInventory()",
+          "update()",
+          "clearCachedModifiers()",
+          "getTrackingUpdates()",
+          "addTemporaryModifiers(Multimap<String, class_1322>)",
+          "addPersistentModifiers(Multimap<String, class_1322>)",
+          "removeModifiers(Multimap<String, class_1322>)",
+          "getModifiers()",
+          "clearModifiers()",
+          "readFromNbt(class_2487)",
+          "applySyncPacket(class_2540)",
+          "writeToNbt(class_2487)",
+          "writeSyncPacket(class_2540, class_3222)",
+          "isEquipped(Predicate<class_1799>)",
+          "getEquipped(Predicate<class_1799>)",
+          "forEach(BiConsumer<SlotReference, class_1799>)"
+        ],
+        "dev.emi.trinkets.api.SlotAttributes": [
+          "addSlotModifier(Multimap<class_1320, class_1322>, String, UUID, double, class_1323)",
+          "getUuid(SlotReference)"
+        ],
+        "dev.emi.trinkets.api.SlotGroup": [
+          "getSlotId()",
+          "getOrder()",
+          "getName()",
+          "getSlots()",
+          "write(class_2487)",
+          "read(class_2487)"
+        ],
+        "dev.emi.trinkets.api.SlotReference": [],
+        "dev.emi.trinkets.api.SlotType": [
+          "getGroup()",
+          "getName()",
+          "getOrder()",
+          "getAmount()",
+          "getIcon()",
+          "getQuickMovePredicates()",
+          "getValidatorPredicates()",
+          "getTooltipPredicates()",
+          "getDropRule()",
+          "getTranslation()",
+          "write(class_2487)",
+          "read(class_2487)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "dev.emi.trinkets.api.Trinket": [
+          "tick(class_1799, SlotReference, class_1309)",
+          "onEquip(class_1799, SlotReference, class_1309)",
+          "onUnequip(class_1799, SlotReference, class_1309)",
+          "canEquip(class_1799, SlotReference, class_1309)",
+          "canUnequip(class_1799, SlotReference, class_1309)",
+          "getModifiers(class_1799, SlotReference, class_1309, UUID)",
+          "onBreak(class_1799, SlotReference, class_1309)",
+          "getDropRule(class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.api.TrinketComponent": [
+          "isEquipped(class_1792)",
+          "getEquipped(class_1792)",
+          "getAllEquipped()"
+        ],
+        "dev.emi.trinkets.api.TrinketEnums": [],
+        "dev.emi.trinkets.api.TrinketInventory": [
+          "getSlotType()",
+          "getComponent()",
+          "method_5448()",
+          "method_5439()",
+          "method_5442()",
+          "method_5438(int)",
+          "method_5434(int, int)",
+          "method_5441(int)",
+          "method_5447(int, class_1799)",
+          "method_5431()",
+          "markUpdate()",
+          "method_5443(class_1657)",
+          "getModifiers()",
+          "getModifiersByOperation(class_1323)",
+          "addModifier(class_1322)",
+          "addPersistentModifier(class_1322)",
+          "removeModifier(UUID)",
+          "clearModifiers()",
+          "clearCachedModifiers()",
+          "update()"
+        ],
+        "dev.emi.trinkets.api.TrinketItem": [
+          "method_7836(class_1937, class_1657, class_1268)",
+          "equipItem(class_1657, class_1799)"
+        ],
+        "dev.emi.trinkets.api.TrinketsApi": [
+          "registerTrinket(class_1792, Trinket)",
+          "getTrinket(class_1792)",
+          "getDefaultTrinket()",
+          "getTrinketComponent(class_1309)",
+          "onTrinketBroken(class_1799, SlotReference, class_1309)",
+          "getPlayerSlots()",
+          "getEntitySlots(class_1299<?>)",
+          "registerTrinketPredicate(class_2960, Function3<class_1799, SlotReference, class_1309, TriState>)",
+          "getTrinketPredicate(class_2960)",
+          "evaluatePredicateSet(Set<class_2960>, class_1799, SlotReference, class_1309)"
+        ],
+        "dev.emi.trinkets.data.EntitySlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, Map<String, Set<String>>>, class_3300, class_3695)",
+          "getEntitySlots(class_1299<?>)",
+          "setSlots(Map<class_1299<?>, Map<String, SlotGroup>>)",
+          "sync(class_3222)",
+          "sync(List<? extends class_3222>)",
+          "getFabricId()",
+          "getFabricDependencies()"
+        ],
+        "dev.emi.trinkets.data.SlotLoader": [
+          "prepare(class_3300, class_3695)",
+          "apply(Map<String, SlotLoader.GroupData>, class_3300, class_3695)",
+          "getSlots()",
+          "getFabricId()"
+        ],
+        "dev.emi.trinkets.TrinketFeatureRenderer": [
+          "render(class_4587, class_4597, int, T, float, float, float, float, float, float)"
+        ],
+        "dev.emi.trinkets.TrinketPlayerScreenHandler": [],
+        "dev.emi.trinkets.TrinketsClient": [
+          "onInitializeClient()"
+        ],
+        "dev.emi.trinkets.TrinketSlot": [
+          "isTrinketFocused()",
+          "getBackgroundIdentifier()",
+          "method_7680(class_1799)",
+          "canInsert(class_1799, SlotReference, class_1309)",
+          "method_7674(class_1657)",
+          "method_7682()",
+          "getType()"
+        ],
+        "dev.emi.trinkets.TrinketsMain": [
+          "onInitialize()",
+          "registerEntityComponentFactories(EntityComponentFactoryRegistry)"
+        ],
+        "dev.emi.trinkets.TrinketsNetwork": []
+      },
+      "sampleCount": 22
+    }
+  },
+  "classCount": 141,
+  "methodCount": 614
+}

@@ -1,0 +1,3299 @@
+{
+  "slug": "collective",
+  "modId": "collective",
+  "id": "authored/lib-collective",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "collective"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:45.257Z",
+  "versions": {
+    "8.32": {
+      "packages": [],
+      "classes": [
+        "com.natamus.collective.CollectiveFabric",
+        "com.natamus.collective.CollectiveFabricClient",
+        "com.natamus.collective.CollectiveForge",
+        "com.natamus.collective.CollectiveNeoForge",
+        "com.natamus.collective.fabric.bundle.FabricBundleConfigCheck",
+        "com.natamus.collective.fabric.bundle.FabricBundleJarJarCheck",
+        "com.natamus.collective.fabric.callbacks.CollectiveAnimalEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveAnvilEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveAttackEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveBlockEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveChatEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveClientEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveCommandEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveCropEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveEntityEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveExplosionEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveFurnaceEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveItemEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveLifecycleEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveMinecraftServerEvents",
+        "com.natamus.collective.fabric.callbacks.CollectivePistonEvents",
+        "com.natamus.collective.fabric.callbacks.CollectivePlayerEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveRenderEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveSoundEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveSpawnEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveWorldEvents",
+        "com.natamus.collective.fabric.config.FabricCollectiveConfigScreen",
+        "com.natamus.collective.fabric.data.GlobalFabricObjects",
+        "com.natamus.collective.fabric.networking.FabricNetworkHandler",
+        "com.natamus.collective.fabric.services.FabricBlockTagsHelper",
+        "com.natamus.collective.fabric.services.FabricClientUtilsHelper",
+        "com.natamus.collective.fabric.services.FabricEventTriggerHelper",
+        "com.natamus.collective.fabric.services.FabricModLoaderHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterBlockHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterItemHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterKeyMappingHelper",
+        "com.natamus.collective.fabric.services.FabricTeleportHelper",
+        "com.natamus.collective.fabric.services.FabricToolFunctionsHelper",
+        "com.natamus.collective.forge.bundle.ForgeBundleConfigCheck",
+        "com.natamus.collective.forge.bundle.ForgeBundleJarJarCheck",
+        "com.natamus.collective.forge.config.ForgeCollectiveConfigScreen",
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeClientEvents",
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeEvents",
+        "com.natamus.collective.forge.networking.ForgeNetworkHandler",
+        "com.natamus.collective.forge.services.ForgeBlockTagsHelper",
+        "com.natamus.collective.forge.services.ForgeClientUtilsHelper",
+        "com.natamus.collective.forge.services.ForgeEventTriggerHelper",
+        "com.natamus.collective.forge.services.ForgeModLoaderHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterBlockHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterItemHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterKeyMappingHelper",
+        "com.natamus.collective.forge.services.ForgeTeleportHelper",
+        "com.natamus.collective.forge.services.ForgeToolFunctionsHelper",
+        "com.natamus.collective.forge.translations.ForgePackFinders",
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleConfigCheck",
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleJarJarCheck",
+        "com.natamus.collective.neoforge.config.NeoForgeCollectiveConfigScreen",
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeClientEvents",
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeEvents",
+        "com.natamus.collective.neoforge.networking.NeoForgeNetworkHandler",
+        "com.natamus.collective.neoforge.services.NeoForgeBlockTagsHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeClientUtilsHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeEventTriggerHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeModLoaderHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterBlockHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterItemHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterKeyMappingHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeTeleportHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeToolFunctionsHelper",
+        "com.natamus.collective.neoforge.translations.NeoForgePackFinders",
+        "com.natamus.collective.util.Placeholder",
+        "com.natamus.collective_common_fabric.check.RegisterMod",
+        "com.natamus.collective_common_fabric.check.ShouldLoadCheck",
+        "com.natamus.collective_common_fabric.cmds.CommandCollective",
+        "com.natamus.collective_common_fabric.CollectiveCommon",
+        "com.natamus.collective_common_fabric.config.CollectiveConfigHandler",
+        "com.natamus.collective_common_fabric.config.DuskConfig",
+        "com.natamus.collective_common_fabric.config.GenerateJSONFiles",
+        "com.natamus.collective_common_fabric.config.LoadJSONFiles",
+        "com.natamus.collective_common_fabric.data.BlockEntityData",
+        "com.natamus.collective_common_fabric.data.ClientConstants",
+        "com.natamus.collective_common_fabric.data.Constants",
+        "com.natamus.collective_common_fabric.data.FeatureFlags",
+        "com.natamus.collective_common_fabric.data.GlobalConstants",
+        "com.natamus.collective_common_fabric.data.GlobalVariables",
+        "com.natamus.collective_common_fabric.events.CollectiveClientEvents",
+        "com.natamus.collective_common_fabric.events.CollectiveEvents",
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayer",
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayerFactory",
+        "com.natamus.collective_common_fabric.features.PlayerHeadCacheFeature",
+        "com.natamus.collective_common_fabric.functions.BlockFunctions",
+        "com.natamus.collective_common_fabric.functions.BlockPosFunctions",
+        "com.natamus.collective_common_fabric.functions.ColourFunctions",
+        "com.natamus.collective_common_fabric.functions.CommandFunctions",
+        "com.natamus.collective_common_fabric.functions.CompareBlockFunctions",
+        "com.natamus.collective_common_fabric.functions.CompareItemFunctions",
+        "com.natamus.collective_common_fabric.functions.ConfigFunctions",
+        "com.natamus.collective_common_fabric.functions.CreativeModeTabFunctions",
+        "com.natamus.collective_common_fabric.functions.CropFunctions",
+        "com.natamus.collective_common_fabric.functions.DataFunctions",
+        "com.natamus.collective_common_fabric.functions.DateFunctions",
+        "com.natamus.collective_common_fabric.functions.DimensionFunctions",
+        "com.natamus.collective_common_fabric.functions.EntityFunctions",
+        "com.natamus.collective_common_fabric.functions.ExperienceFunctions",
+        "com.natamus.collective_common_fabric.functions.ExplosionFunctions",
+        "com.natamus.collective_common_fabric.functions.FABFunctions",
+        "com.natamus.collective_common_fabric.functions.FeatureFunctions",
+        "com.natamus.collective_common_fabric.functions.GameSettingsFunctions",
+        "com.natamus.collective_common_fabric.functions.GearFunctions",
+        "com.natamus.collective_common_fabric.functions.GUIFunctions",
+        "com.natamus.collective_common_fabric.functions.HashMapFunctions",
+        "com.natamus.collective_common_fabric.functions.HeadFunctions",
+        "com.natamus.collective_common_fabric.functions.ItemFunctions",
+        "com.natamus.collective_common_fabric.functions.JsonFunctions",
+        "com.natamus.collective_common_fabric.functions.KeyMappingFunctions",
+        "com.natamus.collective_common_fabric.functions.MenuFunctions",
+        "com.natamus.collective_common_fabric.functions.MessageFunctions",
+        "com.natamus.collective_common_fabric.functions.NumberFunctions",
+        "com.natamus.collective_common_fabric.functions.PlayerFunctions",
+        "com.natamus.collective_common_fabric.functions.RayTraceFunctions",
+        "com.natamus.collective_common_fabric.functions.ScreenFunctions",
+        "com.natamus.collective_common_fabric.functions.SignFunctions",
+        "com.natamus.collective_common_fabric.functions.SpawnEntityFunctions",
+        "com.natamus.collective_common_fabric.functions.StringFunctions",
+        "com.natamus.collective_common_fabric.functions.TaskFunctions",
+        "com.natamus.collective_common_fabric.functions.TileEntityFunctions",
+        "com.natamus.collective_common_fabric.functions.UtilityFunctions",
+        "com.natamus.collective_common_fabric.functions.UUIDFunctions",
+        "com.natamus.collective_common_fabric.functions.WorldFunctions",
+        "com.natamus.collective_common_fabric.globalcallbacks.CachedBlockEntityCallback",
+        "com.natamus.collective_common_fabric.globalcallbacks.CollectiveGuiCallback",
+        "com.natamus.collective_common_fabric.globalcallbacks.GlobalCropCallback",
+        "com.natamus.collective_common_fabric.globalcallbacks.JSONCallback",
+        "com.natamus.collective_common_fabric.globalcallbacks.MainMenuLoadedCallback",
+        "com.natamus.collective_common_fabric.implementations.event.Event",
+        "com.natamus.collective_common_fabric.implementations.event.EventFactory",
+        "com.natamus.collective_common_fabric.implementations.event.EventFactoryImpl",
+        "com.natamus.collective_common_fabric.implementations.event.PhaseSorting",
+        "com.natamus.collective_common_fabric.implementations.networking.api.Dispatcher",
+        "com.natamus.collective_common_fabric.implementations.networking.api.Network",
+        "com.natamus.collective_common_fabric.implementations.networking.api.NetworkHandler",
+        "com.natamus.collective_common_fabric.implementations.networking.data.CommonPacketWrapper",
+        "com.natamus.collective_common_fabric.implementations.networking.data.PacketContainer",
+        "com.natamus.collective_common_fabric.implementations.networking.data.PacketContext",
+        "com.natamus.collective_common_fabric.implementations.networking.data.Side",
+        "com.natamus.collective_common_fabric.implementations.networking.DelayedPacketRegistrationHandler",
+        "com.natamus.collective_common_fabric.implementations.networking.exceptions.RegistrationException",
+        "com.natamus.collective_common_fabric.implementations.networking.NetworkSetup",
+        "com.natamus.collective_common_fabric.implementations.networking.PacketRegistrar",
+        "com.natamus.collective_common_fabric.implementations.networking.PacketRegistrationHandler",
+        "com.natamus.collective_common_fabric.networking.PacketRegistration",
+        "com.natamus.collective_common_fabric.networking.packets.CollectiveInstalledPacket",
+        "com.natamus.collective_common_fabric.objects.RandomCollection",
+        "com.natamus.collective_common_fabric.objects.SAMObject",
+        "com.natamus.collective_common_fabric.schematic.ParsedSchematicObject",
+        "com.natamus.collective_common_fabric.schematic.ParseSchematicFile",
+        "com.natamus.collective_common_fabric.schematic.Schematic",
+        "com.natamus.collective_common_fabric.schematic.SchematicBlockObject",
+        "com.natamus.collective_common_fabric.schematic.SchematicFunctions",
+        "com.natamus.collective_common_fabric.services.helpers.BlockTagsHelper",
+        "com.natamus.collective_common_fabric.services.helpers.ClientUtilsHelper",
+        "com.natamus.collective_common_fabric.services.helpers.EventTriggerHelper",
+        "com.natamus.collective_common_fabric.services.helpers.ModLoaderHelper",
+        "com.natamus.collective_common_fabric.services.helpers.RegisterBlockHelper",
+        "com.natamus.collective_common_fabric.services.helpers.RegisterItemHelper",
+        "com.natamus.collective_common_fabric.services.helpers.RegisterKeyMappingHelper",
+        "com.natamus.collective_common_fabric.services.helpers.TeleportHelper",
+        "com.natamus.collective_common_fabric.services.helpers.ToolFunctionsHelper",
+        "com.natamus.collective_common_fabric.services.Services",
+        "com.natamus.collective_common_fabric.translations.ServerTranslationPack",
+        "com.natamus.collective_common_fabric.translations.TranslationDownloader",
+        "com.natamus.collective_common_fabric.translations.TranslationLoader",
+        "com.natamus.collective_common_fabric.translations.TranslationPack",
+        "com.natamus.collective_common_fabric.translations.TranslationResolver",
+        "com.natamus.collective_common_fabric.translations.TranslationStorage",
+        "com.natamus.collective_common_fabric.util.CollectiveReference",
+        "com.natamus.collective_common_forge.check.RegisterMod",
+        "com.natamus.collective_common_forge.check.ShouldLoadCheck",
+        "com.natamus.collective_common_forge.cmds.CommandCollective",
+        "com.natamus.collective_common_forge.CollectiveCommon",
+        "com.natamus.collective_common_forge.config.CollectiveConfigHandler",
+        "com.natamus.collective_common_forge.config.DuskConfig",
+        "com.natamus.collective_common_forge.config.GenerateJSONFiles",
+        "com.natamus.collective_common_forge.config.LoadJSONFiles",
+        "com.natamus.collective_common_forge.data.BlockEntityData",
+        "com.natamus.collective_common_forge.data.ClientConstants",
+        "com.natamus.collective_common_forge.data.Constants",
+        "com.natamus.collective_common_forge.data.FeatureFlags",
+        "com.natamus.collective_common_forge.data.GlobalConstants",
+        "com.natamus.collective_common_forge.data.GlobalVariables",
+        "com.natamus.collective_common_forge.events.CollectiveClientEvents",
+        "com.natamus.collective_common_forge.events.CollectiveEvents",
+        "com.natamus.collective_common_forge.fakeplayer.FakePlayer",
+        "com.natamus.collective_common_forge.fakeplayer.FakePlayerFactory",
+        "com.natamus.collective_common_forge.features.PlayerHeadCacheFeature",
+        "com.natamus.collective_common_forge.functions.BlockFunctions",
+        "com.natamus.collective_common_forge.functions.BlockPosFunctions",
+        "com.natamus.collective_common_forge.functions.ColourFunctions",
+        "com.natamus.collective_common_forge.functions.CommandFunctions",
+        "com.natamus.collective_common_forge.functions.CompareBlockFunctions",
+        "com.natamus.collective_common_forge.functions.CompareItemFunctions",
+        "com.natamus.collective_common_forge.functions.ConfigFunctions",
+        "com.natamus.collective_common_forge.functions.CreativeModeTabFunctions",
+        "com.natamus.collective_common_forge.functions.CropFunctions",
+        "com.natamus.collective_common_forge.functions.DataFunctions",
+        "com.natamus.collective_common_forge.functions.DateFunctions",
+        "com.natamus.collective_common_forge.functions.DimensionFunctions",
+        "com.natamus.collective_common_forge.functions.EntityFunctions",
+        "com.natamus.collective_common_forge.functions.ExperienceFunctions",
+        "com.natamus.collective_common_forge.functions.ExplosionFunctions",
+        "com.natamus.collective_common_forge.functions.FABFunctions",
+        "com.natamus.collective_common_forge.functions.FeatureFunctions",
+        "com.natamus.collective_common_forge.functions.GameSettingsFunctions",
+        "com.natamus.collective_common_forge.functions.GearFunctions",
+        "com.natamus.collective_common_forge.functions.GUIFunctions",
+        "com.natamus.collective_common_forge.functions.HashMapFunctions",
+        "com.natamus.collective_common_forge.functions.HeadFunctions",
+        "com.natamus.collective_common_forge.functions.ItemFunctions",
+        "com.natamus.collective_common_forge.functions.JsonFunctions",
+        "com.natamus.collective_common_forge.functions.KeyMappingFunctions",
+        "com.natamus.collective_common_forge.functions.MenuFunctions",
+        "com.natamus.collective_common_forge.functions.MessageFunctions",
+        "com.natamus.collective_common_forge.functions.NumberFunctions",
+        "com.natamus.collective_common_forge.functions.PlayerFunctions",
+        "com.natamus.collective_common_forge.functions.RayTraceFunctions",
+        "com.natamus.collective_common_forge.functions.ScreenFunctions",
+        "com.natamus.collective_common_forge.functions.SignFunctions",
+        "com.natamus.collective_common_forge.functions.SpawnEntityFunctions",
+        "com.natamus.collective_common_forge.functions.StringFunctions",
+        "com.natamus.collective_common_forge.functions.TaskFunctions",
+        "com.natamus.collective_common_forge.functions.TileEntityFunctions",
+        "com.natamus.collective_common_forge.functions.UtilityFunctions",
+        "com.natamus.collective_common_forge.functions.UUIDFunctions",
+        "com.natamus.collective_common_forge.functions.WorldFunctions",
+        "com.natamus.collective_common_forge.globalcallbacks.CachedBlockEntityCallback",
+        "com.natamus.collective_common_forge.globalcallbacks.CollectiveGuiCallback",
+        "com.natamus.collective_common_forge.globalcallbacks.GlobalCropCallback",
+        "com.natamus.collective_common_forge.globalcallbacks.JSONCallback",
+        "com.natamus.collective_common_forge.globalcallbacks.MainMenuLoadedCallback",
+        "com.natamus.collective_common_forge.implementations.event.Event",
+        "com.natamus.collective_common_forge.implementations.event.EventFactory",
+        "com.natamus.collective_common_forge.implementations.event.EventFactoryImpl",
+        "com.natamus.collective_common_forge.implementations.event.PhaseSorting",
+        "com.natamus.collective_common_forge.implementations.networking.api.Dispatcher",
+        "com.natamus.collective_common_forge.implementations.networking.api.Network",
+        "com.natamus.collective_common_forge.implementations.networking.api.NetworkHandler",
+        "com.natamus.collective_common_forge.implementations.networking.data.CommonPacketWrapper",
+        "com.natamus.collective_common_forge.implementations.networking.data.PacketContainer",
+        "com.natamus.collective_common_forge.implementations.networking.data.PacketContext",
+        "com.natamus.collective_common_forge.implementations.networking.data.Side",
+        "com.natamus.collective_common_forge.implementations.networking.DelayedPacketRegistrationHandler",
+        "com.natamus.collective_common_forge.implementations.networking.exceptions.RegistrationException",
+        "com.natamus.collective_common_forge.implementations.networking.NetworkSetup",
+        "com.natamus.collective_common_forge.implementations.networking.PacketRegistrar",
+        "com.natamus.collective_common_forge.implementations.networking.PacketRegistrationHandler",
+        "com.natamus.collective_common_forge.networking.PacketRegistration",
+        "com.natamus.collective_common_forge.networking.packets.CollectiveInstalledPacket",
+        "com.natamus.collective_common_forge.objects.RandomCollection",
+        "com.natamus.collective_common_forge.objects.SAMObject",
+        "com.natamus.collective_common_forge.schematic.ParsedSchematicObject",
+        "com.natamus.collective_common_forge.schematic.ParseSchematicFile",
+        "com.natamus.collective_common_forge.schematic.Schematic",
+        "com.natamus.collective_common_forge.schematic.SchematicBlockObject",
+        "com.natamus.collective_common_forge.schematic.SchematicFunctions",
+        "com.natamus.collective_common_forge.services.helpers.BlockTagsHelper",
+        "com.natamus.collective_common_forge.services.helpers.ClientUtilsHelper",
+        "com.natamus.collective_common_forge.services.helpers.EventTriggerHelper",
+        "com.natamus.collective_common_forge.services.helpers.ModLoaderHelper",
+        "com.natamus.collective_common_forge.services.helpers.RegisterBlockHelper",
+        "com.natamus.collective_common_forge.services.helpers.RegisterItemHelper",
+        "com.natamus.collective_common_forge.services.helpers.RegisterKeyMappingHelper",
+        "com.natamus.collective_common_forge.services.helpers.TeleportHelper",
+        "com.natamus.collective_common_forge.services.helpers.ToolFunctionsHelper",
+        "com.natamus.collective_common_forge.services.Services",
+        "com.natamus.collective_common_forge.translations.ServerTranslationPack",
+        "com.natamus.collective_common_forge.translations.TranslationDownloader",
+        "com.natamus.collective_common_forge.translations.TranslationLoader",
+        "com.natamus.collective_common_forge.translations.TranslationPack",
+        "com.natamus.collective_common_forge.translations.TranslationResolver",
+        "com.natamus.collective_common_forge.translations.TranslationStorage",
+        "com.natamus.collective_common_forge.util.CollectiveReference",
+        "com.natamus.collective_common_neoforge.check.RegisterMod",
+        "com.natamus.collective_common_neoforge.check.ShouldLoadCheck",
+        "com.natamus.collective_common_neoforge.cmds.CommandCollective",
+        "com.natamus.collective_common_neoforge.CollectiveCommon",
+        "com.natamus.collective_common_neoforge.config.CollectiveConfigHandler",
+        "com.natamus.collective_common_neoforge.config.DuskConfig",
+        "com.natamus.collective_common_neoforge.config.GenerateJSONFiles",
+        "com.natamus.collective_common_neoforge.config.LoadJSONFiles",
+        "com.natamus.collective_common_neoforge.data.BlockEntityData",
+        "com.natamus.collective_common_neoforge.data.ClientConstants",
+        "com.natamus.collective_common_neoforge.data.Constants",
+        "com.natamus.collective_common_neoforge.data.FeatureFlags",
+        "com.natamus.collective_common_neoforge.data.GlobalConstants",
+        "com.natamus.collective_common_neoforge.data.GlobalVariables",
+        "com.natamus.collective_common_neoforge.events.CollectiveClientEvents",
+        "com.natamus.collective_common_neoforge.events.CollectiveEvents",
+        "com.natamus.collective_common_neoforge.fakeplayer.FakePlayer",
+        "com.natamus.collective_common_neoforge.fakeplayer.FakePlayerFactory",
+        "com.natamus.collective_common_neoforge.features.PlayerHeadCacheFeature",
+        "com.natamus.collective_common_neoforge.functions.BlockFunctions",
+        "com.natamus.collective_common_neoforge.functions.BlockPosFunctions",
+        "com.natamus.collective_common_neoforge.functions.ColourFunctions",
+        "com.natamus.collective_common_neoforge.functions.CommandFunctions",
+        "com.natamus.collective_common_neoforge.functions.CompareBlockFunctions",
+        "com.natamus.collective_common_neoforge.functions.CompareItemFunctions",
+        "com.natamus.collective_common_neoforge.functions.ConfigFunctions",
+        "com.natamus.collective_common_neoforge.functions.CreativeModeTabFunctions",
+        "com.natamus.collective_common_neoforge.functions.CropFunctions",
+        "com.natamus.collective_common_neoforge.functions.DataFunctions",
+        "com.natamus.collective_common_neoforge.functions.DateFunctions",
+        "com.natamus.collective_common_neoforge.functions.DimensionFunctions",
+        "com.natamus.collective_common_neoforge.functions.EntityFunctions",
+        "com.natamus.collective_common_neoforge.functions.ExperienceFunctions",
+        "com.natamus.collective_common_neoforge.functions.ExplosionFunctions",
+        "com.natamus.collective_common_neoforge.functions.FABFunctions",
+        "com.natamus.collective_common_neoforge.functions.FeatureFunctions",
+        "com.natamus.collective_common_neoforge.functions.GameSettingsFunctions",
+        "com.natamus.collective_common_neoforge.functions.GearFunctions",
+        "com.natamus.collective_common_neoforge.functions.GUIFunctions",
+        "com.natamus.collective_common_neoforge.functions.HashMapFunctions",
+        "com.natamus.collective_common_neoforge.functions.HeadFunctions",
+        "com.natamus.collective_common_neoforge.functions.ItemFunctions",
+        "com.natamus.collective_common_neoforge.functions.JsonFunctions",
+        "com.natamus.collective_common_neoforge.functions.KeyMappingFunctions",
+        "com.natamus.collective_common_neoforge.functions.MenuFunctions",
+        "com.natamus.collective_common_neoforge.functions.MessageFunctions",
+        "com.natamus.collective_common_neoforge.functions.NumberFunctions",
+        "com.natamus.collective_common_neoforge.functions.PlayerFunctions",
+        "com.natamus.collective_common_neoforge.functions.RayTraceFunctions",
+        "com.natamus.collective_common_neoforge.functions.ScreenFunctions",
+        "com.natamus.collective_common_neoforge.functions.SignFunctions",
+        "com.natamus.collective_common_neoforge.functions.SpawnEntityFunctions",
+        "com.natamus.collective_common_neoforge.functions.StringFunctions",
+        "com.natamus.collective_common_neoforge.functions.TaskFunctions",
+        "com.natamus.collective_common_neoforge.functions.TileEntityFunctions",
+        "com.natamus.collective_common_neoforge.functions.UtilityFunctions",
+        "com.natamus.collective_common_neoforge.functions.UUIDFunctions",
+        "com.natamus.collective_common_neoforge.functions.WorldFunctions",
+        "com.natamus.collective_common_neoforge.globalcallbacks.CachedBlockEntityCallback",
+        "com.natamus.collective_common_neoforge.globalcallbacks.CollectiveGuiCallback",
+        "com.natamus.collective_common_neoforge.globalcallbacks.GlobalCropCallback",
+        "com.natamus.collective_common_neoforge.globalcallbacks.JSONCallback",
+        "com.natamus.collective_common_neoforge.globalcallbacks.MainMenuLoadedCallback",
+        "com.natamus.collective_common_neoforge.implementations.event.Event",
+        "com.natamus.collective_common_neoforge.implementations.event.EventFactory",
+        "com.natamus.collective_common_neoforge.implementations.event.EventFactoryImpl",
+        "com.natamus.collective_common_neoforge.implementations.event.PhaseSorting",
+        "com.natamus.collective_common_neoforge.implementations.networking.api.Dispatcher",
+        "com.natamus.collective_common_neoforge.implementations.networking.api.Network",
+        "com.natamus.collective_common_neoforge.implementations.networking.api.NetworkHandler",
+        "com.natamus.collective_common_neoforge.implementations.networking.data.CommonPacketWrapper",
+        "com.natamus.collective_common_neoforge.implementations.networking.data.PacketContainer",
+        "com.natamus.collective_common_neoforge.implementations.networking.data.PacketContext",
+        "com.natamus.collective_common_neoforge.implementations.networking.data.Side",
+        "com.natamus.collective_common_neoforge.implementations.networking.DelayedPacketRegistrationHandler",
+        "com.natamus.collective_common_neoforge.implementations.networking.exceptions.RegistrationException",
+        "com.natamus.collective_common_neoforge.implementations.networking.NetworkSetup",
+        "com.natamus.collective_common_neoforge.implementations.networking.PacketRegistrar",
+        "com.natamus.collective_common_neoforge.implementations.networking.PacketRegistrationHandler",
+        "com.natamus.collective_common_neoforge.networking.PacketRegistration",
+        "com.natamus.collective_common_neoforge.networking.packets.CollectiveInstalledPacket",
+        "com.natamus.collective_common_neoforge.objects.RandomCollection",
+        "com.natamus.collective_common_neoforge.objects.SAMObject",
+        "com.natamus.collective_common_neoforge.schematic.ParsedSchematicObject",
+        "com.natamus.collective_common_neoforge.schematic.ParseSchematicFile",
+        "com.natamus.collective_common_neoforge.schematic.Schematic",
+        "com.natamus.collective_common_neoforge.schematic.SchematicBlockObject",
+        "com.natamus.collective_common_neoforge.schematic.SchematicFunctions",
+        "com.natamus.collective_common_neoforge.services.helpers.BlockTagsHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.ClientUtilsHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.EventTriggerHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.ModLoaderHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterBlockHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterItemHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterKeyMappingHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.TeleportHelper",
+        "com.natamus.collective_common_neoforge.services.helpers.ToolFunctionsHelper",
+        "com.natamus.collective_common_neoforge.services.Services",
+        "com.natamus.collective_common_neoforge.translations.ServerTranslationPack",
+        "com.natamus.collective_common_neoforge.translations.TranslationDownloader",
+        "com.natamus.collective_common_neoforge.translations.TranslationLoader",
+        "com.natamus.collective_common_neoforge.translations.TranslationPack",
+        "com.natamus.collective_common_neoforge.translations.TranslationResolver",
+        "com.natamus.collective_common_neoforge.translations.TranslationStorage",
+        "com.natamus.collective_common_neoforge.util.CollectiveReference"
+      ],
+      "methods": {
+        "com.natamus.collective.CollectiveFabric": [
+          "onInitialize()"
+        ],
+        "com.natamus.collective.CollectiveFabricClient": [
+          "onInitializeClient()"
+        ],
+        "com.natamus.collective.CollectiveForge": [],
+        "com.natamus.collective.CollectiveNeoForge": [
+          "commonSetupEvent(FMLCommonSetupEvent)"
+        ],
+        "com.natamus.collective.fabric.bundle.FabricBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.fabric.bundle.FabricBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.fabric.callbacks.CollectiveAnimalEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveAnvilEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveAttackEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveBlockEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveChatEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveClientEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveCommandEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveCropEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveEntityEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveExplosionEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveFurnaceEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveItemEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveLifecycleEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveMinecraftServerEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectivePistonEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectivePlayerEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveRenderEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveSoundEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveSpawnEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveWorldEvents": [],
+        "com.natamus.collective.fabric.config.FabricCollectiveConfigScreen": [
+          "getModConfigScreenFactory()"
+        ],
+        "com.natamus.collective.fabric.data.GlobalFabricObjects": [],
+        "com.natamus.collective.fabric.networking.FabricNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)"
+        ],
+        "com.natamus.collective.fabric.services.FabricBlockTagsHelper": [
+          "isOre(BlockState)",
+          "isOre(BlockState, boolean)"
+        ],
+        "com.natamus.collective.fabric.services.FabricClientUtilsHelper": [],
+        "com.natamus.collective.fabric.services.FabricEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(Level, BlockPos, PortalShape)"
+        ],
+        "com.natamus.collective.fabric.services.FabricModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties, boolean)",
+          "getRegisteredBlockWithoutItem(Identifier)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredBlockWithItem(Identifier)",
+          "getRegisteredBlockWithItemPair(Identifier)",
+          "setRegisteredBlockWithItemPair(Identifier, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean, boolean)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "staticRegisterItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>)",
+          "getRegisteredItem(Identifier)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, Category)"
+        ],
+        "com.natamus.collective.fabric.services.FabricTeleportHelper": [
+          "teleportEntity(Entity, ServerLevel, Vec3)",
+          "teleportEntity(Entity, ServerLevel, BlockPos)",
+          "teleportEntity(Entity, ResourceKey<Level>, Vec3)",
+          "teleportEntity(Entity, ResourceKey<Level>, BlockPos)"
+        ],
+        "com.natamus.collective.fabric.services.FabricToolFunctionsHelper": [
+          "isTool(ItemStack)",
+          "isSword(ItemStack)",
+          "isShield(ItemStack)",
+          "isPickaxe(ItemStack)",
+          "isAxe(ItemStack)",
+          "isShovel(ItemStack)",
+          "isHoe(ItemStack)",
+          "isShears(ItemStack)",
+          "isFlintAndSteel(ItemStack)"
+        ],
+        "com.natamus.collective.forge.bundle.ForgeBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.forge.bundle.ForgeBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.forge.config.ForgeCollectiveConfigScreen": [
+          "registerScreen(ModLoadingContext)"
+        ],
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeClientEvents": [
+          "registerEventsInBus()",
+          "onClientTick(Pre)"
+        ],
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeEvents": [
+          "registerEventsInBus()",
+          "onServerStarted(ServerAboutToStartEvent)",
+          "onWorldLoad(Load)",
+          "onWorldTick(Pre)",
+          "onServerTick(Post)",
+          "onMobSpawnerSpecialSpawn(FinalizeSpawn)",
+          "onEntityJoinLevel(EntityJoinLevelEvent)",
+          "onPlayerLoggedIn(PlayerLoggedInEvent)",
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "com.natamus.collective.forge.networking.ForgeNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)"
+        ],
+        "com.natamus.collective.forge.services.ForgeBlockTagsHelper": [
+          "isOre(BlockState)",
+          "isOre(BlockState, boolean)"
+        ],
+        "com.natamus.collective.forge.services.ForgeClientUtilsHelper": [],
+        "com.natamus.collective.forge.services.ForgeEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(Level, BlockPos, PortalShape)"
+        ],
+        "com.natamus.collective.forge.services.ForgeModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties, boolean)",
+          "getRegisteredBlockWithoutItem(Identifier)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredBlockWithItem(Identifier)",
+          "getRegisteredBlockWithItemPair(Identifier)",
+          "setRegisteredBlockWithItemPair(Identifier, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean, boolean)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredItem(Identifier)",
+          "staticRegisterItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "addItemsToCreativeInventory(BuildCreativeModeTabContentsEvent)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, Category)",
+          "registerKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.natamus.collective.forge.services.ForgeTeleportHelper": [
+          "teleportEntity(Entity, ServerLevel, Vec3)",
+          "teleportEntity(Entity, ServerLevel, BlockPos)",
+          "teleportEntity(Entity, ResourceKey<Level>, Vec3)",
+          "teleportEntity(Entity, ResourceKey<Level>, BlockPos)"
+        ],
+        "com.natamus.collective.forge.services.ForgeToolFunctionsHelper": [
+          "isTool(ItemStack)",
+          "isSword(ItemStack)",
+          "isShield(ItemStack)",
+          "isPickaxe(ItemStack)",
+          "isAxe(ItemStack)",
+          "isShovel(ItemStack)",
+          "isHoe(ItemStack)",
+          "isShears(ItemStack)",
+          "isFlintAndSteel(ItemStack)"
+        ],
+        "com.natamus.collective.forge.translations.ForgePackFinders": [
+          "registerTranslationPack(AddPackFindersEvent)"
+        ],
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.neoforge.config.NeoForgeCollectiveConfigScreen": [
+          "registerScreen(ModLoadingContext)"
+        ],
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeClientEvents": [
+          "onClientTick(Post)"
+        ],
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeEvents": [
+          "onServerStarted(ServerAboutToStartEvent)",
+          "onWorldLoad(Load)",
+          "onWorldTick(Post)",
+          "onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post)",
+          "onEntityJoinLevel(EntityJoinLevelEvent)",
+          "onPlayerLoggedIn(PlayerLoggedInEvent)",
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "com.natamus.collective.neoforge.networking.NeoForgeNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "register(RegisterPayloadHandlersEvent)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeBlockTagsHelper": [
+          "isOre(BlockState)",
+          "isOre(BlockState, boolean)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeClientUtilsHelper": [],
+        "com.natamus.collective.neoforge.services.NeoForgeEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(Level, BlockPos, PortalShape)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties, boolean)",
+          "getRegisteredBlockWithoutItem(Identifier)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredBlockWithItem(Identifier)",
+          "getRegisteredBlockWithItemPair(Identifier)",
+          "setRegisteredBlockWithItemPair(Identifier, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean, boolean)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredItem(Identifier)",
+          "staticRegisterItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "addItemsToCreativeInventory(BuildCreativeModeTabContentsEvent)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, Category)",
+          "registerKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeTeleportHelper": [
+          "teleportEntity(Entity, ServerLevel, Vec3)",
+          "teleportEntity(Entity, ServerLevel, BlockPos)",
+          "teleportEntity(Entity, ResourceKey<Level>, Vec3)",
+          "teleportEntity(Entity, ResourceKey<Level>, BlockPos)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeToolFunctionsHelper": [
+          "isTool(ItemStack)",
+          "isSword(ItemStack)",
+          "isShield(ItemStack)",
+          "isPickaxe(ItemStack)",
+          "isAxe(ItemStack)",
+          "isShovel(ItemStack)",
+          "isHoe(ItemStack)",
+          "isShears(ItemStack)",
+          "isFlintAndSteel(ItemStack)"
+        ],
+        "com.natamus.collective.neoforge.translations.NeoForgePackFinders": [
+          "registerTranslationPack(AddPackFindersEvent)"
+        ],
+        "com.natamus.collective.util.Placeholder": [],
+        "com.natamus.collective_common_fabric.check.RegisterMod": [
+          "register(String, String, String, String)"
+        ],
+        "com.natamus.collective_common_fabric.check.ShouldLoadCheck": [
+          "shouldLoad(String)"
+        ],
+        "com.natamus.collective_common_fabric.cmds.CommandCollective": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "com.natamus.collective_common_fabric.CollectiveCommon": [
+          "init()",
+          "registerPackets()",
+          "loadEvents()"
+        ],
+        "com.natamus.collective_common_fabric.config.CollectiveConfigHandler": [
+          "initConfig()"
+        ],
+        "com.natamus.collective_common_fabric.config.DuskConfig": [
+          "init(String, String, Class<?>)",
+          "init(String, String, Class<?>, Boolean)",
+          "write(String)",
+          "loadJson(Path, String)"
+        ],
+        "com.natamus.collective_common_fabric.config.GenerateJSONFiles": [
+          "requestJSONFile(String, List<String>)",
+          "requestJSONFile(String, String)",
+          "initGeneration(ServerLevel)",
+          "initGeneration(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_fabric.config.LoadJSONFiles": [
+          "startListening()"
+        ],
+        "com.natamus.collective_common_fabric.data.BlockEntityData": [
+          "addBlockEntityToCache(BlockEntityType<?>)"
+        ],
+        "com.natamus.collective_common_fabric.data.ClientConstants": [],
+        "com.natamus.collective_common_fabric.data.Constants": [
+          "initConstantData(Level)"
+        ],
+        "com.natamus.collective_common_fabric.data.FeatureFlags": [],
+        "com.natamus.collective_common_fabric.data.GlobalConstants": [],
+        "com.natamus.collective_common_fabric.data.GlobalVariables": [
+          "generateHashMaps()"
+        ],
+        "com.natamus.collective_common_fabric.events.CollectiveClientEvents": [
+          "onClientTick()"
+        ],
+        "com.natamus.collective_common_fabric.events.CollectiveEvents": [
+          "onWorldLoad(Level)",
+          "onWorldTick(ServerLevel)",
+          "onServerTick(MinecraftServer)",
+          "onEntityJoinLevel(Level, Entity)"
+        ],
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayer": [
+          "awardStat(Stat, int)",
+          "isInvulnerableTo(DamageSource)",
+          "canHarmPlayer(Player)",
+          "die(DamageSource)",
+          "tick()",
+          "updateOptions(ClientInformation)",
+          "getServer()"
+        ],
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayerFactory": [
+          "getMinecraft(ServerLevel)",
+          "get(ServerLevel, GameProfile)",
+          "unloadLevel(ServerLevel)"
+        ],
+        "com.natamus.collective_common_fabric.features.PlayerHeadCacheFeature": [
+          "cachePlayer(Player)",
+          "cachePlayer(ServerLevel, String)",
+          "cachePlayer(String, GameProfile)",
+          "getPlayerHeadStackFromCache(Player)",
+          "getPlayerHeadStackFromCache(ServerLevel, String)",
+          "isHeadCachingEnabled()",
+          "enableHeadCaching()",
+          "resetPlayerHeadCache()"
+        ],
+        "com.natamus.collective_common_fabric.functions.BlockFunctions": [
+          "getBlockDrops(Level, BlockState, boolean)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player, Vec3)",
+          "isSpecificBlock(Block, Block)",
+          "isSpecificBlock(Block, ItemStack)",
+          "isSpecificBlock(Block, Level, BlockPos)",
+          "dropBlock(Level, BlockPos)",
+          "dropBlock(Level, BlockPos, Entity, ItemStack)",
+          "isOneOfBlocks(List<Block>, Block)",
+          "isOneOfBlocks(List<Block>, ItemStack)",
+          "isOneOfBlocks(List<Block>, Level, BlockPos)",
+          "isGrowBlock(Block)",
+          "isStoneTypeBlock(Block)",
+          "isFilledPortalFrame(BlockState)",
+          "canOpenByHand(BlockState)",
+          "canOpenByHand(BlockState, boolean)",
+          "blockToReadableString(Block, int)",
+          "blockToReadableString(Block)"
+        ],
+        "com.natamus.collective_common_fabric.functions.BlockPosFunctions": [
+          "getBlocksAround(BlockPos, boolean)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>, int)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>, int)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int, boolean)",
+          "getCenterNearbyVillage(ServerLevel)",
+          "getNearbyVillage(ServerLevel, BlockPos)",
+          "getNearbyVillage(ServerLevel, BlockPos, String)",
+          "getCenterNearbyBiome(ServerLevel, String)",
+          "getNearbyBiome(ServerLevel, BlockPos, String)",
+          "getCenterNearbyStructure(ServerLevel, HolderSet<Structure>)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos, int)",
+          "getBlockPlayerIsLookingAt(Level, Player, boolean)",
+          "getRandomCoordinatesInNearestUngeneratedChunk(ServerLevel, BlockPos)",
+          "isOnSurface(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ColourFunctions": [
+          "getById(int)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CommandFunctions": [
+          "getRawCommandOutput(ServerLevel, final Vec3, String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CompareBlockFunctions": [
+          "blockIsInRegistryHolder(Block, TagKey<Block>)",
+          "isStoneBlock(Block)",
+          "isNetherStoneBlock(Block)",
+          "isTreeLeaf(Block, boolean)",
+          "isTreeLeaf(Block)",
+          "isTreeLog(Block)",
+          "isSapling(Block)",
+          "isDirtBlock(Block)",
+          "isPortalBlock(Block)",
+          "isAirOrOverwritableBlock(Block)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CompareItemFunctions": [
+          "itemIsInRegistryHolder(Item, TagKey<Item>)",
+          "isSapling(Item)",
+          "isSapling(ItemStack)",
+          "isLog(Item)",
+          "isLog(ItemStack)",
+          "isPlank(Item)",
+          "isPlank(ItemStack)",
+          "isChest(Item)",
+          "isChest(ItemStack)",
+          "isStone(Item)",
+          "isStone(ItemStack)",
+          "isSlab(Item)",
+          "isSlab(ItemStack)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ConfigFunctions": [
+          "getRawConfigValues(String)",
+          "getRawConfigValues(String, boolean)",
+          "getDictValues(String)",
+          "getDictValues(String, boolean)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CreativeModeTabFunctions": [
+          "getCreativeModeTabResourceKey(String)",
+          "getCreativeModeTabResourceKey(String, String)",
+          "getCreativeModeTabResourceKey(Identifier)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CropFunctions": [
+          "applyBonemeal(ItemStack, Level, BlockPos, Player)",
+          "growCrop(Level, Player, BlockState, BlockPos)",
+          "growCrop(Level, Player, BlockState, BlockPos, InteractionHand)",
+          "growCrop(Level, Player, BlockState, BlockPos, ItemStack)",
+          "growCactus(Level, BlockPos)",
+          "growSugarcane(Level, BlockPos)",
+          "growVine(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_fabric.functions.DataFunctions": [
+          "getCurrentMinecraftVersion()",
+          "getGameDirectory()",
+          "getGameDirectoryPath()",
+          "getModDirectory()",
+          "getModDirectoryPath()",
+          "getConfigDirectory()",
+          "getConfigDirectoryPath()",
+          "getInstalledModJars()",
+          "setBit(byte, int, boolean)",
+          "getDataInputStream(MinecraftServer, String, String, String, String)",
+          "getDataInputStream(MinecraftServer, String, String, String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.DateFunctions": [
+          "ymdhisToReadable(String)",
+          "getNowInYmdhis()"
+        ],
+        "com.natamus.collective_common_fabric.functions.DimensionFunctions": [
+          "getSimpleDimensionString(Level)"
+        ],
+        "com.natamus.collective_common_fabric.functions.EntityFunctions": [
+          "isHorse(Entity)",
+          "isModdedVillager(String)",
+          "isModdedVillager(Entity)",
+          "isMilkable(Entity)",
+          "getEntityString(Entity)",
+          "nameEntity(Entity, String)",
+          "addPotionEffect(Entity, MobEffect, Integer)",
+          "addPotionEffect(Entity, Holder<MobEffect>, Integer)",
+          "removePotionEffect(Entity, MobEffect)",
+          "removePotionEffect(Entity, Holder<MobEffect>)",
+          "chargeEntity(Entity)",
+          "setShulkerVariant(Shulker, DyeColor)",
+          "setPaintingVariant(Painting, Holder<PaintingVariant>)",
+          "setRabbitVariant(Rabbit, net.minecraft.world.entity.animal.rabbit.Rabbit.Variant)",
+          "setEntityFlag(Entity, int, boolean)",
+          "getAbstractHorseEntityFlagResult(AbstractHorse, int)",
+          "resetMerchantOffers(Villager)",
+          "resetMerchantOffers(WanderingTrader)",
+          "resetMerchantOffer(MerchantOffer)",
+          "resetMerchantOfferUses(MerchantOffer)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ExperienceFunctions": [
+          "canConsumeXp(Player, int)",
+          "consumeXp(Player, int)",
+          "getPlayerXP(Player)",
+          "addPlayerXP(Player, int)",
+          "getLevelForExperience(int)",
+          "xpBarCap(int)",
+          "getExperienceForLevel(int)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ExplosionFunctions": [
+          "getAffectedBlockPositions(Explosion)",
+          "getAffectedBlockPositions(ServerExplosion)",
+          "clearExplosion(Explosion)",
+          "clearExplosion(ServerExplosion)"
+        ],
+        "com.natamus.collective_common_fabric.functions.FABFunctions": [
+          "getBlockEntitiesAroundPosition(Level, BlockPos, Integer)",
+          "getAllTaggedTileEntityPositionsNearbyEntity(TagKey<Block>, Integer, Level, Entity)",
+          "getAllTaggedTileEntityPositionsNearbyPosition(TagKey<Block>, Integer, Level, BlockPos)",
+          "getAllTileEntityPositionsNearbyEntity(BlockEntityType<?>, Integer, Level, Entity)",
+          "getAllTileEntityPositionsNearbyPosition(BlockEntityType<?>, Integer, Level, BlockPos)",
+          "getRequestedBlockAroundEntitySpawn(Block, Integer, Double, Level, Entity)",
+          "updatePlacedBlock(Block, BlockPos, Level)"
+        ],
+        "com.natamus.collective_common_fabric.functions.FeatureFunctions": [
+          "placeBonusChest(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GameSettingsFunctions": [
+          "setGamma(Options, double)",
+          "getGamma(Options)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GearFunctions": [
+          "setPlayerGearFromGearString(Player, String)",
+          "setPlayerGearFromGearString(Player, String, boolean)",
+          "setInventoryFromGearString(Level, Inventory, String)",
+          "setEquipmentSlot(Inventory, EquipmentSlot, ItemStack)",
+          "getEntityEquipment(Player)",
+          "getEntityEquipment(Inventory)",
+          "getGearStringFromPlayer(Player)",
+          "getGearStringFromPlayer(Player, boolean)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "getHashMapFromGearString(Level, String)",
+          "getItemStackListFromGearString(Level, String)",
+          "getEffectsFromGearString(Player, String)",
+          "getEffectsFromGearString(Level, String)",
+          "getEffectsFromGearString(Registry<MobEffect>, String)",
+          "areTwoGearStringsEqual(Level, String, String)",
+          "sortGearString(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GUIFunctions": [
+          "shouldHideGUI()"
+        ],
+        "com.natamus.collective_common_fabric.functions.HashMapFunctions": [
+          "computeIfAbsent(Map<K, V>, K, Function<? super K, ? extends V>)"
+        ],
+        "com.natamus.collective_common_fabric.functions.HeadFunctions": [
+          "getNewPlayerHead(ServerLevel, String, Integer)",
+          "getNewPlayerHead(ServerLevel, String, String, Integer)",
+          "getNewPlayerHead(GameProfile, Integer)",
+          "getNewPlayerHead(GameProfile, String, Integer)",
+          "getNewTexturedHead(String, String, String, Integer)",
+          "getNewTexturedHead(String, String, String, String, Integer)",
+          "getNewTexturedHead(String, String, UUID, Integer)",
+          "getNewTexturedHead(String, String, UUID, String, Integer)",
+          "getTexturedHeadGameProfile(String, String, String)",
+          "getTexturedHeadGameProfile(String, String, UUID)",
+          "getTexturedHeadResolvableProfile(String, String, String)",
+          "getTexturedHeadResolvableProfile(String, String, UUID)",
+          "getGameProfileFromPlayerName(ServerLevel, String)",
+          "hasStandardHead(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ItemFunctions": [
+          "generateEntityDropsFromLootTable(Level)",
+          "shrinkGiveOrDropItemStack(Player, InteractionHand, ItemStack, ItemStack)",
+          "giveOrDropItemStack(Player, ItemStack)",
+          "itemHurtBreakAndEvent(ItemStack, ServerPlayer, InteractionHand, int)",
+          "isStoneTypeItem(Item)",
+          "itemToReadableString(Item, int)",
+          "itemToReadableString(Item)",
+          "getNBTStringFromItemStack(Level, ItemStack)",
+          "getNBTStringFromItemStack(Level, ItemStack, boolean)",
+          "setItemCategory(Item, CreativeModeTab)",
+          "getUseOnContext(Player, InteractionHand, BlockHitResult)",
+          "getUseOnContext(Player, InteractionHand, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockHitResult)"
+        ],
+        "com.natamus.collective_common_fabric.functions.JsonFunctions": [
+          "JsonStringToHashMap(String)",
+          "HashMapToJsonString(HashMap<String, String>)",
+          "getStringListFromJsonFile(String, String, String)",
+          "getJsonElementFromFile(String, String)",
+          "jsonArrayToList(JsonArray)"
+        ],
+        "com.natamus.collective_common_fabric.functions.KeyMappingFunctions": [
+          "getKey(KeyMapping)"
+        ],
+        "com.natamus.collective_common_fabric.functions.MenuFunctions": [
+          "getTraderFromMerchantMenu(MerchantMenu)"
+        ],
+        "com.natamus.collective_common_fabric.functions.MessageFunctions": [
+          "sendMessage(CommandSourceStack, MutableComponent)",
+          "sendMessage(Player, MutableComponent)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(CommandSourceStack, MutableComponent, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, MutableComponent, boolean)",
+          "sendTranslatableMessage(CommandSourceStack, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, boolean, ChatFormatting, Object...)"
+        ],
+        "com.natamus.collective_common_fabric.functions.NumberFunctions": [
+          "getEnchantingTableLevel(int, int)",
+          "moveToZero(int)",
+          "isNumeric(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.PlayerFunctions": [
+          "respawnPlayer(Level, Player)",
+          "matchPlayer(Player, String)",
+          "matchPlayer(Level, String)",
+          "isHoldingWater(Player)",
+          "isJoiningWorldForTheFirstTime(Player, String)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean, boolean)",
+          "getSpawnPoint(Level, Player)",
+          "getSpawnVec(Level, Player)",
+          "getOtherHand(InteractionHand)",
+          "getPlayerGearString(Player)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "setPlayerGearFromString(Player, String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.RayTraceFunctions": [
+          "rayTrace(Level, Player, boolean)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ScreenFunctions": [
+          "setScreenTitle(Screen, Component)",
+          "setMerchantScreenTitle(MerchantScreen, Component)",
+          "signSetMessage(AbstractSignEditScreen, String, int, boolean)",
+          "getSignBlockEntityFromScreen(AbstractSignEditScreen)",
+          "getSignTextFromScreen(AbstractSignEditScreen)",
+          "setSignTextOnScreen(AbstractSignEditScreen, String, int)",
+          "setSignTextOnScreen(AbstractSignEditScreen, Component, int)",
+          "replaceSignTextOnScreen(AbstractSignEditScreen, SignText)",
+          "getSignMessagesFromScreen(AbstractSignEditScreen)",
+          "setSignMessagesOnScreen(AbstractSignEditScreen, String[])",
+          "setSignMessageAtLineOnScreen(AbstractSignEditScreen, String, int)",
+          "getSignLineFromScreen(AbstractSignEditScreen)",
+          "setSignLineOnScreen(AbstractSignEditScreen, int)",
+          "getSignFieldFromScreen(AbstractSignEditScreen)",
+          "signTextOnScreenisFront(AbstractSignEditScreen)",
+          "addRenderableWidget(Screen, T)"
+        ],
+        "com.natamus.collective_common_fabric.functions.SignFunctions": [
+          "getSignText(BlockEntity)",
+          "getSignText(SignBlockEntity)",
+          "getSignText(HangingSignBlockEntity)",
+          "getSignText(List<SignText>)"
+        ],
+        "com.natamus.collective_common_fabric.functions.SpawnEntityFunctions": [
+          "spawnEntityOnNextTick(ServerLevel, Entity)",
+          "startRidingEntityOnNextTick(ServerLevel, Entity, Entity)"
+        ],
+        "com.natamus.collective_common_fabric.functions.StringFunctions": [
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "broadcastMessage(Level, String, ChatFormatting)",
+          "sendMessageToPlayersAround(Level, BlockPos, int, String, ChatFormatting)",
+          "capitalizeFirst(String)",
+          "capitalizeEveryWord(String)",
+          "escapeSpecialRegexChars(String)",
+          "getRandomName(boolean, boolean)",
+          "getPCLocalTime(boolean, boolean)",
+          "sequenceCount(String, String)",
+          "joinListWithCommaAnd(List<String>)"
+        ],
+        "com.natamus.collective_common_fabric.functions.TaskFunctions": [
+          "enqueueCollectiveTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveServerTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveClientTask(Runnable, int)",
+          "enqueueImmediateTask(Level, Runnable, boolean)",
+          "enqueueTask(Level, Runnable, int)"
+        ],
+        "com.natamus.collective_common_fabric.functions.TileEntityFunctions": [
+          "updateTileEntity(Level, BlockPos)",
+          "updateTileEntity(Level, BlockPos, BlockEntity)",
+          "updateTileEntity(Level, BlockPos, BlockState, BlockEntity)",
+          "setMobSpawnerDelay(BaseSpawner, int)",
+          "resetMobSpawnerDelay(BaseSpawner, int, int)",
+          "resetMobSpawnerDelay(BaseSpawner)"
+        ],
+        "com.natamus.collective_common_fabric.functions.UtilityFunctions": [
+          "createDamageSource(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.UUIDFunctions": [
+          "getUUIDFromStringLenient(String)",
+          "oldIdToIntArray(String)",
+          "getIntegerParts(String, int)"
+        ],
+        "com.natamus.collective_common_fabric.functions.WorldFunctions": [
+          "setWorldTime(ServerLevel, int)",
+          "getTotalTimePassed(ServerLevel)",
+          "getTotalDaysPassed(ServerLevel)",
+          "getWorldTime(ServerLevel)",
+          "getWorldDimensionName(Level)",
+          "isOverworld(Level)",
+          "isNether(Level)",
+          "isEnd(Level)",
+          "getWorldIfInstanceOfAndNotRemote(LevelAccessor)",
+          "getWorldPath(ServerLevel)",
+          "getWorldPath(MinecraftServer)",
+          "getWorldFolderName(ServerLevel)",
+          "getWorldFolderName(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_fabric.globalcallbacks.CachedBlockEntityCallback": [],
+        "com.natamus.collective_common_fabric.globalcallbacks.CollectiveGuiCallback": [],
+        "com.natamus.collective_common_fabric.globalcallbacks.GlobalCropCallback": [],
+        "com.natamus.collective_common_fabric.globalcallbacks.JSONCallback": [],
+        "com.natamus.collective_common_fabric.globalcallbacks.MainMenuLoadedCallback": [],
+        "com.natamus.collective_common_fabric.implementations.event.Event": [
+          "invoker()",
+          "register(T)",
+          "register(Identifier, T)",
+          "addPhaseOrdering(Identifier, Identifier)"
+        ],
+        "com.natamus.collective_common_fabric.implementations.event.EventFactory": [
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "createArrayBacked(Class<T>, T, Function<T[], T>)",
+          "createWithPhases(Class<? super T>, Function<T[], T>, Identifier...)",
+          "getHandlerName(Object)",
+          "isProfilingEnabled()",
+          "invalidate()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.event.EventFactoryImpl": [
+          "invalidate()",
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "ensureContainsDefault(Identifier[])",
+          "ensureNoDuplicates(Identifier[])"
+        ],
+        "com.natamus.collective_common_fabric.implementations.event.PhaseSorting": [],
+        "com.natamus.collective_common_fabric.implementations.networking.api.Dispatcher": [
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)",
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.api.Network": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getNetworkHandler()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.api.NetworkHandler": [
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.data.CommonPacketWrapper": [
+          "encode(FriendlyByteBuf)",
+          "type()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.data.PacketContainer": [
+          "getType()",
+          "getCodec()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.data.PacketContext": [],
+        "com.natamus.collective_common_fabric.implementations.networking.data.Side": [
+          "opposite()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.DelayedPacketRegistrationHandler": [
+          "getSide()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "registerQueuedPackets(PacketRegistrationHandler)"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.exceptions.RegistrationException": [],
+        "com.natamus.collective_common_fabric.implementations.networking.NetworkSetup": [
+          "getDelayedHandler()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getPacketRegistration()"
+        ],
+        "com.natamus.collective_common_fabric.implementations.networking.PacketRegistrar": [],
+        "com.natamus.collective_common_fabric.implementations.networking.PacketRegistrationHandler": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getSide()",
+          "registerPacket(PacketContainer<T>)"
+        ],
+        "com.natamus.collective_common_fabric.networking.PacketRegistration": [
+          "init()"
+        ],
+        "com.natamus.collective_common_fabric.networking.packets.CollectiveInstalledPacket": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf)",
+          "handle(PacketContext<CollectiveInstalledPacket>)"
+        ],
+        "com.natamus.collective_common_fabric.objects.RandomCollection": [
+          "add(double, E)",
+          "next()"
+        ],
+        "com.natamus.collective_common_fabric.objects.SAMObject": [],
+        "com.natamus.collective_common_fabric.schematic.ParsedSchematicObject": [
+          "placeBlockEntitiesInWorld(Level)",
+          "getBlockEntities(Level)"
+        ],
+        "com.natamus.collective_common_fabric.schematic.ParseSchematicFile": [
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean)",
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean, boolean)"
+        ],
+        "com.natamus.collective_common_fabric.schematic.Schematic": [
+          "isOldVersion()",
+          "getBlockState(BlockPos)",
+          "getSize()",
+          "getBlocks()",
+          "getStateFromID(Registry<Block>, int)",
+          "getBlockEntities()",
+          "getEntityRelativePosPairs()",
+          "getTileEntity(BlockPos)",
+          "getBlockPosFromCompoundTag(CompoundTag)",
+          "getWidth()",
+          "getHeight()",
+          "getLength()",
+          "getOffsetX()",
+          "getOffsetY()",
+          "getOffsetZ()",
+          "wasParsedCorrectly()"
+        ],
+        "com.natamus.collective_common_fabric.schematic.SchematicBlockObject": [
+          "getPosition()",
+          "getState()",
+          "getPositionWithOffset(int, int, int)"
+        ],
+        "com.natamus.collective_common_fabric.schematic.SchematicFunctions": [
+          "readCompressed(InputStream)"
+        ],
+        "com.natamus.collective_common_fabric.services.helpers.BlockTagsHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.ClientUtilsHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.EventTriggerHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.ModLoaderHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.RegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_fabric.services.helpers.RegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_fabric.services.helpers.RegisterKeyMappingHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.TeleportHelper": [],
+        "com.natamus.collective_common_fabric.services.helpers.ToolFunctionsHelper": [],
+        "com.natamus.collective_common_fabric.services.Services": [
+          "load(Class<T>)"
+        ],
+        "com.natamus.collective_common_fabric.translations.ServerTranslationPack": [
+          "requireClientTranslations(String)",
+          "useTranslatableForMessage(ServerPlayer)",
+          "useTranslatableForNames()",
+          "onServerStarting(MinecraftServer)",
+          "onPlayerJoin(ServerPlayer)"
+        ],
+        "com.natamus.collective_common_fabric.translations.TranslationDownloader": [
+          "download(String)"
+        ],
+        "com.natamus.collective_common_fabric.translations.TranslationLoader": [
+          "onLanguageChanged(String)"
+        ],
+        "com.natamus.collective_common_fabric.translations.TranslationPack": [
+          "getPackDir()",
+          "contribute(Consumer<Pack>)",
+          "buildTranslationPack()"
+        ],
+        "com.natamus.collective_common_fabric.translations.TranslationResolver": [
+          "resolve(String, Object...)"
+        ],
+        "com.natamus.collective_common_fabric.translations.TranslationStorage": [],
+        "com.natamus.collective_common_fabric.util.CollectiveReference": [],
+        "com.natamus.collective_common_forge.check.RegisterMod": [
+          "register(String, String, String, String)"
+        ],
+        "com.natamus.collective_common_forge.check.ShouldLoadCheck": [
+          "shouldLoad(String)"
+        ],
+        "com.natamus.collective_common_forge.cmds.CommandCollective": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "com.natamus.collective_common_forge.CollectiveCommon": [
+          "init()",
+          "registerPackets()",
+          "loadEvents()"
+        ],
+        "com.natamus.collective_common_forge.config.CollectiveConfigHandler": [
+          "initConfig()"
+        ],
+        "com.natamus.collective_common_forge.config.DuskConfig": [
+          "init(String, String, Class<?>)",
+          "init(String, String, Class<?>, Boolean)",
+          "write(String)",
+          "loadJson(Path, String)"
+        ],
+        "com.natamus.collective_common_forge.config.GenerateJSONFiles": [
+          "requestJSONFile(String, List<String>)",
+          "requestJSONFile(String, String)",
+          "initGeneration(ServerLevel)",
+          "initGeneration(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_forge.config.LoadJSONFiles": [
+          "startListening()"
+        ],
+        "com.natamus.collective_common_forge.data.BlockEntityData": [
+          "addBlockEntityToCache(BlockEntityType<?>)"
+        ],
+        "com.natamus.collective_common_forge.data.ClientConstants": [],
+        "com.natamus.collective_common_forge.data.Constants": [
+          "initConstantData(Level)"
+        ],
+        "com.natamus.collective_common_forge.data.FeatureFlags": [],
+        "com.natamus.collective_common_forge.data.GlobalConstants": [],
+        "com.natamus.collective_common_forge.data.GlobalVariables": [
+          "generateHashMaps()"
+        ],
+        "com.natamus.collective_common_forge.events.CollectiveClientEvents": [
+          "onClientTick()"
+        ],
+        "com.natamus.collective_common_forge.events.CollectiveEvents": [
+          "onWorldLoad(Level)",
+          "onWorldTick(ServerLevel)",
+          "onServerTick(MinecraftServer)",
+          "onEntityJoinLevel(Level, Entity)"
+        ],
+        "com.natamus.collective_common_forge.fakeplayer.FakePlayer": [
+          "awardStat(Stat, int)",
+          "isInvulnerableTo(DamageSource)",
+          "canHarmPlayer(Player)",
+          "die(DamageSource)",
+          "tick()",
+          "updateOptions(ClientInformation)",
+          "getServer()"
+        ],
+        "com.natamus.collective_common_forge.fakeplayer.FakePlayerFactory": [
+          "getMinecraft(ServerLevel)",
+          "get(ServerLevel, GameProfile)",
+          "unloadLevel(ServerLevel)"
+        ],
+        "com.natamus.collective_common_forge.features.PlayerHeadCacheFeature": [
+          "cachePlayer(Player)",
+          "cachePlayer(ServerLevel, String)",
+          "cachePlayer(String, GameProfile)",
+          "getPlayerHeadStackFromCache(Player)",
+          "getPlayerHeadStackFromCache(ServerLevel, String)",
+          "isHeadCachingEnabled()",
+          "enableHeadCaching()",
+          "resetPlayerHeadCache()"
+        ],
+        "com.natamus.collective_common_forge.functions.BlockFunctions": [
+          "getBlockDrops(Level, BlockState, boolean)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player, Vec3)",
+          "isSpecificBlock(Block, Block)",
+          "isSpecificBlock(Block, ItemStack)",
+          "isSpecificBlock(Block, Level, BlockPos)",
+          "dropBlock(Level, BlockPos)",
+          "dropBlock(Level, BlockPos, Entity, ItemStack)",
+          "isOneOfBlocks(List<Block>, Block)",
+          "isOneOfBlocks(List<Block>, ItemStack)",
+          "isOneOfBlocks(List<Block>, Level, BlockPos)",
+          "isGrowBlock(Block)",
+          "isStoneTypeBlock(Block)",
+          "isFilledPortalFrame(BlockState)",
+          "canOpenByHand(BlockState)",
+          "canOpenByHand(BlockState, boolean)",
+          "blockToReadableString(Block, int)",
+          "blockToReadableString(Block)"
+        ],
+        "com.natamus.collective_common_forge.functions.BlockPosFunctions": [
+          "getBlocksAround(BlockPos, boolean)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>, int)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>, int)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int, boolean)",
+          "getCenterNearbyVillage(ServerLevel)",
+          "getNearbyVillage(ServerLevel, BlockPos)",
+          "getNearbyVillage(ServerLevel, BlockPos, String)",
+          "getCenterNearbyBiome(ServerLevel, String)",
+          "getNearbyBiome(ServerLevel, BlockPos, String)",
+          "getCenterNearbyStructure(ServerLevel, HolderSet<Structure>)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos, int)",
+          "getBlockPlayerIsLookingAt(Level, Player, boolean)",
+          "getRandomCoordinatesInNearestUngeneratedChunk(ServerLevel, BlockPos)",
+          "isOnSurface(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_forge.functions.ColourFunctions": [
+          "getById(int)"
+        ],
+        "com.natamus.collective_common_forge.functions.CommandFunctions": [
+          "getRawCommandOutput(ServerLevel, final Vec3, String)"
+        ],
+        "com.natamus.collective_common_forge.functions.CompareBlockFunctions": [
+          "blockIsInRegistryHolder(Block, TagKey<Block>)",
+          "isStoneBlock(Block)",
+          "isNetherStoneBlock(Block)",
+          "isTreeLeaf(Block, boolean)",
+          "isTreeLeaf(Block)",
+          "isTreeLog(Block)",
+          "isSapling(Block)",
+          "isDirtBlock(Block)",
+          "isPortalBlock(Block)",
+          "isAirOrOverwritableBlock(Block)"
+        ],
+        "com.natamus.collective_common_forge.functions.CompareItemFunctions": [
+          "itemIsInRegistryHolder(Item, TagKey<Item>)",
+          "isSapling(Item)",
+          "isSapling(ItemStack)",
+          "isLog(Item)",
+          "isLog(ItemStack)",
+          "isPlank(Item)",
+          "isPlank(ItemStack)",
+          "isChest(Item)",
+          "isChest(ItemStack)",
+          "isStone(Item)",
+          "isStone(ItemStack)",
+          "isSlab(Item)",
+          "isSlab(ItemStack)"
+        ],
+        "com.natamus.collective_common_forge.functions.ConfigFunctions": [
+          "getRawConfigValues(String)",
+          "getRawConfigValues(String, boolean)",
+          "getDictValues(String)",
+          "getDictValues(String, boolean)"
+        ],
+        "com.natamus.collective_common_forge.functions.CreativeModeTabFunctions": [
+          "getCreativeModeTabResourceKey(String)",
+          "getCreativeModeTabResourceKey(String, String)",
+          "getCreativeModeTabResourceKey(Identifier)"
+        ],
+        "com.natamus.collective_common_forge.functions.CropFunctions": [
+          "applyBonemeal(ItemStack, Level, BlockPos, Player)",
+          "growCrop(Level, Player, BlockState, BlockPos)",
+          "growCrop(Level, Player, BlockState, BlockPos, InteractionHand)",
+          "growCrop(Level, Player, BlockState, BlockPos, ItemStack)",
+          "growCactus(Level, BlockPos)",
+          "growSugarcane(Level, BlockPos)",
+          "growVine(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_forge.functions.DataFunctions": [
+          "getCurrentMinecraftVersion()",
+          "getGameDirectory()",
+          "getGameDirectoryPath()",
+          "getModDirectory()",
+          "getModDirectoryPath()",
+          "getConfigDirectory()",
+          "getConfigDirectoryPath()",
+          "getInstalledModJars()",
+          "setBit(byte, int, boolean)",
+          "getDataInputStream(MinecraftServer, String, String, String, String)",
+          "getDataInputStream(MinecraftServer, String, String, String)"
+        ],
+        "com.natamus.collective_common_forge.functions.DateFunctions": [
+          "ymdhisToReadable(String)",
+          "getNowInYmdhis()"
+        ],
+        "com.natamus.collective_common_forge.functions.DimensionFunctions": [
+          "getSimpleDimensionString(Level)"
+        ],
+        "com.natamus.collective_common_forge.functions.EntityFunctions": [
+          "isHorse(Entity)",
+          "isModdedVillager(String)",
+          "isModdedVillager(Entity)",
+          "isMilkable(Entity)",
+          "getEntityString(Entity)",
+          "nameEntity(Entity, String)",
+          "addPotionEffect(Entity, MobEffect, Integer)",
+          "addPotionEffect(Entity, Holder<MobEffect>, Integer)",
+          "removePotionEffect(Entity, MobEffect)",
+          "removePotionEffect(Entity, Holder<MobEffect>)",
+          "chargeEntity(Entity)",
+          "setShulkerVariant(Shulker, DyeColor)",
+          "setPaintingVariant(Painting, Holder<PaintingVariant>)",
+          "setRabbitVariant(Rabbit, net.minecraft.world.entity.animal.rabbit.Rabbit.Variant)",
+          "setEntityFlag(Entity, int, boolean)",
+          "getAbstractHorseEntityFlagResult(AbstractHorse, int)",
+          "resetMerchantOffers(Villager)",
+          "resetMerchantOffers(WanderingTrader)",
+          "resetMerchantOffer(MerchantOffer)",
+          "resetMerchantOfferUses(MerchantOffer)"
+        ],
+        "com.natamus.collective_common_forge.functions.ExperienceFunctions": [
+          "canConsumeXp(Player, int)",
+          "consumeXp(Player, int)",
+          "getPlayerXP(Player)",
+          "addPlayerXP(Player, int)",
+          "getLevelForExperience(int)",
+          "xpBarCap(int)",
+          "getExperienceForLevel(int)"
+        ],
+        "com.natamus.collective_common_forge.functions.ExplosionFunctions": [
+          "getAffectedBlockPositions(Explosion)",
+          "getAffectedBlockPositions(ServerExplosion)",
+          "clearExplosion(Explosion)",
+          "clearExplosion(ServerExplosion)"
+        ],
+        "com.natamus.collective_common_forge.functions.FABFunctions": [
+          "getBlockEntitiesAroundPosition(Level, BlockPos, Integer)",
+          "getAllTaggedTileEntityPositionsNearbyEntity(TagKey<Block>, Integer, Level, Entity)",
+          "getAllTaggedTileEntityPositionsNearbyPosition(TagKey<Block>, Integer, Level, BlockPos)",
+          "getAllTileEntityPositionsNearbyEntity(BlockEntityType<?>, Integer, Level, Entity)",
+          "getAllTileEntityPositionsNearbyPosition(BlockEntityType<?>, Integer, Level, BlockPos)",
+          "getRequestedBlockAroundEntitySpawn(Block, Integer, Double, Level, Entity)",
+          "updatePlacedBlock(Block, BlockPos, Level)"
+        ],
+        "com.natamus.collective_common_forge.functions.FeatureFunctions": [
+          "placeBonusChest(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_forge.functions.GameSettingsFunctions": [
+          "setGamma(Options, double)",
+          "getGamma(Options)"
+        ],
+        "com.natamus.collective_common_forge.functions.GearFunctions": [
+          "setPlayerGearFromGearString(Player, String)",
+          "setPlayerGearFromGearString(Player, String, boolean)",
+          "setInventoryFromGearString(Level, Inventory, String)",
+          "setEquipmentSlot(Inventory, EquipmentSlot, ItemStack)",
+          "getEntityEquipment(Player)",
+          "getEntityEquipment(Inventory)",
+          "getGearStringFromPlayer(Player)",
+          "getGearStringFromPlayer(Player, boolean)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "getHashMapFromGearString(Level, String)",
+          "getItemStackListFromGearString(Level, String)",
+          "getEffectsFromGearString(Player, String)",
+          "getEffectsFromGearString(Level, String)",
+          "getEffectsFromGearString(Registry<MobEffect>, String)",
+          "areTwoGearStringsEqual(Level, String, String)",
+          "sortGearString(String)"
+        ],
+        "com.natamus.collective_common_forge.functions.GUIFunctions": [
+          "shouldHideGUI()"
+        ],
+        "com.natamus.collective_common_forge.functions.HashMapFunctions": [
+          "computeIfAbsent(Map<K, V>, K, Function<? super K, ? extends V>)"
+        ],
+        "com.natamus.collective_common_forge.functions.HeadFunctions": [
+          "getNewPlayerHead(ServerLevel, String, Integer)",
+          "getNewPlayerHead(ServerLevel, String, String, Integer)",
+          "getNewPlayerHead(GameProfile, Integer)",
+          "getNewPlayerHead(GameProfile, String, Integer)",
+          "getNewTexturedHead(String, String, String, Integer)",
+          "getNewTexturedHead(String, String, String, String, Integer)",
+          "getNewTexturedHead(String, String, UUID, Integer)",
+          "getNewTexturedHead(String, String, UUID, String, Integer)",
+          "getTexturedHeadGameProfile(String, String, String)",
+          "getTexturedHeadGameProfile(String, String, UUID)",
+          "getTexturedHeadResolvableProfile(String, String, String)",
+          "getTexturedHeadResolvableProfile(String, String, UUID)",
+          "getGameProfileFromPlayerName(ServerLevel, String)",
+          "hasStandardHead(String)"
+        ],
+        "com.natamus.collective_common_forge.functions.ItemFunctions": [
+          "generateEntityDropsFromLootTable(Level)",
+          "shrinkGiveOrDropItemStack(Player, InteractionHand, ItemStack, ItemStack)",
+          "giveOrDropItemStack(Player, ItemStack)",
+          "itemHurtBreakAndEvent(ItemStack, ServerPlayer, InteractionHand, int)",
+          "isStoneTypeItem(Item)",
+          "itemToReadableString(Item, int)",
+          "itemToReadableString(Item)",
+          "getNBTStringFromItemStack(Level, ItemStack)",
+          "getNBTStringFromItemStack(Level, ItemStack, boolean)",
+          "setItemCategory(Item, CreativeModeTab)",
+          "getUseOnContext(Player, InteractionHand, BlockHitResult)",
+          "getUseOnContext(Player, InteractionHand, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockHitResult)"
+        ],
+        "com.natamus.collective_common_forge.functions.JsonFunctions": [
+          "JsonStringToHashMap(String)",
+          "HashMapToJsonString(HashMap<String, String>)",
+          "getStringListFromJsonFile(String, String, String)",
+          "getJsonElementFromFile(String, String)",
+          "jsonArrayToList(JsonArray)"
+        ],
+        "com.natamus.collective_common_forge.functions.KeyMappingFunctions": [
+          "getKey(KeyMapping)"
+        ],
+        "com.natamus.collective_common_forge.functions.MenuFunctions": [
+          "getTraderFromMerchantMenu(MerchantMenu)"
+        ],
+        "com.natamus.collective_common_forge.functions.MessageFunctions": [
+          "sendMessage(CommandSourceStack, MutableComponent)",
+          "sendMessage(Player, MutableComponent)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(CommandSourceStack, MutableComponent, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, MutableComponent, boolean)",
+          "sendTranslatableMessage(CommandSourceStack, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, boolean, ChatFormatting, Object...)"
+        ],
+        "com.natamus.collective_common_forge.functions.NumberFunctions": [
+          "getEnchantingTableLevel(int, int)",
+          "moveToZero(int)",
+          "isNumeric(String)"
+        ],
+        "com.natamus.collective_common_forge.functions.PlayerFunctions": [
+          "respawnPlayer(Level, Player)",
+          "matchPlayer(Player, String)",
+          "matchPlayer(Level, String)",
+          "isHoldingWater(Player)",
+          "isJoiningWorldForTheFirstTime(Player, String)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean, boolean)",
+          "getSpawnPoint(Level, Player)",
+          "getSpawnVec(Level, Player)",
+          "getOtherHand(InteractionHand)",
+          "getPlayerGearString(Player)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "setPlayerGearFromString(Player, String)"
+        ],
+        "com.natamus.collective_common_forge.functions.RayTraceFunctions": [
+          "rayTrace(Level, Player, boolean)"
+        ],
+        "com.natamus.collective_common_forge.functions.ScreenFunctions": [
+          "setScreenTitle(Screen, Component)",
+          "setMerchantScreenTitle(MerchantScreen, Component)",
+          "signSetMessage(AbstractSignEditScreen, String, int, boolean)",
+          "getSignBlockEntityFromScreen(AbstractSignEditScreen)",
+          "getSignTextFromScreen(AbstractSignEditScreen)",
+          "setSignTextOnScreen(AbstractSignEditScreen, String, int)",
+          "setSignTextOnScreen(AbstractSignEditScreen, Component, int)",
+          "replaceSignTextOnScreen(AbstractSignEditScreen, SignText)",
+          "getSignMessagesFromScreen(AbstractSignEditScreen)",
+          "setSignMessagesOnScreen(AbstractSignEditScreen, String[])",
+          "setSignMessageAtLineOnScreen(AbstractSignEditScreen, String, int)",
+          "getSignLineFromScreen(AbstractSignEditScreen)",
+          "setSignLineOnScreen(AbstractSignEditScreen, int)",
+          "getSignFieldFromScreen(AbstractSignEditScreen)",
+          "signTextOnScreenisFront(AbstractSignEditScreen)",
+          "addRenderableWidget(Screen, T)"
+        ],
+        "com.natamus.collective_common_forge.functions.SignFunctions": [
+          "getSignText(BlockEntity)",
+          "getSignText(SignBlockEntity)",
+          "getSignText(HangingSignBlockEntity)",
+          "getSignText(List<SignText>)"
+        ],
+        "com.natamus.collective_common_forge.functions.SpawnEntityFunctions": [
+          "spawnEntityOnNextTick(ServerLevel, Entity)",
+          "startRidingEntityOnNextTick(ServerLevel, Entity, Entity)"
+        ],
+        "com.natamus.collective_common_forge.functions.StringFunctions": [
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "broadcastMessage(Level, String, ChatFormatting)",
+          "sendMessageToPlayersAround(Level, BlockPos, int, String, ChatFormatting)",
+          "capitalizeFirst(String)",
+          "capitalizeEveryWord(String)",
+          "escapeSpecialRegexChars(String)",
+          "getRandomName(boolean, boolean)",
+          "getPCLocalTime(boolean, boolean)",
+          "sequenceCount(String, String)",
+          "joinListWithCommaAnd(List<String>)"
+        ],
+        "com.natamus.collective_common_forge.functions.TaskFunctions": [
+          "enqueueCollectiveTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveServerTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveClientTask(Runnable, int)",
+          "enqueueImmediateTask(Level, Runnable, boolean)",
+          "enqueueTask(Level, Runnable, int)"
+        ],
+        "com.natamus.collective_common_forge.functions.TileEntityFunctions": [
+          "updateTileEntity(Level, BlockPos)",
+          "updateTileEntity(Level, BlockPos, BlockEntity)",
+          "updateTileEntity(Level, BlockPos, BlockState, BlockEntity)",
+          "setMobSpawnerDelay(BaseSpawner, int)",
+          "resetMobSpawnerDelay(BaseSpawner, int, int)",
+          "resetMobSpawnerDelay(BaseSpawner)"
+        ],
+        "com.natamus.collective_common_forge.functions.UtilityFunctions": [
+          "createDamageSource(String)"
+        ],
+        "com.natamus.collective_common_forge.functions.UUIDFunctions": [
+          "getUUIDFromStringLenient(String)",
+          "oldIdToIntArray(String)",
+          "getIntegerParts(String, int)"
+        ],
+        "com.natamus.collective_common_forge.functions.WorldFunctions": [
+          "setWorldTime(ServerLevel, int)",
+          "getTotalTimePassed(ServerLevel)",
+          "getTotalDaysPassed(ServerLevel)",
+          "getWorldTime(ServerLevel)",
+          "getWorldDimensionName(Level)",
+          "isOverworld(Level)",
+          "isNether(Level)",
+          "isEnd(Level)",
+          "getWorldIfInstanceOfAndNotRemote(LevelAccessor)",
+          "getWorldPath(ServerLevel)",
+          "getWorldPath(MinecraftServer)",
+          "getWorldFolderName(ServerLevel)",
+          "getWorldFolderName(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_forge.globalcallbacks.CachedBlockEntityCallback": [],
+        "com.natamus.collective_common_forge.globalcallbacks.CollectiveGuiCallback": [],
+        "com.natamus.collective_common_forge.globalcallbacks.GlobalCropCallback": [],
+        "com.natamus.collective_common_forge.globalcallbacks.JSONCallback": [],
+        "com.natamus.collective_common_forge.globalcallbacks.MainMenuLoadedCallback": [],
+        "com.natamus.collective_common_forge.implementations.event.Event": [
+          "invoker()",
+          "register(T)",
+          "register(Identifier, T)",
+          "addPhaseOrdering(Identifier, Identifier)"
+        ],
+        "com.natamus.collective_common_forge.implementations.event.EventFactory": [
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "createArrayBacked(Class<T>, T, Function<T[], T>)",
+          "createWithPhases(Class<? super T>, Function<T[], T>, Identifier...)",
+          "getHandlerName(Object)",
+          "isProfilingEnabled()",
+          "invalidate()"
+        ],
+        "com.natamus.collective_common_forge.implementations.event.EventFactoryImpl": [
+          "invalidate()",
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "ensureContainsDefault(Identifier[])",
+          "ensureNoDuplicates(Identifier[])"
+        ],
+        "com.natamus.collective_common_forge.implementations.event.PhaseSorting": [],
+        "com.natamus.collective_common_forge.implementations.networking.api.Dispatcher": [
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)",
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.api.Network": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getNetworkHandler()"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.api.NetworkHandler": [
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.data.CommonPacketWrapper": [
+          "encode(FriendlyByteBuf)",
+          "type()"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.data.PacketContainer": [
+          "getType()",
+          "getCodec()"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.data.PacketContext": [],
+        "com.natamus.collective_common_forge.implementations.networking.data.Side": [
+          "opposite()"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.DelayedPacketRegistrationHandler": [
+          "getSide()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "registerQueuedPackets(PacketRegistrationHandler)"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.exceptions.RegistrationException": [],
+        "com.natamus.collective_common_forge.implementations.networking.NetworkSetup": [
+          "getDelayedHandler()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getPacketRegistration()"
+        ],
+        "com.natamus.collective_common_forge.implementations.networking.PacketRegistrar": [],
+        "com.natamus.collective_common_forge.implementations.networking.PacketRegistrationHandler": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getSide()",
+          "registerPacket(PacketContainer<T>)"
+        ],
+        "com.natamus.collective_common_forge.networking.PacketRegistration": [
+          "init()"
+        ],
+        "com.natamus.collective_common_forge.networking.packets.CollectiveInstalledPacket": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf)",
+          "handle(PacketContext<CollectiveInstalledPacket>)"
+        ],
+        "com.natamus.collective_common_forge.objects.RandomCollection": [
+          "add(double, E)",
+          "next()"
+        ],
+        "com.natamus.collective_common_forge.objects.SAMObject": [],
+        "com.natamus.collective_common_forge.schematic.ParsedSchematicObject": [
+          "placeBlockEntitiesInWorld(Level)",
+          "getBlockEntities(Level)"
+        ],
+        "com.natamus.collective_common_forge.schematic.ParseSchematicFile": [
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean)",
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean, boolean)"
+        ],
+        "com.natamus.collective_common_forge.schematic.Schematic": [
+          "isOldVersion()",
+          "getBlockState(BlockPos)",
+          "getSize()",
+          "getBlocks()",
+          "getStateFromID(Registry<Block>, int)",
+          "getBlockEntities()",
+          "getEntityRelativePosPairs()",
+          "getTileEntity(BlockPos)",
+          "getBlockPosFromCompoundTag(CompoundTag)",
+          "getWidth()",
+          "getHeight()",
+          "getLength()",
+          "getOffsetX()",
+          "getOffsetY()",
+          "getOffsetZ()",
+          "wasParsedCorrectly()"
+        ],
+        "com.natamus.collective_common_forge.schematic.SchematicBlockObject": [
+          "getPosition()",
+          "getState()",
+          "getPositionWithOffset(int, int, int)"
+        ],
+        "com.natamus.collective_common_forge.schematic.SchematicFunctions": [
+          "readCompressed(InputStream)"
+        ],
+        "com.natamus.collective_common_forge.services.helpers.BlockTagsHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.ClientUtilsHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.EventTriggerHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.ModLoaderHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.RegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_forge.services.helpers.RegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_forge.services.helpers.RegisterKeyMappingHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.TeleportHelper": [],
+        "com.natamus.collective_common_forge.services.helpers.ToolFunctionsHelper": [],
+        "com.natamus.collective_common_forge.services.Services": [
+          "load(Class<T>)"
+        ],
+        "com.natamus.collective_common_forge.translations.ServerTranslationPack": [
+          "requireClientTranslations(String)",
+          "useTranslatableForMessage(ServerPlayer)",
+          "useTranslatableForNames()",
+          "onServerStarting(MinecraftServer)",
+          "onPlayerJoin(ServerPlayer)"
+        ],
+        "com.natamus.collective_common_forge.translations.TranslationDownloader": [
+          "download(String)"
+        ],
+        "com.natamus.collective_common_forge.translations.TranslationLoader": [
+          "onLanguageChanged(String)"
+        ],
+        "com.natamus.collective_common_forge.translations.TranslationPack": [
+          "getPackDir()",
+          "contribute(Consumer<Pack>)",
+          "buildTranslationPack()"
+        ],
+        "com.natamus.collective_common_forge.translations.TranslationResolver": [
+          "resolve(String, Object...)"
+        ],
+        "com.natamus.collective_common_forge.translations.TranslationStorage": [],
+        "com.natamus.collective_common_forge.util.CollectiveReference": [],
+        "com.natamus.collective_common_neoforge.check.RegisterMod": [
+          "register(String, String, String, String)"
+        ],
+        "com.natamus.collective_common_neoforge.check.ShouldLoadCheck": [
+          "shouldLoad(String)"
+        ],
+        "com.natamus.collective_common_neoforge.cmds.CommandCollective": [
+          "register(CommandDispatcher<CommandSourceStack>)"
+        ],
+        "com.natamus.collective_common_neoforge.CollectiveCommon": [
+          "init()",
+          "registerPackets()",
+          "loadEvents()"
+        ],
+        "com.natamus.collective_common_neoforge.config.CollectiveConfigHandler": [
+          "initConfig()"
+        ],
+        "com.natamus.collective_common_neoforge.config.DuskConfig": [
+          "init(String, String, Class<?>)",
+          "init(String, String, Class<?>, Boolean)",
+          "write(String)",
+          "loadJson(Path, String)"
+        ],
+        "com.natamus.collective_common_neoforge.config.GenerateJSONFiles": [
+          "requestJSONFile(String, List<String>)",
+          "requestJSONFile(String, String)",
+          "initGeneration(ServerLevel)",
+          "initGeneration(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_neoforge.config.LoadJSONFiles": [
+          "startListening()"
+        ],
+        "com.natamus.collective_common_neoforge.data.BlockEntityData": [
+          "addBlockEntityToCache(BlockEntityType<?>)"
+        ],
+        "com.natamus.collective_common_neoforge.data.ClientConstants": [],
+        "com.natamus.collective_common_neoforge.data.Constants": [
+          "initConstantData(Level)"
+        ],
+        "com.natamus.collective_common_neoforge.data.FeatureFlags": [],
+        "com.natamus.collective_common_neoforge.data.GlobalConstants": [],
+        "com.natamus.collective_common_neoforge.data.GlobalVariables": [
+          "generateHashMaps()"
+        ],
+        "com.natamus.collective_common_neoforge.events.CollectiveClientEvents": [
+          "onClientTick()"
+        ],
+        "com.natamus.collective_common_neoforge.events.CollectiveEvents": [
+          "onWorldLoad(Level)",
+          "onWorldTick(ServerLevel)",
+          "onServerTick(MinecraftServer)",
+          "onEntityJoinLevel(Level, Entity)"
+        ],
+        "com.natamus.collective_common_neoforge.fakeplayer.FakePlayer": [
+          "awardStat(Stat, int)",
+          "isInvulnerableTo(DamageSource)",
+          "canHarmPlayer(Player)",
+          "die(DamageSource)",
+          "tick()",
+          "updateOptions(ClientInformation)",
+          "getServer()"
+        ],
+        "com.natamus.collective_common_neoforge.fakeplayer.FakePlayerFactory": [
+          "getMinecraft(ServerLevel)",
+          "get(ServerLevel, GameProfile)",
+          "unloadLevel(ServerLevel)"
+        ],
+        "com.natamus.collective_common_neoforge.features.PlayerHeadCacheFeature": [
+          "cachePlayer(Player)",
+          "cachePlayer(ServerLevel, String)",
+          "cachePlayer(String, GameProfile)",
+          "getPlayerHeadStackFromCache(Player)",
+          "getPlayerHeadStackFromCache(ServerLevel, String)",
+          "isHeadCachingEnabled()",
+          "enableHeadCaching()",
+          "resetPlayerHeadCache()"
+        ],
+        "com.natamus.collective_common_neoforge.functions.BlockFunctions": [
+          "getBlockDrops(Level, BlockState, boolean)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player)",
+          "getBlockDrops(Level, BlockState, ItemStack, Player, Vec3)",
+          "isSpecificBlock(Block, Block)",
+          "isSpecificBlock(Block, ItemStack)",
+          "isSpecificBlock(Block, Level, BlockPos)",
+          "dropBlock(Level, BlockPos)",
+          "dropBlock(Level, BlockPos, Entity, ItemStack)",
+          "isOneOfBlocks(List<Block>, Block)",
+          "isOneOfBlocks(List<Block>, ItemStack)",
+          "isOneOfBlocks(List<Block>, Level, BlockPos)",
+          "isGrowBlock(Block)",
+          "isStoneTypeBlock(Block)",
+          "isFilledPortalFrame(BlockState)",
+          "canOpenByHand(BlockState)",
+          "canOpenByHand(BlockState, boolean)",
+          "blockToReadableString(Block, int)",
+          "blockToReadableString(Block)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.BlockPosFunctions": [
+          "getBlocksAround(BlockPos, boolean)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>)",
+          "getBlocksNextToEachOther(Level, BlockPos, List<Block>, int)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>)",
+          "getBlocksNextToEachOtherTag(Level, BlockPos, List<TagKey<Block>>, int)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>)",
+          "getBlocksNextToEachOtherMaterial(Level, BlockPos, List<MapColor>, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int)",
+          "getSurfaceBlockPos(ServerLevel, int, int, boolean)",
+          "getCenterNearbyVillage(ServerLevel)",
+          "getNearbyVillage(ServerLevel, BlockPos)",
+          "getNearbyVillage(ServerLevel, BlockPos, String)",
+          "getCenterNearbyBiome(ServerLevel, String)",
+          "getNearbyBiome(ServerLevel, BlockPos, String)",
+          "getCenterNearbyStructure(ServerLevel, HolderSet<Structure>)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos)",
+          "getNearbyStructure(ServerLevel, HolderSet<Structure>, BlockPos, int)",
+          "getBlockPlayerIsLookingAt(Level, Player, boolean)",
+          "getRandomCoordinatesInNearestUngeneratedChunk(ServerLevel, BlockPos)",
+          "isOnSurface(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ColourFunctions": [
+          "getById(int)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.CommandFunctions": [
+          "getRawCommandOutput(ServerLevel, final Vec3, String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.CompareBlockFunctions": [
+          "blockIsInRegistryHolder(Block, TagKey<Block>)",
+          "isStoneBlock(Block)",
+          "isNetherStoneBlock(Block)",
+          "isTreeLeaf(Block, boolean)",
+          "isTreeLeaf(Block)",
+          "isTreeLog(Block)",
+          "isSapling(Block)",
+          "isDirtBlock(Block)",
+          "isPortalBlock(Block)",
+          "isAirOrOverwritableBlock(Block)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.CompareItemFunctions": [
+          "itemIsInRegistryHolder(Item, TagKey<Item>)",
+          "isSapling(Item)",
+          "isSapling(ItemStack)",
+          "isLog(Item)",
+          "isLog(ItemStack)",
+          "isPlank(Item)",
+          "isPlank(ItemStack)",
+          "isChest(Item)",
+          "isChest(ItemStack)",
+          "isStone(Item)",
+          "isStone(ItemStack)",
+          "isSlab(Item)",
+          "isSlab(ItemStack)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ConfigFunctions": [
+          "getRawConfigValues(String)",
+          "getRawConfigValues(String, boolean)",
+          "getDictValues(String)",
+          "getDictValues(String, boolean)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.CreativeModeTabFunctions": [
+          "getCreativeModeTabResourceKey(String)",
+          "getCreativeModeTabResourceKey(String, String)",
+          "getCreativeModeTabResourceKey(Identifier)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.CropFunctions": [
+          "applyBonemeal(ItemStack, Level, BlockPos, Player)",
+          "growCrop(Level, Player, BlockState, BlockPos)",
+          "growCrop(Level, Player, BlockState, BlockPos, InteractionHand)",
+          "growCrop(Level, Player, BlockState, BlockPos, ItemStack)",
+          "growCactus(Level, BlockPos)",
+          "growSugarcane(Level, BlockPos)",
+          "growVine(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.DataFunctions": [
+          "getCurrentMinecraftVersion()",
+          "getGameDirectory()",
+          "getGameDirectoryPath()",
+          "getModDirectory()",
+          "getModDirectoryPath()",
+          "getConfigDirectory()",
+          "getConfigDirectoryPath()",
+          "getInstalledModJars()",
+          "setBit(byte, int, boolean)",
+          "getDataInputStream(MinecraftServer, String, String, String, String)",
+          "getDataInputStream(MinecraftServer, String, String, String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.DateFunctions": [
+          "ymdhisToReadable(String)",
+          "getNowInYmdhis()"
+        ],
+        "com.natamus.collective_common_neoforge.functions.DimensionFunctions": [
+          "getSimpleDimensionString(Level)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.EntityFunctions": [
+          "isHorse(Entity)",
+          "isModdedVillager(String)",
+          "isModdedVillager(Entity)",
+          "isMilkable(Entity)",
+          "getEntityString(Entity)",
+          "nameEntity(Entity, String)",
+          "addPotionEffect(Entity, MobEffect, Integer)",
+          "addPotionEffect(Entity, Holder<MobEffect>, Integer)",
+          "removePotionEffect(Entity, MobEffect)",
+          "removePotionEffect(Entity, Holder<MobEffect>)",
+          "chargeEntity(Entity)",
+          "setShulkerVariant(Shulker, DyeColor)",
+          "setPaintingVariant(Painting, Holder<PaintingVariant>)",
+          "setRabbitVariant(Rabbit, net.minecraft.world.entity.animal.rabbit.Rabbit.Variant)",
+          "setEntityFlag(Entity, int, boolean)",
+          "getAbstractHorseEntityFlagResult(AbstractHorse, int)",
+          "resetMerchantOffers(Villager)",
+          "resetMerchantOffers(WanderingTrader)",
+          "resetMerchantOffer(MerchantOffer)",
+          "resetMerchantOfferUses(MerchantOffer)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ExperienceFunctions": [
+          "canConsumeXp(Player, int)",
+          "consumeXp(Player, int)",
+          "getPlayerXP(Player)",
+          "addPlayerXP(Player, int)",
+          "getLevelForExperience(int)",
+          "xpBarCap(int)",
+          "getExperienceForLevel(int)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ExplosionFunctions": [
+          "getAffectedBlockPositions(Explosion)",
+          "getAffectedBlockPositions(ServerExplosion)",
+          "clearExplosion(Explosion)",
+          "clearExplosion(ServerExplosion)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.FABFunctions": [
+          "getBlockEntitiesAroundPosition(Level, BlockPos, Integer)",
+          "getAllTaggedTileEntityPositionsNearbyEntity(TagKey<Block>, Integer, Level, Entity)",
+          "getAllTaggedTileEntityPositionsNearbyPosition(TagKey<Block>, Integer, Level, BlockPos)",
+          "getAllTileEntityPositionsNearbyEntity(BlockEntityType<?>, Integer, Level, Entity)",
+          "getAllTileEntityPositionsNearbyPosition(BlockEntityType<?>, Integer, Level, BlockPos)",
+          "getRequestedBlockAroundEntitySpawn(Block, Integer, Double, Level, Entity)",
+          "updatePlacedBlock(Block, BlockPos, Level)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.FeatureFunctions": [
+          "placeBonusChest(Level, BlockPos)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.GameSettingsFunctions": [
+          "setGamma(Options, double)",
+          "getGamma(Options)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.GearFunctions": [
+          "setPlayerGearFromGearString(Player, String)",
+          "setPlayerGearFromGearString(Player, String, boolean)",
+          "setInventoryFromGearString(Level, Inventory, String)",
+          "setEquipmentSlot(Inventory, EquipmentSlot, ItemStack)",
+          "getEntityEquipment(Player)",
+          "getEntityEquipment(Inventory)",
+          "getGearStringFromPlayer(Player)",
+          "getGearStringFromPlayer(Player, boolean)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "getHashMapFromGearString(Level, String)",
+          "getItemStackListFromGearString(Level, String)",
+          "getEffectsFromGearString(Player, String)",
+          "getEffectsFromGearString(Level, String)",
+          "getEffectsFromGearString(Registry<MobEffect>, String)",
+          "areTwoGearStringsEqual(Level, String, String)",
+          "sortGearString(String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.GUIFunctions": [
+          "shouldHideGUI()"
+        ],
+        "com.natamus.collective_common_neoforge.functions.HashMapFunctions": [
+          "computeIfAbsent(Map<K, V>, K, Function<? super K, ? extends V>)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.HeadFunctions": [
+          "getNewPlayerHead(ServerLevel, String, Integer)",
+          "getNewPlayerHead(ServerLevel, String, String, Integer)",
+          "getNewPlayerHead(GameProfile, Integer)",
+          "getNewPlayerHead(GameProfile, String, Integer)",
+          "getNewTexturedHead(String, String, String, Integer)",
+          "getNewTexturedHead(String, String, String, String, Integer)",
+          "getNewTexturedHead(String, String, UUID, Integer)",
+          "getNewTexturedHead(String, String, UUID, String, Integer)",
+          "getTexturedHeadGameProfile(String, String, String)",
+          "getTexturedHeadGameProfile(String, String, UUID)",
+          "getTexturedHeadResolvableProfile(String, String, String)",
+          "getTexturedHeadResolvableProfile(String, String, UUID)",
+          "getGameProfileFromPlayerName(ServerLevel, String)",
+          "hasStandardHead(String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ItemFunctions": [
+          "generateEntityDropsFromLootTable(Level)",
+          "shrinkGiveOrDropItemStack(Player, InteractionHand, ItemStack, ItemStack)",
+          "giveOrDropItemStack(Player, ItemStack)",
+          "itemHurtBreakAndEvent(ItemStack, ServerPlayer, InteractionHand, int)",
+          "isStoneTypeItem(Item)",
+          "itemToReadableString(Item, int)",
+          "itemToReadableString(Item)",
+          "getNBTStringFromItemStack(Level, ItemStack)",
+          "getNBTStringFromItemStack(Level, ItemStack, boolean)",
+          "setItemCategory(Item, CreativeModeTab)",
+          "getUseOnContext(Player, InteractionHand, BlockHitResult)",
+          "getUseOnContext(Player, InteractionHand, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockPos, Direction)",
+          "getUseOnContext(Level, Player, InteractionHand, ItemStack, BlockHitResult)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.JsonFunctions": [
+          "JsonStringToHashMap(String)",
+          "HashMapToJsonString(HashMap<String, String>)",
+          "getStringListFromJsonFile(String, String, String)",
+          "getJsonElementFromFile(String, String)",
+          "jsonArrayToList(JsonArray)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.KeyMappingFunctions": [
+          "getKey(KeyMapping)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.MenuFunctions": [
+          "getTraderFromMerchantMenu(MerchantMenu)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.MessageFunctions": [
+          "sendMessage(CommandSourceStack, MutableComponent)",
+          "sendMessage(Player, MutableComponent)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(CommandSourceStack, MutableComponent, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, MutableComponent, boolean)",
+          "sendTranslatableMessage(CommandSourceStack, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, ChatFormatting, Object...)",
+          "sendTranslatableMessage(CommandSourceStack, String, String, boolean, ChatFormatting, Object...)",
+          "sendTranslatableMessage(Player, String, String, boolean, ChatFormatting, Object...)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.NumberFunctions": [
+          "getEnchantingTableLevel(int, int)",
+          "moveToZero(int)",
+          "isNumeric(String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.PlayerFunctions": [
+          "respawnPlayer(Level, Player)",
+          "matchPlayer(Player, String)",
+          "matchPlayer(Level, String)",
+          "isHoldingWater(Player)",
+          "isJoiningWorldForTheFirstTime(Player, String)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean)",
+          "isJoiningWorldForTheFirstTime(Player, String, boolean, boolean)",
+          "getSpawnPoint(Level, Player)",
+          "getSpawnVec(Level, Player)",
+          "getOtherHand(InteractionHand)",
+          "getPlayerGearString(Player)",
+          "getPlayerGearStringFromHashMap(Level, HashMap<String, ItemStack>)",
+          "setPlayerGearFromString(Player, String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.RayTraceFunctions": [
+          "rayTrace(Level, Player, boolean)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.ScreenFunctions": [
+          "setScreenTitle(Screen, Component)",
+          "setMerchantScreenTitle(MerchantScreen, Component)",
+          "signSetMessage(AbstractSignEditScreen, String, int, boolean)",
+          "getSignBlockEntityFromScreen(AbstractSignEditScreen)",
+          "getSignTextFromScreen(AbstractSignEditScreen)",
+          "setSignTextOnScreen(AbstractSignEditScreen, String, int)",
+          "setSignTextOnScreen(AbstractSignEditScreen, Component, int)",
+          "replaceSignTextOnScreen(AbstractSignEditScreen, SignText)",
+          "getSignMessagesFromScreen(AbstractSignEditScreen)",
+          "setSignMessagesOnScreen(AbstractSignEditScreen, String[])",
+          "setSignMessageAtLineOnScreen(AbstractSignEditScreen, String, int)",
+          "getSignLineFromScreen(AbstractSignEditScreen)",
+          "setSignLineOnScreen(AbstractSignEditScreen, int)",
+          "getSignFieldFromScreen(AbstractSignEditScreen)",
+          "signTextOnScreenisFront(AbstractSignEditScreen)",
+          "addRenderableWidget(Screen, T)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.SignFunctions": [
+          "getSignText(BlockEntity)",
+          "getSignText(SignBlockEntity)",
+          "getSignText(HangingSignBlockEntity)",
+          "getSignText(List<SignText>)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.SpawnEntityFunctions": [
+          "spawnEntityOnNextTick(ServerLevel, Entity)",
+          "startRidingEntityOnNextTick(ServerLevel, Entity, Entity)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.StringFunctions": [
+          "sendMessage(CommandSourceStack, String, ChatFormatting)",
+          "sendMessage(Player, String, ChatFormatting)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean)",
+          "sendMessage(Player, String, ChatFormatting, boolean)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, String)",
+          "sendMessage(Player, String, ChatFormatting, String)",
+          "sendMessage(CommandSourceStack, String, ChatFormatting, boolean, String)",
+          "sendMessage(Player, String, ChatFormatting, boolean, String)",
+          "broadcastMessage(Level, String, ChatFormatting)",
+          "sendMessageToPlayersAround(Level, BlockPos, int, String, ChatFormatting)",
+          "capitalizeFirst(String)",
+          "capitalizeEveryWord(String)",
+          "escapeSpecialRegexChars(String)",
+          "getRandomName(boolean, boolean)",
+          "getPCLocalTime(boolean, boolean)",
+          "sequenceCount(String, String)",
+          "joinListWithCommaAnd(List<String>)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.TaskFunctions": [
+          "enqueueCollectiveTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveServerTask(MinecraftServer, Runnable, int)",
+          "enqueueCollectiveClientTask(Runnable, int)",
+          "enqueueImmediateTask(Level, Runnable, boolean)",
+          "enqueueTask(Level, Runnable, int)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.TileEntityFunctions": [
+          "updateTileEntity(Level, BlockPos)",
+          "updateTileEntity(Level, BlockPos, BlockEntity)",
+          "updateTileEntity(Level, BlockPos, BlockState, BlockEntity)",
+          "setMobSpawnerDelay(BaseSpawner, int)",
+          "resetMobSpawnerDelay(BaseSpawner, int, int)",
+          "resetMobSpawnerDelay(BaseSpawner)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.UtilityFunctions": [
+          "createDamageSource(String)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.UUIDFunctions": [
+          "getUUIDFromStringLenient(String)",
+          "oldIdToIntArray(String)",
+          "getIntegerParts(String, int)"
+        ],
+        "com.natamus.collective_common_neoforge.functions.WorldFunctions": [
+          "setWorldTime(ServerLevel, int)",
+          "getTotalTimePassed(ServerLevel)",
+          "getTotalDaysPassed(ServerLevel)",
+          "getWorldTime(ServerLevel)",
+          "getWorldDimensionName(Level)",
+          "isOverworld(Level)",
+          "isNether(Level)",
+          "isEnd(Level)",
+          "getWorldIfInstanceOfAndNotRemote(LevelAccessor)",
+          "getWorldPath(ServerLevel)",
+          "getWorldPath(MinecraftServer)",
+          "getWorldFolderName(ServerLevel)",
+          "getWorldFolderName(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_neoforge.globalcallbacks.CachedBlockEntityCallback": [],
+        "com.natamus.collective_common_neoforge.globalcallbacks.CollectiveGuiCallback": [],
+        "com.natamus.collective_common_neoforge.globalcallbacks.GlobalCropCallback": [],
+        "com.natamus.collective_common_neoforge.globalcallbacks.JSONCallback": [],
+        "com.natamus.collective_common_neoforge.globalcallbacks.MainMenuLoadedCallback": [],
+        "com.natamus.collective_common_neoforge.implementations.event.Event": [
+          "invoker()",
+          "register(T)",
+          "register(Identifier, T)",
+          "addPhaseOrdering(Identifier, Identifier)"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.event.EventFactory": [
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "createArrayBacked(Class<T>, T, Function<T[], T>)",
+          "createWithPhases(Class<? super T>, Function<T[], T>, Identifier...)",
+          "getHandlerName(Object)",
+          "isProfilingEnabled()",
+          "invalidate()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.event.EventFactoryImpl": [
+          "invalidate()",
+          "createArrayBacked(Class<? super T>, Function<T[], T>)",
+          "ensureContainsDefault(Identifier[])",
+          "ensureNoDuplicates(Identifier[])"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.event.PhaseSorting": [],
+        "com.natamus.collective_common_neoforge.implementations.networking.api.Dispatcher": [
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)",
+          "isRegisteredOnClient(Class<T>, ServerPlayer)",
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.api.Network": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getNetworkHandler()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.api.NetworkHandler": [
+          "sendToClients(T, List<ServerPlayer>)",
+          "sendToAllClients(T, MinecraftServer)",
+          "sendToClientsInLevel(T, ServerLevel)",
+          "sendToClientsLoadingChunk(T, LevelChunk)",
+          "sendToClientsLoadingPos(T, ServerLevel, ChunkPos)",
+          "sendToClientsLoadingPos(T, ServerLevel, BlockPos)",
+          "sendToClientsInRange(T, ServerLevel, BlockPos, double)"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.data.CommonPacketWrapper": [
+          "encode(FriendlyByteBuf)",
+          "type()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.data.PacketContainer": [
+          "getType()",
+          "getCodec()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.data.PacketContext": [],
+        "com.natamus.collective_common_neoforge.implementations.networking.data.Side": [
+          "opposite()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.DelayedPacketRegistrationHandler": [
+          "getSide()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "registerQueuedPackets(PacketRegistrationHandler)"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.exceptions.RegistrationException": [],
+        "com.natamus.collective_common_neoforge.implementations.networking.NetworkSetup": [
+          "getDelayedHandler()",
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getPacketRegistration()"
+        ],
+        "com.natamus.collective_common_neoforge.implementations.networking.PacketRegistrar": [],
+        "com.natamus.collective_common_neoforge.implementations.networking.PacketRegistrationHandler": [
+          "registerPacket(Identifier, Class<T>, BiConsumer<T, FriendlyByteBuf>, Function<FriendlyByteBuf, T>, Consumer<PacketContext<T>>)",
+          "getSide()",
+          "registerPacket(PacketContainer<T>)"
+        ],
+        "com.natamus.collective_common_neoforge.networking.PacketRegistration": [
+          "init()"
+        ],
+        "com.natamus.collective_common_neoforge.networking.packets.CollectiveInstalledPacket": [
+          "decode(FriendlyByteBuf)",
+          "encode(FriendlyByteBuf)",
+          "handle(PacketContext<CollectiveInstalledPacket>)"
+        ],
+        "com.natamus.collective_common_neoforge.objects.RandomCollection": [
+          "add(double, E)",
+          "next()"
+        ],
+        "com.natamus.collective_common_neoforge.objects.SAMObject": [],
+        "com.natamus.collective_common_neoforge.schematic.ParsedSchematicObject": [
+          "placeBlockEntitiesInWorld(Level)",
+          "getBlockEntities(Level)"
+        ],
+        "com.natamus.collective_common_neoforge.schematic.ParseSchematicFile": [
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean)",
+          "getParsedSchematicObject(InputStream, Level, BlockPos, int, boolean, boolean)"
+        ],
+        "com.natamus.collective_common_neoforge.schematic.Schematic": [
+          "isOldVersion()",
+          "getBlockState(BlockPos)",
+          "getSize()",
+          "getBlocks()",
+          "getStateFromID(Registry<Block>, int)",
+          "getBlockEntities()",
+          "getEntityRelativePosPairs()",
+          "getTileEntity(BlockPos)",
+          "getBlockPosFromCompoundTag(CompoundTag)",
+          "getWidth()",
+          "getHeight()",
+          "getLength()",
+          "getOffsetX()",
+          "getOffsetY()",
+          "getOffsetZ()",
+          "wasParsedCorrectly()"
+        ],
+        "com.natamus.collective_common_neoforge.schematic.SchematicBlockObject": [
+          "getPosition()",
+          "getState()",
+          "getPositionWithOffset(int, int, int)"
+        ],
+        "com.natamus.collective_common_neoforge.schematic.SchematicFunctions": [
+          "readCompressed(InputStream)"
+        ],
+        "com.natamus.collective_common_neoforge.services.helpers.BlockTagsHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.ClientUtilsHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.EventTriggerHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.ModLoaderHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, Identifier, Function<Properties, Block>, Properties)",
+          "registerBlockWithItem(Object, Identifier, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterItemHelper": [
+          "registerItem(Object, Identifier, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>)"
+        ],
+        "com.natamus.collective_common_neoforge.services.helpers.RegisterKeyMappingHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.TeleportHelper": [],
+        "com.natamus.collective_common_neoforge.services.helpers.ToolFunctionsHelper": [],
+        "com.natamus.collective_common_neoforge.services.Services": [
+          "load(Class<T>)"
+        ],
+        "com.natamus.collective_common_neoforge.translations.ServerTranslationPack": [
+          "requireClientTranslations(String)",
+          "useTranslatableForMessage(ServerPlayer)",
+          "useTranslatableForNames()",
+          "onServerStarting(MinecraftServer)",
+          "onPlayerJoin(ServerPlayer)"
+        ],
+        "com.natamus.collective_common_neoforge.translations.TranslationDownloader": [
+          "download(String)"
+        ],
+        "com.natamus.collective_common_neoforge.translations.TranslationLoader": [
+          "onLanguageChanged(String)"
+        ],
+        "com.natamus.collective_common_neoforge.translations.TranslationPack": [
+          "getPackDir()",
+          "contribute(Consumer<Pack>)",
+          "buildTranslationPack()"
+        ],
+        "com.natamus.collective_common_neoforge.translations.TranslationResolver": [
+          "resolve(String, Object...)"
+        ],
+        "com.natamus.collective_common_neoforge.translations.TranslationStorage": [],
+        "com.natamus.collective_common_neoforge.util.CollectiveReference": []
+      },
+      "sampleCount": 392
+    },
+    "8.13": {
+      "packages": [],
+      "classes": [
+        "com.natamus.collective.CollectiveFabric",
+        "com.natamus.collective.CollectiveFabricClient",
+        "com.natamus.collective.CollectiveForge",
+        "com.natamus.collective.CollectiveNeoForge",
+        "com.natamus.collective.fabric.bundle.FabricBundleConfigCheck",
+        "com.natamus.collective.fabric.bundle.FabricBundleJarJarCheck",
+        "com.natamus.collective.fabric.callbacks.CollectiveAnimalEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveAnvilEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveAttackEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveBlockEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveChatEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveClientEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveCommandEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveCropEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveEntityEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveExplosionEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveFurnaceEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveItemEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveLifecycleEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveMinecraftServerEvents",
+        "com.natamus.collective.fabric.callbacks.CollectivePistonEvents",
+        "com.natamus.collective.fabric.callbacks.CollectivePlayerEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveRenderEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveSoundEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveSpawnEvents",
+        "com.natamus.collective.fabric.callbacks.CollectiveWorldEvents",
+        "com.natamus.collective.fabric.config.FabricCollectiveConfigScreen",
+        "com.natamus.collective.fabric.data.GlobalFabricObjects",
+        "com.natamus.collective.fabric.networking.FabricNetworkHandler",
+        "com.natamus.collective.fabric.services.FabricBlockTagsHelper",
+        "com.natamus.collective.fabric.services.FabricClientUtilsHelper",
+        "com.natamus.collective.fabric.services.FabricEventTriggerHelper",
+        "com.natamus.collective.fabric.services.FabricModLoaderHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterBlockHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterItemHelper",
+        "com.natamus.collective.fabric.services.FabricRegisterKeyMappingHelper",
+        "com.natamus.collective.fabric.services.FabricTeleportHelper",
+        "com.natamus.collective.fabric.services.FabricToolFunctionsHelper",
+        "com.natamus.collective.forge.bundle.ForgeBundleConfigCheck",
+        "com.natamus.collective.forge.bundle.ForgeBundleJarJarCheck",
+        "com.natamus.collective.forge.config.ForgeCollectiveConfigScreen",
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeClientEvents",
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeEvents",
+        "com.natamus.collective.forge.networking.ForgeNetworkHandler",
+        "com.natamus.collective.forge.services.ForgeBlockTagsHelper",
+        "com.natamus.collective.forge.services.ForgeClientUtilsHelper",
+        "com.natamus.collective.forge.services.ForgeEventTriggerHelper",
+        "com.natamus.collective.forge.services.ForgeModLoaderHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterBlockHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterItemHelper",
+        "com.natamus.collective.forge.services.ForgeRegisterKeyMappingHelper",
+        "com.natamus.collective.forge.services.ForgeTeleportHelper",
+        "com.natamus.collective.forge.services.ForgeToolFunctionsHelper",
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleConfigCheck",
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleJarJarCheck",
+        "com.natamus.collective.neoforge.config.NeoForgeCollectiveConfigScreen",
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeClientEvents",
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeEvents",
+        "com.natamus.collective.neoforge.networking.NeoForgeNetworkHandler",
+        "com.natamus.collective.neoforge.services.NeoForgeBlockTagsHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeClientUtilsHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeEventTriggerHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeModLoaderHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterBlockHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterItemHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterKeyMappingHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeTeleportHelper",
+        "com.natamus.collective.neoforge.services.NeoForgeToolFunctionsHelper",
+        "com.natamus.collective.util.Placeholder",
+        "com.natamus.collective_common_fabric.check.RegisterMod",
+        "com.natamus.collective_common_fabric.check.ShouldLoadCheck",
+        "com.natamus.collective_common_fabric.cmds.CommandCollective",
+        "com.natamus.collective_common_fabric.CollectiveCommon",
+        "com.natamus.collective_common_fabric.config.CollectiveConfigHandler",
+        "com.natamus.collective_common_fabric.config.DuskConfig",
+        "com.natamus.collective_common_fabric.config.GenerateJSONFiles",
+        "com.natamus.collective_common_fabric.config.LoadJSONFiles",
+        "com.natamus.collective_common_fabric.data.BlockEntityData",
+        "com.natamus.collective_common_fabric.data.ClientConstants",
+        "com.natamus.collective_common_fabric.data.Constants",
+        "com.natamus.collective_common_fabric.data.FeatureFlags",
+        "com.natamus.collective_common_fabric.data.GlobalConstants",
+        "com.natamus.collective_common_fabric.data.GlobalVariables",
+        "com.natamus.collective_common_fabric.events.CollectiveClientEvents",
+        "com.natamus.collective_common_fabric.events.CollectiveEvents",
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayer",
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayerFactory",
+        "com.natamus.collective_common_fabric.features.PlayerHeadCacheFeature",
+        "com.natamus.collective_common_fabric.functions.BlockFunctions",
+        "com.natamus.collective_common_fabric.functions.BlockPosFunctions",
+        "com.natamus.collective_common_fabric.functions.CommandFunctions",
+        "com.natamus.collective_common_fabric.functions.CompareBlockFunctions",
+        "com.natamus.collective_common_fabric.functions.CompareItemFunctions",
+        "com.natamus.collective_common_fabric.functions.ConfigFunctions",
+        "com.natamus.collective_common_fabric.functions.CreativeModeTabFunctions",
+        "com.natamus.collective_common_fabric.functions.CropFunctions",
+        "com.natamus.collective_common_fabric.functions.DataFunctions",
+        "com.natamus.collective_common_fabric.functions.DateFunctions",
+        "com.natamus.collective_common_fabric.functions.DimensionFunctions",
+        "com.natamus.collective_common_fabric.functions.EntityFunctions",
+        "com.natamus.collective_common_fabric.functions.ExperienceFunctions",
+        "com.natamus.collective_common_fabric.functions.ExplosionFunctions",
+        "com.natamus.collective_common_fabric.functions.FABFunctions",
+        "com.natamus.collective_common_fabric.functions.FeatureFunctions",
+        "com.natamus.collective_common_fabric.functions.GameSettingsFunctions",
+        "com.natamus.collective_common_fabric.functions.GearFunctions",
+        "com.natamus.collective_common_fabric.functions.GUIFunctions",
+        "com.natamus.collective_common_fabric.functions.HashMapFunctions",
+        "com.natamus.collective_common_fabric.functions.HeadFunctions",
+        "com.natamus.collective_common_fabric.functions.ItemFunctions",
+        "com.natamus.collective_common_fabric.functions.JsonFunctions",
+        "com.natamus.collective_common_fabric.functions.KeyMappingFunctions",
+        "com.natamus.collective_common_fabric.functions.MenuFunctions",
+        "com.natamus.collective_common_fabric.functions.MessageFunctions"
+      ],
+      "methods": {
+        "com.natamus.collective.CollectiveFabric": [
+          "onInitialize()"
+        ],
+        "com.natamus.collective.CollectiveFabricClient": [
+          "onInitializeClient()"
+        ],
+        "com.natamus.collective.CollectiveForge": [],
+        "com.natamus.collective.CollectiveNeoForge": [
+          "commonSetupEvent(FMLCommonSetupEvent)"
+        ],
+        "com.natamus.collective.fabric.bundle.FabricBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.fabric.bundle.FabricBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.fabric.callbacks.CollectiveAnimalEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveAnvilEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveAttackEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveBlockEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveChatEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveClientEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveCommandEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveCropEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveEntityEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveExplosionEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveFurnaceEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveItemEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveLifecycleEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveMinecraftServerEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectivePistonEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectivePlayerEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveRenderEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveSoundEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveSpawnEvents": [],
+        "com.natamus.collective.fabric.callbacks.CollectiveWorldEvents": [],
+        "com.natamus.collective.fabric.config.FabricCollectiveConfigScreen": [
+          "getModConfigScreenFactory()"
+        ],
+        "com.natamus.collective.fabric.data.GlobalFabricObjects": [],
+        "com.natamus.collective.fabric.networking.FabricNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, class_3222)"
+        ],
+        "com.natamus.collective.fabric.services.FabricBlockTagsHelper": [
+          "isOre(class_2680)",
+          "isOre(class_2680, boolean)"
+        ],
+        "com.natamus.collective.fabric.services.FabricClientUtilsHelper": [
+          "blockSetChunkSectionLayer(class_2248, class_11515)",
+          "blockSetRenderCutout(class_2248)"
+        ],
+        "com.natamus.collective.fabric.services.FabricEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(class_1937, class_2338, class_2424)"
+        ],
+        "com.natamus.collective.fabric.services.FabricModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, class_2960, Function<class_2251, class_2248>, class_2251, boolean)",
+          "getRegisteredBlockWithoutItem(class_2960)",
+          "registerBlockWithItem(Object, class_2960, Function<class_2251, class_2248>, class_2251, class_5321<class_1761>, boolean)",
+          "getRegisteredBlockWithItem(class_2960)",
+          "getRegisteredBlockWithItemPair(class_2960)",
+          "setRegisteredBlockWithItemPair(class_2960, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, class_2960, Function<class_2251, class_2248>, class_2251, class_5321<class_1761>, boolean, boolean)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterItemHelper": [
+          "registerItem(Object, class_2960, Function<class_1793, class_1792>, class_1793, class_5321<class_1761>, boolean)",
+          "staticRegisterItem(Object, class_2960, Function<class_1793, class_1792>, class_1793, class_5321<class_1761>)",
+          "getRegisteredItem(class_2960)"
+        ],
+        "com.natamus.collective.fabric.services.FabricRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, class_11900)"
+        ],
+        "com.natamus.collective.fabric.services.FabricTeleportHelper": [
+          "teleportEntity(class_1297, class_3218, class_243)",
+          "teleportEntity(class_1297, class_3218, class_2338)",
+          "teleportEntity(class_1297, class_5321<class_1937>, class_243)",
+          "teleportEntity(class_1297, class_5321<class_1937>, class_2338)"
+        ],
+        "com.natamus.collective.fabric.services.FabricToolFunctionsHelper": [
+          "isTool(class_1799)",
+          "isSword(class_1799)",
+          "isShield(class_1799)",
+          "isPickaxe(class_1799)",
+          "isAxe(class_1799)",
+          "isShovel(class_1799)",
+          "isHoe(class_1799)",
+          "isShears(class_1799)",
+          "isFlintAndSteel(class_1799)"
+        ],
+        "com.natamus.collective.forge.bundle.ForgeBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.forge.bundle.ForgeBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.forge.config.ForgeCollectiveConfigScreen": [
+          "registerScreen(ModLoadingContext)"
+        ],
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeClientEvents": [
+          "registerEventsInBus()",
+          "onClientTick(Pre)"
+        ],
+        "com.natamus.collective.forge.events.RegisterCollectiveForgeEvents": [
+          "registerEventsInBus()",
+          "onServerStarted(ServerAboutToStartEvent)",
+          "onWorldLoad(Load)",
+          "onWorldTick(Pre)",
+          "onServerTick(Post)",
+          "onMobSpawnerSpecialSpawn(FinalizeSpawn)",
+          "onEntityJoinLevel(EntityJoinLevelEvent)",
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "com.natamus.collective.forge.networking.ForgeNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)"
+        ],
+        "com.natamus.collective.forge.services.ForgeBlockTagsHelper": [
+          "isOre(BlockState)",
+          "isOre(BlockState, boolean)"
+        ],
+        "com.natamus.collective.forge.services.ForgeClientUtilsHelper": [
+          "blockSetChunkSectionLayer(Block, ChunkSectionLayer)",
+          "blockSetRenderCutout(Block)"
+        ],
+        "com.natamus.collective.forge.services.ForgeEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(Level, BlockPos, PortalShape)"
+        ],
+        "com.natamus.collective.forge.services.ForgeModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, ResourceLocation, Function<Properties, Block>, Properties, boolean)",
+          "getRegisteredBlockWithoutItem(ResourceLocation)",
+          "registerBlockWithItem(Object, ResourceLocation, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredBlockWithItem(ResourceLocation)",
+          "getRegisteredBlockWithItemPair(ResourceLocation)",
+          "setRegisteredBlockWithItemPair(ResourceLocation, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, ResourceLocation, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean, boolean)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterItemHelper": [
+          "registerItem(Object, ResourceLocation, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredItem(ResourceLocation)",
+          "staticRegisterItem(Object, ResourceLocation, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "addItemsToCreativeInventory(BuildCreativeModeTabContentsEvent)"
+        ],
+        "com.natamus.collective.forge.services.ForgeRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, Category)",
+          "registerKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.natamus.collective.forge.services.ForgeTeleportHelper": [
+          "teleportEntity(Entity, ServerLevel, Vec3)",
+          "teleportEntity(Entity, ServerLevel, BlockPos)",
+          "teleportEntity(Entity, ResourceKey<Level>, Vec3)",
+          "teleportEntity(Entity, ResourceKey<Level>, BlockPos)"
+        ],
+        "com.natamus.collective.forge.services.ForgeToolFunctionsHelper": [
+          "isTool(ItemStack)",
+          "isSword(ItemStack)",
+          "isShield(ItemStack)",
+          "isPickaxe(ItemStack)",
+          "isAxe(ItemStack)",
+          "isShovel(ItemStack)",
+          "isHoe(ItemStack)",
+          "isShears(ItemStack)",
+          "isFlintAndSteel(ItemStack)"
+        ],
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleConfigCheck": [
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.neoforge.bundle.NeoForgeBundleJarJarCheck": [
+          "isModJarJard(String)"
+        ],
+        "com.natamus.collective.neoforge.config.NeoForgeCollectiveConfigScreen": [
+          "registerScreen(ModLoadingContext)"
+        ],
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeClientEvents": [
+          "onClientTick(Post)"
+        ],
+        "com.natamus.collective.neoforge.events.RegisterCollectiveNeoForgeEvents": [
+          "onServerStarted(ServerAboutToStartEvent)",
+          "onWorldLoad(Load)",
+          "onWorldTick(Post)",
+          "onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post)",
+          "onEntityJoinLevel(EntityJoinLevelEvent)",
+          "registerCommands(RegisterCommandsEvent)"
+        ],
+        "com.natamus.collective.neoforge.networking.NeoForgeNetworkHandler": [
+          "registerPacket(PacketContainer<T>)",
+          "register(RegisterPayloadHandlersEvent)",
+          "sendToServer(T)",
+          "sendToServer(T, boolean)",
+          "sendToClient(T, ServerPlayer)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeBlockTagsHelper": [
+          "isOre(BlockState)",
+          "isOre(BlockState, boolean)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeClientUtilsHelper": [
+          "blockSetChunkSectionLayer(Block, ChunkSectionLayer)",
+          "blockSetRenderCutout(Block)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeEventTriggerHelper": [
+          "triggerNetherPortalSpawnEvent(Level, BlockPos, PortalShape)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeModLoaderHelper": [
+          "getModLoaderName()",
+          "getGameDirectory()",
+          "isModLoaded(String)",
+          "isDevelopmentEnvironment()",
+          "isClientSide()",
+          "isJarJard(String)",
+          "isBundleModEnabled(String)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterBlockHelper": [
+          "registerBlockWithoutItem(Object, ResourceLocation, Function<Properties, Block>, Properties, boolean)",
+          "getRegisteredBlockWithoutItem(ResourceLocation)",
+          "registerBlockWithItem(Object, ResourceLocation, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredBlockWithItem(ResourceLocation)",
+          "getRegisteredBlockWithItemPair(ResourceLocation)",
+          "setRegisteredBlockWithItemPair(ResourceLocation, Class<?>, String, Class<?>, String)",
+          "staticRegisterBlock(Object, ResourceLocation, Function<Properties, Block>, Properties, ResourceKey<CreativeModeTab>, boolean, boolean)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterItemHelper": [
+          "registerItem(Object, ResourceLocation, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "getRegisteredItem(ResourceLocation)",
+          "staticRegisterItem(Object, ResourceLocation, Function<Properties, Item>, Properties, ResourceKey<CreativeModeTab>, boolean)",
+          "addItemsToCreativeInventory(BuildCreativeModeTabContentsEvent)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeRegisterKeyMappingHelper": [
+          "registerKeyMapping(String, int, String)",
+          "registerKeyMapping(String, int, Category)",
+          "registerKeyMappings(RegisterKeyMappingsEvent)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeTeleportHelper": [
+          "teleportEntity(Entity, ServerLevel, Vec3)",
+          "teleportEntity(Entity, ServerLevel, BlockPos)",
+          "teleportEntity(Entity, ResourceKey<Level>, Vec3)",
+          "teleportEntity(Entity, ResourceKey<Level>, BlockPos)"
+        ],
+        "com.natamus.collective.neoforge.services.NeoForgeToolFunctionsHelper": [
+          "isTool(ItemStack)",
+          "isSword(ItemStack)",
+          "isShield(ItemStack)",
+          "isPickaxe(ItemStack)",
+          "isAxe(ItemStack)",
+          "isShovel(ItemStack)",
+          "isHoe(ItemStack)",
+          "isShears(ItemStack)",
+          "isFlintAndSteel(ItemStack)"
+        ],
+        "com.natamus.collective.util.Placeholder": [],
+        "com.natamus.collective_common_fabric.check.RegisterMod": [
+          "register(String, String, String, String)",
+          "initialProcess()",
+          "joinWorldProcess(class_1937, class_1657)",
+          "createRepostingCheckFile()"
+        ],
+        "com.natamus.collective_common_fabric.check.ShouldLoadCheck": [
+          "shouldLoad(String)"
+        ],
+        "com.natamus.collective_common_fabric.cmds.CommandCollective": [
+          "register(CommandDispatcher<class_2168>)"
+        ],
+        "com.natamus.collective_common_fabric.CollectiveCommon": [
+          "init()",
+          "loadEvents()"
+        ],
+        "com.natamus.collective_common_fabric.config.CollectiveConfigHandler": [
+          "initConfig()"
+        ],
+        "com.natamus.collective_common_fabric.config.DuskConfig": [
+          "init(String, String, Class<?>)",
+          "init(String, String, Class<?>, Boolean)",
+          "write(String)",
+          "loadJson(Path, String)"
+        ],
+        "com.natamus.collective_common_fabric.config.GenerateJSONFiles": [
+          "requestJSONFile(String, List<String>)",
+          "requestJSONFile(String, String)",
+          "initGeneration(class_3218)",
+          "initGeneration(MinecraftServer)"
+        ],
+        "com.natamus.collective_common_fabric.config.LoadJSONFiles": [
+          "startListening()"
+        ],
+        "com.natamus.collective_common_fabric.data.BlockEntityData": [
+          "addBlockEntityToCache(class_2591<?>)"
+        ],
+        "com.natamus.collective_common_fabric.data.ClientConstants": [],
+        "com.natamus.collective_common_fabric.data.Constants": [
+          "initConstantData(class_1937)"
+        ],
+        "com.natamus.collective_common_fabric.data.FeatureFlags": [],
+        "com.natamus.collective_common_fabric.data.GlobalConstants": [],
+        "com.natamus.collective_common_fabric.data.GlobalVariables": [
+          "generateHashMaps()"
+        ],
+        "com.natamus.collective_common_fabric.events.CollectiveClientEvents": [
+          "onClientTick()"
+        ],
+        "com.natamus.collective_common_fabric.events.CollectiveEvents": [
+          "onWorldLoad(class_1937)",
+          "onWorldTick(class_3218)",
+          "onServerTick(MinecraftServer)",
+          "onEntityJoinLevel(class_1937, class_1297)"
+        ],
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayer": [
+          "method_7353(class_2561, boolean)",
+          "method_7342(class_3445, int)",
+          "isInvulnerableTo(class_1282)",
+          "method_7256(class_1657)",
+          "method_6078(class_1282)",
+          "method_5773()",
+          "method_14213(class_8791)",
+          "getServer()"
+        ],
+        "com.natamus.collective_common_fabric.fakeplayer.FakePlayerFactory": [
+          "getMinecraft(class_3218)",
+          "get(class_3218, GameProfile)",
+          "unloadLevel(class_3218)"
+        ],
+        "com.natamus.collective_common_fabric.features.PlayerHeadCacheFeature": [
+          "cachePlayer(class_1657)",
+          "cachePlayer(class_3218, String)",
+          "cachePlayer(String, GameProfile)",
+          "getPlayerHeadStackFromCache(class_1657)",
+          "getPlayerHeadStackFromCache(class_3218, String)",
+          "isHeadCachingEnabled()",
+          "enableHeadCaching()",
+          "resetPlayerHeadCache()"
+        ],
+        "com.natamus.collective_common_fabric.functions.BlockFunctions": [
+          "getBlockDrops(class_1937, class_2680, boolean)",
+          "getBlockDrops(class_1937, class_2680, class_1799, class_1657)",
+          "getBlockDrops(class_1937, class_2680, class_1799, class_1657, class_243)",
+          "isSpecificBlock(class_2248, class_2248)",
+          "isSpecificBlock(class_2248, class_1799)",
+          "isSpecificBlock(class_2248, class_1937, class_2338)",
+          "dropBlock(class_1937, class_2338)",
+          "dropBlock(class_1937, class_2338, class_1297, class_1799)",
+          "isOneOfBlocks(List<class_2248>, class_2248)",
+          "isOneOfBlocks(List<class_2248>, class_1799)",
+          "isOneOfBlocks(List<class_2248>, class_1937, class_2338)",
+          "isGrowBlock(class_2248)",
+          "isStoneTypeBlock(class_2248)",
+          "isFilledPortalFrame(class_2680)",
+          "canOpenByHand(class_2680)",
+          "canOpenByHand(class_2680, boolean)",
+          "blockToReadableString(class_2248, int)",
+          "blockToReadableString(class_2248)"
+        ],
+        "com.natamus.collective_common_fabric.functions.BlockPosFunctions": [
+          "getBlocksAround(class_2338, boolean)",
+          "getBlocksNextToEachOther(class_1937, class_2338, List<class_2248>)",
+          "getBlocksNextToEachOther(class_1937, class_2338, List<class_2248>, int)",
+          "getBlocksNextToEachOtherTag(class_1937, class_2338, List<class_6862<class_2248>>)",
+          "getBlocksNextToEachOtherTag(class_1937, class_2338, List<class_6862<class_2248>>, int)",
+          "getBlocksNextToEachOtherMaterial(class_1937, class_2338, List<class_3620>)",
+          "getBlocksNextToEachOtherMaterial(class_1937, class_2338, List<class_3620>, int)",
+          "getSurfaceBlockPos(class_3218, int, int)",
+          "getSurfaceBlockPos(class_3218, int, int, boolean)",
+          "getCenterNearbyVillage(class_3218)",
+          "getNearbyVillage(class_3218, class_2338)",
+          "getNearbyVillage(class_3218, class_2338, String)",
+          "getCenterNearbyBiome(class_3218, String)",
+          "getNearbyBiome(class_3218, class_2338, String)",
+          "getCenterNearbyStructure(class_3218, class_6885<class_3195>)",
+          "getNearbyStructure(class_3218, class_6885<class_3195>, class_2338)",
+          "getNearbyStructure(class_3218, class_6885<class_3195>, class_2338, int)",
+          "getBlockPlayerIsLookingAt(class_1937, class_1657, boolean)",
+          "getRandomCoordinatesInNearestUngeneratedChunk(class_3218, class_2338)",
+          "isOnSurface(class_1937, class_2338)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CommandFunctions": [
+          "getRawCommandOutput(class_3218, class_243, String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CompareBlockFunctions": [
+          "blockIsInRegistryHolder(class_2248, class_6862<class_2248>)",
+          "isStoneBlock(class_2248)",
+          "isNetherStoneBlock(class_2248)",
+          "isTreeLeaf(class_2248, boolean)",
+          "isTreeLeaf(class_2248)",
+          "isTreeLog(class_2248)",
+          "isSapling(class_2248)",
+          "isDirtBlock(class_2248)",
+          "isPortalBlock(class_2248)",
+          "isAirOrOverwritableBlock(class_2248)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CompareItemFunctions": [
+          "itemIsInRegistryHolder(class_1792, class_6862<class_1792>)",
+          "isSapling(class_1792)",
+          "isSapling(class_1799)",
+          "isLog(class_1792)",
+          "isLog(class_1799)",
+          "isPlank(class_1792)",
+          "isPlank(class_1799)",
+          "isChest(class_1792)",
+          "isChest(class_1799)",
+          "isStone(class_1792)",
+          "isStone(class_1799)",
+          "isSlab(class_1792)",
+          "isSlab(class_1799)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ConfigFunctions": [
+          "getRawConfigValues(String)",
+          "getRawConfigValues(String, boolean)",
+          "getDictValues(String)",
+          "getDictValues(String, boolean)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CreativeModeTabFunctions": [
+          "getCreativeModeTabResourceKey(String)",
+          "getCreativeModeTabResourceKey(String, String)",
+          "getCreativeModeTabResourceKey(class_2960)"
+        ],
+        "com.natamus.collective_common_fabric.functions.CropFunctions": [
+          "applyBonemeal(class_1799, class_1937, class_2338, class_1657)",
+          "growCrop(class_1937, class_1657, class_2680, class_2338)",
+          "growCrop(class_1937, class_1657, class_2680, class_2338, class_1268)",
+          "growCrop(class_1937, class_1657, class_2680, class_2338, class_1799)",
+          "growCactus(class_1937, class_2338)",
+          "growSugarcane(class_1937, class_2338)",
+          "growVine(class_1937, class_2338)"
+        ],
+        "com.natamus.collective_common_fabric.functions.DataFunctions": [
+          "getCurrentMinecraftVersion()",
+          "getGameDirectory()",
+          "getGameDirectoryPath()",
+          "getModDirectory()",
+          "getModDirectoryPath()",
+          "getConfigDirectory()",
+          "getConfigDirectoryPath()",
+          "getInstalledModJars()",
+          "setBit(byte, int, boolean)",
+          "getDataInputStream(MinecraftServer, String, String, String, String)",
+          "getDataInputStream(MinecraftServer, String, String, String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.DateFunctions": [
+          "ymdhisToReadable(String)",
+          "getNowInYmdhis()"
+        ],
+        "com.natamus.collective_common_fabric.functions.DimensionFunctions": [
+          "getSimpleDimensionString(class_1937)"
+        ],
+        "com.natamus.collective_common_fabric.functions.EntityFunctions": [
+          "isHorse(class_1297)",
+          "isModdedVillager(String)",
+          "isModdedVillager(class_1297)",
+          "isMilkable(class_1297)",
+          "getEntityString(class_1297)",
+          "nameEntity(class_1297, String)",
+          "addPotionEffect(class_1297, class_1291, Integer)",
+          "addPotionEffect(class_1297, class_6880<class_1291>, Integer)",
+          "removePotionEffect(class_1297, class_1291)",
+          "removePotionEffect(class_1297, class_6880<class_1291>)",
+          "chargeEntity(class_1297)",
+          "setShulkerVariant(class_1606, class_1767)",
+          "setPaintingVariant(class_1534, class_6880<class_1535>)",
+          "setRabbitVariant(class_1463, class_7990)",
+          "setEntityFlag(class_1297, int, boolean)",
+          "getAbstractHorseEntityFlagResult(class_1496, int)",
+          "resetMerchantOffers(class_1646)",
+          "resetMerchantOffers(class_3989)",
+          "resetMerchantOffer(class_1914)",
+          "forceSetHealth(class_1309, float)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ExperienceFunctions": [
+          "canConsumeXp(class_1657, int)",
+          "consumeXp(class_1657, int)",
+          "getPlayerXP(class_1657)",
+          "addPlayerXP(class_1657, int)",
+          "getLevelForExperience(int)",
+          "xpBarCap(int)",
+          "getExperienceForLevel(int)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ExplosionFunctions": [
+          "getAffectedBlockPositions(class_1927)",
+          "getAffectedBlockPositions(class_9892)",
+          "clearExplosion(class_1927)",
+          "clearExplosion(class_9892)"
+        ],
+        "com.natamus.collective_common_fabric.functions.FABFunctions": [
+          "getBlockEntitiesAroundPosition(class_1937, class_2338, Integer)",
+          "getAllTaggedTileEntityPositionsNearbyEntity(class_6862<class_2248>, Integer, class_1937, class_1297)",
+          "getAllTaggedTileEntityPositionsNearbyPosition(class_6862<class_2248>, Integer, class_1937, class_2338)",
+          "getAllTileEntityPositionsNearbyEntity(class_2591<?>, Integer, class_1937, class_1297)",
+          "getAllTileEntityPositionsNearbyPosition(class_2591<?>, Integer, class_1937, class_2338)",
+          "getRequestedBlockAroundEntitySpawn(class_2248, Integer, Double, class_1937, class_1297)",
+          "updatePlacedBlock(class_2248, class_2338, class_1937)"
+        ],
+        "com.natamus.collective_common_fabric.functions.FeatureFunctions": [
+          "placeBonusChest(class_1937, class_2338)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GameSettingsFunctions": [
+          "setGamma(class_315, double)",
+          "getGamma(class_315)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GearFunctions": [
+          "setPlayerGearFromGearString(class_1657, String)",
+          "setPlayerGearFromGearString(class_1657, String, boolean)",
+          "setInventoryFromGearString(class_1937, class_1661, String)",
+          "setEquipmentSlot(class_1661, class_1304, class_1799)",
+          "getEntityEquipment(class_1657)",
+          "getEntityEquipment(class_1661)",
+          "getGearStringFromPlayer(class_1657)",
+          "getGearStringFromPlayer(class_1657, boolean)",
+          "getPlayerGearStringFromHashMap(class_1937, HashMap<String, class_1799>)",
+          "getHashMapFromGearString(class_1937, String)",
+          "getItemStackListFromGearString(class_1937, String)",
+          "getEffectsFromGearString(class_1657, String)",
+          "getEffectsFromGearString(class_1937, String)",
+          "getEffectsFromGearString(class_2378<class_1291>, String)",
+          "areTwoGearStringsEqual(class_1937, String, String)",
+          "sortGearString(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.GUIFunctions": [
+          "shouldHideGUI()"
+        ],
+        "com.natamus.collective_common_fabric.functions.HashMapFunctions": [
+          "computeIfAbsent(Map<K, V>, K, Function<? super K, ? extends V>)"
+        ],
+        "com.natamus.collective_common_fabric.functions.HeadFunctions": [
+          "getNewPlayerHead(class_3218, String, Integer)",
+          "getNewPlayerHead(class_3218, String, String, Integer)",
+          "getNewPlayerHead(GameProfile, Integer)",
+          "getNewPlayerHead(GameProfile, String, Integer)",
+          "getNewTexturedHead(String, String, String, Integer)",
+          "getNewTexturedHead(String, String, String, String, Integer)",
+          "getNewTexturedHead(String, String, UUID, Integer)",
+          "getNewTexturedHead(String, String, UUID, String, Integer)",
+          "getTexturedHeadGameProfile(String, String, String)",
+          "getTexturedHeadGameProfile(String, String, UUID)",
+          "getTexturedHeadResolvableProfile(String, String, String)",
+          "getTexturedHeadResolvableProfile(String, String, UUID)",
+          "getGameProfileFromPlayerName(class_3218, String)",
+          "hasStandardHead(String)"
+        ],
+        "com.natamus.collective_common_fabric.functions.ItemFunctions": [
+          "generateEntityDropsFromLootTable(class_1937)",
+          "shrinkGiveOrDropItemStack(class_1657, class_1268, class_1799, class_1799)",
+          "giveOrDropItemStack(class_1657, class_1799)",
+          "itemHurtBreakAndEvent(class_1799, class_3222, class_1268, int)",
+          "isStoneTypeItem(class_1792)",
+          "itemToReadableString(class_1792, int)",
+          "itemToReadableString(class_1792)",
+          "getNBTStringFromItemStack(class_1937, class_1799)",
+          "getNBTStringFromItemStack(class_1937, class_1799, boolean)",
+          "setItemCategory(class_1792, class_1761)",
+          "getUseOnContext(class_1657, class_1268, class_3965)",
+          "getUseOnContext(class_1657, class_1268, class_2338, class_2350)",
+          "getUseOnContext(class_1937, class_1657, class_1268, class_1799, class_2338, class_2350)",
+          "getUseOnContext(class_1937, class_1657, class_1268, class_1799, class_3965)"
+        ],
+        "com.natamus.collective_common_fabric.functions.JsonFunctions": [
+          "JsonStringToHashMap(String)",
+          "HashMapToJsonString(HashMap<String, String>)",
+          "getStringListFromJsonFile(String, String, String)",
+          "getJsonElementFromFile(String, String)",
+          "jsonArrayToList(JsonArray)"
+        ],
+        "com.natamus.collective_common_fabric.functions.KeyMappingFunctions": [
+          "getKey(class_304)"
+        ],
+        "com.natamus.collective_common_fabric.functions.MenuFunctions": [
+          "getTraderFromMerchantMenu(class_1728)"
+        ],
+        "com.natamus.collective_common_fabric.functions.MessageFunctions": [
+          "sendMessage(class_2168, class_5250)",
+          "sendMessage(class_1657, class_5250)",
+          "sendMessage(class_2168, String, class_124)",
+          "sendMessage(class_1657, String, class_124)",
+          "sendMessage(class_2168, String, class_124, boolean)",
+          "sendMessage(class_1657, String, class_124, boolean)",
+          "sendMessage(class_2168, String, class_124, String)",
+          "sendMessage(class_1657, String, class_124, String)",
+          "sendMessage(class_2168, String, class_124, boolean, String)",
+          "sendMessage(class_2168, class_5250, boolean)",
+          "sendMessage(class_1657, String, class_124, boolean, String)",
+          "sendMessage(class_1657, class_5250, boolean)",
+          "broadcastMessage(class_1937, String, class_124)",
+          "broadcastMessage(class_1937, class_5250)",
+          "sendMessageToPlayersAround(class_1937, class_2338, int, String, class_124)",
+          "sendMessageToPlayersAround(class_1937, class_2338, int, class_5250)"
+        ]
+      },
+      "sampleCount": 363,
+      "truncated": true
+    },
+    "8.9": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "8.4": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "7.89": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "7.54": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "7.30": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "7.7": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "6.66": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 500,
+  "methodCount": 1832,
+  "truncated": true
+}

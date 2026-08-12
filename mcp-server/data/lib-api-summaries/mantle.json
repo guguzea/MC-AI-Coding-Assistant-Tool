@@ -1,0 +1,3317 @@
+{
+  "slug": "mantle",
+  "modId": "mantle",
+  "id": "authored/lib-mantle",
+  "role": "author_shared",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "mantle"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:06.229Z",
+  "versions": {
+    "1.11.104": {
+      "packages": [],
+      "classes": [
+        "slimeknights.mantle.block.entity.DefaultRetexturedBlockEntity",
+        "slimeknights.mantle.block.entity.INameableMenuProvider",
+        "slimeknights.mantle.block.entity.InventoryBlockEntity",
+        "slimeknights.mantle.block.entity.IRetexturedBlockEntity",
+        "slimeknights.mantle.block.entity.MantleBlockEntity",
+        "slimeknights.mantle.block.entity.MantleHangingSignBlockEntity",
+        "slimeknights.mantle.block.entity.MantleSignBlockEntity",
+        "slimeknights.mantle.block.entity.NameableBlockEntity",
+        "slimeknights.mantle.block.fluid.BurningLiquidBlock",
+        "slimeknights.mantle.block.fluid.MobEffectLiquidBlock",
+        "slimeknights.mantle.block.GaugeBlock",
+        "slimeknights.mantle.block.IMultipartConnectedBlock",
+        "slimeknights.mantle.block.InventoryBlock",
+        "slimeknights.mantle.block.MantleCeilingHangingSignBlock",
+        "slimeknights.mantle.block.MantleStandingSignBlock",
+        "slimeknights.mantle.block.MantleWallHangingSignBlock",
+        "slimeknights.mantle.block.MantleWallSignBlock",
+        "slimeknights.mantle.block.RetexturedBlock",
+        "slimeknights.mantle.block.StrippableLogBlock",
+        "slimeknights.mantle.client.book.action.protocol.ActionProtocol",
+        "slimeknights.mantle.client.book.action.protocol.ProtocolGoToPage",
+        "slimeknights.mantle.client.book.action.StringActionProcessor",
+        "slimeknights.mantle.client.book.BookHelper",
+        "slimeknights.mantle.client.book.BookLoader",
+        "slimeknights.mantle.client.book.BookScreenOpener",
+        "slimeknights.mantle.client.book.data.AppearanceData",
+        "slimeknights.mantle.client.book.data.BookData",
+        "slimeknights.mantle.client.book.data.BookLoadException",
+        "slimeknights.mantle.client.book.data.content.ContentBlank",
+        "slimeknights.mantle.client.book.data.content.ContentBlockInteraction",
+        "slimeknights.mantle.client.book.data.content.ContentCrafting",
+        "slimeknights.mantle.client.book.data.content.ContentDummy",
+        "slimeknights.mantle.client.book.data.content.ContentError",
+        "slimeknights.mantle.client.book.data.content.ContentImage",
+        "slimeknights.mantle.client.book.data.content.ContentImageText",
+        "slimeknights.mantle.client.book.data.content.ContentIndex",
+        "slimeknights.mantle.client.book.data.content.ContentListing",
+        "slimeknights.mantle.client.book.data.content.ContentPadding",
+        "slimeknights.mantle.client.book.data.content.ContentPageIconList",
+        "slimeknights.mantle.client.book.data.content.ContentSectionList",
+        "slimeknights.mantle.client.book.data.content.ContentShowcase",
+        "slimeknights.mantle.client.book.data.content.ContentSmelting",
+        "slimeknights.mantle.client.book.data.content.ContentSmithing",
+        "slimeknights.mantle.client.book.data.content.ContentStructure",
+        "slimeknights.mantle.client.book.data.content.ContentTableOfContents",
+        "slimeknights.mantle.client.book.data.content.ContentText",
+        "slimeknights.mantle.client.book.data.content.ContentTextImage",
+        "slimeknights.mantle.client.book.data.content.ContentTextLeftImage",
+        "slimeknights.mantle.client.book.data.content.ContentTextRightImage",
+        "slimeknights.mantle.client.book.data.content.PageContent",
+        "slimeknights.mantle.client.book.data.deserializer.ConditionDeserializer",
+        "slimeknights.mantle.client.book.data.deserializer.HexStringDeserializer",
+        "slimeknights.mantle.client.book.data.element.DataLocation",
+        "slimeknights.mantle.client.book.data.element.IDataElement",
+        "slimeknights.mantle.client.book.data.element.ImageData",
+        "slimeknights.mantle.client.book.data.element.IngredientData",
+        "slimeknights.mantle.client.book.data.element.TextComponentData",
+        "slimeknights.mantle.client.book.data.element.TextData",
+        "slimeknights.mantle.client.book.data.IConditional",
+        "slimeknights.mantle.client.book.data.IDataItem",
+        "slimeknights.mantle.client.book.data.LinkedSectionData",
+        "slimeknights.mantle.client.book.data.PageData",
+        "slimeknights.mantle.client.book.data.SectionData",
+        "slimeknights.mantle.client.book.repository.BookRepository",
+        "slimeknights.mantle.client.book.repository.DummyRepository",
+        "slimeknights.mantle.client.book.repository.FileRepository",
+        "slimeknights.mantle.client.book.structure.level.FakeEntityGetter",
+        "slimeknights.mantle.client.book.structure.level.FakeLevelData",
+        "slimeknights.mantle.client.book.structure.level.TemplateChunk",
+        "slimeknights.mantle.client.book.structure.level.TemplateChunkSource",
+        "slimeknights.mantle.client.book.structure.level.TemplateLevel",
+        "slimeknights.mantle.client.book.structure.StructureInfo",
+        "slimeknights.mantle.client.book.transformer.BookTransformer",
+        "slimeknights.mantle.client.book.transformer.ContentGroupingSectionTransformer",
+        "slimeknights.mantle.client.book.transformer.ContentListingSectionTransformer",
+        "slimeknights.mantle.client.book.transformer.IndexTransformer",
+        "slimeknights.mantle.client.book.transformer.SectionTransformer",
+        "slimeknights.mantle.client.ClientEvents",
+        "slimeknights.mantle.client.ExtraHeartRenderHandler",
+        "slimeknights.mantle.client.model.builder.ColoredModelBuilder",
+        "slimeknights.mantle.client.model.builder.ConnectedModelBuilder",
+        "slimeknights.mantle.client.model.builder.FallbackModelBuilder",
+        "slimeknights.mantle.client.model.builder.MantleItemLayerBuilder",
+        "slimeknights.mantle.client.model.builder.NBTKeyModelBuilder",
+        "slimeknights.mantle.client.model.builder.RetexturedModelBuilder",
+        "slimeknights.mantle.client.model.connected.ConnectedModel",
+        "slimeknights.mantle.client.model.connected.ConnectedModelRegistry",
+        "slimeknights.mantle.client.model.FallbackModelLoader",
+        "slimeknights.mantle.client.model.NBTKeyModel",
+        "slimeknights.mantle.client.model.RetexturedModel",
+        "slimeknights.mantle.client.model.TextureColorHelper",
+        "slimeknights.mantle.client.model.util.ColoredBlockModel",
+        "slimeknights.mantle.client.model.util.DynamicBakedWrapper",
+        "slimeknights.mantle.client.model.util.ExtraTextureContext",
+        "slimeknights.mantle.client.model.util.GeometryContextWrapper",
+        "slimeknights.mantle.client.model.util.MantleItemLayerModel",
+        "slimeknights.mantle.client.model.util.ModelHelper",
+        "slimeknights.mantle.client.model.util.ModelTextureIteratable",
+        "slimeknights.mantle.client.model.util.SimpleBlockModel",
+        "slimeknights.mantle.client.render.ChannelFluids",
+        "slimeknights.mantle.client.render.FaucetFluid",
+        "slimeknights.mantle.client.render.FluidCuboid",
+        "slimeknights.mantle.client.render.FluidRenderer",
+        "slimeknights.mantle.client.render.InventoryBlockEntityRenderer",
+        "slimeknights.mantle.client.render.InventoryTileEntityRenderer",
+        "slimeknights.mantle.client.render.MantleRenderTypes",
+        "slimeknights.mantle.client.render.MantleShaders",
+        "slimeknights.mantle.client.render.RenderingHelper",
+        "slimeknights.mantle.client.render.RenderItem",
+        "slimeknights.mantle.client.ResourceColorManager",
+        "slimeknights.mantle.client.SafeClientAccess",
+        "slimeknights.mantle.client.screen.BackgroundContainerScreen",
+        "slimeknights.mantle.client.screen.book.ArrowButton",
+        "slimeknights.mantle.client.screen.book.BookScreen",
+        "slimeknights.mantle.client.screen.book.element.AnimationToggleElement",
+        "slimeknights.mantle.client.screen.book.element.ArrowElement",
+        "slimeknights.mantle.client.screen.book.element.BookElement",
+        "slimeknights.mantle.client.screen.book.element.ButtonElement",
+        "slimeknights.mantle.client.screen.book.element.ImageElement",
+        "slimeknights.mantle.client.screen.book.element.ItemElement",
+        "slimeknights.mantle.client.screen.book.element.ListingLeftElement",
+        "slimeknights.mantle.client.screen.book.element.PageIconLinkElement",
+        "slimeknights.mantle.client.screen.book.element.SelectionElement",
+        "slimeknights.mantle.client.screen.book.element.SizedBookElement",
+        "slimeknights.mantle.client.screen.book.element.SpriteElement",
+        "slimeknights.mantle.client.screen.book.element.StructureElement",
+        "slimeknights.mantle.client.screen.book.element.TextComponentElement",
+        "slimeknights.mantle.client.screen.book.element.TextElement",
+        "slimeknights.mantle.client.screen.book.element.TooltipElement",
+        "slimeknights.mantle.client.screen.book.ILayerRenderFunction",
+        "slimeknights.mantle.client.screen.book.TextComponentDataRenderer",
+        "slimeknights.mantle.client.screen.book.TextDataRenderer",
+        "slimeknights.mantle.client.screen.book.Textures",
+        "slimeknights.mantle.client.screen.ElementScreen",
+        "slimeknights.mantle.client.screen.ModuleScreen",
+        "slimeknights.mantle.client.screen.MultiModuleScreen",
+        "slimeknights.mantle.client.screen.ScalableElementScreen",
+        "slimeknights.mantle.client.screen.SliderWidget",
+        "slimeknights.mantle.client.screen.TabsWidget",
+        "slimeknights.mantle.client.screen.Widget",
+        "slimeknights.mantle.client.TooltipKey",
+        "slimeknights.mantle.command.argument.RegistryTagSource",
+        "slimeknights.mantle.command.argument.ResourceOrTagKeyArgument",
+        "slimeknights.mantle.command.argument.TagSource",
+        "slimeknights.mantle.command.argument.TagSourceArgument",
+        "slimeknights.mantle.command.client.BookCommand",
+        "slimeknights.mantle.command.client.ClearBookCacheCommand",
+        "slimeknights.mantle.command.client.ClientSourcesCommand",
+        "slimeknights.mantle.command.client.MantleClientCommand",
+        "slimeknights.mantle.command.DumpAllTagsCommand",
+        "slimeknights.mantle.command.DumpLootModifiers",
+        "slimeknights.mantle.command.DumpTagCommand",
+        "slimeknights.mantle.command.GeneratePackHelper",
+        "slimeknights.mantle.command.HarvestTiersCommand",
+        "slimeknights.mantle.command.HungerCommand",
+        "slimeknights.mantle.command.MantleCommand",
+        "slimeknights.mantle.command.RegistryArgument",
+        "slimeknights.mantle.command.RemoveDataCommand",
+        "slimeknights.mantle.command.RemoveRecipesCommand",
+        "slimeknights.mantle.command.SourcesCommand",
+        "slimeknights.mantle.command.TagPreferenceCommand",
+        "slimeknights.mantle.command.tags.ModifyTagCommand",
+        "slimeknights.mantle.command.TagsForCommand",
+        "slimeknights.mantle.command.ViewTagCommand",
+        "slimeknights.mantle.config.Config",
+        "slimeknights.mantle.data.BuiltinRegistryTagProvider",
+        "slimeknights.mantle.data.client.DeanimateTextureGenerator",
+        "slimeknights.mantle.data.client.GenericTextureGenerator",
+        "slimeknights.mantle.data.datamap.BlockStateDataMapLoader",
+        "slimeknights.mantle.data.datamap.BlockStateDataMapProvider",
+        "slimeknights.mantle.data.datamap.RegistryDataMapLoader",
+        "slimeknights.mantle.data.datamap.RegistryDataMapProvider",
+        "slimeknights.mantle.data.datamap.StateVariantStringBuilder",
+        "slimeknights.mantle.data.GenericDataProvider",
+        "slimeknights.mantle.data.gson.ConditionSerializer",
+        "slimeknights.mantle.data.gson.GenericRegisteredSerializer",
+        "slimeknights.mantle.data.gson.ResourceLocationSerializer",
+        "slimeknights.mantle.data.gson.TagKeySerializer",
+        "slimeknights.mantle.data.JsonCodec",
+        "slimeknights.mantle.data.listener.IEarlyReloadListener",
+        "slimeknights.mantle.data.listener.IEarlySafeManagerReloadListener",
+        "slimeknights.mantle.data.listener.ISafeManagerReloadListener",
+        "slimeknights.mantle.data.listener.MergingJsonDataLoader",
+        "slimeknights.mantle.data.listener.ResourceValidator",
+        "slimeknights.mantle.data.loadable.array.ArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.BooleanArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.ByteArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.CharArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.DoubleArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.FloatArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.IntArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.LongArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.ObjectArrayLoadable",
+        "slimeknights.mantle.data.loadable.array.ShortArrayLoadable",
+        "slimeknights.mantle.data.loadable.common.BaseRegistryLoadable",
+        "slimeknights.mantle.data.loadable.common.BlockStateLoadable",
+        "slimeknights.mantle.data.loadable.common.CodecLoadable",
+        "slimeknights.mantle.data.loadable.common.ColorLoadable",
+        "slimeknights.mantle.data.loadable.common.DisplayContextLoadable",
+        "slimeknights.mantle.data.loadable.common.FluidStackLoadable",
+        "slimeknights.mantle.data.loadable.common.GsonLoadable",
+        "slimeknights.mantle.data.loadable.common.IngredientLoadable",
+        "slimeknights.mantle.data.loadable.common.ItemStackLoadable",
+        "slimeknights.mantle.data.loadable.common.LazyRegistryLoadable",
+        "slimeknights.mantle.data.loadable.common.NBTLoadable",
+        "slimeknights.mantle.data.loadable.common.RegistryLoadable",
+        "slimeknights.mantle.data.loadable.common.Vector3fLoadable",
+        "slimeknights.mantle.data.loadable.ErrorFactory",
+        "slimeknights.mantle.data.loadable.field.AlwaysPresentLoadableField",
+        "slimeknights.mantle.data.loadable.field.AlwaysPresentRecordField",
+        "slimeknights.mantle.data.loadable.field.CatchErrorsField",
+        "slimeknights.mantle.data.loadable.field.ConstantField",
+        "slimeknights.mantle.data.loadable.field.ContextField",
+        "slimeknights.mantle.data.loadable.field.ContextKey",
+        "slimeknights.mantle.data.loadable.field.DefaultingField",
+        "slimeknights.mantle.data.loadable.field.DirectField",
+        "slimeknights.mantle.data.loadable.field.LegacyField",
+        "slimeknights.mantle.data.loadable.field.LoadableField",
+        "slimeknights.mantle.data.loadable.field.NullableField",
+        "slimeknights.mantle.data.loadable.field.RecordField",
+        "slimeknights.mantle.data.loadable.field.RequiredField",
+        "slimeknights.mantle.data.loadable.field.TryDirectField",
+        "slimeknights.mantle.data.loadable.field.UnsyncedField",
+        "slimeknights.mantle.data.loadable.IAmLoadable",
+        "slimeknights.mantle.data.loadable.LegacyLoadable",
+        "slimeknights.mantle.data.loadable.Loadable",
+        "slimeknights.mantle.data.loadable.LoadableCodec",
+        "slimeknights.mantle.data.loadable.Loadables",
+        "slimeknights.mantle.data.loadable.mapping.AnyCollectionLoadable",
+        "slimeknights.mantle.data.loadable.mapping.CollectionLoadable",
+        "slimeknights.mantle.data.loadable.mapping.CompactLoadable",
+        "slimeknights.mantle.data.loadable.mapping.ConditionalLoadable",
+        "slimeknights.mantle.data.loadable.mapping.EitherLoadable",
+        "slimeknights.mantle.data.loadable.mapping.EnumMapLoadable",
+        "slimeknights.mantle.data.loadable.mapping.EnumSetLoadable",
+        "slimeknights.mantle.data.loadable.mapping.ListLoadable",
+        "slimeknights.mantle.data.loadable.mapping.MapLoadable",
+        "slimeknights.mantle.data.loadable.mapping.MappedLoadable",
+        "slimeknights.mantle.data.loadable.mapping.SetLoadable",
+        "slimeknights.mantle.data.loadable.mapping.SimpleRecordLoadable",
+        "slimeknights.mantle.data.loadable.primitive.BooleanLoadable",
+        "slimeknights.mantle.data.loadable.primitive.CharacterLoadable",
+        "slimeknights.mantle.data.loadable.primitive.DoubleLoadable",
+        "slimeknights.mantle.data.loadable.primitive.EnumLoadable",
+        "slimeknights.mantle.data.loadable.primitive.FloatLoadable",
+        "slimeknights.mantle.data.loadable.primitive.IntLoadable",
+        "slimeknights.mantle.data.loadable.primitive.LongLoadable",
+        "slimeknights.mantle.data.loadable.primitive.ResourceLocationLoadable",
+        "slimeknights.mantle.data.loadable.primitive.StringLoadable",
+        "slimeknights.mantle.data.loadable.record.RecordLoadable",
+        "slimeknights.mantle.data.loadable.record.SingletonLoader",
+        "slimeknights.mantle.data.loadable.Streamable",
+        "slimeknights.mantle.data.MantleCodecs",
+        "slimeknights.mantle.data.predicate.block.BlockPredicate",
+        "slimeknights.mantle.data.predicate.block.BlockPropertiesPredicate",
+        "slimeknights.mantle.data.predicate.damage.DamageSourcePredicate",
+        "slimeknights.mantle.data.predicate.damage.DamageTypePredicate",
+        "slimeknights.mantle.data.predicate.damage.SourceAttackerPredicate",
+        "slimeknights.mantle.data.predicate.damage.SourceMessagePredicate",
+        "slimeknights.mantle.data.predicate.entity.BlockAtEntityPredicate",
+        "slimeknights.mantle.data.predicate.entity.HasEnchantmentEntityPredicate",
+        "slimeknights.mantle.data.predicate.entity.HasMobEffectPredicate",
+        "slimeknights.mantle.data.predicate.entity.LivingEntityPredicate",
+        "slimeknights.mantle.data.predicate.entity.MobTypePredicate",
+        "slimeknights.mantle.data.predicate.FallbackPredicateRegistry",
+        "slimeknights.mantle.data.predicate.fluid.FluidPredicate",
+        "slimeknights.mantle.data.predicate.fluid.FluidTypePredicate",
+        "slimeknights.mantle.data.predicate.IJsonPredicate",
+        "slimeknights.mantle.data.predicate.item.ItemPredicate",
+        "slimeknights.mantle.data.predicate.PredicateRegistry",
+        "slimeknights.mantle.data.predicate.RegistryPredicateRegistry",
+        "slimeknights.mantle.data.predicate.TagPredicateRegistry",
+        "slimeknights.mantle.data.registry.AbstractNamedComponentRegistry",
+        "slimeknights.mantle.data.registry.DefaultingLoaderRegistry",
+        "slimeknights.mantle.data.registry.GenericLoaderRegistry",
+        "slimeknights.mantle.data.registry.IdAwareComponentRegistry",
+        "slimeknights.mantle.data.registry.NamedComponentRegistry",
+        "slimeknights.mantle.datagen.MantleBlockTagProvider",
+        "slimeknights.mantle.datagen.MantleFluidTagProvider",
+        "slimeknights.mantle.datagen.MantleFluidTooltipProvider",
+        "slimeknights.mantle.datagen.MantleFluidTransferProvider",
+        "slimeknights.mantle.datagen.MantleMenuTagProvider",
+        "slimeknights.mantle.datagen.MantleTags",
+        "slimeknights.mantle.datagen.MantleValues",
+        "slimeknights.mantle.fluid.FluidTransferHelper",
+        "slimeknights.mantle.fluid.InvertedFluid",
+        "slimeknights.mantle.fluid.InvertedFluidType",
+        "slimeknights.mantle.fluid.texture.AbstractFluidTextureProvider",
+        "slimeknights.mantle.fluid.texture.ClientInvertedFluidType",
+        "slimeknights.mantle.fluid.texture.ClientTextureFluidType",
+        "slimeknights.mantle.fluid.texture.FluidTexture",
+        "slimeknights.mantle.fluid.texture.FluidTextureCameraProvider",
+        "slimeknights.mantle.fluid.texture.FluidTextureManager",
+        "slimeknights.mantle.fluid.TextureFluidType",
+        "slimeknights.mantle.fluid.tooltip.AbstractFluidTooltipProvider",
+        "slimeknights.mantle.fluid.tooltip.FluidTooltipHandler",
+        "slimeknights.mantle.fluid.tooltip.FluidUnit",
+        "slimeknights.mantle.fluid.tooltip.FluidUnitList",
+        "slimeknights.mantle.fluid.transfer.AbstractFluidContainerTransferProvider",
+        "slimeknights.mantle.fluid.transfer.EmptyFluidContainerTransfer",
+        "slimeknights.mantle.fluid.transfer.EmptyFluidWithNBTTransfer",
+        "slimeknights.mantle.fluid.transfer.EmptyPotionTransfer",
+        "slimeknights.mantle.fluid.transfer.FillFluidContainerTransfer",
+        "slimeknights.mantle.fluid.transfer.FillFluidWithNBTTransfer",
+        "slimeknights.mantle.fluid.transfer.FluidContainerTransferManager",
+        "slimeknights.mantle.fluid.transfer.FluidContainerTransferPacket",
+        "slimeknights.mantle.fluid.transfer.IFluidContainerTransfer",
+        "slimeknights.mantle.fluid.UnplaceableFluid",
+        "slimeknights.mantle.inventory.BaseContainerMenu",
+        "slimeknights.mantle.inventory.CustomResultSlot",
+        "slimeknights.mantle.inventory.EmptyItemHandler",
+        "slimeknights.mantle.inventory.IContainerCraftingCustom",
+        "slimeknights.mantle.inventory.MultiModuleContainerMenu",
+        "slimeknights.mantle.inventory.OutSlot",
+        "slimeknights.mantle.inventory.RestrictedItemSlot",
+        "slimeknights.mantle.inventory.SingleItemHandler",
+        "slimeknights.mantle.inventory.SmartItemHandlerSlot",
+        "slimeknights.mantle.inventory.WrapperSlot",
+        "slimeknights.mantle.item.AbstractBookItem",
+        "slimeknights.mantle.item.ArmorTooltipItem",
+        "slimeknights.mantle.item.BlockTooltipItem",
+        "slimeknights.mantle.item.BurnableBlockItem",
+        "slimeknights.mantle.item.BurnableHangingSignItem",
+        "slimeknights.mantle.item.BurnableSignItem",
+        "slimeknights.mantle.item.BurnableTallBlockItem",
+        "slimeknights.mantle.item.ConstantFluidContainerWrapper",
+        "slimeknights.mantle.item.ContainerFoodItem",
+        "slimeknights.mantle.item.EdibleItem",
+        "slimeknights.mantle.item.ILecternBookItem",
+        "slimeknights.mantle.item.LecternBookItem",
+        "slimeknights.mantle.item.TooltipItem",
+        "slimeknights.mantle.loot.AbstractLootModifierBuilder",
+        "slimeknights.mantle.loot.AbstractLootTableInjectionProvider",
+        "slimeknights.mantle.loot.AddEntryLootModifier",
+        "slimeknights.mantle.loot.condition.BlockTagLootCondition",
+        "slimeknights.mantle.loot.condition.ContainsItemModifierLootCondition",
+        "slimeknights.mantle.loot.condition.EmptyModifierLootCondition",
+        "slimeknights.mantle.loot.condition.HasLootContextSetCondition",
+        "slimeknights.mantle.loot.condition.ILootModifierCondition",
+        "slimeknights.mantle.loot.condition.InvertedModifierLootCondition",
+        "slimeknights.mantle.loot.entry.TagPreferenceLootEntry",
+        "slimeknights.mantle.loot.function.RetexturedLootFunction",
+        "slimeknights.mantle.loot.function.SetFluidLootFunction",
+        "slimeknights.mantle.loot.LootTableInjection",
+        "slimeknights.mantle.loot.LootTableInjector",
+        "slimeknights.mantle.loot.MantleLoot",
+        "slimeknights.mantle.loot.ReplaceItemLootModifier",
+        "slimeknights.mantle.Mantle",
+        "slimeknights.mantle.MantleEvents",
+        "slimeknights.mantle.network.MantleNetwork",
+        "slimeknights.mantle.network.NetworkWrapper",
+        "slimeknights.mantle.network.packet.DropLecternBookPacket",
+        "slimeknights.mantle.network.packet.ISimplePacket",
+        "slimeknights.mantle.network.packet.IThreadsafePacket",
+        "slimeknights.mantle.network.packet.OpenLecternBookPacket",
+        "slimeknights.mantle.network.packet.OpenNamedBookPacket",
+        "slimeknights.mantle.network.packet.SwingArmPacket",
+        "slimeknights.mantle.network.packet.UpdateHeldPagePacket",
+        "slimeknights.mantle.network.packet.UpdateInventoryPagePacket",
+        "slimeknights.mantle.network.packet.UpdateLecternPagePacket",
+        "slimeknights.mantle.plugin.jei.entity.EntityIngredientHelper",
+        "slimeknights.mantle.plugin.jei.entity.EntityIngredientRenderer",
+        "slimeknights.mantle.plugin.jei.JEIPlugin",
+        "slimeknights.mantle.plugin.jei.MantleJEIConstants",
+        "slimeknights.mantle.plugin.jei.RetexturableRecipeExtension",
+        "slimeknights.mantle.recipe.condition.TagCombinationCondition",
+        "slimeknights.mantle.recipe.condition.TagCondition",
+        "slimeknights.mantle.recipe.condition.TagEmptyCondition",
+        "slimeknights.mantle.recipe.condition.TagFilledCondition",
+        "slimeknights.mantle.recipe.container.IEmptyContainer",
+        "slimeknights.mantle.recipe.container.InventorySlotWrapper",
+        "slimeknights.mantle.recipe.container.IRecipeContainer",
+        "slimeknights.mantle.recipe.container.ISingleStackContainer",
+        "slimeknights.mantle.recipe.cooking.BlastingResultRecipe",
+        "slimeknights.mantle.recipe.cooking.CampfireResultRecipe",
+        "slimeknights.mantle.recipe.cooking.CookingRecipeBuilder",
+        "slimeknights.mantle.recipe.cooking.CookingResultRecipe",
+        "slimeknights.mantle.recipe.cooking.SmeltingResultRecipe",
+        "slimeknights.mantle.recipe.cooking.SmokingResultRecipe",
+        "slimeknights.mantle.recipe.crafting.ShapedFallbackRecipe",
+        "slimeknights.mantle.recipe.crafting.ShapedFallbackRecipeBuilder",
+        "slimeknights.mantle.recipe.crafting.ShapedRetexturedRecipe",
+        "slimeknights.mantle.recipe.crafting.ShapedRetexturedRecipeBuilder",
+        "slimeknights.mantle.recipe.data.AbstractRecipeBuilder",
+        "slimeknights.mantle.recipe.data.ConsumerWrapperBuilder",
+        "slimeknights.mantle.recipe.data.FluidNameIngredient",
+        "slimeknights.mantle.recipe.data.ICommonRecipeHelper",
+        "slimeknights.mantle.recipe.data.IRecipeHelper",
+        "slimeknights.mantle.recipe.data.ItemNameIngredient",
+        "slimeknights.mantle.recipe.data.ItemNameOutput",
+        "slimeknights.mantle.recipe.data.NBTNameIngredient",
+        "slimeknights.mantle.recipe.helper.FluidOutput",
+        "slimeknights.mantle.recipe.helper.ItemOutput",
+        "slimeknights.mantle.recipe.helper.LoadableIngredientSerializer",
+        "slimeknights.mantle.recipe.helper.LoadableRecipeSerializer",
+        "slimeknights.mantle.recipe.helper.LoggingRecipeSerializer",
+        "slimeknights.mantle.recipe.helper.RecipeHelper",
+        "slimeknights.mantle.recipe.helper.SimpleFinishedRecipe",
+        "slimeknights.mantle.recipe.helper.SimpleRecipeSerializer",
+        "slimeknights.mantle.recipe.helper.TagEmptyCondition",
+        "slimeknights.mantle.recipe.helper.TagPreference",
+        "slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer",
+        "slimeknights.mantle.recipe.ICommonRecipe",
+        "slimeknights.mantle.recipe.ICustomOutputRecipe",
+        "slimeknights.mantle.recipe.IMultiRecipe",
+        "slimeknights.mantle.recipe.ingredient.EntityIngredient",
+        "slimeknights.mantle.recipe.ingredient.FluidContainerIngredient",
+        "slimeknights.mantle.recipe.ingredient.FluidIngredient",
+        "slimeknights.mantle.recipe.ingredient.ItemIngredient",
+        "slimeknights.mantle.recipe.ingredient.PotionDisplayIngredient",
+        "slimeknights.mantle.recipe.ingredient.PotionIngredient",
+        "slimeknights.mantle.recipe.ingredient.SizedIngredient",
+        "slimeknights.mantle.recipe.MantleRecipes",
+        "slimeknights.mantle.recipe.MantleRecipeSerializers",
+        "slimeknights.mantle.registration.adapter.BlockEntityTypeRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.BlockRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.ContainerTypeRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.EntityTypeRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.EnumRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.FluidRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.ItemRegistryAdapter",
+        "slimeknights.mantle.registration.adapter.RegistryAdapter",
+        "slimeknights.mantle.registration.deferred.ArgumentTypeDeferredRegister",
+        "slimeknights.mantle.registration.deferred.AttributeDeferredRegister",
+        "slimeknights.mantle.registration.deferred.BlockDeferredRegister",
+        "slimeknights.mantle.registration.deferred.BlockEntityTypeDeferredRegister",
+        "slimeknights.mantle.registration.deferred.DeferredRegisterWrapper",
+        "slimeknights.mantle.registration.deferred.EntityTypeDeferredRegister",
+        "slimeknights.mantle.registration.deferred.EnumDeferredRegister",
+        "slimeknights.mantle.registration.deferred.FluidDeferredRegister",
+        "slimeknights.mantle.registration.deferred.ItemDeferredRegister",
+        "slimeknights.mantle.registration.deferred.MenuTypeDeferredRegister",
+        "slimeknights.mantle.registration.deferred.PotionDeferredRegister",
+        "slimeknights.mantle.registration.deferred.SynchronizedDeferredRegister",
+        "slimeknights.mantle.registration.DelayedSupplier",
+        "slimeknights.mantle.registration.FluidBuilder"
+      ],
+      "methods": {
+        "slimeknights.mantle.block.entity.DefaultRetexturedBlockEntity": [
+          "getModelData()",
+          "getTextureName()",
+          "updateTexture(String)",
+          "shouldSyncOnUpdate()",
+          "saveSynced(CompoundTag)",
+          "m_142466_(CompoundTag)",
+          "getTexture()"
+        ],
+        "slimeknights.mantle.block.entity.INameableMenuProvider": [
+          "m_7755_()",
+          "m_5446_()"
+        ],
+        "slimeknights.mantle.block.entity.InventoryBlockEntity": [
+          "getCapability(Capability<T>, Direction)",
+          "invalidateCaps()",
+          "m_8020_(int)",
+          "isStackInSlot(int)",
+          "resize(int)",
+          "m_6643_()",
+          "m_6893_()",
+          "m_6836_(int, ItemStack)",
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_7013_(int, ItemStack)",
+          "m_6211_()",
+          "m_6542_(Player)",
+          "m_5856_(Player)",
+          "m_5785_(Player)",
+          "m_142466_(CompoundTag)",
+          "saveSynced(CompoundTag)",
+          "m_183515_(CompoundTag)",
+          "writeInventoryToNBT(CompoundTag)",
+          "readInventoryFromNBT(CompoundTag)"
+        ],
+        "slimeknights.mantle.block.entity.IRetexturedBlockEntity": [
+          "getTextureName()",
+          "getTexture()",
+          "updateTexture(String)"
+        ],
+        "slimeknights.mantle.block.entity.MantleBlockEntity": [
+          "isClient()",
+          "setChangedFast()",
+          "shouldSyncOnUpdate()",
+          "getUpdatePacket()",
+          "saveSynced(CompoundTag)",
+          "m_5995_()",
+          "m_183515_(CompoundTag)"
+        ],
+        "slimeknights.mantle.block.entity.MantleHangingSignBlockEntity": [
+          "m_58903_()",
+          "registerSignBlock(Supplier<? extends Block>)",
+          "buildSignBlocks()"
+        ],
+        "slimeknights.mantle.block.entity.MantleSignBlockEntity": [
+          "m_58903_()",
+          "registerSignBlock(Supplier<? extends Block>)",
+          "buildSignBlocks()"
+        ],
+        "slimeknights.mantle.block.entity.NameableBlockEntity": [
+          "m_142466_(CompoundTag)",
+          "saveSynced(CompoundTag)",
+          "getDefaultName()",
+          "m_7770_()",
+          "setCustomName(Component)"
+        ],
+        "slimeknights.mantle.block.fluid.BurningLiquidBlock": [
+          "m_7892_(BlockState, Level, BlockPos, Entity)",
+          "createBurning(MapColor, int, int, float)"
+        ],
+        "slimeknights.mantle.block.fluid.MobEffectLiquidBlock": [
+          "m_7892_(BlockState, Level, BlockPos, Entity)",
+          "createEffect(MapColor, int, Supplier<MobEffectInstance>)"
+        ],
+        "slimeknights.mantle.block.GaugeBlock": [
+          "formatCapacity(int)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)",
+          "m_5940_(BlockState, BlockGetter, BlockPos, CollisionContext)",
+          "m_7898_(BlockState, LevelReader, BlockPos)",
+          "m_5573_(BlockPlaceContext)",
+          "m_7417_(BlockState, Direction, BlockState, LevelAccessor, BlockPos, BlockPos)",
+          "m_6843_(BlockState, Rotation)",
+          "m_6943_(BlockState, Mirror)",
+          "m_7926_(Builder<Block, BlockState>)"
+        ],
+        "slimeknights.mantle.block.IMultipartConnectedBlock": [
+          "connects(BlockState, BlockState)",
+          "getConnectionUpdate(BlockState, Direction, BlockState)"
+        ],
+        "slimeknights.mantle.block.InventoryBlock": [
+          "openGui(Player, Level, BlockPos)",
+          "m_6227_(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)",
+          "m_6402_(Level, BlockPos, BlockState, LivingEntity, ItemStack)",
+          "m_7246_(BlockState, Level, BlockPos)",
+          "m_6810_(BlockState, Level, BlockPos, BlockState, boolean)",
+          "dropInventoryItems(BlockState, Level, BlockPos, IItemHandler)",
+          "dropInventoryItems(Level, BlockPos, IItemHandler)",
+          "m_8133_(BlockState, Level, BlockPos, int, int)"
+        ],
+        "slimeknights.mantle.block.MantleCeilingHangingSignBlock": [
+          "m_142194_(BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.block.MantleStandingSignBlock": [
+          "m_142194_(BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.block.MantleWallHangingSignBlock": [
+          "m_142194_(BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.block.MantleWallSignBlock": [
+          "m_142194_(BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.block.RetexturedBlock": [
+          "m_6402_(Level, BlockPos, BlockState, LivingEntity, ItemStack)",
+          "getCloneItemStack(BlockState, HitResult, BlockGetter, BlockPos, Player)",
+          "m_5871_(ItemStack, BlockGetter, List<Component>, TooltipFlag)",
+          "updateTextureBlock(Level, BlockPos, ItemStack)",
+          "getPickBlock(BlockGetter, BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.block.StrippableLogBlock": [
+          "getToolModifiedState(BlockState, UseOnContext, ToolAction, boolean)"
+        ],
+        "slimeknights.mantle.client.book.action.protocol.ActionProtocol": [
+          "processCommand(BookScreen, String)"
+        ],
+        "slimeknights.mantle.client.book.action.protocol.ProtocolGoToPage": [
+          "processCommand(BookScreen, String)"
+        ],
+        "slimeknights.mantle.client.book.action.StringActionProcessor": [
+          "registerProtocol(ResourceLocation, ActionProtocol)",
+          "process(String, BookScreen)"
+        ],
+        "slimeknights.mantle.client.book.BookHelper": [
+          "getCurrentSavedPage(ItemStack)",
+          "writeSavedPageToBook(ItemStack, String)"
+        ],
+        "slimeknights.mantle.client.book.BookLoader": [
+          "registerPageType(ResourceLocation, Class<? extends PageContent>)",
+          "getPageType(ResourceLocation)",
+          "registerBook(ResourceLocation, BookRepository...)",
+          "registerBook(ResourceLocation, boolean, boolean, BookRepository...)",
+          "getBook(ResourceLocation)",
+          "getRegisteredBooks()",
+          "updateSavedPage(Player, InteractionHand, String)",
+          "updateSavedPage(Player, int, String)",
+          "updateSavedPage(BlockPos, String)",
+          "getGson()",
+          "registerGsonTypeAdapter(Type, Object)",
+          "resetAllBooks()",
+          "m_6213_(ResourceManager)"
+        ],
+        "slimeknights.mantle.client.book.BookScreenOpener": [],
+        "slimeknights.mantle.client.book.data.AppearanceData": [
+          "getCoverTexture()",
+          "getBookTexture()",
+          "load()",
+          "setCoverTextColor(int)",
+          "getCoverTextColor()",
+          "setPageTint(int)",
+          "getPageTint()"
+        ],
+        "slimeknights.mantle.client.book.data.BookData": [
+          "reset()",
+          "load()",
+          "findSection(String)",
+          "findSection(String, BookScreen.AdvancementCache)",
+          "getFirstPageNumber(SectionData, BookScreen.AdvancementCache)",
+          "findPage(int, BookScreen.AdvancementCache)",
+          "findPage(String, BookScreen.AdvancementCache)",
+          "findPageNumber(String)",
+          "findPageNumber(String, BookScreen.AdvancementCache)",
+          "getPageCount(BookScreen.AdvancementCache)",
+          "getFullPageCount(BookScreen.AdvancementCache)",
+          "getVisibleSections(BookScreen.AdvancementCache)",
+          "translate(String)",
+          "openGui(Component, String, Consumer<String>)",
+          "openGui(Component, String, Consumer<String>, Consumer<?>)",
+          "openGui(InteractionHand, ItemStack)",
+          "openGui(int, ItemStack)",
+          "openGui(BlockPos, ItemStack)",
+          "addRepository(BookRepository)",
+          "addTransformer(BookTransformer)"
+        ],
+        "slimeknights.mantle.client.book.data.BookLoadException": [],
+        "slimeknights.mantle.client.book.data.content.ContentBlank": [
+          "build(BookData, ArrayList<BookElement>, boolean)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentBlockInteraction": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentCrafting": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "load()",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentDummy": [
+          "build(BookData, ArrayList<BookElement>, boolean)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentError": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "buildSimple(ArrayList<BookElement>)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentImage": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentImageText": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentIndex": [
+          "build(BookData, ArrayList<BookElement>, boolean)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentListing": [
+          "addEntry(String, PageData, boolean)",
+          "addEntry(String, PageData)",
+          "addColumnBreak()",
+          "hasEntries()",
+          "getEntriesInColumn(SectionData)",
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentPadding": [
+          "isLeft()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentPageIconList": [
+          "addLink(SizedBookElement, Component, PageData)",
+          "getMaxIconCount()",
+          "getMaxRows()",
+          "getMaxColumns()",
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getPagesNeededForItemCount(int, SectionData, String, String)",
+          "addPages(SectionData, List<ContentPageIconList>, Collection<ContentPageIconList.PageWithIcon>, int)",
+          "addPages(SectionData, List<ContentPageIconList>, Collection<ContentPageIconList.PageWithIcon>)",
+          "getTitle()",
+          "PageWithIcon(SizedBookElement, PageData)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentSectionList": [
+          "addSection(SectionData)",
+          "build(BookData, ArrayList<BookElement>, boolean)"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentShowcase": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentSmelting": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getFuelsList()",
+          "load()",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentSmithing": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentStructure": [
+          "load()",
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentTableOfContents": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentText": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentTextImage": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentTextLeftImage": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.ContentTextRightImage": [
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.content.PageContent": [
+          "getTitle()",
+          "load()",
+          "build(BookData, ArrayList<BookElement>, boolean)",
+          "getTitleHeight()",
+          "addTitle(ArrayList<BookElement>, String)",
+          "addTitle(ArrayList<BookElement>, String, boolean)",
+          "addTitle(ArrayList<BookElement>, String, boolean, int)",
+          "addTitle(ArrayList<BookElement>, String, boolean, int, int)",
+          "addText(ArrayList<BookElement>, String, boolean)",
+          "addText(ArrayList<BookElement>, String, boolean, int)",
+          "addText(ArrayList<BookElement>, String, boolean, int, int)",
+          "setCenterTitle(Boolean)",
+          "getCenterTitle()",
+          "setLargeTitle(Boolean)",
+          "getLargeTitle()"
+        ],
+        "slimeknights.mantle.client.book.data.deserializer.ConditionDeserializer": [
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.client.book.data.deserializer.HexStringDeserializer": [
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.client.book.data.element.DataLocation": [
+          "load(BookRepository)"
+        ],
+        "slimeknights.mantle.client.book.data.element.IDataElement": [],
+        "slimeknights.mantle.client.book.data.element.ImageData": [
+          "load(BookRepository)"
+        ],
+        "slimeknights.mantle.client.book.data.element.IngredientData": [
+          "getItems()",
+          "getItemStackData(ItemStack)",
+          "getItemStackData(NonNullList<ItemStack>)",
+          "load(BookRepository)"
+        ],
+        "slimeknights.mantle.client.book.data.element.TextComponentData": [
+          "text(Component)",
+          "isParagraph(boolean)",
+          "linebreak(boolean)",
+          "dropShadow(boolean)",
+          "scale(float)",
+          "action(String)",
+          "tooltips(Component[])"
+        ],
+        "slimeknights.mantle.client.book.data.element.TextData": [
+          "getText()",
+          "text(String)",
+          "color(String)",
+          "rgbColor(int)",
+          "useOldColor(boolean)",
+          "bold(boolean)",
+          "italic(boolean)",
+          "underlined(boolean)",
+          "strikethrough(boolean)",
+          "obfuscated(boolean)",
+          "paragraph(boolean)",
+          "linebreak(boolean)",
+          "dropshadow(boolean)",
+          "scale(float)",
+          "action(String)",
+          "tooltip(Component[])"
+        ],
+        "slimeknights.mantle.client.book.data.IConditional": [],
+        "slimeknights.mantle.client.book.data.IDataItem": [],
+        "slimeknights.mantle.client.book.data.LinkedSectionData": [
+          "load()",
+          "addSection(SectionData)"
+        ],
+        "slimeknights.mantle.client.book.data.PageData": [
+          "translate(String)",
+          "load()",
+          "getTitle()",
+          "isConditionMet()"
+        ],
+        "slimeknights.mantle.client.book.data.SectionData": [
+          "translate(String)",
+          "load()",
+          "getPages(String)",
+          "update(BookScreen.AdvancementCache)",
+          "getTitle()",
+          "getPageCount()",
+          "isUnlocked(BookScreen.AdvancementCache)",
+          "requirementSatisfied(String, BookScreen.AdvancementCache)",
+          "isConditionMet()"
+        ],
+        "slimeknights.mantle.client.book.repository.BookRepository": [
+          "getSections()",
+          "getResourceLocation(String)",
+          "getResourceLocation(String, boolean)",
+          "getLocation(ResourceLocation)",
+          "getResource(ResourceLocation)",
+          "resourceExists(String)",
+          "resourceExists(ResourceLocation)",
+          "resourceToString(Resource)",
+          "resourceToString(Resource, boolean)"
+        ],
+        "slimeknights.mantle.client.book.repository.DummyRepository": [
+          "getSections()",
+          "getResourceLocation(String, boolean)",
+          "getLocation(ResourceLocation)",
+          "resourceToString(Resource, boolean)"
+        ],
+        "slimeknights.mantle.client.book.repository.FileRepository": [
+          "getSections()",
+          "getResourceLocation(String, boolean)",
+          "getLocation(ResourceLocation)",
+          "resourceToString(Resource, boolean)"
+        ],
+        "slimeknights.mantle.client.book.structure.level.FakeEntityGetter": [
+          "get(int)",
+          "get(UUID)",
+          "m_142273_()",
+          "m_142690_(EntityTypeTest<Entity, U>, AbortableIterationConsumer<U>)",
+          "m_142232_(AABB, Consumer<Entity>)",
+          "m_142137_(EntityTypeTest<Entity, U>, AABB, AbortableIterationConsumer<U>)"
+        ],
+        "slimeknights.mantle.client.book.structure.level.FakeLevelData": [
+          "m_6395_(int)",
+          "m_6397_(int)",
+          "m_6400_(int)",
+          "m_7113_(float)",
+          "m_6789_()",
+          "m_6527_()",
+          "m_6526_()",
+          "m_6790_()",
+          "m_6793_()",
+          "m_6792_()",
+          "m_6534_()",
+          "m_6533_()",
+          "m_5565_(boolean)",
+          "m_5466_()",
+          "m_5470_()",
+          "m_5472_()",
+          "m_5474_()"
+        ],
+        "slimeknights.mantle.client.book.structure.level.TemplateChunk": [
+          "m_8055_(BlockPos)",
+          "m_6425_(BlockPos)",
+          "m_5685_(BlockPos, EntityCreationType)"
+        ],
+        "slimeknights.mantle.client.book.structure.level.TemplateChunkSource": [
+          "m_7587_(int, int, ChunkStatus, boolean)",
+          "m_201698_(BooleanSupplier, boolean)",
+          "m_6754_()",
+          "m_8482_()",
+          "m_7827_()",
+          "m_7653_()"
+        ],
+        "slimeknights.mantle.client.book.structure.level.TemplateLevel": [
+          "m_7260_(BlockPos, BlockState, BlockState, int)",
+          "m_262808_(Player, double, double, double, Holder<SoundEvent>, SoundSource, float, float, long)",
+          "m_213890_(Player, Entity, Holder<SoundEvent>, SoundSource, float, float, long)",
+          "m_46464_()",
+          "m_6815_(int)",
+          "m_7489_(String)",
+          "m_142325_(String, MapItemSavedData)",
+          "m_7354_()",
+          "m_6801_(int, BlockPos, int)",
+          "m_6188_()",
+          "m_7465_()",
+          "m_142646_()",
+          "m_183326_()",
+          "m_183324_()",
+          "m_7726_()",
+          "m_5898_(Player, int, BlockPos, int)",
+          "m_214171_(GameEvent, Vec3, Context)",
+          "m_246046_()",
+          "m_7717_(Direction, boolean)",
+          "m_6907_()"
+        ],
+        "slimeknights.mantle.client.book.structure.StructureInfo": [
+          "setShowLayer(int)",
+          "reset()",
+          "step()",
+          "getLimiter()",
+          "test(BlockPos)"
+        ],
+        "slimeknights.mantle.client.book.transformer.BookTransformer": [
+          "indexTranformer()",
+          "contentTableTransformer()",
+          "contentTableTransformerForSection(String)",
+          "paddingTransformer()",
+          "transform(BookData)"
+        ],
+        "slimeknights.mantle.client.book.transformer.ContentGroupingSectionTransformer": [
+          "transform(BookData, SectionData)",
+          "processPage(BookData, ContentGroupingSectionTransformer.GroupingBuilder, PageData)"
+        ],
+        "slimeknights.mantle.client.book.transformer.ContentListingSectionTransformer": [
+          "transform(BookData, SectionData)",
+          "processPage(BookData, ContentListing, PageData)"
+        ],
+        "slimeknights.mantle.client.book.transformer.IndexTransformer": [
+          "transform(final BookData)",
+          "isPageHidden(PageData)",
+          "isSectionHidden(SectionData)",
+          "filterHiddenPages(List<PageData>)",
+          "filterHiddenSections(List<SectionData>)",
+          "addHiddenPageType(ResourceLocation)"
+        ],
+        "slimeknights.mantle.client.book.transformer.SectionTransformer": [
+          "transform(BookData)",
+          "transform(BookData, SectionData)",
+          "addPage(SectionData, String, ResourceLocation, PageContent)"
+        ],
+        "slimeknights.mantle.client.ClientEvents": [
+          "onConstruct()"
+        ],
+        "slimeknights.mantle.client.ExtraHeartRenderHandler": [
+          "renderHealthbar(Pre)"
+        ],
+        "slimeknights.mantle.client.model.builder.ColoredModelBuilder": [
+          "colorData(ColoredBlockModel.ColorData)",
+          "color(int)",
+          "luminosity(int)",
+          "toJson(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.builder.ConnectedModelBuilder": [
+          "connected(String, String)",
+          "setSides(Direction, Direction...)",
+          "setPredicate(String)",
+          "toJson(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.builder.FallbackModelBuilder": [
+          "fallback(T, String)",
+          "fallback(T)",
+          "toJson(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.builder.MantleItemLayerBuilder": [
+          "addLayer(MantleItemLayerModel.LayerData)",
+          "color(int)",
+          "luminosity(int)",
+          "toJson(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.builder.NBTKeyModelBuilder": [
+          "toJson(JsonObject)",
+          "key(String)",
+          "extraTexturesKey(ResourceLocation)"
+        ],
+        "slimeknights.mantle.client.model.builder.RetexturedModelBuilder": [
+          "retexture(String)",
+          "toJson(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.connected.ConnectedModel": [
+          "resolveParents(Function<ResourceLocation, UnbakedModel>, IGeometryBakingContext)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "deserialize(JsonObject, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.client.model.connected.ConnectedModelRegistry": [
+          "registerPredicate(String, BiPredicate<BlockState, BlockState>)",
+          "deserializePredicate(JsonObject, String)",
+          "getPredicate(String)",
+          "registerType(String, Function<Predicate<Direction>, String>)",
+          "deserializeType(JsonElement, String)"
+        ],
+        "slimeknights.mantle.client.model.FallbackModelLoader": [
+          "read(JsonObject, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.client.model.NBTKeyModel": [
+          "registerExtraTexture(ResourceLocation, String, ResourceLocation)",
+          "resolveParents(Function<ResourceLocation, UnbakedModel>, IGeometryBakingContext)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "deserialize(JsonObject, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.client.model.RetexturedModel": [
+          "resolveParents(Function<ResourceLocation, UnbakedModel>, IGeometryBakingContext)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "getAllRetextured(IGeometryBakingContext, SimpleBlockModel, Set<String>)",
+          "deserialize(JsonObject, JsonDeserializationContext)",
+          "getRetexturedNames(JsonObject)"
+        ],
+        "slimeknights.mantle.client.model.TextureColorHelper": [
+          "getAverageColor(ResourceLocation)",
+          "getAverageColor(TextureAtlasSprite)",
+          "getItemColor(ItemLike)",
+          "getBlockColor(Block)"
+        ],
+        "slimeknights.mantle.client.model.util.ColoredBlockModel": [
+          "bakePart(Builder, IGeometryBakingContext, BlockElement, int, Function<Material, TextureAtlasSprite>, Transformation, IQuadTransformer, boolean, ResourceLocation)",
+          "bakeModel(IGeometryBakingContext, List<BlockElement>, List<ColoredBlockModel.ColorData>, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "bakeWithElements(IGeometryBakingContext, List<BlockElement>, ModelState)",
+          "deserialize(JsonObject, JsonDeserializationContext)",
+          "swapColorRedBlue(int)",
+          "applyColorQuadTransformer(int)",
+          "bakeFace(BlockElement, BlockElementFace, TextureAtlasSprite, Direction, Transformation, boolean, int, ResourceLocation)",
+          "bakeQuad(Vector3f, Vector3f, BlockElementFace, TextureAtlasSprite, Direction, Transformation, boolean, BlockElementRotation, boolean, int, ResourceLocation)",
+          "getColorData()",
+          "ColorData(int, int, Boolean)"
+        ],
+        "slimeknights.mantle.client.model.util.DynamicBakedWrapper": [
+          "m_213637_(BlockState, Direction, RandomSource)",
+          "getQuads(BlockState, Direction, RandomSource, ModelData, RenderType)"
+        ],
+        "slimeknights.mantle.client.model.util.ExtraTextureContext": [
+          "getMaterial(String)",
+          "hasMaterial(String)"
+        ],
+        "slimeknights.mantle.client.model.util.GeometryContextWrapper": [
+          "getModelName()",
+          "hasMaterial(String)",
+          "getMaterial(String)",
+          "isGui3d()",
+          "useBlockLight()",
+          "useAmbientOcclusion()",
+          "getTransforms()",
+          "getRootTransform()",
+          "getRenderTypeHint()",
+          "isComponentVisible(String, boolean)",
+          "getRenderType(ResourceLocation)"
+        ],
+        "slimeknights.mantle.client.model.util.MantleItemLayerModel": [
+          "resolveParents(Function<ResourceLocation, UnbakedModel>, IGeometryBakingContext)",
+          "getDefaultRenderType(IGeometryBakingContext)",
+          "applyTransform(ModelState, Transformation)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "getQuadsForSprite(int, int, TextureAtlasSprite, Transformation, int)",
+          "getQuadsForSprite(int, int, TextureAtlasSprite, Transformation, int, ItemLayerPixels)",
+          "getQuadForGui(int, int, TextureAtlasSprite, Transformation, int)",
+          "buildQuad(QuadBakingVertexConsumer, VertexConsumer, Direction, int, int, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float, float)",
+          "deserialize(JsonObject, JsonDeserializationContext)",
+          "LayerData(int, int, boolean, ResourceLocation)"
+        ],
+        "slimeknights.mantle.client.model.util.ModelHelper": [
+          "getParticleTexture(Block)",
+          "arrayToObject(JsonObject, String, int, Function<float[], T>)",
+          "arrayToVector(JsonObject, String)",
+          "vectorToJson(Vector3f)",
+          "checkRotation(float)",
+          "getRotation(JsonObject, String)"
+        ],
+        "slimeknights.mantle.client.model.util.ModelTextureIteratable": [
+          "of(IGeometryBakingContext, SimpleBlockModel)",
+          "iterator()"
+        ],
+        "slimeknights.mantle.client.model.util.SimpleBlockModel": [
+          "getElements()",
+          "resolveParents(Function<ResourceLocation, UnbakedModel>, IGeometryBakingContext)",
+          "bakedBuilder(IGeometryBakingContext, ItemOverrides)",
+          "bakePart(Builder, IGeometryBakingContext, BlockElement, Function<Material, TextureAtlasSprite>, ModelState, IQuadTransformer, ResourceLocation)",
+          "getRenderTypeGroup(IGeometryBakingContext)",
+          "applyTransform(ModelState, Transformation)",
+          "bakeModel(IGeometryBakingContext, List<BlockElement>, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "bake(IGeometryBakingContext, ModelBaker, Function<Material, TextureAtlasSprite>, ModelState, ItemOverrides, ResourceLocation)",
+          "bakeWithElements(IGeometryBakingContext, List<BlockElement>, ModelState)",
+          "bakeDynamic(IGeometryBakingContext, ModelState)",
+          "deserialize(JsonObject, JsonDeserializationContext)",
+          "getModelElements(JsonDeserializationContext, JsonElement, String)",
+          "getParentLocation()",
+          "getTextures()",
+          "getParent()"
+        ],
+        "slimeknights.mantle.client.render.ChannelFluids": [
+          "initialize(RegisterClientReloadListenersEvent)",
+          "center(boolean)",
+          "Center(FluidCuboid, FluidCuboid)",
+          "Side(FluidCuboid, FluidCuboid, FluidCuboid, FluidCuboid)"
+        ],
+        "slimeknights.mantle.client.render.FaucetFluid": [
+          "initialize(RegisterClientReloadListenersEvent)",
+          "getFluids(Direction)",
+          "fromJson(JsonObject, FaucetFluid)"
+        ],
+        "slimeknights.mantle.client.render.FluidCuboid": [
+          "getFace(Direction)",
+          "getFromScaled()",
+          "getToScaled()",
+          "builder()",
+          "getFrom()",
+          "getTo()",
+          "getFaces()",
+          "FluidFace(boolean, int)"
+        ],
+        "slimeknights.mantle.client.render.FluidRenderer": [
+          "getBlockSprite(ResourceLocation)",
+          "withBlockLight(int, int)",
+          "putTexturedQuad(VertexConsumer, Matrix4f, TextureAtlasSprite, Vector3f, Vector3f, Direction, int, int, int, boolean)",
+          "renderCuboid(PoseStack, VertexConsumer, FluidCuboid, TextureAtlasSprite, TextureAtlasSprite, Vector3f, Vector3f, int, int, boolean)",
+          "renderCuboids(PoseStack, VertexConsumer, List<FluidCuboid>, FluidStack, int)",
+          "renderCuboid(PoseStack, VertexConsumer, FluidCuboid, float, TextureAtlasSprite, TextureAtlasSprite, int, int, boolean)",
+          "renderScaledCuboid(PoseStack, MultiBufferSource, FluidCuboid, FluidStack, float, int, int, boolean)",
+          "renderCamera(Minecraft, PoseStack, ResourceLocation, float, int)"
+        ],
+        "slimeknights.mantle.client.render.InventoryBlockEntityRenderer": [
+          "m_6922_(T, float, PoseStack, MultiBufferSource, int, int)",
+          "m_5932_(T)"
+        ],
+        "slimeknights.mantle.client.render.InventoryTileEntityRenderer": [
+          "m_6922_(T, float, PoseStack, MultiBufferSource, int, int)",
+          "m_5932_(T)"
+        ],
+        "slimeknights.mantle.client.render.MantleRenderTypes": [],
+        "slimeknights.mantle.client.render.MantleShaders": [
+          "getConfiguredFluidShader()",
+          "getBlockFullBrightShader()",
+          "getFluidShader()"
+        ],
+        "slimeknights.mantle.client.render.RenderingHelper": [
+          "applyRotation(PoseStack, BlockState)",
+          "applyRotation(PoseStack, Direction)",
+          "renderItem(PoseStack, MultiBufferSource, ItemStack, RenderItem, int)",
+          "renderFaucetFluids(LevelAccessor, BlockPos, Direction, PoseStack, VertexConsumer, TextureAtlasSprite, TextureAtlasSprite, int, int)"
+        ],
+        "slimeknights.mantle.client.render.RenderItem": [
+          "getCenterScaled()",
+          "getSizeScaled()",
+          "isHidden()",
+          "builder()",
+          "getCenter()",
+          "getSize()",
+          "getX()",
+          "getY()",
+          "getTransform()"
+        ],
+        "slimeknights.mantle.client.ResourceColorManager": [
+          "init(RegisterClientReloadListenersEvent)",
+          "onReloadSafe(ResourceManager)",
+          "getOrNull(String)",
+          "getTextColor(String)",
+          "getColor(String)"
+        ],
+        "slimeknights.mantle.client.SafeClientAccess": [
+          "getTooltipKey()",
+          "getPlayer()",
+          "getLevel()",
+          "getRegistryAccess()",
+          "isAdvancedTooltip()"
+        ],
+        "slimeknights.mantle.client.screen.BackgroundContainerScreen": [
+          "m_7856_()",
+          "m_88315_(GuiGraphics, int, int, float)",
+          "m_7286_(GuiGraphics, float, int, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.ArrowButton": [
+          "renderButton(GuiGraphics, int, int, float, BookData)",
+          "m_87963_(GuiGraphics, int, int, float)"
+        ],
+        "slimeknights.mantle.client.screen.book.BookScreen": [
+          "getAltFont()",
+          "getUniformFont()",
+          "getFontRenderer()",
+          "m_88315_(GuiGraphics, int, int, float)",
+          "m_7856_()",
+          "m_86600_()",
+          "previousPage()",
+          "nextPage()",
+          "m_7933_(int, int, int)",
+          "m_6050_(double, double, double)",
+          "m_6375_(double, double, int)",
+          "m_6348_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_7861_()",
+          "m_7043_()",
+          "drawerTransform(PoseStack, boolean)",
+          "leftOffset(boolean)",
+          "topOffset()",
+          "getMouseX(boolean)",
+          "getMouseY()"
+        ],
+        "slimeknights.mantle.client.screen.book.element.AnimationToggleElement": [
+          "mouseClicked(double, double, int)",
+          "updateColor()"
+        ],
+        "slimeknights.mantle.client.screen.book.element.ArrowElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.BookElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)",
+          "mouseReleased(double, double, int)",
+          "mouseDragged(double, double, double, double, double, double, int)",
+          "renderToolTip(GuiGraphics, Font, ItemStack, int, int)",
+          "drawTooltip(GuiGraphics, List<Component>, int, int, Font)",
+          "setParent(BookScreen)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.ButtonElement": [],
+        "slimeknights.mantle.client.screen.book.element.ImageElement": [
+          "setParent(BookScreen)",
+          "draw(GuiGraphics, int, int, float, Font)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.ItemElement": [
+          "scale(float)",
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.ListingLeftElement": [
+          "draw(GuiGraphics, int, int, float, Font)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.PageIconLinkElement": [
+          "setParent(BookScreen)",
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.SelectionElement": [
+          "setParent(BookScreen)",
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.SizedBookElement": [
+          "isHovered(double, double)",
+          "scale(float)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.SpriteElement": [
+          "scale(float)",
+          "draw(GuiGraphics, int, int, float, Font)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.StructureElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)",
+          "mouseDragged(double, double, double, double, double, double, int)",
+          "mouseReleased(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.TextComponentElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.TextElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)",
+          "mouseClicked(double, double, int)"
+        ],
+        "slimeknights.mantle.client.screen.book.element.TooltipElement": [
+          "draw(GuiGraphics, int, int, float, Font)",
+          "drawOverlay(GuiGraphics, int, int, float, Font)"
+        ],
+        "slimeknights.mantle.client.screen.book.ILayerRenderFunction": [],
+        "slimeknights.mantle.client.screen.book.TextComponentDataRenderer": [
+          "drawText(GuiGraphics, int, int, int, int, TextComponentData[], int, int, Font, List<Component>)",
+          "splitTextComponentBySize(Component, int, int, int, Font, float)",
+          "drawScaledTextComponent(GuiGraphics, Font, FormattedText, float, float, boolean, float)"
+        ],
+        "slimeknights.mantle.client.screen.book.TextDataRenderer": [
+          "drawText(GuiGraphics, int, int, int, int, TextData[], int, int, Font, BookScreen)",
+          "drawText(GuiGraphics, int, int, int, int, TextData[], int, int, Font, List<Component>)",
+          "translateString(String)",
+          "cropStringBySize(String, String, int, int, Font, float)",
+          "cropStringBySize(String, String, int, int, int, Font, float)",
+          "getLinesForString(String, String, int, String, Font)",
+          "drawScaledString(GuiGraphics, Font, String, float, float, int, boolean, float)"
+        ],
+        "slimeknights.mantle.client.screen.book.Textures": [],
+        "slimeknights.mantle.client.screen.ElementScreen": [
+          "move(int, int, int, int)",
+          "shift(int, int)",
+          "draw(GuiGraphics, int, int, int)",
+          "draw(GuiGraphics, int, int)"
+        ],
+        "slimeknights.mantle.client.screen.ModuleScreen": [
+          "guiRight()",
+          "guiBottom()",
+          "getArea()",
+          "m_7856_()",
+          "updatePosition(int, int, int, int)",
+          "shouldDrawSlot(Slot)",
+          "isMouseInModule(int, int)",
+          "isMouseOverFullSlot(double, double)",
+          "handleDrawGuiContainerBackgroundLayer(GuiGraphics, float, int, int)",
+          "handleDrawGuiContainerForegroundLayer(GuiGraphics, int, int)",
+          "handleRenderHoveredTooltip(GuiGraphics, int, int)",
+          "handleMouseClicked(double, double, int)",
+          "handleMouseClickMove(double, double, int, double)",
+          "handleMouseReleased(double, double, int)",
+          "handleMouseScrolled(double, double, double)"
+        ],
+        "slimeknights.mantle.client.screen.MultiModuleScreen": [
+          "addModule(ModuleScreen<?, ?>)",
+          "getModuleAreas()",
+          "m_7856_()",
+          "m_7286_(GuiGraphics, float, int, int)",
+          "m_280003_(GuiGraphics, int, int)",
+          "m_280072_(GuiGraphics, int, int)",
+          "drawBackground(GuiGraphics, ResourceLocation)",
+          "drawContainerName(GuiGraphics)",
+          "drawPlayerInventoryName(GuiGraphics)",
+          "m_6574_(Minecraft, int, int)",
+          "m_88315_(GuiGraphics, int, int, float)",
+          "m_6774_(int, int, int, int, double, double)",
+          "updateSubmodule(ModuleScreen<?, ?>)",
+          "m_280092_(GuiGraphics, Slot)",
+          "m_97774_(Slot, double, double)",
+          "m_6375_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_6050_(double, double, double)",
+          "m_6348_(double, double, int)",
+          "getModuleForPoint(double, double)"
+        ],
+        "slimeknights.mantle.client.screen.ScalableElementScreen": [
+          "drawScaledX(GuiGraphics, int, int, int)",
+          "drawScaledY(GuiGraphics, int, int, int)",
+          "drawScaledYUp(GuiGraphics, int, int, int)",
+          "drawScaled(GuiGraphics, int, int, int, int)",
+          "move(int, int, int, int)",
+          "shift(int, int)"
+        ],
+        "slimeknights.mantle.client.screen.SliderWidget": [
+          "setSize(int)",
+          "setSliderParameters(int, int, int)",
+          "getValue()",
+          "setEnabled(boolean)",
+          "enable()",
+          "disable()",
+          "isEnabled()",
+          "setHidden(boolean)",
+          "hide()",
+          "show()",
+          "isHidden()",
+          "draw(GuiGraphics)",
+          "update(int, int)",
+          "handleMouseClicked(int, int, int)",
+          "handleMouseReleased()",
+          "mouseScrolled(double, boolean)",
+          "increment()",
+          "decrement()",
+          "setSliderValue(int)"
+        ],
+        "slimeknights.mantle.client.screen.TabsWidget": [
+          "addTab(ItemStack)",
+          "clear()",
+          "handleMouseClicked(int, int, int)",
+          "handleMouseReleased()",
+          "update(int, int)",
+          "draw(GuiGraphics)"
+        ],
+        "slimeknights.mantle.client.screen.Widget": [
+          "draw(GuiGraphics)",
+          "setPosition(int, int)",
+          "setSize(int, int)",
+          "handleMouseClicked(int, int, int)",
+          "handleMouseReleased()"
+        ],
+        "slimeknights.mantle.client.TooltipKey": [
+          "isShiftOrUnknown()"
+        ],
+        "slimeknights.mantle.command.argument.RegistryTagSource": [
+          "key()",
+          "folder()",
+          "hasTag(TagKey<T>)",
+          "tagKeys()",
+          "valuesInTag(TagKey<T>)",
+          "keysInTag(TagKey<T>)",
+          "getValue(ResourceLocation)",
+          "tagsFor(T)",
+          "valueKeys()"
+        ],
+        "slimeknights.mantle.command.argument.ResourceOrTagKeyArgument": [
+          "key()",
+          "registry(ResourceKey<? extends Registry<T>>)",
+          "get(CommandContext<CommandSourceStack>, String)",
+          "parse(StringReader)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "Result(ResourceLocation, boolean)"
+        ],
+        "slimeknights.mantle.command.argument.TagSource": [
+          "hasTag(ResourceLocation)",
+          "valuesInTag(ResourceLocation)",
+          "keysInTag(ResourceLocation)"
+        ],
+        "slimeknights.mantle.command.argument.TagSourceArgument": [
+          "registerSuggestions()",
+          "registerCustom(TagSource<T>)",
+          "source()",
+          "argument()",
+          "tagArgument(String)",
+          "valueArgument(String)",
+          "entryArgument(String)",
+          "allSources(CommandContext<? extends SharedSuggestionProvider>)",
+          "allKeys(CommandContext<? extends SharedSuggestionProvider>)",
+          "get(CommandContext<? extends SharedSuggestionProvider>)"
+        ],
+        "slimeknights.mantle.command.client.BookCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "bookNotFound(ResourceLocation)"
+        ],
+        "slimeknights.mantle.command.client.ClearBookCacheCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.client.ClientSourcesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "register(String, String, String, SuggestionProvider<CommandSourceStack>)",
+          "registerMinecraft(String, SuggestionProvider<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.client.MantleClientCommand": [
+          "init()"
+        ],
+        "slimeknights.mantle.command.DumpAllTagsCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "getOutputFile(CommandContext<CommandSourceStack>)",
+          "getOutputComponent(File)"
+        ],
+        "slimeknights.mantle.command.DumpLootModifiers": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.DumpTagCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "parseTag(List<Resource>, List<EntryWithSource>, ResourceLocation, ResourceLocation, ResourceLocation)",
+          "tagToJson(List<EntryWithSource>)",
+          "saveTag(List<EntryWithSource>, Path)"
+        ],
+        "slimeknights.mantle.command.GeneratePackHelper": [
+          "getDatapackPath(MinecraftServer, String)",
+          "getDatapackPath(MinecraftServer)",
+          "saveJson(JsonElement, Path)",
+          "saveConditionRemove(Path, String)",
+          "saveConditionRemove(Path)",
+          "saveMcmeta(Path, PackType, String)",
+          "saveMcmeta(Path)",
+          "getOutputComponent(File)",
+          "getOutputComponent(Path)",
+          "getOutputComponent(String)",
+          "getPathComponent(MutableComponent, String)"
+        ],
+        "slimeknights.mantle.command.HarvestTiersCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.HungerCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.MantleCommand": [
+          "init()",
+          "requiresDebugInfoOrOp(CommandSourceStack, int)"
+        ],
+        "slimeknights.mantle.command.RegistryArgument": [
+          "registry()",
+          "argument()",
+          "getResult(CommandContext<? extends SharedSuggestionProvider>, String)",
+          "get(CommandContext<? extends SharedSuggestionProvider>)"
+        ],
+        "slimeknights.mantle.command.RemoveDataCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.RemoveRecipesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "slimeknights.mantle.command.SourcesCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)",
+          "run(CommandContext<CommandSourceStack>, ResourceManager, String, ResourceLocation, String)",
+          "run(CommandContext<CommandSourceStack>, ResourceManager, ResourceLocation)",
+          "suggestFolder(FileToIdConverter)",
+          "register(String, String, String, SuggestionProvider<CommandSourceStack>)",
+          "register(String, SuggestionProvider<CommandSourceStack>)",
+          "SourceFolder(String, String, String, SuggestionProvider<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.TagPreferenceCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.tags.ModifyTagCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.TagsForCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.command.ViewTagCommand": [
+          "register(LiteralArgumentBuilder<CommandSourceStack>)"
+        ],
+        "slimeknights.mantle.config.Config": [],
+        "slimeknights.mantle.data.BuiltinRegistryTagProvider": [],
+        "slimeknights.mantle.data.client.DeanimateTextureGenerator": [
+          "deanimate(ResourceLocation, ResourceLocation)",
+          "addTextures()",
+          "m_213708_(CachedOutput)",
+          "m_6055_()"
+        ],
+        "slimeknights.mantle.data.client.GenericTextureGenerator": [
+          "saveImage(CachedOutput, ResourceLocation, NativeImage)",
+          "saveMetadata(CachedOutput, ResourceLocation, JsonObject)",
+          "read(ExistingFileHelper, String, ResourceLocation)",
+          "saveImage(CachedOutput, PathProvider, ResourceLocation, NativeImage)"
+        ],
+        "slimeknights.mantle.data.datamap.BlockStateDataMapLoader": [
+          "prepareLoader(Map<ResourceLocation, JsonElement>)",
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "get(BlockState)",
+          "get(BlockState, T)",
+          "getFolder()",
+          "getDataLoader()"
+        ],
+        "slimeknights.mantle.data.datamap.BlockStateDataMapProvider": [
+          "addEntries()",
+          "m_213708_(CachedOutput)",
+          "block(Block)",
+          "block(Supplier<? extends Block>)",
+          "entry(ResourceLocation, D)",
+          "entry(String, D)"
+        ],
+        "slimeknights.mantle.data.datamap.RegistryDataMapLoader": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "parseData(String, Map<ResourceLocation, JsonElement>, ResourceLocation, JsonObject, Map<ResourceLocation, D>, RecordLoadable<D>, TypedMap)",
+          "parseData(String, Map<ResourceLocation, JsonElement>, ResourceLocation, JsonObject, Map<ResourceLocation, D>, RecordLoadable<D>, TypedMap, BiConsumer<JsonObject, JsonObject>)",
+          "fetchParent(String, Map<ResourceLocation, JsonElement>, ResourceLocation, ResourceLocation, List<ResourceLocation>)",
+          "get(R)",
+          "get(R, D)",
+          "getFolder()",
+          "getRegistry()",
+          "getDataLoader()"
+        ],
+        "slimeknights.mantle.data.datamap.RegistryDataMapProvider": [
+          "addEntries()",
+          "m_213708_(CachedOutput)",
+          "key(String)",
+          "key(R)",
+          "key(Supplier<? extends R>)",
+          "entry(ResourceLocation, Supplier<JsonObject>)",
+          "redirect(ResourceLocation, ResourceLocation)",
+          "redirect(String, ResourceLocation)",
+          "redirect(R, ResourceLocation)",
+          "redirect(Supplier<? extends R>, ResourceLocation)",
+          "redirect(String, String)",
+          "redirect(R, String)",
+          "redirect(Supplier<? extends R>, String)",
+          "entry(ResourceLocation, D)",
+          "entry(String, D)",
+          "entry(R, D)",
+          "entry(Supplier<? extends R>, D)"
+        ],
+        "slimeknights.mantle.data.datamap.StateVariantStringBuilder": [
+          "when(Property<T>, T)",
+          "toString()",
+          "predicate(StateDefinition<Block, BlockState>, String)"
+        ],
+        "slimeknights.mantle.data.GenericDataProvider": [
+          "saveJson(CachedOutput, ResourceLocation, Object, Comparator<String>)",
+          "saveJson(CachedOutput, ResourceLocation, Object)",
+          "saveJson(CachedOutput, ResourceLocation, Codec<T>, T)",
+          "allOf(Stream<CompletableFuture<?>>)",
+          "allOf(Collection<CompletableFuture<?>>)"
+        ],
+        "slimeknights.mantle.data.gson.ConditionSerializer": [
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(ICondition, Type, JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.data.gson.GenericRegisteredSerializer": [
+          "registerDeserializer(ResourceLocation, JsonDeserializer<? extends T>)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(T, Type, JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.data.gson.ResourceLocationSerializer": [
+          "resourceLocation(String)",
+          "serialize(ResourceLocation, Type, JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.data.gson.TagKeySerializer": [
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(TagKey<T>, Type, JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.data.JsonCodec": [
+          "codecError()",
+          "decode(DynamicOps<O>, O)",
+          "encode(T, DynamicOps<O>, O)"
+        ],
+        "slimeknights.mantle.data.listener.IEarlyReloadListener": [
+          "m_5540_(PreparationBarrier, ResourceManager, ProfilerFiller, ProfilerFiller, Executor, Executor)"
+        ],
+        "slimeknights.mantle.data.listener.IEarlySafeManagerReloadListener": [
+          "m_5540_(PreparationBarrier, ResourceManager, ProfilerFiller, ProfilerFiller, Executor, Executor)"
+        ],
+        "slimeknights.mantle.data.listener.ISafeManagerReloadListener": [
+          "m_6213_(ResourceManager)"
+        ],
+        "slimeknights.mantle.data.listener.MergingJsonDataLoader": [
+          "parse(B, ResourceLocation, JsonElement)",
+          "finishLoad(Map<ResourceLocation, B>, ResourceManager)",
+          "m_6213_(ResourceManager)"
+        ],
+        "slimeknights.mantle.data.listener.ResourceValidator": [
+          "onReloadSafe(ResourceManager)",
+          "test(ResourceLocation)",
+          "clear()"
+        ],
+        "slimeknights.mantle.data.loadable.array.ArrayLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(A)",
+          "emptyField(String, Function<P, A>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.BooleanArrayLoadable": [
+          "getLength(boolean[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(boolean[])",
+          "serializeAll(JsonArray, boolean[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, boolean[])",
+          "defaultField(String, boolean[], boolean, Function<P, boolean[]>)",
+          "emptyField(String, boolean, Function<P, boolean[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.ByteArrayLoadable": [
+          "getLength(byte[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(byte[])",
+          "serializeAll(JsonArray, byte[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, byte[])",
+          "defaultField(String, byte[], boolean, Function<P, byte[]>)",
+          "emptyField(String, boolean, Function<P, byte[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.CharArrayLoadable": [
+          "getLength(char[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(char[])",
+          "serializeAll(JsonArray, char[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, char[])",
+          "defaultField(String, char[], boolean, Function<P, char[]>)",
+          "emptyField(String, boolean, Function<P, char[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.DoubleArrayLoadable": [
+          "getLength(double[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(double[])",
+          "serializeAll(JsonArray, double[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, double[])",
+          "defaultField(String, double[], boolean, Function<P, double[]>)",
+          "emptyField(String, boolean, Function<P, double[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.FloatArrayLoadable": [
+          "getLength(float[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(float[])",
+          "serializeAll(JsonArray, float[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, float[])",
+          "defaultField(String, float[], boolean, Function<P, float[]>)",
+          "emptyField(String, boolean, Function<P, float[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.IntArrayLoadable": [
+          "getLength(int[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(int[])",
+          "serializeAll(JsonArray, int[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, int[])",
+          "defaultField(String, int[], boolean, Function<P, int[]>)",
+          "emptyField(String, boolean, Function<P, int[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.LongArrayLoadable": [
+          "getLength(long[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(long[])",
+          "serializeAll(JsonArray, long[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, long[])",
+          "defaultField(String, long[], boolean, Function<P, long[]>)",
+          "emptyField(String, boolean, Function<P, long[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.ObjectArrayLoadable": [
+          "getLength(T[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(T[])",
+          "serializeAll(JsonArray, T[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T[])",
+          "defaultField(String, T[], boolean, Function<P, T[]>)",
+          "emptyField(String, boolean, Function<P, T[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.array.ShortArrayLoadable": [
+          "getLength(short[])",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(short[])",
+          "serializeAll(JsonArray, short[])",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, short[])",
+          "defaultField(String, short[], boolean, Function<P, short[]>)",
+          "emptyField(String, boolean, Function<P, short[]>)"
+        ],
+        "slimeknights.mantle.data.loadable.common.BaseRegistryLoadable": [
+          "fromKey(ResourceLocation, String, TypedMap)",
+          "getKey(T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.common.BlockStateLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(BlockState)",
+          "serializeProperty(BlockState, Property<T>, BlockState, JsonObject)",
+          "serialize(BlockState, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, BlockState)"
+        ],
+        "slimeknights.mantle.data.loadable.common.CodecLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.common.ColorLoadable": [
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Integer)",
+          "getOrWhite(JsonObject, String)",
+          "defaultField(String, boolean, Function<P, Integer>)"
+        ],
+        "slimeknights.mantle.data.loadable.common.DisplayContextLoadable": [
+          "fromKey(ResourceLocation, String, TypedMap)",
+          "getKey(ItemDisplayContext)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, ItemDisplayContext)",
+          "mapWithValues(Loadable<V>, int)"
+        ],
+        "slimeknights.mantle.data.loadable.common.FluidStackLoadable": [
+          "fixedSize(int)",
+          "fixedSizeNBT(int)",
+          "notEmpty(Loadable<FluidStack>)",
+          "notEmpty(RecordLoadable<FluidStack>)"
+        ],
+        "slimeknights.mantle.data.loadable.common.GsonLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.common.IngredientLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(Ingredient)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Ingredient)"
+        ],
+        "slimeknights.mantle.data.loadable.common.ItemStackLoadable": [
+          "notEmpty(Loadable<ItemStack>)",
+          "notEmpty(RecordLoadable<ItemStack>)"
+        ],
+        "slimeknights.mantle.data.loadable.common.LazyRegistryLoadable": [
+          "registry()",
+          "registryId()"
+        ],
+        "slimeknights.mantle.data.loadable.common.NBTLoadable": [
+          "deserialize(JsonObject, TypedMap)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(CompoundTag)",
+          "serialize(CompoundTag, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, CompoundTag)",
+          "nullableField(String, Function<P, CompoundTag>)"
+        ],
+        "slimeknights.mantle.data.loadable.common.RegistryLoadable": [],
+        "slimeknights.mantle.data.loadable.common.Vector3fLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(Vector3f)",
+          "serialize(Vector3f, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Vector3f)"
+        ],
+        "slimeknights.mantle.data.loadable.ErrorFactory": [
+          "accept(String)",
+          "create(RuntimeException)"
+        ],
+        "slimeknights.mantle.data.loadable.field.AlwaysPresentLoadableField": [],
+        "slimeknights.mantle.data.loadable.field.AlwaysPresentRecordField": [
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, P)"
+        ],
+        "slimeknights.mantle.data.loadable.field.CatchErrorsField": [
+          "key()",
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, P)"
+        ],
+        "slimeknights.mantle.data.loadable.field.ConstantField": [
+          "get(JsonObject, TypedMap)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "serialize(Object, JsonObject)",
+          "encode(FriendlyByteBuf, Object)"
+        ],
+        "slimeknights.mantle.data.loadable.field.ContextField": [
+          "get(JsonObject, TypedMap)",
+          "serialize(Object, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Object)"
+        ],
+        "slimeknights.mantle.data.loadable.field.ContextKey": [
+          "toString()",
+          "requiredField()",
+          "mappedField(BiFunction<T, ErrorFactory, M>)",
+          "nullableField()",
+          "defaultField(T)",
+          "getName()"
+        ],
+        "slimeknights.mantle.data.loadable.field.DefaultingField": [
+          "serializeDefault()",
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)"
+        ],
+        "slimeknights.mantle.data.loadable.field.DirectField": [
+          "get(JsonObject, TypedMap)",
+          "serialize(P, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)"
+        ],
+        "slimeknights.mantle.data.loadable.field.LegacyField": [
+          "key()",
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, P)"
+        ],
+        "slimeknights.mantle.data.loadable.field.LoadableField": [
+          "get(JsonObject, TypedMap)",
+          "get(JsonObject)",
+          "decode(FriendlyByteBuf)"
+        ],
+        "slimeknights.mantle.data.loadable.field.NullableField": [
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, P)"
+        ],
+        "slimeknights.mantle.data.loadable.field.RecordField": [],
+        "slimeknights.mantle.data.loadable.field.RequiredField": [
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)"
+        ],
+        "slimeknights.mantle.data.loadable.field.TryDirectField": [
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)"
+        ],
+        "slimeknights.mantle.data.loadable.field.UnsyncedField": [
+          "key()",
+          "get(JsonObject, String, TypedMap)",
+          "serialize(P, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, P)"
+        ],
+        "slimeknights.mantle.data.loadable.IAmLoadable": [],
+        "slimeknights.mantle.data.loadable.LegacyLoadable": [
+          "serialize(T)",
+          "serialize(T, JsonObject)",
+          "encode(FriendlyByteBuf, T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "nullableField(String, Function<P, T>)",
+          "defaultField(String, T, boolean, Function<P, T>)",
+          "whileParsing(TypedMap)",
+          "message(RecordLoadable<T>, String)"
+        ],
+        "slimeknights.mantle.data.loadable.Loadable": [
+          "convert(JsonElement, String)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)",
+          "serialize(T, Type, JsonSerializationContext)",
+          "getIfPresent(JsonObject, String, TypedMap)",
+          "getIfPresent(JsonObject, String)",
+          "getOrDefault(JsonObject, String, T, TypedMap)",
+          "getOrDefault(JsonObject, String, T)",
+          "requiredField(String, Function<P, T>)",
+          "nullableField(String, Function<P, T>)",
+          "defaultField(String, T, boolean, Function<P, T>)",
+          "defaultField(String, T, Function<P, T>)",
+          "tryDirectField(String, Function<P, T>, String...)",
+          "array(IntFunction<T[]>, boolean, int, int)",
+          "array(IntFunction<T[]>, boolean, int)",
+          "list(int)",
+          "list()",
+          "set(int)",
+          "set()",
+          "mapWithKeys(int, Function<T, K>)",
+          "mapWithValues(int, Function<T, V>)"
+        ],
+        "slimeknights.mantle.data.loadable.LoadableCodec": [
+          "deserialize(JsonElement, DynamicOps<?>)",
+          "serialize(T, DynamicOps<?>)"
+        ],
+        "slimeknights.mantle.data.loadable.Loadables": [
+          "tagKey(ResourceKey<? extends Registry<T>>)",
+          "resourceKey(ResourceKey<? extends Registry<T>>)",
+          "notValue(StringLoadable<T>, T, String)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.AnyCollectionLoadable": [
+          "listBacked(Loadable<T>, int)",
+          "setBacked(Loadable<T>, int)",
+          "build(Collection<T>)",
+          "mapWithKeys(Function<T, K>)",
+          "mapWithValues(Function<T, V>)",
+          "emptyField(String, boolean, Function<P, Collection<T>>)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.CollectionLoadable": [
+          "createBuilder(int)",
+          "build(Collection<T>)",
+          "checkSize(String, int, ErrorFactory)",
+          "allowCompact()",
+          "getLength(C)",
+          "convertCompact(JsonElement, String, TypedMap)",
+          "convertArray(JsonArray, String, TypedMap)",
+          "serializeFirst(C)",
+          "serializeAll(JsonArray, C)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, C)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.CompactLoadable": [
+          "of(Loadable<T>, Loadable<T>, Predicate<T>)",
+          "of(RecordLoadable<T>, Loadable<T>, Predicate<T>)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.ConditionalLoadable": [
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(T, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.EitherLoadable": [
+          "typed()",
+          "record()"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.EnumMapLoadable": [
+          "createBuilder(int)",
+          "build(Map<K, V>)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.EnumSetLoadable": [
+          "createBuilder(int)",
+          "build(Collection<T>)",
+          "convertCompact(JsonElement, String, TypedMap)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.ListLoadable": [
+          "build(Collection<T>)",
+          "emptyField(String, boolean, Function<P, List<T>>)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.MapLoadable": [
+          "build(Map<K, V>)",
+          "createBuilder(int)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(Map<K, V>)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Map<K, V>)",
+          "emptyField(String, boolean, Function<P, Map<K, V>>)",
+          "emptyField(String, Function<P, Map<K, V>>)",
+          "toString()"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.MappedLoadable": [
+          "of(Loadable<F>, BiFunction<F, ErrorFactory, T>, BiFunction<T, ErrorFactory, F>)",
+          "of(RecordLoadable<F>, BiFunction<F, ErrorFactory, T>, BiFunction<T, ErrorFactory, F>)",
+          "of(StringLoadable<F>, BiFunction<F, ErrorFactory, T>, BiFunction<T, ErrorFactory, F>)",
+          "flatten(Function<T, R>)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.SetLoadable": [
+          "build(Collection<T>)",
+          "mapWithValues(Function<T, V>)",
+          "emptyField(String, boolean, Function<P, Set<T>>)"
+        ],
+        "slimeknights.mantle.data.loadable.mapping.SimpleRecordLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(T)",
+          "serialize(T, JsonObject)",
+          "encode(FriendlyByteBuf, T)",
+          "decode(FriendlyByteBuf, TypedMap)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.BooleanLoadable": [
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(Boolean)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Boolean)",
+          "defaultField(String, Boolean, Function<P, Boolean>)",
+          "array(int, int)",
+          "array(int)",
+          "parseString(String, String, TypedMap)",
+          "getString(Boolean)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.CharacterLoadable": [
+          "parseString(String, String, TypedMap)",
+          "getString(Character)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Character)",
+          "array(int, int)",
+          "array(int)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.DoubleLoadable": [
+          "range(double, double)",
+          "min(double)",
+          "convert(JsonElement, String, TypedMap)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "serialize(Double)",
+          "encode(FriendlyByteBuf, Double)",
+          "array(int, int)",
+          "array(int)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.EnumLoadable": [
+          "of(E...)",
+          "parseString(String, String, TypedMap)",
+          "getString(E)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, E)",
+          "set(int)",
+          "mapWithValues(Loadable<V>, int)",
+          "nullableField(String, Function<P, E>)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.FloatLoadable": [
+          "range(float, float)",
+          "min(float)",
+          "convert(JsonElement, String, TypedMap)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "serialize(Float)",
+          "encode(FriendlyByteBuf, Float)",
+          "array(int, int)",
+          "array(int)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.IntLoadable": [
+          "range(int, int)",
+          "min(int)",
+          "validate(int, String)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(Integer)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Integer)",
+          "array(int, int)",
+          "shortArray(int, int)",
+          "byteArray(int, int)",
+          "array(int)",
+          "shortArray(int)",
+          "byteArray(int)",
+          "asString(int)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.LongLoadable": [
+          "range(long, long)",
+          "min(long)",
+          "validate(long, String)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(Long)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, Long)",
+          "array(int, int)",
+          "array(int)",
+          "asString(int)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.ResourceLocationLoadable": [
+          "fromKey(ResourceLocation, String)",
+          "parseString(String, String, TypedMap)",
+          "convert(JsonElement, String, TypedMap)",
+          "getString(T)"
+        ],
+        "slimeknights.mantle.data.loadable.primitive.StringLoadable": [
+          "parseString(String, String)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "mapWithValues(Loadable<V>, int)",
+          "mapWithValues(Loadable<V>)",
+          "xmap(BiFunction<T, ErrorFactory, M>, BiFunction<M, ErrorFactory, T>)",
+          "comapFlatMap(BiFunction<T, ErrorFactory, M>, Function<M, T>)",
+          "flatComap(Function<T, M>, BiFunction<M, ErrorFactory, T>)",
+          "flatXmap(Function<T, M>, Function<M, T>)",
+          "validate(BiFunction<T, ErrorFactory, T>)"
+        ],
+        "slimeknights.mantle.data.loadable.record.RecordLoadable": [
+          "deserialize(JsonObject)",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T)",
+          "directField(Function<P, T>)",
+          "compact(Loadable<T>, Predicate<T>)",
+          "xmap(BiFunction<T, ErrorFactory, M>, BiFunction<M, ErrorFactory, T>)",
+          "comapFlatMap(BiFunction<T, ErrorFactory, M>, Function<M, T>)",
+          "flatComap(Function<T, M>, BiFunction<M, ErrorFactory, T>)",
+          "flatXmap(Function<T, M>, Function<M, T>)",
+          "validate(BiFunction<T, ErrorFactory, T>)"
+        ],
+        "slimeknights.mantle.data.loadable.record.SingletonLoader": [
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(T, JsonObject)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "encode(FriendlyByteBuf, T)",
+          "singleton(Function<RecordLoadable<T>, T>)",
+          "getInstance()"
+        ],
+        "slimeknights.mantle.data.loadable.Streamable": [
+          "decode(FriendlyByteBuf)"
+        ],
+        "slimeknights.mantle.data.MantleCodecs": [],
+        "slimeknights.mantle.data.predicate.block.BlockPredicate": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.data.predicate.block.BlockPropertiesPredicate": [
+          "matches(BlockState)",
+          "getLoader()",
+          "block(Block)"
+        ],
+        "slimeknights.mantle.data.predicate.damage.DamageSourcePredicate": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.data.predicate.damage.DamageTypePredicate": [
+          "matches(DamageSource)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.damage.SourceAttackerPredicate": [
+          "causing(IJsonPredicate<LivingEntity>)",
+          "direct(IJsonPredicate<LivingEntity>)",
+          "matches(DamageSource)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.damage.SourceMessagePredicate": [
+          "matches(DamageSource)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.entity.BlockAtEntityPredicate": [
+          "getLoader()",
+          "matches(LivingEntity)"
+        ],
+        "slimeknights.mantle.data.predicate.entity.HasEnchantmentEntityPredicate": [
+          "matches(LivingEntity)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.entity.HasMobEffectPredicate": [
+          "matches(LivingEntity)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.entity.LivingEntityPredicate": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.data.predicate.entity.MobTypePredicate": [
+          "matches(LivingEntity)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.FallbackPredicateRegistry": [
+          "fallback(IJsonPredicate<F>)",
+          "convert(JsonElement, String, TypedMap)",
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(IJsonPredicate<T>)",
+          "serialize(IJsonPredicate<T>, JsonObject)"
+        ],
+        "slimeknights.mantle.data.predicate.fluid.FluidPredicate": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.data.predicate.fluid.FluidTypePredicate": [
+          "matches(Fluid)",
+          "getLoader()"
+        ],
+        "slimeknights.mantle.data.predicate.IJsonPredicate": [],
+        "slimeknights.mantle.data.predicate.item.ItemPredicate": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.data.predicate.PredicateRegistry": [
+          "invert(IJsonPredicate<T>)",
+          "and(List<IJsonPredicate<T>>)",
+          "or(List<IJsonPredicate<T>>)",
+          "conditional(IJsonPredicate<T>, IJsonPredicate<T>, ICondition...)",
+          "conditional(IJsonPredicate<T>, ICondition...)"
+        ],
+        "slimeknights.mantle.data.predicate.RegistryPredicateRegistry": [
+          "setOf(Set<R>)",
+          "setOf(R...)"
+        ],
+        "slimeknights.mantle.data.predicate.TagPredicateRegistry": [
+          "tag(TagKey<R>)"
+        ],
+        "slimeknights.mantle.data.registry.AbstractNamedComponentRegistry": [
+          "getValue(ResourceLocation)",
+          "getKeys()",
+          "getValues()",
+          "fromKey(ResourceLocation, String, TypedMap)",
+          "encode(FriendlyByteBuf, T)",
+          "encodeOptional(FriendlyByteBuf, T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "decodeOptional(FriendlyByteBuf)",
+          "nullableField(String, Function<P, T>)"
+        ],
+        "slimeknights.mantle.data.registry.DefaultingLoaderRegistry": [
+          "getDefault()",
+          "convert(JsonElement, String, TypedMap)",
+          "serialize(T, Type, JsonSerializationContext)",
+          "getOrDefault(JsonObject, String, TypedMap)",
+          "getOrDefault(JsonObject, String)",
+          "encode(FriendlyByteBuf, T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "defaultField(String, boolean, Function<P, T>)",
+          "defaultField(String, Function<P, T>)"
+        ],
+        "slimeknights.mantle.data.registry.GenericLoaderRegistry": [
+          "register(ResourceLocation, RecordLoadable<? extends T>)",
+          "getName(RecordLoadable<? extends T>)",
+          "convert(JsonElement, String, TypedMap)",
+          "deserialize(JsonObject, TypedMap)",
+          "serialize(T)",
+          "serialize(T, JsonObject)",
+          "encode(RecordLoadable<L>, FriendlyByteBuf, T)",
+          "encode(FriendlyByteBuf, T)",
+          "decode(FriendlyByteBuf, TypedMap)",
+          "directField(String, Function<P, T>)",
+          "toString()",
+          "getName()",
+          "getConditionalLoader()"
+        ],
+        "slimeknights.mantle.data.registry.IdAwareComponentRegistry": [
+          "register(V)",
+          "getValue(ResourceLocation)",
+          "getKey(T)",
+          "getKeys()",
+          "getValues()"
+        ],
+        "slimeknights.mantle.data.registry.NamedComponentRegistry": [
+          "register(ResourceLocation, V)",
+          "getValue(ResourceLocation)",
+          "getOptionalKey(T)",
+          "getKey(T)",
+          "getKeys()",
+          "getValues()"
+        ],
+        "slimeknights.mantle.datagen.MantleBlockTagProvider": [
+          "m_6577_(Provider)",
+          "m_6055_()"
+        ],
+        "slimeknights.mantle.datagen.MantleFluidTagProvider": [
+          "m_6577_(Provider)",
+          "m_6055_()"
+        ],
+        "slimeknights.mantle.datagen.MantleFluidTooltipProvider": [
+          "addFluids()",
+          "m_6055_()"
+        ],
+        "slimeknights.mantle.datagen.MantleFluidTransferProvider": [
+          "m_6055_()",
+          "addTransfers()",
+          "addPotion(String, ItemLike, TagKey<Item>)"
+        ],
+        "slimeknights.mantle.datagen.MantleMenuTagProvider": [
+          "m_6577_(Provider)"
+        ],
+        "slimeknights.mantle.datagen.MantleTags": [
+          "init()"
+        ],
+        "slimeknights.mantle.datagen.MantleValues": [],
+        "slimeknights.mantle.fluid.FluidTransferHelper": [
+          "getSound(FluidStack, SoundAction, SoundEvent)",
+          "getEmptySound(FluidStack)",
+          "getFillSound(FluidStack)",
+          "tryTransfer(IFluidHandler, IFluidHandler, int)",
+          "tryTransfer(IFluidHandler, IFluidHandler, FluidStack)",
+          "interactWithBucket(Level, BlockPos, Player, InteractionHand, Direction, Direction)",
+          "interactWithFilledBucket(Level, BlockPos, IFluidHandler, Player, InteractionHand, Direction)",
+          "playEmptySound(Level, BlockPos, Player, FluidStack)",
+          "playFillSound(Level, BlockPos, Player, FluidStack)",
+          "interactWithFluidItem(Level, BlockPos, Player, InteractionHand, BlockHitResult)",
+          "interactWithContainer(Level, BlockPos, Player, InteractionHand, BlockHitResult)",
+          "interactWithContainer(Level, BlockPos, IFluidHandler, Player, InteractionHand)",
+          "interactWithTank(Level, BlockPos, Player, InteractionHand, BlockHitResult)",
+          "interactWithTank(Level, BlockPos, Player, InteractionHand, Direction, Direction)",
+          "interactWithTankSlot(IFluidHandler, ItemStack, IFluidContainerTransfer.TransferDirection)",
+          "interactWithStack(IFluidHandler, ItemStack, IFluidContainerTransfer.TransferDirection)",
+          "fillFromTankSlot(IFluidHandler, ItemStack, FluidStack)",
+          "fillStack(IFluidHandler, ItemStack, FluidStack)",
+          "getOrTransferFilled(Player, ItemStack, ItemStack)",
+          "playUISound(Player, SoundEvent)"
+        ],
+        "slimeknights.mantle.fluid.InvertedFluid": [
+          "m_7000_(BlockGetter, BlockPos, FluidState)",
+          "m_75990_(BlockGetter, BlockPos, Direction)",
+          "m_76010_(Level, BlockPos, FluidState)",
+          "m_76035_(Level, BlockPos, BlockState)",
+          "m_76026_(LevelReader, BlockPos, int, Direction, BlockState, BlockPos, Short2ObjectMap<Pair<BlockState, FluidState>>, Short2BooleanMap)",
+          "m_75956_(BlockGetter, Fluid, BlockPos, BlockState, BlockPos, BlockState)",
+          "m_76079_(Level, BlockPos, BlockState)"
+        ],
+        "slimeknights.mantle.fluid.InvertedFluidType": [
+          "initializeClient(Consumer<IClientFluidTypeExtensions>)"
+        ],
+        "slimeknights.mantle.fluid.texture.AbstractFluidTextureProvider": [
+          "m_213708_(CachedOutput)",
+          "getAllTextures()",
+          "addTextures()",
+          "texture(FluidType)",
+          "texture(FluidObject<?>)",
+          "texture(RegistryObject<? extends FluidType>)",
+          "skip(FluidType)",
+          "skip(FluidObject<?>)",
+          "skip(RegistryObject<? extends FluidType>)"
+        ],
+        "slimeknights.mantle.fluid.texture.ClientInvertedFluidType": [
+          "getFlowingTexture(FluidState, BlockAndTintGetter, BlockPos)"
+        ],
+        "slimeknights.mantle.fluid.texture.ClientTextureFluidType": [
+          "getTintColor()",
+          "getStillTexture()",
+          "getFlowingTexture()",
+          "getOverlayTexture()",
+          "getRenderOverlayTexture(Minecraft)",
+          "renderOverlay(Minecraft, PoseStack)",
+          "modifyFogColor(Camera, float, ClientLevel, int, float, Vector3f)",
+          "modifyFogRender(Camera, FogMode, float, float, float, float, FogShape)"
+        ],
+        "slimeknights.mantle.fluid.texture.FluidTexture": [
+          "fogColor()",
+          "serialize()",
+          "deserialize(JsonObject)",
+          "still()",
+          "flowing()",
+          "overlay()",
+          "camera()",
+          "cameraOpacity()",
+          "color()",
+          "calculateFogColor()",
+          "fogShape()",
+          "fogStart()",
+          "fogEnd()",
+          "fogColor(int)",
+          "equals(Object)",
+          "hashCode()",
+          "toString()"
+        ],
+        "slimeknights.mantle.fluid.texture.FluidTextureCameraProvider": [
+          "addTextures()",
+          "m_6055_()"
+        ],
+        "slimeknights.mantle.fluid.texture.FluidTextureManager": [
+          "init(RegisterClientReloadListenersEvent)",
+          "onReloadSafe(ResourceManager)",
+          "getData(FluidType)",
+          "getStillTexture(FluidType)",
+          "getFlowingTexture(FluidType)",
+          "getOverlayTexture(FluidType)",
+          "getCameraTexture(FluidType)",
+          "getColor(FluidType)"
+        ],
+        "slimeknights.mantle.fluid.TextureFluidType": [
+          "initializeClient(Consumer<IClientFluidTypeExtensions>)"
+        ],
+        "slimeknights.mantle.fluid.tooltip.AbstractFluidTooltipProvider": [
+          "addFluids()",
+          "m_213708_(CachedOutput)",
+          "id(String)",
+          "add(ResourceLocation, TagKey<Fluid>)",
+          "add(String, TagKey<Fluid>)",
+          "add(TagKey<Fluid>)",
+          "add(ResourceLocation)",
+          "add(String)",
+          "addRedirect(ResourceLocation, ResourceLocation)"
+        ],
+        "slimeknights.mantle.fluid.tooltip.FluidTooltipHandler": [
+          "init(RegisterClientReloadListenersEvent)",
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "getUnitList(Fluid)",
+          "getFluidTooltip(FluidStack)",
+          "appendAdvanced(ResourceLocation, List<Component>)",
+          "formatModName(ResourceLocation)",
+          "getFluidTooltip(FluidStack, int)",
+          "appendMaterial(FluidStack, List<Component>)",
+          "appendMaterial(Fluid, int, List<Component>)",
+          "appendMaterialNoFallback(Fluid, int, List<Component>)",
+          "appendMaterialNoShift(Fluid, int, List<Component>)",
+          "appendShift(List<Component>)",
+          "appendNamedList(ResourceLocation, int, List<Component>)",
+          "appendBuckets(int, List<Component>)"
+        ],
+        "slimeknights.mantle.fluid.tooltip.FluidUnit": [
+          "getText(List<Component>, int)"
+        ],
+        "slimeknights.mantle.fluid.tooltip.FluidUnitList": [
+          "matches(Fluid)",
+          "getText(List<Component>, int)"
+        ],
+        "slimeknights.mantle.fluid.transfer.AbstractFluidContainerTransferProvider": [
+          "addTransfers()",
+          "addTransfer(ResourceLocation, IFluidContainerTransfer, ICondition...)",
+          "addTransfer(String, IFluidContainerTransfer, ICondition...)",
+          "addFillEmpty(String, ItemLike, ItemLike, FluidOutput, FluidIngredient, boolean, ICondition...)",
+          "addFillEmpty(String, ItemLike, ItemLike, Fluid, TagKey<Fluid>, int, boolean, ICondition...)",
+          "addFillEmpty(String, ItemLike, ItemLike, TagKey<Fluid>, int, boolean, ICondition...)",
+          "addFillEmpty(String, ItemLike, ItemLike, FluidObject<?>, int, boolean, ICondition...)",
+          "addFillEmpty(String, ItemLike, ItemLike, Fluid, TagKey<Fluid>, int, ICondition...)",
+          "addFillEmptyNBT(String, ItemLike, ItemLike, Fluid, TagKey<Fluid>, int, ICondition...)",
+          "m_213708_(CachedOutput)"
+        ],
+        "slimeknights.mantle.fluid.transfer.EmptyFluidContainerTransfer": [
+          "addRepresentativeItems(Consumer<Item>)",
+          "matches(ItemStack, FluidStack)",
+          "getFluid(ItemStack)",
+          "transfer(ItemStack, FluidStack, IFluidHandler, IFluidContainerTransfer.TransferDirection)",
+          "serialize(JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.fluid.transfer.EmptyFluidWithNBTTransfer": [
+          "getFluid(ItemStack)",
+          "serialize(JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.fluid.transfer.EmptyPotionTransfer": [
+          "matches(ItemStack, FluidStack)",
+          "getFluid(ItemStack)",
+          "serialize(JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.fluid.transfer.FillFluidContainerTransfer": [
+          "addRepresentativeItems(Consumer<Item>)",
+          "matches(ItemStack, FluidStack)",
+          "getFilled(FluidStack)",
+          "transfer(ItemStack, FluidStack, IFluidHandler, IFluidContainerTransfer.TransferDirection)",
+          "serialize(JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.fluid.transfer.FillFluidWithNBTTransfer": [
+          "getFilled(FluidStack)",
+          "serialize(JsonSerializationContext)"
+        ],
+        "slimeknights.mantle.fluid.transfer.FluidContainerTransferManager": [
+          "getContainerItems()",
+          "init()",
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "mayHaveTransfer(ItemLike)",
+          "mayHaveTransfer(ItemStack)",
+          "getTransfer(ItemStack, FluidStack)",
+          "setContainerItems(Set<Item>)"
+        ],
+        "slimeknights.mantle.fluid.transfer.FluidContainerTransferPacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.fluid.transfer.IFluidContainerTransfer": [
+          "transfer(ItemStack, FluidStack, IFluidHandler, IFluidContainerTransfer.TransferDirection)",
+          "TransferResult(ItemStack, FluidStack, boolean)"
+        ],
+        "slimeknights.mantle.fluid.UnplaceableFluid": [
+          "getFluidType()",
+          "m_6859_()",
+          "m_5486_(FluidState, BlockGetter, BlockPos, Fluid, Direction)",
+          "m_6718_(LevelReader)",
+          "m_5804_(FluidState)",
+          "m_7000_(BlockGetter, BlockPos, FluidState)",
+          "m_7444_(FluidState)",
+          "m_7427_(FluidState)",
+          "m_6098_(FluidState, BlockGetter, BlockPos)",
+          "m_7430_(FluidState)",
+          "m_7999_(FluidState, BlockGetter, BlockPos)",
+          "m_6752_()"
+        ],
+        "slimeknights.mantle.inventory.BaseContainerMenu": [
+          "getTile()",
+          "syncOnOpen(ServerPlayer)",
+          "syncWithOtherContainer(BaseContainerMenu<?>, ServerPlayer)",
+          "syncNewContainer(ServerPlayer)",
+          "sameGui(BaseContainerMenu<?>)",
+          "m_6875_(Player)",
+          "m_38927_()",
+          "addInventorySlots()",
+          "getInventoryXOffset()",
+          "getInventoryYOffset()",
+          "addInventorySlots(Inventory)",
+          "m_38897_(Slot)",
+          "m_7648_(Player, int)",
+          "m_38903_(ItemStack, int, int, boolean)",
+          "mergeItemStackRefill(ItemStack, int, int, boolean)",
+          "mergeItemStackMove(ItemStack, int, int, boolean)",
+          "getTileEntityFromBuf(FriendlyByteBuf, Class<TILE>)"
+        ],
+        "slimeknights.mantle.inventory.CustomResultSlot": [
+          "m_142406_(Player, ItemStack)"
+        ],
+        "slimeknights.mantle.inventory.EmptyItemHandler": [
+          "getSlots()",
+          "getSlotLimit(int)",
+          "getStackInSlot(int)",
+          "isItemValid(int, ItemStack)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)"
+        ],
+        "slimeknights.mantle.inventory.IContainerCraftingCustom": [],
+        "slimeknights.mantle.inventory.MultiModuleContainerMenu": [
+          "addSubContainer(AbstractContainerMenu, boolean)",
+          "getSubContainer(Class<CONTAINER>)",
+          "getSubContainer(Class<CONTAINER>, int)",
+          "getSlotContainer(int)",
+          "m_6875_(Player)",
+          "m_6877_(Player)",
+          "m_150399_(int, int, ClickType, Player)",
+          "m_7648_(Player, int)",
+          "notifySlotAfterTransfer(Player, ItemStack, ItemStack, Slot)",
+          "moveToTileInventory(ItemStack)",
+          "moveToPlayerInventory(ItemStack)",
+          "moveToAnyContainer(ItemStack, Collection<AbstractContainerMenu>)",
+          "moveToContainer(ItemStack, AbstractContainerMenu)",
+          "refillAnyContainer(ItemStack, Collection<AbstractContainerMenu>)",
+          "refillContainer(ItemStack, AbstractContainerMenu)",
+          "detectTE(Class<TE>)"
+        ],
+        "slimeknights.mantle.inventory.OutSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "slimeknights.mantle.inventory.RestrictedItemSlot": [
+          "m_5857_(ItemStack)"
+        ],
+        "slimeknights.mantle.inventory.SingleItemHandler": [
+          "setStack(ItemStack)",
+          "isItemValid(ItemStack)",
+          "isItemValid(int, ItemStack)",
+          "getSlots()",
+          "getSlotLimit(int)",
+          "getStackInSlot(int)",
+          "setStackInSlot(int, ItemStack)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "writeToNBT()",
+          "readFromNBT(CompoundTag)",
+          "getStack()"
+        ],
+        "slimeknights.mantle.inventory.SmartItemHandlerSlot": [
+          "m_8010_(Player)",
+          "m_5866_(ItemStack)"
+        ],
+        "slimeknights.mantle.inventory.WrapperSlot": [
+          "m_40234_(ItemStack, ItemStack)",
+          "m_142406_(Player, ItemStack)",
+          "m_5857_(ItemStack)",
+          "m_7993_()",
+          "m_6657_()",
+          "m_269060_(ItemStack)",
+          "m_5852_(ItemStack)",
+          "m_6654_()",
+          "m_6641_()",
+          "m_5866_(ItemStack)",
+          "m_7543_()",
+          "m_6201_(int)",
+          "m_8010_(Player)",
+          "m_6659_()",
+          "setBackground(ResourceLocation, ResourceLocation)",
+          "m_150641_(int, int, Player)",
+          "m_150647_(int, int, Player)",
+          "m_150656_(ItemStack, int)",
+          "m_150651_(Player)",
+          "m_280329_()"
+        ],
+        "slimeknights.mantle.item.AbstractBookItem": [
+          "getBook(ItemStack)",
+          "isValidContainer(AbstractContainerMenu)",
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "openScreen(Player, InteractionHand, ItemStack)",
+          "m_7203_(Level, Player, InteractionHand)",
+          "openScreen(Player, int, ItemStack)",
+          "m_142305_(ItemStack, ItemStack, Slot, ClickAction, Player, SlotAccess)",
+          "openLecternScreenClient(BlockPos, ItemStack)"
+        ],
+        "slimeknights.mantle.item.ArmorTooltipItem": [
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)"
+        ],
+        "slimeknights.mantle.item.BlockTooltipItem": [
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)"
+        ],
+        "slimeknights.mantle.item.BurnableBlockItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)"
+        ],
+        "slimeknights.mantle.item.BurnableHangingSignItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)"
+        ],
+        "slimeknights.mantle.item.BurnableSignItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)"
+        ],
+        "slimeknights.mantle.item.BurnableTallBlockItem": [
+          "getBurnTime(ItemStack, RecipeType<?>)"
+        ],
+        "slimeknights.mantle.item.ConstantFluidContainerWrapper": [
+          "getTanks()",
+          "getTankCapacity(int)",
+          "isFluidValid(int, FluidStack)",
+          "getFluidInTank(int)",
+          "fill(FluidStack, FluidAction)",
+          "drain(FluidStack, FluidAction)",
+          "drain(int, FluidAction)",
+          "getCapability(Capability<T>, Direction)",
+          "getContainer()"
+        ],
+        "slimeknights.mantle.item.ContainerFoodItem": [
+          "m_6164_(ItemStack)",
+          "addEffectTooltip(FoodProperties, List<Component>)",
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)",
+          "m_5922_(ItemStack, Level, LivingEntity)"
+        ],
+        "slimeknights.mantle.item.EdibleItem": [
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)"
+        ],
+        "slimeknights.mantle.item.ILecternBookItem": [
+          "openLecternScreen(Level, BlockPos, Player, ItemStack)"
+        ],
+        "slimeknights.mantle.item.LecternBookItem": [
+          "m_6225_(UseOnContext)",
+          "interactWithBlock(RightClickBlock)"
+        ],
+        "slimeknights.mantle.item.TooltipItem": [
+          "m_7373_(ItemStack, Level, List<Component>, TooltipFlag)"
+        ],
+        "slimeknights.mantle.loot.AbstractLootModifierBuilder": [
+          "addCondition(LootItemCondition)",
+          "getConditions()"
+        ],
+        "slimeknights.mantle.loot.AbstractLootTableInjectionProvider": [
+          "addTables()",
+          "m_213708_(CachedOutput)",
+          "inject(String, ResourceLocation, ICondition...)",
+          "inject(String, String, ICondition...)",
+          "injectChest(String, ICondition...)",
+          "injectGameplay(String, ICondition...)"
+        ],
+        "slimeknights.mantle.loot.AddEntryLootModifier": [
+          "builder(LootPoolEntryContainer)",
+          "builder(net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer.Builder<?>)",
+          "doApply(ObjectArrayList<ItemStack>, LootContext)",
+          "codec()"
+        ],
+        "slimeknights.mantle.loot.condition.BlockTagLootCondition": [
+          "test(LootContext)",
+          "m_6231_()",
+          "m_7940_()"
+        ],
+        "slimeknights.mantle.loot.condition.ContainsItemModifierLootCondition": [
+          "test(List<ItemStack>, LootContext)",
+          "serialize(JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.loot.condition.EmptyModifierLootCondition": [
+          "test(List<ItemStack>, LootContext)",
+          "serialize(JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.loot.condition.HasLootContextSetCondition": [
+          "builder(LootContextParamSet)",
+          "m_7940_()",
+          "test(LootContext)"
+        ],
+        "slimeknights.mantle.loot.condition.ILootModifierCondition": [
+          "inverted()"
+        ],
+        "slimeknights.mantle.loot.condition.InvertedModifierLootCondition": [
+          "test(List<ItemStack>, LootContext)",
+          "inverted()",
+          "serialize(JsonSerializationContext)",
+          "deserialize(JsonElement, Type, JsonDeserializationContext)"
+        ],
+        "slimeknights.mantle.loot.entry.TagPreferenceLootEntry": [
+          "m_6751_()",
+          "m_6948_(Consumer<ItemStack>, LootContext)",
+          "tagPreference(TagKey<Item>)"
+        ],
+        "slimeknights.mantle.loot.function.RetexturedLootFunction": [
+          "m_6231_()",
+          "m_7372_(ItemStack, LootContext)",
+          "m_7162_()"
+        ],
+        "slimeknights.mantle.loot.function.SetFluidLootFunction": [
+          "m_7372_(ItemStack, LootContext)",
+          "m_7162_()",
+          "builder(FluidStack)"
+        ],
+        "slimeknights.mantle.loot.LootTableInjection": [
+          "LootPoolInjection(String, LootPoolEntryContainer[])"
+        ],
+        "slimeknights.mantle.loot.LootTableInjector": [
+          "init()",
+          "onResourceManagerReload(ResourceManager)"
+        ],
+        "slimeknights.mantle.loot.MantleLoot": [
+          "registerGlobalLootModifiers(RegisterEvent)"
+        ],
+        "slimeknights.mantle.loot.ReplaceItemLootModifier": [
+          "builder(Ingredient, ItemOutput)",
+          "doApply(ObjectArrayList<ItemStack>, LootContext)",
+          "codec()"
+        ],
+        "slimeknights.mantle.Mantle": [
+          "getResource(String)",
+          "commonResource(String)",
+          "makeDescriptionId(String, String)",
+          "makeComponent(String, String)",
+          "makeComponent(String, String, Object...)"
+        ],
+        "slimeknights.mantle.MantleEvents": [],
+        "slimeknights.mantle.network.MantleNetwork": [
+          "registerPackets()"
+        ],
+        "slimeknights.mantle.network.NetworkWrapper": [
+          "registerPacket(Class<MSG>, Function<FriendlyByteBuf, MSG>, NetworkDirection)",
+          "registerPacket(Class<MSG>, BiConsumer<MSG, FriendlyByteBuf>, Function<FriendlyByteBuf, MSG>, BiConsumer<MSG, Supplier<Context>>, NetworkDirection)",
+          "registerPacketNoLogger(Class<MSG>, BiConsumer<MSG, FriendlyByteBuf>, Function<FriendlyByteBuf, MSG>, BiConsumer<MSG, Supplier<Context>>, NetworkDirection)",
+          "sendToServer(Object)",
+          "send(PacketTarget, Object)",
+          "sendVanillaPacket(Packet<?>, Entity)",
+          "sendTo(Object, Player)",
+          "sendTo(Object, ServerPlayer)",
+          "sendToClientsAround(Object, ServerLevel, BlockPos)",
+          "sendToTrackingAndSelf(Object, Entity)",
+          "sendToTracking(Object, Entity)"
+        ],
+        "slimeknights.mantle.network.packet.DropLecternBookPacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.ISimplePacket": [],
+        "slimeknights.mantle.network.packet.IThreadsafePacket": [
+          "handle(Supplier<Context>)"
+        ],
+        "slimeknights.mantle.network.packet.OpenLecternBookPacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.OpenNamedBookPacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.SwingArmPacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.UpdateHeldPagePacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.UpdateInventoryPagePacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.network.packet.UpdateLecternPagePacket": [
+          "encode(FriendlyByteBuf)",
+          "handleThreadsafe(Context)"
+        ],
+        "slimeknights.mantle.plugin.jei.entity.EntityIngredientHelper": [
+          "getIngredientType()",
+          "getDisplayName(EntityIngredient.EntityInput)",
+          "getUniqueId(EntityIngredient.EntityInput, UidContext)",
+          "getResourceLocation(EntityIngredient.EntityInput)",
+          "copyIngredient(EntityIngredient.EntityInput)",
+          "getErrorInfo(EntityIngredient.EntityInput)"
+        ],
+        "slimeknights.mantle.plugin.jei.entity.EntityIngredientRenderer": [
+          "getWidth()",
+          "getHeight()",
+          "render(GuiGraphics, EntityIngredient.EntityInput)",
+          "getTooltip(EntityIngredient.EntityInput, TooltipFlag)"
+        ],
+        "slimeknights.mantle.plugin.jei.JEIPlugin": [
+          "getPluginUid()",
+          "registerIngredients(IModIngredientRegistration)",
+          "registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration)",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "slimeknights.mantle.plugin.jei.MantleJEIConstants": [
+          "getCraftingIndex(int, int, int)"
+        ],
+        "slimeknights.mantle.plugin.jei.RetexturableRecipeExtension": [
+          "getRegistryName()",
+          "getWidth()",
+          "getHeight()",
+          "setRecipe(IRecipeLayoutBuilder, ICraftingGridHelper, IFocusGroup)"
+        ],
+        "slimeknights.mantle.recipe.condition.TagCombinationCondition": [
+          "match(TagKey<T>, TagKey<T>...)",
+          "intersection(TagKey<T>...)",
+          "difference(TagKey<T>, TagKey<T>)",
+          "getID()",
+          "test(IContext)"
+        ],
+        "slimeknights.mantle.recipe.condition.TagCondition": [
+          "registry(LootContext)",
+          "toString()",
+          "getTag()"
+        ],
+        "slimeknights.mantle.recipe.condition.TagEmptyCondition": [
+          "getID()",
+          "m_7940_()",
+          "test(IContext)",
+          "test(LootContext)"
+        ],
+        "slimeknights.mantle.recipe.condition.TagFilledCondition": [
+          "getID()",
+          "m_7940_()",
+          "test(IContext)",
+          "test(LootContext)"
+        ],
+        "slimeknights.mantle.recipe.container.IEmptyContainer": [
+          "m_8020_(int)",
+          "m_7983_()",
+          "m_6643_()"
+        ],
+        "slimeknights.mantle.recipe.container.InventorySlotWrapper": [
+          "getStack()"
+        ],
+        "slimeknights.mantle.recipe.container.IRecipeContainer": [
+          "m_7407_(int, int)",
+          "m_8016_(int)",
+          "m_6836_(int, ItemStack)",
+          "m_6211_()",
+          "m_6596_()",
+          "m_6542_(Player)"
+        ],
+        "slimeknights.mantle.recipe.container.ISingleStackContainer": [
+          "m_8020_(int)",
+          "m_7983_()",
+          "m_6643_()",
+          "m_18947_(Item)",
+          "m_18949_(Set<Item>)"
+        ],
+        "slimeknights.mantle.recipe.cooking.BlastingResultRecipe": [
+          "m_7707_()",
+          "m_8043_(RegistryAccess)",
+          "m_5874_(Container, RegistryAccess)",
+          "getResult()"
+        ],
+        "slimeknights.mantle.recipe.cooking.CampfireResultRecipe": [
+          "m_7707_()",
+          "m_8043_(RegistryAccess)",
+          "m_5874_(Container, RegistryAccess)",
+          "getResult()"
+        ],
+        "slimeknights.mantle.recipe.cooking.CookingRecipeBuilder": [
+          "builder(ItemOutput)",
+          "builder(ItemLike, int)",
+          "builder(ItemLike)",
+          "builder(TagKey<Item>, int)",
+          "builder(TagKey<Item>)",
+          "type(CookingRecipeBuilder.CookingType)",
+          "requires(Ingredient)",
+          "requires(ItemLike)",
+          "requires(TagKey<Item>)",
+          "experience(float)",
+          "cookingTime(int)",
+          "saveSmelting(Consumer<FinishedRecipe>, ResourceLocation)",
+          "saveBlasting(Consumer<FinishedRecipe>, ResourceLocation)",
+          "saveSmoking(Consumer<FinishedRecipe>, ResourceLocation)",
+          "saveCampfire(Consumer<FinishedRecipe>, ResourceLocation)",
+          "save(Consumer<FinishedRecipe>)",
+          "save(Consumer<FinishedRecipe>, ResourceLocation)"
+        ],
+        "slimeknights.mantle.recipe.cooking.CookingResultRecipe": [],
+        "slimeknights.mantle.recipe.cooking.SmeltingResultRecipe": [
+          "m_7707_()",
+          "m_8043_(RegistryAccess)",
+          "m_5874_(Container, RegistryAccess)",
+          "getResult()"
+        ],
+        "slimeknights.mantle.recipe.cooking.SmokingResultRecipe": [
+          "m_7707_()",
+          "m_8043_(RegistryAccess)",
+          "m_5874_(Container, RegistryAccess)",
+          "getResult()"
+        ],
+        "slimeknights.mantle.recipe.crafting.ShapedFallbackRecipe": [
+          "m_5818_(CraftingContainer, Level)",
+          "m_7707_()"
+        ],
+        "slimeknights.mantle.recipe.crafting.ShapedFallbackRecipeBuilder": [
+          "addAlternative(ResourceLocation)",
+          "addAlternatives(Collection<ResourceLocation>)",
+          "build(Consumer<FinishedRecipe>)",
+          "build(Consumer<FinishedRecipe>, ResourceLocation)",
+          "fallback(ShapedRecipeBuilder)"
+        ],
+        "slimeknights.mantle.recipe.crafting.ShapedRetexturedRecipe": [
+          "getResultItem(Item, RegistryAccess)",
+          "m_5874_(CraftingContainer, RegistryAccess)",
+          "m_7707_()",
+          "getTexture()"
+        ],
+        "slimeknights.mantle.recipe.crafting.ShapedRetexturedRecipeBuilder": [
+          "setSource(Ingredient)",
+          "setSource(TagKey<Item>)",
+          "setSource(char)",
+          "setMatchAll()",
+          "build(Consumer<FinishedRecipe>)",
+          "build(Consumer<FinishedRecipe>, ResourceLocation)",
+          "fromShaped(ShapedRecipeBuilder)"
+        ],
+        "slimeknights.mantle.recipe.data.AbstractRecipeBuilder": [
+          "unlockedBy(String, CriterionTriggerInstance)",
+          "group(String)",
+          "group(ResourceLocation)",
+          "save(Consumer<FinishedRecipe>)",
+          "save(Consumer<FinishedRecipe>, ResourceLocation)",
+          "buildAdvancement(ResourceLocation, String)",
+          "buildOptionalAdvancement(ResourceLocation, String)"
+        ],
+        "slimeknights.mantle.recipe.data.ConsumerWrapperBuilder": [
+          "wrap()",
+          "wrap(RecipeSerializer<?>)",
+          "wrap(ResourceLocation)",
+          "addCondition(ICondition)",
+          "build(Consumer<FinishedRecipe>)"
+        ],
+        "slimeknights.mantle.recipe.data.FluidNameIngredient": [
+          "loadable()",
+          "test(Fluid)",
+          "getAmount(Fluid)",
+          "getAllFluids()",
+          "of(ResourceLocation, int)"
+        ],
+        "slimeknights.mantle.recipe.data.ICommonRecipeHelper": [
+          "packingRecipe(Consumer<FinishedRecipe>, RecipeCategory, String, ItemLike, String, ItemLike, String)",
+          "packingRecipe(Consumer<FinishedRecipe>, RecipeCategory, String, ItemLike, String, ItemLike, TagKey<Item>, String)",
+          "metalCrafting(Consumer<FinishedRecipe>, MetalItemObject, String)",
+          "slabStairsCrafting(Consumer<FinishedRecipe>, BuildingBlockObject, String, boolean)",
+          "stairSlabWallCrafting(Consumer<FinishedRecipe>, WallBuildingBlockObject, String, boolean)",
+          "woodCrafting(Consumer<FinishedRecipe>, WoodBlockObject, String)"
+        ],
+        "slimeknights.mantle.recipe.data.IRecipeHelper": [
+          "location(String)",
+          "prefix(String)",
+          "id(ItemLike)",
+          "id(Registry<T>, T)",
+          "wrap(ResourceLocation, String, String)",
+          "prefix(ResourceLocation, String)",
+          "suffix(ResourceLocation, String)",
+          "wrap(RegistryObject<?>, String, String)",
+          "prefix(RegistryObject<?>, String)",
+          "suffix(RegistryObject<?>, String)",
+          "wrap(IdAwareObject, String, String)",
+          "prefix(IdAwareObject, String)",
+          "suffix(IdAwareObject, String)",
+          "getItemTag(String, String)",
+          "getFluidTag(String, String)",
+          "tagCondition(String)",
+          "withCondition(Consumer<FinishedRecipe>, ICondition...)"
+        ],
+        "slimeknights.mantle.recipe.data.ItemNameIngredient": [
+          "from(List<ResourceLocation>)",
+          "from(ResourceLocation...)",
+          "test(ItemStack)",
+          "m_43942_()",
+          "isSimple()",
+          "getSerializer()"
+        ],
+        "slimeknights.mantle.recipe.data.ItemNameOutput": [
+          "fromName(ResourceLocation, int)",
+          "fromName(ResourceLocation)",
+          "get()",
+          "serialize(boolean)",
+          "fromName(ResourceLocation, int, CompoundTag)",
+          "getCount()"
+        ],
+        "slimeknights.mantle.recipe.data.NBTNameIngredient": [
+          "from(ResourceLocation, CompoundTag)",
+          "from(ResourceLocation)",
+          "test(ItemStack)",
+          "m_43942_()"
+        ],
+        "slimeknights.mantle.recipe.helper.FluidOutput": [
+          "get()",
+          "copy()",
+          "getAmount()",
+          "isEmpty()",
+          "getTag()",
+          "serialize()",
+          "serialize(JsonObject)",
+          "fromStack(FluidStack)",
+          "fromFluid(Fluid, int)",
+          "fromTag(TagKey<Fluid>, int, CompoundTag)",
+          "fromTag(TagKey<Fluid>, int)",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)"
+        ],
+        "slimeknights.mantle.recipe.helper.ItemOutput": [
+          "get()",
+          "copy()",
+          "getCount()",
+          "isEmpty()",
+          "getTag()",
+          "serialize(boolean)",
+          "fromStack(ItemStack)",
+          "fromItem(ItemLike, int)",
+          "fromItem(ItemLike)",
+          "fromTag(TagKey<Item>, int, CompoundTag)",
+          "fromTag(TagKey<Item>, int)",
+          "fromTag(TagKey<Item>)",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)"
+        ],
+        "slimeknights.mantle.recipe.helper.LoadableIngredientSerializer": [
+          "parse(FriendlyByteBuf)",
+          "parse(JsonObject)",
+          "write(FriendlyByteBuf, T)",
+          "serialize(T)"
+        ],
+        "slimeknights.mantle.recipe.helper.LoadableRecipeSerializer": [
+          "of(RecordLoadable<T>)",
+          "of(RecordLoadable<T>, Supplier<? extends RecipeType<R>>)",
+          "deprecated(RecordLoadable<T>, String)",
+          "buildContext(ResourceLocation)",
+          "m_6729_(ResourceLocation, JsonObject)",
+          "fromNetworkSafe(ResourceLocation, FriendlyByteBuf)",
+          "m_8005_(ResourceLocation, FriendlyByteBuf)",
+          "toNetworkSafe(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.recipe.helper.LoggingRecipeSerializer": [
+          "m_8005_(ResourceLocation, FriendlyByteBuf)",
+          "m_6178_(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.recipe.helper.RecipeHelper": [
+          "getRecipe(RecipeManager, ResourceLocation, Class<C>)",
+          "getRecipes(RecipeManager, RecipeType<T>, Class<C>)",
+          "getUIRecipes(RecipeManager, RecipeType<T>, Class<C>, Predicate<? super C>)",
+          "getJEIRecipes(RegistryAccess, Stream<? extends Recipe<?>>, Class<C>)",
+          "getJEIRecipes(RegistryAccess, RecipeManager, RecipeType<T>, Class<C>)"
+        ],
+        "slimeknights.mantle.recipe.helper.SimpleFinishedRecipe": [
+          "m_7917_(JsonObject)",
+          "m_5860_()",
+          "m_6448_()",
+          "m_6445_()",
+          "m_6637_()"
+        ],
+        "slimeknights.mantle.recipe.helper.SimpleRecipeSerializer": [
+          "m_6729_(ResourceLocation, JsonObject)",
+          "m_8005_(ResourceLocation, FriendlyByteBuf)",
+          "m_6178_(FriendlyByteBuf, T)"
+        ],
+        "slimeknights.mantle.recipe.helper.TagEmptyCondition": [],
+        "slimeknights.mantle.recipe.helper.TagPreference": [
+          "init()",
+          "getPreference(TagKey<T>)"
+        ],
+        "slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer": [],
+        "slimeknights.mantle.recipe.ICommonRecipe": [
+          "m_5874_(C, RegistryAccess)",
+          "m_8004_(int, int)",
+          "m_5598_()"
+        ],
+        "slimeknights.mantle.recipe.ICustomOutputRecipe": [
+          "m_8043_(RegistryAccess)",
+          "m_5874_(C, RegistryAccess)"
+        ],
+        "slimeknights.mantle.recipe.IMultiRecipe": [],
+        "slimeknights.mantle.recipe.ingredient.EntityIngredient": [
+          "of(Set<EntityType<?>>)",
+          "of(EntityType<?>...)",
+          "of(TagKey<EntityType<?>>)",
+          "of(EntityIngredient...)",
+          "getTypes()",
+          "serialize()",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)",
+          "getDisplay()",
+          "getEggs()",
+          "EntityInput(EntityType<?>)"
+        ],
+        "slimeknights.mantle.recipe.ingredient.FluidContainerIngredient": [
+          "fromIngredient(FluidIngredient, Ingredient)",
+          "fromIngredient(FluidIngredient)",
+          "fromFluid(FluidObject<?>)",
+          "test(ItemStack)",
+          "m_43908_()",
+          "m_43942_()",
+          "invalidate()",
+          "isSimple()",
+          "m_43947_()",
+          "getSerializer()"
+        ],
+        "slimeknights.mantle.recipe.ingredient.FluidIngredient": [
+          "of(Fluid, int)",
+          "of(FluidStack)",
+          "of(TagKey<Fluid>, int)",
+          "of(FluidIngredient...)",
+          "of(List<FluidIngredient>)",
+          "test(Fluid)",
+          "getAmount(Fluid)",
+          "test(FluidStack)",
+          "getFluids()",
+          "getAllFluids()",
+          "serialize()",
+          "deserialize(JsonObject, String)",
+          "deserialize(JsonElement, String)",
+          "write(FriendlyByteBuf)",
+          "read(FriendlyByteBuf)"
+        ],
+        "slimeknights.mantle.recipe.ingredient.ItemIngredient": [
+          "toItem(List<ItemLike>)",
+          "test(ItemStack)"
+        ],
+        "slimeknights.mantle.recipe.ingredient.PotionDisplayIngredient": [
+          "of(List<ItemLike>)",
+          "of(ItemLike...)",
+          "of(TagKey<Item>)",
+          "isSimple()",
+          "m_43908_()",
+          "getSerializer()",
+          "m_43942_()"
+        ],
+        "slimeknights.mantle.recipe.ingredient.PotionIngredient": [
+          "of(Potion, List<ItemLike>)",
+          "of(Potion, ItemLike...)",
+          "of(Potion, TagKey<Item>)",
+          "test(ItemStack)",
+          "isSimple()",
+          "getSerializer()",
+          "m_43942_()"
+        ],
+        "slimeknights.mantle.recipe.ingredient.SizedIngredient": [
+          "of(Ingredient)",
+          "fromItems(int, ItemLike...)",
+          "fromItems(ItemLike...)",
+          "fromTag(TagKey<Item>, int)",
+          "fromTag(TagKey<Item>)",
+          "test(ItemStack)",
+          "isEmpty()",
+          "getMatchingStacks()",
+          "write(FriendlyByteBuf)",
+          "serialize()",
+          "read(FriendlyByteBuf)",
+          "deserialize(JsonObject)",
+          "of(Ingredient, int)",
+          "getIngredient()",
+          "getAmountNeeded()"
+        ],
+        "slimeknights.mantle.recipe.MantleRecipes": [
+          "init(IEventBus)"
+        ],
+        "slimeknights.mantle.recipe.MantleRecipeSerializers": [],
+        "slimeknights.mantle.registration.adapter.BlockEntityTypeRegistryAdapter": [
+          "register(BlockEntitySupplier<? extends T>, Block, String)",
+          "register(BlockEntitySupplier<? extends T>, Collection<? extends Block>, String)",
+          "register(BlockEntitySupplier<? extends T>, EnumObject<?, ? extends Block>, String)",
+          "register(BlockEntitySupplier<? extends T>, String, Consumer<Builder<Block>>)"
+        ],
+        "slimeknights.mantle.registration.adapter.BlockRegistryAdapter": [
+          "registerOverride(Function<Properties, T>, Block)",
+          "registerBuilding(Block, String)",
+          "registerWallBuilding(Block, String)",
+          "registerFenceBuilding(Block, String)",
+          "registerWood(String, Function<WoodBlockObject.WoodVariant, Properties>)",
+          "registerFluidBlock(Supplier<? extends ForgeFlowingFluid>, MapColor, int, String)"
+        ],
+        "slimeknights.mantle.registration.adapter.ContainerTypeRegistryAdapter": [
+          "registerType(IContainerFactory<C>, String)"
+        ],
+        "slimeknights.mantle.registration.adapter.EntityTypeRegistryAdapter": [
+          "register(Builder<T>, String)"
+        ],
+        "slimeknights.mantle.registration.adapter.EnumRegistryAdapter": [
+          "registerEnum(Function<E, I>, E[], String)",
+          "registerEnum(Function<E, I>, String, E[])"
+        ],
+        "slimeknights.mantle.registration.adapter.FluidRegistryAdapter": [
+          "register(FluidBuilder<?>, Function<Properties, F>, Function<Properties, F>, String)",
+          "register(FluidBuilder<?>, String)"
+        ],
+        "slimeknights.mantle.registration.adapter.ItemRegistryAdapter": [
+          "registerDefault(String)",
+          "register(Properties, String)",
+          "registerDefault(Function<Properties, T>, String)",
+          "register(I, Block)",
+          "registerDefaultBlockItem(Block)",
+          "registerBlockItem(Block, BiFunction<Block, Properties, T>)",
+          "registerBlockItem(Block, Properties)",
+          "registerBlockItem(T)",
+          "registerDefaultBlockItem(BuildingBlockObject)",
+          "registerDefaultBlockItem(WallBuildingBlockObject)",
+          "registerDefaultBlockItem(FenceBuildingBlockObject)",
+          "registerDefaultBlockItem(WoodBlockObject, boolean)",
+          "registerDefaultBlockItem(EnumObject<?, ? extends Block>)",
+          "registerBlockItem(EnumObject<?, B>, Properties)",
+          "registerBlockItem(EnumObject<?, B>, Function<B, ? extends BlockItem>)",
+          "registerBucket(Supplier<? extends Fluid>, String)",
+          "registerSpawnEgg(Supplier<? extends EntityType<? extends Mob>>, int, int, String)"
+        ],
+        "slimeknights.mantle.registration.adapter.RegistryAdapter": [
+          "getResource(String)",
+          "resourceName(String)",
+          "register(I, String)",
+          "register(I, T)",
+          "register(I, ResourceLocation)"
+        ],
+        "slimeknights.mantle.registration.deferred.ArgumentTypeDeferredRegister": [
+          "register(String, Class<? super A>, Supplier<I>)",
+          "registerSingleton(String, Class<A>, Supplier<A>)"
+        ],
+        "slimeknights.mantle.registration.deferred.AttributeDeferredRegister": [
+          "register(String, double, double, double, boolean)",
+          "registerPercent(String, double, boolean)",
+          "registerMultiplier(String, boolean)"
+        ],
+        "slimeknights.mantle.registration.deferred.BlockDeferredRegister": [
+          "register(IEventBus)",
+          "registerNoItem(String, Supplier<? extends B>)",
+          "registerNoItem(String, Properties)",
+          "register(String, Supplier<? extends B>, Function<? super B, ? extends BlockItem>)",
+          "register(String, Properties, Function<? super Block, ? extends BlockItem>)",
+          "registerBuilding(String, Supplier<? extends Block>, Function<? super Block, ? extends BlockItem>)",
+          "registerBuilding(String, Properties, Function<? super Block, ? extends BlockItem>)",
+          "registerWallBuilding(String, Supplier<? extends Block>, Function<? super Block, ? extends BlockItem>)",
+          "registerWallBuilding(String, Properties, Function<? super Block, ? extends BlockItem>)",
+          "registerFenceBuilding(String, Supplier<? extends Block>, Function<? super Block, ? extends BlockItem>)",
+          "registerFenceBuilding(String, Properties, Function<? super Block, ? extends BlockItem>)",
+          "registerWood(String, Function<WoodBlockObject.WoodVariant, Properties>, boolean)",
+          "registerPotted(String, Supplier<? extends Block>)",
+          "registerPotted(RegistryObject<? extends Block>)",
+          "registerPotted(ItemObject<? extends Block>)",
+          "registerEnum(T[], String, Function<T, ? extends B>, Function<? super B, ? extends BlockItem>)",
+          "registerEnum(String, T[], Function<T, ? extends B>, Function<? super B, ? extends BlockItem>)",
+          "registerEnumNoItem(T[], String, Function<T, ? extends B>)",
+          "registerPottedEnum(T[], String, EnumObject<T, B>)",
+          "registerPottedEnum(String, EnumObject<T, B>)"
+        ],
+        "slimeknights.mantle.registration.deferred.BlockEntityTypeDeferredRegister": [
+          "register(String, BlockEntitySupplier<? extends T>, Supplier<? extends Block>)",
+          "register(String, BlockEntitySupplier<? extends T>, EnumObject<?, ? extends Block>)",
+          "register(String, BlockEntitySupplier<? extends T>, Consumer<Builder<Block>>)"
+        ],
+        "slimeknights.mantle.registration.deferred.DeferredRegisterWrapper": [
+          "register(IEventBus)",
+          "resource(String)",
+          "resourceName(String)",
+          "getName(Enum<?>)",
+          "registerEnum(E[], String, BiFunction<String, E, Supplier<? extends V>>)",
+          "registerEnum(String, E[], BiFunction<String, E, Supplier<? extends V>>)"
+        ],
+        "slimeknights.mantle.registration.deferred.EntityTypeDeferredRegister": [
+          "register(IEventBus)",
+          "register(String, Supplier<Builder<T>>)",
+          "registerWithEgg(String, Supplier<Builder<T>>, int, int)"
+        ],
+        "slimeknights.mantle.registration.deferred.EnumDeferredRegister": [
+          "register(String, Supplier<? extends I>)",
+          "registerEnum(E[], String, Function<E, ? extends I>)",
+          "registerEnum(String, E[], Function<E, ? extends I>)"
+        ],
+        "slimeknights.mantle.registration.deferred.FluidDeferredRegister": [
+          "register(IEventBus)",
+          "registerType(String, Supplier<? extends I>)",
+          "registerFluid(String, Supplier<? extends I>)",
+          "register(String)",
+          "createProperties(MapColor, int)"
+        ],
+        "slimeknights.mantle.registration.deferred.ItemDeferredRegister": [
+          "register(String, Supplier<? extends I>)",
+          "register(String, Properties)",
+          "register(String)",
+          "registerEnum(T[], String, Function<T, ? extends I>)",
+          "registerEnum(String, T[], Function<T, ? extends I>)"
+        ],
+        "slimeknights.mantle.registration.deferred.MenuTypeDeferredRegister": [
+          "register(String, IContainerFactory<C>)"
+        ],
+        "slimeknights.mantle.registration.deferred.PotionDeferredRegister": [
+          "register(String, Supplier<Potion>)",
+          "registerTypes(String, Supplier<? extends MobEffect>, int, int)",
+          "registerTypes(RegistryObject<? extends MobEffect>, int, int)",
+          "registerTypes(RegistryObject<? extends MobEffect>)"
+        ],
+        "slimeknights.mantle.registration.deferred.SynchronizedDeferredRegister": [
+          "create(ResourceKey<? extends Registry<T>>, String)",
+          "create(IForgeRegistry<B>, String)",
+          "register(String, Supplier<? extends I>)",
+          "register(IEventBus)",
+          "create(DeferredRegister<T>)"
+        ],
+        "slimeknights.mantle.registration.DelayedSupplier": [
+          "get()",
+          "setSupplier(Supplier<? extends T>)"
+        ],
+        "slimeknights.mantle.registration.FluidBuilder": [
+          "create(Supplier<? extends FluidType>)",
+          "bucket(Supplier<? extends Item>)",
+          "block(Supplier<? extends LiquidBlock>)",
+          "slopeFindDistance(int)",
+          "levelDecreasePerBlock(int)",
+          "explosionResistance(int)",
+          "tickRate(int)",
+          "build(Supplier<? extends FluidType>, Supplier<? extends Fluid>, Supplier<? extends Fluid>)",
+          "getType()",
+          "getBucket()",
+          "getBlock()",
+          "getSlopeFindDistance()"
+        ]
+      },
+      "sampleCount": 512,
+      "truncated": true
+    },
+    "1.6.157": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 436,
+  "methodCount": 2000,
+  "truncated": true
+}

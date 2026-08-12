@@ -1,0 +1,681 @@
+{
+  "slug": "kotlin-for-forge",
+  "modId": "kotlinforforge",
+  "id": "authored/lib-kotlin-for-forge",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "unknown-mod"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:32:00.732Z",
+  "versions": {
+    "unknown": {
+      "packages": [],
+      "classes": [
+        "net.darkhax.bookshelf.block.BlockBasicChest",
+        "net.darkhax.bookshelf.block.BlockSubType",
+        "net.darkhax.bookshelf.block.BlockTileEntity",
+        "net.darkhax.bookshelf.block.property.PropertyObject",
+        "net.darkhax.bookshelf.block.property.PropertyString",
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic",
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest",
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable",
+        "net.darkhax.bookshelf.Bookshelf",
+        "net.darkhax.bookshelf.BookshelfEvents",
+        "net.darkhax.bookshelf.BookshelfRegistry",
+        "net.darkhax.bookshelf.builder.ChestBuilder",
+        "net.darkhax.bookshelf.builder.LootBuilder",
+        "net.darkhax.bookshelf.client.gui.GuiGraphicButton",
+        "net.darkhax.bookshelf.client.gui.GuiSlider",
+        "net.darkhax.bookshelf.client.model.BakedModelRetexturable",
+        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList",
+        "net.darkhax.bookshelf.client.model.ModelArmorExtended",
+        "net.darkhax.bookshelf.client.particle.OpenParticleDigging",
+        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer",
+        "net.darkhax.bookshelf.command.Command",
+        "net.darkhax.bookshelf.command.CommandTree",
+        "net.darkhax.bookshelf.config.ConfigurationHandler",
+        "net.darkhax.bookshelf.crafting.AnvilRecipe",
+        "net.darkhax.bookshelf.crafting.IAnvilRecipe",
+        "net.darkhax.bookshelf.data.AttributeOperation",
+        "net.darkhax.bookshelf.data.Blockstates",
+        "net.darkhax.bookshelf.data.ColorHandlers",
+        "net.darkhax.bookshelf.data.FluidVolume",
+        "net.darkhax.bookshelf.data.VanillaColors",
+        "net.darkhax.bookshelf.entity.EntityArrowBase",
+        "net.darkhax.bookshelf.entity.EntityFake",
+        "net.darkhax.bookshelf.events.EnchantmentModifierEvent",
+        "net.darkhax.bookshelf.inventory.SlotArmor",
+        "net.darkhax.bookshelf.inventory.SlotFake",
+        "net.darkhax.bookshelf.item.ICustomMesh",
+        "net.darkhax.bookshelf.item.ItemBlockBasic",
+        "net.darkhax.bookshelf.item.ItemBlockChest",
+        "net.darkhax.bookshelf.item.ItemInventory",
+        "net.darkhax.bookshelf.item.ItemSubType",
+        "net.darkhax.bookshelf.lib.BookshelfException",
+        "net.darkhax.bookshelf.lib.Constants",
+        "net.darkhax.bookshelf.lib.MCColor",
+        "net.darkhax.bookshelf.lib.ModTrackingList",
+        "net.darkhax.bookshelf.lib.WeightedSelector",
+        "net.darkhax.bookshelf.network.NetworkHandler",
+        "net.darkhax.bookshelf.network.SerializableMessage",
+        "net.darkhax.bookshelf.network.TileEntityMessage",
+        "net.darkhax.bookshelf.registry.IVariant",
+        "net.darkhax.bookshelf.registry.RegistryHelper",
+        "net.darkhax.bookshelf.registry.RegistryListener",
+        "net.darkhax.bookshelf.util.AnnotationUtils",
+        "net.darkhax.bookshelf.util.BannerUtils",
+        "net.darkhax.bookshelf.util.baubles.BaubleUtils",
+        "net.darkhax.bookshelf.util.baubles.ItemBauble",
+        "net.darkhax.bookshelf.util.BlockUtils",
+        "net.darkhax.bookshelf.util.ClassUtils",
+        "net.darkhax.bookshelf.util.CollectionUtils",
+        "net.darkhax.bookshelf.util.CraftingUtils",
+        "net.darkhax.bookshelf.util.EnchantmentUtils",
+        "net.darkhax.bookshelf.util.EntityUtils",
+        "net.darkhax.bookshelf.util.GameUtils",
+        "net.darkhax.bookshelf.util.GuiUtils",
+        "net.darkhax.bookshelf.util.MathsUtils",
+        "net.darkhax.bookshelf.util.MathUtils",
+        "net.darkhax.bookshelf.util.ModUtils",
+        "net.darkhax.bookshelf.util.NBTUtils",
+        "net.darkhax.bookshelf.util.NumericUtils",
+        "net.darkhax.bookshelf.util.OreDictUtils",
+        "net.darkhax.bookshelf.util.ParticleUtils",
+        "net.darkhax.bookshelf.util.PlayerUtils",
+        "net.darkhax.bookshelf.util.RenderUtils",
+        "net.darkhax.bookshelf.util.SkullUtils",
+        "net.darkhax.bookshelf.util.StackUtils",
+        "net.darkhax.bookshelf.util.TextUtils",
+        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific",
+        "net.darkhax.bookshelf.world.loot.functions.SetColor"
+      ],
+      "methods": {
+        "net.darkhax.bookshelf.block.BlockBasicChest": [
+          "func_185496_a(IBlockState, IBlockAccess, BlockPos)",
+          "func_176213_c(World, BlockPos, IBlockState)",
+          "func_180642_a(World, BlockPos, EnumFacing, float, float, float, int, EntityLivingBase)",
+          "func_180633_a(World, BlockPos, IBlockState, EntityLivingBase, ItemStack)",
+          "func_149744_f(IBlockState)",
+          "func_176455_e(World, BlockPos, IBlockState)",
+          "func_176458_f(World, BlockPos, IBlockState)",
+          "func_176196_c(World, BlockPos)",
+          "removedByPlayer(IBlockState, World, BlockPos, EntityPlayer, boolean)",
+          "func_180657_a(World, EntityPlayer, BlockPos, IBlockState, TileEntity, ItemStack)",
+          "func_149915_a(World, int)",
+          "getDrops(IBlockAccess, BlockPos, IBlockState, int)",
+          "getPickBlock(IBlockState, RayTraceResult, World, BlockPos, EntityPlayer)",
+          "func_189418_a(World, BlockPos, boolean)",
+          "isTrapChest()",
+          "setState(World, BlockPos, IBlockState, int)",
+          "correctFacing(World, BlockPos, IBlockState, ChestBuilder.IChestType)",
+          "isDoubleChest(World, BlockPos, ChestBuilder.IChestType)",
+          "getCustomType(IBlockAccess, BlockPos)",
+          "getCustomType(ItemStack)"
+        ],
+        "net.darkhax.bookshelf.block.BlockSubType": [
+          "func_149666_a(Item, CreativeTabs, NonNullList<ItemStack>)",
+          "func_176203_a(int)",
+          "func_176201_c(IBlockState)",
+          "func_180661_e()",
+          "func_180651_a(IBlockState)",
+          "getVariant()",
+          "getVariantProp()"
+        ],
+        "net.darkhax.bookshelf.block.BlockTileEntity": [
+          "func_180663_b(World, BlockPos, IBlockState)",
+          "func_189539_a(IBlockState, World, BlockPos, int, int)"
+        ],
+        "net.darkhax.bookshelf.block.property.PropertyObject": [
+          "getName()",
+          "getType()",
+          "isValid(T)",
+          "valueToString(T)"
+        ],
+        "net.darkhax.bookshelf.block.property.PropertyString": [
+          "func_177700_c()",
+          "func_185929_b(String)",
+          "getName(String)",
+          "getMetaData(String)"
+        ],
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasic": [
+          "func_145839_a(NBTTagCompound)",
+          "func_189515_b(NBTTagCompound)",
+          "func_189518_D_()",
+          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
+          "func_189517_E_()",
+          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
+          "writeNBT(NBTTagCompound)",
+          "readNBT(NBTTagCompound)"
+        ],
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicChest": [
+          "func_189515_b(NBTTagCompound)",
+          "func_189517_E_()",
+          "handleUpdateTag(NBTTagCompound)",
+          "shouldRefresh(World, BlockPos, IBlockState, IBlockState)",
+          "func_189518_D_()",
+          "onDataPacket(NetworkManager, SPacketUpdateTileEntity)",
+          "func_145839_a(NBTTagCompound)",
+          "func_174911_a(EnumFacing)",
+          "getRenderBoundingBox()",
+          "getType()",
+          "setType(ChestBuilder.IChestType)",
+          "getBuilder()"
+        ],
+        "net.darkhax.bookshelf.block.tileentity.TileEntityBasicTickable": [
+          "func_73660_a()",
+          "onEntityUpdate()"
+        ],
+        "net.darkhax.bookshelf.Bookshelf": [
+          "onConstruction(FMLConstructionEvent)",
+          "postInit(FMLPostInitializationEvent)",
+          "preInitClient(FMLPreInitializationEvent)",
+          "init(FMLInitializationEvent)"
+        ],
+        "net.darkhax.bookshelf.BookshelfEvents": [
+          "onAnvilUpdate(AnvilUpdateEvent)",
+          "onClientTick(ClientTickEvent)"
+        ],
+        "net.darkhax.bookshelf.BookshelfRegistry": [
+          "addAnvilRecipe(String, ItemStack, int, int, ItemStack)",
+          "addAnvilRecipe(ItemStack, String, int, int, ItemStack)",
+          "addAnvilRecipe(String, String, int, int, ItemStack)",
+          "addAnvilRecipe(ItemStack, ItemStack, int, int, ItemStack)",
+          "addAnvilRecipe(ItemStack, ItemStack, String, int, int, ItemStack)",
+          "addAnvilRecipe(AnvilRecipe)",
+          "getAnvilRecipes()"
+        ],
+        "net.darkhax.bookshelf.builder.ChestBuilder": [
+          "register(RegistryHelper)",
+          "getNormalChest()",
+          "getTrapChest()",
+          "addChestType(String...)",
+          "addChestType(String)",
+          "addChestType(ChestBuilder.IChestType)",
+          "getChestType(String)",
+          "getNormalType()",
+          "getTrapType()",
+          "getTypes()",
+          "getModid()",
+          "useTraps()"
+        ],
+        "net.darkhax.bookshelf.builder.LootBuilder": [
+          "getName()",
+          "getPool()",
+          "setPool(String)",
+          "getWeight()",
+          "setWeight(int)",
+          "getQuality()",
+          "setQuality(int)",
+          "getItem()",
+          "setItem(Item)",
+          "getConditions()",
+          "addCondition(LootCondition)",
+          "getFunctions()",
+          "addFunction(LootFunction)",
+          "build()",
+          "toString()"
+        ],
+        "net.darkhax.bookshelf.client.gui.GuiGraphicButton": [
+          "func_146112_a(Minecraft, int, int)"
+        ],
+        "net.darkhax.bookshelf.client.gui.GuiSlider": [
+          "func_146119_b(Minecraft, int, int)",
+          "func_146116_c(Minecraft, int, int)",
+          "func_146118_a(int, int)",
+          "func_146114_a(boolean)",
+          "setSliderValue(float)",
+          "getSliderValue()"
+        ],
+        "net.darkhax.bookshelf.client.model.BakedModelRetexturable": [
+          "getRetexturedModel(String)",
+          "getDefaultModel()",
+          "func_188616_a(IBlockState, EnumFacing, long)",
+          "func_177555_b()",
+          "func_177556_c()",
+          "func_188618_c()",
+          "func_177554_e()",
+          "func_177552_f()",
+          "func_188617_f()",
+          "handlePerspective(TransformType)"
+        ],
+        "net.darkhax.bookshelf.client.model.DefaultItemOverrideList": [
+          "handleItemState(IBakedModel, ItemStack, World, EntityLivingBase)"
+        ],
+        "net.darkhax.bookshelf.client.model.ModelArmorExtended": [
+          "addModelParts()",
+          "setRotateAngle(ModelRenderer, float, float, float)",
+          "func_78088_a(Entity, float, float, float, float, float, float)"
+        ],
+        "net.darkhax.bookshelf.client.particle.OpenParticleDigging": [],
+        "net.darkhax.bookshelf.client.render.tileentity.TileEntityBasicChestRenderer": [
+          "renderTileEntityAt(TileEntityBasicChest, double, double, double, float, int)",
+          "func_147499_a(ResourceLocation)"
+        ],
+        "net.darkhax.bookshelf.command.Command": [
+          "func_184882_a(MinecraftServer, ICommandSender)"
+        ],
+        "net.darkhax.bookshelf.command.CommandTree": [
+          "func_184881_a(MinecraftServer, ICommandSender, String[])",
+          "func_184882_a(MinecraftServer, ICommandSender)"
+        ],
+        "net.darkhax.bookshelf.config.ConfigurationHandler": [
+          "init(ASMDataTable)",
+          "sync()",
+          "onConfigChanged(ConfigChangedEvent)",
+          "hasChanged()",
+          "save()",
+          "getConfig()",
+          "addReader(Class<T>, ConfigurationHandler.Adapter<T>)"
+        ],
+        "net.darkhax.bookshelf.crafting.AnvilRecipe": [
+          "isValidRecipe(ItemStack, ItemStack, String)",
+          "getExperienceCost(ItemStack, ItemStack, String)",
+          "getMaterialCost(ItemStack, ItemStack, String)",
+          "getOutput(ItemStack, ItemStack, String)"
+        ],
+        "net.darkhax.bookshelf.crafting.IAnvilRecipe": [],
+        "net.darkhax.bookshelf.data.AttributeOperation": [],
+        "net.darkhax.bookshelf.data.Blockstates": [],
+        "net.darkhax.bookshelf.data.ColorHandlers": [],
+        "net.darkhax.bookshelf.data.FluidVolume": [],
+        "net.darkhax.bookshelf.data.VanillaColors": [
+          "getColor()"
+        ],
+        "net.darkhax.bookshelf.entity.EntityArrowBase": [
+          "func_184550_j()",
+          "func_189511_e(NBTTagCompound)",
+          "func_70020_e(NBTTagCompound)",
+          "equals(Object)",
+          "hashCode()"
+        ],
+        "net.darkhax.bookshelf.entity.EntityFake": [
+          "func_70088_a()",
+          "func_70037_a(NBTTagCompound)",
+          "func_70014_b(NBTTagCompound)"
+        ],
+        "net.darkhax.bookshelf.events.EnchantmentModifierEvent": [
+          "getEnchantment()",
+          "getEntity()",
+          "getLevels()",
+          "setLevels(int)"
+        ],
+        "net.darkhax.bookshelf.inventory.SlotArmor": [
+          "func_75219_a()",
+          "func_75214_a(ItemStack)",
+          "func_178171_c()"
+        ],
+        "net.darkhax.bookshelf.inventory.SlotFake": [
+          "func_82869_a(EntityPlayer)",
+          "func_75214_a(ItemStack)",
+          "func_75209_a(int)",
+          "func_75215_d(ItemStack)"
+        ],
+        "net.darkhax.bookshelf.item.ICustomMesh": [],
+        "net.darkhax.bookshelf.item.ItemBlockBasic": [
+          "func_77647_b(int)",
+          "func_77667_c(ItemStack)",
+          "func_179223_d()",
+          "getVariant()"
+        ],
+        "net.darkhax.bookshelf.item.ItemBlockChest": [
+          "func_77667_c(ItemStack)",
+          "func_77647_b(int)",
+          "placeBlockAt(ItemStack, EntityPlayer, World, BlockPos, EnumFacing, float, float, float, IBlockState)",
+          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
+          "getCustomMesh()",
+          "registerMeshModels()",
+          "getBuilder()"
+        ],
+        "net.darkhax.bookshelf.item.ItemInventory": [
+          "readFromNBT()",
+          "writeToNBT()",
+          "getContents(ItemStack)",
+          "func_70005_c_()",
+          "func_145818_k_()",
+          "func_145748_c_()",
+          "func_70302_i_()",
+          "func_70301_a(int)",
+          "func_70298_a(int, int)",
+          "func_70304_b(int)",
+          "func_70299_a(int, ItemStack)",
+          "func_70297_j_()",
+          "func_70296_d()",
+          "func_174889_b(EntityPlayer)",
+          "func_174886_c(EntityPlayer)",
+          "func_94041_b(int, ItemStack)",
+          "func_174887_a_(int)",
+          "func_174885_b(int, int)",
+          "func_174890_g()",
+          "func_174888_l()"
+        ],
+        "net.darkhax.bookshelf.item.ItemSubType": [
+          "func_77647_b(int)",
+          "func_77667_c(ItemStack)",
+          "func_150895_a(Item, CreativeTabs, NonNullList<ItemStack>)",
+          "getVariant()"
+        ],
+        "net.darkhax.bookshelf.lib.BookshelfException": [],
+        "net.darkhax.bookshelf.lib.Constants": [],
+        "net.darkhax.bookshelf.lib.MCColor": [
+          "writeToStack(ItemStack)",
+          "writeToNBT(NBTTagCompound)",
+          "getComponents()",
+          "getRedF()",
+          "getGreenF()",
+          "getBlueF()",
+          "setRenderColor()",
+          "getRandomColor(Random)",
+          "isAcceptable(ItemStack)",
+          "isAcceptable(IBlockAccess, BlockPos)",
+          "isAcceptable(TileEntity)",
+          "isAcceptable(NBTTagCompound)"
+        ],
+        "net.darkhax.bookshelf.lib.ModTrackingList": [
+          "getTrackedEntries()",
+          "getModContainer(T)",
+          "add(T)",
+          "get(int)",
+          "add(int, T)",
+          "addAll(int, Collection<? extends T>)",
+          "addAll(Collection<? extends T>)",
+          "remove(int)",
+          "remove(Object)",
+          "removeAll(Collection<?>)",
+          "set(int, T)",
+          "subList(int, int)",
+          "size()",
+          "clear()",
+          "forEach(Consumer<? super T>)",
+          "isEmpty()",
+          "contains(Object)",
+          "iterator()",
+          "toArray()",
+          "toArray(T[])"
+        ],
+        "net.darkhax.bookshelf.lib.WeightedSelector": [
+          "addEntry(T, int)",
+          "addEntry(WeightedSelector.WeightedEntry<T>)",
+          "removeEntry(WeightedSelector.WeightedEntry<T>)",
+          "getEntries()",
+          "getRandomEntry()",
+          "updateTotal()"
+        ],
+        "net.darkhax.bookshelf.network.NetworkHandler": [
+          "register(Class, Side)",
+          "sendToAll(IMessage)",
+          "sendTo(IMessage, EntityPlayerMP)",
+          "sendToAllAround(IMessage, World, BlockPos, double)",
+          "sendToAllAround(IMessage, TargetPoint)",
+          "sendToDimension(IMessage, int)",
+          "sendToServer(IMessage)"
+        ],
+        "net.darkhax.bookshelf.network.SerializableMessage": [
+          "handleMessage(MessageContext)",
+          "onMessage(REQ, MessageContext)",
+          "fromBytes(ByteBuf)",
+          "toBytes(ByteBuf)",
+          "addIOHandler(Class<T>, SerializableMessage.Reader<T>, SerializableMessage.Writer<T>)"
+        ],
+        "net.darkhax.bookshelf.network.TileEntityMessage": [
+          "handleMessage(MessageContext)",
+          "getAction()"
+        ],
+        "net.darkhax.bookshelf.registry.IVariant": [
+          "getPrefix()"
+        ],
+        "net.darkhax.bookshelf.registry.RegistryHelper": [
+          "getTab()",
+          "setTab(CreativeTabs)",
+          "getModid()",
+          "getItems()",
+          "getBlocks()",
+          "registerBlock(Block, String)",
+          "registerBlock(Block, ItemBlock, String)",
+          "registerItem(Item, String)",
+          "registerItem(Item, ResourceLocation)",
+          "addLoot(ResourceLocation, String, String, int, Item)",
+          "addLoot(ResourceLocation, String, String, int, int, Item, List<LootCondition>, List<LootFunction>)",
+          "addLoot(ResourceLocation, LootBuilder)",
+          "onTableLoaded(LootTableLoadEvent)",
+          "registerColorHandler(Block, IBlockColor)",
+          "registerColorHandler(Item, IItemColor)",
+          "registerInventoryModel(Block)",
+          "registerInventoryModel(Block, String, String...)",
+          "registerInventoryModel(Block, int, String)",
+          "registerInventoryModel(Item)",
+          "registerInventoryModel(Item, String, String...)"
+        ],
+        "net.darkhax.bookshelf.registry.RegistryListener": [],
+        "net.darkhax.bookshelf.util.AnnotationUtils": [
+          "getData(Class<A>)",
+          "getData(ASMDataTable, Class<A>)",
+          "getAnnotatedClasses(Class<A>)",
+          "getAnnotatedClasses(ASMDataTable, Class<A>)",
+          "getAnnotatedFields(Collection<Class<?>>, Class<A>)",
+          "getAnnotations(Class<A>, Class<T>)",
+          "getAnnotations(ASMDataTable, Class<A>, Class<T>)"
+        ],
+        "net.darkhax.bookshelf.util.BannerUtils": [
+          "createBanner(EnumDyeColor, NBTTagList)",
+          "createPatternList(BannerUtils.BannerLayer...)",
+          "addBasicPattern(String, String)",
+          "addCraftingPattern(String, String, ItemStack)",
+          "addDyePattern(String, String, String, String, String)"
+        ],
+        "net.darkhax.bookshelf.util.baubles.BaubleUtils": [
+          "hasItem(EntityPlayer, Item, int)",
+          "getBaublesFromPlayer(EntityPlayer, Item, int)",
+          "getBaubleType(Item, int)",
+          "getBauble(EntityPlayer, BaubleType)",
+          "getBauble(EntityPlayer, int)",
+          "hasBauble(EntityPlayer, ItemStack, BaubleType)",
+          "equipBauble(EntityPlayer, ItemStack, int)"
+        ],
+        "net.darkhax.bookshelf.util.baubles.ItemBauble": [],
+        "net.darkhax.bookshelf.util.BlockUtils": [
+          "isOre(ItemStack, boolean)",
+          "isFluid(Block)"
+        ],
+        "net.darkhax.bookshelf.util.ClassUtils": [
+          "compareClasses(Class<?>, Class<?>)",
+          "compareObjectToClass(Object, Class<?>)",
+          "getClassFromString(String)"
+        ],
+        "net.darkhax.bookshelf.util.CollectionUtils": [
+          "toDouble(float[])",
+          "toFloat(double[])",
+          "toString(ResourceLocation[])",
+          "toIdentifier(String[])",
+          "toIdentifier(Item[])",
+          "toIdentifier(Block[])",
+          "toItem(ResourceLocation[])",
+          "toBlock(ResourceLocation[])",
+          "toString(ItemStack[])",
+          "toStack(String[])",
+          "toInt(Color)",
+          "toColor(int[])",
+          "toInt(BlockPos)",
+          "toPos(int[])"
+        ],
+        "net.darkhax.bookshelf.util.CraftingUtils": [
+          "getRecipeForMatrix(InventoryCrafting, World)",
+          "getCurrentCraftingRecipe(EntityPlayer)",
+          "getCurrentCraftingOutput(EntityPlayer)",
+          "getCraftingContainer(EntityPlayer)",
+          "getOwner(IRecipe)",
+          "getRecipeOwners()",
+          "getShapedRecipes(ItemStack)",
+          "getShapedOreRecipe(ItemStack)",
+          "getShapelessRecipes(ItemStack)",
+          "getShapelessOreRecipe(ItemStack)",
+          "getAnyRecipe(ItemStack)",
+          "getRecipesForStack(ItemStack, Predicate<IRecipe>)",
+          "createConversionRecipes(ItemStack, ItemStack)",
+          "validateCrafting(Object)"
+        ],
+        "net.darkhax.bookshelf.util.EnchantmentUtils": [
+          "isItemEnchantable(ItemStack)",
+          "getExperienceFromLevel(int)",
+          "getExperienceToLevel(int, int)",
+          "getLevelsFromExperience(int)",
+          "areEnchantmentsCompatible(Enchantment, Enchantment)",
+          "getExpForDisplay(int)"
+        ],
+        "net.darkhax.bookshelf.util.EntityUtils": [
+          "getDistanceFromEntity(Entity, Entity)",
+          "getDistaceFromPos(Entity, BlockPos)",
+          "pushTowards(Entity, EnumFacing, double)",
+          "pushTowards(Entity, BlockPos, double)",
+          "pushTowards(Entity, Entity, double)",
+          "pushTowardsDirection(Entity, EnumFacing, double)",
+          "areEntitiesCloseEnough(Entity, Entity, double)",
+          "getEntitiesInArea(Class<? extends Entity>, World, BlockPos, int)",
+          "getEquipmentSlot(int)",
+          "isWearingFullSet(EntityLivingBase, Class<Item>)"
+        ],
+        "net.darkhax.bookshelf.util.GameUtils": [
+          "isClient()"
+        ],
+        "net.darkhax.bookshelf.util.GuiUtils": [
+          "addPlayerInvToContainer(Container, InventoryPlayer)"
+        ],
+        "net.darkhax.bookshelf.util.MathsUtils": [
+          "isInRange(double, double, double)",
+          "getDistanceBetweenPoints(Vec3d, Vec3d)",
+          "round(double, int)",
+          "nextIntInclusive(int, int)",
+          "rayTrace(EntityPlayer, double)",
+          "tryPercentage(double)",
+          "getRandomColor()",
+          "getAverage(int, int)",
+          "ticksToTime(int)"
+        ],
+        "net.darkhax.bookshelf.util.MathUtils": [],
+        "net.darkhax.bookshelf.util.ModUtils": [
+          "getModName(Impl<?>)",
+          "getModName(Entity)",
+          "getModContainer(String)",
+          "getModName(String)",
+          "getTabFromLabel(String)"
+        ],
+        "net.darkhax.bookshelf.util.NBTUtils": [
+          "setGenericNBTValue(NBTTagCompound, String, Object)",
+          "writeInventoryToNBT(NBTTagCompound, InventoryBasic)",
+          "readInventoryFromNBT(NBTTagCompound, InventoryBasic)",
+          "getStoredItems(NBTTagCompound, int)",
+          "getDeepTagCompound(NBTTagCompound, String[])"
+        ],
+        "net.darkhax.bookshelf.util.NumericUtils": [
+          "isKeyCodeNumeric(int)",
+          "isChristmasTime()",
+          "isHalloweenTime()",
+          "isSpecialDay(int, int)",
+          "isSpecialDay(int, int, int)"
+        ],
+        "net.darkhax.bookshelf.util.OreDictUtils": [
+          "initAdditionalVanillaEntries()"
+        ],
+        "net.darkhax.bookshelf.util.ParticleUtils": [
+          "spawnDigParticles(ParticleManager, IBlockState, World, BlockPos, EnumFacing)",
+          "spawnBreakParticles(ParticleManager, IBlockState, World, BlockPos)",
+          "spawnParticleRing(World, EnumParticleTypes, double, double, double, double, double, double, double)",
+          "spawnPercentageParticleRing(World, EnumParticleTypes, float, double, double, double, double, double, double, double)"
+        ],
+        "net.darkhax.bookshelf.util.PlayerUtils": [
+          "canPlayerSleep(EntityPlayer)",
+          "isPlayerReal(EntityPlayer)",
+          "getPlayerFromUUID(World, UUID)",
+          "getPlayerNameFromUUID(UUID)",
+          "getUUIDFromName(String)",
+          "fixStrippedUUID(String)",
+          "getItemCountInInv(EntityPlayer, Item)",
+          "playerHasItem(EntityPlayer, Item, int)",
+          "getStacksFromPlayer(EntityPlayer, Item, int)",
+          "getClientPlayer()",
+          "sendSpamlessMessage(int, ITextComponent)",
+          "isPlayerInGame()",
+          "getClientUUID()"
+        ],
+        "net.darkhax.bookshelf.util.RenderUtils": [
+          "registerPlayerLayer(LayerRenderer<EntityLivingBase>)",
+          "getSteveRenderer()",
+          "getAlexRenderer()",
+          "getPlayerRenderer(String)",
+          "setPlayerTexture(Type, AbstractClientPlayer, ResourceLocation)",
+          "downloadResourceLocation(String, ResourceLocation, ResourceLocation, IImageBuffer)",
+          "downloadResource(String, ResourceLocation, ResourceLocation, IImageBuffer)",
+          "getCamera(Entity, float)",
+          "translateAgainstPlayer(BlockPos, boolean)",
+          "getParticleTexture(ItemStack)",
+          "getSprite(ItemStack)",
+          "getBakedModel(ModelResourceLocation)",
+          "getBakedModel(ItemStack)",
+          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double)",
+          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double)",
+          "renderFluid(FluidStack, BlockPos, double, double, double, double, double, double, double, double, double, int)",
+          "addTexturedQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int)",
+          "addTextureQuad(VertexBuffer, TextureAtlasSprite, double, double, double, double, double, double, EnumFacing, int, int, int, int, int, int)",
+          "setupRenderState(double, double, double)",
+          "setupRenderState()"
+        ],
+        "net.darkhax.bookshelf.util.SkullUtils": [
+          "createSkull(EntityPlayer)",
+          "createSkull(String, UUID)",
+          "createSkull(SkullUtils.MHFAccount)",
+          "createSkull(SkullUtils.Player)",
+          "createSkull(String)",
+          "getWitherSkeletonSkull()",
+          "getZombieSkull()",
+          "getCreeperSkull()",
+          "getSteveSkull()",
+          "getSkeletonSkull()",
+          "getMHFSkulls()",
+          "getPlayerSkulls()"
+        ],
+        "net.darkhax.bookshelf.util.StackUtils": [
+          "prepareStackTag(ItemStack)",
+          "prepareStack(ItemStack)",
+          "setLore(ItemStack, String[])",
+          "writeStackToString(ItemStack)",
+          "createStackFromString(String)",
+          "compareStackToOreName(ItemStack, String)",
+          "doStacksShareOreName(ItemStack, ItemStack)",
+          "areStacksSimilar(ItemStack, ItemStack)",
+          "areStacksSimilarWithSize(ItemStack, ItemStack)",
+          "writePotionEffectsToStack(ItemStack, PotionEffect[])",
+          "writeStackToTag(ItemStack, NBTTagCompound, String)",
+          "decreaseStackSize(ItemStack, int)",
+          "areStacksEqual(ItemStack, ItemStack, boolean)",
+          "isStackInArray(ItemStack, boolean, ItemStack...)",
+          "copyStackWithSize(ItemStack, int)",
+          "getThingByName(String)",
+          "getBlockFromStack(ItemStack)",
+          "consumeStack(ItemStack)",
+          "dropStackInWorld(World, BlockPos, ItemStack)",
+          "createStackFromTileEntity(TileEntity)"
+        ],
+        "net.darkhax.bookshelf.util.TextUtils": [
+          "wrapStringToList(String, int, boolean, List<String>)",
+          "wrapStringToListWithFormat(String, int, boolean, List<String>, TextFormatting)",
+          "stripFormatting(String)",
+          "getValueByCharacter(char)",
+          "getValueByName(String)",
+          "formatString(String, TextUtils.ChatFormat)"
+        ],
+        "net.darkhax.bookshelf.world.loot.conditions.BiomeSpecific": [
+          "func_186618_a(Random, LootContext)"
+        ],
+        "net.darkhax.bookshelf.world.loot.functions.SetColor": [
+          "func_186553_a(ItemStack, Random, LootContext)"
+        ]
+      },
+      "sampleCount": 80
+    }
+  },
+  "classCount": 77,
+  "methodCount": 436
+}

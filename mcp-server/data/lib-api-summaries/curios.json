@@ -1,0 +1,3316 @@
+{
+  "slug": "curios",
+  "modId": "curios",
+  "id": "authored/lib-curios",
+  "role": "api",
+  "source": {
+    "shard": "jsonl",
+    "dirs": [
+      "curios"
+    ],
+    "merged": false
+  },
+  "generatedAt": "2026-08-12T10:31:49.405Z",
+  "versions": {
+    "FORGE-1.14.4-1.0.6.1": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.capability.CuriosCapability",
+        "top.theillusivec4.curios.api.capability.ICurio",
+        "top.theillusivec4.curios.api.capability.ICurioItemHandler",
+        "top.theillusivec4.curios.api.CuriosAPI",
+        "top.theillusivec4.curios.api.CurioTags",
+        "top.theillusivec4.curios.api.CurioType",
+        "top.theillusivec4.curios.api.event.LivingCurioChangeEvent",
+        "top.theillusivec4.curios.api.event.LivingCurioDropRulesEvent",
+        "top.theillusivec4.curios.api.event.LivingCurioDropsEvent",
+        "top.theillusivec4.curios.api.imc.CurioIMCMessage",
+        "top.theillusivec4.curios.api.inventory.CurioStackHandler",
+        "top.theillusivec4.curios.api.inventory.SlotCurio",
+        "top.theillusivec4.curios.client.EventHandlerClient",
+        "top.theillusivec4.curios.client.gui.CuriosScreen",
+        "top.theillusivec4.curios.client.gui.GuiButtonCurios",
+        "top.theillusivec4.curios.client.gui.GuiEventHandler",
+        "top.theillusivec4.curios.client.KeyRegistry",
+        "top.theillusivec4.curios.client.render.CuriosLayer",
+        "top.theillusivec4.curios.client.render.model.AmuletModel",
+        "top.theillusivec4.curios.client.render.model.CrownModel",
+        "top.theillusivec4.curios.client.render.model.KnucklesModel",
+        "top.theillusivec4.curios.common.capability.CapCurioInventory",
+        "top.theillusivec4.curios.common.capability.CapCurioItem",
+        "top.theillusivec4.curios.common.CuriosConfig",
+        "top.theillusivec4.curios.common.CuriosIMC",
+        "top.theillusivec4.curios.common.CuriosRegistry",
+        "top.theillusivec4.curios.common.event.EventHandlerCurios",
+        "top.theillusivec4.curios.common.inventory.CuriosContainer",
+        "top.theillusivec4.curios.common.inventory.CuriosContainerProvider",
+        "top.theillusivec4.curios.common.item.AmuletItem",
+        "top.theillusivec4.curios.common.item.CrownItem",
+        "top.theillusivec4.curios.common.item.KnucklesItem",
+        "top.theillusivec4.curios.common.item.RingItem",
+        "top.theillusivec4.curios.common.network.client.CPacketDestroyCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla",
+        "top.theillusivec4.curios.common.network.client.CPacketScrollCurios",
+        "top.theillusivec4.curios.common.network.NetworkHandler",
+        "top.theillusivec4.curios.common.network.server.SPacketBreakCurio",
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem",
+        "top.theillusivec4.curios.common.network.server.SPacketScrollCurios",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncActive",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncContents",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncContentsWithTag",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncMap",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncSize",
+        "top.theillusivec4.curios.Curios",
+        "top.theillusivec4.curios.integration.jei.CuriosContainerHandler",
+        "top.theillusivec4.curios.integration.jei.CuriosJeiPlugin",
+        "top.theillusivec4.curios.server.command.CommandCurios",
+        "top.theillusivec4.curios.server.command.CurioArgumentType"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.capability.CuriosCapability": [],
+        "top.theillusivec4.curios.api.capability.ICurio": [
+          "onCurioTick(String, int, LivingEntity)",
+          "onCurioTick(String, LivingEntity)",
+          "onEquipped(String, LivingEntity)",
+          "onUnequipped(String, LivingEntity)",
+          "canEquip(String, LivingEntity)",
+          "canUnequip(String, LivingEntity)",
+          "getTagsTooltip(List<ITextComponent>)",
+          "getAttributeModifiers(String)",
+          "playEquipSound(LivingEntity)",
+          "canRightClickEquip()",
+          "onCurioBreak(ItemStack, LivingEntity)",
+          "shouldSyncToTracking(String, LivingEntity)",
+          "getSyncTag()",
+          "readSyncTag(CompoundNBT)",
+          "getDropRule(LivingEntity)",
+          "hasRender(String, LivingEntity)",
+          "doRender(String, LivingEntity, float, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.api.capability.ICurioItemHandler": [],
+        "top.theillusivec4.curios.api.CuriosAPI": [
+          "getCurio(ItemStack)",
+          "getCuriosHandler(LivingEntity)",
+          "onBrokenCurio(String, int, LivingEntity)",
+          "getType(String)",
+          "getTypeIdentifiers()",
+          "getSlotsForType(LivingEntity, String)",
+          "setSlotsForType(String, LivingEntity, int)",
+          "getCurioEquipped(Item, LivingEntity)",
+          "getCurioEquipped(Predicate<ItemStack>, LivingEntity)",
+          "addTypeSlotToEntity(String, LivingEntity)",
+          "addTypeSlotsToEntity(String, int, LivingEntity)",
+          "removeTypeSlotFromEntity(String, LivingEntity)",
+          "removeTypeSlotsFromEntity(String, int, LivingEntity)",
+          "enableTypeForEntity(String, LivingEntity)",
+          "disableTypeForEntity(String, LivingEntity)",
+          "getCurioTags(Item)",
+          "getIcon(String)"
+        ],
+        "top.theillusivec4.curios.api.CurioTags": [],
+        "top.theillusivec4.curios.api.CurioType": [
+          "getIdentifier()",
+          "getSize()",
+          "isEnabled()",
+          "isHidden()",
+          "defaultSize(int)",
+          "enabled(boolean)",
+          "hide(boolean)"
+        ],
+        "top.theillusivec4.curios.api.event.LivingCurioChangeEvent": [
+          "getTypeIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.LivingCurioDropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, ICurio.DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.LivingCurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.imc.CurioIMCMessage": [
+          "getIdentifier()",
+          "getSize()",
+          "setSize(int)",
+          "isEnabled()",
+          "setEnabled(boolean)",
+          "isHidden()",
+          "setHidden(boolean)"
+        ],
+        "top.theillusivec4.curios.api.inventory.CurioStackHandler": [
+          "setSize(int)",
+          "setPreviousStackInSlot(int, ItemStack)",
+          "getPreviousSlots()",
+          "getPreviousStackInSlot(int)",
+          "addSize(int)",
+          "removeSize(int)",
+          "isHidden()",
+          "setHidden(boolean)",
+          "serializeNBT()",
+          "deserializeNBT(CompoundNBT)"
+        ],
+        "top.theillusivec4.curios.api.inventory.SlotCurio": [
+          "getSlotName()",
+          "func_75214_a(ItemStack)",
+          "hasValidTag(Set<String>)",
+          "func_82869_a(PlayerEntity)",
+          "getBackgroundSprite()"
+        ],
+        "top.theillusivec4.curios.client.EventHandlerClient": [
+          "onKeyInput(ClientTickEvent)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosScreen": [
+          "init()",
+          "getButtonOffset(boolean)",
+          "render(int, int, float)",
+          "keyPressed(int, int, int)",
+          "func_146979_b(int, int)",
+          "func_146976_a(float, int, int)",
+          "func_195359_a(int, int, int, int, double, double)",
+          "mouseClicked(double, double, int)",
+          "mouseReleased(double, double, int)",
+          "mouseDragged(double, double, int, double, double)",
+          "mouseScrolled(double, double, double)"
+        ],
+        "top.theillusivec4.curios.client.gui.GuiButtonCurios": [
+          "render(int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.GuiEventHandler": [
+          "onInventoryGuiInit(Post)",
+          "onInventoryGuiDrawBackground(Pre)",
+          "onMouseClick(net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent.Pre)"
+        ],
+        "top.theillusivec4.curios.client.KeyRegistry": [
+          "registerKeys()"
+        ],
+        "top.theillusivec4.curios.client.render.CuriosLayer": [
+          "render(LivingEntity, float, float, float, float, float, float, float)",
+          "func_177142_b()"
+        ],
+        "top.theillusivec4.curios.client.render.model.AmuletModel": [
+          "func_78088_a(Entity, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.client.render.model.CrownModel": [
+          "func_78088_a(Entity, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.client.render.model.KnucklesModel": [
+          "func_78088_a(LivingEntity, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.common.capability.CapCurioInventory": [
+          "register()",
+          "createProvider(LivingEntity)"
+        ],
+        "top.theillusivec4.curios.common.capability.CapCurioItem": [
+          "register()",
+          "createProvider(ICurio)"
+        ],
+        "top.theillusivec4.curios.common.CuriosConfig": [],
+        "top.theillusivec4.curios.common.CuriosIMC": [
+          "processCurioTypes(Stream<IMCMessage>, Stream<IMCMessage>, Stream<IMCMessage>)"
+        ],
+        "top.theillusivec4.curios.common.CuriosRegistry": [
+          "registerItems(Register<Item>)",
+          "registerContainer(Register<ContainerType<?>>)"
+        ],
+        "top.theillusivec4.curios.common.event.EventHandlerCurios": [
+          "onCapabilitiesEntity(AttachCapabilitiesEvent<Entity>)",
+          "onEntityJoinWorld(EntityJoinWorldEvent)",
+          "onPlayerStartTracking(StartTracking)",
+          "onPlayerClone(Clone)",
+          "onPlayerDrops(LivingDropsEvent)",
+          "onPlayerXPPickUp(PlayerPickupXpEvent)",
+          "onCurioRightClick(RightClickItem)",
+          "onCurioTick(LivingUpdateEvent)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CuriosContainer": [
+          "scrollToIndex(int)",
+          "scrollTo(float)",
+          "func_75130_a(IInventory)",
+          "func_75134_a(PlayerEntity)",
+          "canScroll()",
+          "func_75145_c(PlayerEntity)",
+          "func_82846_b(PlayerEntity, int)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CuriosContainerProvider": [
+          "func_145748_c_()",
+          "createMenu(int, PlayerInventory, PlayerEntity)"
+        ],
+        "top.theillusivec4.curios.common.item.AmuletItem": [
+          "initCapabilities(ItemStack, CompoundNBT)",
+          "func_77636_d(ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.item.CrownItem": [
+          "initCapabilities(final ItemStack, CompoundNBT)",
+          "func_77636_d(ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.item.KnucklesItem": [
+          "initCapabilities(final ItemStack, CompoundNBT)",
+          "func_77636_d(ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.item.RingItem": [
+          "initCapabilities(final ItemStack, CompoundNBT)",
+          "func_77636_d(ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketDestroyCurios": [
+          "encode(CPacketDestroyCurios, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(CPacketDestroyCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios": [
+          "encode(CPacketOpenCurios, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(CPacketOpenCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla": [
+          "encode(CPacketOpenVanilla, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(CPacketOpenVanilla, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketScrollCurios": [
+          "encode(CPacketScrollCurios, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(CPacketScrollCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.NetworkHandler": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketBreakCurio": [
+          "encode(SPacketBreakCurio, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketBreakCurio, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem": [
+          "encode(SPacketGrabbedItem, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketGrabbedItem, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketScrollCurios": [
+          "encode(SPacketScrollCurios, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketScrollCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncActive": [
+          "encode(SPacketSyncActive, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketSyncActive, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncContents": [
+          "encode(SPacketSyncContents, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketSyncContents, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncContentsWithTag": [
+          "encode(SPacketSyncContentsWithTag, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketSyncContentsWithTag, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncMap": [
+          "encode(SPacketSyncMap, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketSyncMap, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncSize": [
+          "encode(SPacketSyncSize, PacketBuffer)",
+          "decode(PacketBuffer)",
+          "handle(SPacketSyncSize, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.Curios": [],
+        "top.theillusivec4.curios.integration.jei.CuriosContainerHandler": [
+          "getGuiExtraAreas(CuriosScreen)"
+        ],
+        "top.theillusivec4.curios.integration.jei.CuriosJeiPlugin": [
+          "getPluginUid()",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "top.theillusivec4.curios.server.command.CommandCurios": [
+          "register(CommandDispatcher<CommandSource>)"
+        ],
+        "top.theillusivec4.curios.server.command.CurioArgumentType": [
+          "slot()",
+          "getSlot(CommandContext<CommandSource>, String)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "parse(StringReader)"
+        ]
+      },
+      "sampleCount": 51
+    },
+    "8.1.0_1.20.6": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry",
+        "top.theillusivec4.curios.api.client.ICurioRenderer",
+        "top.theillusivec4.curios.api.client.ICuriosScreen",
+        "top.theillusivec4.curios.api.CurioAttributeModifiers",
+        "top.theillusivec4.curios.api.CuriosApi",
+        "top.theillusivec4.curios.api.CuriosCapability",
+        "top.theillusivec4.curios.api.CuriosDataProvider",
+        "top.theillusivec4.curios.api.CuriosTooltip",
+        "top.theillusivec4.curios.api.CuriosTriggers",
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent",
+        "top.theillusivec4.curios.api.event.CurioCanEquipEvent",
+        "top.theillusivec4.curios.api.event.CurioCanUnequipEvent",
+        "top.theillusivec4.curios.api.event.CurioChangeEvent",
+        "top.theillusivec4.curios.api.event.CurioDropsEvent",
+        "top.theillusivec4.curios.api.event.DropRulesEvent",
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent",
+        "top.theillusivec4.curios.api.SlotAttribute",
+        "top.theillusivec4.curios.api.SlotContext",
+        "top.theillusivec4.curios.api.SlotPredicate",
+        "top.theillusivec4.curios.api.SlotResult",
+        "top.theillusivec4.curios.api.SlotTypeMessage",
+        "top.theillusivec4.curios.api.SlotTypePreset",
+        "top.theillusivec4.curios.api.type.capability.ICurio",
+        "top.theillusivec4.curios.api.type.capability.ICurioItem",
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler",
+        "top.theillusivec4.curios.api.type.data.IEntitiesData",
+        "top.theillusivec4.curios.api.type.data.ISlotData",
+        "top.theillusivec4.curios.api.type.ICuriosMenu",
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler",
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler",
+        "top.theillusivec4.curios.api.type.ISlotType",
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper",
+        "top.theillusivec4.curios.api.type.util.IIconHelper",
+        "top.theillusivec4.curios.api.type.util.ISlotHelper",
+        "top.theillusivec4.curios.client.ClientEventHandler",
+        "top.theillusivec4.curios.client.CuriosClientConfig",
+        "top.theillusivec4.curios.client.gui.CosmeticButton",
+        "top.theillusivec4.curios.client.gui.CuriosButton",
+        "top.theillusivec4.curios.client.gui.CuriosScreen",
+        "top.theillusivec4.curios.client.gui.GuiEventHandler",
+        "top.theillusivec4.curios.client.gui.PageButton",
+        "top.theillusivec4.curios.client.gui.RenderButton",
+        "top.theillusivec4.curios.client.IconHelper",
+        "top.theillusivec4.curios.client.KeyRegistry",
+        "top.theillusivec4.curios.client.render.CuriosLayer",
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability",
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability",
+        "top.theillusivec4.curios.common.CuriosConfig",
+        "top.theillusivec4.curios.common.CuriosHelper",
+        "top.theillusivec4.curios.common.CuriosRegistry",
+        "top.theillusivec4.curios.common.data.CuriosEntityManager",
+        "top.theillusivec4.curios.common.data.CuriosSlotManager",
+        "top.theillusivec4.curios.common.data.EntitiesData",
+        "top.theillusivec4.curios.common.data.SlotData",
+        "top.theillusivec4.curios.common.event.CuriosEventHandler",
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler",
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider",
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler",
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler",
+        "top.theillusivec4.curios.common.network.client.ClientPacketHandler",
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla",
+        "top.theillusivec4.curios.common.network.client.CPacketPage",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleCosmetics",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender",
+        "top.theillusivec4.curios.common.network.NetworkHandler",
+        "top.theillusivec4.curios.common.network.server.SPacketBreak",
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem",
+        "top.theillusivec4.curios.common.network.server.SPacketPage",
+        "top.theillusivec4.curios.common.network.server.SPacketQuickMove",
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack",
+        "top.theillusivec4.curios.common.slottype.LegacySlotManager",
+        "top.theillusivec4.curios.common.slottype.SlotType",
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger",
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction",
+        "top.theillusivec4.curios.Curios",
+        "top.theillusivec4.curios.CuriosConstants",
+        "top.theillusivec4.curios.platform.ForgeCurios",
+        "top.theillusivec4.curios.platform.services.ICuriosPlatform",
+        "top.theillusivec4.curios.platform.Services",
+        "top.theillusivec4.curios.server.command.CurioArgumentType",
+        "top.theillusivec4.curios.server.command.CuriosCommand",
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions",
+        "top.theillusivec4.curios.server.SlotHelper"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry": [
+          "register(Item, Supplier<ICurioRenderer>)",
+          "getRenderer(Item)",
+          "load()"
+        ],
+        "top.theillusivec4.curios.api.client.ICurioRenderer": [],
+        "top.theillusivec4.curios.api.client.ICuriosScreen": [],
+        "top.theillusivec4.curios.api.CurioAttributeModifiers": [
+          "withTooltip(boolean)",
+          "builder()",
+          "withModifierAdded(ResourceLocation, AttributeModifier, String)",
+          "forEach(String, BiConsumer<ResourceLocation, AttributeModifier>)",
+          "Entry(ResourceLocation, AttributeModifier, String)"
+        ],
+        "top.theillusivec4.curios.api.CuriosApi": [
+          "registerCurio(Item, ICurioItem)",
+          "getSlot(String, Level)",
+          "getSlot(String, boolean)",
+          "getSlots(Level)",
+          "getSlots(boolean)",
+          "getPlayerSlots(Level)",
+          "getPlayerSlots(boolean)",
+          "getPlayerSlots(Player)",
+          "getEntitySlots(LivingEntity)",
+          "getEntitySlots(EntityType<?>, Level)",
+          "getEntitySlots(EntityType<?>, boolean)",
+          "getItemStackSlots(ItemStack, Level)",
+          "getItemStackSlots(ItemStack, boolean)",
+          "getItemStackSlots(ItemStack, LivingEntity)",
+          "getCurio(ItemStack)",
+          "getCuriosInventory(LivingEntity)",
+          "isStackValid(SlotContext, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "addSlotModifier(Multimap<Holder<Attribute>, AttributeModifier>, String, UUID, double, Operation)",
+          "addSlotModifier(ItemStack, String, String, UUID, double, Operation, String)"
+        ],
+        "top.theillusivec4.curios.api.CuriosCapability": [],
+        "top.theillusivec4.curios.api.CuriosDataProvider": [
+          "generate(Provider, ExistingFileHelper)",
+          "run(CachedOutput)",
+          "createSlot(String)",
+          "copySlot(String, String)",
+          "createEntities(String)",
+          "copyEntities(String, String)",
+          "getName()"
+        ],
+        "top.theillusivec4.curios.api.CuriosTooltip": [
+          "append(Component)",
+          "appendHeader(MutableComponent)",
+          "appendSlotHeader(String)",
+          "appendAdditive(MutableComponent)",
+          "appendSubtractive(MutableComponent)",
+          "appendEqual(MutableComponent)",
+          "forSlots(String...)",
+          "forSlots(ItemStack)",
+          "forSlots(ItemStack, LivingEntity)",
+          "build()"
+        ],
+        "top.theillusivec4.curios.api.CuriosTriggers": [
+          "equip()",
+          "equip(Builder)",
+          "equipAtLocation(Builder, net.minecraft.advancements.critereon.LocationPredicate.Builder)"
+        ],
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent": [
+          "getModifiers()",
+          "getOriginalModifiers()",
+          "addModifier(Holder<Attribute>, AttributeModifier)",
+          "removeModifier(Holder<Attribute>, AttributeModifier)",
+          "removeAttribute(Holder<Attribute>)",
+          "clearModifiers()",
+          "getSlotContext()",
+          "getItemStack()",
+          "getUuid()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioCanEquipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioCanUnequipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioChangeEvent": [
+          "getIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.event.DropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, ICurio.DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent": [
+          "getTypes()"
+        ],
+        "top.theillusivec4.curios.api.SlotAttribute": [
+          "getOrCreate(String)",
+          "getIdentifier()"
+        ],
+        "top.theillusivec4.curios.api.SlotContext": [
+          "getIdentifier()",
+          "getIndex()",
+          "getWearer()"
+        ],
+        "top.theillusivec4.curios.api.SlotPredicate": [
+          "matches(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.SlotResult": [],
+        "top.theillusivec4.curios.api.SlotTypeMessage": [
+          "getIdentifier()",
+          "getIcon()",
+          "getPriority()",
+          "getSize()",
+          "isLocked()",
+          "isVisible()",
+          "hasCosmetic()"
+        ],
+        "top.theillusivec4.curios.api.SlotTypePreset": [
+          "findPreset(String)",
+          "getIdentifier()",
+          "getMessageBuilder()"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurio": [
+          "curioTick(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "getEquipSound(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "makesPiglinsNeutral(SlotContext)",
+          "canWalkOnPowderedSnow(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurioItem": [
+          "hasCurioCapability(ItemStack)",
+          "curioTick(SlotContext, ItemStack)",
+          "onEquip(SlotContext, ItemStack, ItemStack)",
+          "onUnequip(SlotContext, ItemStack, ItemStack)",
+          "canEquip(SlotContext, ItemStack)",
+          "canUnequip(SlotContext, ItemStack)",
+          "getSlotsTooltip(List<Component>, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "onEquipFromUse(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext, ItemStack)",
+          "canEquipFromUse(SlotContext, ItemStack)",
+          "curioBreak(SlotContext, ItemStack)",
+          "canSync(SlotContext, ItemStack)",
+          "writeSyncData(SlotContext, ItemStack)",
+          "readSyncData(SlotContext, CompoundTag, ItemStack)",
+          "getDropRule(SlotContext, DamageSource, int, boolean, ItemStack)",
+          "getAttributesTooltip(List<Component>, ItemStack)",
+          "getFortuneLevel(SlotContext, LootContext, ItemStack)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int, ItemStack)",
+          "makesPiglinsNeutral(SlotContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler": [
+          "getVisibleSlots()",
+          "isEquipped(Item)",
+          "isEquipped(Predicate<ItemStack>)",
+          "addTransientSlotModifier(String, UUID, String, double, Operation)",
+          "addPermanentSlotModifier(String, UUID, String, double, Operation)",
+          "removeSlotModifier(String, UUID)",
+          "getLockedSlots()",
+          "unlockSlotType(String, int, boolean, boolean)",
+          "lockSlotType(String)",
+          "processSlots()",
+          "getFortuneBonus()",
+          "getLootingBonus()",
+          "setEnchantmentBonuses(Tuple<Integer, Integer>)"
+        ],
+        "top.theillusivec4.curios.api.type.data.IEntitiesData": [],
+        "top.theillusivec4.curios.api.type.data.ISlotData": [],
+        "top.theillusivec4.curios.api.type.ICuriosMenu": [],
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler": [
+          "canToggleRendering()",
+          "getDropRule()"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler": [],
+        "top.theillusivec4.curios.api.type.ISlotType": [
+          "getValidators()",
+          "writeNbt()",
+          "isLocked()",
+          "getPriority()",
+          "isVisible()"
+        ],
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper": [],
+        "top.theillusivec4.curios.api.type.util.IIconHelper": [],
+        "top.theillusivec4.curios.api.type.util.ISlotHelper": [],
+        "top.theillusivec4.curios.client.ClientEventHandler": [
+          "onClientTick(ClientTickEvent)",
+          "onKeyInput(Key)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientConfig": [],
+        "top.theillusivec4.curios.client.gui.CosmeticButton": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosButton": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosScreen": [
+          "getButtonOffset(boolean)",
+          "init()",
+          "updateRenderButtons()",
+          "containerTick()",
+          "render(GuiGraphics, int, int, float)",
+          "renderTooltip(GuiGraphics, int, int)",
+          "keyPressed(int, int, int)",
+          "renderLabels(GuiGraphics, int, int)",
+          "renderBg(GuiGraphics, float, int, int)",
+          "isHovering(int, int, int, int, double, double)",
+          "mouseClicked(double, double, int)",
+          "mouseReleased(double, double, int)",
+          "mouseScrolled(double, double, double, double)",
+          "hasClickedOutside(double, double, int, int, int)",
+          "slotClicked(Slot, int, int, ClickType)",
+          "recipesUpdated()",
+          "getRecipeBookComponent()"
+        ],
+        "top.theillusivec4.curios.client.gui.GuiEventHandler": [
+          "onInventoryGuiInit(Post)",
+          "onInventoryGuiDrawBackground(Pre)",
+          "onMouseClick(net.minecraftforge.client.event.ScreenEvent.MouseButtonPressed.Pre)"
+        ],
+        "top.theillusivec4.curios.client.gui.PageButton": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.RenderButton": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderButtonOverlay(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.IconHelper": [
+          "clearIcons()",
+          "addIcon(String, ResourceLocation)",
+          "getIcon(String)"
+        ],
+        "top.theillusivec4.curios.client.KeyRegistry": [],
+        "top.theillusivec4.curios.client.render.CuriosLayer": [
+          "render(PoseStack, MultiBufferSource, int, T, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability": [
+          "createProvider(LivingEntity)"
+        ],
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability": [
+          "getStack()",
+          "curioTick(SlotContext)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext)",
+          "makesPiglinsNeutral(SlotContext)"
+        ],
+        "top.theillusivec4.curios.common.CuriosConfig": [],
+        "top.theillusivec4.curios.common.CuriosHelper": [
+          "getCurio(ItemStack)",
+          "getCuriosHandler(LivingEntity)",
+          "getCurioTags(Item)",
+          "getEquippedCurios(LivingEntity)",
+          "setEquippedCurio(LivingEntity, String, int, ItemStack)",
+          "findFirstCurio(LivingEntity, Item)",
+          "findFirstCurio(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, Item)",
+          "findCurios(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, String...)",
+          "findCurio(LivingEntity, String, int)",
+          "findEquippedCurio(Item, LivingEntity)",
+          "findEquippedCurio(Predicate<ItemStack>, LivingEntity)",
+          "isStackValid(SlotContext, ItemStack)",
+          "onBrokenCurio(SlotContext)",
+          "setBrokenCurioConsumer(Consumer<SlotContext>)",
+          "onBrokenCurio(String, int, LivingEntity)",
+          "setBrokenCurioConsumer(TriConsumer<String, Integer, LivingEntity>)"
+        ],
+        "top.theillusivec4.curios.common.CuriosRegistry": [
+          "init()"
+        ],
+        "top.theillusivec4.curios.common.data.CuriosEntityManager": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "getSyncPacket()",
+          "applySyncPacket(ListTag)",
+          "getEntitySlots(EntityType<?>)",
+          "getModsFromSlots()"
+        ],
+        "top.theillusivec4.curios.common.data.CuriosSlotManager": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "getSlots()",
+          "getConfigSlots()",
+          "getSlot(String)",
+          "getSyncPacket()",
+          "applySyncPacket(ListTag)",
+          "setIcons(Map<String, ResourceLocation>)",
+          "getIcons()",
+          "getIcon(String)",
+          "getModsFromSlots()",
+          "fromConfig(Map<String, SlotType.Builder>)",
+          "fromJson(SlotType.Builder, JsonObject)"
+        ],
+        "top.theillusivec4.curios.common.data.EntitiesData": [
+          "replace(boolean)",
+          "addPlayer()",
+          "addEntities(EntityType<?>...)",
+          "addSlots(String...)",
+          "addCondition(ICondition)",
+          "serialize(Provider)"
+        ],
+        "top.theillusivec4.curios.common.data.SlotData": [
+          "replace(boolean)",
+          "order(int)",
+          "size(int)",
+          "operation(Operation)",
+          "useNativeGui(boolean)",
+          "addCosmetic(boolean)",
+          "renderToggle(boolean)",
+          "icon(ResourceLocation)",
+          "dropRule(ICurio.DropRule)",
+          "addCondition(ICondition)",
+          "addValidator(ResourceLocation)",
+          "serialize(Provider)"
+        ],
+        "top.theillusivec4.curios.common.event.CuriosEventHandler": [
+          "playerLoggedIn(PlayerLoggedInEvent)",
+          "onDatapackSync(OnDatapackSyncEvent)",
+          "attachEntitiesCapabilities(AttachCapabilitiesEvent<Entity>)",
+          "entityJoinWorld(EntityJoinLevelEvent)",
+          "playerStartTracking(StartTracking)",
+          "playerClone(Clone)",
+          "playerDrops(LivingDropsEvent)",
+          "playerXPPickUp(PickupXp)",
+          "curioRightClick(RightClickItem)",
+          "looting(LootingLevelEvent)",
+          "onBreakBlock(BreakEvent)",
+          "enderManAnger(EnderManAngerEvent)",
+          "tick(LivingTickEvent)",
+          "livingEquipmentChange(LivingEquipmentChangeEvent)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler": [
+          "getGuiExtraAreas(CuriosScreen)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin": [
+          "getPluginUid()",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer": [
+          "setPage(int)",
+          "resetSlots()",
+          "toggleCosmetics()",
+          "slotsChanged(Container)",
+          "removed(Player)",
+          "setItem(int, int, ItemStack)",
+          "stillValid(Player)",
+          "quickMoveStack(Player, int)",
+          "findAvailableSlot(ItemStack)",
+          "getRecipeBookType()",
+          "shouldMoveToInventory(int)",
+          "fillCraftSlotsStackedContents(StackedContents)",
+          "clearCraftingContent()",
+          "recipeMatches(RecipeHolder<? extends Recipe<CraftingContainer>>)",
+          "getResultSlotIndex()",
+          "getGridWidth()",
+          "getGridHeight()",
+          "getSize()",
+          "nextPage()",
+          "prevPage()"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot": [
+          "getRenderStatus()",
+          "getSlotName()"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioSlot": [
+          "getIdentifier()",
+          "canToggleRender()",
+          "isCosmetic()",
+          "showCosmeticToggle()",
+          "getRenderStatus()",
+          "getSlotName()",
+          "set(ItemStack)",
+          "allowModification(Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler": [
+          "getStacks()",
+          "getCosmeticStacks()",
+          "getRenders()",
+          "canToggleRendering()",
+          "getDropRule()",
+          "getSlots()",
+          "getSizeShift()",
+          "isVisible()",
+          "hasCosmetic()",
+          "grow(int)",
+          "shrink(int)",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)",
+          "getIdentifier()",
+          "getSyncTag()",
+          "applySyncTag(CompoundTag)",
+          "copyModifiers(ICurioStacksHandler)",
+          "getModifiers()",
+          "getPermanentModifiers()",
+          "getCachedModifiers()"
+        ],
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler": [
+          "setPreviousStackInSlot(int, ItemStack)",
+          "getPreviousStackInSlot(int)",
+          "isItemValid(int, ItemStack)",
+          "extractItem(int, int, boolean)",
+          "grow(int)",
+          "shrink(int)",
+          "serializeNBT(Provider)",
+          "deserializeNBT(Provider, CompoundTag)"
+        ],
+        "top.theillusivec4.curios.common.network.client.ClientPacketHandler": [
+          "handlePacket(SPacketQuickMove)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy": [
+          "encode(CPacketDestroy, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketDestroy, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios": [
+          "encode(CPacketOpenCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenCurios, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla": [
+          "encode(CPacketOpenVanilla, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenVanilla, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketPage": [
+          "encode(CPacketPage, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketPage, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleCosmetics": [
+          "encode(CPacketToggleCosmetics, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketToggleCosmetics, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender": [
+          "encode(CPacketToggleRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketToggleRender, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.NetworkHandler": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketBreak": [
+          "encode(SPacketBreak, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketBreak, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem": [
+          "encode(SPacketGrabbedItem, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketGrabbedItem, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketPage": [
+          "encode(SPacketPage, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketPage, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketQuickMove": [
+          "encode(SPacketQuickMove, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketQuickMove, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons": [
+          "encode(SPacketSetIcons, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSetIcons, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios": [
+          "encode(SPacketSyncCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncCurios, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData": [
+          "encode(SPacketSyncData, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncData, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers": [
+          "encode(SPacketSyncModifiers, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncModifiers, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender": [
+          "encode(SPacketSyncRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncRender, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack": [
+          "encode(SPacketSyncStack, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncStack, Context)"
+        ],
+        "top.theillusivec4.curios.common.slottype.LegacySlotManager": [
+          "getIdsToMods()",
+          "getImcBuilders()",
+          "buildImcSlotTypes(Stream<IMCMessage>, Stream<IMCMessage>)"
+        ],
+        "top.theillusivec4.curios.common.slottype.SlotType": [
+          "from(CompoundTag)",
+          "getIdentifier()",
+          "getIcon()",
+          "getOrder()",
+          "getSize()",
+          "useNativeGui()",
+          "hasCosmetic()",
+          "canToggleRendering()",
+          "getDropRule()",
+          "getValidators()",
+          "equals(Object)",
+          "hashCode()",
+          "compareTo(ISlotType)",
+          "writeNbt()"
+        ],
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger": [
+          "codec()",
+          "trigger(ServerPlayer, ItemStack)",
+          "trigger(SlotContext, ServerPlayer, ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction": [
+          "register()",
+          "getType()",
+          "getReferencedContextParams()",
+          "run(ItemStack, LootContext)"
+        ],
+        "top.theillusivec4.curios.Curios": [],
+        "top.theillusivec4.curios.CuriosConstants": [],
+        "top.theillusivec4.curios.platform.ForgeCurios": [
+          "getItemStackSlots(ItemStack, LivingEntity)",
+          "makesPiglinsNeutral(ItemStack, LivingEntity)",
+          "canWalkOnPowderedSnow(ItemStack, LivingEntity)",
+          "isEnderMask(ItemStack, Player, EnderMan)"
+        ],
+        "top.theillusivec4.curios.platform.services.ICuriosPlatform": [],
+        "top.theillusivec4.curios.platform.Services": [
+          "load(Class<T>)"
+        ],
+        "top.theillusivec4.curios.server.command.CurioArgumentType": [
+          "slot()",
+          "getSlot(CommandContext<CommandSourceStack>, String)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "parse(StringReader)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.server.SlotHelper": [
+          "addSlotType(ISlotType)",
+          "clear()",
+          "getSlotType(String)",
+          "getSlotTypes()",
+          "getSlotTypes(LivingEntity)",
+          "createSlots()",
+          "createSlots(LivingEntity)",
+          "getSlotTypeIds()",
+          "getSlotsForType(LivingEntity, String)",
+          "setSlotsForType(String, LivingEntity, int)",
+          "growSlotType(String, LivingEntity)",
+          "growSlotType(String, int, LivingEntity)",
+          "shrinkSlotType(String, LivingEntity)",
+          "shrinkSlotType(String, int, LivingEntity)",
+          "unlockSlotType(String, LivingEntity)",
+          "lockSlotType(String, LivingEntity)"
+        ]
+      },
+      "sampleCount": 94
+    },
+    "7.0.0-beta_1.20.3": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry",
+        "top.theillusivec4.curios.api.client.ICurioRenderer",
+        "top.theillusivec4.curios.api.CuriosApi",
+        "top.theillusivec4.curios.api.CuriosCapability",
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent",
+        "top.theillusivec4.curios.api.event.CurioChangeEvent",
+        "top.theillusivec4.curios.api.event.CurioDropsEvent",
+        "top.theillusivec4.curios.api.event.CurioEquipEvent",
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent",
+        "top.theillusivec4.curios.api.event.DropRulesEvent",
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent",
+        "top.theillusivec4.curios.api.SlotAttribute",
+        "top.theillusivec4.curios.api.SlotContext",
+        "top.theillusivec4.curios.api.SlotResult",
+        "top.theillusivec4.curios.api.SlotTypeMessage",
+        "top.theillusivec4.curios.api.SlotTypePreset",
+        "top.theillusivec4.curios.api.type.capability.ICurio",
+        "top.theillusivec4.curios.api.type.capability.ICurioItem",
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler",
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler",
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler",
+        "top.theillusivec4.curios.api.type.ISlotType",
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper",
+        "top.theillusivec4.curios.api.type.util.IIconHelper",
+        "top.theillusivec4.curios.api.type.util.ISlotHelper",
+        "top.theillusivec4.curios.client.ClientEventHandler",
+        "top.theillusivec4.curios.client.CuriosClientConfig",
+        "top.theillusivec4.curios.client.gui.CuriosButton",
+        "top.theillusivec4.curios.client.gui.CuriosScreen",
+        "top.theillusivec4.curios.client.gui.GuiEventHandler",
+        "top.theillusivec4.curios.client.gui.RenderButton",
+        "top.theillusivec4.curios.client.IconHelper",
+        "top.theillusivec4.curios.client.KeyRegistry",
+        "top.theillusivec4.curios.client.render.CuriosLayer",
+        "top.theillusivec4.curios.common.capability.CurioInventory",
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability",
+        "top.theillusivec4.curios.common.capability.CurioItemHandler",
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability",
+        "top.theillusivec4.curios.common.CuriosConfig",
+        "top.theillusivec4.curios.common.CuriosHelper",
+        "top.theillusivec4.curios.common.CuriosRegistry",
+        "top.theillusivec4.curios.common.data.CuriosEntityManager",
+        "top.theillusivec4.curios.common.data.CuriosSlotManager",
+        "top.theillusivec4.curios.common.event.CuriosEventHandler",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider",
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler",
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler",
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla",
+        "top.theillusivec4.curios.common.network.client.CPacketScroll",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender",
+        "top.theillusivec4.curios.common.network.NetworkHandler",
+        "top.theillusivec4.curios.common.network.server.SPacketBreak",
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem",
+        "top.theillusivec4.curios.common.network.server.SPacketScroll",
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack",
+        "top.theillusivec4.curios.common.slottype.LegacySlotManager",
+        "top.theillusivec4.curios.common.slottype.SlotType",
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger",
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction",
+        "top.theillusivec4.curios.Curios",
+        "top.theillusivec4.curios.server.command.CurioArgumentType",
+        "top.theillusivec4.curios.server.command.CuriosCommand",
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions",
+        "top.theillusivec4.curios.server.SlotHelper"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry": [
+          "register(Item, Supplier<ICurioRenderer>)",
+          "getRenderer(Item)",
+          "load()"
+        ],
+        "top.theillusivec4.curios.api.client.ICurioRenderer": [],
+        "top.theillusivec4.curios.api.CuriosApi": [
+          "registerCurio(Item, ICurioItem)",
+          "getSlot(String)",
+          "getSlotIcon(String)",
+          "getSlots()",
+          "getPlayerSlots()",
+          "getEntitySlots(EntityType<?>)",
+          "getItemStackSlots(ItemStack)",
+          "getItemStackSlots(ItemStack, LivingEntity)",
+          "getCurio(ItemStack)",
+          "getCuriosInventory(LivingEntity)",
+          "isStackValid(SlotContext, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "addSlotModifier(Multimap<Attribute, AttributeModifier>, String, UUID, double, Operation)",
+          "addSlotModifier(ItemStack, String, String, UUID, double, Operation, String)",
+          "addModifier(ItemStack, Attribute, String, UUID, double, Operation, String)",
+          "broadcastCurioBreakEvent(SlotContext)",
+          "setIconHelper(IIconHelper)",
+          "getIconHelper()",
+          "setCuriosHelper(ICuriosHelper)",
+          "getCuriosHelper()"
+        ],
+        "top.theillusivec4.curios.api.CuriosCapability": [],
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent": [
+          "getModifiers()",
+          "getOriginalModifiers()",
+          "addModifier(Attribute, AttributeModifier)",
+          "removeModifier(Attribute, AttributeModifier)",
+          "removeAttribute(Attribute)",
+          "clearModifiers()",
+          "getSlotContext()",
+          "getItemStack()",
+          "getUuid()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioChangeEvent": [
+          "getIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioEquipEvent": [
+          "getEquipResult()",
+          "setEquipResult(Result)",
+          "setResult(Result)",
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent": [
+          "getUnequipResult()",
+          "setUnequipResult(Result)",
+          "setResult(Result)",
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.DropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, ICurio.DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent": [
+          "getTypes()"
+        ],
+        "top.theillusivec4.curios.api.SlotAttribute": [
+          "getOrCreate(String)",
+          "getIdentifier()"
+        ],
+        "top.theillusivec4.curios.api.SlotContext": [
+          "getIdentifier()",
+          "getIndex()",
+          "getWearer()"
+        ],
+        "top.theillusivec4.curios.api.SlotResult": [],
+        "top.theillusivec4.curios.api.SlotTypeMessage": [
+          "getIdentifier()",
+          "getIcon()",
+          "getPriority()",
+          "getSize()",
+          "isLocked()",
+          "isVisible()",
+          "hasCosmetic()"
+        ],
+        "top.theillusivec4.curios.api.SlotTypePreset": [
+          "findPreset(String)",
+          "getIdentifier()",
+          "getMessageBuilder()"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurio": [
+          "curioTick(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "getEquipSound(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "makesPiglinsNeutral(SlotContext)",
+          "canWalkOnPowderedSnow(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurioItem": [
+          "hasCurioCapability(ItemStack)",
+          "curioTick(SlotContext, ItemStack)",
+          "onEquip(SlotContext, ItemStack, ItemStack)",
+          "onUnequip(SlotContext, ItemStack, ItemStack)",
+          "canEquip(SlotContext, ItemStack)",
+          "canUnequip(SlotContext, ItemStack)",
+          "getSlotsTooltip(List<Component>, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "onEquipFromUse(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext, ItemStack)",
+          "canEquipFromUse(SlotContext, ItemStack)",
+          "curioBreak(SlotContext, ItemStack)",
+          "canSync(SlotContext, ItemStack)",
+          "writeSyncData(SlotContext, ItemStack)",
+          "readSyncData(SlotContext, CompoundTag, ItemStack)",
+          "getDropRule(SlotContext, DamageSource, int, boolean, ItemStack)",
+          "getAttributesTooltip(List<Component>, ItemStack)",
+          "getFortuneLevel(SlotContext, LootContext, ItemStack)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int, ItemStack)",
+          "makesPiglinsNeutral(SlotContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler": [
+          "getVisibleSlots()",
+          "getLockedSlots()",
+          "unlockSlotType(String, int, boolean, boolean)",
+          "lockSlotType(String)",
+          "processSlots()",
+          "getFortuneBonus()",
+          "getLootingBonus()",
+          "setEnchantmentBonuses(Tuple<Integer, Integer>)"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler": [
+          "canToggleRendering()",
+          "getDropRule()"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler": [],
+        "top.theillusivec4.curios.api.type.ISlotType": [
+          "isLocked()",
+          "getPriority()",
+          "isVisible()"
+        ],
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper": [],
+        "top.theillusivec4.curios.api.type.util.IIconHelper": [],
+        "top.theillusivec4.curios.api.type.util.ISlotHelper": [],
+        "top.theillusivec4.curios.client.ClientEventHandler": [
+          "onClientTick(ClientTickEvent)",
+          "onKeyInput(Key)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientConfig": [],
+        "top.theillusivec4.curios.client.gui.CuriosButton": [
+          "renderWidget(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosScreen": [
+          "getButtonOffset(boolean)",
+          "init()",
+          "updateRenderButtons()",
+          "containerTick()",
+          "render(GuiGraphics, int, int, float)",
+          "renderTooltip(GuiGraphics, int, int)",
+          "keyPressed(int, int, int)",
+          "renderLabels(GuiGraphics, int, int)",
+          "renderBg(GuiGraphics, float, int, int)",
+          "isHovering(int, int, int, int, double, double)",
+          "mouseClicked(double, double, int)",
+          "mouseReleased(double, double, int)",
+          "mouseDragged(double, double, int, double, double)",
+          "mouseScrolled(double, double, double, double)",
+          "hasClickedOutside(double, double, int, int, int)",
+          "slotClicked(Slot, int, int, ClickType)",
+          "recipesUpdated()",
+          "getRecipeBookComponent()"
+        ],
+        "top.theillusivec4.curios.client.gui.GuiEventHandler": [
+          "onInventoryGuiInit(Post)",
+          "onInventoryGuiDrawBackground(Pre)",
+          "onMouseClick(net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonPressed.Pre)"
+        ],
+        "top.theillusivec4.curios.client.gui.RenderButton": [
+          "renderWidget(GuiGraphics, int, int, float)",
+          "renderButtonOverlay(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.IconHelper": [
+          "clearIcons()",
+          "addIcon(String, ResourceLocation)",
+          "getIcon(String)"
+        ],
+        "top.theillusivec4.curios.client.KeyRegistry": [],
+        "top.theillusivec4.curios.client.render.CuriosLayer": [
+          "render(PoseStack, MultiBufferSource, int, T, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventory": [
+          "init(ICuriosItemHandler)",
+          "asMap()",
+          "replace(Map<String, ICurioStacksHandler>)",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability": [
+          "reset()",
+          "getSlots()",
+          "getVisibleSlots()",
+          "getStacksHandler(String)",
+          "getEquippedCurios()",
+          "setEquippedCurio(String, int, ItemStack)",
+          "findFirstCurio(Item)",
+          "findFirstCurio(Predicate<ItemStack>)",
+          "findCurios(Item)",
+          "findCurios(Predicate<ItemStack>)",
+          "findCurios(String...)",
+          "findCurio(String, int)",
+          "getCurios()",
+          "setCurios(Map<String, ICurioStacksHandler>)",
+          "growSlotType(String, int)",
+          "shrinkSlotType(String, int)",
+          "getWearer()",
+          "loseInvalidStack(ItemStack)",
+          "handleInvalidStacks()",
+          "getFortuneLevel(LootContext)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioItemHandler": [
+          "getSlots()",
+          "getStackInSlot(int)",
+          "insertItem(int, ItemStack, boolean)",
+          "extractItem(int, int, boolean)",
+          "getSlotLimit(int)",
+          "isItemValid(int, ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability": [
+          "getStack()",
+          "curioTick(SlotContext)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext)",
+          "makesPiglinsNeutral(SlotContext)"
+        ],
+        "top.theillusivec4.curios.common.CuriosConfig": [],
+        "top.theillusivec4.curios.common.CuriosHelper": [
+          "getCurio(ItemStack)",
+          "getCuriosHandler(LivingEntity)",
+          "getCurioTags(Item)",
+          "getEquippedCurios(LivingEntity)",
+          "setEquippedCurio(LivingEntity, String, int, ItemStack)",
+          "findFirstCurio(LivingEntity, Item)",
+          "findFirstCurio(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, Item)",
+          "findCurios(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, String...)",
+          "findCurio(LivingEntity, String, int)",
+          "findEquippedCurio(Item, LivingEntity)",
+          "findEquippedCurio(Predicate<ItemStack>, LivingEntity)",
+          "getAttributeModifiers(String, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "addSlotModifier(Multimap<Attribute, AttributeModifier>, String, UUID, double, Operation)",
+          "addSlotModifier(ItemStack, String, String, UUID, double, Operation, String)",
+          "addModifier(ItemStack, Attribute, String, UUID, double, Operation, String)",
+          "isStackValid(SlotContext, ItemStack)",
+          "onBrokenCurio(SlotContext)"
+        ],
+        "top.theillusivec4.curios.common.CuriosRegistry": [
+          "init()"
+        ],
+        "top.theillusivec4.curios.common.data.CuriosEntityManager": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "getSyncPacket()",
+          "applySyncPacket(ListTag)",
+          "hasSlots(EntityType<?>)",
+          "getClientSlots(EntityType<?>)",
+          "getEntitySlots(EntityType<?>)",
+          "getModsFromSlots()"
+        ],
+        "top.theillusivec4.curios.common.data.CuriosSlotManager": [
+          "apply(Map<ResourceLocation, JsonElement>, ResourceManager, ProfilerFiller)",
+          "getSlots()",
+          "getSlot(String)",
+          "setIcons(Map<String, ResourceLocation>)",
+          "getIcons()",
+          "getIcon(String)",
+          "getModsFromSlots()",
+          "fromJson(SlotType.Builder, JsonObject)"
+        ],
+        "top.theillusivec4.curios.common.event.CuriosEventHandler": [
+          "playerLoggedIn(PlayerLoggedInEvent)",
+          "onDatapackSync(OnDatapackSyncEvent)",
+          "entityJoinWorld(EntityJoinLevelEvent)",
+          "playerStartTracking(StartTracking)",
+          "playerClone(Clone)",
+          "playerDrops(LivingDropsEvent)",
+          "playerXPPickUp(PickupXp)",
+          "curioRightClick(RightClickItem)",
+          "worldTick(LevelTickEvent)",
+          "looting(LootingLevelEvent)",
+          "onBreakBlock(BreakEvent)",
+          "enderManAnger(EnderManAngerEvent)",
+          "tick(LivingTickEvent)"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer": [
+          "hasCosmeticColumn()",
+          "resetSlots()",
+          "scrollToIndex(int)",
+          "scrollTo(float)",
+          "slotsChanged(Container)",
+          "removed(Player)",
+          "canScroll()",
+          "stillValid(Player)",
+          "setItem(int, int, ItemStack)",
+          "quickMoveStack(Player, int)",
+          "getRecipeBookType()",
+          "fillCraftSlotsStackedContents(StackedContents)",
+          "clearCraftingContent()",
+          "recipeMatches(RecipeHolder<? extends Recipe<CraftingContainer>>)",
+          "getGridWidth()",
+          "getGridHeight()"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot": [
+          "getRenderStatus()",
+          "getSlotName()"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioSlot": [
+          "getIdentifier()",
+          "canToggleRender()",
+          "getRenderStatus()",
+          "getSlotName()",
+          "set(ItemStack)",
+          "allowModification(Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler": [
+          "getStacks()",
+          "getCosmeticStacks()",
+          "getRenders()",
+          "canToggleRendering()",
+          "getDropRule()",
+          "getSlots()",
+          "getSizeShift()",
+          "isVisible()",
+          "hasCosmetic()",
+          "grow(int)",
+          "shrink(int)",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)",
+          "getIdentifier()",
+          "getSyncTag()",
+          "applySyncTag(CompoundTag)",
+          "copyModifiers(ICurioStacksHandler)",
+          "getModifiers()",
+          "getPermanentModifiers()",
+          "getCachedModifiers()"
+        ],
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler": [
+          "setPreviousStackInSlot(int, ItemStack)",
+          "getPreviousStackInSlot(int)",
+          "isItemValid(int, ItemStack)",
+          "extractItem(int, int, boolean)",
+          "grow(int)",
+          "shrink(int)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy": [
+          "encode(CPacketDestroy, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketDestroy, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios": [
+          "encode(CPacketOpenCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenCurios, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla": [
+          "encode(CPacketOpenVanilla, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenVanilla, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketScroll": [
+          "encode(CPacketScroll, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketScroll, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender": [
+          "encode(CPacketToggleRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketToggleRender, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.NetworkHandler": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketBreak": [
+          "encode(SPacketBreak, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketBreak, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem": [
+          "encode(SPacketGrabbedItem, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketGrabbedItem, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketScroll": [
+          "encode(SPacketScroll, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketScroll, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons": [
+          "encode(SPacketSetIcons, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSetIcons, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios": [
+          "encode(SPacketSyncCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncCurios, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData": [
+          "encode(SPacketSyncData, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncData, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers": [
+          "encode(SPacketSyncModifiers, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncModifiers, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender": [
+          "encode(SPacketSyncRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncRender, Context)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack": [
+          "encode(SPacketSyncStack, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncStack, Context)"
+        ],
+        "top.theillusivec4.curios.common.slottype.LegacySlotManager": [
+          "getIdsToMods()",
+          "getImcBuilders()",
+          "buildImcSlotTypes(Stream<IMCMessage>, Stream<IMCMessage>)"
+        ],
+        "top.theillusivec4.curios.common.slottype.SlotType": [
+          "getIdentifier()",
+          "getIcon()",
+          "getOrder()",
+          "getSize()",
+          "useNativeGui()",
+          "hasCosmetic()",
+          "canToggleRendering()",
+          "getDropRule()",
+          "equals(Object)",
+          "hashCode()",
+          "compareTo(ISlotType)"
+        ],
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger": [
+          "codec()",
+          "trigger(ServerPlayer, ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction": [
+          "register()",
+          "getType()",
+          "getReferencedContextParams()",
+          "run(ItemStack, LootContext)"
+        ],
+        "top.theillusivec4.curios.Curios": [],
+        "top.theillusivec4.curios.server.command.CurioArgumentType": [
+          "slot()",
+          "getSlot(CommandContext<CommandSourceStack>, String)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "parse(StringReader)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.server.SlotHelper": [
+          "addSlotType(ISlotType)",
+          "clear()",
+          "getSlotType(String)",
+          "getSlotTypes()",
+          "getSlotTypes(LivingEntity)",
+          "createSlots()",
+          "createSlots(LivingEntity)",
+          "getSlotTypeIds()",
+          "getSlotsForType(LivingEntity, String)",
+          "setSlotsForType(String, LivingEntity, int)",
+          "growSlotType(String, LivingEntity)",
+          "growSlotType(String, int, LivingEntity)",
+          "shrinkSlotType(String, LivingEntity)",
+          "shrinkSlotType(String, int, LivingEntity)",
+          "unlockSlotType(String, LivingEntity)",
+          "lockSlotType(String, LivingEntity)"
+        ]
+      },
+      "sampleCount": 74
+    },
+    "533ed2eb624b503721c99e804e1f1f0cf6adad417c13eab6a0d3330aa84238766ee6fd59b4ade8fadce920ee048ecce13d96461d5de64b10596ee9767bda40e1": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry",
+        "top.theillusivec4.curios.api.client.ICurioRenderer",
+        "top.theillusivec4.curios.api.CuriosApi",
+        "top.theillusivec4.curios.api.CuriosCapability",
+        "top.theillusivec4.curios.api.CuriosTriggers",
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent",
+        "top.theillusivec4.curios.api.event.CurioChangeEvent",
+        "top.theillusivec4.curios.api.event.CurioDropsEvent",
+        "top.theillusivec4.curios.api.event.CurioEquipEvent",
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent",
+        "top.theillusivec4.curios.api.event.DropRulesEvent",
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent",
+        "top.theillusivec4.curios.api.SlotContext",
+        "top.theillusivec4.curios.api.SlotPredicate",
+        "top.theillusivec4.curios.api.SlotResult",
+        "top.theillusivec4.curios.api.SlotTypeMessage",
+        "top.theillusivec4.curios.api.SlotTypePreset",
+        "top.theillusivec4.curios.api.type.capability.ICurio",
+        "top.theillusivec4.curios.api.type.capability.ICurioItem",
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler",
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler",
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler",
+        "top.theillusivec4.curios.api.type.ISlotType",
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper",
+        "top.theillusivec4.curios.api.type.util.IIconHelper",
+        "top.theillusivec4.curios.api.type.util.ISlotHelper",
+        "top.theillusivec4.curios.client.ClientEventHandler",
+        "top.theillusivec4.curios.client.CuriosClientConfig",
+        "top.theillusivec4.curios.client.CuriosClientMod",
+        "top.theillusivec4.curios.client.CuriosSpriteListener",
+        "top.theillusivec4.curios.client.gui.CuriosButton",
+        "top.theillusivec4.curios.client.gui.CuriosScreen",
+        "top.theillusivec4.curios.client.gui.GuiEventHandler",
+        "top.theillusivec4.curios.client.gui.RenderButton",
+        "top.theillusivec4.curios.client.IconHelper",
+        "top.theillusivec4.curios.client.KeyRegistry",
+        "top.theillusivec4.curios.client.render.CuriosLayer",
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability",
+        "top.theillusivec4.curios.common.capability.CurioItemCapability",
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability",
+        "top.theillusivec4.curios.common.CuriosConfig",
+        "top.theillusivec4.curios.common.CuriosHelper",
+        "top.theillusivec4.curios.common.CuriosRegistry",
+        "top.theillusivec4.curios.common.event.CuriosEventHandler",
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler",
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer",
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider",
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler",
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler",
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla",
+        "top.theillusivec4.curios.common.network.client.CPacketScroll",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender",
+        "top.theillusivec4.curios.common.network.NetworkHandler",
+        "top.theillusivec4.curios.common.network.server.SPacketBreak",
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem",
+        "top.theillusivec4.curios.common.network.server.SPacketScroll",
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncOperation",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack",
+        "top.theillusivec4.curios.common.slottype.SlotType",
+        "top.theillusivec4.curios.common.slottype.SlotTypeManager",
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger",
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction",
+        "top.theillusivec4.curios.Curios",
+        "top.theillusivec4.curios.server.command.CurioArgumentType",
+        "top.theillusivec4.curios.server.command.CuriosCommand",
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions",
+        "top.theillusivec4.curios.server.SlotHelper"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry": [
+          "register(Item, Supplier<ICurioRenderer>)",
+          "getRenderer(Item)",
+          "load()"
+        ],
+        "top.theillusivec4.curios.api.client.ICurioRenderer": [],
+        "top.theillusivec4.curios.api.CuriosApi": [
+          "getIconHelper()",
+          "getSlotHelper()",
+          "getCuriosHelper()",
+          "setIconHelper(IIconHelper)",
+          "setSlotHelper(ISlotHelper)",
+          "setCuriosHelper(ICuriosHelper)"
+        ],
+        "top.theillusivec4.curios.api.CuriosCapability": [],
+        "top.theillusivec4.curios.api.CuriosTriggers": [
+          "equip()",
+          "equip(Builder)",
+          "equipAtLocation(Builder, net.minecraft.advancements.critereon.LocationPredicate.Builder)"
+        ],
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent": [
+          "getModifiers()",
+          "getOriginalModifiers()",
+          "addModifier(Attribute, AttributeModifier)",
+          "removeModifier(Attribute, AttributeModifier)",
+          "removeAttribute(Attribute)",
+          "clearModifiers()",
+          "getSlotContext()",
+          "getItemStack()",
+          "getUuid()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioChangeEvent": [
+          "getIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioEquipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.DropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, ICurio.DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent": [
+          "getTypes()"
+        ],
+        "top.theillusivec4.curios.api.SlotContext": [
+          "getIdentifier()",
+          "getIndex()",
+          "getWearer()"
+        ],
+        "top.theillusivec4.curios.api.SlotPredicate": [
+          "matches(SlotContext)",
+          "fromJson(JsonElement)",
+          "serializeToJson()"
+        ],
+        "top.theillusivec4.curios.api.SlotResult": [],
+        "top.theillusivec4.curios.api.SlotTypeMessage": [
+          "getIdentifier()",
+          "getIcon()",
+          "getPriority()",
+          "getSize()",
+          "isLocked()",
+          "isVisible()",
+          "hasCosmetic()"
+        ],
+        "top.theillusivec4.curios.api.SlotTypePreset": [
+          "findPreset(String)",
+          "getIdentifier()",
+          "getMessageBuilder()"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurio": [
+          "curioTick(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "getEquipSound(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "makesPiglinsNeutral(SlotContext)",
+          "canWalkOnPowderedSnow(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurioItem": [
+          "hasCurioCapability(ItemStack)",
+          "curioTick(SlotContext, ItemStack)",
+          "onEquip(SlotContext, ItemStack, ItemStack)",
+          "onUnequip(SlotContext, ItemStack, ItemStack)",
+          "canEquip(SlotContext, ItemStack)",
+          "canUnequip(SlotContext, ItemStack)",
+          "getSlotsTooltip(List<Component>, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "onEquipFromUse(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext, ItemStack)",
+          "canEquipFromUse(SlotContext, ItemStack)",
+          "curioBreak(SlotContext, ItemStack)",
+          "canSync(SlotContext, ItemStack)",
+          "writeSyncData(SlotContext, ItemStack)",
+          "readSyncData(SlotContext, CompoundTag, ItemStack)",
+          "getDropRule(SlotContext, DamageSource, int, boolean, ItemStack)",
+          "getAttributesTooltip(List<Component>, ItemStack)",
+          "getFortuneLevel(SlotContext, LootContext, ItemStack)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int, ItemStack)",
+          "makesPiglinsNeutral(SlotContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler": [
+          "getVisibleSlots()",
+          "getLockedSlots()",
+          "unlockSlotType(String, int, boolean, boolean)",
+          "lockSlotType(String)",
+          "processSlots()",
+          "getFortuneBonus()",
+          "getLootingBonus()",
+          "setEnchantmentBonuses(Tuple<Integer, Integer>)"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler": [],
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler": [],
+        "top.theillusivec4.curios.api.type.ISlotType": [
+          "isLocked()"
+        ],
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper": [],
+        "top.theillusivec4.curios.api.type.util.IIconHelper": [],
+        "top.theillusivec4.curios.api.type.util.ISlotHelper": [],
+        "top.theillusivec4.curios.client.ClientEventHandler": [
+          "onKeyInput(ClientTickEvent)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientConfig": [],
+        "top.theillusivec4.curios.client.CuriosClientMod": [
+          "init()",
+          "stitch(Pre)"
+        ],
+        "top.theillusivec4.curios.client.CuriosSpriteListener": [
+          "getSprites()",
+          "prepare(ResourceManager, ProfilerFiller)",
+          "apply(Void, ResourceManager, ProfilerFiller)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosButton": [
+          "m_6305_(PoseStack, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosScreen": [
+          "getButtonOffset(boolean)",
+          "m_7856_()",
+          "updateRenderButtons()",
+          "m_181908_()",
+          "m_6305_(PoseStack, int, int, float)",
+          "m_7025_(PoseStack, int, int)",
+          "m_7933_(int, int, int)",
+          "m_7027_(PoseStack, int, int)",
+          "m_7286_(PoseStack, float, int, int)",
+          "m_6774_(int, int, int, int, double, double)",
+          "m_6375_(double, double, int)",
+          "m_6348_(double, double, int)",
+          "m_7979_(double, double, int, double, double)",
+          "m_6050_(double, double, double)",
+          "m_7467_(double, double, int, int, int)",
+          "m_6597_(Slot, int, int, ClickType)",
+          "m_6916_()",
+          "m_7861_()",
+          "m_5564_()"
+        ],
+        "top.theillusivec4.curios.client.gui.GuiEventHandler": [
+          "onInventoryGuiInit(Post)",
+          "onInventoryGuiDrawBackground(Pre)",
+          "onMouseClick(net.minecraftforge.client.event.ScreenEvent.MouseButtonPressed.Pre)"
+        ],
+        "top.theillusivec4.curios.client.gui.RenderButton": [
+          "m_6305_(PoseStack, int, int, float)",
+          "renderButtonOverlay(PoseStack, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.IconHelper": [
+          "clearIcons()",
+          "addIcon(String, ResourceLocation)",
+          "getIcon(String)"
+        ],
+        "top.theillusivec4.curios.client.KeyRegistry": [],
+        "top.theillusivec4.curios.client.render.CuriosLayer": [
+          "render(PoseStack, MultiBufferSource, int, T, float, float, float, float, float, float)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability": [
+          "createProvider(Player)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioItemCapability": [
+          "createProvider(ICurio)"
+        ],
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability": [
+          "getStack()",
+          "curioTick(SlotContext)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext)",
+          "makesPiglinsNeutral(SlotContext)"
+        ],
+        "top.theillusivec4.curios.common.CuriosConfig": [
+          "transformCurios(CommentedConfig)"
+        ],
+        "top.theillusivec4.curios.common.CuriosHelper": [
+          "getCurio(ItemStack)",
+          "getCuriosHandler(LivingEntity)",
+          "getCurioTags(Item)",
+          "getEquippedCurios(LivingEntity)",
+          "setEquippedCurio(LivingEntity, String, int, ItemStack)",
+          "findFirstCurio(LivingEntity, Item)",
+          "findFirstCurio(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, Item)",
+          "findCurios(LivingEntity, Predicate<ItemStack>)",
+          "findCurios(LivingEntity, String...)",
+          "findCurio(LivingEntity, String, int)",
+          "findEquippedCurio(Item, LivingEntity)",
+          "findEquippedCurio(Predicate<ItemStack>, LivingEntity)",
+          "getAttributeModifiers(String, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "addSlotModifier(Multimap<Attribute, AttributeModifier>, String, UUID, double, Operation)",
+          "addSlotModifier(ItemStack, String, String, UUID, double, Operation, String)",
+          "addModifier(ItemStack, Attribute, String, UUID, double, Operation, String)",
+          "isStackValid(SlotContext, ItemStack)",
+          "onBrokenCurio(SlotContext)"
+        ],
+        "top.theillusivec4.curios.common.CuriosRegistry": [
+          "init()"
+        ],
+        "top.theillusivec4.curios.common.event.CuriosEventHandler": [
+          "playerLoggedIn(PlayerLoggedInEvent)",
+          "attachEntitiesCapabilities(AttachCapabilitiesEvent<Entity>)",
+          "attachStackCapabilities(AttachCapabilitiesEvent<ItemStack>)",
+          "entityJoinWorld(EntityJoinLevelEvent)",
+          "playerStartTracking(StartTracking)",
+          "playerClone(Clone)",
+          "playerDrops(LivingDropsEvent)",
+          "playerXPPickUp(PickupXp)",
+          "curioRightClick(RightClickItem)",
+          "worldTick(LevelTickEvent)",
+          "looting(LootingLevelEvent)",
+          "onBreakBlock(BreakEvent)",
+          "enderManAnger(EnderManAngerEvent)",
+          "tick(LivingTickEvent)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler": [
+          "getGuiExtraAreas(CuriosScreen)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin": [
+          "getPluginUid()",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainer": [
+          "hasCosmeticColumn()",
+          "resetSlots()",
+          "scrollToIndex(int)",
+          "scrollTo(float)",
+          "m_6199_(Container)",
+          "m_6877_(Player)",
+          "canScroll()",
+          "m_6875_(Player)",
+          "m_182406_(int, int, ItemStack)",
+          "m_7648_(Player, int)",
+          "m_5867_()",
+          "m_5816_(StackedContents)",
+          "m_6650_()",
+          "m_6032_(Recipe<? super CraftingContainer>)",
+          "m_6636_()",
+          "m_6635_()",
+          "m_6656_()",
+          "m_6653_()"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosContainerProvider": [
+          "m_5446_()",
+          "m_7208_(int, Inventory, Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CosmeticCurioSlot": [
+          "getRenderStatus()",
+          "getSlotName()"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioSlot": [
+          "getIdentifier()",
+          "getRenderStatus()",
+          "getSlotName()",
+          "m_5852_(ItemStack)",
+          "m_5857_(ItemStack)",
+          "m_8010_(Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler": [
+          "getStacks()",
+          "getCosmeticStacks()",
+          "getRenders()",
+          "getSlots()",
+          "getSizeShift()",
+          "isVisible()",
+          "hasCosmetic()",
+          "grow(int)",
+          "shrink(int)",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)",
+          "getIdentifier()",
+          "getSyncTag()",
+          "applySyncTag(CompoundTag)",
+          "copyModifiers(ICurioStacksHandler)",
+          "getModifiers()",
+          "getPermanentModifiers()",
+          "getCachedModifiers()",
+          "getModifiersByOperation(Operation)",
+          "addTransientModifier(AttributeModifier)"
+        ],
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler": [
+          "setPreviousStackInSlot(int, ItemStack)",
+          "getSlots()",
+          "getPreviousStackInSlot(int)",
+          "grow(int)",
+          "shrink(int)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy": [
+          "encode(CPacketDestroy, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketDestroy, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios": [
+          "encode(CPacketOpenCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla": [
+          "encode(CPacketOpenVanilla, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketOpenVanilla, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketScroll": [
+          "encode(CPacketScroll, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketScroll, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender": [
+          "encode(CPacketToggleRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(CPacketToggleRender, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.NetworkHandler": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketBreak": [
+          "encode(SPacketBreak, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketBreak, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem": [
+          "encode(SPacketGrabbedItem, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketGrabbedItem, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketScroll": [
+          "encode(SPacketScroll, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketScroll, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketSetIcons": [
+          "encode(SPacketSetIcons, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSetIcons, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios": [
+          "encode(SPacketSyncCurios, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncCurios, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers": [
+          "encode(SPacketSyncModifiers, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncModifiers, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncOperation": [
+          "encode(SPacketSyncOperation, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncOperation, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender": [
+          "encode(SPacketSyncRender, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncRender, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack": [
+          "encode(SPacketSyncStack, FriendlyByteBuf)",
+          "decode(FriendlyByteBuf)",
+          "handle(SPacketSyncStack, Supplier<Context>)"
+        ],
+        "top.theillusivec4.curios.common.slottype.SlotType": [
+          "getIdentifier()",
+          "getIcon()",
+          "getPriority()",
+          "getSize()",
+          "isVisible()",
+          "hasCosmetic()",
+          "equals(Object)",
+          "hashCode()",
+          "compareTo(ISlotType)"
+        ],
+        "top.theillusivec4.curios.common.slottype.SlotTypeManager": [
+          "getIdsToMods()",
+          "buildImcSlotTypes(Stream<IMCMessage>, Stream<IMCMessage>)",
+          "buildConfigSlotTypes()",
+          "buildSlotTypes()"
+        ],
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger": [
+          "m_7295_()",
+          "createInstance(JsonObject, Composite, DeserializationContext)",
+          "trigger(ServerPlayer, ItemStack, ServerLevel, double, double, double)",
+          "trigger(SlotContext, ServerPlayer, ItemStack, ServerLevel, double, double, double)"
+        ],
+        "top.theillusivec4.curios.common.util.SetCurioAttributesFunction": [
+          "register()",
+          "m_7162_()",
+          "m_6231_()",
+          "m_7372_(ItemStack, LootContext)"
+        ],
+        "top.theillusivec4.curios.Curios": [],
+        "top.theillusivec4.curios.server.command.CurioArgumentType": [
+          "slot()",
+          "getSlot(CommandContext<CommandSourceStack>, String)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "parse(StringReader)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions": [
+          "register()"
+        ],
+        "top.theillusivec4.curios.server.SlotHelper": [
+          "addSlotType(ISlotType)",
+          "getSlotType(String)",
+          "getSlotTypes()",
+          "getSlotTypes(LivingEntity)",
+          "createSlots()",
+          "createSlots(LivingEntity)",
+          "getSlotTypeIds()",
+          "getSlotsForType(LivingEntity, String)",
+          "setSlotsForType(String, LivingEntity, int)",
+          "growSlotType(String, LivingEntity)",
+          "growSlotType(String, int, LivingEntity)",
+          "shrinkSlotType(String, LivingEntity)",
+          "shrinkSlotType(String, int, LivingEntity)",
+          "unlockSlotType(String, LivingEntity)",
+          "lockSlotType(String, LivingEntity)"
+        ]
+      },
+      "sampleCount": 76
+    },
+    "16.0.0_26.2": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry",
+        "top.theillusivec4.curios.api.client.ICurioRenderer",
+        "top.theillusivec4.curios.api.client.ICuriosScreen",
+        "top.theillusivec4.curios.api.common.CuriosCommonHooks",
+        "top.theillusivec4.curios.api.common.DropRule",
+        "top.theillusivec4.curios.api.common.inventory.CuriosResourceHandler",
+        "top.theillusivec4.curios.api.common.loot.SetCurioAttributesFunction",
+        "top.theillusivec4.curios.api.common.slot.SlotTypePredicate",
+        "top.theillusivec4.curios.api.CurioAttributeModifiers",
+        "top.theillusivec4.curios.api.CuriosApi",
+        "top.theillusivec4.curios.api.CuriosCapability",
+        "top.theillusivec4.curios.api.CuriosDataComponents",
+        "top.theillusivec4.curios.api.CuriosDataProvider",
+        "top.theillusivec4.curios.api.CuriosResources",
+        "top.theillusivec4.curios.api.CuriosSlotTypes",
+        "top.theillusivec4.curios.api.CuriosTags",
+        "top.theillusivec4.curios.api.CuriosTooltip",
+        "top.theillusivec4.curios.api.CuriosTriggers",
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent",
+        "top.theillusivec4.curios.api.event.CurioCanEquipEvent",
+        "top.theillusivec4.curios.api.event.CurioCanUnequipEvent",
+        "top.theillusivec4.curios.api.event.CurioChangeEvent",
+        "top.theillusivec4.curios.api.event.CurioDropsEvent",
+        "top.theillusivec4.curios.api.event.DropRulesEvent",
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent",
+        "top.theillusivec4.curios.api.extensions.ICurioSlotExtension",
+        "top.theillusivec4.curios.api.extensions.RegisterCuriosExtensionsEvent",
+        "top.theillusivec4.curios.api.SlotAttribute",
+        "top.theillusivec4.curios.api.SlotContext",
+        "top.theillusivec4.curios.api.SlotPredicate",
+        "top.theillusivec4.curios.api.SlotResult",
+        "top.theillusivec4.curios.api.type.capability.ICurio",
+        "top.theillusivec4.curios.api.type.capability.ICurioItem",
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler",
+        "top.theillusivec4.curios.api.type.data.IEntitiesData",
+        "top.theillusivec4.curios.api.type.data.ISlotData",
+        "top.theillusivec4.curios.api.type.ICurioSlot",
+        "top.theillusivec4.curios.api.type.ICuriosMenu",
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler",
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler",
+        "top.theillusivec4.curios.api.type.ISlotType",
+        "top.theillusivec4.curios.client.CuriosClientEvents",
+        "top.theillusivec4.curios.client.CuriosClientMod",
+        "top.theillusivec4.curios.client.CuriosKeyMappings",
+        "top.theillusivec4.curios.client.CuriosLayer",
+        "top.theillusivec4.curios.client.screen.button.CosmeticButton",
+        "top.theillusivec4.curios.client.screen.button.CuriosButton",
+        "top.theillusivec4.curios.client.screen.button.ICuriosWidget",
+        "top.theillusivec4.curios.client.screen.button.PageButton",
+        "top.theillusivec4.curios.client.screen.button.RenderButton",
+        "top.theillusivec4.curios.client.screen.CuriosScreen",
+        "top.theillusivec4.curios.client.screen.CuriosScreenEvents",
+        "top.theillusivec4.curios.common.capability.CombinedCuriosResourceHandler",
+        "top.theillusivec4.curios.common.capability.CurioInventory",
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability",
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability",
+        "top.theillusivec4.curios.common.CuriosCommonEvents",
+        "top.theillusivec4.curios.common.data.CuriosSlotResources",
+        "top.theillusivec4.curios.common.data.EntitiesData",
+        "top.theillusivec4.curios.common.data.SlotData",
+        "top.theillusivec4.curios.common.integration.CuriosExclusionAreas",
+        "top.theillusivec4.curios.common.integration.CuriosIntegrations",
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler",
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin",
+        "top.theillusivec4.curios.common.inventory.container.CuriosMenu",
+        "top.theillusivec4.curios.common.inventory.container.CuriosMenuProvider",
+        "top.theillusivec4.curios.common.inventory.CurioSlot",
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler",
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler",
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios",
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla",
+        "top.theillusivec4.curios.common.network.client.CPacketPage",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleCosmetics",
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender",
+        "top.theillusivec4.curios.common.network.client.CuriosClientPackets",
+        "top.theillusivec4.curios.common.network.client.CuriosClientPayloadHandler",
+        "top.theillusivec4.curios.common.network.NetworkHandler",
+        "top.theillusivec4.curios.common.network.server.CuriosServerPayloadHandler",
+        "top.theillusivec4.curios.common.network.server.SPacketBreak",
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem",
+        "top.theillusivec4.curios.common.network.server.SPacketPage",
+        "top.theillusivec4.curios.common.network.server.SPacketQuickMove",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncActiveState",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender",
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack",
+        "top.theillusivec4.curios.common.slot.SlotType",
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger",
+        "top.theillusivec4.curios.config.CuriosClientConfig",
+        "top.theillusivec4.curios.config.CuriosConfig",
+        "top.theillusivec4.curios.CuriosCommonMod",
+        "top.theillusivec4.curios.CuriosConstants",
+        "top.theillusivec4.curios.server.command.CurioArgumentType",
+        "top.theillusivec4.curios.server.command.CuriosCommand",
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry": [
+          "register(Item, Supplier<ICurioRenderer>)",
+          "getRenderer(Item)"
+        ],
+        "top.theillusivec4.curios.api.client.ICurioRenderer": [
+          "render(ItemStack, SlotContext, PoseStack, SubmitNodeCollector, int, S, RenderLayerParent<S, M>, Context, float, float)",
+          "renderFirstPersonHand(ItemStack, SlotContext, HumanoidArm, PoseStack, SubmitNodeCollector, AvatarRenderState, AbstractClientPlayer, int)"
+        ],
+        "top.theillusivec4.curios.api.client.ICuriosScreen": [],
+        "top.theillusivec4.curios.api.common.CuriosCommonHooks": [
+          "computeModifiedAttributes(ItemStack, CurioAttributeModifiers)"
+        ],
+        "top.theillusivec4.curios.api.common.DropRule": [
+          "getSerializedName()"
+        ],
+        "top.theillusivec4.curios.api.common.inventory.CuriosResourceHandler": [
+          "getCapacity(int, ItemResource)",
+          "isValid(int, ItemResource)",
+          "onContentsChanged(int, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.common.loot.SetCurioAttributesFunction": [
+          "getReferencedContextParams()",
+          "codec()",
+          "run(ItemStack, LootContext)",
+          "modifier(Identifier, Holder<Attribute>, Operation, NumberProvider)",
+          "setAttributes()",
+          "Modifier(Identifier, Holder<Attribute>, Operation, NumberProvider, List<SlotTypePredicate>)"
+        ],
+        "top.theillusivec4.curios.api.common.slot.SlotTypePredicate": [
+          "builder()",
+          "matches(String)",
+          "matches(ISlotType)"
+        ],
+        "top.theillusivec4.curios.api.CurioAttributeModifiers": [
+          "builder()",
+          "withTooltip(boolean)",
+          "withModifierAdded(Holder<Attribute>, AttributeModifier, ISlotType)",
+          "withModifierAdded(Holder<Attribute>, AttributeModifier, String)",
+          "withModifierAdded(Holder<Attribute>, AttributeModifier, SlotTypePredicate)",
+          "forEach(SlotContext, BiConsumer<Holder<Attribute>, AttributeModifier>)",
+          "forEach(ISlotType, BiConsumer<Holder<Attribute>, AttributeModifier>)",
+          "withModifierAdded(Identifier, AttributeModifier, String)",
+          "forEach(String, BiConsumer<Identifier, AttributeModifier>)"
+        ],
+        "top.theillusivec4.curios.api.CuriosApi": [
+          "registerCurio(Item, ICurioItem)",
+          "getCurio(ItemStack)",
+          "getCurioOrNull(ItemStack)",
+          "getCuriosInventory(LivingEntity)",
+          "getCuriosInventoryOrNull(LivingEntity)",
+          "isStackValid(SlotContext, ItemStack)",
+          "getSlotId(SlotContext)",
+          "broadcastCurioBreakEvent(SlotContext)",
+          "getSlot(String, Level)",
+          "getSlot(String, boolean)",
+          "getSlots(Level)",
+          "getSlots(boolean)",
+          "getPlayerSlots(Level)",
+          "getPlayerSlots(boolean)",
+          "getPlayerSlots(Player)",
+          "getEntitySlots(LivingEntity)",
+          "getEntitySlots(EntityType<?>, Level)",
+          "getEntitySlots(EntityType<?>, boolean)",
+          "getItemStackSlots(ItemStack, Level)",
+          "getItemStackSlots(ItemStack, boolean)"
+        ],
+        "top.theillusivec4.curios.api.CuriosCapability": [],
+        "top.theillusivec4.curios.api.CuriosDataComponents": [
+          "getCurioAttributeModifiersOrEmpty(ItemStack)",
+          "updateCurioAttributeModifiers(ItemStack, CurioAttributeModifiers)",
+          "updateCurioAttributeModifiers(ItemStack, Holder<Attribute>, AttributeModifier, String...)",
+          "updateCurioAttributeModifiers(ItemStack, UnaryOperator<CurioAttributeModifiers>)"
+        ],
+        "top.theillusivec4.curios.api.CuriosDataProvider": [
+          "generate(Provider)",
+          "run(CachedOutput)",
+          "createSlot(String)",
+          "getSlot(String)",
+          "copySlot(String, String)",
+          "createEntities(String)",
+          "copyEntities(String, String)",
+          "tag(TagKey<Item>)",
+          "tag(String)",
+          "tag(ISlotData)",
+          "getName()"
+        ],
+        "top.theillusivec4.curios.api.CuriosResources": [
+          "resource(String)"
+        ],
+        "top.theillusivec4.curios.api.CuriosSlotTypes": [
+          "getSlotType(String)",
+          "getSlotType(String, boolean)",
+          "getSlotTypes()",
+          "getSlotTypes(boolean)",
+          "getItemSlotTypes(ItemStack, boolean)",
+          "getItemSlotTypes(ItemStack, LivingEntity)",
+          "getDefaultPlayerSlotTypes(boolean)",
+          "getDefaultEntitySlotTypes(EntityType<?>, boolean)",
+          "getDefaultEntitySlotTypes(LivingEntity)",
+          "registerPredicate(Identifier, BiPredicate<SlotContext, ItemStack>)",
+          "getPredicate(Identifier)",
+          "getPredicates()",
+          "testPredicates(SlotContext, ItemStack, Set<Identifier>)"
+        ],
+        "top.theillusivec4.curios.api.CuriosTags": [
+          "createEntityTypeTag(String)",
+          "createItemTag(CuriosSlotTypes.Preset)",
+          "createItemTag(String)"
+        ],
+        "top.theillusivec4.curios.api.CuriosTooltip": [
+          "append(Component)",
+          "appendHeader(MutableComponent)",
+          "appendSlotHeader(String)",
+          "appendAdditive(MutableComponent)",
+          "appendSubtractive(MutableComponent)",
+          "appendEqual(MutableComponent)",
+          "forSlots(String...)",
+          "forSlots(ItemStack)",
+          "forSlots(ItemStack, LivingEntity)",
+          "build()"
+        ],
+        "top.theillusivec4.curios.api.CuriosTriggers": [
+          "equip()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent": [
+          "getItemStack()",
+          "getDefaultModifiers()",
+          "getImmutableModifiers()",
+          "addModifier(Holder<Attribute>, AttributeModifier, SlotTypePredicate)",
+          "addModifier(Holder<Attribute>, AttributeModifier, String...)",
+          "addModifier(Holder<Attribute>, AttributeModifier, ISlotType...)",
+          "addModifier(Holder<Attribute>, AttributeModifier)",
+          "removeModifier(Holder<Attribute>, Identifier)",
+          "removeModifier(Holder<Attribute>, AttributeModifier)",
+          "replaceModifier(Holder<Attribute>, AttributeModifier, String...)",
+          "replaceModifier(Holder<Attribute>, AttributeModifier, ISlotType...)",
+          "replaceModifier(Holder<Attribute>, AttributeModifier, SlotTypePredicate)",
+          "removeIf(Predicate<CurioAttributeModifiers.Entry>)",
+          "removeAllModifiersFor(Holder<Attribute>)",
+          "clearModifiers()",
+          "build()",
+          "getModifiers()",
+          "getOriginalModifiers()",
+          "removeAttribute(Holder<Attribute>)"
+        ],
+        "top.theillusivec4.curios.api.event.CurioCanEquipEvent": [
+          "getOriginalEquipResult()",
+          "getEquipResult()",
+          "setEquipResult(boolean)",
+          "setEquipResult(TriState)",
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioCanUnequipEvent": [
+          "getOriginalUnequipResult()",
+          "getUnequipResult()",
+          "setUnequipResult(boolean)",
+          "setUnequipResult(TriState)",
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioChangeEvent": [
+          "getSlotContext()",
+          "getIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.event.DropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent": [
+          "getTypes()"
+        ],
+        "top.theillusivec4.curios.api.extensions.ICurioSlotExtension": [
+          "getDisplayStack(SlotContext, ItemStack)",
+          "getSlotTooltip(SlotContext, List<Component>, TooltipFlag)",
+          "getSlotTooltip(SlotContext, TooltipFlag)"
+        ],
+        "top.theillusivec4.curios.api.extensions.RegisterCuriosExtensionsEvent": [
+          "registerSlotExtension(ICurioSlotExtension, String...)",
+          "isSlotExtensionRegistered(String)"
+        ],
+        "top.theillusivec4.curios.api.SlotAttribute": [
+          "getOrCreate(String)",
+          "id()",
+          "resourceLocation()",
+          "toComponent(AttributeModifier, TooltipFlag)",
+          "getIdentifier()"
+        ],
+        "top.theillusivec4.curios.api.SlotContext": [
+          "getItemAccess()"
+        ],
+        "top.theillusivec4.curios.api.SlotPredicate": [
+          "matches(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.SlotResult": [
+          "getItemAccess()"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurio": [
+          "curioTick(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onStateChange(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>, TooltipContext)",
+          "getDefaultCurioAttributeModifiers()",
+          "getAttributeModifiers(SlotContext, Identifier)",
+          "onEquipFromUse(SlotContext)",
+          "getEquipSound(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, boolean)",
+          "getAttributesTooltip(List<Component>, TooltipContext)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, LootContext)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurioItem": [
+          "hasCurioCapability(ItemStack)",
+          "curioTick(SlotContext, ItemStack)",
+          "onEquip(SlotContext, ItemStack, ItemStack)",
+          "onUnequip(SlotContext, ItemStack, ItemStack)",
+          "onStateChange(SlotContext, ItemStack, ItemStack)",
+          "canEquip(SlotContext, ItemStack)",
+          "canUnequip(SlotContext, ItemStack)",
+          "getSlotsTooltip(List<Component>, TooltipContext, ItemStack)",
+          "getDefaultCurioAttributeModifiers(ItemStack)",
+          "getAttributeModifiers(SlotContext, Identifier, ItemStack)",
+          "onEquipFromUse(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext, ItemStack)",
+          "canEquipFromUse(SlotContext, ItemStack)",
+          "curioBreak(SlotContext, ItemStack)",
+          "canSync(SlotContext, ItemStack)",
+          "writeSyncData(SlotContext, ItemStack)",
+          "readSyncData(SlotContext, CompoundTag, ItemStack)",
+          "getDropRule(SlotContext, DamageSource, boolean, ItemStack)",
+          "getAttributesTooltip(List<Component>, TooltipContext, ItemStack)",
+          "getFortuneLevel(SlotContext, LootContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler": [
+          "getVisibleSlots()",
+          "isEquipped(Item)",
+          "isEquipped(Predicate<ItemStack>)",
+          "isSlotActive(String, int)",
+          "setSlotActive(String, int, boolean)",
+          "setSlotsActive(String, boolean)",
+          "findFirstCurio(Predicate<ItemStack>, boolean, String)",
+          "findCurios(Predicate<ItemStack>, boolean, String)",
+          "findCurios(boolean, String...)",
+          "findCurio(String, int, boolean)",
+          "addTransientSlotModifier(String, Identifier, double, Operation)",
+          "addPermanentSlotModifier(String, Identifier, double, Operation)",
+          "removeSlotModifier(String, Identifier)"
+        ],
+        "top.theillusivec4.curios.api.type.data.IEntitiesData": [],
+        "top.theillusivec4.curios.api.type.data.ISlotData": [],
+        "top.theillusivec4.curios.api.type.ICurioSlot": [
+          "getId()"
+        ],
+        "top.theillusivec4.curios.api.type.ICuriosMenu": [],
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler": [
+          "getActiveStates()",
+          "updateActiveState(int)",
+          "canToggleRendering()",
+          "getDropRule()",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)",
+          "getSyncTag()",
+          "applySyncTag(CompoundTag)"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler": [
+          "serializeNBT(Provider)",
+          "deserializeNBT(Provider, CompoundTag)"
+        ],
+        "top.theillusivec4.curios.api.type.ISlotType": [
+          "getId()",
+          "isItemValid(SlotContext, ItemStack)",
+          "compareTo(ISlotType)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientEvents": [
+          "renderHand(RenderArmEvent<T>)",
+          "onClientTick(Post)",
+          "onAttributeTooltip(AddAttributeTooltipsEvent)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientMod": [],
+        "top.theillusivec4.curios.client.CuriosKeyMappings": [],
+        "top.theillusivec4.curios.client.CuriosLayer": [
+          "submit(PoseStack, SubmitNodeCollector, int, S, float, float)"
+        ],
+        "top.theillusivec4.curios.client.screen.button.CosmeticButton": [
+          "extractContents(GuiGraphicsExtractor, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.screen.button.CuriosButton": [
+          "extractContents(GuiGraphicsExtractor, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.screen.button.ICuriosWidget": [],
+        "top.theillusivec4.curios.client.screen.button.PageButton": [
+          "extractContents(GuiGraphicsExtractor, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.screen.button.RenderButton": [
+          "extractContents(GuiGraphicsExtractor, int, int, float)",
+          "renderButtonOverlay(GuiGraphicsExtractor, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.screen.CuriosScreen": [
+          "getButtonOffset(boolean)",
+          "init()",
+          "onRecipeBookButtonClick()",
+          "getRecipeBookButtonPosition()",
+          "updateRenderButtons()",
+          "extractRenderState(GuiGraphicsExtractor, int, int, float)",
+          "addItemSlotMouseAction(ItemSlotMouseAction)",
+          "extractTooltip(GuiGraphicsExtractor, int, int)",
+          "showsActiveEffects()",
+          "isBiggerResultSlot()",
+          "keyPressed(KeyEvent)",
+          "extractLabels(GuiGraphicsExtractor, int, int)",
+          "extractBackground(GuiGraphicsExtractor, int, int, float)",
+          "extractSlot(GuiGraphicsExtractor, Slot, int, int)",
+          "isHovering(int, int, int, int, double, double)",
+          "mouseReleased(MouseButtonEvent)",
+          "mouseScrolled(double, double, double, double)"
+        ],
+        "top.theillusivec4.curios.client.screen.CuriosScreenEvents": [
+          "postScreenInit(Post)",
+          "preMouseClick(Pre)"
+        ],
+        "top.theillusivec4.curios.common.capability.CombinedCuriosResourceHandler": [
+          "from(LivingEntity)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventory": [
+          "getOwner()",
+          "resetInventory()",
+          "getUpdatingInventories()",
+          "getDroppingStacks()",
+          "loadInventoryConfiguration()",
+          "asMap()",
+          "replace(Map<String, ICurioStacksHandler>)",
+          "serialize(ValueOutput)",
+          "deserialize(ValueInput)"
+        ],
+        "top.theillusivec4.curios.common.capability.CurioInventoryCapability": [
+          "reset()",
+          "getSlots()",
+          "getVisibleSlots()",
+          "getStacksHandler(String)",
+          "getEquippedCurios()",
+          "setEquippedCurio(String, int, ItemStack)",
+          "findFirstCurio(Item)",
+          "findFirstCurio(Predicate<ItemStack>)",
+          "findFirstCurio(Predicate<ItemStack>, String)",
+          "findFirstCurio(Predicate<ItemStack>, boolean, String)",
+          "findCurios(Item)",
+          "findCurios(Predicate<ItemStack>)",
+          "findCurios(Predicate<ItemStack>, boolean, String)",
+          "findCurios(String...)",
+          "findCurios(boolean, String...)",
+          "findCurio(String, int)",
+          "findCurio(String, int, boolean)",
+          "getCurios()",
+          "setCurios(Map<String, ICurioStacksHandler>)",
+          "getWearer()"
+        ],
+        "top.theillusivec4.curios.common.capability.ItemizedCurioCapability": [
+          "getStack()",
+          "curioTick(SlotContext)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>, TooltipContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, boolean)",
+          "getAttributesTooltip(List<Component>, TooltipContext)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, LootContext)",
+          "getDefaultCurioAttributeModifiers()",
+          "getAttributeModifiers(SlotContext, Identifier)",
+          "onEquipFromUse(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onStateChange(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.common.CuriosCommonEvents": [
+          "onTagsUpdated(ServerAboutToStartEvent)",
+          "onDatapackSync(OnDatapackSyncEvent)",
+          "entityConstructing(EntityConstructing)",
+          "entityJoinWorld(EntityJoinLevelEvent)",
+          "playerStartTracking(StartTracking)",
+          "playerDrops(LivingDropsEvent)",
+          "playerXPPickUp(PickupXp)",
+          "curioRightClick(RightClickItem)",
+          "onBreakBlock(BlockDropsEvent)",
+          "enderManAnger(EnderManAngerEvent)",
+          "tick(Post)",
+          "livingEquipmentChange(LivingEquipmentChangeEvent)"
+        ],
+        "top.theillusivec4.curios.common.data.CuriosSlotResources": [
+          "apply(Map<Identifier, JsonElement>, ResourceManager, ProfilerFiller)",
+          "populateData()",
+          "setAllEntitySlots(Map<EntityType<?>, Map<String, ISlotType>>)",
+          "getAllEntitySlots()",
+          "getPlayerSlots()",
+          "getEntitySlots(EntityType<?>)",
+          "getModsFromSlots()",
+          "getSlots()",
+          "setSlots(Map<String, ISlotType>)",
+          "getSlot(String)",
+          "getConfigSlots()",
+          "fromConfig(Map<String, SlotType.Builder>, Provider)"
+        ],
+        "top.theillusivec4.curios.common.data.EntitiesData": [
+          "replace(boolean)",
+          "addPlayer()",
+          "addEntities(EntityType<?>...)",
+          "addEntities(TagKey<EntityType<?>>...)",
+          "addAllPresetSlots()",
+          "addAllPresetSlotsExcept(CuriosSlotTypes.Preset...)",
+          "addPresetSlots(CuriosSlotTypes.Preset...)",
+          "addSlots(String...)",
+          "addSlots(boolean, ISlotData...)",
+          "addSlots(ISlotData...)",
+          "addCondition(ICondition)",
+          "build()",
+          "serialize(Provider)"
+        ],
+        "top.theillusivec4.curios.common.data.SlotData": [
+          "replace(boolean)",
+          "order(int)",
+          "size(int)",
+          "operation(String)",
+          "useNativeGui(boolean)",
+          "addCosmetic(boolean)",
+          "renderToggle(boolean)",
+          "icon(Identifier)",
+          "dropRule(DropRule)",
+          "addCondition(ICondition...)",
+          "addValidator(Identifier...)",
+          "addEntity(EntityType<?>...)",
+          "addEntities(TagKey<EntityType<?>>...)",
+          "getId()",
+          "build()",
+          "serialize(Provider)"
+        ],
+        "top.theillusivec4.curios.common.integration.CuriosExclusionAreas": [
+          "create(CuriosScreen)"
+        ],
+        "top.theillusivec4.curios.common.integration.CuriosIntegrations": [
+          "setup(IEventBus)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosContainerHandler": [
+          "getGuiExtraAreas(CuriosScreen)"
+        ],
+        "top.theillusivec4.curios.common.integration.jei.CuriosJeiPlugin": [
+          "getPluginUid()",
+          "registerGuiHandlers(IGuiHandlerRegistration)"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosMenu": [
+          "setPage(int)",
+          "resetSlots()",
+          "toggleCosmetics()",
+          "slotsChanged(Container)",
+          "removed(Player)",
+          "setItem(int, int, ItemStack)",
+          "stillValid(Player)",
+          "quickMoveStack(Player, int)",
+          "findAvailableSlot(ItemStack)",
+          "getRecipeBookType()",
+          "getResultSlot()",
+          "getInputGridSlots()",
+          "getGridWidth()",
+          "getGridHeight()",
+          "owner()",
+          "nextPage()",
+          "prevPage()",
+          "checkQuickMove()",
+          "getSlot(int)"
+        ],
+        "top.theillusivec4.curios.common.inventory.container.CuriosMenuProvider": [
+          "getDisplayName()",
+          "createMenu(int, Inventory, Player)"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioSlot": [
+          "getIdentifier()",
+          "canToggleRender()",
+          "isActiveState()",
+          "isCosmetic()",
+          "getSlotExtension()",
+          "getSlotContext()",
+          "getRenderStatus()",
+          "getSlotTooltip()",
+          "set(ItemStack)",
+          "allowModification(Player)",
+          "getId()"
+        ],
+        "top.theillusivec4.curios.common.inventory.CurioStacksHandler": [
+          "getStacks()",
+          "getCosmeticStacks()",
+          "getRenders()",
+          "getActiveStates()",
+          "updateActiveState(int)",
+          "canToggleRendering()",
+          "getDropRule()",
+          "getSlots()",
+          "getBaseSize()",
+          "isVisible()",
+          "hasCosmetic()",
+          "serializeNBT()",
+          "deserializeNBT(CompoundTag)",
+          "getIdentifier()",
+          "getSyncTag()",
+          "applySyncTag(CompoundTag)",
+          "copyModifiers(ICurioStacksHandler)",
+          "getModifiers()",
+          "getPermanentModifiers()",
+          "getCachedModifiers()"
+        ],
+        "top.theillusivec4.curios.common.inventory.DynamicStackHandler": [
+          "setPreviousStackInSlot(int, ItemStack)",
+          "getPreviousStackInSlot(int)",
+          "isItemValid(int, ItemStack)",
+          "extractItem(int, int, boolean)",
+          "grow(int)",
+          "shrink(int)",
+          "serializeNBT(Provider)",
+          "deserializeNBT(Provider, CompoundTag)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketDestroy": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenCurios": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketOpenVanilla": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketPage": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleCosmetics": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CPacketToggleRender": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.client.CuriosClientPackets": [
+          "handle(SPacketQuickMove)",
+          "handle(SPacketPage)",
+          "handle(SPacketBreak)",
+          "handle(SPacketSyncRender)",
+          "handle(SPacketSyncModifiers)",
+          "handle(SPacketSyncData)",
+          "handle(SPacketSyncCurios)",
+          "handle(SPacketGrabbedItem)",
+          "handle(SPacketSyncStack)",
+          "handle(SPacketSyncActiveState)"
+        ],
+        "top.theillusivec4.curios.common.network.client.CuriosClientPayloadHandler": [
+          "getInstance()",
+          "handle(SPacketQuickMove, IPayloadContext)",
+          "handle(SPacketPage, IPayloadContext)",
+          "handle(SPacketBreak, IPayloadContext)",
+          "handle(SPacketSyncRender, IPayloadContext)",
+          "handle(SPacketSyncModifiers, IPayloadContext)",
+          "handle(SPacketSyncData, IPayloadContext)",
+          "handle(SPacketSyncActiveState, IPayloadContext)",
+          "handle(SPacketSyncCurios, IPayloadContext)",
+          "handle(SPacketGrabbedItem, IPayloadContext)",
+          "handle(SPacketSyncStack, IPayloadContext)"
+        ],
+        "top.theillusivec4.curios.common.network.NetworkHandler": [
+          "register(PayloadRegistrar)"
+        ],
+        "top.theillusivec4.curios.common.network.server.CuriosServerPayloadHandler": [
+          "getInstance()",
+          "handlerToggleRender(CPacketToggleRender, IPayloadContext)",
+          "handlePage(CPacketPage, IPayloadContext)",
+          "handlerToggleCosmetics(CPacketToggleCosmetics, IPayloadContext)",
+          "handleOpenVanilla(CPacketOpenVanilla, IPayloadContext)",
+          "handleOpenCurios(CPacketOpenCurios, IPayloadContext)",
+          "handleDestroyPacket(CPacketDestroy, IPayloadContext)"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketBreak": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketGrabbedItem": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketPage": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.SPacketQuickMove": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncActiveState": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncCurios": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncData": [
+          "send(ServerPlayer)",
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncModifiers": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncRender": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.network.server.sync.SPacketSyncStack": [
+          "type()"
+        ],
+        "top.theillusivec4.curios.common.slot.SlotType": [
+          "getId()",
+          "getIdentifier()",
+          "getIcon()",
+          "getOrder()",
+          "getSize()",
+          "useNativeGui()",
+          "hasCosmetic()",
+          "canToggleRendering()",
+          "getDropRule()",
+          "getValidators()",
+          "getDefaultEntityTypes()"
+        ],
+        "top.theillusivec4.curios.common.util.EquipCurioTrigger": [
+          "codec()",
+          "getLootContext(ServerPlayer, ItemStack)",
+          "trigger(ServerPlayer, ItemStack)",
+          "trigger(SlotContext, ServerPlayer, ItemStack)"
+        ],
+        "top.theillusivec4.curios.config.CuriosClientConfig": [],
+        "top.theillusivec4.curios.config.CuriosConfig": [],
+        "top.theillusivec4.curios.CuriosCommonMod": [
+          "itemCacheKey(ItemStack)"
+        ],
+        "top.theillusivec4.curios.CuriosConstants": [],
+        "top.theillusivec4.curios.server.command.CurioArgumentType": [
+          "slot()",
+          "getSlot(CommandContext<CommandSourceStack>, String)",
+          "listSuggestions(CommandContext<S>, SuggestionsBuilder)",
+          "getExamples()",
+          "parse(StringReader)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosCommand": [
+          "register(CommandDispatcher<CommandSourceStack>, CommandBuildContext)"
+        ],
+        "top.theillusivec4.curios.server.command.CuriosSelectorOptions": [
+          "register()"
+        ]
+      },
+      "sampleCount": 98
+    },
+    "1373f95fd111c977db2f6adcef8e4eb486a2d926a3e17374692dee4ac3d65857de6446c16922b531aa5ace2c23c666a7fcc28c720b2917c1e04808d15648ba87": {
+      "packages": [],
+      "classes": [
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry",
+        "top.theillusivec4.curios.api.client.ICurioRenderer",
+        "top.theillusivec4.curios.api.client.ICuriosScreen",
+        "top.theillusivec4.curios.api.CuriosApi",
+        "top.theillusivec4.curios.api.CuriosCapability",
+        "top.theillusivec4.curios.api.CuriosDataProvider",
+        "top.theillusivec4.curios.api.CuriosTooltip",
+        "top.theillusivec4.curios.api.CuriosTriggers",
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent",
+        "top.theillusivec4.curios.api.event.CurioChangeEvent",
+        "top.theillusivec4.curios.api.event.CurioDropsEvent",
+        "top.theillusivec4.curios.api.event.CurioEquipEvent",
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent",
+        "top.theillusivec4.curios.api.event.DropRulesEvent",
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent",
+        "top.theillusivec4.curios.api.SlotAttribute",
+        "top.theillusivec4.curios.api.SlotContext",
+        "top.theillusivec4.curios.api.SlotPredicate",
+        "top.theillusivec4.curios.api.SlotResult",
+        "top.theillusivec4.curios.api.SlotTypeMessage",
+        "top.theillusivec4.curios.api.SlotTypePreset",
+        "top.theillusivec4.curios.api.type.capability.ICurio",
+        "top.theillusivec4.curios.api.type.capability.ICurioItem",
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler",
+        "top.theillusivec4.curios.api.type.data.IEntitiesData",
+        "top.theillusivec4.curios.api.type.data.ISlotData",
+        "top.theillusivec4.curios.api.type.ICuriosMenu",
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler",
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler",
+        "top.theillusivec4.curios.api.type.ISlotType",
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper",
+        "top.theillusivec4.curios.api.type.util.IIconHelper",
+        "top.theillusivec4.curios.api.type.util.ISlotHelper",
+        "top.theillusivec4.curios.client.ClientEventHandler",
+        "top.theillusivec4.curios.client.CuriosClientConfig",
+        "top.theillusivec4.curios.client.gui.CosmeticButton",
+        "top.theillusivec4.curios.client.gui.CuriosButton",
+        "top.theillusivec4.curios.client.gui.CuriosScreen"
+      ],
+      "methods": {
+        "top.theillusivec4.curios.api.client.CuriosRendererRegistry": [
+          "register(Item, Supplier<ICurioRenderer>)",
+          "getRenderer(Item)",
+          "load()"
+        ],
+        "top.theillusivec4.curios.api.client.ICurioRenderer": [],
+        "top.theillusivec4.curios.api.client.ICuriosScreen": [],
+        "top.theillusivec4.curios.api.CuriosApi": [
+          "registerCurio(Item, ICurioItem)",
+          "getSlot(String, Level)",
+          "getSlot(String, boolean)",
+          "getSlots(Level)",
+          "getSlots(boolean)",
+          "getPlayerSlots(Level)",
+          "getPlayerSlots(boolean)",
+          "getPlayerSlots(Player)",
+          "getEntitySlots(LivingEntity)",
+          "getEntitySlots(EntityType<?>, Level)",
+          "getEntitySlots(EntityType<?>, boolean)",
+          "getItemStackSlots(ItemStack, Level)",
+          "getItemStackSlots(ItemStack, boolean)",
+          "getItemStackSlots(ItemStack, LivingEntity)",
+          "getCurio(ItemStack)",
+          "createCurioProvider(ICurio)",
+          "getCuriosInventory(LivingEntity)",
+          "isStackValid(SlotContext, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "addSlotModifier(Multimap<Attribute, AttributeModifier>, String, UUID, double, Operation)"
+        ],
+        "top.theillusivec4.curios.api.CuriosCapability": [],
+        "top.theillusivec4.curios.api.CuriosDataProvider": [
+          "generate(Provider, ExistingFileHelper)",
+          "m_213708_(CachedOutput)",
+          "createSlot(String)",
+          "copySlot(String, String)",
+          "createEntities(String)",
+          "copyEntities(String, String)",
+          "m_6055_()"
+        ],
+        "top.theillusivec4.curios.api.CuriosTooltip": [
+          "append(Component)",
+          "appendHeader(MutableComponent)",
+          "appendSlotHeader(String)",
+          "appendAdditive(MutableComponent)",
+          "appendSubtractive(MutableComponent)",
+          "appendEqual(MutableComponent)",
+          "forSlots(String...)",
+          "forSlots(ItemStack)",
+          "forSlots(ItemStack, LivingEntity)",
+          "build()"
+        ],
+        "top.theillusivec4.curios.api.CuriosTriggers": [
+          "equip()",
+          "equip(Builder)",
+          "equipAtLocation(Builder, net.minecraft.advancements.critereon.LocationPredicate.Builder)"
+        ],
+        "top.theillusivec4.curios.api.event.CurioAttributeModifierEvent": [
+          "getModifiers()",
+          "getOriginalModifiers()",
+          "addModifier(Attribute, AttributeModifier)",
+          "removeModifier(Attribute, AttributeModifier)",
+          "removeAttribute(Attribute)",
+          "clearModifiers()",
+          "getSlotContext()",
+          "getItemStack()",
+          "getUuid()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioChangeEvent": [
+          "getIdentifier()",
+          "getSlotIndex()",
+          "getFrom()",
+          "getTo()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioDropsEvent": [
+          "getCurioHandler()",
+          "getSource()",
+          "getDrops()",
+          "getLootingLevel()",
+          "isRecentlyHit()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioEquipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.CurioUnequipEvent": [
+          "getSlotContext()",
+          "getStack()"
+        ],
+        "top.theillusivec4.curios.api.event.DropRulesEvent": [
+          "getSource()",
+          "getLootingLevel()",
+          "isRecentlyHit()",
+          "getCurioHandler()",
+          "addOverride(Predicate<ItemStack>, ICurio.DropRule)",
+          "getOverrides()"
+        ],
+        "top.theillusivec4.curios.api.event.SlotModifiersUpdatedEvent": [
+          "getTypes()"
+        ],
+        "top.theillusivec4.curios.api.SlotAttribute": [
+          "getOrCreate(String)",
+          "getIdentifier()"
+        ],
+        "top.theillusivec4.curios.api.SlotContext": [
+          "getIdentifier()",
+          "getIndex()",
+          "getWearer()"
+        ],
+        "top.theillusivec4.curios.api.SlotPredicate": [
+          "matches(SlotContext)",
+          "fromJson(JsonElement)",
+          "serializeToJson()"
+        ],
+        "top.theillusivec4.curios.api.SlotResult": [],
+        "top.theillusivec4.curios.api.SlotTypeMessage": [
+          "getIdentifier()",
+          "getIcon()",
+          "getPriority()",
+          "getSize()",
+          "isLocked()",
+          "isVisible()",
+          "hasCosmetic()"
+        ],
+        "top.theillusivec4.curios.api.SlotTypePreset": [
+          "findPreset(String)",
+          "getIdentifier()",
+          "getMessageBuilder()"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurio": [
+          "curioTick(SlotContext)",
+          "onEquip(SlotContext, ItemStack)",
+          "onUnequip(SlotContext, ItemStack)",
+          "canEquip(SlotContext)",
+          "canUnequip(SlotContext)",
+          "getSlotsTooltip(List<Component>)",
+          "getAttributeModifiers(SlotContext, UUID)",
+          "onEquipFromUse(SlotContext)",
+          "getEquipSound(SlotContext)",
+          "canEquipFromUse(SlotContext)",
+          "curioBreak(SlotContext)",
+          "canSync(SlotContext)",
+          "writeSyncData(SlotContext)",
+          "readSyncData(SlotContext, CompoundTag)",
+          "getDropRule(SlotContext, DamageSource, int, boolean)",
+          "getAttributesTooltip(List<Component>)",
+          "getFortuneLevel(SlotContext, LootContext)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int)",
+          "makesPiglinsNeutral(SlotContext)",
+          "canWalkOnPowderedSnow(SlotContext)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICurioItem": [
+          "hasCurioCapability(ItemStack)",
+          "curioTick(SlotContext, ItemStack)",
+          "onEquip(SlotContext, ItemStack, ItemStack)",
+          "onUnequip(SlotContext, ItemStack, ItemStack)",
+          "canEquip(SlotContext, ItemStack)",
+          "canUnequip(SlotContext, ItemStack)",
+          "getSlotsTooltip(List<Component>, ItemStack)",
+          "getAttributeModifiers(SlotContext, UUID, ItemStack)",
+          "onEquipFromUse(SlotContext, ItemStack)",
+          "getEquipSound(SlotContext, ItemStack)",
+          "canEquipFromUse(SlotContext, ItemStack)",
+          "curioBreak(SlotContext, ItemStack)",
+          "canSync(SlotContext, ItemStack)",
+          "writeSyncData(SlotContext, ItemStack)",
+          "readSyncData(SlotContext, CompoundTag, ItemStack)",
+          "getDropRule(SlotContext, DamageSource, int, boolean, ItemStack)",
+          "getAttributesTooltip(List<Component>, ItemStack)",
+          "getFortuneLevel(SlotContext, LootContext, ItemStack)",
+          "getLootingLevel(SlotContext, DamageSource, LivingEntity, int, ItemStack)",
+          "makesPiglinsNeutral(SlotContext, ItemStack)"
+        ],
+        "top.theillusivec4.curios.api.type.capability.ICuriosItemHandler": [
+          "getVisibleSlots()",
+          "isEquipped(Item)",
+          "isEquipped(Predicate<ItemStack>)",
+          "saveInventory(boolean, Predicate<ItemStack>)",
+          "saveInventory(boolean, BiPredicate<ItemStack, SlotContext>)",
+          "addTransientSlotModifier(String, UUID, String, double, Operation)",
+          "addPermanentSlotModifier(String, UUID, String, double, Operation)",
+          "removeSlotModifier(String, UUID)",
+          "getLockedSlots()",
+          "unlockSlotType(String, int, boolean, boolean)",
+          "lockSlotType(String)",
+          "processSlots()",
+          "getFortuneBonus()",
+          "getLootingBonus()",
+          "setEnchantmentBonuses(Tuple<Integer, Integer>)"
+        ],
+        "top.theillusivec4.curios.api.type.data.IEntitiesData": [],
+        "top.theillusivec4.curios.api.type.data.ISlotData": [
+          "operation(String)"
+        ],
+        "top.theillusivec4.curios.api.type.ICuriosMenu": [],
+        "top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler": [
+          "canToggleRendering()",
+          "getDropRule()"
+        ],
+        "top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler": [],
+        "top.theillusivec4.curios.api.type.ISlotType": [
+          "getValidators()",
+          "writeNbt()",
+          "isLocked()",
+          "getPriority()",
+          "isVisible()"
+        ],
+        "top.theillusivec4.curios.api.type.util.ICuriosHelper": [],
+        "top.theillusivec4.curios.api.type.util.IIconHelper": [],
+        "top.theillusivec4.curios.api.type.util.ISlotHelper": [],
+        "top.theillusivec4.curios.client.ClientEventHandler": [
+          "onClientTick(ClientTickEvent)",
+          "onKeyInput(Key)",
+          "onTooltip(ItemTooltipEvent)"
+        ],
+        "top.theillusivec4.curios.client.CuriosClientConfig": [],
+        "top.theillusivec4.curios.client.gui.CosmeticButton": [
+          "m_87963_(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosButton": [
+          "m_87963_(GuiGraphics, int, int, float)"
+        ],
+        "top.theillusivec4.curios.client.gui.CuriosScreen": [
+          "getButtonOffset(boolean)",
+          "m_7856_()",
+          "updateRenderButtons()"
+        ]
+      },
+      "sampleCount": 95,
+      "truncated": true
+    },
+    "13.0.0_1.21.10": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "11.0.1_1.21.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    },
+    "0.0.13-1.16.5": {
+      "packages": [],
+      "classes": [],
+      "methods": {},
+      "sampleCount": 0,
+      "skipped": true
+    }
+  },
+  "classCount": 431,
+  "methodCount": 2000,
+  "truncated": true
+}
