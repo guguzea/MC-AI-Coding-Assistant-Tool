@@ -189,13 +189,19 @@ const VALIDATE_COMBOS = [
 function runValidate(allSkills) {
   const errors = [];
 
-  // 全局查重（B1：同 id 全局唯一；§3.5 防御性查重）
+  // 查重：同 id 默认全局唯一。唯一例外：forge-only ↔ neo-only 镜像稿
+  // （解析组互斥，neoforge 只扫 neo-only、forge 只扫 forge-only，故不改组映射也能各自命中）
   const seen = new Map();
+  const mirrorPair = (a, b) =>
+    (a === "forge-only" && b === "neo-only") || (a === "neo-only" && b === "forge-only");
   for (const s of allSkills) {
     if (seen.has(s.skillId)) {
-      errors.push(`重复 skillId「${s.skillId}」：${seen.get(s.skillId)} 与 ${s.path}`);
+      const prev = seen.get(s.skillId);
+      if (!mirrorPair(prev.group, s.group)) {
+        errors.push(`重复 skillId「${s.skillId}」：${prev.path} 与 ${s.path}`);
+      }
     } else {
-      seen.set(s.skillId, s.path);
+      seen.set(s.skillId, { path: s.path, group: s.group });
     }
   }
 

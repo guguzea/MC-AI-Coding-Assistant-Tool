@@ -19,7 +19,7 @@ MC_skill/
 ├── fabric/                      # Fabric 规则与知识（多版本）
 ├── neoforge/                    # NeoForge 规则与知识
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs；48 篇 lib-* 短文等）
-├── knowledge/                   # 知识源稿：patterns/（代码模式）+ libs/（四组 24 个库 Skill，不落盘）
+├── knowledge/                   # 知识源稿：patterns/（代码模式）+ libs/（四组库 Skill 源稿，不落盘）
 ├── scripts/                     # 库模组脚本：manifest / 分批反编译 / catalog / API 摘要 / 传播
 ├── mcp-server/                  # 本地 stdio MCP Server（62 个工具）；data/ 含 lib-manifests、lib-api-summaries
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
@@ -237,7 +237,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
 
-> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 15 + fabric-only 7 + forge-only 2 = **24**（neo-only 空置；以 `knowledge/libs` 实际源稿为准）。
+> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 20 + fabric-only 9 + forge-only 2 + neo-only 2（Curios/KFF 镜像）= **33 份** / **31 唯一 skillId**（以 `knowledge/libs` 实际源稿为准）。
 
 | 平台/版本 | 数量 | 结构 | 说明 |
 |-----------|------|------|------|
@@ -253,7 +253,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 渲染 / 模型      | `mc-renderer`、`mc-model`                                                                                                           |
 | 世界 / 数据包     | `mc-worldgen`、`mc-structure`、`mc-advancement`、`mc-loottable`、`mc-datapack`、`mc-resourcepack`、`mc-dimension`、`mc-weather`         |
 | 配置 / 测试 / 能源 | `mc-gametest`、`mc-energy`、`mc-multiblock`                                                                                          |
-| 兼容 / 文档库     | 平台自有 `mc-compat-jei`；库类（`mc-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` = **23 个库 Skill** → `knowledge/libs` 源稿） |
+| 兼容 / 文档库     | 平台自有 `mc-compat-jei`；库类（`mc-config` / `mc-yacl` / `mc-geckolib` / `mc-architectury` / `mc-terrablender` / `mc-playeranimator` / `mc-pehkui` / `mc-kubejs` / `mc-balm` / `mc-modern-ui` / `mc-patchouli` / `mc-owo` / `mc-curios` / `mc-kotlin-for-forge` / `mc-trinkets` / `mc-cca` / `mc-polymer` / `mc-text-placeholder` / `mc-satin` / `mc-fabric-language-kotlin` / `mc-libgui` / `mc-lib-catalog` / `mc-author-shared-libs` / `mc-resourceful-lib` / `mc-moonlight-lib` / `mc-caelus` / `mc-spruceui` / `mc-player-ability-lib` / `mc-server-translations` / `mc-impersonate` = **30 个库 Skill** → `knowledge/libs` 源稿） |
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
@@ -385,7 +385,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 **② 库 Skill 源稿**（`knowledge/libs/`，按 AGENTS.md「库模组 Skill」解析使用，**不落盘**平台目录）
 
-- 四组：`all-platforms` 15 / `fabric-only` 7 / `forge-only` 2 / `neo-only`（空置）= **24 个** `mc-*/SKILL.md`
+- 四组：`all-platforms` 20 / `fabric-only` 9 / `forge-only` 2 / `neo-only` 2（Curios、KFF 与 forge-only 镜像）= **33 份** `mc-*/SKILL.md`（**31** 唯一 skillId）
 - 解析规则：platform → 组映射（forge→forge-only+all-platforms；fabric/quilt→fabric-only+all-platforms；neoforge→neo-only+all-platforms）+ frontmatter `platforms`/`minecraftVersions` 二次过滤
 
 **③ 数据链**（短文 frontmatter → 脚本生成 → MCP 消费）
@@ -563,7 +563,7 @@ node dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
 | Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展，**62** 工具） |
 | Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
-| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇短文 + 24 库 Skill（knowledge/libs）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
+| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇短文 + 31 库 Skill（knowledge/libs）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
 | Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |
 
 

@@ -5921,7 +5921,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     modrinthSlug: "fabric-language-kotlin",
     role: "api",
     communityDocId: "authored/lib-fabric-language-kotlin",
-    skillId: "mc-kotlin",
+    skillId: "mc-fabric-language-kotlin",
     officialUrls: ["https://github.com/FabricMC/fabric-language-kotlin"],
     notes: "",
     verifiedApi: {
@@ -9275,7 +9275,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     modrinthSlug: "kotlin-for-forge",
     role: "api",
     communityDocId: "authored/lib-kotlin-for-forge",
-    skillId: "mc-kotlin",
+    skillId: "mc-kotlin-for-forge",
     officialUrls: ["https://github.com/thedarkcolour/KotlinForForge"],
     notes: "",
     verifiedApi: {

@@ -10,7 +10,7 @@ modIds: [fabric-language-kotlin]
 loaders: [fabric]
 modrinthSlug: fabric-language-kotlin
 role: api
-skillId: mc-kotlin
+skillId: mc-fabric-language-kotlin
 ---
 
 # Fabric Language Kotlin 语言加载器集成要点

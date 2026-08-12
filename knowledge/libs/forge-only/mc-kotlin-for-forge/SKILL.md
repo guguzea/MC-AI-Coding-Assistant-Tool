@@ -1,25 +1,27 @@
 ---
 name: mc-kotlin-for-forge
-description: Kotlin for Forge（KFF）语言加载器。触发词：Kotlin、KFF、kotlinforforge、协程、coroutines、语言加载器
-platforms: [forge, neoforge]
+description: Kotlin for Forge（KFF）语言加载器（Forge）。触发词：Kotlin、KFF、kotlinforforge、协程、coroutines、语言加载器
+platforms: [forge]
 mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-kotlin-for-forge
 mappings: hint
 ---
 
-# Kotlin for Forge（Forge/NeoForge）
+# Kotlin for Forge（Forge）
 
-Forge/NeoForge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.14-26.2），玩家装 KFF 即可运行 Kotlin 模组。Fabric 平台用 mc-fabric-language-kotlin。
+Forge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.14-26.2），玩家装 KFF 即可运行 Kotlin 模组。Fabric 平台用 `mc-fabric-language-kotlin`。
+
+> 本稿位于 `knowledge/libs/forge-only/`，供 Forge 解析路径使用。NeoForge 工程请读 `neo-only/mc-kotlin-for-forge`。
 
 ## Decision Flow
 
 ```
-Decision: Forge 系用不用 Kotlin
+Decision: Forge 用不用 Kotlin
 → platform = fabric / quilt → 读 mc-fabric-language-kotlin（Fabric Language Kotlin）
+→ platform = neoforge → 读 neo-only/mc-kotlin-for-forge（本稿仅 Forge）
 → 团队/代码库用 Java → 不引，避免给玩家加装依赖
-→ 要用 Kotlin 写 Forge/NeoForge 模组 → Kotlin for Forge
+→ 要用 Kotlin 写 Forge 模组 → Kotlin for Forge
 → 已选：
-   ├─ 平台分支：Forge / NeoForge 装对应构建（Neo 侧支持以 KFF 发布说明为准）
    ├─ 依赖：mods.toml 声明 kotlinforforge（玩家需装语言加载器）
    ├─ 标准库/协程：由 KFF 打包提供，避免自引冲突版本
    └─ 版本：1.14-26.2 内与 MC 对齐
@@ -27,7 +29,7 @@ Decision: Forge 系用不用 Kotlin
 
 ## 软/硬依赖
 
-- `mods.toml`（26.x 为 neoforge.mods.toml）：`depends` 写 kotlinforforge；缺装会启动报错（见 `authored/soft-deps-modlist`）
+- `mods.toml`：`depends` 写 kotlinforforge；缺装会启动报错（见 `authored/soft-deps-modlist`）
 - kotlin-stdlib / coroutines 不自引，以 KFF 打包版本为准
 - 主类与入口结构与 Java 模组等价，只是语言不同；@Mod 注解照常
 - 协程作用域自己管理，别在客户端线程做阻塞操作

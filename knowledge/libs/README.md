@@ -8,16 +8,17 @@
 |----|----------|------|
 | `all-platforms/` | forge / fabric / quilt / neoforge | 多端均有集成意义，正文 Decision 分平台 |
 | `fabric-only/` | fabric / quilt | 仅 Fabric 系，**永不**用于 forge / neoforge |
-| `neo-only/` | neoforge | 默认空置；仅当某库「仅 Neo 有独立 API」时新增 |
-| `forge-only/` | forge / neoforge | Forge 系专属（Neo 经 platforms 白名单可用） |
+| `neo-only/` | neoforge | Neo 归属稿；与 forge-only **镜像同名**时可并存（如 Curios / KFF） |
+| `forge-only/` | forge | Forge 归属稿；Neo 共用库请在 `neo-only/` 放镜像，**不要**改解析组映射 |
 
 - 分组是主依据；frontmatter `platforms` 二次确认，防组内误放
-- fabric-only 的 skill 只对 fabric/quilt 解析；forge-only 只对 forge/neoforge
+- fabric-only 只对 fabric/quilt；forge-only 只对 forge；neo-only 只对 neoforge
 
-## 同 id 全局唯一
+## 同 id 规则
 
-- 四组下 skill id（目录名 `mc-*`）全局唯一，**禁止跨组重名**（如 `mc-owo` 只在 all-platforms 一份，禁止再造第二个）
-- 解析/校验时收集全部 id 查重，重复 fail-fast
+- 默认：四组下 skill id（目录名 `mc-*`）全局唯一（如 `mc-owo` 只在 all-platforms 一份）
+- **例外**：`forge-only` ↔ `neo-only` 允许同名镜像（解析路径互斥：forge 不扫 neo-only，neoforge 不扫 forge-only）
+- 其它跨组重名仍 fail-fast
 
 ## 解析规则（§3.6 摘要）
 
@@ -46,10 +47,10 @@
 
 ## 当前清单
 
-**fabric-only（7）**：mc-trinkets、mc-cca、mc-polymer、mc-text-placeholder、mc-satin、mc-fabric-language-kotlin、mc-libgui
+**fabric-only（9）**：mc-trinkets、mc-cca、mc-polymer、mc-text-placeholder、mc-satin、mc-fabric-language-kotlin、mc-libgui、mc-player-ability-lib、mc-impersonate
 
-**forge-only（2）**：mc-curios、mc-kotlin-for-forge
+**forge-only（2）**：mc-curios、mc-kotlin-for-forge（`platforms: [forge]`）
 
-**neo-only（0）**：默认空置
+**neo-only（2）**：mc-curios、mc-kotlin-for-forge（镜像，`platforms: [neoforge]`；不改 `neoforge → neo-only + all-platforms` 映射）
 
-**all-platforms（-）**：见各稿（mc-owo 唯一一份，platforms 不含 forge）
+**all-platforms（20）**：见各稿（mc-owo 唯一一份，platforms 不含 forge）

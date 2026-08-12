@@ -10,7 +10,7 @@ modIds: [kotlinforforge]
 loaders: [forge, neoforge]
 modrinthSlug: kotlin-for-forge
 role: api
-skillId: mc-kotlin
+skillId: mc-kotlin-for-forge
 ---
 
 # Kotlin for Forge 语言加载器集成要点
