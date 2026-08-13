@@ -1,15 +1,23 @@
 [
   {
-    "id": "1.18.2/tutorial_items",
+    "id": "1.18.2/documentation_start",
     "version": "1.18.2",
-    "label": "Adding an Item",
-    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
+    "label": "Documentation",
+    "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
     "tags": [
-      "item",
-      "tutorial"
+      "documentation"
     ],
     "priority": "⭐",
-    "sectionCount": 10
+    "sectionCount": 3
+  },
+  {
+    "id": "1.18.2/start",
+    "version": "1.18.2",
+    "label": "Welcome to the Fabric Wiki!",
+    "url": "https://fabricmc.net/wiki/doku.php?id=start",
+    "tags": [],
+    "priority": "⭐",
+    "sectionCount": 6
   },
   {
     "id": "1.18.2/tutorial_blocks",
@@ -24,18 +32,6 @@
     "sectionCount": 9
   },
   {
-    "id": "1.18.2/tutorial_kotlin",
-    "version": "1.18.2",
-    "label": "Using Kotlin with Fabric",
-    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
-    "tags": [
-      "kotlin",
-      "tutorial"
-    ],
-    "priority": "⭐",
-    "sectionCount": 5
-  },
-  {
     "id": "1.18.2/tutorial_commands",
     "version": "1.18.2",
     "label": "Creating Commands",
@@ -48,24 +44,28 @@
     "sectionCount": 13
   },
   {
-    "id": "1.18.2/start",
+    "id": "1.18.2/tutorial_items",
     "version": "1.18.2",
-    "label": "Welcome to the Fabric Wiki!",
-    "url": "https://fabricmc.net/wiki/doku.php?id=start",
-    "tags": [],
-    "priority": "⭐",
-    "sectionCount": 6
-  },
-  {
-    "id": "1.18.2/documentation_start",
-    "version": "1.18.2",
-    "label": "Documentation",
-    "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
+    "label": "Adding an Item",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
     "tags": [
-      "documentation"
+      "item",
+      "tutorial"
     ],
     "priority": "⭐",
-    "sectionCount": 3
+    "sectionCount": 10
+  },
+  {
+    "id": "1.18.2/tutorial_kotlin",
+    "version": "1.18.2",
+    "label": "Using Kotlin with Fabric",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
+    "tags": [
+      "kotlin",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5
   },
   {
     "id": "1.18.2/tutorial_start",

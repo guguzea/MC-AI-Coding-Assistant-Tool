@@ -17,6 +17,7 @@ import type {
   ExtractCommonOutput,
   InitArchitecturyOutput,
   ApplyMigrationOutput,
+  QueryApiSuggestion,
 } from "./types.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -189,7 +190,14 @@ function assessRisk(stats: PortingStats, currentPlatform: string, targetPlatform
   return {
     registry: { level: registryLevel, affectedFiles: stats.registryCalls, reason: "跨平台注册方式存在差异" },
     events: { level: eventsLevel, affectedFiles: stats.eventSubscriptions, reason: "事件订阅模式可能需要调整" },
-    network: { level: networkLevel, affectedFiles: stats.networkUsages, reason: "网络层 API 各平台差异最大" },
+    network: {
+      level: networkLevel,
+      affectedFiles: stats.networkUsages,
+      reason:
+        networkLevel === "low"
+          ? "当前工程未检测到或仅有少量网络层用法"
+          : "网络层 API 各平台差异较大，跨平台时需重写发包",
+    },
     mixin: { level: mixinLevel, affectedFiles: stats.mixinConfigs, reason: "Mixin 配置必须在各 loader 子工程分别维护" },
     config: { level: configLevel, affectedFiles: 1, reason: "建议使用 Forge Config API Port 实现跨平台统一配置" },
   };
@@ -200,20 +208,27 @@ function assessRisk(stats: PortingStats, currentPlatform: string, targetPlatform
 function generateRouteSteps(
   isArchitectury: boolean,
   ambiguous: boolean,
-  currentPlatform: string,
+  _currentPlatform: string,
   targetPlatform: string | undefined,
   needCrossPlatform: boolean,
+  userSpecifiedTarget: boolean,
 ): string[] {
-  if (ambiguous) {
+  if (ambiguous && !userSpecifiedTarget) {
     return ["显式指定目标平台（targetPlatform）后重新调用 analyze_porting_path 分析"];
   }
 
+  const prefix =
+    ambiguous && userSpecifiedTarget
+      ? [`当前平台证据不足，已按 targetPlatform=${targetPlatform} 规划`]
+      : [];
+
   if (isArchitectury && !needCrossPlatform) {
-    return ["执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
+    return [...prefix, "执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
   }
 
   if (!isArchitectury && needCrossPlatform) {
     return [
+      ...prefix,
       "初始化 MultiLoader 项目结构（调用 port_project action=init_architectury）",
       "从当前源码提取 common 模块候选（调用 port_project action=extract_common：仅静态分析，不搬文件）",
       "通过 @ExpectPlatform 抽象 Registry 层（根据 extract_common 输出人工处理）",
@@ -225,33 +240,33 @@ function generateRouteSteps(
   }
 
   if (!isArchitectury && !needCrossPlatform) {
-    return ["执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
+    return [...prefix, "执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
   }
 
-  // fallback
-  return ["分析完成，请根据上述报告人工决定下一步"];
+  return [...prefix, "分析完成，请根据上述报告人工决定下一步"];
 }
 
 // ── query_api 建议 ─────────────────────────────────────────────────────────
 
 function buildQuerySuggestions(targetVersion: string, targetPlatform: string | undefined) {
-  const suggestions: { action: "query_api"; targetClass: string; targetVersion: string; reason: string }[] = [];
+  const suggestions: QueryApiSuggestion[] = [];
 
-  if (targetPlatform === "neoforge" || !targetPlatform) {
-    suggestions.push(
-      {
-        action: "query_api" as const,
-        targetClass: "net.neoforged.api.dist.Dist",
-        targetVersion,
-        reason: "Dist 类从 net.minecraftforge 迁移到 net.neoforged.api.dist，请确认 @OnlyIn 使用方式",
-      },
-      {
-        action: "query_api" as const,
-        targetClass: "net.neoforged.neoforge.registries.DeferredHolder",
-        targetVersion,
-        reason: "NeoForge 1.20.2+ 中 RegistryObject 已迁移到 DeferredHolder",
-      },
-    );
+  if (targetPlatform === "neoforge") {
+    suggestions.push({
+      action: "search_neoforge_docs",
+      query: "DeferredRegister Dist",
+      version: targetVersion,
+      reason: "NeoForge 特有 API 请用 search_neoforge_docs；query_api 无 NeoForge 类索引",
+    });
+    if (targetVersion === "26.1" || targetVersion.startsWith("26.")) {
+      suggestions.push({
+        action: "search_neoforge_docs",
+        query: "ItemStack",
+        version: targetVersion,
+        reason: "26.1+ 无 Parchment api-index，ItemStack 等变更请查 NeoForge 文档",
+      });
+    }
+    return suggestions;
   }
 
   if (targetVersion === "26.1") {
@@ -400,6 +415,19 @@ export async function analyzePortingPath(args: unknown) {
     modId = props.mod_id ?? props.modId ?? null;
   }
 
+  const hasBuild = Boolean(buildGradle.trim() || buildGradleKts.trim() || settingsGradle.trim());
+  const hasMeta = Boolean(modsToml.trim() || neoforgeModsToml.trim() || fabricJson.trim());
+  if (!hasBuild && !hasMeta) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: {
+        code: "NOT_A_MOD_PROJECT",
+        message: "未识别为模组工程（无 build.gradle / mods.toml / fabric.mod.json）",
+      },
+    };
+    return JSON.stringify(e);
+  }
+
   // 3. 扫描源码
   const srcJava = join(root, "src/main/java");
   const srcKotlin = join(root, "src/main/kotlin");
@@ -476,7 +504,14 @@ export async function analyzePortingPath(args: unknown) {
   const riskAssessment = assessRisk(stats, currentPlatform, targetPlatform);
 
   // 8. 动态生成 routeSteps
-  const routeSteps = generateRouteSteps(isArchitectury, ambiguous, currentPlatform, targetPlatform, needCrossPlatform);
+  const routeSteps = generateRouteSteps(
+    isArchitectury,
+    ambiguous,
+    currentPlatform,
+    targetPlatform,
+    needCrossPlatform,
+    Boolean(userTargetPlatform),
+  );
 
   // 9. 建议目标信息
   const kb = loadVersionsKB() as { versions?: Record<string, { neoforge?: string; fabric?: string; mappings?: string[]; java?: number }> };
@@ -511,7 +546,14 @@ export async function analyzePortingPath(args: unknown) {
       target: targetInfo,
       knowledgeGaps,
       riskAssessment,
-      recommendedRoute: isArchitectury ? "version_migration" : needCrossPlatform ? "architectury_common_refactor" : "version_migration",
+      recommendedRoute:
+        currentPlatform === "unknown"
+          ? "unrecognized"
+          : isArchitectury
+            ? "version_migration"
+            : needCrossPlatform
+              ? "architectury_common_refactor"
+              : "version_migration",
       routeSteps,
       referenceLinks: buildReferenceLinks(targetPlatform, targetVer),
       queryApiSuggestions: buildQuerySuggestions(targetVer, targetPlatform),

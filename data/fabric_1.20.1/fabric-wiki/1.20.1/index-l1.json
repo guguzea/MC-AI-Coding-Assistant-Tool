@@ -173,7 +173,7 @@
       {
         "title": "A sub command",
         "level": 2,
-        "summary": "To add a sub command, you register the first literal node of the command normally. <code> dispatcher.register(literal(\"foo\")) </code> In order to have a sub command, one needs to append the next no..."
+        "summary": "To add a sub command, you register the first literal node of the command normally. dispatcher.register(literal(\"foo\")) In order to have a sub command, one needs to append the next node to the exist..."
       },
       {
         "title": "Why does my code not compile",
@@ -183,7 +183,7 @@
       {
         "title": "Can I register client side commands?",
         "level": 2,
-        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: <code java> ClientCommandRegistrationCallback.EVENT."
+        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: ClientCommandRegistrationCallback.EVENT."
       }
     ]
   },
@@ -241,7 +241,7 @@
       {
         "title": "Make your item become fuel, or compostable",
         "level": 2,
-        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: <code java> public class ExampleMod implements ModInitial..."
+        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: public class ExampleMod implements ModInitializer { [..."
       },
       {
         "title": "Next Steps",

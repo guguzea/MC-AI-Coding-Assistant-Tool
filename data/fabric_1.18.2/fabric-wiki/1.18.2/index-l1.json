@@ -1,91 +1,68 @@
 [
   {
-    "id": "1.18.2/tutorial_start",
+    "id": "1.18.2/documentation_start",
     "version": "1.18.2",
-    "label": "Fabric Modding Tutorials",
-    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:start",
+    "label": "Documentation",
+    "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
     "tags": [
-      "tutorial"
+      "documentation"
     ],
-    "firstParagraph": "It's strongly recommended to learn Java before diving into the modding world (especially if you don't have prior programming experience).",
+    "firstParagraph": "These pages contain specifications on the different files and file types used by the Fabric toolchain.",
     "sections": [
       {
-        "title": "Prerequisites",
+        "title": "Specifications",
         "level": 2,
-        "summary": "It's strongly recommended to learn Java before diving into the modding world (especially if you don't have prior programming experience)."
+        "summary": "These pages contain specifications on the different files and file types used by the Fabric toolchain. * [fabric.mod.json (Overview)](documentation:fabric_mod_json) * [fabric.mod."
       },
       {
-        "title": "Creating Your First Mod",
+        "title": "Technical Information",
         "level": 2,
-        "summary": "If you have never created a mod using Fabric before, these pages are useful and guide you through the bare basics of modding with Fabric: * https://docs.fabricmc."
+        "summary": "These pages contain technical information on how projects in the Fabric toolchain work. * [Fabric Loader](documentation:fabric_loader) * [Entrypoints](documentation:entrypoint) * [Fabric Loom](docu..."
       },
       {
-        "title": "Community Libraries and Guides",
+        "title": "External Documentation",
         "level": 2,
-        "summary": "The Fabric Wiki isn't the only place where you can learn aspects of modding, checkout these pages which contain useful external guides that can to apply to modding with Fabric, and modding in gener..."
+        "summary": "You can find the documentation of external projects used by projects in the Fabric toolchain here. * https://github.com/SpongePowered/Mixin/wiki|SpongePowered Mixin Documentation * https://github."
       }
     ]
   },
   {
-    "id": "1.18.2/tutorial_items",
+    "id": "1.18.2/start",
     "version": "1.18.2",
-    "label": "Adding an Item",
-    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
-    "tags": [
-      "item",
-      "tutorial"
-    ],
-    "firstParagraph": "Adding a basic item is one of the first steps in modding. You're going to need to create an `class_${1}_1792> class.",
+    "label": "Welcome to the Fabric Wiki!",
+    "url": "https://fabricmc.net/wiki/doku.php?id=start",
+    "tags": [],
+    "firstParagraph": "If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki.",
     "sections": [
       {
-        "title": "Introduction",
+        "title": "Player Tutorials",
         "level": 2,
-        "summary": "Adding a basic item is one of the first steps in modding. You're going to need to create an `class_${1}_1792> class."
+        "summary": "If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki."
       },
       {
-        "title": "Create an Item instance (before 1.21.2)",
+        "title": "Mod Developer Tutorials",
         "level": 2,
-        "summary": ":!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+). First, create an instance of `class_${1}_1792`."
+        "summary": "If you'd like to start developing with Fabric, you should check out the [Mod Developer Tutorials](tutorial:start) section of the wiki."
       },
       {
-        "title": "Register the item (before 1.21.2)",
+        "title": "Documentation",
         "level": 2,
-        "summary": "We've create a basic item, but it still does not exist in Minecraft, because it has not been registered. In Minecraft, almost everything has an registry, and items are no exceptions."
+        "summary": "If you want to know how projects in the Fabric toolchain work, you should check out the [Documentation](documentation:start) section of the wiki."
       },
       {
-        "title": "Best practice of registering items (before 1.21.2)",
+        "title": "Modpack and Launcher Developers",
         "level": 2,
-        "summary": "In the code above, you simply created //one// item. However, it is not convenient if you have //many// items in your mod, as you need to register and create an Identifier instance each time."
+        "summary": ":!: //These pages may be slightly outdated, we are currently in process of rewriting them.// **Please keep in mind that we recommend using Minecraft Launcher and MCUpdater for modpack play and dist..."
       },
       {
-        "title": "Creating Items in 1.21.2+",
+        "title": "Community",
         "level": 2,
-        "summary": "Since 1.21.2, the item registration has been totally rewriten. You have to store a RegistryKey in your Item.Settings, so the models and translation keys will be correctly stored in item components."
+        "summary": "Feeling like participating in Fabric community? You may see our [community:official community spaces](community:official community spaces), or also understand the [community:library mods](community..."
       },
       {
-        "title": "Adding model, texture and model definition",
+        "title": "Contributing to the Wiki",
         "level": 2,
-        "summary": "If you registered your item properly in the first step, you can successfully get your item by typing command /give @s tutorial:custom_item."
-      },
-      {
-        "title": "Creating an Item class",
-        "level": 2,
-        "summary": "You have created a simple item, and learned how to change some basic properties. But maybe you want it to have more behaviors. Therefore, you will need to create an item class."
-      },
-      {
-        "title": "Item components",
-        "level": 2,
-        "summary": "Sometimes you may need to add some default components for the item, such as max stack size or fire durability. This can be done by calling component method in Item.Settings."
-      },
-      {
-        "title": "Make your item become fuel, or compostable",
-        "level": 2,
-        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: <code java> public class ExampleMod implements ModInitial..."
-      },
-      {
-        "title": "Next Steps",
-        "level": 2,
-        "summary": "Try [adding your item to an item group](itemgroup). Your item also does not have a name, so you can also [learn how to add language files](lang)."
+        "summary": "The Wiki is mostly maintained by the community, for the community. If you are interested in contributing to the wiki, check out the following pages first: * [Wiki Meta](wiki:meta) - Starting point ..."
       }
     ]
   },
@@ -148,44 +125,6 @@
     ]
   },
   {
-    "id": "1.18.2/tutorial_kotlin",
-    "version": "1.18.2",
-    "label": "Using Kotlin with Fabric",
-    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
-    "tags": [
-      "kotlin",
-      "tutorial"
-    ],
-    "firstParagraph": "* A lot of syntax sugar that makes coding easier.",
-    "sections": [
-      {
-        "title": "Advantage of using Kotlin",
-        "level": 2,
-        "summary": "* Far less boilerplate. * Easy to use lambdas. * A lot of syntax sugar that makes coding easier. * Automatic type inference (compiler can determine a type of variable based on it's usage) * Null-sa..."
-      },
-      {
-        "title": "Limitations",
-        "level": 2,
-        "summary": "* You cannot use kotlin files for mixins. * I REPEAT, YOU **CANNOT** USE KOTLIN FILES FOR MIXINS... * ..."
-      },
-      {
-        "title": "Step 1: Configure/Initialize mod",
-        "level": 2,
-        "summary": "Create your mod as you usually do — see [creating mod](tutorial:start). If you already have a mod configured, go to next step."
-      },
-      {
-        "title": "Step 2: Configure Kotlin using IntellIJ's Action",
-        "level": 2,
-        "summary": "This step essentially boils down to using a \"Configure Kotlin in Project\" Action which you can access via (Tools -> Kotlin -> Configure Kotlin in Project) menu item, a quick-action menu (Shift, Shi..."
-      },
-      {
-        "title": "Step 3 (recommended): Modify gradle file to add fabric kotlin modding library",
-        "level": 2,
-        "summary": "The previous step added a dependency on kotlin stdlib. You can use https://github.com/FabricMC/fabric-language-kotlin|an official fabric-language-kotlin dependency to add more extensive kotlin supp..."
-      }
-    ]
-  },
-  {
     "id": "1.18.2/tutorial_commands",
     "version": "1.18.2",
     "label": "Creating Commands",
@@ -234,7 +173,7 @@
       {
         "title": "A sub command",
         "level": 2,
-        "summary": "To add a sub command, you register the first literal node of the command normally. <code> dispatcher.register(literal(\"foo\")) </code> In order to have a sub command, one needs to append the next no..."
+        "summary": "To add a sub command, you register the first literal node of the command normally. dispatcher.register(literal(\"foo\")) In order to have a sub command, one needs to append the next node to the exist..."
       },
       {
         "title": "Why does my code not compile",
@@ -244,74 +183,135 @@
       {
         "title": "Can I register client side commands?",
         "level": 2,
-        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: <code java> ClientCommandRegistrationCallback.EVENT."
+        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: ClientCommandRegistrationCallback.EVENT."
       }
     ]
   },
   {
-    "id": "1.18.2/start",
+    "id": "1.18.2/tutorial_items",
     "version": "1.18.2",
-    "label": "Welcome to the Fabric Wiki!",
-    "url": "https://fabricmc.net/wiki/doku.php?id=start",
-    "tags": [],
-    "firstParagraph": "If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki.",
-    "sections": [
-      {
-        "title": "Player Tutorials",
-        "level": 2,
-        "summary": "If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki."
-      },
-      {
-        "title": "Mod Developer Tutorials",
-        "level": 2,
-        "summary": "If you'd like to start developing with Fabric, you should check out the [Mod Developer Tutorials](tutorial:start) section of the wiki."
-      },
-      {
-        "title": "Documentation",
-        "level": 2,
-        "summary": "If you want to know how projects in the Fabric toolchain work, you should check out the [Documentation](documentation:start) section of the wiki."
-      },
-      {
-        "title": "Modpack and Launcher Developers",
-        "level": 2,
-        "summary": ":!: //These pages may be slightly outdated, we are currently in process of rewriting them.// **Please keep in mind that we recommend using Minecraft Launcher and MCUpdater for modpack play and dist..."
-      },
-      {
-        "title": "Community",
-        "level": 2,
-        "summary": "Feeling like participating in Fabric community? You may see our [community:official community spaces](community:official community spaces), or also understand the [community:library mods](community..."
-      },
-      {
-        "title": "Contributing to the Wiki",
-        "level": 2,
-        "summary": "The Wiki is mostly maintained by the community, for the community. If you are interested in contributing to the wiki, check out the following pages first: * [Wiki Meta](wiki:meta) - Starting point ..."
-      }
-    ]
-  },
-  {
-    "id": "1.18.2/documentation_start",
-    "version": "1.18.2",
-    "label": "Documentation",
-    "url": "https://fabricmc.net/wiki/doku.php?id=documentation:start",
+    "label": "Adding an Item",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:items",
     "tags": [
-      "documentation"
+      "item",
+      "tutorial"
     ],
-    "firstParagraph": "These pages contain specifications on the different files and file types used by the Fabric toolchain.",
+    "firstParagraph": "Adding a basic item is one of the first steps in modding. You're going to need to create an `class_1792` object, register it, and give it a texture.",
     "sections": [
       {
-        "title": "Specifications",
+        "title": "Introduction",
         "level": 2,
-        "summary": "These pages contain specifications on the different files and file types used by the Fabric toolchain. * [fabric.mod.json (Overview)](documentation:fabric_${1}_json) * [fabric.mod."
+        "summary": "Adding a basic item is one of the first steps in modding. You're going to need to create an `class_1792` object, register it, and give it a texture."
       },
       {
-        "title": "Technical Information",
+        "title": "Create an Item instance (before 1.21.2)",
         "level": 2,
-        "summary": "These pages contain technical information on how projects in the Fabric toolchain work. * [Fabric Loader](documentation:fabric_loader) * [Entrypoints](documentation:entrypoint) * [Fabric Loom](docu..."
+        "summary": ":!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+). First, create an instance of `class_1792`."
       },
       {
-        "title": "External Documentation",
+        "title": "Register the item (before 1.21.2)",
         "level": 2,
-        "summary": "You can find the documentation of external projects used by projects in the Fabric toolchain here. * https://github.com/SpongePowered/Mixin/wiki|SpongePowered Mixin Documentation * https://github."
+        "summary": "We've create a basic item, but it still does not exist in Minecraft, because it has not been registered. In Minecraft, almost everything has an registry, and items are no exceptions."
+      },
+      {
+        "title": "Best practice of registering items (before 1.21.2)",
+        "level": 2,
+        "summary": "In the code above, you simply created //one// item. However, it is not convenient if you have //many// items in your mod, as you need to register and create an Identifier instance each time."
+      },
+      {
+        "title": "Creating Items in 1.21.2+",
+        "level": 2,
+        "summary": "Since 1.21.2, the item registration has been totally rewriten. You have to store a RegistryKey in your Item.Settings, so the models and translation keys will be correctly stored in item components."
+      },
+      {
+        "title": "Adding model, texture and model definition",
+        "level": 2,
+        "summary": "If you registered your item properly in the first step, you can successfully get your item by typing command /give @s tutorial:custom_item."
+      },
+      {
+        "title": "Creating an Item class",
+        "level": 2,
+        "summary": "You have created a simple item, and learned how to change some basic properties. But maybe you want it to have more behaviors. Therefore, you will need to create an item class."
+      },
+      {
+        "title": "Item components",
+        "level": 2,
+        "summary": "Sometimes you may need to add some default components for the item, such as max stack size or fire durability. This can be done by calling component method in Item.Settings."
+      },
+      {
+        "title": "Make your item become fuel, or compostable",
+        "level": 2,
+        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: public class ExampleMod implements ModInitializer { [..."
+      },
+      {
+        "title": "Next Steps",
+        "level": 2,
+        "summary": "Try [adding your item to an item group](itemgroup). Your item also does not have a name, so you can also [learn how to add language files](lang)."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/tutorial_kotlin",
+    "version": "1.18.2",
+    "label": "Using Kotlin with Fabric",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:kotlin",
+    "tags": [
+      "kotlin",
+      "tutorial"
+    ],
+    "firstParagraph": "* A lot of syntax sugar that makes coding easier.",
+    "sections": [
+      {
+        "title": "Advantage of using Kotlin",
+        "level": 2,
+        "summary": "* Far less boilerplate. * Easy to use lambdas. * A lot of syntax sugar that makes coding easier. * Automatic type inference (compiler can determine a type of variable based on it's usage) * Null-sa..."
+      },
+      {
+        "title": "Limitations",
+        "level": 2,
+        "summary": "* You cannot use kotlin files for mixins. * I REPEAT, YOU **CANNOT** USE KOTLIN FILES FOR MIXINS... * ..."
+      },
+      {
+        "title": "Step 1: Configure/Initialize mod",
+        "level": 2,
+        "summary": "Create your mod as you usually do — see [creating mod](tutorial:start). If you already have a mod configured, go to next step."
+      },
+      {
+        "title": "Step 2: Configure Kotlin using IntellIJ's Action",
+        "level": 2,
+        "summary": "This step essentially boils down to using a \"Configure Kotlin in Project\" Action which you can access via (Tools -> Kotlin -> Configure Kotlin in Project) menu item, a quick-action menu (Shift, Shi..."
+      },
+      {
+        "title": "Step 3 (recommended): Modify gradle file to add fabric kotlin modding library",
+        "level": 2,
+        "summary": "The previous step added a dependency on kotlin stdlib. You can use https://github.com/FabricMC/fabric-language-kotlin|an official fabric-language-kotlin dependency to add more extensive kotlin supp..."
+      }
+    ]
+  },
+  {
+    "id": "1.18.2/tutorial_start",
+    "version": "1.18.2",
+    "label": "Fabric Modding Tutorials",
+    "url": "https://fabricmc.net/wiki/doku.php?id=tutorial:start",
+    "tags": [
+      "tutorial"
+    ],
+    "firstParagraph": "It's strongly recommended to learn Java before diving into the modding world (especially if you don't have prior programming experience).",
+    "sections": [
+      {
+        "title": "Prerequisites",
+        "level": 2,
+        "summary": "It's strongly recommended to learn Java before diving into the modding world (especially if you don't have prior programming experience)."
+      },
+      {
+        "title": "Creating Your First Mod",
+        "level": 2,
+        "summary": "If you have never created a mod using Fabric before, these pages are useful and guide you through the bare basics of modding with Fabric: * https://docs.fabricmc."
+      },
+      {
+        "title": "Community Libraries and Guides",
+        "level": 2,
+        "summary": "The Fabric Wiki isn't the only place where you can learn aspects of modding, checkout these pages which contain useful external guides that can to apply to modding with Fabric, and modding in gener..."
       }
     ]
   }

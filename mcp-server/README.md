@@ -1,6 +1,6 @@
 ﻿# MC MCP Server
 
-本地 **stdio** MCP Server，供 Cursor 等 AI 助手查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。
+本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
 
 **要求：Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。
 
@@ -27,6 +27,8 @@ npm run build
 
 ## 快速配置
 
+各 IDE / CLI 的配置文件、顶层键名（`mcpServers` vs `servers` vs `mcp` vs TOML）和验收步骤见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)。下面只给出规范 stdio 字段；不要默认写成 Cursor 的 `mcp.json`。
+
 ### 1. 安装与编译
 
 ```bash
@@ -40,9 +42,9 @@ npm run build
 # Vanilla Registry：npm run build:vanilla-registries -- --version=1.20.1
 ```
 
-### 2. Cursor MCP 配置
+### 2. MCP 配置（按宿主翻译）
 
-使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`：
+使用 **绝对路径**，`MC_SKILL_DATA` 指向仓库 `data/`。多数宿主（Cursor / Claude / Trae / Windsurf）顶层键为 `mcpServers`：
 
 ```json
 {
@@ -58,6 +60,8 @@ npm run build
 }
 ```
 
+VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continue 用 YAML 列表。OpenCode 用 `command` 数组且建议 `timeout` ≥ 60000。完整对照表与合并/验收流程见 [AUTO_SETUP.md](../AUTO_SETUP.md)。
+
 `port_project` 真写盘时追加：
 
 ```json
@@ -72,7 +76,7 @@ npm run build
 
 ### 3. 验收
 
-重启 Cursor 后应看到 **`MC-AI-Coding-Assistant-Tool`**，工具数 **62**。可试：`get_server_status`、`diagnose_data_paths`。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **62**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 

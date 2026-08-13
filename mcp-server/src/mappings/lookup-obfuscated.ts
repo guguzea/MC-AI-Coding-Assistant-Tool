@@ -78,6 +78,15 @@ function toDot(name: string): string {
   return name.replace(/\//g, ".");
 }
 
+function yarnOwnerNote(ownerClass: string | undefined): string | undefined {
+  if (!ownerClass) return undefined;
+  const yarn = ownerClass.replace(/\//g, ".");
+  if (/^net\.minecraft\.entity(\.|$)/.test(yarn)) {
+    return `Yarn owner 为 ${yarn}；Parchment/Mojang 多为 net.minecraft.world.entity.*（query_api / convert_mapping 请用 Mojang 包名）。`;
+  }
+  return undefined;
+}
+
 function singleHit(
   hits: LookupByObfuscatedResult | null,
 ): ObfuscatedMemberRow | null {
@@ -205,6 +214,8 @@ export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscated
 
   if (hit.found && hit.kind === "method") {
     const r = hit.row;
+    const owner = toDot(r.ownerClass);
+    const extra = yarnOwnerNote(owner);
     return {
       found: true,
       original: token,
@@ -213,16 +224,18 @@ export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscated
       intermediary: r.intermediary,
       yarn: r.yarn,
       mojang: r.official,
-      ownerClass: toDot(r.ownerClass),
+      ownerClass: owner,
       descriptor: r.descriptor,
       readableSignature: r.descriptor ? readableSignature(r.yarn, r.descriptor) : undefined,
       mappingEra: hit.mappingEra,
       schemaVersion,
-      notes: hit.notes,
+      notes: [...(hit.notes ?? []), ...(extra ? [extra] : [])],
     };
   }
   if (hit.found && hit.kind === "field") {
     const r = hit.row;
+    const owner = toDot(r.ownerClass);
+    const extra = yarnOwnerNote(owner);
     return {
       found: true,
       original: token,
@@ -231,11 +244,11 @@ export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscated
       intermediary: r.intermediary,
       yarn: r.yarn,
       mojang: r.official,
-      ownerClass: toDot(r.ownerClass),
+      ownerClass: owner,
       descriptor: r.descriptor,
       mappingEra: hit.mappingEra,
       schemaVersion,
-      notes: hit.notes,
+      notes: [...(hit.notes ?? []), ...(extra ? [extra] : [])],
     };
   }
   if (hit.found && hit.kind === "class") {

@@ -30,3 +30,13 @@ export function toPascalCase(modId: string): string {
 export function toUpperSnake(name: string): string {
   return name.toUpperCase().replace(/-/g, "_");
 }
+
+/** Java 简单类名：保留 PascalCase；勿对 resource id 先 toLowerCase 再用于类名。 */
+export function toJavaClassName(raw: string): string {
+  const cleaned = raw.trim().replace(/[^a-zA-Z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
+  if (!cleaned) return "";
+  if (/[_-]/.test(cleaned)) {
+    return toPascalCase(cleaned.replace(/-/g, "_"));
+  }
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}

@@ -18,7 +18,7 @@ This wiki is also available in the following languages:
   * {{:japan.png?nolink&32|}} [日本語 (Japanese)](ja:start)
   * {{:es.png?nolink&32|}} [ Español](es:start)
 
-**Make sure to check out our [community spaces and rules](community:official_${1}_spaces)!**
+**Make sure to check out our [community spaces and rules](community:official_community_spaces)!**
 
   * [Frequently Asked Questions (from users)](faq:user)
   * [Frequently Asked Questions (expert mode)](faq:expert) - a supplement to the above with more detailed answers
@@ -26,8 +26,8 @@ This wiki is also available in the following languages:
 ## Player Tutorials
 If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [Player Tutorials](player:tutorials:start) section of the wiki.
 
-  * [Installing Fabric Loader](player:tutorials:start#installing_${1}_loader)
-  * [Updating Fabric Loader](player:tutorials:start#updating_${1}_loader)
+  * [Installing Fabric Loader](player:tutorials:start#installing_fabric_loader)
+  * [Updating Fabric Loader](player:tutorials:start#updating_fabric_loader)
   * [Installing Java](player:tutorials:start#installing_java)
   * [Troubleshooting](player:tutorials:start#troubleshooting)
 
@@ -36,7 +36,7 @@ If you wish to use Fabric as a player, server administrator or modpack developer
 ## Mod Developer Tutorials
 If you'd like to start developing with Fabric, you should check out the [Mod Developer Tutorials](tutorial:start) section of the wiki.
 
-  * [Creating Your First Mod](tutorial:start#creating_${1}_first_mod)
+  * [Creating Your First Mod](tutorial:start#creating_your_first_mod)
   * https://docs.fabricmc.net/develop/items/first-item|Creating Your First Item
   * https://docs.fabricmc.net/develop/blocks/first-block|Creating Your First Block
   * https://docs.fabricmc.net/develop/saved-data|Saving Custom Data Across Restarts
@@ -67,7 +67,7 @@ If you want to know how projects in the Fabric toolchain work, you should check 
   * [Using MCUpdater for Fabric modpacks](tutorial:mcupdater_modpacks) (covers usage and creation)
   * [Publishing Fabric modpacks on Technic](tutorial:technic_modpacks)
   * [Publishing Fabric modpacks on ATLauncher](tutorial:atlauncher_modpacks)
-  * [Modpack-related endpoints](documentation:modpack_${1}_endpoints)
+  * [Modpack-related endpoints](documentation:modpack_related_endpoints)
   * [Dependency Overrides](tutorial:dependency_overrides) (Loader 0.11.1 or later!)
 
 ---

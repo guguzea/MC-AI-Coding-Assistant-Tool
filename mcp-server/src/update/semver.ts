@@ -73,3 +73,34 @@ export function isNewer(remoteTag: string, localVersion: string): boolean {
   if (cmp !== null) return cmp > 0;
   return stripV(remoteTag) !== stripV(localVersion);
 }
+
+export type GitDescribeVsRemote = "ahead" | "equal" | "behind" | "unknown";
+
+/**
+ * Compare `git describe --tags --always` with a remote release tag.
+ * `V1.0.4-12-gabcdef` is ahead of `V1.0.4`; exact tag is equal.
+ */
+export function gitDescribeVsRemote(
+  describe: string | undefined,
+  remoteTag: string,
+): GitDescribeVsRemote {
+  if (!describe?.trim() || !remoteTag?.trim()) return "unknown";
+  const d = describe.trim();
+
+  const describeMatch = d.match(/^(.*)-(\d+)-g[0-9a-f]+$/i);
+  if (describeMatch) {
+    const tagPart = describeMatch[1];
+    const commits = Number(describeMatch[2]);
+    const cmp = compareSemver(tagPart, remoteTag);
+    if (cmp === null) return "unknown";
+    if (cmp > 0) return "ahead";
+    if (cmp < 0) return "behind";
+    return commits > 0 ? "ahead" : "equal";
+  }
+
+  const cmp = compareSemver(d, remoteTag);
+  if (cmp === null) return "unknown";
+  if (cmp > 0) return "ahead";
+  if (cmp === 0) return "equal";
+  return "behind";
+}

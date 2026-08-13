@@ -203,7 +203,7 @@ Decision: 选择注册方式
   ```bash
   cd mcp-server && npm ci && npm run build
   ```
-  （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。详见 `AUTO_SETUP.md`。）
+  （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
 - **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，62 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。

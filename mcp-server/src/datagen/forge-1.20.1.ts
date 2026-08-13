@@ -1,9 +1,8 @@
 import { toPascalCase, toUpperSnake } from "./common.js";
 
-export function generateRecipe(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
-  void targetName;
-  return `// Recipe Provider — Forge 1.20.1
+export function generateRecipe(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
+  return `// Recipe Provider — Forge 1.20.1 (${modId}:${targetName})
 package com.example.${modId}.datagen;
 
 import java.util.function.Consumer;
@@ -33,14 +32,14 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
             .define('C', Items.IRON_INGOT)
             .define('D', Items.AIR)
             .unlockedBy("has_diamond", has(Items.DIAMOND))
-            .save(consumer);
+            .save(consumer, "${modId}:${targetName}");
 
         SimpleCookingRecipeBuilder.smelting(
             Ingredient.of(Items.DIRT),
             RecipeCategory.MISC,
             Items.DIAMOND, 0.1f, 200)
             .unlockedBy("has_dirt", has(Items.DIRT))
-            .save(consumer);
+            .save(consumer, "${modId}:${targetName}_smelting");
     }
 
     public static void gatherData(GatherDataEvent event) {
@@ -52,8 +51,8 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
 `;
 }
 
-export function generateBlockState(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateBlockState(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Block State Provider — Forge 1.20.1
 package com.example.${modId}.datagen;
@@ -94,9 +93,9 @@ public class ${pascalName}BlockStatesProvider extends BlockStateProvider {
 `;
 }
 
-export function generateItemModel(modId: string, targetName: string): string {
+export function generateItemModel(modId: string, targetName: string, classBase?: string): string {
   const upperName = toUpperSnake(targetName);
-  const pascalName = toPascalCase(modId);
+  const pascalName = classBase || toPascalCase(modId);
   return `// Item Model Provider — Forge 1.20.1
 package com.example.${modId}.datagen;
 
@@ -135,8 +134,8 @@ public class ${pascalName}ItemModelProvider extends ItemModelProvider {
 `;
 }
 
-export function generateLootTable(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateLootTable(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Loot Table Provider — Forge 1.20.1
 package com.example.${modId}.datagen;
@@ -200,8 +199,8 @@ class ${pascalName}BlockLoot extends BlockLootSubProvider {
 `;
 }
 
-export function generateTag(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateTag(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Block Tags Provider — Forge 1.20.1
 package com.example.${modId}.datagen;
@@ -254,8 +253,8 @@ public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
 `;
 }
 
-export function generateAdvancement(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateAdvancement(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   return `// Advancement Provider — Forge 1.20.1 (ForgeAdvancementProvider)
 package com.example.${modId}.datagen;
 
@@ -309,8 +308,8 @@ public class ${pascalName}AdvancementProvider extends ForgeAdvancementProvider {
 `;
 }
 
-export function generateParticle(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateParticle(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
   return `// ParticleType 注册 + particles.json — Forge 1.20.1
 package com.example.${modId}.init;
@@ -335,8 +334,8 @@ public class ${pascalName}Particles {
 `;
 }
 
-export function generateSound(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateSound(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
   return `// SoundEvent + SoundDefinitionsProvider — Forge 1.20.1
 package com.example.${modId}.datagen;

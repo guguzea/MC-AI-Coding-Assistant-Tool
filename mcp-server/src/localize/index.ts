@@ -273,6 +273,12 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
     ]);
   }
 
+  if (args.sourceJson === undefined && args.enUsJson === undefined) {
+    return fail("INVALID_INPUT", "缺少 sourceJson 或 enUsJson", [
+      "传入 sourceJson 或 enUsJson（空对象 {} 表示无词条）",
+    ]);
+  }
+
   const sourceParsed = parseSourceJson(args);
   if (!sourceParsed.ok) {
     return fail("LANG_PARSE_ERROR", `源语言 JSON: ${sourceParsed.error}`, ["修复 enUsJson/sourceJson"]);

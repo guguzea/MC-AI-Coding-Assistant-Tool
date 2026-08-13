@@ -130,8 +130,8 @@
         "summary": "* [Adding simple state to a block, like ints and booleans](blockstate). * [Giving blocks a block entity so they can have advanced state like inventories](blockentity)."
       }
     ],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
+    "hasCodeBlocks": true,
+    "codeBlockCount": 19,
     "keySections": 4,
     "file": "tutorial_blocks.md",
     "processedFile": "processed/tutorial_blocks.md"
@@ -184,7 +184,7 @@
       {
         "title": "A sub command",
         "level": 2,
-        "summary": "To add a sub command, you register the first literal node of the command normally. <code> dispatcher.register(literal(\"foo\")) </code> In order to have a sub command, one needs to append the next no..."
+        "summary": "To add a sub command, you register the first literal node of the command normally. dispatcher.register(literal(\"foo\")) In order to have a sub command, one needs to append the next node to the exist..."
       },
       {
         "title": "Why does my code not compile",
@@ -194,7 +194,7 @@
       {
         "title": "Can I register client side commands?",
         "level": 2,
-        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: <code java> ClientCommandRegistrationCallback.EVENT."
+        "summary": "Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example: ClientCommandRegistrationCallback.EVENT."
       },
       {
         "title": "Can I register commands in runtime?",
@@ -213,7 +213,7 @@
       }
     ],
     "hasCodeBlocks": true,
-    "codeBlockCount": 1,
+    "codeBlockCount": 15,
     "keySections": 5,
     "file": "tutorial_commands.md",
     "processedFile": "processed/tutorial_commands.md"
@@ -271,7 +271,7 @@
       {
         "title": "Make your item become fuel, or compostable",
         "level": 2,
-        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: <code java> public class ExampleMod implements ModInitial..."
+        "summary": "If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example: public class ExampleMod implements ModInitializer { [..."
       },
       {
         "title": "Next Steps",
@@ -280,7 +280,7 @@
       }
     ],
     "hasCodeBlocks": true,
-    "codeBlockCount": 10,
+    "codeBlockCount": 18,
     "keySections": 0,
     "file": "tutorial_items.md",
     "processedFile": "processed/tutorial_items.md"
@@ -321,8 +321,8 @@
         "summary": "The previous step added a dependency on kotlin stdlib. You can use https://github.com/FabricMC/fabric-language-kotlin|an official fabric-language-kotlin dependency to add more extensive kotlin supp..."
       }
     ],
-    "hasCodeBlocks": false,
-    "codeBlockCount": 0,
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
     "keySections": 1,
     "file": "tutorial_kotlin.md",
     "processedFile": "processed/tutorial_kotlin.md"

@@ -101,13 +101,16 @@ public class ExampleMod implements ModInitializer {
 ## Creating Items in 1.21.2+
 Since 1.21.2, the item registration has been totally rewriten. You have to store a RegistryKey in your Item.Settings, so the models and translation keys will be correctly stored in item components. Otherwise, you may see the following exceptions and Minecraft does not run:
 
-<code>
+```
+
 java.lang.NullPointerException: Item id not set
-</code>
+
+```
 
 To make it run correctly, you should write like below:
 
-<code java>
+```java
+
 public final class TutorialItems {
   private TutorialItems() {
   }
@@ -122,7 +125,8 @@ public final class TutorialItems {
   public static void initialize() {
   }
 }
-</code>
+
+```
 
 In the method Items.register, the registry key will be written in the settings first, and then use that settings to create the item.
 
@@ -140,25 +144,29 @@ That's because we haven't provided the item with **textures**, **baked models** 
 Our example texture can be found https://i.imgur.com/CqLSMEQ.png|here.
 
 A basic item model template is:
-<code JavaScript /resources/assets/tutorial/models/item/custom_item.json>
+```JavaScript
+
 {
   "parent": "item/generated",
   "textures": {
     "layer0": "tutorial:item/custom_item"
   }
 }
-</code>
+
+```
 The parent of your item model changes how it's rendered in the hand and comes in useful for things like block items in the inventory. item/generated is used for many simple items. item/handheld is used for tools that are held from the bottom left of the texture. In the json, textures/layer0 is the location of your image file.
 
 An item model definition is also needed since 1.21.4 (not needed before 1.21.4), of which the content may be:
-<code javascript /resources/assets/tutorial/items/custom_item.json>
+```javascript
+
 {
   "model": {
     "type": "model",
     "model": "tutorial:item/custom_item"
   }
 }
-</code>
+
+```
 
 The item model definition will define the item model that the item uses.
 
@@ -249,7 +257,8 @@ public class ExampleMod implements ModInitializer {
 
 ## Make your item become fuel, or compostable
 If you want to make it a fuel so that it can be used in a furnace, you can register in FuelRegistry when initializing the mod, for example:
-<code java>
+```java
+
 public class ExampleMod implements ModInitializer {
     [...]
     
@@ -260,12 +269,14 @@ public class ExampleMod implements ModInitializer {
         FuelRegistry.INSTANCE.add(TutorialItems.CUSTOM_ITEM, 300);
     }
 }
-</code>
+
+```
 
 However, in practice, when you have many items to register, as registering quantities of items may be effort-consuming and messy, you can consider placing the codes in a separate method, instead of writing like above.
 
 In versions below 1.21.2, you need to use Fabric API's FuelRegistry.INSTANCE.
-<code java>
+```java
+
 public final class TutorialItems {
     [...]
     
@@ -274,10 +285,12 @@ public final class TutorialItems {
         FuelRegistry.INSTANCE.add(CUSTOM_ITEM, 300);
     }
 }
-</code>
+
+```
 
 In versions since 1.21.2, use Fabric API's FuelRegistryEvents:
-<code java>
+```java
+
 public final class TutorialItems {
     [...]
     
@@ -289,10 +302,12 @@ public final class TutorialItems {
         });
     }
 }
-</code>
+
+```
 
 And then refer to this method in your ModInitializer:
-<code java>
+```java
+
 public class ExampleMod implements ModInitializer {
     [...]
     
@@ -302,7 +317,8 @@ public class ExampleMod implements ModInitializer {
         TutorialItems.registerFuels();
     }
 }
-</code>
+
+```
 
 Similarly, you can use a CompostingChanceRegistry to make it compostable in a composter.
 ## Next Steps

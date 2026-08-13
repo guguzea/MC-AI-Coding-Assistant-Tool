@@ -97,6 +97,11 @@ function wikiToMarkdown(text) {
   md = md.replace(/<yarncode\s*>/gi, "```");
   md = md.replace(/<\/yarncode>/gi, "```");
 
+  // DokuWiki / wiki <code lang> → Markdown fence
+  md = md.replace(/<code\s+([A-Za-z0-9_+-]+)[^>]*>/gi, "```$1\n");
+  md = md.replace(/<code\s*>/gi, "```\n");
+  md = md.replace(/<\/code>/gi, "\n```");
+
   // ── 3. %%inline code%% → `inline code` ─────────────────────────────────
   md = md.replace(/%%([^%\n]+)%%/g, "`$1`");
 
@@ -203,8 +208,14 @@ function wikiToMarkdown(text) {
 
   // 清理
   md = md.replace(/\n{3,}/g, "\n\n");
+  md = stripCurlyPlaceholders(md);
 
   return md.trim();
+}
+
+/** 清掉 DokuWiki 残留的 ${1}/${n} 占位 */
+function stripCurlyPlaceholders(text) {
+  return text.replace(/\$\{\d+\}/g, "");
 }
 
 // ── Markdown 解析 ────────────────────────────────────────────────────────────

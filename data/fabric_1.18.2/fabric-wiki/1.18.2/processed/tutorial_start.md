@@ -53,13 +53,13 @@ For more tutorials, please refer to the sidebar of this page. You may also see h
 The Fabric Wiki isn't the only place where you can learn aspects of modding, checkout these pages which contain useful external guides that can to apply to modding with Fabric, and modding in general:
 
    * [Community Libraries](community:library_mods)
-   * [List of useful gists](community:list_${1}_useful_gists)
+   * [List of useful gists](community:list_of_useful_gists)
 
 ### YouTube Tutorials
 If reading is not your thing, checkout these YouTube playlists:
 
   * https://www.youtube.com/playlist?list=PLKGarocXCE1H_HxOYihQMq0mlpqiUJj4L|Kaupenjoe's Fabric Modding Playlist (1.21) 
   * https://www.youtube.com/playlist?list=PLKGarocXCE1EO43Dlf5JGh7Yk-kRAXUEJ|Kaupenjoe's Fabric Modding Playlist (1.20) 
-  * https://www.youtube.com/watch?v=e37IMIwB5BE&list=PLDhiRTZ_${1}_V_hSf2Z-GWEwYK1RlC|Techovision's Modding Tutorials (1.19) 
+  * https://www.youtube.com/watch?v=e37IMIwB5BE&list=PLDhiRTZ_vnoV0O_V_hSf2Z-GWEwYK1RlC|Techovision's Modding Tutorials (1.19) 
 
 //Fabric is not liable for the content or opinions presented on these playlists. These playlists may contain out of date content.//

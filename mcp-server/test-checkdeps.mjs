@@ -117,6 +117,18 @@ function testUnknownLoader() {
   );
 }
 
+function testTrinketsAndCuriosDoNotMatchEmi() {
+  const gradle = `
+plugins { id 'fabric-loom' }
+dependencies {
+  modImplementation "dev.emi:trinkets:3.7.1"
+  implementation "top.theillusivec4.curios:curios-forge:5.4.7+1.20.1"
+}`;
+  const r = checkDependencies(gradle);
+  const jei = r.detectedLibraries.find((l) => l.id === "authored/library-integration-jei-emi");
+  assert.equal(jei, undefined, `dev.emi:trinkets / curios 不应命中 emi，实际: ${JSON.stringify(r.detectedLibraries)}`);
+}
+
 function main() {
   testForgeOwoConflict();
   testFabricNoModsTomlFalsePositive();
@@ -125,6 +137,7 @@ function main() {
   testJeiSoftDependency();
   testBookshelfAmbiguity();
   testUnknownLoader();
+  testTrinketsAndCuriosDoNotMatchEmi();
   console.log("test-checkdeps: ok");
 }
 

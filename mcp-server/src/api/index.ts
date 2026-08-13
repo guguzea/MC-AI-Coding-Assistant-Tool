@@ -480,50 +480,58 @@ function fuzzyMethodSearch(query: string, methods: MethodInfo[]): MethodInfo[] {
     .map(({ m }) => m);
 }
 
-function fuzzyClassSearch(query: string, vData: VersionData): string[] {
+type FuzzyKind = "exact" | "prefix" | "suffix" | "contains" | "edit";
+type FuzzyHit = { name: string; score: number; kind: FuzzyKind };
+
+function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
   const normalized = query.toLowerCase().replace(/\./g, "/");
   const simple = normalized.includes("/")
     ? normalized.slice(normalized.lastIndexOf("/") + 1)
     : normalized;
 
-  // 优先尝试 Trie 前缀搜索（O(k)）
   if (vData.trieIndex) {
     const prefixResults = vData.trieIndex.searchPrefix(normalized);
     if (prefixResults.length > 0) {
-      return prefixResults.slice(0, 5);
+      return prefixResults.slice(0, 5).map((name) => ({ name, score: 95, kind: "prefix" as const }));
     }
     if (simple.length >= 3) {
       const simplePrefix = vData.trieIndex.searchPrefix(simple);
-      // trie 可能按全路径；若无结果走线性
-      if (simplePrefix.length > 0) return simplePrefix.slice(0, 5);
-    }
-  }
-
-  // 回退到线性扫描（classNames 已预加载到内存）
-  if (!vData.classNames || vData.classNames.length === 0) return [];
-  const results: Array<{ score: number; name: string }> = [];
-
-  for (const name of vData.classNames) {
-    const lower = name.toLowerCase();
-    const simpleName = lower.includes("/") ? lower.slice(lower.lastIndexOf("/") + 1) : lower;
-    if (lower === normalized) { results.push({ score: 100, name }); continue; }
-    if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replace("/", "."))) {
-      results.push({ score: 90, name }); continue;
-    }
-    if (lower.includes(normalized) || simpleName.includes(simple)) {
-      results.push({ score: 80 - (lower.length - normalized.length), name });
-      continue;
-    }
-    // 末段编辑距离（Blck → Block）
-    if (simple.length >= 3 && simpleName.length >= 3) {
-      const dist = editDistanceLimited(simple, simpleName, 3);
-      if (dist !== null && dist <= 2) {
-        results.push({ score: 70 - dist * 10, name });
+      if (simplePrefix.length > 0) {
+        return simplePrefix.slice(0, 5).map((name) => ({ name, score: 90, kind: "prefix" as const }));
       }
     }
   }
 
-  return results.sort((a, b) => b.score - a.score).slice(0, 5).map(r => r.name);
+  if (!vData.classNames || vData.classNames.length === 0) return [];
+  const results: FuzzyHit[] = [];
+
+  for (const name of vData.classNames) {
+    const lower = name.toLowerCase();
+    const simpleName = lower.includes("/") ? lower.slice(lower.lastIndexOf("/") + 1) : lower;
+    if (lower === normalized) { results.push({ score: 100, name, kind: "exact" }); continue; }
+    if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replace("/", "."))) {
+      results.push({ score: 90, name, kind: "suffix" }); continue;
+    }
+    if (simple.length >= 3 && (lower.includes(normalized) || simpleName.includes(simple))) {
+      results.push({ score: 80 - (lower.length - normalized.length), name, kind: "contains" });
+      continue;
+    }
+    if (simple.length >= 3 && simpleName.length >= 3) {
+      const dist = editDistanceLimited(simple, simpleName, 3);
+      if (dist !== null && dist <= 2) {
+        const firstOk = simple[0] === simpleName[0] || dist <= 1;
+        if (firstOk) {
+          results.push({ score: 70 - dist * 10, name, kind: "edit" });
+        }
+      }
+    }
+  }
+
+  return results.sort((a, b) => b.score - a.score).slice(0, 5);
+}
+
+function acceptFuzzyHit(hit: FuzzyHit): boolean {
+  return hit.kind !== "edit";
 }
 
 function editDistanceLimited(a: string, b: string, max: number): number | null {
@@ -691,42 +699,50 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   if (!cls) {
     const fuzzy = fuzzyClassSearch(className, vData);
     if (fuzzy.length > 0) {
-      cls = vData.apiIndex[fuzzy[0]];
-      const suggestions = fuzzy.slice(1).map(n => `你指的是 ${toDot(n)} 吗？`);
-      if (cls) {
-        return buildClassResult(toDot(fuzzy[0]), cls, suggestions, version);
+      const suggestions = fuzzy.map((h) => `你指的是 ${toDot(h.name)} 吗？`);
+      const best = fuzzy[0];
+      if (acceptFuzzyHit(best)) {
+        cls = vData.apiIndex[best.name];
+        if (cls) {
+          return buildClassResult(toDot(best.name), cls, suggestions.slice(1), version);
+        }
       }
       return {
         found: false,
         className,
         mappings: { mojang: slashName, parchment: slashName },
         suggestions: [`未找到 ${className}。类似类：`, ...suggestions],
-        notes: ["提示：类名区分大小写，使用完整包名效果更佳"],
+        notes: ["提示：类名区分大小写，使用完整包名效果更佳；纯拼写近似不会当作命中"],
       };
+    }
+    const emptyIndex = !vData.classNames || vData.classNames.length === 0;
+    const unobf = isUnobfuscatedMcVersion(version);
+    const notes: string[] = [];
+    if (!emptyIndex && !unobf) {
+      notes.push(
+        /minecraftforge|neoforged/i.test(className)
+          ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
+          : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
+      );
+    }
+    notes.push(`共收录 ${vData.classNames.length} 个类（版本 ${version}）。`);
+    if (unobf) {
+      notes.push(
+        UNOBFUSCATED_MAPPING_HINT,
+        `query_api 的 api-index 不覆盖 26.1+；请用 search_neoforge_docs（version=26.1）/ search_fabric_docs（先 list_fabric_versions，如 26.1.2）。`,
+      );
+    } else if (emptyIndex) {
+      notes.push(
+        `query_api 的 api-index 目前覆盖 Forge Parchment extracted（约 1.16.5–1.20.4）。` +
+          `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,
+      );
     }
     return {
       found: false,
       className,
       mappings: { mojang: slashName, parchment: slashName },
       suggestions: [`未找到类 ${className}，请检查类名是否正确`],
-        notes: [
-          /minecraftforge|neoforged/i.test(className)
-            ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
-            : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
-          `共收录 ${vData.classNames.length} 个类（版本 ${version}）。`,
-          ...(isUnobfuscatedMcVersion(version)
-            ? [
-                UNOBFUSCATED_MAPPING_HINT,
-                `query_api 的 api-index 不覆盖 26.1+；请用 search_neoforge_docs（version=26.1）/ search_fabric_docs（先 list_fabric_versions，如 26.1.2）。`,
-              ]
-            : []),
-          ...(vData.classNames.length === 0 && !isUnobfuscatedMcVersion(version)
-            ? [
-                `query_api 的 api-index 目前覆盖 Forge Parchment extracted（约 1.16.5–1.20.4）。` +
-                  `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,
-              ]
-            : []),
-        ],
+      notes,
     };
   }
 

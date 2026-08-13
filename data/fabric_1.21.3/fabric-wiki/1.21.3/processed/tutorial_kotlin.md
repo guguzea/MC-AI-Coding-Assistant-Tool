@@ -51,19 +51,23 @@ You should be able to use Kotlin at this point.
 The previous step added a dependency on kotlin stdlib. You can use https://github.com/FabricMC/fabric-language-kotlin|an official fabric-language-kotlin dependency to add more extensive kotlin support for your mod. With this dependency, some core and some extra packages for kotlin will automatically be added to the project, and you shall be spared of wasting your time with manually shadowing entire Kotlin classes.
 
 To do this, replace
-<code groovy>
+```groovy
+
 dependencies {
    //... 
    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
-</code>
+
+```
 with
-<code groovy>
+```groovy
+
 dependencies {
    //...
    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.8+kotlin.1.9.0")
 }
-</code>
+
+```
 
 (Use appropriate version, which can be found on https://github.com/FabricMC/fabric-language-kotlin|the official github)
 
@@ -72,7 +76,8 @@ dependencies {
 
 Do not forget to modify your fabric.mod.json as stated in their https://github.com/FabricMC/fabric-language-kotlin|README.md:
 
-<code json>
+```json
+
 {
     "schemaVersion":  1, 
     "entrypoints": {
@@ -87,15 +92,18 @@ Do not forget to modify your fabric.mod.json as stated in their https://github.c
         "fabric-language-kotlin": ">=1.10.8+kotlin.1.9.0"
     }
 }
-</code>
+
+```
 
 You can also modify mod entrypoints to allow for top-level functions, fields, methods or function references to work. Check the documentation of entrypoints in their https://github.com/FabricMC/fabric-language-kotlin|README.md.
 
 ### Increasing version of jvmToolchain
 Some errors may appear when compiling Kotlin, so it's a good idea to increase the version of jvmToolcahin depending on your mc version (kotlin compiles down to java 8 by default):
 
-<code groovy>
+```groovy
+
 jvmToolchain(11)
-</code>
+
+```
 
 You should be able to use 11 for versions below 1.17, 16 for 1.17 and 17 since 1.18.

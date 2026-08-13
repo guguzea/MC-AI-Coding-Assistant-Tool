@@ -1,9 +1,8 @@
 import { toPascalCase, toUpperSnake } from "./common.js";
 
-export function generateRecipe(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
-  void targetName;
-  return `// Recipe Provider — NeoForge 1.21.x
+export function generateRecipe(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
+  return `// Recipe Provider — NeoForge 1.21.x (${modId}:${targetName})
 package com.example.${modId}.datagen;
 
 import java.util.concurrent.CompletableFuture;
@@ -33,12 +32,12 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
             .define('A', Items.DIAMOND)
             .define('B', Items.EMERALD)
             .unlockedBy("has_diamond", has(Items.DIAMOND))
-            .save(output);
+            .save(output, "${modId}:${targetName}");
 
         SimpleCookingRecipeBuilder.smelting(
                 Ingredient.of(Items.DIRT), RecipeCategory.MISC, Items.DIAMOND, 0.1f, 200)
             .unlockedBy("has_dirt", has(Items.DIRT))
-            .save(output);
+            .save(output, "${modId}:${targetName}_smelting");
     }
 
     public static void gatherData(GatherDataEvent event) {
@@ -50,8 +49,8 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
 `;
 }
 
-export function generateBlockState(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateBlockState(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Block State Provider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -90,8 +89,8 @@ public class ${pascalName}BlockStatesProvider extends BlockStateProvider {
 `;
 }
 
-export function generateItemModel(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateItemModel(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Item Model Provider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -129,8 +128,8 @@ public class ${pascalName}ItemModelProvider extends ItemModelProvider {
 `;
 }
 
-export function generateLootTable(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateLootTable(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Loot Table Provider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -189,8 +188,8 @@ class ${pascalName}BlockLoot extends BlockLootSubProvider {
 `;
 }
 
-export function generateTag(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateTag(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upperName = toUpperSnake(targetName);
   return `// Block Tags Provider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -239,8 +238,8 @@ public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
 `;
 }
 
-export function generateAdvancement(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateAdvancement(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   return `// Advancement Provider — NeoForge 1.21.x (use NeoForge AdvancementProvider)
 package com.example.${modId}.datagen;
 
@@ -295,8 +294,8 @@ public class ${pascalName}AdvancementProvider extends AdvancementProvider {
 `;
 }
 
-export function generateParticle(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateParticle(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
   return `// ParticleType + ParticleDescriptionProvider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -343,8 +342,8 @@ public class ${pascalName}ParticleDescriptionProvider extends ParticleDescriptio
 `;
 }
 
-export function generateSound(modId: string, targetName: string): string {
-  const pascalName = toPascalCase(modId);
+export function generateSound(modId: string, targetName: string, classBase?: string): string {
+  const pascalName = classBase || toPascalCase(modId);
   const upper = toUpperSnake(targetName);
   return `// SoundEvent + SoundDefinitionsProvider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
@@ -406,24 +405,25 @@ export function generateNeoForge21(
   providerType: NeoForge21ProviderType,
   modId: string,
   targetName: string,
+  classBase?: string,
 ): string {
   switch (providerType) {
     case "recipe":
-      return generateRecipe(modId, targetName);
+      return generateRecipe(modId, targetName, classBase);
     case "blockstate":
-      return generateBlockState(modId, targetName);
+      return generateBlockState(modId, targetName, classBase);
     case "itemmodel":
-      return generateItemModel(modId, targetName);
+      return generateItemModel(modId, targetName, classBase);
     case "loottable":
-      return generateLootTable(modId, targetName);
+      return generateLootTable(modId, targetName, classBase);
     case "tag":
-      return generateTag(modId, targetName);
+      return generateTag(modId, targetName, classBase);
     case "advancement":
-      return generateAdvancement(modId, targetName);
+      return generateAdvancement(modId, targetName, classBase);
     case "particle":
-      return generateParticle(modId, targetName);
+      return generateParticle(modId, targetName, classBase);
     case "sound":
-      return generateSound(modId, targetName);
+      return generateSound(modId, targetName, classBase);
     default:
       throw new Error(`Unknown NeoForge 1.21 provider: ${providerType}`);
   }

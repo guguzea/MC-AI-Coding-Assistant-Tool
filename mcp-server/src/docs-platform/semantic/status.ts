@@ -117,7 +117,10 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
       if (!name.startsWith(prefix)) continue;
       const platform = prefix.slice(0, -1);
       const version = name.slice(prefix.length);
+      if (!version || !/^\d/.test(version)) continue;
       for (const source of sources) {
+        const sourceDir = join(dataRoot, name, source);
+        if (!existsSync(sourceDir)) continue;
         const dbPath = semanticDbPath(dataRoot, platform, version, source);
         out.push({
           platform,
@@ -172,7 +175,9 @@ export function missingSemanticDbWarning(missing: boolean): string | undefined {
 export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   const modelsPath = join(dataRoot, "_models");
   const modelsReady = modelsDirReady(dataRoot);
-  const samples: SemanticSample[] = SAMPLE_TARGETS.map((t) => {
+  const samples: SemanticSample[] = SAMPLE_TARGETS.filter((t) =>
+    existsSync(join(dataRoot, `${t.platform}_${t.version}`, t.source)),
+  ).map((t) => {
     const dbPath = semanticDbPath(dataRoot, t.platform, t.version, t.source);
     const info = inspectDb(dbPath);
     return {

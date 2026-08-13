@@ -99,7 +99,12 @@ function wordBoundaryRegex(token: string): RegExp {
 }
 
 function hasKeyword(text: string, token: string): boolean {
-  return wordBoundaryRegex(token).test(text);
+  const t = token.trim();
+  if (!t) return false;
+  if (t.length <= 3) {
+    return new RegExp(`(^|[^A-Za-z0-9_.])${escapeRegExp(t)}($|[^A-Za-z0-9_.])`, "i").test(text);
+  }
+  return wordBoundaryRegex(t).test(text);
 }
 
 /** §4.3 loader 判定算法（顺序固定：fabricModJson → neoModsToml → modsToml 特征 → gradle 探测） */

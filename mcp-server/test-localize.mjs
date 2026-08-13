@@ -157,6 +157,12 @@ function testOwnBadSource() {
   assert.equal(r.code, "LANG_PARSE_ERROR");
 }
 
+function testOwnMissingSource() {
+  const r = localizeMod({ mode: "own", action: "diff" });
+  assert.equal(r.ok, false);
+  assert.equal(r.code, "INVALID_INPUT");
+}
+
 function testJarExtractEn() {
   const jar = writeMockJar("single-en.jar", [
     {
@@ -349,6 +355,7 @@ function main() {
     testOwnEmptySource,
     testOwnBadZh,
     testOwnBadSource,
+    testOwnMissingSource,
     testJarExtractEn,
     testJarPackDraft,
     testJarFallbackDe,

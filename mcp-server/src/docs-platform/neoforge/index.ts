@@ -3,7 +3,7 @@
  *
  * 提供五个递进式查询工具（NeoForge 专用）：
  *   list_neoforge_versions       — 版本列表
- *   search_neoforge_docs         — L0 索引搜索
+ *   search_neoforge_docs         — hybrid 搜索（L0 + 语义 RRF）
  *   get_neoforge_doc_summary    — L1 摘要
  *   get_neoforge_doc_full       — L2/L2+ 全文
  *   get_neoforge_doc_related    — 相关文档
@@ -122,7 +122,7 @@ export async function listNeoForgeVersions(): Promise<CallToolResult> {
 export const searchNeoForgeDocsSchema = {
   name: "search_neoforge_docs",
   description:
-    "搜索 NeoForge 官方文档（L0 索引搜索）。" +
+    "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
     "适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。" +
     "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" +
     "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。",

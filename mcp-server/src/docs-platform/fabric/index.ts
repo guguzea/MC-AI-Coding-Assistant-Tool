@@ -3,7 +3,7 @@
  *
  * 提供四个递进式查询工具（Fabric 专用）：
  *   list_fabric_versions       — 版本列表
- *   search_fabric_docs         — L0 索引搜索
+ *   search_fabric_docs         — hybrid 搜索（L0 + 语义 RRF）
  *   get_fabric_doc_summary    — L1 摘要
  *   get_fabric_doc_full       — L2/L2+ 全文
  *   get_fabric_doc_related    — 相关文档
@@ -132,7 +132,7 @@ export async function listFabricVersions(): Promise<CallToolResult> {
 
 export const searchFabricDocsSchema = {
   name: "search_fabric_docs",
-  description: `Fabric 官方文档搜索（L0 索引）。
+  description: `Fabric 官方文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。
 
 使用方法：
   1. 先调用 search_fabric_docs(query) 找出相关页面。

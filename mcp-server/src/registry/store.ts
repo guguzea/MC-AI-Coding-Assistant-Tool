@@ -49,8 +49,20 @@ export function searchRegistryEntries(
   if (!q) return [];
 
   const like = `%${q.replace(/%/g, "")}%`;
+  const exactNs = q.includes(":") ? q : `minecraft:${q}`;
+  const exactSql = registry
+    ? `SELECT registry, id, translation_key AS translationKey FROM entries
+         WHERE registry = ? AND (LOWER(id) = ? OR LOWER(id) = ?)`
+    : `SELECT registry, id, translation_key AS translationKey FROM entries
+         WHERE LOWER(id) = ? OR LOWER(id) = ?`;
+  const exactRows = (
+    registry
+      ? (db.prepare(exactSql).all(registry, q, exactNs) as unknown as RegistryMatch[])
+      : (db.prepare(exactSql).all(q, exactNs) as unknown as RegistryMatch[])
+  );
+
   const fetchLimit = Math.max(limit * 8, 200);
-  const rows = registry
+  const likeRows = registry
     ? (db
         .prepare(
           `SELECT registry, id, translation_key AS translationKey FROM entries
@@ -66,7 +78,16 @@ export function searchRegistryEntries(
         )
         .all(like, like, fetchLimit) as unknown as RegistryMatch[]);
 
-  return [...rows]
+  const seen = new Set(exactRows.map((r) => `${r.registry}\0${r.id}`));
+  const merged = [...exactRows];
+  for (const r of likeRows) {
+    const k = `${r.registry}\0${r.id}`;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    merged.push(r);
+  }
+
+  return merged
     .sort((a, b) => {
       const ra = rankRegistryMatch(a.id, q);
       const rb = rankRegistryMatch(b.id, q);

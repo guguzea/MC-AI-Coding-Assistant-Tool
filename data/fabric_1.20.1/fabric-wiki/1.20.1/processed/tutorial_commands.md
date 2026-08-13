@@ -21,11 +21,13 @@ The single method in Command, run(CommandContext<S>) takes a CommandContext<S> a
 
 Like other functional interfaces, it is usually used as a lambda or a method reference:
 
-<code java>
+```java
+
 Command<ServerCommandSource> command = context -> {
     return 0;
 };
-</code>
+
+```
 
 
 <!-- key:🟠 role:常见错误 -->
@@ -35,7 +37,8 @@ The integer can be considered the result of the command. Typically negative valu
 ### What can the ServerCommandSource do?
 A ServerCommandSource provides some additional implementation specific context when a command is run. This includes the ability to get the entity that executed the command, the world the command was ran in or the server the command was run on.
 
-<code java >
+```java
+
 // Get the source. This will always work.
 final ServerCommandSource source = ctx.getSource(); 
 
@@ -77,7 +80,8 @@ final String name = source.getName();
 // This is based on the operator status of the sender.
 // (On an integrated server, the player must have cheats enabled to execute these commands.)
 final boolean b = source.hasPermissionLevel(int level); 
-</code>
+
+```
 
 ## Register a basic command
 Commands are registered by registering in CommandRegistrationCallback in the Fabric API. For information on registering callbacks, please see the [callbacks](callbacks).
@@ -85,13 +89,16 @@ Commands are registered by registering in CommandRegistrationCallback in the Fab
 The event should be registered in your mod's initializer. The callback has three parameters. The CommmandDispatcher<S> is used to register, parse and execute commands. S is the type of command source the command dispatcher supports, which is usually ServerCommandSource. The second parameter provides an abstraction to registries which may be passed to certain command argument methods. The third parameter is a RegistrationEnvironment which identifies the type of server the commands are being registered on.
 
 To simplify the code, it is highly recommended to static import the methods in CommandManager (see [#Static Imports](#Static Imports)):
-<code java>
+```java
+
 import static net.minecraft.server.command.CommandManager.*;
-</code>
+
+```
 
 In the mod initializer, we just register the simplest command:
 
-<code java >
+```java
+
 public class ExampleMod implements ModInitializer {
   @Override
   public void onInitialize() {
@@ -105,7 +112,8 @@ public class ExampleMod implements ModInitializer {
     })));
   }
 }
-</code>
+
+```
 
 **Please ensure you import the correct static method.** The method literal is CommandManager.literal. You can also alternatively explicitly write CommandManager.literal instead of using static imports. `CommandManager.literal("foo")` tells brigadier this command has one node, a **literal** called foo.
 
@@ -138,7 +146,8 @@ public class ExampleCommandMod implements ModInitializer {
 In the example above, the use of static imports is used for code simplifying. For a literal this would shorten the statement to `literal("foo")`. This also works for getting the value of an argument. This shortens `StringArgumentType.getString(ctx, "string")` to `getString(ctx, "string")`. This also works for Minecraft's own argument types.
 
 Below is an example of some static imports:
-<code java >
+```java
+
 // getString(ctx, "string")
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 // word()
@@ -149,7 +158,8 @@ import static net.minecraft.server.command.CommandManager.literal;
 import static net.minecraft.server.command.CommandManager.argument;
 // Import everything in the CommandManager
 import static net.minecraft.server.command.CommandManager.*;
-</code>
+
+```
 
 Note: Please be sure you use the literal and argument from CommandManager instead of other classes, or you may have issues with generics when trying to compile, because the type parameter S should be ServerCommandSource. (For client-side commands, use ClientCommandManager instead.)
 
@@ -162,14 +172,16 @@ Let's say you have a command that you only want operators to be able to execute.
 
 For example this may look like the following:
 
-<code java >
+```java
+
 dispatcher.register(literal("foo")
   .requires(source -> source.hasPermissionLevel(2))
   .executes(ctx -> {
     ctx.getSource().sendFeedback(() -> Text.literal("You are an operator"), false);
     return 1;
   });
-</code>
+
+```
 
 This command will only execute if the source of the command is a level 2 operator at minimum, //including// command blocks. Otherwise, the command is not registered. Also this has the side effect of not showing this command in tab completion to anyone who is not a level 2 operator. This is also why you cannot tab-complete most commands when you did not enable cheating.
 
@@ -183,7 +195,8 @@ Arguments are used in most of commands. Sometimes they can be optional, which me
 
 In this case, we add one integer argument, and calculate the square of the integer.
 
-<code java>
+```java
+
     dispatcher.register(literal("mul")
         .then(argument("value", IntegerArgumentType.integer())
             .executes(context -> {
@@ -192,14 +205,16 @@ In this case, we add one integer argument, and calculate the square of the integ
               context.getSource().sendFeedback(() -> Text.literal("%s × %s = %s".formatted(value, value, result)), false);
               return result;
             })));
-</code>
+
+```
 
 In this case, after the word /mul, you should type an integer. For example, if you run /mul 3, you will get the feedback message "3 × 3 = 9". If you type /mul without arguments, the command cannot be correctly parsed.
 
 Note: for simplicity, IntegerArgumentType.integer and IntegerArgumentType.getInteger can be replaced with integer and getInteger with static import. This example does not use static imports, in order to be more explicit.
 
 Then we add an optional second argument:
-<code java>
+```java
+
     dispatcher.register(literal("mul")
         .then(argument("value", IntegerArgumentType.integer())
             .executes(context -> {
@@ -216,11 +231,13 @@ Then we add an optional second argument:
                   context.getSource().sendFeedback(() -> Text.literal("%s × %s = %s".formatted(value, value2, result)), false);
                   return result;
                 }))));
-</code>
+
+```
 
 Now you can type one or two integers. If you give one integer, that square of integer will be calculated. If you provide two integers, their product will be calculated. You may find it unnecessary to specify similar executions twice. Therefore, we can create a method that will be used in both executions.
 
-<code java>
+```java
+
 public class ExampleMod implements ModInitializer {
   @Override
   public void onInitialize() {
@@ -237,19 +254,23 @@ public class ExampleMod implements ModInitializer {
     return result;
   }
 }
-</code>
+
+```
 ## A sub command
 To add a sub command, you register the first literal node of the command normally.
 
-<code>
+```
+
 dispatcher.register(literal("foo"))
-</code>
+
+```
 
 In order to have a sub command, one needs to append the next node to the existing node. 
 
 This creates the command foo <bar> as shown below.
 
-<code java >
+```java
+
 dispatcher.register(literal("foo")
     .then(literal("bar")
         .executes(context -> {
@@ -261,10 +282,12 @@ dispatcher.register(literal("foo")
         })
     )
 );
-</code>
+
+```
 
 Similar to arguments, sub command nodes can also be set optional. In the following case, both /foo and /foo bar will be valid.
-<code java >
+```java
+
 dispatcher.register(literal("foo")
     .executes(context -> {
         context.getSource().sendFeedback(() -> Text.literal("Called foo without bar"), false);
@@ -277,7 +300,8 @@ dispatcher.register(literal("foo")
         })
     )
 );
-</code>
+
+```
 # Advanced concepts
 Below are links to the articles about more complex concepts used in brigadier.
 
@@ -301,14 +325,16 @@ There are several immediate possibilities for why this could occur.
 ## Can I register client side commands?
 Fabric has a ClientCommandManager that can be used to register client side commands. The code should exist only in client-side codes. Example:
 
-<code java>
+```java
+
     ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("foo_client")
         .executes(context -> {
               context.getSource().sendFeedback(Text.literal("The command is executed in the client!"));
               return 1;
             }
         )));
-</code>
+
+```
 
 If you need to open a screen in the client command execution, instead of directly calling client.setScreen(...), you should call `client.execute(() -> client.setScreen(...))`. The variable client can be obtained with context.getSource().getClient().
 
@@ -331,7 +357,8 @@ Yes! You can. Before trying the next code, take note it works on Fabric 0.91.6+1
 
 Here is the code example
 
-<code java>
+```java
+
     private void vanillaCommandByPlayer(World world, BlockPos pos, String command) {
         PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 5, false);
         if (player != null) {
@@ -340,7 +367,8 @@ Here is the code example
             commandManager.executeWithPrefix(commandSource, command);
         }
     }
-</code>
+
+```
 
 First, you need a CommandManager<ServerCommandSource>.
 Second, you need the ServerCommandSource.

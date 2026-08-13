@@ -60,12 +60,19 @@ export interface RiskAssessment {
   config: RiskItem;
 }
 
-export interface QueryApiSuggestion {
-  action: "query_api";
-  targetClass: string;
-  targetVersion: string;
-  reason: string;
-}
+export type QueryApiSuggestion =
+  | {
+      action: "query_api";
+      targetClass: string;
+      targetVersion: string;
+      reason: string;
+    }
+  | {
+      action: "search_neoforge_docs";
+      query: string;
+      version: string;
+      reason: string;
+    };
 
 export interface ReferenceLink {
   title: string;

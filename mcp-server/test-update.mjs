@@ -68,6 +68,15 @@ function testSemver() {
   assert.ok(semver.compareSemver("1.2.3", "1.2.3-beta") > 0);
   assert.equal(semver.isNewer("v0.2.0", "0.1.0"), true);
   assert.equal(semver.looksLikePrereleaseTag("v1.0.0-rc.1"), true);
+  assert.equal(semver.gitDescribeVsRemote("V1.0.4", "V1.0.4"), "equal");
+  assert.equal(semver.gitDescribeVsRemote("V1.0.4-12-gabcdef1", "V1.0.4"), "ahead");
+  assert.equal(semver.gitDescribeVsRemote("V1.0.4", "V1.0.5"), "behind");
+  assert.equal(semver.gitDescribeVsRemote("V1.0.3-2-gabcdef1", "V1.0.4"), "behind");
+  assert.equal(github.toolingNeedsUpdate("0.1.0", "V1.0.4", "V1.0.4-3-gabcdef1"), false);
+  assert.equal(github.toolingNeedsUpdate("1.0.4", "V1.0.4", "V1.0.4"), false);
+  assert.equal(github.toolingNeedsUpdate("1.0.4", "v9.9.9", "V1.0.4-3-gabcdef1"), true);
+  assert.equal(github.dataNeedsUpdate(undefined, "V1.0.4", undefined, "data.zip", "V1.0.4-1-gabcdef1"), false);
+  assert.equal(github.dataNeedsUpdate(undefined, "V1.0.4", undefined, "data.zip", undefined), true);
 }
 
 function testZipLayout() {
@@ -131,6 +140,25 @@ async function testCheckUpdateAvailable() {
   rmSync(dataDir, { recursive: true, force: true });
 }
 
+async function testGitDescribeAheadNoUpdate() {
+  const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
+  const fetchImpl = makeFetch((url) => {
+    if (url.includes("/releases?")) {
+      return jsonRes([mockRelease({ tag: "V1.0.4", withData: false, withSums: false })]);
+    }
+    return jsonRes({}, 404);
+  });
+  const res = await update.mcSkillUpdate({
+    action: "check",
+    scope: "all",
+    channel: "stable",
+    fetchImpl,
+    dataDir,
+  });
+  assert.equal(res.updateAvailable, false, `ahead/equal 不应提示更新: ${JSON.stringify(res.local)}`);
+  rmSync(dataDir, { recursive: true, force: true });
+}
+
 async function testApplyRequiresConfirm() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   const fetchImpl = makeFetch((url) => {
@@ -166,7 +194,7 @@ async function testDataDryRunOverwriteList() {
   const sumsPath = join(dataDir, "SHA256SUMS.txt");
   writeFileSync(sumsPath, `${digest}  mc-skill-data-full-0.2.0.zip\n`);
 
-  const release = mockRelease({ tag: "v0.2.0" });
+  const release = mockRelease({ tag: "v9.9.9" });
   const fetchImpl = makeFetch((url) => {
     if (url.includes("/releases?")) return jsonRes([release]);
     return jsonRes({}, 404);
@@ -209,7 +237,7 @@ async function testDataApplyWritesAndChecksumFail() {
   const sumsPath = join(dataDir, "SHA256SUMS.txt");
   writeFileSync(sumsPath, `${digest}  mc-skill-data-full-0.2.0.zip\n`);
 
-  const release = mockRelease({ tag: "v0.2.0" });
+  const release = mockRelease({ tag: "v9.9.9" });
   const fetchImpl = makeFetch((url) => {
     if (url.includes("/releases?")) return jsonRes([release]);
     return jsonRes({}, 404);
@@ -243,7 +271,7 @@ async function testDataApplyWritesAndChecksumFail() {
   assert.equal(ok.applied, true, JSON.stringify(ok));
   assert.ok(existsSync(join(nestedData, "forge_1.20.1", "a.json")));
   const st = state.readUpdateState(nestedData);
-  assert.equal(st.dataReleaseTag, "v0.2.0");
+  assert.equal(st.dataReleaseTag, "v9.9.9");
 
   delete process.env.MC_SKILL_ALLOW_WRITE;
   delete process.env.MC_SKILL_PROJECT_ROOT;
@@ -254,7 +282,7 @@ async function testChecksumMissingAsset() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   const fetchImpl = makeFetch((url) => {
     if (url.includes("/releases?")) {
-      return jsonRes([mockRelease({ tag: "v0.2.0", withData: true, withSums: false })]);
+      return jsonRes([mockRelease({ tag: "v9.9.9", withData: true, withSums: false })]);
     }
     return jsonRes({}, 404);
   });
@@ -322,6 +350,7 @@ async function main() {
   await testRateLimit429();
   await testStableSkipsPrerelease();
   await testCheckUpdateAvailable();
+  await testGitDescribeAheadNoUpdate();
   await testApplyRequiresConfirm();
   await testDataDryRunOverwriteList();
   await testDataApplyWritesAndChecksumFail();

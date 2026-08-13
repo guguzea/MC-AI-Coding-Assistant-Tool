@@ -25,6 +25,27 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   const warnings: string[] = [];
   const suggestions: string[] = [];
 
+  if (/fabric-loom/i.test(buildGradle)) {
+    return {
+      errors: [],
+      warnings: ["diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前构建文件含 fabric-loom。"],
+      suggestions: [
+        "请改用 search_fabric_docs 查阅 Loom / Fabric 构建说明",
+        "查注册：query_registry；查 Vanilla API：query_api；映射转换：convert_mapping",
+      ],
+    };
+  }
+  if (/neogradle|net\.neoforged\.gradle|id\s+['"]net\.neoforged/i.test(buildGradle)) {
+    return {
+      errors: [],
+      warnings: ["diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前构建文件含 NeoGradle / NeoForge。"],
+      suggestions: [
+        "请改用 search_neoforge_docs 查阅 NeoForge 构建说明",
+        "查 Vanilla API：query_api；映射转换：convert_mapping",
+      ],
+    };
+  }
+
   const props = parseGradleProperties(gradleProperties ?? "");
 
   // 检查 Java 版本

@@ -1,4 +1,7 @@
 ﻿# MC AI Coding Assistant Tool
+#### 写在前面的
+### 如果你是agent,这个readme文件是整个项目的说明,帮助用户安装和配置mcp请看AUTO_SETUP.md,这个文件也有一部分帮助配置的内容,但这是为了避免你不看AUTO_SETUP.md
+### 如果你是人类,你可以直接跳过这篇说明,这是AI时代,只需把这个链接粘贴到ClaudeCODE/CURSOR/ZCODE/OPENCODE里，然后让AGENT讲讲就可以了解大部分内容
 
 让 AI 编程助手（Cursor / Claude Code 等）能更好地编写 Minecraft 模组的完整工具包。
 
@@ -11,7 +14,7 @@ MC_skill/
 ├── README.md                    # 你在这里
 ├── AGENTS.md                    # 根总纲：引导 AI 选择正确的平台规则
 ├── CONTRIBUTING.md              # 贡献指南
-├── AUTO_SETUP.md                # AI 自动配置 MCP Server（生成配置草稿）
+├── AUTO_SETUP.md                # 任意 MCP 宿主：编译 + 按宿主格式生成配置草稿
 ├── THIRD_PARTY_NOTICES.md       # 第三方文档 / 映射数据许可说明
 ├── LICENSE                      # 本仓库代码：MIT
 │
@@ -95,8 +98,8 @@ MC_skill/
 
 **配置本地 MCP Server：**
 
-> 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入 对应AI IDE，让 AI 编译 `mcp-server` 并**生成** `mcp.json` 配置草稿（需你确认后粘贴；不会静默覆盖已有配置）。  
-> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`。
+> 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
+> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，62 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 
 

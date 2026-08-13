@@ -312,6 +312,9 @@ async function runTests() {
     className: "net.minecraft.world.level.block.entity.Blck",
   });
   const content3 = JSON.parse(r3.result.content[0].text);
+  assert.equal(content3.found, false, `Blck must not be a hit: ${JSON.stringify(content3.suggestions)}`);
+  const sug3 = (content3.suggestions ?? []).join(" ");
+  assert.ok(!/\bPack\b/.test(sug3), `Blck must not suggest Pack: ${sug3}`);
   console.log(`  found=${content3.found}  suggestions: ${content3.suggestions?.join(" | ") ?? "n/a"}`);
   console.log();
 

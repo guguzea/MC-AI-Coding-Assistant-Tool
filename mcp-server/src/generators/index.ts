@@ -35,8 +35,22 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
   if (!mod) return { code: null, errors: ["无效 modId"] };
   const en: Record<string, string> = {};
   const zh: Record<string, string> = {};
+  const warnings: string[] = [];
+  if (mod.warned) warnings.push("标识符已归一化");
   for (const [k, v] of Object.entries(entries)) {
-    const key = k.includes(".") ? k : `block.${mod.value}.${k}`;
+    let key: string;
+    if (k.includes(".")) {
+      key = k;
+    } else if (k.startsWith("item_")) {
+      key = `item.${mod.value}.${k.slice("item_".length)}`;
+    } else if (k.startsWith("block_")) {
+      key = `block.${mod.value}.${k.slice("block_".length)}`;
+    } else if (k.startsWith("entity_")) {
+      key = `entity.${mod.value}.${k.slice("entity_".length)}`;
+    } else {
+      key = `block.${mod.value}.${k}`;
+      warnings.push(`键 "${k}" 无点号且无法从 item_/block_/entity_ 前缀推断，已按 block.${mod.value}.${k} 处理`);
+    }
     en[key] = v;
     zh[key] = v;
   }
@@ -46,6 +60,7 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
       [`assets/${mod.value}/lang/en_us.json`]: JSON.stringify(en, null, 2),
       [`assets/${mod.value}/lang/zh_cn.json`]: JSON.stringify(zh, null, 2),
     },
+    warnings: warnings.length ? warnings : undefined,
   };
 }
 

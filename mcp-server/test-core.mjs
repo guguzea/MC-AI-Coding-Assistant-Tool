@@ -20,6 +20,7 @@ import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen } from "./dist/datagen/index.js";
+import { generateLang } from "./dist/generators/index.js";
 import { diagnoseGradle } from "./dist/gradle/index.js";
 import { resolveDataDir } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
@@ -47,8 +48,11 @@ async function testUnknownPlatformEvidence() {
   const root = mkdtempSync(join(tmpdir(), "mc-skill-empty-"));
   try {
     const result = JSON.parse(await analyzePortingPath({ projectPath: root }));
-    assert.equal(result.analysis.current.platform, "unknown");
-    assert.equal(result.analysis.current.ambiguous, true);
+    assert.equal(result.ok, false);
+    assert.equal(result.error.code, "NOT_A_MOD_PROJECT");
+    const withTarget = JSON.parse(await analyzePortingPath({ projectPath: root, targetPlatform: "fabric" }));
+    assert.equal(withTarget.ok, false);
+    assert.equal(withTarget.error.code, "NOT_A_MOD_PROJECT");
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -450,6 +454,15 @@ async function testDatagenAndMappingGates() {
   assert.equal(soft.usedTargetName, "my_block");
   assert.ok(soft.warnings?.length >= 1);
 
+  const pascal = generateDatagen({
+    providerType: "recipe",
+    modId: "ExampleMod",
+    targetName: "ruby_block",
+  });
+  assert.ok(pascal.code?.includes("ExampleModRecipeProvider"), "class name must keep PascalCase");
+  assert.ok(pascal.code?.includes("examplemod:ruby_block"), "recipe id must use targetName");
+  assert.ok(!pascal.code?.includes("ExamplemodRecipeProvider"));
+
   for (const t of /** @type {const} */ (["recipe", "blockstate", "itemmodel", "loottable", "tag"])) {
     const d = generateDatagen({ providerType: t, modId: "demo", targetName: "stone_block" });
     assert.ok(d.code?.includes("net.minecraft.data.PackOutput"), `${t} PackOutput`);
@@ -677,6 +690,14 @@ async function testDatagenAndMappingGates() {
       `Entity.${yarnWrong} is Yarn-only and must NOT be in Forge api-index`,
     );
   }
+
+  const blck = await queryApi({
+    className: "net.minecraft.world.level.block.entity.Blck",
+    version: "1.20.1",
+  });
+  assert.equal(blck.found, false, "edit-distance Blck must not be a hit");
+  const joined = (blck.suggestions ?? []).join(" ");
+  assert.ok(!/\bPack\b/.test(joined), `Blck must not suggest Pack: ${joined}`);
   disposeApiData();
 
   const gradle = diagnoseGradle({
@@ -691,6 +712,30 @@ copyIdeResources = true
     gradleProperties: "minecraft_version=1.19.2\nforge_version=47.1.0\n",
   });
   assert.ok(gradle.errors.some((e) => /不一致/.test(e)));
+
+  const loom = diagnoseGradle({
+    buildGradle: `plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\n`,
+  });
+  assert.equal(loom.errors.length, 0);
+  assert.ok(loom.warnings.some((w) => /仅覆盖 Forge/.test(w)));
+  assert.ok(loom.suggestions.some((s) => s.includes("search_fabric_docs")));
+  assert.ok(!loom.suggestions.some((s) => /query_fabric_registry/.test(s)));
+
+  const neo = diagnoseGradle({
+    buildGradle: `plugins { id 'net.neoforged.gradle.userdev' version '7.0.80' }\n`,
+  });
+  assert.ok(neo.suggestions.some((s) => s.includes("search_neoforge_docs")));
+
+  const lang = generateLang("demo", {
+    "item.demo.sword": "Sword",
+    item_gem: "Gem",
+    ruby: "Ruby",
+  });
+  const en = JSON.parse(lang.files["assets/demo/lang/en_us.json"]);
+  assert.equal(en["item.demo.sword"], "Sword");
+  assert.equal(en["item.demo.gem"], "Gem");
+  assert.equal(en["block.demo.ruby"], "Ruby");
+  assert.ok(lang.warnings?.some((w) => /ruby/.test(w)));
 }
 
 async function testPortingFabricYarnAndProps() {

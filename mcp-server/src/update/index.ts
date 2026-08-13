@@ -81,11 +81,17 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
 
   const release = resolved.release;
   const assets = pickDataAssets(release);
-  const toolingUpdate = toolingNeedsUpdate(localVersion, release.tag_name);
+  const toolingUpdate = toolingNeedsUpdate(localVersion, release.tag_name, describe);
   const dataUpdate =
     Boolean(assets.zip) &&
     !assets.action?.code?.includes("MISSING") &&
-    dataNeedsUpdate(state.dataReleaseTag, release.tag_name, state.dataAssetName, assets.zip!.name);
+    dataNeedsUpdate(
+      state.dataReleaseTag,
+      release.tag_name,
+      state.dataAssetName,
+      assets.zip!.name,
+      describe,
+    );
 
   // If checksum missing, data cannot update
   const dataBlocked = Boolean(assets.action && (assets.action.code === "DATA_CHECKSUM_MISSING" || assets.action.code === "DATA_ASSET_MISSING"));

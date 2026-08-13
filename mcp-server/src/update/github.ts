@@ -10,7 +10,7 @@ import {
   networkFailureNextSteps,
   type FetchFn,
 } from "./http.js";
-import { isNewer, looksLikePrereleaseTag } from "./semver.js";
+import { gitDescribeVsRemote, isNewer, looksLikePrereleaseTag } from "./semver.js";
 
 export type { FetchFn } from "./http.js";
 
@@ -282,7 +282,13 @@ export function pickDataAssets(release: GhRelease): {
 
 export { getLastGithubFetchMeta };
 
-export function toolingNeedsUpdate(localVersion: string, remoteTag: string): boolean {
+export function toolingNeedsUpdate(
+  localVersion: string,
+  remoteTag: string,
+  gitDescribe?: string,
+): boolean {
+  const vs = gitDescribeVsRemote(gitDescribe, remoteTag);
+  if (vs === "ahead" || vs === "equal") return false;
   return isNewer(remoteTag, localVersion);
 }
 
@@ -291,7 +297,10 @@ export function dataNeedsUpdate(
   remoteTag: string,
   localAsset: string | undefined,
   remoteAsset: string,
+  gitDescribe?: string,
 ): boolean {
+  const vs = gitDescribeVsRemote(gitDescribe, remoteTag);
+  if (vs === "ahead" || vs === "equal") return false;
   if (!localTag) return true;
   if (localTag !== remoteTag) return isNewer(remoteTag, localTag) || stripSimple(localTag) !== stripSimple(remoteTag);
   if (localAsset && localAsset !== remoteAsset) return true;

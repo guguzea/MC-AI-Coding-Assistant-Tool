@@ -3,7 +3,7 @@
  *
  * 提供五个递进式查询工具（Forge 专用）：
  *   list_forge_versions       — 版本列表
- *   search_forge_docs         — L0 索引搜索
+ *   search_forge_docs         — hybrid 搜索（L0 + 语义 RRF）
  *   get_forge_doc_summary    — L1 摘要
  *   get_forge_doc_full       — L2/L2+ 全文
  *   get_forge_doc_related    — 相关文档
@@ -105,7 +105,7 @@ export async function listForgeVersions(): Promise<CallToolResult> {
 
 export const searchForgeDocsSchema = {
   name: "search_forge_docs",
-  description: `Forge 官方文档搜索（L0 索引）。
+  description: `Forge 官方文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。
 
 使用方法：
   1. 先调用 search_forge_docs(query) 找出相关页面。

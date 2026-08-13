@@ -8,11 +8,11 @@
  * - data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/resources*.md
  */
 
-import { normalizeModIdentifier } from "./common.js";
+import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateNeoForge21, type NeoForge21ProviderType } from "./neoforge-1.21.js";
 
-export { normalizeModIdentifier } from "./common.js";
+export { normalizeModIdentifier, toJavaClassName } from "./common.js";
 
 export interface DatagenQuery {
   providerType:
@@ -78,35 +78,36 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
 
   const modId = mod.value;
   const targetName = target.value;
+  const classBase = toJavaClassName(query.modId) || toJavaClassName(modId);
 
   let code: string;
   if (platform === "neoforge") {
-    code = generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName);
+    code = generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase);
   } else {
     switch (providerType) {
       case "recipe":
-        code = forge.generateRecipe(modId, targetName);
+        code = forge.generateRecipe(modId, targetName, classBase);
         break;
       case "blockstate":
-        code = forge.generateBlockState(modId, targetName);
+        code = forge.generateBlockState(modId, targetName, classBase);
         break;
       case "itemmodel":
-        code = forge.generateItemModel(modId, targetName);
+        code = forge.generateItemModel(modId, targetName, classBase);
         break;
       case "loottable":
-        code = forge.generateLootTable(modId, targetName);
+        code = forge.generateLootTable(modId, targetName, classBase);
         break;
       case "tag":
-        code = forge.generateTag(modId, targetName);
+        code = forge.generateTag(modId, targetName, classBase);
         break;
       case "advancement":
-        code = forge.generateAdvancement(modId, targetName);
+        code = forge.generateAdvancement(modId, targetName, classBase);
         break;
       case "particle":
-        code = forge.generateParticle(modId, targetName);
+        code = forge.generateParticle(modId, targetName, classBase);
         break;
       case "sound":
-        code = forge.generateSound(modId, targetName);
+        code = forge.generateSound(modId, targetName, classBase);
         break;
       default:
         return {
