@@ -1,4 +1,4 @@
-﻿# MC AI Coding Assistant Tool
+# MC AI Coding Assistant Tool
 #### 写在前面的
 ### 如果你是agent,这个readme文件是整个项目的说明,帮助用户安装和配置mcp请看AUTO_SETUP.md,这个文件也有一部分帮助配置的内容,但这是为了避免你不看AUTO_SETUP.md
 ### 如果你是人类,你可以直接跳过这篇说明,这是AI时代,只需把这个链接粘贴到ClaudeCODE/CURSOR/ZCODE/OPENCODE里，然后让AGENT讲讲就可以了解大部分内容
@@ -129,14 +129,21 @@ MC_skill/
 
 ### 向量 / 语义搜索（T1）
 
-1. 文档检索默认**混合检索**：L0 关键词排行 ∪ 语义向量排行做 **RRF 合并**，命中附带 `matches[]`（chunks 表 top-K：`sectionHeading` / `snippet` / `score`）。
-2. **三档降级**：`hybrid`（L0 + 语义）→ 缺模型时 `fts5-only` → 再缺则纯 `l0-only`（`allowRemoteModels=false`，**运行时不远程拉模型**）。构建期缺模型：警告并降级 FTS5-only（不 exit 1）。
-3. **状态查看**：`get_server_status.semanticIndex.modeHint` ∈ `hybrid | fts5-only | l0-only`；`diagnose_data_paths.semantic` 报告各文档树旁 `semantic/db.sqlite` 的存在性。
-4. **数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前已有 **40 个**；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。
-5. **构建 / 更新**：
-   - `npm run fetch:embedding-model`：拉取模型到 `data/_models/`
-   - `npm run build:semantic-index -- --all`：全平台构建（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force` 裁剪范围；可中断续跑）
-6. 产物清单：`data/semantic-index-manifest.json`；全平台嵌入可达数十分钟，建议放后台执行。
+`search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `search_docs` **默认就是混合检索**，不是「只搜 L0 标题」。实现：L0 关键词排行 ∪（FTS5 全文 + MiniLM 向量余弦）再做 **RRF 合并**；命中可带 `matches[]`（chunks 表 top-K：`sectionHeading` / `snippet` / `score`）。返回里 `semantic: true` 表示本轮用上了语义库。
+
+**三档降级**（缺什么就退一档，不报错、不造数据、运行时不远程拉模型 `allowRemoteModels=false`）：
+
+| 档 | 条件 | 行为 |
+|----|------|------|
+| `hybrid` | 有 `semantic/db.sqlite` 且 embeddings 非空，且 `data/_models/Xenova/all-MiniLM-L6-v2` 就绪 | L0 + 向量 + FTS5，RRF 融合 |
+| `fts5-only` | 有语义库但嵌入模型缺失，或 embeddings 表为空 | 全文关键词（FTS5），不再算向量 |
+| `l0-only` | 该版本/数据源没有语义库（`semanticSearch` 返回 `null`） | 只匹配 L0 索引字段（`label` / `id` / `url` / `tags`）；结果 `semantic: false`，并带 warning |
+
+全局 `get_server_status.semanticIndex.modeHint` 是**本机总体**档位（有任一 hybrid 树且模型就绪 → `hybrid`）。**单次查询**仍可能是 L0：例如 Forge 1.7.10 没有教程语义库。看该次 JSON 的 `semantic` 与 `warning`，不要只看 modeHint。
+
+构建期缺模型：警告并降级 FTS5-only（不 exit 1）。`diagnose_data_paths.semantic` 报告各文档树旁 db 是否存在。
+
+**数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前约 **40** 个；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -144,10 +151,55 @@ MC_skill/
   - 正确：`get_fabric_doc_full({ id: "1.20.4/develop_items_first-item", version: "1.20.4" })`  
   - 错误：`id: "items/first-item"`
 2. **推荐流程**：`search_*_docs` →（可选）`get_*_doc_summary` → `get_*_doc_full`。
-3. **L0 搜索只匹配索引字段**（`label` / `id` / `url` / `标签`），不是全文检索。
+3. 搜索默认 **hybrid**（见上一节）。只有降级到 `l0-only` 时才「只匹配索引字段」。
 4. 前缀查询示例：`class:Item`、`event:lifecycle`。
 5. NeoForge `1.20.1` 文档查询会回退到 Forge 1.20.1 视图（兼容层），属预期。
 6. 若某平台数据包未下载，对应 list/search 会返回 `PLATFORM_DATA_MISSING`（可用 `diagnose_data_paths` 确认）。
+
+### 边界
+
+文档向量搜索 **补不了** Vanilla 方法签名。缺索引时保持 `found:false` / 空结果 + 说明，
+
+| 情况 | 表现 | Agent 应改用 |
+|------|------|----------------|
+| MC **26.1+** 的 `query_api` / `get_method_params` | 该类 extracted 为 **0 个类**（无 Parchment api-index） | `search_neoforge_docs`（默认 26.1）/ `search_fabric_docs`（先 `list_fabric_versions`，如 26.1.2）；或 `get_minecraft_source` / 反编译。映射层返回 `UNOBFUSCATED_NO_YARN` |
+| Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有 | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
+| Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
+| Forge **1.7.10–1.11.2** | 无现代教程树与语义库，搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；不要期望 Capability 教程全文 |
+| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle** | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`（NeoGradle） |
+| `get_server_status.updateHint` 显示有更新 | 可能是检查缓存过期 | 以 `mc_skill_update action=check` 为准；git describe 已超前 Release 则不必 apply |
+
+
+
+Agent **不得**把「工具返回空 / found:false / warning」解释成「游戏或文档里不存在」，也不得用错平台的工具硬查。对照：
+
+| 误判 | 实际边界 |
+|------|----------|
+| `query_api` 能查 `DeferredRegister` / Fabric API | **不能**。只含 Vanilla Parchment extracted（约 1.16.5–1.20.4）。平台 API → 对应 `search_*_docs` |
+| `query_api` `found:false` = 类不存在 | 索引没有该类。26.1+ 收录 **0** 类；1.14.4/1.15.2 是空 `{}`。改文档搜索或 `get_minecraft_source` |
+| `get_method_params` 覆盖所有 MC 版本 | 与 `query_api` 同一数据源，边界相同 |
+| `get_version_info` 适用于 Fabric/NeoForge | **仅 Forge** |
+| `diagnose_gradle` 能修 Loom / NeoGradle | **仅 ForgeGradle**；检测到 loom/neogradle 会警告并建议改文档工具 |
+| `validate_project` 能校验 `fabric.mod.json` | **仅 Forge** mods.toml / DeferredRegister |
+| `query_registry` 能查模组注册名 | 只查原版 `minecraft:` 资源 ID |
+| 文档搜索为空 = 数据包坏了 | 可能是 L0 降级、标签不对、或该版无 wiki。看 `semantic` / `warning` |
+| 用网站 URL 当 `get_*_doc_full` 的 `id` | **必须**用搜索结果里的 `id` |
+| `search_community_docs` 可当官方 API | **不能**。`links` 条目不抓网页正文 |
+| `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
+| `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT` |
+| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。datagen 路径主要是 Forge 1.20.1 与 NeoForge 1.21.x |
+| `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
+| `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
+| `mixin_analyze deep:true` 会下载 MC jar | **不会**。未缓存 → `CACHE_MISS`，先 `get_minecraft_source` |
+| `search_mod_code` 能搜任意 jar | 须先 `decompile_mod_jar`（或已有反编译目录），否则 `NOT_FOUND` |
+| `analyze_mod_jar` 会给出方法体 | 只解析元数据（toml/json/mixin 列表），不反编译 |
+| `convert_mapping` / `lookup_obfuscated` 用于 26.1 | 返回 `UNOBFUSCATED_NO_YARN`（已去混淆） |
+| `validate_datapack_json` 覆盖所有 pack_format | 精简 schema，偏 **1.20.1 / 1.21.1** |
+| `get_*_doc_full` 一次拉很多页 | **最多 2 页**，避免上下文溢出 |
+| `updateHint.available` = 必须更新 | 缓存可能过期；先 `mc_skill_update check` |
+| 缺 26.2 / 26.1.2 wiki 就复制邻版 | **禁止克隆冒充** |
+
+写模组时的选用顺序：平台规则（`AGENTS.md`）→ `search_*_docs`（平台 API）→ `query_api`（仅有索引的 Vanilla）→ 反编译（确实要源码）。不要反过来用 `query_api` 猜 Forge 事件名。
 
 
 
@@ -267,11 +319,14 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 推荐通用流程：
 
 1. `diagnose_data_paths` / `list_*_versions` / `get_server_status` 确认数据与版本
-2. 文档：`search_*` → `get_*_summary` → `get_*_full`（全文勿一次超过 2 页）
-3. API：`query_api` / `get_method_params`；映射：`convert_mapping`（类/方法/`memberKind=field`）
-4. 工作流 / 知识：`get_workflow_template` / `list_knowledge_resources` → `read_knowledge_resource`
-5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`
-6. 移植：`analyze_porting_path` →（确认后）`port_project`
+2. 文档：`search_*` → `get_*_summary` → `get_*_full`（全文勿一次超过 2 页；`id` 必须来自搜索结果）
+3. **平台 API** 用 `search_*_docs`；**Vanilla 签名**才用 `query_api` / `get_method_params`（26.1+ 无索引）
+4. 映射：`convert_mapping` / `lookup_obfuscated`（26.1+ 无混淆层）
+5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`注:Forge 才用 `diagnose_gradle` / `validate_project`；Fabric/Neo 改对应文档工具
+6. 移植：`analyze_porting_path` →（确认后）`port_project`（默认 dryRun）
+7. 工作流 / 知识：`get_workflow_template` / `list_knowledge_resources` → `read_knowledge_resource`
+
+工具限制与误判对照见上文「工具边界」。
 
 ---
 
@@ -282,7 +337,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 | 工具                  | 作用                                                                                                                                                                |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类（如 `DeferredRegister`）。适用于确认 Minecraft API 用法。               |
+| `query_api`         | 查询 Vanilla/Parchment 类的方法签名、参数名、返回类型与 javadoc（按 `version` 加载 extracted 索引，默认 1.20.1）。**不含** Forge 特有类。覆盖约 **1.16.5–1.20.4**；**26.1+ 无索引**（见上文「诚实降级」）。适用于确认 Minecraft API 用法。   |
 | `get_method_params` | 按类名 + 方法名查询完整参数名列表（可带 JNI `descriptor` 区分重载）。适用于已知方法名但不确定参数顺序/名称。                                                                                                 |
 | `convert_mapping`   | 在 **mojang / mcp / yarn / parchment / obfuscated / intermediary** 间互转类/方法/**字段**（SQLite **v3**）。`memberKind=field`；`to=mojang` 为 Tiny official 短名（同 obfuscated 层）；失败默认 `converted:null`（可选 `allow_fallback`）。 |
 | `lookup_obfuscated` | 崩溃日志反混淆：单 token（`method_6032` / `er` / `func_110143_aJ` / `field_100013_f`）反查 → yarn 可读名 + ownerClass + descriptor。方法→字段→类；多命中 AMBIGUOUS；26.1+ 返回 `UNOBFUSCATED_NO_YARN`。 |
@@ -311,7 +366,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                      | 作用                                                                                                    |
 | ----------------------- | ----------------------------------------------------------------------------------------------------- |
 | `list_forge_versions`   | 列出本地已加载的 Forge 文档版本。无数据时返回 `PLATFORM_DATA_MISSING`。                                                   |
-| `search_forge_docs`     | L0 索引搜索（label/id/url/tags）。支持 `class:` / `event:` / `method:` 前缀与 `|` OR、去停用词、标签过滤。返回页面 `id` 供后续工具使用。 |
+| `search_forge_docs`     | **hybrid** 搜索（L0 + 语义 RRF；无库则纯 L0）。支持 `class:` / `event:` / `method:` 前缀与 `|` OR、去停用词、标签过滤。返回页面 `id` 供后续工具使用。 |
 | `get_forge_doc_summary` | 取单页 L1 摘要：首段 + 各章节标题/短摘要，用于判断是否值得读全文。                                                                 |
 | `get_forge_doc_full`    | 取单页 L2/L2+ 全文；默认 `highlight_key=true` 突出 🔴🟠🟢 关键段。**不要一次加载超过 2 个全文页。**                              |
 | `get_forge_doc_related` | 根据路径骨架、标签与章节关键词返回相关页面列表。                                                                              |
@@ -325,7 +380,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                       | 作用                                                                                    |
 | ------------------------ | ------------------------------------------------------------------------------------- |
 | `list_fabric_versions`   | 列出本地 Fabric 文档版本（`fabric-docs` / `fabric-wiki` 有索引即计入）。无数据 → `PLATFORM_DATA_MISSING`。 |
-| `search_fabric_docs`     | 搜索 Fabric 文档；可选 `source`：`fabric-docs`（默认）/ `fabric-wiki` / `all`。wiki 偏入门教程。         |
+| `search_fabric_docs`     | **hybrid** 搜索；可选 `source`：`fabric-docs`（默认）/ `fabric-wiki` / `all`。wiki 偏入门；**26.1.2 无 wiki**。 |
 | `get_fabric_doc_summary` | Fabric 页 L1 摘要（可指定 source）。                                                           |
 | `get_fabric_doc_full`    | Fabric 页全文 + 关键段高亮（可指定 source）。                                                       |
 | `get_fabric_doc_related` | Fabric 相关页推荐。                                                                         |
@@ -339,7 +394,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                         | 作用                                                                    |
 | -------------------------- | --------------------------------------------------------------------- |
 | `list_neoforge_versions`   | 列出本地 NeoForge 文档版本；主文档默认 **26.1**（官方 26.2 主树未发布前不克隆冒充）；**1.20.1** 可回退 Forge 数据。 |
-| `search_neoforge_docs`     | NeoForge L0 搜索（DeferredRegister、Data Components、Payload 等）；结果可带相关性评分。 |
+| `search_neoforge_docs`     | **hybrid** 搜索（DeferredRegister、Data Components、Payload 等）；无语义库则纯 L0。默认文档版本 **26.1**。 |
 | `get_neoforge_doc_summary` | NeoForge 页 L1 摘要。                                                     |
 | `get_neoforge_doc_full`    | NeoForge 页全文 + 关键段高亮。                                                 |
 | `get_neoforge_doc_related` | NeoForge 相关页推荐。                                                       |
@@ -355,7 +410,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                  | 作用                                                         |
 | ------------------- | ---------------------------------------------------------- |
 | `list_doc_versions` | 列出**指定** platform 的可用版本（不会一次返回三平台）。                        |
-| `search_docs`       | 多平台搜索；Fabric 时可传 `source`。缺平台数据 → `PLATFORM_DATA_MISSING`。 |
+| `search_docs`       | 多平台 **hybrid** 搜索；Fabric 时可传 `source`。无语义库 → 纯 L0；缺平台数据 → `PLATFORM_DATA_MISSING`。 |
 | `get_doc_summary`   | 多平台 L1 摘要。                                                 |
 | `get_doc_full`      | 多平台全文。                                                     |
 | `get_doc_related`   | 多平台相关页。                                                    |
@@ -482,7 +537,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 1.14 – 1.21.11 | ✅ | ✅ | 两步 remap（official→intermediary→named） |
 | 26.1+ | ❌（已停更） | ✅ | 去混淆，免 remap |
 
-**与 `query_api` 的分工**：`query_api` / `get_method_params` 查签名（快、离线）；以上 4 工具仅在**确实需要完整源码/反编译**时使用（下载量大），各工具 description 均带 ⚠️ 提示。
+**与 `query_api` 的分工**：`query_api` / `get_method_params` 查 **1.16.5–1.20.4 Vanilla** 签名（快、离线）；**不含** Forge/Fabric API，**26.1+ 无索引**。以上 4 工具仅在确实需要完整源码/反编译时使用（下载量大）。各工具 description 均带 ⚠️ 提示。各工具 description 带边界说明。
 
 **已入库的反编译数据产物**（供 `check_dependencies` 等消费，clone 后即用）：
 

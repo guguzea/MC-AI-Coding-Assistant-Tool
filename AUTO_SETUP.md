@@ -1,4 +1,4 @@
-﻿# AUTO SETUP — MC Skill MCP Server
+# AUTO SETUP — MC Skill MCP Server
 
 > **给任意 MCP 宿主上的 AI Agent 看的配置手册，不是 Cursor 专用脚本。**  
 > 用户把本文件拖进对话、或让你「配置 MCP」时：先识别宿主，再编译，再按该宿主的配置格式生成草稿，**经用户确认后才写盘**。  
@@ -537,14 +537,20 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 1. 读仓库根 `AGENTS.md`，按平台打开 `forge|fabric|neoforge/<版本>/AGENTS.md` 与规则目录。
 2. **文档**：`search_*_docs` 或 `search_docs` →（可选）`get_*_doc_summary` → 确认相关后再 `get_*_doc_full`。  
+   - 搜索默认 **hybrid**（L0 + 向量 RRF）；无语义库则纯 L0（`semantic: false`）。降级表见根目录 `README.md`「诚实降级」。  
    - **页面 `id` 必须用搜索结果里的 `id`**，不要用网站 URL 路径。  
    - 一次不要拉超过 2 个 full page。
-3. **API / 映射**：已知类名用 `query_api` / `get_method_params`；Yarn↔Mojang 用 `convert_mapping`（Yarn 走 sqlite 点查）。崩溃短名用 `lookup_obfuscated`。26.1+ 无 Yarn 混淆层，不要用 Yarn 工具硬查。
+3. **API / 映射**：平台 API（DeferredRegister、Fabric Registry 等）用 `search_*_docs`，**不要**用 `query_api`。`query_api` / `get_method_params` 只查 Vanilla Parchment（约 1.16.5–1.20.4；**26.1+ 无索引**，`found:false` ≠ 类不存在）。Yarn↔Mojang 用 `convert_mapping`；崩溃短名用 `lookup_obfuscated`。26.1+ 无混淆层，不要用 Yarn 工具硬查。
 4. **工程**：`validate_project`、`diagnose_gradle`（**仅 ForgeGradle**；Loom 改 `search_fabric_docs`，NeoGradle 改 `search_neoforge_docs`）、`check_dependencies`、`crash_analyze`。
 5. **移植**：先 `analyze_porting_path`；真正改工程才 `port_project`，且须写盘开关。
 6. 社区实务（发布 / 软依赖 / 崩溃分类）：`search_community_docs`。它**不替代**官方文档工具。
 
-调用前看清工具 schema：平台专用工具不要拿去套另一平台；`diagnose_gradle` 不是通用 Gradle 诊断。
+调用前看清工具 schema 与根目录 `README.md`「工具边界」：
+
+- 平台专用工具不要套另一平台（`diagnose_gradle` / `validate_project` / `get_version_info` **仅 Forge**）
+- `query_api` **不是** Forge/Fabric API；`found:false` 多半是索引范围，不是「类不存在」
+- `search_community_docs` 不替代官方文档；`generate_*` 不写盘；`port_project` 默认 dryRun
+- 文档 `id` 只用搜索结果；不要把邻版本文档拷过来冒充
 
 ---
 
@@ -579,7 +585,7 @@ node dist/cli.js <工具名> --key=value
 | OpenCode 启动超时 | `timeout` ≥ 60000 |
 | Claude Desktop 无变化 | 托盘进程也要退出 |
 | `dist/index.js` 不存在 | `mcp-server/` 下 `npm ci && npm run build` |
-| 文档搜索为空 | 换标签（`item` / `mixin`）或 `class:` / `event:` / `method:`；`id` 来自搜索结果 |
+| 文档搜索为空 | 先看返回的 `semantic` / `warning`：无库会降级纯 L0。换标签（`item` / `mixin`）或 `class:` / `event:` / `method:`；`id` 必须来自搜索结果。**26.1+ 不要用 `query_api`**（无 extracted），改 `search_*_docs`。不要把其他版本文档拷过来冒充 |
 | `PLATFORM_DATA_MISSING` | `diagnose_data_paths`；该平台数据包可能未下载 |
 | NeoForge `1.20.1` 文档 | 回退到 Forge 1.20.1 视图，属预期 |
 | Skill 面板没有条目 | 预期。走 Step 6，不要在本仓库根建 `.cursor/skills` |

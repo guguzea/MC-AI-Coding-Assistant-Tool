@@ -1,4 +1,4 @@
-﻿# MC MCP Server
+# MC MCP Server
 
 本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
 
@@ -21,7 +21,7 @@ npm run build
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
-完整分类说明见根目录 [README.md](../README.md)「MCP Server 工具」。
+完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` / `validate_project` 仅 Forge；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
 
 ---
 
@@ -215,7 +215,7 @@ node dist/cli.js list-tools            # 全部 62 个工具的 schema（paramet
 | 拉嵌入模型（唯一允许远程拉模型的入口） | `npm run fetch:embedding-model` → `data/_models/Xenova/all-MiniLM-L6-v2/` |
 | 构建索引 | `npm run build:semantic-index -- --all`（可 `--platform`/`--version`/`--source`/`--no-embed`/`--force`） |
 
-- **运行时** `allowRemoteModels=false`：缺模型时检索降级为 FTS5，再缺库则纯 L0。
+- **运行时** `allowRemoteModels=false`：缺模型时检索降级为 FTS5，再缺库则纯 L0。单次查询看返回的 `semantic` / `warning`，不要只看全局 `modeHint`。数据缺口与「不要克隆冒充」见仓库根 [README.md](../README.md)「诚实降级」。
 - **构建期**缺模型：警告并降级 **FTS5-only**（不因缺模型整次 exit 1）；`--all` 可中断续跑（已有完整 meta 的 db 默认跳过）。
 - **检索**：有语义库时对 L0 排行 ∪ 语义 RRF 排行再做 RRF；命中附带 `matches[]`（来自 **chunks** 表 top-K，含 `sectionHeading`/`snippet`/`score`）。
 - **状态**：`get_server_status.semanticIndex.modeHint` ∈ `hybrid` | `fts5-only` | `l0-only`；`diagnose_data_paths.semantic` 报告各树旁 db 存在性。

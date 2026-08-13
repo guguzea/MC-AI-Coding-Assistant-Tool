@@ -165,7 +165,7 @@ Decision: 选择注册方式
 
 永远选择**保守**方案：
 - 不确定用哪个事件 → 选更通用的事件
-- 不确定方法名 → 用 IDE 自动补全、`query_api` 或查阅官方文档（含社区短文指向的原文）
+- 不确定方法名 → 用 IDE 自动补全、`query_api` 或查阅官方文档（含社区短文指向的原文）。`query_api` 仅 Vanilla/Parchment（约 1.16.5–1.20.4，**不含** Forge/Fabric 类，**26.1+ 无索引**）；平台 API 用 `search_*_docs`
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
 
 ## MCP Server 工具（可选）
@@ -196,6 +196,20 @@ Decision: 选择注册方式
 | `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |
+| `lookup_obfuscated` | 崩溃短名反查 |
+| `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` | 按需反编译与 jar 元数据 |
+| `validate_at` / `validate_aw` | AT / AW 字节码校验 |
+
+### 工具边界（禁止误判）
+
+完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
+
+- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `search_*_docs` 或反编译。
+- **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。
+- **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
+- **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
+- **写盘类默认 dryRun**（`port_project` / `mc_skill_update apply`）；`generate_*` 只吐文本。
+- **不要克隆版本文档**（1.21 wiki ≠ 26.1.2；26.1 ≠ 26.2）。
 
 ### 工具不可用排查（clone 后必读）
 

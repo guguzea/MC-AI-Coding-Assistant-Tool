@@ -5,7 +5,7 @@
 ## 定位
 
 - 社区短文 = **实务清单、反模式、工程化提示**，不是 API 规范。
-- **注册 / 方法签名 / 事件总线细节** → 仍用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs` / `query_api`。
+- **注册 / 方法签名 / 事件总线细节** → 仍用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs`。`query_api` 只覆盖 Vanilla Parchment（约 1.16.5–1.20.4）
 
 ## 强制：不清楚就去查原文
 

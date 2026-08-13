@@ -222,11 +222,12 @@ patchToolCollection(server);
 server.registerTool(
   "query_api",
   {
-    title: "Query Forge/Vanilla API",
+    title: "Query Vanilla/Parchment API",
     description:
       "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。" +
       "适用于：需要确认某个 Minecraft API 的正确用法时。" +
-      "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。",
+      "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。" +
+      "【边界】覆盖约 1.16.5–1.20.4；26.1+ 索引为 0 个类。found:false 表示本索引没有该类，不代表游戏里不存在。平台 API 请用 search_*_docs。",
     inputSchema: queryApiSchema,
   },
   async ({ className, methodName, version }): Promise<CallToolResult> => {
@@ -243,7 +244,8 @@ server.registerTool(
     description:
       "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。" +
       "适用于：当知道方法名但不确定参数顺序和名称时。" +
-      "需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。",
+      "需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。" +
+      "【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ 无索引。found:false 表示索引没有该方法，不代表运行时不存在。",
     inputSchema: getMethodParamsSchema,
   },
   async ({ className, methodName, descriptor, version }): Promise<CallToolResult> => {
@@ -332,7 +334,8 @@ server.registerTool(
     description:
       "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
       "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
-      "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。",
+      "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。" +
+      "【边界】不要用于 Fabric / NeoForge 工程。",
     inputSchema: getVersionInfoSchema,
   },
   async ({ version, action }): Promise<CallToolResult> => {
@@ -350,7 +353,8 @@ server.registerTool(
       "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、" +
       "parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。" +
       "适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。" +
-      "返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。",
+      "返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。" +
+      "【边界】不是通用 Gradle 诊断；检测到 fabric-loom / NeoGradle 会拒绝并建议改用 search_fabric_docs / search_neoforge_docs。",
     inputSchema: diagnoseGradleSchema,
   },
   async ({ buildGradle, gradleProperties }): Promise<CallToolResult> => {
@@ -368,7 +372,8 @@ server.registerTool(
       "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。" +
       "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
       "注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。" +
-      "返回完整的 Java 代码模板。",
+      "返回完整的 Java 代码模板。" +
+      "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。",
     inputSchema: generateDatagenSchema,
   },
   async ({ providerType, modId, targetName, version, platform }): Promise<CallToolResult> => {
@@ -430,7 +435,7 @@ server.registerTool(
   {
     title: "Search Official Forge Documentation",
     description:
-      "搜索 Forge 官方文档（L0 索引搜索）。" +
+      "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
       "适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。" +
       "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
       "建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
@@ -589,7 +594,7 @@ server.registerTool(
   {
     title: "Search Official Fabric Documentation",
     description:
-      "搜索 Fabric 官方文档（L0 索引搜索）。" +
+      "搜索 Fabric 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
       "适用于：需要了解 Fabric 特有功能（如 Registry.register、Identifier、Mixin、网络通信）的官方说明时。" +
       "返回相关页面 ID 列表，每个结果包含标题、摘要和标签。" +
       "建议配合 get_fabric_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。" +
@@ -690,7 +695,7 @@ server.registerTool(
   {
     title: "Search Official NeoForge Documentation",
     description:
-      "搜索 NeoForge 官方文档（L0 索引搜索）。" +
+      "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
       "适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。" +
       "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。",
     inputSchema: searchNeoForgeDocsSchema.inputSchema,
@@ -771,7 +776,7 @@ server.registerTool(
   {
     title: "Search Documentation (Multi-Platform)",
     description:
-      "通用文档搜索，支持多平台（Forge/NeoForge/Fabric）。" +
+      "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0），支持多平台（Forge/NeoForge/Fabric）。" +
       "platform 参数指定平台，默认 forge。" +
       "适用于：需要了解平台特有功能的官方说明时。" +
       "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。",
@@ -905,13 +910,13 @@ export type ToolSchemaEntry = {
 };
 
 export const indexToolSchemas: ToolSchemaEntry[] = [
-  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。", inputSchema: queryApiSchema },
-  { name: "get_method_params", description: "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。适用于：当知道方法名但不确定参数顺序和名称时。需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。", inputSchema: getMethodParamsSchema },
+  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。【边界】覆盖约 1.16.5–1.20.4；26.1+ 索引为 0 个类。found:false 表示本索引没有该类，不代表游戏里不存在。平台 API 请用 search_*_docs。", inputSchema: queryApiSchema },
+  { name: "get_method_params", description: "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。适用于：当知道方法名但不确定参数顺序和名称时。需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ 无索引。found:false 表示索引没有该方法，不代表运行时不存在。", inputSchema: getMethodParamsSchema },
   { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
-  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。", inputSchema: getVersionInfoSchema },
-  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。", inputSchema: diagnoseGradleSchema },
-  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。返回完整的 Java 代码模板。", inputSchema: generateDatagenSchema },
+  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】不要用于 Fabric / NeoForge 工程。", inputSchema: getVersionInfoSchema },
+  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。【边界】不是通用 Gradle 诊断；检测到 fabric-loom / NeoGradle 会拒绝并建议改用 search_fabric_docs / search_neoforge_docs。", inputSchema: diagnoseGradleSchema },
+  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。", inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
   { name: "validate_project", description: "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。适用于：收到用户项目后首次审查、或修复问题后验证。支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。", inputSchema: validateProjectSchema },
   { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。", inputSchema: searchForgeDocsSchema.inputSchema },

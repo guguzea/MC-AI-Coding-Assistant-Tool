@@ -1,6 +1,27 @@
-plugins {
-    id 'eclipse'
-    id 'idea'
-}
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
 
-rootProject.name = 'examplemod'
+# Eclipse
+.project
+.settings/
+bin/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Forge
+run/
+run-data/
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
