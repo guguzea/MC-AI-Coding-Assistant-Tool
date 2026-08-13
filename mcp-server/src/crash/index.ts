@@ -15,6 +15,9 @@ export type CrashKind =
   | "openGL"
   | "memory"
   | "fabric"
+  | "quilt"
+  | "liteloader"
+  | "rift"
   | "java"
   | "unknown";
 
@@ -252,6 +255,34 @@ const KNOWN_PATTERNS: Array<{
     ],
     relatedMistakes: ["mc-project-setup: 版本范围写错"],
   },
+  {
+    pattern: /com\.mumfrey\.liteloader/i,
+    cause: "LiteLoader 相关崩溃（客户端回调或混合映射不一致）",
+    fix: [
+      "混合工程必须在 build.gradle 显式钉死双方兼容的 MCP 映射（例如 mappings = 'stable_39'）",
+      "NoSuchMethodError / AbstractMethodError 常因 LiteLoader API 与 Forge jar 映射不一致",
+      "聊天/Tick/渲染钩子走 LiteLoader 接口（Tickable / OutboundChatListener 等），不要只写 Forge 事件",
+    ],
+    relatedMistakes: ["liteloader: 映射未钉死"],
+  },
+  {
+    pattern: /org\.dimdev\.riftloader|RiftLoaderClientTweaker|org\.dimdev\.rift\.listener/i,
+    cause: "Rift Loader 崩溃",
+    fix: [
+      "对照 rift/1.13.2/knowledge/common/ 已核实 Listener，禁止用 Fabric ModInitializer / onInitialize 记忆改入口",
+      "元数据官方拼写是 riftmod.json；listeners 类须有 public 无参构造",
+    ],
+    relatedMistakes: ["rift: 未核实方法名"],
+  },
+  {
+    pattern: /org\.quiltmc\.loader|QuiltLoader|quilt\.mod\.json/i,
+    cause: "Quilt Loader 崩溃",
+    fix: [
+      "QSL 与 Fabric API 不要混用已弃用的 Registry 同步 API（QuiltRegistry ≠ Fabric Registry）",
+      "检查 quilt.mod.json 的 quilt_loader.depends 与 QSL 模块是否匹配",
+    ],
+    relatedMistakes: ["quilt: 误用 FAPI Registry"],
+  },
 ];
 
 /** 从报告正文 / 路径推断 crashKind */
@@ -270,10 +301,13 @@ export function detectCrashKind(crashReport: string): CrashKind {
     rendering: "openGL",
     memory: "memory",
     fabric: "fabric",
+    quilt: "quilt",
+    liteloader: "liteloader",
+    rift: "rift",
     java: "java",
   };
   const hasLoaderFingerprint =
-    /Minecraft Forge|Forge Mod Loader|Fabric Loader|fabric-loader|NeoForge|net\.minecraftforge|net\.fabricmc|net\.neoforged|cpw\.mods\.modlauncher|FMLModContainer/i.test(
+    /Minecraft Forge|Forge Mod Loader|Fabric Loader|fabric-loader|NeoForge|net\.minecraftforge|net\.fabricmc|net\.neoforged|cpw\.mods\.modlauncher|FMLModContainer|org\.quiltmc|com\.mumfrey\.liteloader|org\.dimdev\.riftloader/i.test(
       crashReport,
     );
 
@@ -284,6 +318,9 @@ export function detectCrashKind(crashReport: string): CrashKind {
   }
   if (kindFromName && map[kindFromName] && hasLoaderFingerprint) return map[kindFromName];
 
+  if (/org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
+  if (/com\.mumfrey\.liteloader/i.test(crashReport)) return "liteloader";
+  if (/org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(crashReport)) return "rift";
   if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
   if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
@@ -302,7 +339,7 @@ export function detectCrashKind(crashReport: string): CrashKind {
 
 function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
   const hints = ["logs/latest.log", "logs/debug.log"];
-  if (kind === "fml" || kind === "fabric" || !matchedKnown) {
+  if (kind === "fml" || kind === "fabric" || kind === "quilt" || kind === "liteloader" || kind === "rift" || !matchedKnown) {
     return [
       "优先核对崩溃报告开头的异常与 Mod List",
       ...hints,
@@ -347,8 +384,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     }
   }
 
-  const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge|net\.neoforged/i.test(crashReport);
-  const unknownHint = `未能识别为典型 Forge / Fabric / NeoForge 崩溃指纹（crashKind=unknown）。请打开 Minecraft Wiki 对照完整报告结构：${CRASH_REPORT_WIKI}`;
+  const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge|net\.neoforged|org\.quiltmc|com\.mumfrey\.liteloader|org\.dimdev\.riftloader/i.test(crashReport);
+  const unknownHint = `未能识别为典型 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift 崩溃指纹（crashKind=unknown）。请打开 Minecraft Wiki 对照完整报告结构：${CRASH_REPORT_WIKI}`;
   const fmlHint =
     crashKind === "fml"
       ? "此报告疑似加载期（-fml）失败：优先查缺前置、版本范围与 mods.toml"

@@ -1,0 +1,51 @@
+/**
+ * Quilt → Fabric 文档回退过滤。
+ * QSL 专用查询禁止 semanticSearch(fabric)；通用回退丢掉 FAPI 专属 Registry 页。
+ */
+
+export function isQslSpecificQuery(query: string): boolean {
+  return /quiltregistry|org\.quiltmc|\bqsl\b|qsl\b|registryentryattachment|quilted\s*fabric|quilt\.mod\.json|quilt_loader/i.test(
+    query,
+  );
+}
+
+const FABRIC_EXCLUSIVE_CLASS = [
+  /net\.fabricmc\.fabric\.api\.event\.registry/,
+  /net\.fabricmc\.fabric\.api\.registry/,
+  /FabricRegistryBuilder/,
+  /RegistrySyncManager/,
+  /FabricItemGroup/,
+  /net\.fabricmc\.fabric\.api\.itemgroup/,
+  /net\.fabricmc\.fabric\.api\.event\.lifecycle/,
+];
+
+export function isFabricExclusiveHit(hit: {
+  id?: string;
+  label?: string;
+  url?: string;
+  tags?: string[];
+}): boolean {
+  const blob = [hit.id, hit.label, hit.url, ...(hit.tags ?? [])].join(" ");
+  if (FABRIC_EXCLUSIVE_CLASS.some((re) => re.test(blob))) return true;
+  if (/fabric-api/i.test(blob) && /registr/i.test(blob)) return true;
+  return false;
+}
+
+export function isSharedOrVanillaHit(hit: {
+  id?: string;
+  label?: string;
+  url?: string;
+  tags?: string[];
+}): boolean {
+  const blob = [hit.id, hit.label, hit.url, ...(hit.tags ?? [])].join(" ");
+  if (/net\.minecraft\./.test(blob)) return true;
+  if (/\b(loom|yarn|mixin|datapack|resource.?pack)\b/i.test(blob)) return true;
+  return !isFabricExclusiveHit(hit);
+}
+
+export function filterFabricFallbackHits<T extends { id?: string; label?: string; url?: string; tags?: string[] }>(
+  hits: T[],
+): { hits: T[]; dropped: number } {
+  const kept = hits.filter((h) => isSharedOrVanillaHit(h) && !isFabricExclusiveHit(h));
+  return { hits: kept, dropped: hits.length - kept.length };
+}

@@ -33,6 +33,7 @@ const GROUPS = {
   fabric: ["fabric-only", "all-platforms"],
   quilt: ["fabric-only", "all-platforms"],
   neoforge: ["neo-only", "all-platforms"],
+  bedrock: ["bedrock-only"],
 };
 
 /* ------------------------------ frontmatter ------------------------------ */
@@ -116,7 +117,7 @@ function walkSkillDirs(groupDir) {
 /** 收集四组全部 skill（含 frontmatter），附带组名 */
 function loadAllSkills() {
   const skills = [];
-  for (const group of ["all-platforms", "fabric-only", "neo-only", "forge-only"]) {
+  for (const group of ["all-platforms", "fabric-only", "neo-only", "forge-only", "bedrock-only"]) {
     for (const file of walkSkillDirs(join(LIBS_ROOT, group))) {
       const meta = parseFrontmatter(readFileSync(file, "utf8"));
       const dirName = file.split(/[\\/]/).slice(-2, -1)[0];
@@ -160,7 +161,7 @@ function resolveModIds(skill, authoredCache) {
  */
 function resolve(platform, mcVersion, allSkills) {
   const groups = GROUPS[platform];
-  if (!groups) throw new Error(`未知平台: ${platform}（应为 forge | fabric | quilt | neoforge）`);
+  if (!groups) throw new Error(`未知平台: ${platform}（应为 forge | fabric | quilt | neoforge | bedrock）`);
   const authoredCache = new Map();
   const matched = [];
   for (const skill of allSkills) {
@@ -184,6 +185,7 @@ const VALIDATE_COMBOS = [
   ["forge", "1.20.1"],
   ["fabric", "1.20.1"],
   ["neoforge", "1.20.4"],
+  ["bedrock", "stable"],
 ];
 
 function runValidate(allSkills) {

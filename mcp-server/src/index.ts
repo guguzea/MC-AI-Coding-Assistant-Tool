@@ -75,6 +75,25 @@ import { diagnoseDataPaths, hasAnyPlatformData, resolveDataDir } from "./utils/p
 import { getSemanticIndexStatus } from "./docs-platform/semantic/status.js";
 import { analyzePortingPath, portProject } from "./porting/index.js";
 import { registerWaveExtensions, waveToolSchemas } from "./wave/register.js";
+import {
+  searchBedrockDocs,
+  searchBedrockDocsSchema,
+  getBedrockDocSummary,
+  getBedrockDocSummarySchema,
+  getBedrockDocFull,
+  getBedrockDocFullSchema,
+  getBedrockDocRelated,
+  getBedrockDocRelatedSchema,
+  validateAddonManifest,
+  validateAddonManifestSchema,
+  validateBpJson,
+  validateBpJsonSchema,
+  generateAddonManifest,
+  generateAddonManifestSchema,
+  generateBpEntity,
+  generateBpEntitySchema,
+  loadBedrockDocsStatus,
+} from "./bedrock/index.js";
 
 // ── 工具 inputSchema 常量（导出供 CLI list-tools / schema 驱动解析复用）────────
 
@@ -166,13 +185,13 @@ export const diagnoseDataPathsSchema = z.object({});
 
 export const analyzePortingPathSchema = z.object({
   projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
-  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台（可选，未指定则自动推断）"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"]).optional().describe("目标平台（可选，未指定则自动推断）"),
   targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
 });
 
 export const portProjectSchema = z.object({
   projectPath: z.string().describe("项目根目录"),
-  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"]).optional().describe("目标平台"),
   targetVersion: z.string().optional().describe("目标 MC 版本"),
   modId: z.string().optional().describe("init_architectury 的 modId（小写）；默认从目录名推导"),
   dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
@@ -312,6 +331,7 @@ server.registerTool(
       dataPaths: diagnoseDataPaths(),
       /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错，但 warnings 必报） */
       semanticIndex: getSemanticIndexStatus(resolveDataDir()),
+      bedrockDocsStatus: loadBedrockDocsStatus(),
       /** ② build 状态：dist 缺失/过期提示（src 修改未重新编译时 buildRequired=true） */
       buildStatus: getBuildStatus(),
       updateHint: getUpdateHint(),
@@ -350,11 +370,8 @@ server.registerTool(
   {
     title: "Diagnose Gradle Build Configuration",
     description:
-      "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、" +
-      "parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。" +
-      "适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。" +
-      "返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。" +
-      "【边界】不是通用 Gradle 诊断；检测到 fabric-loom / NeoGradle 会拒绝并建议改用 search_fabric_docs / search_neoforge_docs。",
+      "【Forge only】校验 ForgeGradle 工程。Quilt Loom / fabric-loom / NeoGradle / 基岩 manifest 会拒绝并改口。" +
+      "含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。",
     inputSchema: diagnoseGradleSchema,
   },
   async ({ buildGradle, gradleProperties }): Promise<CallToolResult> => {
@@ -762,7 +779,7 @@ server.registerTool(
     title: "List Available Doc Versions (Multi-Platform)",
     description:
       "返回指定平台的可用文档版本列表。" +
-      "platform 参数指定平台（forge/neoforge/fabric），默认 forge。",
+      "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），默认 forge。基岩请用 search_bedrock_docs。",
     inputSchema: listVersionsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -899,6 +916,88 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "search_bedrock_docs",
+  {
+    title: "Search Bedrock Creator docs",
+    description:
+      "搜索基岩版 Microsoft Learn Creator 文档（hybrid L0+语义）。每次返回 docsStatus 滞后标记。不是 search_forge_docs。",
+    inputSchema: searchBedrockDocsSchema,
+  },
+  async (args): Promise<CallToolResult> => searchBedrockDocs(args),
+);
+server.registerTool(
+  "get_bedrock_doc_summary",
+  {
+    title: "Bedrock doc summary",
+    description: "基岩文档 L1 摘要。带 docsStatus。不是 get_forge_doc_summary。",
+    inputSchema: getBedrockDocSummarySchema,
+  },
+  async (args): Promise<CallToolResult> => getBedrockDocSummary(args),
+);
+server.registerTool(
+  "get_bedrock_doc_full",
+  {
+    title: "Bedrock doc full page",
+    description: "基岩文档全文。一次 ≤ 2 页。带 docsStatus。",
+    inputSchema: getBedrockDocFullSchema,
+  },
+  async (args): Promise<CallToolResult> => getBedrockDocFull(args),
+);
+server.registerTool(
+  "get_bedrock_doc_related",
+  {
+    title: "Related Bedrock docs",
+    description: "基岩文档相关页。带 docsStatus。",
+    inputSchema: getBedrockDocRelatedSchema,
+  },
+  async (args): Promise<CallToolResult> => getBedrockDocRelated(args),
+);
+server.registerTool(
+  "validate_addon_manifest",
+  {
+    title: "Validate Bedrock pack manifest",
+    description: "校验基岩 manifest.json（header/modules/UUID/capabilities）。不是 validate_project。禁止 experimentalGameplay。",
+    inputSchema: validateAddonManifestSchema,
+  },
+  async (args): Promise<CallToolResult> => ({
+    content: [{ type: "text", text: JSON.stringify(validateAddonManifest(args.manifestJson), null, 2) }],
+  }),
+);
+server.registerTool(
+  "validate_bp_json",
+  {
+    title: "Validate Bedrock BP JSON",
+    description: "精简校验 entity/block/item/recipe JSON。不是 validate_datapack_json（Java pack_format）。",
+    inputSchema: validateBpJsonSchema,
+  },
+  async (args): Promise<CallToolResult> => ({
+    content: [{ type: "text", text: JSON.stringify(validateBpJson(args.kind, args.json), null, 2) }],
+  }),
+);
+server.registerTool(
+  "generate_addon_manifest",
+  {
+    title: "Generate Bedrock manifest JSON",
+    description: "只吐 manifest JSON 文本，不写盘。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。",
+    inputSchema: generateAddonManifestSchema,
+  },
+  async (args): Promise<CallToolResult> => ({
+    content: [{ type: "text", text: JSON.stringify(generateAddonManifest(args), null, 2) }],
+  }),
+);
+server.registerTool(
+  "generate_bp_entity",
+  {
+    title: "Generate Bedrock BP entity JSON",
+    description: "只吐 BP 实体 JSON 文本，不写盘。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。",
+    inputSchema: generateBpEntitySchema,
+  },
+  async (args): Promise<CallToolResult> => ({
+    content: [{ type: "text", text: JSON.stringify(generateBpEntity(args), null, 2) }],
+  }),
+);
+
 registerWaveExtensions(server);
 
 // ── 工具 schema 清单（供 CLI list-tools / schema 驱动解析；无副作用）──────────
@@ -915,7 +1014,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
   { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】不要用于 Fabric / NeoForge 工程。", inputSchema: getVersionInfoSchema },
-  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle 和 gradle.properties 中的依赖声明、Forge 版本、Java toolchain、parchment 映射、reobfJar 配置是否正确。暂不覆盖 Loom / NeoGradle 全部分支。适用于：Forge 项目构建失败、依赖冲突、或首次搭建项目时。返回 errors（必须修复）/ warnings（建议修复）/ suggestions（可选优化）三级结果。【边界】不是通用 Gradle 诊断；检测到 fabric-loom / NeoGradle 会拒绝并建议改用 search_fabric_docs / search_neoforge_docs。", inputSchema: diagnoseGradleSchema },
+  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle / gradle.properties。检测到 fabric-loom / Quilt Loom / NeoGradle / 基岩 manifest 会拒绝并改口。含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。", inputSchema: diagnoseGradleSchema },
   { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。", inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
   { name: "validate_project", description: "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。适用于：收到用户项目后首次审查、或修复问题后验证。支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。", inputSchema: validateProjectSchema },
@@ -938,17 +1037,25 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "get_neoforge_doc_full", description: "获取 NeoForge 文档页面全文（L2/L2+）。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。**永远不要一次性加载超过 2 个 full page**。", inputSchema: getNeoForgeDocFullSchema.inputSchema },
   { name: "get_neoforge_doc_related", description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。", inputSchema: getNeoForgeDocRelatedSchema.inputSchema },
   { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
-  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform 参数指定平台（forge/neoforge/fabric），默认 forge。", inputSchema: listVersionsSchema.inputSchema },
-  { name: "search_docs", description: "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0），支持多平台（Forge/NeoForge/Fabric）。platform 参数指定平台，默认 forge。适用于：需要了解平台特有功能的官方说明时。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。", inputSchema: searchDocsSchema.inputSchema },
+  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform：forge/neoforge/fabric/quilt/liteloader/rift/modloader，默认 forge。基岩请用 search_bedrock_docs。", inputSchema: listVersionsSchema.inputSchema },
+  { name: "search_docs", description: "通用文档搜索（hybrid：L0 关键词 + 语义检索）。platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader。Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。", inputSchema: searchDocsSchema.inputSchema },
   { name: "get_doc_summary", description: "获取文档页面的章节骨架与摘要，支持多平台（platform 参数）。适用于：判断某篇文档是否包含所需内容时。", inputSchema: getDocSummarySchema.inputSchema },
   { name: "get_doc_full", description: "获取文档页面全文，支持多平台（platform 参数）。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。", inputSchema: getDocFullSchema.inputSchema },
   { name: "get_doc_related", description: "获取与指定文档页面相关的其他页面列表，支持多平台（platform 参数）。返回共享最多关键词的其他页面，按相关性降序排列。", inputSchema: getDocRelatedSchema.inputSchema },
   { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。", inputSchema: diagnoseDataPathsSchema },
-  { name: "analyze_porting_path", description: "分析 Minecraft Mod 项目，生成跨平台/跨版本移植路线图。扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、参考链接和建议的 query_api 调用。适用于：用户询问如何将 Mod 移植到其他平台或版本时。", inputSchema: analyzePortingPathSchema },
-  { name: "port_project", description: "执行移植步骤（init_architectury / extract_common / apply_version_migration）。所有写文件操作默认 dryRun=true，仅输出 diff 预览。实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。apply_version_migration 在确认写入时会真实执行包名替换；冲突文件在 confirmed 写入时会被拒绝。", inputSchema: portProjectSchema },
+  { name: "analyze_porting_path", description: "分析 Minecraft Mod 项目移植路线。targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。", inputSchema: analyzePortingPathSchema },
+  { name: "port_project", description: "执行移植步骤。基岩/三老加载器目标返回 UNSUPPORTED_PORT。写盘默认 dryRun。", inputSchema: portProjectSchema },
+  { name: "search_bedrock_docs", description: "搜索基岩版 Microsoft Learn Creator 文档（hybrid L0+语义）。每次返回 docsStatus 滞后标记。不是 search_forge_docs。", inputSchema: searchBedrockDocsSchema },
+  { name: "get_bedrock_doc_summary", description: "基岩文档 L1 摘要。带 docsStatus。不是 get_forge_doc_summary。", inputSchema: getBedrockDocSummarySchema },
+  { name: "get_bedrock_doc_full", description: "基岩文档全文。一次 ≤ 2 页。带 docsStatus。", inputSchema: getBedrockDocFullSchema },
+  { name: "get_bedrock_doc_related", description: "基岩文档相关页。带 docsStatus。", inputSchema: getBedrockDocRelatedSchema },
+  { name: "validate_addon_manifest", description: "校验基岩 manifest.json（header/modules/UUID/capabilities）。不是 validate_project。禁止 experimentalGameplay。", inputSchema: validateAddonManifestSchema },
+  { name: "validate_bp_json", description: "精简校验 entity/block/item/recipe JSON。不是 validate_datapack_json（Java pack_format）。", inputSchema: validateBpJsonSchema },
+  { name: "generate_addon_manifest", description: "只吐 manifest JSON 文本，不写盘。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。", inputSchema: generateAddonManifestSchema },
+  { name: "generate_bp_entity", description: "只吐 BP 实体 JSON 文本，不写盘。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。", inputSchema: generateBpEntitySchema },
 ];
 
-/** 全部 62 个工具的 schema 清单（index 36 + wave 26），供 CLI list-tools 与 schema 驱动解析使用。 */
+/** 全部工具 schema（index + wave；基岩 8 个工具计入 index）。 */
 export function listAllToolSchemas(): ToolSchemaEntry[] {
   return [...indexToolSchemas, ...waveToolSchemas];
 }

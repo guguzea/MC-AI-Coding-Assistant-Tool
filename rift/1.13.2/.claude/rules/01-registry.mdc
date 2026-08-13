@@ -1,0 +1,11 @@
+# 01 — 注册（已核实）
+
+| 接口 | 方法 |
+|------|------|
+| org.dimdev.rift.listener.BlockAdder | void registerBlocks() |
+| org.dimdev.rift.listener.ItemAdder | void registerItems() |
+| org.dimdev.rift.listener.BootstrapListener | void afterVanillaBootstrap() |
+| org.dimdev.riftloader.listener.InitializationListener | void onInitialization() |
+
+Listener 须 **public 无参构造**；在 riftmod.json 的 `listeners` 列出类名。
+禁止编造 Fabric Registry.register 当 Rift 入口。

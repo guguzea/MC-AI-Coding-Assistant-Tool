@@ -6,6 +6,7 @@ import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
 import { EMBEDDING_MODEL } from "./embeddings.js";
 import { semanticDbPath } from "./search.js";
+import { isSemanticIndexStale } from "./fingerprint.js";
 
 export type SemanticModeHint = "hybrid" | "fts5-only" | "l0-only";
 
@@ -19,6 +20,8 @@ export interface SemanticSample {
   chunks?: number;
   embedded?: number;
   mode: "hybrid" | "fts5-only" | "missing";
+  stale?: boolean;
+  staleReason?: string;
 }
 
 export interface SemanticIndexStatus {
@@ -31,7 +34,9 @@ export interface SemanticIndexStatus {
   hybridCount: number;
   fts5OnlyCount: number;
   /** 缺库 / 缺模型时非空；缺库不抛错但必须 warning */
+  /** 缺库 / 缺模型 / 索引过期时非空 */
   warnings: string[];
+  staleCount: number;
 }
 
 const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string }> = [
@@ -40,6 +45,8 @@ const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string 
   { platform: "fabric", version: "1.20.1", source: "fabric-wiki" },
   { platform: "neoforge", version: "1.20.4", source: "neoforge-docs" },
   { platform: "neoforge", version: "1.21.1", source: "neoforge-docs" },
+  { platform: "quilt", version: "1.20.1", source: "quilt-docs" },
+  { platform: "bedrock", version: "stable", source: "bedrock-docs" },
 ];
 
 function modelsDirReady(dataRoot: string): boolean {
@@ -52,7 +59,10 @@ function modelsDirReady(dataRoot: string): boolean {
   );
 }
 
-function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> {
+function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> & {
+  builtAt?: string;
+  fingerprint?: string;
+} {
   if (!existsSync(dbPath)) return { mode: "missing" };
   try {
     const db = new DatabaseSync(dbPath, { readOnly: true });
@@ -73,11 +83,15 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
         embedded = 0;
       }
     }
+    const builtAt = meta("built_at");
+    const fingerprint = meta("source_fingerprint");
     db.close();
     return {
       docs,
       chunks,
       embedded,
+      builtAt,
+      fingerprint,
       mode: embedded > 0 ? "hybrid" : chunks > 0 || docs > 0 ? "fts5-only" : "missing",
     };
   } catch {
@@ -99,6 +113,11 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
     forge_: ["forge-docs"],
     fabric_: ["fabric-docs", "fabric-wiki"],
     neoforge_: ["neoforge-docs"],
+    quilt_: ["quilt-docs"],
+    liteloader_: ["liteloader-docs"],
+    rift_: ["rift-docs"],
+    modloader_: ["modloader-docs"],
+    bedrock_: ["bedrock-docs"],
   };
   let entries: string[] = [];
   try {
@@ -117,7 +136,8 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
       if (!name.startsWith(prefix)) continue;
       const platform = prefix.slice(0, -1);
       const version = name.slice(prefix.length);
-      if (!version || !/^\d/.test(version)) continue;
+      if (!version) continue;
+      if (!/^\d/.test(version) && version !== "stable") continue;
       for (const source of sources) {
         const sourceDir = join(dataRoot, name, source);
         if (!existsSync(sourceDir)) continue;
@@ -172,6 +192,27 @@ export function missingSemanticDbWarning(missing: boolean): string | undefined {
   return "语义索引缺库，本次已回退 L0 关键词检索。详见 diagnose_data_paths.semantic.warnings；补齐可运行 npm run build:semantic-index";
 }
 
+/** search_docs 命中带 stale warning（不静默重建） */
+export function semanticStaleSearchWarning(
+  dataRoot: string,
+  platform: string,
+  version: string,
+  source: string,
+): string | undefined {
+  const dbPath = semanticDbPath(dataRoot, platform, version, source);
+  if (!existsSync(dbPath)) return undefined;
+  const info = inspectDb(dbPath);
+  if (info.mode === "missing") return undefined;
+  const versionDir = join(dataRoot, `${platform}_${version}`, source, version);
+  const stale = isSemanticIndexStale({
+    builtAtIso: info.builtAt,
+    storedFingerprint: info.fingerprint,
+    versionDir,
+  });
+  if (!stale.stale) return undefined;
+  return `语义索引过期（stale）${stale.reason ? `：${stale.reason}` : ""}。命中可能不是最新 processed/。请运行 npm run build:semantic-index -- --platform=${platform} --version=${version} --force`;
+}
+
 export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   const modelsPath = join(dataRoot, "_models");
   const modelsReady = modelsDirReady(dataRoot);
@@ -180,6 +221,15 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   ).map((t) => {
     const dbPath = semanticDbPath(dataRoot, t.platform, t.version, t.source);
     const info = inspectDb(dbPath);
+    const versionDir = join(dataRoot, `${t.platform}_${t.version}`, t.source, t.version);
+    const staleInfo =
+      info.mode === "missing"
+        ? { stale: false as const }
+        : isSemanticIndexStale({
+            builtAtIso: info.builtAt,
+            storedFingerprint: info.fingerprint,
+            versionDir,
+          });
     return {
       ...t,
       dbPath,
@@ -188,11 +238,14 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
       chunks: info.chunks,
       embedded: info.embedded,
       mode: info.mode,
+      stale: staleInfo.stale,
+      staleReason: staleInfo.reason,
     };
   });
   const presentCount = samples.filter((s) => s.exists).length;
   const hybridCount = samples.filter((s) => s.mode === "hybrid").length;
   const fts5OnlyCount = samples.filter((s) => s.mode === "fts5-only").length;
+  const staleCount = samples.filter((s) => s.stale).length;
   let modeHint: SemanticModeHint = "l0-only";
   if (hybridCount > 0 && modelsReady) modeHint = "hybrid";
   else if (presentCount > 0) modeHint = "fts5-only";
@@ -206,6 +259,11 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
     modelsReady,
     missingSamples: presence.length > 0 ? missingSamples : samples.filter((s) => !s.exists),
   });
+  for (const s of samples.filter((x) => x.stale)) {
+    warnings.push(
+      `语义索引过期（stale）：${s.platform}_${s.version}/${s.source}${s.staleReason ? `（${s.staleReason}）` : ""}。processed/ 新于 sqlite 或指纹不一致。请运行 npm run build:semantic-index -- --platform=${s.platform} --version=${s.version} --force`,
+    );
+  }
   return {
     modelsReady,
     modelsPath,
@@ -215,6 +273,7 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
     presentCount,
     hybridCount,
     fts5OnlyCount,
+    staleCount,
     warnings,
   };
 }

@@ -25,6 +25,13 @@ import { existsSync, readdirSync, readFileSync } from "fs";
 
 import { resolveDataDir } from "../utils/path.js";
 import { PlatformDataMissingError } from "./platform-data.js";
+import {
+  KNOWN_VERSIONS,
+  PLATFORM_DOC_SUBDIR,
+  type Platform,
+} from "./platforms.js";
+
+export type { Platform } from "./platforms.js";
 
 // ── 类型 re-export ──────────────────────────────────────────────────────────
 export type {
@@ -63,33 +70,6 @@ export interface IDocStore {
 // import.meta.url 在 Node ESM 中有时指向 CWD 而非脚本文件本身，
 // 导致 fileURLToPath(import.meta.url) 不准确。
 // 因此接受外部传入 dataRoot 参数，由调用方（forge/index.js）从 __dirname 推导。
-
-// ── 平台类型 ────────────────────────────────────────────────────────────────
-
-export type Platform = "forge" | "neoforge" | "fabric";
-
-/** 各平台已知版本（按优先级排序，新增版本时维护此数组） */
-const KNOWN_VERSIONS: Record<Platform, string[]> = {
-  forge:    [
-    // 优先使用标准 MkDocs 数据；仅在没有标准数据时回退到 Javadoc 存档。
-    "1.20.4", "1.20.1", "1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.15.2", "1.14.4",
-    "1.12.2", "1.11.2", "1.10.2", "1.9.4", "1.8.9", "1.7.10",
-  ],
-  neoforge: [
-    // 主文档版本（按优先级排序）；勿把未发布的 26.2 主树放进已知列表首位
-    "26.1", "1.21.11", "1.21.10", "1.21.8", "1.21.5", "1.21.3", "1.21.1", "1.20.6", "1.20.4",
-    // Forge 兼容版本（复用 Forge 1.20.1 数据）
-    "1.20.1",
-  ],
-  fabric:   ["26.1.2", "1.21.11", "1.21.3", "1.21.1", "1.20.4", "1.20.1", "1.19.4", "1.18.2", "1.17.1", "1.16.5", "1.14.4"],
-};
-
-/** 各平台文档子目录名（version 前的固定前缀） */
-const PLATFORM_DOC_SUBDIR: Record<Platform, string> = {
-  forge:    "forge-docs",
-  neoforge: "neoforge-docs",
-  fabric:   "fabric-docs",
-};
 
 /** Forge 1.7.10–1.12.2 使用 forge_javadoc 而非 forge-docs */
 const JAVADOC_VERSIONS = new Set(["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2", "1.12.2"]);
@@ -172,8 +152,8 @@ import { FabricDocStore } from "./fabric/store.js";
 import { NeoForgeDocStore } from "./neoforge/store.js";
 
 class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = "平台不支持，当前支持 forge、neoforge 和 fabric";
-  private static readonly HINT = "请使用 platform: forge、neoforge 或 fabric";
+  private static readonly MSG = "平台不支持；Java 文档用 search_docs（forge/neoforge/fabric/quilt/liteloader/rift/modloader），基岩用 search_bedrock_docs";
+  private static readonly HINT = "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs";
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
@@ -208,6 +188,20 @@ export function createDocStore(platform: Platform, dataDir: string): IDocStore {
   }
   if (platform === "neoforge") {
     return new NeoForgeDocStore(dataDir);
+  }
+  if (platform === "quilt") {
+    return new FabricDocStore(dataDir, KNOWN_VERSIONS.quilt[0] ?? "1.20.1", "quilt-docs", "quilt");
+  }
+  if (platform === "liteloader" || platform === "rift" || platform === "modloader") {
+    return new FabricDocStore(
+      dataDir,
+      KNOWN_VERSIONS[platform][0],
+      PLATFORM_DOC_SUBDIR[platform],
+      platform,
+    );
+  }
+  if (platform === "bedrock") {
+    return new FabricDocStore(dataDir, "stable", "bedrock-docs", "bedrock");
   }
   return new UnsupportedPlatformStore();
 }

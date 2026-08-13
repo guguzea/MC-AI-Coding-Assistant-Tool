@@ -1,0 +1,10 @@
+﻿---
+description: 09 — 基岩反模式
+---
+
+# 09 — 基岩反模式
+
+- 错 UUID / RP 与 BP identifier 对不上
+- 用 Java query_api 查 Script API
+- 一律写 experimentalGameplay
+- 发明 worldgen/experimental.json 当开关

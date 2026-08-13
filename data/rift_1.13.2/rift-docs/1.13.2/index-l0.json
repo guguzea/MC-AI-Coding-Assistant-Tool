@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1.13.2/upstream-readme",
+    "version": "1.13.2",
+    "label": "upstream-readme",
+    "url": "rift/1.13.2/knowledge/common/upstream-readme.md",
+    "tags": [
+      "rift"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "rift-docs",
+    "fetchedAt": "2026-08-13T14:50:37.094Z"
+  },
+  {
+    "id": "1.13.2/making-mods-wiki",
+    "version": "1.13.2",
+    "label": "making-mods-wiki",
+    "url": "rift/1.13.2/knowledge/common/making-mods-wiki.md",
+    "tags": [
+      "rift"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "rift-docs",
+    "fetchedAt": "2026-08-13T14:50:37.114Z"
+  },
+  {
+    "id": "1.13.2/listeners",
+    "version": "1.13.2",
+    "label": "listeners",
+    "url": "rift/1.13.2/knowledge/common/listeners.md",
+    "tags": [
+      "rift"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "rift-docs",
+    "fetchedAt": "2026-08-13T14:50:37.128Z"
+  }
+]

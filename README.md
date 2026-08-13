@@ -24,7 +24,7 @@ MC_skill/
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs；48 篇 lib-* 短文等）
 ├── knowledge/                   # 知识源稿：patterns/（代码模式）+ libs/（四组库 Skill 源稿，不落盘）
 ├── scripts/                     # 库模组脚本：manifest / 分批反编译 / catalog / API 摘要 / 传播
-├── mcp-server/                  # 本地 stdio MCP Server（62 个工具）；data/ 含 lib-manifests、lib-api-summaries
+├── mcp-server/                  # 本地 stdio MCP Server（70 个工具）；data/ 含 lib-manifests、lib-api-summaries
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -38,6 +38,11 @@ MC_skill/
 | Forge    | ✅ 完成 | 多版本规则（主推 **1.20.1**）；数据目录 `data/forge_`*                 |
 | Fabric   | ✅ 完成 | 多版本规则（主推 **1.20.1 / 1.21.x / 26.x**）；数据目录 `data/fabric_*`；**26.1+ 仅 mojmap** |
 | NeoForge | ✅ 完成 | 规则集在 `neoforge/`（主推 **1.20.4+ / 26.x**）；文档数据见 `data/neoforge_*`（主文档默认 **26.1**；primer 可有 26.2） |
+| Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05），02–10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
+| 基岩版   | ✅ 完成 | 扁平 `bedrock/`；`search_bedrock_docs` + 滞后 `docsStatus`；实验开关按 `min_engine_version` 分层 |
+| LiteLoader | ✅ 完成 | `liteloader/1.12.2/` 纯客户端 + `HYBRID.md`；`diagnose_gradle` 对 liteloader 插件走轻量模式 |
+| Rift     | ✅ 完成 | `rift/1.13.2/`；元数据 `riftmod.json`；方法名只来自已抓 wiki/源码 |
+| ModLoader | ✅ 完成 | `modloader/1.6.4/` + 安全 API 表；禁止用 Forge Javadoc / `func_*` 冒充 |
 
 
 
@@ -99,7 +104,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，62 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，70 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 
 
@@ -123,7 +128,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**62** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**70** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
 
@@ -166,7 +171,7 @@ MC_skill/
 | Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有 | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
 | Forge **1.7.10–1.11.2** | 无现代教程树与语义库，搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；不要期望 Capability 教程全文 |
-| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle** | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`（NeoGradle） |
+| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle** | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`；Quilt Loom → `search_docs({platform:"quilt"})`；`liteloader` 插件 → **轻量模式**（不跑 FG6/Java17/1.20）；基岩 → `search_bedrock_docs` |
 | `get_server_status.updateHint` 显示有更新 | 可能是检查缓存过期 | 以 `mc_skill_update action=check` 为准；git describe 已超前 Release 则不必 apply |
 
 
@@ -292,7 +297,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
 
-> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` 四组），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 20 + fabric-only 9 + forge-only 2 + neo-only 2（Curios/KFF 镜像）= **33 份** / **31 唯一 skillId**（以 `knowledge/libs` 实际源稿为准）。
+> 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` / `bedrock-only`），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 20 + fabric-only 9 + forge-only 2 + neo-only 2（Curios/KFF 镜像）+ bedrock-only 2 = **35 份** / **33 唯一 skillId**（以 `knowledge/libs` 实际源稿为准）。
 
 | 平台/版本 | 数量 | 结构 | 说明 |
 |-----------|------|------|------|
@@ -312,7 +317,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（62 个）
+## MCP Server 工具（70 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
 
@@ -404,7 +409,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 ### 6. 跨平台通用文档（5）
 
-与专用工具能力对应，通过 `platform`（`forge` / `fabric` / `neoforge`，默认 forge）统一入口：
+与专用工具能力对应，通过 `platform`（`forge` / `fabric` / `neoforge` / `quilt` / `liteloader` / `rift` / `modloader`，默认 forge）统一入口。基岩请用 `search_bedrock_docs`。
 
 
 | 工具                  | 作用                                                         |
@@ -583,7 +588,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://workflow/mc-new-block` 等 8 个 | 与 Prompt 同名的工作流正文                                          |
 
 
-### 独立 CLI（`mc-skill`，62 工具全可用）
+### 独立 CLI（`mc-skill`，70 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误：
 
@@ -592,7 +597,7 @@ node dist/cli.js status --version 1.20.1            # 服务器状态（含 buil
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node dist/cli.js update --action check
-node dist/cli.js list-tools                          # 全部 62 个工具的 schema
+node dist/cli.js list-tools                          # 全部 70 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：
@@ -619,7 +624,7 @@ node dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 1   | ✅ 完成  | Forge / Fabric / NeoForge 规则集与多版本扩展                   |
 | Phase 1.5 | ✅ 完成  | 模组脚手架 + 校验 CLI                                        |
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
-| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展，**62** 工具） |
+| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展 + 五平台，**70** 工具） |
 | Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
 | Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇短文 + 31 库 Skill（knowledge/libs）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
 | Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |

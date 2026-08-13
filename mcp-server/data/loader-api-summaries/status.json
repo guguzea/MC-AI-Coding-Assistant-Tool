@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "decompiled": [],
+  "skipped": "no jars in D:\\mc-skill-temp\\loader-jars",
+  "cache": "D:\\mc-skill-temp",
+  "note": "Place loader API jars then re-run. Yarn remap is off for MC < 1.14."
+}

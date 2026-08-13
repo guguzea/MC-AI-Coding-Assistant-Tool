@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const analyzePortingPathSchema = z.object({
   projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
-  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台（可选，未指定则自动推断）"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"]).optional().describe("目标平台（可选，未指定则自动推断）"),
   targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
 });
 
@@ -12,7 +12,7 @@ export type AnalyzePortingPathInput = z.infer<typeof analyzePortingPathSchema>;
 
 export const portProjectSchema = z.object({
   projectPath: z.string().describe("项目根目录"),
-  targetPlatform: z.enum(["fabric", "neoforge", "forge"]).optional().describe("目标平台"),
+  targetPlatform: z.enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"]).optional().describe("目标平台"),
   targetVersion: z.string().optional().describe("目标 MC 版本"),
   modId: z
     .string()
@@ -32,6 +32,7 @@ export interface PlatformEvidence {
   forge: number;
   fabric: number;
   neoforge: number;
+  quilt: number;
 }
 
 // ── analyze_porting_path 输出 ────────────────────────────────────────────────

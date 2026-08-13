@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1.19.4/qsl-qfapi",
+    "version": "1.19.4",
+    "label": "QSL and Quilted Fabric API",
+    "url": "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
+    "tags": [
+      "qsl",
+      "qfapi",
+      "registry"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-13T15:11:00.090Z",
+    "sha256": "d86914997302985b041005c72bb974ccc3ca574eb97f6445bc879dbbb1b14763"
+  },
+  {
+    "id": "1.19.4/quilt-mod-json",
+    "version": "1.19.4",
+    "label": "quilt.mod.json",
+    "url": "https://raw.githubusercontent.com/QuiltMC/rfcs/main/specification/0002-quilt.mod.json.md",
+    "tags": [
+      "loader",
+      "metadata"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-13T15:11:00.508Z",
+    "sha256": "eee8a259181847cb42c497ec62e8daf2ad9253d061e2474e2d41634349f06e8f"
+  },
+  {
+    "id": "1.19.4/qsl-readme",
+    "version": "1.19.4",
+    "label": "Quilt Standard Libraries README",
+    "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/1.19/README.md",
+    "tags": [
+      "qsl"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-13T15:11:00.904Z",
+    "sha256": "9efce96794fd0f8b1ea6fe1946571c1efdd55ae70f8e5b2dbc65e7cfadb13e7d"
+  }
+]

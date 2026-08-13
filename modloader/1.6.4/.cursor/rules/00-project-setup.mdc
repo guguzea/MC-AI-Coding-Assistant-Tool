@@ -1,0 +1,4 @@
+# 00 — 历史 MCP 工作区
+
+给人类维护者：经典 MCP 1.6.4 + Eclipse。**不是** Agent 默认步骤（现代机器极难配齐）。
+无 Gradle。入口类名 `mod_Example` 继承 `BaseMod`。

@@ -5,6 +5,7 @@
  *
  * 库模组 Skill（mc-config / mc-geckolib / mc-curios / mc-patchouli 等）
  * 不再经本脚本传播：改走 knowledge/libs 源稿即用（不落盘，见 plan §3.6 解析规则）。
+ * **禁止**把 Wave D Java Skill 无差别传播到 bedrock / modloader / quilt / liteloader / rift。
  */
 import fs from "node:fs";
 import path from "node:path";

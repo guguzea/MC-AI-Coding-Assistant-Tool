@@ -408,7 +408,7 @@ async function runTests() {
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 62, `expected 62 tools, got ${toolNames.length}`);
+  assert.equal(toolNames.length, 70, `expected 70 tools, got ${toolNames.length}`);
   for (const waveD of ["validate_at", "validate_aw"]) {
     assert.ok(toolNames.includes(waveD), `tools/list missing ${waveD}`);
   }

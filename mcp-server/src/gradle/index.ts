@@ -25,16 +25,84 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   const warnings: string[] = [];
   const suggestions: string[] = [];
 
-  if (/fabric-loom/i.test(buildGradle)) {
+  if (/fabric-loom|org\.quiltmc\.loom|quilt-loom/i.test(buildGradle)) {
+    const quilt = /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle);
     return {
       errors: [],
-      warnings: ["diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前构建文件含 fabric-loom。"],
+      warnings: [
+        quilt
+          ? "diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前构建文件含 Quilt Loom。"
+          : "diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前构建文件含 fabric-loom。",
+      ],
       suggestions: [
-        "请改用 search_fabric_docs 查阅 Loom / Fabric 构建说明",
+        quilt
+          ? "请改用 search_docs({platform:\"quilt\"}) 查阅 Quilt Loom / QSL；不要用本工具当 Quilt 诊断"
+          : "请改用 search_fabric_docs 查阅 Loom / Fabric 构建说明",
         "查注册：query_registry；查 Vanilla API：query_api；映射转换：convert_mapping",
       ],
     };
   }
+
+  if (/"format_version"/.test(buildGradle) && /"modules"/.test(buildGradle)) {
+    return {
+      errors: [],
+      warnings: ["diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前内容像基岩 Add-On manifest，不是 Gradle 工程。"],
+      suggestions: [
+        "请改用 search_bedrock_docs / validate_addon_manifest；不要用本工具当基岩诊断",
+      ],
+    };
+  }
+
+  const hasLiteLoaderPlugin = /net\.minecraftforge\.gradle\.liteloader/.test(buildGradle);
+  if (hasLiteLoaderPlugin) {
+    return diagnoseLiteLoaderGradle(buildGradle);
+  }
+
+  if (/litemod\.json|LiteMod|liteloader/i.test(buildGradle)) {
+    const looksForgeHybrid =
+      /net\.minecraftforge:forge:\d+\.\d+-\d+/.test(buildGradle) ||
+      /modLoader\s*=\s*"javafml"/i.test(buildGradle) ||
+      /apply\s+plugin:\s*['"]net\.minecraftforge\.gradle\.forge['"]/.test(buildGradle);
+    if (looksForgeHybrid) {
+      return {
+        errors: [
+          "同时存在 LiteLoader 与 Forge 迹象，但未 apply plugin: 'net.minecraftforge.gradle.liteloader'。禁止当 Forge 1.20 / FG6 诊断。",
+        ],
+        warnings: [],
+        suggestions: [
+          "混合工程只保留：apply plugin: 'net.minecraftforge.gradle.liteloader'，并钉死双方兼容的 MCP 映射",
+        ],
+      };
+    }
+    return {
+      errors: [],
+      warnings: [
+        "纯 LiteLoader / 未使用 net.minecraftforge.gradle.liteloader：不要当 Forge 1.20 诊断。",
+      ],
+      suggestions: ['请改用 search_docs({platform:"liteloader"}) 与 LiteLoader 规则'],
+    };
+  }
+
+  if (/tweaker-client|RiftLoaderClientTweaker|riftmod\.json/i.test(buildGradle)) {
+    return {
+      errors: [],
+      warnings: ["diagnose_gradle 不覆盖 Rift。"],
+      suggestions: ['请改用 search_docs({platform:"rift"})；方法名只许来自已核实 wiki/源码'],
+    };
+  }
+
+  if (/extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle)) {
+    return {
+      errors: [],
+      warnings: [
+        "diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前内容像 Risugami's ModLoader（BaseMod），通常无 Gradle。",
+      ],
+      suggestions: [
+        '请改用 search_docs({platform:"modloader"}) 与 modloader/1.6.4/knowledge/common/safe-api.md；禁止用 Forge Javadoc / func_*',
+      ],
+    };
+  }
+
   if (/neogradle|net\.neoforged\.gradle|id\s+['"]net\.neoforged/i.test(buildGradle)) {
     return {
       errors: [],
@@ -155,6 +223,43 @@ export function parseGradleProperties(content: string): Record<string, string> {
     }
   }
   return result;
+}
+
+function diagnoseLiteLoaderGradle(buildGradle: string): GradleResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const suggestions: string[] = [];
+
+  const hasStdForgePlugin =
+    /apply\s+plugin:\s*['"]net\.minecraftforge\.gradle\.forge['"]/.test(buildGradle) ||
+    /id\s+['"]net\.minecraftforge\.gradle['"]/.test(buildGradle);
+  if (hasStdForgePlugin) {
+    errors.push(
+      "混合工程禁止同时 apply 标准 Forge 插件与 LiteLoader 插件。只保留：apply plugin: 'net.minecraftforge.gradle.liteloader'",
+    );
+  }
+
+  const hasMappings =
+    /mappings\s*=\s*['"](?:stable|snapshot)_\d+['"]/.test(buildGradle) ||
+    /mappings\s+channel/.test(buildGradle);
+  if (!hasMappings) {
+    errors.push(
+      "必须在 build.gradle 显式钉死 LiteLoader 与 Forge 双方兼容的 MCP 映射（例如 mappings = 'stable_39'）。缺映射会导致运行时 NoSuchMethodError / AbstractMethodError",
+    );
+  }
+
+  const hasRun =
+    /\brunClient\b/.test(buildGradle) ||
+    /run\s*\{[^}]*client/is.test(buildGradle) ||
+    /task\s+runClient/.test(buildGradle);
+  if (!hasRun) {
+    warnings.push("未检测到 runClient / run { client } 任务，请确认 LiteLoader FG 工作区可启动客户端");
+  }
+
+  warnings.push("本工具看不到 LiteMod 客户端回调；聊天/Tick/渲染请走 LiteLoader 规则（Tickable / OutboundChatListener 等）");
+  suggestions.push("混合工程：注册走 Forge RegistryEvent；客户端钩子走 com.mumfrey.liteloader.* 接口");
+
+  return { errors, warnings, suggestions };
 }
 
 function buildGradlerIncludesParchment(buildGradle: string): boolean {

@@ -8,7 +8,8 @@
  *   npm run build          # 先构建 dist（embeddings/search 为 TS 模块）
  *   npm run fetch:embedding-model   # 唯一允许远程拉模型的入口 → data/_models/
  *   npm run build:semantic-index -- --all
- *   node scripts/_lib/build-semantic-index.mjs --platform=forge --version=1.20.1
+ *   node scripts/_lib/build-semantic-index.mjs --platform=quilt
+ *   node scripts/_lib/build-semantic-index.mjs --platform=quilt --version=1.20.1
  *   node scripts/_lib/build-semantic-index.mjs --all --no-embed   # 仅 FTS5
  *   node scripts/_lib/build-semantic-index.mjs --all --force      # 忽略已有索引重建
  *
@@ -50,6 +51,11 @@ const SOURCES = {
   forge: ["forge-docs"],
   fabric: ["fabric-docs", "fabric-wiki"],
   neoforge: ["neoforge-docs"],
+  quilt: ["quilt-docs"],
+  bedrock: ["bedrock-docs"],
+  liteloader: ["liteloader-docs"],
+  rift: ["rift-docs"],
+  modloader: ["modloader-docs"],
 };
 
 export const MAX_CHUNK_SIZE = 1000;
@@ -190,11 +196,19 @@ function resolveTargets(args, dataRoot) {
   }
   const platform = args.platform;
   const version = args.version;
-  if (!platform || !version) {
-    throw new Error("需要 --platform 与 --version（或 --all）");
+  if (!platform) {
+    throw new Error("需要 --platform（可再加 --version）或 --all");
+  }
+  const versions = version
+    ? [version]
+    : listPlatformVersionDirs(dataRoot, platform);
+  if (versions.length === 0) {
+    throw new Error(`平台 ${platform} 没有 data/${platform}_<ver>/ 目录`);
   }
   const sources = args.source ? [args.source] : (SOURCES[platform] ?? []);
-  for (const source of sources) out.push({ platform, version, source });
+  for (const ver of versions) {
+    for (const source of sources) out.push({ platform, version: ver, source });
+  }
   return out;
 }
 
@@ -235,7 +249,29 @@ function discoverDocs(dataRoot, target) {
       sectionCount: Number(entry.sectionCount ?? 0),
     });
   }
-  return { processedDir, docs, skipped, l0Count: l0.length };
+  return { processedDir, docs, skipped, l0Count: l0.length, versionDir };
+}
+
+function computeSourceFingerprint(versionDir) {
+  const files = [];
+  const l0 = join(versionDir, "index-l0.json");
+  if (existsSync(l0)) files.push(l0);
+  const processed = join(versionDir, "processed");
+  if (existsSync(processed)) {
+    for (const name of readdirSync(processed).sort()) {
+      if (name.endsWith(".md")) files.push(join(processed, name));
+    }
+  }
+  if (files.length === 0) return "";
+  const h = createHash("sha256");
+  for (const f of files) {
+    const rel = f.slice(versionDir.length).replace(/\\/g, "/");
+    h.update(rel);
+    h.update("\0");
+    h.update(readFileSync(f));
+    h.update("\0");
+  }
+  return h.digest("hex");
 }
 
 function collectChunks(processedDir, docs) {
@@ -258,7 +294,7 @@ function collectChunks(processedDir, docs) {
   return rows;
 }
 
-async function buildIndex(dbPath, docs, chunks, embedder) {
+async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
   mkdirSync(dirname(dbPath), { recursive: true });
   const tmpPath = `${dbPath}.tmp-${process.pid}`;
   const db = new DatabaseSync(tmpPath);
@@ -317,6 +353,9 @@ async function buildIndex(dbPath, docs, chunks, embedder) {
   insMeta.run("chunks", String(chunks.length));
   insMeta.run("embedded", String(embedded));
   insMeta.run("built_at", new Date().toISOString());
+  if (extraMeta.source_fingerprint) {
+    insMeta.run("source_fingerprint", extraMeta.source_fingerprint);
+  }
   db.exec("COMMIT");
 
   db.close();
@@ -395,7 +434,9 @@ async function main() {
       }
       console.log(`[build ${i}/${targets.length}] ${label}（${discovered.docs.length} docs）…`);
       const chunks = collectChunks(discovered.processedDir, discovered.docs);
-      const stats = await buildIndex(dbPath, discovered.docs, chunks, embedder);
+      const stats = await buildIndex(dbPath, discovered.docs, chunks, embedder, {
+        source_fingerprint: computeSourceFingerprint(discovered.versionDir),
+      });
       const mode = stats.embedded > 0 ? "embedded" : "fts5-only";
       if (mode === "embedded") summary.embedded++;
       else summary.fts5Only++;
@@ -439,12 +480,34 @@ async function main() {
       });
     }
     const { writeFileSync } = await import("node:fs");
+    let prev = { entries: [] };
+    if (existsSync(manifestPath)) {
+      try {
+        prev = JSON.parse(readFileSync(manifestPath, "utf8"));
+      } catch {
+        prev = { entries: [] };
+      }
+    }
+    const byKey = new Map();
+    for (const e of prev.entries ?? []) {
+      if (e?.platform && e?.version && e?.source) {
+        byKey.set(`${e.platform}|${e.version}|${e.source}`, e);
+      }
+    }
+    for (const e of entries) {
+      byKey.set(`${e.platform}|${e.version}|${e.source}`, e);
+    }
+    const merged = [...byKey.values()].sort((a, b) =>
+      `${a.platform}|${a.version}|${a.source}`.localeCompare(`${b.platform}|${b.version}|${b.source}`),
+    );
+    const mergedMode =
+      prev.embedMode === "hybrid" || embedMode === "hybrid" ? "hybrid" : embedMode;
     writeFileSync(
       manifestPath,
-      JSON.stringify({ built_at: new Date().toISOString(), embedMode, entries }, null, 2),
+      JSON.stringify({ built_at: new Date().toISOString(), embedMode: mergedMode, entries: merged }, null, 2),
       "utf8",
     );
-    console.log(`[manifest] ${manifestPath} (${entries.length} entries)`);
+    console.log(`[manifest] ${manifestPath} (${merged.length} entries, merged)`);
   } catch (e) {
     console.warn(`[warn] 写 semantic-index-manifest.json 失败: ${e.message}`);
   }

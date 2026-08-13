@@ -7,8 +7,9 @@ import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { resolveDataDir } from "../utils/path.js";
+import { ALL_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR, type Platform } from "./platforms.js";
 
-export type DocPlatform = "forge" | "fabric" | "neoforge";
+export type DocPlatform = Platform;
 
 export class PlatformDataMissingError extends Error {
   readonly code = "PLATFORM_DATA_MISSING" as const;
@@ -25,6 +26,16 @@ const HINTS: Record<DocPlatform, string> = {
     "请下载并解压 Fabric 文档数据包到 data/fabric_<version>/fabric-docs/<version>/（或 fabric-wiki），并确认 MC_SKILL_DATA 指向 data 根目录。可用 diagnose_data_paths 检查。",
   neoforge:
     "请下载并解压 NeoForge 文档数据包到 data/neoforge_<version>/neoforge-docs/<version>/；若只需 1.20.1，也可提供 forge_1.20.1。确认 MC_SKILL_DATA 指向 data 根目录。可用 diagnose_data_paths 检查。",
+  quilt:
+    "Quilt 官方树位于 data/quilt_<version>/quilt-docs/<version>/。无树时 search_docs(platform=quilt) 对非 QSL 查询可回退 Fabric（过滤 FAPI 专属类）；QSL 专用查询不会回退。可用 diagnose_data_paths 检查。",
+  liteloader:
+    "LiteLoader 文档树位于 data/liteloader_<version>/liteloader-docs/<version>/。页少时可仅 L0/社区短文 + loader-api-summaries。不要复制 forge_1.12.2 教程树。",
+  rift:
+    "Rift 文档树位于 data/rift_1.13.2/rift-docs/1.13.2/。无库时用仓库 rift/1.13.2/knowledge/common/ 已抓 wiki。不要回退 Fabric 文档。",
+  modloader:
+    "ModLoader 以仓库内安全 API 表为准（modloader/1.6.4/knowledge/common/safe-api.md），不把 found:false 当成类不存在。",
+  bedrock:
+    "基岩文档请用 search_bedrock_docs。数据位于 data/bedrock_*/bedrock-docs/；并查看 data/bedrock-docs-status.json 的滞后标记。",
 };
 
 export function platformDataMissingPayload(platform: DocPlatform) {
@@ -58,9 +69,26 @@ export function asPlatformDataMissingResult(e: unknown): CallToolResult | null {
   return null;
 }
 
+function hasPrefixedIndex(
+  dataDir: string,
+  prefix: string,
+  sources: string[],
+): boolean {
+  for (const e of readdirSync(dataDir, { withFileTypes: true })) {
+    if (!e.isDirectory() || !e.name.startsWith(`${prefix}_`)) continue;
+    const ver = e.name.slice(`${prefix}_`.length);
+    const base = join(dataDir, e.name);
+    for (const src of sources) {
+      if (existsSync(join(base, src, ver, "index-l0.json"))) return true;
+    }
+  }
+  return false;
+}
+
 /**
  * 扫描 data 根下是否存在该平台的可用文档索引。
  * NeoForge 额外认可 forge_1.20.1（兼容回退）。
+ * Quilt **不**把 Fabric 树算作「已有 Quilt 数据」（回退在 search_docs 里显式处理）。
  */
 export function hasPlatformDocData(
   platform: DocPlatform,
@@ -90,34 +118,28 @@ export function hasPlatformDocData(
       return false;
     }
     if (platform === "fabric") {
-      for (const e of readdirSync(dataDir, { withFileTypes: true })) {
-        if (!e.isDirectory() || !e.name.startsWith("fabric_")) continue;
-        const ver = e.name.slice("fabric_".length);
-        const base = join(dataDir, e.name);
-        if (
-          existsSync(join(base, "fabric-docs", ver, "index-l0.json")) ||
-          existsSync(join(base, "fabric-wiki", ver, "index-l0.json"))
-        ) {
-          return true;
-        }
-      }
-      return false;
+      return hasPrefixedIndex(dataDir, "fabric", ["fabric-docs", "fabric-wiki"]);
     }
-    // neoforge
-    for (const e of readdirSync(dataDir, { withFileTypes: true })) {
-      if (!e.isDirectory()) continue;
-      if (e.name.startsWith("neoforge_") && e.name !== "neoforge_javadoc") {
-        const ver = e.name.slice("neoforge_".length);
-        if (existsSync(join(dataDir, e.name, "neoforge-docs", ver, "index-l0.json"))) {
-          return true;
-        }
-      }
+    if (platform === "neoforge") {
+      if (hasPrefixedIndex(dataDir, "neoforge", ["neoforge-docs"])) return true;
+      return existsSync(
+        join(dataDir, "forge_1.20.1", "forge-docs", "1.20.1", "index-l0.json"),
+      );
     }
-    // 1.20.1 Forge 兼容
-    return existsSync(
-      join(dataDir, "forge_1.20.1", "forge-docs", "1.20.1", "index-l0.json"),
-    );
+    const extraSources: Record<string, string[]> = {
+      quilt: ["quilt-docs"],
+      liteloader: ["liteloader-docs"],
+      rift: ["rift-docs"],
+      modloader: ["modloader-docs"],
+      bedrock: ["bedrock-docs"],
+    };
+    const sources = extraSources[platform] ?? [PLATFORM_DOC_SUBDIR[platform]];
+    return hasPrefixedIndex(dataDir, platform, sources);
   } catch {
     return false;
   }
+}
+
+export function listKnownDocPlatforms(): readonly string[] {
+  return ALL_DOC_PLATFORMS;
 }

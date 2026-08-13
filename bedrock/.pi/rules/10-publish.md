@@ -1,0 +1,7 @@
+﻿---
+description: 10 — 发布
+---
+
+# 10 — 发布
+
+.mcpack / .mcaddon、市场、BDS。实验室调试用 Minecraft Preview / Editor，不要用 ForgeGradle。

@@ -1225,6 +1225,23 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/modloader-1.6.4",
+      "label": "Risugami's ModLoader 1.6.4 实务",
+      "path": "authored/modloader-1.6.4.md",
+      "url": "",
+      "tags": [
+        "modloader",
+        "1.6.4",
+        "basemod",
+        "mcp",
+        "safe-api"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "官方文档近乎没有。只能用仓库 safe-api 表内的 MCP named；禁止用 Forge Javadoc 冒充；缺名则停。",
+      "mcHint": "1.6.4"
+    },
+    {
       "id": "authored/multi-face-block-models",
       "label": "多面贴图与朝向方块模型",
       "path": "authored/multi-face-block-models.md",

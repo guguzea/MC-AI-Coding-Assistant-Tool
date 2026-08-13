@@ -1,0 +1,7 @@
+﻿---
+description: 05 — 方块与物品 JSON
+---
+
+# 05 — 方块与物品 JSON
+
+BP `minecraft:block` / `minecraft:item` + RP 纹理引用。identifier 必须 `namespace:name`。

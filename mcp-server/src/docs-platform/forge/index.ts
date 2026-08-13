@@ -25,7 +25,9 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from "../search-utils.js";
-import { missingSemanticDbWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
+import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
+import { searchQuiltDocs } from "../quilt-search.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -40,8 +42,8 @@ const _genericStoreCache = new Map<string, IDocStore>();
  * 这样行为统一，调用方收到一致的错误 envelope。
  */
 class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = "平台不支持，当前支持 forge、neoforge 和 fabric";
-  private static readonly HINT = "请使用 platform: forge、neoforge 或 fabric";
+  private static readonly MSG = "平台不支持；Java 文档用 forge/neoforge/fabric/quilt/liteloader/rift/modloader，基岩用 search_bedrock_docs";
+  private static readonly HINT = "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader";
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
@@ -61,7 +63,7 @@ class UnsupportedPlatformStore implements IDocStore {
 }
 
 function getGenericStore(platform: Platform): IDocStore {
-  if (platform !== "forge" && platform !== "neoforge" && platform !== "fabric") {
+  if (platform === "bedrock") {
     return new UnsupportedPlatformStore();
   }
   const dataDir = resolvePlatformDataDir(platform);
@@ -501,7 +503,7 @@ function handleError(e: unknown): CallToolResult {
   if (e instanceof DocNotFoundError) {
     const code = e.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
     const hint = e.code === "UNSUPPORTED_PLATFORM"
-      ? "请使用 platform: forge、neoforge 或 fabric"
+      ? "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs"
       : "请使用 search_docs 查询正确的页面 ID";
     const message = e.code === "UNSUPPORTED_PLATFORM"
       ? e.version  // 短提示
@@ -541,7 +543,7 @@ export const listVersionsSchema = {
   - platform: 平台（forge/neoforge/fabric），默认 forge。请先用此工具确认各平台的可用版本。`,
   inputSchema: z.object({
     platform: z
-      .enum(["forge", "neoforge", "fabric"])
+      .enum(SEARCH_DOC_PLATFORMS)
       .optional()
       .default("forge")
       .describe("平台，默认 forge"),
@@ -604,7 +606,7 @@ export const searchDocsSchema = {
     query: z.string().describe("搜索关键词（支持 | OR 分组、class:/event:/method: 前缀）"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
-      .enum(["forge", "neoforge", "fabric"])
+      .enum(SEARCH_DOC_PLATFORMS)
       .optional()
       .default("forge")
       .describe("平台，默认 forge"),
@@ -622,6 +624,10 @@ export async function searchDocs(
   try {
     const platform = args.platform ?? "forge";
     const fabricSource = args.source ?? "fabric-docs";
+
+    if (platform === "quilt") {
+      return searchQuiltDocs({ query: args.query, version: args.version, tags: args.tags });
+    }
 
     if (!hasPlatformDocData(platform)) {
       return platformDataMissingResult(platform);
@@ -697,6 +703,7 @@ export async function searchDocs(
                     ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
                     : undefined,
                   missingSemanticDbWarning(semanticMissing),
+                  semanticStaleSearchWarning(dataRoot, "fabric", resolvedVersion, fabricSource === "all" ? "fabric-docs" : fabricSource),
                 ),
                 platform,
                 source: fabricSource,
@@ -734,11 +741,15 @@ export async function searchDocs(
     const resolvedVersion = meta?.resolvedVersion ?? args.version;
     const versionFallback = meta?.versionFallback ?? false;
     // 语义检索（forge/neoforge 各自语义库）；无语义库 → null，保持纯 L0
+    const docSource =
+      platform === "neoforge"
+        ? "neoforge-docs"
+        : PLATFORM_DOC_SUBDIR[platform] ?? "forge-docs";
     const semanticHits = await semanticSearch(
       args.query,
       platform,
       resolvedVersion,
-      platform === "neoforge" ? "neoforge-docs" : "forge-docs",
+      docSource,
       resolveDataDir(),
     );
     const finalResults = semanticHits === null
@@ -764,6 +775,7 @@ export async function searchDocs(
                   ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
                   : undefined,
                 missingSemanticDbWarning(semanticHits === null),
+                semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
               ),
               platform,
               tags: args.tags,
@@ -796,7 +808,7 @@ export const getDocSummarySchema = {
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
-      .enum(["forge", "neoforge", "fabric"])
+      .enum(SEARCH_DOC_PLATFORMS)
       .optional()
       .default("forge")
       .describe("平台，默认 forge"),
@@ -829,7 +841,7 @@ highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显�
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
-      .enum(["forge", "neoforge", "fabric"])
+      .enum(SEARCH_DOC_PLATFORMS)
       .optional()
       .default("forge")
       .describe("平台，默认 forge"),
@@ -871,7 +883,7 @@ export const getDocRelatedSchema = {
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
-      .enum(["forge", "neoforge", "fabric"])
+      .enum(SEARCH_DOC_PLATFORMS)
       .optional()
       .default("forge")
       .describe("平台，默认 forge"),

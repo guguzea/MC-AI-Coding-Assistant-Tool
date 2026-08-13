@@ -1,0 +1,61 @@
+[
+  {
+    "id": "stable/pack-manifest",
+    "version": "stable",
+    "label": "Pack manifest",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/addonsreference/packmanifest?view=minecraft-bedrock-stable",
+    "tags": [
+      "manifest",
+      "pack"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-13T15:09:35.601Z",
+    "sha256": "d0bf6e9b9b297556ccf06f75b324a3140aaef9a22a010aa133ccd84b94627a3c"
+  },
+  {
+    "id": "stable/experimental-features-toggle",
+    "version": "stable",
+    "label": "Experimental Features Toggle",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/experimentalfeaturestoggle?view=minecraft-bedrock-stable",
+    "tags": [
+      "experiments",
+      "beta"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-13T15:09:42.151Z",
+    "sha256": "5f8ec7a4803d97df1fadb22c9221003c7f7f44fad59a54696606f621c0d1512e"
+  },
+  {
+    "id": "stable/script-server",
+    "version": "stable",
+    "label": "@minecraft/server",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable",
+    "tags": [
+      "script",
+      "server"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-13T15:09:48.323Z",
+    "sha256": "ccf16d31c40776b45f1aac5642efd2baae1aa7bd50ec38c38e799dd93a7d10ed"
+  },
+  {
+    "id": "stable/script-api-intro",
+    "version": "stable",
+    "label": "Script API introduction",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/introduction?view=minecraft-bedrock-stable",
+    "tags": [
+      "script"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-13T15:09:53.377Z",
+    "sha256": "a44f0b1b23c567080991f29ac970f2cc9de138bed7d180f4370af08f331cff05"
+  }
+]

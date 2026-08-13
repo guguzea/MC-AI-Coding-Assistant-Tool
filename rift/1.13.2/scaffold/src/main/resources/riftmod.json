@@ -1,0 +1,6 @@
+{
+  "id": "examplemod",
+  "name": "Example Rift Mod",
+  "authors": ["example"],
+  "listeners": ["com.example.examplemod.ExampleMod"]
+}

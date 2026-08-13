@@ -1,0 +1,25 @@
+﻿---
+description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
+---
+
+# 01 — Quilt 注册（QSL ≠ FAPI Registry）
+
+> 适用：Quilt 1.21.1。**禁止编造 `QuiltRegistry.register()`。** 未核实的 QSL 方法名：停止生成，改 `search_docs({platform:"quilt"})` 或 QSL 源码 / loader-api-summaries。
+
+## 核心事实（已核实）
+
+- QSL Core Registry 与 Fabric API Registry **不完全相同**（Addition Events Helper、按条目排除同步等）
+- Quilted Fabric API 在 **有 QSL 替代** 处 **弃用** 对应 FAPI 模块
+- 简单物品/方块仍可用 **Vanilla** `Registry.register(Registries.*, id, value)`（与 Fabric 共享，不是 FAPI 专属）
+- **不要**生成 `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当作 QSL
+
+## Decision Flow
+
+```
+Decision: 注册方式
+→ 简单 Item/Block/BlockEntity → Vanilla Registry.register（在 org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer) 中）
+→ 需要注册表同步/条目附件/QSL 专属 → 只使用 org.quiltmc.qsl.* 已核实 API；不清楚就拒绝臆造
+→ 禁止：把 Fabric Registry 教程改名交差
+```
+
+对照：https://wiki.quiltmc.org/en/concepts/qsl-qfapi

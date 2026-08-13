@@ -1,0 +1,7 @@
+﻿---
+description: 05 — Listener
+---
+
+# 05 — Listener
+
+完整类名列表见 knowledge/common/listeners.md。Mixin：`InitializationListener.onInitialization()`，建议单独一类。

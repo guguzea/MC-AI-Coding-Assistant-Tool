@@ -65,7 +65,17 @@ export function getMigrationGuide(route: string): Record<string, unknown> {
 
 // ── check_dependencies：loader 判定 + 库模组 catalog 接线 + 冲突/陷阱检测 ──────
 
-export type DetectedLoader = "fabric" | "forge" | "neoforge" | "unknown";
+export type DetectedLoader =
+  | "fabric"
+  | "forge"
+  | "neoforge"
+  | "quilt"
+  | "liteloader"
+  | "liteloader_forge"
+  | "rift"
+  | "modloader"
+  | "bedrock"
+  | "unknown";
 
 export interface DetectedLibrary {
   id: string;
@@ -107,25 +117,79 @@ function hasKeyword(text: string, token: string): boolean {
   return wordBoundaryRegex(t).test(text);
 }
 
-/** §4.3 loader 判定算法（顺序固定：fabricModJson → neoModsToml → modsToml 特征 → gradle 探测） */
-function detectLoader(
+export interface CheckDependenciesExtras {
+  quiltModJson?: string;
+  litemodJson?: string;
+  riftmodJson?: string;
+  addonManifest?: string;
+}
+
+/** loader 判定：Quilt → Fabric → NeoForge → LiteLoader → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
+export function detectLoader(
   buildGradle: string,
   modsToml?: string,
   fabricModJson?: string,
   neoModsToml?: string,
+  extras?: CheckDependenciesExtras,
 ): DetectedLoader {
+  const quiltJson = extras?.quiltModJson?.trim();
+  if (quiltJson || /org\.quiltmc\.loom|quilt-loom|quilt\.mod\.json/i.test(buildGradle)) {
+    return "quilt";
+  }
+
   if (fabricModJson && fabricModJson.trim().length > 0) return "fabric";
+  if (/fabric-loom|fabric-api/i.test(buildGradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(buildGradle)) {
+    return "fabric";
+  }
+
   if (neoModsToml && neoModsToml.trim().length > 0) return "neoforge";
+  if (/neogradle|net\.neoforged|neoforge/i.test(buildGradle)) return "neoforge";
+
+  const litemod = extras?.litemodJson?.trim();
+  const hasLlPlugin = /net\.minecraftforge\.gradle\.liteloader/.test(buildGradle);
+  const hasForgeMeta =
+    /modLoader\s*=\s*"javafml"/i.test(modsToml ?? "") ||
+    /@Mod\b/.test(buildGradle);
+  const hasLiteMeta = Boolean(litemod) || /LiteMod|litemod\.json/i.test(buildGradle);
+
+  if (hasLlPlugin) {
+    return "liteloader_forge";
+  }
+  if (hasLiteMeta && !hasForgeMeta) {
+    return "liteloader";
+  }
+  if (hasLiteMeta && hasForgeMeta && !hasLlPlugin) {
+    return "unknown";
+  }
+
+  const riftJson = extras?.riftmodJson?.trim();
+  if (
+    riftJson ||
+    /riftmod\.json|rift\.mod\.json/i.test(buildGradle) ||
+    /RiftLoaderClientTweaker|net\.minecraftforge\.gradle\.tweaker-client/i.test(buildGradle)
+  ) {
+    return "rift";
+  }
+
   const toml = modsToml?.trim();
   if (toml && toml.length > 0) {
-    // neoforge 特征：neoforge.mods.toml / 依赖 neoforge / loaderVersion [1,) 风格（NeoForge 个位数下限）
     if (/neoforge\.mods\.toml|modId\s*=\s*"neoforge"|loaderVersion\s*=\s*"\[\d,/.test(toml)) return "neoforge";
-    // javafml：loaderVersion [44,) 风格（Forge 两位数下限）
     if (/modLoader\s*=\s*"javafml"|loaderVersion\s*=\s*"\[44,/.test(toml)) return "forge";
   }
-  if (/fabric-loom|fabric-api/i.test(buildGradle)) return "fabric";
-  if (/neogradle|neoforge/i.test(buildGradle)) return "neoforge";
-  if (/forge|minecraftforge/i.test(buildGradle)) return "forge";
+  if (/forge|minecraftforge/i.test(buildGradle) && !hasLiteMeta) return "forge";
+
+  if (
+    /extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle) &&
+    !/cpw\.mods\.fml|net\.minecraftforge/.test(buildGradle)
+  ) {
+    return "modloader";
+  }
+
+  const manifest = extras?.addonManifest?.trim();
+  if (manifest && /"format_version"/.test(manifest) && /"modules"/.test(manifest)) {
+    return "bedrock";
+  }
+
   return "unknown";
 }
 
@@ -253,7 +317,7 @@ function hasMinecraftVersionHint(text: string): boolean {
 /** §4.5 traps（bookshelf 重名与 loader 无关；trinkets 停更需 fabric） */
 function detectTraps(loader: DetectedLoader, text: string): DependencyTrap[] {
   const traps: DependencyTrap[] = [];
-  if (loader === "fabric" && hasKeyword(text, "trinkets")) {
+  if ((loader === "fabric" || loader === "quilt") && hasKeyword(text, "trinkets")) {
     if (hintAtLeastMinecraft(text, [1, 21, 4])) {
       traps.push({
         code: "trinkets_stale",
@@ -284,14 +348,30 @@ export function checkDependencies(
   modsToml?: string,
   fabricModJson?: string,
   neoModsToml?: string,
+  extras?: CheckDependenciesExtras,
 ): Record<string, unknown> {
   const issues: string[] = [];
   const suggestions: string[] = [];
-  const detectedLoader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml);
-  const text = [buildGradle, modsToml, fabricModJson, neoModsToml].filter((s) => s).join("\n");
+  const detectedLoader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml, extras);
+  const text = [buildGradle, modsToml, fabricModJson, neoModsToml, extras?.quiltModJson, extras?.litemodJson, extras?.riftmodJson, extras?.addonManifest]
+    .filter((s) => s)
+    .join("\n");
+
+  if (detectedLoader === "unknown" && (extras?.litemodJson || /litemod\.json|LiteMod/i.test(text)) && /modLoader\s*=\s*"javafml"|@Mod/.test(text)) {
+    issues.push(
+      "同时存在 LiteLoader 与 Forge 元数据，但未检测到 apply plugin: 'net.minecraftforge.gradle.liteloader'。请确认是混合工程还是残留 litemod；禁止默默当纯 Forge。",
+    );
+  }
+  if (
+    /net\.minecraftforge\.gradle\.forge/.test(buildGradle) &&
+    /liteloader/i.test(buildGradle) &&
+    !/net\.minecraftforge\.gradle\.liteloader/.test(buildGradle)
+  ) {
+    issues.push("错误组合：不要分别 apply 标准 Forge 插件和另一个 LiteLoader 插件，只使用 net.minecraftforge.gradle.liteloader");
+  }
 
   // ── 保留并增强原有启发式 ────────────────────────────────────────────────
-  if (!/minecraft|forge|neoforge|fabric/i.test(buildGradle)) {
+  if (detectedLoader !== "bedrock" && detectedLoader !== "modloader" && !/minecraft|forge|neoforge|fabric|quilt|liteloader|rift/i.test(buildGradle)) {
     issues.push("build.gradle 未检测到 minecraft/loader 依赖");
   }
   if ((detectedLoader === "forge" || /forge/i.test(buildGradle)) && modsToml && !/modLoader\s*=\s*"javafml"/i.test(modsToml)) {
@@ -311,8 +391,8 @@ export function checkDependencies(
   const traps = detectTraps(detectedLoader, text);
 
   // curios_on_fabric：Fabric 上仅 curios（无 trinkets 说明）→ 建议 Trinkets
-  if (detectedLoader === "fabric" && hasKeyword(text, "curios") && !hasKeyword(text, "trinkets")) {
-    suggestions.push("curios_on_fabric：Fabric 上检测到 Curios 依赖——Curios 无 Fabric 版，Fabric 饰品标准是 Trinkets");
+  if ((detectedLoader === "fabric" || detectedLoader === "quilt") && hasKeyword(text, "curios") && !hasKeyword(text, "trinkets")) {
+    suggestions.push("curios_on_fabric：Fabric/Quilt 上检测到 Curios 依赖——Curios 无 Fabric 版，饰品标准是 Trinkets");
   }
   // cloth_frozen：Cloth Config 已冷冻，新模组语境 → 建议 YACL/Fzzy
   if (hasKeyword(text, "cloth-config") || hasKeyword(text, "cloth_config")) {

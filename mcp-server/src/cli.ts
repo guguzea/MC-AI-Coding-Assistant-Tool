@@ -61,7 +61,7 @@ function usage() {
       "mc-skill descriptor --descriptor=<jniDescriptor> [--name=method]",
       "mc-skill update --action=check|apply [--scope=all|tooling|data] [--channel=stable|latest|tag] [--tag=vX.Y.Z] [--dry-run] [--confirm] [--allow-dirty] [--stash-dirty]",
       "mc-skill list-tools",
-      "mc-skill <任意MCP工具名> --key=value ...   # 通用 dispatch：62 个工具全可用（如 search_docs / check_dependencies / analyze_mod_jar / diagnose_data_paths）",
+      "mc-skill <任意MCP工具名> --key=value ...   # 通用 dispatch：全部 MCP 工具（含 search_docs / search_bedrock_docs / check_dependencies）",
     ],
   });
 }
@@ -192,7 +192,7 @@ class CliToolError extends Error {
 
 /**
  * zod inputSchema → JSON schema（供 list-tools 的 parameters 输出）。
- * 覆盖本仓库 62 个工具用到的 zod 类型：string/number/boolean/enum/array/object/
+ * 覆盖本仓库 70 个工具用到的 zod 类型：string/number/boolean/enum/array/object/
  * record/union/literal + optional/default 包裹；保留 .describe() 描述与 required。
  */
 function zodToJsonSchema(schema: z.ZodTypeAny): Record<string, unknown> {

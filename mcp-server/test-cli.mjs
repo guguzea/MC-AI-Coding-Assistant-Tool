@@ -43,13 +43,13 @@ function parseJson(r, label) {
   console.log(`convert mcp→mojang getHealth → ${j.result.converted}`);
 }
 
-// ── 2. list-tools：62 工具 + lookup_obfuscated / convert_mapping ─────────────
+// ── 2. list-tools：70 工具 + lookup_obfuscated / convert_mapping ─────────────
 {
   const r = run(["list-tools"]);
   if (r.status !== 0) throw new Error(`list-tools failed (exit ${r.status}):\n${r.stderr}\n${r.stdout}`);
   const j = parseJson(r, "list-tools");
   if (j.success !== true || j.tool !== "list-tools") throw new Error(`list-tools wrapper bad: ${JSON.stringify(j).slice(0, 200)}`);
-  if (j.result?.total !== 62) throw new Error(`list-tools total=${j.result?.total}, expected 62`);
+  if (j.result?.total !== 70) throw new Error(`list-tools total=${j.result?.total}, expected 70`);
   const names = (j.result.tools ?? []).map((t) => t.name);
   for (const required of ["lookup_obfuscated", "convert_mapping", "validate_at", "validate_aw"]) {
     if (!names.includes(required)) throw new Error(`list-tools missing ${required}`);

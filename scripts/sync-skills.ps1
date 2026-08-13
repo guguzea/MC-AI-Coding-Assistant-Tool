@@ -30,11 +30,14 @@ function Get-RepoRoot {
 function Resolve-PlatformVersion {
     param([string]$Dir)
     $norm = $Dir.Replace("\", "/")
-    if ($norm -match '/(forge|fabric)/(\d+\.\d+(?:\.\d+)?)/?$') {
+    if ($norm -match '/(forge|fabric|quilt|liteloader|rift|modloader)/(\d+\.\d+(?:\.\d+)?)/?$') {
         return @{ Platform = $Matches[1]; Version = $Matches[2]; Rel = "$($Matches[1])/$($Matches[2])" }
     }
     if ($norm -match '/neoforge/?$') {
         return @{ Platform = "neoforge"; Version = ""; Rel = "neoforge" }
+    }
+    if ($norm -match '/bedrock/?$') {
+        return @{ Platform = "bedrock"; Version = ""; Rel = "bedrock" }
     }
     return @{ Platform = ""; Version = ""; Rel = "" }
 }
@@ -192,7 +195,7 @@ $repoRoot = Get-RepoRoot
 
 if ($All) {
     $targets = @()
-    foreach ($plat in @("forge", "fabric")) {
+    foreach ($plat in @("forge", "fabric", "quilt", "liteloader", "rift", "modloader")) {
         $platDir = Join-Path $repoRoot $plat
         if (-not (Test-Path $platDir)) { continue }
         foreach ($verDir in Get-ChildItem $platDir -Directory) {
@@ -204,6 +207,8 @@ if ($All) {
     }
     $nf = Join-Path $repoRoot "neoforge"
     if (Test-Path (Join-Path $nf ".cursor\rules")) { $targets += $nf }
+    $be = Join-Path $repoRoot "bedrock"
+    if (Test-Path (Join-Path $be ".cursor\rules")) { $targets += $be }
 
     Write-Host "Syncing $($targets.Count) version directories..." -ForegroundColor Cyan
     foreach ($t in $targets) { Sync-VersionDir $t }

@@ -27,6 +27,8 @@
     "build:yarn-sqlite": "node scripts/_lib/build-yarn-sqlite.mjs --all",
     "build:semantic-index": "npm run build && node scripts/_lib/build-semantic-index.mjs",
     "fetch:embedding-model": "node scripts/fetch-embedding-model.mjs",
+    "fetch:quilt-docs": "node scripts/fetch-quilt-docs.js --version=all",
+    "fetch:bedrock-docs": "node scripts/fetch-bedrock-docs.js",
     "test:semantic": "npm run build && node test-semantic.mjs",
     "assert:no-yarn-slurp": "node scripts/assert-no-yarn-json-slurp.mjs",
     "smoke:release": "node scripts/release-smoke.mjs",

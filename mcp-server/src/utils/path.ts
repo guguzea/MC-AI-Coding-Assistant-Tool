@@ -141,7 +141,7 @@ export function diagnoseDataPaths(): {
   const dataDir = resolveDataDir();
   const platforms: Record<string, { status: string; path: string; details: string }> = {};
 
-  for (const platform of ["forge", "fabric", "neoforge"] as const) {
+  for (const platform of ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift", "modloader", "bedrock"] as const) {
     const prefix = `${platform}_`;
     let status = "not_found";
     let details = "";
@@ -232,7 +232,12 @@ export function hasAnyPlatformData(dataDir = resolveDataDir()): boolean {
         e.isDirectory() &&
         (e.name.startsWith("forge_") ||
           e.name.startsWith("fabric_") ||
-          e.name.startsWith("neoforge_")),
+          e.name.startsWith("neoforge_") ||
+          e.name.startsWith("quilt_") ||
+          e.name.startsWith("liteloader_") ||
+          e.name.startsWith("rift_") ||
+          e.name.startsWith("modloader_") ||
+          e.name.startsWith("bedrock_")),
     );
   } catch {
     return false;

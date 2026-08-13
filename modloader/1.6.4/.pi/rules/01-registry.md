@@ -1,0 +1,8 @@
+﻿---
+description: 01 — BaseMod（仅安全表）
+---
+
+# 01 — BaseMod（仅安全表）
+
+见 knowledge/common/safe-api.md：`load()` / `modsLoaded()` / `ModLoader.addRecipe` / `addName`。
+禁止 `DeferredRegister`、禁止 `func_*`。

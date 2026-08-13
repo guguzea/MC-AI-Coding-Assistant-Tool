@@ -4,54 +4,104 @@
 
 ## 第一步：判断项目使用的平台和版本
 
-打开任何 MC Mod 项目时，先按以下顺序判断平台：
+打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt 在 Fabric 前；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：
 
-### 1. 检查 Forge
+### 1. 检查 Quilt
 
-查找 `mods.toml`（位于 `src/main/resources/META-INF/`）或 `build.gradle`：
+查找 `quilt.mod.json` 或 `quilt-loom`（不少 Quilt 工程同时有 `fabric.mod.json`）：
 
 ```
-# mods.toml 中有：
-modLoader="javafml"
-loaderVersion="[44,)"   # Forge 版本范围
+# quilt.mod.json
+"schema_version": 1,
+"quilt_loader": { "id": "examplemod", ... }
 
-# build.gradle 中有：
-minecraft "1.20.1"
-forge "47.2.0"
+# build.gradle
+id 'org.quiltmc.loom'
 ```
 
-如果匹配 → 跳转到 `forge/1.20.1/AGENTS.md`
+如果匹配 → 跳转到 `quilt/<mc版本>/AGENTS.md`（再读 `fabric/<mc版本>` 的 02–10 规则，本目录只写 QSL 差异）。
+
+库 Skill：Quilt 仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/` 源稿。
 
 ### 2. 检查 Fabric
 
-查找 `fabric.mod.json`（位于 `src/main/resources/`）或 `build.gradle`：
+查找 `fabric.mod.json` 或 `fabric-loom`（且 **没有** `quilt.mod.json` / quilt-loom）：
 
 ```
-# fabric.mod.json 中有：
+# fabric.mod.json
 "schemaVersion": 1,
 "id": "examplemod",
 "entrypoints": { "main": [...] }
 
-# build.gradle 中有：
+# build.gradle
 id 'fabric-loom'
-loom { ... }
 ```
 
-如果匹配 → 跳转到 `fabric/1.20.1/AGENTS.md`
+如果匹配 → 跳转到 `fabric/<mc版本>/AGENTS.md`
 
 ### 3. 检查 NeoForge
 
-查找 `neoforge_VERSION` 或 `neogradle` 相关配置：
+查找 `neoforge.mods.toml` 或 NeoGradle：
 
 ```
-# build.gradle 中有：
+# build.gradle
 neoform "20231220.153330"
 neoforge "20.4.237"
+id 'net.neoforged.gradle.userdev'
 ```
 
-如果匹配 → 跳转到 `neoforge/1.20.4/AGENTS.md`
+如果匹配 → 跳转到 `neoforge/AGENTS.md`
 
-### 4. 未知平台
+### 4. 检查 LiteLoader（含 Forge 混合）
+
+查找 `litemod.json`、`LiteMod` 实现、或 Gradle 插件 `net.minecraftforge.gradle.liteloader`。**必须在把任意 ForgeGradle 收成纯 Forge 之前做这一步。**
+
+```
+Decision:
+→ IF 有 litemod.json / LiteMod，且没有 javafml mods.toml / @Mod
+    → 纯客户端：跳转 liteloader/<mc版本>/AGENTS.md（主推 1.12.2）
+→ ELSE IF 两边元数据都在，且 apply plugin: 'net.minecraftforge.gradle.liteloader'
+    → 混合 liteloader_forge：先读 liteloader/<ver>/HYBRID.md，再读 forge/1.12.2 的 01–03 + LiteLoader 的 05/08
+→ ELSE IF 分别 apply 了 net.minecraftforge.gradle.forge 和另一个 LiteLoader 插件
+    → 拒绝：混合工程只允许 liteloader 专用插件
+→ ELSE IF 两边元数据都在但没有该专用插件
+    → 询问用户，禁止默默当 Forge
+```
+
+### 5. 检查 Forge
+
+查找 `mods.toml`（`modLoader="javafml"`）或标准 ForgeGradle（且上一步未判为 LiteLoader）：
+
+```
+# mods.toml
+modLoader="javafml"
+loaderVersion="[44,)"
+
+# build.gradle
+id 'net.minecraftforge.gradle'
+```
+
+如果匹配 → 跳转到 `forge/<mc版本>/AGENTS.md`
+
+### 6. 检查 Rift
+
+查找 **`riftmod.json`**（官方拼写；兼容误写的 `rift.mod.json`）或 `tweaker-client` + `RiftLoaderClientTweaker`。
+
+如果匹配 → 跳转到 `rift/1.13.2/AGENTS.md`。方法名只许来自该目录 `knowledge/common/` 与已核实源码，禁止用 Fabric 记忆填写。
+
+### 7. 检查 Risugami's ModLoader
+
+查找 `BaseMod` 子类且 **没有** Forge/FML（无 `cpw.mods.fml` / `net.minecraftforge`）。工程通常是 MCP + Eclipse，无 Gradle。
+
+如果匹配 → 跳转到 `modloader/1.6.4/AGENTS.md`。生成代码 **只能**用该目录安全 API 表内的名字。
+
+### 8. 检查基岩版 Add-On
+
+查找包根 `manifest.json` 且含 `format_version` + `modules`（`resources` / `data` / `script` / `world_template`）。
+
+如果匹配 → 跳转到 `bedrock/AGENTS.md`。不要用 Java `query_api` / Yarn / Mixin。
+
+### 9. 未知平台
 
 如果无法判断：
 1. 询问用户当前使用的平台和 Minecraft 版本
@@ -111,7 +161,7 @@ private void doServerThing() { ... }
 
 - 必须全小写
 - 禁止包含 `-`（用 `_` 替代）
-- 必须与 `mods.toml` / `fabric.mod.json` 中的 `modId` 一致
+- 必须与 `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 `manifest` 中的 id 一致
 
 ## 第四步：决策树使用方式
 
@@ -126,6 +176,7 @@ Decision: 选择注册方式
 → IF Minecraft >= 1.20.5 AND 平台 = Forge → 使用 DeferredRegister
 → ELSE IF 平台 = Forge → 使用 RegistryEvent.register
 → ELSE IF 平台 = Fabric → 使用 Registry.register() in onInitialize
+→ ELSE IF 平台 = Quilt → 优先 QSL / org.quiltmc（见 quilt/<ver>/01-registry.mdc），不要生成 FAPI Registry 当 QSL
 → ELSE → 询问用户
 ```
 
@@ -156,6 +207,8 @@ Decision: 选择注册方式
    - `forge` → `forge-only` + `all-platforms`
    - `fabric` / `quilt` → `fabric-only` + `all-platforms`
    - `neoforge` → `neo-only` + `all-platforms`
+   - `bedrock` → `bedrock-only`（Script API 等；禁止把 CCA/Trinkets/GeckoLib 当基岩教程）
+   - LiteLoader / Rift / ModLoader：暂无独立 Java 库组；不要把 Fabric/Forge 库 Skill 当这些加载器的 API
 2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
 3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`minecraftVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本）
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`
@@ -170,7 +223,7 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**，**62** 个工具；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |
@@ -187,7 +240,10 @@ Decision: 选择注册方式
 | `search_forge_docs` / `get_forge_doc_*` | Forge 文档 |
 | `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
-| `search_docs` / `get_doc_*` | 跨平台通用文档入口 |
+| `search_docs` / `get_doc_*` | 跨平台通用文档入口（`platform` 含 forge/fabric/neoforge/**quilt**/liteloader/rift/modloader）。Quilt 问 QSL 时禁止把 Fabric Registry 当命中 |
+| `search_bedrock_docs` / `get_bedrock_doc_*` | 基岩版 Microsoft Learn；带滞后 `docsStatus`。不是 `search_forge_docs` |
+| `validate_addon_manifest` / `validate_bp_json` | 基岩 pack 校验；不是 `validate_project` / `validate_datapack_json` |
+| `generate_addon_manifest` / `generate_bp_entity` | 只吐 JSON 文本，不写盘 |
 | `list_community_sources` / `search_community_docs` / `get_community_doc_*` | 社区实务知识库（发布/崩溃/软依赖；不替代官方文档） |
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
@@ -205,7 +261,7 @@ Decision: 选择注册方式
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
 - **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `search_*_docs` 或反编译。
-- **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。
+- **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。`diagnose_gradle` 对 `net.minecraftforge.gradle.liteloader` 走轻量模式（不跑 FG6/Java17/1.20）。基岩 / Quilt Loom / 无 Gradle 的 MCP 工程不要当 Forge 诊断。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
 - **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
 - **写盘类默认 dryRun**（`port_project` / `mc_skill_update apply`）；`generate_*` 只吐文本。
@@ -218,7 +274,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，62 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，70 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。

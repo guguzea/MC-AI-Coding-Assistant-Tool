@@ -1,0 +1,10 @@
+﻿---
+description: 00 — LiteLoader 工程
+---
+
+# 00 — LiteLoader 工程
+
+- Java 8。混合 **只** apply `net.minecraftforge.gradle.liteloader`
+- 钉死 `mappings = 'stable_39'`（或当时文档要求的 channel，禁止臆造）
+- 产出 `.litemod` / 按 FG 文档打包
+- 纯 LiteLoader 不要当 Forge 1.20 跑 `diagnose_gradle`

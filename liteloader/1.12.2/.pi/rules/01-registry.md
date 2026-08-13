@@ -1,0 +1,8 @@
+﻿---
+description: 01 — 注册
+---
+
+# 01 — 注册
+
+- **纯 LiteLoader**：几乎不注册方块/物品；不要生成 Forge RegistryEvent
+- **混合**：指向 `forge/1.12.2/.cursor/rules/01-registry.mdc`

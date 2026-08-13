@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "com.example",
+    "id": "examplemod",
+    "version": "1.0.0",
+    "metadata": {
+      "name": "Example Mod",
+      "description": "Quilt scaffold"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": ["com.example.examplemod.ExampleMod"]
+    },
+    "depends": [
+      { "id": "quilt_loader", "versions": "*" },
+      { "id": "minecraft", "versions": "1.18.2" }
+    ]
+  }
+}

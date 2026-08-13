@@ -28,7 +28,7 @@ import {
   stripScores,
   type SymbolIndex,
 } from "../search-utils.js";
-import { PlatformDataMissingError } from "../platform-data.js";
+import { PlatformDataMissingError, type DocPlatform } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -182,6 +182,7 @@ export class FabricDocStore {
     private readonly dataDir: string,
     version = "1.20.1",
     source = "fabric-docs",
+    private readonly dirPrefix = "fabric",
   ) {
     this.source = SUBDIR_MAP[source] ?? source ?? "fabric-docs";
     Object.defineProperty(this, "_version", { value: version, writable: false, enumerable: false });
@@ -193,7 +194,7 @@ export class FabricDocStore {
 
   /** Resolve on-disk directory for a MC version under this store. */
   private versionDataDir(version: string): string {
-    const canonical = join(this.dataDir, `fabric_${version}`, this.source, version);
+    const canonical = join(this.dataDir, `${this.dirPrefix}_${version}`, this.source, version);
     if (existsSync(join(canonical, "index-l0.json"))) return canonical;
 
     // Legacy: dataDir already points at .../fabric-docs (or .../fabric-wiki)
@@ -218,10 +219,10 @@ export class FabricDocStore {
     this._validated = true;
 
     if (!existsSync(this.dataDir)) {
-      throw new PlatformDataMissingError("fabric");
+      throw new PlatformDataMissingError(this.dirPrefix as DocPlatform);
     }
     if (this.getAvailableVersionsUnchecked().length === 0) {
-      throw new PlatformDataMissingError("fabric");
+      throw new PlatformDataMissingError(this.dirPrefix as DocPlatform);
     }
   }
 
@@ -242,8 +243,8 @@ export class FabricDocStore {
     try {
       for (const entry of readdirSync(this.dataDir, { withFileTypes: true })) {
         if (!entry.isDirectory()) continue;
-        if (entry.name.startsWith("fabric_")) {
-          const ver = entry.name.slice("fabric_".length);
+        if (entry.name.startsWith(`${this.dirPrefix}_`)) {
+          const ver = entry.name.slice(`${this.dirPrefix}_`.length);
           if (existsSync(join(this.dataDir, entry.name, this.source, ver, "index-l0.json"))) {
             versions.add(ver);
           }

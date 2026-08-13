@@ -1,0 +1,20 @@
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+minecraft {
+    version = '1.13.2'
+    mappings = 'snapshot_20180921'
+    runDir = 'run'
+    tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
+}
+
+repositories {
+    // dimdev.org maven 可能已失效；把 rift 的 dev jar 放进 libs/
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    implementation name: 'rift-1.0.3-45-dev'
+}

@@ -27,6 +27,7 @@
 | 机器 / Menu / BE / Capability | `authored/machine-be-gui-working`、`authored/menu-screen-sync`、`authored/blockentity-persist-ticker`、`authored/itemhandler-capability` |
 | 模型 / 本地化 / 开发环境 | `authored/multi-face-block-models`、`authored/localization-lang`、`authored/forge-dev-env-pitfalls` |
 | 映射字段 schema v3 | `authored/mapping-fields-v3` |
+| 历史加载器 | `authored/modloader-1.6.4`（1.6.4 只许用仓库 safe-api 表） |
 | 代码模式库 | `patterns/`（DeferredRegister / SimpleChannel / DataComponent / cube_all / ConfigSpec） |
 | 库集成（总览/索引/陷阱） | `authored/library-catalog-2026`（总览目录）、`library-integration`（分类索引）、`library-integration-jei-emi`（JEI/EMI/REI）、`lib-traps-2026`（陷阱专篇） |
 | 库集成 · 配置 | `lib-cloth-config`、`lib-config-legacy`、`lib-forge-config-api-port`、`lib-fzzy-config`、`lib-midnightlib`、`lib-owo`、`lib-yacl` |

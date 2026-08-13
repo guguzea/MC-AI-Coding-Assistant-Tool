@@ -1,0 +1,4 @@
+# 04 — 实体成对
+
+client_entity（RP）与 `minecraft:entity`（BP）identifier 必须一致。
+不要用 Java EntityType / DeferredRegister。

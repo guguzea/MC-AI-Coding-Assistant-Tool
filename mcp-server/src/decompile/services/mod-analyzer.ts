@@ -128,6 +128,35 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   }
   meta.entryCount = entries.size;
 
+  // ── quilt.mod.json（优先于 fabric：同时存在时标 quilt）────────────────────
+  const quiltJson = entries.get("quilt.mod.json");
+  if (quiltJson) {
+    try {
+      const quilt = JSON.parse(quiltJson.toString("utf8")) as Record<string, unknown>;
+      meta.loaders.push("quilt");
+      const loader = quilt.quilt_loader as Record<string, unknown> | undefined;
+      const qid = loader && typeof loader.id === "string" ? loader.id : typeof quilt.id === "string" ? quilt.id : undefined;
+      if (qid) meta.modId = qid;
+      const qver = loader && typeof loader.version === "string" ? loader.version : typeof quilt.version === "string" ? quilt.version : undefined;
+      if (qver) meta.modVersion = qver;
+      const metadata = loader?.metadata as Record<string, unknown> | undefined;
+      if (metadata && typeof metadata.name === "string") meta.modName = metadata.name;
+      if (metadata && typeof metadata.description === "string") meta.description = metadata.description;
+      const entrypoints = loader?.entrypoints ?? quilt.entrypoints;
+      if (entrypoints && typeof entrypoints === "object") {
+        const eps: Record<string, string[]> = {};
+        for (const [side, list] of Object.entries(entrypoints as Record<string, unknown>)) {
+          if (Array.isArray(list)) {
+            eps[side] = list.filter((x): x is string => typeof x === "string");
+          }
+        }
+        meta.entrypoints = { ...meta.entrypoints, ...eps };
+      }
+    } catch (err) {
+      meta.warnings.push(`quilt.mod.json 解析失败: ${(err as Error).message}`);
+    }
+  }
+
   // ── fabric.mod.json ─────────────────────────────────────────────────────────
   const fabricJson = entries.get("fabric.mod.json");
   if (fabricJson) {
@@ -196,6 +225,74 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
     }
   }
 
+  // ── 旧 Forge mcmod.info（1.12 混合常与 litemod.json 并存）────────────────
+  const mcmodInfo = entries.get("mcmod.info");
+  if (mcmodInfo && !meta.loaders.includes("forge") && !meta.loaders.includes("neoforge")) {
+    try {
+      const parsed = JSON.parse(mcmodInfo.toString("utf8")) as unknown;
+      const first = Array.isArray(parsed) ? parsed[0] : parsed;
+      if (first && typeof first === "object") {
+        const rec = first as Record<string, unknown>;
+        meta.loaders.push("forge");
+        if (!meta.modId && typeof rec.modid === "string") meta.modId = rec.modid;
+        if (!meta.modVersion && typeof rec.version === "string") meta.modVersion = rec.version;
+        if (!meta.modName && typeof rec.name === "string") meta.modName = rec.name;
+      }
+    } catch (err) {
+      meta.warnings.push(`mcmod.info 解析失败: ${(err as Error).message}`);
+    }
+  }
+
+  // ── litemod.json ──────────────────────────────────────────────────────────
+  const litemodJson = entries.get("litemod.json");
+  if (litemodJson) {
+    try {
+      const lite = JSON.parse(litemodJson.toString("utf8")) as Record<string, unknown>;
+      if (!meta.loaders.includes("liteloader")) meta.loaders.push("liteloader");
+      if (!meta.modId && typeof lite.name === "string") meta.modId = lite.name;
+      if (!meta.modVersion && typeof lite.version === "string") meta.modVersion = lite.version;
+      if (!meta.modName && typeof lite.displayName === "string") meta.modName = lite.displayName;
+    } catch (err) {
+      meta.warnings.push(`litemod.json 解析失败: ${(err as Error).message}`);
+    }
+  }
+
+  // ── riftmod.json（官方）/ rift.mod.json（兼容误写）────────────────────────
+  const riftJson = entries.get("riftmod.json") ?? entries.get("rift.mod.json");
+  if (riftJson) {
+    try {
+      const rift = JSON.parse(riftJson.toString("utf8")) as Record<string, unknown>;
+      meta.loaders.push("rift");
+      if (!meta.modId && typeof rift.id === "string") meta.modId = rift.id;
+      if (!meta.modName && typeof rift.name === "string") meta.modName = rift.name;
+      if (Array.isArray(rift.listeners)) {
+        meta.entrypoints = {
+          ...meta.entrypoints,
+          listeners: rift.listeners.filter((x): x is string => typeof x === "string"),
+        };
+      }
+    } catch (err) {
+      meta.warnings.push(`riftmod.json 解析失败: ${(err as Error).message}`);
+    }
+  }
+
+  // ── 基岩 manifest.json ───────────────────────────────────────────────────
+  const addonManifest = entries.get("manifest.json");
+  if (addonManifest) {
+    try {
+      const man = JSON.parse(addonManifest.toString("utf8")) as Record<string, unknown>;
+      if (man.format_version != null && Array.isArray(man.modules)) {
+        meta.loaders.push("bedrock");
+        const header = man.header as Record<string, unknown> | undefined;
+        if (header && typeof header.name === "string") meta.modName = header.name;
+        if (header && typeof header.uuid === "string") meta.modId = header.uuid;
+        if (header && Array.isArray(header.version)) meta.modVersion = header.version.join(".");
+      }
+    } catch (err) {
+      meta.warnings.push(`manifest.json 解析失败: ${(err as Error).message}`);
+    }
+  }
+
   // ── 根级 mixins.json / accesswidener / *_at.cfg ────────────────────────────
   for (const name of entries.keys()) {
     if (name.endsWith(".mixins.json") && !name.includes("/")) {
@@ -208,7 +305,12 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   }
 
   if (meta.loaders.length === 0) {
-    meta.warnings.push("未识别 loader（无 fabric.mod.json / mods.toml / neoforge.mods.toml），可能是库 jar 或资源包");
+    meta.warnings.push(
+      "未识别 loader（无 quilt.mod.json / fabric.mod.json / mods.toml / litemod.json / riftmod.json / 基岩 manifest），可能是库 jar 或资源包",
+    );
+  }
+  if (meta.loaders.includes("forge") && meta.loaders.includes("liteloader")) {
+    meta.warnings.push("同时存在 Forge 与 LiteLoader 元数据：混合模组 loaders=[\"forge\",\"liteloader\"]");
   }
   if (meta.loaders.length > 1) {
     meta.warnings.push(`同时存在多个 loader 元数据: ${meta.loaders.join(", ")}`);

@@ -1,0 +1,9 @@
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+
+minecraft {
+    version = '1.12.2-14.23.5.2847'
+    mappings = 'stable_39'
+    runDir = 'run'
+}
+
+jar { classifier = '' }

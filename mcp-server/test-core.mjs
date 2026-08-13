@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 
 import { listVersions, searchForgeDocs, searchDocs } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
@@ -22,6 +23,17 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen } from "./dist/datagen/index.js";
 import { generateLang } from "./dist/generators/index.js";
 import { diagnoseGradle } from "./dist/gradle/index.js";
+import { detectLoader } from "./dist/diagnostics/index.js";
+import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
+import {
+  generateAddonManifest,
+  generateBpEntity,
+  loadBedrockDocsStatus,
+  validateAddonManifest,
+} from "./dist/bedrock/index.js";
+import { listSemanticDbPresence, semanticStaleSearchWarning } from "./dist/docs-platform/semantic/status.js";
+import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
+import { SEMANTIC_DDL, semanticDbPath } from "./dist/docs-platform/semantic/search.js";
 import { resolveDataDir } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
@@ -32,6 +44,8 @@ import {
   getCommunityDocFull,
 } from "./dist/docs-platform/community/index.js";
 import { analyzeCrash } from "./dist/crash/index.js";
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 function parseToolText(result) {
   return JSON.parse(result.content[0].text);
@@ -726,6 +740,52 @@ copyIdeResources = true
   });
   assert.ok(neo.suggestions.some((s) => s.includes("search_neoforge_docs")));
 
+  // E2E-004：liteloader 插件不得跑 FG6 / Java17 / 1.20
+  const ll = diagnoseGradle({
+    buildGradle: `
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+minecraft {
+  version = '1.12.2-14.23.5.2847'
+  mappings = 'stable_39'
+  runDir = 'run'
+}
+task runClient {}
+`,
+  });
+  assert.equal(ll.errors.length, 0, JSON.stringify(ll.errors));
+  assert.ok(!ll.errors.some((e) => /Java 17|toolchain|6\.0,6\.2|forge:1\.20|47/.test(e)));
+  assert.ok(!ll.warnings.some((w) => /Java toolchain 应为 17|Minecraft 版本.*1\.20|不以 47/.test(w)));
+  assert.ok(ll.warnings.some((w) => /LiteMod/.test(w)));
+
+  const llHybridNoPlugin = diagnoseGradle({
+    buildGradle: `
+apply plugin: 'net.minecraftforge.gradle.forge'
+dependencies { minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2847' }
+// LiteMod
+`,
+  });
+  assert.ok(llHybridNoPlugin.errors.some((e) => /liteloader/.test(e)));
+  assert.ok(!llHybridNoPlugin.warnings.some((w) => /Java toolchain 应为 17/.test(w)));
+
+  const quiltLoom = diagnoseGradle({
+    buildGradle: `plugins { id 'org.quiltmc.loom' version '1.7.4' }\n`,
+  });
+  assert.ok(quiltLoom.warnings.some((w) => /Quilt Loom/.test(w)));
+  assert.ok(quiltLoom.suggestions.some((s) => /search_docs/.test(s)));
+
+  const mlGradle = diagnoseGradle({
+    buildGradle: "public class mod_Example extends BaseMod {\n  public String getName() { return \"x\"; }\n}\n",
+  });
+  assert.equal(mlGradle.errors.length, 0);
+  assert.ok(mlGradle.warnings.some((w) => /ModLoader|BaseMod/.test(w)));
+  assert.ok(mlGradle.suggestions.some((s) => /safe-api/.test(s)));
+
+  const riftGradle = diagnoseGradle({
+    buildGradle: "apply plugin: 'net.minecraftforge.gradle.tweaker-client'\n",
+  });
+  assert.ok(riftGradle.warnings.some((w) => /Rift/.test(w)));
+  assert.ok(!riftGradle.errors.some((e) => /Java 17|6\.0,6\.2/.test(e)));
+
   const lang = generateLang("demo", {
     "item.demo.sword": "Sword",
     item_gem: "Gem",
@@ -782,6 +842,10 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.equal(unknown.crashKind, "unknown");
   assert.match(unknown.probableCause, /minecraft\.wiki\/w\/Crash_report/);
   assert.ok(unknown.fixSuggestions.some((s) => /minecraft\.wiki\/w\/Crash_report/.test(s)));
+
+  assert.equal(detectCrashKind("org.quiltmc.loader.impl.QuiltLoader crashed"), "quilt");
+  assert.equal(detectCrashKind("at com.mumfrey.liteloader.core.LiteLoader"), "liteloader");
+  assert.equal(detectCrashKind("org.dimdev.riftloader.RiftLoaderClientTweaker"), "rift");
 }
 
 async function testPlatformDataMissing() {
@@ -1059,6 +1123,173 @@ async function testObfuscatedLayerAndLookup() {
   );
 }
 
+async function testFivePlatformRouting() {
+  assert.equal(
+    detectLoader("id 'fabric-loom'", undefined, '{"id":"x"}', undefined, { quiltModJson: '{"schema_version":1}' }),
+    "quilt",
+  );
+  assert.equal(detectLoader("id 'fabric-loom'", undefined, '{"id":"x"}'), "fabric");
+  assert.equal(
+    detectLoader("apply plugin: 'net.minecraftforge.gradle.liteloader'", 'modLoader="javafml"', undefined, undefined, {
+      litemodJson: '{"name":"x"}',
+    }),
+    "liteloader_forge",
+  );
+  assert.ok(isQslSpecificQuery("QSL QuiltRegistry 注册"));
+  const filtered = filterFabricFallbackHits([
+    { id: "a", label: "net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder", url: "https://fabricmc.net/wiki" },
+    { id: "b", label: "net.minecraft.world.item.Item", url: "https://docs.fabricmc.net/loom" },
+  ]);
+  assert.equal(filtered.hits.length, 1);
+  assert.equal(filtered.hits[0].id, "b");
+
+  const qsl = parseToolText(
+    await searchDocs({ platform: "quilt", version: "1.20.1", query: "QSL QuiltRegistry 注册" }),
+  );
+  assert.notEqual(qsl.fallback, "fabric", "QSL 查询禁止 Fabric 向量回退");
+  const blob = JSON.stringify(qsl);
+  assert.ok(!/net\.fabricmc\.fabric\.api\.event\.registry/.test(blob));
+  if (!qsl.ok) {
+    assert.equal(qsl.error?.code, "PLATFORM_DATA_MISSING");
+    assert.ok(/QSL|禁止回退|QuiltRegistry/.test(qsl.warning || qsl.error?.hint || qsl.error?.message || ""));
+  }
+
+  const man = generateAddonManifest({
+    packName: "Demo",
+    packType: "script",
+    beta: true,
+    minEngineVersion: [1, 21, 0],
+  });
+  const bp = JSON.stringify(man.files);
+  assert.ok(!/experimentalGameplay/.test(bp));
+  assert.ok(!/worldgen\/experimental/.test(bp));
+  assert.ok(man.warnings.some((w) => /Beta APIs/.test(w)));
+  const bad = validateAddonManifest(JSON.stringify({ format_version: 2, experimentalGameplay: true, header: {}, modules: [] }));
+  assert.equal(bad.ok, false);
+  assert.ok(bad.errors.some((e) => /experimentalGameplay/.test(e)));
+
+  assert.equal(detectLoader("apply plugin: 'net.minecraftforge.gradle.tweaker-client'"), "rift");
+  assert.equal(
+    detectLoader(
+      "apply plugin: 'net.minecraftforge.gradle.tweaker-client'\n// net.minecraftforge.gradle.forge substring must not win",
+      undefined,
+      undefined,
+      undefined,
+      { riftmodJson: '{"id":"example"}' },
+    ),
+    "rift",
+  );
+  const addonManifest = JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+  });
+  assert.equal(detectLoader("", undefined, undefined, undefined, { addonManifest }), "bedrock");
+  assert.equal(detectLoader("public class mod_Example extends BaseMod {\n}"), "modloader");
+
+  // E2E-001：混合脚手架钉死 liteloader 插件 + stable_39，且有 LiteMod + Forge 入口
+  const hybridRoot = join(REPO_ROOT, "liteloader", "1.12.2", "scaffold", "hybrid");
+  const hybridGradle = readFileSync(join(hybridRoot, "build.gradle"), "utf8");
+  assert.ok(/net\.minecraftforge\.gradle\.liteloader/.test(hybridGradle));
+  assert.ok(/stable_39/.test(hybridGradle));
+  const liteModSrc = readFileSync(
+    join(hybridRoot, "src", "main", "java", "com", "example", "examplehybrid", "LiteModExample.java"),
+    "utf8",
+  );
+  assert.ok(/OutboundChatListener/.test(liteModSrc));
+  assert.ok(
+    existsSync(join(hybridRoot, "src", "main", "java", "com", "example", "examplehybrid", "ForgeEntry.java")),
+  );
+
+  // E2E-002：点名 Beta 爆炸时带 BP/manifest.json beta 依赖，禁止 experimentalGameplay
+  const ent = generateBpEntity({ identifier: "demo:widget", betaExplodeEvent: true });
+  const bpManText = JSON.stringify(ent.files?.["BP/manifest.json"] ?? {});
+  assert.ok(/@minecraft\/server/.test(bpManText), bpManText);
+  assert.ok(/"beta"/.test(bpManText), bpManText);
+  const allEntFiles = JSON.stringify(ent.files);
+  assert.ok(!/experimentalGameplay/.test(allEntFiles));
+  assert.ok(!/worldgen\/experimental/.test(allEntFiles));
+  assert.ok(Array.isArray(ent.warnings) && ent.warnings.some((w) => /Beta APIs/.test(w)));
+
+  const tmpStatus = mkdtempSync(join(tmpdir(), "mc-skill-bedrock-status-"));
+  try {
+    writeFileSync(
+      join(tmpStatus, "bedrock-docs-status.json"),
+      JSON.stringify({
+        localRevision: "abc",
+        remoteRevision: "abc",
+        fetchedAt: new Date().toISOString(),
+        stale: true,
+      }),
+      "utf8",
+    );
+    assert.equal(loadBedrockDocsStatus(tmpStatus).stale, false);
+
+    writeFileSync(
+      join(tmpStatus, "bedrock-docs-status.json"),
+      JSON.stringify({
+        localRevision: "abc",
+        remoteRevision: "abc",
+        fetchedAt: "2020-01-01T00:00:00.000Z",
+        stale: false,
+      }),
+      "utf8",
+    );
+    assert.equal(loadBedrockDocsStatus(tmpStatus).stale, true);
+
+    writeFileSync(
+      join(tmpStatus, "bedrock-docs-status.json"),
+      JSON.stringify({
+        localRevision: "abc",
+        remoteRevision: "xyz",
+        fetchedAt: new Date().toISOString(),
+        stale: false,
+      }),
+      "utf8",
+    );
+    assert.equal(loadBedrockDocsStatus(tmpStatus).stale, true);
+  } finally {
+    rmSync(tmpStatus, { recursive: true, force: true });
+  }
+
+  const presence = listSemanticDbPresence(resolveDataDir());
+  assert.ok(
+    presence.some((p) => p.platform === "bedrock" && p.version === "stable"),
+    "listSemanticDbPresence must include bedrock_stable",
+  );
+
+  // E2E-005：processed 指纹与 sqlite 不一致时 search 路径应 warning stale（不改仓库真实库）
+  const tmpData = mkdtempSync(join(tmpdir(), "mc-skill-sem-stale-"));
+  try {
+    const versionDir = join(tmpData, "quilt_1.20.1", "quilt-docs", "1.20.1");
+    mkdirSync(join(versionDir, "processed"), { recursive: true });
+    mkdirSync(join(versionDir, "semantic"), { recursive: true });
+    writeFileSync(join(versionDir, "index-l0.json"), JSON.stringify({ docs: [] }), "utf8");
+    writeFileSync(join(versionDir, "processed", "x.md"), "# QSL\n", "utf8");
+    const dbPath = semanticDbPath(tmpData, "quilt", "1.20.1", "quilt-docs");
+    const db = new DatabaseSync(dbPath);
+    db.exec(SEMANTIC_DDL);
+    db.exec(`
+      INSERT INTO meta (key, value) VALUES
+        ('docs', '1'),
+        ('chunks', '1'),
+        ('built_at', '2010-01-01T00:00:00.000Z'),
+        ('source_fingerprint', 'intentionally-wrong');
+    `);
+    db.close();
+    const stale = isSemanticIndexStale({
+      builtAtIso: "2010-01-01T00:00:00.000Z",
+      storedFingerprint: "intentionally-wrong",
+      versionDir,
+    });
+    assert.equal(stale.stale, true);
+    const warn = semanticStaleSearchWarning(tmpData, "quilt", "1.20.1", "quilt-docs");
+    assert.match(warn ?? "", /语义索引过期/);
+  } finally {
+    rmSync(tmpData, { recursive: true, force: true });
+  }
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -1077,6 +1308,7 @@ await testSearchEnhancements();
 await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
 await testObfuscatedLayerAndLookup();
+await testFivePlatformRouting();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

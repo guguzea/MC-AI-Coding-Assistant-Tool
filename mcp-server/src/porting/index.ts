@@ -102,6 +102,7 @@ function addBuildMetadataEvidence(
     modsToml: string;
     neoforgeModsToml: string;
     fabricJson: string;
+    quiltJson?: string;
   },
 ): void {
   const build = [
@@ -135,6 +136,14 @@ function addBuildMetadataEvidence(
     if (/modLoader\s*=\s*["']javafml["']/.test(files.modsToml)) {
       evidence.forge += 1;
     }
+  }
+
+  // Quilt（优先于 Fabric：同时有 quilt.mod.json 与 fabric.mod.json 时 quilt 分更高）
+  if (
+    /org\.quiltmc\.loom|quilt-loom|quilt\.mod\.json/.test(build) ||
+    files.quiltJson
+  ) {
+    evidence.quilt += 5;
   }
 
   // Fabric
@@ -179,7 +188,10 @@ function queryBreakingChanges(currentVer: string, targetVer: string): {
 // ── 风险评估 ────────────────────────────────────────────────────────────────
 
 function assessRisk(stats: PortingStats, currentPlatform: string, targetPlatform: string): RiskAssessment {
-  const crossPlatform = currentPlatform !== targetPlatform;
+  const quiltFabricPair =
+    (currentPlatform === "quilt" && targetPlatform === "fabric") ||
+    (currentPlatform === "fabric" && targetPlatform === "quilt");
+  const crossPlatform = currentPlatform !== targetPlatform && !quiltFabricPair;
 
   const registryLevel = crossPlatform ? "medium" : "low";
   const eventsLevel = crossPlatform ? "medium" : "low";
@@ -393,7 +405,21 @@ export async function analyzePortingPath(args: unknown) {
   const modsToml = readContent(join(root, "src/main/resources/META-INF/mods.toml"));
   const neoforgeModsToml = readContent(join(root, "src/main/resources/META-INF/neoforge.mods.toml"));
   const fabricJson = readContent(join(root, "src/main/resources/fabric.mod.json"));
+  const quiltJson = readContent(join(root, "src/main/resources/quilt.mod.json"));
+  const litemodJson = readContent(join(root, "src/main/resources/litemod.json"));
+  const riftmodJson =
+    readContent(join(root, "src/main/resources/riftmod.json")) ||
+    readContent(join(root, "src/main/resources/rift.mod.json"));
+  const bedrockManifest = readContent(join(root, "manifest.json"));
 
+  if (quiltJson) {
+    try {
+      const parsed = JSON.parse(quiltJson);
+      modId = parsed.quilt_loader?.id ?? parsed.id ?? modId;
+    } catch {
+      // ignore
+    }
+  }
   if (fabricJson) {
     try {
       const parsed = JSON.parse(fabricJson);
@@ -416,7 +442,15 @@ export async function analyzePortingPath(args: unknown) {
   }
 
   const hasBuild = Boolean(buildGradle.trim() || buildGradleKts.trim() || settingsGradle.trim());
-  const hasMeta = Boolean(modsToml.trim() || neoforgeModsToml.trim() || fabricJson.trim());
+  const hasMeta = Boolean(
+    modsToml.trim() ||
+      neoforgeModsToml.trim() ||
+      fabricJson.trim() ||
+      quiltJson.trim() ||
+      litemodJson.trim() ||
+      riftmodJson.trim() ||
+      (bedrockManifest.trim() && /"format_version"/.test(bedrockManifest) && /"modules"/.test(bedrockManifest)),
+  );
   if (!hasBuild && !hasMeta) {
     const e: AnalyzePortingError = {
       ok: false,
@@ -442,7 +476,7 @@ export async function analyzePortingPath(args: unknown) {
   let mixinConfigs = 0;
   let clientOnlyAnnotations = 0;
 
-  const evidence: PlatformEvidence = { forge: 0, fabric: 0, neoforge: 0 };
+  const evidence: PlatformEvidence = { forge: 0, fabric: 0, neoforge: 0, quilt: 0 };
 
   for (const file of allSourceFiles) {
     const content = readContent(file);
@@ -453,6 +487,7 @@ export async function analyzePortingPath(args: unknown) {
     evidence.forge += (content.match(/@Mod\s*\(/g) ?? []).length;
     evidence.fabric += (content.match(/import net\.fabricmc\./g) ?? []).length;
     evidence.neoforge += (content.match(/import net\.neoforged\./g) ?? []).length;
+    evidence.quilt += (content.match(/import org\.quiltmc\./g) ?? []).length;
 
     // 统计
     if (/DeferredRegister|RegistryObject|FabricRegistry\.INSTANCE/g.test(content)) registryCalls++;
@@ -471,6 +506,7 @@ export async function analyzePortingPath(args: unknown) {
     modsToml,
     neoforgeModsToml,
     fabricJson,
+    quiltJson,
   });
 
   // mixin.json 文件
@@ -489,10 +525,43 @@ export async function analyzePortingPath(args: unknown) {
 
   // 4. 平台推断
   const { platform: inferredPlatform, ambiguous } = inferPlatform(evidence);
-  const currentPlatform = inferredPlatform;
+  let currentPlatform = inferredPlatform;
+  if (quiltJson.trim()) currentPlatform = "quilt";
+  else if (riftmodJson.trim()) currentPlatform = "rift";
+  else if (
+    bedrockManifest.trim() &&
+    /"format_version"/.test(bedrockManifest) &&
+    /"modules"/.test(bedrockManifest)
+  ) {
+    currentPlatform = "bedrock";
+  } else if (litemodJson.trim()) {
+    currentPlatform = "liteloader";
+  } else if (
+    allSourceFiles.some((f) => {
+      const c = readContent(f);
+      return /extends\s+BaseMod\b/.test(c) && !/net\.minecraftforge|cpw\.mods\.fml/.test(c);
+    })
+  ) {
+    currentPlatform = "modloader";
+  }
 
-  // 5. 推断目标平台
+  const UNSUPPORTED_PORT = new Set(["liteloader", "rift", "modloader", "bedrock"]);
   const targetPlatform = userTargetPlatform ?? (currentPlatform === "forge" ? "neoforge" : currentPlatform);
+
+  if (UNSUPPORTED_PORT.has(currentPlatform) || UNSUPPORTED_PORT.has(targetPlatform)) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: {
+        code: "UNSUPPORTED_PORT",
+        message: `不支持自动移植 ${currentPlatform} → ${targetPlatform}。基岩 / LiteLoader / Rift / ModLoader 交叉移植只提供笔记，不改工程。`,
+        hint:
+          currentPlatform === "rift" && targetPlatform === "fabric"
+            ? "Rift→Fabric 可手写移植笔记；port_project 保持 dryRun，无现成模板则只输出路线。"
+            : "请改用对应平台规则树；Quilt↔Fabric 才视为低风险自动路线。",
+      },
+    };
+    return JSON.stringify(e, null, 2);
+  }
   const needCrossPlatform = currentPlatform !== targetPlatform;
 
   // 6. 知识库查询
@@ -512,6 +581,9 @@ export async function analyzePortingPath(args: unknown) {
     needCrossPlatform,
     Boolean(userTargetPlatform),
   );
+  if (targetPlatform === "quilt" || currentPlatform === "quilt") {
+    routeSteps.push("Quilt 工程优先 org.quiltmc / QSL；禁止把 net.fabricmc.fabric.api.event.registry 当 QSL 注册");
+  }
 
   // 9. 建议目标信息
   const kb = loadVersionsKB() as { versions?: Record<string, { neoforge?: string; fabric?: string; mappings?: string[]; java?: number }> };
@@ -533,7 +605,7 @@ export async function analyzePortingPath(args: unknown) {
     platform: targetPlatform,
     mcVersion: targetVer,
     mappings:
-      targetPlatform === "fabric"
+      targetPlatform === "fabric" || targetPlatform === "quilt"
         ? "yarn"
         : (targetVersionInfo?.mappings?.[0] ?? mappings ?? null),
     java: targetVersionInfo?.java ?? (targetVer === "26.1" ? 25 : 21),
@@ -793,7 +865,21 @@ export async function portProject(args: unknown) {
     });
   }
 
-  const { dryRun = true, confirmed, action } = parsed.data;
+  const { dryRun = true, confirmed, action, targetPlatform } = parsed.data;
+  if (
+    targetPlatform === "liteloader" ||
+    targetPlatform === "rift" ||
+    targetPlatform === "modloader" ||
+    targetPlatform === "bedrock"
+  ) {
+    return JSON.stringify({
+      ok: false,
+      error: {
+        code: "UNSUPPORTED_PORT",
+        message: `port_project 不支持目标平台 ${targetPlatform}（仅笔记，不改工程）`,
+      },
+    });
+  }
   const doWrite = !dryRun && safeConfirmed(confirmed);
 
   let root: string;

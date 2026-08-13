@@ -1,0 +1,8 @@
+{
+  "name": "examplelitemod",
+  "version": "1.0.0",
+  "mcversion": "1.12.2",
+  "revision": "1",
+  "author": "example",
+  "description": "pure LiteLoader scaffold"
+}
