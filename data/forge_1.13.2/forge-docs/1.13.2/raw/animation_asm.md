@@ -11,11 +11,11 @@ Animation State Machine (ASM) Files are the meat of the animation API. These def
 
 ## Concepts
 
-The ASM contains _*parameters*_, _*clips*_, _*states*_, and _*transitions*_.
+The ASM contains *parameters*, *clips*, *states*, and *transitions*.
 
 ### States
 
-The Animation _*State*_ Machine can be in many different _*states*_. You define which states there are in the states section.
+The Animation *State* Machine can be in many different *states*. You define which states there are in the states section.
 
 ### Transitions
 

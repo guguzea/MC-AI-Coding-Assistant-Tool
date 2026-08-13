@@ -6,9 +6,9 @@ Game Tests are a way to run in-game unit tests. The system was designed to be sc
 
 A standard Game Test follows three basic steps:
 
-1. A structure, or template, is loaded holding the scene on which the interaction or behavior is tested.
-2. A method conducts the logic to perform on the scene.
-3. The method logic executes. If a successful state is reached, then the test succeeds. Otherwise, the test fails and the result is stored within a lectern adjacent to the scene.
+1. <li>A structure, or template, is loaded holding the scene on which the interaction or behavior is tested.
+2. <li>A method conducts the logic to perform on the scene.
+3. <li>The method logic executes. If a successful state is reached, then the test succeeds. Otherwise, the test fails and the result is stored within a lectern adjacent to the scene.
 
 As such, to create a Game Test, there must be an existing template holding the initial start state of the scene and a method which provides the logic of execution.
 
@@ -194,9 +194,9 @@ Game Tests are performed within scenes loaded by structures, or templates. All t
 
 The location of the template is specified by a few factors:
 
-- If the namespace of the template is specified.
-- If the class should be prepended to the name of the template.
-- If the name of the template is specified.
+- <li>If the namespace of the template is specified.
+- <li>If the class should be prepended to the name of the template.
+- <li>If the name of the template is specified.
 
 The namespace of the template is determined by `GameTest#templateNamespace`, then `GameTestHolder#value` if not specified, then `minecraft` if neither is specified.
 

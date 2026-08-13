@@ -7,6 +7,7 @@ import { resolveDataDir, resolveRepoRoot } from "../utils/path.js";
 import {
   dataNeedsUpdate,
   defaultUpdateRepo,
+  getLastGithubFetchMeta,
   pickDataAssets,
   resolveRelease,
   toolingNeedsUpdate,
@@ -134,7 +135,8 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       dataZip: assets.zip
         ? { name: assets.zip.name, size: assets.zip.size, url: assets.zip.browser_download_url }
         : null,
-      checksumAsset: assets.sums?.name ?? null,
+      checksumAsset: assets.sums?.name ?? (assets.checksumHex ? "github-asset-digest" : null),
+      fetchBackend: getLastGithubFetchMeta().backend,
     },
     channel,
     scope,
@@ -228,10 +230,17 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
     if (dataBlocked) {
       return withAction({ ...base, dryRun, steps, applied: false }, assets.action);
     }
-    if (!assets.zip || !assets.sums) {
+    if (!assets.zip) {
       return withAction(
         { ...base, dryRun, steps, applied: false },
         actionable("DATA_ASSET_MISSING", "缺少 data 资产", ["检查 Release"], ["mc_skill_update"]),
+      );
+    }
+    if (!assets.sums && !assets.checksumHex && !query.localSumsPath) {
+      return withAction(
+        { ...base, dryRun, steps, applied: false },
+        assets.action ??
+          actionable("DATA_CHECKSUM_MISSING", "缺少 checksum", ["检查 Release"], ["mc_skill_update"]),
       );
     }
     if (!dataUpdate && !dryRun) {
@@ -240,6 +249,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       const dr = await applyDataUpdate({
         zip: assets.zip,
         sums: assets.sums,
+        checksumHex: assets.checksumHex,
         releaseTag: release.tag_name,
         dryRun,
         dataDir,

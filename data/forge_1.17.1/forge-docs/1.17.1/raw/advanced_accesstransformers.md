@@ -77,7 +77,7 @@ Also called &ldquo;descriptors&rdquo;: see the [Java Virtual Machine Specificati
 - <li>`Z` - `boolean`, a `true` or `false` value
 - <li>`[` - references one dimension of an array<ul> <li>Example: `[[S` refers to `short[][]`
 
-<li>`L<class name>;` - references a reference type- <li>Example: `Ljava/lang/String;` refers to `java.lang.String` reference type _*(note the use of slashes instead of periods)*_
+<li>`L<class name>;` - references a reference type- <li>Example: `Ljava/lang/String;` refers to `java.lang.String` reference type *(note the use of slashes instead of periods)*
 
 <li>`(` - references a method descriptor, parameters should be supplied here or nothing if no parameters are present- <li>Example: `<method>(I)Z` refers to a method that requires an integer argument and returns a boolean
 

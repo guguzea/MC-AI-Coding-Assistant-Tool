@@ -1,8 +1,10 @@
-# Blocks
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/blocks
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "blocks"
+source: "https://docs.readthedocs.net/en/1.20.1/blocks/"
+sourceType: mkdocs
+---
 # Blocks
 
 Blocks are, obviously, essential to the Minecraft world. They make up all of the terrain, structures, and machines. Chances are if you are interested in making a mod, then you will want to add some blocks. This page will guide you through the creation of blocks, and some of the things you can do with them.
@@ -13,12 +15,12 @@ Blocks are, obviously, essential to the Minecraft world. They make up all of the
 
 For simple blocks, which need no special functionality (think cobblestone, wooden planks, etc.), a custom class is not necessary. You can create a block by instantiating the `Block` class with a `BlockBehaviour$Properties` object. This `BlockBehaviour$Properties` object can be made using `BlockBehaviour$Properties#of`, and it can be customized by calling its methods. For instance:
 
-- `strength` - The hardness controls the time it takes to break the block. It is an arbitrary value. For reference, stone has a hardness of 1.5, and dirt 0.5. If the block should be unbreakable a hardness of -1.0 should be used, see the definition of `Blocks#BEDROCK` as an example. The resistance controls the explosion resistance of the block. For reference, stone has a resistance of 6.0, and dirt 0.5.
-- `sound` - Controls the sound the block makes when it is punched, broken, or placed. Requires a `SoundType` argument, see the [sounds](../gameeffects/sounds/) page for more details.
-- `lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
-- `friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
+- <li>`strength` - The hardness controls the time it takes to break the block. It is an arbitrary value. For reference, stone has a hardness of 1.5, and dirt 0.5. If the block should be unbreakable a hardness of -1.0 should be used, see the definition of `Blocks#BEDROCK` as an example. The resistance controls the explosion resistance of the block. For reference, stone has a resistance of 6.0, and dirt 0.5.
+- <li>`sound` - Controls the sound the block makes when it is punched, broken, or placed. Requires a `SoundType` argument, see the [sounds](../gameeffects/sounds/) page for more details.
+- <li>`lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
+- <li>`friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
 
-All these methods are _*${1}_ which means you can call them in series. See the `Blocks` class for examples of this.
+All these methods are *chainable* which means you can call them in series. See the `Blocks` class for examples of this.
 
 > **Note**: Note Blocks have no setter for their CreativeModeTab. This is handled by the BuildCreativeModeTabContentsEvent if the block has an associated item (e.g. BlockItem). Furthermore, there is no setter for translation key of the block as it is generated from the registry name via Block#getDescriptionId.
 

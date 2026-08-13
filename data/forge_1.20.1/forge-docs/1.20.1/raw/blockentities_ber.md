@@ -1,8 +1,10 @@
-# BlockEntityRenderer
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/blockentities/ber
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "blockentities/ber"
+source: "https://docs.readthedocs.net/en/1.20.1/blockentities/ber/"
+sourceType: mkdocs
+---
 # BlockEntityRenderer
 
 A `BlockEntityRenderer` or `BER` is used to render blocks in a way that cannot be represented with a static baked model (JSON, OBJ, B3D, others). A block entity renderer requires the block to have a `BlockEntity`.
@@ -19,12 +21,12 @@ This method is called every frame in order to render the block entity.
 
 #### Parameters
 
-- <code>blockEntity`: This is the instance of the block entity being rendered.
-- `partialTick`: The amount of time, in fractions of a tick, that has passed since the last full tick.
-- `poseStack`: A stack holding four-dimensional matrix entries offset to the current position of the block entity.
-- `bufferSource`: A rendering buffer able to access a vertex consumer.
-- `combinedLight`: An integer of the current light value on the block entity.
-- `combinedOverlay`: An integer set to the current overlay of the block entity, usually `OverlayTexture#NO_OVERLAY` or 655,360.
+- <li><code>blockEntity`: This is the instance of the block entity being rendered.
+- <li>`partialTick`: The amount of time, in fractions of a tick, that has passed since the last full tick.
+- <li>`poseStack`: A stack holding four-dimensional matrix entries offset to the current position of the block entity.
+- <li>`bufferSource`: A rendering buffer able to access a vertex consumer.
+- <li>`combinedLight`: An integer of the current light value on the block entity.
+- <li>`combinedOverlay`: An integer set to the current overlay of the block entity, usually `OverlayTexture#NO_OVERLAY` or 655,360.
 
 ## Registering a BER
 

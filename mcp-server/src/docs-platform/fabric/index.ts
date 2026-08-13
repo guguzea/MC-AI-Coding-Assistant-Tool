@@ -25,7 +25,8 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
+import { missingSemanticDbWarning } from "../semantic/status.js";
 
 function getDataRoot(): string {
   return resolveDataDir();
@@ -205,10 +206,12 @@ export async function searchFabricDocs(
     const resolvedSource = source ?? "fabric-docs";
     const sources = resolvedSource === "all" ? ["fabric-docs", "fabric-wiki"] : [resolvedSource];
     let semanticRanked = false;
+    let semanticMissing = false;
     const semanticList: NonNullable<Awaited<ReturnType<typeof semanticSearch>>> = [];
     for (const src of sources) {
       const hits = await semanticSearch(query, "fabric", version, src, getDataRoot());
-      if (hits !== null) semanticRanked = true;
+      if (hits === null) semanticMissing = true;
+      else semanticRanked = true;
       if (hits) semanticList.push(...hits);
     }
     if (semanticRanked) {
@@ -233,6 +236,7 @@ export async function searchFabricDocs(
               source,
               tags,
               semantic: semanticRanked,
+              warning: joinSearchWarnings(missingSemanticDbWarning(semanticMissing)),
               total: (results as unknown as Array<unknown>).length,
               results,
             },

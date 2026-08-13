@@ -1,8 +1,10 @@
-# Synchronizing Entities
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/networking/entities
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "networking/entities"
+source: "https://docs.readthedocs.net/en/1.20.1/networking/entities/"
+sourceType: mkdocs
+---
 # Entities
 
 In addition to regular network messages, there are various other systems provided to handle synchronizing entity data.

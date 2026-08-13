@@ -1,8 +1,10 @@
-# Structuring
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "gettingstarted/structuring"
+source: "https://docs.readthedocs.net/en/1.20.1/gettingstarted/structuring/"
+sourceType: mkdocs
+---
 # Structuring Your Mod
 
 Structured mods are beneficial for maintenance, making contributions, and providing a clearer understanding of the underlying codebase. Some of the recommendations from Java, Minecraft, and Forge are listed below.
@@ -50,8 +52,8 @@ You can find some additional naming conventions on [Oracle&rsquo;s tutorial page
 
 In addition to the top-level package, it is highly recommend to break your mod&rsquo;s classes between subpackages. There are two major methods on how to do so:
 
-- **Group By Function**: Make subpackages for classes with a common purpose. For example, blocks can be under `block` or `blocks`, entities under `entity` or `entities`, etc. Mojang uses this structure with the singular version of the word.
-- **Group By Logic**: Make subpackages for classes with a common logic. For example, if you were creating a new type of crafting table, you would put its block, menu, item, and more under `feature.crafting_table`.
+- <li>**Group By Function**: Make subpackages for classes with a common purpose. For example, blocks can be under `block` or `blocks`, entities under `entity` or `entities`, etc. Mojang uses this structure with the singular version of the word.
+- <li>**Group By Logic**: Make subpackages for classes with a common logic. For example, if you were creating a new type of crafting table, you would put its block, menu, item, and more under `feature.crafting_table`.
 
 #### Client, Server, and Data Packages
 
@@ -65,9 +67,9 @@ A common class naming scheme makes it easier to decipher the purpose of the clas
 
 Classes are commonly suffixed with its type, for example:
 
-- An `Item` called `PowerRing` -> `PowerRingItem`.
-- A `Block` called `NotDirt` -> `NotDirtBlock`.
-- A menu for an `Oven` -> `OvenMenu`.
+- <li>An `Item` called `PowerRing` -> `PowerRingItem`.
+- <li>A `Block` called `NotDirt` -> `NotDirtBlock`.
+- <li>A menu for an `Oven` -> `OvenMenu`.
 
 > **Note**: Note Mojang typically follows a similar structure for all classes except entities. Those are represented by just their names (e.g. Pig, Zombie, etc.).
 

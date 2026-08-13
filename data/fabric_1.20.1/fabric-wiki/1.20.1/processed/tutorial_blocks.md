@@ -12,7 +12,7 @@ Adding blocks to your mod follows a similar process to [adding an item](tutorial
 
 Start by creating an instance of Block. It can be stored at any location, but we will start at the top of your ModInitializer. The Block constructor requires an AbstractBlock.Settings instance, which is a builder for configuring block properties. Fabric provides a FabricBlockSettings builder class with more available options.
 
-<code java [enable_${1}_numbers="true"] ExampleMod.java>
+<code java  ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     /* Declare and initialize our custom block instance.
@@ -44,7 +44,7 @@ Blocks should be registered under the Registries.BLOCK registry. Similar to regi
 
 If you're using version 1.19.2 or below, please replace Registries.BLOCK with Registry.BLOCK。
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="11"] ExampleMod.java>
+<code java  ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     // For versions below 1.20:
@@ -57,9 +57,9 @@ public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // For versions below 1.21:
-        // Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_${1}_BLOCK);
+        // Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_block"), EXAMPLE_BLOCK);
         // For versions since 1.21:
-        Registry.register(Registries.BLOCK, Identifier.of("tutorial", "example_${1}_BLOCK);
+        Registry.register(Registries.BLOCK, Identifier.of("tutorial", "example_block"), EXAMPLE_BLOCK);
     }
 }
 </code>
@@ -69,7 +69,7 @@ Your custom block will //not// be accessible as an item yet, but it can be seen 
 ## Registering an Item for your Block before 1.21.2
 In most cases, you want to be able to place your block using an item. To do this, you need to register a corresponding BlockItem in the item registry. You can do this by registering an instance of BlockItem under Registries.ITEM. The registry name of the item should usually be the same as the registry name of the block.
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="12"] ExampleMod.java>
+<code java  ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     // For versions below 1.20:
@@ -81,15 +81,15 @@ public class ExampleMod implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_${1}_BLOCK);
+        Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_block"), EXAMPLE_BLOCK);
         // For versions below 1.20.5:
-        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_${1}_BLOCK, new FabricItemSettings()));
+        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new FabricItemSettings()));
         
         // For versions below 1.21:
-        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_${1}_BLOCK, new Item.Settings()));
+        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new Item.Settings()));
         
         // For versions since 1.21:
-        Registry.register(Registries.ITEM, Identifier.of("tutorial", "example_${1}_BLOCK, new Item.Settings()));
+        Registry.register(Registries.ITEM, Identifier.of("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new Item.Settings()));
     }
 }
 </code>
@@ -100,7 +100,7 @@ public class ExampleMod implements ModInitializer {
 Sometimes you have many blocks in the mod. If you register them in such ways, you have to write complex codes for each of them, and the code will be messy. Therefore, similar to registering items, we create a separate class for blocks, and a utility methods to register the block and item.
 <code java TutorialBlocks.java>
 public final class TutorialBlocks {
-    public static final Block EXAMPLE_${1}_block", new Block(Block.Settings.create().strength(4.0f)));
+    public static final Block EXAMPLE_BLOCK = register("example_block", new Block(Block.Settings.create().strength(4.0f)));
     
     private static <T extends Block> T register(String path, T block) {
         Registry.register(Registries.BLOCK, Identifier.of("tutorial", path), block);
@@ -128,7 +128,7 @@ In 1.21.2+, RegistryKey should be added into the AbstractBlock.Settings for the 
 
 <code java TutorialBlocks.java>
 public class TutorialBlocks {
-  public static final Block EXAMPLE_${1}_block", Block::new, Block.Settings.create().strength(4.0f));
+  public static final Block EXAMPLE_BLOCK = register("example_block", Block::new, Block.Settings.create().strength(4.0f));
 
   private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
     final Identifier identifier = Identifier.of("tutorial", path);
@@ -162,7 +162,7 @@ Do not forget to static-load the class in the mod initializer:
 ## Giving your Block Visuals
 At this point, your new block will appear as a purple and black checkerboard pattern in-game. This is Minecraft's way of showing you that something went wrong while loading the block's assets (or visuals). A full list of issues will be printed to your log when you run your client. You will need these files to give your block visuals:
   * A https://minecraft.wiki/w/Blockstates_definition|blockstates definition
-  * A https://minecraft.wiki/w/Model#Uses_${1}_models|baked block model
+  * A https://minecraft.wiki/w/Model#Uses_of_models|baked block model
   * A texture for the block
   * //For version 1.21.3 and below:// An item model file (if the block has an item associated with it).
   * //For version 1.21.4 and above:// An item model definition for the item (if the block has an item associated with it).
@@ -221,9 +221,9 @@ Load up Minecraft and your block should have visuals!
 ## Configuring Block Drops
 To make your block drop items when broken, you will need a //loot table//. The following file will cause your block to drop its respective item form when broken: 
 
-For versions since 1.21, the path is src/main/resources/data/tutorial/**loot_${1}_block.json. Before version 1.21, the path was src/main/resources/data/tutorial/**loot_${1}_block.json.
+For versions since 1.21, the path is src/main/resources/data/tutorial/**loot_table**/blocks/example_block.json. Before version 1.21, the path was src/main/resources/data/tutorial/**loot_tables**/blocks/example_block.json.
 
-<code JavaScript src/main/resources/data/tutorial/loot_${1}_block.json>
+<code JavaScript src/main/resources/data/tutorial/loot_table/blocks/example_block.json>
 {
   "type": "minecraft:block",
   "pools": [
@@ -250,7 +250,7 @@ The condition minecraft:survives_explosion means that, if the block is destroyed
 In minecraft 1.17, there has been a change for breaking blocks. Now, to define harvest tools and harvest levels, we need to use tags. Read about tags at: [Tags Tutorial](tutorial:tags). The tags that we need to add the block to are:
 
  * Harvest tool: src/main/resources/data/minecraft/tags/**block**/mineable/<tooltype>.json, where <tooltype> can be any of: axe, pickaxe, shovel or hoe (replace "//**block**//" with "//**blocks**//" for versions below 1.21)
- * Harvest level: src/main/resources/data/minecraft/tags/**block**/needs_${1}_tool.json, where <tier> can be any of: stone, iron or diamond (//not including// netherite) (replace "//**block**//" with "//**blocks**//" for versions below 1.21)
+ * Harvest level: src/main/resources/data/minecraft/tags/**block**/needs_<tier>_tool.json, where <tier> can be any of: stone, iron or diamond (//not including// netherite) (replace "//**block**//" with "//**blocks**//" for versions below 1.21)
 
 <code JavaScript src/main/resources/data/minecraft/tags/block/mineable/pickaxe.json>
 {
@@ -261,7 +261,7 @@ In minecraft 1.17, there has been a change for breaking blocks. Now, to define h
 }
 </code>
 
-<code JavaScript src/main/resources/data/minecraft/tags/block/needs_${1}_tool.json>
+<code JavaScript src/main/resources/data/minecraft/tags/block/needs_stone_tool.json>
 {
   "replace": false,
   "values": [
@@ -270,16 +270,16 @@ In minecraft 1.17, there has been a change for breaking blocks. Now, to define h
 }
 </code>
 
-For the harvest level tags (needs_${1}_tool, needs_${1}_tool and needs_${1}_tool) to take effect, add requiresTool() to the Block.Settings in the block declaration (example of versions above 1.20.5):
+For the harvest level tags (needs_stone_tool, needs_iron_tool and needs_diamond_tool) to take effect, add requiresTool() to the Block.Settings in the block declaration (example of versions above 1.20.5):
 
-<code java [enable_${1}_numbers="true"]>
+<code java >
     public static final Block EXAMPLE_BLOCK = new ExampleBlock(Block.Settings.create().strength(4.0f).requiresTool());
 </code>
 
 ## Creating a Custom Block Class
 The above approach works well for simple blocks but falls short when you want a block with //unique// mechanics. We'll create a //separate// class that extends Block to do this. The class needs a constructor that takes in an AbstractBlock.Settings argument:
 
-<code java [enable_${1}_numbers="true"] ExampleBlock.java>
+<code java  ExampleBlock.java>
 public class ExampleBlock extends Block {
     public ExampleBlock(Settings settings) {
         super(settings);
@@ -289,7 +289,7 @@ public class ExampleBlock extends Block {
 
 You can override methods in the block class for custom functionality. Here's an implementation of the onUse method, which is called when you right-click the block. We check if the interaction is occurring on the server, and then send the player a message saying, //"Hello, world!"//
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="8,9,10,11,12,13,14,15"] ExampleBlock.java>
+<code java  ExampleBlock.java>
 public class ExampleBlock extends Block {
 
     public ExampleBlock(Settings settings) {
@@ -310,10 +310,10 @@ public class ExampleBlock extends Block {
 
 To use your custom block class, replace new Block with new ExampleBlock:
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="3"] TutorialBlocks.java>
+<code java  TutorialBlocks.java>
 public final class TutorialBlocks {
 
-    public static final Block EXAMPLE_${1}_block", new ExampleBlock(Block.Settings.create().strength(4.0f)));
+    public static final Block EXAMPLE_BLOCK = register("example_block", new ExampleBlock(Block.Settings.create().strength(4.0f)));
     
     // ...
 }

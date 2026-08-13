@@ -6,7 +6,7 @@ This page will cover the basics of the most common types of interaction with blo
 
 ## Player Right Click
 
-Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is _*the*_ most common method of interaction. And thankfully, it is also one of the simplest to handle.
+Since left clicking, or &ldquo;punching&rdquo;, a block does not generally result in any unique behavior, it is probably fair to say right clicking, or &ldquo;activation&rdquo;, is *the* most common method of interaction. And thankfully, it is also one of the simplest to handle.
 
 ## `onBlockActivated
 

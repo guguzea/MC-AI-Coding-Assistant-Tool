@@ -1,8 +1,10 @@
-# Codecs
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "datastorage/codecs"
+source: "https://docs.readthedocs.net/en/1.20.1/datastorage/codecs/"
+sourceType: mkdocs
+---
 # Codecs
 
 Codecs are a serialization tool from Mojang&rsquo;s [DataFixerUpper](https://github.com/Mojang/DataFixerUpper) used to describe how objects can be transformed between different formats, such as `JsonElement`s for JSON and `Tag`s for NBT.
@@ -119,7 +121,7 @@ Codecs can be created for encoding and decoding any object. For understanding pu
 
 Codecs can define objects through the use of records. Each record codec defines any object with explicit named fields. There are many ways to create a record codec, but the simplest is via `RecordCodecBuilder#create`.
 
-`RecordCodecBuilder#create` takes in a function which defines an `Instance` and returns an application (`App`) of the object. A correlation can be drawn to creating a class _*${1}_ and the constructors used to _*${1}_ the class to the constructed object.
+`RecordCodecBuilder#create` takes in a function which defines an `Instance` and returns an application (`App`) of the object. A correlation can be drawn to creating a class *instance* and the constructors used to *apply* the class to the constructed object.
 
 ```
 // Some object to create a codec for

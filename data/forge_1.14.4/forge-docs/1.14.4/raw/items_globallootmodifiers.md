@@ -21,7 +21,7 @@ All you need to add here are the registry names of your loot modifiers. ``` { "r
 
 `replace` causes the cache of modifiers to be cleared fully when this asset loads (mods are loaded in an order that may be specified by a data pack). For modders you will want to use `false` while data pack makers may want to specify their overrides with `true`.
 
-`entries` is an _*ordered list*_ of the modifiers that will be loaded. Any modifier that is not listed will not be loaded and the ones listed are called in the order listed. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
+`entries` is an *ordered list* of the modifiers that will be loaded. Any modifier that is not listed will not be loaded and the ones listed are called in the order listed. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
 
 ## The serialized json
 

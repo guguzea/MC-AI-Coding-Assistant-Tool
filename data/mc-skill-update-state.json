@@ -1,0 +1,11 @@
+{
+  "lastCheck": {
+    "at": "2026-08-13T02:01:53.344Z",
+    "updateAvailable": true,
+    "remoteTag": "V1.0.4",
+    "scopes": [
+      "tooling",
+      "data"
+    ]
+  }
+}

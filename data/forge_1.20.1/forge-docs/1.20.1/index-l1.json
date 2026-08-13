@@ -3,7 +3,7 @@
     "id": "1.20.1/advanced_accesstransformers",
     "version": "1.20.1",
     "label": "Access Transformers",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers",
+    "url": "https://docs.readthedocs.net/en/1.20.1/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -22,7 +22,7 @@
       {
         "title": "Access Modifiers",
         "level": 2,
-        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - public - visible to all classes inside and outside its package -..."
+        "summary": "Access modifiers specify to what new member visibility the given target will be transformed to. In decreasing order of visibility: - <li>public - visible to all classes inside and outside its packa..."
       },
       {
         "title": "Targets and Directives",
@@ -40,7 +40,7 @@
     "id": "1.20.1/blockentities",
     "version": "1.20.1",
     "label": "BlockEntities",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/",
     "tags": [
       "block"
     ],
@@ -77,7 +77,7 @@
     "id": "1.20.1/blockentities_ber",
     "version": "1.20.1",
     "label": "BlockEntityRenderer",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/ber",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/ber/",
     "tags": [
       "block"
     ],
@@ -99,7 +99,7 @@
     "id": "1.20.1/blocks",
     "version": "1.20.1",
     "label": "Blocks",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/",
     "tags": [
       "block"
     ],
@@ -126,7 +126,7 @@
     "id": "1.20.1/blocks_states",
     "version": "1.20.1",
     "label": "Block States",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/states",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/states/",
     "tags": [
       "block"
     ],
@@ -163,7 +163,7 @@
     "id": "1.20.1/concepts_events",
     "version": "1.20.1",
     "label": "Events",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/events",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/events/",
     "tags": [
       "event"
     ],
@@ -205,7 +205,7 @@
     "id": "1.20.1/concepts_internationalization",
     "version": "1.20.1",
     "label": "Internationalization and Localization",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/internationalization",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/internationalization/",
     "tags": [],
     "firstParagraph": "Language files are located by assets/[namespace]/lang/[locale].json (e.g. all US English translations provided by examplemod would be within assets/examplemod/lang/en_us.json).",
     "sections": [
@@ -230,7 +230,7 @@
     "id": "1.20.1/concepts_lifecycle",
     "version": "1.20.1",
     "label": "Mod Lifecycle",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/lifecycle/",
     "tags": [
       "lifecycle"
     ],
@@ -267,7 +267,7 @@
     "id": "1.20.1/concepts_registries",
     "version": "1.20.1",
     "label": "Registries",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/registries",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -299,7 +299,7 @@
     "id": "1.20.1/concepts_resources",
     "version": "1.20.1",
     "label": "Resources",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/resources",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/resources/",
     "tags": [],
     "firstParagraph": "Minecraft identifies resources using <code>ResourceLocations. A ResourceLocation contains two parts: a namespace and a path.",
     "sections": [
@@ -314,7 +314,7 @@
     "id": "1.20.1/concepts_sides",
     "version": "1.20.1",
     "label": "Sides in Minecraft",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/sides",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/sides/",
     "tags": [
       "sides"
     ],
@@ -361,7 +361,7 @@
     "id": "1.20.1/datagen",
     "version": "1.20.1",
     "label": "Data Generators",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datagen/",
     "tags": [
       "datagen",
       "tag"
@@ -619,7 +619,7 @@
     "id": "1.20.1/datastorage_capabilities",
     "version": "1.20.1",
     "label": "The Capability System",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -671,7 +671,7 @@
     "id": "1.20.1/datastorage_codecs",
     "version": "1.20.1",
     "label": "Codecs",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/codecs/",
     "tags": [],
     "firstParagraph": "Codecs are primarily used to encode, or serialize, Java objects to some data format type and decode, or deserialize, formatted data objects back to its associated Java type.",
     "sections": [
@@ -696,14 +696,14 @@
     "id": "1.20.1/datastorage_saveddata",
     "version": "1.20.1",
     "label": "Saved Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/saveddata/",
     "tags": [],
     "firstParagraph": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of:",
     "sections": [
       {
         "title": "Declaration",
         "level": 2,
-        "summary": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of: - save: Allows the implementation to write NBT data to the level."
+        "summary": "Each SD implementation must subtype the SavedData class. There are two important methods to be aware of: - <li>save: Allows the implementation to write NBT data to the level."
       },
       {
         "title": "Attaching to a Level",
@@ -791,7 +791,7 @@
     "id": "1.20.1/gameeffects_particles",
     "version": "1.20.1",
     "label": "Particles",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/particles/",
     "tags": [
       "particles"
     ],
@@ -813,7 +813,7 @@
     "id": "1.20.1/gameeffects_sounds",
     "version": "1.20.1",
     "label": "Sounds",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/sounds",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -845,19 +845,19 @@
     "id": "1.20.1/gettingstarted",
     "version": "1.20.1",
     "label": "Getting Started with Forge",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/",
     "tags": [],
-    "firstParagraph": "- An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin.",
+    "firstParagraph": "- <li> An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin.",
     "sections": [
       {
         "title": "Prerequisites",
         "level": 2,
-        "summary": "- An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin."
+        "summary": "- <li> An installation of the Java 17 Development Kit (JDK) and 64-bit Java Virtual Machine (JVM). Forge recommends and officially supports Eclipse Temurin."
       },
       {
         "title": "Building and Testing Your Mod",
         "level": 2,
-        "summary": "1. To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar, by default."
+        "summary": "1. <li>To build your mod, run gradlew build. This will output a file in build/libs with the name [archivesBaseName]-[version].jar, by default."
       }
     ]
   },
@@ -865,7 +865,7 @@
     "id": "1.20.1/gettingstarted_modfiles",
     "version": "1.20.1",
     "label": "Mod Files",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/modfiles",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/modfiles/",
     "tags": [
       "meta"
     ],
@@ -887,7 +887,7 @@
     "id": "1.20.1/gettingstarted_structuring",
     "version": "1.20.1",
     "label": "Structuring Your Mod",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
@@ -914,7 +914,7 @@
     "id": "1.20.1/gettingstarted_versioning",
     "version": "1.20.1",
     "label": "Versioning",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/versioning/",
     "tags": [
       "meta"
     ],
@@ -923,7 +923,7 @@
       {
         "title": "Examples",
         "level": 2,
-        "summary": "Here is a list of examples that can increment the various variables. - MCVERSION - Always matches the Minecraft version the mod is for. - MAJORMOD - Removing items, blocks, block entities, etc."
+        "summary": "Here is a list of examples that can increment the various variables. - <li>MCVERSION - <li>Always matches the Minecraft version the mod is for."
       }
     ]
   },
@@ -931,16 +931,16 @@
     "id": "1.20.1/gui_menus",
     "version": "1.20.1",
     "label": "Menus",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/menus",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gui/menus/",
     "tags": [
       "gui"
     ],
-    "firstParagraph": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the ${1} of the menu.",
+    "firstParagraph": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the type of the menu.",
     "sections": [
       {
         "title": "`MenuType",
         "level": 2,
-        "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the ${1} of the menu."
+        "summary": "Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the type of the menu."
       },
       {
         "title": "`AbstractContainerMenu",
@@ -958,7 +958,7 @@
     "id": "1.20.1/gui_screens",
     "version": "1.20.1",
     "label": "Screens",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/screens",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gui/screens/",
     "tags": [
       "gui"
     ],
@@ -1010,7 +1010,7 @@
     "id": "1.20.1/items",
     "version": "1.20.1",
     "label": "Items",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/items",
+    "url": "https://docs.readthedocs.net/en/1.20.1/items/",
     "tags": [
       "item"
     ],
@@ -1037,7 +1037,7 @@
     "id": "1.20.1/items_bewlr",
     "version": "1.20.1",
     "label": "BlockEntityWithoutLevelRenderer",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/items/bewlr",
+    "url": "https://docs.readthedocs.net/en/1.20.1/items/bewlr/",
     "tags": [
       "item"
     ],
@@ -1054,7 +1054,7 @@
     "id": "1.20.1/legacy",
     "version": "1.20.1",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy",
+    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1063,7 +1063,7 @@
     "id": "1.20.1/legacy_porting",
     "version": "1.20.1",
     "label": "Porting to Minecraft 1.20",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/porting",
+    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/porting/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1072,7 +1072,7 @@
     "id": "1.20.1/misc_config",
     "version": "1.20.1",
     "label": "Configuration",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/config",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/config/",
     "tags": [
       "config"
     ],
@@ -1099,7 +1099,7 @@
     "id": "1.20.1/misc_debugprofiler",
     "version": "1.20.1",
     "label": "Debug Profiler",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/debugprofiler/",
     "tags": [],
     "firstParagraph": "The Debug Profiler is very simple to use. It requires the debug keybind F3 + L to start the profiler. After 10 seconds, it will automatically stop; however, it can be stopped earlier by pressing th...",
     "sections": [
@@ -1124,7 +1124,7 @@
     "id": "1.20.1/misc_gametest",
     "version": "1.20.1",
     "label": "Game Tests",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/gametest",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/gametest/",
     "tags": [
       "tests"
     ],
@@ -1133,7 +1133,7 @@
       {
         "title": "Creating a Game Test",
         "level": 2,
-        "summary": "A standard Game Test follows three basic steps: 1. A structure, or template, is loaded holding the scene on which the interaction or behavior is tested. 2."
+        "summary": "A standard Game Test follows three basic steps: 1. <li>A structure, or template, is loaded holding the scene on which the interaction or behavior is tested. 2."
       },
       {
         "title": "Registering a Game Test",
@@ -1161,7 +1161,7 @@
     "id": "1.20.1/misc_keymappings",
     "version": "1.20.1",
     "label": "Key Mappings",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/keymappings",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/keymappings/",
     "tags": [],
     "firstParagraph": "A <code>KeyMapping can be registered by listening to the RegisterKeyMappingsEvent on the mod event bus only on the physical client and calling #register`.",
     "sections": [
@@ -1186,7 +1186,7 @@
     "id": "1.20.1/misc_updatechecker",
     "version": "1.20.1",
     "label": "Forge Update Checker",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/updatechecker/",
     "tags": [],
     "firstParagraph": "The first thing you want to do is specify the updateJSONURL parameter in your mods.toml file. The value of this parameter should be a valid URL pointing to an update JSON file.",
     "sections": [
@@ -1206,7 +1206,7 @@
     "id": "1.20.1/networking",
     "version": "1.20.1",
     "label": "Networking",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/",
     "tags": [
       "networking"
     ],
@@ -1217,7 +1217,7 @@
     "id": "1.20.1/networking_entities",
     "version": "1.20.1",
     "label": "Entities",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/entities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -1239,7 +1239,7 @@
     "id": "1.20.1/networking_simpleimpl",
     "version": "1.20.1",
     "label": "SimpleImpl",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -1258,7 +1258,7 @@
       {
         "title": "Registering Packets",
         "level": 2,
-        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - The first parameter is the discriminator..."
+        "summary": "Next, we must declare the types of messages that we would like to send and receive. This is done using INSTANCE#registerMessage, which takes 5 parameters: - <li>The first parameter is the discrimin..."
       },
       {
         "title": "Handling Packets",
@@ -1268,7 +1268,7 @@
       {
         "title": "Sending Packets",
         "level": 2,
-        "summary": "There is but one way to send a packet to the server. This is because there is only ever ${1} server the client can be connected to at once."
+        "summary": "There is but one way to send a packet to the server. This is because there is only ever one server the client can be connected to at once."
       }
     ]
   },
@@ -1353,7 +1353,7 @@
     "id": "1.20.1/rendering_modelloaders",
     "version": "1.20.1",
     "label": "Custom Model Loaders",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders",
+    "url": "https://docs.readthedocs.net/en/1.20.1/rendering/modelloaders/",
     "tags": [
       "rendering"
     ],
@@ -1426,7 +1426,7 @@
     "id": "1.20.1/resources_client",
     "version": "1.20.1",
     "label": "Resource Packs",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/client/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1481,7 +1481,7 @@
     "id": "1.20.1/resources_server",
     "version": "1.20.1",
     "label": "Datapacks",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/",
     "tags": [],
     "firstParagraph": "",
     "sections": []
@@ -1621,6 +1621,48 @@
     ]
   },
   {
+    "id": "1.20.1/resources_server_recipes_custom",
+    "version": "1.20.1",
+    "label": "Custom Recipes",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/recipes/custom/",
+    "tags": [
+      "recipe"
+    ],
+    "firstParagraph": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result.",
+    "sections": [
+      {
+        "title": "Recipe",
+        "level": 2,
+        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
+      },
+      {
+        "title": "RecipeType",
+        "level": 2,
+        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
+      },
+      {
+        "title": "RecipeSerializer",
+        "level": 2,
+        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
+      },
+      {
+        "title": "Building the JSON",
+        "level": 2,
+        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
+      },
+      {
+        "title": "Non-Item Logic",
+        "level": 2,
+        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
+      },
+      {
+        "title": "Data Generation",
+        "level": 2,
+        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
+      }
+    ]
+  },
+  {
     "id": "1.20.1/resources_server_recipes_incode",
     "version": "1.20.1",
     "label": "Non-Datapack Recipes",
@@ -1703,48 +1745,6 @@
         "title": "Using Tags in Recipes and Advancements",
         "level": 2,
         "summary": "Tags are directly supported by Vanilla. See the respective Vanilla wiki pages for recipes and advancements for usage details."
-      }
-    ]
-  },
-  {
-    "id": "1.20.1/resources_server_recipes_custom",
-    "version": "1.20.1",
-    "label": "Custom Recipes",
-    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/recipes/custom/",
-    "tags": [
-      "recipe"
-    ],
-    "firstParagraph": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result.",
-    "sections": [
-      {
-        "title": "Recipe",
-        "level": 2,
-        "summary": "The Recipe interface describes the recipe data and the execution logic. This includes matching the inputs and providing the associated result."
-      },
-      {
-        "title": "RecipeType",
-        "level": 2,
-        "summary": "RecipeType is responsible for defining the category or context the recipe will be used within. For example, if a recipe was going to be smelted in a furnace, it would have a type of RecipeType#SMEL..."
-      },
-      {
-        "title": "RecipeSerializer",
-        "level": 2,
-        "summary": "A RecipeSerializer is responsible for decoding JSONs and communicating across the network for an associated Recipe subtype."
-      },
-      {
-        "title": "Building the JSON",
-        "level": 2,
-        "summary": "Custom Recipe JSONs are stored in the same place as other recipes. The specified type should represent the registry name of the recipe serializer."
-      },
-      {
-        "title": "Non-Item Logic",
-        "level": 2,
-        "summary": "If items are not used as part of the input or result of a recipe, then the normal methods provided in RecipeManager will not be useful."
-      },
-      {
-        "title": "Data Generation",
-        "level": 2,
-        "summary": "All custom recipes, regardless of input or output data, can be created into a FinishedRecipe for data generation using the RecipeProvider."
       }
     ]
   }

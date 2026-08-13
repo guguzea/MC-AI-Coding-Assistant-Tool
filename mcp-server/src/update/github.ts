@@ -3,7 +3,16 @@
  */
 
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import {
+  collectErrorText,
+  getLastGithubFetchMeta,
+  githubFetch,
+  networkFailureNextSteps,
+  type FetchFn,
+} from "./http.js";
 import { isNewer, looksLikePrereleaseTag } from "./semver.js";
+
+export type { FetchFn } from "./http.js";
 
 export type UpdateChannel = "stable" | "latest" | "tag";
 
@@ -12,6 +21,8 @@ export interface GhAsset {
   size: number;
   browser_download_url: string;
   content_type?: string;
+  /** GitHub Release API 的 `digest`，如 `sha256:abc...` */
+  digest?: string;
 }
 
 export interface GhRelease {
@@ -31,8 +42,6 @@ export interface FetchReleaseResult {
   action?: ActionEnvelope;
   rateLimitRetryAfter?: number;
 }
-
-export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 
 export function defaultUpdateRepo(): string {
   return process.env.MC_SKILL_UPDATE_REPO?.trim() || "guguzea/MC-AI-Coding-Assistant-Tool";
@@ -61,6 +70,44 @@ export function isPrereleaseRelease(r: GhRelease): boolean {
   return looksLikePrereleaseTag(r.tag_name);
 }
 
+function httpStatusAction(status: number): ActionEnvelope {
+  if (status === 404) {
+    return actionable(
+      "UPDATE_CHECK_FAILED",
+      `GitHub API 失败: HTTP 404（仓库或 Release 不存在）`,
+      [
+        `确认 MC_SKILL_UPDATE_REPO（当前默认 ${defaultUpdateRepo()}）`,
+        "确认该仓库已发布 GitHub Release",
+        "可选配置 GitHub token",
+      ],
+      ["mc_skill_update", "get_server_status"],
+    );
+  }
+  if (status === 401 || status === 403) {
+    return actionable(
+      "UPDATE_CHECK_FAILED",
+      `GitHub API 失败: HTTP ${status}（鉴权/权限）`,
+      ["检查 MC_SKILL_GITHUB_TOKEN / GITHUB_TOKEN", "确认 token 对目标仓库有权读取 Release"],
+      ["mc_skill_update"],
+    );
+  }
+  return actionable(
+    "UPDATE_CHECK_FAILED",
+    `GitHub API 失败: HTTP ${status}`,
+    ["检查网络与 MC_SKILL_UPDATE_REPO", "稍后重试", "可选配置 GitHub token"],
+    ["mc_skill_update", "get_server_status"],
+  );
+}
+
+function networkFailureAction(err: unknown, url: string): ActionEnvelope {
+  return actionable(
+    "UPDATE_CHECK_FAILED",
+    `无法连接 GitHub: ${collectErrorText(err)} @ ${url}`,
+    networkFailureNextSteps(),
+    ["mc_skill_update"],
+  );
+}
+
 async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
   if (res.status === 429) {
     const retryAfter = Number(res.headers.get("retry-after") || "60");
@@ -78,12 +125,7 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
   if (!res.ok) {
     return {
       ok: false,
-      action: actionable(
-        "UPDATE_CHECK_FAILED",
-        `GitHub API 失败: HTTP ${res.status}`,
-        ["检查网络与 MC_SKILL_UPDATE_REPO", "稍后重试", "可选配置 GitHub token"],
-        ["mc_skill_update", "get_server_status"],
-      ),
+      action: httpStatusAction(res.status),
     };
   }
   const json = (await res.json()) as GhRelease | GhRelease[];
@@ -92,7 +134,7 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
 
 export async function fetchReleasesList(
   repo: string,
-  fetchImpl: FetchFn = fetch,
+  fetchImpl: FetchFn = githubFetch,
   perPage = 30,
 ): Promise<{ ok: boolean; releases?: GhRelease[]; action?: ActionEnvelope }> {
   const url = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}`;
@@ -113,12 +155,7 @@ export async function fetchReleasesList(
     if (!res.ok) {
       return {
         ok: false,
-        action: actionable(
-          "UPDATE_CHECK_FAILED",
-          `GitHub API 失败: HTTP ${res.status}`,
-          ["检查网络与 MC_SKILL_UPDATE_REPO", "稍后重试"],
-          ["mc_skill_update"],
-        ),
+        action: httpStatusAction(res.status),
       };
     }
     const releases = (await res.json()) as GhRelease[];
@@ -126,12 +163,7 @@ export async function fetchReleasesList(
   } catch (err) {
     return {
       ok: false,
-      action: actionable(
-        "UPDATE_CHECK_FAILED",
-        `无法连接 GitHub: ${(err as Error).message}`,
-        ["检查网络 / 代理", "稍后重试"],
-        ["mc_skill_update"],
-      ),
+      action: networkFailureAction(err, url),
     };
   }
 }
@@ -143,7 +175,7 @@ export async function resolveRelease(opts: {
   fetchImpl?: FetchFn;
 }): Promise<FetchReleaseResult & { notes?: string }> {
   const repo = opts.repo ?? defaultUpdateRepo();
-  const fetchImpl = opts.fetchImpl ?? fetch;
+  const fetchImpl = opts.fetchImpl ?? githubFetch;
   const channel = opts.channel;
 
   try {
@@ -199,48 +231,56 @@ export async function resolveRelease(opts: {
     }
     return { ok: true, release: stable, notes: truncateBody(stable.body) };
   } catch (err) {
+    const url = `https://api.github.com/repos/${repo}/releases`;
     return {
       ok: false,
-      action: actionable(
-        "UPDATE_CHECK_FAILED",
-        `无法连接 GitHub: ${(err as Error).message}`,
-        ["检查网络 / 代理", "稍后重试"],
-        ["mc_skill_update"],
-      ),
+      action: networkFailureAction(err, url),
     };
   }
+}
+
+export function githubAssetSha256(asset: GhAsset): string | undefined {
+  const d = asset.digest?.trim();
+  const m = d?.match(/^sha256:([a-fA-F0-9]{64})$/i);
+  return m?.[1]?.toLowerCase();
 }
 
 export function pickDataAssets(release: GhRelease): {
   zip?: GhAsset;
   sums?: GhAsset;
+  checksumHex?: string;
   action?: ActionEnvelope;
 } {
-  const zip = release.assets.find((a) => /^mc-skill-data-full-.*\.zip$/i.test(a.name));
+  const zip =
+    release.assets.find((a) => /^mc-skill-data-full-.*\.zip$/i.test(a.name)) ??
+    release.assets.find((a) => /^data\.zip$/i.test(a.name));
   const sums = release.assets.find((a) => /^SHA256SUMS/i.test(a.name));
   if (!zip) {
     return {
       action: actionable(
         "DATA_ASSET_MISSING",
-        "Release 中未找到 mc-skill-data-full-*.zip",
+        "Release 中未找到 mc-skill-data-full-*.zip 或 data.zip",
         ["确认 Release 已上传数据包", "或 scope=tooling 只更新代码"],
         ["mc_skill_update"],
       ),
     };
   }
-  if (!sums) {
+  const checksumHex = githubAssetSha256(zip);
+  if (!sums && !checksumHex) {
     return {
       zip,
       action: actionable(
         "DATA_CHECKSUM_MISSING",
-        "Release 中未找到 SHA256SUMS*.txt",
+        "Release 中未找到 SHA256SUMS*.txt，且 data zip 无 GitHub digest",
         ["等待补齐 checksum 资产后再更新 data", "或 scope=tooling"],
         ["mc_skill_update"],
       ),
     };
   }
-  return { zip, sums };
+  return { zip, sums, checksumHex };
 }
+
+export { getLastGithubFetchMeta };
 
 export function toolingNeedsUpdate(localVersion: string, remoteTag: string): boolean {
   return isNewer(remoteTag, localVersion);

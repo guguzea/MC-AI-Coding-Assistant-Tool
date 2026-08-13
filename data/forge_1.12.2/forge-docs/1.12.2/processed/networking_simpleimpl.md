@@ -47,7 +47,7 @@ public class MyMessage implements IMessage {
 
 ### IMessageHandler
 
-Now, how can we use this packet? Well, first we must have a class that can _*handle*_ this packet. This is created with the `IMessageHandler` interface. Say we wanted to use this integer we sent to give the player that many diamonds on the server. Let&rsquo;s make this handler:
+Now, how can we use this packet? Well, first we must have a class that can *handle* this packet. This is created with the `IMessageHandler` interface. Say we wanted to use this integer we sent to give the player that many diamonds on the server. Let&rsquo;s make this handler:
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -91,22 +91,22 @@ It is recommended (but not required) that for organization&rsquo;s sake, this cl
 
 ## Registering Packets
 
-So now we have a packet, and a handler for this packet. But the `SimpleNetworkWrapper` needs one more thing to function! For it to use a packet, the packet must be registered with an _*discriminator*_, which is just an integer used to map packet types between server and client. To do this, call `INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, 0, Side.Server);` where `INSTANCE` is the `SimpleNetworkWrapper` we defined earlier.
+So now we have a packet, and a handler for this packet. But the `SimpleNetworkWrapper` needs one more thing to function! For it to use a packet, the packet must be registered with an *discriminator*, which is just an integer used to map packet types between server and client. To do this, call `INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, 0, Side.Server);` where `INSTANCE` is the `SimpleNetworkWrapper` we defined earlier.
 
 This is quite a complex method, so lets break it down a bit.
 
 - <li>The first parameter is `messageHandler`, which is the class that handles your packet. This class must always have a default constructor, and should have type bound REQ that matches the next argument.
 - <li>The second parameter is `requestMessageType` which is the actual packet class. This class must also have a default constructor and match the REQ type bound of the previous param.
 - <li>The third parameter is the discriminator for the packet. This is a per-channel unique ID for the packet. We recommend you use a static variable to hold the ID, and then call registerMessage using `id++`. This will guarantee 100% unique IDs.
-- <li>The fourth and final parameter is the side that your packet will be **_*received*_** on. If you are planning to send the packet to both sides, it must be registered twice, once to each side. Discriminators can be the same between sides, but are not required to be.
+- <li>The fourth and final parameter is the side that your packet will be ***received*** on. If you are planning to send the packet to both sides, it must be registered twice, once to each side. Discriminators can be the same between sides, but are not required to be.
 
 ## Using Packets
 
-When sending packets, make sure that there is a handler registered _*on the receiving side*_ for said packet. If there is not, the packet will be sent across the network and then thrown away, resulting in a &ldquo;leaked&rdquo; packet. This is harmless other than needless network usage, but should still be fixed.
+When sending packets, make sure that there is a handler registered *on the receiving side* for said packet. If there is not, the packet will be sent across the network and then thrown away, resulting in a &ldquo;leaked&rdquo; packet. This is harmless other than needless network usage, but should still be fixed.
 
 ### Sending to the Server
 
-There is but one way to send a packet to the server. This is because there is only ever _*one*_ server, and only _*one*_ way to send to that server, of course. To do so, we must again use that `SimpleNetworkWrapper` that was defined earlier. Simply call `INSTANCE.sendToServer(new MyMessage(toSend))`. The message will be sent to the `Side.SERVER` `IMessageHandler` for its type, if one exists.
+There is but one way to send a packet to the server. This is because there is only ever *one* server, and only *one* way to send to that server, of course. To do so, we must again use that `SimpleNetworkWrapper` that was defined earlier. Simply call `INSTANCE.sendToServer(new MyMessage(toSend))`. The message will be sent to the `Side.SERVER` `IMessageHandler` for its type, if one exists.
 
 ### Sending to Clients
 

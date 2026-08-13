@@ -17,13 +17,24 @@ export interface ParsedMethodRef {
   raw: string;
 }
 
-const SRG_RE = /^func_\d+_[a-z]$/i;
+/** MCP SRG：`func_110143_aJ`（后缀可为多字母，禁止写成 `[a-z]$` 单字母） */
+export const SRG_METHOD_RE = /^func_\d+_[a-zA-Z]+$/;
+/** MCP SRG 字段：`field_100013_f`；与 Yarn `field_6247`（无后缀字母）不重叠 */
+export const SRG_FIELD_RE = /^field_\d+_[a-zA-Z]+$/;
 const YARN_RE = /^method_\d+$/i;
 const MOJANG_RE = /^m_\d+_$/;
 
+export function isSrgMethod(name: string): boolean {
+  return SRG_METHOD_RE.test(name.trim());
+}
+
+export function isSrgField(name: string): boolean {
+  return SRG_FIELD_RE.test(name.trim());
+}
+
 export function detectNamingStyle(name: string): MethodNamingStyle {
   const n = name.trim();
-  if (SRG_RE.test(n)) return "srg";
+  if (SRG_METHOD_RE.test(n) || SRG_FIELD_RE.test(n)) return "srg";
   if (YARN_RE.test(n)) return "yarn_intermediary";
   if (MOJANG_RE.test(n)) return "mojang_hashed";
   if (n.includes("(") && n.includes(")")) return "descriptor_combined";

@@ -521,12 +521,19 @@ export interface SearchResultLike {
   tags: string[];
   priority: string;
   sectionCount?: number;
+  /** 融合后的排序分（有语义时为 RRF，纯 L0 时为 L0 加权分） */
   score?: number;
+  /** L0 关键词加权分（与余弦/RRF 量纲不同，勿直接混排） */
+  l0Score?: number;
+  /** 语义侧分数（余弦或 FTS 派生，0–1 量级） */
+  semanticScore?: number;
+  /** Reciprocal Rank Fusion 分（仅融合后存在） */
+  rrfScore?: number;
   matches?: Array<{ sectionHeading?: string; snippet: string; score: number }>;
 }
 
 /** 与 semantic/search.ts 的 rrfFuse 同公式（避免循环依赖，保持本地一份） */
-function rrfFuseIds(rankings: string[][], k = 60): string[] {
+function rrfFuseScores(rankings: string[][], k = 60): Map<string, number> {
   const scores = new Map<string, number>();
   for (const rank of rankings) {
     for (let i = 0; i < rank.length; i++) {
@@ -535,13 +542,19 @@ function rrfFuseIds(rankings: string[][], k = 60): string[] {
       scores.set(id, (scores.get(id) ?? 0) + 1 / (k + i + 1));
     }
   }
-  return [...scores.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id);
+  return scores;
+}
+
+export function joinSearchWarnings(...parts: Array<string | undefined | false>): string | undefined {
+  const xs = parts.filter((p): p is string => typeof p === "string" && p.trim().length > 0);
+  return xs.length ? xs.join("；") : undefined;
 }
 
 /**
  * 将语义检索命中与 L0 结果再融合（handler 层使用）。
  * - 有语义命中：对 L0 id 排行 ∪ 语义 id 排行做 **RRF 再融合**（非简单 append）
- * - 无语义命中：保持纯 L0
+ * - 无语义命中：保持纯 L0（score 仍为 L0 加权分）
+ * - 融合后对外 `score` = RRF，并分别保留 `l0Score` / `semanticScore` / `rrfScore`
  * - 应用 tags 过滤（与 enhancedSearch 同语义：所有 tag 均需命中）
  * - 语义侧的 matches 写入合并结果（L0 独有条目无 matches）
  * - 截断到 limit
@@ -562,13 +575,22 @@ export function mergeSemanticResults(
   });
 
   if (filteredHits.length === 0) {
-    return results.slice(0, limit);
+    return results.slice(0, limit).map((r) => ({
+      ...r,
+      ...(r.score !== undefined ? { l0Score: r.l0Score ?? r.score } : {}),
+    }));
   }
 
+  const l0ScoreById = new Map<string, number>();
+  const semScoreById = new Map<string, number>();
   const byId = new Map<string, SearchResultLike>();
-  for (const r of results) byId.set(r.id, { ...r });
+  for (const r of results) {
+    byId.set(r.id, { ...r });
+    if (typeof r.score === "number") l0ScoreById.set(r.id, r.score);
+  }
   for (const h of filteredHits) {
     const prev = byId.get(h.docId);
+    if (typeof h.score === "number") semScoreById.set(h.docId, h.score);
     byId.set(h.docId, {
       id: h.docId,
       version: opts.version ?? prev?.version ?? "unknown",
@@ -577,13 +599,28 @@ export function mergeSemanticResults(
       tags: h.tags ?? prev?.tags ?? [],
       priority: h.priority ?? prev?.priority ?? "🟢",
       sectionCount: h.sectionCount ?? prev?.sectionCount ?? 0,
-      ...(h.score !== undefined ? { score: h.score } : prev?.score !== undefined ? { score: prev.score } : {}),
       ...(h.matches && h.matches.length > 0 ? { matches: h.matches } : {}),
     });
   }
 
   const l0Ids = results.map((r) => r.id);
   const semIds = filteredHits.map((h) => h.docId);
-  const fused = rrfFuseIds([l0Ids, semIds], 60).slice(0, limit);
-  return fused.map((id) => byId.get(id)!).filter(Boolean);
+  const rrfMap = rrfFuseScores([l0Ids, semIds], 60);
+  const fused = [...rrfMap.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id).slice(0, limit);
+  const out: SearchResultLike[] = [];
+  for (const id of fused) {
+    const row = byId.get(id);
+    if (!row) continue;
+    const rrf = Number((rrfMap.get(id) ?? 0).toFixed(6));
+    const l0Score = l0ScoreById.get(id);
+    const semanticScore = semScoreById.get(id);
+    out.push({
+      ...row,
+      score: rrf,
+      rrfScore: rrf,
+      ...(l0Score !== undefined ? { l0Score } : {}),
+      ...(semanticScore !== undefined ? { semanticScore } : {}),
+    });
+  }
+  return out;
 }

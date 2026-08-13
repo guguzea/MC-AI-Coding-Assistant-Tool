@@ -269,6 +269,32 @@ async function testChecksumMissingAsset() {
   rmSync(dataDir, { recursive: true, force: true });
 }
 
+async function testDataZipAndGithubDigest() {
+  const digest = "ab".repeat(32);
+  const release = mockRelease({ tag: "v0.2.0", withData: false, withSums: false });
+  release.assets.push({
+    name: "data.zip",
+    size: 99,
+    browser_download_url: "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/data.zip",
+    digest: `sha256:${digest}`,
+  });
+  const picked = github.pickDataAssets(release);
+  assert.equal(picked.zip.name, "data.zip");
+  assert.equal(picked.checksumHex, digest);
+  assert.equal(picked.action, undefined);
+}
+
+function testTlsCertErrorDetect() {
+  return import(pathToFileURL(join(root, "update/http.js")).href).then((http) => {
+    const cause = new Error("unable to verify the first certificate");
+    cause.code = "UNABLE_TO_VERIFY_LEAF_SIGNATURE";
+    const err = new Error("fetch failed");
+    err.cause = cause;
+    assert.equal(http.isTlsCertError(err), true);
+    assert.equal(http.isTlsCertError(new Error("ENOTFOUND")), false);
+  });
+}
+
 async function testPendingRestartHint() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   state.writeUpdateState(
@@ -300,6 +326,8 @@ async function main() {
   await testDataDryRunOverwriteList();
   await testDataApplyWritesAndChecksumFail();
   await testChecksumMissingAsset();
+  await testDataZipAndGithubDigest();
+  await testTlsCertErrorDetect();
   await testPendingRestartHint();
   console.log("test-update: ok");
 }

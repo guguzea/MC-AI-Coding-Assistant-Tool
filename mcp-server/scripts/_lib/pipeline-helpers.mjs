@@ -254,6 +254,24 @@ export async function downloadFileAtomic(url, destPath, opts = {}) {
 // ── Markdown 工具（纯函数） ─────────────────────────────────────────────
 
 /**
+ * 修复错误的 HTML→MD 斜体：`_*foo*_` → `*foo*`（旧 fetch-forge-docs 把 <em> 转成了 _*$1*_）。
+ * 不进入围栏代码块。
+ * @param {string} md
+ * @returns {string}
+ */
+export function repairBrokenItalicMarkup(md) {
+  if (typeof md !== "string" || !md.includes("_*")) return md;
+  const parts = md.split(/(```[\s\S]*?```)/);
+  return parts
+    .map((part, i) =>
+      i % 2 === 1
+        ? part
+        : part.replace(/_\*([^*]+)\*_/g, "*$1*").replace(/_\*\$\{1\}_/g, "*…*"),
+    )
+    .join("");
+}
+
+/**
  * 统计 Markdown 中的围栏代码块数量。
  * 仅匹配成对的 ``` 围栏；不会把单反引号的 inline code 误算进来。
  *

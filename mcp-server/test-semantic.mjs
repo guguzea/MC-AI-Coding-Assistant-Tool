@@ -277,7 +277,10 @@ test("mergeSemanticResults: RRF 再融合 + 去重 + 截断", () => {
   assert.ok(merged.some((r) => r.id === "b"));
   const b = merged.find((r) => r.id === "b");
   assert.equal(b.label, "B");
-  assert.equal(b.score, 0.9);
+  assert.equal(b.semanticScore, 0.9);
+  assert.equal(b.score, b.rrfScore);
+  assert.ok(typeof b.rrfScore === "number" && b.rrfScore < 1, "对外 score 应为 RRF 而非语义余弦");
+  assert.notEqual(b.score, 0.9);
   assert.ok(b.matches?.length >= 1);
 });
 
@@ -314,6 +317,8 @@ test("mergeSemanticResults: limit 截断", () => {
       const st = getSemanticIndexStatus(root);
       assert.equal(st.modeHint, "l0-only");
       assert.equal(st.presentCount, 0);
+      assert.ok(Array.isArray(st.warnings) && st.warnings.length > 0, "缺库必须 warning");
+      assert.ok(st.warnings.some((w) => /缺库|semantic/.test(w)));
       assert.ok(st.samples.every((s) => s.mode === "missing" || s.exists === false));
     } finally {
       rmSync(root, { recursive: true, force: true });

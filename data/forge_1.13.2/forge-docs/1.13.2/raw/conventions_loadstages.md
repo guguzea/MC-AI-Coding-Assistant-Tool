@@ -7,7 +7,7 @@ sourceType: mkdocs
 ---
 # Loading Stages
 
-The Forge loading process has four main phases. All of these events shown are fired on the mod-specific eventbus, _*not*_ the global Forge event bus `MinecraftForge.EVENT_BUS` Handlers should be registered either using `@EventBusSubscriber(bus = Bus.MOD)` or in the mod object constructor as follows:
+The Forge loading process has four main phases. All of these events shown are fired on the mod-specific eventbus, *not* the global Forge event bus `MinecraftForge.EVENT_BUS` Handlers should be registered either using `@EventBusSubscriber(bus = Bus.MOD)` or in the mod object constructor as follows:
 
 ```java
 @Mod("mymod")

@@ -1,8 +1,10 @@
-# Screens
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/gui/screens
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "gui/screens"
+source: "https://docs.readthedocs.net/en/1.20.1/gui/screens/"
+sourceType: mkdocs
+---
 # Screens
 
 Screens are typically the base of all Graphical User Interfaces (GUIs) in Minecraft: taking in user input, verifying it on the server, and syncing the resulting action back to the client. They can be combined with [menus](../menus/) to create an communication network for inventory-like views, or they can be standalone which modders can handle through their own [network](../../networking/) implementations.

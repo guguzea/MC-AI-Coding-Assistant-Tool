@@ -18,6 +18,9 @@ export type CrashKind =
   | "java"
   | "unknown";
 
+/** 认不出典型 loader 指纹时引导对照的 Wiki */
+export const CRASH_REPORT_WIKI = "https://minecraft.wiki/w/Crash_report";
+
 export interface CrashQuery {
   crashReport: string;
   version?: string;
@@ -269,22 +272,31 @@ export function detectCrashKind(crashReport: string): CrashKind {
     fabric: "fabric",
     java: "java",
   };
-  if (kindFromName && map[kindFromName]) return map[kindFromName];
+  const hasLoaderFingerprint =
+    /Minecraft Forge|Forge Mod Loader|Fabric Loader|fabric-loader|NeoForge|net\.minecraftforge|net\.fabricmc|net\.neoforged|cpw\.mods\.modlauncher|FMLModContainer/i.test(
+      crashReport,
+    );
+
+  // 文件名里的 fml/fabric/opengl/memory/java 可信；client/server 仅在有 loader 指纹时采用
+  if (kindFromName === "fml" || kindFromName === "fabric") return map[kindFromName];
+  if (kindFromName === "opengl" || kindFromName === "rendering" || kindFromName === "memory" || kindFromName === "java") {
+    return map[kindFromName];
+  }
+  if (kindFromName && map[kindFromName] && hasLoaderFingerprint) return map[kindFromName];
 
   if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
   if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
   if (
-    /ModLoader|FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|Missing or unsupported mandatory/i.test(
+    /ModLoader|FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|net\.neoforged|Missing or unsupported mandatory/i.test(
       crashReport,
     )
   ) {
     return "fml";
   }
-  if (/DedicatedServer|net\.minecraft\.server\.dedicated/i.test(crashReport)) return "server";
-  if (/IntegratedServer/i.test(crashReport)) return "integrated-server";
-  if (/Minecraft\.getInstance|net\.minecraft\.client/i.test(crashReport)) return "client";
-  if (/---- Minecraft Crash Report ----/i.test(crashReport)) return "java";
+  if (hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated/i.test(crashReport)) return "server";
+  if (hasLoaderFingerprint && /IntegratedServer/i.test(crashReport)) return "integrated-server";
+  if (hasLoaderFingerprint && /Minecraft\.getInstance|net\.minecraft\.client/i.test(crashReport)) return "client";
   return "unknown";
 }
 
@@ -335,23 +347,26 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     }
   }
 
-  const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge/i.test(crashReport);
+  const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge|net\.neoforged/i.test(crashReport);
+  const unknownHint = `未能识别为典型 Forge / Fabric / NeoForge 崩溃指纹（crashKind=unknown）。请打开 Minecraft Wiki 对照完整报告结构：${CRASH_REPORT_WIKI}`;
   const fmlHint =
     crashKind === "fml"
       ? "此报告疑似加载期（-fml）失败：优先查缺前置、版本范围与 mods.toml"
-      : hasModLoader
-        ? "崩溃原因不明确，请将堆栈信息与 Forge/Fabric 文档对照分析"
-        : "未能识别为典型 Forge/Fabric 崩溃报告，请检查粘贴内容是否完整";
+      : crashKind === "unknown" || !hasModLoader
+        ? unknownHint
+        : "崩溃原因不明确，请将堆栈信息与 Forge/Fabric 文档对照分析";
 
   return {
     probableCause: fmlHint,
     fixSuggestions: [
-      "将崩溃堆栈的完整内容粘贴到 https://minecraft.wiki/w/Crash_report",
+      `将崩溃堆栈的完整内容粘贴到 ${CRASH_REPORT_WIKI} 对照 Description / Stacktrace / System Details`,
       "检查是否涉及自定义模组内容",
       "尝试使用 parchment 映射以获得更清晰的可读堆栈",
       ...(crashKind === "fml"
         ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
-        : []),
+        : crashKind === "unknown"
+          ? ["确认粘贴的是完整 crash-*.txt（含 ---- Minecraft Crash Report ---- 标题），而不是 latest.log 片段"]
+          : []),
     ],
     deobfuscated,
     relatedMistakes: [],

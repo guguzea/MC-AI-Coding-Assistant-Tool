@@ -1,6 +1,6 @@
 # Forge Update Checker
 
-Forge provides a very lightweight opt-in update-checking framework. All it does is check for updates, then show a flashing icon on the Mods button of the main menu and mod list if any mods have an available update, along with the respective changelogs. It _*does not*_ download updates automatically.
+Forge provides a very lightweight opt-in update-checking framework. All it does is check for updates, then show a flashing icon on the Mods button of the main menu and mod list if any mods have an available update, along with the respective changelogs. It *does not* download updates automatically.
 
 ## Getting Started
 

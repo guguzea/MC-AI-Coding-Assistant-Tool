@@ -121,7 +121,7 @@ Codecs can be created for encoding and decoding any object. For understanding pu
 
 Codecs can define objects through the use of records. Each record codec defines any object with explicit named fields. There are many ways to create a record codec, but the simplest is via `RecordCodecBuilder#create`.
 
-`RecordCodecBuilder#create` takes in a function which defines an `Instance` and returns an application (`App`) of the object. A correlation can be drawn to creating a class _*instance*_ and the constructors used to _*apply*_ the class to the constructed object.
+`RecordCodecBuilder#create` takes in a function which defines an `Instance` and returns an application (`App`) of the object. A correlation can be drawn to creating a class *instance* and the constructors used to *apply* the class to the constructed object.
 
 ```
 // Some object to create a codec for

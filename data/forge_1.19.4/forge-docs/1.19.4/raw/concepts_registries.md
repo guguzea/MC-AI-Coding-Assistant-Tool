@@ -37,7 +37,7 @@ public ExampleMod() {
 
 <code>RegisterEvent` is the second way to register objects. This [event](../events/) is fired for each registry after the mod constructors and before the loading of configs. Objects are registered using `#register` by passing in the registry key, the name of the registry object, and the object itself. There is an additional `#register` overload which takes in a consumed helper to register an object with a given name. It is recommended to use this method to avoid unnecessary object creation.
 
-Here is an example: (the event handler is registered on the _*mod event bus*_)
+Here is an example: (the event handler is registered on the *mod event bus*)
 
 ```java
 @SubscribeEvent
@@ -101,8 +101,8 @@ The rules for `@ObjectHolder` are as follows:
 - <li>the **field** is annotated with `@ObjectHolder`, and:<ul> <li>the name value is explicitly defined; and
 - <li>the registry name value is explicitly defined
 
-<li>_*A compile-time exception is thrown if a field does not have a corresponding registry or name.*_
-<li>_*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*_
+<li>*A compile-time exception is thrown if a field does not have a corresponding registry or name.*
+<li>*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*
 <li>If no other errors or exceptions occur, the field will be injected
 <li>If all of the above rules do not apply, no action will be taken (and a message may be logged)
 

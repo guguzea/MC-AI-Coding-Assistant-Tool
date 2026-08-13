@@ -93,11 +93,11 @@ It is strongly suggested that direct checks in code are used to test for capabil
 
 As mentioned, attaching capabilities to existing providers, `Level`s, and `LevelChunk`s can be done using `AttachCapabilitiesEvent`. The same event is used for all objects that can provide capabilities. `AttachCapabilitiesEvent` has 5 valid generic types providing the following events:
 
-- `AttachCapabilitiesEvent<Entity>`: Fires only for entities.
-- `AttachCapabilitiesEvent<BlockEntity>`: Fires only for block entities.
-- `AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
-- `AttachCapabilitiesEvent<Level>`: Fires only for levels.
-- `AttachCapabilitiesEvent<LevelChunk>`: Fires only for level chunks.
+- <li>`AttachCapabilitiesEvent<Entity>`: Fires only for entities.
+- <li>`AttachCapabilitiesEvent<BlockEntity>`: Fires only for block entities.
+- <li>`AttachCapabilitiesEvent<ItemStack>`: Fires only for item stacks.
+- <li>`AttachCapabilitiesEvent<Level>`: Fires only for levels.
+- <li>`AttachCapabilitiesEvent<LevelChunk>`: Fires only for level chunks.
 
 The generic type cannot be more specific than the above types. For example: If you want to attach capabilities to `Player`, you have to subscribe to the `AttachCapabilitiesEvent<Entity>`, and then determine that the provided object is an `Player` before attaching the capability.
 
@@ -170,9 +170,9 @@ By default, capability data is not sent to clients. In order to change this, the
 
 There are three different situations in which you may want to send synchronization packets, all of them optional:
 
-1. When the entity spawns in the level, or the block is placed, you may want to share the initialization-assigned values with the clients.
-2. When the stored data changes, you may want to notify some or all of the watching clients.
-3. When a new client starts viewing the entity or block, you may want to notify it of the existing data.
+1. <li>When the entity spawns in the level, or the block is placed, you may want to share the initialization-assigned values with the clients.
+2. <li>When the stored data changes, you may want to notify some or all of the watching clients.
+3. <li>When a new client starts viewing the entity or block, you may want to notify it of the existing data.
 
 Refer to the [Networking](../../networking/) page for more information on implementing network packets.
 

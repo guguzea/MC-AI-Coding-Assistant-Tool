@@ -23,7 +23,7 @@ All you need to add here are the file names of your loot modifiers. The [Resourc
 
 `replace` causes the cache of modifiers to be cleared fully when this asset loads (mods are loaded in an order that may be specified by a data pack). For modders, you will want to use `false`. Data pack makers may want to specify their overrides with `true`.
 
-`entries` is an _*ordered list*_ of the modifiers that will be loaded. This means that any modifier that not listed will not be loaded, and the ones listed are their written order. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
+`entries` is an *ordered list* of the modifiers that will be loaded. This means that any modifier that not listed will not be loaded, and the ones listed are their written order. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
 
 ## The Serialized JSON
 
@@ -99,7 +99,7 @@ public class WheatSeedsConverterModifier extends LootModifier {
 
 The critical portion is the `doApply` method.
 
-This method is only called if the `conditions` specified return `true`. If so, the modder is now able to make the modifications they desire. In this case, we can see that the number of `itemToCheck` meets or exceeds the `numSeedsToConvert` before modifying the list by adding an `itemReward` and removing any excess `itemToCheck` stacks, matching the previously mentioned effects: _*When a wheat block is harvested with shears, if enough seeds are generated as loot, they are converted to additional wheat instead*_.
+This method is only called if the `conditions` specified return `true`. If so, the modder is now able to make the modifications they desire. In this case, we can see that the number of `itemToCheck` meets or exceeds the `numSeedsToConvert` before modifying the list by adding an `itemReward` and removing any excess `itemToCheck` stacks, matching the previously mentioned effects: *When a wheat block is harvested with shears, if enough seeds are generated as loot, they are converted to additional wheat instead*.
 
 Also take note of the `read` method in the serializer. The conditions are already deserialized for you and if you have no other data, simply `return new MyModifier(conditions)`. However, the full `JsonObject` is available if needed. The `write` method, on the other hand, is used for if you want to utilize `GlobalLootModifierProvider` for [data generation](../../datagen/intro/).
 

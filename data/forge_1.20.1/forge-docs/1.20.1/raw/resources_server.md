@@ -1,8 +1,10 @@
-# Server Data
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/server
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "resources/server"
+source: "https://docs.readthedocs.net/en/1.20.1/resources/server/"
+sourceType: mkdocs
+---
 # Datapacks
 
 In 1.13, Mojang added [datapacks](https://minecraft.wiki/w/Data_pack) to the base game. They allow for the modification of the files for logical servers through the `data` directory. This includes advancements, loot_tables, structures, recipes, tags, etc. Forge, and your mod, can also have datapacks. Any user can therefore modify all the recipes, loot tables, and other data defined within this directory.

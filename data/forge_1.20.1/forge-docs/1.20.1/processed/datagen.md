@@ -18,18 +18,18 @@ The `--existing <folderpath>` argument allows the specified folder and its subfo
 
 The data generator can be configured to run 4 different data generations, which are configured from the command-line parameters, and can be checked from `GatherDataEvent#include***` methods.
 
-- **Client Assets**
-- Generates client-only files in `assets`: block/item models, blockstate JSONs, language files, etc.
-- **`--client`**, `#includeClient`
-- **Server Data**
-- Generates server-only files in `data`: recipes, advancements, tags, etc.
-- **`--server`**, `#includeServer`
-- **Development Tools**
-- Runs some development tools: converting SNBT to NBT and vice-versa, etc.
-- **`--dev`**, `#includeDev`
-- **Reports**
-- Dumps all registered blocks, items, commands, etc.
-- **`--reports`**, `#includeReports`
+- <li>**Client Assets**
+- <li>Generates client-only files in `assets`: block/item models, blockstate JSONs, language files, etc.
+- <li>**`--client`**, `#includeClient`
+- <li>**Server Data**
+- <li>Generates server-only files in `data`: recipes, advancements, tags, etc.
+- <li>**`--server`**, `#includeServer`
+- <li>**Development Tools**
+- <li>Runs some development tools: converting SNBT to NBT and vice-versa, etc.
+- <li>**`--dev`**, `#includeDev`
+- <li>**Reports**
+- <li>Dumps all registered blocks, items, commands, etc.
+- <li>**`--reports`**, `#includeReports`
 
 All of the generators can be included using `--all`.
 
@@ -41,10 +41,10 @@ The `GatherDataEvent` is fired on the mod event bus when the data generator is b
 
 ### Client Assets
 
-- [`net.minecraftforge.common.data.LanguageProvider`](client/localization/) - for [language strings](https://minecraft.wiki/w/Language); implement `#addTranslations`
-- [`net.minecraftforge.common.data.SoundDefinitionsProvider`](client/sounds/) - for [`sounds.json`](https://minecraft.wiki/w/Sounds.json); implement `#registerSounds`
-- [`net.minecraftforge.client.model.generators.ModelProvider<?>`](client/modelproviders/) - for [models](../resources/client/models/); implement `#registerModels`<ul> <li>[`ItemModelProvider`](client/modelproviders/#itemmodelprovider) - for item models
-- [`BlockModelProvider`](client/modelproviders/#blockmodelprovider) - for block models
+- <li>[`net.minecraftforge.common.data.LanguageProvider`](client/localization/) - for [language strings](https://minecraft.wiki/w/Language); implement `#addTranslations`
+- <li>[`net.minecraftforge.common.data.SoundDefinitionsProvider`](client/sounds/) - for [`sounds.json`](https://minecraft.wiki/w/Sounds.json); implement `#registerSounds`
+- <li>[`net.minecraftforge.client.model.generators.ModelProvider<?>`](client/modelproviders/) - for [models](../resources/client/models/); implement `#registerModels`<ul> <li>[`ItemModelProvider`](client/modelproviders/#itemmodelprovider) - for item models
+- <li>[`BlockModelProvider`](client/modelproviders/#blockmodelprovider) - for block models
 
 <li>[`net.minecraftforge.client.model.generators.BlockStateProvider`](client/modelproviders/#block-state-provider) - for blockstate JSONs and their block and item models; implement `#registerStatesAndModels`
 
@@ -52,12 +52,12 @@ The `GatherDataEvent` is fired on the mod event bus when the data generator is b
 
 **These classes are under the `net.minecraftforge.common.data` package**:
 
-- [`GlobalLootModifierProvider`](server/glm/) - for [global loot modifiers](../resources/server/glm/); implement `#start`
-- [`DatapackBuiltinEntriesProvider`](server/datapackregistries/) for datapack registry objects; pass in `RegistrySetBuilder` to the constructor
+- <li>[`GlobalLootModifierProvider`](server/glm/) - for [global loot modifiers](../resources/server/glm/); implement `#start`
+- <li>[`DatapackBuiltinEntriesProvider`](server/datapackregistries/) for datapack registry objects; pass in `RegistrySetBuilder` to the constructor
 
 **These classes are under the `net.minecraft.data` package**:
 
-- [`loot.LootTableProvider`](server/loottables/) - for [loot tables](../resources/server/loottables/); pass in `LootTableProvider$SubProviderEntry`s to the constructor
-- [`recipes.RecipeProvider`](server/recipes/) - for [recipes](../resources/server/recipes/) and their unlocking advancements; implement `#buildRecipes`
-- [`tags.TagsProvider`](server/tags/) - for [tags](../resources/server/tags/); implement `#addTags`
-- [`advancements.AdvancementProvider`](server/advancements/) - for [advancements](../resources/server/advancements/); pass in `AdvancementSubProvider`s to the constructor
+- <li>[`loot.LootTableProvider`](server/loottables/) - for [loot tables](../resources/server/loottables/); pass in `LootTableProvider$SubProviderEntry`s to the constructor
+- <li>[`recipes.RecipeProvider`](server/recipes/) - for [recipes](../resources/server/recipes/) and their unlocking advancements; implement `#buildRecipes`
+- <li>[`tags.TagsProvider`](server/tags/) - for [tags](../resources/server/tags/); implement `#addTags`
+- <li>[`advancements.AdvancementProvider`](server/advancements/) - for [advancements](../resources/server/advancements/); pass in `AdvancementSubProvider`s to the constructor

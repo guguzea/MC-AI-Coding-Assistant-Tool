@@ -35,7 +35,7 @@ The integer can be considered the result of the command. Typically negative valu
 ### What can the ServerCommandSource do?
 A ServerCommandSource provides some additional implementation specific context when a command is run. This includes the ability to get the entity that executed the command, the world the command was ran in or the server the command was run on.
 
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 // Get the source. This will always work.
 final ServerCommandSource source = ctx.getSource(); 
 
@@ -91,7 +91,7 @@ import static net.minecraft.server.command.CommandManager.*;
 
 In the mod initializer, we just register the simplest command:
 
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 public class ExampleMod implements ModInitializer {
   @Override
   public void onInitialize() {
@@ -138,7 +138,7 @@ public class ExampleCommandMod implements ModInitializer {
 In the example above, the use of static imports is used for code simplifying. For a literal this would shorten the statement to `literal("foo")`. This also works for getting the value of an argument. This shortens `StringArgumentType.getString(ctx, "string")` to `getString(ctx, "string")`. This also works for Minecraft's own argument types.
 
 Below is an example of some static imports:
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 // getString(ctx, "string")
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 // word()
@@ -162,7 +162,7 @@ Let's say you have a command that you only want operators to be able to execute.
 
 For example this may look like the following:
 
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 dispatcher.register(literal("foo")
   .requires(source -> source.hasPermissionLevel(2))
   .executes(ctx -> {
@@ -249,7 +249,7 @@ In order to have a sub command, one needs to append the next node to the existin
 
 This creates the command foo <bar> as shown below.
 
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 dispatcher.register(literal("foo")
     .then(literal("bar")
         .executes(context -> {
@@ -264,7 +264,7 @@ dispatcher.register(literal("foo")
 </code>
 
 Similar to arguments, sub command nodes can also be set optional. In the following case, both /foo and /foo bar will be valid.
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
 dispatcher.register(literal("foo")
     .executes(context -> {
         context.getSource().sendFeedback(() -> Text.literal("Called foo without bar"), false);

@@ -53,7 +53,7 @@
     "id": "1.20.1/datagen",
     "version": "1.20.1",
     "label": "Data Generators",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datagen",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datagen/",
     "tags": [
       "datagen",
       "tag"
@@ -78,7 +78,7 @@
     "id": "1.20.1/resources_server",
     "version": "1.20.1",
     "label": "Datapacks",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/server",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/server/",
     "tags": [],
     "priority": "⭐",
     "sectionCount": 0
@@ -87,7 +87,7 @@
     "id": "1.20.1/networking_entities",
     "version": "1.20.1",
     "label": "Entities",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/entities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/entities/",
     "tags": [
       "networking"
     ],
@@ -98,7 +98,7 @@
     "id": "1.20.1/concepts_events",
     "version": "1.20.1",
     "label": "Events",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/events",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/events/",
     "tags": [
       "event"
     ],
@@ -188,7 +188,7 @@
     "id": "1.20.1/concepts_lifecycle",
     "version": "1.20.1",
     "label": "Mod Lifecycle",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/lifecycle/",
     "tags": [
       "lifecycle"
     ],
@@ -220,7 +220,7 @@
     "id": "1.20.1/networking",
     "version": "1.20.1",
     "label": "Networking",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/",
     "tags": [
       "networking"
     ],
@@ -266,7 +266,7 @@
     "id": "1.20.1/concepts_registries",
     "version": "1.20.1",
     "label": "Registries",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/registries",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/registries/",
     "tags": [
       "registry"
     ],
@@ -277,7 +277,7 @@
     "id": "1.20.1/resources_client",
     "version": "1.20.1",
     "label": "Resource Packs",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/resources/client",
+    "url": "https://docs.readthedocs.net/en/1.20.1/resources/client/",
     "tags": [],
     "priority": "⭐",
     "sectionCount": 0
@@ -286,7 +286,7 @@
     "id": "1.20.1/concepts_sides",
     "version": "1.20.1",
     "label": "Sides in Minecraft",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/sides",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/sides/",
     "tags": [
       "sides"
     ],
@@ -297,7 +297,7 @@
     "id": "1.20.1/networking_simpleimpl",
     "version": "1.20.1",
     "label": "SimpleImpl",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/networking/simpleimpl",
+    "url": "https://docs.readthedocs.net/en/1.20.1/networking/simpleimpl/",
     "tags": [
       "networking"
     ],
@@ -344,7 +344,7 @@
     "id": "1.20.1/datastorage_capabilities",
     "version": "1.20.1",
     "label": "The Capability System",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/capabilities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/capabilities/",
     "tags": [
       "capability"
     ],
@@ -367,7 +367,7 @@
     "id": "1.20.1/blocks_states",
     "version": "1.20.1",
     "label": "Block States",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks/states",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/states/",
     "tags": [
       "block"
     ],
@@ -378,7 +378,7 @@
     "id": "1.20.1/blockentities",
     "version": "1.20.1",
     "label": "BlockEntities",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/",
     "tags": [
       "block"
     ],
@@ -389,7 +389,7 @@
     "id": "1.20.1/blockentities_ber",
     "version": "1.20.1",
     "label": "BlockEntityRenderer",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blockentities/ber",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blockentities/ber/",
     "tags": [
       "block"
     ],
@@ -400,7 +400,7 @@
     "id": "1.20.1/items_bewlr",
     "version": "1.20.1",
     "label": "BlockEntityWithoutLevelRenderer",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/items/bewlr",
+    "url": "https://docs.readthedocs.net/en/1.20.1/items/bewlr/",
     "tags": [
       "item"
     ],
@@ -411,7 +411,7 @@
     "id": "1.20.1/blocks",
     "version": "1.20.1",
     "label": "Blocks",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/blocks",
+    "url": "https://docs.readthedocs.net/en/1.20.1/blocks/",
     "tags": [
       "block"
     ],
@@ -422,7 +422,7 @@
     "id": "1.20.1/items",
     "version": "1.20.1",
     "label": "Items",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/items",
+    "url": "https://docs.readthedocs.net/en/1.20.1/items/",
     "tags": [
       "item"
     ],
@@ -444,7 +444,7 @@
     "id": "1.20.1/advanced_accesstransformers",
     "version": "1.20.1",
     "label": "Access Transformers",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/advanced/accesstransformers",
+    "url": "https://docs.readthedocs.net/en/1.20.1/advanced/accesstransformers/",
     "tags": [
       "advanced"
     ],
@@ -455,7 +455,7 @@
     "id": "1.20.1/datastorage_codecs",
     "version": "1.20.1",
     "label": "Codecs",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/codecs",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/codecs/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -464,7 +464,7 @@
     "id": "1.20.1/misc_config",
     "version": "1.20.1",
     "label": "Configuration",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/config",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/config/",
     "tags": [
       "config"
     ],
@@ -484,7 +484,7 @@
     "id": "1.20.1/rendering_modelloaders",
     "version": "1.20.1",
     "label": "Custom Model Loaders",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/rendering/modelloaders",
+    "url": "https://docs.readthedocs.net/en/1.20.1/rendering/modelloaders/",
     "tags": [
       "rendering"
     ],
@@ -495,7 +495,7 @@
     "id": "1.20.1/misc_debugprofiler",
     "version": "1.20.1",
     "label": "Debug Profiler",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/debugprofiler/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -504,7 +504,7 @@
     "id": "1.20.1/legacy",
     "version": "1.20.1",
     "label": "Documentation for Legacy Versions",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy",
+    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -524,7 +524,7 @@
     "id": "1.20.1/misc_updatechecker",
     "version": "1.20.1",
     "label": "Forge Update Checker",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/updatechecker/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2
@@ -533,7 +533,7 @@
     "id": "1.20.1/misc_gametest",
     "version": "1.20.1",
     "label": "Game Tests",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/gametest",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/gametest/",
     "tags": [
       "tests"
     ],
@@ -553,7 +553,7 @@
     "id": "1.20.1/gettingstarted",
     "version": "1.20.1",
     "label": "Getting Started with Forge",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2
@@ -562,7 +562,7 @@
     "id": "1.20.1/concepts_internationalization",
     "version": "1.20.1",
     "label": "Internationalization and Localization",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/internationalization",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/internationalization/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -571,7 +571,7 @@
     "id": "1.20.1/misc_keymappings",
     "version": "1.20.1",
     "label": "Key Mappings",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/misc/keymappings",
+    "url": "https://docs.readthedocs.net/en/1.20.1/misc/keymappings/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 3
@@ -580,7 +580,7 @@
     "id": "1.20.1/gui_menus",
     "version": "1.20.1",
     "label": "Menus",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/menus",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gui/menus/",
     "tags": [
       "gui"
     ],
@@ -591,7 +591,7 @@
     "id": "1.20.1/gettingstarted_modfiles",
     "version": "1.20.1",
     "label": "Mod Files",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/modfiles",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/modfiles/",
     "tags": [
       "meta"
     ],
@@ -613,7 +613,7 @@
     "id": "1.20.1/gameeffects_particles",
     "version": "1.20.1",
     "label": "Particles",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/particles/",
     "tags": [
       "particles"
     ],
@@ -624,7 +624,7 @@
     "id": "1.20.1/legacy_porting",
     "version": "1.20.1",
     "label": "Porting to Minecraft 1.20",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/legacy/porting",
+    "url": "https://docs.readthedocs.net/en/1.20.1/legacy/porting/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 0
@@ -653,7 +653,7 @@
     "id": "1.20.1/concepts_resources",
     "version": "1.20.1",
     "label": "Resources",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/concepts/resources",
+    "url": "https://docs.readthedocs.net/en/1.20.1/concepts/resources/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 1
@@ -673,7 +673,7 @@
     "id": "1.20.1/datastorage_saveddata",
     "version": "1.20.1",
     "label": "Saved Data",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata",
+    "url": "https://docs.readthedocs.net/en/1.20.1/datastorage/saveddata/",
     "tags": [],
     "priority": "🟢",
     "sectionCount": 2
@@ -682,7 +682,7 @@
     "id": "1.20.1/gui_screens",
     "version": "1.20.1",
     "label": "Screens",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gui/screens",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gui/screens/",
     "tags": [
       "gui"
     ],
@@ -693,7 +693,7 @@
     "id": "1.20.1/gameeffects_sounds",
     "version": "1.20.1",
     "label": "Sounds",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gameeffects/sounds",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gameeffects/sounds/",
     "tags": [
       "sounds"
     ],
@@ -704,7 +704,7 @@
     "id": "1.20.1/gettingstarted_structuring",
     "version": "1.20.1",
     "label": "Structuring Your Mod",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/structuring",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/structuring/",
     "tags": [
       "meta"
     ],
@@ -726,7 +726,7 @@
     "id": "1.20.1/gettingstarted_versioning",
     "version": "1.20.1",
     "label": "Versioning",
-    "url": "https://docs.minecraftforge.net/en/1.20.1/gettingstarted/versioning",
+    "url": "https://docs.readthedocs.net/en/1.20.1/gettingstarted/versioning/",
     "tags": [
       "meta"
     ],

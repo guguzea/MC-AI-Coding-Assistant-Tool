@@ -23,7 +23,7 @@ This file defines the metadata of your mod. Its information may be viewed by use
 
 The <code>mods.toml` file is formatted as [TOML](https://github.com/toml-lang/toml), the example mods.toml file in the MDK provides comments explaining the contents of the file. It should be stored as `src/main/resources/META-INF/mods.toml`. A basic `mods.toml`, describing one mod, may look like this: ```java # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml modLoader="javafml" # A version range to match for said mod loader - for regular FML @Mod it will be the forge version # Forge for 1.14.4 is version 28 loaderVersion="[28,)" # A URL to refer people to when problems occur with this mod issueTrackerURL="github.com/MinecraftForge/MinecraftForge/issues" # If the mods defined in this file should show as seperate resource packs showAsResourcePack=false [[mods]] modId="examplemod" version="1.0.0.0" displayName="Example Mod" updateJSONURL="minecraftforge.net/versions.json" displayURL="minecraftforge.net" logoFile="assets/examplemod/textures/logo.png" credits="I'd like to thank my mother and father." authors="Author" description=''' Lets you craft dirt into diamonds. This is a traditional mod that has existed for eons. It is ancient. The holy Notch created it. Jeb rainbowfied it. Dinnerbone made it upside down. Etc. ''' [[dependencies.examplemod]] modId="forge" mandatory=true versionRange="[28,)" ordering="NONE" side="BOTH" [[dependencies.examplemod]] modId="minecraft" mandatory=true versionRange="[1.14.4]" ordering="NONE" side="BOTH" ```
 
-The default Gradle configuration replaces `${file.jarVersion}` with the project version, but _*only*_ within `mods.toml`, so you should use those instead of directly writing them out. Here is a table of attributes that may be given to a mod, where `mandatory` means there is no default and the absence of the property causes an error.
+The default Gradle configuration replaces `${file.jarVersion}` with the project version, but *only* within `mods.toml`, so you should use those instead of directly writing them out. Here is a table of attributes that may be given to a mod, where `mandatory` means there is no default and the absence of the property causes an error.
 
 Property | Type | Default | Description
 --- | --- | --- | ---
@@ -42,7 +42,7 @@ dependencies | [list] | `[]` | A list of dependencies of this mod.
 
 ## The Mod File
 
-Generally, we&rsquo;ll start with a file named after your mod, and put into your package. This is the _*entry point*_ to your mod and will contain some special indicators marking it as such.
+Generally, we&rsquo;ll start with a file named after your mod, and put into your package. This is the *entry point* to your mod and will contain some special indicators marking it as such.
 
 ## What is `@Mod?
 
@@ -68,4 +68,4 @@ For Example:
 - <li>A `Block` called `NotDirt` would be in a `block` package, with a class name of `NotDirtBlock`.
 - <li>Finally, a `TileEntity` for a block called `SuperChewer` would be a `tile` or `tileentity` package, with a class name of `SuperChewerTile`.
 
-Appending your class names with what _*kind*_ of object they are makes it easier to figure out what a class is, or guess the class for an object.
+Appending your class names with what *kind* of object they are makes it easier to figure out what a class is, or guess the class for an object.

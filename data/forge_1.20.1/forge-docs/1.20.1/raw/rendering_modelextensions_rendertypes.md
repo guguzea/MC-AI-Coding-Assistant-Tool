@@ -61,9 +61,9 @@ A custom named render type consists of two or three components:
 
 - A chunk render type - any of the types in the list returned by `RenderType.chunkBufferLayers()` can be used
 - A render type with the `DefaultVertexFormat.NEW_ENTITY` vertex format (&ldquo;entity render type&rdquo;)
-- A render type with the `DefaultVertexFormat.NEW_ENTITY` vertex format for use when the _*${1}_ graphics mode is selected (optional)
+- A render type with the `DefaultVertexFormat.NEW_ENTITY` vertex format for use when the *…* graphics mode is selected (optional)
 
-The chunk render type is used when a block using this named render type is rendered as part of the chunk geometry. The required entity render type is used when an item using this named render type is rendered in the Fast and Fancy graphics modes (inventory, ground, item frame, etc.). The optional entity render type is used the same way as the required entity render type when the _*${1}_ graphics mode is selected. This render type is needed in cases where the required entity render type does not work in the _*${1}_ graphics mode (typically only applies to translucent render types).
+The chunk render type is used when a block using this named render type is rendered as part of the chunk geometry. The required entity render type is used when an item using this named render type is rendered in the Fast and Fancy graphics modes (inventory, ground, item frame, etc.). The optional entity render type is used the same way as the required entity render type when the *…* graphics mode is selected. This render type is needed in cases where the required entity render type does not work in the *…* graphics mode (typically only applies to translucent render types).
 
 ```
 public static void onRegisterNamedRenderTypes(RegisterNamedRenderTypesEvent event)

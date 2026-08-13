@@ -1020,8 +1020,7 @@ export function lookupByObfuscated(
   kind: "method" | "field",
 ): LookupByObfuscatedResult {
   const era = getMappingEra(version);
-  const isSrg =
-    kind === "method" ? /^func_\d+_[a-z]$/i.test(token) : /^field_\d+_[a-z]$/i.test(token);
+  const isSrg = kind === "method" ? /^func_\d+_[a-zA-Z]+$/.test(token) : /^field_\d+_[a-zA-Z]+$/.test(token);
 
   // SRG → Forge CSV searge 表全局反查
   if (isSrg) {

@@ -12,8 +12,8 @@ If anything in this section is not clear, or you are struggling to understand, y
 ## Specifications
 These pages contain specifications on the different files and file types used by the Fabric toolchain.
 
-  * [fabric.mod.json (Overview)](documentation:fabric_${1}_json)
-  * [fabric.mod.json (Full Spec)](documentation:fabric_${1}_json_spec)
+  * [fabric.mod.json (Overview)](documentation:fabric_mod_json)
+  * [fabric.mod.json (Full Spec)](documentation:fabric_mod_json_spec)
   * [Mapping Formats](documentation:mapping_formats)
     * [Tiny v1](documentation:tiny)
     * [Tiny v2](documentation:tiny2)
@@ -28,7 +28,7 @@ These pages contain technical information on how projects in the Fabric toolchai
   * [Enigma](documentation:enigma)
   * [Matcher](documentation:matcher)
   * [Yarn](documentation:yarn)
-  * [Fabric Meta](documentation:modpack_${1}_endpoints)
+  * [Fabric Meta](documentation:modpack_related_endpoints)
   * [Mod Build pipeline](documentation:build_pipelines)
 
 ## External Documentation

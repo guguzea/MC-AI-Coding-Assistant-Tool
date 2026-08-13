@@ -11,7 +11,7 @@ Animations for blocks are done with the `AnimationTESR`, which is a `FastTESR`. 
 
 The `StaticProperty` is a property you can add to your block&rsquo;s blockstate by adding `Properties.StaticProperty` to the list of your block&rsquo;s properties inside of `createBlockState()`. When rendering the block, the `AnimationTESR` checks if the property&rsquo;s value is true; if so, block rendering continues as normal. Otherwise the `AnimationTESR` animates the block model assigned to the `static=false` variant in the blockstate json. All parts of the model that can be static should probably be rendered in the static state, as that is its purpose.
 
-The `handleEvents()` callback is located _*in*_ the `AnimationTESR`, so you have to either subclass or overload it inline when you register the tileentity.
+The `handleEvents()` callback is located *in* the `AnimationTESR`, so you have to either subclass or overload it inline when you register the tileentity.
 
 Here&rsquo;s an example of registering the TESR:
 

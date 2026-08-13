@@ -106,7 +106,9 @@ function copyTree(srcRoot: string, destRoot: string, allowRoot: string): string[
 
 export interface DataApplyOpts {
   zip: GhAsset;
-  sums: GhAsset;
+  sums?: GhAsset;
+  /** 来自 GitHub Release asset digest（无 SHA256SUMS 时使用） */
+  checksumHex?: string;
   releaseTag: string;
   dryRun: boolean;
   dataDir?: string;
@@ -131,7 +133,11 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
   const dataDir = opts.dataDir ?? resolveDataDir();
   const diskSpace = checkDiskSpace(dataDir, opts.zip.size);
   steps.push(`download ${opts.zip.name} (${opts.zip.size} bytes)`);
-  steps.push(`verify SHA256 via ${opts.sums.name}`);
+  steps.push(
+    opts.checksumHex && !opts.sums && !opts.localSumsPath
+      ? `verify SHA256 via GitHub asset digest`
+      : `verify SHA256 via ${opts.sums?.name ?? opts.localSumsPath ?? "checksum"}`,
+  );
   steps.push(`extract into ${dataDir} (layout: zip root = data contents)`);
 
   if (!diskSpace.ok) {
@@ -188,7 +194,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
   const tmpBase = join(tmpdir(), `mc-skill-update-${process.pid}-${Date.now()}`);
   mkdirSync(tmpBase, { recursive: true });
   const zipPath = opts.localZipPath ?? join(tmpBase, opts.zip.name);
-  const sumsPath = opts.localSumsPath ?? join(tmpBase, opts.sums.name);
+  const sumsPath = opts.localSumsPath ?? (opts.sums ? join(tmpBase, opts.sums.name) : undefined);
   const staging = join(tmpBase, "staging");
 
   try {
@@ -198,14 +204,30 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       });
       if (!dl.ok) return { ok: false, steps, filesToOverwrite: [], diskSpace, action: dl.action };
     }
-    if (!opts.localSumsPath) {
-      const dl2 = await downloadToFile(opts.sums.browser_download_url, sumsPath, {
-        fetchImpl: opts.fetchImpl,
-      });
-      if (!dl2.ok) return { ok: false, steps, filesToOverwrite: [], diskSpace, action: dl2.action };
+    let expected = opts.checksumHex?.toLowerCase() ?? null;
+    if (!expected) {
+      if (!sumsPath || (!opts.localSumsPath && !opts.sums)) {
+        return {
+          ok: false,
+          steps,
+          filesToOverwrite: [],
+          diskSpace,
+          action: actionable(
+            "DATA_CHECKSUM_MISSING",
+            "无 SHA256SUMS 且无 GitHub digest",
+            ["检查 Release checksum"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
+      if (!opts.localSumsPath && opts.sums) {
+        const dl2 = await downloadToFile(opts.sums.browser_download_url, sumsPath, {
+          fetchImpl: opts.fetchImpl,
+        });
+        if (!dl2.ok) return { ok: false, steps, filesToOverwrite: [], diskSpace, action: dl2.action };
+      }
+      expected = parseSha256Sums(readFileSync(sumsPath, "utf8"), opts.zip.name);
     }
-
-    const expected = parseSha256Sums(readFileSync(sumsPath, "utf8"), opts.zip.name);
     if (!expected) {
       return {
         ok: false,

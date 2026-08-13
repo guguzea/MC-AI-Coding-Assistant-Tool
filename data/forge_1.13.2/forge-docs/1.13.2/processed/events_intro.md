@@ -53,4 +53,4 @@ Event handler methods (marked with `@SubscribeEvent`) have a priority. You can s
 
 ## Sub Events
 
-Many events have different variations of themselves, these can be different but all based around one common factor (e.g. `PlayerEvent`) or can be an event that has multiple phases (e.g. `PotionBrewEvent`). Take note that if you listen to the parent event class, you will receive calls to your method for _*all*_ subclasses.
+Many events have different variations of themselves, these can be different but all based around one common factor (e.g. `PlayerEvent`) or can be an event that has multiple phases (e.g. `PotionBrewEvent`). Take note that if you listen to the parent event class, you will receive calls to your method for *all* subclasses.

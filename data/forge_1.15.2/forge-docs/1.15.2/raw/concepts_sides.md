@@ -7,7 +7,7 @@ sourceType: mkdocs
 ---
 # Sides in Minecraft
 
-A very important concept to understand when modding Minecraft are the two sides: _*client*_ and _*server*_. There are many, many common misconceptions and mistakes regarding siding, which can lead to bugs that might not crash the game, but can rather have unintended and often unpredictable effects.
+A very important concept to understand when modding Minecraft are the two sides: *client* and *server*. There are many, many common misconceptions and mistakes regarding siding, which can lead to bugs that might not crash the game, but can rather have unintended and often unpredictable effects.
 
 ## Different Kinds of Sides
 
@@ -15,10 +15,10 @@ When we say &ldquo;client&rdquo; or &ldquo;server&rdquo;, it usually follows wit
 
 As it turns out, there can be some ambiguity even with two such terms. Here we disambiguate the four possible meanings of &ldquo;client&rdquo; and &ldquo;server&rdquo;:
 
-- <li>Physical client - The _*physical client*_ is the entire program that runs whenever you launch Minecraft from the launcher. All threads, processes, and services that run during the game&rsquo;s graphical, interactable lifetime are part of the physical client.
-- <li>Physical server - Often known as the dedicated server, the _*physical server*_ is the entire program that runs whenever you launch any sort of `minecraft_server.jar` that does not bring up a playable GUI.
-- <li>Logical server - The _*logical server*_ is what runs game logic: mob spawning, weather, updating inventories, health, AI, and all other game mechanics. The logical server is present within a physical server, but it also can run inside a physical client together with a logical client, as a single player world. The logical server always runs in a thread named the `Server Thread`.
-- <li>Logical client - The _*logical client*_ is what accepts input from the player and relays it to the logical server. In addition, it also receives information from the logical server and makes it available graphically to the player. The logical client runs in the `Client Thread`, though often several other threads are spawned to handle things like audio and chunk render batching.
+- <li>Physical client - The *physical client* is the entire program that runs whenever you launch Minecraft from the launcher. All threads, processes, and services that run during the game&rsquo;s graphical, interactable lifetime are part of the physical client.
+- <li>Physical server - Often known as the dedicated server, the *physical server* is the entire program that runs whenever you launch any sort of `minecraft_server.jar` that does not bring up a playable GUI.
+- <li>Logical server - The *logical server* is what runs game logic: mob spawning, weather, updating inventories, health, AI, and all other game mechanics. The logical server is present within a physical server, but it also can run inside a physical client together with a logical client, as a single player world. The logical server always runs in a thread named the `Server Thread`.
+- <li>Logical client - The *logical client* is what accepts input from the player and relays it to the logical server. In addition, it also receives information from the logical server and makes it available graphically to the player. The logical client runs in the `Client Thread`, though often several other threads are spawned to handle things like audio and chunk render batching.
 
 In the MinecraftForge codebase, the physical side is represented by an enum called `Dist`, while the logical side is represented by an enum called `LogicalSide`.
 
@@ -42,7 +42,7 @@ How do we resolve this? Luckily, FML has `DistExecutor`, which provides various 
 
 ### Thread Groups
 
-If `Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER` is true, it is likely the current thread is on the logical server. Otherwise, it is likely on the logical client. This is useful to retrieve the **logical** side when you do not have access to a `World` object to check `isRemote`. It _*guesses*_ which logical side you are on by looking at the group of the currently running thread. Because it is a guess, this method should only be used when other options have been exhausted. In nearly every case, you should prefer checking `World#isRemote`.
+If `Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER` is true, it is likely the current thread is on the logical server. Otherwise, it is likely on the logical client. This is useful to retrieve the **logical** side when you do not have access to a `World` object to check `isRemote`. It *guesses* which logical side you are on by looking at the group of the currently running thread. Because it is a guess, this method should only be used when other options have been exhausted. In nearly every case, you should prefer checking `World#isRemote`.
 
 ### `FMLEnvironment#dist and <code>@OnlyIn
 

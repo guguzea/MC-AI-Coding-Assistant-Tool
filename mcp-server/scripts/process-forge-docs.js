@@ -26,6 +26,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parseCliArgs } from "./_lib/args.js";
+import { repairBrokenItalicMarkup } from "./_lib/pipeline-helpers.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "..", "data");
@@ -373,6 +374,7 @@ function processVersion(version) {
       const metaMatch = raw.match(/^> 来源：(.+)\r?\n> 版本：(.+)\r?\n\r?\n/m);
       if (metaMatch) content = raw.slice(raw.indexOf(metaMatch[0]) + metaMatch[0].length);
     }
+    content = repairBrokenItalicMarkup(content);
 
     // 提取标题
     const titleMatch = content.match(/^# (.+)/);

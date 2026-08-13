@@ -1,8 +1,10 @@
-# BlockEntityWithoutLevelRenderer
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/items/bewlr
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "items/bewlr"
+source: "https://docs.readthedocs.net/en/1.20.1/items/bewlr/"
+sourceType: mkdocs
+---
 # BlockEntityWithoutLevelRenderer
 
 `BlockEntityWithoutLevelRenderer` is a method to handle dynamic rendering on items. This system is much simpler than the old `ItemStack` system, which required a `BlockEntity`, and did not allow access to the `ItemStack`.

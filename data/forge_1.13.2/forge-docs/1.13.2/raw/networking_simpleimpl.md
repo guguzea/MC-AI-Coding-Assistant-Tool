@@ -60,7 +60,7 @@ Note the presence of `setPacketHandled`, which used to tell the network system t
 
 ### Sending to the Server
 
-There is but one way to send a packet to the server. This is because there is only ever _*one*_ server the client can be connected to at once. To do so, we must again use that `SimpleChannel` that was defined earlier. Simply call `INSTANCE.sendToServer(new MyMessage())`. The message will be sent to the handler for its type, if one exists.
+There is but one way to send a packet to the server. This is because there is only ever *one* server the client can be connected to at once. To do so, we must again use that `SimpleChannel` that was defined earlier. Simply call `INSTANCE.sendToServer(new MyMessage())`. The message will be sent to the handler for its type, if one exists.
 
 ### Sending to Clients
 

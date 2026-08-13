@@ -51,7 +51,7 @@ The specified light values are purely client-side and affect neither the server&
 
 Specifying the `ambient_occlusion` flag will configure [AO](https://en.wikipedia.org/wiki/Ambient_occlusion) for the quads. Defaults to `true`. The behaviour of this flag is equivalent to the top-level `ambientocclusion` flag of the vanilla format.
 
-<img alt="Ambient occlusion in action" src="../ambientocclusion_annotated.png" /> _*${1}_
+<img alt="Ambient occlusion in action" src="../ambientocclusion_annotated.png" /> *…*
 
 
 <!-- key:🔴 role:新手必读 (Note) -->

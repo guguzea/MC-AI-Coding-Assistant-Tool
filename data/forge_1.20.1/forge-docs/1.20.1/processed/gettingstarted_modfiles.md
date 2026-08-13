@@ -59,7 +59,7 @@ Property | Type | Default | Description | Example
 `showAsResourcePack` | boolean | `false` | When `true`, the mod(s)&rsquo;s resources will be displayed as a separate resource pack on the &lsquo;Resource Packs&rsquo; menu, rather than being combined with the &lsquo;Mod resources&rsquo; pack. | `true`
 `services` | array | `[]` | An array of services your mod **uses**. This is consumed as part of the created module for the mod from Forge&rsquo;s implementation of the Java Platform Module System. | `["net.minecraftforge.forgespi.language.IModLanguageProvider"]`
 `properties` | table | `{}` | A table of substitution properties. This is used by `StringSubstitutor` to replace `${file.<key>}` with its corresponding value. This is currently only used to replace the `version` in the [mod-specific properties](#mod-specific-properties). | `{ "example" = "1.2.3" }` referenced by `${file.example}`
-`issueTrackerURL` | string | _*${1}_ | A URL representing the place to report and track issues with the mod(s). | `"https://forums.minecraftforge.net/"`
+`issueTrackerURL` | string | *nothing* | A URL representing the place to report and track issues with the mod(s). | `"https://forums.minecraftforge.net/"`
 
 
 <!-- key:🔴 role:新手必读 (Important) -->
@@ -87,15 +87,15 @@ Property | Type | Default | Description | Example
 `version` | string | `"1"` | The version of the mod, preferably in a [variation of Maven versioning](../versioning/). When set to `${file.jarVersion}`, it will be replaced with the value of the `Implementation-Version` property in the JAR&rsquo;s manifest (displays as `0.0NONE` in a development environment). | `"1.20-1.0.0.0"`
 `displayName` | string | value of `modId` | The pretty name of the mod. Used when representing the mod on a screen (e.g., mod list, mod mismatch). | `"Example Mod"`
 `description` | string | `"MISSING DESCRIPTION"` | The description of the mod shown in the mod list screen. It is recommended to use a [multiline literal string](https://toml.io/en/v1.0.0#string). | `"This is an example."`
-`logoFile` | string | _*${1}_ | The name and extension of an image file used on the mods list screen. The logo must be in the root of the JAR or directly in the root of the source set (e.g., `src/main/resources` for the main source set). | `"example_logo.png"`
+`logoFile` | string | *nothing* | The name and extension of an image file used on the mods list screen. The logo must be in the root of the JAR or directly in the root of the source set (e.g., `src/main/resources` for the main source set). | `"example_logo.png"`
 `logoBlur` | boolean | `true` | Whether to use `GL_LINEAR*` (true) or `GL_NEAREST*` (false) to render the `logoFile`. | `false`
-`updateJSONURL` | string | _*${1}_ | A URL to a JSON used by the [update checker](../../misc/updatechecker/) to make sure the mod you are playing is the latest version. | `"https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"`
+`updateJSONURL` | string | *nothing* | A URL to a JSON used by the [update checker](../../misc/updatechecker/) to make sure the mod you are playing is the latest version. | `"https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json"`
 `features` | table | `{}` | See &lsquo;[features](#features)&rsquo;. | `{ java_version = "17" }`
 `modproperties` | table | `{}` | A table of key/values associated with this mod. Currently unused by Forge, but is mainly for use by mods. | `{ example = "value" }`
-`modUrl` | string | _*${1}_ | A URL to the download page of the mod. Currently unused. | `"https://files.minecraftforge.net/"`
-`credits` | string | _*${1}_ | Credits and acknowledges for the mod shown on the mod list screen. | `"The person over here and there."`
-`authors` | string | _*${1}_ | The authors of the mod shown on the mod list screen. | `"Example Person"`
-`displayURL` | string | _*${1}_ | A URL to the display page of the mod shown on the mod list screen. | `"https://minecraftforge.net/"`
+`modUrl` | string | *nothing* | A URL to the download page of the mod. Currently unused. | `"https://files.minecraftforge.net/"`
+`credits` | string | *nothing* | Credits and acknowledges for the mod shown on the mod list screen. | `"The person over here and there."`
+`authors` | string | *nothing* | The authors of the mod shown on the mod list screen. | `"Example Person"`
+`displayURL` | string | *nothing* | A URL to the display page of the mod shown on the mod list screen. | `"https://minecraftforge.net/"`
 `displayTest` | string | `"MATCH_VERSION"` | See &lsquo;[sides](../../concepts/sides/#writing-one-sided-mods)&rsquo;. | `"NONE"`
 
 #### Features
@@ -117,7 +117,7 @@ Property | Type | Default | Description | Example
 `versionRange` | string | `""` | The acceptable version range of the language loader, expressed as a [Maven Version Range](https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html). An empty string matches any version. | `"[1, 2)"`
 `ordering` | string | `"NONE"` | Defines if the mod must load before (`"BEFORE"`) or after (`"AFTER"`) this dependency. If the ordering does not matter, return `"NONE"` | `"AFTER"`
 `side` | string | `"BOTH"` | The [physical side](../../concepts/sides/#different-kinds-of-sides) the dependency must be present on: `"CLIENT"`, `"SERVER"`, or `"BOTH"`. | `"CLIENT"`
-`referralUrl` | string | _*${1}_ | A URL to the download page of the dependency. Currently unused. | `"https://library.example.com/"`
+`referralUrl` | string | *nothing* | A URL to the download page of the dependency. Currently unused. | `"https://library.example.com/"`
 
 
 <!-- key:🔴 role:新手必读 (Warning) -->

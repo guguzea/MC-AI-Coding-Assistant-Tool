@@ -16,7 +16,7 @@ For simple blocks, which need no special functionality (think cobblestone, wood 
 - <li>`setUnlocalizedName` - Mostly self explanatory, sets the unlocalized name of the block. This name will be prepended with &ldquo;tile.&rdquo; and appended with &ldquo;.name&rdquo; for localization purposes. For instance `setUnlocalizedName("foo")` will cause the block&rsquo;s actual localization key to be &ldquo;tile.foo.name&rdquo;. For more advanced localization control, a custom Item will be needed. We&rsquo;ll get into this more later.
 - <li>`setCreativeTab` - Controls which creative tab this block will fall under. This must be called if the block should be shown in the creative menu. Tab options can be found in the `CreativeTabs` class.
 
-All these methods are _*chainable*_ which means you can call them in series. See `Block#registerBlocks` for examples of this.
+All these methods are *chainable* which means you can call them in series. See `Block#registerBlocks` for examples of this.
 
 ### Advanced Blocks
 

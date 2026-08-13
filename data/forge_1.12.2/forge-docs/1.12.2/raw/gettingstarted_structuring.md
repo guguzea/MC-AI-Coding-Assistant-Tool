@@ -38,7 +38,7 @@ The `mcmod.info` file is formatted as JSON, where the root element is a list of 
 }]
 ```
 
-The default Gradle configuration replaces `${version}` with the project version, and `${mcversion}` with the Minecraft version, but _*only*_ within `mcmod.info`, so you should use those instead of directly writing them out. Here is a table of attributes that may be given to a mod, where `required` means there is no default and the absence of the property causes an error. In addition to the required properties, you should also define `description`, `version`, `mcversion`, `url`, and `authorList`.
+The default Gradle configuration replaces `${version}` with the project version, and `${mcversion}` with the Minecraft version, but *only* within `mcmod.info`, so you should use those instead of directly writing them out. Here is a table of attributes that may be given to a mod, where `required` means there is no default and the absence of the property causes an error. In addition to the required properties, you should also define `description`, `version`, `mcversion`, `url`, and `authorList`.
 
 Property | Type | Default | Description
 --- | --- | --- | ---
@@ -56,15 +56,15 @@ logoFile | string | `""` | The path to the mod&rsquo;s logo. It is resolved on t
 screenshots | [string] | `[]` | A list of images to be shown on the info page. Currently unimplemented.
 parent | string | `""` | The modid of a parent mod, if applicable. Using this allows modules of another mod to be listed under it in the info page, like BuildCraft.
 useDependencyInformation | boolean | `false` | If true and `Mod.useMetadata`, the below 3 lists of dependencies will be used. If not, they do nothing.
-requiredMods | [string] | `[]` | A list of modids. If one is missing, the game will crash. This **does not affect the _*ordering*_ of mod loading!** To specify ordering as well as requirement, have a coupled entry in `dependencies`.
-dependencies | [string] | `[]` | A list of modids. All of the listed mods will load _*before*_ this one. If one is not present, nothing happens.
-dependants | [string] | `[]` | A list of modids. All of the listed mods will load _*after*_ this one. If one is not present, nothing happens.
+requiredMods | [string] | `[]` | A list of modids. If one is missing, the game will crash. This **does not affect the *ordering* of mod loading!** To specify ordering as well as requirement, have a coupled entry in `dependencies`.
+dependencies | [string] | `[]` | A list of modids. All of the listed mods will load *before* this one. If one is not present, nothing happens.
+dependants | [string] | `[]` | A list of modids. All of the listed mods will load *after* this one. If one is not present, nothing happens.
 
 A good example `mcmod.info` that uses many of these properties is [BuildCraft](https://gist.github.com/anonymous/05ad9a1e0220bbdc25caed89ef0a22d2).
 
 ## The Mod File
 
-Generally, we&rsquo;ll start with a file named after your mod, and put into your package. This is the _*entry point*_ to your mod and will contain some special indicators marking it as such.
+Generally, we&rsquo;ll start with a file named after your mod, and put into your package. This is the *entry point* to your mod and will contain some special indicators marking it as such.
 
 ## What is `@Mod?
 
@@ -103,4 +103,4 @@ For Example:
 - <li>A `Block` called `NotDirt` would be in a `block` package, with a class name of `BlockNotDirt`.
 - <li>Finally, a `TileEntity` for a block called `SuperChewer` would be a `tile` or `tileentity` package, with a class name of `TileSuperChewer`.
 
-Prepending your class names with what _*kind*_ of object they are makes it easier to figure out what a class is, or guess the class for an object.
+Prepending your class names with what *kind* of object they are makes it easier to figure out what a class is, or guess the class for an object.

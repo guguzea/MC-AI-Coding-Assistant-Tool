@@ -88,6 +88,9 @@ npm run build
 | `MC_SKILL_CACHE` | 反编译/下载缓存根目录（默认 `%APPDATA%/mc-skill-cache` / `~/.config/mc-skill-cache`） | `H:/mc-skill-cache` |
 | `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义） | `1` |
 | `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | data zip 下载超时 | `600000` |
+| `MC_SKILL_GITHUB_TIMEOUT_MS` | Release API 超时 | `25000` |
+| `MC_SKILL_GITHUB_API_BASE` | GitHub API 根（可改镜像） | `https://api.github.com` |
+| `HTTPS_PROXY` / `HTTP_PROXY` | Node fetch 代理（Clash 等） | `http://127.0.0.1:7890` |
 | `MC_SKILL_GITHUB_TOKEN` / `GITHUB_TOKEN` | 可选，提高 API 限额 | |
 | `MC_SKILL_STRICT` | `1` 数据无效则启动失败 | `1` |
 | `MC_SKILL_DEBUG_PATHS` | `1` 打印路径解析 | `1` |

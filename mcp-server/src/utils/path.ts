@@ -14,6 +14,7 @@ import { fileURLToPath } from "url";
 import {
   getSemanticIndexStatus,
   listSemanticDbPresence,
+  buildSemanticWarnings,
 } from "../docs-platform/semantic/status.js";
 
 function getSelfDir(): string {
@@ -124,7 +125,10 @@ export function diagnoseDataPaths(): {
     present: number;
     totalChecked: number;
     samples: ReturnType<typeof listSemanticDbPresence>;
+    warnings: string[];
   };
+  /** 缺语义库等必须出现的警告（规范：缺库必 warning） */
+  warnings: string[];
 } {
   const sources: string[] = [];
   const envPath = process.env.MC_SKILL_DATA;
@@ -190,6 +194,12 @@ export function diagnoseDataPaths(): {
   const semanticPresence = listSemanticDbPresence(dataDir);
   const semanticStatus = getSemanticIndexStatus(dataDir);
   const present = semanticPresence.filter((s) => s.exists).length;
+  const semanticWarnings = buildSemanticWarnings({
+    present,
+    total: semanticPresence.length,
+    modelsReady: semanticStatus.modelsReady,
+    missingSamples: semanticPresence.filter((s) => !s.exists),
+  });
 
   return {
     resolvedDataDir: dataDir,
@@ -207,7 +217,9 @@ export function diagnoseDataPaths(): {
       present,
       totalChecked: semanticPresence.length,
       samples: semanticPresence.filter((s) => s.exists).slice(0, 40),
+      warnings: semanticWarnings,
     },
+    warnings: semanticWarnings,
   };
 }
 

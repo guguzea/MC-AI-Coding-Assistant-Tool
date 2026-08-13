@@ -30,6 +30,8 @@ export interface SemanticIndexStatus {
   presentCount: number;
   hybridCount: number;
   fts5OnlyCount: number;
+  /** 缺库 / 缺模型时非空；缺库不抛错但必须 warning */
+  warnings: string[];
 }
 
 const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string }> = [
@@ -130,6 +132,43 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
   return out;
 }
 
+/** 规范：语义库缺失必须 warning（不抛错、不假装 hybrid） */
+export function buildSemanticWarnings(opts: {
+  present: number;
+  total: number;
+  modelsReady: boolean;
+  missingSamples?: Array<{ platform: string; version: string; source: string }>;
+}): string[] {
+  const warnings: string[] = [];
+  if (opts.total <= 0) {
+    warnings.push(
+      "未扫描到任何文档树旁的 semantic/db.sqlite 探测点（可能尚未下载平台数据包）。search_*_docs 仅 L0。",
+    );
+    return warnings;
+  }
+  if (opts.present < opts.total) {
+    const miss = opts.total - opts.present;
+    const extra = opts.missingSamples
+      ?.slice(0, 8)
+      .map((s) => `${s.platform}_${s.version}/${s.source}`)
+      .join(", ");
+    warnings.push(
+      `语义索引缺库：${opts.present}/${opts.total} 个 db.sqlite 存在（缺 ${miss}）${extra ? `，例如 ${extra}` : ""}。缺库版本的 search_*_docs 回退 L0。补齐：在 mcp-server 执行 npm run build:semantic-index`,
+    );
+  }
+  if (!opts.modelsReady) {
+    warnings.push(
+      "嵌入模型未就绪（data/_models/Xenova/all-MiniLM-L6-v2），即使有语义库也只能 FTS5 而非 hybrid。可执行 npm run fetch:embedding-model",
+    );
+  }
+  return warnings;
+}
+
+export function missingSemanticDbWarning(missing: boolean): string | undefined {
+  if (!missing) return undefined;
+  return "语义索引缺库，本次已回退 L0 关键词检索。详见 diagnose_data_paths.semantic.warnings；补齐可运行 npm run build:semantic-index";
+}
+
 export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   const modelsPath = join(dataRoot, "_models");
   const modelsReady = modelsDirReady(dataRoot);
@@ -153,6 +192,15 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   if (hybridCount > 0 && modelsReady) modeHint = "hybrid";
   else if (presentCount > 0) modeHint = "fts5-only";
   else modeHint = "l0-only";
+  const presence = listSemanticDbPresence(dataRoot);
+  const presentAll = presence.filter((s) => s.exists).length;
+  const missingSamples = presence.filter((s) => !s.exists);
+  const warnings = buildSemanticWarnings({
+    present: presence.length > 0 ? presentAll : presentCount,
+    total: presence.length > 0 ? presence.length : samples.length,
+    modelsReady,
+    missingSamples: presence.length > 0 ? missingSamples : samples.filter((s) => !s.exists),
+  });
   return {
     modelsReady,
     modelsPath,
@@ -162,5 +210,6 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
     presentCount,
     hybridCount,
     fts5OnlyCount,
+    warnings,
   };
 }

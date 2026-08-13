@@ -1,11 +1,13 @@
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "misc/updatechecker"
+source: "https://docs.readthedocs.net/en/1.20.1/misc/updatechecker/"
+sourceType: mkdocs
+---
 # Forge Update Checker
 
-> 来源：https://docs.minecraftforge.net/en/1.20.1/misc/updatechecker
-> 版本：1.20.1
-
-# Forge Update Checker
-
-Forge provides a very lightweight, opt-in, update-checking framework. If any mods have an available update, it will show a flashing icon on the &lsquo;Mods&rsquo; button of the main menu and mod list along with the respective changelogs. It _*${1}_ download updates automatically.
+Forge provides a very lightweight, opt-in, update-checking framework. If any mods have an available update, it will show a flashing icon on the &lsquo;Mods&rsquo; button of the main menu and mod list along with the respective changelogs. It *does not* download updates automatically.
 
 ## Getting Started
 
@@ -15,7 +17,7 @@ The first thing you want to do is specify the `updateJSONURL` parameter in your 
 
 The JSON itself has a relatively simple format as follows:
 
-```json
+```xml
 {
   "homepage": "<homepage/download page for your mod>",
   "<mcversion>": {
@@ -35,11 +37,11 @@ The JSON itself has a relatively simple format as follows:
 
 This is fairly self-explanatory, but some notes:
 
-- The link under `homepage` is the link the user will be shown when the mod is outdated.
-- Forge uses an internal algorithm to determine whether one version string of your mod is &ldquo;newer&rdquo; than another. Most versioning schemes should be compatible, but see the `ComparableVersion` class if you are concerned about whether your scheme is supported. Adherence to [Maven versioning](../../gettingstarted/versioning/) is highly recommended.
-- The changelog string can be separated into lines using `\n`. Some prefer to include a abbreviated changelog, then link to an external site that provides a full listing of changes.
-- 
-Manually inputting data can be chore. You can configure your `build.gradle` to automatically update this file when building a release as Groovy has native JSON parsing support. Doing this is left as an exercise to the reader. - <p>Some examples can be found here for [nocubes](https://cadiboo.github.io/projects/nocubes/update.json), [Corail Tombstone](https://github.com/Corail31/tombstone_lite/blob/master/update.json) and [Chisels & Bits 2](https://github.com/Aeltumn/Chisels-and-Bits-2/blob/master/update.json). ## Retrieving Update Check Results <p>You can retrieve the results of the Forge Update Checker using `VersionChecker#getResult(IModInfo)`. You can obtain your `IModInfo` via `ModContainer#getModInfo`. You can get your `ModContainer` using `ModLoadingContext.get().getActiveContainer()` inside your constructor, `ModList.get().getModContainerById(<your modId>)`, or `ModList.get().getModContainerByObject(<your mod instance>)`. You can obtain any other mod&rsquo;s `ModContainer` using `ModList.get().getModContainerById(<modId>)`. The returned object has a method `#status` which indicates the status of the version check.
+- <li>The link under `homepage` is the link the user will be shown when the mod is outdated.
+- <li>Forge uses an internal algorithm to determine whether one version string of your mod is &ldquo;newer&rdquo; than another. Most versioning schemes should be compatible, but see the `ComparableVersion` class if you are concerned about whether your scheme is supported. Adherence to [Maven versioning](../../gettingstarted/versioning/) is highly recommended.
+- <li>The changelog string can be separated into lines using `\n`. Some prefer to include a abbreviated changelog, then link to an external site that provides a full listing of changes.
+- <li> 
+Manually inputting data can be chore. You can configure your `build.gradle` to automatically update this file when building a release as Groovy has native JSON parsing support. Doing this is left as an exercise to the reader. - <li> <p>Some examples can be found here for [nocubes](https://cadiboo.github.io/projects/nocubes/update.json), [Corail Tombstone](https://github.com/Corail31/tombstone_lite/blob/master/update.json) and [Chisels & Bits 2](https://github.com/Aeltumn/Chisels-and-Bits-2/blob/master/update.json). ## Retrieving Update Check Results <p>You can retrieve the results of the Forge Update Checker using `VersionChecker#getResult(IModInfo)`. You can obtain your `IModInfo` via `ModContainer#getModInfo`. You can get your `ModContainer` using `ModLoadingContext.get().getActiveContainer()` inside your constructor, `ModList.get().getModContainerById(<your modId>)`, or `ModList.get().getModContainerByObject(<your mod instance>)`. You can obtain any other mod&rsquo;s `ModContainer` using `ModList.get().getModContainerById(<modId>)`. The returned object has a method `#status` which indicates the status of the version check.
 
 Status | Description
 --- | ---

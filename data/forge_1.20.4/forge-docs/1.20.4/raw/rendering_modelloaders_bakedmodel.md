@@ -52,4 +52,4 @@ The `rand` parameter is an instance of Random.
 
 It also takes in a non null `ModelData` instance. This can be used to define extra data when rendering the specific model via `ModelProperty`s. For example, one such property is `CompositeModel$Data`, which is used to store any additional submodel data for a model using the `forge:composite` model loader.
 
-Note that this method is called very often: once for every combination of non-culled face and supported block render layer (anywhere between 0 to 28 times) _*${1}_. This method should be as fast as possible, and should probably cache heavily.
+Note that this method is called very often: once for every combination of non-culled face and supported block render layer (anywhere between 0 to 28 times) *…*. This method should be as fast as possible, and should probably cache heavily.

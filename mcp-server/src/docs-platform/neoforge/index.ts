@@ -27,7 +27,8 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
+import { missingSemanticDbWarning } from "../semantic/status.js";
 
 const DATA_ROOT = resolveDataDir();
 
@@ -169,9 +170,12 @@ export async function searchNeoForgeDocs(args: {
           version,
           resolvedVersion: detailed.resolvedVersion,
           versionFallback: detailed.versionFallback,
-          warning: detailed.versionFallback
-            ? `请求版本 ${version} 已映射到 ${detailed.resolvedVersion}`
-            : undefined,
+          warning: joinSearchWarnings(
+            detailed.versionFallback
+              ? `请求版本 ${version} 已映射到 ${detailed.resolvedVersion}`
+              : undefined,
+            missingSemanticDbWarning(semanticHits === null),
+          ),
           forgeCompatible: forgeCompatible || undefined,
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"

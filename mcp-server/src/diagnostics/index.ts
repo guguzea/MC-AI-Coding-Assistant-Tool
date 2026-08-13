@@ -240,15 +240,29 @@ function hintAtLeastMinecraft(text: string, minVer: [number, number, number]): b
   return false;
 }
 
+/** 提取文本中是否出现任何 MC 版本号 */
+function hasMinecraftVersionHint(text: string): boolean {
+  return /\b1\.\d{1,2}(?:\.\d{1,2})?\b|\b26\.\d+\b/.test(text);
+}
+
 /** §4.5 traps（bookshelf 重名与 loader 无关；trinkets 停更需 fabric） */
 function detectTraps(loader: DetectedLoader, text: string): DependencyTrap[] {
   const traps: DependencyTrap[] = [];
-  if (loader === "fabric" && hasKeyword(text, "trinkets") && hintAtLeastMinecraft(text, [1, 21, 4])) {
-    traps.push({
-      code: "trinkets_stale",
-      message: "Trinkets 已停在 ~1.21.1；1.21.4+ 多自研/原版机制（如 Data Component），建议核对支持窗口或改原版机制",
-      communityDocId: "authored/lib-trinkets",
-    });
+  if (loader === "fabric" && hasKeyword(text, "trinkets")) {
+    if (hintAtLeastMinecraft(text, [1, 21, 4])) {
+      traps.push({
+        code: "trinkets_stale",
+        message: "Trinkets 已停在 ~1.21.1；1.21.4+ 多自研/原版机制（如 Data Component），建议核对支持窗口或改原版机制",
+        communityDocId: "authored/lib-trinkets",
+      });
+    } else if (!hasMinecraftVersionHint(text)) {
+      traps.push({
+        code: "trinkets_version_window",
+        message:
+          "检测到 Trinkets，但未看到目标 MC 版本。Trinkets 约维护到 1.21.1；若目标为 1.21.4+ 请核对支持窗口或改原版/自研饰品机制",
+        communityDocId: "authored/lib-trinkets",
+      });
+    }
   }
   if (hasKeyword(text, "bookshelf") && !/bookshelf-lib|bookshelfapi|darkhax\.bookshelf|bookshelflib/i.test(text)) {
     traps.push({

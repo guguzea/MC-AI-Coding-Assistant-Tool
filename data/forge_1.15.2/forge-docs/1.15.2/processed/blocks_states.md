@@ -25,7 +25,7 @@ Because the numbers carry no meaning by themselves, no one could know what they 
 
 In Minecraft 1.8 and above, the metadata system, along with the block ID system, was deprecated and eventually replaced with the **block state system**. The block state system abstracts out the details of the block&rsquo;s properties from the other behaviors of the block.
 
-Each _*property*_ of a block is described by an instance of `IProperty<?>`. Examples of block properties include instruments (`IProperty<NoteBlockInstrument>`), facing (`IProperty<Direction>`), poweredness (`IProperty<Boolean>`), etc. Each property has the value of the type `T` parametrized by `IProperty<T>`.
+Each *property* of a block is described by an instance of `IProperty<?>`. Examples of block properties include instruments (`IProperty<NoteBlockInstrument>`), facing (`IProperty<Direction>`), poweredness (`IProperty<Boolean>`), etc. Each property has the value of the type `T` parametrized by `IProperty<T>`.
 
 A unique triple can be constructed from the `Block`, the set of `IProperty<?>`, and the set of values for those properties. This unique triple is called a `BlockState`.
 
@@ -42,7 +42,7 @@ Not all blocks and situations require the usage of `BlockState`; only the most b
 
 > **Note**: Note A good rule of thumb is: if it has a different name, it should be a separate block.
 
-An example is making chair blocks: the _*direction*_ of the chair should be a _*property*_, while the different _*types of wood*_ should be separated into different blocks. An &ldquo;Oak Chair&rdquo; facing east (`oak_chair[facing=east]`) is different from a &ldquo;Spruce Chair&rdquo; facing west (`spruce_chair[facing=west]`).
+An example is making chair blocks: the *direction* of the chair should be a *property*, while the different *types of wood* should be separated into different blocks. An &ldquo;Oak Chair&rdquo; facing east (`oak_chair[facing=east]`) is different from a &ldquo;Spruce Chair&rdquo; facing west (`spruce_chair[facing=west]`).
 
 ## Implementing Block States
 

@@ -56,6 +56,12 @@ test("countCodeFences: 未闭合的奇数 fence 仍按整块计", () => {
   assert.equal(countCodeFences(md), 0);
 });
 
+test("repairBrokenItalicMarkup: _*foo*_ → *foo*，代码块不动", () => {
+  assert.equal(repairBrokenItalicMarkup("see _*mods.toml*_ here"), "see *mods.toml* here");
+  const fenced = "```\n_*keep*_\n```\n_*out*_";
+  assert.equal(repairBrokenItalicMarkup(fenced), "```\n_*keep*_\n```\n*out*");
+});
+
 // ── 纯函数：htmlTableToMarkdown ──────────────────────────────────────────
 
 test("htmlTableToMarkdown: 含 <thead> 与 <th>", () => {
@@ -419,7 +425,7 @@ test("atomicWriteText: 写入后无 .tmp 残留", async () => {
 // node:test 默认会自动统计。失败时退出码非零，无需手动处理。
 // 这里额外打印通过/失败计数，便于在 PowerShell 里肉眼确认。
 
-import { countCodeFences, htmlTableToMarkdown, dokuWikiRowToMarkdown, isDokuWikiSeparator, isLikelyValidHtmlPage, fetchPageHtml, downloadFileAtomic, atomicWriteText, safeFileSize } from "./pipeline-helpers.mjs";
+import { countCodeFences, htmlTableToMarkdown, dokuWikiRowToMarkdown, isDokuWikiSeparator, isLikelyValidHtmlPage, fetchPageHtml, downloadFileAtomic, atomicWriteText, safeFileSize, repairBrokenItalicMarkup } from "./pipeline-helpers.mjs";
 
 // node:test 在 Node 22 上以子进程方式运行；当前文件直接执行时，
 // `test` 回调会同步触发，并最终由 runner 决定退出码。

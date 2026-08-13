@@ -18,7 +18,7 @@ public void registerBlocks(RegistryEvent.Register<Block> event) {
 }
 ```
 
-The order in which `RegistryEvent.Register` events fire is alphabetically, with the exception that `Block` will _*always*_ fire first, and `Item` will _*always*_ fire second, right after `Block`. After the `Register<Block>` event has fired, all [`ObjectHolder`](#injecting-registry-values-into-fields) annotations are refreshed, and after `Register<Item>` has fired they are refreshed again. They are refreshed for a third time after _*all*_ of the other `Register` events have fired.
+The order in which `RegistryEvent.Register` events fire is alphabetically, with the exception that `Block` will *always* fire first, and `Item` will *always* fire second, right after `Block`. After the `Register<Block>` event has fired, all [`ObjectHolder`](#injecting-registry-values-into-fields) annotations are refreshed, and after `Register<Item>` has fired they are refreshed again. They are refreshed for a third time after *all* of the other `Register` events have fired.
 
 `RegistryEvent`s are currently supported for the following types: `Block`, `Item`, `Potion`, `Biome`, `SoundEvent`, `PotionType`, `Enchantment`, `IRecipe`, `VillagerProfession`, `EntityEntry`
 

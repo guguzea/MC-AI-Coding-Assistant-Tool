@@ -13,4 +13,4 @@ The Animation API is made up of two main components: armature files and animatio
 
 ASM Files are normally stored in the `asms/block` for blocks or `asms/item` for items and so on. You specify where to load them from, so their location is really up to you.
 
-Armature files _*must*_ be stored in the `armatures` folder. They are looked up by taking the path to your model file, removing `models/` and taking whats left and prepending `armatures/`, so a model in `models/block/test.json` becomes `armatures/block/test.json`.
+Armature files *must* be stored in the `armatures` folder. They are looked up by taking the path to your model file, removing `models/` and taking whats left and prepending `armatures/`, so a model in `models/block/test.json` becomes `armatures/block/test.json`.

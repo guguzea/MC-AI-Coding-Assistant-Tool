@@ -732,6 +732,11 @@ async function testCrashAnalyzeKindAndMissingDep() {
   const beResult = analyzeCrash({ crashReport: beNull });
   assert.match(beResult.probableCause, /BlockEntity 引用为 null|未取到 BE/);
   assert.doesNotMatch(beResult.probableCause, /world 为 null/);
+
+  const unknown = analyzeCrash({ crashReport: "not a crash report at all" });
+  assert.equal(unknown.crashKind, "unknown");
+  assert.match(unknown.probableCause, /minecraft\.wiki\/w\/Crash_report/);
+  assert.ok(unknown.fixSuggestions.some((s) => /minecraft\.wiki\/w\/Crash_report/.test(s)));
 }
 
 async function testPlatformDataMissing() {
@@ -964,15 +969,19 @@ async function testObfuscatedLayerAndLookup() {
   assert.equal(lo6.found, false);
   assert.equal(lo6.resultKind, "UNOBFUSCATED_NO_YARN");
 
-  // SRG func_ 反查
+  // SRG func_ 反查（后缀多字母 aJ，禁止被过严正则判成非 SRG）
   const loSrg = lookupObfuscated({ name: "func_110143_aJ", version: "1.20.1" });
-  // 1.20.1 yarn sqlite 可能无 SRG 列；若 found 则必须是 method
   if (loSrg.found) {
     assert.equal(loSrg.kind, "method");
     assert.ok(loSrg.yarn);
   } else {
     assert.equal(loSrg.action?.code, "NOT_FOUND");
   }
+
+  const loSrgCsv = lookupObfuscated({ name: "func_110143_aJ", version: "1.14.4" });
+  assert.equal(loSrgCsv.found, true, `1.14.4 SRG func_110143_aJ 应命中 CSV，实际 ${JSON.stringify(loSrgCsv)}`);
+  assert.equal(loSrgCsv.kind, "method");
+  assert.equal(loSrgCsv.yarn, "getHealth");
 
   // convert 无 owner：裸 er 三路回退（方法优先 → getHealth，不得假 NOT_FOUND）
   const convEr = convertMapping({

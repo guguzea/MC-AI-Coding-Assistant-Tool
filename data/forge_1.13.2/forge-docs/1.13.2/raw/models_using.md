@@ -9,14 +9,14 @@ sourceType: mkdocs
 
 ## Block Models
 
-Blocks are not directly linked to models, instead, block_*states*_ are mapped to `ModelResourceLocation`s, which point to models (&ldquo;models&rdquo; includes blockstate JSONs). An `IBlockState` is mapped to a `ModelResourceLocation` by an `IStateMapper`. The default statemapper, which works by default for all blocks, works as follows:
+Blocks are not directly linked to models, instead, block*states* are mapped to `ModelResourceLocation`s, which point to models (&ldquo;models&rdquo; includes blockstate JSONs). An `IBlockState` is mapped to a `ModelResourceLocation` by an `IStateMapper`. The default statemapper, which works by default for all blocks, works as follows:
 
 1. <li>Get the registry name of the blockstate&rsquo;s block.
 2. <li>Set said name as the `ResourceLocation` part of the `ModelResourceLocation`.
 3. <li>Get all properties and their values in the blockstate.
 4. <li>Get the name of each property with `IProperty#getName`.
 5. <li>Get the name of each value with `IProperty<T>#getName(T)`.
-6. <li>Sort the pairs alphabetically by the name of the _*property only*_.
+6. <li>Sort the pairs alphabetically by the name of the *property only*.
 7. <li>Produce a comma delimited string of key-value pairs (e.g. `a=b,c=d,e=f`).
 8. <li>Set that as the variant part of the `ModelResourceLocation`.
 9. <li>If the variant string is empty (i.e. no properties defined), default the variant to `normal`.
@@ -77,7 +77,7 @@ An <code>ItemMeshDefinition` is a function that takes `ItemStack`s and maps them
 
 ### Blockstate JSONs for Items
 
-Note that _*items*_ can use _*block*_state JSONs. This is possible by simply passing a `ModelResourceLocation` pointing to a blockstate JSON into `ModelLoader.setCustomModelResourceLocation` or returning it from an `ItemMeshDefinition`. Doing so allows the model to take advantage of things like submodels and combining variants. The two main use cases are items that share their models with blocks (especially `ItemBlock`s) and the default item layer model (The `textures` block inside combining variant definitions can be used to build up the layers of the model, with one property setting `layer0`, another setting `layer1`, etc.).
+Note that *items* can use *block*state JSONs. This is possible by simply passing a `ModelResourceLocation` pointing to a blockstate JSON into `ModelLoader.setCustomModelResourceLocation` or returning it from an `ItemMeshDefinition`. Doing so allows the model to take advantage of things like submodels and combining variants. The two main use cases are items that share their models with blocks (especially `ItemBlock`s) and the default item layer model (The `textures` block inside combining variant definitions can be used to build up the layers of the model, with one property setting `layer0`, another setting `layer1`, etc.).
 
 > **Note**: Note 1.9 multipart blockstates will not work as item models out of the box, as they require an IBlockState to select a model.
 

@@ -15,7 +15,7 @@ Brigadier is a command parser & dispatcher written by Mojang for use in Minecraf
 The source code for brigadier can be found here: https://github.com/Mojang/brigadier
 
 ## The Command interface
-In Minecraft, com.mojang.brigadier.Command is a functional interface, which runs some specific things, and throw a CommandSyntaxException in some cases. It has a generic type S, which defines the type of the //command source//. The command source provides some context in which a command was ran. In Minecraft, the command source is typically a `class_${1}_637`.
+In Minecraft, com.mojang.brigadier.Command is a functional interface, which runs some specific things, and throw a CommandSyntaxException in some cases. It has a generic type S, which defines the type of the //command source//. The command source provides some context in which a command was ran. In Minecraft, the command source is typically a `class_2168` which can represent a server, a command block, rcon connection, a player or an entity. In some cases, it can also be a `class_637`.
 
 The single method in Command, run(CommandContext<S>) takes a CommandContext<S> as the sole parameter and returns an integer. The command context holds your command source of S and allows you to obtain arguments, look at the parsed command nodes and see the input used in this command.
 
@@ -35,7 +35,7 @@ The integer can be considered the result of the command. Typically negative valu
 ### What can the ServerCommandSource do?
 A ServerCommandSource provides some additional implementation specific context when a command is run. This includes the ability to get the entity that executed the command, the world the command was ran in or the server the command was run on.
 
-<code java [enable_${1}_numbers="true"]>
+<code java >
 // Get the source. This will always work.
 final ServerCommandSource source = ctx.getSource(); 
 
@@ -91,7 +91,7 @@ import static net.minecraft.server.command.CommandManager.*;
 
 In the mod initializer, we just register the simplest command:
 
-<code java [enable_${1}_numbers="true"]>
+<code java >
 public class ExampleMod implements ModInitializer {
   @Override
   public void onInitialize() {
@@ -114,7 +114,7 @@ public class ExampleMod implements ModInitializer {
 
 In the sendFeedback method, the first parameter is the text to be sent, which is a Text in versions below 1.20, or a Supplier<Text> in 1.20 and above (this is used to avoid instantiating Text objects when not needed, so please do not use Suppliers.ofInstance or smiliar methods). The second parameter determines whether to broadcast the feedback to other operators. If the command is to //query// something without actually affecting the world, such as query the current time or some player's score, it should be false. If the command actually //does// something, such as changing the time or modifying someone's score, it should be true. If game rule sendCommandFeedback is false, you will not accept any feedback. If the sender is modifed through /execute as ..., the feedback is sent to the original sender.
 
-If the command fails, instead of calling sendFeedback, you may directly throw a CommandSyntaxException or `class_${1}_exceptions]] for details.
+If the command fails, instead of calling sendFeedback, you may directly throw a CommandSyntaxException or `class_2164`. See [command_exceptions](command_exceptions) for details.
 
 To execute this command, you must type /foo, which is case-sensitive. If /Foo, /FoO, /FOO, /fOO or /fooo is typed instead, the command will not run.
 
@@ -138,7 +138,7 @@ public class ExampleCommandMod implements ModInitializer {
 In the example above, the use of static imports is used for code simplifying. For a literal this would shorten the statement to `literal("foo")`. This also works for getting the value of an argument. This shortens `StringArgumentType.getString(ctx, "string")` to `getString(ctx, "string")`. This also works for Minecraft's own argument types.
 
 Below is an example of some static imports:
-<code java [enable_${1}_numbers="true"]>
+<code java >
 // getString(ctx, "string")
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 // word()
@@ -162,7 +162,7 @@ Let's say you have a command that you only want operators to be able to execute.
 
 For example this may look like the following:
 
-<code java [enable_${1}_numbers="true"]>
+<code java >
 dispatcher.register(literal("foo")
   .requires(source -> source.hasPermissionLevel(2))
   .executes(ctx -> {
@@ -249,7 +249,7 @@ In order to have a sub command, one needs to append the next node to the existin
 
 This creates the command foo <bar> as shown below.
 
-<code java [enable_${1}_numbers="true"]>
+<code java >
 dispatcher.register(literal("foo")
     .then(literal("bar")
         .executes(context -> {
@@ -264,7 +264,7 @@ dispatcher.register(literal("foo")
 </code>
 
 Similar to arguments, sub command nodes can also be set optional. In the following case, both /foo and /foo bar will be valid.
-<code java [enable_${1}_numbers="true"]>
+<code java >
 dispatcher.register(literal("foo")
     .executes(context -> {
         context.getSource().sendFeedback(() -> Text.literal("Called foo without bar"), false);
@@ -286,7 +286,7 @@ Below are links to the articles about more complex concepts used in brigadier.
 | --- | --- |
 | [Suggestions](command_suggestions) | Suggesting command input for the client. |
 | [Redirects](command_redirects) | Allow use of aliases or repeating elements to execute commands. |
-| [Custom Argument Types](command_${1}_types) | Parse your own arguments into your own objects. |
+| [Custom Argument Types](command_argument_types) | Parse your own arguments into your own objects. |
 | [Examples](command_examples) | Some example commands |
 
 # FAQ

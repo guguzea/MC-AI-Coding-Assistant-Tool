@@ -20,6 +20,8 @@ import { resolveDataDir } from "./dist/utils/path.js";
 
 function testMethodStringForms() {
   assert.equal(detectNamingStyle("func_12345_a"), "srg");
+  assert.equal(detectNamingStyle("func_110143_aJ"), "srg");
+  assert.equal(detectNamingStyle("field_100013_f"), "srg");
   assert.equal(detectNamingStyle("method_12345"), "yarn_intermediary");
   assert.equal(detectNamingStyle("m_12345_"), "mojang_hashed");
   assert.equal(detectNamingStyle("hurt"), "readable");
@@ -63,6 +65,10 @@ function testRegistry() {
   assert.equal(stone.nameLayer, "registry_id");
   assert.ok(stone.relatedTools.includes("convert_mapping"));
 
+  const stoneShort = queryRegistry({ query: "stone", version: "1.20.1" });
+  assert.equal(stoneShort.found, true);
+  assert.equal(stoneShort.matches[0]?.id, "minecraft:stone", `stone 应优先精确 path，实际首条 ${stoneShort.matches[0]?.id}`);
+
   const cls = queryRegistry({ query: "net.minecraft.world.entity.Entity", version: "1.20.1" });
   assert.ok(cls.action);
 }
@@ -88,6 +94,9 @@ function testGenerators() {
   assert.ok(m.files);
   const pkt = generateNetworkPacket("my_mod", "sync_msg", "neoforge_1.21");
   assert.ok(pkt.code?.includes("StreamCodec"));
+  const pktPascal = generateNetworkPacket("my_mod", "ExamplePacket", "forge_1.20.1");
+  assert.ok(pktPascal.code?.includes("class ExamplePacket"), pktPascal.code);
+  assert.ok(!pktPascal.code?.includes("Examplepacket"));
 }
 
 function testWorkflow() {

@@ -1,4 +1,4 @@
-import { normalizeModIdentifier, toPascalCase, type GeneratorResult } from "./common.js";
+import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult } from "./common.js";
 
 export function generateModel(modId: string, blockName: string): GeneratorResult {
   const mod = normalizeModIdentifier(modId);
@@ -57,7 +57,7 @@ export function generateNetworkPacket(
   const mod = normalizeModIdentifier(modId);
   const pkt = normalizeModIdentifier(packetName);
   if (!mod || !pkt) return { code: null, errors: ["无效标识符"] };
-  const pascal = toPascalCase(pkt.value);
+  const pascal = stripJavaTypeSuffix(toJavaClassName(packetName), "Packet");
 
   if (platform === "neoforge_1.21") {
     return {
@@ -122,7 +122,7 @@ export function generateCapability(modId: string, capName: string, neoforge = fa
   const mod = normalizeModIdentifier(modId);
   const cap = normalizeModIdentifier(capName);
   if (!mod || !cap) return { code: null, errors: ["无效标识符"] };
-  const pascal = toPascalCase(cap.value);
+  const pascal = stripJavaTypeSuffix(toJavaClassName(capName), "Capability");
 
   if (neoforge) {
     return {
@@ -193,7 +193,7 @@ export function generateEntityRenderer(modId: string, entityName: string): Gener
   const mod = normalizeModIdentifier(modId);
   const ent = normalizeModIdentifier(entityName);
   if (!mod || !ent) return { code: null, errors: ["无效标识符"] };
-  const pascal = toPascalCase(ent.value);
+  const pascal = stripJavaTypeSuffix(toJavaClassName(entityName), "Renderer");
   return {
     code: `// 客户端 EntityRenderer 骨架 — GeckoLib 见 mc-geckolib skill
 @OnlyIn(Dist.CLIENT)

@@ -6,8 +6,8 @@ The Saved Data (SD) system is an alternative to level capabilities that can atta
 
 Each SD implementation must subtype the `SavedData` class. There are two important methods to be aware of:
 
-- `save`: Allows the implementation to write NBT data to the level.
-- `setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
+- <li>`save`: Allows the implementation to write NBT data to the level.
+- <li>`setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
 
 ## Attaching to a Level
 

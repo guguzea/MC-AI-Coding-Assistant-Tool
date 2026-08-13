@@ -20,7 +20,7 @@ For simple blocks, which need no special functionality (think cobblestone, woode
 - <li>`lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
 - <li>`friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
 
-All these methods are _*chainable*_ which means you can call them in series. See the `Blocks` class for examples of this.
+All these methods are *chainable* which means you can call them in series. See the `Blocks` class for examples of this.
 
 > **Note**: Note Blocks have no setter for their CreativeModeTab. This is now handled by the CreativeModeTabEvent$BuildContents if the block has an associated item (e.g. BlockItem). Furthermore, there is no setter for translation key as it is now generated from the registry name.
 

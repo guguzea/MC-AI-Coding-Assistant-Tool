@@ -26,6 +26,17 @@ export interface RegistryMatch {
   translationKey?: string | null;
 }
 
+function rankRegistryMatch(id: string, q: string): number {
+  const lower = id.toLowerCase();
+  const colon = lower.indexOf(":");
+  const path = colon >= 0 ? lower.slice(colon + 1) : lower;
+  if (lower === q || lower === `minecraft:${q}`) return 0;
+  if (path === q) return 1;
+  if (path.startsWith(q + "_") || path.startsWith(q + "/")) return 2;
+  if (path.startsWith(q) || path.endsWith("/" + q)) return 3;
+  return 4;
+}
+
 export function searchRegistryEntries(
   version: string,
   registry: string | undefined,
@@ -38,22 +49,32 @@ export function searchRegistryEntries(
   if (!q) return [];
 
   const like = `%${q.replace(/%/g, "")}%`;
-  if (registry) {
-    return db
-      .prepare(
-        `SELECT registry, id, translation_key AS translationKey FROM entries
+  const fetchLimit = Math.max(limit * 8, 200);
+  const rows = registry
+    ? (db
+        .prepare(
+          `SELECT registry, id, translation_key AS translationKey FROM entries
          WHERE registry = ? AND (LOWER(id) LIKE ? OR LOWER(COALESCE(translation_key,'')) LIKE ?)
-         ORDER BY id LIMIT ?`,
-      )
-      .all(registry, like, like, limit) as unknown as RegistryMatch[];
-  }
-  return db
-    .prepare(
-      `SELECT registry, id, translation_key AS translationKey FROM entries
-       WHERE LOWER(id) LIKE ? OR LOWER(COALESCE(translation_key,'')) LIKE ?
-       ORDER BY registry, id LIMIT ?`,
-    )
-    .all(like, like, limit) as unknown as RegistryMatch[];
+         LIMIT ?`,
+        )
+        .all(registry, like, like, fetchLimit) as unknown as RegistryMatch[])
+    : (db
+        .prepare(
+          `SELECT registry, id, translation_key AS translationKey FROM entries
+         WHERE LOWER(id) LIKE ? OR LOWER(COALESCE(translation_key,'')) LIKE ?
+         LIMIT ?`,
+        )
+        .all(like, like, fetchLimit) as unknown as RegistryMatch[]);
+
+  return [...rows]
+    .sort((a, b) => {
+      const ra = rankRegistryMatch(a.id, q);
+      const rb = rankRegistryMatch(b.id, q);
+      if (ra !== rb) return ra - rb;
+      if (a.id.length !== b.id.length) return a.id.length - b.id.length;
+      return a.registry.localeCompare(b.registry) || a.id.localeCompare(b.id);
+    })
+    .slice(0, limit);
 }
 
 export function listRegistryNames(version: string): string[] {

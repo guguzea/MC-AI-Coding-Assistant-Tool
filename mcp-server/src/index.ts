@@ -308,7 +308,7 @@ server.registerTool(
       focus: getApiPreloadStatus(v),
       api: listApiPreloadStatuses(),
       dataPaths: diagnoseDataPaths(),
-      /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错） */
+      /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错，但 warnings 必报） */
       semanticIndex: getSemanticIndexStatus(resolveDataDir()),
       /** ② build 状态：dist 缺失/过期提示（src 修改未重新编译时 buildRequired=true） */
       buildStatus: getBuildStatus(),

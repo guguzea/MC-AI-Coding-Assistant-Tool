@@ -1,8 +1,10 @@
-# Configuration
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/misc/config
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "misc/config"
+source: "https://docs.readthedocs.net/en/1.20.1/misc/config/"
+sourceType: mkdocs
+---
 # Configuration
 
 Configurations define settings and consumer preferences that can be applied to a mod instance. Forge uses a configuration system using [TOML](https://toml.io/) files and read with [NightConfig](https://github.com/TheElectronWill/night-config).
@@ -32,13 +34,13 @@ Config values can be built with the provided contexts (if defined) using any of 
 
 All config value methods take in at least two components:
 
-- A path representing the name of the variable: a `.` separated string representing the sections the config value is in
-- The default value when no valid configuration is present
+- <li>A path representing the name of the variable: a `.` separated string representing the sections the config value is in
+- <li>The default value when no valid configuration is present
 
 The `ConfigValue` specific methods take in two additional components:
 
-- A validator to make sure the deserialized object is valid
-- A class representing the data type of the config value
+- <li>A validator to make sure the deserialized object is valid
+- <li>A class representing the data type of the config value
 
 ```
 // For some ForgeConfigSpec$Builder builder
@@ -50,42 +52,42 @@ The values themselves can be obtained using `ConfigValue#get`. The values are ad
 
 #### Additional Config Value Types
 
-- **Range Values**<ul> <li>Description: Value must be between the defined bounds
-- Class Type: `Comparable<T>`
-- Method Name: `#defineInRange`
-- Additional Components:
-- The minimum and maximum the config value may be
-- A class representing the data type of the config value
+- <li>**Range Values**<ul> <li>Description: Value must be between the defined bounds
+- <li>Class Type: `Comparable<T>`
+- <li>Method Name: `#defineInRange`
+- <li>Additional Components:
+- <li>The minimum and maximum the config value may be
+- <li>A class representing the data type of the config value
 
 > **Note**: Note DoubleValues, IntValues, and LongValues are range values which specify the class as Double, Integer, and Long respectively.
 
-- 
-**Whitelisted Values** <ul> <li>Description: Value must be in supplied collection - Class Type: `T` - Method Name: `#defineInList` - Additional Components: - A collection of the allowed values the configuration can be <li> <p>**List Values**
+- <li> 
+**Whitelisted Values** <ul> <li>Description: Value must be in supplied collection - <li>Class Type: `T` - <li>Method Name: `#defineInList` - <li>Additional Components: - <li>A collection of the allowed values the configuration can be <li> <p>**List Values**
 
-- Description: Value is a list of entries
-- Class Type: `List<T>`
-- Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
-- Additional Components:
-- A validator to make sure a deserialized element from the list is valid
+- <li>Description: Value is a list of entries
+- <li>Class Type: `List<T>`
+- <li>Method Name: `#defineList`, `#defineListAllowEmpty` if list can be empty
+- <li>Additional Components:
+- <li>A validator to make sure a deserialized element from the list is valid
 
 <li>
 
 **Enum Values**
 
-- Description: An enum value in the supplied collection
-- Class Type: `Enum<T>`
-- Method Name: `#defineEnum`
-- Additional Components:
-- A getter to convert a string or integer into an enum
-- A collection of the allowed values the configuration can be
+- <li>Description: An enum value in the supplied collection
+- <li>Class Type: `Enum<T>`
+- <li>Method Name: `#defineEnum`
+- <li>Additional Components:
+- <li>A getter to convert a string or integer into an enum
+- <li>A collection of the allowed values the configuration can be
 
 <li>
 
 **Boolean Values**
 
-- Description: A `boolean` value
-- Class Type: `Boolean`
-- Method Name: `#define`
+- <li>Description: A `boolean` value
+- <li>Class Type: `Boolean`
+- <li>Method Name: `#define`
 
 ## Registering a Configuration
 

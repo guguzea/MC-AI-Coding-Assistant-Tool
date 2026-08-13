@@ -1,8 +1,10 @@
-# Events
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/concepts/events
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "concepts/events"
+source: "https://docs.readthedocs.net/en/1.20.1/concepts/events/"
+sourceType: mkdocs
+---
 # Events
 
 Forge uses an event bus that allows mods to intercept events from various Vanilla and mod behaviors.
@@ -107,7 +109,7 @@ Event handler methods (marked with `@SubscribeEvent`) have a priority. You can s
 
 ## Sub Events
 
-Many events have different variations of themselves. These can be different but all based around one common factor (e.g. `PlayerEvent`) or can be an event that has multiple phases (e.g. `PotionBrewEvent`). Take note that if you listen to the parent event class, you will receive calls to your method for _*${1}_ subclasses.
+Many events have different variations of themselves. These can be different but all based around one common factor (e.g. `PlayerEvent`) or can be an event that has multiple phases (e.g. `PotionBrewEvent`). Take note that if you listen to the parent event class, you will receive calls to your method for *all* subclasses.
 
 ## Mod Event Bus
 
@@ -115,10 +117,10 @@ The mod event bus is primarily used for listening to lifecycle events in which m
 
 These are the four most commonly used lifecycle events that are called during mod initialization on the mod event bus:
 
-- `FMLCommonSetupEvent`
-- `FMLClientSetupEvent` & `FMLDedicatedServerSetupEvent`
-- `InterModEnqueueEvent`
-- `InterModProcessEvent`
+- <li>`FMLCommonSetupEvent`
+- <li>`FMLClientSetupEvent` & `FMLDedicatedServerSetupEvent`
+- <li>`InterModEnqueueEvent`
+- <li>`InterModProcessEvent`
 
 > **Note**: Note The FMLClientSetupEvent and FMLDedicatedServerSetupEvent are only called on their respective distribution.
 
@@ -126,9 +128,9 @@ These four lifecycle events are all ran in parallel since they all are a subclas
 
 Next to the lifecycle events, there are a few miscellaneous events that are fired on the mod event bus where you can register, set up, or initialize various things. Most of these events are not ran in parallel in contrast to the lifecycle events. A few examples:
 
-- `RegisterColorHandlersEvent`
-- `ModelEvent$BakingCompleted`
-- `TextureStitchEvent`
-- `RegisterEvent`
+- <li>`RegisterColorHandlersEvent`
+- <li>`ModelEvent$BakingCompleted`
+- <li>`TextureStitchEvent`
+- <li>`RegisterEvent`
 
 A good rule of thumb: events are fired on the mod event bus when they should be handled during initialization of a mod.

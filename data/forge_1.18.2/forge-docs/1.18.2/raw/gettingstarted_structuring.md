@@ -44,7 +44,7 @@ dependencies | [list] | `[]` | A list of dependencies of this mod.
 
 ## The Mod File
 
-Generally, we will start with a file named after your mod and put into your package. This is the _*entry point*_ to your mod and will contain some special indicators marking it as such.
+Generally, we will start with a file named after your mod and put into your package. This is the *entry point* to your mod and will contain some special indicators marking it as such.
 
 ## What is `@Mod?
 
@@ -70,4 +70,4 @@ For Example:
 - <li>A `Block` called `NotDirt` would be in a `block` package, with a class name of `NotDirtBlock`.
 - <li>Finally, a `BlockEntity` for a block called `SuperChewer` would be a `block.entity` or `blockentity` package, with a class name of `SuperChewerBlockEntity`.
 
-Appending your class names with what _*kind*_ of object they are makes it easier to figure out what a class is or guess the class for an object.
+Appending your class names with what *kind* of object they are makes it easier to figure out what a class is or guess the class for an object.

@@ -1,8 +1,10 @@
-# Registries
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/concepts/registries
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "concepts/registries"
+source: "https://docs.readthedocs.net/en/1.20.1/concepts/registries/"
+sourceType: mkdocs
+---
 # Registries
 
 Registration is the process of taking the objects of a mod (such as items, blocks, sounds, etc.) and making them known to the game. Registering things is important, as without registration the game will simply not know about these objects, which will cause unexplainable behaviors and crashes.
@@ -21,7 +23,7 @@ There are two proper ways to register objects: the `DeferredRegister` class, and
 
 An example of a mod registering a custom block:
 
-```java
+```
 private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 
 public static final RegistryObject<Block> ROCK_BLOCK = BLOCKS.register("rock", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
@@ -35,7 +37,7 @@ public ExampleMod() {
 
 <code>RegisterEvent` is the second way to register objects. This [event](../events/) is fired for each registry after the mod constructors and before the loading of configs. Objects are registered using `#register` by passing in the registry key, the name of the registry object, and the object itself. There is an additional `#register` overload which takes in a consumed helper to register an object with a given name. It is recommended to use this method to avoid unnecessary object creation.
 
-Here is an example: (the event handler is registered on the _*${1}_)
+Here is an example: (the event handler is registered on the *mod event bus*)
 
 ```java
 @SubscribeEvent
@@ -57,7 +59,7 @@ Not all registries are wrapped by Forge. These can be static registries, like `L
 
 > **Important**: Important Dynamic registry objects can only be registered through data files (e.g. JSON). They cannot be registered in-code.
 
-```java
+```
 private static final DeferredRegister<LootItemConditionType> REGISTER = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, "examplemod");
 
 public static final RegistryObject<LootItemConditionType> EXAMPLE_LOOT_ITEM_CONDITION_TYPE = REGISTER.register("example_loot_item_condition_type", () -> new LootItemConditionType(...));
@@ -92,15 +94,15 @@ Registered objects from registries can be injected into the `public static` fiel
 
 The rules for `@ObjectHolder` are as follows:
 
-- If the class is annotated with `@ObjectHolder`, its value will be the default namespace for all fields within if not explicitly defined
-- If the class is annotated with `@Mod`, the modid will be the default namespace for all annotated fields within if not explicitly defined
-- A field is considered for injection if:
-- it has at least the modifiers `public static`;
-- the **field** is annotated with `@ObjectHolder`, and:<ul> <li>the name value is explicitly defined; and
-- the registry name value is explicitly defined
+- <li>If the class is annotated with `@ObjectHolder`, its value will be the default namespace for all fields within if not explicitly defined
+- <li>If the class is annotated with `@Mod`, the modid will be the default namespace for all annotated fields within if not explicitly defined
+- <li>A field is considered for injection if:
+- <li>it has at least the modifiers `public static`;
+- <li>the **field** is annotated with `@ObjectHolder`, and:<ul> <li>the name value is explicitly defined; and
+- <li>the registry name value is explicitly defined
 
-<li>_*${1}_
-<li>_*${1}_
+<li>*A compile-time exception is thrown if a field does not have a corresponding registry or name.*
+<li>*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*
 <li>If no other errors or exceptions occur, the field will be injected
 <li>If all of the above rules do not apply, no action will be taken (and a message may be logged)
 

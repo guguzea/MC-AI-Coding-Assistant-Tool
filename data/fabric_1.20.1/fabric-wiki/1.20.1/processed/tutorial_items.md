@@ -6,21 +6,21 @@
 
 # Adding an Item
 ## Introduction
-Adding a basic item is one of the first steps in modding. You're going to need to create an `class_${1}_1792> class. In this tutorial and all future ones, the “tutorial” namespace is used as a placeholder. If you have a separate mod id, feel free to use it instead.
+Adding a basic item is one of the first steps in modding. You're going to need to create an `class_1792` object, register it, and give it a texture. To add additional behavior to the item you will need a custom <yarn class_1792> class. In this tutorial and all future ones, the “tutorial” namespace is used as a placeholder. If you have a separate mod id, feel free to use it instead.
 
 ## Create an Item instance (before 1.21.2)
 :!: If you're in version 1.21.2 or above, please directly read [#Creating Items in 1.21.2+](#Creating Items in 1.21.2+).
 
-First, create an instance of `class_${1}_1792`.`class_1793` (or a FabricItemSettings unless versions since 1.20.5) instance, which is used to set item properties such as the durability, and stack count. For simplicity, we just do it in ExampleMod class, and store them in static fields.
+First, create an instance of `class_1792`. The constructor takes in an `class_1792`.`class_1793` (or a FabricItemSettings unless versions since 1.20.5) instance, which is used to set item properties such as the durability, and stack count. For simplicity, we just do it in ExampleMod class, and store them in static fields.
 
 ```java
 public class ExampleMod implements ModInitializer {
 
     // an instance of our new item
     // for versions below 1.20.4
-    public static final class_${1}_ITEM = new class_1792(new FabricItemSettings());
+    public static final class_1792 CUSTOM_ITEM = new class_1792(new FabricItemSettings());
     // for versions since 1.20.5, below 1.21.2
-    public static final class_${1}_ITEM = new class_${1}_1792.class_1793());
+    public static final class_1792 CUSTOM_ITEM = new class_1792(new class_1792.class_1793());
     [...]
 }
 ```
@@ -28,7 +28,7 @@ public class ExampleMod implements ModInitializer {
 ## Register the item (before 1.21.2)
 We've create a basic item, but it still does not exist in Minecraft, because it has not been registered. In Minecraft, almost everything has an registry, and items are no exceptions.
 
-You'll use the vanilla registry system for registering new content. The basic syntax is `class_${1}_10230`//(Registry Type, `class_${1}_7923` or `class_${1}_2378`.//`method_${1}_7923`.`field_${1}_2960`, `class_1792`). This can be called anywhere as long as it occurs during initialization. The method itself also returns the registered content itself.
+You'll use the vanilla registry system for registering new content. The basic syntax is `class_2378`.//`method_10230`//(Registry Type, `class_2960`, Content). Registry types are stored as static fields in the `class_7923` or `class_2378` class, and the identifier is what labels your content. Content is an instance of whatever you're adding. Specifically for item, the syntax is `class_2378`.//`method_10230`//(`class_7923`.`field_41178`, `class_2960`, `class_1792`). This can be called anywhere as long as it occurs during initialization. The method itself also returns the registered content itself.
 
 For versions since 1.21, an Identifier is created through `Identifier.of("namespace", "path")`. For versions below 1.21, it is created through `new Identifier("namespace", "path")` or `new Identifier("namespace:path")`. It will fail if the namespace or path contains illegal characters.
 
@@ -36,12 +36,12 @@ For versions since 1.21, an Identifier is created through `Identifier.of("namesp
 public class ExampleMod implements ModInitializer {
 
     // an instance of our new item
-    public static final class_${1}_ITEM = new class_${1}_1792.class_1793());
+    public static final class_1792 CUSTOM_ITEM = new class_1792(new class_1792.class_1793());
 
     @Override
     public void onInitialize() {
         // For versions below 1.21, please replace Identifier.of with new Identifier
-        class_${1}_10230(class_${1}_41178, Identifier.of("tutorial", "custom_${1}_ITEM);
+        class_2378.method_10230(class_7923.field_41178, Identifier.of("tutorial", "custom_item"), CUSTOM_ITEM);
     }
 }
 ```
@@ -52,10 +52,10 @@ For more simplicity, you can simplify your code by directly registering them whe
 public class ExampleMod implements ModInitializer {
 
     // an instance of our new item
-    public static final class_${1}_ITEM =
+    public static final class_1792 CUSTOM_ITEM =
       // For versions below 1.21, use new Identifier("tutorial", "custom_item").
-      class_${1}_10230(class_${1}_41178, Identifier.of("tutorial", "custom_item"),
-        new class_${1}_1792.class_1793()));
+      class_2378.method_10230(class_7923.field_41178, Identifier.of("tutorial", "custom_item"),
+        new class_1792(new class_1792.class_1793()));
 
     @Override
     public void onInitialize() {
@@ -74,11 +74,11 @@ public final class TutorialItems {
     private TutorialItems() {}
     
     // an instance of our new item
-    public static final class_${1}_ITEM = register("custom_${1}_1792(new class_${1}_1793()));
+    public static final class_1792 CUSTOM_ITEM = register("custom_item", new class_1792(new class_1792.class_1793()));
 
     public static <T extends Item> T register(String path, T item) {
         // For versions below 1.21, please replace Identifier.of with new Identifier
-        return class_${1}_10230(class_${1}_41178, Identifier.of("tutorial", path), item);
+        return class_2378.method_10230(class_7923.field_41178, Identifier.of("tutorial", path), item);
     }
     
     public static void initialize() {
@@ -112,7 +112,7 @@ public final class TutorialItems {
   private TutorialItems() {
   }
 
-  public static final Item CUSTOM_${1}_item", Item::new, new Item.Settings());
+  public static final Item CUSTOM_ITEM = register("custom_item", Item::new, new Item.Settings());
 
   public static Item register(String path, Function<Item.Settings, Item> factory, Item.Settings settings) {
     final RegistryKey<Item> registryKey = RegistryKey.of(RegistryKeys.ITEM, Identifier.of("tutorial", path));
@@ -129,7 +129,7 @@ In the method Items.register, the registry key will be written in the settings f
 ## Adding model, texture and model definition
 If you registered your item properly in the first step, you can successfully get your item by typing command /give @s tutorial:custom_item. You will find it has missing texture, and Minecraft will complain about a missing texture file in a fashion similar to this:
 
-    [Server-Worker-1/WARN]: Unable to load model: 'tutorial:custom_${1}_item#inventory: java.io.FileNotFoundException: tutorial:models/item/custom_item.json
+    [Server-Worker-1/WARN]: Unable to load model: 'tutorial:custom_item#inventory' referenced from: tutorial:custom_item#inventory: java.io.FileNotFoundException: tutorial:models/item/custom_item.json
 
 That's because we haven't provided the item with **textures**, **baked models** (we call them "models" for short) and **model definition** (also called model mapping). Those files are located in the following places respectively:
 
@@ -183,15 +183,15 @@ public class CustomItem extends class_1792 {
 
     // write this if the version is below 1.21.2:
     @Override
-    public class_${1}_1799> method_${1}_1937 world, class_${1}_1268 hand) {
-        user.method_${1}_3417.field_14983, 1.0F, 1.0F);
-        return class_${1}_22427(user.method_5998(hand));
+    public class_1271<class_1799> method_7836(class_1937 world, class_1657 user, class_1268 hand) {
+        user.method_5783(class_3417.field_14983, 1.0F, 1.0F);
+        return class_1271.method_22427(user.method_5998(hand));
     }
     
     // write this if the version is 1.21.2 or higher:
     @Override
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        user.playSound(SoundEvents.BLOCK_${1}_BREAK, 1.0F, 1.0F);
+        user.playSound(SoundEvents.BLOCK_WOOL_BREAK, 1.0F, 1.0F);
         return ActionResult.SUCCESS;
     }
 }
@@ -205,10 +205,10 @@ public final class TutorialItems {
     // an instance of our new item
     
     // For versions below 1.21.2:
-    public static final CustomItem CUSTOM_${1}_item", new CustomItem(new class_${1}_1793()));
+    public static final CustomItem CUSTOM_ITEM = register("custom_item", new CustomItem(new class_1792.class_1793()));
     
     // For versions since 1.21.2:
-    public static final CustomItem CUSTOM_${1}_item", CustomItem::new, new class_${1}_1793());
+    public static final CustomItem CUSTOM_ITEM = register("custom_item", CustomItem::new, new class_1792.class_1793());
     [...]
 }
 ```
@@ -220,15 +220,15 @@ Sometimes you may need to add some default components for the item, such as max 
 In this example, the item will be unbreakable by default, while hiding tooltips about it.
 ```java
     // For versions below 1.21.2:
-    public static final CustomItem CUSTOM_${1}_item", new CustomItem(new class_${1}_1793()
+    public static final CustomItem CUSTOM_ITEM = register("custom_item", new CustomItem(new class_1792.class_1793()
         .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true))));
         
     // For versions since 1.21.2, before 1.21.4:
-    public static final Item CUSTOM_${1}_item", CustomItem::new, new Item.Settings()
+    public static final Item CUSTOM_ITEM = register("custom_item", CustomItem::new, new Item.Settings()
         .component(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true)));
         
     // For versions since 1.21.4:
-    public static final Item CUSTOM_${1}_item", CustomItem::new, new Item.Settings()
+    public static final Item CUSTOM_ITEM = register("custom_item", CustomItem::new, new Item.Settings()
         .component(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE));
 ```
 
@@ -239,10 +239,10 @@ public class ExampleMod implements ModInitializer {
     // An instance of our new item, where the maximum stack size is 16
     
     // For versions below 1.21.2:
-    public static final CustomItem CUSTOM_${1}_item", new CustomItem(new class_${1}_1793().maxCount(16)));
+    public static final CustomItem CUSTOM_ITEM = register("custom_item", new CustomItem(new class_1792.class_1793().maxCount(16)));
     
     // For versions since 1.21.2:
-    public static final Item CUSTOM_${1}_item", CustomItem::new, new Item.Settings().maxCount(16));
+    public static final Item CUSTOM_ITEM = register("custom_item", CustomItem::new, new Item.Settings().maxCount(16));
     [...]
 }
 ```

@@ -35,7 +35,7 @@ The <code>RegistryEvent`s are the second and more flexible way to register objec
 
 The event used to register objects is `RegistryEvent$Register<T>`. The type parameter `T` should be set to the type of the object being registered. Calling `#getRegistry` will return the registry, upon which objects are registered with `#register` or `#registerAll`.
 
-Here is an example: (the event handler is registered on the _*mod event bus*_)
+Here is an example: (the event handler is registered on the *mod event bus*)
 
 
 <!-- key:🟢 role:示例代码 -->
@@ -100,15 +100,15 @@ The rules for `@ObjectHolder` are as follows:
 - <li>A field is considered for injection if:<ul> <li>it has at least the modifiers `public static`;
 - <li>one of the following conditions are true:<ul> <li>the **enclosing class** has an `@ObjectHolder` annotation, and the field is `final`, and:<ul> <li>the name value is the field&rsquo;s name; and
 - <li>the namespace value is the enclosing class&rsquo;s namespace
-- <li>_*An exception is thrown if the namespace value cannot be found and inherited*_
+- <li>*An exception is thrown if the namespace value cannot be found and inherited*
 
 <li>the **field** is annotated with `@ObjectHolder`, and:- <li>the name value is explicitly defined; and
 - <li>the namespace value is either explicitly defined or the enclosing class&rsquo;s namespace
 
 <li>the field type or one of its supertypes corresponds to a valid registry (e.g. `Item` or `ArrowItem` for the `Item` registry);
-<li>_*An exception is thrown if a field does not have a corresponding registry.*_
+<li>*An exception is thrown if a field does not have a corresponding registry.*
 
-<li>_*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*_
+<li>*An exception is thrown if the resulting `ResourceLocation` is incomplete or invalid (non-valid characters in path)*
 <li>If no other errors or exceptions occur, the field will be injected
 
 <!-- key:🟠 role:常见错误 -->

@@ -38,7 +38,7 @@ The `GatherDataEvent` is fired on the mod event bus when the data generator is b
 ### Client Assets
 
 - <li>`net.minecraftforge.common.data.LanguageProvider` - for language strings; override `#addTranslations`
-- <li>`ModelProvider<?>` - base class for all model providers<ul> <li>_*These classes are under the `net.minecraftforge.client.model.generators` package*_
+- <li>`ModelProvider<?>` - base class for all model providers<ul> <li>*These classes are under the `net.minecraftforge.client.model.generators` package*
 - <li>`ItemModelProvider` - for item models; override `#registerModels`
 - <li>`BlockStateProvider` - for blockstates and their block and item models; override `#registerStatesAndModels`
 - <li>`BlockModelProvider` - for block models; override `#registerModels`
@@ -46,7 +46,7 @@ The `GatherDataEvent` is fired on the mod event bus when the data generator is b
 ### Server Data
 
 - <li>`net.minecraftforge.common.data.GlobalLootModifierProvider` - for [global loot modifiers](../../items/globallootmodifiers/); override `#start`
-- <li>_*These classes are under the `net.minecraft.data` package*_
+- <li>*These classes are under the `net.minecraft.data` package*
 - <li>`LootTableProvider` - for loot tables; override `#getTables`
 - <li>`RecipeProvider` - for recipes and their unlocking advancements; override `#buildShapelessRecipes`
 - <li>`TagsProvider` - for tags; override `#addTags`

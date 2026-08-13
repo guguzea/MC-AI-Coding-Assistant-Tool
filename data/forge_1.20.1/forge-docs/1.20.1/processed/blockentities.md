@@ -14,7 +14,7 @@
 
 Block Entities are created and removed dynamically and as such are not registry objects on their own.
 
-In order to create a `BlockEntity`, you need to extend the `BlockEntity` class. As such, another object is registered instead to easily create and refer to the _*${1}_ of the dynamic object. For a `BlockEntity`, these are known as `BlockEntityType`s.
+In order to create a `BlockEntity`, you need to extend the `BlockEntity` class. As such, another object is registered instead to easily create and refer to the *type* of the dynamic object. For a `BlockEntity`, these are known as `BlockEntityType`s.
 
 A `BlockEntityType` can be [registered](../concepts/registries/#methods-for-registering) like any other registry object. To construct a `BlockEntityType`, its builder form can be used via `BlockEntityType$Builder#of`. This takes in two arguments: a `BlockEntityType$BlockEntitySupplier` which takes in a `BlockPos` and `BlockState` to create a new instance of the associated `BlockEntity`, and a varargs of `Block`s which this `BlockEntity` can be attached to. Building the `BlockEntityType` is done by calling `BlockEntityType$Builder#build`. This takes in a `Type` which represents the type-safe reference used to refer to this registry object in a `DataFixer`. Since `DataFixer`s are an optional system to use for mods, this can be passed as `null`.
 
@@ -101,8 +101,8 @@ For this you need to override ``` BlockEntity#getUpdateTag() IForgeBlockEntity#h
 
 This method is a bit more complicated, but again you just need to override two or three methods. Here is a tiny example implementation of it: ``` @Override public CompoundTag getUpdateTag() { CompoundTag tag = new CompoundTag(); //Write your data into the tag return tag; } @Override public Packet<ClientGamePacketListener> getUpdatePacket() { // Will get tag from #getUpdateTag return ClientboundBlockEntityDataPacket.create(this); } // Can override IForgeBlockEntity#onDataPacket. By default, this will defer to the #load. ``` The static constructors `ClientboundBlockEntityDataPacket#create` takes:
 
-- The `BlockEntity`.
-- An optional function to get the `CompoundTag` from the `BlockEntity`. By default, this uses `BlockEntity#getUpdateTag`.
+- <li>The `BlockEntity`.
+- <li>An optional function to get the `CompoundTag` from the `BlockEntity`. By default, this uses `BlockEntity#getUpdateTag`.
 
 Now, to send the packet, an update notification must be given on the server. ``` Level#sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) ``` The `pos` should be your `BlockEntity`&rsquo;s position. For `oldState` and `newState`, you can pass the current `BlockState` at that position. `flags` is a bitmask that should contain `2`, which will sync the changes to the client. See `Block` for more info as well as the rest of the flags. The flag `2` is equivalent to `Block#UPDATE_CLIENTS`.
 

@@ -12,7 +12,7 @@ Adding blocks to your mod follows a similar process to [adding an item](tutorial
 
 Start by creating an instance of Block. It can be stored at any location, but we will start at the top of your ModInitializer. The Block constructor requires an AbstractBlock.Settings instance, which is a builder for configuring block properties. Fabric provides a FabricBlockSettings builder class with more available options.
 
-<code java [enable_${1}_numbers="true"] ExampleMod.java>
+<code java [enable_line_numbers="true"] ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     /* Declare and initialize our custom block instance.
@@ -44,7 +44,7 @@ Blocks should be registered under the Registries.BLOCK registry. Similar to regi
 
 If you're using version 1.19.2 or below, please replace Registries.BLOCK with Registry.BLOCK。
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="11"] ExampleMod.java>
+<code java [enable_line_numbers="true",highlight_${1}_extra="11"] ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     // For versions below 1.20:
@@ -69,7 +69,7 @@ Your custom block will //not// be accessible as an item yet, but it can be seen 
 ## Registering an Item for your Block before 1.21.2
 In most cases, you want to be able to place your block using an item. To do this, you need to register a corresponding BlockItem in the item registry. You can do this by registering an instance of BlockItem under Registries.ITEM. The registry name of the item should usually be the same as the registry name of the block.
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="12"] ExampleMod.java>
+<code java [enable_line_numbers="true",highlight_${1}_extra="12"] ExampleMod.java>
 public class ExampleMod implements ModInitializer {
 
     // For versions below 1.20:
@@ -272,14 +272,14 @@ In minecraft 1.17, there has been a change for breaking blocks. Now, to define h
 
 For the harvest level tags (needs_${1}_tool, needs_${1}_tool and needs_${1}_tool) to take effect, add requiresTool() to the Block.Settings in the block declaration (example of versions above 1.20.5):
 
-<code java [enable_${1}_numbers="true"]>
+<code java [enable_line_numbers="true"]>
     public static final Block EXAMPLE_BLOCK = new ExampleBlock(Block.Settings.create().strength(4.0f).requiresTool());
 </code>
 
 ## Creating a Custom Block Class
 The above approach works well for simple blocks but falls short when you want a block with //unique// mechanics. We'll create a //separate// class that extends Block to do this. The class needs a constructor that takes in an AbstractBlock.Settings argument:
 
-<code java [enable_${1}_numbers="true"] ExampleBlock.java>
+<code java [enable_line_numbers="true"] ExampleBlock.java>
 public class ExampleBlock extends Block {
     public ExampleBlock(Settings settings) {
         super(settings);
@@ -289,7 +289,7 @@ public class ExampleBlock extends Block {
 
 You can override methods in the block class for custom functionality. Here's an implementation of the onUse method, which is called when you right-click the block. We check if the interaction is occurring on the server, and then send the player a message saying, //"Hello, world!"//
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="8,9,10,11,12,13,14,15"] ExampleBlock.java>
+<code java [enable_line_numbers="true",highlight_${1}_extra="8,9,10,11,12,13,14,15"] ExampleBlock.java>
 public class ExampleBlock extends Block {
 
     public ExampleBlock(Settings settings) {
@@ -310,7 +310,7 @@ public class ExampleBlock extends Block {
 
 To use your custom block class, replace new Block with new ExampleBlock:
 
-<code java [enable_${1}_numbers="true",highlight_${1}_extra="3"] TutorialBlocks.java>
+<code java [enable_line_numbers="true",highlight_${1}_extra="3"] TutorialBlocks.java>
 public final class TutorialBlocks {
 
     public static final Block EXAMPLE_${1}_block", new ExampleBlock(Block.Settings.create().strength(4.0f)));

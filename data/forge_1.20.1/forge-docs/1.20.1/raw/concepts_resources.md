@@ -1,8 +1,10 @@
-# Resources
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/concepts/resources
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "concepts/resources"
+source: "https://docs.readthedocs.net/en/1.20.1/concepts/resources/"
+sourceType: mkdocs
+---
 # Resources
 
 A resource is extra data used by the game, and is stored in a data file, instead of being in the code. Minecraft has two primary resource systems active: one on the logical client used for visuals such as models, textures, and localization called `assets`, and one on the logical server used for gameplay such as recipes and loot tables called `data`. [Resource packs](../../resources/client/) control the former, while [Datapacks](../../resources/server/) control the latter.

@@ -1,8 +1,10 @@
-# Debug Profiler
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/misc/debugprofiler
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "misc/debugprofiler"
+source: "https://docs.readthedocs.net/en/1.20.1/misc/debugprofiler/"
+sourceType: mkdocs
+---
 # Debug Profiler
 
 Minecraft provides a Debug Profiler that provides system data, current game settings, JVM data, level data, and sided tick information to find time consuming code. Considering things like `TickEvent`s and ticking `BlockEntities`, this can be very useful for modders and server owners that want to find a lag source.

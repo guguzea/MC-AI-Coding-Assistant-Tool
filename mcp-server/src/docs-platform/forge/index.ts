@@ -24,7 +24,8 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from "../search-utils.js";
+import { missingSemanticDbWarning } from "../semantic/status.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -174,9 +175,12 @@ export async function searchForgeDocs(
               version: args.version,
               resolvedVersion: detailed.resolvedVersion,
               versionFallback: detailed.versionFallback,
-              warning: detailed.versionFallback
-                ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
-                : undefined,
+              warning: joinSearchWarnings(
+                detailed.versionFallback
+                  ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
+                  : undefined,
+                missingSemanticDbWarning(semanticHits === null),
+              ),
               tags: args.tags,
               semantic: semanticHits !== null,
               total: results.length,
@@ -653,6 +657,7 @@ export async function searchDocs(
       // 语义检索（两源各自查询）；无语义库 → null，保持纯 L0
       const sources = fabricSource === "all" ? ["fabric-docs", "fabric-wiki"] : [fabricSource];
       let semanticRanked = false;
+      let semanticMissing = false;
       const semanticList: Array<{
         docId: string;
         score?: number;
@@ -664,7 +669,8 @@ export async function searchDocs(
       }> = [];
       for (const src of sources) {
         const hits = await semanticSearch(args.query, "fabric", args.version, src, dataRoot);
-        if (hits !== null) semanticRanked = true;
+        if (hits === null) semanticMissing = true;
+        else semanticRanked = true;
         if (hits) semanticList.push(...hits);
       }
       if (semanticRanked) {
@@ -686,9 +692,12 @@ export async function searchDocs(
                 version: args.version,
                 resolvedVersion,
                 versionFallback,
-                warning: versionFallback
-                  ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
-                  : undefined,
+                warning: joinSearchWarnings(
+                  versionFallback
+                    ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
+                    : undefined,
+                  missingSemanticDbWarning(semanticMissing),
+                ),
                 platform,
                 source: fabricSource,
                 tags: args.tags,
@@ -750,9 +759,12 @@ export async function searchDocs(
               version: args.version,
               resolvedVersion,
               versionFallback,
-              warning: versionFallback
-                ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
-                : undefined,
+              warning: joinSearchWarnings(
+                versionFallback
+                  ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
+                  : undefined,
+                missingSemanticDbWarning(semanticHits === null),
+              ),
               platform,
               tags: args.tags,
               semantic: semanticHits !== null,

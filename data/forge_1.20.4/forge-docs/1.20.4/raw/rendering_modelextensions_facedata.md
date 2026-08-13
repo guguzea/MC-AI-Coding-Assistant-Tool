@@ -46,6 +46,6 @@ The specified light values are purely client-side and affect neither the server&
 
 Specifying the `ambient_occlusion` flag will configure [AO](https://en.wikipedia.org/wiki/Ambient_occlusion) for the quads. Defaults to `true`. The behaviour of this flag is equivalent to the top-level `ambientocclusion` flag of the vanilla format.
 
-<img alt="Ambient occlusion in action" src="../ambientocclusion_annotated.png" /> _*${1}_
+<img alt="Ambient occlusion in action" src="../ambientocclusion_annotated.png" /> *…*
 
 > **Note**: Note If the top-level AO flag is set to false, specifying this flag as true on an element or face won&rsquo;t be able to override the top-level flag. { "ambientocclusion": false, "elements": [ { "forge_data": { "ambient_occlusion": true // Has no effect } } ] }

@@ -13,7 +13,7 @@ For simple blocks, which need no special functionality (think cobblestone, woode
 - <li>`lightLevel` - Controls the light emission of the block. Takes a function with a `BlockState` parameter that returns a value from zero to fifteen.
 - <li>`friction` - Controls how slippery the block is. For reference, ice has a slipperiness of 0.98.
 
-All these methods are _*chainable*_ which means you can call them in series. See the `Blocks` class for examples of this.
+All these methods are *chainable* which means you can call them in series. See the `Blocks` class for examples of this.
 
 
 <!-- key:🔴 role:新手必读 (Note) -->

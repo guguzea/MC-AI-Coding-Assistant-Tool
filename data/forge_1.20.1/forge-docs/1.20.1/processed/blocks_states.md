@@ -25,7 +25,7 @@ Because the numbers carry no meaning by themselves, no one could know what they 
 
 In Minecraft 1.8 and above, the metadata system, along with the block ID system, was deprecated and eventually replaced with the **block state system**. The block state system abstracts out the details of the block&rsquo;s properties from the other behaviors of the block.
 
-Each _*${1}_ of a block is described by an instance of `Property<?>`. Examples of block properties include instruments (`EnumProperty<NoteBlockInstrument>`), facing (`DirectionProperty`), poweredness (`Property<Boolean>`), etc. Each property has the value of the type `T` parametrized by `Property<T>`.
+Each *property* of a block is described by an instance of `Property<?>`. Examples of block properties include instruments (`EnumProperty<NoteBlockInstrument>`), facing (`DirectionProperty`), poweredness (`Property<Boolean>`), etc. Each property has the value of the type `T` parametrized by `Property<T>`.
 
 A unique pair can be constructed from the `Block` and a map of the `Property<?>` to their associated values. This unique pair is called a `BlockState`.
 
@@ -42,24 +42,24 @@ Not all blocks and situations require the usage of `BlockState`; only the most b
 
 > **Note**: Note A good rule of thumb is: if it has a different name, it should be a separate block.
 
-An example is making chair blocks: the _*${1}_ of the chair should be a _*${1}_, while the different _*${1}_ should be separated into different blocks. An &ldquo;Oak Chair&rdquo; facing east (`oak_chair[facing=east]`) is different from a &ldquo;Spruce Chair&rdquo; facing west (`spruce_chair[facing=west]`).
+An example is making chair blocks: the *direction* of the chair should be a *property*, while the different *types of wood* should be separated into different blocks. An &ldquo;Oak Chair&rdquo; facing east (`oak_chair[facing=east]`) is different from a &ldquo;Spruce Chair&rdquo; facing west (`spruce_chair[facing=west]`).
 
 ## Implementing Block States
 
 In your Block class, create or reference `static final` `Property<?>` objects for every property that your Block has. You are free to make your own `Property<?>` implementations, but the means to do that are not covered in this article. The vanilla code provides several convenience implementations:
 
-- `IntegerProperty`<ul> <li>Implements `Property<Integer>`. Defines a property that holds an integer value.
-- Created by calling `IntegerProperty#create(String propertyName, int minimum, int maximum)`.
+- <li>`IntegerProperty`<ul> <li>Implements `Property<Integer>`. Defines a property that holds an integer value.
+- <li>Created by calling `IntegerProperty#create(String propertyName, int minimum, int maximum)`.
 
-<li>`BooleanProperty`- Implements `Property<Boolean>`. Defines a property that holds a `true` or `false` value.
-- Created by calling `BooleanProperty#create(String propertyName)`.
+<li>`BooleanProperty`- <li>Implements `Property<Boolean>`. Defines a property that holds a `true` or `false` value.
+- <li>Created by calling `BooleanProperty#create(String propertyName)`.
 
-<li>`EnumProperty<E extends Enum<E>>`- Implements `Property<E>`. Defines a property that can take on the values of an Enum class.
-- Created by calling `EnumProperty#create(String propertyName, Class<E> enumClass)`.
-- It is also possible to use only a subset of the Enum values (e.g. 4 out of 16 `DyeColor`s). See the overloads of `EnumProperty#create`.
+<li>`EnumProperty<E extends Enum<E>>`- <li>Implements `Property<E>`. Defines a property that can take on the values of an Enum class.
+- <li>Created by calling `EnumProperty#create(String propertyName, Class<E> enumClass)`.
+- <li>It is also possible to use only a subset of the Enum values (e.g. 4 out of 16 `DyeColor`s). See the overloads of `EnumProperty#create`.
 
-<li>`DirectionProperty`- This is a convenience implementation of `EnumProperty<Direction>`
-- Several convenience predicates are also provided. For example, to get a property that represents the cardinal directions, call `DirectionProperty.create("<name>", Direction.Plane.HORIZONTAL)`; to get the X directions, `DirectionProperty.create("<name>", Direction.Axis.X)`.
+<li>`DirectionProperty`- <li>This is a convenience implementation of `EnumProperty<Direction>`
+- <li>Several convenience predicates are also provided. For example, to get a property that represents the cardinal directions, call `DirectionProperty.create("<name>", Direction.Plane.HORIZONTAL)`; to get the X directions, `DirectionProperty.create("<name>", Direction.Axis.X)`.
 
 
 <!-- key:🟠 role:常见错误 -->

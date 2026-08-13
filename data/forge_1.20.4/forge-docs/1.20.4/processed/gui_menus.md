@@ -4,7 +4,7 @@ Menus are one type of backend for Graphical User Interfaces, or GUIs; they handl
 
 ## `MenuType
 
-Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the _*type*_ of the menu. For a menu, these are <code>MenuType`s.
+Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a menu, these are <code>MenuType`s.
 
 `MenuType`s must be [registered](../../concepts/registries/#methods-for-registering).
 

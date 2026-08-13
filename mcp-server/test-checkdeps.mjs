@@ -52,6 +52,20 @@ dependencies { minecraft "com.mojang:minecraft:1.20.1" }`;
   assert.equal(r.traps.length, 0, "1.20.1 不应触发 trinkets_stale");
 }
 
+function testTrinketsNoVersionSoftHint() {
+  const fabricJson = JSON.stringify({
+    schemaVersion: 1,
+    id: "example",
+    depends: { trinkets: "*" },
+  });
+  const r = checkDependencies("", undefined, fabricJson);
+  assert.equal(r.detectedLoader, "fabric");
+  assert.ok(
+    r.traps.some((t) => t.code === "trinkets_version_window"),
+    `无版本时应软提示 version_window，实际: ${JSON.stringify(r.traps)}`,
+  );
+}
+
 // #3 Fabric + trinkets + 1.21.4 字符串 → traps 含停更窗口
 function testTrinketsStale() {
   const fabricJson = JSON.stringify({
@@ -106,6 +120,7 @@ function testUnknownLoader() {
 function main() {
   testForgeOwoConflict();
   testFabricNoModsTomlFalsePositive();
+  testTrinketsNoVersionSoftHint();
   testTrinketsStale();
   testJeiSoftDependency();
   testBookshelfAmbiguity();

@@ -11,22 +11,22 @@ In general projects, [semantic versioning](https://semver.org/) is often used (w
 
 Here is a list of examples that can increment the various variables.
 
-- `MCVERSION`
-- Always matches the Minecraft version the mod is for.
-- `MAJORMOD`
-- Removing items, blocks, block entities, etc.
-- Changing or removing previously existing mechanics.
-- Updating to a new Minecraft version.
-- `MAJORAPI`
-- Changing the order or variables of enums.
-- Changing return types of methods.
-- Removing public methods altogether.
-- `MINOR`
-- Adding items, blocks, block entities, etc.
-- Adding new mechanics.
-- Deprecating public methods. (This is not a `MAJORAPI` increment since it doesn&rsquo;t break an API.)
-- `PATCH`
-- Bugfixes.
+- <li>`MCVERSION`
+- <li>Always matches the Minecraft version the mod is for.
+- <li>`MAJORMOD`
+- <li>Removing items, blocks, block entities, etc.
+- <li>Changing or removing previously existing mechanics.
+- <li>Updating to a new Minecraft version.
+- <li>`MAJORAPI`
+- <li>Changing the order or variables of enums.
+- <li>Changing return types of methods.
+- <li>Removing public methods altogether.
+- <li>`MINOR`
+- <li>Adding items, blocks, block entities, etc.
+- <li>Adding new mechanics.
+- <li>Deprecating public methods. (This is not a `MAJORAPI` increment since it doesn&rsquo;t break an API.)
+- <li>`PATCH`
+- <li>Bugfixes.
 
 When incrementing any variable, all lesser variables should reset to `0`. For instance, if `MINOR` would increment, `PATCH` would become `0`. If `MAJORMOD` would increment, all other variables would become `0`.
 

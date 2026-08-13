@@ -1,8 +1,10 @@
-# Key Mappings
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/misc/keymappings
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "misc/keymappings"
+source: "https://docs.readthedocs.net/en/1.20.1/misc/keymappings/"
+sourceType: mkdocs
+---
 # Key Mappings
 
 A key mapping, or key binding, defines a particular action that should be tied to an input: mouse click, key press, etc. Each action defined by a key mapping can be checked whenever the client can take an input. Furthermore, each key mapping can be assigned to any input through the [Controls option menu](https://minecraft.wiki/w/Options#Controls).

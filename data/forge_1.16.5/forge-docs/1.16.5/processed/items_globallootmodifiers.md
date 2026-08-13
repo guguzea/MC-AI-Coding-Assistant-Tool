@@ -14,7 +14,7 @@ Create a `global_loot_modifiers.json`. <p>This will tell Forge about your modifi
 
 > **Important**: Important global_loot_modifiers.json will only be read in the forge namespace. The file will be neglected if it is under the mod&rsquo;s namespace.
 
-`entries` is an _*ordered list*_ of the modifiers that will be loaded. The [ResourceLocation](../../concepts/resources/#ResourceLocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
+`entries` is an *ordered list* of the modifiers that will be loaded. The [ResourceLocation](../../concepts/resources/#ResourceLocation)s specified points to their associated entry within `data/<namespace>/loot_modifiers/<path>.json`. This is primarily relevant to data pack makers for resolving conflicts between modifiers from separate mods.
 
 `replace`, when `true`, changes the behavior from appending loot modifiers to the global list to replacing the global list entries entirely. Modders will want to use `false` for compatibility with other mod implementations. Datapack makers may want to specify their overrides with `true`.
 

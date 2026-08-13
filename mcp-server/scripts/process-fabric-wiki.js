@@ -84,8 +84,10 @@ function wikiToMarkdown(text) {
 
   // ── 5. <yarncode> 标签 → 标准 markdown 代码块 ────────────────────────
   // 处理 enable_${1}_numbers 属性（Fabric Wiki 特殊语法）
+  md = md.replace(/\[enable_line_numbers[^\]]*\]/gi, "");
   md = md.replace(/\[enable_\$\{1\}_numbers="true"\]/gi, "");
   md = md.replace(/\[enable_\$\{1\}_numbers[^\]]*\]/gi, "");
+  md = md.replace(/enable_\$\{1\}_numbers/gi, "enable_line_numbers");
 
   md = md.replace(/<yarncode java(\s[^\n]*)?>/gi, "```java");
   md = md.replace(/<yarncode kotlin(\s[^\n]*)?>/gi, "```kotlin");
@@ -134,7 +136,7 @@ function wikiToMarkdown(text) {
   md = md.replace(/\*\*(.+?)\*\*/g, "**$1**");
   md = md.replace(/\*(.+?)\*/g, "*$1*");
   md = md.replace(/__(.+?)__/g, "__$1__");
-  md = md.replace(/_(.+?)_/g, "_${1}_");
+  // 斜体 `_text_` 已是 Markdown，禁止写成 "_${1}_"（会把原文替换成字面 ${1}）
 
   // 删除线
   md = md.replace(/<del>([\s\S]*?)<\/del>/gi, "~~$1~~");

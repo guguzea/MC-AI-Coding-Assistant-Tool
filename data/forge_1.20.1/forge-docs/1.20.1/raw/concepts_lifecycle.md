@@ -1,8 +1,10 @@
-# Mod Lifecycle
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/concepts/lifecycle
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "concepts/lifecycle"
+source: "https://docs.readthedocs.net/en/1.20.1/concepts/lifecycle/"
+sourceType: mkdocs
+---
 # Mod Lifecycle
 
 During the mod loading process, the various lifecycle events are fired on the mod-specific event bus. Many actions are performed during these events, such as [registering objects](../registries/#methods-for-registering), preparing for [data generation](../../datagen/), or [communicating with other mods](./#intermodcomms).

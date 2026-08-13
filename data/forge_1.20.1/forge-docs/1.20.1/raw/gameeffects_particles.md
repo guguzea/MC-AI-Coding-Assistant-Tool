@@ -1,8 +1,10 @@
-# Particles
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/gameeffects/particles
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "gameeffects/particles"
+source: "https://docs.readthedocs.net/en/1.20.1/gameeffects/particles/"
+sourceType: mkdocs
+---
 # Particles
 
 Particles are an effect within the game used as polish to better improve immersion. Their usefulness also requires great caution because of their methods of creation and reference.
@@ -95,7 +97,7 @@ There are three particle render types that cannot use the above method of regist
 
 To add a texture to a particle, a new JSON file must be added to `assets/<modid>/particles`. This is known as the `ParticleDescription`. The name of this file will represent the registry name of the `ParticleType` the factory is being attached to. Each particle JSON is an object. The object stores a single key `textures` which holds an array of `ResourceLocation`s. Any `<modid>:<path>` texture represented here will point to a texture at `assets/<modid>/textures/particle/<path>.png`.
 
-```json
+```
 {
   "textures": [
     // Will point to a texture located in

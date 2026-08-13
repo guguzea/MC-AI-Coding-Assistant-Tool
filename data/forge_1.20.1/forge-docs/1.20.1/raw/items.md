@@ -1,8 +1,10 @@
-# Items
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/items
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "items"
+source: "https://docs.readthedocs.net/en/1.20.1/items/"
+sourceType: mkdocs
+---
 # Items
 
 Along with blocks, items are a key component of most mods. While blocks make up the level around you, items exist within inventories.

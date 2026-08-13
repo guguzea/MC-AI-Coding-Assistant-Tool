@@ -81,7 +81,7 @@ If the return type is void, or the method has no parameters, then it does not ne
 - <li>`Z` - `boolean`, a `true` or `false` value
 - <li>`[` - references one dimension of an array<ul> <li>Example: `[[S` refers to `short[][]`
 
-<li>`L<class name>;` - references a reference type- <li>Example: `Ljava/lang/String;` refers to `java.lang.String` reference type _*(note the use of slashes instead of periods)*_
+<li>`L<class name>;` - references a reference type- <li>Example: `Ljava/lang/String;` refers to `java.lang.String` reference type *(note the use of slashes instead of periods)*
 
 ## Examples
 

@@ -1,15 +1,17 @@
-# Menus
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/gui/menus
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "gui/menus"
+source: "https://docs.readthedocs.net/en/1.20.1/gui/menus/"
+sourceType: mkdocs
+---
 # Menus
 
 Menus are one type of backend for Graphical User Interfaces, or GUIs; they handle the logic involved in interacting with some represented data holder. Menus themselves are not data holders. They are views which allow to user to indirectly modify the internal data holder state. As such, a data holder should not be directly coupled to any menu, instead passing in the data references to invoke and modify.
 
 ## `MenuType
 
-Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the _*${1}_ of the menu. For a menu, these are <code>MenuType`s.
+Menus are created and removed dynamically and as such are not registry objects. As such, another factory object is registered instead to easily create and refer to the *type* of the menu. For a menu, these are <code>MenuType`s.
 
 `MenuType`s must be [registered](../../concepts/registries/#methods-for-registering).
 

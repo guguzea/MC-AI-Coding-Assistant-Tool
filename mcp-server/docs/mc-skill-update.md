@@ -49,6 +49,14 @@ mc-skill-data-full-*.zip
 | `MC_SKILL_UPDATE_REMOTE` | （扫描匹配） | 强制 remote 名 |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `3600` | status 缓存 TTL |
 | `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | `600000` | 下载超时 |
+| `MC_SKILL_GITHUB_TIMEOUT_MS` | `25000` | Release API 超时 |
+| `MC_SKILL_GITHUB_API_BASE` | `https://api.github.com` | API 根 URL（可改镜像） |
+| `MC_SKILL_FETCH_BACKEND` | （自动） | 强制 `node` 或 `curl` |
+| `HTTPS_PROXY` / `HTTP_PROXY` | | Node fetch 走代理（Clash 等） |
 | `MC_SKILL_GITHUB_TOKEN` | | 可选 API token |
+
+浏览器能打开 github.com **不代表** Node `fetch` 能访问 `api.github.com`：Node 使用 Mozilla CA，Windows 浏览器使用系统证书库。公司网关 / 杀毒 HTTPS 扫描常导致 `UNABLE_TO_VERIFY_LEAF_SIGNATURE`。本工具在 Windows 上会自动回退 `curl.exe --ssl-no-revoke`（与浏览器同一套 Schannel）。
+
+Release 数据包优先匹配 `mc-skill-data-full-*.zip` + `SHA256SUMS*.txt`；若没有，则接受 `data.zip` 并使用 GitHub asset `digest`（`sha256:…`）校验。
 
 `get_server_status.updateHint` 读取 `data/mc-skill-update-state.json` 中上次 check（过期则 `stale=true`，不自动联网）。

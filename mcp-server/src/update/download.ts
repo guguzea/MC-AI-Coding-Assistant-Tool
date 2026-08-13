@@ -7,6 +7,7 @@ import { dirname } from "path";
 import { pipeline } from "stream/promises";
 import { Readable } from "stream";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { curlGetToFile, isTlsCertError } from "./http.js";
 
 const ALLOWED_HOSTS = new Set([
   "api.github.com",
@@ -114,6 +115,20 @@ export async function downloadToFile(
         if (existsSync(destPath)) unlinkSync(destPath);
       } catch {
         /* ignore */
+      }
+      if (!opts?.fetchImpl && process.platform === "win32" && isTlsCertError(err)) {
+        try {
+          const viaCurl = await curlGetToFile(url, destPath, {
+            headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-updater" },
+          }, downloadTimeoutMs());
+          if (viaCurl.status >= 200 && viaCurl.status < 300 && existsSync(destPath)) {
+            const { size } = await import("fs").then((fs) => fs.statSync(destPath));
+            return { ok: true, path: destPath, bytes: size, attempts: attempt };
+          }
+          lastErr = `curl HTTP ${viaCurl.status}`;
+        } catch (curlErr) {
+          lastErr = `Node TLS 失败且 curl 回退失败: ${(curlErr as Error).message}`;
+        }
       }
       if (attempt < maxAttempts) {
         await sleep(1000 * 2 ** (attempt - 1));

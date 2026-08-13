@@ -1,8 +1,10 @@
-# Saved Data
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/datastorage/saveddata
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "datastorage/saveddata"
+source: "https://docs.readthedocs.net/en/1.20.1/datastorage/saveddata/"
+sourceType: mkdocs
+---
 # Saved Data
 
 The Saved Data (SD) system is an alternative to level capabilities that can attach data per level.
@@ -11,8 +13,8 @@ The Saved Data (SD) system is an alternative to level capabilities that can atta
 
 Each SD implementation must subtype the `SavedData` class. There are two important methods to be aware of:
 
-- `save`: Allows the implementation to write NBT data to the level.
-- `setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
+- <li>`save`: Allows the implementation to write NBT data to the level.
+- <li>`setDirty`: A method that must be called after changing the data, to notify the game that there are changes that need to be written. If not called, `#save` will not get called and the existing data will persist.
 
 ## Attaching to a Level
 

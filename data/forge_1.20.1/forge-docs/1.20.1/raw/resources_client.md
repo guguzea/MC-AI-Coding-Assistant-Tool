@@ -1,8 +1,10 @@
-# Client Assets
-
-> 来源：https://docs.minecraftforge.net/en/1.20.1/resources/client
-> 版本：1.20.1
-
+---
+version: "1.20.1"
+forgeVersion: "47.2.0"
+chapter: "resources/client"
+source: "https://docs.readthedocs.net/en/1.20.1/resources/client/"
+sourceType: mkdocs
+---
 # Resource Packs
 
 [Resource Packs](https://minecraft.wiki/w/Resource_Pack) allow for the customization of client resources through the `assets` directory. This includes textures, models, sounds, localizations, and others. Your mod (as well as Forge itself) can also have resource packs. Any user can therefore modify all the textures, models, and other assets defined within this directory.

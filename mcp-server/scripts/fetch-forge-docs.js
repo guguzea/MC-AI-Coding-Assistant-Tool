@@ -14,6 +14,10 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { parseCliArgs } from "./_lib/args.js";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(__dirname, "..", "..", "data");
@@ -77,7 +81,38 @@ const USER_AGENTS = [
 let uaIndex = 0;
 function nextUA() { return USER_AGENTS[uaIndex++ % USER_AGENTS.length]; }
 
+async function fetchUrlViaCurl(url) {
+  try {
+    const { stdout } = await execFileAsync(
+      "curl.exe",
+      [
+        "-sS",
+        "-L",
+        "--ssl-no-revoke",
+        "--max-time",
+        "30",
+        "-A",
+        nextUA(),
+        "-w",
+        "\n__MC_SKILL_HTTP_STATUS__:%{http_code}",
+        url,
+      ],
+      { encoding: "utf8", maxBuffer: 20 * 1024 * 1024, windowsHide: true },
+    );
+    const m = stdout.match(/\n__MC_SKILL_HTTP_STATUS__:(\d+)\s*$/);
+    const status = m ? Number(m[1]) : 0;
+    const body = m ? stdout.slice(0, m.index) : stdout;
+    return { ok: status === 200, status, content: body, finalUrl: url };
+  } catch (e) {
+    return { ok: false, status: -1, content: "", error: e.message };
+  }
+}
+
 async function fetchUrl(url, retries = 3) {
+  if (process.platform === "win32") {
+    const viaCurl = await fetchUrlViaCurl(url);
+    if (viaCurl.ok) return viaCurl;
+  }
   const https = await import("node:https");
   const http = await import("node:http");
   let currentUrl = url;
@@ -225,8 +260,8 @@ function htmlToMd(html) {
   // bold/italic
   text = text.replace(/<strong>([\s\S]*?)<\/strong>/gi, "**$1**");
   text = text.replace(/<b>([\s\S]*?)<\/b>/gi, "**$1**");
-  text = text.replace(/<em>([\s\S]*?)<\/em>/gi, "_*$1*_");
-  text = text.replace(/<i>([\s\S]*?)<\/i>/gi, "_*$1*_");
+  text = text.replace(/<em>([\s\S]*?)<\/em>/gi, "*$1*");
+  text = text.replace(/<i>([\s\S]*?)<\/i>/gi, "*$1*");
 
   // unordered lists
   text = text.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, inner) =>
