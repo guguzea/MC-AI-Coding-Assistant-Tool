@@ -8,9 +8,15 @@
  * - 正确依赖声明
  */
 
+import { detectLoader } from "../diagnostics/index.js";
+
 export interface GradleQuery {
   buildGradle: string;
   gradleProperties?: string;
+  litemodJson?: string;
+  riftmodJson?: string;
+  addonManifest?: string;
+  quiltModJson?: string;
 }
 
 export interface GradleResult {
@@ -20,13 +26,12 @@ export interface GradleResult {
 }
 
 export function diagnoseGradle(query: GradleQuery): GradleResult {
-  const { buildGradle, gradleProperties } = query;
-  const errors: string[] = [];
-  const warnings: string[] = [];
-  const suggestions: string[] = [];
+  const { buildGradle, gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson } = query;
+  const extras = { litemodJson, riftmodJson, addonManifest, quiltModJson };
+  const loader = detectLoader(buildGradle, undefined, undefined, undefined, extras);
 
-  if (/fabric-loom|org\.quiltmc\.loom|quilt-loom/i.test(buildGradle)) {
-    const quilt = /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle);
+  if (/fabric-loom|org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || loader === "quilt" || quiltModJson?.trim()) {
+    const quilt = loader === "quilt" || /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || Boolean(quiltModJson?.trim());
     return {
       errors: [],
       warnings: [
@@ -43,7 +48,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     };
   }
 
-  if (/"format_version"/.test(buildGradle) && /"modules"/.test(buildGradle)) {
+  if (loader === "bedrock" || addonManifest?.trim() || (/"format_version"/.test(buildGradle) && /"modules"/.test(buildGradle))) {
     return {
       errors: [],
       warnings: ["diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前内容像基岩 Add-On manifest，不是 Gradle 工程。"],
@@ -54,16 +59,20 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   }
 
   const hasLiteLoaderPlugin = /net\.minecraftforge\.gradle\.liteloader/.test(buildGradle);
-  if (hasLiteLoaderPlugin) {
+  if (hasLiteLoaderPlugin || loader === "liteloader_forge") {
     return diagnoseLiteLoaderGradle(buildGradle);
   }
 
-  if (/litemod\.json|LiteMod|liteloader/i.test(buildGradle)) {
-    const looksForgeHybrid =
-      /net\.minecraftforge:forge:\d+\.\d+-\d+/.test(buildGradle) ||
-      /modLoader\s*=\s*"javafml"/i.test(buildGradle) ||
-      /apply\s+plugin:\s*['"]net\.minecraftforge\.gradle\.forge['"]/.test(buildGradle);
-    if (looksForgeHybrid) {
+  const looksLiteMeta =
+    Boolean(litemodJson?.trim()) ||
+    /litemod\.json|\bLiteMod\b|com\.mumfrey\.liteloader/i.test(buildGradle);
+  const looksForgeShape =
+    /net\.minecraftforge:forge:\d+\.\d+-\d+/.test(buildGradle) ||
+    /modLoader\s*=\s*"javafml"/i.test(buildGradle) ||
+    /apply\s+plugin:\s*['"]net\.minecraftforge\.gradle\.forge['"]/.test(buildGradle) ||
+    /id\s+['"]net\.minecraftforge\.gradle['"]/.test(buildGradle);
+  if (looksLiteMeta || loader === "liteloader" || (loader === "unknown" && Boolean(litemodJson?.trim()))) {
+    if (looksForgeShape) {
       return {
         errors: [
           "同时存在 LiteLoader 与 Forge 迹象，但未 apply plugin: 'net.minecraftforge.gradle.liteloader'。禁止当 Forge 1.20 / FG6 诊断。",
@@ -83,7 +92,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     };
   }
 
-  if (/tweaker-client|RiftLoaderClientTweaker|riftmod\.json/i.test(buildGradle)) {
+  if (loader === "rift" || riftmodJson?.trim() || /tweaker-client|RiftLoaderClientTweaker|riftmod\.json/i.test(buildGradle)) {
     return {
       errors: [],
       warnings: ["diagnose_gradle 不覆盖 Rift。"],
@@ -91,7 +100,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     };
   }
 
-  if (/extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle)) {
+  if (loader === "modloader" || /extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle)) {
     return {
       errors: [],
       warnings: [
@@ -113,6 +122,10 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
       ],
     };
   }
+
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const suggestions: string[] = [];
 
   const props = parseGradleProperties(gradleProperties ?? "");
 

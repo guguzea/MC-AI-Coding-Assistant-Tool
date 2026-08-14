@@ -18,6 +18,7 @@ export type CrashKind =
   | "quilt"
   | "liteloader"
   | "rift"
+  | "modloader"
   | "java"
   | "unknown";
 
@@ -311,21 +312,30 @@ export function detectCrashKind(crashReport: string): CrashKind {
       crashReport,
     );
 
-  // 文件名里的 fml/fabric/opengl/memory/java 可信；client/server 仅在有 loader 指纹时采用
-  if (kindFromName === "fml" || kindFromName === "fabric") return map[kindFromName];
+  // 文件名里的 fml/opengl/memory/java 可信；fabric 须先排除 Quilt 正文指纹
+  if (kindFromName === "fml") return map[kindFromName];
   if (kindFromName === "opengl" || kindFromName === "rendering" || kindFromName === "memory" || kindFromName === "java") {
     return map[kindFromName];
   }
-  if (kindFromName && map[kindFromName] && hasLoaderFingerprint) return map[kindFromName];
 
   if (/org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
   if (/com\.mumfrey\.liteloader/i.test(crashReport)) return "liteloader";
   if (/org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(crashReport)) return "rift";
+  if (
+    /net\.minecraft\.src\.ModLoader|\bat ModLoader\.|class\s+mod_[A-Za-z0-9_]+\s+extends\s+BaseMod/i.test(crashReport) &&
+    !/cpw\.mods\.fml|net\.minecraftforge|FMLModContainer/i.test(crashReport)
+  ) {
+    return "modloader";
+  }
+
+  if (kindFromName === "fabric") return "fabric";
+  if (kindFromName && map[kindFromName] && hasLoaderFingerprint) return map[kindFromName];
+
   if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
   if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
   if (
-    /ModLoader|FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|net\.neoforged|Missing or unsupported mandatory/i.test(
+    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|net\.neoforged|Missing or unsupported mandatory/i.test(
       crashReport,
     )
   ) {
@@ -339,7 +349,7 @@ export function detectCrashKind(crashReport: string): CrashKind {
 
 function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
   const hints = ["logs/latest.log", "logs/debug.log"];
-  if (kind === "fml" || kind === "fabric" || kind === "quilt" || kind === "liteloader" || kind === "rift" || !matchedKnown) {
+  if (kind === "fml" || kind === "fabric" || kind === "quilt" || kind === "liteloader" || kind === "rift" || kind === "modloader" || !matchedKnown) {
     return [
       "优先核对崩溃报告开头的异常与 Mod List",
       ...hints,
@@ -385,7 +395,7 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
   }
 
   const hasModLoader = /Minecraft Forge|Forge Mod Loader|Fabric Loader|NeoForge|net\.neoforged|org\.quiltmc|com\.mumfrey\.liteloader|org\.dimdev\.riftloader/i.test(crashReport);
-  const unknownHint = `未能识别为典型 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift 崩溃指纹（crashKind=unknown）。请打开 Minecraft Wiki 对照完整报告结构：${CRASH_REPORT_WIKI}`;
+  const unknownHint = `未能识别为典型 Forge / Fabric / NeoForge / Quilt / LiteLoader / Rift / ModLoader 崩溃指纹（crashKind=unknown）。请打开 Minecraft Wiki 对照完整报告结构：${CRASH_REPORT_WIKI}`;
   const fmlHint =
     crashKind === "fml"
       ? "此报告疑似加载期（-fml）失败：优先查缺前置、版本范围与 mods.toml"

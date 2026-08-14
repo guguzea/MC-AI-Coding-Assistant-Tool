@@ -311,7 +311,7 @@ export const generateAddonManifestSchema = z.object({
   description: z.string().optional(),
   packType: z.enum(["resources", "data", "both", "script"]).describe("resources=RP data=BP both=各一份 script=BP+script 模块"),
   minEngineVersion: z.array(z.number()).optional().describe("默认 [1, 21, 0]"),
-  beta: z.boolean().optional().describe("仅当用户明确要 Beta / @minecraft/server-beta 时为 true"),
+  beta: z.boolean().optional().describe("仅当用户明确要 pack 侧 @minecraft/server 的 version: \"beta\"（须在世界打开 Beta APIs）时为 true。不是 @minecraft/server-beta 包名。"),
   scriptEval: z.boolean().optional().describe("仅当需要 eval 时写入 capabilities: [script_eval]"),
   headerUuid: z.string().optional(),
   moduleUuid: z.string().optional(),
@@ -425,7 +425,7 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
   };
   if (args.betaExplodeEvent) {
     files["script-snippet.js"] =
-      `import { world } from "@minecraft/server";\n// Beta：BlockExplodeAfterEvent 等需 @minecraft/server-beta\n// 必须在世界设置打开 Beta APIs；pack 侧 dependencies 用 beta 模块。\nworld.afterEvents.blockExplode?.subscribe((ev) => {\n  console.warn("block exploded", ev.block);\n});\n`;
+      `import { world } from "@minecraft/server";\n// Beta：BlockExplodeAfterEvent 等需 pack 侧 dependencies 声明 @minecraft/server version=beta，并在世界打开 Beta APIs。\nworld.afterEvents.blockExplode?.subscribe((ev) => {\n  console.warn("block exploded", ev.block);\n});\n`;
     const man = generateAddonManifest({
       packName: `${args.identifier} scripts`,
       packType: "script",

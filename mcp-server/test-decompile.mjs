@@ -330,6 +330,52 @@ section("mod-analyzer");
     assert.ok(r.action && r.action.code === "INVALID_INPUT");
   });
 
+  test("quilt.mod.json + fabric.mod.json → loaders=[quilt], quilt id/entrypoints win, no multi-loader warning", () => {
+    const quiltJar = join(tmpRoot, "fixturequilt-1.0.0.jar");
+    writeFileSync(
+      quiltJar,
+      makeZip([
+        {
+          name: "quilt.mod.json",
+          data: JSON.stringify({
+            schema_version: 1,
+            quilt_loader: {
+              id: "quiltmod",
+              version: "1.0.0",
+              metadata: { name: "Quilt Mod" },
+              entrypoints: {
+                init: "com.example.quilt.Init",
+                client_init: { value: "com.example.quilt.Client" },
+              },
+            },
+          }),
+        },
+        {
+          name: "fabric.mod.json",
+          data: JSON.stringify({
+            schemaVersion: 1,
+            id: "fabricname",
+            version: "9.9.9",
+            name: "Fabric Name",
+            entrypoints: { main: ["com.example.fabric.Main"] },
+            depends: { minecraft: ">=1.20" },
+          }),
+        },
+      ]),
+    );
+    const r = analyzeModJar(quiltJar);
+    assert.equal(r.found, true);
+    assert.deepEqual(r.loaders, ["quilt"], `loaders=${JSON.stringify(r.loaders)}`);
+    assert.ok(!r.loaders.includes("fabric"));
+    assert.equal(r.modId, "quiltmod");
+    assert.equal(r.modVersion, "1.0.0");
+    assert.deepEqual(r.entrypoints?.init, ["com.example.quilt.Init"]);
+    assert.deepEqual(r.entrypoints?.client_init, ["com.example.quilt.Client"]);
+    assert.ok(!r.entrypoints?.main, `fabric entrypoints must not replace quilt: ${JSON.stringify(r.entrypoints)}`);
+    assert.ok(r.dependencies.some((d) => d.id === "minecraft"), `fabric depends still merge: ${JSON.stringify(r.dependencies)}`);
+    assert.ok(!r.warnings.some((w) => /多个 loader/.test(w)), `warnings=${JSON.stringify(r.warnings)}`);
+  });
+
   rmSync(tmpRoot, { recursive: true, force: true });
 }
 

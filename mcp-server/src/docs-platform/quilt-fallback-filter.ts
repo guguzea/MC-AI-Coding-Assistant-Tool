@@ -15,7 +15,11 @@ const FABRIC_EXCLUSIVE_CLASS = [
   /FabricRegistryBuilder/,
   /RegistrySyncManager/,
   /FabricItemGroup/,
+  /FabricItemSettings/,
+  /ItemGroupEvents/,
   /net\.fabricmc\.fabric\.api\.itemgroup/,
+  /net\.fabricmc\.fabric\.api\.item\b/,
+  /net\.fabricmc\.fabric\.api\.object\.builder/,
   /net\.fabricmc\.fabric\.api\.event\.lifecycle/,
 ];
 

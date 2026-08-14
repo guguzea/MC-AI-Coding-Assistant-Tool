@@ -75,6 +75,27 @@ function emptyMeta(jarPath: string): ModMetadata {
   };
 }
 
+/** Quilt / Fabric 入口：string、string[]、{ value }（adapter 包装）。 */
+function collectEntrypointValues(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(collectEntrypointValues);
+  if (value && typeof value === "object") {
+    const inner = (value as { value?: unknown }).value;
+    if (typeof inner === "string") return [inner];
+  }
+  return [];
+}
+
+function parseEntrypointsMap(entrypoints: unknown): Record<string, string[]> | undefined {
+  if (!entrypoints || typeof entrypoints !== "object") return undefined;
+  const eps: Record<string, string[]> = {};
+  for (const [side, list] of Object.entries(entrypoints as Record<string, unknown>)) {
+    const vals = collectEntrypointValues(list);
+    if (vals.length > 0) eps[side] = vals;
+  }
+  return Object.keys(eps).length > 0 ? eps : undefined;
+}
+
 export interface AnalyzeResult extends ModMetadata {}
 
 export function analyzeModJar(jarPath: string): AnalyzeResult {
@@ -143,15 +164,8 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
       if (metadata && typeof metadata.name === "string") meta.modName = metadata.name;
       if (metadata && typeof metadata.description === "string") meta.description = metadata.description;
       const entrypoints = loader?.entrypoints ?? quilt.entrypoints;
-      if (entrypoints && typeof entrypoints === "object") {
-        const eps: Record<string, string[]> = {};
-        for (const [side, list] of Object.entries(entrypoints as Record<string, unknown>)) {
-          if (Array.isArray(list)) {
-            eps[side] = list.filter((x): x is string => typeof x === "string");
-          }
-        }
-        meta.entrypoints = { ...meta.entrypoints, ...eps };
-      }
+      const eps = parseEntrypointsMap(entrypoints);
+      if (eps) meta.entrypoints = { ...meta.entrypoints, ...eps };
     } catch (err) {
       meta.warnings.push(`quilt.mod.json 解析失败: ${(err as Error).message}`);
     }
@@ -162,21 +176,18 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   if (fabricJson) {
     try {
       const fabric = JSON.parse(fabricJson.toString("utf8")) as Record<string, unknown>;
-      meta.loaders.push("fabric");
-      if (typeof fabric.id === "string") meta.modId = fabric.id;
-      if (typeof fabric.version === "string") meta.modVersion = fabric.version;
-      if (typeof fabric.name === "string") meta.modName = fabric.name;
-      if (typeof fabric.description === "string") meta.description = fabric.description;
-
-      const entrypoints = fabric.entrypoints;
-      if (entrypoints && typeof entrypoints === "object") {
-        const eps: Record<string, string[]> = {};
-        for (const [side, list] of Object.entries(entrypoints as Record<string, unknown>)) {
-          if (Array.isArray(list)) {
-            eps[side] = list.filter((x): x is string => typeof x === "string");
-          }
-        }
-        meta.entrypoints = eps;
+      const quiltWins = meta.loaders.includes("quilt");
+      if (!quiltWins) {
+        meta.loaders.push("fabric");
+        if (typeof fabric.id === "string") meta.modId = fabric.id;
+        if (typeof fabric.version === "string") meta.modVersion = fabric.version;
+        if (typeof fabric.name === "string") meta.modName = fabric.name;
+        if (typeof fabric.description === "string") meta.description = fabric.description;
+        const eps = parseEntrypointsMap(fabric.entrypoints);
+        if (eps) meta.entrypoints = eps;
+      } else if (!meta.entrypoints) {
+        const eps = parseEntrypointsMap(fabric.entrypoints);
+        if (eps) meta.entrypoints = eps;
       }
 
       const depends = fabric.depends;
@@ -312,7 +323,11 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   if (meta.loaders.includes("forge") && meta.loaders.includes("liteloader")) {
     meta.warnings.push("同时存在 Forge 与 LiteLoader 元数据：混合模组 loaders=[\"forge\",\"liteloader\"]");
   }
-  if (meta.loaders.length > 1) {
+  const quiltFabricOnly =
+    meta.loaders.length === 2 &&
+    meta.loaders.includes("quilt") &&
+    meta.loaders.includes("fabric");
+  if (meta.loaders.length > 1 && !quiltFabricOnly) {
     meta.warnings.push(`同时存在多个 loader 元数据: ${meta.loaders.join(", ")}`);
   }
 

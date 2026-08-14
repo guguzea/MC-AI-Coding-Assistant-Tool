@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
-import { listVersions, searchForgeDocs, searchDocs } from "./dist/docs-platform/forge/index.js";
+import { listVersions, searchForgeDocs, searchDocs, getDocFull } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
@@ -30,6 +30,7 @@ import {
   generateBpEntity,
   loadBedrockDocsStatus,
   validateAddonManifest,
+  getBedrockDocFull,
 } from "./dist/bedrock/index.js";
 import { listSemanticDbPresence, semanticStaleSearchWarning } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
@@ -786,6 +787,36 @@ dependencies { minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2847' }
   assert.ok(riftGradle.warnings.some((w) => /Rift/.test(w)));
   assert.ok(!riftGradle.errors.some((e) => /Java 17|6\.0,6\.2/.test(e)));
 
+  const commentLl = diagnoseGradle({
+    buildGradle: `
+plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }
+// migrated from liteloader last year
+`,
+  });
+  assert.ok(!commentLl.errors.some((e) => /liteloader/.test(e)), JSON.stringify(commentLl.errors));
+  assert.ok(!commentLl.warnings.some((w) => /LiteLoader|不要当 Forge 1\.20/.test(w)));
+  assert.ok(
+    commentLl.warnings.some((w) => /gradle.properties|copyIdeResources|mappings/.test(w)),
+    JSON.stringify(commentLl.warnings),
+  );
+
+  const extrasLl = diagnoseGradle({
+    buildGradle: `
+plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }
+`,
+    litemodJson: '{"name":"legacy"}',
+  });
+  assert.ok(
+    extrasLl.errors.some((e) => /未 apply plugin: 'net.minecraftforge.gradle.liteloader'/.test(e)),
+    JSON.stringify(extrasLl.errors),
+  );
+  assert.ok(!extrasLl.warnings.some((w) => /Java toolchain 应为 17/.test(w)));
+  assert.ok(!extrasLl.errors.some((e) => /Java 17|6\.0,6\.2|forge:1\.20/.test(e)));
+
   const lang = generateLang("demo", {
     "item.demo.sword": "Sword",
     item_gem: "Gem",
@@ -846,6 +877,20 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.equal(detectCrashKind("org.quiltmc.loader.impl.QuiltLoader crashed"), "quilt");
   assert.equal(detectCrashKind("at com.mumfrey.liteloader.core.LiteLoader"), "liteloader");
   assert.equal(detectCrashKind("org.dimdev.riftloader.RiftLoaderClientTweaker"), "rift");
+  assert.equal(
+    detectCrashKind("---- Minecraft Crash Report ----\nat net.minecraft.src.ModLoader.init(ModLoader.java:120)\n"),
+    "modloader",
+  );
+  assert.equal(
+    detectCrashKind("---- Minecraft Crash Report ----\nat ModLoader.addMod(ModLoader.java:1)\n"),
+    "modloader",
+  );
+  assert.equal(
+    detectCrashKind(
+      "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fabric.txt\norg.quiltmc.loader.impl.QuiltLoader failed\n",
+    ),
+    "quilt",
+  );
 }
 
 async function testPlatformDataMissing() {
@@ -1139,6 +1184,8 @@ async function testFivePlatformRouting() {
   const filtered = filterFabricFallbackHits([
     { id: "a", label: "net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder", url: "https://fabricmc.net/wiki" },
     { id: "b", label: "net.minecraft.world.item.Item", url: "https://docs.fabricmc.net/loom" },
+    { id: "c", label: "FabricItemSettings / ItemGroupEvents", url: "https://docs.fabricmc.net" },
+    { id: "d", label: "net.fabricmc.fabric.api.object.builder.v1.entity", url: "https://docs.fabricmc.net" },
   ]);
   assert.equal(filtered.hits.length, 1);
   assert.equal(filtered.hits[0].id, "b");
@@ -1209,6 +1256,7 @@ async function testFivePlatformRouting() {
   const allEntFiles = JSON.stringify(ent.files);
   assert.ok(!/experimentalGameplay/.test(allEntFiles));
   assert.ok(!/worldgen\/experimental/.test(allEntFiles));
+  assert.ok(!/@minecraft\/server-beta/.test(allEntFiles));
   assert.ok(Array.isArray(ent.warnings) && ent.warnings.some((w) => /Beta APIs/.test(w)));
 
   const tmpStatus = mkdtempSync(join(tmpdir(), "mc-skill-bedrock-status-"));
@@ -1290,6 +1338,110 @@ async function testFivePlatformRouting() {
   }
 }
 
+async function testReviewFixes() {
+  const riftRoot = mkdtempSync(join(tmpdir(), "mc-skill-rift-port-"));
+  try {
+    writeFileSync(
+      join(riftRoot, "build.gradle"),
+      "apply plugin: 'net.minecraftforge.gradle.tweaker-client'\n",
+      "utf8",
+    );
+    const rift = JSON.parse(await analyzePortingPath({ projectPath: riftRoot, targetPlatform: "forge" }));
+    assert.equal(rift.ok, false, JSON.stringify(rift));
+    assert.equal(rift.error.code, "UNSUPPORTED_PORT");
+    assert.match(String(rift.error.message), /rift/i);
+    assert.doesNotMatch(String(rift.error.message), /forge → neoforge/i);
+  } finally {
+    rmSync(riftRoot, { recursive: true, force: true });
+  }
+
+  const quiltDual = mkdtempSync(join(tmpdir(), "mc-skill-quilt-dual-"));
+  try {
+    mkdirSync(join(quiltDual, "src", "main", "resources"), { recursive: true });
+    writeFileSync(join(quiltDual, "build.gradle"), "plugins { id 'org.quiltmc.loom' version '1.7.4' }\n", "utf8");
+    writeFileSync(
+      join(quiltDual, "src", "main", "resources", "quilt.mod.json"),
+      JSON.stringify({ schema_version: 1, quilt_loader: { id: "quiltmod", version: "1.0.0" } }),
+      "utf8",
+    );
+    writeFileSync(
+      join(quiltDual, "src", "main", "resources", "fabric.mod.json"),
+      JSON.stringify({ schemaVersion: 1, id: "fabricname", version: "9.9.9" }),
+      "utf8",
+    );
+    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltDual, targetPlatform: "quilt" }));
+    assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
+    assert.equal(q.analysis.current.platform, "quilt");
+    assert.equal(q.analysis.current.modId, "quiltmod");
+  } finally {
+    rmSync(quiltDual, { recursive: true, force: true });
+  }
+
+  const quiltLoomOnly = mkdtempSync(join(tmpdir(), "mc-skill-quilt-loom-"));
+  try {
+    mkdirSync(join(quiltLoomOnly, "src", "main", "resources"), { recursive: true });
+    writeFileSync(
+      join(quiltLoomOnly, "build.gradle"),
+      "plugins { id 'org.quiltmc.loom' version '1.7.4'\n  id 'fabric-loom' version '1.6-SNAPSHOT' }\n",
+      "utf8",
+    );
+    writeFileSync(
+      join(quiltLoomOnly, "src", "main", "resources", "fabric.mod.json"),
+      JSON.stringify({ schemaVersion: 1, id: "fabricname" }),
+      "utf8",
+    );
+    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltLoomOnly, targetPlatform: "quilt" }));
+    assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
+    assert.equal(q.analysis.current.platform, "quilt");
+  } finally {
+    rmSync(quiltLoomOnly, { recursive: true, force: true });
+  }
+
+  const bpRoot = mkdtempSync(join(tmpdir(), "mc-skill-bp-port-"));
+  try {
+    mkdirSync(join(bpRoot, "BP"), { recursive: true });
+    writeFileSync(
+      join(bpRoot, "BP", "manifest.json"),
+      JSON.stringify({
+        format_version: 2,
+        header: { name: "pack", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+        modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+      }),
+      "utf8",
+    );
+    const bp = JSON.parse(await analyzePortingPath({ projectPath: bpRoot }));
+    assert.equal(bp.ok, false, JSON.stringify(bp));
+    assert.equal(bp.error.code, "UNSUPPORTED_PORT");
+    assert.match(String(bp.error.message), /bedrock/i);
+  } finally {
+    rmSync(bpRoot, { recursive: true, force: true });
+  }
+
+  const qslFull = parseToolText(
+    await getDocFull({ platform: "quilt", version: "1.20.1", id: "qsl-qfapi", highlight_key: false }),
+  );
+  assert.notEqual(qslFull.ok, false, JSON.stringify(qslFull.error ?? qslFull).slice(0, 500));
+  assert.equal(qslFull.fallback, null);
+  const qslText = JSON.stringify(qslFull);
+  assert.match(qslText, /QSL|Quilted Fabric API|quilt/i);
+
+  const fabFb = parseToolText(
+    await getDocFull({
+      platform: "quilt",
+      version: "1.20.1",
+      id: "1.20.1/develop_networking",
+      highlight_key: false,
+    }),
+  );
+  assert.equal(fabFb.fallback, "fabric", JSON.stringify(fabFb.error ?? { fallback: fabFb.fallback }).slice(0, 400));
+  assert.ok(fabFb.content || fabFb.meta, JSON.stringify(Object.keys(fabFb)));
+  assert.match(JSON.stringify(fabFb), /network/i);
+
+  const bed = parseToolText(await getBedrockDocFull({ id: "stable/pack-manifest", version: "stable" }));
+  assert.notEqual(bed.ok, false, JSON.stringify(bed.error ?? bed).slice(0, 400));
+  assert.match(JSON.stringify(bed), /manifest/i);
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -1309,6 +1461,7 @@ await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
 await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();
+await testReviewFixes();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

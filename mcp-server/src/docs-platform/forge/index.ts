@@ -22,12 +22,13 @@ import {
   asPlatformDataMissingResult,
   platformDataMissingResult,
   hasPlatformDocData,
+  type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
-import { searchQuiltDocs } from "../quilt-search.js";
+import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -473,18 +474,48 @@ export async function getForgeDocRelated(
 export { createDocStore } from "../store.js";
 export type { IDocStore, Platform } from "../store.js";
 
+function isVersionNotFoundLike(e: unknown): e is { message: string; availableVersions: string[] } {
+  if (!e || typeof e !== "object") return false;
+  const rec = e as { name?: string; availableVersions?: unknown };
+  return rec.name === "VersionNotFoundError" || Array.isArray(rec.availableVersions);
+}
+
+function isDocNotFoundLike(e: unknown): e is { message: string; code?: string; version?: string } {
+  if (!e || typeof e !== "object") return false;
+  const rec = e as { name?: string; id?: unknown; version?: unknown; availableVersions?: unknown };
+  if (Array.isArray(rec.availableVersions)) return false;
+  return rec.name === "DocNotFoundError" || (typeof rec.id === "string" && typeof rec.version === "string");
+}
+
+function asHandlePlatform(platform?: string): DocPlatform {
+  const p = platform ?? "forge";
+  const allowed: DocPlatform[] = [
+    "forge",
+    "neoforge",
+    "fabric",
+    "quilt",
+    "liteloader",
+    "rift",
+    "modloader",
+    "bedrock",
+  ];
+  return (allowed as string[]).includes(p) ? (p as DocPlatform) : "forge";
+}
+
 /** 统一错误处理（各通用 handler 复用）
  *
  * 所有错误统一返回 { ok: false, error: { code, message, hint } } 格式。
  * 成功路径保持原样 JSON.stringify({ query, version, total, results })，不套 envelope。
+ * Quilt/LiteLoader 走 FabricDocStore，错误类与 Forge store 不是同一份，必须 duck-type。
  */
-function handleError(e: unknown): CallToolResult {
+function handleError(e: unknown, platform: string = "forge"): CallToolResult {
   const miss = asPlatformDataMissingResult(e);
   if (miss) return miss;
-  if (e instanceof VersionNotFoundError) {
-    if (e.availableVersions.length === 0) {
-      // 无法从 VersionNotFoundError 区分平台；通用工具默认按消息提示下载
-      return platformDataMissingResult("forge");
+  if (e instanceof VersionNotFoundError || isVersionNotFoundLike(e)) {
+    const rec = e as { message?: string; availableVersions?: string[] };
+    const versions = rec.availableVersions ?? [];
+    if (versions.length === 0) {
+      return platformDataMissingResult(asHandlePlatform(platform));
     }
     return {
       content: [{
@@ -493,21 +524,22 @@ function handleError(e: unknown): CallToolResult {
           ok: false,
           error: {
             code: "VERSION_NOT_FOUND",
-            message: e.message,
-            hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+            message: rec.message ?? String(e),
+            hint: `请使用支持的版本：${versions.join(", ") || "未知"}`,
           },
         }, null, 2),
       }],
     };
   }
-  if (e instanceof DocNotFoundError) {
-    const code = e.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
-    const hint = e.code === "UNSUPPORTED_PLATFORM"
+  if (e instanceof DocNotFoundError || isDocNotFoundLike(e)) {
+    const rec = e as { code?: string; version?: string; message: string };
+    const code = rec.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
+    const hint = rec.code === "UNSUPPORTED_PLATFORM"
       ? "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs"
       : "请使用 search_docs 查询正确的页面 ID";
-    const message = e.code === "UNSUPPORTED_PLATFORM"
-      ? e.version  // 短提示
-      : e.message;
+    const message = rec.code === "UNSUPPORTED_PLATFORM"
+      ? rec.version ?? rec.message
+      : rec.message;
     return {
       content: [{
         type: "text",
@@ -540,7 +572,7 @@ export const listVersionsSchema = {
 如需同时查询多个平台，请分别调用 list_doc_versions({ platform: "forge" }) 和 list_doc_versions({ platform: "fabric" })。
 
 参数说明：
-  - platform: 平台（forge/neoforge/fabric），默认 forge。请先用此工具确认各平台的可用版本。`,
+  - platform: 平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），默认 forge。基岩请用 search_bedrock_docs。`,
   inputSchema: z.object({
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
@@ -568,7 +600,7 @@ export async function listVersions(
     if (e instanceof Error && /未下载|结构不符合预期|数据目录不存在/.test(e.message)) {
       return platformDataMissingResult(platform);
     }
-    return handleError(e);
+    return handleError(e, platform);
   }
 }
 
@@ -576,7 +608,7 @@ export async function listVersions(
 
 export const searchDocsSchema = {
   name: "search_docs",
-  description: `通用文档搜索，支持多平台（Forge/NeoForge/Fabric）。
+  description: `通用文档搜索，支持多平台（Forge/NeoForge/Fabric/Quilt/LiteLoader/Rift/ModLoader）。基岩请用 search_bedrock_docs。
 
 使用方法：
   1. 先调用 search_docs(query) 找出相关页面。
@@ -587,8 +619,8 @@ export const searchDocsSchema = {
   6. ⚠️ 搜索失败时，使用精确术语（如类名、方法名、事件名）重新尝试。
 
 ⚠️ platform 和 version 必须对应：
-  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
-  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）
+  - platform=forge / neoforge / fabric / quilt / liteloader / rift / modloader 时，version 必须是该平台已索引的版本
+  - 基岩请用 search_bedrock_docs，不要用本工具的 platform=bedrock
   混合使用会导致文档查找失败。请先用 list_doc_versions 确认各平台的可用版本。
 
 增强功能：
@@ -790,7 +822,7 @@ export async function searchDocs(
       ],
     };
   } catch (e) {
-    return handleError(e);
+    return handleError(e, args.platform ?? "forge");
   }
 }
 
@@ -799,11 +831,9 @@ export async function searchDocs(
 export const getDocSummarySchema = {
   name: "get_doc_summary",
   description: `获取文档页面的章节骨架与摘要，用于判断是否需要深入。
-支持多平台（platform 参数）。
+支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_summary。
 
-⚠️ platform 和 version 必须对应：
-  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
-  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
+⚠️ platform 和 version 必须对应；Quilt 无此页时会回退 Fabric 全文（warning.fallback=fabric）。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -818,12 +848,16 @@ export const getDocSummarySchema = {
 export async function getDocSummary(
   args: z.infer<typeof getDocSummarySchema.inputSchema>,
 ): Promise<CallToolResult> {
+  const platform = args.platform ?? "forge";
   try {
-    const store = getGenericStore(args.platform ?? "forge");
+    if (platform === "quilt") {
+      return await getQuiltDocSummary({ id: args.id, version: args.version });
+    }
+    const store = getGenericStore(platform);
     const result = store.loadSummary(args.id, args.version);
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   } catch (e) {
-    return handleError(e);
+    return handleError(e, platform);
   }
 }
 
@@ -831,12 +865,10 @@ export async function getDocSummary(
 
 export const getDocFullSchema = {
   name: "get_doc_full",
-  description: `获取文档页面全文，支持多平台（platform 参数）。
+  description: `获取文档页面全文，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_full。
 highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。
 
-⚠️ platform 和 version 必须对应：
-  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
-  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
+⚠️ Quilt 无此页时会回退 Fabric（fallback=fabric）。QSL 不要用 Fabric Registry 页。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -856,8 +888,16 @@ highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显�
 export async function getDocFull(
   args: z.infer<typeof getDocFullSchema.inputSchema>,
 ): Promise<CallToolResult> {
+  const platform = args.platform ?? "forge";
   try {
-    const store = getGenericStore(args.platform ?? "forge");
+    if (platform === "quilt") {
+      return await getQuiltDocFull({
+        id: args.id,
+        version: args.version,
+        highlight_key: args.highlight_key,
+      });
+    }
+    const store = getGenericStore(platform);
     const result = await store.loadFullDoc(
       args.id,
       args.version,
@@ -865,7 +905,7 @@ export async function getDocFull(
     );
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   } catch (e) {
-    return handleError(e);
+    return handleError(e, platform);
   }
 }
 
@@ -873,12 +913,8 @@ export async function getDocFull(
 
 export const getDocRelatedSchema = {
   name: "get_doc_related",
-  description: `获取与指定文档页面相关的其他页面列表，支持多平台。
-返回共享最多关键词的其他页面，按相关性降序排列。
-
-⚠️ platform 和 version 必须对应：
-  - platform=forge 时，version 必须是 Forge 版本（如 1.20.1）
-  - platform=fabric 时，version 必须是 Fabric 版本（如 1.20.1）`,
+  description: `获取与指定文档页面相关的其他页面列表，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。
+返回共享最多关键词的其他页面，按相关性降序排列。基岩请用 get_bedrock_doc_related。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -894,8 +930,12 @@ export const getDocRelatedSchema = {
 export async function getDocRelated(
   args: z.infer<typeof getDocRelatedSchema.inputSchema>,
 ): Promise<CallToolResult> {
+  const platform = args.platform ?? "forge";
   try {
-    const store = getGenericStore(args.platform ?? "forge");
+    if (platform === "quilt") {
+      return getQuiltDocRelated({ id: args.id, version: args.version, limit: args.limit });
+    }
+    const store = getGenericStore(platform);
     const result = store.getRelatedDocs(
       args.id,
       args.version,
@@ -903,6 +943,6 @@ export async function getDocRelated(
     );
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   } catch (e) {
-    return handleError(e);
+    return handleError(e, platform);
   }
 }

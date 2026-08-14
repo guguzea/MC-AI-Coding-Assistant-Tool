@@ -99,17 +99,115 @@ export async function searchQuiltDocs(args: {
     platform: "quilt",
     fallback: "fabric",
     warning: joinSearchWarnings(
-      "无独立 Quilt 文档树，已回退 Fabric（已过滤 FAPI 专属 Registry/ItemGroup 等）。QSL 专用页可能缺失。",
+      "无独立 Quilt 文档树，已回退 Fabric（已过滤 FAPI 专属 Registry/ItemGroup 等）。QSL 专用页可能缺失。取全文可继续 platform=quilt（会自动回退 Fabric）或改 platform=fabric。",
       filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属命中` : undefined,
       missingSemanticDbWarning(semanticHits === null),
       semanticStaleSearchWarning(resolveDataDir(), "fabric", fabricDetailed.resolvedVersion, "fabric-docs"),
     ),
     semantic: semanticHits !== null,
     total: filtered.hits.length,
-    results: filtered.hits,
+    results: filtered.hits.map((h) => ({ ...h, sourcePlatform: "fabric" as const })),
   });
 }
 
 function jsonOk(payload: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
+}
+
+function isDocNotFoundLike(e: unknown): boolean {
+  if (!e || typeof e !== "object") return false;
+  const rec = e as { name?: string; id?: unknown; availableVersions?: unknown; code?: unknown };
+  if (Array.isArray(rec.availableVersions)) return false;
+  if (rec.code === "UNSUPPORTED_PLATFORM") return false;
+  return rec.name === "DocNotFoundError" || typeof rec.id === "string";
+}
+
+const QUILT_FABRIC_FALLBACK_WARNING =
+  "Quilt 无此页，已回退 Fabric 全文。QSL 专用 API 不要用 Fabric Registry 页。";
+
+export async function getQuiltDocSummary(args: { id: string; version: string }): Promise<CallToolResult> {
+  const dataRoot = resolveDataDir();
+  if (hasPlatformDocData("quilt", dataRoot)) {
+    try {
+      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      const result = store.loadSummary(args.id, args.version);
+      return jsonOk({ ...result, platform: "quilt", fallback: null });
+    } catch (e) {
+      if (!isDocNotFoundLike(e)) throw e;
+    }
+  }
+  if (!hasPlatformDocData("fabric", dataRoot)) {
+    return jsonOk({
+      ...platformDataMissingPayload("quilt"),
+      warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
+    });
+  }
+  const result = createFabricDocStore(args.version, "fabric-docs", dataRoot).loadSummary(args.id, args.version);
+  return jsonOk({
+    ...result,
+    platform: "quilt",
+    fallback: "fabric",
+    warning: QUILT_FABRIC_FALLBACK_WARNING,
+  });
+}
+
+export async function getQuiltDocFull(args: {
+  id: string;
+  version: string;
+  highlight_key?: boolean;
+}): Promise<CallToolResult> {
+  const dataRoot = resolveDataDir();
+  const highlight = args.highlight_key ?? true;
+  if (hasPlatformDocData("quilt", dataRoot)) {
+    try {
+      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      const result = await store.loadFullDoc(args.id, args.version, highlight);
+      return jsonOk({ ...result, platform: "quilt", fallback: null });
+    } catch (e) {
+      if (!isDocNotFoundLike(e)) throw e;
+    }
+  }
+  if (!hasPlatformDocData("fabric", dataRoot)) {
+    return jsonOk({
+      ...platformDataMissingPayload("quilt"),
+      warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
+    });
+  }
+  const result = await createFabricDocStore(args.version, "fabric-docs", dataRoot).loadFullDoc(
+    args.id,
+    args.version,
+    highlight,
+  );
+  return jsonOk({
+    ...result,
+    platform: "quilt",
+    fallback: "fabric",
+    warning: QUILT_FABRIC_FALLBACK_WARNING,
+  });
+}
+
+export function getQuiltDocRelated(args: {
+  id: string;
+  version: string;
+  limit?: number;
+}): CallToolResult {
+  const dataRoot = resolveDataDir();
+  const limit = args.limit ?? 5;
+  if (hasPlatformDocData("quilt", dataRoot)) {
+    try {
+      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      return jsonOk(store.getRelatedDocs(args.id, args.version, limit));
+    } catch (e) {
+      if (!isDocNotFoundLike(e)) throw e;
+    }
+  }
+  if (!hasPlatformDocData("fabric", dataRoot)) {
+    return jsonOk({
+      ...platformDataMissingPayload("quilt"),
+      warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
+    });
+  }
+  return jsonOk(
+    createFabricDocStore(args.version, "fabric-docs", dataRoot).getRelatedDocs(args.id, args.version, limit),
+  );
 }

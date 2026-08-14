@@ -77,6 +77,7 @@ export interface SearchLogEntry {
 }
 
 export class DocNotFoundError extends Error {
+  override name = "DocNotFoundError";
   constructor(
     public id: string,
     public version: string,
@@ -87,16 +88,19 @@ export class DocNotFoundError extends Error {
         ? version  // message = "请使用 platform: forge（当前唯一支持的平台）"
         : `Forge 文档未找到: ${id} (版本 ${version})`
     );
+    this.name = "DocNotFoundError";
   }
 }
 
 export class VersionNotFoundError extends Error {
+  override name = "VersionNotFoundError";
   constructor(public version: string, public availableVersions: string[]) {
     super(
       availableVersions.length > 0
         ? `不支持的版本: ${version}。当前仅支持: ${availableVersions.join(", ")}`
         : `不支持的版本: ${version}。文档数据未加载。`,
     );
+    this.name = "VersionNotFoundError";
   }
 }
 

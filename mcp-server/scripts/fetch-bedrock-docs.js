@@ -45,6 +45,31 @@ function sha(s) {
   return createHash("sha256").update(s).digest("hex");
 }
 
+/** 对所有成功抓取页的 raw HTML 做短哈希，避免只哈希第一页导致漏更新。 */
+export function hashRevision(parts) {
+  const list = Array.isArray(parts) ? parts : [String(parts ?? "")];
+  return sha(list.join("\n")).slice(0, 12);
+}
+
+/** 从 @minecraft/server Learn 页抽取稳定模块版本（如 1.14.0）。 */
+export function extractScriptApiStable(html) {
+  if (!html) return null;
+  const near = String(html).match(/@minecraft\/server[\s\S]{0,400}?(\d+\.\d+\.\d+)/i);
+  return near?.[1] ?? null;
+}
+
+function isDirectRun() {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    const a = resolve(fileURLToPath(import.meta.url)).replace(/\\/g, "/").toLowerCase();
+    const b = resolve(entry).replace(/\\/g, "/").toLowerCase();
+    return a === b;
+  } catch {
+    return false;
+  }
+}
+
 async function fetchText(url) {
   let last;
   for (let i = 0; i < 4; i++) {
@@ -82,12 +107,14 @@ async function main() {
   const processed = join(outDir, "processed");
   if (!dry) mkdirSync(processed, { recursive: true });
   const index = [];
-  let remoteRevision = null;
+  const rawParts = [];
+  let scriptServerHtml = null;
   for (const page of PAGES) {
     try {
       const raw = await fetchText(page.url);
+      rawParts.push(raw);
+      if (page.id === "script-server") scriptServerHtml = raw;
       const md = toMd(raw, page.url);
-      if (!remoteRevision) remoteRevision = sha(raw).slice(0, 12);
       if (!dry) writeFileSync(join(processed, `${page.id}.md`), md, "utf8");
       index.push({
         id: `${ver}/${page.id}`,
@@ -107,6 +134,8 @@ async function main() {
     }
   }
   const fetchedAt = new Date().toISOString();
+  const remoteRevision = rawParts.length ? hashRevision(rawParts) : null;
+  const extracted = scriptServerHtml ? extractScriptApiStable(scriptServerHtml) : null;
   const statusPath = join(DATA, "bedrock-docs-status.json");
   let prev = {};
   if (existsSync(statusPath)) {
@@ -119,7 +148,7 @@ async function main() {
   const status = {
     localRevision: remoteRevision ?? prev.localRevision ?? null,
     remoteRevision: remoteRevision ?? prev.remoteRevision ?? null,
-    scriptApiStable: prev.scriptApiStable ?? "1.11.0",
+    scriptApiStable: extracted ?? prev.scriptApiStable ?? "1.11.0",
     scriptApiBeta: prev.scriptApiBeta ?? "beta",
     fetchedAt,
     stale: false,
@@ -133,7 +162,9 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (isDirectRun()) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

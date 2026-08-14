@@ -374,7 +374,7 @@ export function checkDependencies(
   if (detectedLoader !== "bedrock" && detectedLoader !== "modloader" && !/minecraft|forge|neoforge|fabric|quilt|liteloader|rift/i.test(buildGradle)) {
     issues.push("build.gradle 未检测到 minecraft/loader 依赖");
   }
-  if ((detectedLoader === "forge" || /forge/i.test(buildGradle)) && modsToml && !/modLoader\s*=\s*"javafml"/i.test(modsToml)) {
+  if (detectedLoader === "forge" && modsToml && !/modLoader\s*=\s*"javafml"/i.test(modsToml)) {
     issues.push("Forge 项目但 mods.toml modLoader 不是 javafml");
   }
   if (detectedLoader === "forge" && !modsToml) {

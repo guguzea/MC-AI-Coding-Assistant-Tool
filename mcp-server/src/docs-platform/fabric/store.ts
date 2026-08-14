@@ -82,27 +82,44 @@ export interface SearchLogEntry {
   timestamp: number;
 }
 
+function platformDocLabel(platform?: string): string {
+  const map: Record<string, string> = {
+    fabric: "Fabric",
+    quilt: "Quilt",
+    bedrock: "Bedrock",
+    liteloader: "LiteLoader",
+    rift: "Rift",
+    modloader: "ModLoader",
+  };
+  return map[platform ?? ""] ?? (platform ? platform : "Fabric");
+}
+
 export class DocNotFoundError extends Error {
+  override name = "DocNotFoundError";
   constructor(
     public id: string,
     public version: string,
-    public code?: string
+    public code?: string,
+    public platform?: string,
   ) {
     super(
       code === "UNSUPPORTED_PLATFORM"
         ? version  // message = "请使用 platform: fabric"
-        : `Fabric 文档未找到: ${id} (版本 ${version})`
+        : `${platformDocLabel(platform)} 文档未找到: ${id} (版本 ${version})`
     );
+    this.name = "DocNotFoundError";
   }
 }
 
 export class VersionNotFoundError extends Error {
+  override name = "VersionNotFoundError";
   constructor(public version: string, public availableVersions: string[]) {
     super(
       availableVersions.length > 0
         ? `不支持的版本: ${version}。当前仅支持: ${availableVersions.join(", ")}`
         : `不支持的版本: ${version}。文档数据未加载。`,
     );
+    this.name = "VersionNotFoundError";
   }
 }
 
@@ -190,6 +207,136 @@ export class FabricDocStore {
 
   private get defaultVersion(): string {
     return (this as unknown as { _version: string })._version;
+  }
+
+  private indexPath(version: string, name: string): string {
+    return join(this.versionDataDir(version), name);
+  }
+
+  private indexFileExists(version: string, name: string): boolean {
+    return existsSync(this.indexPath(version, name));
+  }
+
+  /** 薄文档树：只有 L0 + processed，没有 L1/L2（Quilt / 基岩 / LiteLoader 等）。 */
+  private isThinL0Tree(version: string): boolean {
+    return this.indexFileExists(version, "index-l0.json") && !this.indexFileExists(version, "index-l1.json");
+  }
+
+  /** 已带版本前缀（1.20.1/... 或 stable/...）则原样，避免 stable/pack-manifest 被收成 stable/stable_pack-manifest。 */
+  private normalizeDocId(id: string, version: string): string {
+    const trimmed = id.trim();
+    if (trimmed.startsWith(`${version}/`)) return trimmed;
+    if (/^(?:\d+\.\d+(?:\.\d+)?|stable)\//.test(trimmed)) return trimmed;
+    return `${version}/${trimmed.replace(/\//g, "_")}`;
+  }
+
+  private notFound(id: string, version: string): never {
+    throw new DocNotFoundError(id, version, undefined, this.dirPrefix);
+  }
+
+  private findL0Entry(id: string, version: string): SearchResult | undefined {
+    const l0 = this.loadIndexL0(version);
+    const normalized = this.normalizeDocId(id, version);
+    const bare = normalized.replace(/^(?:\d+\.\d+(?:\.\d+)?|stable)\//, "");
+    return l0.find(
+      (e) => e.id === normalized || e.id === id || e.id === bare || e.id.endsWith(`/${bare}`),
+    );
+  }
+
+  private processedFileFor(entryId: string): string {
+    const bare = entryId.replace(/^(?:\d+\.\d+(?:\.\d+)?|stable)\//, "");
+    return `processed/${bare}.md`;
+  }
+
+  private firstParagraph(md: string): string {
+    const lines = md
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter((l) => l && !l.startsWith(">") && !l.startsWith("#"));
+    return (lines[0] ?? md.replace(/\s+/g, " ").trim().slice(0, 240)).slice(0, 400);
+  }
+
+  private readProcessedFile(version: string, processedFile: string, id: string): string {
+    const cacheKey = `${version}/${processedFile}`;
+    const cached = this.fileCache.get(cacheKey);
+    if (cached && cached.expiry > Date.now()) return cached.data;
+    const versionRoot = resolve(this.versionDataDir(version));
+    const resolved = resolve(versionRoot, processedFile);
+    if (!resolved.startsWith(versionRoot) || !existsSync(resolved)) {
+      this.notFound(id, version);
+    }
+    const content = readFileSync(resolved, "utf-8");
+    this.fileCache.set(cacheKey, {
+      data: content,
+      expiry: Date.now() + FabricDocStore.CACHE_TTL,
+    });
+    return content;
+  }
+
+  private l0ToSummary(entry: SearchResult, content: string): SummaryResult {
+    return {
+      id: entry.id,
+      version: entry.version,
+      label: entry.label,
+      url: entry.url,
+      tags: entry.tags ?? [],
+      firstParagraph: this.firstParagraph(content),
+      sections: [{ title: entry.label, level: 1, summary: this.firstParagraph(content) }],
+    };
+  }
+
+  private l0ToL2(entry: SearchResult, processedFile: string, content: string): L2Entry {
+    const ticks = content.match(/```/g)?.length ?? 0;
+    return {
+      id: entry.id,
+      version: entry.version,
+      label: entry.label,
+      url: entry.url,
+      tags: entry.tags ?? [],
+      sections: [{ title: entry.label, level: 1, summary: this.firstParagraph(content) }],
+      hasCodeBlocks: ticks >= 2,
+      codeBlockCount: Math.floor(ticks / 2),
+      keySections: 0,
+      file: processedFile,
+      processedFile,
+    };
+  }
+
+  private loadSummaryFromL0(id: string, version: string): SummaryResult {
+    const entry = this.findL0Entry(id, version);
+    if (!entry) this.notFound(id, version);
+    const processedFile = this.processedFileFor(entry.id);
+    const content = this.readProcessedFile(version, processedFile, id);
+    return this.l0ToSummary(entry, content);
+  }
+
+  private async loadFullDocFromL0(
+    id: string,
+    version: string,
+    highlightKey?: boolean,
+  ): Promise<FullDocResult> {
+    const entry = this.findL0Entry(id, version);
+    if (!entry) this.notFound(id, version);
+    const processedFile = this.processedFileFor(entry.id);
+    const content = this.readProcessedFile(version, processedFile, id);
+    return this.buildResult(content, this.l0ToL2(entry, processedFile, content), highlightKey);
+  }
+
+  private getRelatedDocsFromL0(id: string, version: string, limit: number): SearchResult[] {
+    const current = this.findL0Entry(id, version);
+    if (!current) this.notFound(id, version);
+    const tags = new Set((current.tags ?? []).map((t) => t.toLowerCase()));
+    const l0 = this.loadIndexL0(version);
+    return l0
+      .filter((e) => e.id !== current.id)
+      .map((e) => ({
+        e,
+        overlap: (e.tags ?? []).filter((t) => tags.has(String(t).toLowerCase())).length,
+      }))
+      .filter((x) => x.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap)
+      .slice(0, limit)
+      .map((x) => x.e);
   }
 
   /** Resolve on-disk directory for a MC version under this store. */
@@ -368,6 +515,15 @@ export class FabricDocStore {
     const cached = this.relatedCache.get(cacheKey);
     if (cached) return cached;
 
+    if (!this.indexFileExists(version, "index-l2.json")) {
+      if (this.indexFileExists(version, "index-l0.json")) {
+        const thin = this.getRelatedDocsFromL0(id, version, limit);
+        this.relatedCache.set(cacheKey, thin);
+        return thin;
+      }
+      throw new VersionNotFoundError(version, this.getAvailableVersions());
+    }
+
     let l2: L2Entry[];
     try {
       l2 = this.loadIndexL2(version);
@@ -375,8 +531,9 @@ export class FabricDocStore {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
 
-    const current = l2.find((e) => e.id === id);
-    if (!current) throw new DocNotFoundError(id, version);
+    const normalized = this.normalizeDocId(id, version);
+    const current = l2.find((e) => e.id === normalized || e.id === id);
+    if (!current) this.notFound(id, version);
 
     const pathKws = this.extractPathKeywords(id);
     const sectionKws = current.sections
@@ -419,19 +576,20 @@ export class FabricDocStore {
    */
   loadSummary(id: string, version: string): SummaryResult {
     this.ensureValidated();
+    if (this.isThinL0Tree(version) || !this.indexFileExists(version, "index-l1.json")) {
+      return this.loadSummaryFromL0(id, version);
+    }
     const index = this.loadIndexL1(version);
-    const normalized = id.match(/^\d+\.\d+\.\d+\//)
-      ? id
-      : `${version}/${id.replace(/\//g, "_")}`;
-    const entry = index.find((e) => e.id === normalized);
+    const normalized = this.normalizeDocId(id, version);
+    const entry = index.find((e) => e.id === normalized || e.id === id);
     if (!entry) {
-      throw new DocNotFoundError(id, version);
+      this.notFound(id, version);
     }
     return entry;
   }
 
   /**
-   * L2/L2+ 全文加载。
+   * L2/L2+ 全文加载；薄树回退到 index-l0.json + processed/*.md。
    */
   async loadFullDoc(
     id: string,
@@ -439,13 +597,14 @@ export class FabricDocStore {
     highlightKey?: boolean,
   ): Promise<FullDocResult> {
     this.ensureValidated();
+    if (this.isThinL0Tree(version) || !this.indexFileExists(version, "index-l2.json")) {
+      return this.loadFullDocFromL0(id, version, highlightKey);
+    }
     const l2 = this.loadIndexL2(version);
-    const normalized = id.match(/^\d+\.\d+\.\d+\//)
-      ? id
-      : `${version}/${id.replace(/\//g, "_")}`;
-    const meta = l2.find((e) => e.id === normalized);
+    const normalized = this.normalizeDocId(id, version);
+    const meta = l2.find((e) => e.id === normalized || e.id === id);
     if (!meta) {
-      throw new DocNotFoundError(id, version);
+      this.notFound(id, version);
     }
 
     const cacheKey = `${version}/${meta.processedFile}`;
@@ -458,7 +617,7 @@ export class FabricDocStore {
       const versionRoot = resolve(this.versionDataDir(version));
       const resolved = resolve(versionRoot, meta.processedFile);
       if (!resolved.startsWith(versionRoot) || !existsSync(resolved)) {
-        throw new DocNotFoundError(id, version);
+        this.notFound(id, version);
       }
       content = readFileSync(resolved, "utf-8");
       this.fileCache.set(cacheKey, {

@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
 import { parseGradleProperties } from "../gradle/index.js";
+import { detectLoader } from "../diagnostics/index.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -76,6 +77,12 @@ function pathRel(projectRoot: string, filePath: string): string {
   return relative(projectRoot, filePath).replace(/\\/g, "/");
 }
 
+function readAddonManifestIfValid(filePath: string): string {
+  const text = readContent(filePath);
+  if (text && /"format_version"/.test(text) && /"modules"/.test(text)) return text;
+  return "";
+}
+
 // ── 平台推断 ────────────────────────────────────────────────────────────────
 
 function inferPlatform(evidence: PlatformEvidence): { platform: string; ambiguous: boolean } {
@@ -123,11 +130,17 @@ function addBuildMetadataEvidence(
     evidence.neoforge += 4;
   }
 
-  // Forge
+  const riftOrLitePlugin =
+    /net\.minecraftforge\.gradle\.tweaker-client|RiftLoaderClientTweaker|net\.minecraftforge\.gradle\.liteloader/i.test(
+      build,
+    );
+
+  // Forge（tweaker-client / liteloader 插件都含 minecraftforge 子串，不可算成纯 Forge）
   if (
-    /net\.minecraftforge/.test(build) ||
-    /minecraftforge\.gradle/.test(build) ||
-    /['"]net\.minecraftforge:forge:/.test(build)
+    !riftOrLitePlugin &&
+    (/net\.minecraftforge/.test(build) ||
+      /minecraftforge\.gradle/.test(build) ||
+      /['"]net\.minecraftforge:forge:/.test(build))
   ) {
     evidence.forge += 4;
   }
@@ -138,12 +151,12 @@ function addBuildMetadataEvidence(
     }
   }
 
-  // Quilt（优先于 Fabric：同时有 quilt.mod.json 与 fabric.mod.json 时 quilt 分更高）
+  // Quilt（须压过 fabric-loom + fabric.mod.json 的 7 分；无 json 仅 loom 时也能赢）
   if (
     /org\.quiltmc\.loom|quilt-loom|quilt\.mod\.json/.test(build) ||
     files.quiltJson
   ) {
-    evidence.quilt += 5;
+    evidence.quilt += 8;
   }
 
   // Fabric
@@ -410,7 +423,6 @@ export async function analyzePortingPath(args: unknown) {
   const riftmodJson =
     readContent(join(root, "src/main/resources/riftmod.json")) ||
     readContent(join(root, "src/main/resources/rift.mod.json"));
-  const bedrockManifest = readContent(join(root, "manifest.json"));
 
   if (quiltJson) {
     try {
@@ -420,7 +432,7 @@ export async function analyzePortingPath(args: unknown) {
       // ignore
     }
   }
-  if (fabricJson) {
+  if (!modId && fabricJson) {
     try {
       const parsed = JSON.parse(fabricJson);
       modId = parsed.id ?? null;
@@ -441,6 +453,13 @@ export async function analyzePortingPath(args: unknown) {
     modId = props.mod_id ?? props.modId ?? null;
   }
 
+  const bedrockManifest =
+    readAddonManifestIfValid(join(root, "manifest.json")) ||
+    readAddonManifestIfValid(join(root, "BP", "manifest.json")) ||
+    readAddonManifestIfValid(join(root, "RP", "manifest.json")) ||
+    readAddonManifestIfValid(join(root, "behavior_pack", "manifest.json")) ||
+    readAddonManifestIfValid(join(root, "resource_pack", "manifest.json"));
+
   const hasBuild = Boolean(buildGradle.trim() || buildGradleKts.trim() || settingsGradle.trim());
   const hasMeta = Boolean(
     modsToml.trim() ||
@@ -449,14 +468,15 @@ export async function analyzePortingPath(args: unknown) {
       quiltJson.trim() ||
       litemodJson.trim() ||
       riftmodJson.trim() ||
-      (bedrockManifest.trim() && /"format_version"/.test(bedrockManifest) && /"modules"/.test(bedrockManifest)),
+      bedrockManifest,
   );
   if (!hasBuild && !hasMeta) {
     const e: AnalyzePortingError = {
       ok: false,
       error: {
         code: "NOT_A_MOD_PROJECT",
-        message: "未识别为模组工程（无 build.gradle / mods.toml / fabric.mod.json）",
+        message:
+          "未识别为模组工程（无 build.gradle / mods.toml / fabric.mod.json / quilt.mod.json / litemod.json / riftmod.json / 基岩 manifest）",
       },
     };
     return JSON.stringify(e);
@@ -475,6 +495,7 @@ export async function analyzePortingPath(args: unknown) {
   let networkUsages = 0;
   let mixinConfigs = 0;
   let clientOnlyAnnotations = 0;
+  let hasBaseMod = false;
 
   const evidence: PlatformEvidence = { forge: 0, fabric: 0, neoforge: 0, quilt: 0 };
 
@@ -488,6 +509,9 @@ export async function analyzePortingPath(args: unknown) {
     evidence.fabric += (content.match(/import net\.fabricmc\./g) ?? []).length;
     evidence.neoforge += (content.match(/import net\.neoforged\./g) ?? []).length;
     evidence.quilt += (content.match(/import org\.quiltmc\./g) ?? []).length;
+    if (/extends\s+BaseMod\b/.test(content) && !/net\.minecraftforge|cpw\.mods\.fml/.test(content)) {
+      hasBaseMod = true;
+    }
 
     // 统计
     if (/DeferredRegister|RegistryObject|FabricRegistry\.INSTANCE/g.test(content)) registryCalls++;
@@ -523,26 +547,20 @@ export async function analyzePortingPath(args: unknown) {
     clientOnlyAnnotations,
   };
 
-  // 4. 平台推断
+  // 4. 平台推断（与 check_dependencies 同一套 detectLoader，避免 tweaker-client 被收成 Forge）
   const { platform: inferredPlatform, ambiguous } = inferPlatform(evidence);
-  let currentPlatform = inferredPlatform;
-  if (quiltJson.trim()) currentPlatform = "quilt";
-  else if (riftmodJson.trim()) currentPlatform = "rift";
-  else if (
-    bedrockManifest.trim() &&
-    /"format_version"/.test(bedrockManifest) &&
-    /"modules"/.test(bedrockManifest)
-  ) {
-    currentPlatform = "bedrock";
-  } else if (litemodJson.trim()) {
-    currentPlatform = "liteloader";
-  } else if (
-    allSourceFiles.some((f) => {
-      const c = readContent(f);
-      return /extends\s+BaseMod\b/.test(c) && !/net\.minecraftforge|cpw\.mods\.fml/.test(c);
-    })
-  ) {
-    currentPlatform = "modloader";
+  const gradleBlob = [buildGradle, buildGradleKts, settingsGradle].join("\n") +
+    (hasBaseMod ? "\npublic class mod_PortingDetect extends BaseMod {}\n" : "");
+  const detected = detectLoader(gradleBlob, modsToml, fabricJson, neoforgeModsToml, {
+    quiltModJson: quiltJson,
+    litemodJson,
+    riftmodJson,
+    addonManifest: bedrockManifest,
+  });
+  let currentPlatform: string = detected === "liteloader_forge" ? "liteloader" : detected;
+  if (currentPlatform === "unknown") {
+    if (litemodJson.trim() || /LiteMod|litemod\.json/i.test(gradleBlob)) currentPlatform = "liteloader";
+    else currentPlatform = inferredPlatform;
   }
 
   const UNSUPPORTED_PORT = new Set(["liteloader", "rift", "modloader", "bedrock"]);

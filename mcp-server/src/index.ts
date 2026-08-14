@@ -144,6 +144,10 @@ export const getVersionInfoSchema = z.object({
 export const diagnoseGradleSchema = z.object({
   buildGradle: z.string().describe("build.gradle 文件内容"),
   gradleProperties: z.string().optional().describe("gradle.properties 文件内容"),
+  litemodJson: z.string().optional().describe("litemod.json 全文（extras；gradle 正文看不到时仍按 LiteLoader 处理）"),
+  riftmodJson: z.string().optional().describe("riftmod.json 全文"),
+  addonManifest: z.string().optional().describe("基岩 manifest.json 全文"),
+  quiltModJson: z.string().optional().describe("quilt.mod.json 全文"),
 });
 
 export const generateDatagenSchema = z.object({
@@ -374,8 +378,15 @@ server.registerTool(
       "含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。",
     inputSchema: diagnoseGradleSchema,
   },
-  async ({ buildGradle, gradleProperties }): Promise<CallToolResult> => {
-    const result = diagnoseGradle({ buildGradle, gradleProperties });
+  async ({ buildGradle, gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson }): Promise<CallToolResult> => {
+    const result = diagnoseGradle({
+      buildGradle,
+      gradleProperties,
+      litemodJson,
+      riftmodJson,
+      addonManifest,
+      quiltModJson,
+    });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );

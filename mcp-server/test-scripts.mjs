@@ -32,4 +32,13 @@ assert.equal(escaped.rows[0].desc, 'contains "quoted", comma');
 const malformed = parseCSV('name,desc\nfoo,"unterminated');
 assert.ok(malformed.errors.some((error) => error.includes("unterminated")));
 
+const { hashRevision, extractScriptApiStable } = await import("./scripts/fetch-bedrock-docs.js");
+assert.notEqual(hashRevision(["page-one-raw", "page-two-raw"]), hashRevision(["page-one-raw"]));
+assert.equal(hashRevision(["a", "b"]), hashRevision(["a", "b"]));
+assert.equal(
+  extractScriptApiStable("See @minecraft/server module version 1.14.0 in the table"),
+  "1.14.0",
+);
+assert.equal(extractScriptApiStable("<p>no versions here</p>"), null);
+
 console.log("script helper regression tests passed");
