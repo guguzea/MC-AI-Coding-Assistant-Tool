@@ -13,15 +13,18 @@
 
 Java 8。映射：混合工程钉 `mappings = 'stable_39'`（社区 1.12.2 常见兼容值，来自当时 FG/LiteLoader 文档，不要臆造 snapshot）。
 
-已核实 API（hempflower 镜像 / LiteMod 源码）：
+已核实 API（hempflower 镜像 / LiteMod 源码 + 2026-08-15 GitLab 1.12.2 打开）：
 
 - `LiteMod`: `getVersion()`, `init(File)`, `upgradeSettings(...)`
 - `Listener.getName()`
 - `Tickable.onTick(Minecraft, float, boolean, boolean)`
 - `ChatFilter.onChat` / `ChatListener.onChat`
-- `OutboundChatListener.onSendChatMessage(CPacketChatMessage, String)`（混合工程客户端聊天命令用这个）
+- `OutboundChatListener.onSendChatMessage(CPacketChatMessage, String)`
+- `HUDRenderListener.onPreRenderHUD/onPostRenderHUD(int, int)`
+- `RenderListener.onRender / onRenderGui(GuiScreen) / onSetupCameraTransform`
+- `PluginChannelListener.onCustomPayload(String, PacketBuffer)` + `getChannels()`（经 CommonPluginChannelListener；不要直接实现 Common*）
 
-缺名则拒绝臆造。`query_api` 无 1.12 Parchment 完整树。`diagnose_gradle` 对 liteloader 插件走轻量模式。
+完整表：`knowledge/common/verified-api.md`。缺名则拒绝臆造。`query_api` 无 1.12 Parchment 完整树。`diagnose_gradle` 对 liteloader 插件走轻量模式。
 
 ### 本规则集的 IDE 加载优先级
 

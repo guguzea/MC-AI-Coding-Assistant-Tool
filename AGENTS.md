@@ -37,7 +37,13 @@ id 'org.quiltmc.loom'
 id 'fabric-loom'
 ```
 
-如果匹配 → 跳转到 `fabric/<mc版本>/AGENTS.md`
+如果匹配 → 跳转到 `fabric/<mc版本>/AGENTS.md`。
+
+**例外（禁止读邻版 01–10）：**
+
+- 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
+- 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。
+
 
 ### 3. 检查 NeoForge
 
@@ -50,7 +56,9 @@ neoforge "20.4.237"
 id 'net.neoforged.gradle.userdev'
 ```
 
-如果匹配 → 跳转到 `neoforge/AGENTS.md`
+如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再跳转 `neoforge/<mc版本>/AGENTS.md`（六档：`1.20.4` / `1.21.1` / `1.21.3` / `1.21.8` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10。** 未建档版本（文档有、规则树无）：`1.20.1`、`1.20.6`、`1.21.5`、`1.21.10` — **禁止**用 1.20.4 或 1.21.11 顶上，改口 `search_neoforge_docs`（NeoForge 1.20.1 已有 Forge 兼容数据）。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
+
+工作流提醒（**不是硬门**）：仅当用户要走完整新方块 / 新实体 / GUI / 崩溃分诊 / 移植 / 从零构建 / 真机循环 / 汉化 / 反编译研究时才调用 `get_workflow_template`。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。从零工程才 `download_official_mdk`。
 
 ### 4. 检查 LiteLoader（含 Forge 混合）
 
@@ -233,10 +241,10 @@ Decision: 选择注册方式
 | `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint） |
 | `get_version_info` | 查询版本支持的 API 范围 |
 | `mc_skill_update` | 检查/应用 tooling+data 更新（GitHub Release；确认后可写盘） |
-| `diagnose_gradle` | 诊断 Gradle 构建问题 |
+| `diagnose_gradle` | 诊断 Gradle 构建问题。ForgeGradle 专用；liteloader 插件走轻量模式。可选 extras：`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`。Rift / BaseMod 早退。 |
 | `generate_datagen` | 生成数据生成器代码 |
 | `crash_analyze` | 分析崩溃日志 |
-| `validate_project` | 校验模组项目结构 |
+| `validate_project` | 校验模组项目结构。非 Forge **早退**（warning 改口），不是通用校验器。Forge 才跑 mods.toml / DeferredRegister。 |
 | `search_forge_docs` / `get_forge_doc_*` | Forge 文档 |
 | `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
@@ -248,7 +256,7 @@ Decision: 选择注册方式
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
 | `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
-| `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流与知识 URI（tools 兜底） |
+| `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调）与知识 URI |
 | `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |
@@ -261,7 +269,7 @@ Decision: 选择注册方式
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
 - **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `search_*_docs` 或反编译。
-- **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。`diagnose_gradle` 对 `net.minecraftforge.gradle.liteloader` 走轻量模式（不跑 FG6/Java17/1.20）。基岩 / Quilt Loom / 无 Gradle 的 MCP 工程不要当 Forge 诊断。
+- **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。`diagnose_gradle` 对 `net.minecraftforge.gradle.liteloader` 走轻量模式（不跑 FG6/Java17/1.20），并接受 extras（`litemodJson` 等）；Rift / BaseMod 早退。`validate_project` 对非 Forge **早退改口**，不跑 DeferredRegister/@Mod。基岩 / Quilt Loom / 无 Gradle 的 MCP 工程不要当 Forge 诊断。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
 - **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
 - **写盘类默认 dryRun**（`port_project` / `mc_skill_update apply`）；`generate_*` 只吐文本。

@@ -1,4 +1,23 @@
 # 04 — 实体成对
 
-client_entity（RP）与 `minecraft:entity`（BP）identifier 必须一致。
-不要用 Java EntityType / DeferredRegister。
+client_entity（RP）与 `minecraft:entity`（BP）identifier 必须一致。不要用 Java EntityType / DeferredRegister。
+
+## Decision Flow
+
+```
+→ 新建实体 → 先读 stable/entity-behavior-intro
+→ 填组件 → 只使用 stable/entity-components 列出的组件名；表外禁止臆造
+→ RP 外观/动画 → stable/resource-pack；Molang 查询见 06
+→ identifier 必须 namespace:name，RP/BP 相同
+```
+
+## 已核实约束
+
+- identifier 形如 `namespace:name`，RP `client_entity` 与 BP `minecraft:entity` **同一字符串**。
+- 组件表：`search_bedrock_docs` id `stable/entity-components`。表里没有的名字禁止输出。
+- 生成骨架文本可用 `generate_bp_entity`（只吐 JSON，不写盘）。写盘前仍须对照该组件表。
+- 脚本里操控实体用 `@minecraft/server` 的 `Entity`（见 07），不是 Fabric `EntityType`。
+
+## 文档
+
+`stable/entity-behavior-intro`、`stable/entity-components`、`stable/resource-pack`。

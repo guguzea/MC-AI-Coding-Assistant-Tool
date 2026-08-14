@@ -4,4 +4,6 @@ description: 04 — 实体
 
 # 04 — 实体
 
-目录中有 `EntityTypeAdder` **仅类名核实**。缺方法签名则停止生成，提示打开 GitHub `org.dimdev.rift.listener` 或 summaries。
+`EntityTypeAdder.registerEntityTypes()`。渲染用 client `EntityRendererAdder.addEntityRenderers(...)`。
+TE：`TileEntityTypeAdder.registerTileEntityTypes()` + client `TileEntityRendererAdder`。
+表外禁止臆造。

@@ -376,6 +376,29 @@ section("mod-analyzer");
     assert.ok(!r.warnings.some((w) => /多个 loader/.test(w)), `warnings=${JSON.stringify(r.warnings)}`);
   });
 
+  test("quilt entrypoint { value: com.example.X }", () => {
+    const quiltJar = join(tmpRoot, "quilt-value-ep.jar");
+    writeFileSync(
+      quiltJar,
+      makeZip([
+        {
+          name: "quilt.mod.json",
+          data: JSON.stringify({
+            schema_version: 1,
+            quilt_loader: {
+              id: "qval",
+              version: "1.0.0",
+              entrypoints: { init: { value: "com.example.X" } },
+            },
+          }),
+        },
+      ]),
+    );
+    const r = analyzeModJar(quiltJar);
+    assert.equal(r.found, true);
+    assert.deepEqual(r.entrypoints?.init, ["com.example.X"]);
+  });
+
   rmSync(tmpRoot, { recursive: true, force: true });
 }
 

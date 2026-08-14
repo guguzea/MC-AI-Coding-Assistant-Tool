@@ -1,0 +1,203 @@
+{
+  "file": "1.20.4-neoforge",
+  "mappingsVersion": "mojmap-neoform-1.20.4",
+  "mapping": "mojmap",
+  "source": "official-raw",
+  "cacheDir": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge",
+  "classCount": 7,
+  "classes": [
+    {
+      "fqcn": "net.neoforged.neoforge.registries.DeferredHolder",
+      "simpleName": "DeferredHolder",
+      "pkg": "net.neoforged.neoforge.registries",
+      "methods": [
+        "create",
+        "value",
+        "get",
+        "asOptional",
+        "isBound",
+        "getRegistry",
+        "bind",
+        "getId",
+        "getKey",
+        "equals",
+        "hashCode",
+        "toString",
+        "is",
+        "tags",
+        "unwrapKey",
+        "kind",
+        "canSerializeIn"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/DeferredHolder.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.registries.DeferredRegister",
+      "simpleName": "DeferredRegister",
+      "pkg": "net.neoforged.neoforge.registries",
+      "methods": [
+        "createItems",
+        "createBlocks",
+        "makeRegistry",
+        "getRegistry",
+        "createTagKey",
+        "addAlias",
+        "register",
+        "getRegistryName",
+        "getNamespace",
+        "addEntries",
+        "addRegistry",
+        "registerSimpleBlock",
+        "registerSimpleBlockItem",
+        "registerSimpleItem"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/DeferredRegister.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.IPayloadRegistrar",
+      "simpleName": "IPayloadRegistrar",
+      "pkg": "net.neoforged.neoforge.network.registration",
+      "methods": [
+        "play",
+        "versioned",
+        "optional"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/IPayloadRegistrar.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.NetworkRegistry",
+      "simpleName": "NetworkRegistry",
+      "pkg": "net.neoforged.neoforge.network.registration",
+      "methods": [
+        "getInstance",
+        "setup",
+        "onModdedPacketAtServer",
+        "onModdedPacketAtClient",
+        "onModdedConnectionDetectedAtServer",
+        "onVanillaOrOtherConnectionDetectedAtServer",
+        "canSendPacket",
+        "shouldSendPacketRaw",
+        "getKnownAdHocChannelsOfOtherEnd",
+        "isAdhocConfigurationChannelReadable",
+        "isAdhocPlayChannelReadable",
+        "onNetworkQuery",
+        "onModdedNetworkConnectionEstablished",
+        "onVanillaNetworkConnectionEstablished",
+        "isConnected",
+        "configureMockConnection",
+        "onMinecraftRegister",
+        "onMinecraftUnregister",
+        "getInitialServerListeningChannels",
+        "getInitialServerUnregisterChannels",
+        "getInitialClientListeningChannels",
+        "onConfigurationFinished",
+        "execute",
+        "submitAsync",
+        "eventLoop",
+        "handle",
+        "disconnect",
+        "send"
+      ],
+      "apiStatusInternal": true,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/NetworkRegistry.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
+      "simpleName": "PacketDistributor",
+      "pkg": "net.neoforged.neoforge.network",
+      "methods": [
+        "p",
+        "send",
+        "flow",
+        "with",
+        "noArg",
+        "playerConsumer",
+        "playerListDimConsumer",
+        "playerListAll",
+        "clientToServer",
+        "playerListPointConsumer",
+        "trackingEntity",
+        "trackingEntityAndSelf",
+        "trackingChunk",
+        "getServer"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/PacketDistributor.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.handling.PlayPayloadContext",
+      "simpleName": "PlayPayloadContext",
+      "pkg": "net.neoforged.neoforge.network.handling",
+      "methods": [
+        "protocol"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/PlayPayloadContext.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent",
+      "simpleName": "RegisterPayloadHandlerEvent",
+      "pkg": "net.neoforged.neoforge.network.event",
+      "methods": [
+        "registrar"
+      ],
+      "apiStatusInternal": true,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.20.4-neoforge/RegisterPayloadHandlerEvent.java"
+    }
+  ],
+  "fetched": [
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/network/event/RegisterPayloadHandlerEvent.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/network/registration/IPayloadRegistrar.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/network/registration/NetworkRegistry.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/network/handling/PlayPayloadContext.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/network/PacketDistributor.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/registries/DeferredRegister.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/1.20.4/src/main/java/net/neoforged/neoforge/registries/DeferredHolder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    }
+  ],
+  "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。"
+}

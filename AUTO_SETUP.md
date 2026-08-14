@@ -179,7 +179,7 @@ MC_SKILL_PROJECT_ROOT=<目标模组项目绝对路径>
 |------|------|
 | `MC_SKILL_STRICT=1` | 数据无效则 MCP 启动失败 |
 | `MC_SKILL_DEBUG_PATHS=1` | 打印路径解析（排障） |
-| `MC_SKILL_CACHE` | 反编译缓存根 |
+| `MC_SKILL_CACHE` | 反编译 / MDK zip / loader jar 缓存根。**MCP 运行时（`resolveCacheRoot`）与仓库脚本（如 `decompile-loader-apis.mjs`）都读此变量。** 不设则可能分家：MCP 默认 `%APPDATA%/mc-skill-cache`（Unix `~/.config/mc-skill-cache`），脚本默认 `D:\mc-skill-temp`。请设成同一路径。不要改 `resolveCacheRoot` 去探测 D 盘。 |
 | `HTTPS_PROXY` / `HTTP_PROXY` | Node fetch 代理（更新 / 下载） |
 | `MCP_TIMEOUT_MS` | 本仓库测试脚本超时，**不是**宿主拉起 MCP 的超时 |
 

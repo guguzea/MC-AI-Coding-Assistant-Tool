@@ -4,4 +4,5 @@ description: 02 — 方块
 
 # 02 — 方块
 
-只用表内 `Block` / `ModLoader.registerBlock`。缺名则停。
+只用表内 `Block` / `ModLoader.registerBlock(Block)` 或 `registerBlock(Block, Class)`。
+`World.setBlock` / `World.getBlockId`。缺名则停。禁止 1.8+ `Block.Properties`。

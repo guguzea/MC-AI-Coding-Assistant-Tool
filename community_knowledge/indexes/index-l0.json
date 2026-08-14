@@ -70,6 +70,23 @@
       "mcHint": ""
     },
     {
+      "id": "authored/fabric-26.2-overview",
+      "label": "Fabric 26.2 概述（官方博客摘录）",
+      "path": "authored/fabric-26.2-overview.md",
+      "url": "https://fabricmc.net/2026/06/15/262.html",
+      "tags": [
+        "26.2",
+        "fabric",
+        "loom",
+        "vulkan",
+        "porting"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Loom 1.17 / Gradle 9.5.1；Vulkan 实验后端；BlockIds DataGen；gui.setScreen。短文不是 API 规范。",
+      "mcHint": ""
+    },
+    {
       "id": "authored/forge-dev-env-pitfalls",
       "label": "Forge 开发环境常见坑（Parchment / 证书 / assets / Git）",
       "path": "authored/forge-dev-env-pitfalls.md",
@@ -1260,6 +1277,23 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/neoforge-26.1-deobfuscation",
+      "label": "NeoForge 26.1 去混淆（官方博客摘录）",
+      "path": "authored/neoforge-26.1-deobfuscation.md",
+      "url": "https://neoforged.net/news/26.1release/",
+      "tags": [
+        "26.1",
+        "neoforge",
+        "mappings",
+        "mojmap",
+        "parchment"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Mojang 在 26.1 去掉混淆；NeoForm 版本号改为 `<mc>-<build>`；可删 Parchment 配置。短文不是 API 规范。",
+      "mcHint": ""
+    },
+    {
       "id": "authored/patterns-framework",
       "label": "代码模式库怎么用（knowledge/patterns）",
       "path": "authored/patterns-framework.md",
@@ -1330,6 +1364,21 @@
       "mcHint": ""
     },
     {
+      "id": "links/fabric-26.2-blog",
+      "label": "Fabric for Minecraft 26.2（官方博客，外链）",
+      "path": "links/fabric-26.2-blog.md",
+      "url": "https://fabricmc.net/2026/06/15/262.html",
+      "tags": [
+        "official",
+        "fabric",
+        "26.2"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "Loom 1.17、Vulkan 后端、BlockIds DataGen、GUI setScreen 迁移。不是 API 规范。",
+      "mcHint": ""
+    },
+    {
       "id": "links/forge-docs-official",
       "label": "Forge 官方文档（外链）",
       "path": "links/forge-docs-official.md",
@@ -1362,6 +1411,22 @@
       "priority": "🟢",
       "summary": "作者 Kadar_Visico；Forge 1.20.1 工程骨架与工业机器全链路。文首禁止转载，本库仅外链；实务要点见 authored 自写短文。",
       "mcHint": "1.20.1"
+    },
+    {
+      "id": "links/neoforge-26.1-release",
+      "label": "NeoForge for Minecraft 26.1（官方博客，外链）",
+      "path": "links/neoforge-26.1-release.md",
+      "url": "https://neoforged.net/news/26.1release/",
+      "tags": [
+        "official",
+        "neoforge",
+        "26.1",
+        "mappings"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "26.1 去混淆、NeoForm 版本号变化、可移除 Parchment。不是 API 规范。",
+      "mcHint": ""
     },
     {
       "id": "mcmod-3993/crash-publishing",

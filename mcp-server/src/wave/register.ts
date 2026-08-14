@@ -24,6 +24,7 @@ import { mcSkillUpdate } from "../update/index.js";
 import { localizeMod } from "../localize/index.js";
 import { lookupObfuscated } from "../mappings/index.js";
 import { validateAtHandler, validateAwHandler } from "../mixin/index.js";
+import { downloadOfficialMdk } from "../mdk/index.js";
 import {
   getMinecraftSourceHandler,
   analyzeModJarHandler,
@@ -100,7 +101,7 @@ export const generateLangSchema = z.object({
 export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
   packetName: z.string(),
-  platform: z.enum(["forge_1.20.1", "neoforge_1.21"]).optional(),
+  platform: z.enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21"]).optional(),
 });
 export const generateCapabilitySchema = z.object({
   modId: z.string(),
@@ -117,7 +118,12 @@ export const analyzeLogSchema = z.object({
   logText: z.string(),
   version: z.string().optional(),
 });
-export const getMigrationGuideSchema = z.object({ route: z.string() });
+export const getMigrationGuideSchema = z.object({
+  route: z.string().describe("迁移路线，如 1.21.11->26.1 或 forge->neoforge"),
+  full: z.boolean().optional().describe("默认 false：只返回 Primer 目录；true 才返回全文。与 section 同时传时以 section 为准"),
+  section: z.string().optional().describe("只返回匹配该标题的一章（子串匹配 toc）；不要一次拉整篇 26.2"),
+  platform: z.string().optional().describe("forge / neoforge / fabric，写入返回 JSON"),
+});
 export const checkDependenciesSchema = z.object({
   buildGradle: z.string().describe("build.gradle 全文（基岩包可传空字符串或占位）"),
   modsToml: z.string().optional().describe("mods.toml 全文（Forge；NeoForge 内容也可并入）"),
@@ -138,6 +144,18 @@ export const mcSkillUpdateSchema = z.object({
   channel: z.enum(["stable", "latest", "tag"]).optional().describe("默认 stable"),
   tagName: z.string().optional(),
   includePrerelease: z.boolean().optional().describe("true 时等价 channel=latest"),
+});
+export const downloadOfficialMdkSchema = z.object({
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt", "liteloader", "rift"]),
+  minecraftVersion: z.string().describe("精确 MC 版本，禁止用邻版 MDK 冒充"),
+  buildPlugin: z
+    .enum(["moddevgradle", "neogradle", "forgegradle", "loom", "quilt-loom"])
+    .optional()
+    .describe("26.1.1/26.1.2/26.2 均同时提供 ModDevGradle 与 NeoGradle，必须显式选择"),
+  dryRun: z.boolean().optional().default(true),
+  confirmed: z.boolean().optional().describe("写入用户工程时必须 true"),
+  destPath: z.string().optional().describe("可选：解压到用户工程（需 ALLOW_WRITE）"),
+  allowCacheFallback: z.boolean().optional().describe("官方 URL 404 时仅允许同一 platform+version 的 cache"),
 });
 export const lookupObfuscatedSchema = z.object({
   name: z.string().describe("混淆/中间名 token，如 method_6032、er、func_110143_aJ、field_100013_f"),
@@ -262,7 +280,9 @@ export function registerWaveExtensions(server: McpServer): void {
     "get_workflow_template",
     {
       title: "Get workflow template (Prompt fallback)",
-      description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。",
+      description:
+        "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。" +
+        "仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。",
       inputSchema: getWorkflowTemplateSchema,
     },
     async ({ name }): Promise<CallToolResult> => jsonResult(getWorkflowTemplate(name)),
@@ -352,8 +372,11 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("get_migration_guide", {
     title: "Get built-in migration guide summary",
+    description:
+      "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。" +
+      "route 如 1.21.11->26.1 / 26.2 / forge->neoforge。platform 写入返回 JSON。同轮最多 1–2 hop，不要把 26.2 四千行复述给用户。",
     inputSchema: getMigrationGuideSchema,
-  }, async (a) => jsonResult(getMigrationGuide(a.route)));
+  }, async (a) => jsonResult(getMigrationGuide(a.route, { full: a.full, platform: a.platform, section: a.section })));
 
   server.registerTool("check_dependencies", {
     title: "Check Gradle / mods.toml dependency hints",
@@ -380,6 +403,21 @@ export function registerWaveExtensions(server: McpServer): void {
       inputSchema: mcSkillUpdateSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(await mcSkillUpdate(args)),
+  );
+
+  server.registerTool(
+    "download_official_mdk",
+    {
+      title: "Download official MDK (pinned commit, cache only)",
+      description:
+        "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
+        "GitHub 必须 pin commit SHA（见 data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
+        "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
+        "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
+        "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。",
+      inputSchema: downloadOfficialMdkSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(await downloadOfficialMdk(args)),
   );
 
   server.registerTool(
@@ -526,7 +564,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "mixin_analyze", description: "解析 mixins.json 与 @Mixin 源码，校验 @Inject/@Redirect 等方法目标（多映射层）。高风险工具，见 supportMatrix。deep:true 时基于已缓存 remapped 客户端 jar 做字节码级校验；jar 未缓存返回 CACHE_MISS 引导。", inputSchema: mixinAnalyzeSchema },
   { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。", inputSchema: auditResourcesSchema },
   { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验（1.20.1 / 1.21.1）。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
-  { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。", inputSchema: getWorkflowTemplateSchema },
+  { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。", inputSchema: getWorkflowTemplateSchema },
   { name: "localize_mod", description: "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。", inputSchema: localizeModSchema },
   { name: "list_knowledge_resources", description: "列出 mcskill:// 资源 URI；配合 read_knowledge_resource 读取正文。", inputSchema: listKnowledgeResourcesSchema },
   { name: "read_knowledge_resource", description: "Read knowledge resource by URI", inputSchema: readKnowledgeResourceSchema },
@@ -538,7 +576,8 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
   { name: "generate_worldgen", description: "Generate worldgen JSON templates。返回世界生成 JSON 骨架，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: "Analyze game / crash log excerpt", inputSchema: analyzeLogSchema },
-  { name: "get_migration_guide", description: "Get built-in migration guide summary", inputSchema: getMigrationGuideSchema },
+  { name: "get_migration_guide", description: "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。route 如 1.21.11->26.1 / 26.2 / forge->neoforge。", inputSchema: getMigrationGuideSchema },
+  { name: "download_official_mdk", description: "下载官方 MDK 到 $MC_SKILL_CACHE。GitHub pin commit SHA；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle。默认 dryRun。", inputSchema: downloadOfficialMdkSchema },
   { name: "check_dependencies", description: "根据 build.gradle / mods.toml / fabric.mod.json / quilt.mod.json / litemod.json / riftmod.json / 基岩 manifest 提示依赖问题：loader 判定、库模组识别（library-catalog 接线）、跨加载器冲突（owo/CCA/Polymer/Trinkets 等）与陷阱。Quilt 在 Fabric 前；LiteLoader 混合只认 net.minecraftforge.gradle.liteloader。【边界】启发式 + catalog，不是 Gradle 依赖解析器；未收录库可能漏报。", inputSchema: checkDependenciesSchema },
   { name: "mc_skill_update", description: "检查 GitHub Release 是否有新版本；确认后可更新 tooling（git ff-only + npm build）与 data（zip+SHA256）。默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。", inputSchema: mcSkillUpdateSchema },
   { name: "lookup_obfuscated", description: "崩溃日志反混淆：单 token 反查混淆短名（er）/ intermediary（method_6032）/ SRG（func_110143_aJ）→ yarn 可读名 + ownerClass + descriptor。\n方法优先 → 字段 → 类；多命中返回 AMBIGUOUS。26.1+ 无混淆层，返回 UNOBFUSCATED_NO_YARN。", inputSchema: lookupObfuscatedSchema },

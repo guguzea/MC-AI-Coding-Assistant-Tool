@@ -1,7 +1,9 @@
 ﻿---
-description: 08 — 客户端
+description: 08 — 客户端 / 服务端
 ---
 
-# 08 — 客户端
+# 08 — 客户端 / 服务端
 
-`listener/client/` 方法未逐一打开则禁止臆造。wiki 记载 listener 对象可含 `"side":"client"`。
+client 包接口（`listener/client/`）只在客户端 Listener 使用：`ClientTickable`、`OverlayRenderer`、`GameGuiAdder`、`KeyBindingAdder` 等。
+服务端 tick：`ServerTickable.serverTick(MinecraftServer)`。
+不要在服务端类引用 `net.minecraft.client.*`。

@@ -1,0 +1,567 @@
+{
+  "ok": true,
+  "cache": "D:\\mc-skill-temp",
+  "mappingsVersion": "mojmap-neoform-1.20.4;mojmap-neoform-1.21.1;mojmap-unobfuscated-26.1;mcp-1.13.2;mcp-1.12.2;mcp-1.6.4",
+  "classCount": 24,
+  "javaFileCount": 24,
+  "issues": [
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.20.4/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.1/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.3/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.8/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/1.21.11/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.moddev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.neoforged.gradle.userdev",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "net.minecraftforge",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/01-registry.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/06-networking.mdc",
+      "symbol": "net.neoforged.neoforge.network.NetworkRegistry",
+      "kind": "fqcn_not_in_cache",
+      "hint": "cache 中无此 FQCN；可能包名写错或尚未反编译该 jar"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/06-networking.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    },
+    {
+      "file": "neoforge/26.1/.cursor/rules/09-anti-patterns.mdc",
+      "symbol": "NeoForgeAddonPlugin",
+      "kind": "invented_class",
+      "hint": "cache 中无此类，视为臆造，应从规则删除"
+    }
+  ],
+  "extractedSample": [
+    {
+      "fqcn": "org.dimdev.rift.listener.BlockAdder",
+      "methods": [
+        "registerBlocks"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.CustomPayloadHandler",
+      "methods": [
+        "clientHandlesChannel",
+        "clientHandleCustomPayload",
+        "serverHandlesChannel",
+        "serverHandleCustomPayload"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.client.GameGuiAdder",
+      "methods": [
+        "displayGui",
+        "displayContainerGui"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.ItemAdder",
+      "methods": [
+        "registerItems"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.MessageAdder",
+      "methods": [
+        "registerMessages"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.client.OverlayRenderer",
+      "methods": [
+        "renderOverlay"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.PacketAdder",
+      "methods": [
+        "registerPacket",
+        "registerHandshakingPackets",
+        "registerPlayPackets",
+        "registerStatusPackets",
+        "registerLoginPackets"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.TileEntityTypeAdder",
+      "methods": [
+        "registerTileEntityTypes"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.registries.DeferredHolder",
+      "methods": [
+        "create",
+        "value",
+        "get",
+        "asOptional",
+        "isBound",
+        "getRegistry",
+        "bind",
+        "getId"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.registries.DeferredRegister",
+      "methods": [
+        "createItems",
+        "createBlocks",
+        "makeRegistry",
+        "getRegistry",
+        "createTagKey",
+        "addAlias",
+        "register",
+        "getRegistryName"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.IPayloadRegistrar",
+      "methods": [
+        "play",
+        "versioned",
+        "optional"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.NetworkRegistry",
+      "methods": [
+        "getInstance",
+        "setup",
+        "onModdedPacketAtServer",
+        "onModdedPacketAtClient",
+        "onModdedConnectionDetectedAtServer",
+        "onVanillaOrOtherConnectionDetectedAtServer",
+        "canSendPacket",
+        "shouldSendPacketRaw"
+      ],
+      "apiStatusInternal": true,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
+      "methods": [
+        "p",
+        "send",
+        "flow",
+        "with",
+        "noArg",
+        "playerConsumer",
+        "playerListDimConsumer",
+        "playerListAll"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.handling.PlayPayloadContext",
+      "methods": [
+        "protocol"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent",
+      "methods": [
+        "registrar"
+      ],
+      "apiStatusInternal": true,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
+      "methods": [
+        "listener",
+        "connection",
+        "player",
+        "reply",
+        "disconnect",
+        "enqueueWork",
+        "flow",
+        "protocol"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.NetworkRegistry",
+      "methods": [
+        "setup",
+        "isModdedPayload",
+        "handleModdedPayload",
+        "initializeNeoForgeConnection",
+        "initializeOtherConnection",
+        "checkPacket",
+        "hasAdhocChannel",
+        "onNetworkQuery"
+      ],
+      "apiStatusInternal": true,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
+      "methods": [
+        "sendToServer",
+        "sendToPlayer",
+        "sendToPlayersInDimension",
+        "sendToPlayersNear",
+        "sendToAllPlayers",
+        "sendToPlayersTrackingEntity",
+        "sendToPlayersTrackingEntityAndSelf",
+        "sendToPlayersTrackingChunk"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.PayloadRegistrar",
+      "methods": [
+        "executesOn",
+        "versioned",
+        "optional"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent",
+      "methods": [
+        "registrar"
+      ],
+      "apiStatusInternal": true,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
+      "methods": [
+        "listener",
+        "connection",
+        "player",
+        "reply",
+        "disconnect",
+        "enqueueWork",
+        "flow",
+        "protocol"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
+      "methods": [
+        "sendToPlayer",
+        "sendToPlayersInDimension",
+        "sendToPlayersNear",
+        "sendToAllPlayers",
+        "sendToPlayersTrackingEntity",
+        "sendToPlayersTrackingEntityAndSelf",
+        "sendToPlayersTrackingChunk"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.PayloadRegistrar",
+      "methods": [
+        "executesOn",
+        "versioned",
+        "optional"
+      ],
+      "apiStatusInternal": false,
+      "environment": false
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent",
+      "methods": [
+        "registrar"
+      ],
+      "apiStatusInternal": true,
+      "environment": false
+    }
+  ]
+}

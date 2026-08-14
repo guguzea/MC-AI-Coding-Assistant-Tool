@@ -1133,5 +1133,65 @@
         "summary": "Tags are directly supported by Vanilla, see the respective Vanilla wiki pages for recipes and advancements for usage details."
       }
     ]
+  },
+  {
+    "id": "1.14.4/primer_1_14",
+    "version": "1.14.4",
+    "label": "1.12 -> 1.13/1.14 Update Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.14/",
+    "tags": [],
+    "firstParagraph": "ResourceLocation now throw on non-snake-case names instead of silently lowercasing for you, so you probably should go and change all those string constants now.",
+    "sections": [
+      {
+        "title": "Things in Advance",
+        "level": 2,
+        "summary": "ResourceLocation now throw on non-snake-case names instead of silently lowercasing for you, so you probably should go and change all those string constants now."
+      },
+      {
+        "title": "Rendering Changes",
+        "level": 2,
+        "summary": "* ModelLoader.setCustomModelResourceLocation has been removed since it is no longer needed due to the flattening."
+      },
+      {
+        "title": "Lang changes",
+        "level": 2,
+        "summary": "* Lang files are now json. instead of key=value, now one large json object with every translation inside e.g. { \"block.minecraft."
+      },
+      {
+        "title": "Data packs",
+        "level": 2,
+        "summary": "* Move your advancements, functions, loot tables, recipes, and structures from assets/ to data/. assets/ should once again become a place where client-only resources live**."
+      },
+      {
+        "title": "What's the deal with metadata?",
+        "level": 2,
+        "summary": "* Metadata has been removed. All of it. No more magic numbers! * Information formerly expressed using metadata is either no longer needed (blocks), flattened (blocks and items), or moved to NBT (it..."
+      },
+      {
+        "title": "Tags (OreDictionary for ctrl+f)",
+        "level": 2,
+        "summary": "* Read https://mcforge.readthedocs.io/en/1.13.x/utilities/tags/ Remember: Block tags (tags/blocks/...)are only used for commands like /execute which query the blocks in world directly."
+      },
+      {
+        "title": "Recipes",
+        "level": 2,
+        "summary": "You need a json for every recipe now (dramatic music plays*) * But not really: You just need a json to allow it to be disabled by datapacks (and syncing to client) * Basically there is a registry f..."
+      },
+      {
+        "title": "Advanced Recipes",
+        "level": 2,
+        "summary": "* You can now register custom deserializers for recipes, which are dispatched based on the type field in the recipe json."
+      },
+      {
+        "title": "Commands",
+        "level": 2,
+        "summary": "* Commands have been overhauled, and now use a separate Mojang library called Brigadier (it's not obfuscated, so you can just look at the source) * Command syntax is now much more declarative (inst..."
+      },
+      {
+        "title": "Fluids and waterlogged blocks",
+        "level": 2,
+        "summary": "* 1.13 brings a new \"water in block\" mechanic * The interfaces are very general - World now has getFluidState and setFluidState methods, and fluids are elevated to almost block-level status (they c..."
+      }
+    ]
   }
 ]

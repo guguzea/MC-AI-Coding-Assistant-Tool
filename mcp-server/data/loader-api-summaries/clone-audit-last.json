@@ -1,0 +1,503 @@
+{
+  "ok": true,
+  "threshold": 0.7,
+  "suspectedTotal": 60,
+  "note": "SUSPECTED_CLONE 不是构建失败。误报（同骨架换类名）须人工签字，不算验收失败。",
+  "pairs": [
+    {
+      "left": "neoforge/1.20.4",
+      "right": "forge/1.20.4",
+      "comparedFiles": 13,
+      "suspected": 0,
+      "findings": []
+    },
+    {
+      "left": "neoforge/1.21.1",
+      "right": "neoforge/1.20.4",
+      "comparedFiles": 13,
+      "suspected": 10,
+      "findings": [
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
+          "similarity": 0.8172,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/01-registry.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/01-registry.mdc",
+          "similarity": 0.9189,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/02-block.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/02-block.mdc",
+          "similarity": 0.9167,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/03-item.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/03-item.mdc",
+          "similarity": 0.7045,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/04-entity.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/04-entity.mdc",
+          "similarity": 0.9535,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/05-events.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/05-events.mdc",
+          "similarity": 0.9,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/08-client-server.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/08-client-server.mdc",
+          "similarity": 0.9535,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/09-anti-patterns.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/09-anti-patterns.mdc",
+          "similarity": 0.8621,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/.cursor/rules/10-gui.mdc",
+          "right": "neoforge/1.20.4/.cursor/rules/10-gui.mdc",
+          "similarity": 0.8155,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.1/AGENTS.md",
+          "right": "neoforge/1.20.4/AGENTS.md",
+          "similarity": 0.7445,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        }
+      ]
+    },
+    {
+      "left": "neoforge/1.21.3",
+      "right": "neoforge/1.21.1",
+      "comparedFiles": 13,
+      "suspected": 13,
+      "findings": [
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
+          "similarity": 0.8984,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/01-registry.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/01-registry.mdc",
+          "similarity": 0.9297,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/02-block.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/02-block.mdc",
+          "similarity": 0.9722,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/03-item.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/03-item.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/04-entity.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/04-entity.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/05-events.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/05-events.mdc",
+          "similarity": 0.96,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/06-networking.mdc",
+          "similarity": 0.9006,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/07-datagen.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/07-datagen.mdc",
+          "similarity": 0.9259,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/08-client-server.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/08-client-server.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/09-anti-patterns.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/09-anti-patterns.mdc",
+          "similarity": 0.885,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/.cursor/rules/10-gui.mdc",
+          "right": "neoforge/1.21.1/.cursor/rules/10-gui.mdc",
+          "similarity": 0.8911,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/knowledge/porting/02-version-migration.md",
+          "right": "neoforge/1.21.1/knowledge/porting/02-version-migration.md",
+          "similarity": 0.7213,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.3/AGENTS.md",
+          "right": "neoforge/1.21.1/AGENTS.md",
+          "similarity": 0.8871,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        }
+      ]
+    },
+    {
+      "left": "neoforge/1.21.8",
+      "right": "neoforge/1.21.3",
+      "comparedFiles": 13,
+      "suspected": 12,
+      "findings": [
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
+          "similarity": 0.907,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/01-registry.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/01-registry.mdc",
+          "similarity": 0.9339,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/02-block.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/02-block.mdc",
+          "similarity": 0.9722,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/03-item.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/03-item.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/04-entity.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/04-entity.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/05-events.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/05-events.mdc",
+          "similarity": 0.96,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
+          "similarity": 0.9125,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/08-client-server.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/08-client-server.mdc",
+          "similarity": 1,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/09-anti-patterns.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/09-anti-patterns.mdc",
+          "similarity": 0.8947,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/.cursor/rules/10-gui.mdc",
+          "right": "neoforge/1.21.3/.cursor/rules/10-gui.mdc",
+          "similarity": 0.8713,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/knowledge/porting/02-version-migration.md",
+          "right": "neoforge/1.21.3/knowledge/porting/02-version-migration.md",
+          "similarity": 0.7213,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.8/AGENTS.md",
+          "right": "neoforge/1.21.3/AGENTS.md",
+          "similarity": 0.9098,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        }
+      ]
+    },
+    {
+      "left": "neoforge/1.21.11",
+      "right": "neoforge/1.21.8",
+      "comparedFiles": 13,
+      "suspected": 13,
+      "findings": [
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
+          "similarity": 0.8571,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/01-registry.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/01-registry.mdc",
+          "similarity": 0.8806,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/02-block.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/02-block.mdc",
+          "similarity": 0.9459,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/03-item.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/03-item.mdc",
+          "similarity": 0.9655,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/04-entity.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/04-entity.mdc",
+          "similarity": 0.9773,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/05-events.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/05-events.mdc",
+          "similarity": 0.9615,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
+          "similarity": 0.893,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/07-datagen.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/07-datagen.mdc",
+          "similarity": 0.9394,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/08-client-server.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/08-client-server.mdc",
+          "similarity": 0.9773,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/09-anti-patterns.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/09-anti-patterns.mdc",
+          "similarity": 0.843,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/.cursor/rules/10-gui.mdc",
+          "right": "neoforge/1.21.8/.cursor/rules/10-gui.mdc",
+          "similarity": 0.8544,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/knowledge/porting/02-version-migration.md",
+          "right": "neoforge/1.21.8/knowledge/porting/02-version-migration.md",
+          "similarity": 0.7097,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/1.21.11/AGENTS.md",
+          "right": "neoforge/1.21.8/AGENTS.md",
+          "similarity": 0.8775,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        }
+      ]
+    },
+    {
+      "left": "neoforge/26.1",
+      "right": "neoforge/1.21.11",
+      "comparedFiles": 13,
+      "suspected": 12,
+      "findings": [
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
+          "similarity": 0.7774,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/01-registry.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/01-registry.mdc",
+          "similarity": 0.8604,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/02-block.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/02-block.mdc",
+          "similarity": 0.9041,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/03-item.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/03-item.mdc",
+          "similarity": 0.7209,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/04-entity.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/04-entity.mdc",
+          "similarity": 0.9425,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/05-events.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/05-events.mdc",
+          "similarity": 0.9412,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/06-networking.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
+          "similarity": 0.8494,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/07-datagen.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/07-datagen.mdc",
+          "similarity": 0.9063,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/08-client-server.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/08-client-server.mdc",
+          "similarity": 0.9425,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/09-anti-patterns.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/09-anti-patterns.mdc",
+          "similarity": 0.708,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/.cursor/rules/10-gui.mdc",
+          "right": "neoforge/1.21.11/.cursor/rules/10-gui.mdc",
+          "similarity": 0.8283,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        },
+        {
+          "status": "SUSPECTED_CLONE",
+          "left": "neoforge/26.1/AGENTS.md",
+          "right": "neoforge/1.21.11/AGENTS.md",
+          "similarity": 0.7669,
+          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
+        }
+      ]
+    },
+    {
+      "left": "liteloader/1.8.9",
+      "right": "liteloader/1.12.2",
+      "comparedFiles": 13,
+      "suspected": 0,
+      "findings": []
+    },
+    {
+      "left": "liteloader/1.10.2",
+      "right": "liteloader/1.12.2",
+      "comparedFiles": 13,
+      "suspected": 0,
+      "findings": []
+    },
+    {
+      "left": "modloader/1.2.5",
+      "right": "modloader/1.6.4",
+      "comparedFiles": 13,
+      "suspected": 0,
+      "findings": []
+    },
+    {
+      "left": "fabric/26.1.2",
+      "right": "fabric/1.21.11",
+      "comparedFiles": 12,
+      "suspected": 0,
+      "findings": []
+    }
+  ]
+}

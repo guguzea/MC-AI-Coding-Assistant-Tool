@@ -1309,5 +1309,124 @@
     "keySections": 1,
     "file": "utilities_tags.md",
     "processedFile": "processed/utilities_tags.md"
+  },
+  {
+    "id": "1.14.4/primer_1_14",
+    "version": "1.14.4",
+    "label": "1.12 -> 1.13/1.14 Update Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.14/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Things in Advance",
+        "level": 2,
+        "summary": "ResourceLocation now throw on non-snake-case names instead of silently lowercasing for you, so you probably should go and change all those string constants now."
+      },
+      {
+        "title": "Rendering Changes",
+        "level": 2,
+        "summary": "* ModelLoader.setCustomModelResourceLocation has been removed since it is no longer needed due to the flattening."
+      },
+      {
+        "title": "Lang changes",
+        "level": 2,
+        "summary": "* Lang files are now json. instead of key=value, now one large json object with every translation inside e.g. { \"block.minecraft."
+      },
+      {
+        "title": "Data packs",
+        "level": 2,
+        "summary": "* Move your advancements, functions, loot tables, recipes, and structures from assets/ to data/. assets/ should once again become a place where client-only resources live**."
+      },
+      {
+        "title": "What's the deal with metadata?",
+        "level": 2,
+        "summary": "* Metadata has been removed. All of it. No more magic numbers! * Information formerly expressed using metadata is either no longer needed (blocks), flattened (blocks and items), or moved to NBT (it..."
+      },
+      {
+        "title": "Tags (OreDictionary for ctrl+f)",
+        "level": 2,
+        "summary": "* Read https://mcforge.readthedocs.io/en/1.13.x/utilities/tags/ Remember: Block tags (tags/blocks/...)are only used for commands like /execute which query the blocks in world directly."
+      },
+      {
+        "title": "Recipes",
+        "level": 2,
+        "summary": "You need a json for every recipe now (dramatic music plays*) * But not really: You just need a json to allow it to be disabled by datapacks (and syncing to client) * Basically there is a registry f..."
+      },
+      {
+        "title": "Advanced Recipes",
+        "level": 2,
+        "summary": "* You can now register custom deserializers for recipes, which are dispatched based on the type field in the recipe json."
+      },
+      {
+        "title": "Commands",
+        "level": 2,
+        "summary": "* Commands have been overhauled, and now use a separate Mojang library called Brigadier (it's not obfuscated, so you can just look at the source) * Command syntax is now much more declarative (inst..."
+      },
+      {
+        "title": "Fluids and waterlogged blocks",
+        "level": 2,
+        "summary": "* 1.13 brings a new \"water in block\" mechanic * The interfaces are very general - World now has getFluidState and setFluidState methods, and fluids are elevated to almost block-level status (they c..."
+      },
+      {
+        "title": "World gen changes",
+        "level": 2,
+        "summary": "* HUGE amount of changes, likely the largest subsystem change in this update * Now threaded. I hope your worldgen functions are pure!"
+      },
+      {
+        "title": "Data Fixers",
+        "level": 2,
+        "summary": "* Got an extremely category-/type-theory heavy makeover due to the extreme changes to the world format * No really, here's the paper: https://arxiv.org/ftp/arxiv/papers/1703/1703.10857."
+      },
+      {
+        "title": "Containers",
+        "level": 2,
+        "summary": "* https://github.com/MinecraftForge/MinecraftForge/blob/1.14.x/src/test/java/net/minecraftforge/debug/misc/ContainerTypeTest.java"
+      },
+      {
+        "title": "Particles",
+        "level": 2,
+        "summary": "Particles are now handled in a much more complete and cohesive manner. There are two components to the particle system, the logical side (teaching the game about your particle, how to spawn it, etc."
+      },
+      {
+        "title": "GUI/Mouse/Keyboard/Input/Keybindings",
+        "level": 2,
+        "summary": "* LWJGL3 now uses GLFW as the backing windowing system, so things have shifted accordingly. * If you need something, look around to see if MouseHelper and KeyboardListener have what you need alread..."
+      },
+      {
+        "title": "Dimensions",
+        "level": 2,
+        "summary": "* The class names are a bit screwy, so here's a brief rundown * DimensionType: Vanilla class, unique handle to a world."
+      },
+      {
+        "title": "Misc Things",
+        "level": 2,
+        "summary": "* Vanilla now has a \"different AABB depending on where you look\" system (aka vanilla diet hoppers but even better). Play with the hopper in 1.13 to see what I mean."
+      },
+      {
+        "title": "Nitty Gritty Random Things (Ctrl+F section)",
+        "level": 2,
+        "summary": "* SideOnly(Side.CLIENT) => OnlyIn(Dist.CLIENT) * SidedProxy => DistExecutor * e.g. public static IProxy proxy = DistExecutor."
+      },
+      {
+        "title": "Cross-referencing, a quick how-to",
+        "level": 2,
+        "summary": "* Oh no! Method FooClass.BarMethod disappeared in 1.13/1.14! Where did it go? Follow these easy steps for a guaranteed 80% success rate! 1. Open a 1."
+      },
+      {
+        "title": "Some parting words",
+        "level": 2,
+        "summary": "* Ask experienced modders for help on Discord/IRC or look at their own ports * Help others needing help, but only if you're 100% certain what you're talking about."
+      },
+      {
+        "title": "Reporting Errata",
+        "level": 2,
+        "summary": "* If you notice something incorrect in this primer, please let me (williewillus) know as soon as possible on the Modded Minecraft discord, twitter, or #minecraftforge IRC if I'm there."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 11,
+    "file": "primer_1_14.md",
+    "processedFile": "processed/primer_1_14.md"
   }
 ]

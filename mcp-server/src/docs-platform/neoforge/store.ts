@@ -37,6 +37,8 @@ export interface SearchResult {
   sectionCount: number;
   /** 相关性评分（searchIndexDetailed 保留；与工具描述一致） */
   score?: number;
+  /** primer 旁路命中 */
+  source?: "primer" | "docs";
 }
 
 export interface SummaryResult {
@@ -103,19 +105,24 @@ export class DocNotFoundError extends Error {
 }
 
 export class VersionNotFoundError extends Error {
+  override name = "VersionNotFoundError";
   constructor(public version: string, public availableVersions: string[]) {
     super(
       availableVersions.length > 0
         ? `不支持的版本: ${version}。当前仅支持: ${availableVersions.join(", ")}`
         : `不支持的版本: ${version}。文档数据未加载。`,
     );
+    this.name = "VersionNotFoundError";
   }
 }
 
 // ── 版本降级映射 ─────────────────────────────────────────────────────────
 
-/** 版本 → 回退版本映射 */
-const VERSION_FALLBACK: Record<string, string | null> = {
+/**
+ * 仅当请求版没有自己的 index-l0.json 时才使用。
+ * 有独立树时必须从本表删除对应键（例如官方发布 /docs/26.2/ 后删掉 26.2）。
+ */
+export const VERSION_FALLBACK: Record<string, string | null> = {
   "26.2": "26.1",
   "1.21.9": "1.21.10",
   "1.21.7": "1.21.8",
@@ -216,15 +223,47 @@ export class NeoForgeDocStore {
     return nested;
   }
 
-  /** 解析请求版本 → 实际数据版本（用于 Forge 兼容模式判断） */
-  private resolveEffectiveVersion(version: string): string {
-    if (FORGE_COMPATIBLE_VERSIONS.has(version)) return version;
-    const fallback = VERSION_FALLBACK[version];
-    if (fallback && !FORGE_COMPATIBLE_VERSIONS.has(fallback)) {
-      const nested = this.versionDataDir(fallback);
-      if (existsSync(join(nested, "index-l0.json"))) return fallback;
+  /** 本版是否有独立主文档树（含 NeoForge 1.20.1 的 Forge 兼容数据） */
+  hasOwnDocTree(version: string): boolean {
+    if (existsSync(join(this.versionDataDir(version), "index-l0.json"))) return true;
+    if (FORGE_COMPATIBLE_VERSIONS.has(version)) {
+      return existsSync(join(this.dataDir, "forge_1.20.1", "forge-docs", "1.20.1", "index-l0.json"));
     }
+    return false;
+  }
+
+  /**
+   * 解析请求版本 → 实际数据版本。
+   * 先看本版 index-l0，有则禁止 VERSION_FALLBACK 抢先跳到邻档。
+   */
+  resolveEffectiveVersion(version: string): string {
+    if (this.hasOwnDocTree(version)) return version;
+    const fallback = VERSION_FALLBACK[version];
+    if (fallback && this.hasOwnDocTree(fallback)) return fallback;
     return version;
+  }
+
+  describeVersionResolution(version: string): {
+    requested: string;
+    resolved: string;
+    versionFallback: boolean;
+    mainDocsMissing: boolean;
+    warning?: string;
+  } {
+    const resolved = this.resolveEffectiveVersion(version);
+    const own = this.hasOwnDocTree(version);
+    const versionFallback = !own && resolved !== version && this.hasOwnDocTree(resolved);
+    const mainDocsMissing = !own && !this.hasOwnDocTree(resolved);
+    let warning: string | undefined;
+    if (versionFallback) {
+      warning = `请求版本 ${version} 无独立主文档树，已降级到 ${resolved}。不要把 ${resolved} 规则/全文当成 ${version}。`;
+    } else if (mainDocsMissing) {
+      warning =
+        version === "1.20.5"
+          ? "NeoForge 无独立 1.20.5 主文档树（不要建空树，也不要读 1.20.4/1.20.6 的 00–10）。Primer 仍可按 to 命中；请用 get_migration_guide 或 search 的 source=primer。"
+          : `NeoForge 无独立 ${version} 主文档树。未建档版本禁止读邻档 00–10，请改口 search_neoforge_docs / get_migration_guide。`;
+    }
+    return { requested: version, resolved, versionFallback, mainDocsMissing, warning };
   }
 
   private isCacheValid<T>(entry: CacheEntry<T> | undefined): boolean {
@@ -334,7 +373,7 @@ export class NeoForgeDocStore {
 
     const resolvedVersionDir = this.resolveVersionDir(version);
     const effectiveVersion = basename(resolvedVersionDir) || this.resolveEffectiveVersion(version);
-    const versionFallback = effectiveVersion !== version || !!VERSION_FALLBACK[version];
+    const versionFallback = effectiveVersion !== version;
 
     const symbolIndex = this.getOrBuildSymbolIndex(version, effectiveVersion);
     const normalizedTags = tags?.map((t) => t.toLowerCase().replace(/-/g, ""));

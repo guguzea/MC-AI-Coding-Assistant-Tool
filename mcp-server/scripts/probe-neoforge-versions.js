@@ -269,6 +269,18 @@ const PRIMER_CONFIG = [
   { version: "1.21.9", url: "https://docs.neoforged.net/primer/docs/1.21.9/",   from: "1.21.8",  to: "1.21.9"  },
   { version: "1.21.10",url: "https://docs.neoforged.net/primer/docs/1.21.10/",  from: "1.21.9",  to: "1.21.10" },
   { version: "1.20.6", url: "https://docs.neoforged.net/primer/docs/1.20.6/",   from: "1.20.5",  to: "1.20.6"  },
+  { version: "1.14",   url: "https://docs.neoforged.net/primer/docs/1.14/",    from: "1.12",    to: "1.14"    },
+  { version: "1.15",   url: "https://docs.neoforged.net/primer/docs/1.15/",    from: "1.14",    to: "1.15"    },
+  { version: "1.16.5", url: "https://docs.neoforged.net/primer/docs/1.16.5/",  from: "1.15.2",  to: "1.16.5"  },
+  { version: "1.17",   url: "https://docs.neoforged.net/primer/docs/1.17/",    from: "1.16.5",  to: "1.17"    },
+  { version: "1.18",   url: "https://docs.neoforged.net/primer/docs/1.18/",    from: "1.17.1",  to: "1.18"    },
+  { version: "1.19",   url: "https://docs.neoforged.net/primer/docs/1.19/",    from: "1.18.2",  to: "1.19"    },
+  { version: "1.19.3", url: "https://docs.neoforged.net/primer/docs/1.19.3/",  from: "1.19.2",  to: "1.19.3"  },
+  { version: "1.19.4", url: "https://docs.neoforged.net/primer/docs/1.19.4/",  from: "1.19.3",  to: "1.19.4"  },
+  { version: "1.20",   url: "https://docs.neoforged.net/primer/docs/1.20/",    from: "1.19.4",  to: "1.20"    },
+  { version: "1.20.2", url: "https://docs.neoforged.net/primer/docs/1.20.2/",  from: "1.20.1",  to: "1.20.2"  },
+  { version: "1.20.4", url: "https://docs.neoforged.net/primer/docs/1.20.4/",  from: "1.20.2",  to: "1.20.4"  },
+  { version: "1.20.5", url: "https://docs.neoforged.net/primer/docs/1.20.5/",  from: "1.20.4",  to: "1.20.5"  },
 ];
 
 // ── CLI ─────────────────────────────────────────────────────────────────────

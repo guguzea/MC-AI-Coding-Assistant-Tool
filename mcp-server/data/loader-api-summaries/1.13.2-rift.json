@@ -1,0 +1,157 @@
+{
+  "file": "1.13.2-rift",
+  "mappingsVersion": "mcp-1.13.2",
+  "mapping": "mcp",
+  "source": "official-raw",
+  "cacheDir": "D:/mc-skill-temp/loader-api-src/1.13.2-rift",
+  "classCount": 8,
+  "classes": [
+    {
+      "fqcn": "org.dimdev.rift.listener.BlockAdder",
+      "simpleName": "BlockAdder",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "registerBlocks"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/BlockAdder.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.CustomPayloadHandler",
+      "simpleName": "CustomPayloadHandler",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "clientHandlesChannel",
+        "clientHandleCustomPayload",
+        "serverHandlesChannel",
+        "serverHandleCustomPayload"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/CustomPayloadHandler.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.client.GameGuiAdder",
+      "simpleName": "GameGuiAdder",
+      "pkg": "org.dimdev.rift.listener.client",
+      "methods": [
+        "displayGui",
+        "displayContainerGui"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/GameGuiAdder.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.ItemAdder",
+      "simpleName": "ItemAdder",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "registerItems"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/ItemAdder.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.MessageAdder",
+      "simpleName": "MessageAdder",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "registerMessages"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/MessageAdder.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.client.OverlayRenderer",
+      "simpleName": "OverlayRenderer",
+      "pkg": "org.dimdev.rift.listener.client",
+      "methods": [
+        "renderOverlay"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/OverlayRenderer.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.PacketAdder",
+      "simpleName": "PacketAdder",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "registerPacket",
+        "registerHandshakingPackets",
+        "registerPlayPackets",
+        "registerStatusPackets",
+        "registerLoginPackets"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/PacketAdder.java"
+    },
+    {
+      "fqcn": "org.dimdev.rift.listener.TileEntityTypeAdder",
+      "simpleName": "TileEntityTypeAdder",
+      "pkg": "org.dimdev.rift.listener",
+      "methods": [
+        "registerTileEntityTypes"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/TileEntityTypeAdder.java"
+    }
+  ],
+  "fetched": [
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/MessageAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/PacketAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/CustomPayloadHandler.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/BlockAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/ItemAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/TileEntityTypeAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/client/GameGuiAdder.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/DimensionalDevelopment/Rift/master/src/main/java/org/dimdev/rift/listener/client/OverlayRenderer.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    }
+  ],
+  "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。"
+}

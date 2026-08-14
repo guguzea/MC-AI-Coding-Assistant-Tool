@@ -1,0 +1,31 @@
+{
+  "cache": "D:\\mc-skill-temp",
+  "report": [
+    {
+      "key": "1.20.4-neoforge",
+      "classes": 7,
+      "okUrls": 7
+    },
+    {
+      "key": "1.21.1-neoforge",
+      "classes": 5,
+      "okUrls": 5
+    },
+    {
+      "key": "26.1-neoforge",
+      "classes": 4,
+      "okUrls": 4
+    },
+    {
+      "key": "1.13.2-rift",
+      "classes": 8,
+      "okUrls": 8
+    },
+    {
+      "key": "1.12.2-liteloader",
+      "classes": 0,
+      "okUrls": 0,
+      "skippedWrite": true
+    }
+  ]
+}

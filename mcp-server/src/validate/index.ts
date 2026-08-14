@@ -15,6 +15,12 @@
  * H. DeferredRegister 自动检测
  */
 
+import {
+  detectLoader,
+  type CheckDependenciesExtras,
+  type DetectedLoader,
+} from "../diagnostics/index.js";
+
 export interface ValidateQuery {
   /** mods.toml 文件内容 */
   modsToml?: string;
@@ -520,6 +526,92 @@ function checkModsToml(
   return modId;
 }
 
+const NON_FORGE_LOADERS = new Set<DetectedLoader>([
+  "quilt",
+  "fabric",
+  "neoforge",
+  "liteloader",
+  "liteloader_forge",
+  "rift",
+  "modloader",
+  "bedrock",
+]);
+
+function warningForNonForge(loader: DetectedLoader): string {
+  switch (loader) {
+    case "quilt":
+      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Quilt。请改用 search_docs({platform:"quilt"})，不要用本工具当结构校验器。';
+    case "fabric":
+      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Fabric。请改用 search_fabric_docs，不要用本工具当结构校验器。";
+    case "neoforge":
+      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 NeoForge。请改用 search_neoforge_docs，不要用本工具当结构校验器。";
+    case "liteloader":
+    case "liteloader_forge":
+      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 LiteLoader。请改用 search_docs({platform:"liteloader"})。';
+    case "rift":
+      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Rift。请改用 search_docs({platform:"rift"})。';
+    case "modloader":
+      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Risugami's ModLoader。请改用 search_docs({platform:\"modloader\"})。";
+    case "bedrock":
+      return "validate_project 仅覆盖 Forge，不是基岩校验器。请改用 validate_addon_manifest / search_bedrock_docs。";
+    default:
+      return "validate_project 仅覆盖 Forge。请改用对应平台的文档/校验工具。";
+  }
+}
+
+/** 用已有输入调 detectLoader，并扫 Java/清单正文补强（不扩展 schema）。 */
+export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
+  const gradle = query.buildGradle ?? "";
+  const modsToml = query.modsToml;
+  const javaBlob = (query.javaFiles ?? [])
+    .map((f) => `${f.path}\n${f.content}`)
+    .join("\n");
+  const extras: CheckDependenciesExtras = {};
+  if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) {
+    extras.addonManifest = javaBlob;
+  }
+  if (/quilt_loader/.test(javaBlob)) {
+    extras.quiltModJson = javaBlob;
+  }
+  if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) {
+    extras.litemodJson = javaBlob;
+  }
+  if (/RiftLoader|riftmod\.json|rift\.mod\.json/i.test(javaBlob)) {
+    extras.riftmodJson = javaBlob;
+  }
+
+  const fromDetect = detectLoader(gradle, modsToml, undefined, undefined, extras);
+  if (fromDetect !== "unknown" && fromDetect !== "forge") {
+    return fromDetect;
+  }
+  // NeoForge 的 mods.toml 也常写 javafml，detectLoader 会判成 forge；
+  // 有 neoforged 源码且无 forge 包名时改口，避免把 Neo 工程当 Forge 校验。
+  if (fromDetect === "forge") {
+    if (/net\.neoforged/.test(javaBlob) && !/net\.minecraftforge/.test(javaBlob)) {
+      return "neoforge";
+    }
+    return "forge";
+  }
+
+  if (/org\.quiltmc|quilt\.mod\.json|quilt_loader/i.test(javaBlob)) return "quilt";
+  if (/net\.neoforged|neoforge\.mods\.toml/i.test(javaBlob)) return "neoforge";
+  if (/net\.fabricmc|implements\s+ModInitializer|fabric\.mod\.json/i.test(javaBlob)) {
+    return "fabric";
+  }
+  if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) return "liteloader";
+  if (/RiftLoader|riftmod\.json|rift\.mod\.json/i.test(javaBlob)) return "rift";
+  if (
+    /extends\s+BaseMod\b/.test(javaBlob) &&
+    !/cpw\.mods\.fml|net\.minecraftforge/.test(javaBlob)
+  ) {
+    return "modloader";
+  }
+  if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) return "bedrock";
+  const extraText = `${modsToml ?? ""}\n${query.gradleProperties ?? ""}`;
+  if (/"format_version"/.test(extraText) && /"modules"/.test(extraText)) return "bedrock";
+  return fromDetect;
+}
+
 // ── 主函数 ────────────────────────────────────────────────────────────────
 
 export function validateProject(query: ValidateQuery): ValidationResult {
@@ -529,6 +621,16 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     gradleProperties,
     mixinsJson,
   } = query;
+
+  const loader = detectValidateLoader(query);
+  if (NON_FORGE_LOADERS.has(loader)) {
+    return {
+      passed: true,
+      errors: [],
+      warnings: [warningForNonForge(loader)],
+      checks: ["loader 识别（非 Forge 早退）"],
+    };
+  }
 
   const errors: string[] = [];
   const warnings: string[] = [];

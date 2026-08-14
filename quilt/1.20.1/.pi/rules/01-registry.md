@@ -23,3 +23,4 @@ Decision: 注册方式
 ```
 
 对照：https://wiki.quiltmc.org/en/concepts/qsl-qfapi
+已核实表：`quilt/1.20.1/knowledge/common/qsl-verified.md`（02–10 仍读 fabric/1.20.1）。

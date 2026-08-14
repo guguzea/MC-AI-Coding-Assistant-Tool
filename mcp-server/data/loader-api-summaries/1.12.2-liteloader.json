@@ -1,0 +1,64 @@
+{
+  "file": "1.12.2-liteloader",
+  "mappingsVersion": "mcp-1.12.2",
+  "mapping": "mcp",
+  "source": "GitLab 1.12.2 已打开接口（许可证禁止把 loader 源码再分发进仓库）",
+  "classCount": 6,
+  "classes": [
+    {
+      "fqcn": "com.mumfrey.liteloader.HUDRenderListener",
+      "simpleName": "HUDRenderListener",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["onPreRenderHUD", "onPostRenderHUD"],
+      "apiStatusInternal": false,
+      "environment": true,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    },
+    {
+      "fqcn": "com.mumfrey.liteloader.RenderListener",
+      "simpleName": "RenderListener",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["onRender", "onRenderGui", "onSetupCameraTransform"],
+      "apiStatusInternal": false,
+      "environment": true,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    },
+    {
+      "fqcn": "com.mumfrey.liteloader.ViewportListener",
+      "simpleName": "ViewportListener",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["onViewportResized", "onFullScreenToggled"],
+      "apiStatusInternal": false,
+      "environment": true,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    },
+    {
+      "fqcn": "com.mumfrey.liteloader.PluginChannelListener",
+      "simpleName": "PluginChannelListener",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["onCustomPayload"],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    },
+    {
+      "fqcn": "com.mumfrey.liteloader.LiteMod",
+      "simpleName": "LiteMod",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["getVersion", "init", "upgradeSettings"],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    },
+    {
+      "fqcn": "com.mumfrey.liteloader.Tickable",
+      "simpleName": "Tickable",
+      "pkg": "com.mumfrey.liteloader",
+      "methods": ["onTick"],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
+    }
+  ],
+  "note": "GitLab raw 现需登录，不能把 loader 源码写入仓库。摘要来自已打开的 1.12.2 接口，带 mappingsVersion=mcp-1.12.2。"
+}

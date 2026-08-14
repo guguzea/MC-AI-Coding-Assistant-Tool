@@ -67,12 +67,68 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
 export function generateNetworkPacket(
   modId: string,
   packetName: string,
-  platform: "forge_1.20.1" | "neoforge_1.21" = "forge_1.20.1",
+  platform: "forge_1.20.1" | "neoforge_1.20.4" | "neoforge_1.21" = "forge_1.20.1",
 ): GeneratorResult {
   const mod = normalizeModIdentifier(modId);
   const pkt = normalizeModIdentifier(packetName);
   if (!mod || !pkt) return { code: null, errors: ["无效标识符"] };
   const pascal = stripJavaTypeSuffix(toJavaClassName(packetName), "Packet");
+
+  if (platform === "neoforge_1.20.4") {
+    return {
+      code: `// NeoForge 1.20.4 — CustomPacketPayload（RegisterPayloadHandlerEvent 单数 Handler）
+package com.example.${mod.value}.network;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final ResourceLocation ID =
+        new ResourceLocation("${mod.value}", "${pkt.value}");
+
+    public ${pascal}Payload(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeUtf(message);
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
+    }
+
+    public static void register(RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event.registrar("${mod.value}");
+        registrar.play(
+            ID,
+            ${pascal}Payload::new,
+            handler -> handler
+                .client(${pascal}Payload::handleClient)
+                .server(${pascal}Payload::handleServer));
+    }
+
+    private static void handleClient(${pascal}Payload payload, PlayPayloadContext context) {
+        context.workHandler().submitAsync(() -> { /* client main thread */ });
+    }
+
+    private static void handleServer(${pascal}Payload payload, PlayPayloadContext context) {
+        context.workHandler().submitAsync(() -> { /* server main thread */ });
+    }
+}
+`,
+      warnings: [
+        "1.20.4 事件名是 RegisterPayloadHandlerEvent（单数 Handler），不是 1.21 的 RegisterPayloadHandlersEvent。",
+        "反面：无 SimpleChannel / IMessage / NetworkRegistry.newSimpleChannel。",
+      ],
+    };
+  }
 
   if (platform === "neoforge_1.21") {
     return {

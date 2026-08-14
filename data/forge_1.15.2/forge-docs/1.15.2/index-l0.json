@@ -210,6 +210,15 @@
     "sectionCount": 2
   },
   {
+    "id": "1.15.2/primer_1_15",
+    "version": "1.15.2",
+    "label": "1.14 -> 1.15 Update Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.15/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 3
+  },
+  {
     "id": "1.15.2/advanced_accesstransformers",
     "version": "1.15.2",
     "label": "Access Transformers",

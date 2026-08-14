@@ -253,6 +253,24 @@ export class ForgeDocStore {
     throw new VersionNotFoundError(requested, available);
   }
 
+  describeVersionResolution(version: string): {
+    requested: string;
+    resolved: string;
+    versionFallback: boolean;
+    warning?: string;
+  } {
+    const resolved = this.resolveVersion(version);
+    const versionFallback = resolved !== version;
+    return {
+      requested: version,
+      resolved,
+      versionFallback,
+      warning: versionFallback
+        ? `请求版本 ${version} 无独立文档，已降级到 ${resolved}`
+        : undefined,
+    };
+  }
+
   /**
    * L0 + L1 符号增强搜索。
    * 版本不存在时自动降级；调用方可经 getLastSearchMeta / searchIndexDetailed 获取 versionFallback。

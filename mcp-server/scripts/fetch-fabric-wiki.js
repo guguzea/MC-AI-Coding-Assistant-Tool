@@ -15,6 +15,8 @@
  *   ❌ tutorial:dev_environment, tutorial:mixin, documentation:specifications,
  *      documentation:entities, documentation:worldgen, tutorial:datagen,
  *      tutorial:configuration
+ * 2026-08-15 重试：上述 ❌ 页 HTML 仍含 “This topic does not exist”，**不要加入 PAGES**。
+ * 26.1.2 **不建 wiki 树**。
  *
  * 用法：
  *   node scripts/fetch-fabric-wiki.js --version 1.20.1

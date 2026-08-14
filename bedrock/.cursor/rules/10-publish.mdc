@@ -1,3 +1,23 @@
 # 10 — 发布
 
 .mcpack / .mcaddon、市场、BDS。实验室调试用 Minecraft Preview / Editor，不要用 ForgeGradle。
+
+## Decision Flow
+
+```
+→ 打包 → RP+BP 各一份 manifest（见 01）；uuid 不重复
+→ 脚本 UI → 只用 stable @minecraft/server-ui（stable/script-server-ui）；不要塞 Beta
+→ 世界实验 → 玩家在游戏 UI / level.dat 打开；pack 不能替玩家打开（07）
+→ 安装测试 → Learn getting-started：.mcpack 进 Behavior/Resource Pack 页；.mcworld 进 Play
+```
+
+## 已核实约束
+
+- 分发单位是 `.mcpack` / `.mcaddon` / `.mcworld`，不是 Java `build/libs/*.jar`。
+- Learn Getting Started：若下载成 `.zip`，改扩展名为 `.mcpack` 或 `.mcworld` 再打开。
+- 脚本 UI 模块：`stable/script-server-ui`。未点名 Beta 不要用 Beta UI API。
+- 市场/BDS 具体条款以 Learn 现行页为准；缺页标未核实。
+
+## 文档
+
+`stable/getting-started`、`stable/pack-manifest`、`stable/script-server-ui`。

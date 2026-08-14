@@ -88,8 +88,8 @@ IF 注册自定义 Registry
 IF 平台 = Fabric
   → 跳转 fabric/1.20.1/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
 
-IF 平台 = NeoForge (1.20.4+)
-  → 跳转 neoforge/1.20.4/AGENTS.md（NeoForge 使用相同的 DeferredRegister）
+IF 平台 = NeoForge
+  → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未建档版本（1.20.1/1.20.6/1.21.5/1.21.10）禁止读邻档 00–10，改口 search_neoforge_docs。
 ```
 
 ### Decision: 注册什么类型？

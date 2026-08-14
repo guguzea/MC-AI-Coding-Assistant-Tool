@@ -4,6 +4,7 @@ import { LIBRARY_CATALOG } from "./library-catalog.js";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { migrationGuideFromPrimers } from "../docs-platform/neoforge/primers.js";
 
 export interface AnalyzeLogInput {
   logText: string;
@@ -47,20 +48,42 @@ const MIGRATION_GUIDES: Record<string, { title: string; bullets: string[] }> = {
   },
 };
 
-export function getMigrationGuide(route: string): Record<string, unknown> {
+export function getMigrationGuide(
+  route: string,
+  opts?: { full?: boolean; platform?: string; section?: string },
+): Record<string, unknown> {
   const key = route.trim().toLowerCase().replace(/\s+/g, "");
+  const fromPrimers = migrationGuideFromPrimers({
+    route: route.trim(),
+    full: opts?.full === true,
+    platform: opts?.platform,
+    section: opts?.section,
+  });
+  if (fromPrimers.found) {
+    return fromPrimers;
+  }
   const guide = MIGRATION_GUIDES[key];
   if (!guide) {
     return {
       found: false,
-      availableRoutes: Object.keys(MIGRATION_GUIDES),
+      availableRoutes: [
+        ...Object.keys(MIGRATION_GUIDES),
+        ...((fromPrimers.availableRoutes as string[]) ?? []),
+      ],
       action: actionable(ActionCodes.NOT_FOUND, "未内置该迁移路线", [
         "使用 analyze_porting_path 扫描项目",
         "查阅 knowledge/version-changes",
-      ], ["analyze_porting_path", "search_docs"]),
+        "get_migration_guide route 用 Primer 的 from->to（默认 toc；section 返回该章；full=true 才全文）",
+      ], ["analyze_porting_path", "search_docs", "search_neoforge_docs"]),
     };
   }
-  return { found: true, route: key, ...guide, relatedTools: ["analyze_porting_path", "port_project"] };
+  return {
+    found: true,
+    route: key,
+    platform: opts?.platform,
+    ...guide,
+    relatedTools: ["analyze_porting_path", "port_project"],
+  };
 }
 
 // ── check_dependencies：loader 判定 + 库模组 catalog 接线 + 冲突/陷阱检测 ──────

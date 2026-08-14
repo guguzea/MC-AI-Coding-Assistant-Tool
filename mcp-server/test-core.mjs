@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
-import { listVersions, searchForgeDocs, searchDocs, getDocFull } from "./dist/docs-platform/forge/index.js";
+import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocRelated } from "./dist/docs-platform/forge/index.js";
 import { analyzePortingPath, portProject } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
@@ -23,7 +23,7 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen } from "./dist/datagen/index.js";
 import { generateLang } from "./dist/generators/index.js";
 import { diagnoseGradle } from "./dist/gradle/index.js";
-import { detectLoader } from "./dist/diagnostics/index.js";
+import { detectLoader, getMigrationGuide } from "./dist/diagnostics/index.js";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
   generateAddonManifest,
@@ -45,6 +45,8 @@ import {
   getCommunityDocFull,
 } from "./dist/docs-platform/community/index.js";
 import { analyzeCrash } from "./dist/crash/index.js";
+import { validateProject } from "./dist/validate/index.js";
+import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-search.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -426,6 +428,7 @@ async function testSearchEnhancements() {
   const nfFb = parseToolText(await searchNeoForgeDocs({ query: "block", version: "26.2" }));
   assert.equal(nfFb.versionFallback, true);
   assert.equal(nfFb.resolvedVersion, "26.1");
+  assert.ok(nfFb.warning, "26.2 fallback must include warning");
 
   const nf1201 = new NeoForgeDocStore(dataRoot);
   const summary = nf1201.loadSummary("concepts/registries", "1.20.1");
@@ -1440,6 +1443,162 @@ async function testReviewFixes() {
   const bed = parseToolText(await getBedrockDocFull({ id: "stable/pack-manifest", version: "stable" }));
   assert.notEqual(bed.ok, false, JSON.stringify(bed.error ?? bed).slice(0, 400));
   assert.match(JSON.stringify(bed), /manifest/i);
+
+  const quiltVal = validateProject({
+    buildGradle: "plugins { id 'org.quiltmc.loom' version '1.7.4' }\n",
+  });
+  assert.equal(quiltVal.passed, true, JSON.stringify(quiltVal));
+  assert.deepEqual(quiltVal.errors, []);
+  assert.equal(quiltVal.warnings.length, 1);
+  assert.match(quiltVal.warnings[0], /search_docs/);
+  assert.ok(!quiltVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+
+  const fabricVal = validateProject({
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.fabricmc.api.ModInitializer;\npublic class ExampleMod implements ModInitializer {\n  public void onInitialize() {}\n}\n",
+    }],
+  });
+  assert.equal(fabricVal.passed, true, JSON.stringify(fabricVal));
+  assert.deepEqual(fabricVal.errors, []);
+  assert.match(fabricVal.warnings[0], /search_fabric_docs/);
+  assert.ok(!fabricVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+
+  const bedrockVal = validateProject({
+    javaFiles: [{
+      path: "BP/manifest.json",
+      content: JSON.stringify({
+        format_version: 2,
+        header: { name: "pack", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+        modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: [1, 0, 0] }],
+      }),
+    }],
+  });
+  assert.equal(bedrockVal.passed, true, JSON.stringify(bedrockVal));
+  assert.deepEqual(bedrockVal.errors, []);
+  assert.match(bedrockVal.warnings[0], /validate_addon_manifest/);
+
+  const forgeVal = validateProject({
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: '@Mod("other")\npublic class ExampleMod {}\n',
+    }],
+  });
+  assert.ok(forgeVal.errors.some((e) => /@Mod/.test(e)), JSON.stringify(forgeVal));
+  assert.equal(forgeVal.passed, false);
+
+  const neoVal = validateProject({
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.neoforged.bus.api.IEventBus;\npublic class ExampleMod {}\n",
+    }],
+  });
+  assert.equal(neoVal.passed, true, JSON.stringify(neoVal));
+  assert.deepEqual(neoVal.errors, []);
+  assert.match(neoVal.warnings[0], /search_neoforge_docs/);
+  assert.ok(!neoVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+
+  const exclusiveHit = exclusiveFabricFallbackRefusal({
+    id: "wiki/FabricRegistryBuilder",
+    label: "net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder",
+  });
+  assert.ok(exclusiveHit && exclusiveHit.ok === false);
+
+  const exclFull = parseToolText(
+    await getDocFull({ platform: "quilt", version: "1.20.1", id: "FabricRegistryBuilder", highlight_key: false }),
+  );
+  assert.equal(exclFull.ok, false, JSON.stringify(exclFull).slice(0, 500));
+  assert.ok(!exclFull.content, JSON.stringify(Object.keys(exclFull)));
+  assert.match(JSON.stringify(exclFull), /QSL|禁止|Registry|ItemGroup/i);
+  assert.doesNotMatch(JSON.stringify(exclFull), /已降级/);
+
+  const qRelated = parseToolText(
+    await getDocRelated({ platform: "quilt", version: "1.20.1", id: "qsl-qfapi", limit: 5 }),
+  );
+  assert.ok(Array.isArray(qRelated), JSON.stringify(qRelated).slice(0, 400));
+  assert.ok(qRelated.length >= 0);
+
+  const qRelatedFb = parseToolText(
+    await getDocRelated({
+      platform: "quilt",
+      version: "1.20.1",
+      id: "1.20.1/develop_networking",
+      limit: 5,
+    }),
+  );
+  assert.ok(Array.isArray(qRelatedFb), JSON.stringify(qRelatedFb).slice(0, 400));
+  if (qRelatedFb.length > 0) {
+    assert.equal(qRelatedFb[0].sourcePlatform, "fabric");
+    assert.match(String(qRelatedFb[0].warning || ""), /回退 Fabric|QSL/);
+  }
+
+  const exclRelated = parseToolText(
+    await getDocRelated({ platform: "quilt", version: "1.20.1", id: "FabricRegistryBuilder", limit: 5 }),
+  );
+  assert.equal(exclRelated.ok, false, JSON.stringify(exclRelated).slice(0, 400));
+  assert.ok(!Array.isArray(exclRelated));
+
+  const quiltBadVer = parseToolText(
+    await searchDocs({ platform: "quilt", version: "0.0.0", query: "loom" }),
+  );
+  assert.equal(quiltBadVer.ok, false, JSON.stringify(quiltBadVer).slice(0, 500));
+  assert.equal(quiltBadVer.error?.code, "VERSION_NOT_FOUND");
+  assert.doesNotMatch(JSON.stringify(quiltBadVer), /已降级/);
+  assert.ok(
+    Array.isArray(quiltBadVer.availableVersions) || /1\.20/.test(quiltBadVer.error?.hint || ""),
+    JSON.stringify(quiltBadVer.error ?? quiltBadVer).slice(0, 400),
+  );
+}
+
+async function testPlan2PrimerMdkFabricPorting() {
+  const nf1205 = parseToolText(await searchNeoForgeDocs({ query: "primer migration", version: "1.20.5" }));
+  assert.equal(nf1205.ok, true, JSON.stringify(nf1205).slice(0, 400));
+  assert.ok(nf1205.warning, "1.20.5 must warn about missing main doc tree");
+
+  const toc = getMigrationGuide("26.1->26.2", { platform: "neoforge" });
+  assert.equal(toc.found, true, JSON.stringify(toc).slice(0, 400));
+  assert.ok(Array.isArray(toc.toc), "get_migration_guide default is toc");
+  assert.equal(toc.content, undefined);
+
+  const chap = getMigrationGuide("26.1->26.2", { platform: "neoforge", section: "Pack Changes" });
+  assert.equal(chap.found, true, JSON.stringify(chap).slice(0, 400));
+  assert.equal(chap.sectionFound, true, JSON.stringify(chap).slice(0, 400));
+  assert.ok(String(chap.content || "").includes("Pack Changes"), String(chap.content).slice(0, 200));
+  assert.ok(String(chap.content || "").length < 8000, "section must not dump the whole primer");
+
+  const miss = getMigrationGuide("26.1->26.2", { platform: "neoforge", section: "NotARealHeadingXYZ" });
+  assert.equal(miss.sectionFound, false);
+  assert.equal(miss.content, undefined);
+
+  const { downloadOfficialMdk } = await import("./dist/mdk/index.js");
+  const dry = await downloadOfficialMdk({
+    platform: "neoforge",
+    minecraftVersion: "26.1.2",
+    buildPlugin: "moddevgradle",
+    dryRun: true,
+  });
+  assert.equal(dry.ok, true);
+  assert.equal(dry.downloaded, false);
+  assert.ok(String(dry.url).includes("1fd0f4d9"));
+
+  const needPlugin = await downloadOfficialMdk({
+    platform: "neoforge",
+    minecraftVersion: "26.2",
+    dryRun: true,
+  });
+  assert.equal(needPlugin.ok, false);
+
+  const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
+  const fa = parseToolText(await searchFabricDocs({ query: "porting 26.2 vulkan", version: "26.1.2" }));
+  assert.equal(fa.ok, true);
+  assert.ok(
+    (fa.results ?? []).some((r) => r.id === "porting/26.2" || r.source === "porting-extra"),
+    JSON.stringify(fa.results?.slice(0, 8)).slice(0, 600),
+  );
 }
 
 await testNeoForgeGenericRouting();
@@ -1462,6 +1621,7 @@ await testPortingFabricYarnAndProps();
 await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();
 await testReviewFixes();
+await testPlan2PrimerMdkFabricPorting();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

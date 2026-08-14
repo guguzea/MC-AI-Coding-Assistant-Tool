@@ -1,3 +1,10 @@
-# 07 — 数据
+# 07 — 无 DataGen
 
-无现代 DataGen。资源：`assets/<id>` 与 `data/<id>`。AT：`access_transformations.at`（notch 名）。
+1.13 Rift **没有** Forge 1.20 DataGen。禁止调用 `generate_datagen`。
+
+## 该时代做法
+
+- 资源：`resources/assets/<modid>/...`（wiki Making-mods）
+- 数据包：`resources/data/<modid>/...`
+- AT：`src/main/resources/access_transformations.at`（notch 名）
+- 配方：`RecipeAdder.addRecipes(...)` 或手写 data JSON；序列化器 `RecipeSerializerAdder.addRecipeSerializers()`

@@ -18,9 +18,9 @@
 | 09 | 反模式 |
 | 10 | 发布 mcpack |
 
-文档：`search_bedrock_docs`（带 `docsStatus`）。`diagnose_gradle` / `convert_mapping` / `query_api` / `mixin_analyze` 必须拒绝并改口。
+文档：`search_bedrock_docs`（带 `docsStatus`）。`id` 必须来自搜索结果（如 `stable/custom-block`），不要用网站 URL 当 `get_bedrock_doc_full` 的 id。`diagnose_gradle` / `convert_mapping` / `query_api` / `mixin_analyze` 必须拒绝并改口。
 
-库 Skill：`knowledge/libs/bedrock-only/`。禁止 CCA/Trinkets/GeckoLib。
+规则 00–10 在 `.cursor/rules/`（决策流 + 已核实 Learn 约束）。平台 Skill 在 `.cursor/skills/`；库 Skill 另见 `knowledge/libs/bedrock-only/`。禁止 CCA/Trinkets/GeckoLib。
 
 ### 本规则集的 IDE 加载优先级
 

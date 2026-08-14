@@ -29,6 +29,13 @@ import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from 
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
+import {
+  findPrimer,
+  isPrimerDocId,
+  primerFullPayload,
+  primerSummaryPayload,
+  searchNeoForgePrimers,
+} from "../neoforge/primers.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
 
@@ -753,11 +760,23 @@ export async function searchDocs(
     }
 
     const store = getGenericStore(platform);
-    const result = store.searchIndex(
-      args.query,
-      args.version,
-      args.tags,
-    );
+    let result: ReturnType<IDocStore["searchIndex"]> = [];
+    let threwMissing = false;
+    try {
+      result = store.searchIndex(
+        args.query,
+        args.version,
+        args.tags,
+      );
+    } catch (e) {
+      const rec = e as { name?: string; availableVersions?: unknown };
+      if (platform === "neoforge" && (rec.name === "VersionNotFoundError" || Array.isArray(rec.availableVersions))) {
+        threwMissing = true;
+        result = [];
+      } else {
+        throw e;
+      }
+    }
     const meta =
       typeof (store as unknown as { getLastSearchMeta?: () => {
         resolvedVersion: string;
@@ -777,20 +796,36 @@ export async function searchDocs(
       platform === "neoforge"
         ? "neoforge-docs"
         : PLATFORM_DOC_SUBDIR[platform] ?? "forge-docs";
-    const semanticHits = await semanticSearch(
-      args.query,
-      platform,
-      resolvedVersion,
-      docSource,
-      resolveDataDir(),
-    );
-    const finalResults = semanticHits === null
+    const semanticHits = threwMissing
+      ? null
+      : await semanticSearch(
+          args.query,
+          platform,
+          resolvedVersion,
+          docSource,
+          resolveDataDir(),
+        );
+    const finalResultsBase = semanticHits === null
       ? result
       : mergeSemanticResults(result, semanticHits, {
           tags: args.tags,
           limit: 20,
           version: resolvedVersion,
         });
+    let finalResults = finalResultsBase;
+    let primerNote: string | undefined;
+    if (platform === "neoforge") {
+      const primerHits = searchNeoForgePrimers({
+        query: args.query,
+        version: args.version,
+        dataRoot: resolveDataDir(),
+      });
+      if (primerHits.length) {
+        const seen = new Set(finalResults.map((r) => r.id));
+        finalResults = [...primerHits.filter((p) => !seen.has(p.id)), ...finalResults].slice(0, 20);
+        primerNote = "结果含 source=primer（迁移 Primer，不是 loader API 全文）";
+      }
+    }
     return {
       content: [
         {
@@ -803,9 +838,13 @@ export async function searchDocs(
               resolvedVersion,
               versionFallback,
               warning: joinSearchWarnings(
+                threwMissing
+                  ? `NeoForge 无独立 ${args.version} 主文档树。未建档版本禁止读邻档 00–10。`
+                  : undefined,
                 versionFallback
                   ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
                   : undefined,
+                primerNote,
                 missingSemanticDbWarning(semanticHits === null),
                 semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
               ),
@@ -830,10 +869,10 @@ export async function searchDocs(
 
 export const getDocSummarySchema = {
   name: "get_doc_summary",
-  description: `获取文档页面的章节骨架与摘要，用于判断是否需要深入。
-支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_summary。
+  description: `获取文档页面的章节骨架与摘要，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_summary。
+适用于：判断某篇文档是否包含所需内容时。返回每个章节的标题、摘要和首段概述，用于判断是否需要深入。
 
-⚠️ platform 和 version 必须对应；Quilt 无此页时会回退 Fabric 全文（warning.fallback=fabric）。`,
+⚠️ platform 和 version 必须对应；Quilt 无此页时会回退 Fabric（fallback=fabric）。FAPI 专属 Registry/ItemGroup 页会拒绝（ok=false，不返回正文）。QSL 不要用 Fabric Registry 页。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -853,9 +892,26 @@ export async function getDocSummary(
     if (platform === "quilt") {
       return await getQuiltDocSummary({ id: args.id, version: args.version });
     }
+    if (platform === "neoforge" && isPrimerDocId(args.id)) {
+      const primer = findPrimer(args.id);
+      if (!primer) throw new DocNotFoundError(args.id, args.version);
+      return { content: [{ type: "text", text: JSON.stringify(primerSummaryPayload(primer), null, 2) }] };
+    }
     const store = getGenericStore(platform);
     const result = store.loadSummary(args.id, args.version);
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    const extra =
+      platform === "forge" || platform === "neoforge"
+        ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
+        : undefined;
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ...result,
+          ...(extra?.warning ? { warning: extra.warning, versionFallback: extra.versionFallback } : {}),
+        }, null, 2),
+      }],
+    };
   } catch (e) {
     return handleError(e, platform);
   }
@@ -866,9 +922,10 @@ export async function getDocSummary(
 export const getDocFullSchema = {
   name: "get_doc_full",
   description: `获取文档页面全文，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。基岩请用 get_bedrock_doc_full。
-highlight_key=true（默认）时，关键段落（🔴🟠🟢⭐）突出显示。
+适用于：需要查看 API 完整步骤、事件列表、配置项清单时。
+highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示。
 
-⚠️ Quilt 无此页时会回退 Fabric（fallback=fabric）。QSL 不要用 Fabric Registry 页。`,
+⚠️ Quilt 无此页时会回退 Fabric（fallback=fabric）。FAPI 专属 Registry/ItemGroup 页会拒绝（ok=false，不返回正文）。QSL 不要用 Fabric Registry 页。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -897,13 +954,30 @@ export async function getDocFull(
         highlight_key: args.highlight_key,
       });
     }
+    if (platform === "neoforge" && isPrimerDocId(args.id)) {
+      const primer = findPrimer(args.id);
+      if (!primer) throw new DocNotFoundError(args.id, args.version);
+      return { content: [{ type: "text", text: JSON.stringify(primerFullPayload(primer, true), null, 2) }] };
+    }
     const store = getGenericStore(platform);
     const result = await store.loadFullDoc(
       args.id,
       args.version,
       args.highlight_key ?? true,
     );
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    const extra =
+      platform === "forge" || platform === "neoforge"
+        ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
+        : undefined;
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ...result,
+          ...(extra?.warning ? { warning: extra.warning, versionFallback: extra.versionFallback } : {}),
+        }, null, 2),
+      }],
+    };
   } catch (e) {
     return handleError(e, platform);
   }
@@ -914,7 +988,10 @@ export async function getDocFull(
 export const getDocRelatedSchema = {
   name: "get_doc_related",
   description: `获取与指定文档页面相关的其他页面列表，支持多平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader）。
-返回共享最多关键词的其他页面，按相关性降序排列。基岩请用 get_bedrock_doc_related。`,
+适用于：想了解某个主题，但不知道还需要查阅哪些关联文档时。返回共享最多关键词的其他页面，按相关性降序排列。基岩请用 get_bedrock_doc_related。
+成功时 JSON 根是数组（与其它 platform 相同）。
+
+⚠️ Quilt 无此页时会回退 Fabric（条目带 sourcePlatform=fabric 与 warning），并丢掉 FAPI 专属 Registry/ItemGroup 页。FAPI 专属 id 拒绝（ok=false 对象，不是数组）。QSL 不要用 Fabric Registry 页。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_docs 返回的 results[].id"),
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
@@ -941,7 +1018,14 @@ export async function getDocRelated(
       args.version,
       args.limit ?? 5,
     );
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    const extra =
+      platform === "forge" || platform === "neoforge"
+        ? (store as { describeVersionResolution?: (v: string) => { warning?: string } }).describeVersionResolution?.(args.version)
+        : undefined;
+    const payload = extra?.warning
+      ? (Array.isArray(result) ? result.map((h) => ({ ...h, warning: extra.warning })) : result)
+      : result;
+    return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
   } catch (e) {
     return handleError(e, platform);
   }

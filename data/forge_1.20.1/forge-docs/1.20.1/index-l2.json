@@ -2023,5 +2023,99 @@
     "keySections": 1,
     "file": "resources_server_tags.md",
     "processedFile": "processed/resources_server_tags.md"
+  },
+  {
+    "id": "1.20.1/primer_1_20",
+    "version": "1.20.1",
+    "label": "Minecraft 1.19.4 -> 1.20 Mod Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.20/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Pack Changes",
+        "level": 2,
+        "summary": "There are a number of user-facing changes that are part of vanilla which are not discussed below that may be relevant to modders. You can find a list of them on Misode's version changelog."
+      },
+      {
+        "title": "Moving Experimental Features",
+        "level": 2,
+        "summary": "All experimental features which were disabled with the update120 flag are now moved to their proper locations and implementations. Removed features flags can be seen within net.minecraft.world.level."
+      },
+      {
+        "title": "LootData",
+        "level": 2,
+        "summary": "Loot Tables, Predicates, and Item Modifiers have been internally migrated to be handled by one system: LootData. LootData is resolved using a LootDataResolver and identified through its LootDataType."
+      },
+      {
+        "title": "Vertex Logic Changes",
+        "level": 2,
+        "summary": "Vertices within the projection matrix can now be sorted via com.mojang.blaze3d.vertex.VertexSorting. By default, sorting can occur either from the distance to the origin (#DISTANCETOORIGIN), by dis..."
+      },
+      {
+        "title": "GuiGraphics",
+        "level": 2,
+        "summary": "GuiComponent has been fully removed from the game, now taking the form of GuiGraphics. GuiGraphics, as the name implies, holds all drawing related information and helpers for GUIs."
+      },
+      {
+        "title": "Light Engine Rewrite",
+        "level": 2,
+        "summary": "The light engine has been rewritten to be more efficient and consolidated. While the basic usages of the light engine remain similar, more complicated tasks will require some amount of rewriting."
+      },
+      {
+        "title": "RuleBlockEntityModifier",
+        "level": 2,
+        "summary": "Within the rule structure processor, block entities can now be streamlined for modification using a RuleBlockEntityModifier. These simply define how to modify the tag on a particular block entity."
+      },
+      {
+        "title": "Signs: Now with More Features",
+        "level": 2,
+        "summary": "Signs now have a multitude of features. First, the sign text itself is stored within a net.minecraft.world.level.block.entity.SignText object. The text can be on both the front and back of the sign."
+      },
+      {
+        "title": "Goodbye Legacy Smithing",
+        "level": 2,
+        "summary": "In 1.19.4, the current smithing implementation was deprecated and migrated to a legacy implementation to be replaced with transformers and trims. 1.20 removes the legacy implemenation in its entirety."
+      },
+      {
+        "title": "Redstone Signals via the SignalGetter",
+        "level": 2,
+        "summary": "All signal information originally tied to the level have been migrated into its own getter called net.minecraft.world.level.SignalGetter."
+      },
+      {
+        "title": "Resonate Vibrations",
+        "level": 2,
+        "summary": "As 1.20 added in calibrated sculk sensors, vibrations listeners have been modified to handle different frequencies and allow some form of resonation with other blocks."
+      },
+      {
+        "title": "StructureProcessor Redefinitions",
+        "level": 2,
+        "summary": "The two main methods within StructureProcessor have been slightly changed to redefine their implementations."
+      },
+      {
+        "title": "Stripping Materials",
+        "level": 2,
+        "summary": "Materials have been completely removed from Block Properties. There are a number of changes reflecting this."
+      },
+      {
+        "title": "Criteria Changes",
+        "level": 2,
+        "summary": "All AbstractCriterionTriggerInstances now take in a ContextAwarePredicate instead of a EntityPredicate$Composite representing teh player."
+      },
+      {
+        "title": "Creative Tab Registry",
+        "level": 2,
+        "summary": "CreativeModeTabs are now a new static registry."
+      },
+      {
+        "title": "Minor Additions, Changes, and Removals",
+        "level": 2,
+        "summary": "The following is a list of useful or interesting additions, changes, and removals that do not deserve their own section in the primer."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 8,
+    "file": "primer_1_20.md",
+    "processedFile": "processed/primer_1_20.md"
   }
 ]

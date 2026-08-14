@@ -30,7 +30,7 @@ function Get-RepoRoot {
 function Resolve-PlatformVersion {
     param([string]$Dir)
     $norm = $Dir.Replace("\", "/")
-    if ($norm -match '/(forge|fabric|quilt|liteloader|rift|modloader)/(\d+\.\d+(?:\.\d+)?)/?$') {
+    if ($norm -match '/(forge|fabric|quilt|liteloader|rift|modloader|neoforge)/(\d+\.\d+(?:\.\d+)?)/?$') {
         return @{ Platform = $Matches[1]; Version = $Matches[2]; Rel = "$($Matches[1])/$($Matches[2])" }
     }
     if ($norm -match '/neoforge/?$') {
@@ -195,7 +195,7 @@ $repoRoot = Get-RepoRoot
 
 if ($All) {
     $targets = @()
-    foreach ($plat in @("forge", "fabric", "quilt", "liteloader", "rift", "modloader")) {
+    foreach ($plat in @("forge", "fabric", "quilt", "liteloader", "rift", "modloader", "neoforge")) {
         $platDir = Join-Path $repoRoot $plat
         if (-not (Test-Path $platDir)) { continue }
         foreach ($verDir in Get-ChildItem $platDir -Directory) {

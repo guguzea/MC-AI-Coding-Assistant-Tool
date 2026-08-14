@@ -11,8 +11,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "bedrock-docs",
-    "fetchedAt": "2026-08-13T15:09:35.601Z",
-    "sha256": "d0bf6e9b9b297556ccf06f75b324a3140aaef9a22a010aa133ccd84b94627a3c"
+    "fetchedAt": "2026-08-14T18:35:14.267Z",
+    "sha256": "91b7f6509eafb9c7a73472be159a346532cd1de225e751dcb1127838fc892bb6"
   },
   {
     "id": "stable/experimental-features-toggle",
@@ -26,8 +26,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "bedrock-docs",
-    "fetchedAt": "2026-08-13T15:09:42.151Z",
-    "sha256": "5f8ec7a4803d97df1fadb22c9221003c7f7f44fad59a54696606f621c0d1512e"
+    "fetchedAt": "2026-08-14T18:35:16.643Z",
+    "sha256": "c71b297fef364f6a1888c8a1077fb6bf391f9f9ea9269ef203d9d8f6c93a7e85"
   },
   {
     "id": "stable/script-server",
@@ -41,8 +41,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "bedrock-docs",
-    "fetchedAt": "2026-08-13T15:09:48.323Z",
-    "sha256": "ccf16d31c40776b45f1aac5642efd2baae1aa7bd50ec38c38e799dd93a7d10ed"
+    "fetchedAt": "2026-08-14T18:35:18.068Z",
+    "sha256": "b9fb5bedcd6e38f3b7bb2f5f135f64ea3bfd956424673d97eb79a064cf5da92d"
   },
   {
     "id": "stable/script-api-intro",
@@ -55,7 +55,246 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "bedrock-docs",
-    "fetchedAt": "2026-08-13T15:09:53.377Z",
-    "sha256": "a44f0b1b23c567080991f29ac970f2cc9de138bed7d180f4370af08f331cff05"
+    "fetchedAt": "2026-08-14T18:35:19.209Z",
+    "sha256": "f5eec0ec7d200d6b91ebf014dce2907682f832735f3f3364eebe487cded73c88"
+  },
+  {
+    "id": "stable/getting-started",
+    "version": "stable",
+    "label": "Getting Started with Minecraft Add-Ons",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/gettingstarted?view=minecraft-bedrock-stable",
+    "tags": [
+      "pack",
+      "intro"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:20.077Z",
+    "sha256": "2db553c0810ca4eee6a2ba9c071f7924342dbe2f92375521279450846e0ed5ee"
+  },
+  {
+    "id": "stable/resource-pack",
+    "version": "stable",
+    "label": "Introduction to Resource Packs",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/resourcepack?view=minecraft-bedrock-stable",
+    "tags": [
+      "resourcepack",
+      "rp"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:21.285Z",
+    "sha256": "d755ec792e23906b9cb2b1e06da9a0ed4d97a6ea2b65403faaa1e9e3bb96d73d"
+  },
+  {
+    "id": "stable/behavior-pack",
+    "version": "stable",
+    "label": "Introduction to Behavior Packs",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/behaviorpack?view=minecraft-bedrock-stable",
+    "tags": [
+      "behaviorpack",
+      "bp"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:22.124Z",
+    "sha256": "be3bab2bc36003763880b5090177017c63e1b9441b6aa50b326427f28869909a"
+  },
+  {
+    "id": "stable/entity-behavior-intro",
+    "version": "stable",
+    "label": "Entity Behavior Introduction",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitybehaviorintroduction?view=minecraft-bedrock-stable",
+    "tags": [
+      "entity",
+      "bp"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:23.542Z",
+    "sha256": "2f1c83ffd8a699b09d0df6e57844242714d56c45d88f36cb0fb70728b59215ff"
+  },
+  {
+    "id": "stable/entity-components",
+    "version": "stable",
+    "label": "Entity Components",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/componentlist?view=minecraft-bedrock-stable",
+    "tags": [
+      "entity",
+      "components"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:24.702Z",
+    "sha256": "c30c229fe51e062586295031d781992a235e6eb33151d0a139962de2b40521de"
+  },
+  {
+    "id": "stable/custom-block",
+    "version": "stable",
+    "label": "Create a Custom Die Block",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblock?view=minecraft-bedrock-stable",
+    "tags": [
+      "block",
+      "bp",
+      "rp"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:25.987Z",
+    "sha256": "8b1922fbde09a9ab3f7d28162404a08148ce22aea8531fbc44faee0d2e639ce0"
+  },
+  {
+    "id": "stable/block-components",
+    "version": "stable",
+    "label": "Block Components",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/blockcomponentslist?view=minecraft-bedrock-stable",
+    "tags": [
+      "block",
+      "components"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:26.791Z",
+    "sha256": "730a61be6043c8b991e990ac573b7dfdef88789d382828ffc9ca0ab4c9e896c4"
+  },
+  {
+    "id": "stable/custom-items",
+    "version": "stable",
+    "label": "How to Add Custom Items",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomitems?view=minecraft-bedrock-stable",
+    "tags": [
+      "item",
+      "bp"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:27.897Z",
+    "sha256": "de1e724470764b03c6be196f2d7691f061d2bd0840382549f96870aed36374ca"
+  },
+  {
+    "id": "stable/item-components",
+    "version": "stable",
+    "label": "Item Components",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/itemreference/examples/itemcomponentlist?view=minecraft-bedrock-stable",
+    "tags": [
+      "item",
+      "components"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:28.640Z",
+    "sha256": "458555934acdd1180775eba22fb22315c8a5f28f51fde18f5999e01e99b62c37"
+  },
+  {
+    "id": "stable/molang-intro",
+    "version": "stable",
+    "label": "An Introduction to Molang",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/introduction?view=minecraft-bedrock-stable",
+    "tags": [
+      "molang"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:29.741Z",
+    "sha256": "75b62e9cf8a1d3a6fcfe56fa0aeb9be967bdcf5f4db4fab23d91e48f19c6454f"
+  },
+  {
+    "id": "stable/molang-syntax",
+    "version": "stable",
+    "label": "Molang Syntax Guide",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable",
+    "tags": [
+      "molang"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:30.571Z",
+    "sha256": "f1d5af14074be031a62f937c9c6f3754d003fe2a4458c13616582b0c47b3a7f3"
+  },
+  {
+    "id": "stable/features-intro",
+    "version": "stable",
+    "label": "Introduction to Features",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/featuresreference/examples/featuresintroduction?view=minecraft-bedrock-stable",
+    "tags": [
+      "worldgen",
+      "features"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:31.677Z",
+    "sha256": "8cb4024a0cd6e61fcacbaca80d7f868f72bf40bea8679b30ecd7d8cc563fcd7d"
+  },
+  {
+    "id": "stable/biomes",
+    "version": "stable",
+    "label": "Biomes",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/biomesreference/examples/componentlist?view=minecraft-bedrock-stable",
+    "tags": [
+      "worldgen",
+      "biome"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:32.844Z",
+    "sha256": "8659d9d4a5dd65b0cc4d591462df7a12f8b8331c5e0a096d114906d87809bb54"
+  },
+  {
+    "id": "stable/world-after-events",
+    "version": "stable",
+    "label": "WorldAfterEvents",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-stable",
+    "tags": [
+      "script",
+      "events"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:34.097Z",
+    "sha256": "1fcd6a603f3b9fea00ad4762e48df16903123cf47a6eb82ca1bb2a7283fe4502"
+  },
+  {
+    "id": "stable/system-after-events",
+    "version": "stable",
+    "label": "SystemAfterEvents",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/systemafterevents?view=minecraft-bedrock-stable",
+    "tags": [
+      "script",
+      "events"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:34.896Z",
+    "sha256": "483d6ced70c40aebf81980214a96d1fb713486ecd5a168e92108d0f1422b0bd5"
+  },
+  {
+    "id": "stable/script-server-ui",
+    "version": "stable",
+    "label": "@minecraft/server-ui",
+    "url": "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/minecraft-server-ui?view=minecraft-bedrock-stable",
+    "tags": [
+      "script",
+      "ui"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "bedrock-docs",
+    "fetchedAt": "2026-08-14T18:35:35.715Z",
+    "sha256": "254c60d70c9579705e843359487fd44b88cccc6a168fba736c4bf87c05766965"
   }
 ]

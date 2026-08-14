@@ -1,0 +1,36 @@
+{
+  "file": "1.6.4-modloader",
+  "mappingsVersion": "mcp-1.6.4",
+  "mapping": "mcp",
+  "source": "safe-api.md (MCP named / public ModLoader API)",
+  "classCount": 2,
+  "classes": [
+    {
+      "fqcn": "ModLoader",
+      "simpleName": "ModLoader",
+      "pkg": "",
+      "methods": [
+        "addRecipe",
+        "addShapelessRecipe",
+        "addName",
+        "registerBlock",
+        "registerItem",
+        "setInGameHook",
+        "setInGUIHook"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "modloader/1.6.4/knowledge/common/safe-api.md"
+    },
+    {
+      "fqcn": "BaseMod",
+      "simpleName": "BaseMod",
+      "pkg": "",
+      "methods": ["getVersion", "load", "modsLoaded", "getName"],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "modloader/1.6.4/knowledge/common/safe-api.md"
+    }
+  ],
+  "note": "无独立 loader jar 可反编译；摘要来自已打开的 MCP named 安全表，不是混淆短名。1.5.2/1.2.5 未打开 named，不要用本文件冒充。"
+}

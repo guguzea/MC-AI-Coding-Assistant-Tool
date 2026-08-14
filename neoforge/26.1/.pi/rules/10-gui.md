@@ -1,0 +1,14 @@
+﻿---
+description: 10 — GUI（NeoForge 26.1）
+---
+
+# 10 — GUI（NeoForge 26.1）
+
+来源：https://docs.neoforged.net/docs/gui/menus/
+
+- 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
+- `AbstractContainerMenu` + 客户端 `Screen` + `MenuScreens.register`。
+- 菜单 API 以 26.1 gui 文档为准。
+- 额外数据同步：DataSlot / ContainerData，或 06 的 Payload。**禁止 SimpleChannel。**
+
+1.20.4 文档出现 `IForgeMenuType.create` 与 `NetworkHooks.openScreen`。更高版本名称可能变，先 `search_neoforge_docs version=26.1 query=MenuType`。

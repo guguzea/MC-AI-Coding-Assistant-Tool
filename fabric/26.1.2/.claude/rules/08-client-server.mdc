@@ -1,0 +1,4 @@
+# 08 — 物理端
+
+入口分 main / client（fmj）。按键 `26.1.2/develop_key-mappings`。Mixin `26.1.2/develop_mixins_bytecode`。
+客户端渲染 `26.1.2/develop_rendering_basic-concepts`。不要在服务端调 `Minecraft.getInstance()`。

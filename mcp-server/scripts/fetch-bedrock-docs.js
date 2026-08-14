@@ -39,6 +39,102 @@ const PAGES = [
     url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/introduction?view=minecraft-bedrock-stable",
     tags: ["script"],
   },
+  {
+    id: "getting-started",
+    label: "Getting Started with Minecraft Add-Ons",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/gettingstarted?view=minecraft-bedrock-stable",
+    tags: ["pack", "intro"],
+  },
+  {
+    id: "resource-pack",
+    label: "Introduction to Resource Packs",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/resourcepack?view=minecraft-bedrock-stable",
+    tags: ["resourcepack", "rp"],
+  },
+  {
+    id: "behavior-pack",
+    label: "Introduction to Behavior Packs",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/behaviorpack?view=minecraft-bedrock-stable",
+    tags: ["behaviorpack", "bp"],
+  },
+  {
+    id: "entity-behavior-intro",
+    label: "Entity Behavior Introduction",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/entitybehaviorintroduction?view=minecraft-bedrock-stable",
+    tags: ["entity", "bp"],
+  },
+  {
+    id: "entity-components",
+    label: "Entity Components",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/entityreference/examples/componentlist?view=minecraft-bedrock-stable",
+    tags: ["entity", "components"],
+  },
+  {
+    id: "custom-block",
+    label: "Create a Custom Die Block",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/customblock?view=minecraft-bedrock-stable",
+    tags: ["block", "bp", "rp"],
+  },
+  {
+    id: "block-components",
+    label: "Block Components",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/blockreference/examples/blockcomponents/blockcomponentslist?view=minecraft-bedrock-stable",
+    tags: ["block", "components"],
+  },
+  {
+    id: "custom-items",
+    label: "How to Add Custom Items",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/addcustomitems?view=minecraft-bedrock-stable",
+    tags: ["item", "bp"],
+  },
+  {
+    id: "item-components",
+    label: "Item Components",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/itemreference/examples/itemcomponentlist?view=minecraft-bedrock-stable",
+    tags: ["item", "components"],
+  },
+  {
+    id: "molang-intro",
+    label: "An Introduction to Molang",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/introduction?view=minecraft-bedrock-stable",
+    tags: ["molang"],
+  },
+  {
+    id: "molang-syntax",
+    label: "Molang Syntax Guide",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/documents/molang/syntax-guide?view=minecraft-bedrock-stable",
+    tags: ["molang"],
+  },
+  {
+    id: "features-intro",
+    label: "Introduction to Features",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/featuresreference/examples/featuresintroduction?view=minecraft-bedrock-stable",
+    tags: ["worldgen", "features"],
+  },
+  {
+    id: "biomes",
+    label: "Biomes",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/reference/content/biomesreference/examples/componentlist?view=minecraft-bedrock-stable",
+    tags: ["worldgen", "biome"],
+  },
+  {
+    id: "world-after-events",
+    label: "WorldAfterEvents",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/worldafterevents?view=minecraft-bedrock-stable",
+    tags: ["script", "events"],
+  },
+  {
+    id: "system-after-events",
+    label: "SystemAfterEvents",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/systemafterevents?view=minecraft-bedrock-stable",
+    tags: ["script", "events"],
+  },
+  {
+    id: "script-server-ui",
+    label: "@minecraft/server-ui",
+    url: "https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/minecraft-server-ui?view=minecraft-bedrock-stable",
+    tags: ["script", "ui"],
+  },
 ];
 
 function sha(s) {

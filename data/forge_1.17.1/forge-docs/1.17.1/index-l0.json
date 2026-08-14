@@ -339,6 +339,15 @@
     "sectionCount": 0
   },
   {
+    "id": "1.17.1/primer_1_17",
+    "version": "1.17.1",
+    "label": "Minecraft 1.16.5 -> 1.17 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.17/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 10
+  },
+  {
     "id": "1.17.1/models_files",
     "version": "1.17.1",
     "label": "Model Files",

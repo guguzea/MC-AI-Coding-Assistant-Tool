@@ -4,7 +4,22 @@ description: 09 — 基岩反模式
 
 # 09 — 基岩反模式
 
-- 错 UUID / RP 与 BP identifier 对不上
-- 用 Java query_api 查 Script API
-- 一律写 experimentalGameplay
-- 发明 worldgen/experimental.json 当开关
+## Decision Flow
+
+```
+→ 要查 API → search_bedrock_docs / get_bedrock_doc_*；禁止 query_api / Yarn
+→ 要校验 pack → validate_addon_manifest + validate_bp_json；禁止 validate_project / validate_datapack_json
+→ 要 Gradle / 映射 → 拒绝并改口：基岩无 ForgeGradle、无 convert_mapping
+→ 用户要 Beta → 走 07 分层；禁止 experimentalGameplay 与虚构 experimental.json
+```
+
+## 禁止（已核实）
+
+- RP 与 BP **identifier 对不上**，或 header/module **uuid 重复**
+- 用 Java `query_api` / `mixin_analyze` / Yarn 查 Script API 或模型路径
+- 一律写 `"experimentalGameplay": true`
+- 发明 `worldgen/experimental.json` 当世界实验开关
+- 把 `assets/<modid>/models`、DeferredRegister、`EntityType`、`BlockBehaviour`、`generate_datagen` 写进基岩包
+- 未点名 Beta 就生成 Beta 事件或 `@minecraft/server-beta`
+- 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI / `level.dat` 的 `experiments.gametest`）
+- `diagnose_gradle` 修 Loom/Forge 来「修」Add-On

@@ -1,5 +1,5 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/reference/content/addonsreference/packmanifest?view=minecraft-bedrock-stable
-> 抓取时间：2026-08-13T15:09:35.243Z
+> 抓取时间：2026-08-14T18:35:14.233Z
 > 警告：此文档可能滞后于当前正式版
 
 Add-Ons Reference: manifest.json | Microsoft Learn

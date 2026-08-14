@@ -1,25 +1,34 @@
 export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }> = {
   "mc-new-block": {
     title: "新方块工作流",
-    body: `1. DeferredRegister 注册方块（mc-registry / 01-registry）
-2. 注册 BlockItem（同名）
-3. blockstates + 模型（generate_model 或 DataGen）
-4. lang en_us/zh_cn（generate_lang）
-5. loot table（generate_datagen loottable）
-6. 可选：tags、recipe DataGen`,
+    body: `1. 确认平台与精确 MC 版本。从零工程：download_official_mdk（dryRun 先看；26.1.x/26.2 须选 buildPlugin）。已有工程不要下 MDK。
+2. 读该档 01-registry / mc-registry，不要默认 Forge 1.20：
+   - Forge：DeferredRegister（该版规则）
+   - NeoForge：该档 DeferredRegister / DeferredBlock / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo；禁止 NeoForgeAddonPlugin
+   - Fabric：Registry.register；26.1.2 用官方名 + implementation，不要 modImplementation
+   - Quilt：Vanilla Registry.register + ModInitializer(ModContainer)；禁止编 QuiltRegistry；02–10 仍读 fabric/<ver>
+   - LiteLoader / Rift / ModLoader：只使用该版核实表；禁止 DeferredRegister / generate_datagen
+3. 注册 BlockItem（现代档）或该时代等价物
+4. 资源：现代档 generate_model 或 DataGen；老平台手写 assets/ JSON
+5. lang：generate_lang（en_us/zh_cn）
+6. 战利品/合成：Forge 1.20.1 与 NeoForge 1.21.x 才 generate_datagen；其余手写 data/ 或 ModLoader.addRecipe`,
   },
   "mc-new-entity": {
     title: "新实体工作流",
-    body: `1. EntityType DeferredRegister + 属性（mc-entity）
-2. 注册 SpawnPlacement / 生物蛋
-3. 客户端 EntityRenderer（generate_entity_renderer）
-4. loot / 音效按需`,
+    body: `1. 确认平台与精确 MC 版本（从零才 download_official_mdk；已有工程不要下）
+2. 读该档 04-entity：
+   - Forge/NeoForge：EntityType + 该档注册 API（Neo 用 DeferredHolder 族，禁止把 Forge RegistryObject 当 Neo）
+   - Fabric/Quilt：Registry.register EntityType；基岩用 BP/RP JSON，不是 EntityType
+   - 老平台：核实表里的 Adder / BaseMod 钩子；表外禁止输出
+3. 客户端渲染：现代档 generate_entity_renderer / 04；Rift 用 EntityRendererAdder
+4. loot / 音效按该时代资源路径，不要对 LiteLoader/Rift/ModLoader 调 generate_datagen`,
   },
   "mc-new-gui": {
     title: "GUI 工作流",
-    body: `1. MenuType + AbstractContainerMenu（mc-gui）
-2. Screen + MenuScreens.register
-3. SimpleChannel 同步槽位（mc-networking）`,
+    body: `1. 确认平台与 MC 版本（已有工程不要下 MDK）
+2. MenuType + AbstractContainerMenu（mc-gui / 10-gui）
+3. Screen + MenuScreens.register（客户端）
+4. 同步：NeoForge 用 Payload（1.20.4 为 RegisterPayloadHandlerEvent 单数；1.21+ 为 RegisterPayloadHandlersEvent）；Forge 1.20.1 才是 SimpleChannel。禁止把 SimpleChannel 写进 NeoForge。`,
   },
   "mc-crash-triage": {
     title: "崩溃分诊",
@@ -37,12 +46,13 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-build-mod": {
     title: "模组构建流程",
-    body: `1. 确认平台 / MC 版本 / mappings（读 mods.toml 或 fabric.mod.json、build.gradle）
-2. validate_project；必要时 diagnose_gradle / check_dependencies
-3. 构建：Forge/NeoForge 用 ./gradlew build；Fabric 用 Loom 等价任务；需要资源时先跑 DataGen
-4. 确认产出 jar：build/libs/（排除 -sources、-javadoc 等）
-5. 构建失败：对 Gradle/编译日志用 analyze_log / crash_analyze，修好后重跑构建
-6. 完成后可接工作流 mc-ingame-iterate（真机测试与修复循环）`,
+    body: `1. 确认平台 / 精确 MC 版本 / mappings。从零工程：调用 download_official_mdk（dryRun 先看 URL/hash；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle，二者官方都提供）。已有工程加内容不要下 MDK。
+2. 读 MDK 返回的 buildPlugin / mappings / entryClass，再加载对应 00–10；未建档版本禁止读邻档规则，改口 search_*_docs。
+3. validate_project 仅 Forge；NeoForge/Fabric 用文档工具。必要时 diagnose_gradle / check_dependencies
+4. 构建：Forge/NeoForge 用 ./gradlew build；Fabric 用 Loom 等价任务；需要资源时先跑 DataGen
+5. 确认产出 jar：build/libs/（排除 -sources、-javadoc 等）
+6. 构建失败：对 Gradle/编译日志用 analyze_log / crash_analyze，修好后重跑构建
+7. 完成后可接工作流 mc-ingame-iterate（真机测试与修复循环）`,
   },
   "mc-ingame-iterate": {
     title: "真机测试与修复循环",

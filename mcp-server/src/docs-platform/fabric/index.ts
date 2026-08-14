@@ -27,6 +27,11 @@ import {
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
+import {
+  findFabricPorting,
+  isFabricPortingId,
+  searchFabricPortingPages,
+} from "./extra-porting.js";
 
 function getDataRoot(): string {
   return resolveDataDir();
@@ -222,6 +227,20 @@ export async function searchFabricDocs(
       }) as typeof results;
     }
 
+    const portingHits = searchFabricPortingPages(query, version);
+    if (portingHits.length) {
+      const seen = new Set((results as Array<{ id: string }>).map((r) => r.id));
+      results = [...portingHits.filter((p) => !seen.has(p.id)), ...(results as object[])].slice(
+        0,
+        12,
+      ) as typeof results;
+    }
+
+    const extraWarn =
+      version === "26.2" || version.startsWith("26.2")
+        ? "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。"
+        : undefined;
+
     return {
       content: [
         {
@@ -236,7 +255,10 @@ export async function searchFabricDocs(
               source,
               tags,
               semantic: semanticRanked,
-              warning: joinSearchWarnings(missingSemanticDbWarning(semanticMissing)),
+              warning: joinSearchWarnings(
+                missingSemanticDbWarning(semanticMissing),
+                extraWarn,
+              ),
               total: (results as unknown as Array<unknown>).length,
               results,
             },
@@ -284,6 +306,29 @@ export async function getFabricDocSummary(
   args: z.infer<typeof getFabricDocSummarySchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
+    if (isFabricPortingId(args.id)) {
+      const page = findFabricPorting(args.id);
+      if (!page) {
+        return handleError(new DocNotFoundError(args.id, args.version));
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              ok: true,
+              id: page.id,
+              version: page.to,
+              label: page.title,
+              url: page.url,
+              firstParagraph: page.body.split(/\n/).find((l) => l.trim() && !l.startsWith("#")) ?? "",
+              source: "porting-extra",
+              _source: "porting-extra",
+            }),
+          },
+        ],
+      };
+    }
     const resolvedSource = args.source ?? "fabric-docs";
     const result = getStore(args.version, resolvedSource).loadSummary(
       args.id,
@@ -343,6 +388,26 @@ export async function getFabricDocFull(
   args: z.infer<typeof getFabricDocFullSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
+    if (isFabricPortingId(args.id)) {
+      const page = findFabricPorting(args.id);
+      if (!page) {
+        return handleError(new DocNotFoundError(args.id, args.version));
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              ok: true,
+              content: page.body,
+              meta: { id: page.id, version: page.to, label: page.title, url: page.url },
+              source: "porting-extra",
+              _source: "porting-extra",
+            }),
+          },
+        ],
+      };
+    }
     const resolvedSource = args.source ?? "fabric-docs";
     const result = await getStore(args.version, resolvedSource).loadFullDoc(
       args.id,

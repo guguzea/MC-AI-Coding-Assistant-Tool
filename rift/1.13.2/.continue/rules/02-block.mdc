@@ -1,3 +1,9 @@
 # 02 — 方块
 
-实现 `BlockAdder.registerBlocks()`。其它 `*Adder` 仅类名已核实、方法未打开则标未核实，禁止臆造。
+实现 `BlockAdder.registerBlocks()`。方法见 `knowledge/common/listeners.md`。
+
+## 逐步
+
+1. public 无参构造的 Listener 类写入 `riftmod.json` `listeners`。
+2. 在 `registerBlocks()` 内 `new Block(...)` 并完成该版原版注册调用（打开 1.13 源码，禁止臆造 `Registry.register` 当 Rift API）。
+3. 方块模型/方块状态 JSON：手写 `resources/assets/<id>/blockstates` 与 `models`（见 07）。不要 `generate_datagen`。

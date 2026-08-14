@@ -13,6 +13,18 @@
     → 禁止 experimentalGameplay、禁止虚构 worldgen/experimental.json
 → min_engine_version < 约 1.19.80：对照该引擎归档，不要倒灌现行 capabilities
 → ≥ 1.19.80：世界实验走 level.dat experiments.gametest；pack 不能替玩家打开
+→ UI → 只用 stable @minecraft/server-ui（stable/script-server-ui）
 ```
 
-滞后：`search_bedrock_docs` 的 docsStatus.stale **不是**拒绝令。
+## 已核实约束
+
+- BP manifest：`modules` 含 `type: script`、`language: javascript`、`entry`（scaffold：`scripts/main.js`）；`dependencies` 含 `module_name: "@minecraft/server"`。
+- 版本号读 `data/bedrock-docs-status.json` 的 `scriptApiStable`（不要写死旧 1.x）。`docsStatus.stale` **不是**拒绝令。
+- 事件概述：`stable/world-after-events`、`stable/system-after-events`。类/模块：`stable/script-server`、`stable/script-api-intro`。
+- 库 Skill：`knowledge/libs/bedrock-only/mc-script-server`、`mc-script-ui`。禁止把 CCA/Trinkets/GeckoLib 当基岩教程。
+
+滞后：`search_bedrock_docs` 的 docsStatus.stale 不是拒绝令。
+
+## 文档
+
+`stable/script-api-intro`、`stable/script-server`、`stable/world-after-events`、`stable/system-after-events`、`stable/script-server-ui`、`stable/experimental-features-toggle`。

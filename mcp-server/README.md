@@ -21,7 +21,7 @@ npm run build
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
-完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` / `validate_project` 仅 Forge；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
+完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` / `validate_project` 仅 Forge（`validate_project` 对非 Forge **早退**，不是通用校验器）；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
 
 ---
 
@@ -89,7 +89,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 | `MC_SKILL_UPDATE_REPO` | GitHub `owner/repo`（默认本仓库） | `guguzea/MC-AI-Coding-Assistant-Tool` |
 | `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |
-| `MC_SKILL_CACHE` | 反编译/下载缓存根目录（默认 `%APPDATA%/mc-skill-cache` / `~/.config/mc-skill-cache`） | `H:/mc-skill-cache` |
+| `MC_SKILL_CACHE` | 反编译/MDK/loader-jar 缓存根。MCP（`resolveCacheRoot`）与脚本都读此变量。不设则分家：MCP 默认 APPDATA/`~/.config/mc-skill-cache`，`decompile-loader-apis.mjs` 默认 `D:\mc-skill-temp`。请设成同一路径。 | `D:/mc-skill-temp` |
 | `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义） | `1` |
 | `MC_SKILL_UPDATE_DOWNLOAD_TIMEOUT_MS` | data zip 下载超时 | `600000` |
 | `MC_SKILL_GITHUB_TIMEOUT_MS` | Release API 超时 | `25000` |

@@ -1159,5 +1159,34 @@
     "keySections": 1,
     "file": "utilities_tags.md",
     "processedFile": "processed/utilities_tags.md"
+  },
+  {
+    "id": "1.15.2/primer_1_15",
+    "version": "1.15.2",
+    "label": "1.14 -> 1.15 Update Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.15/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "License",
+        "level": 2,
+        "summary": "Your choice of CC0 or MIT"
+      },
+      {
+        "title": "Not Rendering",
+        "level": 2,
+        "summary": "* Honestly not much. Ask in the usual channels."
+      },
+      {
+        "title": "Rendering",
+        "level": 2,
+        "summary": "* Forge Blockstate jsons are now removed as having model logic being was always a massive hack * Instead, the vanilla model json format has been expanded."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "primer_1_15.md",
+    "processedFile": "processed/primer_1_15.md"
   }
 ]

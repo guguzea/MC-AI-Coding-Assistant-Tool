@@ -4,4 +4,10 @@ description: 07 — 无 DataGen
 
 # 07 — 无 DataGen
 
-1.6.4 无数据包生成器。
+1.6.4 **没有**数据包生成器。禁止 `generate_datagen`。
+
+## 该时代做法
+
+- 合成：`ModLoader.addRecipe(ItemStack, Object...)` / `addShapelessRecipe`
+- 显示名：`ModLoader.addName` / `addLocalization`
+- 纹理：1.6.4 资源路径按 MCP 该版（不是 `assets/<modid>/models` 的 1.8+ 格式，除非你打开的源码如此）

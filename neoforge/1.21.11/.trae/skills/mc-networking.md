@@ -1,0 +1,60 @@
+﻿---
+name: mc-networking
+description: NeoForge 1.21.11 mc-networking。类名只来自本档核实表与 search_neoforge_docs。
+platform: neoforge
+version: "1.21.11"
+dependencies: []
+mappings: mojmap
+---
+
+# mc-networking（NeoForge 1.21.11）
+
+禁止从 Forge 或邻档复制。1.21.11 文档把 ResourceLocation 换成 Identifier。Primer 26.1 才是下一跳。
+
+# 06 — 网络（NeoForge 1.21.11）
+
+**本档不是 Forge SimpleChannel。** 1.21.11 文档把 ResourceLocation 换成 Identifier。Primer 26.1 才是下一跳。
+
+## 核实骨架
+
+```java
+@SubscribeEvent // mod event bus
+public static void register(final RegisterPayloadHandlersEvent event) {
+    final PayloadRegistrar registrar = event.registrar("1");
+    registrar.playBidirectional(
+        MyData.TYPE,
+        MyData.STREAM_CODEC,
+        new DirectionalPayloadHandler<>(
+            ClientPayloadHandler::handleDataOnMain,
+            ServerPayloadHandler::handleDataOnMain));
+}
+
+public record MyData(String name, int age) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<MyData> TYPE =
+        new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("mymod", "my_data"));
+    public static final StreamCodec<ByteBuf, MyData> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8, MyData::name,
+        ByteBufCodecs.VAR_INT, MyData::age,
+        MyData::new);
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() { return TYPE; }
+}
+
+public static void handleDataOnMain(final MyData data, final IPayloadContext context) {
+    // 默认主线程；若 registrar.executesOn(HandlerThread.NETWORK) 则用 context.enqueueWork
+}
+```
+发送：PacketDistributor；payload TYPE 用 Identifier
+来源：https://docs.neoforged.net/docs/1.21.11/networking/payload/
+
+## 反面清单（写进本档即错）
+
+- `SimpleChannel` / `IMessage` / `NetworkRegistry.newSimpleChannel`
+- 顶层 `net.neoforged.neoforge.network.NetworkRegistry`（若存在 `NetworkRegistry` 也在 `.registration` 且多为 Internal）
+- 把 1.20.4 的 RegisterPayloadHandlerEvent（单数） 抄进 NeoForge 1.21.11
+- `NeoForgeAddonPlugin`
+
+1.21.11 文档已用 Identifier.fromNamespaceAndPath，不要再写 ResourceLocation.fromNamespaceAndPath。
+
+
+触发词：Payload、CustomPacketPayload、PacketDistributor。禁止 SimpleChannel。

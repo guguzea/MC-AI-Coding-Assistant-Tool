@@ -1,5 +1,5 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/documents/experimentalfeaturestoggle?view=minecraft-bedrock-stable
-> 抓取时间：2026-08-13T15:09:41.713Z
+> 抓取时间：2026-08-14T18:35:16.587Z
 > 警告：此文档可能滞后于当前正式版
 
 Experimental Features in Minecraft: Bedrock Edition | Microsoft Learn

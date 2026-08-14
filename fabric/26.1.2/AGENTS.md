@@ -1,0 +1,26 @@
+# Fabric 26.1.2 — Agent 总纲
+
+> 只适用于 **Minecraft / Fabric 26.1.2**。游戏已去混淆。
+> **禁止**读取 `fabric/1.21.11/.cursor/rules` 或任何邻版 01–10。
+> **禁止**把 `fabric-wiki` / 1.21.x wiki 当本版全文。
+> 先 `list_fabric_versions`，再用 `search_fabric_docs`（version=26.1.2）。
+> `query_api` 对 26.1+ **无索引**。Yarn convert 拒绝。
+
+## 硬约束（来自入库文档，不是邻版记忆）
+
+| 项 | 口径 | 文档 id |
+|----|------|---------|
+| 移植起点 | 入库 porting 是 **1.21.11 → 26.1** | `26.1.2/develop_porting_index` |
+| 映射 | 去掉 `mappings` 依赖；用官方名 | 同上 |
+| Java | **25**（porting：不要再用 21） | 同上 |
+| Loom 插件 id | `id "net.fabricmc.fabric-loom"`（不要旧的 `id "fabric-loom"`） | 同上 |
+| 依赖配置 | `implementation` / `compileOnly` / `api`，不要 `modImplementation` | 同上 |
+| 任务名 | `jar` 取代 `remapJar` | 同上 |
+| AW | header `named` → `official` | 同上 |
+| 26.2 | 不要建 `data/fabric_26.2` 树；移植页旁路见 `search_fabric_docs` `porting/26.2` | 计划 2 |
+
+线上 https://docs.fabricmc.net/develop/porting/index 当前可能是 26.1→26.2，与本树入库的 1.21.11→26.1 **不是同一页**。
+
+## 规则文件
+
+00–10 只引用 `data/fabric_26.1.2` 能核到的 id。核不到的编号是「未核实、禁止输出」stub，**不是缺文件**。

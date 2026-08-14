@@ -588,6 +588,15 @@
     "sectionCount": 3
   },
   {
+    "id": "1.20.1/primer_1_20",
+    "version": "1.20.1",
+    "label": "Minecraft 1.19.4 -> 1.20 Mod Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.20/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 16
+  },
+  {
     "id": "1.20.1/gettingstarted_modfiles",
     "version": "1.20.1",
     "label": "Mod Files",

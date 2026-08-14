@@ -1,3 +1,37 @@
 # 05 — 方块与物品 JSON
 
 BP `minecraft:block` / `minecraft:item` + RP 纹理引用。identifier 必须 `namespace:name`。
+
+## Decision Flow
+
+```
+→ 方块教程 → stable/custom-block
+→ 方块组件名 → stable/block-components（表外禁止编 Java BlockBehaviour）
+→ 物品教程 → stable/custom-items
+→ 物品组件名 → stable/item-components
+→ 几何/材质 → RP（02）+ block-components 里的 geometry 等键，以 Learn 为准
+```
+
+## 已核实约束（Learn）
+
+方块（`stable/custom-block`）：
+
+```json
+{
+  "format_version": "1.21.80",
+  "minecraft:block": {
+    "description": { "identifier": "demo:die" },
+    "components": {}
+  }
+}
+```
+
+`description.identifier` 必须带命名空间。组件只从 `stable/block-components` 抄，例如已出现在该页的 `minecraft:collision_box`、`minecraft:geometry`、`minecraft:friction`、`minecraft:light_emission`、`minecraft:destructible_by_mining`、`minecraft:flammable`。标 Legacy / experimental / Upcoming-Creator-Features 的条目未点名实验不要用。
+
+物品：`minecraft:item` + `description.identifier`。组件只从 `stable/item-components` 抄，例如该页已有的 `minecraft:allow_off_hand`、`minecraft:block_placer`、`minecraft:can_destroy_in_creative`。`format_version` 随组件升高（Learn：trim ≥ 1.20.60，dyeable ≥ 1.21.30）。
+
+JSON 校验：`validate_bp_json`。
+
+## 文档
+
+`stable/custom-block`、`stable/block-components`、`stable/custom-items`、`stable/item-components`。

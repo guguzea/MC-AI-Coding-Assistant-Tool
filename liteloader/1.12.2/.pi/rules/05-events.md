@@ -1,10 +1,10 @@
 ﻿---
-description: 05 — LiteMod 生命周期（混合也不能省）
+description: 05 — LiteMod 生命周期
 ---
 
-# 05 — LiteMod 生命周期（混合也不能省）
+# 05 — LiteMod 生命周期
 
-已核实：
+完整表：`knowledge/common/verified-api.md`。
 
 | 接口 | 方法 |
 |------|------|
@@ -13,5 +13,7 @@ description: 05 — LiteMod 生命周期（混合也不能省）
 | Tickable | onTick(Minecraft, float, boolean, boolean) |
 | ChatFilter / ChatListener | onChat(...) |
 | OutboundChatListener | onSendChatMessage(CPacketChatMessage, String) |
+| HUDRenderListener | onPreRenderHUD(int, int)；onPostRenderHUD(int, int) |
+| RenderListener | onRender()；onRenderGui(GuiScreen)；onSetupCameraTransform() |
 
-HUD/Render 等客户端接口目录还有其它类型；**方法未打开源码则禁止臆造**。
+HUD/Render **extends LiteMod**。缺名则停。

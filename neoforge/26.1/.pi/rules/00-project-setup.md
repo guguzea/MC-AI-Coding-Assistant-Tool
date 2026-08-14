@@ -1,0 +1,43 @@
+﻿---
+description: 00 — 项目结构（NeoForge 26.1）
+---
+
+# 00 — 项目结构（NeoForge 26.1）
+
+来源：https://docs.neoforged.net/docs/gettingstarted/ 与官方 MDK（26.1.1/26.1.2 均同时提供 ModDevGradle 与 NeoGradle，必须传 buildPlugin。不为 26.1.1 单造规则树。）。不要用 ForgeGradle / Yarn 冒充。
+
+## 构建插件
+
+官方模组生成器对多个 MC 版本**同时**提供 ModDevGradle（`net.neoforged.moddev`）与 NeoGradle（`net.neoforged.gradle.userdev`）。**禁止按版本硬绑**。从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`。
+
+## Java / mappings
+
+- Java **25**
+- mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
+- 26.1 去混淆 + Identifier。禁止 Yarn。query_api 无本版索引。
+
+## 入口
+
+```java
+@Mod(ExampleMod.MODID)
+public class ExampleMod {
+    public static final String MODID = "examplemod";
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
+        BLOCKS.register(modEventBus);
+        ITEMS.register(modEventBus);
+    }
+}
+```
+
+官方 MDK-26.1.2-ModDevGradle @ 1fd0f4d9… 使用 ModContainer.registerConfig，不再用 ModLoadingContext.get()。
+
+元数据：neoforge.mods.toml。modId 全小写、无 `-`。
+
+## 禁止
+
+- `NeoForgeAddonPlugin`、`getBootstrapContext().getEventBus`
+- 用 Forge `mods.toml` + `net.minecraftforge` 包当 NeoForge 26.1
+- 把邻版 MDK zip 当本版
+- 官方 MDK 404 时回退邻版

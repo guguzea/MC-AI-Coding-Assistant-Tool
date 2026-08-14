@@ -320,8 +320,12 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
   // 仅目标版本 >= 26 时附带 26.1 链接
   const major = parseFloat(version);
   if (!Number.isNaN(major) && major >= 26) {
-    links.push({ title: "Fabric 26.1 迁移文档", url: "https://docs.fabricmc.net/develop/porting/" });
-    links.push({ title: "NeoForge 26.1 迁移指南", url: "https://docs.neoforged.net/primer/docs/26.1/" });
+    links.push({ title: "Fabric 移植索引（线上当前多为 26.1→26.2）", url: "https://docs.fabricmc.net/develop/porting/index" });
+    links.push({ title: "NeoForge Primer 26.1", url: "https://docs.neoforged.net/primer/docs/26.1/" });
+    if (version === "26.2" || version.startsWith("26.2")) {
+      links.push({ title: "NeoForge Primer 26.2", url: "https://docs.neoforged.net/primer/docs/26.2/" });
+      links.push({ title: "Fabric API 26.2 概述", url: "https://fabricmc.net/2026/06/15/262.html" });
+    }
   }
   if (platform === "fabric") {
     links.push({ title: "Fabric Wiki", url: "https://fabricmc.net/wiki/" });

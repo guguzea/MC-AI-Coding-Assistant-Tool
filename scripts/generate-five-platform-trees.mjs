@@ -2,6 +2,9 @@
 /**
  * 一次性生成五平台规则树 + 最小 scaffold（禁止整包复制 fabric/forge）。
  * 运行：node scripts/generate-five-platform-trees.mjs
+ *
+ * 警告：会覆盖 quilt/rift/liteloader/modloader/bedrock 的 AGENTS 与 00–10。
+ * 计划 1 加厚后不要无脑重跑；只需更新 indexKnowledge 列表并单独写 processed/L0。
  */
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import { dirname, join } from "path";
@@ -886,6 +889,7 @@ indexKnowledge("modloader", "1.6.4", "modloader-docs", [
 ]);
 indexKnowledge("liteloader", "1.12.2", "liteloader-docs", [
   ["hybrid", "liteloader/1.12.2/HYBRID.md"],
+  ["verified-api", "liteloader/1.12.2/knowledge/common/verified-api.md"],
 ]);
 
 console.log("five-platform trees written");

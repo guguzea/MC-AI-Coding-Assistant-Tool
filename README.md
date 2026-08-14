@@ -119,7 +119,7 @@ MC_skill/
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `H:/mods/my-mod`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程                           | `1`                               |
-| `MC_SKILL_CACHE`        | 反编译/下载缓存根目录（默认 `%APPDATA%/mc-skill-cache` / `~/.config/mc-skill-cache`） | `H:/mc-skill-cache` |
+| `MC_SKILL_CACHE`        | 反编译/MDK/loader-jar 缓存根。MCP 与脚本都读此变量；不设则 MCP 默认 APPDATA、脚本默认 `D:\mc-skill-temp`，会分家 | `D:/mc-skill-temp` |
 | `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义）       | `1`                               |
 | `MCP_TIMEOUT_MS`        | 测试脚本超时毫秒数                              | `30000`                           |
 
@@ -170,8 +170,8 @@ MC_skill/
 | MC **26.1+** 的 `query_api` / `get_method_params` | 该类 extracted 为 **0 个类**（无 Parchment api-index） | `search_neoforge_docs`（默认 26.1）/ `search_fabric_docs`（先 `list_fabric_versions`，如 26.1.2）；或 `get_minecraft_source` / 反编译。映射层返回 `UNOBFUSCATED_NO_YARN` |
 | Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有 | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
-| Forge **1.7.10–1.11.2** | 无现代教程树与语义库，搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；不要期望 Capability 教程全文 |
-| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle** | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`；Quilt Loom → `search_docs({platform:"quilt"})`；`liteloader` 插件 → **轻量模式**（不跑 FG6/Java17/1.20）；基岩 → `search_bedrock_docs` |
+| Forge **1.7.10–1.11.2** | **无教程规则树**（不要造假 Capability 教程）。搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_docs({platform:"forge"})` / `forge_javadoc`。可选 `forge/1.7.10/AGENTS.md` 只含改口 |
+| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle**；`validate_project` 对非 Forge **早退**（不跑 DeferredRegister/@Mod），不是通用校验器 | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`；Quilt Loom → `search_docs({platform:"quilt"})`；`diagnose_gradle` 对 liteloader 插件走**轻量模式**（不跑 FG6/Java17/1.20），可选 extras（`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`）；Rift / BaseMod 早退；基岩 → `validate_addon_manifest` / `search_bedrock_docs` |
 | `get_server_status.updateHint` 显示有更新 | 可能是检查缓存过期 | 以 `mc_skill_update action=check` 为准；git describe 已超前 Release 则不必 apply |
 
 
@@ -184,14 +184,14 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `query_api` `found:false` = 类不存在 | 索引没有该类。26.1+ 收录 **0** 类；1.14.4/1.15.2 是空 `{}`。改文档搜索或 `get_minecraft_source` |
 | `get_method_params` 覆盖所有 MC 版本 | 与 `query_api` 同一数据源，边界相同 |
 | `get_version_info` 适用于 Fabric/NeoForge | **仅 Forge** |
-| `diagnose_gradle` 能修 Loom / NeoGradle | **仅 ForgeGradle**；检测到 loom/neogradle 会警告并建议改文档工具 |
-| `validate_project` 能校验 `fabric.mod.json` | **仅 Forge** mods.toml / DeferredRegister |
+| `diagnose_gradle` 能修 Loom / NeoGradle | **仅 ForgeGradle**；检测到 loom/neogradle 会警告并建议改文档工具。可选 extras：`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`；Rift / BaseMod 早退 |
+| `validate_project` 能校验 `fabric.mod.json` | 非 Forge **早退**（warning 改口到对应文档/校验工具），不是通用校验器；Forge 才跑 mods.toml / DeferredRegister |
 | `query_registry` 能查模组注册名 | 只查原版 `minecraft:` 资源 ID |
 | 文档搜索为空 = 数据包坏了 | 可能是 L0 降级、标签不对、或该版无 wiki。看 `semantic` / `warning` |
 | 用网站 URL 当 `get_*_doc_full` 的 `id` | **必须**用搜索结果里的 `id` |
 | `search_community_docs` 可当官方 API | **不能**。`links` 条目不抓网页正文 |
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
-| `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT` |
+| `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
 | `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。datagen 路径主要是 Forge 1.20.1 与 NeoForge 1.21.x |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
 | `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
@@ -327,7 +327,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 2. 文档：`search_*` → `get_*_summary` → `get_*_full`（全文勿一次超过 2 页；`id` 必须来自搜索结果）
 3. **平台 API** 用 `search_*_docs`；**Vanilla 签名**才用 `query_api` / `get_method_params`（26.1+ 无索引）
 4. 映射：`convert_mapping` / `lookup_obfuscated`（26.1+ 无混淆层）
-5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`注:Forge 才用 `diagnose_gradle` / `validate_project`；Fabric/Neo 改对应文档工具
+5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`。注：Forge 才跑完整 Gradle/`validate_project` 检查；非 Forge 的 `validate_project` **早退改口**；Fabric/Neo 改对应文档工具
 6. 移植：`analyze_porting_path` →（确认后）`port_project`（默认 dryRun）
 7. 工作流 / 知识：`get_workflow_template` / `list_knowledge_resources` → `read_knowledge_resource`
 
@@ -357,10 +357,10 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 | 工具                 | 作用                                                                                                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `diagnose_gradle`  | **【Forge only】** 检查 `build.gradle` / `gradle.properties`：依赖、Forge 版本、Java toolchain、Parchment、reobf 等。返回 errors / warnings / suggestions。暂不覆盖 Loom / NeoGradle 全分支。    |
+| `diagnose_gradle`  | **【Forge only】** 检查 `build.gradle` / `gradle.properties`：依赖、Forge 版本、Java toolchain、Parchment、reobf 等。返回 errors / warnings / suggestions。暂不覆盖 Loom / NeoGradle 全分支。可选 extras：`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`。检测到 Loom / NeoGradle / 基岩 / Rift / BaseMod 会拒绝并改口；`liteloader` 插件走轻量模式。    |
 | `generate_datagen` | 生成 DataGen Provider 模板：Forge **1.20.1**（recipe/blockstate/itemmodel/loottable/tag）与 NeoForge **1.21.x** 完整路径；另含 advancement / particle / sound。需 `modId`、`targetName`。 |
-| `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
-| `validate_project` | **【Forge only】** 审查项目结构：`mods.toml` / `@Mod` / DeferredRegister / RegistryObject / Mixin / 资源路径 / 重复注册名等。适合首次接手或修完后自查。                                                 |
+| `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
+| `validate_project` | **【Forge only】** 审查项目结构：`mods.toml` / `@Mod` / DeferredRegister / RegistryObject / Mixin / 资源路径 / 重复注册名等。适合首次接手或修完后自查。非 Forge **早退**（passed=true + warning 改口），不是通用校验器。                                                 |
 
 
 
@@ -416,9 +416,9 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | ------------------- | ---------------------------------------------------------- |
 | `list_doc_versions` | 列出**指定** platform 的可用版本（不会一次返回三平台）。                        |
 | `search_docs`       | 多平台 **hybrid** 搜索；Fabric 时可传 `source`。无语义库 → 纯 L0；缺平台数据 → `PLATFORM_DATA_MISSING`。 |
-| `get_doc_summary`   | 多平台 L1 摘要。                                                 |
-| `get_doc_full`      | 多平台全文。                                                     |
-| `get_doc_related`   | 多平台相关页。                                                    |
+| `get_doc_summary`   | 多平台 L1 摘要，用于判断某篇文档是否包含所需内容。Quilt 缺页回退 Fabric（`fallback=fabric`）；FAPI 专属 Registry/ItemGroup 页拒绝（ok=false）。                                                 |
+| `get_doc_full`      | 多平台全文。适用于查看 API 完整步骤、事件列表、配置项清单；`highlight_key` 默认突出 🔴🟠🟢 关键段。Quilt 缺页回退 Fabric；FAPI 专属页拒绝，不返回 Registry 正文。                                                     |
+| `get_doc_related`   | 多平台相关页，返回共享最多关键词的其他页面。成功时 JSON 根是数组。Quilt 回退 Fabric 时仍为数组（条目带 `sourcePlatform:"fabric"` / `warning`），并丢掉 FAPI 专属页；FAPI 专属 id 拒绝（ok=false）。                                                    |
 
 
 
@@ -473,8 +473,8 @@ authored/lib-*.md frontmatter
 
 | 工具                     | 作用                                                                                                                                                                                          |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `diagnose_data_paths`  | 诊断 `MC_SKILL_DATA` / `MC_SKILL_COMMUNITY` 解析结果，以及 forge/fabric/neoforge/community 是 `found` / `empty` / `not_found`。排障首选。                                                                   |
-| `analyze_porting_path` | 扫描项目，识别平台/版本/Mappings/Architectury，输出风险、`routeSteps`、参考链接与建议的 `query_api` 调用。                                                                                                               |
+| `diagnose_data_paths`  | 诊断数据目录配置（高级排障用）。诊断 `MC_SKILL_DATA` / `MC_SKILL_COMMUNITY` 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 `found` / `empty` / `not_found`。排障首选。                                                                   |
+| `analyze_porting_path` | 扫描项目，识别平台/版本/Mappings/Architectury，输出风险、`routeSteps`、参考链接与建议的 `query_api` 调用。LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT`。                                                                                                               |
 | `port_project`         | 执行移植步骤：`init_architectury` / `extract_common` / `apply_version_migration`。默认 **dryRun**；真正写入需 `dryRun=false` + `confirmed=true` + `MC_SKILL_ALLOW_WRITE=1` + 路径在 `MC_SKILL_PROJECT_ROOT` 内。 |
 
 
@@ -513,8 +513,8 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | 工具                    | 作用                                      |
 | --------------------- | --------------------------------------- |
 | `analyze_log`         | 解析游戏/崩溃日志片段（可复用 `crash_analyze` 分类）。    |
-| `get_migration_guide` | 内置版本迁移路线摘要。                             |
-| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` 提示依赖问题：loader 判定（fabric/forge/neoforge）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 |
+| `get_migration_guide` | 默认 Primer **toc**；`section` 只返回该章；`full=true` 才全文（含 url/license/loader）。route 含 platform 或 `from->to`。 |
+| `check_dependencies`  | 根据 `build.gradle` / `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 manifest 提示依赖问题：loader 判定（quilt/fabric/forge/neoforge/liteloader/rift/modloader/bedrock）、库模组识别（catalog 接线）、冲突/陷阱检测。返回 `detectedLibraries`（含 `supportedVersions` 反编译验证版本窗口与 `manifestSummary` 版本/加载器摘要，数据来自 `library-catalog.ts` + `data/lib-manifests/all.json`）。 |
 
 ### 12. 自我更新（1）
 

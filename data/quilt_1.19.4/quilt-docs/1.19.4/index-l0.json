@@ -43,5 +43,20 @@
     "source": "quilt-docs",
     "fetchedAt": "2026-08-13T15:11:00.904Z",
     "sha256": "9efce96794fd0f8b1ea6fe1946571c1efdd55ae70f8e5b2dbc65e7cfadb13e7d"
+  },
+  {
+    "id": "1.19.4/qsl-verified",
+    "version": "1.19.4",
+    "label": "QSL 已核实表（差异层）",
+    "url": "qsl-verified",
+    "tags": [
+      "quilt",
+      "qsl",
+      "registry"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-14T22:55:03.666Z"
   }
 ]

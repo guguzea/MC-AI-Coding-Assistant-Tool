@@ -322,6 +322,15 @@
     "sectionCount": 0
   },
   {
+    "id": "1.16.5/primer_1_16_5",
+    "version": "1.16.5",
+    "label": "Minecraft 1.15.2 -> 1.16.5 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.16.5/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 14
+  },
+  {
     "id": "1.16.5/concepts_lifecycle",
     "version": "1.16.5",
     "label": "Mod Lifecycle",

@@ -1,0 +1,99 @@
+{
+  "file": "26.1-neoforge",
+  "mappingsVersion": "mojmap-unobfuscated-26.1",
+  "mapping": "mojmap",
+  "source": "official-raw",
+  "cacheDir": "D:/mc-skill-temp/loader-api-src/26.1-neoforge",
+  "classCount": 4,
+  "classes": [
+    {
+      "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
+      "simpleName": "IPayloadContext",
+      "pkg": "net.neoforged.neoforge.network.handling",
+      "methods": [
+        "listener",
+        "connection",
+        "player",
+        "reply",
+        "disconnect",
+        "enqueueWork",
+        "flow",
+        "protocol",
+        "handle",
+        "finishCurrentTask",
+        "channelHandlerContext"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/26.1-neoforge/IPayloadContext.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
+      "simpleName": "PacketDistributor",
+      "pkg": "net.neoforged.neoforge.network",
+      "methods": [
+        "sendToPlayer",
+        "sendToPlayersInDimension",
+        "sendToPlayersNear",
+        "sendToAllPlayers",
+        "sendToPlayersTrackingEntity",
+        "sendToPlayersTrackingEntityAndSelf",
+        "sendToPlayersTrackingChunk"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/26.1-neoforge/PacketDistributor.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.registration.PayloadRegistrar",
+      "simpleName": "PayloadRegistrar",
+      "pkg": "net.neoforged.neoforge.network.registration",
+      "methods": [
+        "executesOn",
+        "versioned",
+        "optional"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/26.1-neoforge/PayloadRegistrar.java"
+    },
+    {
+      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent",
+      "simpleName": "RegisterPayloadHandlersEvent",
+      "pkg": "net.neoforged.neoforge.network.event",
+      "methods": [
+        "registrar"
+      ],
+      "apiStatusInternal": true,
+      "environment": false,
+      "file": "D:/mc-skill-temp/loader-api-src/26.1-neoforge/RegisterPayloadHandlersEvent.java"
+    }
+  ],
+  "fetched": [
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/26.1.x/src/main/java/net/neoforged/neoforge/network/event/RegisterPayloadHandlersEvent.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/26.1.x/src/main/java/net/neoforged/neoforge/network/registration/PayloadRegistrar.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/26.1.x/src/main/java/net/neoforged/neoforge/network/handling/IPayloadContext.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/neoforged/NeoForge/26.1.x/src/main/java/net/neoforged/neoforge/network/PacketDistributor.java",
+      "status": 304,
+      "ok": true,
+      "note": "cache"
+    }
+  ],
+  "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。"
+}

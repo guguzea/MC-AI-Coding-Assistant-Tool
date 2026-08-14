@@ -1,3 +1,11 @@
-# 05 — Listener
+# 05 — 生命周期
 
-完整类名列表见 knowledge/common/listeners.md。Mixin：`InitializationListener.onInitialization()`，建议单独一类。
+| 接口 | 方法 |
+|------|------|
+| InitializationListener | `onInitialization()`（Mixin / 自定义 transformer） |
+| BootstrapListener | `afterVanillaBootstrap()` |
+| MinecraftStartListener | `onMinecraftStart()` |
+| ServerTickable | `serverTick(MinecraftServer)` |
+| client.ClientTickable | `clientTick()` |
+
+不要用 Fabric `ClientTickEvents`。

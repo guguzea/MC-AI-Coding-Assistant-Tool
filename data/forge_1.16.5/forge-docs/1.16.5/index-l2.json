@@ -1178,5 +1178,89 @@
     "keySections": 2,
     "file": "utilities_tags.md",
     "processedFile": "processed/utilities_tags.md"
+  },
+  {
+    "id": "1.16.5/primer_1_16_5",
+    "version": "1.16.5",
+    "label": "Minecraft 1.15.2 -> 1.16.5 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.16.5/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "DataFixerUpper and Codecs",
+        "level": 2,
+        "summary": "In 1.16 Mojang updated their library DataFixerUpper (used to migrate old world data from older game versions to new versions) to include a new set of tools called Codecs."
+      },
+      {
+        "title": "Dynamic Registries",
+        "level": 2,
+        "summary": "In 1.16+ alot of registry objects became data driven. The DynamicRegistries manages the syncing of these data driven registries."
+      },
+      {
+        "title": "Registry Keys",
+        "level": 2,
+        "summary": "The RegistryKey is a new object introduced in 1.16 which is combination of a registry's ID and the object's registry name. It is a universally unique identifier for an object."
+      },
+      {
+        "title": "World Generation",
+        "level": 2,
+        "summary": "Most world generation objects have become data driven via the Minecraft Datapack system. While some objects still require code based objects, most world generation is now datapack based."
+      },
+      {
+        "title": "Dimensions/Worlds",
+        "level": 2,
+        "summary": "Dimensions are now data-driven and have significantly changed in its design. - Dimensions are now more of a set of extended settings for a World. It pairs a ChunkGenerator and DimensionType together."
+      },
+      {
+        "title": "Rendering",
+        "level": 2,
+        "summary": "Most rendering methods now include a MatrixStack in their parameters. GUIs are an exception in which some methods still use old RenderSystem and GlStateManager calls."
+      },
+      {
+        "title": "Item Properties",
+        "level": 2,
+        "summary": "These are now a static builder function you call during FMLClientSetupEvent. Use ItemProperties#register. The supplier in that method takes a LivingEntity, ClientWorld and ItemStack."
+      },
+      {
+        "title": "Command Registration",
+        "level": 2,
+        "summary": "Register your commands in Forge's RegisterCommandsEvent."
+      },
+      {
+        "title": "Reload Listener Registration",
+        "level": 2,
+        "summary": "Register your ReloadListener(s) in Forge's AddReloadListenerEvent event. This event fires when datapacks are reloaded. Datapacks will reload at least twice in total during the game's loading process."
+      },
+      {
+        "title": "Entity Attribute Creation and Modification",
+        "level": 2,
+        "summary": "Entity Attributes are no longer a method you inherit from the Entity class. Internally, it is now created by using a builder function to add attributes to the GlobalEntityTypeAttributes map."
+      },
+      {
+        "title": "Networking",
+        "level": 2,
+        "summary": "The introduction of data-driven registries has led to changes in the data the player receives The player is now sent its own set of registry data via a packet on login: - The client now stores its ..."
+      },
+      {
+        "title": "Miscellaneous",
+        "level": 2,
+        "summary": "There is now an Forge API hook that allows you to register multiple hitboxes for your entity, similar to the Ender Dragon. The Forge ChunkManager from older versions has been readded to Forge."
+      },
+      {
+        "title": "Forge API",
+        "level": 2,
+        "summary": "There has been a newly discovered bug in the @EventBusSubscriber annotation where the Mod ID that is firing the event is no longer known unless the class that this annotation is used on, also has a..."
+      },
+      {
+        "title": "References",
+        "level": 2,
+        "summary": "- SuperCoder7979's 1.16 RC primer (SuperCoder7979, Accessed 2021) - TelepathicGrunt's Structure Tutorial Mod (TelepathicGrunt, Accessed 2021) - Official Minecraft Forge Discord (MinecraftForge, Acc..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 4,
+    "keySections": 15,
+    "file": "primer_1_16_5.md",
+    "processedFile": "processed/primer_1_16_5.md"
   }
 ]

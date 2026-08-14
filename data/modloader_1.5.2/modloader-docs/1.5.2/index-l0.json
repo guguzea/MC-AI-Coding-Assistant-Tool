@@ -1,0 +1,15 @@
+[
+  {
+    "id": "1.5.2/safe-api",
+    "version": "1.5.2",
+    "label": "safe-api",
+    "url": "modloader/1.5.2/knowledge/common/safe-api.md",
+    "tags": [
+      "modloader"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "modloader-docs",
+    "fetchedAt": "2026-08-14T18:31:41.460Z"
+  }
+]

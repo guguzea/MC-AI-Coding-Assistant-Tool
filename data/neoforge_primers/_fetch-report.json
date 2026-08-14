@@ -1,0 +1,123 @@
+{
+  "at": "2026-08-14T18:01:18.338Z",
+  "report": [
+    {
+      "slug": "26.2",
+      "skipped": "exists"
+    },
+    {
+      "slug": "26.1",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.1",
+      "status": 200,
+      "loader": "neoforge",
+      "bytes": 1251
+    },
+    {
+      "slug": "1.21.2",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.4",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.5",
+      "status": 200,
+      "loader": "neoforge",
+      "bytes": 194956
+    },
+    {
+      "slug": "1.21.6",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.7",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.8",
+      "status": 200,
+      "loader": "neoforge",
+      "bytes": 1230
+    },
+    {
+      "slug": "1.21.9",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.10",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.21.11",
+      "status": 200,
+      "loader": "neoforge",
+      "bytes": 191129
+    },
+    {
+      "slug": "1.20.6",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.14",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.15",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.16.5",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.17",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.18",
+      "status": 404,
+      "skipped": "http"
+    },
+    {
+      "slug": "1.19",
+      "status": 404,
+      "skipped": "http"
+    },
+    {
+      "slug": "1.19.3",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.19.4",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.20",
+      "skipped": "exists"
+    },
+    {
+      "slug": "1.20.2",
+      "status": 404,
+      "skipped": "http"
+    },
+    {
+      "slug": "1.20.4",
+      "status": 404,
+      "skipped": "http"
+    },
+    {
+      "slug": "1.20.5",
+      "status": 200,
+      "loader": "neoforge",
+      "bytes": 84942
+    }
+  ]
+}

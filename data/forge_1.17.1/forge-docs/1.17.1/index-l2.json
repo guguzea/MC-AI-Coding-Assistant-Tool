@@ -1189,5 +1189,69 @@
     "keySections": 2,
     "file": "utilities_tags.md",
     "processedFile": "processed/utilities_tags.md"
+  },
+  {
+    "id": "1.17.1/primer_1_17",
+    "version": "1.17.1",
+    "label": "Minecraft 1.16.5 -> 1.17 Modding Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.17/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Debug Profiler",
+        "level": 2,
+        "summary": "The /debug command now does nothing, and can be executed through F3 + L for at most 10 seconds It now provides a lot more detail besides tick profiling including system data, jvm data, game setting..."
+      },
+      {
+        "title": "Tile Entities",
+        "level": 2,
+        "summary": "The TileEntity is now named BlockEntity with Forge moving to using Mojang mapping names. TileEntityProvider is now called EntityBlock."
+      },
+      {
+        "title": "TileEntityRenderer",
+        "level": 2,
+        "summary": "In the Forge environment, you need to Subscribe to the EntityRenderersEvent event. - Call EntityRenderersEvent$RegisterRenderers#registerBlockEntityRenderer to register a BlockEntityRenderer - You ..."
+      },
+      {
+        "title": "Rendering",
+        "level": 2,
+        "summary": "Minecraft has moved to OpenGL 3.2 Core, which brings with it shader-based rendering. Any bind calls in RenderSystem should now move to using RenderSystem#setShaderTexture(0, resourceLocation) instead."
+      },
+      {
+        "title": "World Generation",
+        "level": 2,
+        "summary": "Most of the core foundations from 1.16 have remained mostly the same. The main changes relate to the technical foundations in preparations for 1.18 Caves and Cliffs generation."
+      },
+      {
+        "title": "Game Events",
+        "level": 2,
+        "summary": "In preparation for the 1.18 SculkSensor block which emits redstone triggered by nearby sound events, Mojang has now added their own “Event\" system."
+      },
+      {
+        "title": "Game Test Framework",
+        "level": 2,
+        "summary": "Mojang has recently exposed their game test framework, a set of tools which the Mojang developers use to simulate and test game mechanics. - Example usage: https://www.youtube.com/watch?v=vXaWOJTCYNg"
+      },
+      {
+        "title": "Forge API",
+        "level": 2,
+        "summary": "In 1.17 Forge fully migrated its codebase to Mojang’s Official Obfuscation Mappings. Previously, only methods and fields were migrated."
+      },
+      {
+        "title": "Potential Changes in Forge",
+        "level": 2,
+        "summary": "Fluids are getting a complete overhaul in 1.17. Previously, Fluids were limited to water-like behaviour only due to Mojang hardcoding their water references in many parts of the codebase."
+      },
+      {
+        "title": "References and Contributors",
+        "level": 2,
+        "summary": "- Gigaherz - various guides and documentation for the 1.17 systems - SizableShrimp - information about 1."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 6,
+    "keySections": 7,
+    "file": "primer_1_17.md",
+    "processedFile": "processed/primer_1_17.md"
   }
 ]

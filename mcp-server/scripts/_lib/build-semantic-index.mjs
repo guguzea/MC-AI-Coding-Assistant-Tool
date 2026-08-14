@@ -20,11 +20,11 @@
  */
 import { createHash } from "node:crypto";
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   readFileSync,
   readdirSync,
-  renameSync,
   rmSync,
   statSync,
 } from "node:fs";
@@ -359,8 +359,12 @@ async function buildIndex(dbPath, docs, chunks, embedder, extraMeta = {}) {
   db.exec("COMMIT");
 
   db.close();
-  if (existsSync(dbPath)) rmSync(dbPath);
-  renameSync(tmpPath, dbPath);
+  copyFileSync(tmpPath, dbPath);
+  try {
+    rmSync(tmpPath);
+  } catch {
+    /* Windows 偶发占用 tmp，可忽略 */
+  }
   return { docs: docs.length, chunks: chunks.length, embedded };
 }
 

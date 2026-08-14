@@ -302,6 +302,15 @@
     "sectionCount": 3
   },
   {
+    "id": "1.19.4/primer_1_19_4",
+    "version": "1.19.4",
+    "label": "Minecraft 1.19.3 -> 1.19.4 Mod Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.19.4/",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 8
+  },
+  {
     "id": "1.19.4/gettingstarted_modfiles",
     "version": "1.19.4",
     "label": "Mod Files",

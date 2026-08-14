@@ -1,0 +1,17 @@
+﻿---
+description: 03 — 物品（NeoForge 1.21.8）
+---
+
+# 03 — 物品（NeoForge 1.21.8）
+
+来源：https://docs.neoforged.net/docs/1.21.8/items/
+
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+
+创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
+
+
+
+1.21+ 物品数据优先 Data Components，不要把 1.12 NBT 当主存储。
+
+禁止：`RegistryObject<Item>` 当 NeoForge 1.21.8 持有类型；禁止 Fabric `Registry.register` 冒充。

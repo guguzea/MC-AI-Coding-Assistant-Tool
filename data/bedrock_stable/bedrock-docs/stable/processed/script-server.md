@@ -1,5 +1,5 @@
 > 来源：https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable
-> 抓取时间：2026-08-13T15:09:47.413Z
+> 抓取时间：2026-08-14T18:35:18.000Z
 > 警告：此文档可能滞后于当前正式版
 
 minecraft/server Module | Microsoft Learn

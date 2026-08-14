@@ -1143,5 +1143,59 @@
     "keySections": 0,
     "file": "resources_server.md",
     "processedFile": "processed/resources_server.md"
+  },
+  {
+    "id": "1.19.4/primer_1_19_4",
+    "version": "1.19.4",
+    "label": "Minecraft 1.19.3 -> 1.19.4 Mod Migration Primer",
+    "url": "https://docs.neoforged.net/primer/docs/1.19.4/",
+    "tags": [],
+    "sections": [
+      {
+        "title": "Pack Changes",
+        "level": 2,
+        "summary": "There are a number of user-facing changes that are part of vanilla which are not discussed below that may be relevant to modders. You can find a list of them on Misode's version changelog."
+      },
+      {
+        "title": "DamgeType and DamageSources",
+        "level": 2,
+        "summary": "Damage sources have been rewritten to define common data which should be static between different sources. As such, each DamageSource now takes in a DamageType which defines this information."
+      },
+      {
+        "title": "GUI Changes",
+        "level": 2,
+        "summary": "There have been a number of GUI changes which expands upon existing methods, restructures components, and reorganizes their locations. All GuiComponent methods are now static."
+      },
+      {
+        "title": "Entity Interfaces",
+        "level": 2,
+        "summary": "Entity logic has been abstracted even more into three new interfaces: Attackable, Targeting, and TraceableEntity."
+      },
+      {
+        "title": "Blocks and Sounds",
+        "level": 2,
+        "summary": "Blocks have a few changes regarding their internal implementation and data structures. The BlockBehaviour$OffsetType passed into BlockBehavior$Properties#offsetType now redirects to BlockBehavior$O..."
+      },
+      {
+        "title": "Creative Tabs",
+        "level": 2,
+        "summary": "Creative Tabs have slightly changed as now when populating the generator, the method provides CreativeModeTab$ItemDisplayParameters and an CreativeModeTab$Output."
+      },
+      {
+        "title": "Removal of `com.mojang.bridge.*`",
+        "level": 2,
+        "summary": "Mojang's javabridge library has been removed as a dependency from Minecraft. As such, all of the redirected counterparts to the bridge (such as com.mojang.bridge.game.PackType and com.mojang.bridge."
+      },
+      {
+        "title": "Minor Additions, Changes, and Removals",
+        "level": 2,
+        "summary": "The following is a list of useful or interesting additions, changes, and removals that do not deserve their own section in the primer."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 5,
+    "file": "primer_1_19_4.md",
+    "processedFile": "processed/primer_1_19_4.md"
   }
 ]

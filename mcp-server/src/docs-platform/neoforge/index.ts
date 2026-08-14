@@ -29,6 +29,13 @@ import {
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
+import {
+  findPrimer,
+  isPrimerDocId,
+  primerFullPayload,
+  primerSummaryPayload,
+  searchNeoForgePrimers,
+} from "./primers.js";
 
 const DATA_ROOT = resolveDataDir();
 
@@ -125,6 +132,8 @@ export const searchNeoForgeDocsSchema = {
     "搜索 NeoForge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
     "适用于：需要了解 NeoForge 特有功能（如 DeferredRegister、Data Components、Payload 网络）的官方说明时。" +
     "返回相关页面 ID 列表，每个结果包含标题、标签和相关性评分。" +
+    "另合并 data/neoforge_primers（仅 loader=neoforge，命中带 source:primer）。" +
+    "无独立主文档树的版本（如 1.20.5、未发布的 26.2）会 warning，禁止把邻档 API 当本版。" +
     "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。",
   inputSchema: z.object({
     query: z.string().describe("搜索查询关键词"),
@@ -144,23 +153,41 @@ export async function searchNeoForgeDocs(args: {
     }
     const s = getGenericStore() as NeoForgeDocStore;
     const version = args.version ?? "26.1";
-    const detailed = s.searchIndexDetailed(args.query, version, args.tags);
+    const resolution = s.describeVersionResolution(version);
+    let detailed: ReturnType<NeoForgeDocStore["searchIndexDetailed"]>;
+    try {
+      detailed = s.searchIndexDetailed(args.query, version, args.tags);
+    } catch (e) {
+      if (!(e instanceof VersionNotFoundError) || !resolution.mainDocsMissing) throw e;
+      detailed = {
+        results: [],
+        requestedVersion: version,
+        resolvedVersion: version,
+        versionFallback: false,
+      };
+    }
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
-    // 语义检索（neoforge 语义库；1.20.1 兼容 Forge 时无语义库 → null，保持纯 L0）
-    const semanticHits = await semanticSearch(
-      args.query,
-      "neoforge",
-      detailed.resolvedVersion,
-      "neoforge-docs",
-      DATA_ROOT,
-    );
-    const results = semanticHits === null
+    const semanticHits = resolution.mainDocsMissing
+      ? null
+      : await semanticSearch(
+          args.query,
+          "neoforge",
+          detailed.resolvedVersion,
+          "neoforge-docs",
+          DATA_ROOT,
+        );
+    let results = semanticHits === null
       ? detailed.results
       : mergeSemanticResults(detailed.results, semanticHits, {
           tags: args.tags,
           limit: 20,
           version: detailed.resolvedVersion,
         });
+    const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: DATA_ROOT });
+    if (primerHits.length) {
+      const seen = new Set(results.map((r) => r.id));
+      results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, 20);
+    }
     return {
       content: [{
         type: "text",
@@ -169,12 +196,14 @@ export async function searchNeoForgeDocs(args: {
           query: args.query,
           version,
           resolvedVersion: detailed.resolvedVersion,
-          versionFallback: detailed.versionFallback,
+          versionFallback: detailed.versionFallback || resolution.versionFallback,
           warning: joinSearchWarnings(
-            detailed.versionFallback
+            resolution.warning,
+            detailed.versionFallback && !resolution.warning
               ? `请求版本 ${version} 已映射到 ${detailed.resolvedVersion}`
               : undefined,
-            missingSemanticDbWarning(semanticHits === null),
+            primerHits.length ? "结果含 source=primer（迁移 Primer，不是 loader API 全文）" : undefined,
+            missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
           ),
           forgeCompatible: forgeCompatible || undefined,
           sourceNote: forgeCompatible
@@ -210,12 +239,28 @@ export async function getNeoForgeDocSummary(args: {
   version?: string;
 }): Promise<CallToolResult> {
   try {
-    const s = getGenericStore();
-    const summary = s.loadSummary(args.id, args.version ?? "26.1");
+    const version = args.version ?? "26.1";
+    if (isPrimerDocId(args.id)) {
+      const primer = findPrimer(args.id);
+      if (!primer) {
+        throw new DocNotFoundError(args.id, version);
+      }
+      return {
+        content: [{ type: "text", text: JSON.stringify(primerSummaryPayload(primer), null, 2) }],
+      };
+    }
+    const s = getGenericStore() as NeoForgeDocStore;
+    const resolution = s.describeVersionResolution(version);
+    const summary = s.loadSummary(args.id, version);
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, ...summary }, null, 2),
+        text: JSON.stringify({
+          ok: true,
+          ...summary,
+          versionFallback: resolution.versionFallback,
+          warning: resolution.warning,
+        }, null, 2),
       }],
     };
   } catch (e) {
@@ -245,12 +290,31 @@ export async function getNeoForgeDocFull(args: {
   highlight_key?: boolean;
 }): Promise<CallToolResult> {
   try {
-    const s = getGenericStore();
-    const result = await s.loadFullDoc(args.id, args.version ?? "26.1", args.highlight_key ?? true);
+    const version = args.version ?? "26.1";
+    if (isPrimerDocId(args.id)) {
+      const primer = findPrimer(args.id);
+      if (!primer) {
+        throw new DocNotFoundError(args.id, version);
+      }
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify(primerFullPayload(primer, true), null, 2),
+        }],
+      };
+    }
+    const s = getGenericStore() as NeoForgeDocStore;
+    const resolution = s.describeVersionResolution(version);
+    const result = await s.loadFullDoc(args.id, version, args.highlight_key ?? true);
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, ...result }, null, 2),
+        text: JSON.stringify({
+          ok: true,
+          ...result,
+          versionFallback: resolution.versionFallback,
+          warning: resolution.warning,
+        }, null, 2),
       }],
     };
   } catch (e) {
@@ -279,12 +343,43 @@ export async function getNeoForgeDocRelated(args: {
   limit?: number;
 }): Promise<CallToolResult> {
   try {
-    const s = getGenericStore();
-    const results = s.getRelatedDocs(args.id, args.version ?? "26.1", args.limit ?? 5);
+    const version = args.version ?? "26.1";
+    if (isPrimerDocId(args.id)) {
+      const primer = findPrimer(args.id);
+      if (!primer) {
+        throw new DocNotFoundError(args.id, version);
+      }
+      const related = searchNeoForgePrimers({
+        query: `${primer.from} ${primer.to} migration`,
+        version: primer.to,
+      }).filter((r) => r.id !== primer.id).slice(0, args.limit ?? 5);
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({
+            ok: true,
+            id: args.id,
+            version,
+            results: related,
+            warning: "Primer 相关页来自 neoforge_primers，不是 API 树。",
+          }, null, 2),
+        }],
+      };
+    }
+    const s = getGenericStore() as NeoForgeDocStore;
+    const resolution = s.describeVersionResolution(version);
+    const results = s.getRelatedDocs(args.id, version, args.limit ?? 5);
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ ok: true, id: args.id, version: args.version, results }, null, 2),
+        text: JSON.stringify({
+          ok: true,
+          id: args.id,
+          version,
+          versionFallback: resolution.versionFallback,
+          warning: resolution.warning,
+          results,
+        }, null, 2),
       }],
     };
   } catch (e) {

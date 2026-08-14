@@ -374,8 +374,10 @@ server.registerTool(
   {
     title: "Diagnose Gradle Build Configuration",
     description:
-      "【Forge only】校验 ForgeGradle 工程。Quilt Loom / fabric-loom / NeoGradle / 基岩 manifest 会拒绝并改口。" +
-      "含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。",
+      "【Forge only】校验 ForgeGradle 工程（build.gradle / gradle.properties）。" +
+      "Quilt Loom / fabric-loom / NeoGradle / 基岩 manifest 会拒绝并改口。" +
+      "含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。" +
+      "可选 extras：litemodJson / riftmodJson / addonManifest / quiltModJson（gradle 正文看不到元数据时仍按对应加载器处理）。Rift / BaseMod 早退。",
     inputSchema: diagnoseGradleSchema,
   },
   async ({ buildGradle, gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson }): Promise<CallToolResult> => {
@@ -426,7 +428,7 @@ server.registerTool(
       "适用于：模组运行崩溃、收到玩家的崩溃日志时。" +
       "支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、" +
       "BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），" +
-      "并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。" +
+      "并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。" +
       "**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。",
     inputSchema: crashAnalyzeSchema,
   },
@@ -443,6 +445,8 @@ server.registerTool(
     title: "Validate Forge Mod Project Structure",
     description:
       "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。" +
+      "非 Forge（Quilt/Fabric/NeoForge/LiteLoader/Rift/ModLoader/基岩）早退：passed=true、不跑 Forge 检查，并 warning 改口到 search_docs / search_fabric_docs / search_neoforge_docs / validate_addon_manifest。" +
+      "不是通用结构校验器。" +
       "适用于：收到用户项目后首次审查、或修复问题后验证。" +
       "支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、" +
       "@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、" +
@@ -826,9 +830,7 @@ server.registerTool(
   getDocSummarySchema.name,
   {
     title: "Get Doc Page Summary (Multi-Platform)",
-    description:
-      "获取文档页面的章节骨架与摘要，支持多平台（platform 参数）。" +
-      "适用于：判断某篇文档是否包含所需内容时。",
+    description: getDocSummarySchema.description,
     inputSchema: getDocSummarySchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -841,10 +843,7 @@ server.registerTool(
   getDocFullSchema.name,
   {
     title: "Get Full Documentation Page (Multi-Platform)",
-    description:
-      "获取文档页面全文，支持多平台（platform 参数）。" +
-      "适用于：需要查看 API 完整步骤、事件列表、配置项清单时。" +
-      "highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。",
+    description: getDocFullSchema.description,
     inputSchema: getDocFullSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -862,9 +861,7 @@ server.registerTool(
   getDocRelatedSchema.name,
   {
     title: "Get Related Documentation Pages (Multi-Platform)",
-    description:
-      "获取与指定文档页面相关的其他页面列表，支持多平台（platform 参数）。" +
-      "返回共享最多关键词的其他页面，按相关性降序排列。",
+    description: getDocRelatedSchema.description,
     inputSchema: getDocRelatedSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -878,7 +875,9 @@ server.registerTool(
   "diagnose_data_paths",
   {
     title: "Diagnose Data Path Configuration",
-    description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。",
+    description:
+      "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。" +
+      "诊断 MC_SKILL_DATA / MC_SKILL_COMMUNITY 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 found / empty / not_found。",
     inputSchema: diagnoseDataPathsSchema,
   },
   async (): Promise<CallToolResult> => {
@@ -898,6 +897,7 @@ server.registerTool(
       "扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、" +
       "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
       "参考链接和建议的 query_api 调用。" +
+      "targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。" +
       "适用于：用户询问如何将 Mod 移植到其他平台或版本时。",
     inputSchema: analyzePortingPathSchema,
   },
@@ -1025,10 +1025,10 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
   { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】不要用于 Fabric / NeoForge 工程。", inputSchema: getVersionInfoSchema },
-  { name: "diagnose_gradle", description: "【Forge only】校验 build.gradle / gradle.properties。检测到 fabric-loom / Quilt Loom / NeoGradle / 基岩 manifest 会拒绝并改口。含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。", inputSchema: diagnoseGradleSchema },
+  { name: "diagnose_gradle", description: "【Forge only】校验 ForgeGradle 工程（build.gradle / gradle.properties）。Quilt Loom / fabric-loom / NeoGradle / 基岩 manifest 会拒绝并改口。含 net.minecraftforge.gradle.liteloader 时走轻量模式（不跑 FG6/Java17/1.20）。可选 extras：litemodJson / riftmodJson / addonManifest / quiltModJson（gradle 正文看不到元数据时仍按对应加载器处理）。Rift / BaseMod 早退。", inputSchema: diagnoseGradleSchema },
   { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：支持 Forge 1.20.1 与 NeoForge 1.21.x（platform=neoforge）；新增 advancement/particle/sound。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。", inputSchema: generateDatagenSchema },
-  { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
-  { name: "validate_project", description: "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。适用于：收到用户项目后首次审查、或修复问题后验证。支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。", inputSchema: validateProjectSchema },
+  { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
+  { name: "validate_project", description: "【Forge only】校验模组项目的结构完整性（偏 Forge mods.toml / DeferredRegister）。非 Forge（Quilt/Fabric/NeoForge/LiteLoader/Rift/ModLoader/基岩）早退：passed=true、不跑 Forge 检查，并 warning 改口到 search_docs / search_fabric_docs / search_neoforge_docs / validate_addon_manifest。不是通用结构校验器。适用于：收到用户项目后首次审查、或修复问题后验证。支持的检查项：mods.toml 语法和 modId 一致性（mods.toml 优先级最高）、@Mod 注解 modId 一致性、RegistryObject 命名与 static/final 修饰符、DeferredRegister 注册完整性（必须调用 modEventBus）、类名与文件名一致性、@ObjectHolder 注解格式、BlockItem 注册完整性（提示而非错误）、Mixin 配置（用户提供 mixins.json 时）、资源路径大小写、重复注册名检测。", inputSchema: validateProjectSchema },
   { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。", inputSchema: searchForgeDocsSchema.inputSchema },
   { name: "get_forge_doc_summary", description: "获取 Forge 文档页面的章节骨架与摘要。适用于：判断某篇文档是否包含所需内容时。返回每个 <h2> 章节的标题、150-200 字摘要和首段概述。建议：先 search_forge_docs 搜索关键词，再对相关页面取摘要，最后仅当摘要显示内容相关时才调用 get_forge_doc_full 获取全文。", inputSchema: getForgeDocSummarySchema.inputSchema },
   { name: "get_forge_doc_full", description: "获取 Forge 文档页面全文。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示在开头。**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。", inputSchema: getForgeDocFullSchema.inputSchema },
@@ -1050,10 +1050,10 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
   { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform：forge/neoforge/fabric/quilt/liteloader/rift/modloader，默认 forge。基岩请用 search_bedrock_docs。", inputSchema: listVersionsSchema.inputSchema },
   { name: "search_docs", description: "通用文档搜索（hybrid：L0 关键词 + 语义检索）。platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader。Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。", inputSchema: searchDocsSchema.inputSchema },
-  { name: "get_doc_summary", description: "获取文档页面的章节骨架与摘要，支持多平台（platform 参数）。适用于：判断某篇文档是否包含所需内容时。", inputSchema: getDocSummarySchema.inputSchema },
-  { name: "get_doc_full", description: "获取文档页面全文，支持多平台（platform 参数）。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。", inputSchema: getDocFullSchema.inputSchema },
-  { name: "get_doc_related", description: "获取与指定文档页面相关的其他页面列表，支持多平台（platform 参数）。返回共享最多关键词的其他页面，按相关性降序排列。", inputSchema: getDocRelatedSchema.inputSchema },
-  { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。", inputSchema: diagnoseDataPathsSchema },
+  { name: "get_doc_summary", description: getDocSummarySchema.description, inputSchema: getDocSummarySchema.inputSchema },
+  { name: "get_doc_full", description: getDocFullSchema.description, inputSchema: getDocFullSchema.inputSchema },
+  { name: "get_doc_related", description: getDocRelatedSchema.description, inputSchema: getDocRelatedSchema.inputSchema },
+  { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。诊断 MC_SKILL_DATA / MC_SKILL_COMMUNITY 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 found / empty / not_found。", inputSchema: diagnoseDataPathsSchema },
   { name: "analyze_porting_path", description: "分析 Minecraft Mod 项目移植路线。targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。", inputSchema: analyzePortingPathSchema },
   { name: "port_project", description: "执行移植步骤。基岩/三老加载器目标返回 UNSUPPORTED_PORT。写盘默认 dryRun。", inputSchema: portProjectSchema },
   { name: "search_bedrock_docs", description: "搜索基岩版 Microsoft Learn Creator 文档（hybrid L0+语义）。每次返回 docsStatus 滞后标记。不是 search_forge_docs。", inputSchema: searchBedrockDocsSchema },

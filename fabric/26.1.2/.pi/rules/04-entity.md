@@ -1,0 +1,7 @@
+﻿---
+description: 04 — 实体
+---
+
+# 04 — 实体
+
+逐步：`26.1.2/develop_entities_first-entity`。渲染概念 `26.1.2/develop_rendering_basic-concepts`。缺签名则停。

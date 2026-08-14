@@ -1,9 +1,8 @@
 package com.example.examplemod;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -11,120 +10,48 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.FMLClientSetupEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.eventbus.api.IEventBus;
-import net.neoforged.neoforge.eventbus.api.SubscribeEvent;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 
-// NeoForge 1.20.4 使用 BuildPlugin 模式代替 @Mod 注解
+// 本目录已废弃：请用 neoforge/<mc版本>/scaffold。此处仅保留 1.20.4 官方口径以免误导。
+// 对照官方 MDK：NeoForgeMDKs/MDK-1.20.4-NeoGradle @ 8cd443623d2fd12ef8a6912d2af1296d8522faac
+@Mod(ExampleMod.MODID)
 public class ExampleMod {
-    public static final String MOD_ID = "examplemod";
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    // DeferredRegister — 持有某类对象的延迟注册器
-    // 所有注册通过 modEventBus 延迟到正确的 RegistryEvent 时机执行
-    public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
-    public static final DeferredRegister<Item> ITEMS =
-        DeferredRegister.create(NeoForgeRegistries.ITEMS, MOD_ID);
+    public static final String MODID = "examplemod";
+    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
+        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    // ---- 注册方块 ----
-    public static final DeferredHolder<Block, Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
-        () -> new Block(BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
-            .strength(1.5f, 6.0f)
-            .requiresCorrectToolForDrops()
-        )
-    );
+    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
 
-    // ---- 注册方块对应的 ItemBlock ----
-    // ItemBlock 与方块使用相同 registry name，自动关联
-    public static final DeferredHolder<Item, BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block",
-        () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()
-            .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
-        )
-    );
-
-    // ---- 注册普通物品 ----
-    public static final DeferredHolder<Item, Item> EXAMPLE_ITEM = ITEMS.register("example_item",
-        () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_MISC)
-            .stacksTo(64)
-        )
-    );
-
-    // ---- 注册食物（带药水效果） ----
-    public static final DeferredHolder<Item, Item> EXAMPLE_FOOD = ITEMS.register("example_food",
-        () -> new Item(new Item.Properties()
-            .tab(CreativeModeTab.TAB_FOOD)
-            .food(new FoodProperties.Builder()
-                .nutrition(4)
-                .saturationMod(0.3f)
-                .effect(() -> new net.minecraft.world.effect.MobEffectInstance(
-                    net.minecraft.world.effect.MobEffects.JUMP, 200, 1), 1.0f)
-                .build())
-        )
-    );
-
-    // ---- 注册创造模式标签 ----
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab",
-        () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB =
+        CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.examplemod"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(EXAMPLE_ITEM.get());
-                output.accept(EXAMPLE_FOOD.get());
-            })
-            .build()
-    );
+            .icon(() -> EXAMPLE_BLOCK_ITEM.get().getDefaultInstance())
+            .displayItems((parameters, output) -> output.accept(EXAMPLE_BLOCK_ITEM.get()))
+            .build());
 
-    // NeoForge 1.20.4 初始化入口
-    public static void init(IEventBus modEventBus) {
-        // 将 DeferredRegister 注册到 modEventBus
+    public ExampleMod(IEventBus modEventBus) {
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
-
-        // 注册服务端事件监听器
-        NeoForge.EVENT_BUS.register(ExampleMod.class);
-
-        LOGGER.info("ExampleMod initialized — mod loaded");
+        NeoForge.EVENT_BUS.register(this);
     }
 
-    // ---- 将物品添加到创造模式标签（通过事件订阅） ----
     @SubscribeEvent
-    private static void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTab.TAB_MISC) {
-            event.accept(EXAMPLE_ITEM.get());
-        }
-    }
-
-    // ---- 服务端事件 ----
-    @SubscribeEvent
-    private static void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getWorldData().getLevelName());
-    }
-
-    // ---- 客户端事件 ----
-    @net.neoforged.bus.api.SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event) {
-        LOGGER.info("Client setup — game dir: {}", Minecraft.getInstance().gameDirectory);
-    }
-
-    // ---- 客户端按键绑定注册 ----
-    @net.neoforged.bus.api.SubscribeEvent
-    public static void registerBindings(RegisterKeyMappingsEvent event) {
-        // 在这里注册自定义 KeyMapping
-        // event.register(YOUR_KEY_MAPPING.get());
+    public void onServerStarting(ServerStartingEvent event) {
+        LOGGER.info("NeoForge 1.20.4 examplemod starting");
     }
 }
