@@ -6,9 +6,9 @@ description: 03 — 物品（NeoForge 1.21.11）
 
 来源：https://docs.neoforged.net/docs/1.21.11/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`setId` 必填。第三参是 **unary operator** `props -> props`，不是 `new Item.Properties()`。修理禁用：`setNoCombineRepair`。
 
-创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
+创造页：`BuildCreativeModeTabContentsEvent#accept` 或自建 tab `displayItems`。
 
 
 

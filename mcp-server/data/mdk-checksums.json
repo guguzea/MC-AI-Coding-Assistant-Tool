@@ -1,5 +1,5 @@
 {
-  "note": "GitHub pin commit SHA. archiveUrl 必须是该 SHA 的 archive zip，禁止 branch HEAD。sha256 首次下载后回填；空则校验和跳过但拒绝把 HEAD 当 pin。26.1.1/26.1.2/26.2 均同时提供 ModDevGradle 与 NeoGradle。",
+  "note": "GitHub pin commit SHA（source=github）。official 源用固定 URL + sha256，无 commit。archiveUrl 禁止 branch HEAD。sha256 仅解压并解析 entryClass 后回填。26.1.1/26.1.2/26.2 均同时提供 ModDevGradle 与 NeoGradle。",
   "entries": [
     {
       "id": "neoforge-26.1.1-neogradle",
@@ -8,8 +8,9 @@
       "buildPlugin": "neogradle",
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.1.1-NeoGradle",
       "ref": "31cc6e741841edb8b0919f7e7ebe48bca997be4d",
+      "source": "github",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.1.1-NeoGradle/archive/31cc6e741841edb8b0919f7e7ebe48bca997be4d.zip",
-      "sha256": null,
+      "sha256": "6f4841c17306b8399bf8dadbce49e8125f952a6fb4be2baa8867e94dfc64bf3c",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
@@ -23,11 +24,12 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.1.1-ModDevGradle",
       "ref": "d247bc9b9a68536d258194d3841d469dba5ef614",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.1.1-ModDevGradle/archive/d247bc9b9a68536d258194d3841d469dba5ef614.zip",
-      "sha256": null,
+      "sha256": "61bc076388e22a207da574e546fed54a3badb0afb2b9a0d344fcbb98c0cbd3e6",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "不为 26.1.1 单造规则树；只当 MDK 变体。"
+      "notes": "不为 26.1.1 单造规则树；只当 MDK 变体。",
+      "source": "github"
     },
     {
       "id": "neoforge-26.1.2-moddevgradle",
@@ -37,10 +39,11 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.1.2-ModDevGradle",
       "ref": "1fd0f4d9b3bb47ed97d44e6532546d4d5627f927",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.1.2-ModDevGradle/archive/1fd0f4d9b3bb47ed97d44e6532546d4d5627f927.zip",
-      "sha256": null,
+      "sha256": "1f531b46afcc16a2472b9b51a07d5b035b5178ec31de52fc89d144226680b089",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
-      "mappings": "mojmap"
+      "mappings": "mojmap",
+      "source": "github"
     },
     {
       "id": "neoforge-26.1.2-neogradle",
@@ -50,10 +53,11 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.1.2-NeoGradle",
       "ref": "e6d91073fffc47a4950763485c803afeb88d1386",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.1.2-NeoGradle/archive/e6d91073fffc47a4950763485c803afeb88d1386.zip",
-      "sha256": null,
+      "sha256": "a0462522de62af47bab011a1b22e4bd8650df50cd505846a7b085ed86c144091",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
-      "mappings": "mojmap"
+      "mappings": "mojmap",
+      "source": "github"
     },
     {
       "id": "neoforge-26.2-moddevgradle",
@@ -63,11 +67,12 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle",
       "ref": "d1c748fd52b311cba7b4a50e3d689927c5daac9a",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.2-ModDevGradle/archive/d1c748fd52b311cba7b4a50e3d689927c5daac9a.zip",
-      "sha256": null,
+      "sha256": "5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。"
+      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。",
+      "source": "github"
     },
     {
       "id": "neoforge-26.2-neogradle",
@@ -77,11 +82,12 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-26.2-NeoGradle",
       "ref": "15955d033693fce0d05619eb3ab32643b941cd93",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-26.2-NeoGradle/archive/15955d033693fce0d05619eb3ab32643b941cd93.zip",
-      "sha256": null,
+      "sha256": "c184c4736caf7ac737df2e823ec269e71eb930056ea1108e2679e9b6058f1c97",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。"
+      "notes": "无独立 neoforge_26.2 文档树时不要把 26.1 规则当 26.2。",
+      "source": "github"
     },
     {
       "id": "neoforge-1.20.4-neogradle",
@@ -91,10 +97,11 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-1.20.4-NeoGradle",
       "ref": "8cd443623d2fd12ef8a6912d2af1296d8522faac",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.20.4-NeoGradle/archive/8cd443623d2fd12ef8a6912d2af1296d8522faac.zip",
-      "sha256": null,
+      "sha256": "46e81f1994d79f3f6afe0f31abfb983485cc6987414fddd65333598bc6b04103",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
-      "mappings": "mojmap"
+      "mappings": "mojmap",
+      "source": "github"
     },
     {
       "id": "neoforge-1.20.4-moddevgradle",
@@ -104,10 +111,11 @@
       "repo": "https://github.com/NeoForgeMDKs/MDK-1.20.4-ModDevGradle",
       "ref": "ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a",
       "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.20.4-ModDevGradle/archive/ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a.zip",
-      "sha256": null,
+      "sha256": "82c1f2f3ef825cbe4e9a6bd6281867eb6c33b812fc17e99347682127f1299202",
       "license": "MIT (TEMPLATE_LICENSE.txt)",
       "gitPolicy": "submodule_ok",
-      "mappings": "mojmap"
+      "mappings": "mojmap",
+      "source": "github"
     },
     {
       "id": "fabric-1.21.1-loom",
@@ -117,10 +125,11 @@
       "repo": "https://github.com/FabricMC/fabric-example-mod",
       "ref": "ec6a4cbff9f335ba6b6b3170784dffce380e4408",
       "archiveUrl": "https://github.com/FabricMC/fabric-example-mod/archive/ec6a4cbff9f335ba6b6b3170784dffce380e4408.zip",
-      "sha256": null,
+      "sha256": "78c1855bdd8b4f1c277f99fc370d3318d33eeb234df9472f1bd2de30bba477b5",
       "license": "CC0-1.0",
       "gitPolicy": "submodule_ok",
-      "mappings": "yarn"
+      "mappings": "yarn",
+      "source": "github"
     },
     {
       "id": "fabric-1.20.4-loom",
@@ -130,10 +139,11 @@
       "repo": "https://github.com/FabricMC/fabric-example-mod",
       "ref": "7b53cc2ff200a6153945616aa31115a2ffd07c51",
       "archiveUrl": "https://github.com/FabricMC/fabric-example-mod/archive/7b53cc2ff200a6153945616aa31115a2ffd07c51.zip",
-      "sha256": null,
+      "sha256": "d54fb1e74f1005fe5f397f0f98782f9e1de50493a10befda61655f55aee531e8",
       "license": "CC0-1.0",
       "gitPolicy": "submodule_ok",
-      "mappings": "yarn"
+      "mappings": "yarn",
+      "source": "github"
     },
     {
       "id": "fabric-26.1.2-loom",
@@ -143,11 +153,12 @@
       "repo": "https://github.com/FabricMC/fabric-example-mod",
       "ref": "27c9ae062374e59b9732d86ce229bfb42175408e",
       "archiveUrl": "https://github.com/FabricMC/fabric-example-mod/archive/27c9ae062374e59b9732d86ce229bfb42175408e.zip",
-      "sha256": null,
+      "sha256": "a885078a951e0dc5271904ce3a6589425b8f65d28686f5f85f191fa43a1cc74d",
       "license": "CC0-1.0",
       "gitPolicy": "submodule_ok",
       "mappings": "mojmap",
-      "notes": "pin 该 commit，不要跟 26.1.2 branch HEAD。"
+      "notes": "pin 该 commit，不要跟 26.1.2 branch HEAD。",
+      "source": "github"
     },
     {
       "id": "quilt-template-loom",
@@ -157,10 +168,11 @@
       "repo": "https://github.com/QuiltMC/quilt-template-mod",
       "ref": "9a6f89cd481e3f58f128596b5b043353bee6b3f2",
       "archiveUrl": "https://github.com/QuiltMC/quilt-template-mod/archive/9a6f89cd481e3f58f128596b5b043353bee6b3f2.zip",
-      "sha256": null,
+      "sha256": "a2afaa5ab8037021c4538fc8f1bbcca6e30b713c57359245c7eec315e0aaf849",
       "license": "CC0-1.0 (LICENSE-TEMPLATE.md)",
       "gitPolicy": "submodule_ok",
-      "mappings": "yarn"
+      "mappings": "yarn",
+      "source": "github"
     },
     {
       "id": "liteloader-1.12.2",
@@ -174,7 +186,270 @@
       "license": "Copyright Adam Mummery-Smith",
       "gitPolicy": "forbidden_redistribute",
       "mappings": "mcp",
-      "notes": "禁止再分发 LiteLoader 源码/MDK zip。官方 URL 404 时仅 allowCacheFallback 且同一 platform+version。"
+      "notes": "禁止再分发 LiteLoader 源码/MDK zip。官方 URL 404 时仅 allowCacheFallback 且同一 platform+version。",
+      "source": "github"
+    },
+    {
+      "id": "neoforge-1.21.1-moddevgradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.1",
+      "buildPlugin": "moddevgradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.1-ModDevGradle",
+      "ref": "b893096cab5bd133d8cb7bcdb61dc38ce285caf5",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.1-ModDevGradle/archive/b893096cab5bd133d8cb7bcdb61dc38ce285caf5.zip",
+      "sha256": "65c8d7656014bc5dcc8e92b9b0b076f1c2c77bb2224f58223f5ae18155258bba",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.1-neogradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.1",
+      "buildPlugin": "neogradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.1-NeoGradle",
+      "ref": "50b02952c596784d7c493866650021c1222846ca",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.1-NeoGradle/archive/50b02952c596784d7c493866650021c1222846ca.zip",
+      "sha256": "8c2b4ba0ada335dc4fd9a7a1f7bb0d2e6f6a19cecbdb25af4a315590f1b28c4f",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.3-moddevgradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.3",
+      "buildPlugin": "moddevgradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.3-ModDevGradle",
+      "ref": "8e8b9da3ae8661854caebdf93754e2d9ce85be45",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.3-ModDevGradle/archive/8e8b9da3ae8661854caebdf93754e2d9ce85be45.zip",
+      "sha256": "748db4ca045e347e7c41ce70f07e5ab888d85e19854f04d481d773901488a64b",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.3-neogradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.3",
+      "buildPlugin": "neogradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.3-NeoGradle",
+      "ref": "32c3f04f86b3bb05df7d880a2272ab8b9de2905f",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.3-NeoGradle/archive/32c3f04f86b3bb05df7d880a2272ab8b9de2905f.zip",
+      "sha256": "8e0453d9119c737ab6317c0b9052ea91ccc9aaa08245f6dce33cafced23c0407",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.8-moddevgradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.8",
+      "buildPlugin": "moddevgradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.8-ModDevGradle",
+      "ref": "afd4fbcbba2d0a80258f041572fb99527e78ef64",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.8-ModDevGradle/archive/afd4fbcbba2d0a80258f041572fb99527e78ef64.zip",
+      "sha256": "12ba098cd75d591cb05152742bc5c988be6b9a766b60aba20b3a1561e623cd40",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.8-neogradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.8",
+      "buildPlugin": "neogradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.8-NeoGradle",
+      "ref": "e2aa41019858302a01dec30ad05fad14677cf883",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.8-NeoGradle/archive/e2aa41019858302a01dec30ad05fad14677cf883.zip",
+      "sha256": "c0ad942960f64bf74a8a34cdeff60e5c9bfb5b5320ca0e57cde5002f25f61c68",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.11-moddevgradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.11",
+      "buildPlugin": "moddevgradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.11-ModDevGradle",
+      "ref": "88207194a64e0d720b7a3d48dd58342c8499ce83",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.11-ModDevGradle/archive/88207194a64e0d720b7a3d48dd58342c8499ce83.zip",
+      "sha256": "6d8151d876c96147a808dc0c3d83c51115f9d62d5484368867516858af3da7f5",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "neoforge-1.21.11-neogradle",
+      "platform": "neoforge",
+      "minecraftVersion": "1.21.11",
+      "buildPlugin": "neogradle",
+      "source": "github",
+      "repo": "https://github.com/NeoForgeMDKs/MDK-1.21.11-NeoGradle",
+      "ref": "ba51df32a412d779a10c96b9d7934ab4f864c9f6",
+      "archiveUrl": "https://github.com/NeoForgeMDKs/MDK-1.21.11-NeoGradle/archive/ba51df32a412d779a10c96b9d7934ab4f864c9f6.zip",
+      "sha256": "45ad34960c4689ffd8b2004c9bbf53fd339a7047a384e9c91c18da3a091b6e48",
+      "license": "MIT (TEMPLATE_LICENSE.txt)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mojmap"
+    },
+    {
+      "id": "forge-1.20.4-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.20.4",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.4-49.2.0/forge-1.20.4-49.2.0-mdk.zip",
+      "sha256": "82db5950872220031f1f55f2392061759c7e52a907ff3bfe3439f513c1f524db",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 49.2.0 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.20.1-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.20.1",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.10/forge-1.20.1-47.4.10-mdk.zip",
+      "sha256": "73e0122becd05e39b47eced54e030380d66411850ed86786a2d58ecd886b0451",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 47.4.10 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.19.4-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.19.4",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.19.4-45.4.0/forge-1.19.4-45.4.0-mdk.zip",
+      "sha256": "a6a9009c61722fbe20c04d063fefc1c84fa7df4998e342b619b0877992a3f456",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 45.4.0 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.18.2-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.18.2",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.3.0/forge-1.18.2-40.3.0-mdk.zip",
+      "sha256": "b2691f2aa4a0e8de06c9bcf7c0cb167abedecf17ea90b0ec943b002d0a2f3e2b",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 40.3.0 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.17.1-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.17.1",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.17.1-37.1.1/forge-1.17.1-37.1.1-mdk.zip",
+      "sha256": "65f2419c0670b2b7f1819032210c8180dc0538f3a9a4cf89d7d0b4bbd7d63a73",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 37.1.1 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.16.5-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.16.5",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.34/forge-1.16.5-36.2.34-mdk.zip",
+      "sha256": "56a5a90fb63b45334fe8afd9fe0f7a45476ea550cfdf10bc9941e2e597fb6bd7",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 36.2.34 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.15.2-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.15.2",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.15.2-31.2.57/forge-1.15.2-31.2.57-mdk.zip",
+      "sha256": "383b1ce2a8512591ec292549b1cb620f00e2a2dd97b3b4b44e195c9b8ab73be2",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 31.2.57 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.14.4-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.14.4",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.14.4-28.2.26/forge-1.14.4-28.2.26-mdk.zip",
+      "sha256": "0fd8553d9fd72a37949708cdc6c208ffea955a0b4854e0725e7416d09a001948",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 28.2.26 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.13.2-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.13.2",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.13.2-25.0.223/forge-1.13.2-25.0.223-mdk.zip",
+      "sha256": "d13ab7a7a3fad9a64dc9a58a2dde4e57fdeab028feadfd25b210e5a8076abfbe",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 25.0.223 from promotions_slim.json"
+    },
+    {
+      "id": "forge-1.12.2-forgegradle",
+      "platform": "forge",
+      "minecraftVersion": "1.12.2",
+      "buildPlugin": "forgegradle",
+      "source": "official",
+      "repo": "https://files.minecraftforge.net/",
+      "ref": "",
+      "archiveUrl": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2859/forge-1.12.2-14.23.5.2859-mdk.zip",
+      "sha256": "52992d8bd80f3517891019d4e1e07c081d6b09c4117313c36c8beed8746527db",
+      "license": "LGPL (Forge MDK template)",
+      "gitPolicy": "submodule_ok",
+      "mappings": "mcp",
+      "notes": "recommended/latest 14.23.5.2859 from promotions_slim.json"
     }
   ]
 }

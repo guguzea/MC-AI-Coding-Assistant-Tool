@@ -40,4 +40,4 @@ DataGen 必须用 Client/Server 子事件，不要写回单一 GatherDataEvent�
 - `NeoForgeAddonPlugin`、`getBootstrapContext().getEventBus`
 - 用 Forge `mods.toml` + `net.minecraftforge` 包当 NeoForge 1.21.8
 - 把邻版 MDK zip 当本版
-- 官方 MDK 404 时回退邻版
+- 官方 MDK 404 / 无 pin 时返回 MDK_NOT_PINNED，禁止邻版 MDK

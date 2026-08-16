@@ -187,6 +187,13 @@ function Sync-VersionDir {
     }
     Write-Host "  Preserved: .cursor/agents/default.md (if present)`n" -ForegroundColor DarkGray
 
+    $claudeSrc = "$Base\CLAUDE.md"
+    if (Test-Path $claudeSrc) {
+        Ensure-Dir "$Base\.claude"
+        Copy-Item $claudeSrc "$Base\.claude\CLAUDE.md" -Force
+        Write-Host "  Synced: CLAUDE.md → .claude/CLAUDE.md" -ForegroundColor Green
+    }
+
     Write-Host "=== Sync Complete: $skillCount skills, $ruleCount rules ===" -ForegroundColor Cyan
 }
 

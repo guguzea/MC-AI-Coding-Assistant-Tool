@@ -29,6 +29,7 @@ const DEFAULT_PAIRS = [
   ["liteloader/1.8.9", "liteloader/1.12.2"],
   ["liteloader/1.10.2", "liteloader/1.12.2"],
   ["modloader/1.2.5", "modloader/1.6.4"],
+  ["modloader/1.5.2", "modloader/1.6.4"],
   ["fabric/26.1.2", "fabric/1.21.11"],
 ];
 
@@ -87,10 +88,34 @@ function dice(aTokens, bTokens) {
   return (2 * inter) / (aTokens.length + bTokens.length);
 }
 
+function parseSignOffNumbers(baseRel) {
+  const dir = join(ROOT, baseRel, "knowledge", "common");
+  const nums = new Set();
+  if (!existsSync(dir)) return nums;
+  for (const name of readdirSync(dir)) {
+    if (!/^verified-api/i.test(name) || !/\.md$/i.test(name)) continue;
+    const text = readFileSync(join(dir, name), "utf8");
+    const idx = text.indexOf("## 对照签字");
+    if (idx < 0) continue;
+    const rest = text.slice(idx);
+    for (const line of rest.split(/\r?\n/)) {
+      const m = line.match(/^\|\s*(0[348])\s*\|/);
+      if (m) nums.add(m[1]);
+    }
+  }
+  return nums;
+}
+
+function ruleNumberFromRel(rel) {
+  const m = rel.replace(/\\/g, "/").match(/(?:^|\/)(\d{2})-[a-z0-9-]+\.mdc$/i);
+  return m ? m[1] : null;
+}
+
 function comparePair(leftRel, rightRel) {
   const leftFiles = collectRelFiles(leftRel);
   const rightSet = new Set(collectRelFiles(rightRel));
   const shared = leftFiles.filter((f) => rightSet.has(f));
+  const signOff = parseSignOffNumbers(leftRel);
   const findings = [];
   for (const rel of shared) {
     const aPath = join(ROOT, leftRel, rel);
@@ -101,12 +126,19 @@ function comparePair(leftRel, rightRel) {
       tokenize(readFileSync(bPath, "utf8")),
     );
     if (sim > THRESHOLD) {
+      const num = ruleNumberFromRel(rel);
+      const signed = num && signOff.has(num);
+      const exact = sim >= 0.9999;
       findings.push({
         status: "SUSPECTED_CLONE",
         left: `${leftRel}/${rel}`.replace(/\\/g, "/"),
         right: `${rightRel}/${rel}`.replace(/\\/g, "/"),
         similarity: Number(sim.toFixed(4)),
-        note: "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。",
+        signOff: signed || false,
+        closeGapIncomplete: Boolean(exact && num && ["03", "04", "08"].includes(num) && !signed),
+        note: exact && num && ["03", "04", "08"].includes(num) && !signed
+          ? "相似度 1.0 且核实表无「对照签字」该编号，本收口未完成。"
+          : "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。",
       });
     }
   }

@@ -39,3 +39,11 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 - Java 21；mojmap（游戏仍混淆；与 26.1 去混淆不是同一档）
 - 1.21.11 文档已用 Identifier.fromNamespaceAndPath，不要再写 ResourceLocation.fromNamespaceAndPath。
 - 1.21.11 文档把 ResourceLocation 换成 Identifier。Primer 26.1 才是下一跳。
+
+## 对照签字
+
+| 编号 | 对照 URL | 抓取日 | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.21.11/items/ | 2026-08-16 | 已按该版文档改写（unary operator + DeferredItem） |
+| 04 | https://docs.neoforged.net/docs/1.21.11/entities/ | 2026-08-16 | 已按该版文档改写 |
+| 08 | https://docs.neoforged.net/docs/1.21.11/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+

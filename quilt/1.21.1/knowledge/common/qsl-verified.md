@@ -16,8 +16,16 @@
 | 做法 | 说明 |
 |------|------|
 | Vanilla `Registry.register(Registries.*, id, value)` | 简单 Item/Block/BlockEntity **可用**（不是 FAPI 专属） |
-| QSL Core Registry | README：Addition Events、Addition Events Helper、Registry Syncing、Exclude Specific Entries。**具体类名未在 README 列出则禁止臆造**，改 `search_docs({platform:"quilt"})` |
-| 禁止 | `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当 QSL |
+| `org.quiltmc.qsl.registry.api.event.RegistryEvents#getEntryAddEvent(Registry)` | 低层：条目添加后回调。源码 [RegistryEvents.java @ 1.21 `871ca7abf109`](https://github.com/QuiltMC/quilt-standard-libraries/blob/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java)（抓取日 2026-08-16）。回调 `EntryAdded#onAdded(RegistryEntryContext)`。字段 `DYNAMIC_REGISTRY_SETUP` / `DYNAMIC_REGISTRY_LOADED` |
+| `org.quiltmc.qsl.registry.api.event.RegistryMonitor#create(Registry)` | 高层监视：`filter` / `forAll` / `forUpcoming`。源码 [RegistryMonitor.java @ 1.21 `871ca7abf109`](https://github.com/QuiltMC/quilt-standard-libraries/blob/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java)（抓取日 2026-08-16） |
+| 禁止 | `QuiltRegistry.register()`；`net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` 当 QSL |
+
+## 生命周期（已打开源码）
+
+| API | 说明 |
+|-----|------|
+| `org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents` | 字段 `STARTING` / `READY` / `STOPPING` / `STOPPED`。回调 `startingServer` / `readyServer` / `stoppingServer` / `exitServer`。[ServerLifecycleEvents.java @ `871ca7abf109`](https://github.com/QuiltMC/quilt-standard-libraries/blob/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java) |
+| `org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents` | `@ClientOnly`。字段 `READY` / `STOPPING` / `STOPPED`（无 STARTING）。回调 `readyClient` / `stoppingClient` / `stoppedClient`。[ClientLifecycleEvents.java @ `871ca7abf109`](https://github.com/QuiltMC/quilt-standard-libraries/blob/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java) |
 
 ## README 标明 QSL 有、不要用 FAPI 名顶上的能力（无方法签名则只作方向）
 

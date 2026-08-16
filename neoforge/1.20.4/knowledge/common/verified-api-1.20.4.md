@@ -39,3 +39,11 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 - Java 17；mojmap / NeoForm 官方名（不是 Forge MCP）
 - 本档仍用 ResourceLocation 构造函数，不是 fromNamespaceAndPath，也不是 Identifier。
 - 1.20.4 网络是 Payload 单数 Handler，不是把 Forge SimpleChannel 改包名。CustomPacketPayload 实现 write + id()，用 FriendlyByteBuf 构造器当 reader。
+
+## 对照签字
+
+| 编号 | 对照 URL | 抓取日 | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.20.4/items/ | 2026-08-16 | 已按该版文档改写 |
+| 04 | https://docs.neoforged.net/docs/1.20.4/entities/ | 2026-08-16 | 本编号 API 与邻档相同，非未核克隆 |
+| 08 | https://docs.neoforged.net/docs/1.20.4/concepts/sides/ | 2026-08-16 | 已按该版文档改写（MDK ClientModEvents；payload 默认网络线程） |
+

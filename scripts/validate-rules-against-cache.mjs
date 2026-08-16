@@ -76,19 +76,6 @@ const scanRoots = [
 const javaFiles = [];
 for (const r of scanRoots) walkJava(r, javaFiles);
 
-if (javaFiles.length === 0) {
-  mkdirSync(OUT, { recursive: true });
-  const skipped = {
-    ok: true,
-    skipped: true,
-    cache: CACHE,
-    note: "无反编译 .java。把官方 API jar 放到 loader-jars 后跑 decompile-loader-apis.mjs / decompile_mod_jar。",
-  };
-  writeFileSync(join(OUT, "validate-rules-last.json"), JSON.stringify(skipped, null, 2), "utf8");
-  console.log("validate-rules-against-cache: no decompiled java; skipped");
-  process.exit(0);
-}
-
 const classes = [];
 for (const f of javaFiles) {
   let src;
@@ -101,12 +88,101 @@ for (const f of javaFiles) {
   if (rec) classes.push(rec);
 }
 
+const seenFq = new Set(classes.map((c) => c.fqcn));
+for (const name of existsSync(OUT) ? readdirSync(OUT).filter((n) => n.endsWith(".json") && !n.includes("last") && n !== "index.json" && n !== "status.json" && n !== "extracted-classes.json") : []) {
+  try {
+    const j = JSON.parse(readFileSync(join(OUT, name), "utf8"));
+    if (Array.isArray(j.fqcnIndex)) {
+      for (const fq of j.fqcnIndex) {
+        if (seenFq.has(fq)) continue;
+        seenFq.add(fq);
+        const simple = String(fq).split(".").pop();
+        classes.push({ fqcn: fq, simpleName: simple, pkg: String(fq).slice(0, Math.max(0, String(fq).lastIndexOf("."))), methods: [], environment: false, apiStatusInternal: false, file: `summary:${name}` });
+      }
+    }
+    if (Array.isArray(j.classes)) {
+      for (const c of j.classes) {
+        if (!c.fqcn || seenFq.has(c.fqcn)) continue;
+        seenFq.add(c.fqcn);
+        classes.push({
+          fqcn: c.fqcn,
+          simpleName: c.simpleName || c.fqcn.split(".").pop(),
+          pkg: c.pkg || c.fqcn.slice(0, Math.max(0, c.fqcn.lastIndexOf("."))),
+          methods: c.methods || [],
+          environment: !!c.environment,
+          apiStatusInternal: !!c.apiStatusInternal,
+          file: `summary:${name}`,
+        });
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+if (classes.length === 0) {
+  mkdirSync(OUT, { recursive: true });
+  const skipped = {
+    ok: true,
+    skipped: true,
+    cache: CACHE,
+    note: "无反编译 .java 且摘要 JSON 无 fqcnIndex。把官方 API jar 放到 loader-jars 后跑 decompile-loader-apis.mjs。",
+  };
+  writeFileSync(join(OUT, "validate-rules-last.json"), JSON.stringify(skipped, null, 2), "utf8");
+  console.log("validate-rules-against-cache: no classes; skipped");
+  process.exit(0);
+}
+
 const byFqcn = new Map(classes.map((c) => [c.fqcn, c]));
 const bySimple = new Map();
 for (const c of classes) {
   const arr = bySimple.get(c.simpleName) ?? [];
   arr.push(c);
   bySimple.set(c.simpleName, arr);
+}
+
+function headingLevel(line) {
+  const m = line.match(/^(#{1,3})\s+/);
+  return m ? m[1].length : 0;
+}
+
+function sectionAround(lines, lineIdx) {
+  let start = 0;
+  let startLevel = 1;
+  for (let i = lineIdx; i >= 0; i--) {
+    const lv = headingLevel(lines[i]);
+    if (lv) {
+      start = i;
+      startLevel = lv;
+      break;
+    }
+  }
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    const lv = headingLevel(lines[i]);
+    if (lv && lv <= startLevel) {
+      end = i;
+      break;
+    }
+  }
+  return lines.slice(start, end).join("\n");
+}
+
+const NEGATIVE_HINT = /禁止|不要|反面|不存在/;
+const PLUGIN_ID_LAST = /^(moddev|userdev|gradle)$/i;
+
+function looksLikeGradlePluginId(fqcn) {
+  const last = fqcn.split(".").pop() || "";
+  if (PLUGIN_ID_LAST.test(last)) return true;
+  if (
+    fqcn === "net.neoforged.moddev" ||
+    fqcn === "net.neoforged.gradle.userdev" ||
+    fqcn === "net.minecraftforge.gradle" ||
+    fqcn === "net.minecraftforge.gradle.userdev"
+  ) {
+    return true;
+  }
+  return /^[a-z0-9_.]+$/.test(fqcn) && last === last.toLowerCase() && last.length <= 12 && !last.includes("_");
 }
 
 function scanRulesDir(rel) {
@@ -129,6 +205,7 @@ function scanRulesDir(rel) {
     }
   }
   const issues = [];
+  const negativeMentions = [];
   const fqcnRe = /\b((?:net\.(?:neoforged|minecraftforge|fabricmc|minecraft)|org\.quiltmc)[a-zA-Z0-9_.]+)\b/g;
   const suspectNames = [
     "NeoForgeAddonPlugin",
@@ -144,6 +221,7 @@ function scanRulesDir(rel) {
   ];
   for (const file of files) {
     const text = readFileSync(file, "utf8");
+    const lines = text.split(/\r?\n/);
     const relFile = relative(ROOT, file).replace(/\\/g, "/");
     let m;
     const seen = new Set();
@@ -151,7 +229,15 @@ function scanRulesDir(rel) {
       const fqcn = m[1].replace(/\.$/, "");
       if (seen.has(fqcn)) continue;
       seen.add(fqcn);
+      if (looksLikeGradlePluginId(fqcn)) continue;
+      if (fqcn.startsWith("net.minecraft.")) continue;
       const hit = byFqcn.get(fqcn);
+      const lineIdx = text.slice(0, m.index).split(/\r?\n/).length - 1;
+      const section = sectionAround(lines, lineIdx);
+      if (NEGATIVE_HINT.test(section)) {
+        negativeMentions.push({ file: relFile, symbol: fqcn, kind: "negative_mention" });
+        continue;
+      }
       if (!hit) {
         issues.push({
           file: relFile,
@@ -170,18 +256,32 @@ function scanRulesDir(rel) {
     }
     for (const name of suspectNames) {
       if (!text.includes(name)) continue;
+      const idx = text.indexOf(name);
+      const lineIdx = text.slice(0, idx).split(/\r?\n/).length - 1;
+      const section = sectionAround(lines, lineIdx);
       const hits = bySimple.get(name) ?? [];
-      if (name === "NeoForgeAddonPlugin" && hits.length === 0) {
-        issues.push({
-          file: relFile,
-          symbol: name,
-          kind: "invented_class",
-          hint: "cache 中无此类，视为臆造，应从规则删除",
-        });
+      if (name === "NeoForgeAddonPlugin" || name === "SimpleChannel" || name === "IMessage") {
+        if (NEGATIVE_HINT.test(section) || hits.length === 0 && NEGATIVE_HINT.test(section)) {
+          negativeMentions.push({ file: relFile, symbol: name, kind: "negative_mention" });
+          continue;
+        }
+        if (name === "NeoForgeAddonPlugin" && hits.length === 0 && !NEGATIVE_HINT.test(section)) {
+          issues.push({
+            file: relFile,
+            symbol: name,
+            kind: "invented_class",
+            hint: "cache 中无此类，且不在禁止/反面小节，视为臆造",
+          });
+        }
+        continue;
       }
       if (name === "NetworkRegistry" && hits.length) {
         for (const h of hits) {
           if (h.pkg.endsWith(".network") && !h.pkg.endsWith(".network.registration")) {
+            if (NEGATIVE_HINT.test(section)) {
+              negativeMentions.push({ file: relFile, symbol: h.fqcn, kind: "negative_mention" });
+              continue;
+            }
             issues.push({
               file: relFile,
               symbol: h.fqcn,
@@ -193,20 +293,21 @@ function scanRulesDir(rel) {
       }
     }
   }
-  return issues;
+  return { issues, negativeMentions };
 }
 
 const ruleRoots = [];
 if (platformArg && versionArg) {
   ruleRoots.push(join(platformArg, versionArg, ".cursor", "rules"));
 } else {
-  ruleRoots.push("neoforge/.cursor/rules");
   for (const ver of ["1.20.4", "1.21.1", "1.21.3", "1.21.8", "1.21.11", "26.1"]) {
     ruleRoots.push(`neoforge/${ver}/.cursor/rules`);
   }
 }
 
-const issues = ruleRoots.flatMap((r) => scanRulesDir(r));
+const scanned = ruleRoots.map((r) => ({ root: r, ...scanRulesDir(r) }));
+const issues = scanned.flatMap((s) => s.issues);
+const negativeMentions = scanned.flatMap((s) => s.negativeMentions);
 const mappingsVersion = process.env.MC_SKILL_MAPPINGS_VERSION ?? null;
 const summary = {
   ok: true,
@@ -215,6 +316,7 @@ const summary = {
   classCount: classes.length,
   javaFileCount: javaFiles.length,
   issues,
+  negativeMentions,
   extractedSample: classes.slice(0, 30).map((c) => ({
     fqcn: c.fqcn,
     methods: c.methods.slice(0, 8),
@@ -227,7 +329,7 @@ const summary = {
 };
 
 mkdirSync(OUT, { recursive: true });
-writeFileSync(join(OUT, "extracted-classes.json"), JSON.stringify({ mappingsVersion, classes }, null, 2), "utf8");
+writeFileSync(join(OUT, "extracted-classes.json"), JSON.stringify({ mappingsVersion, classCount: classes.length, sample: classes.slice(0, 40).map((c) => ({ fqcn: c.fqcn, methods: (c.methods || []).slice(0, 8) })) }, null, 2), "utf8");
 writeFileSync(join(OUT, "validate-rules-last.json"), JSON.stringify(summary, null, 2), "utf8");
 console.log(
   `validate-rules-against-cache: ${classes.length} classes, ${issues.length} issues, cache=${CACHE}`,

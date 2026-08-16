@@ -1,0 +1,171 @@
+{
+  "cache": "D:\\mc-skill-temp",
+  "log": [
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.20.4\\loom\\unpacked\\fabric-example-mod-7b53cc2ff200a6153945616aa31115a2ffd07c51",
+      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.21.1\\loom\\unpacked\\fabric-example-mod-ec6a4cbff9f335ba6b6b3170784dffce380e4408",
+      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\26.1.2\\loom\\unpacked\\fabric-example-mod-27c9ae062374e59b9732d86ce229bfb42175408e",
+      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.12.2\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.13.2\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.14.4\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.15.2\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.16.5\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.17.1\\forgegradle\\unpacked",
+      "key": "unknown-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.18.2\\forgegradle\\unpacked",
+      "key": "1.18.2-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.19.4\\forgegradle\\unpacked",
+      "key": "1.19.4-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.20.1\\forgegradle\\unpacked",
+      "key": "1.20.1-forge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\moddevgradle\\unpacked\\MDK-26.2-ModDevGradle-d1c748fd52b311cba7b4a50e3d689927c5daac9a",
+      "key": "26.2-neoforge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\neogradle\\unpacked\\MDK-26.2-NeoGradle-15955d033693fce0d05619eb3ab32643b941cd93",
+      "key": "26.2-neoforge",
+      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\quilt\\1.21.1\\quilt-loom\\unpacked\\quilt-template-mod-9a6f89cd481e3f58f128596b5b043353bee6b3f2",
+      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.4-49.2.0/forge-1.20.4-49.2.0-sources.jar",
+      "bytes": 1620355,
+      "mappingsVersion": "official-1.20.4",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.20.4-49.2.0",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.20.4-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-neoforge.jar",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/20.4.251/neoforge-20.4.251-sources.jar",
+      "bytes": 1490583,
+      "mappingsVersion": "parchment-1.20.4-2024.04.14",
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "20.4.251",
+        "from": "moddev-plugin+neoForge.version"
+      },
+      "key": "1.20.4-neoforge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-neoforge.jar",
+      "skipped": "idempotent cache hit",
+      "key": "1.21.1-neoforge",
+      "mappingsVersion": "parchment-1.21.1-2024.11.17",
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "21.1.248",
+        "from": "moddev-plugin+neoForge.version"
+      }
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.11-neoforge.jar",
+      "skipped": "idempotent cache hit",
+      "key": "1.21.11-neoforge",
+      "mappingsVersion": "parchment-1.21.11-2025.12.20",
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "21.11.45",
+        "from": "moddev-plugin+neoForge.version"
+      }
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.3-neoforge.jar",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.3.97/neoforge-21.3.97-sources.jar",
+      "bytes": 1793397,
+      "mappingsVersion": "parchment-1.21.3-2024.12.07",
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "21.3.97",
+        "from": "moddev-plugin+neoForge.version"
+      },
+      "key": "1.21.3-neoforge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.8-neoforge.jar",
+      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.8.54/neoforge-21.8.54-sources.jar",
+      "bytes": 1899585,
+      "mappingsVersion": "parchment-1.21.8-2025.09.14",
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "21.8.54",
+        "from": "moddev-plugin+neoForge.version"
+      },
+      "key": "1.21.8-neoforge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\26.1-neoforge.jar",
+      "skipped": "idempotent cache hit",
+      "key": "26.1-neoforge",
+      "mappingsVersion": null,
+      "coord": {
+        "group": "net.neoforged",
+        "artifact": "neoforge",
+        "version": "26.1.2.95",
+        "from": "moddev-plugin+neoForge.version"
+      }
+    }
+  ]
+}

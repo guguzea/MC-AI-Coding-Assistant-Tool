@@ -49,6 +49,21 @@ const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string 
   { platform: "bedrock", version: "stable", source: "bedrock-docs" },
 ];
 
+/** 页少（1–3）故意不建向量库；缺 db 不算漏建 */
+const L0_ONLY_TREES = new Set([
+  "liteloader_1.12.2/liteloader-docs",
+  "liteloader_1.10.2/liteloader-docs",
+  "liteloader_1.8.9/liteloader-docs",
+  "rift_1.13.2/rift-docs",
+  "modloader_1.6.4/modloader-docs",
+  "modloader_1.5.2/modloader-docs",
+  "modloader_1.2.5/modloader-docs",
+]);
+
+export function isIntentionalL0Only(platform: string, version: string, source: string): boolean {
+  return L0_ONLY_TREES.has(`${platform}_${version}/${source}`);
+}
+
 function modelsDirReady(dataRoot: string): boolean {
   const root = join(dataRoot, "_models", "Xenova", "all-MiniLM-L6-v2");
   if (!existsSync(root)) return false;
@@ -252,13 +267,23 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   else modeHint = "l0-only";
   const presence = listSemanticDbPresence(dataRoot);
   const presentAll = presence.filter((s) => s.exists).length;
-  const missingSamples = presence.filter((s) => !s.exists);
+  const missingSamples = presence.filter((s) => !s.exists && !isIntentionalL0Only(s.platform, s.version, s.source));
+  const l0Only = presence.filter((s) => !s.exists && isIntentionalL0Only(s.platform, s.version, s.source));
+  const totalCounted = presence.length > 0 ? presence.length - l0Only.length : samples.length;
   const warnings = buildSemanticWarnings({
     present: presence.length > 0 ? presentAll : presentCount,
-    total: presence.length > 0 ? presence.length : samples.length,
+    total: presence.length > 0 ? Math.max(totalCounted, presentAll) : samples.length,
     modelsReady,
     missingSamples: presence.length > 0 ? missingSamples : samples.filter((s) => !s.exists),
   });
+  if (l0Only.length) {
+    warnings.push(
+      `下列 ${l0Only.length} 棵文档树为故意 L0-only（页少，不建空向量库）：${l0Only
+        .slice(0, 8)
+        .map((s) => `${s.platform}_${s.version}/${s.source}`)
+        .join(", ")}。`,
+    );
+  }
   for (const s of samples.filter((x) => x.stale)) {
     warnings.push(
       `语义索引过期（stale）：${s.platform}_${s.version}/${s.source}${s.staleReason ? `（${s.staleReason}）` : ""}。processed/ 新于 sqlite 或指纹不一致。请运行 npm run build:semantic-index -- --platform=${s.platform} --version=${s.version} --force`,

@@ -101,7 +101,9 @@ export const generateLangSchema = z.object({
 export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
   packetName: z.string(),
-  platform: z.enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21"]).optional(),
+  platform: z
+    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1"])
+    .describe("必填。省略则 error，禁止默认 forge_1.20.1"),
 });
 export const generateCapabilitySchema = z.object({
   modId: z.string(),
@@ -338,7 +340,7 @@ export function registerWaveExtensions(server: McpServer): void {
     description: "Generate network packet skeleton。返回网络包 Java 骨架文本，不写盘。",
     inputSchema: generateNetworkPacketSchema,
   }, async (a) =>
-    jsonResult(generateNetworkPacket(a.modId, a.packetName, a.platform ?? "forge_1.20.1")));
+    jsonResult(generateNetworkPacket(a.modId, a.packetName, a.platform)));
 
   server.registerTool("generate_capability", {
     title: "Generate Capability / DataAttachment skeleton",
@@ -570,7 +572,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "read_knowledge_resource", description: "Read knowledge resource by URI", inputSchema: readKnowledgeResourceSchema },
   { name: "generate_model", description: "Generate block model JSON templates。返回方块模型 JSON 骨架文本，不写盘。", inputSchema: generateModelSchema },
   { name: "generate_lang", description: "Generate en_us + zh_cn lang JSON。返回 en_us/zh_cn lang JSON 骨架，不写盘、无机器翻译。", inputSchema: generateLangSchema },
-  { name: "generate_network_packet", description: "Generate network packet skeleton。返回网络包 Java 骨架文本，不写盘。", inputSchema: generateNetworkPacketSchema },
+  { name: "generate_network_packet", description: "Generate network packet skeleton。platform 必填（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1）。返回 Java 骨架文本，不写盘。", inputSchema: generateNetworkPacketSchema },
   { name: "generate_capability", description: "Generate Capability / DataAttachment skeleton。返回 Capability/DataAttachment 骨架文本，不写盘。", inputSchema: generateCapabilitySchema },
   { name: "generate_config", description: "Generate config spec skeleton。返回配置规范骨架文本，不写盘。", inputSchema: generateConfigSchema },
   { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },

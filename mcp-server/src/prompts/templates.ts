@@ -26,9 +26,14 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-new-gui": {
     title: "GUI 工作流",
     body: `1. 确认平台与 MC 版本（已有工程不要下 MDK）
-2. MenuType + AbstractContainerMenu（mc-gui / 10-gui）
-3. Screen + MenuScreens.register（客户端）
-4. 同步：NeoForge 用 Payload（1.20.4 为 RegisterPayloadHandlerEvent 单数；1.21+ 为 RegisterPayloadHandlersEvent）；Forge 1.20.1 才是 SimpleChannel。禁止把 SimpleChannel 写进 NeoForge。`,
+2. 按平台分支，不要默认 MenuType：
+   - 现代 NeoForge / Forge：MenuType + AbstractContainerMenu（该档 10-gui / mc-gui）；Screen + MenuScreens.register（客户端）
+   - Fabric / Quilt：该版 10-gui（Quilt 02–10 仍读 fabric/<ver>）
+   - LiteLoader：GuiScreen / HUDRenderListener（核实表）；禁止 MenuType
+   - Rift：GameGuiAdder / OverlayRenderer（核实表）
+   - ModLoader：核实表 Gui；禁止 DeferredRegister
+   - 基岩：BP/RP JSON，不要 MenuType
+3. 同步：NeoForge 用 Payload（1.20.4 为 RegisterPayloadHandlerEvent 单数；1.21+ 为 RegisterPayloadHandlersEvent；26.1 用 Identifier）。Forge 1.20.1 才是 SimpleChannel。禁止把 SimpleChannel 写进 NeoForge。`,
   },
   "mc-crash-triage": {
     title: "崩溃分诊",

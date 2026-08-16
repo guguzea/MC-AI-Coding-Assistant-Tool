@@ -39,3 +39,11 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 - Java 25；mojmap-unobfuscated（游戏 jar 已是 Mojang 名）
 - 26.1 去混淆 + Identifier。禁止 Yarn。query_api 无本版索引。
 - 26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。官方 /docs/26.2/ 仍 404，禁止克隆本档冒充 26.2。
+
+## 对照签字
+
+| 编号 | 对照 URL | 抓取日 | 结论 |
+| 03 | https://docs.neoforged.net/docs/items/ | 2026-08-16 | 已按该版文档改写（setId + unary + ItemStackTemplate） |
+| 04 | https://docs.neoforged.net/docs/entities/ | 2026-08-16 | 已按该版文档改写（Identifier + registerEntityType） |
+| 08 | https://docs.neoforged.net/docs/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment#getDist） |
+

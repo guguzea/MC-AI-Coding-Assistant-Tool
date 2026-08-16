@@ -1,405 +1,332 @@
 {
-  "mappingsVersion": "mojmap-neoform-1.20.4;mojmap-neoform-1.21.1;mojmap-unobfuscated-26.1;mcp-1.13.2;mcp-1.12.2;mcp-1.6.4",
-  "classes": [
+  "mappingsVersion": null,
+  "classCount": 6200,
+  "sample": [
     {
       "fqcn": "org.dimdev.rift.listener.BlockAdder",
-      "simpleName": "BlockAdder",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "registerBlocks"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/BlockAdder.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.CustomPayloadHandler",
-      "simpleName": "CustomPayloadHandler",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "clientHandlesChannel",
         "clientHandleCustomPayload",
         "serverHandlesChannel",
         "serverHandleCustomPayload"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/CustomPayloadHandler.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.client.GameGuiAdder",
-      "simpleName": "GameGuiAdder",
-      "pkg": "org.dimdev.rift.listener.client",
       "methods": [
         "displayGui",
         "displayContainerGui"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/GameGuiAdder.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.ItemAdder",
-      "simpleName": "ItemAdder",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "registerItems"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/ItemAdder.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.MessageAdder",
-      "simpleName": "MessageAdder",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "registerMessages"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/MessageAdder.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.client.OverlayRenderer",
-      "simpleName": "OverlayRenderer",
-      "pkg": "org.dimdev.rift.listener.client",
       "methods": [
         "renderOverlay"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/OverlayRenderer.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.PacketAdder",
-      "simpleName": "PacketAdder",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "registerPacket",
         "registerHandshakingPackets",
         "registerPlayPackets",
         "registerStatusPackets",
         "registerLoginPackets"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/PacketAdder.java"
+      ]
     },
     {
       "fqcn": "org.dimdev.rift.listener.TileEntityTypeAdder",
-      "simpleName": "TileEntityTypeAdder",
-      "pkg": "org.dimdev.rift.listener",
       "methods": [
         "registerTileEntityTypes"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.13.2-rift/TileEntityTypeAdder.java"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.registries.DeferredHolder",
-      "simpleName": "DeferredHolder",
-      "pkg": "net.neoforged.neoforge.registries",
+      "fqcn": "net.minecraftforge.client.ChunkRenderTypeSet",
       "methods": [
-        "create",
-        "value",
+        "none",
+        "all",
+        "of",
+        "union",
+        "intersection",
+        "isEmpty",
+        "contains",
+        "iterator"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.ClientCommandHandler",
+      "methods": [
+        "init",
+        "handleClientPlayerLogin",
+        "mergeServerCommands",
+        "getDispatcher",
+        "getSource",
+        "runCommand"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.ClientCommandSourceStack",
+      "methods": [
+        "m_288197_",
+        "m_5983_",
+        "m_5982_",
+        "m_6860_",
+        "m_6553_",
+        "m_5894_",
+        "getScoreboard",
+        "getAdvancement"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.ClientForgeMod",
+      "methods": [
+        "onRegisterGeometryLoaders",
+        "onRegisterReloadListeners",
+        "onRegisterNamedRenderTypes"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.ColorResolverManager",
+      "methods": [
+        "init",
+        "registerBlockTintCaches"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.ConfigScreenHandler",
+      "methods": []
+    },
+    {
+      "fqcn": "net.minecraftforge.client.CreativeModeTabSearchRegistry",
+      "methods": [
+        "getNameSearchKey",
+        "getTagSearchKey",
+        "createSearchTrees"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.DimensionSpecialEffectsManager",
+      "methods": [
+        "getForType",
+        "init",
+        "preRegisterVanillaEffects"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.EntitySpectatorShaderManager",
+      "methods": [
         "get",
-        "asOptional",
-        "isBound",
-        "getRegistry",
-        "bind",
-        "getId",
-        "getKey",
-        "equals",
-        "hashCode",
-        "toString",
-        "is",
-        "tags",
-        "unwrapKey",
-        "kind",
-        "canSerializeIn"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.20.4-neoforge/DeferredHolder.java"
+        "init"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.registries.DeferredRegister",
-      "simpleName": "DeferredRegister",
-      "pkg": "net.neoforged.neoforge.registries",
+      "fqcn": "net.minecraftforge.client.event.ClientChatEvent",
       "methods": [
-        "createItems",
-        "createBlocks",
-        "makeRegistry",
-        "getRegistry",
-        "createTagKey",
-        "addAlias",
+        "getMessage",
+        "setMessage",
+        "getOriginalMessage"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ClientChatReceivedEvent",
+      "methods": [
+        "getMessage",
+        "setMessage",
+        "getBoundChatType",
+        "getSender",
+        "isSystem",
+        "getPlayerChatMessage",
+        "isOverlay"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ClientPauseChangeEvent",
+      "methods": [
+        "isPaused"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ClientPauseEvent",
+      "methods": [
+        "isPaused"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ClientPlayerChangeGameTypeEvent",
+      "methods": [
+        "getInfo",
+        "getCurrentGameType",
+        "getNewGameType"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ClientPlayerNetworkEvent",
+      "methods": [
+        "getMultiPlayerGameMode",
+        "getPlayer",
+        "getConnection",
+        "getOldPlayer",
+        "getNewPlayer"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ComputeFovModifierEvent",
+      "methods": [
+        "getPlayer",
+        "getFovModifier",
+        "getNewFovModifier",
+        "setNewFovModifier"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ContainerScreenEvent",
+      "methods": [
+        "getContainerScreen",
+        "getGuiGraphics",
+        "getMouseX",
+        "getMouseY"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.CustomizeGuiOverlayEvent",
+      "methods": [
+        "getWindow",
+        "getGuiGraphics",
+        "getPartialTick",
+        "getBossEvent",
+        "getX",
+        "getY",
+        "getIncrement",
+        "setIncrement"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.EntityRenderersEvent",
+      "methods": [
+        "registerLayerDefinition",
+        "getSkins",
+        "getEntityModels",
+        "getContext",
+        "getEntityModelSet",
+        "registerSkullModel"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ForgeEventFactoryClient",
+      "methods": [
+        "post",
+        "gatherLayers",
+        "onScreenMouseReleasedPre",
+        "onScreenMouseReleasedPost",
+        "onScreenMouseClickedPre",
+        "onScreenMouseClickedPost",
+        "onMouseButtonPre",
+        "onMouseButtonPost"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.InputEvent",
+      "methods": [
+        "getButton",
+        "getAction",
+        "getModifiers",
+        "getDeltaX",
+        "getDeltaY",
+        "isLeftDown",
+        "isRightDown",
+        "isMiddleDown"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.ModelEvent",
+      "methods": [
+        "getModelBakery",
+        "getModelManager",
+        "register"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.MovementInputUpdateEvent",
+      "methods": [
+        "getInput"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.RecipesUpdatedEvent",
+      "methods": [
+        "getRecipeManager"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.RegisterClientCommandsEvent",
+      "methods": [
+        "getDispatcher",
+        "getBuildContext"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.RegisterClientReloadListenersEvent",
+      "methods": [
+        "registerReloadListener"
+      ]
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent",
+      "methods": []
+    },
+    {
+      "fqcn": "net.minecraftforge.client.event.RegisterColorHandlersEvent",
+      "methods": [
+        "getBlockColors",
         "register",
-        "getRegistryName",
-        "getNamespace",
-        "addEntries",
-        "addRegistry",
-        "registerSimpleBlock",
-        "registerSimpleBlockItem",
-        "registerSimpleItem"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.20.4-neoforge/DeferredRegister.java"
+        "getItemColors"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.network.registration.IPayloadRegistrar",
-      "simpleName": "IPayloadRegistrar",
-      "pkg": "net.neoforged.neoforge.network.registration",
+      "fqcn": "net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent",
       "methods": [
-        "play",
-        "versioned",
-        "optional"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.20.4-neoforge/IPayloadRegistrar.java"
+        "register"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.network.registration.NetworkRegistry",
-      "simpleName": "NetworkRegistry",
-      "pkg": "net.neoforged.neoforge.network.registration",
+      "fqcn": "net.minecraftforge.client.event.RegisterEntitySpectatorShadersEvent",
       "methods": [
-        "getInstance",
-        "setup",
-        "onModdedPacketAtServer",
-        "onModdedPacketAtClient",
-        "onModdedConnectionDetectedAtServer",
-        "onVanillaOrOtherConnectionDetectedAtServer",
-        "canSendPacket",
-        "shouldSendPacketRaw",
-        "getKnownAdHocChannelsOfOtherEnd",
-        "isAdhocConfigurationChannelReadable",
-        "isAdhocPlayChannelReadable",
-        "onNetworkQuery",
-        "onModdedNetworkConnectionEstablished",
-        "onVanillaNetworkConnectionEstablished",
-        "isConnected",
-        "configureMockConnection",
-        "onMinecraftRegister",
-        "onMinecraftUnregister",
-        "getInitialServerListeningChannels",
-        "getInitialServerUnregisterChannels",
-        "getInitialClientListeningChannels",
-        "onConfigurationFinished",
-        "execute",
-        "submitAsync",
-        "eventLoop",
-        "handle",
-        "disconnect",
-        "send"
-      ],
-      "environment": false,
-      "apiStatusInternal": true,
-      "file": "loader-api-src/1.20.4-neoforge/NetworkRegistry.java"
+        "register"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
-      "simpleName": "PacketDistributor",
-      "pkg": "net.neoforged.neoforge.network",
+      "fqcn": "net.minecraftforge.client.event.RegisterGuiOverlaysEvent",
       "methods": [
-        "p",
-        "send",
-        "flow",
-        "with",
-        "noArg",
-        "playerConsumer",
-        "playerListDimConsumer",
-        "playerListAll",
-        "clientToServer",
-        "playerListPointConsumer",
-        "trackingEntity",
-        "trackingEntityAndSelf",
-        "trackingChunk",
-        "getServer"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.20.4-neoforge/PacketDistributor.java"
+        "registerBelowAll",
+        "registerBelow",
+        "registerAbove",
+        "registerAboveAll",
+        "register"
+      ]
     },
     {
-      "fqcn": "net.neoforged.neoforge.network.handling.PlayPayloadContext",
-      "simpleName": "PlayPayloadContext",
-      "pkg": "net.neoforged.neoforge.network.handling",
+      "fqcn": "net.minecraftforge.client.event.RegisterItemDecorationsEvent",
       "methods": [
-        "protocol"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.20.4-neoforge/PlayPayloadContext.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent",
-      "simpleName": "RegisterPayloadHandlerEvent",
-      "pkg": "net.neoforged.neoforge.network.event",
-      "methods": [
-        "registrar"
-      ],
-      "environment": false,
-      "apiStatusInternal": true,
-      "file": "loader-api-src/1.20.4-neoforge/RegisterPayloadHandlerEvent.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
-      "simpleName": "IPayloadContext",
-      "pkg": "net.neoforged.neoforge.network.handling",
-      "methods": [
-        "listener",
-        "connection",
-        "player",
-        "reply",
-        "disconnect",
-        "enqueueWork",
-        "flow",
-        "protocol",
-        "handle",
-        "finishCurrentTask",
-        "channelHandlerContext"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.21.1-neoforge/IPayloadContext.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.registration.NetworkRegistry",
-      "simpleName": "NetworkRegistry",
-      "pkg": "net.neoforged.neoforge.network.registration",
-      "methods": [
-        "setup",
-        "isModdedPayload",
-        "handleModdedPayload",
-        "initializeNeoForgeConnection",
-        "initializeOtherConnection",
-        "checkPacket",
-        "hasAdhocChannel",
-        "onNetworkQuery",
-        "hasChannel",
-        "configureMockConnection",
-        "onMinecraftRegister",
-        "onMinecraftUnregister",
-        "getInitialListeningChannels",
-        "getInitialServerUnregisterChannels",
-        "checkCommonVersion",
-        "onCommonRegister",
-        "getCommonPlayChannels",
-        "onConfigurationFinished",
-        "getConnectionType",
-        "dumpStackToLog"
-      ],
-      "environment": false,
-      "apiStatusInternal": true,
-      "file": "loader-api-src/1.21.1-neoforge/NetworkRegistry.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
-      "simpleName": "PacketDistributor",
-      "pkg": "net.neoforged.neoforge.network",
-      "methods": [
-        "sendToServer",
-        "sendToPlayer",
-        "sendToPlayersInDimension",
-        "sendToPlayersNear",
-        "sendToAllPlayers",
-        "sendToPlayersTrackingEntity",
-        "sendToPlayersTrackingEntityAndSelf",
-        "sendToPlayersTrackingChunk",
-        "makeClientboundPacket"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.21.1-neoforge/PacketDistributor.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.registration.PayloadRegistrar",
-      "simpleName": "PayloadRegistrar",
-      "pkg": "net.neoforged.neoforge.network.registration",
-      "methods": [
-        "executesOn",
-        "versioned",
-        "optional"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/1.21.1-neoforge/PayloadRegistrar.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent",
-      "simpleName": "RegisterPayloadHandlersEvent",
-      "pkg": "net.neoforged.neoforge.network.event",
-      "methods": [
-        "registrar"
-      ],
-      "environment": false,
-      "apiStatusInternal": true,
-      "file": "loader-api-src/1.21.1-neoforge/RegisterPayloadHandlersEvent.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
-      "simpleName": "IPayloadContext",
-      "pkg": "net.neoforged.neoforge.network.handling",
-      "methods": [
-        "listener",
-        "connection",
-        "player",
-        "reply",
-        "disconnect",
-        "enqueueWork",
-        "flow",
-        "protocol",
-        "handle",
-        "finishCurrentTask",
-        "channelHandlerContext"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/26.1-neoforge/IPayloadContext.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.PacketDistributor",
-      "simpleName": "PacketDistributor",
-      "pkg": "net.neoforged.neoforge.network",
-      "methods": [
-        "sendToPlayer",
-        "sendToPlayersInDimension",
-        "sendToPlayersNear",
-        "sendToAllPlayers",
-        "sendToPlayersTrackingEntity",
-        "sendToPlayersTrackingEntityAndSelf",
-        "sendToPlayersTrackingChunk"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/26.1-neoforge/PacketDistributor.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.registration.PayloadRegistrar",
-      "simpleName": "PayloadRegistrar",
-      "pkg": "net.neoforged.neoforge.network.registration",
-      "methods": [
-        "executesOn",
-        "versioned",
-        "optional"
-      ],
-      "environment": false,
-      "apiStatusInternal": false,
-      "file": "loader-api-src/26.1-neoforge/PayloadRegistrar.java"
-    },
-    {
-      "fqcn": "net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent",
-      "simpleName": "RegisterPayloadHandlersEvent",
-      "pkg": "net.neoforged.neoforge.network.event",
-      "methods": [
-        "registrar"
-      ],
-      "environment": false,
-      "apiStatusInternal": true,
-      "file": "loader-api-src/26.1-neoforge/RegisterPayloadHandlersEvent.java"
+        "register"
+      ]
     }
   ]
 }

@@ -6,9 +6,9 @@ description: 03 — 物品（NeoForge 26.1）
 
 来源：https://docs.neoforged.net/docs/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**。第三参是 unary operator `props -> props`。另有 `ItemStackTemplate`（配方等不可变上下文）与 `ItemInstance`。修理禁用：`setNoCombineRepair`。
 
-创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
+创造页：`BuildCreativeModeTabContentsEvent#accept` 或自建 tab `displayItems`。
 
 
 26.1 MDK：`alwaysEdible()` + `saturationModifier()`，Properties 常用 unary operator。

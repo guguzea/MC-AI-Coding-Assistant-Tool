@@ -1,0 +1,138 @@
+{
+  "results": [
+    {
+      "id": "neoforge-26.1.1-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "61bc076388e22a207da574e546fed54a3badb0afb2b9a0d344fcbb98c0cbd3e6",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\26.1.1\\moddevgradle\\unpacked\\MDK-26.1.1-ModDevGradle-d247bc9b9a68536d258194d3841d469dba5ef614"
+    },
+    {
+      "id": "neoforge-26.1.2-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "1f531b46afcc16a2472b9b51a07d5b035b5178ec31de52fc89d144226680b089",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\26.1.2\\moddevgradle\\unpacked\\MDK-26.1.2-ModDevGradle-1fd0f4d9b3bb47ed97d44e6532546d4d5627f927"
+    },
+    {
+      "id": "neoforge-26.1.2-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "a0462522de62af47bab011a1b22e4bd8650df50cd505846a7b085ed86c144091",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\26.1.2\\neogradle\\unpacked\\MDK-26.1.2-NeoGradle-e6d91073fffc47a4950763485c803afeb88d1386"
+    },
+    {
+      "id": "neoforge-26.2-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "5647144e0f5dbe5b70fc2f8b47b251efd2d9fb2222f8ab7620742cad890e6f2e",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\moddevgradle\\unpacked\\MDK-26.2-ModDevGradle-d1c748fd52b311cba7b4a50e3d689927c5daac9a"
+    },
+    {
+      "id": "neoforge-26.2-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "c184c4736caf7ac737df2e823ec269e71eb930056ea1108e2679e9b6058f1c97",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\neogradle\\unpacked\\MDK-26.2-NeoGradle-15955d033693fce0d05619eb3ab32643b941cd93"
+    },
+    {
+      "id": "neoforge-1.20.4-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "46e81f1994d79f3f6afe0f31abfb983485cc6987414fddd65333598bc6b04103",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.20.4\\neogradle\\unpacked\\MDK-1.20.4-NeoGradle-8cd443623d2fd12ef8a6912d2af1296d8522faac"
+    },
+    {
+      "id": "neoforge-1.20.4-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "82c1f2f3ef825cbe4e9a6bd6281867eb6c33b812fc17e99347682127f1299202",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.20.4\\moddevgradle\\unpacked\\MDK-1.20.4-ModDevGradle-ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a"
+    },
+    {
+      "id": "fabric-1.21.1-loom",
+      "ok": true,
+      "entryClass": "com.example.ExampleMod",
+      "sha256": "78c1855bdd8b4f1c277f99fc370d3318d33eeb234df9472f1bd2de30bba477b5",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\fabric\\1.21.1\\loom\\unpacked\\fabric-example-mod-ec6a4cbff9f335ba6b6b3170784dffce380e4408"
+    },
+    {
+      "id": "fabric-1.20.4-loom",
+      "ok": true,
+      "entryClass": "com.example.ExampleMod",
+      "sha256": "d54fb1e74f1005fe5f397f0f98782f9e1de50493a10befda61655f55aee531e8",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\fabric\\1.20.4\\loom\\unpacked\\fabric-example-mod-7b53cc2ff200a6153945616aa31115a2ffd07c51"
+    },
+    {
+      "id": "fabric-26.1.2-loom",
+      "ok": true,
+      "entryClass": "com.example.ExampleMod",
+      "sha256": "a885078a951e0dc5271904ce3a6589425b8f65d28686f5f85f191fa43a1cc74d",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\fabric\\26.1.2\\loom\\unpacked\\fabric-example-mod-27c9ae062374e59b9732d86ce229bfb42175408e"
+    },
+    {
+      "id": "quilt-template-loom",
+      "ok": true,
+      "entryClass": "com.example.example_mod.ExampleMod",
+      "sha256": "a2afaa5ab8037021c4538fc8f1bbcca6e30b713c57359245c7eec315e0aaf849",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\quilt\\1.21.1\\quilt-loom\\unpacked\\quilt-template-mod-9a6f89cd481e3f58f128596b5b043353bee6b3f2"
+    },
+    {
+      "id": "neoforge-1.21.1-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "65c8d7656014bc5dcc8e92b9b0b076f1c2c77bb2224f58223f5ae18155258bba",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.1\\moddevgradle\\unpacked\\MDK-1.21.1-ModDevGradle-b893096cab5bd133d8cb7bcdb61dc38ce285caf5"
+    },
+    {
+      "id": "neoforge-1.21.1-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "8c2b4ba0ada335dc4fd9a7a1f7bb0d2e6f6a19cecbdb25af4a315590f1b28c4f",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.1\\neogradle\\unpacked\\MDK-1.21.1-NeoGradle-50b02952c596784d7c493866650021c1222846ca"
+    },
+    {
+      "id": "neoforge-1.21.3-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "748db4ca045e347e7c41ce70f07e5ab888d85e19854f04d481d773901488a64b",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.3\\moddevgradle\\unpacked\\MDK-1.21.3-ModDevGradle-8e8b9da3ae8661854caebdf93754e2d9ce85be45"
+    },
+    {
+      "id": "neoforge-1.21.3-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "8e0453d9119c737ab6317c0b9052ea91ccc9aaa08245f6dce33cafced23c0407",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.3\\neogradle\\unpacked\\MDK-1.21.3-NeoGradle-32c3f04f86b3bb05df7d880a2272ab8b9de2905f"
+    },
+    {
+      "id": "neoforge-1.21.8-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "12ba098cd75d591cb05152742bc5c988be6b9a766b60aba20b3a1561e623cd40",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.8\\moddevgradle\\unpacked\\MDK-1.21.8-ModDevGradle-afd4fbcbba2d0a80258f041572fb99527e78ef64"
+    },
+    {
+      "id": "neoforge-1.21.8-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "c0ad942960f64bf74a8a34cdeff60e5c9bfb5b5320ca0e57cde5002f25f61c68",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.8\\neogradle\\unpacked\\MDK-1.21.8-NeoGradle-e2aa41019858302a01dec30ad05fad14677cf883"
+    },
+    {
+      "id": "neoforge-1.21.11-moddevgradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "6d8151d876c96147a808dc0c3d83c51115f9d62d5484368867516858af3da7f5",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.11\\moddevgradle\\unpacked\\MDK-1.21.11-ModDevGradle-88207194a64e0d720b7a3d48dd58342c8499ce83"
+    },
+    {
+      "id": "neoforge-1.21.11-neogradle",
+      "ok": true,
+      "entryClass": "com.example.examplemod.ExampleMod",
+      "sha256": "45ad34960c4689ffd8b2004c9bbf53fd339a7047a384e9c91c18da3a091b6e48",
+      "unpackedRoot": "D:\\mc-skill-temp\\mdk\\neoforge\\1.21.11\\neogradle\\unpacked\\MDK-1.21.11-NeoGradle-ba51df32a412d779a10c96b9d7934ab4f864c9f6"
+    }
+  ],
+  "skipped": []
+}

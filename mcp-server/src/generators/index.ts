@@ -67,8 +67,23 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
 export function generateNetworkPacket(
   modId: string,
   packetName: string,
-  platform: "forge_1.20.1" | "neoforge_1.20.4" | "neoforge_1.21" = "forge_1.20.1",
+  platform?: "forge_1.20.1" | "neoforge_1.20.4" | "neoforge_1.21" | "neoforge_26.1",
 ): GeneratorResult {
+  const allowed = ["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1"] as const;
+  if (!platform) {
+    return {
+      code: null,
+      errors: [
+        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_26.1",
+      ],
+    };
+  }
+  if (!(allowed as readonly string[]).includes(platform)) {
+    return {
+      code: null,
+      errors: [`未知 platform=${platform}。可选：${allowed.join(" | ")}`],
+    };
+  }
   const mod = normalizeModIdentifier(modId);
   const pkt = normalizeModIdentifier(packetName);
   if (!mod || !pkt) return { code: null, errors: ["无效标识符"] };
@@ -156,6 +171,38 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 }
 `,
       experimental: true,
+    };
+  }
+
+  if (platform === "neoforge_26.1") {
+    return {
+      code: `// NeoForge 26.1 — Identifier + RegisterPayloadHandlersEvent
+package com.example.${mod.value}.network;
+
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
+        new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("${mod.value}", "${pkt.value}"));
+
+    public static final StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, ${pascal}Payload> STREAM_CODEC =
+        StreamCodec.of(
+            (buf, payload) -> buf.writeUtf(payload.message()),
+            buf -> new ${pascal}Payload(buf.readUtf()));
+
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+}
+`,
+      warnings: [
+        "26.1 用 Identifier.fromNamespaceAndPath，不要 new ResourceLocation。",
+        "事件是 RegisterPayloadHandlersEvent（复数），不是 1.20.4 的单数 Handler。",
+        "反面：无 SimpleChannel / IMessage / NetworkRegistry.newSimpleChannel。",
+      ],
     };
   }
 

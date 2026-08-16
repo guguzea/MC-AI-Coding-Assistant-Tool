@@ -16,8 +16,8 @@
 | 做法 | 说明 |
 |------|------|
 | Vanilla `Registry.register(Registries.*, id, value)` | 简单 Item/Block/BlockEntity **可用**（不是 FAPI 专属） |
-| QSL Core Registry | README：Addition Events、Addition Events Helper、Registry Syncing、Exclude Specific Entries。**具体类名未在 README 列出则禁止臆造**，改 `search_docs({platform:"quilt"})` |
-| 禁止 | `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当 QSL |
+| QSL Core Registry | 本档对应 QSL 分支未在本收口打开到 `RegistryEvents.java`。**禁止**把 1.21 分支方法名冒充本档。已核实的 1.21 源见 `quilt/1.21.1/knowledge/common/qsl-verified.md`。 |
+| 禁止 | `QuiltRegistry.register()`；`net.fabricmc.fabric.api.event.registry` 当 QSL |
 
 ## README 标明 QSL 有、不要用 FAPI 名顶上的能力（无方法签名则只作方向）
 

@@ -1592,6 +1592,27 @@ async function testPlan2PrimerMdkFabricPorting() {
   });
   assert.equal(needPlugin.ok, false);
 
+  const neo1211 = await downloadOfficialMdk({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    buildPlugin: "moddevgradle",
+    dryRun: true,
+  });
+  if (neo1211.ok) {
+    assert.ok(String(neo1211.url).includes(String(neo1211.ref)), JSON.stringify({ url: neo1211.url, ref: neo1211.ref }));
+  } else {
+    assert.equal(neo1211.error?.code, "MDK_NOT_PINNED");
+  }
+
+  const { generateNetworkPacket } = await import("./dist/generators/index.js");
+  const noPlat = generateNetworkPacket("my_mod", "sync_msg");
+  assert.equal(noPlat.code, null);
+  assert.ok(noPlat.errors?.some((e) => /platform 必填/.test(e)), JSON.stringify(noPlat));
+
+  const nf261 = generateNetworkPacket("my_mod", "sync_msg", "neoforge_26.1");
+  assert.ok(nf261.code?.includes("Identifier"), nf261.code?.slice(0, 400));
+  assert.ok(!/new ResourceLocation\s*\(/.test(nf261.code || ""), nf261.code?.slice(0, 400));
+
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
   const fa = parseToolText(await searchFabricDocs({ query: "porting 26.2 vulkan", version: "26.1.2" }));
   assert.equal(fa.ok, true);
@@ -1599,6 +1620,62 @@ async function testPlan2PrimerMdkFabricPorting() {
     (fa.results ?? []).some((r) => r.id === "porting/26.2" || r.source === "porting-extra"),
     JSON.stringify(fa.results?.slice(0, 8)).slice(0, 600),
   );
+}
+
+async function testMdkUnpackFixtures() {
+  const { createStoreZip, unpackMdkArchive, assertNoZipSlip, isForbiddenEngineArchive, probeUnzipTool } =
+    await import("./dist/mdk/index.js");
+  assert.equal(
+    isForbiddenEngineArchive("https://github.com/MinecraftForge/MinecraftForge/archive/1.20.1.zip"),
+    true,
+  );
+  assert.equal(isForbiddenEngineArchive("https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-mdk.zip"), false);
+
+  const slip = assertNoZipSlip(["../evil.txt"], join(tmpdir(), "unpacked"));
+  assert.equal(slip.ok, false);
+
+  const java = `package com.example.examplemod;
+import net.neoforged.fml.common.Mod;
+@Mod("examplemod")
+public class ExampleMod {}
+`;
+  const goodZip = createStoreZip([
+    { name: "MDK-sha/src/main/java/com/example/examplemod/ExampleMod.java", data: java },
+    { name: "MDK-sha/gradle.properties", data: "neo_version=21.1.0\n" },
+  ]);
+  const dest = mkdtempSync(join(tmpdir(), "mdk-unpack-"));
+  try {
+    const badHash = unpackMdkArchive({
+      zip: goodZip,
+      destCache: join(dest, "mismatch"),
+      expectedSha256: "0".repeat(64),
+    });
+    assert.equal(badHash.ok, false);
+    assert.equal(badHash.error?.code, "SHA256_MISMATCH");
+    assert.ok(existsSync(badHash.archivePath), "mismatch 仍保留 zip");
+
+    const slipZip = createStoreZip([{ name: "../evil.txt", data: "x" }]);
+    const slipDest = join(dest, "slip");
+    const slipRes = unpackMdkArchive({ zip: slipZip, destCache: slipDest });
+    assert.equal(slipRes.ok, false);
+    assert.equal(slipRes.error?.code, "ZIP_SLIP");
+    assert.ok(existsSync(slipRes.archivePath));
+
+    const tool = probeUnzipTool();
+    if (!tool) {
+      const missing = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "notool") });
+      assert.equal(missing.ok, false);
+      assert.equal(missing.error?.code, "UNZIP_TOOL_MISSING");
+      return;
+    }
+    const ok = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "ok") });
+    assert.equal(ok.ok, true, JSON.stringify(ok.error));
+    assert.equal(ok.entryClass, "com.example.examplemod.ExampleMod");
+    assert.ok(ok.unpackedRoot?.includes("MDK-sha") || ok.unpackedRoot, ok.unpackedRoot);
+    assert.ok(existsSync(ok.archivePath));
+  } finally {
+    rmSync(dest, { recursive: true, force: true });
+  }
 }
 
 await testNeoForgeGenericRouting();
@@ -1622,6 +1699,7 @@ await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();
 await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
+await testMdkUnpackFixtures();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

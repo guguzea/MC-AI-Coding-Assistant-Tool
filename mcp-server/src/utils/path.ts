@@ -15,6 +15,7 @@ import {
   getSemanticIndexStatus,
   listSemanticDbPresence,
   buildSemanticWarnings,
+  isIntentionalL0Only,
 } from "../docs-platform/semantic/status.js";
 
 function getSelfDir(): string {
@@ -194,12 +195,21 @@ export function diagnoseDataPaths(): {
   const semanticPresence = listSemanticDbPresence(dataDir);
   const semanticStatus = getSemanticIndexStatus(dataDir);
   const present = semanticPresence.filter((s) => s.exists).length;
+  const l0Only = semanticPresence.filter((s) => !s.exists && isIntentionalL0Only(s.platform, s.version, s.source));
+  const missingReal = semanticPresence.filter((s) => !s.exists && !isIntentionalL0Only(s.platform, s.version, s.source));
   const semanticWarnings = buildSemanticWarnings({
     present,
-    total: semanticPresence.length,
+    total: Math.max(semanticPresence.length - l0Only.length, present),
     modelsReady: semanticStatus.modelsReady,
-    missingSamples: semanticPresence.filter((s) => !s.exists),
+    missingSamples: missingReal,
   });
+  if (l0Only.length) {
+    semanticWarnings.push(
+      `下列 ${l0Only.length} 棵文档树为故意 L0-only（页少，不建空向量库）：${l0Only
+        .map((s) => `${s.platform}_${s.version}/${s.source}`)
+        .join(", ")}。`,
+    );
+  }
 
   return {
     resolvedDataDir: dataDir,

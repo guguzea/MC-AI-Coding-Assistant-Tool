@@ -1,7 +1,7 @@
 {
   "ok": true,
   "threshold": 0.7,
-  "suspectedTotal": 60,
+  "suspectedTotal": 58,
   "note": "SUSPECTED_CLONE 不是构建失败。误报（同骨架换类名）须人工签字，不算验收失败。",
   "pairs": [
     {
@@ -15,13 +15,15 @@
       "left": "neoforge/1.21.1",
       "right": "neoforge/1.20.4",
       "comparedFiles": 13,
-      "suspected": 10,
+      "suspected": 8,
       "findings": [
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/00-project-setup.mdc",
-          "similarity": 0.8172,
+          "similarity": 0.8223,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -29,6 +31,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/01-registry.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/01-registry.mdc",
           "similarity": 0.9189,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -36,13 +40,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/02-block.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/02-block.mdc",
           "similarity": 0.9167,
-          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
-        },
-        {
-          "status": "SUSPECTED_CLONE",
-          "left": "neoforge/1.21.1/.cursor/rules/03-item.mdc",
-          "right": "neoforge/1.20.4/.cursor/rules/03-item.mdc",
-          "similarity": 0.7045,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -50,6 +49,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/04-entity.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/04-entity.mdc",
           "similarity": 0.9535,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -57,13 +58,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/05-events.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/05-events.mdc",
           "similarity": 0.9,
-          "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
-        },
-        {
-          "status": "SUSPECTED_CLONE",
-          "left": "neoforge/1.21.1/.cursor/rules/08-client-server.mdc",
-          "right": "neoforge/1.20.4/.cursor/rules/08-client-server.mdc",
-          "similarity": 0.9535,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -71,6 +67,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/09-anti-patterns.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/09-anti-patterns.mdc",
           "similarity": 0.8621,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -78,6 +76,8 @@
           "left": "neoforge/1.21.1/.cursor/rules/10-gui.mdc",
           "right": "neoforge/1.20.4/.cursor/rules/10-gui.mdc",
           "similarity": 0.8155,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -85,6 +85,8 @@
           "left": "neoforge/1.21.1/AGENTS.md",
           "right": "neoforge/1.20.4/AGENTS.md",
           "similarity": 0.7445,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         }
       ]
@@ -99,7 +101,9 @@
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/00-project-setup.mdc",
-          "similarity": 0.8984,
+          "similarity": 0.9015,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -107,6 +111,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/01-registry.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/01-registry.mdc",
           "similarity": 0.9297,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -114,13 +120,17 @@
           "left": "neoforge/1.21.3/.cursor/rules/02-block.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/02-block.mdc",
           "similarity": 0.9722,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.3/.cursor/rules/03-item.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/03-item.mdc",
-          "similarity": 1,
+          "similarity": 0.7273,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -128,6 +138,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/04-entity.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/04-entity.mdc",
           "similarity": 1,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -135,6 +147,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/05-events.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/05-events.mdc",
           "similarity": 0.96,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -142,6 +156,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/06-networking.mdc",
           "similarity": 0.9006,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -149,13 +165,17 @@
           "left": "neoforge/1.21.3/.cursor/rules/07-datagen.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/07-datagen.mdc",
           "similarity": 0.9259,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.3/.cursor/rules/08-client-server.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/08-client-server.mdc",
-          "similarity": 1,
+          "similarity": 0.9245,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -163,6 +183,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/09-anti-patterns.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/09-anti-patterns.mdc",
           "similarity": 0.885,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -170,6 +192,8 @@
           "left": "neoforge/1.21.3/.cursor/rules/10-gui.mdc",
           "right": "neoforge/1.21.1/.cursor/rules/10-gui.mdc",
           "similarity": 0.8911,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -177,6 +201,8 @@
           "left": "neoforge/1.21.3/knowledge/porting/02-version-migration.md",
           "right": "neoforge/1.21.1/knowledge/porting/02-version-migration.md",
           "similarity": 0.7213,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -184,6 +210,8 @@
           "left": "neoforge/1.21.3/AGENTS.md",
           "right": "neoforge/1.21.1/AGENTS.md",
           "similarity": 0.8871,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         }
       ]
@@ -198,7 +226,9 @@
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/00-project-setup.mdc",
-          "similarity": 0.907,
+          "similarity": 0.9098,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -206,6 +236,8 @@
           "left": "neoforge/1.21.8/.cursor/rules/01-registry.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/01-registry.mdc",
           "similarity": 0.9339,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -213,13 +245,17 @@
           "left": "neoforge/1.21.8/.cursor/rules/02-block.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/02-block.mdc",
           "similarity": 0.9722,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.8/.cursor/rules/03-item.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/03-item.mdc",
-          "similarity": 1,
+          "similarity": 0.8,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -227,6 +263,8 @@
           "left": "neoforge/1.21.8/.cursor/rules/04-entity.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/04-entity.mdc",
           "similarity": 1,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -234,6 +272,8 @@
           "left": "neoforge/1.21.8/.cursor/rules/05-events.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/05-events.mdc",
           "similarity": 0.96,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -241,13 +281,17 @@
           "left": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/06-networking.mdc",
           "similarity": 0.9125,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.8/.cursor/rules/08-client-server.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/08-client-server.mdc",
-          "similarity": 1,
+          "similarity": 0.8913,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -255,6 +299,8 @@
           "left": "neoforge/1.21.8/.cursor/rules/09-anti-patterns.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/09-anti-patterns.mdc",
           "similarity": 0.8947,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -262,6 +308,8 @@
           "left": "neoforge/1.21.8/.cursor/rules/10-gui.mdc",
           "right": "neoforge/1.21.3/.cursor/rules/10-gui.mdc",
           "similarity": 0.8713,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -269,6 +317,8 @@
           "left": "neoforge/1.21.8/knowledge/porting/02-version-migration.md",
           "right": "neoforge/1.21.3/knowledge/porting/02-version-migration.md",
           "similarity": 0.7213,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -276,6 +326,8 @@
           "left": "neoforge/1.21.8/AGENTS.md",
           "right": "neoforge/1.21.3/AGENTS.md",
           "similarity": 0.9098,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         }
       ]
@@ -290,7 +342,9 @@
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/00-project-setup.mdc",
-          "similarity": 0.8571,
+          "similarity": 0.8612,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -298,6 +352,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/01-registry.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/01-registry.mdc",
           "similarity": 0.8806,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -305,20 +361,26 @@
           "left": "neoforge/1.21.11/.cursor/rules/02-block.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/02-block.mdc",
           "similarity": 0.9459,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.11/.cursor/rules/03-item.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/03-item.mdc",
-          "similarity": 0.9655,
+          "similarity": 0.8644,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/1.21.11/.cursor/rules/04-entity.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/04-entity.mdc",
-          "similarity": 0.9773,
+          "similarity": 0.8421,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -326,6 +388,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/05-events.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/05-events.mdc",
           "similarity": 0.9615,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -333,6 +397,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/06-networking.mdc",
           "similarity": 0.893,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -340,6 +406,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/07-datagen.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/07-datagen.mdc",
           "similarity": 0.9394,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -347,6 +415,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/08-client-server.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/08-client-server.mdc",
           "similarity": 0.9773,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -354,6 +424,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/09-anti-patterns.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/09-anti-patterns.mdc",
           "similarity": 0.843,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -361,6 +433,8 @@
           "left": "neoforge/1.21.11/.cursor/rules/10-gui.mdc",
           "right": "neoforge/1.21.8/.cursor/rules/10-gui.mdc",
           "similarity": 0.8544,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -368,6 +442,8 @@
           "left": "neoforge/1.21.11/knowledge/porting/02-version-migration.md",
           "right": "neoforge/1.21.8/knowledge/porting/02-version-migration.md",
           "similarity": 0.7097,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -375,6 +451,8 @@
           "left": "neoforge/1.21.11/AGENTS.md",
           "right": "neoforge/1.21.8/AGENTS.md",
           "similarity": 0.8775,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         }
       ]
@@ -389,7 +467,9 @@
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/26.1/.cursor/rules/00-project-setup.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/00-project-setup.mdc",
-          "similarity": 0.7774,
+          "similarity": 0.7835,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -397,6 +477,8 @@
           "left": "neoforge/26.1/.cursor/rules/01-registry.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/01-registry.mdc",
           "similarity": 0.8604,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -404,20 +486,26 @@
           "left": "neoforge/26.1/.cursor/rules/02-block.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/02-block.mdc",
           "similarity": 0.9041,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/26.1/.cursor/rules/03-item.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/03-item.mdc",
-          "similarity": 0.7209,
+          "similarity": 0.7333,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/26.1/.cursor/rules/04-entity.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/04-entity.mdc",
-          "similarity": 0.9425,
+          "similarity": 0.9143,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -425,6 +513,8 @@
           "left": "neoforge/26.1/.cursor/rules/05-events.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/05-events.mdc",
           "similarity": 0.9412,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -432,6 +522,8 @@
           "left": "neoforge/26.1/.cursor/rules/06-networking.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/06-networking.mdc",
           "similarity": 0.8494,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -439,13 +531,17 @@
           "left": "neoforge/26.1/.cursor/rules/07-datagen.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/07-datagen.mdc",
           "similarity": 0.9063,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
           "status": "SUSPECTED_CLONE",
           "left": "neoforge/26.1/.cursor/rules/08-client-server.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/08-client-server.mdc",
-          "similarity": 0.9425,
+          "similarity": 0.8421,
+          "signOff": true,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -453,6 +549,8 @@
           "left": "neoforge/26.1/.cursor/rules/09-anti-patterns.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/09-anti-patterns.mdc",
           "similarity": 0.708,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -460,6 +558,8 @@
           "left": "neoforge/26.1/.cursor/rules/10-gui.mdc",
           "right": "neoforge/1.21.11/.cursor/rules/10-gui.mdc",
           "similarity": 0.8283,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         },
         {
@@ -467,6 +567,8 @@
           "left": "neoforge/26.1/AGENTS.md",
           "right": "neoforge/1.21.11/AGENTS.md",
           "similarity": 0.7669,
+          "signOff": false,
+          "closeGapIncomplete": false,
           "note": "须对照该版源码/文档签字。同骨架换类名可标误报，不算验收失败。"
         }
       ]
@@ -487,6 +589,13 @@
     },
     {
       "left": "modloader/1.2.5",
+      "right": "modloader/1.6.4",
+      "comparedFiles": 13,
+      "suspected": 0,
+      "findings": []
+    },
+    {
+      "left": "modloader/1.5.2",
       "right": "modloader/1.6.4",
       "comparedFiles": 13,
       "suspected": 0,

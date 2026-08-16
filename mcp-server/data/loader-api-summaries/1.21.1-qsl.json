@@ -1,0 +1,51 @@
+{
+  "file": "1.21.1-qsl",
+  "mappingsVersion": "qsl-git-1.21-871ca7abf109",
+  "mappingsSource": "github QuiltMC/quilt-standard-libraries",
+  "mapping": "mojmap",
+  "version": "1.21.1",
+  "source": "qsl-github-java",
+  "fetchedAt": "2026-08-16",
+  "repo": "https://github.com/QuiltMC/quilt-standard-libraries",
+  "ref": "871ca7abf109239601eab2f96a23eb64317e0045",
+  "branch": "1.21",
+  "classCount": 4,
+  "classes": [
+    {
+      "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryEvents",
+      "simpleName": "RegistryEvents",
+      "methods": ["getEntryAddEvent"],
+      "fields": ["DYNAMIC_REGISTRY_SETUP", "DYNAMIC_REGISTRY_LOADED"],
+      "nested": ["EntryAdded#onAdded", "DynamicRegistrySetupCallback#onDynamicRegistrySetup", "DynamicRegistryLoadedCallback#onDynamicRegistryLoaded"],
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryMonitor",
+      "simpleName": "RegistryMonitor",
+      "methods": ["filter", "forAll", "forUpcoming", "create"],
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents",
+      "simpleName": "ServerLifecycleEvents",
+      "methods": [],
+      "fields": ["STARTING", "READY", "STOPPING", "STOPPED"],
+      "nested": ["Starting#startingServer", "Ready#readyServer", "Stopping#stoppingServer", "Stopped#exitServer"],
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents",
+      "simpleName": "ClientLifecycleEvents",
+      "methods": [],
+      "fields": ["READY", "STOPPING", "STOPPED"],
+      "nested": ["Ready#readyClient", "Stopping#stoppingClient", "Stopped#stoppedClient"],
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
+    }
+  ],
+  "missing": [],
+  "note": "许可证允许引用签名；源码不入库。禁止编 QuiltRegistry.register()。quilt-template-mod pin commit 打开到的是 org.quiltmc:qsl + QFAPI bundle（该 commit 的 gradle 为 1.20.6），不是 fat org.quiltmc:quilt-standard-libraries 坐标。1.21 方法名以本摘要 GitHub commit 为准。"
+}

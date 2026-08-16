@@ -6,8 +6,8 @@ description: 04 — 实体（NeoForge 1.21.11）
 
 来源：https://docs.neoforged.net/docs/1.21.11/entities/
 
-用 `DeferredRegister.Entities` / `DeferredRegister.create(Registries.ENTITY_TYPE, MODID)`。`EntityType.Builder` 最后 `.build(...)` 的 ResourceKey 参数以该版文档为准。
+用 `DeferredRegister.Entities` / `DeferredRegister.createEntities`。`EntityType.Builder.build` 用 `ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(...))`。可走 `registerEntityType` 捷径。
 
-渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = MOD)`。不要在服务端加载 Renderer。
+渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = MOD)` 或 `@Mod(..., dist = Dist.CLIENT)`。不要在服务端加载 Renderer。
 
 生成、属性、生成蛋：查该版 entities 页，不要抄 Forge 1.12 `EntityRegistry`。

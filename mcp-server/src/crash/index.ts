@@ -166,7 +166,7 @@ const KNOWN_PATTERNS: Array<{
     cause: "CreativeModeTab 未正确注册，或物品未添加到 Tab",
     fix: [
       "使用 DeferredRegister<CreativeModeTab> 注册 CreativeModeTab",
-      "在 mod 构造函数中调用 CREATIVE_TABS.register(FMLJavaModLoadingContext.get().getModEventBus())",
+      "在 mod 构造函数中把 CREATIVE_TABS.register 接到注入的 IEventBus（NeoForge）或该平台等价入口",
       "通过 BuildCreativeModeTabContentsEvent 的 event.accept() 添加物品",
       "不要在 CreativeModeTab.builder().displayItems 中引用尚未注册的对象",
     ],
@@ -176,8 +176,8 @@ const KNOWN_PATTERNS: Array<{
     pattern: /Packet.*discId|IMessage.*id|messageType.*conflict/i,
     cause: "网络包 ID 冲突或序列化错误",
     fix: [
-      "检查 SimpleChannel 中各消息的 discId() 返回值是否唯一",
-      "确保 @Nullable 参数在 toBytes/fromBytes 中正确处理",
+      "按加载器选择网络 API：NeoForge 用 Payload + PayloadRegistrar，不要 SimpleChannel",
+      "Forge 1.20.1 才检查 SimpleChannel 各消息 discId 是否唯一",
       "检查 PacketBuffer 是否溢出（写入过多数据）",
     ],
     relatedMistakes: ["mc-networking: 消息 ID 重复"],
@@ -347,6 +347,42 @@ export function detectCrashKind(crashReport: string): CrashKind {
   return "unknown";
 }
 
+function rewriteFixesForLoader(fixes: string[], crashReport: string, crashKind: CrashKind): string[] {
+  const neo = /net\.neoforged/i.test(crashReport);
+  const forgeOnly = /net\.minecraftforge/i.test(crashReport) && !neo;
+  const fabric = (/net\.fabricmc|fabric-loader/i.test(crashReport) && !/org\.quiltmc/i.test(crashReport)) || crashKind === "fabric";
+  const quilt = /org\.quiltmc/i.test(crashReport) || crashKind === "quilt";
+  const known = neo || forgeOnly || fabric || quilt || crashKind === "liteloader" || crashKind === "rift" || crashKind === "modloader";
+
+  const mapFix = (s: string): string | null => {
+    if (neo) {
+      if (/FMLJavaModLoadingContext/i.test(s)) {
+        return "NeoForge：CreativeModeTab / DeferredRegister 接到模组构造函数注入的 IEventBus，不要 FMLJavaModLoadingContext";
+      }
+      if (/SimpleChannel/i.test(s)) {
+        return "NeoForge 网络用 Payload（RegisterPayloadHandler(s)Event），不要 SimpleChannel";
+      }
+    }
+    if (fabric || quilt) {
+      if (/FMLJavaModLoadingContext|SimpleChannel/i.test(s)) return null;
+    }
+    if (!known && crashKind === "unknown") {
+      if (/FMLJavaModLoadingContext|SimpleChannel/i.test(s)) return null;
+    }
+    return s;
+  };
+
+  const out: string[] = [];
+  for (const f of fixes) {
+    const n = mapFix(f);
+    if (n && !out.includes(n)) out.push(n);
+  }
+  if (!known && crashKind === "unknown" && out.length === 0) {
+    out.push("检查注册与日志（latest.log）；不要默认输出 SimpleChannel 或 FMLJavaModLoadingContext");
+  }
+  return out;
+}
+
 function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
   const hints = ["logs/latest.log", "logs/debug.log"];
   if (kind === "fml" || kind === "fabric" || kind === "quilt" || kind === "liteloader" || kind === "rift" || kind === "modloader" || !matchedKnown) {
@@ -385,7 +421,7 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     if (pattern.test(crashReport)) {
       return {
         probableCause: cause,
-        fixSuggestions: fix,
+        fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind),
         deobfuscated,
         relatedMistakes,
         crashKind,
@@ -405,16 +441,20 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
 
   return {
     probableCause: fmlHint,
-    fixSuggestions: [
-      `将崩溃堆栈的完整内容粘贴到 ${CRASH_REPORT_WIKI} 对照 Description / Stacktrace / System Details`,
-      "检查是否涉及自定义模组内容",
-      "尝试使用 parchment 映射以获得更清晰的可读堆栈",
-      ...(crashKind === "fml"
-        ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
-        : crashKind === "unknown"
-          ? ["确认粘贴的是完整 crash-*.txt（含 ---- Minecraft Crash Report ---- 标题），而不是 latest.log 片段"]
-          : []),
-    ],
+    fixSuggestions: rewriteFixesForLoader(
+      [
+        `将崩溃堆栈的完整内容粘贴到 ${CRASH_REPORT_WIKI} 对照 Description / Stacktrace / System Details`,
+        "检查是否涉及自定义模组内容",
+        "尝试使用 parchment 映射以获得更清晰的可读堆栈",
+        ...(crashKind === "fml"
+          ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
+          : crashKind === "unknown"
+            ? ["确认粘贴的是完整 crash-*.txt（含 ---- Minecraft Crash Report ---- 标题），而不是 latest.log 片段"]
+            : []),
+      ],
+      crashReport,
+      crashKind,
+    ),
     deobfuscated,
     relatedMistakes: [],
     crashKind,

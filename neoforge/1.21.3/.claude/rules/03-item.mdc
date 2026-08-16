@@ -2,9 +2,9 @@
 
 来源：https://docs.neoforged.net/docs/1.21.3/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**（`registerItem` 内部会 `ResourceKey.create(Registries.ITEM, registryName)`）。属性对象仍是 `new Item.Properties()`，不是 unary operator。食物/工具另有 `remainders` / `enchantable` / `equippable`。
 
-创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
+创造页：`BuildCreativeModeTabContentsEvent#accept` 或自建 tab `displayItems`。
 
 
 

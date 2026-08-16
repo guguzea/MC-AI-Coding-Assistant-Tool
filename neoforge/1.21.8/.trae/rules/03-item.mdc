@@ -2,9 +2,9 @@
 
 来源：https://docs.neoforged.net/docs/1.21.8/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`setId` 必填（由 `registerItem` 写入）。属性仍传 `new Item.Properties()`。修理禁用方法是 **`setNoCombineRepair`**（不是更早档的 `setNoRepair`）。
 
-创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
+创造页：`BuildCreativeModeTabContentsEvent#accept` 或自建 tab `displayItems`。
 
 
 

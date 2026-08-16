@@ -891,5 +891,17 @@ indexKnowledge("liteloader", "1.12.2", "liteloader-docs", [
   ["hybrid", "liteloader/1.12.2/HYBRID.md"],
   ["verified-api", "liteloader/1.12.2/knowledge/common/verified-api.md"],
 ]);
+indexKnowledge("liteloader", "1.10.2", "liteloader-docs", [
+  ["verified-api", "liteloader/1.10.2/knowledge/common/verified-api.md"],
+]);
+indexKnowledge("liteloader", "1.8.9", "liteloader-docs", [
+  ["verified-api", "liteloader/1.8.9/knowledge/common/verified-api.md"],
+]);
+indexKnowledge("modloader", "1.5.2", "modloader-docs", [
+  ["safe-api", "modloader/1.5.2/knowledge/common/safe-api.md"],
+]);
+indexKnowledge("modloader", "1.2.5", "modloader-docs", [
+  ["safe-api", "modloader/1.2.5/knowledge/common/safe-api.md"],
+]);
 
 console.log("five-platform trees written");

@@ -1,7 +1,23 @@
 {
   "ok": true,
-  "decompiled": [],
-  "skipped": "no jars in D:\\mc-skill-temp\\loader-jars",
+  "decompiled": [
+    "1.20.4-forge.jar",
+    "1.20.4-neoforge.jar",
+    "1.21.1-neoforge.jar",
+    "1.21.11-neoforge.jar",
+    "1.21.3-neoforge.jar",
+    "1.21.8-neoforge.jar",
+    "26.1-neoforge.jar"
+  ],
+  "mappingsVersion": {
+    "1.20.4-forge": "official-1.20.4",
+    "1.20.4-neoforge": "parchment-1.20.4-2024.04.14",
+    "1.21.1-neoforge": "parchment-1.21.1-2024.11.17",
+    "1.21.11-neoforge": "parchment-1.21.11-2025.12.20",
+    "1.21.3-neoforge": "parchment-1.21.3-2024.12.07",
+    "1.21.8-neoforge": "parchment-1.21.8-2025.09.14",
+    "26.1-neoforge": "mojmap-unobfuscated-26.1"
+  },
   "cache": "D:\\mc-skill-temp",
-  "note": "Place loader API jars then re-run. Yarn remap is off for MC < 1.14."
+  "invalid": []
 }

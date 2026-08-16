@@ -6,7 +6,7 @@ description: 03 — 物品（NeoForge 1.21.1）
 
 来源：https://docs.neoforged.net/docs/1.21.1/items/
 
-`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。返回类型文档示例为 `Supplier<Item>`（尚未强制 `DeferredItem`）。`Item.Properties` 直接传入，**没有** `setId` 必填。
 
 创造页：MDK 用自建 `CreativeModeTab` 的 `displayItems`，或 `BuildCreativeModeTabContentsEvent`。
 

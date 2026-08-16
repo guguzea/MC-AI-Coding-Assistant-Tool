@@ -1,0 +1,68 @@
+{
+  "cache": "D:\\mc-skill-temp",
+  "jars": [
+    {
+      "file": "1.20.4-forge.jar",
+      "mappingsVersion": "official-1.20.4",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 667,
+      "fqcnIndexCount": 681,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.4-neoforge.jar",
+      "mappingsVersion": "parchment-1.20.4-2024.04.14",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 764,
+      "fqcnIndexCount": 851,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.1-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.1-2024.11.17",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 848,
+      "fqcnIndexCount": 953,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.11-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.11-2025.12.20",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 988,
+      "fqcnIndexCount": 1126,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.3-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.3-2024.12.07",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 838,
+      "fqcnIndexCount": 947,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.8-neoforge.jar",
+      "mappingsVersion": "parchment-1.21.8-2025.09.14",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 908,
+      "fqcnIndexCount": 1039,
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "26.1-neoforge.jar",
+      "mappingsVersion": "mojmap-unobfuscated-26.1",
+      "mappingsSource": "gradle.properties-sidecar",
+      "classCount": 1002,
+      "fqcnIndexCount": 1136,
+      "fromSourcesJar": true,
+      "invalid": false
+    }
+  ]
+}

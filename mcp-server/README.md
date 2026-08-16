@@ -99,6 +99,10 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 | `MC_SKILL_STRICT` | `1` 数据无效则启动失败 | `1` |
 | `MC_SKILL_DEBUG_PATHS` | `1` 打印路径解析 | `1` |
 
+### MDK 解压依赖（`download_official_mdk`）
+
+`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_26.1`），省略返回 error。
+
 ### 5. 开发
 
 ```bash

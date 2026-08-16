@@ -39,3 +39,11 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 - Java 21；mojmap
 - 1.21.3 文档仍用 ResourceLocation.fromNamespaceAndPath。
 - 1.21.3 规则树独立存在是为了禁止 Agent 拿 1.20.4 或 1.21.8 顶上。Data Components 已是物品数据主路径。
+
+## 对照签字
+
+| 编号 | 对照 URL | 抓取日 | 结论 |
+| 03 | https://docs.neoforged.net/docs/1.21.3/items/ | 2026-08-16 | 已按该版文档改写（DeferredItem + setId 必填） |
+| 04 | https://docs.neoforged.net/docs/1.21.3/entities/ | 2026-08-16 | 本编号 API 与邻档相同，非未核克隆 |
+| 08 | https://docs.neoforged.net/docs/1.21.3/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+
