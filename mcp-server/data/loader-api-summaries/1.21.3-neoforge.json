@@ -5518,5 +5518,7 @@
       ],
       "file": "D:/mc-skill-temp/loader-api-src/1.21.3-neoforge/net/neoforged/neoforge/common/util/flag/FeatureFlagLoader.java"
     }
-  ]
+  ],
+  "sourceJarSha256": "b239c4b17fbac389ca5a0e16ecd591999bd306e1067b2b5828fbf85d957f1131",
+  "source": "official"
 }

@@ -991,7 +991,9 @@
           "name": "connection",
           "returnType": "Connection",
           "parameters": [],
-          "modifiers": ["default"],
+          "modifiers": [
+            "default"
+          ],
           "signature": "Connection connection()"
         },
         {
@@ -1004,28 +1006,52 @@
         {
           "name": "reply",
           "returnType": "void",
-          "parameters": [{ "type": "CustomPacketPayload", "name": "payload" }],
-          "modifiers": ["default"],
+          "parameters": [
+            {
+              "type": "CustomPacketPayload",
+              "name": "payload"
+            }
+          ],
+          "modifiers": [
+            "default"
+          ],
           "signature": "void reply(CustomPacketPayload)"
         },
         {
           "name": "disconnect",
           "returnType": "void",
-          "parameters": [{ "type": "Component", "name": "reason" }],
-          "modifiers": ["default"],
+          "parameters": [
+            {
+              "type": "Component",
+              "name": "reason"
+            }
+          ],
+          "modifiers": [
+            "default"
+          ],
           "signature": "void disconnect(Component)"
         },
         {
           "name": "enqueueWork",
           "returnType": "CompletableFuture<Void>",
-          "parameters": [{ "type": "Runnable", "name": "task" }],
+          "parameters": [
+            {
+              "type": "Runnable",
+              "name": "task"
+            }
+          ],
           "modifiers": [],
           "signature": "CompletableFuture<Void> enqueueWork(Runnable)"
         },
         {
           "name": "enqueueWork",
           "returnType": "CompletableFuture<T>",
-          "parameters": [{ "type": "Supplier<T>", "name": "task" }],
+          "parameters": [
+            {
+              "type": "Supplier<T>",
+              "name": "task"
+            }
+          ],
           "modifiers": [],
           "signature": "CompletableFuture<T> enqueueWork(Supplier<T>)"
         },
@@ -1040,27 +1066,46 @@
           "name": "protocol",
           "returnType": "ConnectionProtocol",
           "parameters": [],
-          "modifiers": ["default"],
+          "modifiers": [
+            "default"
+          ],
           "signature": "ConnectionProtocol protocol()"
         },
         {
           "name": "handle",
           "returnType": "void",
-          "parameters": [{ "type": "Packet<?>", "name": "packet" }],
-          "modifiers": ["default"],
+          "parameters": [
+            {
+              "type": "Packet<?>",
+              "name": "packet"
+            }
+          ],
+          "modifiers": [
+            "default"
+          ],
           "signature": "void handle(Packet<?>)"
         },
         {
           "name": "handle",
           "returnType": "void",
-          "parameters": [{ "type": "CustomPacketPayload", "name": "payload" }],
+          "parameters": [
+            {
+              "type": "CustomPacketPayload",
+              "name": "payload"
+            }
+          ],
           "modifiers": [],
           "signature": "void handle(CustomPacketPayload)"
         },
         {
           "name": "finishCurrentTask",
           "returnType": "void",
-          "parameters": [{ "type": "ConfigurationTask.Type", "name": "type" }],
+          "parameters": [
+            {
+              "type": "ConfigurationTask.Type",
+              "name": "type"
+            }
+          ],
           "modifiers": [],
           "signature": "void finishCurrentTask(ConfigurationTask.Type)"
         },
@@ -1068,7 +1113,9 @@
           "name": "channelHandlerContext",
           "returnType": "ChannelHandlerContext",
           "parameters": [],
-          "modifiers": ["default"],
+          "modifiers": [
+            "default"
+          ],
           "signature": "ChannelHandlerContext channelHandlerContext()"
         }
       ],
@@ -5607,5 +5654,7 @@
       ],
       "file": "D:/mc-skill-temp/loader-api-src/1.21.1-neoforge/net/neoforged/neoforge/common/util/DataComponentUtil.java"
     }
-  ]
+  ],
+  "sourceJarSha256": "b4b912457549ff586873ce78b39b08af96f11a0e3a54c6b77576c6a25907083f",
+  "source": "official"
 }

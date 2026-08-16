@@ -5502,5 +5502,7 @@
       "methods": [],
       "file": "D:/mc-skill-temp/loader-api-src/1.21.11-neoforge/net/neoforged/neoforge/common/extensions/IFallableExtension.java"
     }
-  ]
+  ],
+  "sourceJarSha256": "da38660fabd4479065d9149399c0d830ffc724d21960590ea8c6037488ac72bd",
+  "source": "official"
 }

@@ -16,6 +16,7 @@ import {
   schemaPropertyType,
   UnknownFlagError,
   zodToJsonSchema,
+  DATA_DIR_TOOLS,
 } from "./dist/cli-parse.js";
 
 {
@@ -155,6 +156,12 @@ import {
   assert.equal(tup.type, "array");
   assert.equal(tup.minItems, 2);
   assert.equal(tup.maxItems, 2);
+}
+
+{
+  assert.ok(DATA_DIR_TOOLS.has("query_loader_api"));
+  assert.ok(DATA_DIR_TOOLS.has("search_loader_api"));
+  assert.ok(DATA_DIR_TOOLS.has("query_api"));
 }
 
 console.log("test-cli-parse: ok");

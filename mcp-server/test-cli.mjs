@@ -387,4 +387,89 @@ function parseJson(r, label) {
   console.log("get_community_doc_full 缺 id → isError exit 1");
 }
 
+{
+  const r = run(["--help", "--json", "--compact"], { unsetData: true });
+  if (r.status !== 0) throw new Error(`--help --json --compact failed: ${r.status}`);
+  if (r.stdout.includes("\n  ")) throw new Error(`help compact still pretty: ${r.stdout}`);
+  const j = parseJson(r, "help-json-compact");
+  if (!Array.isArray(j.usage) || j.usage.length === 0) throw new Error(`help json missing usage: ${r.stdout}`);
+  console.log("--help --json --compact: ok");
+}
+
+{
+  const r = run(["query", "--help", "--json", "--compact"], { unsetData: true });
+  if (r.status !== 0) throw new Error(`query --help --json --compact failed: ${r.status}`);
+  if (r.stdout.includes("\n  ")) throw new Error(`tool help compact still pretty: ${r.stdout}`);
+  if (String(r.stdout + r.stderr).includes("running ")) {
+    throw new Error("tool --help --json must not dispatch");
+  }
+  const j = parseJson(r, "query-help-compact");
+  if (!j.parameters || !j.tool) throw new Error(`query help compact schema: ${r.stdout.slice(0, 300)}`);
+  console.log("query --help --json --compact: ok");
+}
+
+{
+  const r = run(["crash_analyze", "--file", `crashReport=${crashFile}`]);
+  if (r.status !== 0) throw new Error(`--file crashReport= failed: ${r.status}\n${r.stderr}\n${r.stdout}`);
+  console.log("--file crashReport=（计划字面形式）: ok");
+}
+
+{
+  const r = run(["crash_analyze", "--crashReport=@./definitely-missing-crash.txt"]);
+  if (r.status !== 2) throw new Error(`expected exit 2 for missing @file, got ${r.status}:\n${r.stdout}\n${r.stderr}`);
+  console.log("缺失 @file → exit 2");
+}
+
+{
+  const r = run(["diagnose_gradle", "--project", fixture]);
+  if (r.status === 2) throw new Error(`diagnose_gradle --project usage error:\n${r.stderr}\n${r.stdout}`);
+  const j = parseJson(r, "diagnose-project");
+  if (!j.result || (!Array.isArray(j.result.errors) && !Array.isArray(j.result.warnings))) {
+    throw new Error(`diagnose_gradle --project shape: ${JSON.stringify(j).slice(0, 400)}`);
+  }
+  console.log("diagnose_gradle --project fixture: ok");
+}
+
+{
+  const r = run(["check_dependencies", "--project", fixture]);
+  if (r.status === 2) throw new Error(`check_dependencies --project usage error:\n${r.stderr}\n${r.stdout}`);
+  const j = parseJson(r, "checkdeps-project");
+  if (j.result?.detectedLoader !== "forge") {
+    throw new Error(`check_dependencies loader: ${JSON.stringify(j.result).slice(0, 400)}`);
+  }
+  console.log("check_dependencies --project fixture: ok");
+}
+
+{
+  const r = run(["detect_mod_project", "--project", fixture]);
+  if (r.status === 2) throw new Error(`detect_mod_project usage error:\n${r.stderr}\n${r.stdout}`);
+  const j = parseJson(r, "detect-mod");
+  if (j.success !== true && j.result?.ok === false && j.result?.code === "PACK_NOT_FOUND") {
+    console.log("detect_mod_project --project fixture: PACK_NOT_FOUND（fixture 无完整规则树，可接受）");
+  } else if (j.success !== true && j.result?.ok === false) {
+    throw new Error(`detect_mod_project unexpected fail: ${JSON.stringify(j).slice(0, 400)}`);
+  } else {
+    console.log("detect_mod_project --project fixture: ok");
+  }
+}
+
+{
+  const r = run(["validate_project", "--project", fixture, "--includeCrashAnalysis"]);
+  if (r.status !== 0) throw new Error(`includeCrashAnalysis failed: ${r.status}\n${r.stderr}\n${r.stdout}`);
+  const j = parseJson(r, "crash-analysis");
+  if (!Array.isArray(j.result?.crashAnalyses) || j.result.crashAnalyses.length === 0) {
+    throw new Error(`includeCrashAnalysis missing crashAnalyses: ${JSON.stringify(j.result).slice(0, 400)}`);
+  }
+  console.log("validate_project --includeCrashAnalysis: ok");
+}
+
+{
+  const r = run(["diagnose_gradle", "--buildGradle", "plugins { id 'net.minecraftforge.gradle' }\n", "--fail-on-error"]);
+  const j = parseJson(r, "gradle-fail-on-error");
+  if (Array.isArray(j.result?.errors) && j.result.errors.length > 0 && r.status !== 1) {
+    throw new Error(`--fail-on-error should lift errors[] to exit 1, got ${r.status}: ${JSON.stringify(j.result.errors)}`);
+  }
+  console.log("diagnose_gradle --fail-on-error: ok");
+}
+
 console.log("test-cli: ok");

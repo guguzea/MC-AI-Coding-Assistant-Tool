@@ -522,4 +522,6 @@ export const DATA_DIR_TOOLS = new Set([
   "search_mod_code",
   "decompile_mod_jar",
   "diagnose_data_paths",
+  "query_loader_api",
+  "search_loader_api",
 ]);

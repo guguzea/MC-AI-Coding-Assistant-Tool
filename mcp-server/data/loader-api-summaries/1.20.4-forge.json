@@ -5543,5 +5543,7 @@
       ],
       "file": "D:/mc-skill-temp/loader-api-src/1.20.4-forge/net/minecraftforge/event/entity/living/LivingDestroyBlockEvent.java"
     }
-  ]
+  ],
+  "sourceJarSha256": "c9cf2eaa628718deb95aabfef3578be9362a64df3bef4aff570d33f08065b65b",
+  "source": "official"
 }

@@ -85,6 +85,9 @@ function mappingsFromProps(p, buildGradle) {
   if (/officialMojangMappings|loom\.officialMojangMappings/.test(bg)) {
     return `mojmap-${p.minecraft_version || "unknown"}`;
   }
+  if (String(p.minecraft_version || "").startsWith("26.")) {
+    return `mojmap-${p.minecraft_version}`;
+  }
   return null;
 }
 

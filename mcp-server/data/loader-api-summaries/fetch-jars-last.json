@@ -18,7 +18,8 @@
     {
       "root": "H:\\MC_skill\\fabric\\1.20.1",
       "key": "1.20.1-fabric-api",
-      "skipped": "该档文档未写明 fabric-api 坐标，禁止借邻版"
+      "pinned": "0.91.0+1.20.1",
+      "from": "repo-docs"
     },
     {
       "root": "H:\\MC_skill\\fabric\\1.16.5",
@@ -63,21 +64,17 @@
       "from": "repo-docs"
     },
     {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.20.4\\loom\\unpacked\\fabric-example-mod-7b53cc2ff200a6153945616aa31115a2ffd07c51",
-      "coord": {
-        "group": "net.fabricmc.fabric-api",
-        "artifact": "fabric-api",
-        "version": "0.97.3+1.20.4",
-        "from": "quoted-maven-coord"
-      },
       "key": "1.20.4-fabric-api",
-      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+      "expandedModules": true,
+      "moduleHits": 42,
+      "moduleCount": 43,
+      "javaFileCount": 979
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-fabric-api.jar",
-      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.97.3+1.20.4/fabric-api-0.97.3+1.20.4-sources.jar",
-      "bytes": 6043,
+      "url": "fabric-api-pom-modules:0.97.3+1.20.4",
+      "bytes": 3096062,
       "mappingsVersion": "mojmap-1.20.4",
       "coord": {
         "group": "net.fabricmc.fabric-api",
@@ -88,21 +85,17 @@
       "key": "1.20.4-fabric-api"
     },
     {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.21.1\\loom\\unpacked\\fabric-example-mod-ec6a4cbff9f335ba6b6b3170784dffce380e4408",
-      "coord": {
-        "group": "net.fabricmc.fabric-api",
-        "artifact": "fabric-api",
-        "version": "0.116.15+1.21.1",
-        "from": "quoted-maven-coord"
-      },
       "key": "1.21.1-fabric-api",
-      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+      "expandedModules": true,
+      "moduleHits": 42,
+      "moduleCount": 43,
+      "javaFileCount": 1062
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-fabric-api.jar",
-      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.116.15+1.21.1/fabric-api-0.116.15+1.21.1-sources.jar",
-      "bytes": 6041,
+      "url": "fabric-api-pom-modules:0.116.15+1.21.1",
+      "bytes": 3343055,
       "mappingsVersion": "mojmap-1.21.1",
       "coord": {
         "group": "net.fabricmc.fabric-api",
@@ -113,21 +106,17 @@
       "key": "1.21.1-fabric-api"
     },
     {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\26.1.2\\loom\\unpacked\\fabric-example-mod-27c9ae062374e59b9732d86ce229bfb42175408e",
-      "coord": {
-        "group": "net.fabricmc.fabric-api",
-        "artifact": "fabric-api",
-        "version": "0.155.2+26.1.2",
-        "from": "quoted-maven-coord"
-      },
       "key": "26.1.2-fabric-api",
-      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+      "expandedModules": true,
+      "moduleHits": 44,
+      "moduleCount": 45,
+      "javaFileCount": 1540
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\26.1.2-fabric-api.jar",
-      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.155.2+26.1.2/fabric-api-0.155.2+26.1.2-sources.jar",
-      "bytes": 5996,
+      "url": "fabric-api-pom-modules:0.155.2+26.1.2",
+      "bytes": 4647315,
       "mappingsVersion": null,
       "coord": {
         "group": "net.fabricmc.fabric-api",
@@ -140,86 +129,80 @@
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.12.2-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2859/forge-1.12.2-14.23.5.2859-sources.jar",
-      "bytes": 1873506,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.12.2-forge",
       "mappingsVersion": "snapshot-20171003-1.12",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.12.2-14.23.5.2859",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.12.2-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.13.2-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.13.2-25.0.223/forge-1.13.2-25.0.223-sources.jar",
-      "bytes": 1475122,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.13.2-forge",
       "mappingsVersion": "snapshot-20180921-1.13",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.13.2-25.0.223",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.13.2-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.14.4-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.14.4-28.2.26/forge-1.14.4-28.2.26-sources.jar",
-      "bytes": 1580409,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.14.4-forge",
       "mappingsVersion": "snapshot-20190719-1.14.3",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.14.4-28.2.26",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.14.4-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.15.2-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.15.2-31.2.57/forge-1.15.2-31.2.57-sources.jar",
-      "bytes": 1532234,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.15.2-forge",
       "mappingsVersion": "snapshot-20200514-1.15.1",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.15.2-31.2.57",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.15.2-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.16.5-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.34/forge-1.16.5-36.2.34-sources.jar",
-      "bytes": 1658984,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.16.5-forge",
       "mappingsVersion": "official-1.16.5",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.16.5-36.2.34",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.16.5-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.17.1-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.17.1-37.1.1/forge-1.17.1-37.1.1-sources.jar",
-      "bytes": 1558390,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.17.1-forge",
       "mappingsVersion": "official-1.17.1",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.17.1-37.1.1",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.17.1-forge"
+      }
     },
     {
       "ok": true,
@@ -350,6 +333,27 @@
         "version": "26.1.2.95",
         "from": "moddev-plugin+neoForge.version"
       }
+    },
+    {
+      "key": "1.20.1-fabric-api",
+      "expandedModules": true,
+      "moduleHits": 41,
+      "moduleCount": 42,
+      "javaFileCount": 897
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.1-fabric-api.jar",
+      "url": "fabric-api-pom-modules:0.91.0+1.20.1",
+      "bytes": 2824693,
+      "mappingsVersion": "yarn-1.20.1+build.10",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.91.0+1.20.1",
+        "from": "H:\\MC_skill\\fabric\\1.20.1\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.20.1-fabric-api"
     },
     {
       "root": "H:\\MC_skill\\fabric\\1.16.5",
@@ -665,10 +669,6 @@
           "status": 404
         }
       ]
-    },
-    {
-      "key": "1.20.1-fabric-api",
-      "skipped": "LOADER_API_NOT_INDEXED：无 MDK/文档坐标，禁止借邻版 jar"
     }
   ]
 }

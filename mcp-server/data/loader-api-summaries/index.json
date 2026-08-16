@@ -2,11 +2,148 @@
   "cache": "D:\\mc-skill-temp",
   "jars": [
     {
+      "file": "1.12.2-forge.jar",
+      "mappingsVersion": "snapshot-20171003-1.12",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1111,
+      "fqcnIndexCount": 695,
+      "sourceJarSha256": "9d79d8fad7d2ed0b802de9d76be6d00fb10d0fbd6e6467e80e92805602650742",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.12.2-liteloader",
+      "mappingsVersion": "mcp-1.12.2",
+      "classCount": 6,
+      "source": "GitLab 1.12.2 已打开接口（许可证禁止把 loader 源码再分发进仓库）",
+      "invalid": false
+    },
+    {
+      "file": "1.13.2-forge.jar",
+      "mappingsVersion": "snapshot-20180921-1.13",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 930,
+      "fqcnIndexCount": 581,
+      "sourceJarSha256": "dcd07e8e964870ed2b9b72e6de6905035a1457e450916a099736ce5f0dbf9bbf",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.13.2-rift",
+      "mappingsVersion": "mcp-1.13.2",
+      "classCount": 8,
+      "source": "official-raw",
+      "invalid": false
+    },
+    {
+      "file": "1.14.4-forge.jar",
+      "mappingsVersion": "snapshot-20190719-1.14.3",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1036,
+      "fqcnIndexCount": 622,
+      "sourceJarSha256": "0d3b2a366e55a08f2088c6742646b485f767d87e085d98eacde1c00da061251f",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.15.2-forge.jar",
+      "mappingsVersion": "snapshot-20200514-1.15.1",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 966,
+      "fqcnIndexCount": 595,
+      "sourceJarSha256": "b7b83f46f3dc0aaa5b61764a863a94fe917e5b016dc83b5607fee70512b1b107",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.16.5-forge.jar",
+      "mappingsVersion": "official-1.16.5",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1050,
+      "fqcnIndexCount": 645,
+      "sourceJarSha256": "a1c8999617d792843c879c04e49f8658c299e5a423b4f44468f8f70961a68104",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.17.1-forge.jar",
+      "mappingsVersion": "official-1.17.1",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 979,
+      "fqcnIndexCount": 605,
+      "sourceJarSha256": "58a7ed4c531ac8965bcded899116821e19ac02ec1aabec8942f5fe5aef9da6b8",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.18.2-forge.jar",
+      "mappingsVersion": "official-1.18.2",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 999,
+      "fqcnIndexCount": 617,
+      "sourceJarSha256": "9dfd638392a92034c72750aa91aba431e226f90d12b2cb2a30beaee761bd8941",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.19.4-forge.jar",
+      "mappingsVersion": "official-1.19.4",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1035,
+      "fqcnIndexCount": 660,
+      "sourceJarSha256": "6335b2bdf18f95e78640bee4239ae33111c04fd26527b6b9dbafd74b9be3d472",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.1-fabric-api.jar",
+      "mappingsVersion": "yarn-1.20.1+build.10",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1016,
+      "fqcnIndexCount": 897,
+      "sourceJarSha256": "8a67a54d9b3692228feeb1e1e054161ed9e750e35599eeff09646b99becba2b4",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.1-forge.jar",
+      "mappingsVersion": "official-1.20.1",
+      "mappingsSource": "mdk-gradle.properties",
+      "classCount": 1038,
+      "fqcnIndexCount": 666,
+      "sourceJarSha256": "918a11bdfceace2752d4c29bddbdf327981e1f6a1e1f0675f23e5fbf01e226c0",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.20.4-fabric-api.jar",
+      "mappingsVersion": "yarn-1.20.4",
+      "mappingsSource": "fabric-api-sources-yarn",
+      "classCount": 1133,
+      "fqcnIndexCount": 979,
+      "sourceJarSha256": "1c6755d5c4b9393899a40927a8b51443295b6f20730475d9a247c2ad593aead8",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
       "file": "1.20.4-forge.jar",
       "mappingsVersion": "official-1.20.4",
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 667,
       "fqcnIndexCount": 681,
+      "sourceJarSha256": "c9cf2eaa628718deb95aabfef3578be9362a64df3bef4aff570d33f08065b65b",
+      "source": "official",
       "fromSourcesJar": true,
       "invalid": false
     },
@@ -16,6 +153,19 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 764,
       "fqcnIndexCount": 851,
+      "sourceJarSha256": "198df8b25fa20c988459d127ca1f6d3b0c464620009dea2f96a953d22da80612",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.1-fabric-api.jar",
+      "mappingsVersion": "yarn-1.21.1",
+      "mappingsSource": "fabric-api-sources-yarn",
+      "classCount": 1211,
+      "fqcnIndexCount": 1062,
+      "sourceJarSha256": "835eeb9079beecb64848dd6c0de5e5e2942a6b6206253024d627cc00af2579be",
+      "source": "official",
       "fromSourcesJar": true,
       "invalid": false
     },
@@ -25,7 +175,17 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 848,
       "fqcnIndexCount": 953,
+      "sourceJarSha256": "b4b912457549ff586873ce78b39b08af96f11a0e3a54c6b77576c6a25907083f",
+      "source": "official",
       "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.21.1-qsl",
+      "mappingsVersion": "qsl-git-1.21-871ca7abf109",
+      "mappingsSource": "github QuiltMC/quilt-standard-libraries",
+      "classCount": 4,
+      "source": "qsl-github-java",
       "invalid": false
     },
     {
@@ -34,6 +194,8 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 988,
       "fqcnIndexCount": 1126,
+      "sourceJarSha256": "da38660fabd4479065d9149399c0d830ffc724d21960590ea8c6037488ac72bd",
+      "source": "official",
       "fromSourcesJar": true,
       "invalid": false
     },
@@ -43,6 +205,8 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 838,
       "fqcnIndexCount": 947,
+      "sourceJarSha256": "b239c4b17fbac389ca5a0e16ecd591999bd306e1067b2b5828fbf85d957f1131",
+      "source": "official",
       "fromSourcesJar": true,
       "invalid": false
     },
@@ -52,7 +216,16 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 908,
       "fqcnIndexCount": 1039,
+      "sourceJarSha256": "bc0e70532f9c234111ffcd01ff56d8d57b182b306802759bb29f13ba517e1fd4",
+      "source": "official",
       "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "1.6.4-modloader",
+      "mappingsVersion": "mcp-1.6.4",
+      "classCount": 2,
+      "source": "safe-api.md (MCP named / public ModLoader API)",
       "invalid": false
     },
     {
@@ -61,6 +234,19 @@
       "mappingsSource": "gradle.properties-sidecar",
       "classCount": 1002,
       "fqcnIndexCount": 1136,
+      "sourceJarSha256": "a95cbf58c4b6afc8dccf3314867874dce51c4611beda984ba7acd207e2a82641",
+      "source": "official",
+      "fromSourcesJar": true,
+      "invalid": false
+    },
+    {
+      "file": "26.1.2-fabric-api.jar",
+      "mappingsVersion": "mojmap-26.1.2",
+      "mappingsSource": "loom.officialMojangMappings",
+      "classCount": 1645,
+      "fqcnIndexCount": 1540,
+      "sourceJarSha256": "0f0595333e987a61a043d265852fb3211350e5658349815065663b6d302c346c",
+      "source": "official",
       "fromSourcesJar": true,
       "invalid": false
     }

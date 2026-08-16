@@ -220,7 +220,7 @@ function buildWritePlan(opts: {
     }
     if (opts.includeSkills) {
       // v1：八宿主均可 Stub。若某宿主日后要求技能必须自包含，列入此集合，不写残缺 stub。
-      const HOSTS_REQUIRE_INLINE_SKILLS = new Set([]);
+      const HOSTS_REQUIRE_INLINE_SKILLS = new Set<PackHost>([]);
       if (HOSTS_REQUIRE_INLINE_SKILLS.has(host)) {
         skipped.push({ rel: layout.skillsDir, reason: "SKILL_STUB_UNSUPPORTED" });
         continue;
