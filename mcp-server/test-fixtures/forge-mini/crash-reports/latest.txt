@@ -1,0 +1,8 @@
+---- Minecraft Crash Report ----
+// Hello
+
+Time: 2024-01-01 00:00:00
+Description: Unexpected error
+
+java.lang.NullPointerException: test fixture
+	at com.example.ExampleMod.<init>(ExampleMod.java:1)

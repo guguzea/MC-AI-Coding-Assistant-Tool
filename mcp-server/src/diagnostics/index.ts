@@ -1,19 +1,44 @@
 import { analyzeCrash } from "../crash/index.js";
 import { actionable, ActionCodes } from "../utils/actionable.js";
 import { LIBRARY_CATALOG } from "./library-catalog.js";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { migrationGuideFromPrimers } from "../docs-platform/neoforge/primers.js";
+import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 
 export interface AnalyzeLogInput {
-  logText: string;
+  logText?: string;
+  logPath?: string;
   version?: string;
 }
 
 export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
   const version = input.version ?? "1.20.1";
-  const text = input.logText;
+  let text = input.logText;
+  if (!text?.trim() && input.logPath) {
+    const p = input.logPath;
+    try {
+      if (!existsSync(p) || !statSync(p).isFile()) {
+        const action = actionable(ActionCodes.INVALID_INPUT, `无法读取 logPath：${p}`, [
+          "传入 logText 全文，或有效的 logPath",
+        ]);
+        return { ok: false, action, error: action.message };
+      }
+      text = readFileSync(p, "utf8");
+    } catch (err) {
+      const action = actionable(ActionCodes.INVALID_INPUT, `读取 logPath 失败：${(err as Error).message}`, [
+        "检查路径是否存在且可读",
+      ]);
+      return { ok: false, action, error: action.message };
+    }
+  }
+  if (!text?.trim()) {
+    const action = actionable(ActionCodes.INVALID_INPUT, "需要 logText 或 logPath", [
+      "传入日志全文，或 CLI 使用 --logText @./logs/latest.log",
+    ]);
+    return { ok: false, action, error: action.message };
+  }
   const lines = text.split(/\r?\n/);
   const errors = lines.filter((l) => /ERROR|Exception|Caused by:/i.test(l)).slice(0, 30);
   const warnings = lines.filter((l) => /WARN/i.test(l)).slice(0, 20);
@@ -145,6 +170,7 @@ export interface CheckDependenciesExtras {
   litemodJson?: string;
   riftmodJson?: string;
   addonManifest?: string;
+  projectPath?: string;
 }
 
 /** loader 判定：Quilt → Fabric → NeoForge → LiteLoader → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
@@ -373,6 +399,24 @@ export function checkDependencies(
   neoModsToml?: string,
   extras?: CheckDependenciesExtras,
 ): Record<string, unknown> {
+  if (extras?.projectPath) {
+    const resolved = resolveProjectDir(extras.projectPath);
+    if (!resolved.ok) {
+      return { ok: false, action: resolved.action, issues: [resolved.action.message], suggestions: [] };
+    }
+    const loaded = loadModProject(resolved.root);
+    buildGradle = preferExplicit(buildGradle, loaded.buildGradle) ?? "";
+    modsToml = preferExplicit(modsToml, loaded.modsToml);
+    fabricModJson = preferExplicit(fabricModJson, loaded.fabricModJson);
+    neoModsToml = preferExplicit(neoModsToml, loaded.neoModsToml);
+    extras = {
+      ...extras,
+      quiltModJson: preferExplicit(extras.quiltModJson, loaded.quiltModJson),
+      litemodJson: preferExplicit(extras.litemodJson, loaded.litemodJson),
+      riftmodJson: preferExplicit(extras.riftmodJson, loaded.riftmodJson),
+      addonManifest: preferExplicit(extras.addonManifest, loaded.addonManifest),
+    };
+  }
   const issues: string[] = [];
   const suggestions: string[] = [];
   const detectedLoader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml, extras);

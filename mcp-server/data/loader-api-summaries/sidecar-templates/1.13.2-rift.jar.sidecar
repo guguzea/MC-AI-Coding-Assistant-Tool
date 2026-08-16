@@ -1,0 +1,6 @@
+{
+  "key": "1.13.2-rift",
+  "mappingsVersion": "",
+  "mappingsSource": "user_must_fill",
+  "note": "Place jar at $MC_SKILL_CACHE/loader-jars/1.13.2-rift.jar and set mappingsVersion. Official fetch will not download this jar."
+}

@@ -13,9 +13,12 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { basename, join, relative } from "path";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { PROJECT_SCAN_SKIP_DIRS, walkProjectFiles } from "../utils/project-files.js";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { buildJarIndex } from "./bytecode.js";
 import { parseMixinJavaSource } from "./parser.js";
+
+export { PROJECT_SCAN_SKIP_DIRS, walkProjectFiles };
 import {
   lookupMemberInHierarchy,
   normalizeOwnerCandidates,
@@ -421,55 +424,6 @@ export interface ValidateAwArgs {
   projectPath?: string;
   version?: string;
   jarPath?: string;
-}
-
-/** 扫描时跳过的常见构建 / IDE / 依赖目录（避免大项目慢扫与假冲突） */
-export const PROJECT_SCAN_SKIP_DIRS = new Set([
-  "node_modules",
-  "build",
-  ".gradle",
-  ".git",
-  "run",
-  "runs",
-  "out",
-  "dist",
-  "bin",
-  ".idea",
-  ".vscode",
-  "target",
-  ".cache",
-]);
-
-function walkProjectFiles(
-  root: string,
-  match: (relPosix: string, name: string) => boolean,
-  maxDepth = 10,
-): string[] {
-  const out: string[] = [];
-  const walk = (dir: string, depth: number) => {
-    if (depth > maxDepth) return;
-    let entries;
-    try {
-      entries = readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    for (const e of entries) {
-      const name = String(e.name);
-      if (name === "." || name === "..") continue;
-      const abs = join(dir, name);
-      if (e.isDirectory()) {
-        if (PROJECT_SCAN_SKIP_DIRS.has(name)) continue;
-        walk(abs, depth + 1);
-        continue;
-      }
-      if (!e.isFile()) continue;
-      const rel = relative(root, abs).replace(/\\/g, "/");
-      if (match(rel, name)) out.push(abs);
-    }
-  };
-  if (existsSync(root) && statSync(root).isDirectory()) walk(root, 0);
-  return out.sort();
 }
 
 /** 合并多文件内容，用 `# ===== file: rel =====` 分隔以启用跨文件冲突检测 */

@@ -721,8 +721,8 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     if (!emptyIndex && !unobf) {
       notes.push(
         /minecraftforge|neoforged/i.test(className)
-          ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 search_forge_docs / search_neoforge_docs。"
-          : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。",
+          ? "Forge/NeoForge 特有类不在 Parchment 索引中，请改用 query_loader_api（必填 platform+minecraftVersion）或 search_forge_docs / search_neoforge_docs。"
+          : "Forge 特有类（如 DeferredRegister、Capability）不在 Parchment 数据中。请改用 query_loader_api。",
       );
     }
     notes.push(`共收录 ${vData.classNames.length} 个类（版本 ${version}）。`);

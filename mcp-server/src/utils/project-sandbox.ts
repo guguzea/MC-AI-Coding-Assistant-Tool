@@ -52,6 +52,38 @@ export function isInsideReal(childReal: string, parentReal: string): boolean {
   return c.startsWith(prefix);
 }
 
+/**
+ * 写盘 allowlist 根：explicitRoot（如 CLI --project / projectPath）优先于 MC_SKILL_PROJECT_ROOT。
+ * 仍要求 MC_SKILL_ALLOW_WRITE=1。供平台包写入用户模组工程。
+ */
+export function resolveWriteAllowRoot(explicitRoot?: string): string {
+  if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
+    throw new ProjectPathError(
+      "写操作已禁用。设置环境变量 MC_SKILL_ALLOW_WRITE=1，并以 dryRun=false 且 confirmed=true 执行。",
+      "WRITE_DISABLED",
+    );
+  }
+
+  const allowRoot = (explicitRoot?.trim() || process.env.MC_SKILL_PROJECT_ROOT || "").trim();
+  if (!allowRoot) {
+    throw new ProjectPathError(
+      "写操作需要绝对路径项目根：传入 projectPath（CLI --project）或设置 MC_SKILL_PROJECT_ROOT。",
+      "PROJECT_ROOT_REQUIRED",
+    );
+  }
+  if (!isAbsolute(allowRoot)) {
+    throw new ProjectPathError(
+      "项目根必须是绝对路径（不允许相对路径，以免随进程 cwd 漂移）。",
+      "PROJECT_ROOT_REQUIRED",
+    );
+  }
+  const root = resolve(allowRoot);
+  if (!existsSync(root)) {
+    throw new ProjectPathError(`项目根不存在：${root}`, "PATH_NOT_FOUND");
+  }
+  return nativeReal(root);
+}
+
 function resolveAllowRoot(): string {
   if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
     throw new ProjectPathError(

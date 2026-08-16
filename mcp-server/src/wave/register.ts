@@ -31,6 +31,9 @@ import {
   decompileModJarHandler,
   searchModCodeHandler,
 } from "../decompile/index.js";
+import { queryLoaderApi, searchLoaderApi, ingestLoaderApi } from "../loader-api/index.js";
+import { detectModProject } from "../platform-pack/detect.js";
+import { activatePlatformPack } from "../platform-pack/index.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
 export const queryRegistrySchema = z.object({
@@ -53,6 +56,7 @@ export const mixinAnalyzeSchema = z.object({
     .string()
     .optional()
     .describe("客户端 jar 绝对路径（deep:true 时优先于缓存扫描）"),
+  projectPath: z.string().optional().describe("模组项目根：扫 mixin 相关 java 与 mixins.json（显式正文优先）"),
 });
 export const auditResourcesSchema = z.object({
   resourceRoot: z.string().describe("assets 根目录，如 src/main/resources/assets/<modid>"),
@@ -117,7 +121,8 @@ export const generateConfigSchema = z.object({
 export const generateEntityRendererSchema = z.object({ modId: z.string(), entityName: z.string() });
 export const generateWorldgenSchema = z.object({ modId: z.string(), featureName: z.string() });
 export const analyzeLogSchema = z.object({
-  logText: z.string(),
+  logText: z.string().optional().describe("日志全文（与 logPath 二选一）"),
+  logPath: z.string().optional().describe("日志文件路径（与 logText 二选一）"),
   version: z.string().optional(),
 });
 export const getMigrationGuideSchema = z.object({
@@ -127,7 +132,7 @@ export const getMigrationGuideSchema = z.object({
   platform: z.string().optional().describe("forge / neoforge / fabric，写入返回 JSON"),
 });
 export const checkDependenciesSchema = z.object({
-  buildGradle: z.string().describe("build.gradle 全文（基岩包可传空字符串或占位）"),
+  buildGradle: z.string().optional().describe("build.gradle 全文（基岩包可传空字符串或占位；与 projectPath 二选一）"),
   modsToml: z.string().optional().describe("mods.toml 全文（Forge；NeoForge 内容也可并入）"),
   fabricModJson: z.string().optional().describe("fabric.mod.json 全文（Fabric 工程；loader 冲突检测必需）"),
   neoModsToml: z.string().optional().describe("neoforge.mods.toml 全文（可选；亦可并入 modsToml）"),
@@ -135,6 +140,7 @@ export const checkDependenciesSchema = z.object({
   litemodJson: z.string().optional().describe("litemod.json 全文"),
   riftmodJson: z.string().optional().describe("riftmod.json 全文"),
   addonManifest: z.string().optional().describe("基岩 manifest.json 全文"),
+  projectPath: z.string().optional().describe("模组项目根：扫 gradle 与元数据（显式正文优先）"),
 });
 export const mcSkillUpdateSchema = z.object({
   action: z.enum(["check", "apply"]).describe("check=只读探测；apply=预演或执行更新"),
@@ -224,6 +230,50 @@ export const validateAwSchema = z.object({
     .string()
     .optional()
     .describe("客户端 jar 绝对路径（优先于 $MC_SKILL_CACHE 缓存扫描）"),
+});
+
+export const queryLoaderApiSchema = z.object({
+  platform: z.string().describe("forge / neoforge / fabric / quilt / liteloader / rift / modloader（必填，无默认）"),
+  minecraftVersion: z.string().describe("精确 MC 版本，如 1.21.1 / 26.1（必填，无默认 Forge 1.20.1）"),
+  className: z.string().describe("FQCN 或 simpleName；嵌套类用 Outer$Inner"),
+});
+export const searchLoaderApiSchema = z.object({
+  platform: z.string().optional().describe("search 必填；mode=list 时可省略以列出全部已索引档"),
+  minecraftVersion: z.string().optional(),
+  query: z.string().optional().describe("fqcnIndex 子串（mode=search 必填）"),
+  mode: z.enum(["search", "list"]).optional().describe("默认 search；list 列出已索引/skipped/overlay"),
+  limit: z.number().optional().describe("默认 20，封顶 50"),
+  offset: z.number().optional(),
+});
+export const ingestLoaderApiSchema = z.object({
+  platform: z.string(),
+  minecraftVersion: z.string(),
+  jarPath: z.string().describe("自备 jar 绝对路径（不要用 --file）"),
+  mappingsVersion: z.string().describe("必填，禁止猜 Yarn/MCP"),
+  mappingsSource: z.string().optional(),
+  dryRun: z.boolean().optional().default(true),
+  confirmed: z.boolean().optional(),
+});
+export const detectModProjectSchema = z.object({
+  projectPath: z
+    .string()
+    .optional()
+    .describe("模组工程绝对路径（CLI --project 注入此字段）。优先于 MC_SKILL_PROJECT_ROOT"),
+});
+export const activatePlatformPackSchema = z.object({
+  action: z.enum(["list", "session", "write", "deactivate"]),
+  platform: z.string().optional().describe("session/write 必填"),
+  minecraftVersion: z.string().optional(),
+  hosts: z
+    .array(z.string())
+    .optional()
+    .describe("write/deactivate 必填：cursor|claude|continue|trae|opencode|codex|zcode|pi，或 all。禁止默认 Cursor"),
+  topics: z.array(z.string()).optional().describe("session：规则编号如 02、10"),
+  includeAllRules: z.boolean().optional(),
+  includeSkills: z.boolean().optional().describe("write：默认 false；true 才写 Skill Stub"),
+  dryRun: z.boolean().optional().default(true),
+  confirmed: z.boolean().optional(),
+  projectPath: z.string().optional().describe("用户模组工程绝对路径（CLI --project）。write 真写只认此 allowlist"),
 });
 
 function jsonResult(obj: unknown): CallToolResult {
@@ -388,11 +438,12 @@ export function registerWaveExtensions(server: McpServer): void {
       "Quilt 在 Fabric 前；LiteLoader 混合只认 net.minecraftforge.gradle.liteloader。" +
       "【边界】启发式 + catalog，不是 Gradle 依赖解析器；未收录库可能漏报。",
     inputSchema: checkDependenciesSchema,
-  }, async (a) => jsonResult(checkDependencies(a.buildGradle, a.modsToml, a.fabricModJson, a.neoModsToml, {
+  }, async (a) => jsonResult(checkDependencies(a.buildGradle ?? "", a.modsToml, a.fabricModJson, a.neoModsToml, {
     quiltModJson: a.quiltModJson,
     litemodJson: a.litemodJson,
     riftmodJson: a.riftmodJson,
     addonManifest: a.addonManifest,
+    projectPath: a.projectPath,
   })));
 
   server.registerTool(
@@ -520,6 +571,61 @@ export function registerWaveExtensions(server: McpServer): void {
     async (args): Promise<CallToolResult> => jsonResult(validateAwHandler(args)),
   );
 
+  server.registerTool(
+    "query_loader_api",
+    {
+      title: "Query loader / modding API class (not Vanilla query_api)",
+      description:
+        "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。" +
+        "不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。",
+      inputSchema: queryLoaderApiSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(queryLoaderApi(args)),
+  );
+  server.registerTool(
+    "search_loader_api",
+    {
+      title: "Search loader-api FQCN index or list indexed packs",
+      description:
+        "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。",
+      inputSchema: searchLoaderApiSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(searchLoaderApi(args)),
+  );
+  server.registerTool(
+    "ingest_loader_api",
+    {
+      title: "Ingest a user-provided loader jar into cache overlay",
+      description:
+        "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。" +
+        "jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。",
+      inputSchema: ingestLoaderApiSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(await ingestLoaderApi(args)),
+  );
+  server.registerTool(
+    "detect_mod_project",
+    {
+      title: "Detect mod loader / MC version / platform pack",
+      description:
+        "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。" +
+        "对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。",
+      inputSchema: detectModProjectSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(detectModProject(args)),
+  );
+  server.registerTool(
+    "activate_platform_pack",
+    {
+      title: "Activate platform rules for session or write into a mod project",
+      description:
+        "list / session / write / deactivate。session 不写盘、不依赖项目根，返回该档 AGENTS/规则/技能索引。" +
+        "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。",
+      inputSchema: activatePlatformPackSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(activatePlatformPack(args)),
+  );
+
   // ── Wave B: Prompts + Resources (protocol) ───────────────────────────────
   for (const [name, meta] of Object.entries(WORKFLOW_TEMPLATES)) {
     server.registerPrompt(
@@ -589,4 +695,9 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "search_mod_code", description: "对已反编译的模组源码做行级检索（子串或正则），返回 file:line 命中。\n入口二选一：decompiledDir（反编译目录）或 jarPath（须先 decompile_mod_jar 并缓存）。纯 Node，无 Java 需求。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 源码未反编译时返回 NOT_FOUND，不会自动 decompile。", inputSchema: searchModCodeSchema },
   { name: "validate_at", description: "校验 Forge/NeoForge `*_at.cfg`：目标类/成员存在性（继承成员/record/内部类）、映射层不匹配建议、跨文件冲突告警。jar 来源：jarPath > $MC_SKILL_CACHE 缓存；未缓存返回 CACHE_MISS 引导。", inputSchema: validateAtSchema },
   { name: "validate_aw", description: "校验 Fabric `.accesswidener`：header/namespace、条目类型、目标存在性、transitive、跨文件冲突告警。jar 来源：jarPath > $MC_SKILL_CACHE 缓存；未缓存返回 CACHE_MISS 引导。", inputSchema: validateAwSchema },
+  { name: "query_loader_api", description: "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。", inputSchema: queryLoaderApiSchema },
+  { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。", inputSchema: searchLoaderApiSchema },
+  { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
+  { name: "detect_mod_project", description: "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。", inputSchema: detectModProjectSchema },
+  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根，返回该档 AGENTS/规则/技能索引。write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
 ];

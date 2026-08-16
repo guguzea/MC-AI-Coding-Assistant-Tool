@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **70** 个 MCP 工具：`src/index.ts` **44** + `src/wave/register.ts` **26**
+- 共 **76** 个 MCP 工具：`src/tool-registry.ts` **44** + `src/wave/register.ts` **32**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -76,7 +76,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **70**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **76**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
@@ -134,7 +134,10 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
 | Wave C 诊断 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
 | T2 反编译（Wave C） | `get_minecraft_source`、`analyze_mod_jar`、`decompile_mod_jar`、`search_mod_code` |
+| MDK | `download_official_mdk` |
 | T4 字节码校验（Wave D） | `validate_at`、`validate_aw`（+ `mixin_analyze` 的 `deep:true` 深度模式） |
+| Loader API / 平台包 | `query_loader_api`、`search_loader_api`、`ingest_loader_api`、`detect_mod_project`、`activate_platform_pack` |
+| 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity` |
 | 自我更新 | `mc_skill_update` |
 
 补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`。
@@ -147,19 +150,48 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 ### 独立 CLI（`mc-skill`）
 
-flags-only（`--key value` / `--key=value` / 裸 `--key`→true），参数按各工具的 zod `inputSchema` 驱动类型转换；输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误：
+一条执行路径：短名只做 alias（`query`→`query_api`、`convert`→`convert_mapping`、`update`→`mc_skill_update`、`status`/`warmup`→`get_server_status`；`warmup` 会注入 `warmup=true`，用户显式 `--warmup=false` 优先）。`descriptor` 是本地命令，不加载 MCP 工具注册表。
+
+全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`。
+
+kebab-case 会转到 camelCase（`--dry-run`→`dryRun`）；另有 `--name`→`memberName`、`--confirm`→`confirmed`、`--class`→`className` 等别名（仅当目标字段存在于该工具 schema 时）。未知 flag **exit 2**。
+
+文件输入（所有 string 字段）：
+
+- `--crashReport @./latest.txt` 读文件（`@@` 转义成字面 `@`）
+- `--crashReport=-` 或 `@-` 读 stdin（全进程只能一次）
+- `--file crashReport=./latest.txt` 或 `--file crash-report=./latest.txt` 等价（字段名走 kebab/别名）
+- 单文件上限约 8MB
+- `--project <dir>`：若工具有 `projectPath` 则注入；否则不传，stderr 警告「该工具不支持 --project」
+
+输出统一 JSON `{success, tool, result|error}`。`--compact` 时所有 stdout JSON 都不 pretty。TTY 且未加 `--json` 的 `--help` 用人读摘要。
+
+退出码：
+
+| 码 | 含义 |
+|----|------|
+| 0 | 工具跑完且非失败（`query_api` 的 `found:false` 默认仍为 0） |
+| 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在 |
+| 2 | 用法 / 未知命令 / 未知 flag / 缺参 / 读文件失败 |
+
+`--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。
 
 ```bash
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
+node dist/cli.js convert --from obfuscated --to yarn --name er --version 1.20.1
+node dist/cli.js mc_skill_update --action apply --dry-run=false --confirm
+node dist/cli.js crash_analyze --crashReport @./crash-reports/latest.txt
+node dist/cli.js validate_project --project .
+node dist/cli.js query --help
 node dist/cli.js descriptor --descriptor '()F' --name getHealth
 node dist/cli.js update --action check
-node dist/cli.js list-tools            # 全部 70 个工具的 schema（parameters=inputSchema）
+node dist/cli.js list-tools
 ```
 
-- 旧位置参数形式（`query <className> [methodName]`、`convert ... <memberName>`、`descriptor <jniDescriptor>`、`update check|apply`）**仍兼容**，结果 JSON 与 flags-only 一致，stderr 输出迁移提示 `⚠️ 旧位置参数用法将在未来移除，请改用 --key value 形式`。
-- PowerShell 括号场景：单引号包裹即可，如 `'--descriptor=()F'`。
-- `list-tools` 从 `src/index.ts` 的 `listAllToolSchemas()` 读取（`indexToolSchemas` 36 + `waveToolSchemas` 26），导入该模块不会启动 MCP 服务（bootstrap 有 `isMainModule()` 守卫）。
+- 旧位置参数（`query <className> [methodName]`、`convert ... <memberName>`、`descriptor <jniDescriptor>`、`update check|apply`）仍兼容，stderr 提示改用 `--key value`。
+- PowerShell 括号：单引号包裹，如 `'--descriptor=()F'`。
+- 全局 `--help`/`--version` 不加载工具注册表。`MC_SKILL_DATA` 仅在真正调用依赖 data 的工具时提示。
 
 ### obfuscated / intermediary 层（T5）
 
@@ -251,6 +283,45 @@ node dist/cli.js list-tools            # 全部 70 个工具的 schema（paramet
 
 ---
 
+## Loader API 摘要与平台包
+
+### 工具对照
+
+| 工具 | 用途 |
+|------|------|
+| `query_api` | Vanilla/Parchment **游戏** API（约 1.16.5–1.20.4）。不含 Forge/Fabric 类。 |
+| `query_loader_api` | 加载器/模组 API 摘要（Neo/Forge/Fabric-API/QSL）。必填 `platform`+`minecraftVersion`。 |
+| `activate_platform_pack` | 把该档规则送进**当前会话**，或写入**用户模组工程**的 IDE 目录。**不能**改 Cursor/Claude 等扫描器。 |
+
+CLI 与现行全局 flag 对齐：`--project` / `--file` / `--dry-run` / `--confirm`。不要写 `--projectRoot=`。ingest 的 jar 用 `--jarPath=`，不要用 `--file`。
+
+```bash
+node dist/cli.js activate_platform_pack --action=write --platform=neoforge --minecraftVersion=1.21.1 --hosts=cursor --project <abs> --dry-run=false --confirm
+node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
+```
+
+### 数据来源与边界（用户必读）
+
+- **官方索引**：`mcp-server/data/loader-api-summaries/`（维护者构建，随仓分发：Neo/Forge/Fabric/Quilt 精选档）。
+- **用户 ingest**：只写 `$MC_SKILL_CACHE/loader-api-summaries/`，**不入库、不共享给他人**。
+- **查询顺序**：官方先，本地 overlay 后，同 key 本地覆盖官方。
+- LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。
+
+### ingest 实战
+
+1. 自备已合法取得的 jar（须含 `.java`；纯 class 先 `decompile_mod_jar`）
+2. dryRun：`node dist/cli.js ingest_loader_api --platform=… --minecraftVersion=… --jarPath=<abs> --mappingsVersion=…`
+3. `--dry-run=false --confirm`
+4. `query_loader_api` 验证
+
+### index.json schema（贡献者）
+
+现有 `cache` + `jars[]`（`file` / `mappingsVersion` / `mappingsSource` / `classCount` / `fromSourcesJar` / `invalid`）上补充 `sourceJarSha256`、`source`（`official` | `user_jar`）。
+
+新增官方档 checklist：许可允许再分发 → `WANTED_KEYS`/坐标解析加条目 → fetch + decompile 校验 JSON → 更新 `index.json` → PR **不要**带 `$MC_SKILL_CACHE`。
+
+---
+
 ## FAQ
 
 **Q: NeoForge 1.20.1 文档？**  
@@ -261,3 +332,12 @@ A: 在 `mcp-server/` 执行 `npm ci && npm run build`。
 
 **Q: Yarn 查询 OOM？**  
 A: 使用预建 `yarn-mappings.sqlite`，勿加载整份 JSON。
+
+**Q: ingest 后仍 `PLATFORM_SKIPPED`？**  
+A: 查 `$MC_SKILL_CACHE/loader-jars/<key>.jar.sidecar` 的 `mappingsVersion`；确认 overlay JSON 在 `$MC_SKILL_CACHE/loader-api-summaries/`。
+
+**Q: `methods` 空 / `parseError`？**  
+A: jar 须含 `.java`。纯 class 先 `decompile_mod_jar` 再 ingest。解析失败不回退正则。
+
+**Q: `AMBIGUOUS`？**  
+A: 改用含 `$` 的 FQCN（如 `Outer$Inner`）。

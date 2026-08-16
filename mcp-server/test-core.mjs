@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 
 import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocRelated } from "./dist/docs-platform/forge/index.js";
@@ -23,7 +24,7 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen } from "./dist/datagen/index.js";
 import { generateLang } from "./dist/generators/index.js";
 import { diagnoseGradle } from "./dist/gradle/index.js";
-import { detectLoader, getMigrationGuide } from "./dist/diagnostics/index.js";
+import { detectLoader, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
   generateAddonManifest,
@@ -38,7 +39,6 @@ import { SEMANTIC_DDL, semanticDbPath } from "./dist/docs-platform/semantic/sear
 import { resolveDataDir } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import {
   listCommunitySources,
   searchCommunityDocs,
@@ -1678,6 +1678,47 @@ public class ExampleMod {}
   }
 }
 
+function testProjectPathFill() {
+  const fixture = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures", "forge-mini");
+  const val = validateProject({ projectPath: fixture });
+  assert.equal(val.passed, true, JSON.stringify(val));
+  assert.ok(Array.isArray(val.checks) && val.checks.length > 0, JSON.stringify(val.checks));
+  assert.ok(!val.errors?.some((e) => /@Mod/.test(e)), JSON.stringify(val.errors));
+
+  const valCrash = validateProject({ projectPath: fixture, includeCrashAnalysis: true });
+  assert.ok(Array.isArray(valCrash.crashAnalyses) && valCrash.crashAnalyses.length > 0, JSON.stringify(valCrash));
+
+  const gradle = diagnoseGradle({ projectPath: fixture });
+  assert.notEqual(gradle.ok, false, JSON.stringify(gradle));
+  assert.ok(Array.isArray(gradle.errors) && Array.isArray(gradle.warnings));
+
+  const deps = checkDependencies("", undefined, undefined, undefined, { projectPath: fixture });
+  assert.equal(deps.detectedLoader, "forge", JSON.stringify(deps));
+
+  const stillContent = validateProject({
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: '@Mod("other")\npublic class ExampleMod {}\n',
+    }],
+  });
+  assert.equal(stillContent.passed, false, JSON.stringify(stillContent));
+  assert.ok(stillContent.errors.some((e) => /@Mod/.test(e)));
+
+  const bad = validateProject({ projectPath: join(fixture, "no-such") });
+  assert.equal(bad.passed, false);
+  assert.equal(bad.ok, false);
+  assert.equal(bad.action?.code, "INVALID_INPUT");
+
+  const badG = diagnoseGradle({ projectPath: join(fixture, "no-such") });
+  assert.equal(badG.ok, false);
+  assert.equal(badG.action?.code, "INVALID_INPUT");
+
+  const badD = checkDependencies("", undefined, undefined, undefined, { projectPath: join(fixture, "no-such") });
+  assert.equal(badD.ok, false);
+  assert.equal(badD.action?.code, "INVALID_INPUT");
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -1700,6 +1741,7 @@ await testFivePlatformRouting();
 await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
 await testMdkUnpackFixtures();
+await testProjectPathFill();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

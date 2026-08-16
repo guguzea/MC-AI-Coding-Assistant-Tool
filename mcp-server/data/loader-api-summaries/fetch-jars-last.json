@@ -2,108 +2,294 @@
   "cache": "D:\\mc-skill-temp",
   "log": [
     {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.20.4\\loom\\unpacked\\fabric-example-mod-7b53cc2ff200a6153945616aa31115a2ffd07c51",
-      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.21.1\\loom\\unpacked\\fabric-example-mod-ec6a4cbff9f335ba6b6b3170784dffce380e4408",
-      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\fabric\\26.1.2\\loom\\unpacked\\fabric-example-mod-27c9ae062374e59b9732d86ce229bfb42175408e",
-      "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.12.2\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.13.2\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.14.4\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.15.2\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.16.5\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.17.1\\forgegradle\\unpacked",
-      "key": "unknown-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.18.2\\forgegradle\\unpacked",
-      "key": "1.18.2-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.19.4\\forgegradle\\unpacked",
-      "key": "1.19.4-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
-      "root": "D:\\mc-skill-temp\\mdk\\forge\\1.20.1\\forgegradle\\unpacked",
-      "key": "1.20.1-forge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
-    },
-    {
       "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\moddevgradle\\unpacked\\MDK-26.2-ModDevGradle-d1c748fd52b311cba7b4a50e3d689927c5daac9a",
       "key": "26.2-neoforge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+      "skipped": "不在 WANTED_KEYS（对照索引，不造 00–10）"
     },
     {
       "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\neogradle\\unpacked\\MDK-26.2-NeoGradle-15955d033693fce0d05619eb3ab32643b941cd93",
       "key": "26.2-neoforge",
-      "skipped": "本收口只拉六档 Neo + 1.20.4 Forge 对照 jar"
+      "skipped": "不在 WANTED_KEYS（对照索引，不造 00–10）"
     },
     {
       "root": "D:\\mc-skill-temp\\mdk\\quilt\\1.21.1\\quilt-loom\\unpacked\\quilt-template-mod-9a6f89cd481e3f58f128596b5b043353bee6b3f2",
       "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
     },
     {
+      "root": "H:\\MC_skill\\fabric\\1.20.1",
+      "key": "1.20.1-fabric-api",
+      "skipped": "该档文档未写明 fabric-api 坐标，禁止借邻版"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.16.5",
+      "key": "1.16.5-fabric-api",
+      "pinned": "0.16.24+build.4-1.16.5",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.17.1",
+      "key": "1.17.1-fabric-api",
+      "pinned": "0.31.1+build.1",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.19.4",
+      "key": "1.19.4-fabric-api",
+      "pinned": "0.76.1+1.19.4",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.18.2",
+      "key": "1.18.2-fabric-api",
+      "pinned": "0.44.1+build.3",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.21.11",
+      "key": "1.21.11-fabric-api",
+      "pinned": "0.200.1+build.3",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.21.3",
+      "key": "1.21.3-fabric-api",
+      "pinned": "0.200.1+build.3",
+      "from": "repo-docs"
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.14.4",
+      "key": "1.14.4-fabric-api",
+      "pinned": "0.3.2+build.1",
+      "from": "repo-docs"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.20.4\\loom\\unpacked\\fabric-example-mod-7b53cc2ff200a6153945616aa31115a2ffd07c51",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.97.3+1.20.4",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.20.4-fabric-api",
+      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-fabric-api.jar",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.97.3+1.20.4/fabric-api-0.97.3+1.20.4-sources.jar",
+      "bytes": 6043,
+      "mappingsVersion": "mojmap-1.20.4",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.97.3+1.20.4",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.20.4-fabric-api"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\1.21.1\\loom\\unpacked\\fabric-example-mod-ec6a4cbff9f335ba6b6b3170784dffce380e4408",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.116.15+1.21.1",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.21.1-fabric-api",
+      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-fabric-api.jar",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.116.15+1.21.1/fabric-api-0.116.15+1.21.1-sources.jar",
+      "bytes": 6041,
+      "mappingsVersion": "mojmap-1.21.1",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.116.15+1.21.1",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.21.1-fabric-api"
+    },
+    {
+      "root": "D:\\mc-skill-temp\\mdk\\fabric\\26.1.2\\loom\\unpacked\\fabric-example-mod-27c9ae062374e59b9732d86ce229bfb42175408e",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.155.2+26.1.2",
+        "from": "quoted-maven-coord"
+      },
+      "key": "26.1.2-fabric-api",
+      "warning": "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\26.1.2-fabric-api.jar",
+      "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.155.2+26.1.2/fabric-api-0.155.2+26.1.2-sources.jar",
+      "bytes": 5996,
+      "mappingsVersion": null,
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.155.2+26.1.2",
+        "from": "quoted-maven-coord"
+      },
+      "key": "26.1.2-fabric-api"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.12.2-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2859/forge-1.12.2-14.23.5.2859-sources.jar",
+      "bytes": 1873506,
+      "mappingsVersion": "snapshot-20171003-1.12",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.12.2-14.23.5.2859",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.12.2-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.13.2-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.13.2-25.0.223/forge-1.13.2-25.0.223-sources.jar",
+      "bytes": 1475122,
+      "mappingsVersion": "snapshot-20180921-1.13",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.13.2-25.0.223",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.13.2-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.14.4-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.14.4-28.2.26/forge-1.14.4-28.2.26-sources.jar",
+      "bytes": 1580409,
+      "mappingsVersion": "snapshot-20190719-1.14.3",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.14.4-28.2.26",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.14.4-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.15.2-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.15.2-31.2.57/forge-1.15.2-31.2.57-sources.jar",
+      "bytes": 1532234,
+      "mappingsVersion": "snapshot-20200514-1.15.1",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.15.2-31.2.57",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.15.2-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.16.5-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.34/forge-1.16.5-36.2.34-sources.jar",
+      "bytes": 1658984,
+      "mappingsVersion": "official-1.16.5",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.16.5-36.2.34",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.16.5-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.17.1-forge.jar",
+      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.17.1-37.1.1/forge-1.17.1-37.1.1-sources.jar",
+      "bytes": 1558390,
+      "mappingsVersion": "official-1.17.1",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.17.1-37.1.1",
+        "from": "quoted-maven-coord"
+      },
+      "key": "1.17.1-forge"
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.18.2-forge.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.18.2-forge",
+      "mappingsVersion": "official-1.18.2",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.18.2-40.3.0",
+        "from": "quoted-maven-coord"
+      }
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.19.4-forge.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.19.4-forge",
+      "mappingsVersion": "official-1.19.4",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.19.4-45.4.0",
+        "from": "quoted-maven-coord"
+      }
+    },
+    {
+      "ok": true,
+      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.1-forge.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.20.1-forge",
+      "mappingsVersion": "official-1.20.1",
+      "coord": {
+        "group": "net.minecraftforge",
+        "artifact": "forge",
+        "version": "1.20.1-47.4.10",
+        "from": "quoted-maven-coord"
+      }
+    },
+    {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-forge.jar",
-      "url": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.4-49.2.0/forge-1.20.4-49.2.0-sources.jar",
-      "bytes": 1620355,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.20.4-forge",
       "mappingsVersion": "official-1.20.4",
       "coord": {
         "group": "net.minecraftforge",
         "artifact": "forge",
         "version": "1.20.4-49.2.0",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.20.4-forge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-neoforge.jar",
-      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/20.4.251/neoforge-20.4.251-sources.jar",
-      "bytes": 1490583,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.20.4-neoforge",
       "mappingsVersion": "parchment-1.20.4-2024.04.14",
       "coord": {
         "group": "net.neoforged",
         "artifact": "neoforge",
         "version": "20.4.251",
         "from": "moddev-plugin+neoForge.version"
-      },
-      "key": "1.20.4-neoforge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-neoforge.jar",
-      "skipped": "idempotent cache hit",
+      "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.1-neoforge",
       "mappingsVersion": "parchment-1.21.1-2024.11.17",
       "coord": {
@@ -116,7 +302,7 @@
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.11-neoforge.jar",
-      "skipped": "idempotent cache hit",
+      "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.11-neoforge",
       "mappingsVersion": "parchment-1.21.11-2025.12.20",
       "coord": {
@@ -129,35 +315,33 @@
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.3-neoforge.jar",
-      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.3.97/neoforge-21.3.97-sources.jar",
-      "bytes": 1793397,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.21.3-neoforge",
       "mappingsVersion": "parchment-1.21.3-2024.12.07",
       "coord": {
         "group": "net.neoforged",
         "artifact": "neoforge",
         "version": "21.3.97",
         "from": "moddev-plugin+neoForge.version"
-      },
-      "key": "1.21.3-neoforge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.8-neoforge.jar",
-      "url": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.8.54/neoforge-21.8.54-sources.jar",
-      "bytes": 1899585,
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.21.8-neoforge",
       "mappingsVersion": "parchment-1.21.8-2025.09.14",
       "coord": {
         "group": "net.neoforged",
         "artifact": "neoforge",
         "version": "21.8.54",
         "from": "moddev-plugin+neoForge.version"
-      },
-      "key": "1.21.8-neoforge"
+      }
     },
     {
       "ok": true,
       "dest": "D:\\mc-skill-temp\\loader-jars\\26.1-neoforge.jar",
-      "skipped": "idempotent cache hit",
+      "skipped": "idempotent cache hit (jar contains .java)",
       "key": "26.1-neoforge",
       "mappingsVersion": null,
       "coord": {
@@ -166,6 +350,325 @@
         "version": "26.1.2.95",
         "from": "moddev-plugin+neoForge.version"
       }
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.16.5",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.16.24+build.4-1.16.5",
+        "from": "H:\\MC_skill\\fabric\\1.16.5\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.16.5-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24+build.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24%2Bbuild.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24+build.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24%2Bbuild.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24+build.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24%2Bbuild.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24+build.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.16.24%2Bbuild.4-1.16.5/fabric-api-0.16.24+build.4-1.16.5.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.17.1",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.31.1+build.1",
+        "from": "H:\\MC_skill\\fabric\\1.17.1\\scaffold\\gradle.properties"
+      },
+      "key": "1.17.1-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1+build.1/fabric-api-0.31.1+build.1-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1%2Bbuild.1/fabric-api-0.31.1+build.1-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1+build.1/fabric-api-0.31.1+build.1-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1%2Bbuild.1/fabric-api-0.31.1+build.1-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1+build.1/fabric-api-0.31.1+build.1-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1%2Bbuild.1/fabric-api-0.31.1+build.1-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1+build.1/fabric-api-0.31.1+build.1.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.31.1%2Bbuild.1/fabric-api-0.31.1+build.1.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.19.4",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.76.1+1.19.4",
+        "from": "H:\\MC_skill\\fabric\\1.19.4\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.19.4-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1+1.19.4/fabric-api-0.76.1+1.19.4-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1%2B1.19.4/fabric-api-0.76.1+1.19.4-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1+1.19.4/fabric-api-0.76.1+1.19.4-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1%2B1.19.4/fabric-api-0.76.1+1.19.4-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1+1.19.4/fabric-api-0.76.1+1.19.4-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1%2B1.19.4/fabric-api-0.76.1+1.19.4-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1+1.19.4/fabric-api-0.76.1+1.19.4.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.76.1%2B1.19.4/fabric-api-0.76.1+1.19.4.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.18.2",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.44.1+build.3",
+        "from": "H:\\MC_skill\\fabric\\1.18.2\\scaffold\\gradle.properties"
+      },
+      "key": "1.18.2-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1+build.3/fabric-api-0.44.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1%2Bbuild.3/fabric-api-0.44.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1+build.3/fabric-api-0.44.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1%2Bbuild.3/fabric-api-0.44.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1+build.3/fabric-api-0.44.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1%2Bbuild.3/fabric-api-0.44.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1+build.3/fabric-api-0.44.1+build.3.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.44.1%2Bbuild.3/fabric-api-0.44.1+build.3.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.21.11",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.200.1+build.3",
+        "from": "H:\\MC_skill\\fabric\\1.21.11\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.21.11-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.21.3",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.200.1+build.3",
+        "from": "H:\\MC_skill\\fabric\\1.21.3\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.21.3-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1+build.3/fabric-api-0.200.1+build.3.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.200.1%2Bbuild.3/fabric-api-0.200.1+build.3.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "root": "H:\\MC_skill\\fabric\\1.14.4",
+      "coord": {
+        "group": "net.fabricmc.fabric-api",
+        "artifact": "fabric-api",
+        "version": "0.3.2+build.1",
+        "from": "H:\\MC_skill\\fabric\\1.14.4\\.cursor\\rules\\00-project-setup.mdc"
+      },
+      "key": "1.14.4-fabric-api",
+      "skipped": "maven 404，不编造 jar",
+      "tries": [
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2+build.1/fabric-api-0.3.2+build.1-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2%2Bbuild.1/fabric-api-0.3.2+build.1-sources.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2+build.1/fabric-api-0.3.2+build.1-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2%2Bbuild.1/fabric-api-0.3.2+build.1-universal.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2+build.1/fabric-api-0.3.2+build.1-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2%2Bbuild.1/fabric-api-0.3.2+build.1-userdev.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2+build.1/fabric-api-0.3.2+build.1.jar",
+          "status": 404
+        },
+        {
+          "url": "https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/0.3.2%2Bbuild.1/fabric-api-0.3.2+build.1.jar",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "key": "1.20.1-fabric-api",
+      "skipped": "LOADER_API_NOT_INDEXED：无 MDK/文档坐标，禁止借邻版 jar"
     }
   ]
 }

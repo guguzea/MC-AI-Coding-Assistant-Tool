@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+DEPRECATED: 本 Python CLI 已停止维护，校验逻辑不再更新。
+请改用：node mcp-server/dist/cli.js validate_project --project .
+
 Forge 1.20.4 模组项目校验工具
 
 校验内容：

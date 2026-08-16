@@ -1,0 +1,574 @@
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
+import { dirname, isAbsolute, join, resolve, sep } from "path";
+import { actionable } from "../utils/actionable.js";
+import { resolveRepoRoot } from "../utils/path.js";
+import {
+  assertCreatableDir,
+  assertWritablePath,
+  ProjectPathError,
+  resolveWriteAllowRoot,
+} from "../utils/project-sandbox.js";
+import {
+  findPack,
+  listRuleFiles,
+  listSkillIndex,
+  readText,
+} from "./catalog.js";
+import { detectModProject } from "./detect.js";
+import {
+  entryBody,
+  expandHosts,
+  hostLayout,
+  PACK_HOSTS,
+  removeHostMarker,
+  upsertHostMarker,
+  type PackHost,
+} from "./hosts.js";
+
+export const packWriteTestHooks: { failBeforeRel?: string } = {};
+
+export type WriteArgs = {
+  action: "write" | "deactivate";
+  platform?: string;
+  minecraftVersion?: string;
+  hosts?: string[];
+  includeSkills?: boolean;
+  dryRun?: boolean;
+  confirmed?: boolean;
+  projectPath?: string;
+};
+
+type Manifest = {
+  platform: string;
+  minecraftVersion: string;
+  hosts: string[];
+  createdFiles: string[];
+  patchedFiles: string[];
+  hostFiles: Record<string, { created: string[]; patched: string[] }>;
+};
+
+type PlannedFile =
+  | { kind: "create"; rel: string; content: string; host: PackHost }
+  | { kind: "upsertMarker"; rel: string; host: PackHost; platform: string; version: string; body: string };
+
+function posixRel(rel: string): string {
+  return rel.replace(/\\/g, "/");
+}
+
+function isKnowledgeRepo(root: string): boolean {
+  return (
+    existsSync(join(root, "mcp-server")) &&
+    existsSync(join(root, "AGENTS.md")) &&
+    (existsSync(join(root, "forge")) || existsSync(join(root, "fabric")))
+  );
+}
+
+function resolveUserProject(projectPath?: string): {
+  ok: true;
+  root: string;
+  from: string;
+  envDiffers?: boolean;
+} | { ok: false; action: ReturnType<typeof actionable> } {
+  const fromArg = projectPath?.trim() || "";
+  const fromEnv = (process.env.MC_SKILL_PROJECT_ROOT || "").trim();
+  const raw = fromArg || fromEnv;
+  if (!raw) {
+    return {
+      ok: false,
+      action: actionable("PROJECT_ROOT_REQUIRED", "write 需要用户模组工程绝对路径（session 仍可用）。", [
+        "CLI：--project <绝对路径>",
+        "或设置 MC_SKILL_PROJECT_ROOT",
+      ]),
+    };
+  }
+  if (!isAbsolute(raw)) {
+    return {
+      ok: false,
+      action: actionable("PROJECT_ROOT_REQUIRED", "项目根必须是绝对路径。", ["使用 --project <abs>"]),
+    };
+  }
+  const root = resolve(raw);
+  if (!existsSync(root)) {
+    return { ok: false, action: actionable("NOT_FOUND", `项目根不存在：${root}`, ["检查路径"]) };
+  }
+  if (isKnowledgeRepo(root)) {
+    return {
+      ok: false,
+      action: actionable("REFUSE_KNOWLEDGE_REPO", "拒绝写入 MC Skill 知识库根。目标必须是用户模组工程。", [
+        "把 --project / MC_SKILL_PROJECT_ROOT 改成模组工程目录",
+      ]),
+    };
+  }
+  const envDiffers = Boolean(fromArg && fromEnv && resolve(fromArg) !== resolve(fromEnv));
+  return { ok: true, root, from: fromArg ? "projectPath" : "MC_SKILL_PROJECT_ROOT", envDiffers };
+}
+
+function howToWriteCli(args: {
+  platform: string;
+  version: string;
+  hosts: string[];
+  project: string;
+}): string {
+  const hosts = args.hosts.join(",");
+  return (
+    `node dist/cli.js activate_platform_pack --action=write --platform=${args.platform}` +
+    ` --minecraftVersion=${args.version} --hosts=${hosts} --project ${args.project} --dry-run=false --confirm`
+  );
+}
+
+function ensureFrontmatter(text: string, description: string, extra: Record<string, string>): string {
+  const extraLines = Object.entries(extra)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join("\n");
+  if (text.startsWith("---")) {
+    const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+    if (m) {
+      let fm = m[1];
+      if (!/^description:/m.test(fm)) fm = `description: ${description}\n${fm}`;
+      for (const [k, v] of Object.entries(extra)) {
+        if (!new RegExp(`^${k}:`, "m").test(fm)) fm = `${fm}\n${k}: ${v}`;
+      }
+      return `---\n${fm}\n---\n${text.slice(m[0].length)}`;
+    }
+  }
+  const head = [`---`, `description: ${description}`, extraLines, `---`, ""].filter(Boolean).join("\n");
+  return `${head}\n${text}`;
+}
+
+function destRuleName(fileName: string, ext: ".mdc" | ".md"): string {
+  const base = fileName.replace(/\.(mdc|md)$/i, "");
+  return `mc-skill-${base}${ext}`;
+}
+
+function skillStub(relPosix: string, name: string, description: string, platform: string, version: string): string {
+  return [
+    "---",
+    `name: ${name}`,
+    `description: "[${platform} ${version}] ${description || name}"`,
+    "---",
+    "",
+    `# ${name}`,
+    "",
+    `必须先 Read 知识库相对路径 \`${relPosix}\`（相对 MC Skill 仓库根，用 MCP/detect 解析的仓库根拼接）。`,
+    "找不到则调用 `activate_platform_pack action=session` 取索引，不要凭 stub description 写代码。",
+    "禁止把本机盘符路径写死进工程。仓库根变更或换机器后本 stub 会失效。",
+    "",
+  ].join("\n");
+}
+
+function loadManifest(projectRoot: string): Manifest | null {
+  const p = join(projectRoot, ".mc-skill", "pack-manifest.json");
+  if (!existsSync(p)) return null;
+  try {
+    return JSON.parse(readFileSync(p, "utf8")) as Manifest;
+  } catch {
+    return null;
+  }
+}
+
+function buildWritePlan(opts: {
+  projectRoot: string;
+  platform: string;
+  version: string;
+  hosts: PackHost[];
+  includeSkills: boolean;
+}): { ops: PlannedFile[]; skipped: Array<{ rel: string; reason: string }>; overlayNote?: string } {
+  const pack = findPack(opts.platform, opts.version);
+  if (!pack) return { ops: [], skipped: [{ rel: "", reason: "PACK_NOT_FOUND" }] };
+  const rules = listRuleFiles(pack.packDir);
+  const skills = opts.includeSkills ? listSkillIndex(pack.packDir) : [];
+  const existingManifest = loadManifest(opts.projectRoot);
+  const owned = new Set((existingManifest?.createdFiles ?? []).map(posixRel));
+  const ops: PlannedFile[] = [];
+  const skipped: Array<{ rel: string; reason: string }> = [];
+
+  for (const host of opts.hosts) {
+    const layout = hostLayout(host);
+    if (layout.rulesDir) {
+      for (const rule of rules) {
+        const destName = destRuleName(rule.fileName, layout.rulesExt);
+        const rel = posixRel(`${layout.rulesDir}/${destName}`);
+        const abs = join(opts.projectRoot, rel.split("/").join(sep));
+        if (existsSync(abs) && !owned.has(rel)) {
+          skipped.push({ rel, reason: "SKIP_EXISTING" });
+          continue;
+        }
+        const desc = `MC Skill ${opts.platform} ${opts.version} ${rule.id}`;
+        let content = readText(rule.abs);
+        const extra: Record<string, string> = {};
+        if (layout.alwaysApply) extra.alwaysApply = "true";
+        content = ensureFrontmatter(content, desc, extra);
+        ops.push({ kind: "create", rel, content, host });
+      }
+    }
+    if (layout.entryFile) {
+      ops.push({
+        kind: "upsertMarker",
+        rel: posixRel(layout.entryFile),
+        host,
+        platform: opts.platform,
+        version: opts.version,
+        body: entryBody(host, opts.platform, opts.version),
+      });
+    }
+    if (opts.includeSkills) {
+      // v1：八宿主均可 Stub。若某宿主日后要求技能必须自包含，列入此集合，不写残缺 stub。
+      const HOSTS_REQUIRE_INLINE_SKILLS = new Set([]);
+      if (HOSTS_REQUIRE_INLINE_SKILLS.has(host)) {
+        skipped.push({ rel: layout.skillsDir, reason: "SKILL_STUB_UNSUPPORTED" });
+        continue;
+      }
+      for (const sk of skills) {
+        const rel = posixRel(`${layout.skillsDir}/${sk.name}/SKILL.md`);
+        const abs = join(opts.projectRoot, rel.split("/").join(sep));
+        if (existsSync(abs) && !owned.has(rel)) {
+          skipped.push({ rel, reason: "SKIP_EXISTING" });
+          continue;
+        }
+        ops.push({
+          kind: "create",
+          rel,
+          content: skillStub(sk.relPosix, sk.name, sk.description, opts.platform, opts.version),
+          host,
+        });
+      }
+    }
+  }
+  return { ops, skipped };
+}
+
+function mkdirForFile(abs: string, allowRoot: string | null) {
+  const dir = dirname(abs);
+  if (existsSync(dir)) return;
+  if (allowRoot) assertCreatableDir(dir, allowRoot);
+  mkdirSync(dir, { recursive: true });
+}
+
+function writeManifestAtomic(projectRoot: string, manifest: Manifest, allowRoot: string) {
+  const dir = join(projectRoot, ".mc-skill");
+  assertCreatableDir(dir, allowRoot);
+  mkdirSync(dir, { recursive: true });
+  const dest = join(dir, "pack-manifest.json");
+  const tmp = `${dest}.tmp`;
+  assertWritablePath(tmp, allowRoot);
+  writeFileSync(tmp, JSON.stringify(manifest, null, 2), "utf8");
+  try {
+    if (existsSync(dest)) unlinkSync(dest);
+  } catch {
+    /* ignore */
+  }
+  renameSync(tmp, dest);
+}
+
+export function writePlatformPack(args: WriteArgs) {
+  const dryRun = args.dryRun !== false;
+  const confirmed = args.confirmed === true;
+  const hostsOrErr = expandHosts(args.hosts);
+  if ("error" in hostsOrErr) {
+    return { ok: false, action: actionable("INVALID_INPUT", hostsOrErr.error, ["传入 hosts 数组，或 hosts=all"]) };
+  }
+  const hosts = hostsOrErr;
+
+  const proj = resolveUserProject(args.projectPath);
+  if (!proj.ok) return { ok: false, action: proj.action };
+
+  let platform = String(args.platform ?? "").trim().toLowerCase();
+  let version = String(args.minecraftVersion ?? "").trim();
+  if (!platform || !version) {
+    const det = detectModProject({ projectPath: proj.root });
+    if (!det.ok || !det.packFound) {
+      return {
+        ok: false,
+        resolvedProjectRoot: proj.root,
+        action:
+          "action" in det && det.action
+            ? det.action
+            : actionable("INVALID_INPUT", "write 需要 platform + minecraftVersion（或可 detect 的工程）。", [
+                "传入 platform 与 minecraftVersion",
+              ]),
+      };
+    }
+    platform = String(det.platform);
+    version = String(det.knowledgeVersion ?? det.minecraftVersion ?? "");
+  }
+
+  const pack = findPack(platform, version);
+  if (!pack) {
+    return {
+      ok: false,
+      resolvedProjectRoot: proj.root,
+      action: actionable("PACK_NOT_FOUND", `没有 ${platform} ${version} 规则树。`, ["改用文档工具，禁止邻档"]),
+    };
+  }
+
+  const { ops, skipped } = buildWritePlan({
+    projectRoot: proj.root,
+    platform: pack.platform,
+    version: pack.minecraftVersion,
+    hosts,
+    includeSkills: args.includeSkills === true,
+  });
+
+  const howToWrite = {
+    env: { MC_SKILL_ALLOW_WRITE: "1" },
+    note: "真写还需要 dryRun=false 且 confirmed=true。CLI 不要用已废弃的 --projectRoot=。",
+    cli: howToWriteCli({
+      platform: pack.platform,
+      version: pack.minecraftVersion,
+      hosts,
+      project: proj.root,
+    }),
+  };
+
+  if (dryRun || !confirmed) {
+    return {
+      ok: true,
+      dryRun: true,
+      dest: "project",
+      resolvedProjectRoot: proj.root,
+      resolvedFrom: proj.from,
+      envProjectRootDiffers: proj.envDiffers === true,
+      note: proj.envDiffers
+        ? "projectPath 与 MC_SKILL_PROJECT_ROOT 不同，以 projectPath 为准。"
+        : undefined,
+      platform: pack.platform,
+      minecraftVersion: pack.minecraftVersion,
+      hosts,
+      planned: ops.map((o) => ({ kind: o.kind, rel: o.rel, host: o.host })),
+      skipped,
+      howToWrite,
+    };
+  }
+
+  let allowRoot: string;
+  try {
+    allowRoot = resolveWriteAllowRoot(proj.root);
+  } catch (err) {
+    if (err instanceof ProjectPathError) {
+      return { ok: false, action: actionable(err.code, err.message, ["设置 MC_SKILL_ALLOW_WRITE=1", "确认 --project 绝对路径"]) };
+    }
+    throw err;
+  }
+
+  const created: string[] = [];
+  const patched: string[] = [];
+  const backups = new Map<string, string | null>();
+  const hostFiles: Manifest["hostFiles"] = {};
+  for (const h of hosts) hostFiles[h] = { created: [], patched: [] };
+  const partial: string[] = [];
+
+  const rollback = () => {
+    for (const rel of [...created].reverse()) {
+      const abs = join(proj.root, rel.split("/").join(sep));
+      try {
+        if (existsSync(abs)) unlinkSync(abs);
+      } catch {
+        /* ignore */
+      }
+    }
+    for (const [rel, prev] of backups) {
+      const abs = join(proj.root, rel.split("/").join(sep));
+      try {
+        if (prev === null) {
+          if (existsSync(abs)) unlinkSync(abs);
+        } else {
+          writeFileSync(abs, prev, "utf8");
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+  };
+
+  try {
+    for (const op of ops) {
+      if (packWriteTestHooks.failBeforeRel && posixRel(op.rel) === posixRel(packWriteTestHooks.failBeforeRel)) {
+        throw new Error(`test inject fail before ${op.rel}`);
+      }
+      const abs = join(proj.root, op.rel.split("/").join(sep));
+      if (op.kind === "create") {
+        mkdirForFile(abs, allowRoot);
+        assertWritablePath(abs, allowRoot);
+        writeFileSync(abs, op.content, "utf8");
+        created.push(op.rel);
+        hostFiles[op.host].created.push(op.rel);
+        partial.push(op.rel);
+      } else {
+        const existed = existsSync(abs);
+        const prev = existed ? readFileSync(abs, "utf8") : "";
+        backups.set(op.rel, existed ? prev : null);
+        mkdirForFile(abs, allowRoot);
+        assertWritablePath(abs, allowRoot);
+        const next = upsertHostMarker(existed ? prev : "", op.host, op.platform, op.version, op.body);
+        writeFileSync(abs, next, "utf8");
+        if (!existed) {
+          created.push(op.rel);
+          hostFiles[op.host].created.push(op.rel);
+        } else {
+          patched.push(op.rel);
+          hostFiles[op.host].patched.push(op.rel);
+        }
+        partial.push(op.rel);
+      }
+    }
+
+    const prevMan = loadManifest(proj.root);
+    const manifest: Manifest = {
+      platform: pack.platform,
+      minecraftVersion: pack.minecraftVersion,
+      hosts: [...new Set([...(prevMan?.hosts ?? []), ...hosts])],
+      createdFiles: [...new Set([...(prevMan?.createdFiles ?? []), ...created])],
+      patchedFiles: [...new Set([...(prevMan?.patchedFiles ?? []), ...patched])],
+      hostFiles: { ...(prevMan?.hostFiles ?? {}), ...hostFiles },
+    };
+    writeManifestAtomic(proj.root, manifest, allowRoot);
+    return {
+      ok: true,
+      dryRun: false,
+      dest: "project",
+      resolvedProjectRoot: proj.root,
+      platform: pack.platform,
+      minecraftVersion: pack.minecraftVersion,
+      hosts,
+      createdFiles: created,
+      patchedFiles: patched,
+      skipped,
+      manifest: posixRel(".mc-skill/pack-manifest.json"),
+    };
+  } catch (err) {
+    rollback();
+    return {
+      ok: false,
+      dest: "project",
+      resolvedProjectRoot: proj.root,
+      partial,
+      rolledBack: true,
+      action: actionable("WRITE_FAILED", err instanceof Error ? err.message : String(err), [
+        "已回滚本工具新建文件与标记块",
+        "可 dryRun 后重试",
+      ]),
+    };
+  }
+}
+
+export function deactivatePlatformPack(args: WriteArgs) {
+  const dryRun = args.dryRun !== false;
+  const confirmed = args.confirmed === true;
+  const hostsOrErr = expandHosts(args.hosts);
+  if ("error" in hostsOrErr) {
+    return { ok: false, action: actionable("INVALID_INPUT", hostsOrErr.error, ["传入要停用的 hosts"]) };
+  }
+  const hosts = hostsOrErr;
+  const proj = resolveUserProject(args.projectPath);
+  if (!proj.ok) return { ok: false, action: proj.action };
+  const man = loadManifest(proj.root);
+  if (!man) {
+    return { ok: true, dryRun, note: "无 pack-manifest.json，无需 deactivate", resolvedProjectRoot: proj.root };
+  }
+
+  const toDelete = new Set<string>();
+  const toUnpatch = new Set<string>();
+  for (const h of hosts) {
+    const hf = man.hostFiles?.[h];
+    if (!hf) continue;
+    for (const rel of hf.created) toDelete.add(posixRel(rel));
+    for (const rel of hf.patched) toUnpatch.add(posixRel(rel));
+  }
+
+  if (dryRun || !confirmed) {
+    return {
+      ok: true,
+      dryRun: true,
+      resolvedProjectRoot: proj.root,
+      willDelete: [...toDelete],
+      willUnpatch: [...toUnpatch],
+      hosts,
+      howToWrite: {
+        env: { MC_SKILL_ALLOW_WRITE: "1" },
+        cli: `node dist/cli.js activate_platform_pack --action=deactivate --hosts=${hosts.join(",")} --project ${proj.root} --dry-run=false --confirm`,
+      },
+    };
+  }
+
+  let allowRoot: string;
+  try {
+    allowRoot = resolveWriteAllowRoot(proj.root);
+  } catch (err) {
+    if (err instanceof ProjectPathError) {
+      return { ok: false, action: actionable(err.code, err.message, ["设置 MC_SKILL_ALLOW_WRITE=1"]) };
+    }
+    throw err;
+  }
+
+  const unpatched: string[] = [];
+  const entryRels = new Set(
+    hosts.flatMap((h) => {
+      const f = hostLayout(h).entryFile;
+      return f ? [posixRel(f)] : [];
+    }),
+  );
+  for (const rel of new Set([...toUnpatch, ...[...toDelete].filter((r) => entryRels.has(r))])) {
+    const abs = join(proj.root, rel.split("/").join(sep));
+    if (!existsSync(abs)) continue;
+    assertWritablePath(abs, allowRoot);
+    let text = readFileSync(abs, "utf8");
+    for (const h of hosts) text = removeHostMarker(text, h);
+    writeFileSync(abs, text, "utf8");
+    unpatched.push(rel);
+  }
+  const remainHosts = man.hosts.filter((h) => !hosts.includes(h as PackHost));
+  const deleted: string[] = [];
+  for (const rel of toDelete) {
+    const stillUsed = remainHosts.some((h) => {
+      const hf = man.hostFiles?.[h];
+      if (!hf) return false;
+      return hf.created.map(posixRel).includes(rel) || hf.patched.map(posixRel).includes(rel);
+    });
+    if (stillUsed) continue;
+    const abs = join(proj.root, rel.split("/").join(sep));
+    if (!existsSync(abs)) continue;
+    if (entryRels.has(rel)) {
+      const left = readFileSync(abs, "utf8").trim();
+      if (left.length > 0) continue;
+    }
+    assertWritablePath(abs, allowRoot);
+    unlinkSync(abs);
+    deleted.push(rel);
+  }
+
+  if (remainHosts.length === 0) {
+    const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
+    if (existsSync(manPath)) {
+      assertWritablePath(manPath, allowRoot);
+      unlinkSync(manPath);
+    }
+  } else {
+    const next: Manifest = {
+      ...man,
+      hosts: remainHosts,
+      createdFiles: man.createdFiles.filter((f) => !toDelete.has(posixRel(f))),
+      patchedFiles: man.patchedFiles.filter((f) => !toUnpatch.has(posixRel(f))),
+      hostFiles: { ...man.hostFiles },
+    };
+    for (const h of hosts) delete next.hostFiles[h];
+    writeManifestAtomic(proj.root, next, allowRoot);
+  }
+
+  return {
+    ok: true,
+    dryRun: false,
+    resolvedProjectRoot: proj.root,
+    deleted,
+    unpatched,
+    hosts,
+  };
+}
+
+export { PACK_HOSTS };

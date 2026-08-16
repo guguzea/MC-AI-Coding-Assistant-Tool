@@ -3,6 +3,7 @@
   "mappingsVersion": "mcp-1.12.2",
   "mapping": "mcp",
   "source": "GitLab 1.12.2 已打开接口（许可证禁止把 loader 源码再分发进仓库）",
+  "skippedExpansion": true,
   "classCount": 6,
   "classes": [
     {

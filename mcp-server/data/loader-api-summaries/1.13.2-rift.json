@@ -2,6 +2,7 @@
   "file": "1.13.2-rift",
   "mappingsVersion": "mcp-1.13.2",
   "mapping": "mcp",
+  "skippedExpansion": true,
   "source": "official-raw",
   "cacheDir": "D:/mc-skill-temp/loader-api-src/1.13.2-rift",
   "classCount": 8,

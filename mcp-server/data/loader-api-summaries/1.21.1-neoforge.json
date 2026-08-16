@@ -976,9 +976,102 @@
   "classes": [
     {
       "fqcn": "net.neoforged.neoforge.network.handling.IPayloadContext",
+      "simpleName": "IPayloadContext",
       "apiStatusInternal": false,
       "environment": false,
-      "methods": [],
+      "methods": [
+        {
+          "name": "listener",
+          "returnType": "ICommonPacketListener",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "ICommonPacketListener listener()"
+        },
+        {
+          "name": "connection",
+          "returnType": "Connection",
+          "parameters": [],
+          "modifiers": ["default"],
+          "signature": "Connection connection()"
+        },
+        {
+          "name": "player",
+          "returnType": "Player",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "Player player()"
+        },
+        {
+          "name": "reply",
+          "returnType": "void",
+          "parameters": [{ "type": "CustomPacketPayload", "name": "payload" }],
+          "modifiers": ["default"],
+          "signature": "void reply(CustomPacketPayload)"
+        },
+        {
+          "name": "disconnect",
+          "returnType": "void",
+          "parameters": [{ "type": "Component", "name": "reason" }],
+          "modifiers": ["default"],
+          "signature": "void disconnect(Component)"
+        },
+        {
+          "name": "enqueueWork",
+          "returnType": "CompletableFuture<Void>",
+          "parameters": [{ "type": "Runnable", "name": "task" }],
+          "modifiers": [],
+          "signature": "CompletableFuture<Void> enqueueWork(Runnable)"
+        },
+        {
+          "name": "enqueueWork",
+          "returnType": "CompletableFuture<T>",
+          "parameters": [{ "type": "Supplier<T>", "name": "task" }],
+          "modifiers": [],
+          "signature": "CompletableFuture<T> enqueueWork(Supplier<T>)"
+        },
+        {
+          "name": "flow",
+          "returnType": "PacketFlow",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "PacketFlow flow()"
+        },
+        {
+          "name": "protocol",
+          "returnType": "ConnectionProtocol",
+          "parameters": [],
+          "modifiers": ["default"],
+          "signature": "ConnectionProtocol protocol()"
+        },
+        {
+          "name": "handle",
+          "returnType": "void",
+          "parameters": [{ "type": "Packet<?>", "name": "packet" }],
+          "modifiers": ["default"],
+          "signature": "void handle(Packet<?>)"
+        },
+        {
+          "name": "handle",
+          "returnType": "void",
+          "parameters": [{ "type": "CustomPacketPayload", "name": "payload" }],
+          "modifiers": [],
+          "signature": "void handle(CustomPacketPayload)"
+        },
+        {
+          "name": "finishCurrentTask",
+          "returnType": "void",
+          "parameters": [{ "type": "ConfigurationTask.Type", "name": "type" }],
+          "modifiers": [],
+          "signature": "void finishCurrentTask(ConfigurationTask.Type)"
+        },
+        {
+          "name": "channelHandlerContext",
+          "returnType": "ChannelHandlerContext",
+          "parameters": [],
+          "modifiers": ["default"],
+          "signature": "ChannelHandlerContext channelHandlerContext()"
+        }
+      ],
       "file": "D:/mc-skill-temp/loader-api-src/1.21.1-neoforge/IPayloadContext.java"
     },
     {

@@ -1,7 +1,8 @@
 import { parseMixinsJson, parseMixinJavaSource, findMixinClassInFiles } from "./parser.js";
 import { resolveMixinMethodTarget } from "./resolve.js";
-import { actionable } from "../utils/actionable.js";
+import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 import { deepValidateMixins, resolveValidationJar, cacheMissActionable } from "./deep-validate.js";
+import { loadModProject, mergeJavaFiles, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 
 export interface MixinAnalyzeInput {
   javaFiles?: Array<{ path: string; content: string }>;
@@ -11,6 +12,7 @@ export interface MixinAnalyzeInput {
   deep?: boolean;
   /** 显式指定客户端 jar 绝对路径（优先于缓存扫描） */
   jarPath?: string;
+  projectPath?: string;
 }
 
 export interface DeepAnalysisResult {
@@ -47,6 +49,7 @@ export interface MixinAnalyzeResult {
   warnings: string[];
   errors: string[];
   supportMatrix: string[];
+  action?: ActionEnvelope;
   /** 仅 deep:true 时附加（纯增量字段，静态结果不变） */
   deepResult?: DeepAnalysisResult;
 }
@@ -60,10 +63,37 @@ const SUPPORT_MATRIX = [
 ];
 
 export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnalyzeResult> {
+  let javaWarning: string | undefined;
+  if (input.projectPath) {
+    const resolved = resolveProjectDir(input.projectPath);
+    if (!resolved.ok) {
+      return {
+        ok: false,
+        version: input.version ?? "1.20.1",
+        mixins: [],
+        warnings: [],
+        errors: [resolved.action.message],
+        supportMatrix: SUPPORT_MATRIX,
+        action: resolved.action,
+      };
+    }
+    const loaded = loadModProject(resolved.root);
+    if (loaded.javaWarning) {
+      process.stderr.write(`${loaded.javaWarning}\n`);
+      javaWarning = loaded.javaWarning;
+    }
+    const mixinJava = loaded.javaFiles.filter((f) => f.content.includes("@Mixin"));
+    input = {
+      ...input,
+      mixinsJson: preferExplicit(input.mixinsJson, loaded.mixinsJson),
+      javaFiles: mergeJavaFiles(input.javaFiles, mixinJava.length ? mixinJava : loaded.javaFiles),
+    };
+  }
   const version = input.version ?? "1.20.1";
   const javaFiles = input.javaFiles ?? [];
   const warnings: string[] = [];
   const errors: string[] = [];
+  if (javaWarning) warnings.push(javaWarning);
   const mixins: MixinAnalyzeResult["mixins"] = [];
 
   let jsonSummary: ReturnType<typeof parseMixinsJson> | undefined;

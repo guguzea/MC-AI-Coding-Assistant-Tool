@@ -1,7 +1,7 @@
 /**
  * 统一工具注册收集器：monkey-patch McpServer.registerTool，
  * 收集 {name, description, inputSchema, handler} 到模块级表。
- * CLI 通用 dispatch 通过 import index.js 的副作用填充此表后直接调用任意工具。
+ * CLI 通用 dispatch 通过 import tool-registry.js 的副作用填充此表后直接调用任意工具。
  */
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 

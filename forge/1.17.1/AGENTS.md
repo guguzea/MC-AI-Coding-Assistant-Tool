@@ -132,7 +132,7 @@ src/main/java/
 1. 先读 `01-registry.mdc` 确认注册方式
 2. 再读对应主题的规则文件（如 `02-block.mdc`）
 3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
-4. 最后运行 `validate_project` 自查（Phase 1.5 CLI 工具）
+4. 最后运行 `validate_project` 自查（`node mcp-server/dist/cli.js validate_project --project .`，或 MCP 工具 `validate_project`）
 
 ---
 

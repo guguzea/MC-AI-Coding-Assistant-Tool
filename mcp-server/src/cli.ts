@@ -1,437 +1,423 @@
 #!/usr/bin/env node
 /**
- * mc-skill CLI — status / warmup / query / convert / descriptor / update / list-tools
+ * mc-skill CLI — 短名 alias + 全部 MCP 工具通用 dispatch。
  *
  * flags-only（--key value / --key=value / 裸 --key→true），参数类型按各工具的
- * zod inputSchema 驱动转换（string 保持字面，number/boolean/array/object 转换）。
- * 输出统一 JSON 包装 {success, tool, result|error}；退出码 0=成功 / 1=工具错误 / 2=用法错误。
+ * zod inputSchema 驱动转换。输出 JSON 包装 {success, tool, result|error}。
+ * 退出码 0=成功 / 1=工具失败 / 2=用法错误。
  *
- * 旧位置参数形式仍兼容（stderr 输出迁移提示），结果 JSON 与 flags-only 形式一致。
- * 参数解析 / 类型转换 / isMainModule 模式参照 MCDxAI/minecraft-dev-mcp src/cli.ts（MIT，见 THIRD_PARTY_NOTICES.md）。
+ * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
-import { realpathSync } from "fs";
+import { existsSync, readFileSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath } from "url";
 import * as z from "zod";
-import { getBuildStatus } from "./utils/build-status.js";
 import { toolHandlers } from "./tool-handlers.js";
-// 副作用：加载全部工具注册（server 不 connect），填充 toolHandlers 供通用 dispatch
-import "./index.js";
+import {
+  applyPositionalCompat,
+  coerceFlags,
+  DATA_DIR_TOOLS,
+  extractGlobalFlags,
+  isToolFailure,
+  mapShortCommand,
+  MIGRATION_NOTICE,
+  parseFlags,
+  POSITIONAL_COMMANDS,
+  resolveFlagKey,
+  schemaObjectShape,
+  UnknownFlagError,
+  zodToJsonSchema,
+  type RawFlags,
+} from "./cli-parse.js";
+import { parameterTypes, readableSignature, returnType } from "./utils/descriptor.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const root = join(__dirname, "..");
+const FILE_MAX_BYTES = 8 * 1024 * 1024;
 
-/** 旧位置参数迁移提示（stderr） */
-const MIGRATION_NOTICE = "⚠️ 旧位置参数用法将在未来移除，请改用 --key value 形式";
+const descriptorSchema = z.object({
+  descriptor: z.string().optional(),
+  name: z.string().optional(),
+});
 
-/** 有位置参数兼容映射的子命令 */
-const POSITIONAL_COMMANDS = new Set(["query", "convert", "descriptor", "update"]);
-const COMMANDS = ["status", "warmup", "query", "convert", "descriptor", "update", "list-tools"];
-
-async function load() {
-  const api = await import(pathToFileURL(join(root, "dist/api/index.js")).href);
-  const mappings = await import(pathToFileURL(join(root, "dist/mappings/index.js")).href);
-  const descriptor = await import(pathToFileURL(join(root, "dist/utils/descriptor.js")).href);
-  const pathUtil = await import(pathToFileURL(join(root, "dist/utils/path.js")).href);
-  const update = await import(pathToFileURL(join(root, "dist/update/index.js")).href);
-  return { api, mappings, descriptor, pathUtil, update };
-}
-
-/**
- * 惰性加载工具 schema 注册表（dist/index.js）。该模块被 import 时不启动 MCP 服务
- * （bootstrap 已用 isMainModule() 守卫），故无副作用。
- */
-async function schemaRegistry() {
-  return import(pathToFileURL(join(root, "dist/index.js")).href);
-}
-
-function printJson(obj: unknown) {
-  process.stdout.write(JSON.stringify(obj, null, 2) + "\n");
-}
-
-function usage() {
-  printJson({
-    usage: [
-      "mc-skill status [--version=1.20.1]",
-      "mc-skill warmup [--version=1.20.1]",
-      "mc-skill query --className <className> [--methodName <methodName>] [--version=1.20.1]",
-      "mc-skill convert --from=mcp|yarn|mojang|parchment|obfuscated|intermediary --to=... --name=getHealth [--owner=...] [--descriptor=()F] [--kind=method|field|class] [--version=1.20.1] [--allow-fallback]",
-      "mc-skill convert --from=intermediary --to=obfuscated --name=method_6032 --version=1.20.1",
-      "mc-skill convert --from=obfuscated --to=yarn --name=er --version=1.20.1   # 无 owner：method→field→class 全局反查",
-      "mc-skill descriptor --descriptor=<jniDescriptor> [--name=method]",
-      "mc-skill update --action=check|apply [--scope=all|tooling|data] [--channel=stable|latest|tag] [--tag=vX.Y.Z] [--dry-run] [--confirm] [--allow-dirty] [--stash-dirty]",
-      "mc-skill list-tools",
-      "mc-skill <任意MCP工具名> --key=value ...   # 通用 dispatch：全部 MCP 工具（含 search_docs / search_bedrock_docs / check_dependencies）",
-    ],
-  });
-}
-
-/**
- * flags 解析：--key value / --key=value / 裸 --key→true（值以 -- 开头时不吞并，
- * 视为裸 flag）；非 -- 开头参数归入 positional（旧位置参数兼容）。
- */
-export function parseFlags(argv: string[]) {
-  const flags: Record<string, string | boolean> = {};
-  const positional: string[] = [];
-  for (let i = 0; i < argv.length; i++) {
-    const a = argv[i];
-    if (a.startsWith("--")) {
-      const eq = a.indexOf("=");
-      if (eq > 0) {
-        flags[a.slice(2, eq)] = a.slice(eq + 1);
-      } else {
-        const key = a.slice(2);
-        const next = argv[i + 1];
-        if (next !== undefined && !next.startsWith("--")) {
-          flags[key] = next;
-          i++;
-        } else {
-          flags[key] = true;
-        }
-      }
-    } else {
-      positional.push(a);
-    }
-  }
-  return { flags, positional };
-}
-
-/** 由 zod inputSchema 取字段的 JSON-schema type（string 保持字面，不猜值） */
-function schemaPropertyType(schema: z.ZodTypeAny | undefined, key: string): string | undefined {
-  const shape = (schema as { shape?: Record<string, z.ZodTypeAny> } | undefined)?.shape;
-  let prop = shape?.[key];
-  if (!prop) return undefined;
-  while (prop instanceof z.ZodOptional || prop instanceof z.ZodDefault) {
-    prop = prop._def.innerType as z.ZodTypeAny;
-  }
-  if (prop instanceof z.ZodNumber || prop instanceof z.ZodBigInt) return "number";
-  if (prop instanceof z.ZodBoolean) return "boolean";
-  if (prop instanceof z.ZodArray) return "array";
-  if (prop instanceof z.ZodObject || prop instanceof z.ZodRecord) return "object";
-  // string / enum / union → 保持字符串字面
-  return "string";
-}
-
-/**
- * 按 schema 字段类型转换 flag 值（参照 MCDxAI coerceFlagValue，MIT）：
- * string 保持字面；number/boolean 转换；array 支持 JSON 数组与逗号分隔两种形式；
- * object 尝试 JSON.parse。数组 flag 重复出现时追加而非覆盖。
- */
-export function coerceFlagValue(value: string, expectedType?: string): unknown {
-  switch (expectedType) {
-    case "number":
-    case "integer": {
-      const num = Number(value);
-      return Number.isNaN(num) ? value : num;
-    }
-    case "boolean":
-      return value === "true" || value === "1";
-    case "array": {
-      try {
-        const parsed: unknown = JSON.parse(value);
-        if (Array.isArray(parsed)) return parsed;
-      } catch {
-        // 非 JSON → 按逗号拆分
-      }
-      return value
-        .split(",")
-        .map((part) => part.trim())
-        .filter(Boolean);
-    }
-    case "object": {
-      try {
-        return JSON.parse(value);
-      } catch {
-        return value;
-      }
-    }
-    default:
-      return value;
-  }
-}
-
-/** 旧 CLI flag 名 → 工具 schema 字段名 */
-const ALIASES: Record<string, Record<string, string>> = {
-  query: { class: "className", method: "methodName" },
-  convert: { name: "memberName", owner: "ownerClass", kind: "memberKind", "allow-fallback": "allow_fallback" },
-  update: {
-    confirm: "confirmed",
-    tag: "tagName",
-    "dry-run": "dryRun",
-    "allow-dirty": "allowDirty",
-    "stash-dirty": "stashDirty",
-    "include-prerelease": "includePrerelease",
-  },
-};
-
-function coerceFlags(
-  raw: Record<string, string | boolean>,
-  schema: z.ZodTypeAny | undefined,
-  aliases: Record<string, string>
-): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(raw)) {
-    const key = aliases[k] ?? k;
-    if (typeof v === "boolean") {
-      out[key] = v; // 裸 flag → true
-      continue;
-    }
-    out[key] = coerceFlagValue(v, schemaPropertyType(schema, key));
-  }
-  return out;
-}
-
-class CliToolError extends Error {
+class CliUsageError extends Error {
   constructor(
     readonly tool: string,
-    message: string
+    message: string,
   ) {
     super(message);
   }
 }
 
-/**
- * zod inputSchema → JSON schema（供 list-tools 的 parameters 输出）。
- * 覆盖本仓库 70 个工具用到的 zod 类型：string/number/boolean/enum/array/object/
- * record/union/literal + optional/default 包裹；保留 .describe() 描述与 required。
- */
-function zodToJsonSchema(schema: z.ZodTypeAny): Record<string, unknown> {
-  const def = schema._def as { description?: string; innerType?: z.ZodTypeAny; type?: z.ZodTypeAny; values?: readonly string[] | Record<string, string>; options?: z.ZodTypeAny[]; value?: unknown; shape?: Record<string, z.ZodTypeAny> };
-  let out: Record<string, unknown>;
-  if (schema instanceof z.ZodOptional || schema instanceof z.ZodDefault) {
-    out = zodToJsonSchema(def.innerType!);
-  } else if (schema instanceof z.ZodString) {
-    out = { type: "string" };
-  } else if (schema instanceof z.ZodNumber || schema instanceof z.ZodBigInt) {
-    out = { type: "number" };
-  } else if (schema instanceof z.ZodBoolean) {
-    out = { type: "boolean" };
-  } else if (schema instanceof z.ZodEnum) {
-    out = { type: "string", enum: [...(def.values as readonly string[])] };
-  } else if (schema instanceof z.ZodNativeEnum) {
-    out = { type: "string", enum: Object.values(def.values as Record<string, string>).filter((v) => typeof v === "string") };
-  } else if (schema instanceof z.ZodArray) {
-    out = { type: "array", items: zodToJsonSchema(def.type!) };
-  } else if (schema instanceof z.ZodObject) {
-    const shape = (schema as { shape: Record<string, z.ZodTypeAny> }).shape;
-    const props: Record<string, unknown> = {};
-    const required: string[] = [];
-    for (const [k, v] of Object.entries(shape)) {
-      props[k] = zodToJsonSchema(v);
-      if (!(v instanceof z.ZodOptional) && !(v instanceof z.ZodDefault)) required.push(k);
-    }
-    out = { type: "object", properties: props, ...(required.length > 0 ? { required } : {}) };
-  } else if (schema instanceof z.ZodRecord) {
-    out = { type: "object" };
-  } else if (schema instanceof z.ZodUnion) {
-    out = { anyOf: def.options!.map((o) => zodToJsonSchema(o)) };
-  } else if (schema instanceof z.ZodLiteral) {
-    out = { const: def.value };
-  } else {
-    out = {};
-  }
-  if (def.description) out.description = def.description;
-  return out;
-}
-
-function str(v: unknown, fallback?: string): string | undefined {
-  return typeof v === "string" ? v : fallback;
-}
-
-async function runCommand(
-  cmd: string,
-  flags: Record<string, string | boolean>,
-  positional: string[]
-): Promise<unknown> {
-  switch (cmd) {
-    case "status": {
-      const { api, pathUtil, update } = await load();
-      const reg = await schemaRegistry();
-      const params = coerceFlags(flags, reg.getServerStatusSchema, {});
-      const version = str(params.version, "1.20.1")!;
-      await api.warmupApi([version]);
-      const result = {
-        ok: true,
-        dataPaths: pathUtil.diagnoseDataPaths(),
-        api: api.listApiPreloadStatuses(),
-        focus: api.getApiPreloadStatus(version),
-        updateHint: update.getUpdateHint(),
-        buildStatus: getBuildStatus(),
-      };
-      api.disposeApiData();
-      return result;
-    }
-
-    case "warmup": {
-      const { api } = await load();
-      const reg = await schemaRegistry();
-      const params = coerceFlags(flags, reg.getServerStatusSchema, {});
-      const version = str(params.version, "1.20.1")!;
-      const statuses = await api.warmupApi([version]);
-      api.disposeApiData();
-      return { ok: true, statuses };
-    }
-
-    case "query": {
-      const { api } = await load();
-      const reg = await schemaRegistry();
-      const params = coerceFlags(flags, reg.queryApiSchema, ALIASES.query);
-      const className = str(params.className) ?? positional[0];
-      const methodName = str(params.methodName) ?? positional[1];
-      if (typeof className !== "string" || !className) {
-        throw new CliToolError("query", "缺少必填参数 className（--className <className>）");
-      }
-      const version = str(params.version, "1.20.1")!;
-      const result = await api.queryApi({ className, methodName, version });
-      api.disposeApiData();
-      return result;
-    }
-
-    case "convert": {
-      const { mappings } = await load();
-      const reg = await schemaRegistry();
-      const params = coerceFlags(flags, reg.convertMappingSchema, ALIASES.convert);
-      const from = str(params.from, "");
-      const to = str(params.to, "");
-      const memberName = str(params.memberName) ?? positional[0];
-      if (!from || !to) {
-        throw new CliToolError("convert", "缺少必填参数 --from 与 --to（如 --from mcp --to mojang）");
-      }
-      if (typeof memberName !== "string" || !memberName) {
-        throw new CliToolError("convert", "缺少必填参数 memberName（--name <memberName>）");
-      }
-      return mappings.convertMapping({
-        from: from as "mojang" | "mcp" | "yarn" | "parchment",
-        to: to as "mojang" | "mcp" | "yarn" | "parchment",
-        memberName,
-        ownerClass: str(params.ownerClass),
-        descriptor: str(params.descriptor),
-        version: str(params.version),
-        memberKind: (str(params.memberKind) ?? "auto") as "class" | "method" | "field" | "auto",
-        allow_fallback: params.allow_fallback === true,
-      });
-    }
-
-    case "descriptor": {
-      const { descriptor } = await load();
-      const descriptorSchema = z.object({
-        descriptor: z.string().optional(),
-        name: z.string().optional(),
-      });
-      const params = coerceFlags(flags, descriptorSchema, {});
-      const desc = str(params.descriptor) ?? positional[0];
-      if (typeof desc !== "string" || !desc) {
-        throw new CliToolError("descriptor", "缺少必填参数 descriptor（--descriptor <jniDescriptor>）");
-      }
-      const name = str(params.name, "method")!;
-      return {
-        descriptor: desc,
-        returnType: descriptor.returnType(desc),
-        parameterTypes: descriptor.parameterTypes(desc),
-        readableSignature: descriptor.readableSignature(name, desc),
-      };
-    }
-
-    case "update": {
-      const { update } = await load();
-      const reg = await schemaRegistry();
-      const params = coerceFlags(flags, reg.mcSkillUpdateSchema, ALIASES.update);
-      const action = str(params.action) ?? (positional[0] === "apply" || positional[0] === "check" ? positional[0] : undefined);
-      if (action !== "check" && action !== "apply") {
-        throw new CliToolError("update", "缺少必填参数 action（--action check|apply）");
-      }
-      const confirmed = params.confirmed === true;
-      const dryRun = confirmed ? false : typeof params.dryRun === "boolean" ? params.dryRun : true;
-      const result = await update.mcSkillUpdate({
-        action,
-        scope: str(params.scope, "all")!,
-        channel: str(params.channel, "stable")!,
-        tagName: str(params.tagName),
-        dryRun: action === "apply" ? dryRun : undefined,
-        confirmed,
-        allowDirty: params.allowDirty === true,
-        stashDirty: params.stashDirty === true,
-        includePrerelease: params.includePrerelease === true,
-      });
-      return result;
-    }
-
-    case "list-tools": {
-      const reg = await schemaRegistry();
-      const tools = reg.listAllToolSchemas();
-      return {
-        tools: tools.map((t: { name: string; description: string; inputSchema: z.ZodTypeAny }) => ({
-          name: t.name,
-          description: t.description,
-          parameters: zodToJsonSchema(t.inputSchema),
-        })),
-        total: tools.length,
-      };
-    }
-
-    default: {
-      // 通用 dispatch：任意 MCP 工具名直接可用（handler 由 import ./index.js 副作用收集）
-      const entry = toolHandlers.get(cmd);
-      if (!entry) throw new CliToolError(cmd, `未知命令：${cmd}`);
-      const schema = entry.inputSchema as z.ZodTypeAny;
-      const params = coerceFlags(flags, schema, {});
-      // zod 必填校验（coerceFlags 只转换不校验；缺参给出明确提示而非内部错误）
-      const parsed = schema.safeParse(params);
-      if (!parsed.success) {
-        const issues = parsed.error.issues
-          .map((i) => `${i.path.join(".") || "(root)"}：${i.message}`)
-          .join("；");
-        throw new CliToolError(cmd, `参数校验失败：${issues}（可用 list-tools 查看该工具 schema）`);
-      }
-      const raw = await entry.handler(parsed.data);
-      // MCP handler 返回 CallToolResult（{content:[{type:"text",text}]}）→ 提取文本并尽量解析 JSON
-      const content = (raw as { content?: Array<{ type?: string; text?: string }> } | null)?.content;
-      if (Array.isArray(content) && content.length > 0 && typeof content[0]?.text === "string") {
-        const text = content[0].text;
-        try {
-          return JSON.parse(text);
-        } catch {
-          return { text };
-        }
-      }
-      return raw;
-    }
+function cliVersion(): string {
+  try {
+    const pkg = JSON.parse(readFileSync(join(__dirname, "..", "package.json"), "utf8")) as { version?: string };
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
   }
 }
 
-async function main() {
-  const argv = process.argv.slice(2);
-  const cmd = argv[0];
-  if (cmd === "-h" || cmd === "--help" || cmd === "help") {
-    usage();
+function printJson(obj: unknown, compact: boolean): void {
+  process.stdout.write(JSON.stringify(obj, null, compact ? undefined : 2) + "\n");
+}
+
+const USAGE_LINES = [
+  "mc-skill <tool> [--key=value ...] [--project <dir>] [--file field=path]",
+  "mc-skill query --className <className> [--methodName <methodName>] [--version=1.20.1]",
+  "mc-skill convert --from=mcp --to=mojang --name=getHealth [--owner=...] [--descriptor=()F]",
+  "mc-skill convert_mapping --from obfuscated --to yarn --name er --version 1.20.1",
+  "mc-skill descriptor --descriptor=<jniDescriptor> [--name=method]",
+  "mc-skill update --action=check|apply [--dry-run=false --confirm]",
+  "mc-skill validate_project --project .",
+  "mc-skill crash_analyze --crashReport @./crash-reports/latest.txt",
+  "mc-skill list-tools",
+  "mc-skill <任意MCP工具名> --key=value ...",
+];
+
+function printGlobalHelp(json: boolean, compact: boolean): void {
+  if (json || !process.stdout.isTTY) {
+    printJson({ usage: USAGE_LINES }, compact);
     return;
   }
-  if (!cmd || (!COMMANDS.includes(cmd) && !toolHandlers.has(cmd))) {
-    usage();
-    process.exit(2);
+  process.stdout.write(
+    [
+      "mc-skill — 调用 MCP 工具的独立 CLI",
+      "",
+      "用法:",
+      ...USAGE_LINES.map((l) => `  ${l}`),
+      "",
+      "全局 flag: --help  --version  --json  --compact  --fail-on-error  --project <dir>  --file field=path",
+      "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt",
+      "退出码: 0 成功 / 1 工具失败 / 2 用法错误",
+      "",
+    ].join("\n"),
+  );
+}
+
+async function loadRegistry() {
+  return import("./tool-registry.js");
+}
+
+function readLimitedFile(path: string, tool: string): string {
+  try {
+    if (!existsSync(path) || !statSync(path).isFile()) {
+      throw new CliUsageError(tool, `无法读取文件：${path}`);
+    }
+    const size = statSync(path).size;
+    if (size > FILE_MAX_BYTES) {
+      throw new CliUsageError(tool, `文件超过 8MB 上限：${path}`);
+    }
+    const content = readFileSync(path, "utf8");
+    if (Buffer.byteLength(content, "utf8") > FILE_MAX_BYTES) {
+      throw new CliUsageError(tool, `文件超过 8MB 上限：${path}`);
+    }
+    return content;
+  } catch (err) {
+    if (err instanceof CliUsageError) throw err;
+    throw new CliUsageError(tool, `读取文件失败：${path}（${(err as Error).message}）`);
+  }
+}
+
+interface StdinState {
+  used: boolean;
+}
+
+function expandStringValue(value: string, tool: string, stdin: StdinState): string {
+  if (value === "-" || value === "@-") {
+    if (stdin.used) {
+      throw new CliUsageError(tool, "stdin 只能用一次（不要同时对多个字段使用 @- 或 =-）");
+    }
+    stdin.used = true;
+    return readFileSync(0, "utf8");
+  }
+  if (value.startsWith("@@")) return value.slice(1);
+  if (value.startsWith("@")) return readLimitedFile(value.slice(1), tool);
+  return value;
+}
+
+function applyFileSpecs(
+  rest: RawFlags,
+  fileSpecs: string[],
+  tool: string,
+  schema: z.ZodTypeAny,
+): void {
+  const shape = schemaObjectShape(schema);
+  const keys = new Set(Object.keys(shape ?? {}));
+  for (const spec of fileSpecs) {
+    const eq = spec.indexOf("=");
+    if (eq <= 0) {
+      throw new CliUsageError(tool, "--file 需要 field=path 形式（如 --file crashReport=./latest.txt）");
+    }
+    const rawField = spec.slice(0, eq);
+    const field = resolveFlagKey(rawField, keys);
+    if (!field) {
+      throw new UnknownFlagError(rawField);
+    }
+    const path = spec.slice(eq + 1);
+    rest[field] = path === "-" || path.startsWith("@") ? path : `@${path}`;
+  }
+}
+
+function expandFlagFiles(rest: RawFlags, tool: string, stdin: StdinState): void {
+  for (const [k, v] of Object.entries(rest)) {
+    if (Array.isArray(v)) {
+      rest[k] = v.map((item) => (typeof item === "string" ? expandStringValue(item, tool, stdin) : item));
+    } else if (typeof v === "string") {
+      rest[k] = expandStringValue(v, tool, stdin);
+    }
+  }
+}
+
+function unwrapHandlerResult(raw: unknown): { result: unknown; isError: boolean } {
+  if (raw && typeof raw === "object" && "content" in raw) {
+    const r = raw as { isError?: boolean; content?: Array<{ type?: string; text?: string }> };
+    const isError = r.isError === true;
+    const text = r.content?.[0]?.text;
+    if (typeof text === "string") {
+      try {
+        return { result: JSON.parse(text), isError };
+      } catch {
+        return { result: { text }, isError };
+      }
+    }
+    return { result: raw, isError };
+  }
+  return { result: raw, isError: false };
+}
+
+async function maybeHintDataDir(mappedTool: string): Promise<void> {
+  if (!DATA_DIR_TOOLS.has(mappedTool)) return;
+  try {
+    const { hasAnyPlatformData } = await import("./utils/path.js");
+    if (!hasAnyPlatformData()) {
+      process.stderr.write(
+        "提示: 未检测到平台数据目录。请设置 MC_SKILL_DATA 为 data 目录绝对路径，例如 MC_SKILL_DATA=H:/MC_skill/data\n",
+      );
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function printToolHelp(
+  name: string,
+  description: string,
+  schema: z.ZodTypeAny,
+  json: boolean,
+  compact: boolean,
+): void {
+  const parameters = zodToJsonSchema(schema);
+  if (json || !process.stdout.isTTY) {
+    printJson({ tool: name, description, parameters }, compact);
+    return;
+  }
+  const required = Array.isArray((parameters as { required?: string[] }).required)
+    ? (parameters as { required: string[] }).required
+    : [];
+  process.stdout.write(
+    [
+      `${name}`,
+      description,
+      required.length ? `必填: ${required.join(", ")}` : "无必填字段",
+      "参数 schema 见：mc-skill " + name + " --help --json",
+      "",
+    ].join("\n"),
+  );
+}
+
+async function runDescriptor(params: Record<string, unknown>, positional: string[]): Promise<unknown> {
+  const merged = applyPositionalCompat("descriptor", params, positional);
+  const desc = typeof merged.descriptor === "string" ? merged.descriptor : undefined;
+  if (!desc) {
+    throw new CliUsageError("descriptor", "缺少必填参数 descriptor（--descriptor <jniDescriptor>）");
+  }
+  const name = typeof merged.name === "string" ? merged.name : "method";
+  return {
+    descriptor: desc,
+    returnType: returnType(desc),
+    parameterTypes: parameterTypes(desc),
+    readableSignature: readableSignature(name, desc),
+  };
+}
+
+async function main(): Promise<void> {
+  const argv = process.argv.slice(2);
+  if (argv[0] === "--version" || argv[0] === "-V") {
+    process.stdout.write(cliVersion() + "\n");
+    return;
   }
 
-  const { flags, positional } = parseFlags(argv.slice(1));
-  if (positional.length > 0 && POSITIONAL_COMMANDS.has(cmd)) {
+  const { flags: rawFlags, positional } = parseFlags(argv);
+  const { globals, rest } = extractGlobalFlags(rawFlags);
+
+  if (positional.length === 0 && (rawFlags.version === true || rawFlags.version === "true")) {
+    process.stdout.write(cliVersion() + "\n");
+    return;
+  }
+
+  if (positional.length === 0) {
+    if (globals.help || argv[0] === "help") {
+      printGlobalHelp(globals.json, globals.compact);
+      return;
+    }
+    printGlobalHelp(globals.json, globals.compact);
+    process.exitCode = 2;
+    return;
+  }
+
+  const userCmd = positional[0];
+  const cmdPositional = positional.slice(1);
+
+  if (userCmd === "help") {
+    printGlobalHelp(globals.json, globals.compact);
+    return;
+  }
+
+  if (globals.help) {
+    if (userCmd === "list-tools") {
+      printToolHelp("list-tools", "列出全部 MCP 工具及其 JSON Schema", z.object({}), globals.json, globals.compact);
+      return;
+    }
+    if (userCmd === "descriptor") {
+      printToolHelp(
+        "descriptor",
+        "解析 JNI 描述符（本地命令，不加载 MCP 工具）",
+        descriptorSchema,
+        globals.json,
+        globals.compact,
+      );
+      return;
+    }
+    const { tool: mapped } = mapShortCommand(userCmd);
+    const reg = await loadRegistry();
+    const entry = toolHandlers.get(mapped) ?? toolHandlers.get(userCmd);
+    const listed = reg.listAllToolSchemas().find((t) => t.name === mapped || t.name === userCmd);
+    if (!entry && !listed) {
+      printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}` }, globals.compact);
+      process.exitCode = 2;
+      return;
+    }
+    const schema = (entry?.inputSchema ?? listed?.inputSchema) as z.ZodTypeAny;
+    const description = entry?.description ?? listed?.description ?? "";
+    printToolHelp(mapped, description, schema, globals.json, globals.compact);
+    return;
+  }
+
+  const { tool: mappedTool, inject } = mapShortCommand(userCmd);
+
+  if (cmdPositional.length > 0 && POSITIONAL_COMMANDS.has(userCmd)) {
     process.stderr.write(MIGRATION_NOTICE + "\n");
   }
 
   try {
-    const result = await runCommand(cmd, flags, positional);
-    printJson({ success: true, tool: cmd, result });
-  } catch (err) {
-    if (err instanceof CliToolError) {
-      printJson({ success: false, tool: err.tool, error: err.message });
-      process.exit(1);
+    if (userCmd === "list-tools") {
+      const reg = await loadRegistry();
+      const tools = reg.listAllToolSchemas();
+      printJson(
+        {
+          success: true,
+          tool: userCmd,
+          result: {
+            tools: tools.map((t) => ({
+              name: t.name,
+              description: t.description,
+              parameters: zodToJsonSchema(t.inputSchema),
+            })),
+            total: tools.length,
+          },
+        },
+        globals.compact,
+      );
+      return;
     }
-    printJson({ success: false, tool: cmd, error: err instanceof Error ? err.message : String(err) });
-    process.exit(1);
+
+    if (userCmd === "descriptor") {
+      applyFileSpecs(rest, globals.file, userCmd, descriptorSchema);
+      expandFlagFiles(rest, userCmd, { used: false });
+      const params = coerceFlags(rest, descriptorSchema, {});
+      const result = await runDescriptor(params, cmdPositional);
+      printJson({ success: true, tool: userCmd, result }, globals.compact);
+      return;
+    }
+
+    await loadRegistry();
+    const entry = toolHandlers.get(mappedTool);
+    if (!entry) {
+      throw new CliUsageError(userCmd, `未知命令：${userCmd}`);
+    }
+    const schema = entry.inputSchema as z.ZodTypeAny;
+    applyFileSpecs(rest, globals.file, userCmd, schema);
+    expandFlagFiles(rest, userCmd, { used: false });
+    const shape = schemaObjectShape(schema);
+    if (globals.project) {
+      if (shape && "projectPath" in shape) {
+        if (rest.projectPath === undefined) rest.projectPath = globals.project;
+      } else {
+        process.stderr.write(`警告: 该工具不支持 --project（${mappedTool} 无 projectPath 字段）\n`);
+      }
+    }
+
+    const params = applyPositionalCompat(
+      userCmd,
+      coerceFlags(rest, schema, inject),
+      cmdPositional,
+    );
+    const parsed = schema.safeParse(params);
+    if (!parsed.success) {
+      const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "(root)"}：${i.message}`).join("；");
+      throw new CliUsageError(userCmd, `参数校验失败：${issues}（可用 list-tools 或 ${userCmd} --help 查看 schema）`);
+    }
+
+    await maybeHintDataDir(mappedTool);
+    process.stderr.write(`running ${mappedTool}...\n`);
+    try {
+      const raw = await entry.handler(parsed.data as Record<string, unknown>);
+      const { result, isError } = unwrapHandlerResult(raw);
+      if (
+        result &&
+        typeof result === "object" &&
+        ((result as { action?: { code?: string } }).action?.code === "DATA_UNAVAILABLE" ||
+          (result as { error?: { code?: string } }).error?.code === "DATA_UNAVAILABLE" ||
+          (result as { error?: { code?: string } }).error?.code === "PLATFORM_DATA_MISSING")
+      ) {
+        await maybeHintDataDir(mappedTool);
+      }
+      const failed = isToolFailure(result, isError, globals.failOnError);
+      printJson({ success: !failed, tool: userCmd, result }, globals.compact);
+      if (failed) process.exitCode = 1;
+    } finally {
+      try {
+        const { disposeApiData } = await import("./api/index.js");
+        disposeApiData();
+      } catch {
+        /* ignore */
+      }
+      try {
+        const { closeAllYarnDbs } = await import("./mappings/yarn-sqlite.js");
+        closeAllYarnDbs();
+      } catch {
+        /* ignore */
+      }
+    }
+  } catch (err) {
+    if (err instanceof UnknownFlagError) {
+      printJson({ success: false, tool: userCmd, error: err.message }, globals.compact);
+      process.exitCode = 2;
+      return;
+    }
+    if (err instanceof CliUsageError) {
+      printJson({ success: false, tool: err.tool, error: err.message }, globals.compact);
+      process.exitCode = 2;
+      return;
+    }
+    printJson(
+      { success: false, tool: userCmd, error: err instanceof Error ? err.message : String(err) },
+      globals.compact,
+    );
+    process.exitCode = 1;
   }
 }
 
-// 仅直接执行时运行（被 import 时不启动）。比较 realpath 以兼容
-// nvm-windows / npm link 的 symlink 安装（import.meta.url 解析到真实路径，
-// 而 process.argv[1] 保留 symlink 路径）。
 function isMainModule(): boolean {
   const entry = process.argv[1];
   if (!entry) return false;
@@ -450,3 +436,5 @@ if (isMainModule()) {
     process.exit(1);
   });
 }
+
+export { parseFlags, coerceFlags } from "./cli-parse.js";

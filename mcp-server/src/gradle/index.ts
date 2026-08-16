@@ -9,24 +9,58 @@
  */
 
 import { detectLoader } from "../diagnostics/index.js";
+import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 
 export interface GradleQuery {
-  buildGradle: string;
+  buildGradle?: string;
   gradleProperties?: string;
   litemodJson?: string;
   riftmodJson?: string;
   addonManifest?: string;
   quiltModJson?: string;
+  projectPath?: string;
 }
 
 export interface GradleResult {
   errors: string[];
   warnings: string[];
   suggestions: string[];
+  ok?: boolean;
+  action?: ActionEnvelope;
 }
 
 export function diagnoseGradle(query: GradleQuery): GradleResult {
-  const { buildGradle, gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson } = query;
+  if (query.projectPath) {
+    const resolved = resolveProjectDir(query.projectPath);
+    if (!resolved.ok) {
+      return {
+        ok: false,
+        errors: [resolved.action.message],
+        warnings: [],
+        suggestions: [],
+        action: resolved.action,
+      };
+    }
+    const loaded = loadModProject(resolved.root);
+    query = {
+      ...query,
+      buildGradle: preferExplicit(query.buildGradle, loaded.buildGradle),
+      gradleProperties: preferExplicit(query.gradleProperties, loaded.gradleProperties),
+      litemodJson: preferExplicit(query.litemodJson, loaded.litemodJson),
+      riftmodJson: preferExplicit(query.riftmodJson, loaded.riftmodJson),
+      addonManifest: preferExplicit(query.addonManifest, loaded.addonManifest),
+      quiltModJson: preferExplicit(query.quiltModJson, loaded.quiltModJson),
+    };
+  }
+  const buildGradle = query.buildGradle;
+  if (!buildGradle?.trim()) {
+    const action = actionable("INVALID_INPUT", "缺少 build.gradle 正文（可传 buildGradle 或 projectPath）", [
+      "传入 build.gradle 全文，或使用 projectPath / CLI --project 指向工程根目录",
+    ]);
+    return { ok: false, errors: [action.message], warnings: [], suggestions: [], action };
+  }
+  const { gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson } = query;
   const extras = { litemodJson, riftmodJson, addonManifest, quiltModJson };
   const loader = detectLoader(buildGradle, undefined, undefined, undefined, extras);
 

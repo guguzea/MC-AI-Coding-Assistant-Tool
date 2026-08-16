@@ -15,7 +15,7 @@ gradle-*.zip
 *.swo
 .DS_Store
 Thumbs.db
-
+.cursor/
 # MCP server
 mcp-server/node_modules/
 mcp-server/dist/

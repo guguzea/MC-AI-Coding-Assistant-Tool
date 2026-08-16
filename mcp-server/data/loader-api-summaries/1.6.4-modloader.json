@@ -2,6 +2,7 @@
   "file": "1.6.4-modloader",
   "mappingsVersion": "mcp-1.6.4",
   "mapping": "mcp",
+  "skippedExpansion": true,
   "source": "safe-api.md (MCP named / public ModLoader API)",
   "classCount": 2,
   "classes": [

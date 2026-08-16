@@ -113,7 +113,8 @@ try {
   assert.ok(names.includes("validate_at"));
   assert.ok(names.includes("validate_aw"));
   assert.ok(names.includes("analyze_mod_jar"));
-  assert.equal(names.length, 70);
+  assert.equal(names.length, 76);
+  assert.ok(names.includes("download_official_mdk"));
 
   const convertSchema = tools.find((t) => t.name === "convert_mapping")?.inputSchema;
   const fromEnum = convertSchema?.properties?.from?.enum ?? convertSchema?.properties?.from?.anyOf;

@@ -1,8 +1,8 @@
 /**
  * 项目校验模块
  *
- * 对应 Phase 1.5 的 validate_project.py（Python CLI），
- * 此模块提供 MCP 接口版本，供 AI 在 Cursor 中直接调用
+ * 对应已 deprecated 的 Phase 1.5 Python CLI（forge/<ver>/scaffold/cli/validate_project.py）。
+ * 请改用本模块或 node mcp-server/dist/cli.js validate_project --project .
  *
  * 校验规则：
  * A. DeferredRegister 注册完整性（ERROR）
@@ -20,6 +20,14 @@ import {
   type CheckDependenciesExtras,
   type DetectedLoader,
 } from "../diagnostics/index.js";
+import { analyzeCrash, type CrashResult } from "../crash/index.js";
+import type { ActionEnvelope } from "../utils/actionable.js";
+import {
+  loadModProject,
+  mergeJavaFiles,
+  preferExplicit,
+  resolveProjectDir,
+} from "../utils/project-files.js";
 
 export interface ValidateQuery {
   /** mods.toml 文件内容 */
@@ -32,6 +40,8 @@ export interface ValidateQuery {
   gradleProperties?: string;
   /** mixins.json 文件内容（用于 Mixin 配置校验） */
   mixinsJson?: string;
+  /** 模组项目根目录：扫盘填缺失正文（显式正文优先） */
+  projectPath?: string;
   /** 是否同时分析 crash-reports 目录 */
   includeCrashAnalysis?: boolean;
 }
@@ -41,6 +51,9 @@ export interface ValidationResult {
   errors: string[];
   warnings: string[];
   checks: string[];
+  ok?: boolean;
+  action?: ActionEnvelope;
+  crashAnalyses?: Array<{ path: string } & CrashResult>;
 }
 
 // ── 辅助函数 ────────────────────────────────────────────────────────────────
@@ -614,26 +627,70 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
 
 // ── 主函数 ────────────────────────────────────────────────────────────────
 
+function fillValidateQuery(
+  query: ValidateQuery,
+): { query: ValidateQuery; javaWarning?: string; crashReports: Array<{ path: string; content: string }> } | { error: ValidationResult } {
+  if (!query.projectPath) return { query, crashReports: [] };
+  const resolved = resolveProjectDir(query.projectPath);
+  if (!resolved.ok) {
+    return {
+      error: {
+        passed: false,
+        ok: false,
+        errors: [resolved.action.message],
+        warnings: [],
+        checks: [],
+        action: resolved.action,
+      },
+    };
+  }
+  const loaded = loadModProject(resolved.root);
+  if (loaded.javaWarning) {
+    process.stderr.write(`${loaded.javaWarning}\n`);
+  }
+  return {
+    query: {
+      ...query,
+      modsToml: preferExplicit(query.modsToml, loaded.modsToml ?? loaded.neoModsToml),
+      buildGradle: preferExplicit(query.buildGradle, loaded.buildGradle),
+      gradleProperties: preferExplicit(query.gradleProperties, loaded.gradleProperties),
+      mixinsJson: preferExplicit(query.mixinsJson, loaded.mixinsJson),
+      javaFiles: mergeJavaFiles(query.javaFiles, loaded.javaFiles),
+    },
+    javaWarning: loaded.javaWarning,
+    crashReports: loaded.crashReports,
+  };
+}
+
 export function validateProject(query: ValidateQuery): ValidationResult {
+  const filled = fillValidateQuery(query);
+  if ("error" in filled) return filled.error;
+  const javaWarning = filled.javaWarning;
+  const crashReports = filled.crashReports;
   const {
     modsToml,
     javaFiles = [],
     gradleProperties,
     mixinsJson,
-  } = query;
+    includeCrashAnalysis,
+  } = filled.query;
+  query = filled.query;
 
   const loader = detectValidateLoader(query);
   if (NON_FORGE_LOADERS.has(loader)) {
+    const warnings = [warningForNonForge(loader)];
+    if (javaWarning) warnings.push(javaWarning);
     return {
       passed: true,
       errors: [],
-      warnings: [warningForNonForge(loader)],
+      warnings,
       checks: ["loader 识别（非 Forge 早退）"],
     };
   }
 
   const errors: string[] = [];
   const warnings: string[] = [];
+  if (javaWarning) warnings.push(javaWarning);
   const checks: string[] = [
     "mods.toml 语法",
     "mod ID 一致性",
@@ -757,10 +814,19 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   checkMixinConfig(mixinsJson, javaFiles, warnings);
   checkDuplicateRegistryNames(javaFiles, warnings);
 
+  let crashAnalyses: ValidationResult["crashAnalyses"];
+  if (includeCrashAnalysis && crashReports.length > 0) {
+    crashAnalyses = crashReports.map((c) => ({
+      path: c.path,
+      ...analyzeCrash({ crashReport: c.content }),
+    }));
+  }
+
   return {
     passed: errors.length === 0,
     errors,
     warnings,
     checks,
+    ...(crashAnalyses ? { crashAnalyses } : {}),
   };
 }

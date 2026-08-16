@@ -1,0 +1,4 @@
+---- Minecraft Crash Report ----
+Time: 2024-01-01
+Description: CLI @file fixture
+java.lang.IllegalStateException: boom

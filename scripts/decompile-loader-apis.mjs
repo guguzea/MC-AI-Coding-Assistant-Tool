@@ -13,6 +13,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, cpSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { createHash } from "crypto";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
@@ -74,6 +75,21 @@ function mappingsFromManifest(mf) {
 }
 
 async function resolveMappings(name, jarPath) {
+  const jsonSide = `${jarPath}.sidecar`;
+  if (existsSync(jsonSide)) {
+    try {
+      const j = JSON.parse(readFileSync(jsonSide, "utf8"));
+      if (j.mappingsVersion) {
+        return {
+          ...inferMappings(name),
+          mappingsVersion: j.mappingsVersion,
+          mappingsSource: j.mappingsSource || "json-sidecar",
+        };
+      }
+    } catch {
+      /* fall through */
+    }
+  }
   const side = `${jarPath}.mappings.json`;
   if (existsSync(side)) {
     try {
@@ -106,23 +122,12 @@ async function resolveMappings(name, jarPath) {
   return { ...inferred, mappingsVersion: null, mappingsSource: "missing" };
 }
 
-function extractClasses(javaText, limit = 30) {
-  const stripped = javaText.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/.*$/gm, "");
-  const pkg = stripped.match(/^\s*package\s+([a-zA-Z0-9_.]+)\s*;/m)?.[1] ?? "";
-  const classMatch = stripped.match(/\b(?:class|interface|enum|record)\s+([A-Za-z_][A-Za-z0-9_]*)/);
-  if (!classMatch) return null;
-  const methods = [];
-  const re = /(?:public|protected)\s+(?:static\s+)?(?:default\s+)?(?:[\w.<>,?\[\]\s]+)\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g;
-  let m;
-  while ((m = re.exec(stripped)) && methods.length < limit) {
-    if (m[1] !== classMatch[1]) methods.push(m[1]);
-  }
-  return {
-    fqcn: pkg ? `${pkg}.${classMatch[1]}` : classMatch[1],
-    apiStatusInternal: /@ApiStatus\.Internal/.test(javaText),
-    environment: /@Environment\b|@OnlyIn\b/.test(javaText),
-    methods: [...new Set(methods)].slice(0, 20),
-  };
+function extractClasses(javaText, fileHint) {
+  return extractCompilationUnit(javaText, fileHint);
+}
+
+function sha256File(p) {
+  return createHash("sha256").update(readFileSync(p)).digest("hex");
 }
 
 function walkJava(dir, acc = [], limit = 8000) {
@@ -182,13 +187,47 @@ const { readZip, listZipEntries } = await import(
   pathToFileURL(join(ROOT, "mcp-server", "dist", "decompile", "zip-util.js")).href
 );
 const { createStoreZip } = await import(pathToFileURL(join(ROOT, "mcp-server", "dist", "mdk", "index.js")).href);
+const { extractCompilationUnit } = await import(
+  pathToFileURL(join(ROOT, "mcp-server", "dist", "loader-api", "extract.js")).href
+);
+
+const USER_INGEST_KEYS = new Set([
+  "1.12.2-liteloader",
+  "1.10.2-liteloader",
+  "1.8.9-liteloader",
+  "1.13.2-rift",
+  "1.6.4-modloader",
+  "1.5.2-modloader",
+  "1.2.5-modloader",
+]);
 
 const summaries = [];
 const slimDir = join(CACHE, "loader-jars-slim");
 mkdirSync(slimDir, { recursive: true });
 
+const indexPath = join(OUT, "index.json");
+const priorIndex = existsSync(indexPath)
+  ? (() => {
+      try {
+        return JSON.parse(readFileSync(indexPath, "utf8"));
+      } catch {
+        return { cache: CACHE, jars: [] };
+      }
+    })()
+  : { cache: CACHE, jars: [] };
+
 for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.startsWith("_") && !f.includes("-slim"))) {
   const jarPath = join(JAR_DIR, name);
+  const key = basename(name, ".jar");
+  if (USER_INGEST_KEYS.has(key)) {
+    summaries.push({
+      file: name,
+      skipped: "user-ingest-only",
+      invalid: true,
+      note: "LiteLoader/Rift/ModLoader 禁止写入仓库 data/，请 ingest_loader_api 写 cache overlay",
+    });
+    continue;
+  }
   const inferred = await resolveMappings(name, jarPath);
   if (!inferred.mappingsVersion) {
     const invalid = {
@@ -201,6 +240,45 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
     writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(invalid, null, 2), "utf8");
     continue;
   }
+  const jarSha = sha256File(jarPath);
+  const existingPath = join(OUT, `${key}.json`);
+  if (existsSync(existingPath)) {
+    try {
+      const prev = JSON.parse(readFileSync(existingPath, "utf8"));
+      if (prev.sourceJarSha256 && prev.sourceJarSha256 !== jarSha) {
+        summaries.push({
+          file: name,
+          invalid: true,
+          skipped: "CACHE_STALE",
+          note: "jar sha256 与摘要不一致，拒绝静默重抽",
+        });
+        console.error("CACHE_STALE", name, prev.sourceJarSha256, jarSha);
+        continue;
+      }
+      if (prev.sourceJarSha256 && prev.mappingsVersion && prev.mappingsVersion !== inferred.mappingsVersion) {
+        summaries.push({
+          file: name,
+          invalid: true,
+          skipped: "CACHE_STALE",
+          note: `sidecar/摘要 mappings ${prev.mappingsVersion} ≠ ${inferred.mappingsVersion}`,
+        });
+        console.error("CACHE_STALE mappings", name);
+        continue;
+      }
+      if (Array.isArray(prev.classes) && prev.classes.length && (prev.sourceJarSha256 === jarSha || !prev.sourceJarSha256)) {
+        if (!prev.sourceJarSha256) {
+          prev.sourceJarSha256 = jarSha;
+          prev.source = prev.source || "official";
+          writeFileSync(existingPath, JSON.stringify(prev, null, 2), "utf8");
+        }
+        summaries.push({ ...prev, file: name, source: prev.source || "official" });
+        console.log("idempotent keep", name, "classes", prev.classes.length);
+        continue;
+      }
+    } catch {
+      /* rewrite */
+    }
+  }
   const meta = analyzeModJar(jarPath);
   const buf = readFileSync(jarPath);
   let names = [];
@@ -210,12 +288,14 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
     names = [];
   }
   const fqcnIndex = names
-    .filter((n) => (n.endsWith(".class") || n.endsWith(".java")) && !n.includes("$"))
+    .filter((n) => (n.endsWith(".class") || n.endsWith(".java")) && !/\$[0-9]/.test(n))
     .map((n) => fqcnFromClassPath(n.replace(/\.java$/i, ".class")))
-    .filter((fq) => /^(net\.neoforged|net\.minecraftforge|org\.quiltmc)/.test(fq));
+    .filter((fq) => /^(net\.neoforged|net\.minecraftforge|net\.fabricmc|org\.quiltmc)/.test(fq));
   const entries = readZip(buf);
   const javaEntries = [...entries.entries()].filter(
-    ([n]) => n.endsWith(".java") && /(?:^|\/)(?:net\/(?:neoforged|minecraftforge)|org\/quiltmc)\//.test(n.replace(/\\/g, "/")),
+    ([n]) =>
+      n.endsWith(".java") &&
+      /(?:^|\/)(?:net\/(?:neoforged|minecraftforge|fabricmc)|org\/quiltmc)\//.test(n.replace(/\\/g, "/")),
   );
   const classes = [];
   const srcOut = join(CACHE, "loader-api-src", basename(name, ".jar"));
@@ -229,8 +309,8 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       writeFileSync(dest, data);
     }
     for (const jf of walkJava(srcOut)) {
-      const rec = extractClasses(readFileSync(jf, "utf8"));
-      if (rec) classes.push({ ...rec, file: jf.replace(/\\/g, "/") });
+      const recs = extractClasses(readFileSync(jf, "utf8"), jf.replace(/\\/g, "/"));
+      for (const rec of recs) classes.push({ ...rec, file: jf.replace(/\\/g, "/") });
     }
     decompile = {
       found: true,
@@ -257,8 +337,8 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
         /* ignore */
       }
       for (const jf of walkJava(srcOut)) {
-        const rec = extractClasses(readFileSync(jf, "utf8"));
-        if (rec) classes.push({ ...rec, file: jf.replace(/\\/g, "/") });
+        const recs = extractClasses(readFileSync(jf, "utf8"), jf.replace(/\\/g, "/"));
+        for (const rec of recs) classes.push({ ...rec, file: jf.replace(/\\/g, "/") });
       }
     }
     decompile = {
@@ -276,33 +356,54 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
     mappingsSource: inferred.mappingsSource,
     mapping: inferred.mapping,
     version: inferred.version,
+    sourceJarSha256: jarSha,
+    source: "official",
     loaders: meta.loaders,
     modId: meta.modId,
     decompile,
     classCount: classes.length,
     fqcnIndexCount: fqcnIndex.length,
-    fqcnIndex: fqcnIndex.slice(0, 4000),
-    classes: classes.slice(0, 400),
+    fqcnIndex: fqcnIndex.filter((fq) => fq && !/\$[0-9]/.test(fq)),
+    classes,
   };
   summaries.push(summary);
   writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(summary, null, 2), "utf8");
+  writeFileSync(
+    `${jarPath}.sidecar`,
+    JSON.stringify(
+      {
+        mappingsVersion: inferred.mappingsVersion,
+        mappingsSource: inferred.mappingsSource,
+        sourceJarSha256: jarSha,
+      },
+      null,
+      2,
+    ),
+    "utf8",
+  );
 }
 
+const byFile = new Map(
+  (priorIndex.jars || []).filter((j) => j?.file).map((j) => [j.file, j]),
+);
+for (const s of summaries) {
+  if (!s.file || s.skipped === "user-ingest-only") continue;
+  byFile.set(s.file, {
+    file: s.file,
+    mappingsVersion: s.mappingsVersion,
+    mappingsSource: s.mappingsSource,
+    classCount: s.classCount,
+    fqcnIndexCount: s.fqcnIndexCount,
+    sourceJarSha256: s.sourceJarSha256,
+    source: s.source || "official",
+    fromSourcesJar: s.decompile?.fromSourcesJar,
+    invalid: s.invalid || false,
+  });
+}
 writeFileSync(
   join(OUT, "index.json"),
   JSON.stringify(
-    {
-      cache: CACHE,
-      jars: summaries.map((s) => ({
-        file: s.file,
-        mappingsVersion: s.mappingsVersion,
-        mappingsSource: s.mappingsSource,
-        classCount: s.classCount,
-        fqcnIndexCount: s.fqcnIndexCount,
-        fromSourcesJar: s.decompile?.fromSourcesJar,
-        invalid: s.invalid || false,
-      })),
-    },
+    { cache: CACHE, jars: [...byFile.values()].sort((a, b) => String(a.file).localeCompare(String(b.file))) },
     null,
     2,
   ),

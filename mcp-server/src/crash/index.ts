@@ -1,11 +1,5 @@
-/**
- * 崩溃日志分析模块
- *
- * 功能：
- * 1. 解析崩溃堆栈 / 文件名后缀
- * 2. 通过映射表反混淆类名
- * 3. 返回可能成因和修复建议（含 crashKind、logHints）
- */
+import { existsSync, readFileSync, statSync } from "fs";
+import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export type CrashKind =
   | "fml"
@@ -26,7 +20,8 @@ export type CrashKind =
 export const CRASH_REPORT_WIKI = "https://minecraft.wiki/w/Crash_report";
 
 export interface CrashQuery {
-  crashReport: string;
+  crashReport?: string;
+  crashReportPath?: string;
   version?: string;
 }
 
@@ -39,6 +34,8 @@ export interface CrashResult {
   crashKind?: CrashKind;
   /** 建议同时查看的日志 */
   logHints?: string[];
+  ok?: boolean;
+  action?: ActionEnvelope;
 }
 
 // 已知的常见崩溃原因模式（从 8 种扩展至 16 种 + 加载期）
@@ -396,7 +393,57 @@ function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
 }
 
 export function analyzeCrash(query: CrashQuery): CrashResult {
-  const { crashReport } = query;
+  let crashReport = query.crashReport;
+  if (!crashReport?.trim() && query.crashReportPath) {
+    const p = query.crashReportPath;
+    try {
+      if (!existsSync(p) || !statSync(p).isFile()) {
+        const action = actionable("INVALID_INPUT", `无法读取 crashReportPath：${p}`, [
+          "传入崩溃报告全文 crashReport，或有效的 crashReportPath",
+        ]);
+        return {
+          ok: false,
+          probableCause: action.message,
+          fixSuggestions: action.nextSteps,
+          deobfuscated: [],
+          relatedMistakes: [],
+          crashKind: "unknown",
+          logHints: [],
+          action,
+        };
+      }
+      crashReport = readFileSync(p, "utf8");
+    } catch (err) {
+      const action = actionable("INVALID_INPUT", `读取 crashReportPath 失败：${(err as Error).message}`, [
+        "检查路径是否存在且可读",
+      ]);
+      return {
+        ok: false,
+        probableCause: action.message,
+        fixSuggestions: action.nextSteps,
+        deobfuscated: [],
+        relatedMistakes: [],
+        crashKind: "unknown",
+        logHints: [],
+        action,
+      };
+    }
+  }
+  if (!crashReport?.trim()) {
+    const action = actionable("INVALID_INPUT", "需要 crashReport 或 crashReportPath", [
+      "传入崩溃报告全文，或 CLI 使用 --crashReport @./crash-reports/latest.txt",
+    ]);
+    return {
+      ok: false,
+      probableCause: action.message,
+      fixSuggestions: action.nextSteps,
+      deobfuscated: [],
+      relatedMistakes: [],
+      crashKind: "unknown",
+      logHints: [],
+      action,
+    };
+  }
   if (typeof crashReport === "string" && crashReport.length > 512_000) {
     return {
       probableCause: "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP",

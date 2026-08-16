@@ -1,0 +1,16 @@
+{
+  "note": "官方不代下这些 loader jar。用户自备后 ingest_loader_api 只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止提交进仓库。已有手摘摘要的 key 仍可 query_loader_api。",
+  "keys": [
+    { "key": "1.12.2-liteloader", "platform": "liteloader", "minecraftVersion": "1.12.2", "reason": "forbidden_redistribute", "hasOfficialHandExtract": true },
+    { "key": "1.10.2-liteloader", "platform": "liteloader", "minecraftVersion": "1.10.2", "reason": "forbidden_redistribute", "hasOfficialHandExtract": false },
+    { "key": "1.8.9-liteloader", "platform": "liteloader", "minecraftVersion": "1.8.9", "reason": "forbidden_redistribute", "hasOfficialHandExtract": false },
+    { "key": "1.13.2-rift", "platform": "rift", "minecraftVersion": "1.13.2", "reason": "Rift-MDK 无 LICENSE，禁止官方代下", "hasOfficialHandExtract": true },
+    { "key": "1.6.4-modloader", "platform": "modloader", "minecraftVersion": "1.6.4", "reason": "无官方 Gradle API 坐标", "hasOfficialHandExtract": true },
+    { "key": "1.5.2-modloader", "platform": "modloader", "minecraftVersion": "1.5.2", "reason": "无官方 Gradle API 坐标", "hasOfficialHandExtract": false },
+    { "key": "1.2.5-modloader", "platform": "modloader", "minecraftVersion": "1.2.5", "reason": "无官方 Gradle API 坐标", "hasOfficialHandExtract": false }
+  ],
+  "noIngest": [
+    { "platform": "bedrock", "reason": "不是 Java loader jar，请用 search_bedrock_docs" },
+    { "platform": "forge", "versions": ["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2"], "reason": "仅 javadoc / search_docs；1.7.10 maven MDK 404，禁止邻版 MDK" }
+  ]
+}

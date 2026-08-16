@@ -115,6 +115,8 @@ id 'net.minecraftforge.gradle'
 1. 询问用户当前使用的平台和 Minecraft 版本
 2. 根据回答加载对应平台的规则
 
+确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / 技能索引送进当前对话。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun）。**禁止**读邻档 00–10。MCP **不能**开关 IDE 扫描器。
+
 ## 第二步：加载对应平台的规则
 
 确认平台后，阅读 `平台/版本/.cursor/rules/` 目录下的所有 `.mdc` 文件。
@@ -268,7 +270,7 @@ Decision: 选择注册方式
 
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
-- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `search_*_docs` 或反编译。
+- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
 - **平台工具不要混用**：`diagnose_gradle` / `validate_project` / `get_version_info` 不是通用工程工具。`diagnose_gradle` 对 `net.minecraftforge.gradle.liteloader` 走轻量模式（不跑 FG6/Java17/1.20），并接受 extras（`litemodJson` 等）；Rift / BaseMod 早退。`validate_project` 对非 Forge **早退改口**，不跑 DeferredRegister/@Mod。基岩 / Quilt Loom / 无 Gradle 的 MCP 工程不要当 Forge 诊断。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
 - **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
@@ -282,7 +284,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，70 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，76 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。

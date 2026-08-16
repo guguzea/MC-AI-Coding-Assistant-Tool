@@ -1,5 +1,9 @@
 # CLI 校验工具说明
 
+> **DEPRECATED**：本 Python CLI 已停止维护。请改用：
+> `node mcp-server/dist/cli.js validate_project --project .`
+> （或 MCP 工具 `validate_project`）。文件保留，校验算法不再更新。
+
 ## 用途
 
 在 AI 生成代码后，用本工具自动检查常见错误，确保代码可以编译运行。

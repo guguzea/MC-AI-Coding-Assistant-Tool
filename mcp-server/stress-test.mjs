@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Import the built dist directly (simulates what MCP server does)
-const { queryApi } = await import(`file://${join(__dirname, "dist", "api", "index.js")}`);
+const { queryApi, disposeApiData } = await import(`file://${join(__dirname, "dist", "api", "index.js")}`);
 
 // ── Test queries ────────────────────────────────────────────────────────────────
 const CLASS_QUERIES = [
@@ -177,6 +177,8 @@ async function main() {
   } else {
     console.log("\n~ Some queries are slower than expected");
   }
+
+  disposeApiData();
 }
 
 main().catch(console.error);
