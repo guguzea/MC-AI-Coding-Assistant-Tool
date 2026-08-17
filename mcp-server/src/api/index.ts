@@ -59,6 +59,7 @@ export interface ApiResult {
   mappings: Record<string, string>;
   suggestions?: string[];
   notes?: string[];
+  warning?: string;
   action?: ActionEnvelope;
 }
 
@@ -655,6 +656,16 @@ function buildMethodResult(
   };
 }
 
+const QUERY_API_EMPTY_INDEX =
+  "当前版本无 Vanilla API 索引，无法执行 query_api；请用 search_*_docs 或反编译 jar。query_api 覆盖约 1.16.5–1.20.4。found:false 不代表游戏里没有该类。";
+
+function queryApiCoverageWarning(version: string, classCount?: number): string | undefined {
+  const v = version.trim();
+  const outOfRange = isUnobfuscatedMcVersion(v) || /^1\.21(\.|$)/.test(v) || /^26\./.test(v);
+  if (outOfRange || classCount === 0) return QUERY_API_EMPTY_INDEX;
+  return undefined;
+}
+
 // ── 主查询函数 ─────────────────────────────────────────────────────────────
 
 export async function queryApi(query: ApiQuery): Promise<ApiResult> {
@@ -665,10 +676,13 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   await startPreloader(version);
 
   const vData = getVersionData(version);
+  const coverageWarning = queryApiCoverageWarning(version, vData.classNames?.length ?? 0);
+  const withCoverage = (r: ApiResult): ApiResult =>
+    coverageWarning ? { ...r, warning: r.warning ?? coverageWarning } : r;
 
   // 数据不可用时的降级响应
   if (!vData.loaded) {
-    return withAction(
+    return withCoverage(withAction(
       {
         found: false,
         className,
@@ -688,7 +702,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         ],
         ["get_server_status", "diagnose_data_paths"],
       ),
-    );
+    ));
   }
 
   // 1. 精确类名查询
@@ -704,16 +718,16 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
       if (acceptFuzzyHit(best)) {
         cls = vData.apiIndex[best.name];
         if (cls) {
-          return buildClassResult(toDot(best.name), cls, suggestions.slice(1), version);
+          return withCoverage(buildClassResult(toDot(best.name), cls, suggestions.slice(1), version));
         }
       }
-      return {
+      return withCoverage({
         found: false,
         className,
         mappings: { mojang: slashName, parchment: slashName },
         suggestions: [`未找到 ${className}。类似类：`, ...suggestions],
         notes: ["提示：类名区分大小写，使用完整包名效果更佳；纯拼写近似不会当作命中"],
-      };
+      });
     }
     const emptyIndex = !vData.classNames || vData.classNames.length === 0;
     const unobf = isUnobfuscatedMcVersion(version);
@@ -737,13 +751,13 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           `若你在查 NeoForge/MC ${version}，本工具无对应索引；请改用 search_neoforge_docs / convert_mapping，或换 version=1.20.1/1.20.4 查相近 Vanilla API。`,
       );
     }
-    return {
+    return withCoverage({
       found: false,
       className,
       mappings: { mojang: slashName, parchment: slashName },
       suggestions: [`未找到类 ${className}，请检查类名是否正确`],
       notes,
-    };
+    });
   }
 
   // 3. 类找到了，查找方法
@@ -770,7 +784,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         ...similarSuggestions,
       ];
       if (yarnSuggestions.length > 0 || similarSuggestions.length > 0) {
-        return {
+        return withCoverage({
           found: false,
           className: toDot(slashName),
           methodName,
@@ -779,11 +793,11 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           notes: [
             `${version} 共收录 ${cls.methods.length} 个方法（含 Mojang supplement），方法名区分大小写`,
             "Forge 1.17+ 使用 Mojang 映射名（如 Entity.level()），不是 Yarn（getWorld）",
-            `提示：如果你看到的是混淆名（如 aqm），请访问 https://mappings.xhyrom.dev/${version}/ 反查`,
+            `提示：如果你看到的是混淆名（如 aqm），请访问 https://mappings.xhyrom.dev/${version} 反查`,
           ],
-        };
+        });
       }
-      return {
+      return withCoverage({
         found: false,
         className: toDot(slashName),
         methodName,
@@ -796,12 +810,12 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           `${version} 共收录 ${cls.methods.length} 个方法，方法名区分大小写`,
           "请确认已用 parchment-extractor（Mojang client.txt supplement）重建 extracted",
         ],
-      };
+      });
     }
-    return buildMethodResult(toDot(slashName), cls, matched);
+    return withCoverage(buildMethodResult(toDot(slashName), cls, matched));
   }
 
-  return buildClassResult(toDot(slashName), cls, [], version);
+  return withCoverage(buildClassResult(toDot(slashName), cls, [], version));
 }
 
 // ── 导出 Trie 索引供外部使用（如 store.ts 的搜索）─────────────────────────

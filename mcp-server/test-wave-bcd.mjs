@@ -120,6 +120,21 @@ function testWorkflow() {
   const localize = getWorkflowTemplate("mc-localize-mod");
   assert.equal(localize.found, true);
   assert.ok(localize.body?.includes("localize_mod"));
+
+  const setup = getWorkflowTemplate("mc-setup-env");
+  assert.equal(setup.found, true);
+  assert.ok(setup.body?.includes("detect_mod_project"));
+  assert.ok(setup.body?.includes("Fabric") || setup.body?.includes("Quilt"));
+  assert.doesNotMatch(setup.body ?? "", /validate_project[\s\S]{0,20}通过即结束/);
+
+  const publish = getWorkflowTemplate("mc-publish");
+  assert.equal(publish.found, true);
+  assert.ok(publish.body?.includes("build/libs"));
+
+  for (const name of ["mc-new-item", "mc-new-blockentity", "mc-mixin", "mc-worldgen", "mc-config", "mc-gametest"]) {
+    const w = getWorkflowTemplate(name);
+    assert.equal(w.found, true, name);
+  }
 }
 
 function testPatternsResource() {
@@ -158,6 +173,29 @@ function testMixinsJson() {
     }),
   );
   assert.ok(summary.warnings.length > 0);
+  assert.ok(summary.common.includes("BadMixin"), JSON.stringify(summary));
+  assert.ok(summary.client.includes("ExampleMixin"));
+  assert.ok(!summary.client.includes("BadMixin"));
+
+  const ow = parseMixinJavaSource(`
+@Mixin(Foo.class)
+public class FooMixin {
+  @Overwrite
+  public void tick() {}
+}
+`);
+  const overwrite = ow?.injections.find((i) => i.kind === "Overwrite");
+  assert.ok(overwrite, JSON.stringify(ow));
+  assert.equal(overwrite.methodRefs.length, 0);
+
+  const arg = parseMixinJavaSource(`
+@Mixin(Foo.class)
+public class FooMixin {
+  @ModifyArg(method = "hurt", at = @At("HEAD"))
+  private float edit(float f) { return f; }
+}
+`);
+  assert.ok(arg?.injections.some((i) => i.kind === "ModifyArg"), JSON.stringify(arg));
 }
 
 async function main() {

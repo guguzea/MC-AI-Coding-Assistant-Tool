@@ -16,9 +16,13 @@ import {
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
 import {
+  fabricRulesOverlay,
   findPack,
+  inspectPack,
   listRuleFiles,
   listSkillIndex,
+  mappingNoteForFabricSkill,
+  mergeQuiltFabricSkills,
   readText,
 } from "./catalog.js";
 import { detectModProject } from "./detect.js";
@@ -163,6 +167,33 @@ function skillStub(relPosix: string, name: string, description: string, platform
   ].join("\n");
 }
 
+function quiltCopiedSkill(abs: string, name: string, description: string, fabricVer: string): string {
+  const raw = readFileSync(abs, "utf8");
+  const note = mappingNoteForFabricSkill(fabricVer);
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  if (!m) {
+    return `---\nname: ${name}\ndescription: ${description}\nsource: fabric/${fabricVer}\n---\n\n${note}\n\n${raw}`;
+  }
+  let fm = m[1];
+  if (!/^source:/m.test(fm)) fm += `\nsource: fabric/${fabricVer}`;
+  return `---\n${fm}\n---\n\n${note}\n\n${m[2]}`;
+}
+
+function skillContentForWrite(
+  sk: { name: string; description: string; relPosix: string; source?: string },
+  platform: string,
+  version: string,
+): string {
+  if (platform === "quilt" && sk.source?.startsWith("fabric/")) {
+    const abs = join(resolveRepoRoot(), sk.relPosix.split("/").join(sep));
+    if (existsSync(abs)) {
+      const fabricVer = sk.source.slice("fabric/".length);
+      return quiltCopiedSkill(abs, sk.name, sk.description, fabricVer);
+    }
+  }
+  return skillStub(sk.relPosix, sk.name, sk.description, platform, version);
+}
+
 function loadManifest(projectRoot: string): Manifest | null {
   const p = join(projectRoot, ".mc-skill", "pack-manifest.json");
   if (!existsSync(p)) return null;
@@ -183,7 +214,12 @@ function buildWritePlan(opts: {
   const pack = findPack(opts.platform, opts.version);
   if (!pack) return { ops: [], skipped: [{ rel: "", reason: "PACK_NOT_FOUND" }] };
   const rules = listRuleFiles(pack.packDir);
-  const skills = opts.includeSkills ? listSkillIndex(pack.packDir) : [];
+  const overlay = opts.platform === "quilt" ? fabricRulesOverlay(opts.version) : undefined;
+  const skills = opts.includeSkills
+    ? opts.platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir
+      ? mergeQuiltFabricSkills(pack.packDir, overlay.fabricDir, opts.version)
+      : listSkillIndex(pack.packDir)
+    : [];
   const existingManifest = loadManifest(opts.projectRoot);
   const owned = new Set((existingManifest?.createdFiles ?? []).map(posixRel));
   const ops: PlannedFile[] = [];
@@ -235,7 +271,7 @@ function buildWritePlan(opts: {
         ops.push({
           kind: "create",
           rel,
-          content: skillStub(sk.relPosix, sk.name, sk.description, opts.platform, opts.version),
+          content: skillContentForWrite(sk, opts.platform, opts.version),
           host,
         });
       }
@@ -299,14 +335,22 @@ export function writePlatformPack(args: WriteArgs) {
     version = String(det.knowledgeVersion ?? det.minecraftVersion ?? "");
   }
 
-  const pack = findPack(platform, version);
-  if (!pack) {
+  const inspected = inspectPack(platform, version);
+  if (!inspected || inspected.status === "draft") {
+    const draft = inspected?.status === "draft";
     return {
       ok: false,
       resolvedProjectRoot: proj.root,
-      action: actionable("PACK_NOT_FOUND", `没有 ${platform} ${version} 规则树。`, ["改用文档工具，禁止邻档"]),
+      action: actionable(
+        "PACK_NOT_FOUND",
+        draft
+          ? `${platform} ${version} 规则包 pack-status=draft，禁止 session/write。`
+          : `没有 ${platform} ${version} 规则树。`,
+        ["改用文档工具，禁止邻档"],
+      ),
     };
   }
+  const pack = inspected.pack;
 
   const { ops, skipped } = buildWritePlan({
     projectRoot: proj.root,

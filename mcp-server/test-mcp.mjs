@@ -410,10 +410,12 @@ async function runTests() {
     "ingest_loader_api",
     "detect_mod_project",
     "activate_platform_pack",
+    "check_publish_ready",
+    "inspect_runtime",
   ]) {
     assert.ok(toolNames.includes(required), `tools/list missing ${required}`);
   }
-  assert.equal(toolNames.length, 76, `expected 76 tools, got ${toolNames.length}`);
+  assert.equal(toolNames.length, 78, `expected 78 tools, got ${toolNames.length}`);
   assert.ok(toolNames.includes("download_official_mdk"), "tools/list missing download_official_mdk");
   for (const waveD of ["validate_at", "validate_aw"]) {
     assert.ok(toolNames.includes(waveD), `tools/list missing ${waveD}`);

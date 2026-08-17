@@ -550,6 +550,26 @@ export function joinSearchWarnings(...parts: Array<string | undefined | false>):
   return xs.length ? xs.join("；") : undefined;
 }
 
+export const DOCS_FALLBACK_PACK_NOTE =
+  "仅作 API 参考，不得据此推断规则树适用；本版无树则 PACK_NOT_FOUND。";
+
+export function withDocsFallbackFields<T extends Record<string, unknown>>(payload: T): T {
+  const versionFallback = Boolean(payload.versionFallback);
+  if (!versionFallback) return payload;
+  const requested = String(payload.version ?? "");
+  const resolved = String(payload.resolvedVersion ?? payload.source_version ?? "");
+  return {
+    ...payload,
+    fallback: true,
+    source_version: resolved,
+    warning: joinSearchWarnings(
+      typeof payload.warning === "string" ? payload.warning : undefined,
+      DOCS_FALLBACK_PACK_NOTE,
+      requested && resolved ? `请求版本 ${requested} 已映射到 ${resolved}` : undefined,
+    ),
+  };
+}
+
 /**
  * 将语义检索命中与 L0 结果再融合（handler 层使用）。
  * - 有语义命中：对 L0 id 排行 ∪ 语义 id 排行做 **RRF 再融合**（非简单 append）

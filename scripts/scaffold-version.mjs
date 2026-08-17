@@ -1,0 +1,134 @@
+#!/usr/bin/env node
+/**
+ * 为有官方 docs 索引的版本生成 draft 规则树骨架。
+ * 无 index-l0.json 则退出、不写规则树。禁止从邻版复制方法名。
+ *
+ * 用法：node scripts/scaffold-version.mjs --platform=neoforge --minecraftVersion=1.20.6
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const RULES = [
+  ["00", "project-setup", "工程 / 构建"],
+  ["01", "registry", "注册"],
+  ["02", "block", "方块"],
+  ["03", "item", "物品"],
+  ["04", "entity", "实体"],
+  ["05", "events", "事件"],
+  ["06", "networking", "网络"],
+  ["07", "datagen", "数据生成"],
+  ["08", "client-server", "物理端"],
+  ["09", "anti-patterns", "反模式"],
+  ["10", "gui", "GUI"],
+];
+
+function arg(name) {
+  const p = process.argv.find((a) => a.startsWith(`--${name}=`));
+  return p ? p.slice(name.length + 3) : "";
+}
+
+function findIndexL0(platform, ver) {
+  const candidates = [
+    path.join(ROOT, "data", `${platform}_${ver}`, `${platform}-docs`, ver, "index-l0.json"),
+    path.join(ROOT, "data", `${platform}_${ver}`, "neoforge-docs", ver, "index-l0.json"),
+    path.join(ROOT, "data", `${platform}_${ver}`, "forge-docs", ver, "index-l0.json"),
+    path.join(ROOT, "data", `${platform}_${ver}`, "fabric-docs", ver, "index-l0.json"),
+    path.join(ROOT, "data", `${platform}_${ver}`, "quilt-docs", ver, "index-l0.json"),
+  ];
+  return candidates.find((p) => fs.existsSync(p));
+}
+
+function ruleBody(platform, ver, num, slug, title, docsTool) {
+  return `---
+description: ${num} — ${title}（${platform} ${ver}）draft。只许填本版文档 id。
+globs:
+alwaysApply: true
+status: draft
+---
+
+# ${num} — ${title}
+
+> pack-status: draft。禁止把本 FIXME 当可执行规则。
+> 引用自该版 l0，禁止邻档 API。只许填本版 \`${docsTool}\` / index-l0 能核到的 id。
+
+## Decision Flow
+
+\`\`\`
+FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
+\`\`\`
+`;
+}
+
+function agentsBody(platform, ver, docsTool, indexRel) {
+  return `# ${platform} ${ver} — Agent 总纲（draft）
+
+> pack-status: draft。**未核过核心 00/01/09 之前禁止 activate_platform_pack session/write。**
+> 只适用于 **${platform} ${ver}**。禁止读取邻档 00–10 或把邻版方法名改版本号冒充。
+> 文档：\`${docsTool}\`（version=${ver}）。索引：\`${indexRel}\`。
+
+## 基本信息
+
+| 项 | 值 |
+|---|---|
+| 平台 | ${platform} ${ver} |
+| 文档 | ${docsTool} |
+| 状态 | draft |
+
+类名必须能在本版文档或 \`knowledge/common/verified-api-${ver}.md\` 核到。核不到的编号保持 FIXME。
+`;
+}
+
+function main() {
+  const platform = arg("platform").trim().toLowerCase();
+  const ver = arg("minecraftVersion").trim();
+  if (!platform || !ver) {
+    console.error("需要 --platform= 与 --minecraftVersion=");
+    process.exit(1);
+  }
+  const indexPath = findIndexL0(platform, ver);
+  if (!indexPath) {
+    console.error(`没有 ${platform} ${ver} 的 index-l0.json，不写规则树。`);
+    process.exit(2);
+  }
+  const packDir = path.join(ROOT, platform, ver);
+  const rulesDir = path.join(packDir, ".cursor", "rules");
+  fs.mkdirSync(rulesDir, { recursive: true });
+  const docsTool =
+    platform === "neoforge"
+      ? "search_neoforge_docs"
+      : platform === "fabric"
+        ? "search_fabric_docs"
+        : platform === "forge"
+          ? "search_forge_docs"
+          : "search_docs";
+  const indexRel = path.relative(ROOT, indexPath).replace(/\\/g, "/");
+  fs.writeFileSync(
+    path.join(packDir, "pack.meta.json"),
+    `${JSON.stringify({ "pack-status": "draft", status: "draft", platform, minecraftVersion: ver, index: indexRel }, null, 2)}\n`,
+    "utf8",
+  );
+  fs.writeFileSync(path.join(packDir, "AGENTS.md"), agentsBody(platform, ver, docsTool, indexRel), "utf8");
+  for (const [num, slug, title] of RULES) {
+    fs.writeFileSync(
+      path.join(rulesDir, `${num}-${slug}.mdc`),
+      ruleBody(platform, ver, num, slug, title, docsTool),
+      "utf8",
+    );
+  }
+  const commonDir = path.join(packDir, "knowledge", "common");
+  fs.mkdirSync(commonDir, { recursive: true });
+  const verified = path.join(commonDir, `verified-api-${ver}.md`);
+  if (!fs.existsSync(verified)) {
+    fs.writeFileSync(
+      verified,
+      `# ${platform} ${ver} 已核实 API\n\n> draft。只记录已用 ${docsTool} / processed md 核对过的类名。\n`,
+      "utf8",
+    );
+  }
+  console.log(`draft pack: ${path.relative(ROOT, packDir)} (index ${indexRel})`);
+}
+
+main();

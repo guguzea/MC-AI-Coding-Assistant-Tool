@@ -34,6 +34,8 @@ import {
 import { queryLoaderApi, searchLoaderApi, ingestLoaderApi } from "../loader-api/index.js";
 import { detectModProject } from "../platform-pack/detect.js";
 import { activatePlatformPack } from "../platform-pack/index.js";
+import { checkPublishReady } from "../publish/index.js";
+import { inspectRuntime } from "../runtime-inspect/index.js";
 
 // ── Wave 工具 inputSchema（导出供 CLI list-tools / schema 驱动解析复用）────────
 export const queryRegistrySchema = z.object({
@@ -78,6 +80,14 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-ingame-iterate",
     "mc-localize-mod",
     "mc-decompile-mod",
+    "mc-new-item",
+    "mc-new-blockentity",
+    "mc-mixin",
+    "mc-worldgen",
+    "mc-config",
+    "mc-gametest",
+    "mc-publish",
+    "mc-setup-env",
   ]),
 });
 export const localizeModSchema = z.object({
@@ -106,19 +116,26 @@ export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
   packetName: z.string(),
   platform: z
-    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1"])
-    .describe("必填。省略则 error，禁止默认 forge_1.20.1"),
+    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1", "fabric_1.21", "fabric_26.1"])
+    .describe("必填。须带版本后缀；禁止只传 fabric / neoforge"),
 });
 export const generateCapabilitySchema = z.object({
   modId: z.string(),
   name: z.string(),
-  neoforge: z.boolean().optional(),
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge=Capability；neoforge=1.20.4+ Data Attachment；fabric/quilt 改口 CCA"),
+  version: z.string().describe("必填。neoforge 仅 1.20.4+"),
 });
 export const generateConfigSchema = z.object({
   modId: z.string(),
-  loader: z.enum(["forge", "neoforge", "fabric"]).optional(),
+  loader: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填，禁止默认 forge"),
+  version: z.string().describe("必填。neoforge 1.20.4 用 ForgeConfigSpec+neoforged；1.21+/26.1 用 ModConfigSpec；fabric/quilt 为 Cloth Config 骨架"),
 });
-export const generateEntityRendererSchema = z.object({ modId: z.string(), entityName: z.string() });
+export const generateEntityRendererSchema = z.object({
+  modId: z.string(),
+  entityName: z.string(),
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge 1.20.1/1.20.4 与 neoforge 26.1 生成代码"),
+  version: z.string().describe("必填。forge 仅 1.20.1 / 1.20.4；neoforge 仅 26.1"),
+});
 export const generateWorldgenSchema = z.object({ modId: z.string(), featureName: z.string() });
 export const analyzeLogSchema = z.object({
   logText: z.string().optional().describe("日志全文（与 logPath 二选一）"),
@@ -275,6 +292,21 @@ export const activatePlatformPackSchema = z.object({
   confirmed: z.boolean().optional(),
   projectPath: z.string().optional().describe("用户模组工程绝对路径（CLI --project）。write 真写只认此 allowlist"),
 });
+export const checkPublishReadySchema = z.object({
+  projectPath: z.string().optional().describe("模组工程根：扫元数据与 build/libs"),
+  modsToml: z.string().optional(),
+  fabricModJson: z.string().optional(),
+  quiltModJson: z.string().optional(),
+  neoModsToml: z.string().optional(),
+});
+export const inspectRuntimeSchema = z.object({
+  logsDir: z.string().optional().describe("用户确认的日志目录（优先，只读该路径）"),
+  crashReportsDir: z.string().optional().describe("crash-reports 目录"),
+  projectPath: z.string().optional().describe("未传 logsDir 时有界探测 run/logs 等，禁止全盘"),
+  maxLines: z.number().optional().describe("日志尾部行数，默认 200，封顶 2000"),
+  maxBytes: z.number().optional().describe("读取字节上限，默认 512KiB"),
+  version: z.string().optional(),
+});
 
 function jsonResult(obj: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] };
@@ -321,7 +353,8 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Validate datapack JSON (lite schema)",
       description:
-        "recipe / loot_table / advancement / tag 的精简 JSON 校验（1.20.1 / 1.21.1）。" +
+        "recipe / loot_table / advancement / tag 的精简 JSON 校验。" +
+        "minecraft:crafting_special_* 与 smithing_trim 等无 result 不报错；普通 crafting_shaped 缺 result 仍报。" +
         "【边界】不是全 pack_format 官方 schema。",
       inputSchema: validateDatapackJsonSchema,
     },
@@ -394,21 +427,28 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("generate_capability", {
     title: "Generate Capability / DataAttachment skeleton",
-    description: "Generate Capability / DataAttachment skeleton。返回 Capability/DataAttachment 骨架文本，不写盘。",
+    description:
+      "Generate Capability / DataAttachment skeleton。platform 与 version 必填。" +
+      "forge → Forge Capability；neoforge → 仅 1.20.4+ Data Attachment（不是 Forge Capability）；" +
+      "fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。",
     inputSchema: generateCapabilitySchema,
-  }, async (a) => jsonResult(generateCapability(a.modId, a.name, a.neoforge ?? false)));
+  }, async (a) => jsonResult(generateCapability(a.modId, a.name, a.platform, a.version)));
 
   server.registerTool("generate_config", {
     title: "Generate config spec skeleton",
-    description: "Generate config spec skeleton。返回配置规范骨架文本，不写盘。",
+    description:
+      "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。" +
+      "neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 改口 mc-config。不写盘。",
     inputSchema: generateConfigSchema,
-  }, async (a) => jsonResult(generateConfig(a.modId, a.loader ?? "forge")));
+  }, async (a) => jsonResult(generateConfig(a.modId, a.loader, a.version)));
 
   server.registerTool("generate_entity_renderer", {
     title: "Generate entity renderer skeleton",
-    description: "Generate entity renderer skeleton。返回实体渲染器骨架文本，不写盘。",
+    description:
+      "Generate entity renderer skeleton。platform 与 version 必填。当前仅支持 forge 1.20.1 / 1.20.4（@OnlyIn）。" +
+      "neoforge/26.1 与 fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。",
     inputSchema: generateEntityRendererSchema,
-  }, async (a) => jsonResult(generateEntityRenderer(a.modId, a.entityName)));
+  }, async (a) => jsonResult(generateEntityRenderer(a.modId, a.entityName, a.platform, a.version)));
 
   server.registerTool("generate_worldgen", {
     title: "Generate worldgen JSON templates",
@@ -625,6 +665,27 @@ export function registerWaveExtensions(server: McpServer): void {
     },
     async (args): Promise<CallToolResult> => jsonResult(activatePlatformPack(args)),
   );
+  server.registerTool(
+    "check_publish_ready",
+    {
+      title: "Check publish checklist (no upload)",
+      description:
+        "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。",
+      inputSchema: checkPublishReadySchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(checkPublishReady(args)),
+  );
+  server.registerTool(
+    "inspect_runtime",
+    {
+      title: "Inspect latest.log / crash-reports (log-based, no JVM attach)",
+      description:
+        "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。" +
+        "禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。",
+      inputSchema: inspectRuntimeSchema,
+    },
+    async (args): Promise<CallToolResult> => jsonResult(inspectRuntime(args)),
+  );
 
   // ── Wave B: Prompts + Resources (protocol) ───────────────────────────────
   for (const [name, meta] of Object.entries(WORKFLOW_TEMPLATES)) {
@@ -671,17 +732,17 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "query_registry", description: "查询 Vanilla 注册表资源 ID（minecraft:stone）。nameLayer=registry_id；类/方法映射请用 convert_mapping。【边界】不是模组 DeferredRegister / Fabric Registry。", inputSchema: queryRegistrySchema },
   { name: "mixin_analyze", description: "解析 mixins.json 与 @Mixin 源码，校验 @Inject/@Redirect 等方法目标（多映射层）。高风险工具，见 supportMatrix。deep:true 时基于已缓存 remapped 客户端 jar 做字节码级校验；jar 未缓存返回 CACHE_MISS 引导。", inputSchema: mixinAnalyzeSchema },
   { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。", inputSchema: auditResourcesSchema },
-  { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验（1.20.1 / 1.21.1）。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
+  { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验。minecraft:crafting_special_* 与 smithing_trim 等无 result 不报错；普通 crafting_shaped 缺 result 仍报。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
   { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。", inputSchema: getWorkflowTemplateSchema },
   { name: "localize_mod", description: "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。", inputSchema: localizeModSchema },
   { name: "list_knowledge_resources", description: "列出 mcskill:// 资源 URI；配合 read_knowledge_resource 读取正文。", inputSchema: listKnowledgeResourcesSchema },
   { name: "read_knowledge_resource", description: "Read knowledge resource by URI", inputSchema: readKnowledgeResourceSchema },
   { name: "generate_model", description: "Generate block model JSON templates。返回方块模型 JSON 骨架文本，不写盘。", inputSchema: generateModelSchema },
   { name: "generate_lang", description: "Generate en_us + zh_cn lang JSON。返回 en_us/zh_cn lang JSON 骨架，不写盘、无机器翻译。", inputSchema: generateLangSchema },
-  { name: "generate_network_packet", description: "Generate network packet skeleton。platform 必填（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1）。返回 Java 骨架文本，不写盘。", inputSchema: generateNetworkPacketSchema },
-  { name: "generate_capability", description: "Generate Capability / DataAttachment skeleton。返回 Capability/DataAttachment 骨架文本，不写盘。", inputSchema: generateCapabilitySchema },
-  { name: "generate_config", description: "Generate config spec skeleton。返回配置规范骨架文本，不写盘。", inputSchema: generateConfigSchema },
-  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
+  { name: "generate_network_packet", description: "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。只传 fabric 会 error。返回 Java 骨架文本，不写盘。", inputSchema: generateNetworkPacketSchema },
+  { name: "generate_capability", description: "Generate Capability / DataAttachment skeleton。platform 与 version 必填。forge → Forge Capability；neoforge → 仅 1.20.4+ Data Attachment（不是 Forge Capability）；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。", inputSchema: generateCapabilitySchema },
+  { name: "generate_config", description: "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖。不写盘。", inputSchema: generateConfigSchema },
+  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。支持 forge 1.20.1 / 1.20.4（@OnlyIn）与 neoforge 26.1（EntityRenderer + Identifier）。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
   { name: "generate_worldgen", description: "Generate worldgen JSON templates。返回世界生成 JSON 骨架，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: "Analyze game / crash log excerpt", inputSchema: analyzeLogSchema },
   { name: "get_migration_guide", description: "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。route 如 1.21.11->26.1 / 26.2 / forge->neoforge。", inputSchema: getMigrationGuideSchema },
@@ -700,4 +761,6 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。", inputSchema: detectModProjectSchema },
   { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根，返回该档 AGENTS/规则/技能索引。write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
+  { name: "check_publish_ready", description: "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。", inputSchema: checkPublishReadySchema },
+  { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];

@@ -12,3 +12,10 @@ description: 06 — 网络
 4. 收：`ClientPlayNetworking.registerGlobalReceiver` / `ServerPlayNetworking.registerGlobalReceiver`
 
 禁止 SimpleChannel。26.2 的 Vulkan/gui.setScreen 不是本版网络页内容。
+
+## Decision Flow
+
+```
+→ 自定义包 → CustomPacketPayload + PayloadTypeRegistry + *PlayNetworking
+→ 禁止 SimpleChannel / Forge 网络包名
+```

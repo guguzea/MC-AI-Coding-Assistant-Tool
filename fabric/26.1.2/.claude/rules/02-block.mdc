@@ -1,4 +1,12 @@
 # 02 — 方块
 
 逐步：`26.1.2/develop_blocks_first-block`、模型 `26.1.2/develop_blocks_block-models`、方块实体 `26.1.2/develop_blocks_block-entities`。
-不要用 Forge BlockBehaviour 记忆顶上；打开上述 id。
+
+## Decision Flow
+
+```
+→ 普通方块 → first-block 页的 Block + BlockItem 注册
+→ 模型/方块状态 → block-models
+→ 方块实体 → block-entities；缺签名则停，search_fabric_docs
+→ 禁止用 Forge BlockBehaviour / DeferredRegister 记忆顶上
+```

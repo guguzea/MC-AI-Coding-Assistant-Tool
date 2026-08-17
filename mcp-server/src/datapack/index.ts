@@ -12,6 +12,13 @@ export interface ValidateDatapackResult {
   warnings: string[];
 }
 
+function recipeRequiresResult(type: unknown): boolean {
+  const t = String(type ?? "");
+  if (t.startsWith("minecraft:crafting_special_")) return false;
+  if (t === "minecraft:smithing_trim" || t === "minecraft:smithing_transform") return false;
+  return true;
+}
+
 function requireKeys(obj: Record<string, unknown>, keys: string[], errors: string[]): void {
   for (const k of keys) {
     if (!(k in obj)) errors.push(`缺少必需字段: ${k}`);
@@ -38,7 +45,10 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
 
   switch (input.kind) {
     case "recipe":
-      requireKeys(data, ["type", "result"], errors);
+      requireKeys(data, ["type"], errors);
+      if (recipeRequiresResult(data.type) && !("result" in data)) {
+        errors.push("缺少必需字段: result");
+      }
       if (data.type === "minecraft:crafting_shaped" || data.type === "minecraft:crafting_shapeless") {
         if (!("ingredients" in data) && !("key" in data)) {
           errors.push("合成配方需要 key/ingredients");

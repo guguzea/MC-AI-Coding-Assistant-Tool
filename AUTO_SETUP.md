@@ -29,7 +29,7 @@
 |----|------|----------------|----------|
 | **Rules** | 写代码时的平台约束 | 打开对应模组工程 / 读 `AGENTS.md` | `forge\|fabric\|neoforge\|quilt\|liteloader\|rift\|modloader/<ver>/` 或扁平 `bedrock/` |
 | **Skills** | 斜杠命令 / Skill 面板里的任务手册 | IDE **扫描** `技能名/SKILL.md` | 用户全局或**模组项目**根，不是本仓库根 |
-| **MCP 工具** | 运行时查询文档 / API / 映射 / 诊断（**76** 个工具） | 宿主拉起 **stdio** 子进程 `node dist/index.js` | 各 IDE 自己的 MCP 配置文件 |
+| **MCP 工具** | 运行时查询文档 / API / 映射 / 诊断（**78** 个工具） | 宿主拉起 **stdio** 子进程 `node dist/index.js` | 各 IDE 自己的 MCP 配置文件 |
 
 本仓库 `mcp-server/` 提供的是 **本地 stdio MCP**，不是 HTTP/SSE 远程服务。配置里必须是 `command` + `args`（或等价的 command 数组），**不要**写成 `url`。
 
@@ -40,7 +40,7 @@
 ## 目标
 
 1. 编译本仓库的本地 MCP Server。
-2. 按**当前宿主**生成并合并 MCP 配置，使 Agent 能调用 **76** 个工具。
+2. 按**当前宿主**生成并合并 MCP 配置，使 Agent 能调用 **78** 个工具。
 3. （可选）按 Step 6 把平台 Skill 装到用户全局目录或**模组项目**（不要装进 `MC_skill` 仓库根）。
 
 工具覆盖：
@@ -91,7 +91,7 @@ MCP 负责运行时查询；规则集负责写代码约束。完整注意项见�
 
 **配置写到哪里：**
 
-- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 76 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
+- **推荐默认：用户级 / 全局**，这样打开任意模组工程都能用这 78 个工具。`args` 与 `MC_SKILL_DATA` 仍指向 **本仓库**（`MC_skill`），不要改成模组工程路径。
 - **项目级**（`.mcp.json`、`.cursor/mcp.json`、`.trae/mcp.json` 等）只在用户明确要求「只给这个仓库用」时写。
 - **不要**把带本机绝对路径的 MCP 配置提交进 `MC_skill` 仓库。
 - 用户的**模组工程**可以放项目级 MCP（路径仍指向本仓库的 `dist/index.js` 与 `data/`）。
@@ -410,7 +410,7 @@ Cline 常见：`%APPDATA%\Code\User\globalStorage\saoudrizwan.claude-dev\setting
    - forge / fabric / neoforge 至少一侧为 `found`（未下载的平台可以是 `not_found`，要如实告诉用户）。
 3. **`list_doc_versions`**（或当前平台的 `list_*_versions`）应返回版本数组。
 
-可选：工具列表里应能看到本服务，数量 **76**（`tool-registry.ts` 44 + `wave/register.ts` 32）。对不上先 `npm run build`，不要改服务名。
+可选：工具列表里应能看到本服务，数量 **78**（`tool-registry.ts` 44 + `wave/register.ts` 34）。对不上先 `npm run build`，不要改服务名。
 
 **验收失败时的 CLI 对照**（可区分「没连上宿主」还是「data 路径错」）：
 
@@ -556,7 +556,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 ## CLI 兜底（宿主没有 MCP，或配置尚未生效）
 
-76 个工具均可：
+78 个工具均可：
 
 ```bash
 cd mcp-server
@@ -607,4 +607,4 @@ node dist/cli.js <工具名> --key=value
 - 服务名必须是 **`MC-AI-Coding-Assistant-Tool`**
 - 本服务是 **stdio**，不要配成 HTTP `url`
 - 验收靠调用 `get_server_status` / `diagnose_data_paths`，不要只描述点击路径
-- 无 MCP 宿主时用 CLI，不要假装已经连上 76 个工具
+- 无 MCP 宿主时用 CLI，不要假装已经连上 78 个工具

@@ -54,8 +54,24 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
     errorLines: errors,
     warnLines: warnings,
     crashAnalysis: crash,
-    relatedTools: ["crash_analyze", "search_community_docs", "validate_project"],
+    relatedTools: relatedToolsForLog(text, version),
   };
+}
+
+function relatedToolsForLog(text: string, _version: string): string[] {
+  const tools = ["crash_analyze", "search_community_docs"];
+  if (/net\.fabricmc|fabric-loader|quilt\.mod|org\.quiltmc/i.test(text)) {
+    tools.push("search_fabric_docs");
+    return tools;
+  }
+  if (/net\.neoforged|neoforge/i.test(text)) {
+    tools.push("search_neoforge_docs");
+    return tools;
+  }
+  if (/net\.minecraftforge|minecraftforge|javafml/i.test(text)) {
+    tools.push("validate_project");
+  }
+  return tools;
 }
 
 const MIGRATION_GUIDES: Record<string, { title: string; bullets: string[] }> = {

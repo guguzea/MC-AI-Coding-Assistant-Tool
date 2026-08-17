@@ -1,16 +1,14 @@
 /**
  * 数据生成辅助模块
  *
- * Forge 1.20.1 与 NeoForge 1.21.x 两套模板。
- *
- * 依据：
- * - data/forge_1.20.1/forge-docs/.../datagen_*.md
- * - data/neoforge_1.21.1/neoforge-docs/1.21.1/processed/resources*.md
+ * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric/Quilt Loom。
  */
 
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
+import { generateFabric, type FabricProviderType } from "./fabric.js";
 import { generateNeoForge21, type NeoForge21ProviderType } from "./neoforge-1.21.js";
+import { generateNeoForge261, type NeoForge261ProviderType } from "./neoforge-26.1.js";
 
 export { normalizeModIdentifier, toJavaClassName } from "./common.js";
 
@@ -27,7 +25,7 @@ export interface DatagenQuery {
   modId: string;
   targetName: string;
   version?: string;
-  platform?: "forge" | "neoforge";
+  platform?: "forge" | "neoforge" | "fabric" | "quilt";
 }
 
 export interface DatagenResult {
@@ -44,15 +42,54 @@ export function isNeoForge21Platform(platform: string, version: string): boolean
   return v.startsWith("1.21") || v === "21" || /^21\./.test(v);
 }
 
-export function generateDatagen(query: DatagenQuery): DatagenResult {
-  const { providerType, version = "1.20.1", platform = "forge" } = query;
-  const warnings: string[] = [];
-  const neo21 = isNeoForge21Platform(platform, version);
+export function isNeoForge261Platform(platform: string, version: string): boolean {
+  return platform === "neoforge" && /^26\.1/.test(version.trim());
+}
 
-  if (platform === "neoforge" && !neo21) {
-    warnings.push(
-      "NeoForge datagen 模板面向 1.21.x；请将 version 设为 1.21.1（或 1.21*），否则仍输出 1.21 模板但可能与你项目版本不一致",
-    );
+export function generateDatagen(query: DatagenQuery): DatagenResult {
+  const { providerType, version, platform } = query;
+  const warnings: string[] = [];
+
+  if (!platform) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: ["platform is required（forge | neoforge | fabric | quilt），禁止默认 forge"],
+    };
+  }
+  if (!version?.trim()) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: ["version is required，禁止默认 1.20.1"],
+    };
+  }
+  const ver = version.trim();
+  if (platform === "fabric" || platform === "quilt") {
+    const fabric21 = ver.startsWith("1.21");
+    const fabric261 = /^26\.1/.test(ver);
+    if (!fabric21 && !fabric261) {
+      return {
+        code: null,
+        usedModId: query.modId,
+        usedTargetName: query.targetName,
+        errors: [
+          `尚无 Fabric/Quilt Datagen 模板覆盖 version=${ver}。请用 search_fabric_docs / 该档 07-datagen，不要生成 Forge DataGen。`,
+        ],
+      };
+    }
+  }
+  const neo21 = isNeoForge21Platform(platform, ver);
+  const neo261 = isNeoForge261Platform(platform, ver);
+  if (platform === "neoforge" && !neo21 && !neo261) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: ["NeoForge Datagen 当前仅支持 1.21.x 与 26.1 模板；其它版本请手写或查阅 search_neoforge_docs"],
+    };
   }
 
   const mod = normalizeModIdentifier(query.modId);
@@ -81,7 +118,17 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   const classBase = toJavaClassName(query.modId) || toJavaClassName(modId);
 
   let code: string;
-  if (platform === "neoforge") {
+  if (platform === "fabric" || platform === "quilt") {
+    code = generateFabric(
+      providerType as FabricProviderType,
+      modId,
+      targetName,
+      classBase,
+      /^26\.1/.test(ver),
+    );
+  } else if (platform === "neoforge" && neo261) {
+    code = generateNeoForge261(providerType as NeoForge261ProviderType, modId, targetName, classBase);
+  } else if (platform === "neoforge") {
     code = generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase);
   } else {
     switch (providerType) {

@@ -24,7 +24,7 @@ MC_skill/
 ├── community_knowledge/         # 社区实务知识库（MCP search_community_docs；48 篇 lib-* 短文等）
 ├── knowledge/                   # 知识源稿：patterns/（代码模式）+ libs/（四组库 Skill 源稿，不落盘）
 ├── scripts/                     # 库模组脚本：manifest / 分批反编译 / catalog / API 摘要 / 传播
-├── mcp-server/                  # 本地 stdio MCP Server（76 个工具）；data/ 含 lib-manifests、lib-api-summaries
+├── mcp-server/                  # 本地 stdio MCP Server（78 个工具）；data/ 含 lib-manifests、lib-api-summaries
 └── data/                        # 离线数据：文档索引 + mappings + yarn JSON/SQLite + porting
 ```
 
@@ -104,7 +104,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，76 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，78 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 
 
@@ -128,7 +128,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**76** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**78** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
 
@@ -171,7 +171,7 @@ MC_skill/
 | Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有 | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
 | Forge **1.7.10–1.11.2** | **无教程规则树**（不要造假 Capability 教程）。搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_docs({platform:"forge"})` / `forge_javadoc`。可选 `forge/1.7.10/AGENTS.md` 只含改口 |
-| `diagnose_gradle` / `validate_project` | **仅 ForgeGradle**；`validate_project` 对非 Forge **早退**（不跑 DeferredRegister/@Mod），不是通用校验器 | Fabric → `search_fabric_docs`（Loom）；NeoForge → `search_neoforge_docs`；Quilt Loom → `search_docs({platform:"quilt"})`；`diagnose_gradle` 对 liteloader 插件走**轻量模式**（不跑 FG6/Java17/1.20），可选 extras（`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`）；Rift / BaseMod 早退；基岩 → `validate_addon_manifest` / `search_bedrock_docs` |
+| `diagnose_gradle` / `validate_project` | **ForgeGradle + Loom + Neo/MDG**；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查（`passed`/`failed`）；LiteLoader/Rift/ModLoader/基岩 `skipped`。基岩 → `validate_addon_manifest` | Java 扫描上限默认 300，可用 `MC_SKILL_JAVA_SCAN_MAX_FILES` 提高（超限 warning 含「检查可能不完整」） |
 | `get_server_status.updateHint` 显示有更新 | 可能是检查缓存过期 | 以 `mc_skill_update action=check` 为准；git describe 已超前 Release 则不必 apply |
 
 
@@ -184,15 +184,15 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `query_api` `found:false` = 类不存在 | 索引没有该类。26.1+ 收录 **0** 类；1.14.4/1.15.2 是空 `{}`。改文档搜索或 `get_minecraft_source` |
 | `get_method_params` 覆盖所有 MC 版本 | 与 `query_api` 同一数据源，边界相同 |
 | `get_version_info` 适用于 Fabric/NeoForge | **仅 Forge** |
-| `diagnose_gradle` 能修 Loom / NeoGradle | **仅 ForgeGradle**；检测到 loom/neogradle 会警告并建议改文档工具。可选 extras：`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`；Rift / BaseMod 早退 |
-| `validate_project` 能校验 `fabric.mod.json` | 非 Forge **早退**（warning 改口到对应文档/校验工具），不是通用校验器；Forge 才跑 mods.toml / DeferredRegister |
+| `diagnose_gradle` 能修 Loom / NeoGradle | **覆盖** ForgeGradle + Loom + NeoGradle/MDG；Rift / BaseMod / 基岩仍早退。liteloader 插件走轻量模式 |
+| `validate_project` 能校验 `fabric.mod.json` | Fabric/Quilt/NeoForge **真检查**；LiteLoader/Rift/ModLoader/基岩仍 `skipped`。基岩用 `validate_addon_manifest` |
 | `query_registry` 能查模组注册名 | 只查原版 `minecraft:` 资源 ID |
 | 文档搜索为空 = 数据包坏了 | 可能是 L0 降级、标签不对、或该版无 wiki。看 `semantic` / `warning` |
 | 用网站 URL 当 `get_*_doc_full` 的 `id` | **必须**用搜索结果里的 `id` |
 | `search_community_docs` 可当官方 API | **不能**。`links` 条目不抓网页正文 |
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
-| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。datagen 路径主要是 Forge 1.20.1 与 NeoForge 1.21.x |
+| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：Forge 1.20.1 与 NeoForge 1.21.x；26.1 error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
 | `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
 | `mixin_analyze deep:true` 会下载 MC jar | **不会**。未缓存 → `CACHE_MISS`，先 `get_minecraft_source` |
@@ -237,7 +237,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 | 能力   | 工具                         | 说明                                                                                                   |
 | ---- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 工作流  | `get_workflow_template`    | 模板名：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod`（与 Prompt 同名） |
+| 工作流  | `get_workflow_template`    | 模板名以 `get_workflow_template` 列表为准（含 `mc-new-block` / `mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-setup-env` / `mc-publish` 等，与 Prompt 同名） |
 | 知识列表 | `list_knowledge_resources` | 列出 `mcskill://` URI                                                                                  |
 | 知识读取 | `read_knowledge_resource`  | 按 URI 读正文                                                                                            |
 
@@ -317,7 +317,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / Forge 1.15.2 另含 `mc-events`。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（76 个）
+## MCP Server 工具（78 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
 
@@ -327,7 +327,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 2. 文档：`search_*` → `get_*_summary` → `get_*_full`（全文勿一次超过 2 页；`id` 必须来自搜索结果）
 3. **平台 API** 用 `query_loader_api` / `search_loader_api` 或 `search_*_docs`；**Vanilla 签名**才用 `query_api` / `get_method_params`（26.1+ 无索引）。规则树用 `activate_platform_pack action=session`
 4. 映射：`convert_mapping` / `lookup_obfuscated`（26.1+ 无混淆层）
-5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze`。注：Forge 才跑完整 Gradle/`validate_project` 检查；非 Forge 的 `validate_project` **早退改口**；Fabric/Neo 改对应文档工具
+5. 工程：`diagnose_gradle` / `validate_project` / `generate_datagen` / `crash_analyze` / `inspect_runtime`（日志型）。Forge/Fabric/Quilt/NeoForge 跑对应检查；LiteLoader/Rift/基岩的 `validate_project` 仍 skipped
 6. 移植：`analyze_porting_path` →（确认后）`port_project`（默认 dryRun）
 7. 工作流 / 知识：`get_workflow_template` / `list_knowledge_resources` → `read_knowledge_resource`
 
@@ -361,15 +361,17 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根。write 默认 dryRun，`hosts` 必填，目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
-### 2. 工程辅助（4）
+### 2. 工程辅助
 
 
 | 工具                 | 作用                                                                                                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `diagnose_gradle`  | **【Forge only】** 检查 `build.gradle` / `gradle.properties`：依赖、Forge 版本、Java toolchain、Parchment、reobf 等。返回 errors / warnings / suggestions。暂不覆盖 Loom / NeoGradle 全分支。可选 extras：`litemodJson` / `riftmodJson` / `addonManifest` / `quiltModJson`。检测到 Loom / NeoGradle / 基岩 / Rift / BaseMod 会拒绝并改口；`liteloader` 插件走轻量模式。    |
-| `generate_datagen` | 生成 DataGen Provider 模板：Forge **1.20.1**（recipe/blockstate/itemmodel/loottable/tag）与 NeoForge **1.21.x** 完整路径；另含 advancement / particle / sound。需 `modId`、`targetName`。 |
+| `diagnose_gradle`  | 检查 `build.gradle` / `gradle.properties`：ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。26.1 Loom 必须 `net.fabricmc.fabric-loom`、Java 25、禁止 `modImplementation`。liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。    |
+| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric/Quilt 1.21 与 26.1。需 `modId`、`targetName`。 |
 | `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
-| `validate_project` | **【Forge only】** 审查项目结构：`mods.toml` / `@Mod` / DeferredRegister / RegistryObject / Mixin / 资源路径 / 重复注册名等。适合首次接手或修完后自查。非 Forge **早退**（passed=true + warning 改口），不是通用校验器。                                                 |
+| `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
+| `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |
+| `inspect_runtime` | 日志型 inspector：优先 `logsDir`/`crashReportsDir`；否则有界探测 `run/logs` 等。禁止全盘 / JVM attach。默认读文件尾部。 |
 
 
 
@@ -500,7 +502,7 @@ authored/lib-*.md frontmatter
 | `validate_aw`                                          | 字节码级校验 Fabric `.accesswidener`：header/namespace、条目类型、存在性、transitive、跨文件冲突。 |
 | `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           |
 | `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验。                  |
-| `get_workflow_template`                                | 工作流全文（`mc-new-block` 等 9 个；与 MCP Prompt 同名；Cursor tools 兜底）。         |
+| `get_workflow_template`                                | 工作流全文（以 `get_workflow_template` 列表为准；与 MCP Prompt 同名；Cursor tools 兜底）。         |
 | `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          |
 
 字节码级校验（`mixin_analyze deep` / `validate_at` / `validate_aw`）依赖 T2 缓存管线：
@@ -567,7 +569,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 另：`registerPrompt` / `registerResource`（工作流与知识 URI）供支持 prompts/resources 的客户端使用；详见 `mcp-server/docs/prompts-client-compat.md`。
 ### 工作流模板（MCP Prompts）
 
-9 个工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；Cursor 等仅 tools 客户端用 `get_workflow_template` 工具获取同款全文。
+工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；数量以 `get_workflow_template` 列表为准。Cursor 等仅 tools 客户端用该工具获取同款全文。
 
 
 | 模板名               | 标题      | 流程要点                                                                                                              |
@@ -581,6 +583,14 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-ingame-iterate` | 真机测试与修复循环 | 索取启动器与路径（官方/HMCL/PCL2 版本隔离）→ 装 jar → 复现 → 修 → 再测；可选兼容性测试。路径约定见模板正文与 [HMCL 隔离文档](https://docs.hmcl.net/launcher/isolation.html) |
 | `mc-localize-mod` | 模组汉化 | 判定 own/third_party → `localize_mod` diff/draft 或 extract/pack_draft → Agent 填中文 → 自检；见 `authored/localization-lang` |
 | `mc-decompile-mod` | 模组反编译研究 | 定位 jar → `analyze_mod_jar` → `decompile_mod_jar` / `get_minecraft_source` → `search_mod_code` → 定位目标类 → 修改建议 → 衔接 `mc-build-mod` / `mc-ingame-iterate` |
+| `mc-new-item` | 新物品工作流 | 该档 03-item 注册 → 模型/lang → 合成（有模板才 generate_datagen） |
+| `mc-new-blockentity` | 方块实体工作流 | BlockEntityType + 方块 → 渲染/同步；GUI 接 mc-new-gui |
+| `mc-mixin` | Mixin 工作流 | mixin_analyze → mixins.json 分桶 → 核 mappings |
+| `mc-worldgen` | 世界生成工作流 | configured/placed feature → 该档 biome 注入 |
+| `mc-config` | 配置工作流 | generate_config（loader+version 必填）或 Cloth Config |
+| `mc-gametest` | GameTest 工作流 | 按平台核文档，禁止默记 Forge 1.20.1 |
+| `mc-publish` | 发布清单 | 元数据 / build/libs / changelog / license；不上传 |
+| `mc-setup-env` | 开发环境搭建 | detect_mod_project → MDK dryRun 或 Loom/映射清单；不自动 genRuns |
 
 
 ### 知识暴露（MCP Resources）
@@ -595,10 +605,10 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://version-changes/1.21`        | 1.21 变更专章（知识库）                                             |
 | `mcskill://antipatterns/registry`       | 注册反模式短文                                                    |
 | `mcskill://patterns/README`             | 代码模式库索引（community_knowledge/patterns/）                     |
-| `mcskill://workflow/mc-new-block` 等 8 个 | 与 Prompt 同名的工作流正文                                          |
+| `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
 
 
-### 独立 CLI（`mc-skill`，76 工具全可用）
+### 独立 CLI（`mc-skill`，78 工具全可用）
 
 flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误：
 
@@ -607,7 +617,7 @@ node dist/cli.js status --version 1.20.1            # 服务器状态（含 buil
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1
 node dist/cli.js convert --from mcp --to mojang --name getHealth --owner net.minecraft.world.entity.LivingEntity '--descriptor=()F'
 node dist/cli.js update --action check
-node dist/cli.js list-tools                          # 全部 76 个工具的 schema
+node dist/cli.js list-tools                          # 全部 78 个工具的 schema
 ```
 
 **通用 dispatch（v0.2+）**：除上述命令外，**任意 MCP 工具名可直接调用**（handler 自动收集，缺参时返回 zod 校验提示）：
@@ -634,9 +644,9 @@ node dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 1   | ✅ 完成  | Forge / Fabric / NeoForge 规则集与多版本扩展                   |
 | Phase 1.5 | ✅ 完成  | 模组脚手架 + 校验 CLI                                        |
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
-| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展 + 五平台，**76** 工具） |
+| Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展 + 五平台；工具数以 `list-tools` 为准） |
 | Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
 | Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇短文 + 31 库 Skill（knowledge/libs）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
-| Phase 5   | 📋 暂缓 | 微调数据集 + runtime-inspector                             |
+| Phase 5   | 📋 部分  | `inspect_runtime` = 日志型 inspector（非 JVM attach）；微调数据集仍暂缓 |
 
 

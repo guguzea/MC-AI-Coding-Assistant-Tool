@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { mergeInjectMethodAndDesc, parseMethodArrayLiteral, parseMethodReference, type ParsedMethodRef } from "./method-string.js";
 
 export interface MixinClassRef {
@@ -7,7 +8,17 @@ export interface MixinClassRef {
 }
 
 export interface InjectionSite {
-  kind: "Inject" | "Redirect" | "ModifyVariable" | "Overwrite" | "Accessor" | "Invoker" | "Unknown";
+  kind:
+    | "Inject"
+    | "Redirect"
+    | "ModifyVariable"
+    | "ModifyArg"
+    | "ModifyArgs"
+    | "ModifyConstant"
+    | "Overwrite"
+    | "Accessor"
+    | "Invoker"
+    | "Unknown";
   methodRefs: ParsedMethodRef[];
   at?: string;
   lineHint?: number;
@@ -17,19 +28,53 @@ export interface ParsedMixinSource {
   mixinClass: string;
   targetClass?: string;
   injections: InjectionSite[];
+  warnings?: string[];
 }
 
 export interface MixinsJsonSummary {
   package?: string;
   mixinClasses: string[];
+  common: string[];
   client: string[];
   server: string[];
   warnings: string[];
 }
 
-export function parseMixinsJson(content: string): MixinsJsonSummary {
+const PARSE_CACHE_MAX = 32;
+type LruEntry<T> = { key: string; value: T };
+const jsonCache: LruEntry<MixinsJsonSummary>[] = [];
+const javaCache: LruEntry<ParsedMixinSource>[] = [];
+
+function lruGet<T>(lru: LruEntry<T>[], key: string): T | undefined {
+  const i = lru.findIndex((e) => e.key === key);
+  if (i < 0) return undefined;
+  const [e] = lru.splice(i, 1);
+  lru.push(e);
+  return e.value;
+}
+
+function lruSet<T>(lru: LruEntry<T>[], key: string, value: T): void {
+  const i = lru.findIndex((e) => e.key === key);
+  if (i >= 0) lru.splice(i, 1);
+  lru.push({ key, value });
+  while (lru.length > PARSE_CACHE_MAX) lru.shift();
+}
+
+function contentHash(path: string, content: string, mtime?: number): string {
+  return createHash("sha256").update(`${path}\0${mtime ?? ""}\0${content}`).digest("hex");
+}
+
+export function parseMixinsJson(
+  content: string,
+  cacheMeta?: { path?: string; mtime?: number },
+): MixinsJsonSummary {
+  const key = contentHash(cacheMeta?.path ?? "", content, cacheMeta?.mtime);
+  const hit = lruGet(jsonCache, key);
+  if (hit) return hit;
+
   const warnings: string[] = [];
   const mixinClasses = new Set<string>();
+  const common: string[] = [];
   const client: string[] = [];
   const server: string[] = [];
   let pkg: string | undefined;
@@ -38,7 +83,15 @@ export function parseMixinsJson(content: string): MixinsJsonSummary {
   try {
     config = JSON.parse(content) as Record<string, unknown>;
   } catch {
-    return { mixinClasses: [], client: [], server: [], warnings: ["mixins.json JSON 解析失败"] };
+    const failed: MixinsJsonSummary = {
+      mixinClasses: [],
+      common: [],
+      client: [],
+      server: [],
+      warnings: ["mixins.json JSON 解析失败"],
+    };
+    lruSet(jsonCache, key, failed);
+    return failed;
   }
 
   if (typeof config.package === "string") pkg = config.package;
@@ -60,35 +113,51 @@ export function parseMixinsJson(content: string): MixinsJsonSummary {
     }
   };
 
-  collect(config.mixins, client);
+  collect(config.mixins, common);
   collect(config.client, client);
   collect(config.server, server);
 
-  return {
+  const parsed: MixinsJsonSummary = {
     package: pkg,
     mixinClasses: [...mixinClasses],
+    common,
     client,
     server,
     warnings,
   };
+  lruSet(jsonCache, key, parsed);
+  return parsed;
 }
 
-function extractAnnotationBlock(source: string, name: string): string[] {
-  const blocks: string[] = [];
+type AnnBlock = { inner: string | null };
+
+function extractAnnotationBlock(source: string, name: string): AnnBlock[] {
+  const blocks: AnnBlock[] = [];
   const needle = `@${name}`;
   let i = 0;
   while ((i = source.indexOf(needle, i)) >= 0) {
-    const open = source.indexOf("(", i + needle.length);
-    if (open < 0) break;
+    const afterName = i + needle.length;
+    const boundary = source[afterName];
+    if (boundary && /[A-Za-z0-9_]/.test(boundary)) {
+      i = afterName;
+      continue;
+    }
+    let k = afterName;
+    while (k < source.length && /\s/.test(source[k])) k++;
+    if (source[k] !== "(") {
+      blocks.push({ inner: null });
+      i = k === afterName ? afterName + 1 : k;
+      continue;
+    }
     let depth = 0;
-    let j = open;
+    let j = k;
     for (; j < source.length; j++) {
       const c = source[j];
       if (c === "(") depth++;
       else if (c === ")") {
         depth--;
         if (depth === 0) {
-          blocks.push(source.slice(open + 1, j));
+          blocks.push({ inner: source.slice(k + 1, j) });
           break;
         }
       }
@@ -113,7 +182,15 @@ function parseMethodValue(block: string): string[] {
   return [];
 }
 
-export function parseMixinJavaSource(source: string, filePath?: string): ParsedMixinSource | null {
+export function parseMixinJavaSource(
+  source: string,
+  filePath?: string,
+  mtime?: number,
+): ParsedMixinSource | null {
+  const key = contentHash(filePath ?? "", source, mtime);
+  const cached = lruGet(javaCache, key);
+  if (cached) return cached;
+
   const classMatch = source.match(/(?:public\s+)?class\s+(\w+)/);
   if (!classMatch) return null;
 
@@ -134,20 +211,35 @@ export function parseMixinJavaSource(source: string, filePath?: string): ParsedM
   }
 
   const injections: InjectionSite[] = [];
-  const kinds = ["Inject", "Redirect", "ModifyVariable", "Overwrite", "Accessor", "Invoker"] as const;
+  const warnings: string[] = [];
+  const kinds = [
+    "Inject",
+    "Redirect",
+    "ModifyVariable",
+    "ModifyArg",
+    "ModifyArgs",
+    "ModifyConstant",
+    "Overwrite",
+    "Accessor",
+    "Invoker",
+  ] as const;
 
   for (const kind of kinds) {
-    for (const block of extractAnnotationBlock(source, kind)) {
-      const at = parseAtValue(block, "at") ?? parseAtValue(block, "target");
-      const desc = parseAtValue(block, "desc");
-      const methods = parseMethodValue(block);
+    for (const { inner } of extractAnnotationBlock(source, kind)) {
+      if (inner === null) {
+        injections.push({ kind, methodRefs: [] });
+        continue;
+      }
+      const at = parseAtValue(inner, "at") ?? parseAtValue(inner, "target");
+      const desc = parseAtValue(inner, "desc");
+      const methods = parseMethodValue(inner);
       const methodRefs: ParsedMethodRef[] = [];
       if (methods.length) {
         for (const m of methods) {
           methodRefs.push(parseMethodReference(m, desc));
         }
       } else {
-        const single = parseAtValue(block, "method");
+        const single = parseAtValue(inner, "method");
         if (single) methodRefs.push(mergeInjectMethodAndDesc(single, desc) ?? parseMethodReference(single, desc));
       }
       injections.push({
@@ -158,11 +250,28 @@ export function parseMixinJavaSource(source: string, filePath?: string): ParsedM
     }
   }
 
-  return {
+  const extras = ["ModifyExpressionValue", "WrapOperation", "WrapWithCondition", "ModifyReturnValue"];
+  for (const name of extras) {
+    const found = extractAnnotationBlock(source, name);
+    if (found.length) {
+      warnings.push(`MixinExtras @${name} 记为 Unknown，不要当成 @Inject`);
+      for (const { inner } of found) {
+        injections.push({
+          kind: "Unknown",
+          methodRefs: inner ? parseMethodValue(inner).map((m) => parseMethodReference(m)) : [],
+        });
+      }
+    }
+  }
+
+  const parsed: ParsedMixinSource = {
     mixinClass: classMatch[1],
     targetClass,
     injections,
+    warnings: warnings.length ? warnings : undefined,
   };
+  lruSet(javaCache, key, parsed);
+  return parsed;
 }
 
 export function findMixinClassInFiles(

@@ -15,13 +15,13 @@ npm run build
 
 ## 能力概览
 
-- 共 **76** 个 MCP 工具：`src/tool-registry.ts` **44** + `src/wave/register.ts` **32**
+- 共 **78** 个 MCP 工具：`src/tool-registry.ts` **44** + `src/wave/register.ts` **34**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
-完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` / `validate_project` 仅 Forge（`validate_project` 对非 Forge **早退**，不是通用校验器）；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
+完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
 
 ---
 
@@ -76,7 +76,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **76**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **78**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 

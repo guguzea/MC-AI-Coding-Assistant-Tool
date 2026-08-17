@@ -1,0 +1,15 @@
+﻿---
+name: mc-item
+description: NeoForge 1.21.10 mc-item。类名只来自本档核实表与 search_neoforge_docs。
+platform: neoforge
+version: "1.21.10"
+dependencies: []
+mappings: mojmap
+---
+
+# mc-item（NeoForge 1.21.10）
+
+禁止从邻档复制。Java 21。`ResourceLocation`。
+
+对照 `neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md` 与 search_neoforge_docs version=1.21.10。
+网络：RegisterPayloadHandlersEvent + PayloadRegistrar（以 networking 页为准），禁止 SimpleChannel。

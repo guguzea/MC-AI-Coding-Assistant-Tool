@@ -37,10 +37,15 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   },
   "mc-crash-triage": {
     title: "崩溃分诊",
-    body: `1. analyze_log / crash_analyze
+    body: `1. analyze_log / crash_analyze；可选 inspect_runtime（优先 logsDir，禁止全盘）
 2. search_community_docs 按 crashKind
-3. validate_project + mixin_analyze
-4. diagnose_gradle 若启动阶段失败`,
+3. 先看 status / skipped，再看 action，不要只看 passed。
+   STATUS_GATE: skipped → docs（LiteLoader/Rift/ModLoader/基岩）
+   STATUS_GATE: passed → continue
+   STATUS_GATE: failed → 按 errors 修
+   - Forge / Fabric / Quilt / NeoForge：validate_project 与 diagnose_gradle 已做真检查；看 status
+   - 仍 skipped 的 loader 换 search_*_docs / validate_addon_manifest
+4. mixin_analyze；diagnose_gradle 若构建失败（同样先看 status/skipped）`,
   },
   "mc-port-mod": {
     title: "移植模组",
@@ -53,7 +58,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
     title: "模组构建流程",
     body: `1. 确认平台 / 精确 MC 版本 / mappings。从零工程：调用 download_official_mdk（dryRun 先看 URL/hash；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle，二者官方都提供）。已有工程加内容不要下 MDK。
 2. 读 MDK 返回的 buildPlugin / mappings / entryClass，再加载对应 00–10；未建档版本禁止读邻档规则，改口 search_*_docs。
-3. validate_project 仅 Forge；NeoForge/Fabric 用文档工具。必要时 diagnose_gradle / check_dependencies
+3. validate_project（Forge/Fabric/Quilt/NeoForge 真检查，看 status）；LiteLoader/Rift/基岩 skipped。必要时 diagnose_gradle / check_dependencies
 4. 构建：Forge/NeoForge 用 ./gradlew build；Fabric 用 Loom 等价任务；需要资源时先跑 DataGen
 5. 确认产出 jar：build/libs/（排除 -sources、-javadoc 等）
 6. 构建失败：对 Gradle/编译日志用 analyze_log / crash_analyze，修好后重跑构建
@@ -130,6 +135,82 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 5. 读源码 → 定位真实实现 → 给出修改建议（涉及 API 用法用 query_api 核对签名）
 6. 衔接：进入 mc-build-mod（构建验证）→ mc-ingame-iterate（真机测试循环）；移植场景先走 mc-port-mod
 7. 提示用户：首次反编译 3–10 分钟，二次缓存命中 <1s；MC_SKILL_SKIP_DOWNLOAD=1 时下载类工具会诚实失败`,
+  },
+  "mc-new-item": {
+    title: "新物品工作流",
+    body: `1. 确认平台与精确 MC 版本。已有工程不要 download_official_mdk。
+2. 读该档 03-item / mc-item，不要默认 Forge 1.20 Item：
+   - Forge：DeferredRegister ITEMS（该版规则）
+   - NeoForge：该档 DeferredItem / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo
+   - Fabric：Registry.register；26.1.2 用官方名 + implementation
+   - Quilt：Vanilla Registry + ModInitializer(ModContainer)；02–10 读 fabric/<ver>
+   - 老平台：核实表；禁止 DeferredRegister
+3. 创造栏 / 食物 / 工具属性按该档 03，不要抄邻版
+4. 模型：generate_model 或 DataGen；lang：generate_lang
+5. 合成：generate_datagen 仅 Forge 1.20.1 与 NeoForge 1.21.x / 已提供的 26.1 模板；其余手写 data/`,
+  },
+  "mc-new-blockentity": {
+    title: "方块实体工作流",
+    body: `1. 确认平台与精确 MC 版本
+2. 读该档 02-block / 04 或 mc-blockentity：
+   - Forge/NeoForge：BlockEntityType + 该档注册（Neo 用 DeferredHolder 族）
+   - Fabric/Quilt：BlockEntityType.Builder + Registry.register
+   - 老平台：核实表 TileEntity；表外禁止输出
+3. 先有方块再挂 BE；校验顺序不要反
+4. 客户端渲染按该档 08；同步用该档网络 API（Neo 禁止 SimpleChannel）
+5. GUI 若需要再接 mc-new-gui`,
+  },
+  "mc-mixin": {
+    title: "Mixin 工作流",
+    body: `1. 确认平台与 MC 版本；先 mixin_analyze（静态）。deep:true 需已缓存 remapped 客户端 jar，未缓存会 CACHE_MISS，不要自动下载。
+2. mixins.json：common 进 mixins[]，client/server 分桶，不要把 common 写进 client。
+3. 注入点用该档 mappings（Yarn named / Mojmap / MCP）；禁止 class_ / method_ 中间名当 API。
+4. 高风险 @Overwrite / MixinExtras 先 warning；改字节码目标用 validate_at / validate_aw。
+5. 跑 mixin_analyze 看 TARGET_METHOD_MISSING；再构建验证。`,
+  },
+  "mc-worldgen": {
+    title: "世界生成工作流",
+    body: `1. 确认平台与精确 MC 版本。读该档 worldgen / 07；禁止默认 Forge biome_modifier。
+2. 配置：configured_feature / placed_feature JSON 或该档 Datagen。
+3. 注入生物群系：
+   - Forge 1.20.1：forge:add_features biome_modifier
+   - NeoForge：该档 biome modifier / datagen（26.1 以 Identifier 为准）
+   - Fabric/Quilt：BiomeModifications 或该版文档；核不到则 search_fabric_docs
+4. generate_worldgen 只是 JSON 骨架；类名必须能在本版文档核到。`,
+  },
+  "mc-config": {
+    title: "配置工作流",
+    body: `1. 确认平台与版本。generate_config 的 loader 与 version 必填。
+2. 分支：
+   - Forge：ForgeConfigSpec
+   - NeoForge 1.20.4：ForgeConfigSpec + net.neoforged；1.21+/26.1：ModConfigSpec
+   - Fabric/Quilt：Cloth Config（mc-config Skill）；不要生成 ForgeConfigSpec
+3. 注册到 ModConfig / Cloth 屏幕按该档；缺依赖要在 fabric.mod.json / mods.toml 声明。`,
+  },
+  "mc-gametest": {
+    title: "GameTest 工作流",
+    body: `1. 确认平台与 MC 版本。GameTest 不是所有加载器都有同一套 API。
+2. Forge/NeoForge：读该档 gametest / 官方 docs；用 search_*_docs 核类名，禁止默记 1.20.1。
+3. Fabric：Fabric GameTest / 该版 wiki；核不到则 stub，不要编 Forge GameTest。
+4. 结构文件放 data/<modid>/gametest 或该版路径；先跑 ./gradlew 对应 test 任务，不要假设 runGameTestServer 通用。`,
+  },
+  "mc-publish": {
+    title: "发布清单（不上传）",
+    body: `对照 community_knowledge/authored/publishing.md。禁止调用 CurseForge / Modrinth 上传 API。
+1. 元数据：mods.toml / neoforge.mods.toml / fabric.mod.json 的 id、version、license
+2. 产物：build/libs 正式 jar（排除 -sources、-javadoc、dev）
+3. changelog 与支持的 MC/loader 版本
+4. 可选 check_publish_ready（若已注册）做机器检查；默认不写盘、不调外网
+5. 用户自行上传。`,
+  },
+  "mc-setup-env": {
+    title: "开发环境搭建",
+    body: `1. detect_mod_project 确定平台和版本。不要默认 Forge 1.20.1。
+2. Forge/NeoForge：download_official_mdk（dryRun）拿推荐 JDK / Gradle / mappings；对照 gradle.properties、build.gradle 与规则 00。
+3. Fabric/Quilt：对照 fabric.mod.json / quilt.mod.json 与 gradle.properties 的 Loom、Yarn/Mojmap、Java toolchain。26.1 用 implementation，不要 modImplementation。
+4. 输出：建议 JDK、runClient/runServer、映射选择、gradle.properties 修正清单。
+5. 提醒用户手动 ./gradlew genEclipseRuns 或 genIntellijRuns（如适用），不自动执行。
+6. validate_project：Fabric/Quilt/NeoForge 看 status passed/failed（不是 skipped）。LiteLoader/Rift/ModLoader/基岩仍 skipped，改口文档工具。任何平台都不得把「validate_project 通过」当成环境搭建结束。`,
   },
 };
 

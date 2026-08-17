@@ -1,5 +1,6 @@
 # Fabric 26.1.2 — Agent 总纲
 
+> 文档 fallback 仅限查询 API，不代表规则树可用。
 > 只适用于 **Minecraft / Fabric 26.1.2**。游戏已去混淆。
 > **禁止**读取 `fabric/1.21.11/.cursor/rules` 或任何邻版 01–10。
 > **禁止**把 `fabric-wiki` / 1.21.x wiki 当本版全文。

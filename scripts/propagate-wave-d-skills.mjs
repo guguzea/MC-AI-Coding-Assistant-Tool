@@ -61,7 +61,7 @@ const FABRIC_VERSIONS = [
   "1.21.11",
 ];
 
-const NEOFORGE_VERSION = "1.20.4";
+const NEOFORGE_VERSION = "1.20.4"; // 仅作历史对照。禁止无差别复制进 neoforge/<ver>。
 
 function readUtf8(p) {
   let s = fs.readFileSync(p, "utf8");
@@ -173,26 +173,6 @@ function main() {
       writeUtf8(dest, out);
       written++;
     }
-
-    {
-      const out = buildSkill(srcText, {
-        platform: "neoforge",
-        version: NEOFORGE_VERSION,
-        mappings: "mcp",
-        knowledgeHint: "neoforge",
-        docsTool: "search_neoforge_docs",
-      });
-      const dest = path.join(
-        ROOT,
-        "neoforge",
-        ".cursor",
-        "skills",
-        name,
-        "SKILL.md"
-      );
-      writeUtf8(dest, out);
-      written++;
-    }
   }
 
   console.log(
@@ -203,7 +183,8 @@ function main() {
         written,
         forgeVersions: FORGE_VERSIONS.length,
         fabricVersions: FABRIC_VERSIONS.length,
-        neoforge: true,
+        neoforge: false,
+        note: "禁止把 Forge 1.20.1 Wave D 无差别复制进 neoforge/<ver>。分档 Skill 须按该版 verified-api / search_neoforge_docs 人工核实。",
       },
       null,
       2

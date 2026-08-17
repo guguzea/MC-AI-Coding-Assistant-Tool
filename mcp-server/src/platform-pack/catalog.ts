@@ -15,6 +15,8 @@ export const PACK_PLATFORMS = [
 
 export type PackPlatform = (typeof PACK_PLATFORMS)[number];
 
+export type PackActivationStatus = "ready" | "draft";
+
 export type PackInfo = {
   platform: PackPlatform;
   minecraftVersion: string;
@@ -22,10 +24,25 @@ export type PackInfo = {
   agentsPath: string;
   trap?: boolean;
   trapNote?: string;
+  status?: PackActivationStatus;
 };
 
 function isVersionDirName(name: string): boolean {
   return /^\d+(\.\d+)*$/.test(name);
+}
+
+export function readPackStatus(packDir: string): PackActivationStatus {
+  const metaPath = join(packDir, "pack.meta.json");
+  if (existsSync(metaPath)) {
+    try {
+      const j = JSON.parse(readFileSync(metaPath, "utf8")) as Record<string, unknown>;
+      const s = String(j.status ?? j["pack-status"] ?? "").toLowerCase();
+      if (s === "draft") return "draft";
+    } catch {
+      /* ignore */
+    }
+  }
+  return "ready";
 }
 
 export function knowledgeVersion(platform: string, mcVersion: string): string {
@@ -35,9 +52,10 @@ export function knowledgeVersion(platform: string, mcVersion: string): string {
   return v;
 }
 
-export function listPacks(repoRoot = resolveRepoRoot()): { packs: PackInfo[]; traps: PackInfo[] } {
+export function listPacks(repoRoot = resolveRepoRoot()): { packs: PackInfo[]; traps: PackInfo[]; drafts: PackInfo[] } {
   const packs: PackInfo[] = [];
   const traps: PackInfo[] = [];
+  const drafts: PackInfo[] = [];
   for (const platform of PACK_PLATFORMS) {
     const dir = join(repoRoot, platform);
     if (!existsSync(dir) || !statSync(dir).isDirectory()) continue;
@@ -75,10 +93,18 @@ export function listPacks(repoRoot = resolveRepoRoot()): { packs: PackInfo[]; tr
       }
       const agentsPath = join(packDir, "AGENTS.md");
       if (!existsSync(agentsPath)) continue;
-      packs.push({ platform, minecraftVersion: name, packDir, agentsPath });
+      const info: PackInfo = {
+        platform,
+        minecraftVersion: name,
+        packDir,
+        agentsPath,
+        status: readPackStatus(packDir),
+      };
+      if (info.status === "draft") drafts.push(info);
+      else packs.push(info);
     }
   }
-  return { packs, traps };
+  return { packs, traps, drafts };
 }
 
 export function fabricRulesOverlay(
@@ -125,27 +151,37 @@ export function fabricRulesOverlay(
   return { wanted, status: "ok", note: `02–10 可读 ${wanted}/.cursor/rules`, fabricDir };
 }
 
-export function findPack(
+export function inspectPack(
   platform: string,
   minecraftVersion: string,
   repoRoot = resolveRepoRoot(),
-): PackInfo | null {
+): { pack: PackInfo; status: PackActivationStatus } | null {
   const p = platform.trim().toLowerCase() as PackPlatform;
   if (p === "bedrock") {
     const packDir = join(repoRoot, "bedrock");
     const agentsPath = join(packDir, "AGENTS.md");
     if (existsSync(agentsPath)) {
-      return { platform: "bedrock", minecraftVersion: "*", packDir, agentsPath };
+      const status = readPackStatus(packDir);
+      return { pack: { platform: "bedrock", minecraftVersion: "*", packDir, agentsPath, status }, status };
     }
     return null;
   }
   const ver = knowledgeVersion(p, minecraftVersion);
   const packDir = join(repoRoot, p, ver);
   const agentsPath = join(packDir, "AGENTS.md");
-  if (existsSync(agentsPath)) {
-    return { platform: p, minecraftVersion: ver, packDir, agentsPath };
-  }
-  return null;
+  if (!existsSync(agentsPath)) return null;
+  const status = readPackStatus(packDir);
+  return { pack: { platform: p, minecraftVersion: ver, packDir, agentsPath, status }, status };
+}
+
+export function findPack(
+  platform: string,
+  minecraftVersion: string,
+  repoRoot = resolveRepoRoot(),
+): PackInfo | null {
+  const inspected = inspectPack(platform, minecraftVersion, repoRoot);
+  if (!inspected || inspected.status !== "ready") return null;
+  return inspected.pack;
 }
 
 export function listRuleFiles(packDir: string): Array<{ id: string; fileName: string; abs: string }> {
@@ -167,7 +203,13 @@ export function listRuleFiles(packDir: string): Array<{ id: string; fileName: st
   return out;
 }
 
-export type SkillIndexEntry = { name: string; description: string; relPosix: string };
+export type SkillIndexEntry = {
+  name: string;
+  description: string;
+  relPosix: string;
+  source?: string;
+  mappingNote?: string;
+};
 
 function frontmatterDescription(text: string): { name?: string; description: string } {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -209,6 +251,33 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
     }
   }
   return out.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function mappingNoteForFabricSkill(fabricVer: string): string {
+  return (
+    `本 Skill 正文来自 Fabric ${fabricVer} 规则包，映射以该 Fabric 档为准（多为 Yarn named；26.1.2 为官方名）。` +
+    `请与当前 Quilt 工程的 mappings 对齐后再抄代码。禁止把 class_ / method_ / field_ 中间名当 API。`
+  );
+}
+
+export function mergeQuiltFabricSkills(
+  quiltDir: string,
+  fabricDir: string,
+  fabricVer: string,
+  repoRoot = resolveRepoRoot(),
+): SkillIndexEntry[] {
+  const quilt = listSkillIndex(quiltDir, repoRoot);
+  const fabric = listSkillIndex(fabricDir, repoRoot);
+  const byName = new Map<string, SkillIndexEntry>();
+  const note = mappingNoteForFabricSkill(fabricVer);
+  const source = `fabric/${fabricVer}`;
+  for (const s of fabric) {
+    byName.set(s.name, { ...s, source, mappingNote: note });
+  }
+  for (const s of quilt) {
+    byName.set(s.name, s);
+  }
+  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function readText(abs: string, maxChars = 120_000): string {

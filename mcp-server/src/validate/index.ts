@@ -22,16 +22,25 @@ import {
 } from "../diagnostics/index.js";
 import { analyzeCrash, type CrashResult } from "../crash/index.js";
 import type { ActionEnvelope } from "../utils/actionable.js";
+import { actionable, ActionCodes } from "../utils/actionable.js";
 import {
   loadModProject,
   mergeJavaFiles,
   preferExplicit,
   resolveProjectDir,
 } from "../utils/project-files.js";
+import {
+  datapackRecipeWarnings,
+  validateFabricOrQuilt,
+  validateNeoForge,
+} from "./loaders.js";
 
 export interface ValidateQuery {
   /** mods.toml 文件内容 */
   modsToml?: string;
+  neoModsToml?: string;
+  fabricModJson?: string;
+  quiltModJson?: string;
   /** Java 源文件列表，建议包含所有注册相关类 */
   javaFiles?: Array<{ path: string; content: string }>;
   /** build.gradle 文件内容（用于 Gradle 配置诊断） */
@@ -47,6 +56,8 @@ export interface ValidateQuery {
 }
 
 export interface ValidationResult {
+  status: "passed" | "failed" | "skipped";
+  skipped?: boolean;
   passed: boolean;
   errors: string[];
   warnings: string[];
@@ -141,55 +152,88 @@ function findItemRegistryNames(
 
 /**
  * A. DeferredRegister 注册完整性（ERROR）
- * 检查 BLOCKS.register(...) 后是否调用了 .register(modEventBus)
+ * 检测 DeferredRegister.create / createBlocks / createItems 字段是否挂到 modEventBus。
+ * 条目注册 register("id", …) 不得计入 bus 次数。
  */
+function extractDeferredRegisterFields(content: string): string[] {
+  const names = new Set<string>();
+  const fieldRe = /DeferredRegister(?:\s*<[^>]+>)?\s+(\w+)\s*=/g;
+  let m: RegExpExecArray | null;
+  while ((m = fieldRe.exec(content)) !== null) {
+    names.add(m[1]);
+  }
+  const createRe = /(\w+)\s*=\s*DeferredRegister\.(?:create|createBlocks|createItems)\s*\(/g;
+  while ((m = createRe.exec(content)) !== null) {
+    names.add(m[1]);
+  }
+  return [...names];
+}
+
+function hasBusRegister(content: string, field: string): boolean {
+  const re = new RegExp(String.raw`\b${field}\s*\.\s*register\s*\(\s*(?!["'])`);
+  return re.test(content);
+}
+
 function checkDeferredRegisterIntegrity(
   javaFiles: Array<{ path: string; content: string }>,
   errors: string[],
-  warnings: string[],
+  _warnings: string[],
 ): void {
-  for (const { path, content } of javaFiles) {
-    const lines = content.split("\n");
+  const allContent = javaFiles.map((f) => f.content).join("\n");
+  const fields = extractDeferredRegisterFields(allContent);
+  if (!fields.length) return;
 
-    // 统计 DeferredRegister.register() 调用次数
-    const deferredCalls = (
-      content.match(/(?:BLOCKS|ITEMS|ENTITIES|BlockReg|ItemReg|EntityReg)\s*\.\s*register\s*\(\s*"[^"]+"\s*,/g) ?? []
-    ).length;
+  for (const field of fields) {
+    if (hasBusRegister(allContent, field)) continue;
+    const declared = javaFiles.find((f) => {
+      const re = new RegExp(String.raw`DeferredRegister(?:\s*<[^>]+>)?\s+${field}\s*=`);
+      return re.test(f.content) || new RegExp(String.raw`${field}\s*=\s*DeferredRegister\.`).test(f.content);
+    });
+    const path = declared?.path ?? javaFiles[0]?.path ?? "(unknown)";
+    errors.push(
+      `[${path}] DeferredRegister 字段 '${field}' 未调用 ${field}.register(modEventBus)` +
+        "（或 FMLJavaModLoadingContext.get().getModEventBus()）。条目 register(\"id\", …) 不能代替挂 bus。",
+    );
+  }
+}
 
-    // 检查 modEventBus.register() 调用
-    // 支持：BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus())
-    // 或：(...) -> BLOCKS.register(...), FMLJavaModLoadingContext.get().getModEventBus()
-    const modEventBusPattern =
-      /(?:BLOCKS|ITEMS|ENTITIES)\s*\.\s*register\s*\(\s*FMLJavaModLoadingContext\s*\.\s*get\s*\(\s*\)\s*\.\s*getModEventBus\s*\(\s*\)/g;
-    const modEventBusCalls = (content.match(modEventBusPattern) ?? []).length;
+function resolveModIdConstant(
+  expr: string,
+  javaFiles: Array<{ path: string; content: string }>,
+  currentContent: string,
+): string | null {
+  const simple = expr.trim();
+  const fromCurrent = currentContent.match(
+    new RegExp(String.raw`public\s+static\s+final\s+String\s+${simple}\s*=\s*"([^"]+)"`),
+  );
+  if (!simple.includes(".") && fromCurrent) return fromCurrent[1];
 
-    // 也检测 ModBusHelper 写法
-    const modBusHelperPattern =
-      /(?:BLOCKS|ITEMS|ENTITIES)\s*\.\s*register\s*\(\s*ModLoadingContext\s*\.\s*get\s*\(\s*\)\s*\.\s*getModBus\s*\(\s*\)/g;
-    const modBusHelperCalls = (content.match(modBusHelperPattern) ?? []).length;
-
-    const totalBusCalls = modEventBusCalls + modBusHelperCalls;
-
-    if (deferredCalls > 0 && totalBusCalls === 0) {
-      errors.push(
-        `[${path}] 发现 ${deferredCalls} 个 DeferredRegister.register() 调用，但未找到 modEventBus 注册。` +
-          "必须在 mod 构造函数中调用 BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus())",
+  const dotted = simple.match(/^(\w+)\.(\w+)$/);
+  if (dotted) {
+    const [, className, field] = dotted;
+    for (const f of javaFiles) {
+      if (!new RegExp(String.raw`\bclass\s+${className}\b`).test(f.content)) continue;
+      const m = f.content.match(
+        new RegExp(String.raw`public\s+static\s+final\s+String\s+${field}\s*=\s*"([^"]+)"`),
       );
-    } else if (
-      deferredCalls > 0 &&
-      totalBusCalls > 0 &&
-      totalBusCalls < deferredCalls
-    ) {
-      warnings.push(
-        `[${path}] 发现 ${deferredCalls} 个 register() 调用但仅有 ${totalBusCalls} 个 modEventBus 注册，可能遗漏`,
-      );
+      if (m) return m[1];
     }
   }
+
+  if (!simple.includes(".")) {
+    for (const f of javaFiles) {
+      const m = f.content.match(
+        new RegExp(String.raw`public\s+static\s+final\s+String\s+${simple}\s*=\s*"([^"]+)"`),
+      );
+      if (m) return m[1];
+    }
+  }
+  return null;
 }
 
 /**
  * B. @Mod 入口类检查（ERROR）
- * 检查 @Mod 注解的 modId 是否与 mods.toml 一致
+ * 检查 @Mod 注解的 modId 是否与 mods.toml 一致。常量引用无法解析时 WARN。
  */
 function checkModAnnotation(
   javaFiles: Array<{ path: string; content: string }>,
@@ -200,12 +244,29 @@ function checkModAnnotation(
   if (!modsTomlModId) return;
 
   for (const { path, content } of javaFiles) {
-    const matches = content.matchAll(/@Mod\s*\(\s*"([^"]+)"\s*\)/g);
-    for (const m of matches) {
+    const stringMatches = content.matchAll(/@Mod\s*\(\s*"([^"]+)"\s*\)/g);
+    for (const m of stringMatches) {
       const modIdInAnnotation = m[1];
       if (modIdInAnnotation !== modsTomlModId) {
         errors.push(
           `[${path}] @Mod 注解 modId='${modIdInAnnotation}' 与 mods.toml modId='${modsTomlModId}' 不一致`,
+        );
+      }
+    }
+
+    const constMatches = content.matchAll(/@Mod\s*\(\s*([A-Za-z_][\w.]*)\s*\)/g);
+    for (const m of constMatches) {
+      const expr = m[1];
+      const resolved = resolveModIdConstant(expr, javaFiles, content);
+      if (!resolved) {
+        warnings.push(
+          `[${path}] @Mod(${expr}) 无法解析常量，已跳过与 mods.toml 的硬比对`,
+        );
+        continue;
+      }
+      if (resolved !== modsTomlModId) {
+        errors.push(
+          `[${path}] @Mod(${expr}) 解析为 '${resolved}'，与 mods.toml modId='${modsTomlModId}' 不一致`,
         );
       }
     }
@@ -539,10 +600,7 @@ function checkModsToml(
   return modId;
 }
 
-const NON_FORGE_LOADERS = new Set<DetectedLoader>([
-  "quilt",
-  "fabric",
-  "neoforge",
+const SKIPPED_LOADERS = new Set<DetectedLoader>([
   "liteloader",
   "liteloader_forge",
   "rift",
@@ -550,25 +608,19 @@ const NON_FORGE_LOADERS = new Set<DetectedLoader>([
   "bedrock",
 ]);
 
-function warningForNonForge(loader: DetectedLoader): string {
+function warningForSkippedLoader(loader: DetectedLoader): string {
   switch (loader) {
-    case "quilt":
-      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Quilt。请改用 search_docs({platform:"quilt"})，不要用本工具当结构校验器。';
-    case "fabric":
-      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Fabric。请改用 search_fabric_docs，不要用本工具当结构校验器。";
-    case "neoforge":
-      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 NeoForge。请改用 search_neoforge_docs，不要用本工具当结构校验器。";
     case "liteloader":
     case "liteloader_forge":
-      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 LiteLoader。请改用 search_docs({platform:"liteloader"})。';
+      return 'validate_project 不覆盖 LiteLoader。请改用 search_docs({platform:"liteloader"})。';
     case "rift":
-      return 'validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Rift。请改用 search_docs({platform:"rift"})。';
+      return 'validate_project 不覆盖 Rift。请改用 search_docs({platform:"rift"})。';
     case "modloader":
-      return "validate_project 仅覆盖 Forge（mods.toml / DeferredRegister）。当前工程像 Risugami's ModLoader。请改用 search_docs({platform:\"modloader\"})。";
+      return "validate_project 不覆盖 Risugami's ModLoader。请改用 search_docs({platform:\"modloader\"})。";
     case "bedrock":
-      return "validate_project 仅覆盖 Forge，不是基岩校验器。请改用 validate_addon_manifest / search_bedrock_docs。";
+      return "validate_project 不是基岩校验器。请改用 validate_addon_manifest / search_bedrock_docs。";
     default:
-      return "validate_project 仅覆盖 Forge。请改用对应平台的文档/校验工具。";
+      return "validate_project 不覆盖该加载器。请改用对应平台的文档/校验工具。";
   }
 }
 
@@ -580,11 +632,12 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
     .map((f) => `${f.path}\n${f.content}`)
     .join("\n");
   const extras: CheckDependenciesExtras = {};
+  if (query.quiltModJson) extras.quiltModJson = query.quiltModJson;
   if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) {
     extras.addonManifest = javaBlob;
   }
   if (/quilt_loader/.test(javaBlob)) {
-    extras.quiltModJson = javaBlob;
+    extras.quiltModJson = extras.quiltModJson ?? javaBlob;
   }
   if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) {
     extras.litemodJson = javaBlob;
@@ -593,7 +646,7 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
     extras.riftmodJson = javaBlob;
   }
 
-  const fromDetect = detectLoader(gradle, modsToml, undefined, undefined, extras);
+  const fromDetect = detectLoader(gradle, modsToml, query.fabricModJson, query.neoModsToml, extras);
   if (fromDetect !== "unknown" && fromDetect !== "forge") {
     return fromDetect;
   }
@@ -635,6 +688,7 @@ function fillValidateQuery(
   if (!resolved.ok) {
     return {
       error: {
+        status: "failed",
         passed: false,
         ok: false,
         errors: [resolved.action.message],
@@ -651,7 +705,10 @@ function fillValidateQuery(
   return {
     query: {
       ...query,
-      modsToml: preferExplicit(query.modsToml, loaded.modsToml ?? loaded.neoModsToml),
+      modsToml: preferExplicit(query.modsToml, loaded.modsToml),
+      neoModsToml: preferExplicit(query.neoModsToml, loaded.neoModsToml),
+      fabricModJson: preferExplicit(query.fabricModJson, loaded.fabricModJson),
+      quiltModJson: preferExplicit(query.quiltModJson, loaded.quiltModJson),
       buildGradle: preferExplicit(query.buildGradle, loaded.buildGradle),
       gradleProperties: preferExplicit(query.gradleProperties, loaded.gradleProperties),
       mixinsJson: preferExplicit(query.mixinsJson, loaded.mixinsJson),
@@ -677,14 +734,39 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   query = filled.query;
 
   const loader = detectValidateLoader(query);
-  if (NON_FORGE_LOADERS.has(loader)) {
-    const warnings = [warningForNonForge(loader)];
+  const recipeWarnings = datapackRecipeWarnings(query.projectPath);
+  if (loader === "fabric" || loader === "quilt") {
+    const r = validateFabricOrQuilt(query, loader);
+    if (javaWarning) r.warnings.unshift(javaWarning);
+    r.warnings.push(...recipeWarnings);
+    return r;
+  }
+  if (loader === "neoforge") {
+    const r = validateNeoForge(query);
+    if (javaWarning) r.warnings.unshift(javaWarning);
+    r.warnings.push(...recipeWarnings);
+    return r;
+  }
+  if (SKIPPED_LOADERS.has(loader)) {
+    const warnings = [warningForSkippedLoader(loader)];
     if (javaWarning) warnings.push(javaWarning);
     return {
-      passed: true,
+      status: "skipped",
+      skipped: true,
+      passed: false,
+      ok: false,
       errors: [],
       warnings,
-      checks: ["loader 识别（非 Forge 早退）"],
+      checks: ["loader 识别（未跑校验）"],
+      action: actionable(
+        ActionCodes.WRONG_TOOL,
+        "请先看 status/skipped，不要只看 passed；这不是项目损坏，而是本工具未跑检查。" +
+          warningForSkippedLoader(loader),
+        [
+          "改用对应平台文档或校验工具（search_docs / validate_addon_manifest）",
+        ],
+        ["search_docs", "validate_addon_manifest"],
+      ),
     };
   }
 
@@ -813,6 +895,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   checkObjectHolder(javaFiles, modsTomlModId, warnings);
   checkMixinConfig(mixinsJson, javaFiles, warnings);
   checkDuplicateRegistryNames(javaFiles, warnings);
+  warnings.push(...recipeWarnings);
 
   let crashAnalyses: ValidationResult["crashAnalyses"];
   if (includeCrashAnalysis && crashReports.length > 0) {
@@ -822,8 +905,11 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     }));
   }
 
+  const passed = errors.length === 0;
   return {
-    passed: errors.length === 0,
+    status: passed ? "passed" : "failed",
+    passed,
+    ok: passed,
     errors,
     warnings,
     checks,

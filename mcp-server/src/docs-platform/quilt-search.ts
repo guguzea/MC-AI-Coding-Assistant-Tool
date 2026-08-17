@@ -6,7 +6,7 @@ import { createFabricDocStore, FabricDocStore } from "./fabric/store.js";
 import { hasPlatformDocData, platformDataMissingPayload } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from "./search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
 import { filterFabricFallbackHits, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
@@ -19,7 +19,8 @@ const QUILT_FABRIC_FALLBACK_WARNING =
 type DocHit = { id?: string; label?: string; url?: string; tags?: string[] };
 
 function jsonOk(payload: unknown): CallToolResult {
-  return { content: [{ type: "text", text: JSON.stringify(payload, null, 2) }] };
+  const rec = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : { value: payload };
+  return { content: [{ type: "text", text: JSON.stringify(withDocsFallbackFields(rec), null, 2) }] };
 }
 
 function isDocNotFoundLike(e: unknown): boolean {

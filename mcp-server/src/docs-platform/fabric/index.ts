@@ -25,7 +25,7 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
 import {
   findFabricPorting,
@@ -246,7 +246,7 @@ export async function searchFabricDocs(
         {
           type: "text",
           text: JSON.stringify(
-            {
+            withDocsFallbackFields({
               ok: true,
               query,
               version,
@@ -261,7 +261,7 @@ export async function searchFabricDocs(
               ),
               total: (results as unknown as Array<unknown>).length,
               results,
-            },
+            }),
             null,
             2,
           ),

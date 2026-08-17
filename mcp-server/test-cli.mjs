@@ -2,7 +2,7 @@
  * CLI test for mc-skill（flags-only + list-tools + JSON 包装 + 通用 dispatch）
  */
 import { spawnSync } from "child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "fs";
+import { mkdtempSync, rmSync, writeFileSync, readFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
@@ -92,6 +92,16 @@ function parseJson(r, label) {
     throw new Error(`get_minecraft_source lines tuple missing: ${JSON.stringify(src?.parameters?.properties?.lines)}`);
   }
   console.log(`list-tools: ${j.result.total} tools`);
+  const repoRoot = join(root, "..");
+  const docs = [
+    readFileSync(join(repoRoot, "README.md"), "utf8"),
+    readFileSync(join(repoRoot, "CONTRIBUTING.md"), "utf8"),
+  ].join("\n");
+  for (const m of docs.matchAll(/(\d+)\s*个工具/g)) {
+    if (Number(m[1]) !== j.result.total) {
+      throw new Error(`文档写死「${m[1]} 个工具」但 list-tools 为 ${j.result.total}`);
+    }
+  }
 }
 
 // ── 3. 旧位置参数兼容：query <className> [methodName] + stderr 迁移提示 ───────

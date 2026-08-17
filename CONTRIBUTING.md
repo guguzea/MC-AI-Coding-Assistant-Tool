@@ -11,7 +11,7 @@
 | Forge 规则 / Skills | `forge/<version>/` | 多版本已完成（主推 1.20.1） | 扩展规则、Skill、scaffold |
 | Fabric 规则 / Skills | `fabric/<version>/` | 多版本已完成（主推 1.20.1 / 1.21.x） | 同上 + Fabric 专有 Skill |
 | NeoForge 规则 | `neoforge/` | 已完成（主推 1.20.4+） | 扩展规则与知识 |
-| MCP Server | `mcp-server/` | **54** 个工具 | 新工具、脚本、测试 |
+| MCP Server | `mcp-server/` | 以 list-tools / 实际注册为准 | 新工具、脚本、测试 |
 | 离线数据 | `data/` | Forge / Fabric / NeoForge 多版本 | 抓取、索引、审计 |
 | 根文档 | `README.md` / `AUTO_SETUP.md` / `AGENTS.md` | 持续维护 | 修正与同步 |
 

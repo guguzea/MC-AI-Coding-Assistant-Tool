@@ -22,8 +22,8 @@ import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen } from "./dist/datagen/index.js";
-import { generateLang } from "./dist/generators/index.js";
-import { diagnoseGradle } from "./dist/gradle/index.js";
+import { generateLang, generateCapability, generateConfig, generateEntityRenderer } from "./dist/generators/index.js";
+import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
 import { detectLoader, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
@@ -46,7 +46,12 @@ import {
 } from "./dist/docs-platform/community/index.js";
 import { analyzeCrash } from "./dist/crash/index.js";
 import { validateProject } from "./dist/validate/index.js";
+import { validateDatapackJson } from "./dist/datapack/index.js";
+import { collectJavaSources } from "./dist/utils/project-files.js";
+import { checkPublishReady } from "./dist/publish/index.js";
+import { inspectRuntime } from "./dist/runtime-inspect/index.js";
 import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-search.js";
+import { getWorkflowTemplate, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -466,6 +471,8 @@ async function testDatagenAndMappingGates() {
     providerType: "recipe",
     modId: "example.mod",
     targetName: "My-Block",
+    platform: "forge",
+    version: "1.20.1",
   });
   assert.ok(soft.code, "soft-normalized datagen should still emit code");
   assert.equal(soft.usedModId, "example_mod");
@@ -476,13 +483,15 @@ async function testDatagenAndMappingGates() {
     providerType: "recipe",
     modId: "ExampleMod",
     targetName: "ruby_block",
+    platform: "forge",
+    version: "1.20.1",
   });
   assert.ok(pascal.code?.includes("ExampleModRecipeProvider"), "class name must keep PascalCase");
   assert.ok(pascal.code?.includes("examplemod:ruby_block"), "recipe id must use targetName");
   assert.ok(!pascal.code?.includes("ExamplemodRecipeProvider"));
 
   for (const t of /** @type {const} */ (["recipe", "blockstate", "itemmodel", "loottable", "tag"])) {
-    const d = generateDatagen({ providerType: t, modId: "demo", targetName: "stone_block" });
+    const d = generateDatagen({ providerType: t, modId: "demo", targetName: "stone_block", platform: "forge", version: "1.20.1" });
     assert.ok(d.code?.includes("net.minecraft.data.PackOutput"), `${t} PackOutput`);
     assert.ok(!d.code?.includes("data.pack.PackOutput"), `${t} wrong PackOutput package`);
     assert.ok(!d.code?.includes("::iterator"), `${t} must not use ::iterator`);
@@ -503,7 +512,7 @@ async function testDatagenAndMappingGates() {
   assert.ok(!nfRecipe.code?.includes("net.minecraftforge"));
 
   for (const t of /** @type {const} */ (["advancement", "particle", "sound"])) {
-    const forgeExtra = generateDatagen({ providerType: t, modId: "demo", targetName: "spark" });
+    const forgeExtra = generateDatagen({ providerType: t, modId: "demo", targetName: "spark", platform: "forge", version: "1.20.1" });
     assert.ok(forgeExtra.code?.includes("net.minecraftforge"), `${t} forge path`);
 
     const nfExtra = generateDatagen({
@@ -716,6 +725,12 @@ async function testDatagenAndMappingGates() {
   assert.equal(blck.found, false, "edit-distance Blck must not be a hit");
   const joined = (blck.suggestions ?? []).join(" ");
   assert.ok(!/\bPack\b/.test(joined), `Blck must not suggest Pack: ${joined}`);
+  const q1211 = await queryApi({
+    className: "net.minecraft.world.entity.LivingEntity",
+    version: "1.21.1",
+  });
+  assert.equal(q1211.found, false);
+  assert.ok(q1211.warning && /无 Vanilla API 索引/.test(q1211.warning), JSON.stringify(q1211).slice(0, 500));
   disposeApiData();
 
   const gradle = diagnoseGradle({
@@ -734,10 +749,19 @@ copyIdeResources = true
   const loom = diagnoseGradle({
     buildGradle: `plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\n`,
   });
-  assert.equal(loom.errors.length, 0);
-  assert.ok(loom.warnings.some((w) => /仅覆盖 Forge/.test(w)));
+  assert.equal(loom.status, "failed");
+  assert.ok(loom.errors.some((e) => /toolchain|Java/.test(e)), JSON.stringify(loom.errors));
   assert.ok(loom.suggestions.some((s) => s.includes("search_fabric_docs")));
   assert.ok(!loom.suggestions.some((s) => /query_fabric_registry/.test(s)));
+
+  const loom261 = diagnoseGradle({
+    buildGradle: `plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\ndependencies { modImplementation 'net.fabricmc.fabric-api:fabric-api:1.0' }\n`,
+    gradleProperties: "minecraft_version=26.1.2\n",
+  });
+  assert.equal(loom261.status, "failed");
+  assert.ok(loom261.errors.some((e) => /net\.fabricmc\.fabric-loom/.test(e)), JSON.stringify(loom261.errors));
+  assert.ok(loom261.errors.some((e) => /modImplementation/.test(e)));
+  assert.ok(loom261.errors.some((e) => /25/.test(e)));
 
   const neo = diagnoseGradle({
     buildGradle: `plugins { id 'net.neoforged.gradle.userdev' version '7.0.80' }\n`,
@@ -1447,11 +1471,10 @@ async function testReviewFixes() {
   const quiltVal = validateProject({
     buildGradle: "plugins { id 'org.quiltmc.loom' version '1.7.4' }\n",
   });
-  assert.equal(quiltVal.passed, true, JSON.stringify(quiltVal));
-  assert.deepEqual(quiltVal.errors, []);
-  assert.equal(quiltVal.warnings.length, 1);
-  assert.match(quiltVal.warnings[0], /search_docs/);
-  assert.ok(!quiltVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+  assert.equal(quiltVal.status, "failed", JSON.stringify(quiltVal));
+  assert.equal(quiltVal.passed, false, JSON.stringify(quiltVal));
+  assert.ok(quiltVal.errors.some((e) => /quilt.mod.json/.test(e)));
+  assert.equal(quiltVal.deprecated_legacy_passed, undefined);
 
   const fabricVal = validateProject({
     javaFiles: [{
@@ -1460,10 +1483,26 @@ async function testReviewFixes() {
         "package com.example;\nimport net.fabricmc.api.ModInitializer;\npublic class ExampleMod implements ModInitializer {\n  public void onInitialize() {}\n}\n",
     }],
   });
-  assert.equal(fabricVal.passed, true, JSON.stringify(fabricVal));
-  assert.deepEqual(fabricVal.errors, []);
-  assert.match(fabricVal.warnings[0], /search_fabric_docs/);
+  assert.equal(fabricVal.status, "failed", JSON.stringify(fabricVal));
+  assert.equal(fabricVal.passed, false, JSON.stringify(fabricVal));
+  assert.ok(fabricVal.errors.some((e) => /fabric.mod.json/.test(e)));
   assert.ok(!fabricVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+  assert.equal(fabricVal.deprecated_legacy_passed, undefined);
+
+  const fabricPass = validateProject({
+    fabricModJson: JSON.stringify({
+      schemaVersion: 1,
+      id: "examplemod",
+      entrypoints: { main: ["com.example.ExampleMod"] },
+    }),
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.fabricmc.api.ModInitializer;\npublic class ExampleMod implements ModInitializer {\n  public void onInitialize() {}\n}\n",
+    }],
+  });
+  assert.equal(fabricPass.status, "passed", JSON.stringify(fabricPass));
+  assert.equal(fabricPass.deprecated_legacy_passed, undefined);
 
   const bedrockVal = validateProject({
     javaFiles: [{
@@ -1475,9 +1514,11 @@ async function testReviewFixes() {
       }),
     }],
   });
-  assert.equal(bedrockVal.passed, true, JSON.stringify(bedrockVal));
+  assert.equal(bedrockVal.status, "skipped", JSON.stringify(bedrockVal));
+  assert.equal(bedrockVal.passed, false, JSON.stringify(bedrockVal));
   assert.deepEqual(bedrockVal.errors, []);
   assert.match(bedrockVal.warnings[0], /validate_addon_manifest/);
+  assert.equal(bedrockVal.deprecated_legacy_passed, undefined);
 
   const forgeVal = validateProject({
     modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
@@ -1497,10 +1538,20 @@ async function testReviewFixes() {
         "package com.example;\nimport net.neoforged.bus.api.IEventBus;\npublic class ExampleMod {}\n",
     }],
   });
-  assert.equal(neoVal.passed, true, JSON.stringify(neoVal));
-  assert.deepEqual(neoVal.errors, []);
-  assert.match(neoVal.warnings[0], /search_neoforge_docs/);
-  assert.ok(!neoVal.errors.some((e) => /DeferredRegister|@Mod/.test(e)));
+  assert.equal(neoVal.status, "failed", JSON.stringify(neoVal));
+  assert.equal(neoVal.passed, false, JSON.stringify(neoVal));
+  assert.ok(neoVal.errors.some((e) => /@Mod/.test(e)), JSON.stringify(neoVal.errors));
+  assert.equal(neoVal.deprecated_legacy_passed, undefined);
+
+  const neoPass = validateProject({
+    neoModsToml: 'modLoader="javafml"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.neoforged.bus.api.IEventBus;\nimport net.neoforged.fml.common.Mod;\n@Mod(\"examplemod\")\npublic class ExampleMod {\n  public ExampleMod(IEventBus bus) {}\n}\n",
+    }],
+  });
+  assert.equal(neoPass.status, "passed", JSON.stringify(neoPass));
 
   const exclusiveHit = exclusiveFabricFallbackRefusal({
     id: "wiki/FabricRegistryBuilder",
@@ -1559,6 +1610,12 @@ async function testPlan2PrimerMdkFabricPorting() {
   assert.equal(nf1205.ok, true, JSON.stringify(nf1205).slice(0, 400));
   assert.ok(nf1205.warning, "1.20.5 must warn about missing main doc tree");
 
+  const nf262 = parseToolText(await searchNeoForgeDocs({ query: "events", version: "26.2" }));
+  assert.equal(nf262.ok, true, JSON.stringify(nf262).slice(0, 400));
+  assert.equal(nf262.fallback, true, JSON.stringify(nf262).slice(0, 600));
+  assert.ok(nf262.source_version, JSON.stringify(nf262).slice(0, 400));
+  assert.match(String(nf262.warning || ""), /PACK_NOT_FOUND|不得据此推断规则树/);
+
   const toc = getMigrationGuide("26.1->26.2", { platform: "neoforge" });
   assert.equal(toc.found, true, JSON.stringify(toc).slice(0, 400));
   assert.ok(Array.isArray(toc.toc), "get_migration_guide default is toc");
@@ -1604,14 +1661,31 @@ async function testPlan2PrimerMdkFabricPorting() {
     assert.equal(neo1211.error?.code, "MDK_NOT_PINNED");
   }
 
-  const { generateNetworkPacket } = await import("./dist/generators/index.js");
-  const noPlat = generateNetworkPacket("my_mod", "sync_msg");
+  const { generateNetworkPacket: genPkt } = await import("./dist/generators/index.js");
+  const noPlat = genPkt("my_mod", "sync_msg");
   assert.equal(noPlat.code, null);
   assert.ok(noPlat.errors?.some((e) => /platform 必填/.test(e)), JSON.stringify(noPlat));
 
-  const nf261 = generateNetworkPacket("my_mod", "sync_msg", "neoforge_26.1");
+  const nf261 = genPkt("my_mod", "sync_msg", "neoforge_26.1");
   assert.ok(nf261.code?.includes("Identifier"), nf261.code?.slice(0, 400));
   assert.ok(!/new ResourceLocation\s*\(/.test(nf261.code || ""), nf261.code?.slice(0, 400));
+
+  const bareNeo = genPkt("my_mod", "sync_msg", "neoforge");
+  assert.equal(bareNeo.code, null);
+  assert.ok(bareNeo.errors?.length, JSON.stringify(bareNeo));
+
+  const bareFab = genPkt("my_mod", "sync_msg", "fabric");
+  assert.equal(bareFab.code, null);
+  assert.ok(!/net\.minecraftforge/.test(bareFab.code || ""));
+
+  const fabPkt = genPkt("my_mod", "sync_msg", "fabric_1.21");
+  assert.ok(fabPkt.code?.includes("PayloadTypeRegistry"), fabPkt.code?.slice(0, 400));
+  assert.ok(!/net\.minecraftforge/.test(fabPkt.code || ""));
+  assert.ok(!/net\.neoforged/.test(fabPkt.code || ""));
+
+  const fabPkt261 = genPkt("my_mod", "sync_msg", "fabric_26.1");
+  assert.ok(fabPkt261.code?.includes("ServerPlayNetworking"));
+  assert.ok(!/net\.minecraftforge/.test(fabPkt261.code || ""));
 
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
   const fa = parseToolText(await searchFabricDocs({ query: "porting 26.2 vulkan", version: "26.1.2" }));
@@ -1681,6 +1755,7 @@ public class ExampleMod {}
 function testProjectPathFill() {
   const fixture = join(dirname(fileURLToPath(import.meta.url)), "test-fixtures", "forge-mini");
   const val = validateProject({ projectPath: fixture });
+  assert.equal(val.status, "passed", JSON.stringify(val));
   assert.equal(val.passed, true, JSON.stringify(val));
   assert.ok(Array.isArray(val.checks) && val.checks.length > 0, JSON.stringify(val.checks));
   assert.ok(!val.errors?.some((e) => /@Mod/.test(e)), JSON.stringify(val.errors));
@@ -1719,6 +1794,247 @@ function testProjectPathFill() {
   assert.equal(badD.action?.code, "INVALID_INPUT");
 }
 
+function testPlan1Fixes() {
+  assert.equal(detectMinecraftVersion({ gradleProperties: "minecraft_version=1.20.1\n" }), "1.20.1");
+  assert.equal(detectMinecraftVersion({ gradleProperties: "mc_version=1.16.5\n" }), "1.16.5");
+  assert.equal(detectMinecraftVersion({ buildGradle: "minecraft '1.20.1'\n" }), "1.20.1");
+  assert.equal(detectMinecraftVersion({ buildGradle: "minecraft_version = '1.20.1'\n" }), "1.20.1");
+  assert.equal(
+    detectMinecraftVersion({ buildGradle: "dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }\n" }),
+    "1.20.1",
+  );
+  assert.equal(detectMinecraftVersion({ buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n" }), "unknown");
+
+  const g1204 = diagnoseGradle({
+    buildGradle: `
+plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+dependencies { minecraft 'net.minecraftforge:forge:1.20.4-49.0.0' }
+`,
+    gradleProperties: "minecraft_version=1.20.4\nforge_version=49.0.0\n",
+  });
+  assert.ok(!g1204.warnings.some((w) => /不以 47/.test(w)), JSON.stringify(g1204.warnings));
+
+  const gUnknown = diagnoseGradle({
+    buildGradle: `plugins { id 'net.minecraftforge.gradle' version '[6.0,6.2)' }\n`,
+  });
+  assert.ok(gUnknown.warnings.some((w) => /无法判定 MC 版本/.test(w)), JSON.stringify(gUnknown.warnings));
+  assert.ok(!gUnknown.errors.some((e) => /6\.0,6\.2|不以 47/.test(e)), JSON.stringify(gUnknown.errors));
+
+  const g112 = diagnoseGradle({
+    buildGradle: `apply plugin: 'net.minecraftforge.gradle.forge'\n`,
+    gradleProperties: "minecraft_version=1.12.2\n",
+  });
+  assert.ok(!g112.warnings.some((w) => /Java toolchain 应为 17|不以 47/.test(w)), JSON.stringify(g112.warnings));
+  assert.ok(!g112.errors.some((e) => /copyIdeResources/.test(e)), JSON.stringify(g112.errors));
+
+  const g165 = diagnoseGradle({
+    buildGradle: `apply plugin: 'net.minecraftforge.gradle.forge'\njava.toolchain.languageVersion = JavaLanguageVersion.of(17)\n`,
+    gradleProperties: "minecraft_version=1.16.5\n",
+  });
+  assert.ok(!g165.warnings.some((w) => /不以 47/.test(w)), JSON.stringify(g165.warnings));
+
+  const modern = validateProject({
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: `
+@Mod("examplemod")
+public class ExampleMod {
+  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, "examplemod");
+  public static final RegistryObject<Block> A = BLOCKS.register("a", () -> new Block(BlockBehaviour.Properties.of()));
+  public static final RegistryObject<Block> B = BLOCKS.register("b", () -> new Block(BlockBehaviour.Properties.of()));
+  public ExampleMod(IEventBus modEventBus) {
+    BLOCKS.register(modEventBus);
+  }
+}
+`,
+    }],
+  });
+  assert.ok(!modern.errors.some((e) => /DeferredRegister|modEventBus/.test(e)), JSON.stringify(modern.errors));
+
+  const constMod = validateProject({
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: `
+public class ExampleMod {
+  public static final String MOD_ID = "examplemod";
+}
+@Mod(ExampleMod.MOD_ID)
+public class ExampleMod { }
+`,
+    }],
+  });
+  assert.ok(!constMod.errors.some((e) => /@Mod/.test(e)), JSON.stringify(constMod.errors));
+
+  const noPlatDatagen = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: undefined,
+    version: "1.20.1",
+  });
+  assert.equal(noPlatDatagen.code, null);
+
+  const noVer = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "",
+  });
+  assert.equal(noVer.code, null);
+  assert.ok(noVer.errors?.some((e) => /version is required/.test(e)), JSON.stringify(noVer));
+
+  const neoNoVer = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: undefined,
+  });
+  assert.equal(neoNoVer.code, null);
+
+  const neo261 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "26.1.1",
+  });
+  assert.ok(neo261.code, JSON.stringify(neo261));
+  assert.ok(neo261.code.includes("GatherDataEvent.Client"), neo261.code.slice(0, 500));
+  assert.ok(!/new ResourceLocation/.test(neo261.code));
+  assert.ok(!/ForgeConfigSpec/.test(neo261.code));
+  assert.ok(!/net\.minecraftforge/.test(neo261.code));
+  assert.ok(neo261.code.includes("net.neoforged"));
+
+  const fabDatagen = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.11",
+  });
+  assert.ok(fabDatagen.code, JSON.stringify(fabDatagen));
+  assert.ok(fabDatagen.code.includes("DataGeneratorEntrypoint"));
+  assert.ok(!/net\.minecraftforge/.test(fabDatagen.code));
+  assert.ok(!/net\.neoforged/.test(fabDatagen.code));
+
+  const fab261 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "26.1.2",
+  });
+  assert.ok(fab261.code?.includes("FabricPackOutput"));
+  assert.ok(!/net\.minecraftforge/.test(fab261.code || ""));
+  assert.ok(!/net\.neoforged/.test(fab261.code || ""));
+
+  const capFab = generateCapability("my_mod", "mana", "fabric", "1.20.1");
+  assert.equal(capFab.code, null);
+  assert.ok(capFab.errors?.some((e) => /CCA|Cardinal/.test(e)), JSON.stringify(capFab));
+
+  const capNeoNoVer = generateCapability("my_mod", "mana", "neoforge");
+  assert.equal(capNeoNoVer.code, null);
+
+  const capNeo1201 = generateCapability("my_mod", "mana", "neoforge", "1.20.1");
+  assert.equal(capNeo1201.code, null);
+
+  const capNeo1204 = generateCapability("my_mod", "mana", "neoforge", "1.20.4");
+  assert.ok(capNeo1204.code?.includes("AttachmentType"), capNeo1204.code);
+
+  const cfgNoVer = generateConfig("my_mod", "neoforge");
+  assert.equal(cfgNoVer.code, null);
+
+  const rendNo = generateEntityRenderer("my_mod", "slime", "neoforge", "1.21.1");
+  assert.equal(rendNo.code, null);
+
+  const rend261 = generateEntityRenderer("my_mod", "slime", "neoforge", "26.1");
+  assert.ok(rend261.code?.includes("Identifier"), rend261.code);
+  assert.ok(rend261.code?.includes("EntityRenderer"), rend261.code);
+  assert.ok(!/net\.minecraftforge/.test(rend261.code || ""));
+
+  const cfgFab = generateConfig("my_mod", "fabric", "1.21.11");
+  assert.ok(cfgFab.code?.includes("clothconfig2"), cfgFab.code);
+  assert.ok(cfgFab.warnings?.some((w) => /依赖/.test(w)), JSON.stringify(cfgFab.warnings));
+  assert.ok(!/net\.minecraftforge/.test(cfgFab.code || ""));
+
+  const rendOk = generateEntityRenderer("my_mod", "slime", "forge", "1.20.1");
+  assert.ok(rendOk.code?.includes("@OnlyIn"), rendOk.code);
+
+  const triage = getWorkflowTemplate("mc-crash-triage");
+  assert.equal(triage.found, true);
+  assert.match(triage.body ?? "", /STATUS_GATE: skipped/);
+  assert.match(triage.body ?? "", /STATUS_GATE: passed/);
+  assert.match(triage.body ?? "", /status/);
+  assert.match(triage.body ?? "", /skipped/);
+  assert.doesNotMatch(triage.body ?? "", /validate_project[\s\S]{0,30}通过即结束/);
+
+  const special = validateDatapackJson({
+    kind: "recipe",
+    jsonContent: JSON.stringify({ type: "minecraft:crafting_special_armordye" }),
+  });
+  assert.equal(special.valid, true, JSON.stringify(special));
+  const trim = validateDatapackJson({
+    kind: "recipe",
+    jsonContent: JSON.stringify({ type: "minecraft:smithing_trim", template: {}, base: {}, addition: {} }),
+  });
+  assert.equal(trim.valid, true, JSON.stringify(trim));
+  const shaped = validateDatapackJson({
+    kind: "recipe",
+    jsonContent: JSON.stringify({ type: "minecraft:crafting_shaped", pattern: ["#"], key: { "#": { item: "minecraft:stone" } } }),
+  });
+  assert.equal(shaped.valid, false);
+  assert.ok(shaped.errors.some((e) => /result/.test(e)));
+
+  const scanRoot = mkdtempSync(join(tmpdir(), "mc-java-scan-"));
+  try {
+    mkdirSync(join(scanRoot, "src", "main", "java"), { recursive: true });
+    writeFileSync(join(scanRoot, "src", "main", "java", "A.java"), "class A {}\n");
+    writeFileSync(join(scanRoot, "src", "main", "java", "B.java"), "class B {}\n");
+    const prev = process.env.MC_SKILL_JAVA_SCAN_MAX_FILES;
+    process.env.MC_SKILL_JAVA_SCAN_MAX_FILES = "1";
+    const scanned = collectJavaSources(scanRoot);
+    if (prev === undefined) delete process.env.MC_SKILL_JAVA_SCAN_MAX_FILES;
+    else process.env.MC_SKILL_JAVA_SCAN_MAX_FILES = prev;
+    assert.equal(scanned.truncated, true);
+    assert.ok(scanned.warning && /检查可能不完整/.test(scanned.warning), scanned.warning);
+    assert.ok(/MC_SKILL_JAVA_SCAN_MAX_FILES/.test(scanned.warning ?? ""));
+  } finally {
+    rmSync(scanRoot, { recursive: true, force: true });
+  }
+
+  const pub = checkPublishReady({
+    fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
+  });
+  assert.equal(pub.ready, true, JSON.stringify(pub));
+  assert.ok(pub.warnings.some((w) => /不上传/.test(w)));
+
+  const logRoot = mkdtempSync(join(tmpdir(), "mc-inspect-"));
+  try {
+    mkdirSync(join(logRoot, "run", "logs"), { recursive: true });
+    writeFileSync(join(logRoot, "run", "logs", "latest.log"), "[Server thread/INFO]: Starting minecraft server version 1.20.1\nException: boom\n");
+    const insp = inspectRuntime({ projectPath: logRoot, maxLines: 20 });
+    assert.equal(insp.ok, true, JSON.stringify(insp));
+    assert.ok(insp.logAnalysis, JSON.stringify(insp));
+  } finally {
+    rmSync(logRoot, { recursive: true, force: true });
+  }
+
+  const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const docs = [
+    readFileSync(join(repoRoot, "README.md"), "utf8"),
+    readFileSync(join(repoRoot, "CONTRIBUTING.md"), "utf8"),
+  ].join("\n");
+  const wfCount = Object.keys(WORKFLOW_TEMPLATES).length;
+  for (const m of docs.matchAll(/(\d+)\s*个工作流/g)) {
+    assert.equal(Number(m[1]), wfCount, `文档写死「${m[1]} 个工作流」但模板数为 ${wfCount}`);
+  }
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -1742,6 +2058,7 @@ await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
 await testMdkUnpackFixtures();
 await testProjectPathFill();
+testPlan1Fixes();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

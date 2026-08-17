@@ -112,6 +112,7 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
     if (!f.content.includes("@Mixin")) continue;
     const parsed = parseMixinJavaSource(f.content, f.path);
     if (!parsed) continue;
+    if (parsed.warnings?.length) warnings.push(...parsed.warnings);
 
     const owner = parsed.targetClass;
     const injections = [];

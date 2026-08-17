@@ -4,9 +4,10 @@ import { actionable } from "../utils/actionable.js";
 import { docsToolForPlatform } from "../loader-api/keys.js";
 import {
   fabricRulesOverlay,
-  findPack,
+  inspectPack,
   listRuleFiles,
   listSkillIndex,
+  mergeQuiltFabricSkills,
   readText,
 } from "./catalog.js";
 
@@ -58,18 +59,22 @@ export function sessionPlatformPack(args: SessionArgs) {
       ]),
     };
   }
-  const pack = findPack(platform, minecraftVersion);
-  if (!pack) {
+  const inspected = inspectPack(platform, minecraftVersion);
+  if (!inspected || inspected.status === "draft") {
+    const draft = inspected?.status === "draft";
     return {
       ok: false,
       action: actionable(
         "PACK_NOT_FOUND",
-        `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。`,
+        draft
+          ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。`
+          : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。`,
         [`改用 ${docsToolForPlatform(platform)}`],
         [docsToolForPlatform(platform)],
       ),
     };
   }
+  const pack = inspected.pack;
 
   const includeAll = args.includeAllRules === true;
   const ids = topicIds(args.topics, includeAll);
@@ -103,7 +108,10 @@ export function sessionPlatformPack(args: SessionArgs) {
     }
   }
 
-  const skills = listSkillIndex(pack.packDir);
+  const skills =
+    pack.platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir
+      ? mergeQuiltFabricSkills(pack.packDir, overlay.fabricDir, pack.minecraftVersion)
+      : listSkillIndex(pack.packDir);
   return {
     ok: true,
     dest: "session",

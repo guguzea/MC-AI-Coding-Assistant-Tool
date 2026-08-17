@@ -262,7 +262,7 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }`,
 
   // datagen
   step("generate_datagen");
-  r = generateDatagen({ providerType: "recipe", modId: "TestMod", targetName: "My-Block", version: "1.20.1" });
+  r = generateDatagen({ providerType: "recipe", modId: "TestMod", targetName: "My-Block", version: "1.20.1", platform: "forge" });
   const code = r.code ?? r.content ?? JSON.stringify(r);
   if (/TestMod/.test(code) || /My-Block/.test(code)) {
     note("warn", "generate_datagen", "accepts invalid modId (uppercase) and registry name with hyphen", {

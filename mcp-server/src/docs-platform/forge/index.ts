@@ -25,7 +25,7 @@ import {
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
@@ -179,7 +179,7 @@ export async function searchForgeDocs(
         {
           type: "text",
           text: JSON.stringify(
-            {
+            withDocsFallbackFields({
               ok: true,
               query: args.query,
               version: args.version,
@@ -195,7 +195,7 @@ export async function searchForgeDocs(
               semantic: semanticHits !== null,
               total: results.length,
               results,
-            },
+            }),
             null,
             2,
           ),
@@ -731,7 +731,7 @@ export async function searchDocs(
           {
             type: "text",
             text: JSON.stringify(
-              {
+              withDocsFallbackFields({
                 ok: true,
                 query: args.query,
                 version: args.version,
@@ -750,7 +750,7 @@ export async function searchDocs(
                 semantic: semanticRanked,
                 total: results.length,
                 results,
-              },
+              }),
               null,
               2,
             ),
@@ -831,7 +831,7 @@ export async function searchDocs(
         {
           type: "text",
           text: JSON.stringify(
-            {
+            withDocsFallbackFields({
               ok: true,
               query: args.query,
               version: args.version,
@@ -853,7 +853,7 @@ export async function searchDocs(
               semantic: semanticHits !== null,
               total: finalResults.length,
               results: finalResults,
-            },
+            }),
             null,
             2,
           ),

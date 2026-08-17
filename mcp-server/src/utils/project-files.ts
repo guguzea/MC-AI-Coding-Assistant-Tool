@@ -26,6 +26,15 @@ export const PROJECT_SCAN_SKIP_DIRS = new Set([
 export const JAVA_SCAN_MAX_FILES = 300;
 export const JAVA_SCAN_MAX_BYTES = 5 * 1024 * 1024;
 
+/** 默认 300；可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高。 */
+export function javaScanMaxFiles(): number {
+  const raw = process.env.MC_SKILL_JAVA_SCAN_MAX_FILES;
+  if (raw == null || raw.trim() === "") return JAVA_SCAN_MAX_FILES;
+  const n = Number.parseInt(raw, 10);
+  if (!Number.isFinite(n) || n < 1) return JAVA_SCAN_MAX_FILES;
+  return Math.floor(n);
+}
+
 export function invalidProjectAction(projectPath: string): ActionEnvelope {
   return actionable("INVALID_INPUT", `projectPath 不是有效目录：${projectPath}`, [
     "传入模组项目根目录（绝对或相对路径）",
@@ -102,8 +111,9 @@ export interface JavaScanResult {
   warning?: string;
 }
 
-/** 扫 src/main/java 下的 .java；达 300 文件或 5MB 则停止并带截断警告（不因此失败）。 */
+/** 扫 src/main/java 下的 .java；达上限则停止并带截断警告（不因此失败）。可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高文件上限。 */
 export function collectJavaSources(root: string): JavaScanResult {
+  const fileLimit = javaScanMaxFiles();
   const absFiles = walkProjectFiles(
     root,
     (rel, name) => name.endsWith(".java") && (rel.includes("src/main/java/") || rel.startsWith("src/main/java/")),
@@ -112,7 +122,7 @@ export function collectJavaSources(root: string): JavaScanResult {
   let bytes = 0;
   let truncated = false;
   for (const abs of absFiles) {
-    if (files.length >= JAVA_SCAN_MAX_FILES || bytes >= JAVA_SCAN_MAX_BYTES) {
+    if (files.length >= fileLimit || bytes >= JAVA_SCAN_MAX_BYTES) {
       truncated = true;
       break;
     }
@@ -131,7 +141,7 @@ export function collectJavaSources(root: string): JavaScanResult {
     files.push({ path: relative(root, abs).replace(/\\/g, "/"), content });
   }
   const warning = truncated
-    ? `已扫描 ${files.length} 个 Java 文件（上限 ${JAVA_SCAN_MAX_FILES} 个或 ${JAVA_SCAN_MAX_BYTES} 字节），可能不完整`
+    ? `检查可能不完整：已扫描 ${files.length} 个 Java 文件（当前上限 ${fileLimit}，可用环境变量 MC_SKILL_JAVA_SCAN_MAX_FILES 提高；另有字节上限 ${JAVA_SCAN_MAX_BYTES}）`
     : undefined;
   return { files, truncated, warning };
 }

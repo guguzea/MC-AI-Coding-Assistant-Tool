@@ -5,6 +5,7 @@ import { actionable } from "../utils/actionable.js";
 import { loadModProject } from "../utils/project-files.js";
 import { docsToolForPlatform } from "../loader-api/keys.js";
 import { findPack, knowledgeVersion, listPacks } from "./catalog.js";
+import { detectMinecraftVersion } from "../utils/minecraft-version.js";
 
 export type DetectModProjectArgs = {
   projectPath?: string;
@@ -39,22 +40,8 @@ function resolveDetectRoot(projectPath?: string): { ok: true; root: string; from
 }
 
 function parseMcVersion(gradleProperties?: string, buildGradle?: string): string | null {
-  const props = gradleProperties ?? "";
-  const bg = buildGradle ?? "";
-  const fromProps =
-    props.match(/^minecraft_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^mc_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^minecraftVersion\s*=\s*(\S+)/m)?.[1];
-  if (fromProps) return fromProps.trim();
-  const fromBg =
-    bg.match(/minecraft\s*\(\s*["']([^"']+)["']/) ??
-    bg.match(/minecraft_version\s*=\s*["']([^"']+)["']/);
-  if (fromBg) {
-    const raw = fromBg[1];
-    const ver = raw.match(/(\d+\.\d+(?:\.\d+)?)/);
-    return ver?.[1] ?? raw;
-  }
-  return null;
+  const detected = detectMinecraftVersion({ gradleProperties, buildGradle });
+  return detected === "unknown" ? null : detected;
 }
 
 export function detectModProject(args: DetectModProjectArgs = {}) {
@@ -123,7 +110,7 @@ export function detectModProject(args: DetectModProjectArgs = {}) {
 }
 
 export function listPlatformPacks() {
-  const { packs, traps } = listPacks();
+  const { packs, traps, drafts } = listPacks();
   return {
     packs: packs.map((p) => ({
       platform: p.platform,
@@ -131,5 +118,11 @@ export function listPlatformPacks() {
       packDir: p.packDir,
     })),
     traps: traps.map((t) => ({ path: t.agentsPath, note: t.trapNote })),
+    drafts: drafts.map((p) => ({
+      platform: p.platform,
+      minecraftVersion: p.minecraftVersion,
+      packDir: p.packDir,
+      status: "draft",
+    })),
   };
 }

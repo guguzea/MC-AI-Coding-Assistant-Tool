@@ -36,6 +36,11 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   assert.ok(q.overlay, "quilt overlay field");
   assert.equal(q.overlay.status, "ok", "quilt 1.21.1 有对应 fabric/1.21.1 规则树");
   assert.ok(String(q.agents).toLowerCase().includes("quilt"));
+  const names = (q.skills ?? []).map((s) => s.name);
+  assert.ok(names.includes("mc-registry") || names.includes("mc-block"), `quilt skills=${names.join(",")}`);
+  const fromFab = (q.skills ?? []).filter((s) => s.source && String(s.source).startsWith("fabric/"));
+  assert.ok(fromFab.length > 0, "quilt session 应并集 Fabric Skill");
+  assert.ok(fromFab.every((s) => s.mappingNote && /class_/.test(s.mappingNote)), JSON.stringify(fromFab[0]));
   const fake = fabricRulesOverlay("9.9.9", repo);
   assert.equal(fake.status, "missing");
   const tmpOverlay = mkdtempSync(join(tmpdir(), "mc-quilt-ov-"));
@@ -233,6 +238,28 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   rmSync(tmp, { recursive: true, force: true });
   delete process.env.MC_SKILL_ALLOW_WRITE;
   console.log(`includeSkills stub host=cursor skills=${skillDirs.length}`);
+}
+
+{
+  const { findPack, listPacks, inspectPack } = await import("./dist/platform-pack/catalog.js");
+  const tmpRepo = mkdtempSync(join(tmpdir(), "mc-pack-draft-"));
+  const packDir = join(tmpRepo, "neoforge", "9.9.9");
+  mkdirSync(join(packDir, ".cursor", "rules"), { recursive: true });
+  writeFileSync(join(packDir, "AGENTS.md"), "# draft\npack-status: draft\n", "utf8");
+  writeFileSync(
+    join(packDir, "pack.meta.json"),
+    JSON.stringify({ status: "draft", "pack-status": "draft" }),
+    "utf8",
+  );
+  writeFileSync(join(packDir, ".cursor", "rules", "00-project-setup.mdc"), "FIXME\n", "utf8");
+  assert.equal(findPack("neoforge", "9.9.9", tmpRepo), null);
+  const inspected = inspectPack("neoforge", "9.9.9", tmpRepo);
+  assert.equal(inspected?.status, "draft");
+  const listed = listPacks(tmpRepo);
+  assert.ok(listed.drafts.some((d) => d.minecraftVersion === "9.9.9"));
+  assert.ok(!listed.packs.some((p) => p.minecraftVersion === "9.9.9"));
+  rmSync(tmpRepo, { recursive: true, force: true });
+  console.log("draft pack: findPack PACK_NOT_FOUND, listPacks drafts[]");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

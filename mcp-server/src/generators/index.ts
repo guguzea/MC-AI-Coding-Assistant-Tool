@@ -67,14 +67,21 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
 export function generateNetworkPacket(
   modId: string,
   packetName: string,
-  platform?: "forge_1.20.1" | "neoforge_1.20.4" | "neoforge_1.21" | "neoforge_26.1",
+  platform?: string,
 ): GeneratorResult {
-  const allowed = ["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1"] as const;
+  const allowed = [
+    "forge_1.20.1",
+    "neoforge_1.20.4",
+    "neoforge_1.21",
+    "neoforge_26.1",
+    "fabric_1.21",
+    "fabric_26.1",
+  ] as const;
   if (!platform) {
     return {
       code: null,
       errors: [
-        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_26.1",
+        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_26.1 | fabric_1.21 | fabric_26.1",
       ],
     };
   }
@@ -206,6 +213,47 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     };
   }
 
+  if (platform === "fabric_1.21" || platform === "fabric_26.1") {
+    const verLabel = platform === "fabric_26.1" ? "26.1" : "1.21";
+    return {
+      code: `// Fabric ${verLabel} — CustomPacketPayload + PayloadTypeRegistry（ServerPlayNetworking）
+package com.example.${mod.value}.network;
+
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("${mod.value}", "${pkt.value}");
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE = new CustomPacketPayload.Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ${pascal}Payload> CODEC =
+        StreamCodec.of(
+            (buf, payload) -> buf.writeUtf(payload.message()),
+            buf -> new ${pascal}Payload(buf.readUtf()));
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(TYPE, (payload, context) -> {
+            /* validate on server */
+        });
+    }
+}
+`,
+      warnings: [
+        "须带版本后缀 fabric_1.21 / fabric_26.1，禁止只传 fabric。",
+        "依赖 fabric-networking-api；客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+      ],
+    };
+  }
+
   return {
     code: `// Forge 1.20.1 — SimpleChannel 消息骨架
 package com.example.${mod.value}.network;
@@ -236,15 +284,48 @@ public class ${pascal}Packet {
   };
 }
 
-export function generateCapability(modId: string, capName: string, neoforge = false): GeneratorResult {
+export function generateCapability(
+  modId: string,
+  capName: string,
+  platform?: string,
+  version?: string,
+): GeneratorResult {
+  if (!platform) {
+    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt），禁止默认 Forge Capability"] };
+  }
+  if (!version?.trim()) {
+    return { code: null, errors: ["version is required"] };
+  }
+  const p = platform.trim().toLowerCase();
+  if (p === "fabric" || p === "quilt") {
+    return {
+      code: null,
+      errors: [
+        "Fabric/Quilt 无内置 Capability。请用 Cardinal Components API（CCA）Skill（knowledge/libs/fabric-only/mc-cca）或 search_fabric_docs，不要生成 Forge Capability。",
+      ],
+    };
+  }
+  if (p === "neoforge") {
+    if (!isNeoForgeAttachmentVersion(version)) {
+      return {
+        code: null,
+        errors: [
+          `NeoForge Data Attachment 仅支持 1.20.4+（收到 version=${version}）。1.20.1 或更低不要生成 Attachment。`,
+        ],
+      };
+    }
+  } else if (p !== "forge") {
+    return { code: null, errors: [`未知 platform=${platform}。可选：forge | neoforge | fabric | quilt`] };
+  }
+
   const mod = normalizeModIdentifier(modId);
   const cap = normalizeModIdentifier(capName);
   if (!mod || !cap) return { code: null, errors: ["无效标识符"] };
   const pascal = stripJavaTypeSuffix(toJavaClassName(capName), "Capability");
 
-  if (neoforge) {
+  if (p === "neoforge") {
     return {
-      code: `// NeoForge DataAttachment 骨架
+      code: `// NeoForge DataAttachment 骨架（1.20.4+；不是 Forge Capability）
 package com.example.${mod.value}.attachment;
 
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -279,39 +360,174 @@ public class ${pascal}Capability {
   };
 }
 
-export function generateConfig(modId: string, loader: "forge" | "neoforge" | "fabric" = "forge"): GeneratorResult {
+function isNeoForgeAttachmentVersion(version: string): boolean {
+  const t = version.trim();
+  if (t.startsWith("26.1") || t.startsWith("1.21")) return true;
+  const m = t.match(/^1\.20\.(\d+)/);
+  if (m) return Number(m[1]) >= 4;
+  return false;
+}
+
+export function generateConfig(
+  modId: string,
+  loader?: "forge" | "neoforge" | "fabric" | "quilt",
+  version?: string,
+): GeneratorResult {
+  if (!loader) {
+    return { code: null, errors: ["loader 必填（forge | neoforge | fabric | quilt），禁止默认 forge"] };
+  }
+  if (!version?.trim()) {
+    return { code: null, errors: ["version is required，禁止猜测 1.20.4 或 1.21"] };
+  }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
 
-  if (loader === "fabric") {
+  if (loader === "fabric" || loader === "quilt") {
     return {
-      code: `// Cloth Config 占位 — 见 mc-config skill
-// modId: ${mod.value}
+      code: `package com.example.${mod.value}.config;
+
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.api.ConfigCategory;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+
+public final class ${toPascalCase(mod.value)}Config {
+    public static boolean enableFeature = true;
+
+    private ${toPascalCase(mod.value)}Config() {}
+
+    public static Screen create(Screen parent) {
+        ConfigBuilder builder = ConfigBuilder.create()
+            .setParentScreen(parent)
+            .setTitle(Component.translatable("config.${mod.value}.title"));
+        ConfigEntryBuilder entry = builder.entryBuilder();
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("config.${mod.value}.general"));
+        general.addEntry(
+            entry.startBooleanToggle(Component.translatable("config.${mod.value}.enable_feature"), enableFeature)
+                .setDefaultValue(true)
+                .setSaveConsumer(v -> enableFeature = v)
+                .build());
+        builder.setSavingRunnable(() -> { /* persist */ });
+        return builder.build();
+    }
+}
 `,
-      warnings: ["Cloth Config 需添加 fabric.mod.json 依赖"],
+      warnings: [
+        "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖；未声明则无法编译。",
+        "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
+      ],
     };
   }
 
-  const spec = loader === "neoforge" ? "NeoForgeConfigSpec" : "ForgeConfigSpec";
-  return {
-    code: `package com.example.${mod.value}.config;
+  if (loader === "neoforge") {
+    const v = version.trim();
+    const useModConfig = v.startsWith("1.21") || v.startsWith("26.1");
+    if (useModConfig) {
+      return {
+        code: `package com.example.${mod.value}.config;
 
-import ${loader === "neoforge" ? "net.neoforged" : "net.minecraftforge"}.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
+public class ${toPascalCase(mod.value)}Config {
+    public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final ModConfigSpec SPEC = BUILDER.build();
+}
+`,
+      };
+    }
+    if (v.startsWith("1.20.4") || /^1\.20\.[4-9]/.test(v) || /^1\.20\.\d{2}/.test(v)) {
+      return {
+        code: `package com.example.${mod.value}.config;
+
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class ${toPascalCase(mod.value)}Config {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 }
 `,
-    warnings: [`模板使用 ${spec}，请按平台调整 import`],
+      };
+    }
+    return {
+      code: null,
+      errors: [`NeoForge config 当前支持 1.20.4（ForgeConfigSpec + net.neoforged）与 1.21+/26.1（ModConfigSpec）。收到 version=${version}`],
+    };
+  }
+
+  return {
+    code: `package com.example.${mod.value}.config;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+
+public class ${toPascalCase(mod.value)}Config {
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
+}
+`,
   };
 }
 
-export function generateEntityRenderer(modId: string, entityName: string): GeneratorResult {
+const ENTITY_RENDERER_SUPPORTED = "forge 1.20.1 / forge 1.20.4 / neoforge 26.1";
+
+export function generateEntityRenderer(
+  modId: string,
+  entityName: string,
+  platform?: string,
+  version?: string,
+): GeneratorResult {
+  if (!platform) {
+    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt）"] };
+  }
+  if (!version?.trim()) {
+    return { code: null, errors: [`version is required。当前支持 ${ENTITY_RENDERER_SUPPORTED}`] };
+  }
+  const p = platform.trim().toLowerCase();
+  const v = version.trim();
+  const forgeOk = p === "forge" && (v === "1.20.1" || v === "1.20.4");
+  const neo261 = p === "neoforge" && /^26\.1/.test(v);
+  if (p === "fabric" || p === "quilt") {
+    return {
+      code: null,
+      errors: [
+        `当前支持 ${ENTITY_RENDERER_SUPPORTED}。Fabric/Quilt 禁止生成 @OnlyIn/Dist；请用该档 EntityRenderer 客户端注册。`,
+      ],
+    };
+  }
+  if (!forgeOk && !neo261) {
+    return {
+      code: null,
+      errors: [`当前支持 ${ENTITY_RENDERER_SUPPORTED}（收到 platform=${platform} version=${version}），禁止默默生成。`],
+    };
+  }
   const mod = normalizeModIdentifier(modId);
   const ent = normalizeModIdentifier(entityName);
   if (!mod || !ent) return { code: null, errors: ["无效标识符"] };
   const pascal = stripJavaTypeSuffix(toJavaClassName(entityName), "Renderer");
+  if (neo261) {
+    return {
+      code: `// NeoForge 26.1 客户端 EntityRenderer。注册放 Dist.CLIENT（@EventBusSubscriber(value = Dist.CLIENT)）。
+// 构造与注册事件以 search_neoforge_docs 为准（本档无 EntityRenderersEvent 页）。
+package com.example.${mod.value}.client;
+
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.resources.Identifier;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
+
+@EventBusSubscriber(value = Dist.CLIENT)
+public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
+    public static final Identifier TEXTURE =
+        Identifier.fromNamespaceAndPath("${mod.value}", "textures/entity/${ent.value}.png");
+}
+`,
+      experimental: true,
+      warnings: [
+        "26.1 用 Identifier，不要 ResourceLocation / @OnlyIn。",
+        "注册事件名请 search_neoforge_docs，不要默写 EntityRenderersEvent。",
+      ],
+    };
+  }
   return {
     code: `// 客户端 EntityRenderer 骨架 — GeckoLib 见 mc-geckolib skill
 @OnlyIn(Dist.CLIENT)

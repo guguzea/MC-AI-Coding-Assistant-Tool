@@ -1,7 +1,7 @@
 # NeoForge 1.21.11 — Agent 总纲
 
 > 只适用于 **NeoForge 1.21.11**。禁止读取 `neoforge/1.20.4 / 1.21.1 / 1.21.3 / 1.21.8 / 26.1` 或扁平 `neoforge/.cursor/rules` 来填本档类名。
-> 未建档版本（1.20.1、1.20.6、1.21.5、1.21.10）**禁止读邻档 00–10**，改口 `search_neoforge_docs`。
+> 未建档版本（1.20.1）**禁止读邻档 00–10**，改口 `search_neoforge_docs`。
 > 文档工具用 `list_neoforge_versions`，**不要**用 `list_forge_versions`。
 
 ## 基本信息

@@ -27,7 +27,7 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -191,7 +191,7 @@ export async function searchNeoForgeDocs(args: {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
+        text: JSON.stringify(withDocsFallbackFields({
           ok: true,
           query: args.query,
           version,
@@ -212,7 +212,7 @@ export async function searchNeoForgeDocs(args: {
           semantic: semanticHits !== null,
           total: results.length,
           results,
-        }, null, 2),
+        }), null, 2),
       }],
     };
   } catch (e) {
