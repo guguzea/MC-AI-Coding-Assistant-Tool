@@ -311,7 +311,7 @@ const negativeMentions = scanned.flatMap((s) => s.negativeMentions);
 const mappingsVersion = process.env.MC_SKILL_MAPPINGS_VERSION ?? null;
 const summary = {
   ok: true,
-  cache: CACHE,
+  cache: "$MC_SKILL_CACHE",
   mappingsVersion,
   classCount: classes.length,
   javaFileCount: javaFiles.length,

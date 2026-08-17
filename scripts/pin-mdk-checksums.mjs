@@ -10,9 +10,10 @@
  *
  * 不要把 MDK 源码 commit 进本仓。
  */
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECKSUMS = join(ROOT, "mcp-server", "data", "mdk-checksums.json");
@@ -217,7 +218,14 @@ async function main() {
     });
     console.log(`${out.ok ? "OK" : "FAIL"} ${e.id} entryClass=${out.entryClass || "-"} ${out.error?.code || ""}`);
   }
-  writeFileSync(join(ROOT, "mcp-server", "data", "loader-api-summaries", "pin-mdk-last.json"), JSON.stringify({ results, skipped }, null, 2), "utf8");
+  const cache = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+  const lastDir = join(cache, "loader-api-summaries");
+  mkdirSync(lastDir, { recursive: true });
+  writeFileSync(
+    join(lastDir, "pin-mdk-last.json"),
+    JSON.stringify(redactAbs({ results, skipped }, { cache, repo: ROOT }), null, 2),
+    "utf8",
+  );
 }
 
 main().catch((e) => {

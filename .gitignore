@@ -25,6 +25,8 @@ release/
 npm-debug.log*
 
 # Local-only audit / scratch artefacts
+mcp-server/data/loader-api-summaries/*-last.json
+mcp-server/data/loader-api-summaries/extracted-classes.json
 mcp-server/audit-*.txt
 mcp-server/scripts/_temp/
 mcp-server/_temp_localize_test/

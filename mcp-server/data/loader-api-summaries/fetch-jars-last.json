@@ -1,134 +1,137 @@
 {
-  "cache": "D:\\mc-skill-temp",
+  "cache": "$MC_SKILL_CACHE",
   "log": [
     {
-      "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\moddevgradle\\unpacked\\MDK-26.2-ModDevGradle-d1c748fd52b311cba7b4a50e3d689927c5daac9a",
+      "root": "$MC_SKILL_CACHE/mdk/neoforge/26.2/moddevgradle/unpacked/MDK-26.2-ModDevGradle-d1c748fd52b311cba7b4a50e3d689927c5daac9a",
       "key": "26.2-neoforge",
       "skipped": "不在 WANTED_KEYS（对照索引，不造 00–10）"
     },
     {
-      "root": "D:\\mc-skill-temp\\mdk\\neoforge\\26.2\\neogradle\\unpacked\\MDK-26.2-NeoGradle-15955d033693fce0d05619eb3ab32643b941cd93",
+      "root": "$MC_SKILL_CACHE/mdk/neoforge/26.2/neogradle/unpacked/MDK-26.2-NeoGradle-15955d033693fce0d05619eb3ab32643b941cd93",
       "key": "26.2-neoforge",
       "skipped": "不在 WANTED_KEYS（对照索引，不造 00–10）"
     },
     {
-      "root": "D:\\mc-skill-temp\\mdk\\quilt\\1.21.1\\quilt-loom\\unpacked\\quilt-template-mod-9a6f89cd481e3f58f128596b5b043353bee6b3f2",
+      "root": "$MC_SKILL_CACHE/mdk/quilt/1.21.1/quilt-loom/unpacked/quilt-template-mod-9a6f89cd481e3f58f128596b5b043353bee6b3f2",
       "skipped": "build.gradle 未打开到 maven 坐标，禁止猜 artifactId"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.20.1",
+      "root": "fabric/1.20.1",
       "key": "1.20.1-fabric-api",
       "pinned": "0.91.0+1.20.1",
+      "alts": [
+        "0.91.0+1.20.1"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.16.5",
+      "root": "fabric/1.16.5",
       "key": "1.16.5-fabric-api",
       "pinned": "0.16.24+build.4-1.16.5",
+      "alts": [
+        "0.16.24+build.4-1.16.5"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.17.1",
+      "root": "fabric/1.17.1",
       "key": "1.17.1-fabric-api",
       "pinned": "0.31.1+build.1",
+      "alts": [
+        "0.31.1+build.1"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.19.4",
+      "root": "fabric/1.19.4",
       "key": "1.19.4-fabric-api",
       "pinned": "0.76.1+1.19.4",
+      "alts": [
+        "0.76.1+1.19.4",
+        "0.79.1+1.19.4"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.18.2",
+      "root": "fabric/1.18.2",
       "key": "1.18.2-fabric-api",
       "pinned": "0.44.1+build.3",
+      "alts": [
+        "0.44.1+build.3",
+        "0.44.1+1.18.2"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.21.11",
+      "root": "fabric/1.21.11",
       "key": "1.21.11-fabric-api",
       "pinned": "0.200.1+build.3",
+      "alts": [
+        "0.200.1+build.3"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.21.3",
+      "root": "fabric/1.21.3",
       "key": "1.21.3-fabric-api",
       "pinned": "0.200.1+build.3",
+      "alts": [
+        "0.200.1+build.3"
+      ],
       "from": "repo-docs"
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.14.4",
+      "root": "fabric/1.14.4",
       "key": "1.14.4-fabric-api",
       "pinned": "0.3.2+build.1",
+      "alts": [
+        "0.3.2+build.1",
+        "0.4.1+build.18-1.14"
+      ],
       "from": "repo-docs"
-    },
-    {
-      "key": "1.20.4-fabric-api",
-      "expandedModules": true,
-      "moduleHits": 42,
-      "moduleCount": 43,
-      "javaFileCount": 979
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-fabric-api.jar",
-      "url": "fabric-api-pom-modules:0.97.3+1.20.4",
-      "bytes": 3096062,
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.20.4-fabric-api.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.20.4-fabric-api",
       "mappingsVersion": "mojmap-1.20.4",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.97.3+1.20.4",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.20.4-fabric-api"
-    },
-    {
-      "key": "1.21.1-fabric-api",
-      "expandedModules": true,
-      "moduleHits": 42,
-      "moduleCount": 43,
-      "javaFileCount": 1062
+      }
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-fabric-api.jar",
-      "url": "fabric-api-pom-modules:0.116.15+1.21.1",
-      "bytes": 3343055,
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.21.1-fabric-api.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.21.1-fabric-api",
       "mappingsVersion": "mojmap-1.21.1",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.116.15+1.21.1",
         "from": "quoted-maven-coord"
-      },
-      "key": "1.21.1-fabric-api"
-    },
-    {
-      "key": "26.1.2-fabric-api",
-      "expandedModules": true,
-      "moduleHits": 44,
-      "moduleCount": 45,
-      "javaFileCount": 1540
+      }
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\26.1.2-fabric-api.jar",
-      "url": "fabric-api-pom-modules:0.155.2+26.1.2",
-      "bytes": 4647315,
-      "mappingsVersion": null,
+      "dest": "$MC_SKILL_CACHE/loader-jars/26.1.2-fabric-api.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "26.1.2-fabric-api",
+      "mappingsVersion": "mojmap-26.1.2",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.155.2+26.1.2",
         "from": "quoted-maven-coord"
-      },
-      "key": "26.1.2-fabric-api"
+      }
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.12.2-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.12.2-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.12.2-forge",
       "mappingsVersion": "snapshot-20171003-1.12",
@@ -141,7 +144,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.13.2-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.13.2-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.13.2-forge",
       "mappingsVersion": "snapshot-20180921-1.13",
@@ -154,7 +157,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.14.4-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.14.4-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.14.4-forge",
       "mappingsVersion": "snapshot-20190719-1.14.3",
@@ -167,7 +170,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.15.2-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.15.2-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.15.2-forge",
       "mappingsVersion": "snapshot-20200514-1.15.1",
@@ -180,7 +183,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.16.5-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.16.5-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.16.5-forge",
       "mappingsVersion": "official-1.16.5",
@@ -193,7 +196,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.17.1-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.17.1-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.17.1-forge",
       "mappingsVersion": "official-1.17.1",
@@ -206,7 +209,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.18.2-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.18.2-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.18.2-forge",
       "mappingsVersion": "official-1.18.2",
@@ -219,7 +222,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.19.4-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.19.4-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.19.4-forge",
       "mappingsVersion": "official-1.19.4",
@@ -232,7 +235,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.1-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.20.1-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.20.1-forge",
       "mappingsVersion": "official-1.20.1",
@@ -245,7 +248,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-forge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.20.4-forge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.20.4-forge",
       "mappingsVersion": "official-1.20.4",
@@ -258,7 +261,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.4-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.20.4-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.20.4-neoforge",
       "mappingsVersion": "parchment-1.20.4-2024.04.14",
@@ -271,7 +274,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.1-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.21.1-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.1-neoforge",
       "mappingsVersion": "parchment-1.21.1-2024.11.17",
@@ -284,7 +287,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.11-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.21.11-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.11-neoforge",
       "mappingsVersion": "parchment-1.21.11-2025.12.20",
@@ -297,7 +300,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.3-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.21.3-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.3-neoforge",
       "mappingsVersion": "parchment-1.21.3-2024.12.07",
@@ -310,7 +313,7 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.21.8-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.21.8-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "1.21.8-neoforge",
       "mappingsVersion": "parchment-1.21.8-2025.09.14",
@@ -323,10 +326,10 @@
     },
     {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\26.1-neoforge.jar",
+      "dest": "$MC_SKILL_CACHE/loader-jars/26.1-neoforge.jar",
       "skipped": "idempotent cache hit (jar contains .java)",
       "key": "26.1-neoforge",
-      "mappingsVersion": null,
+      "mappingsVersion": "mojmap-26.1.2",
       "coord": {
         "group": "net.neoforged",
         "artifact": "neoforge",
@@ -335,33 +338,25 @@
       }
     },
     {
-      "key": "1.20.1-fabric-api",
-      "expandedModules": true,
-      "moduleHits": 41,
-      "moduleCount": 42,
-      "javaFileCount": 897
-    },
-    {
       "ok": true,
-      "dest": "D:\\mc-skill-temp\\loader-jars\\1.20.1-fabric-api.jar",
-      "url": "fabric-api-pom-modules:0.91.0+1.20.1",
-      "bytes": 2824693,
+      "dest": "$MC_SKILL_CACHE/loader-jars/1.20.1-fabric-api.jar",
+      "skipped": "idempotent cache hit (jar contains .java)",
+      "key": "1.20.1-fabric-api",
       "mappingsVersion": "yarn-1.20.1+build.10",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.91.0+1.20.1",
-        "from": "H:\\MC_skill\\fabric\\1.20.1\\.cursor\\rules\\00-project-setup.mdc"
-      },
-      "key": "1.20.1-fabric-api"
+        "from": "fabric/1.20.1/.cursor/rules/00-project-setup.mdc"
+      }
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.16.5",
+      "root": "fabric/1.16.5",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.16.24+build.4-1.16.5",
-        "from": "H:\\MC_skill\\fabric\\1.16.5\\.cursor\\rules\\00-project-setup.mdc"
+        "from": "fabric/1.16.5/.cursor/rules/00-project-setup.mdc"
       },
       "key": "1.16.5-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -401,12 +396,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.17.1",
+      "root": "fabric/1.17.1",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.31.1+build.1",
-        "from": "H:\\MC_skill\\fabric\\1.17.1\\scaffold\\gradle.properties"
+        "from": "fabric/1.17.1/scaffold/gradle.properties"
       },
       "key": "1.17.1-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -446,12 +441,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.19.4",
+      "root": "fabric/1.19.4",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.76.1+1.19.4",
-        "from": "H:\\MC_skill\\fabric\\1.19.4\\.cursor\\rules\\00-project-setup.mdc"
+        "from": "fabric/1.19.4/.cursor/rules/00-project-setup.mdc"
       },
       "key": "1.19.4-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -491,12 +486,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.18.2",
+      "root": "fabric/1.18.2",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.44.1+build.3",
-        "from": "H:\\MC_skill\\fabric\\1.18.2\\scaffold\\gradle.properties"
+        "from": "fabric/1.18.2/scaffold/gradle.properties"
       },
       "key": "1.18.2-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -536,12 +531,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.21.11",
+      "root": "fabric/1.21.11",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.200.1+build.3",
-        "from": "H:\\MC_skill\\fabric\\1.21.11\\.cursor\\rules\\00-project-setup.mdc"
+        "from": "fabric/1.21.11/.cursor/rules/00-project-setup.mdc"
       },
       "key": "1.21.11-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -581,12 +576,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.21.3",
+      "root": "fabric/1.21.3",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.200.1+build.3",
-        "from": "H:\\MC_skill\\fabric\\1.21.3\\.cursor\\rules\\00-project-setup.mdc"
+        "from": "fabric/1.21.3/.cursor/rules/00-project-setup.mdc"
       },
       "key": "1.21.3-fabric-api",
       "skipped": "maven 404，不编造 jar",
@@ -626,12 +621,12 @@
       ]
     },
     {
-      "root": "H:\\MC_skill\\fabric\\1.14.4",
+      "root": "fabric/1.14.4",
       "coord": {
         "group": "net.fabricmc.fabric-api",
         "artifact": "fabric-api",
         "version": "0.3.2+build.1",
-        "from": "H:\\MC_skill\\fabric\\1.14.4\\.cursor\\rules\\00-project-setup.mdc"
+        "from": "fabric/1.14.4/.cursor/rules/00-project-setup.mdc"
       },
       "key": "1.14.4-fabric-api",
       "skipped": "maven 404，不编造 jar",

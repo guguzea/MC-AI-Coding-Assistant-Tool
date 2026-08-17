@@ -146,3 +146,29 @@ export function classSimpleName(fqcn: string): string {
   const last = fqcn.split(".").pop() ?? fqcn;
   return last.split("$").pop() ?? last;
 }
+
+function methodQuality(m: unknown): number {
+  if (typeof m === "string") return 0;
+  if (!m || typeof m !== "object") return 0;
+  const sig = String((m as MethodInfo).signature ?? "");
+  if (!sig || sig.endsWith("(...)")) return 1;
+  return 3;
+}
+
+/** 同一 FQCN 只留一条（优先完整 MethodInfo + 更完整的相对路径）。 */
+export function dedupeLoaderClasses(classes: LoaderClassRecord[]): LoaderClassRecord[] {
+  const map = new Map<string, LoaderClassRecord>();
+  const score = (c: LoaderClassRecord) => {
+    const methods = c.methods ?? [];
+    const q = methods.reduce((s, m) => s + methodQuality(m), 0);
+    const pathLen = String(c.file || "").length;
+    return q * 1000 + pathLen;
+  };
+  for (const c of classes) {
+    const fq = String(c.fqcn ?? "");
+    if (!fq) continue;
+    const prev = map.get(fq);
+    if (!prev || score(c) > score(prev)) map.set(fq, c);
+  }
+  return [...map.values()];
+}

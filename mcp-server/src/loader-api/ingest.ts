@@ -6,7 +6,7 @@ import { actionable } from "../utils/actionable.js";
 import { extractCompilationUnit } from "./extract.js";
 import { candidateKeys, howToIngestCli, mcpServerRoot } from "./keys.js";
 import { assertCacheFresh, readSidecar, sha256File } from "./sidecar.js";
-import { overlaySummariesDir } from "./store.js";
+import { overlaySummariesDir, dedupeLoaderClasses } from "./store.js";
 import type { LoaderApiSummary, LoaderClassRecord } from "./types.js";
 
 export type IngestLoaderApiArgs = {
@@ -121,22 +121,25 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     };
   }
 
+  // overlay 只写 $MC_SKILL_CACHE，与 decompile_mod_jar 同口径，不走工程沙箱 / MC_SKILL_ALLOW_WRITE。
   if (dryRun || !confirmed) {
     return {
       ok: true,
       dryRun: true,
       ...planned,
-      howToWrite: "设置后重跑：--dry-run=false --confirm（仍不会写仓库 data/）",
+      howToWrite:
+        "设置后重跑：--dry-run=false --confirm。只写 $MC_SKILL_CACHE overlay（与 decompile 同口径，不需要 MC_SKILL_ALLOW_WRITE）。仍不会写仓库 data/",
     };
   }
 
   const entries = readZip(readFileSync(jarPath));
-  const classes: LoaderClassRecord[] = [];
+  const rawClasses: LoaderClassRecord[] = [];
   for (const [name, data] of entries) {
     const posix = name.replace(/\\/g, "/");
     if (!posix.endsWith(".java")) continue;
-    classes.push(...extractCompilationUnit(data.toString("utf8"), posix));
+    rawClasses.push(...extractCompilationUnit(data.toString("utf8"), posix));
   }
+  const classes = dedupeLoaderClasses(rawClasses);
 
   const fqcnIndex = [...new Set(classes.map((c) => c.fqcn).filter((fq) => fq && !/\$[0-9]/.test(fq)))];
 

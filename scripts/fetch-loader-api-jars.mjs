@@ -8,6 +8,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
@@ -264,6 +265,39 @@ function considerCandidate(best, log, cand) {
   if (!prev || betterCandidate(cand, prev)) best.set(key, cand);
 }
 
+function fabricVerBelongsToMc(apiVer, mcVer) {
+  if (!apiVer || apiVer.includes("$") || /\.x\b/.test(apiVer) || apiVer.includes("x+")) return false;
+  const mcMentions = [...String(apiVer).matchAll(/(?:^|[^0-9])((?:1|26)\.\d+(?:\.\d+)?)/g)].map((m) => m[1]);
+  if (!mcMentions.length) return true;
+  return mcMentions.some((m) => m === mcVer || mcVer.startsWith(`${m}.`) || m.startsWith(`${mcVer}.`));
+}
+
+/** 只读同一档 scaffold / 00-project-setup / antipatterns 里写明的坐标，禁止邻版。 */
+function fabricApiVersionsInTree(dir, mcVer) {
+  const versions = [];
+  const seen = new Set();
+  const add = (v) => {
+    const ver = String(v || "").trim().replace(/[,"']+$/g, "");
+    if (!fabricVerBelongsToMc(ver, mcVer)) return;
+    if (seen.has(ver)) return;
+    seen.add(ver);
+    versions.push(ver);
+  };
+  const files = [
+    join(dir, "scaffold", "gradle.properties"),
+    join(dir, ".cursor", "rules", "00-project-setup.mdc"),
+    join(dir, "knowledge", "antipatterns", "gradle.md"),
+  ];
+  for (const f of files) {
+    if (!existsSync(f)) continue;
+    const txt = readFileSync(f, "utf8");
+    const pin = txt.match(/fabric_api_version\s*=\s*(\S+)/);
+    if (pin) add(pin[1]);
+    for (const m of txt.matchAll(/fabric-api:fabric-api:([0-9][^\s"']+)/g)) add(m[1]);
+  }
+  return versions;
+}
+
 /** 无 example-mod MDK 时，只读该档 scaffold / 00-project-setup 写明的 fabric-api 坐标。 */
 function collectRepoFabricPins(best, log) {
   const fabricRoot = join(ROOT, "fabric");
@@ -276,8 +310,14 @@ function collectRepoFabricPins(best, log) {
   }
   for (const ver of vers) {
     const key = `${ver}-fabric-api`;
-    if (!WANTED_KEYS.has(key) || best.has(key)) continue;
+    if (!WANTED_KEYS.has(key)) continue;
     const dir = join(fabricRoot, ver);
+    const alts = fabricApiVersionsInTree(dir, ver);
+    if (best.has(key)) {
+      const existing = best.get(key);
+      existing.altVersions = [...new Set([...(existing.altVersions || []), existing.coord?.version, ...alts].filter(Boolean))];
+      continue;
+    }
     const scaffoldGp = join(dir, "scaffold", "gradle.properties");
     const setup = join(dir, ".cursor", "rules", "00-project-setup.mdc");
     let txt = "";
@@ -292,7 +332,7 @@ function collectRepoFabricPins(best, log) {
       from = setup;
       props = parseProps(txt);
     }
-    const apiVer = props.fabric_api_version || props.fabric_version;
+    const apiVer = props.fabric_api_version || props.fabric_version || alts[0];
     if (!apiVer || apiVer.includes("$")) {
       log.push({ root: dir, key, skipped: "该档文档未写明 fabric-api 坐标，禁止借邻版" });
       continue;
@@ -309,8 +349,9 @@ function collectRepoFabricPins(best, log) {
       },
       key,
       mappingsHint: yarn ? `yarn-${yarn}` : null,
+      altVersions: alts,
     };
-    log.push({ root: dir, key, pinned: apiVer, from: "repo-docs" });
+    log.push({ root: dir, key, pinned: apiVer, alts, from: "repo-docs" });
     considerCandidate(best, log, cand);
   }
 }
@@ -434,7 +475,8 @@ async function main() {
   collectRepoFabricPins(best, log);
 
   for (const cand of best.values()) {
-    const { root, props, coord: c, key } = cand;
+    const { root, props, key } = cand;
+    let coord = { ...cand.coord };
     const dest = join(JAR_DIR, `${key}.jar`);
     const bgText = existsSync(join(root, "build.gradle"))
       ? readFileSync(join(root, "build.gradle"), "utf8")
@@ -448,12 +490,24 @@ async function main() {
     const hasJava = destBuf && destBuf.includes(Buffer.from(".java"));
     const userdevOnly = destBuf && destBuf.includes(Buffer.from("joined.lzma")) && !hasJava;
     if (existsSync(dest) && hasJava && (existsSync(`${dest}.sidecar`) || existsSync(`${dest}.mappings.json`)) && !userdevOnly) {
-      log.push({ ok: true, dest, skipped: "idempotent cache hit (jar contains .java)", key, mappingsVersion: mv, coord: c });
+      log.push({ ok: true, dest, skipped: "idempotent cache hit (jar contains .java)", key, mappingsVersion: mv, coord });
       continue;
     }
-    let got = await downloadCoord(c);
-    if (got?.ok && !got.buf.includes(Buffer.from(".java")) && c.group === "net.fabricmc.fabric-api") {
-      const expanded = await expandFabricApiModules(c, log);
+    let got = await downloadCoord(coord);
+    if (!got?.ok && coord.group === "net.fabricmc.fabric-api") {
+      for (const v of [...new Set(cand.altVersions || [])]) {
+        if (v === coord.version) continue;
+        const retry = await downloadCoord({ ...coord, version: v });
+        if (retry?.ok) {
+          coord = { ...coord, version: v };
+          got = retry;
+          log.push({ key, usedAltVersion: v, note: "same-tree documented coord，禁止邻版" });
+          break;
+        }
+      }
+    }
+    if (got?.ok && !got.buf.includes(Buffer.from(".java")) && coord.group === "net.fabricmc.fabric-api") {
+      const expanded = await expandFabricApiModules(coord, log);
       if (expanded.ok) {
         log.push({
           key,
@@ -468,19 +522,19 @@ async function main() {
       }
     }
     if (!got?.ok) {
-      log.push({ root, coord: c, key, skipped: "maven 404，不编造 jar", tries: got?.tries?.slice(0, 8) });
+      log.push({ root, coord, key, skipped: "maven 404，不编造 jar", tries: got?.tries?.slice(0, 8) });
       continue;
     }
     writeFileSync(dest, got.buf);
     if (mv) {
-      const side = { mappingsVersion: mv, mappingsSource: "mdk-gradle.properties", coord: c, url: got.url };
+      const side = { mappingsVersion: mv, mappingsSource: "mdk-gradle.properties", coord, url: got.url };
       writeFileSync(`${dest}.mappings.json`, JSON.stringify({ ...side, from: side.mappingsSource }, null, 2));
       writeFileSync(`${dest}.sidecar`, JSON.stringify(side, null, 2));
     }
     if (!got.buf.includes(Buffer.from(".java"))) {
-      log.push({ root, coord: c, key, warning: "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev" });
+      log.push({ root, coord, key, warning: "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev" });
     }
-    log.push({ ok: true, dest, url: got.url, bytes: got.buf.length, mappingsVersion: mv, coord: c, key });
+    log.push({ ok: true, dest, url: got.url, bytes: got.buf.length, mappingsVersion: mv, coord, key });
   }
 
   for (const key of WANTED_KEYS) {
@@ -490,9 +544,11 @@ async function main() {
     }
   }
 
+  const lastDir = join(CACHE, "loader-api-summaries");
+  mkdirSync(lastDir, { recursive: true });
   writeFileSync(
-    join(ROOT, "mcp-server", "data", "loader-api-summaries", "fetch-jars-last.json"),
-    JSON.stringify({ cache: CACHE, log }, null, 2),
+    join(lastDir, "fetch-jars-last.json"),
+    JSON.stringify({ cache: "$MC_SKILL_CACHE", log: redactAbs(log, { cache: CACHE, repo: ROOT }) }, null, 2),
   );
   console.log(
     JSON.stringify(

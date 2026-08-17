@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "cache": "D:\\mc-skill-temp",
+  "cache": "$MC_SKILL_CACHE",
   "mappingsVersion": null,
   "classCount": 6200,
   "javaFileCount": 6757,

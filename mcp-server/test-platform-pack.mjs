@@ -34,11 +34,17 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   const q = sessionPlatformPack({ platform: "quilt", minecraftVersion: "1.21.1" });
   assert.equal(q.ok, true);
   assert.ok(q.overlay, "quilt overlay field");
-  assert.ok(q.overlay.status === "ok" || q.overlay.status === "missing");
+  assert.equal(q.overlay.status, "ok", "quilt 1.21.1 有对应 fabric/1.21.1 规则树");
   assert.ok(String(q.agents).toLowerCase().includes("quilt"));
   const fake = fabricRulesOverlay("9.9.9", repo);
   assert.equal(fake.status, "missing");
-  console.log(`quilt overlay status=${q.overlay.status} missing-test=${fake.status}`);
+  const tmpOverlay = mkdtempSync(join(tmpdir(), "mc-quilt-ov-"));
+  mkdirSync(join(tmpOverlay, "fabric", "9.8.8", ".cursor", "rules"), { recursive: true });
+  writeFileSync(join(tmpOverlay, "fabric", "9.8.8", "AGENTS.md"), "# fabric 9.8.8\n", "utf8");
+  const mismatch = fabricRulesOverlay("9.8.8", tmpOverlay);
+  assert.equal(mismatch.status, "version_mismatch");
+  rmSync(tmpOverlay, { recursive: true, force: true });
+  console.log(`quilt overlay status=${q.overlay.status} missing-test=${fake.status} mismatch=${mismatch.status}`);
 }
 
 {
@@ -199,6 +205,34 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   assert.ok(preview.howToWrite.cli.includes(tmp) || preview.howToWrite.cli.includes("--project"));
   rmSync(tmp, { recursive: true, force: true });
   console.log("write --project only (no env): ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-sk-"));
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  const written = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    includeSkills: true,
+    dryRun: false,
+    confirmed: true,
+  });
+  assert.equal(written.ok, true, JSON.stringify(written).slice(0, 400));
+  const stubDir = join(tmp, ".cursor", "skills");
+  assert.equal(existsSync(stubDir), true, "includeSkills writes .cursor/skills");
+  const { readdirSync } = await import("node:fs");
+  const skillDirs = readdirSync(stubDir);
+  assert.ok(skillDirs.length > 0, "at least one skill stub");
+  const stub = readFileSync(join(stubDir, skillDirs[0], "SKILL.md"), "utf8");
+  assert.ok(!/[A-Za-z]:\\/.test(stub) && !/H:\//.test(stub), "stub must not embed drive-letter paths");
+  assert.ok(stub.includes("activate_platform_pack action=session"));
+  assert.match(stub, /neoforge\/1\.21\.1\//);
+  rmSync(tmp, { recursive: true, force: true });
+  delete process.env.MC_SKILL_ALLOW_WRITE;
+  console.log(`includeSkills stub host=cursor skills=${skillDirs.length}`);
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

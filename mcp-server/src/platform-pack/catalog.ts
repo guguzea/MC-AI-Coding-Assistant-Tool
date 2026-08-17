@@ -107,6 +107,21 @@ export function fabricRulesOverlay(
       note: `${wanted} 无 .cursor/rules。仍返回 Quilt 本档；改口 search_fabric_docs。`,
     };
   }
+  let ruleNames: string[] = [];
+  try {
+    ruleNames = readdirSync(rulesDir);
+  } catch {
+    ruleNames = [];
+  }
+  const overlayRules = ruleNames.filter((n) => /^(0[2-9]|10)-/.test(n));
+  if (!overlayRules.length) {
+    return {
+      wanted,
+      status: "version_mismatch",
+      note: `${wanted} 有 AGENTS 但没有 02–10 规则。仍返回 Quilt 本档；改口 search_fabric_docs，不要用邻版 Fabric。`,
+      fabricDir,
+    };
+  }
   return { wanted, status: "ok", note: `02–10 可读 ${wanted}/.cursor/rules`, fabricDir };
 }
 

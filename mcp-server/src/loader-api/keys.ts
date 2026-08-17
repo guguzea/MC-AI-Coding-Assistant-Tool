@@ -108,6 +108,7 @@ export function platformSkippedAction(
 export function readSkippedCatalog(): {
   keys: typeof USER_INGEST_KEYS;
   noIngest: Array<{ platform: string; versions?: string[]; reason: string }>;
+  mavenNotIndexed?: Array<{ key: string; platform: string; minecraftVersion: string; reason: string }>;
 } {
   const p = join(officialSummariesDir(), "skipped-ingest.json");
   if (!existsSync(p)) {
@@ -117,11 +118,17 @@ export function readSkippedCatalog(): {
         { platform: "bedrock", reason: "不是 Java loader jar" },
         { platform: "forge", versions: [...FORGE_NO_SOURCES], reason: "仅 javadoc / search_docs，不走 sources 管线" },
       ],
+      mavenNotIndexed: [],
     };
   }
   try {
-    return JSON.parse(readFileSync(p, "utf8")) as ReturnType<typeof readSkippedCatalog>;
+    const parsed = JSON.parse(readFileSync(p, "utf8")) as ReturnType<typeof readSkippedCatalog>;
+    return {
+      keys: parsed.keys ?? [...USER_INGEST_KEYS],
+      noIngest: parsed.noIngest ?? [],
+      mavenNotIndexed: parsed.mavenNotIndexed ?? [],
+    };
   } catch {
-    return { keys: [...USER_INGEST_KEYS], noIngest: [] };
+    return { keys: [...USER_INGEST_KEYS], noIngest: [], mavenNotIndexed: [] };
   }
 }

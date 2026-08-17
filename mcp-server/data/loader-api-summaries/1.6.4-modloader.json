@@ -11,13 +11,55 @@
       "simpleName": "ModLoader",
       "pkg": "",
       "methods": [
-        "addRecipe",
-        "addShapelessRecipe",
-        "addName",
-        "registerBlock",
-        "registerItem",
-        "setInGameHook",
-        "setInGUIHook"
+        {
+          "name": "addRecipe",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "addRecipe(...)"
+        },
+        {
+          "name": "addShapelessRecipe",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "addShapelessRecipe(...)"
+        },
+        {
+          "name": "addName",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "addName(...)"
+        },
+        {
+          "name": "registerBlock",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerBlock(...)"
+        },
+        {
+          "name": "registerItem",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerItem(...)"
+        },
+        {
+          "name": "setInGameHook",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "setInGameHook(...)"
+        },
+        {
+          "name": "setInGUIHook",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "setInGUIHook(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
@@ -27,11 +69,41 @@
       "fqcn": "BaseMod",
       "simpleName": "BaseMod",
       "pkg": "",
-      "methods": ["getVersion", "load", "modsLoaded", "getName"],
+      "methods": [
+        {
+          "name": "getVersion",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "getVersion(...)"
+        },
+        {
+          "name": "load",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "load(...)"
+        },
+        {
+          "name": "modsLoaded",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "modsLoaded(...)"
+        },
+        {
+          "name": "getName",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "getName(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": false,
       "file": "modloader/1.6.4/knowledge/common/safe-api.md"
     }
   ],
-  "note": "无独立 loader jar 可反编译；摘要来自已打开的 MCP named 安全表，不是混淆短名。1.5.2/1.2.5 未打开 named，不要用本文件冒充。"
+  "note": "无独立 loader jar 可反编译；摘要来自已打开的 MCP named 安全表，不是混淆短名。1.5.2/1.2.5 未打开 named，不要用本文件冒充。",
+  "fqcnIndexCount": 0
 }

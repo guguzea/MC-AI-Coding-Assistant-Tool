@@ -9,43 +9,435 @@
   "repo": "https://github.com/QuiltMC/quilt-standard-libraries",
   "ref": "871ca7abf109239601eab2f96a23eb64317e0045",
   "branch": "1.21",
-  "classCount": 4,
+  "classCount": 14,
   "classes": [
     {
       "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryEvents",
       "simpleName": "RegistryEvents",
-      "methods": ["getEntryAddEvent"],
-      "fields": ["DYNAMIC_REGISTRY_SETUP", "DYNAMIC_REGISTRY_LOADED"],
-      "nested": ["EntryAdded#onAdded", "DynamicRegistrySetupCallback#onDynamicRegistrySetup", "DynamicRegistryLoadedCallback#onDynamicRegistryLoaded"],
-      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
-      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
+      "pkg": "org.quiltmc.qsl.registry.api.event",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "RegistryEvents",
+          "returnType": "RegistryEvents",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "RegistryEvents()"
+        },
+        {
+          "name": "getEntryAddEvent",
+          "returnType": "Event<EntryAdded<V>>",
+          "parameters": [
+            {
+              "type": "Registry<V>",
+              "name": "registry"
+            }
+          ],
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "signature": "Event<EntryAdded<V>> getEntryAddEvent(Registry<V>)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryEvents$EntryAdded",
+      "simpleName": "EntryAdded",
+      "pkg": "org.quiltmc.qsl.registry.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "onAdded",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "RegistryEntryContext<V>",
+              "name": "context"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void onAdded(RegistryEntryContext<V>)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryEvents$DynamicRegistrySetupCallback",
+      "simpleName": "DynamicRegistrySetupCallback",
+      "pkg": "org.quiltmc.qsl.registry.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "onDynamicRegistrySetup",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "DynamicRegistryManagerSetupContext",
+              "name": "context"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void onDynamicRegistrySetup(DynamicRegistryManagerSetupContext)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryEvents$DynamicRegistryLoadedCallback",
+      "simpleName": "DynamicRegistryLoadedCallback",
+      "pkg": "org.quiltmc.qsl.registry.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "onDynamicRegistryLoaded",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "DynamicRegistryManager",
+              "name": "registryManager"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void onDynamicRegistryLoaded(DynamicRegistryManager)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java",
+      "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryEvents.java"
     },
     {
       "fqcn": "org.quiltmc.qsl.registry.api.event.RegistryMonitor",
       "simpleName": "RegistryMonitor",
-      "methods": ["filter", "forAll", "forUpcoming", "create"],
+      "methods": [
+        {
+          "name": "filter",
+          "returnType": "RegistryMonitor<V>",
+          "parameters": [
+            {
+              "type": "Predicate<RegistryEntryContext<V>>",
+              "name": "filter"
+            }
+          ],
+          "modifiers": [],
+          "signature": "RegistryMonitor<V> filter(Predicate<RegistryEntryContext<V>>)"
+        },
+        {
+          "name": "forAll",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "RegistryEvents.EntryAdded<V>",
+              "name": "callback"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void forAll(RegistryEvents.EntryAdded<V>)"
+        },
+        {
+          "name": "forUpcoming",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "RegistryEvents.EntryAdded<V>",
+              "name": "callback"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void forUpcoming(RegistryEvents.EntryAdded<V>)"
+        },
+        {
+          "name": "create",
+          "returnType": "RegistryMonitor<V>",
+          "parameters": [
+            {
+              "type": "Registry<V>",
+              "name": "registry"
+            }
+          ],
+          "modifiers": [
+            "static"
+          ],
+          "signature": "RegistryMonitor<V> create(Registry<V>)"
+        }
+      ],
       "sourcePath": "library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java",
-      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java"
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/registry/src/main/java/org/quiltmc/qsl/registry/api/event/RegistryMonitor.java",
+      "pkg": "org.quiltmc.qsl.registry.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "file": "org/quiltmc/qsl/registry/api/event/RegistryMonitor.java"
     },
     {
       "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents",
       "simpleName": "ServerLifecycleEvents",
-      "methods": [],
-      "fields": ["STARTING", "READY", "STOPPING", "STOPPED"],
-      "nested": ["Starting#startingServer", "Ready#readyServer", "Stopping#stoppingServer", "Stopped#exitServer"],
-      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
-      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+      "pkg": "org.quiltmc.qsl.lifecycle.api.event",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ServerLifecycleEvents",
+          "returnType": "ServerLifecycleEvents",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "ServerLifecycleEvents()"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents$Starting",
+      "simpleName": "Starting",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "startingServer",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftServer",
+              "name": "server"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void startingServer(MinecraftServer)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents$Ready",
+      "simpleName": "Ready",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "readyServer",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftServer",
+              "name": "server"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void readyServer(MinecraftServer)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents$Stopping",
+      "simpleName": "Stopping",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "stoppingServer",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftServer",
+              "name": "server"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void stoppingServer(MinecraftServer)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents$Stopped",
+      "simpleName": "Stopped",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "exitServer",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftServer",
+              "name": "server"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void exitServer(MinecraftServer)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/event/ServerLifecycleEvents.java"
     },
     {
       "fqcn": "org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents",
       "simpleName": "ClientLifecycleEvents",
-      "methods": [],
-      "fields": ["READY", "STOPPING", "STOPPED"],
-      "nested": ["Ready#readyClient", "Stopping#stoppingClient", "Stopped#stoppedClient"],
-      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
-      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
+      "pkg": "org.quiltmc.qsl.lifecycle.api.client.event",
+      "modifiers": [
+        "public",
+        "final"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "ClientLifecycleEvents",
+          "returnType": "ClientLifecycleEvents",
+          "parameters": [],
+          "modifiers": [
+            "private"
+          ],
+          "signature": "ClientLifecycleEvents()"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents$Ready",
+      "simpleName": "Ready",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.client.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "readyClient",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftClient",
+              "name": "client"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void readyClient(MinecraftClient)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents$Stopping",
+      "simpleName": "Stopping",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.client.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "stoppingClient",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftClient",
+              "name": "client"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void stoppingClient(MinecraftClient)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
+    },
+    {
+      "fqcn": "org.quiltmc.qsl.lifecycle.api.client.event.ClientLifecycleEvents$Stopped",
+      "simpleName": "Stopped",
+      "pkg": "org.quiltmc.qsl.lifecycle.api.client.event",
+      "modifiers": [
+        "public"
+      ],
+      "apiStatusInternal": false,
+      "environment": false,
+      "methods": [
+        {
+          "name": "stoppedClient",
+          "returnType": "void",
+          "parameters": [
+            {
+              "type": "MinecraftClient",
+              "name": "client"
+            }
+          ],
+          "modifiers": [],
+          "signature": "void stoppedClient(MinecraftClient)"
+        }
+      ],
+      "file": "org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/871ca7abf109239601eab2f96a23eb64317e0045/library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java",
+      "sourcePath": "library/core/lifecycle_events/src/main/java/org/quiltmc/qsl/lifecycle/api/client/event/ClientLifecycleEvents.java"
     }
   ],
   "missing": [],
-  "note": "许可证允许引用签名；源码不入库。禁止编 QuiltRegistry.register()。quilt-template-mod pin commit 打开到的是 org.quiltmc:qsl + QFAPI bundle（该 commit 的 gradle 为 1.20.6），不是 fat org.quiltmc:quilt-standard-libraries 坐标。1.21 方法名以本摘要 GitHub commit 为准。"
+  "note": "许可证允许引用签名；源码不入库。禁止编 QuiltRegistry.register()。quilt-template-mod pin commit 打开到的是 org.quiltmc:qsl + QFAPI bundle（该 commit 的 gradle 为 1.20.6），不是 fat org.quiltmc:quilt-standard-libraries 坐标。1.21 方法名以本摘要 GitHub commit 为准。",
+  "fqcnIndexCount": 0
 }

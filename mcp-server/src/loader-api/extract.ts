@@ -4,7 +4,7 @@
  * 本模块较重，禁止被 query_loader_api 静态导入（ingest / 抽取脚本动态或脚本入口加载）。
  */
 import { parse } from "java-parser";
-import type { LoaderClassRecord, MethodInfo } from "./types.js";
+import type { LoaderApiSummary, LoaderClassRecord, MethodInfo } from "./types.js";
 
 interface CstNode {
   name?: string;
@@ -12,6 +12,23 @@ interface CstNode {
   startOffset?: number;
   children?: Record<string, CstNode[] | undefined>;
 }
+
+const NESTED_STOP = new Set([
+  "methodDeclaration",
+  "interfaceMethodDeclaration",
+  "constructorDeclaration",
+  "compactConstructorDeclaration",
+  "annotationInterfaceElementDeclaration",
+]);
+
+const TYPE_NODE = new Set([
+  "classDeclaration",
+  "interfaceDeclaration",
+  "enumDeclaration",
+  "recordDeclaration",
+  "annotationInterfaceDeclaration",
+  "annotationTypeDeclaration",
+]);
 
 function kids(node: CstNode | undefined, key: string): CstNode[] {
   const arr = node?.children?.[key];
@@ -55,8 +72,7 @@ function identifierImage(node: CstNode | undefined): string {
   if (isToken(node)) return node.image;
   const id = first(node, "Identifier") ?? node;
   if (isToken(id)) return id.image;
-  const img = cstImage(node);
-  return img;
+  return cstImage(node);
 }
 
 function packageName(unit: CstNode): string {
@@ -71,21 +87,39 @@ function typeModifiers(decl: CstNode): string[] {
   for (const key of ["classModifier", "interfaceModifier", "enumModifier", "recordModifier", "annotationTypeModifier"]) {
     for (const m of kids(decl, key)) {
       const img = cstImage(m).trim();
-      if (img) out.push(img);
+      if (img && !img.startsWith("@")) out.push(img);
     }
   }
-  return out.filter((m) => m && !m.startsWith("@"));
+  return out;
+}
+
+/** 只读本类型声明上的注解，不扫整个文件、不进入方法体。 */
+function annotationTextFromDecl(decl: CstNode | undefined): string {
+  if (!decl) return "";
+  const chunks: string[] = [];
+  for (const key of ["classModifier", "interfaceModifier", "enumModifier", "recordModifier", "annotationTypeModifier"]) {
+    for (const m of kids(decl, key)) chunks.push(cstImage(m));
+  }
+  for (const a of kids(decl, "annotation")) chunks.push(cstImage(a));
+  return chunks.join(" ");
+}
+
+function flagsFromAnnotations(text: string): { apiStatusInternal: boolean; environment: boolean } {
+  return {
+    apiStatusInternal: /@ApiStatus\.Internal\b/.test(text) || /ApiStatus\.Internal/.test(text),
+    environment: /@Environment\b/.test(text) || /@OnlyIn\b/.test(text),
+  };
 }
 
 function methodModifiers(method: CstNode): string[] {
   const out: string[] = [];
-  for (const key of ["methodModifier", "interfaceMethodModifier"]) {
+  for (const key of ["methodModifier", "interfaceMethodModifier", "constructorModifier", "annotationInterfaceElementModifier"]) {
     for (const m of kids(method, key)) {
       const img = cstImage(m).trim();
-      if (img) out.push(img);
+      if (img && !img.startsWith("@")) out.push(img);
     }
   }
-  return out.filter((m) => m && !m.startsWith("@"));
+  return out;
 }
 
 function paramName(param: CstNode): string {
@@ -131,112 +165,203 @@ function extractMethod(method: CstNode): MethodInfo | null {
   return { name, returnType, parameters, modifiers, signature };
 }
 
-function methodsFromBody(body: CstNode | undefined): MethodInfo[] {
+function extractConstructor(ctor: CstNode, fallbackName: string): MethodInfo | null {
+  const declarator = first(ctor, "constructorDeclarator") ?? ctor;
+  const nameNode =
+    first(declarator, "simpleTypeName") ??
+    first(ctor, "simpleTypeName") ??
+    first(declarator, "typeIdentifier");
+  const name = identifierImage(nameNode) || fallbackName;
+  if (!name) return null;
+  const parameters = extractParams(declarator);
+  const modifiers = methodModifiers(ctor);
+  const signature = `${name}(${parameters.map((p) => p.type).join(", ")})`;
+  return { name, returnType: name, parameters, modifiers, signature };
+}
+
+function extractCompactConstructor(
+  ctor: CstNode,
+  typeName: string,
+  recordParams: MethodInfo["parameters"],
+): MethodInfo {
+  const name = identifierImage(first(ctor, "simpleTypeName")) || typeName;
+  const modifiers = [...methodModifiers(ctor), "compact"];
+  const signature = `${name}(${recordParams.map((p) => p.type).join(", ")})`;
+  return { name, returnType: name, parameters: recordParams, modifiers, signature };
+}
+
+function extractAnnoElement(el: CstNode): MethodInfo | null {
+  const name = identifierImage(first(el, "Identifier"));
+  if (!name) return null;
+  const returnType = cstImage(first(el, "unannType")) || "?";
+  const modifiers = methodModifiers(el);
+  const signature = `${returnType} ${name}()`;
+  return { name, returnType, parameters: [], modifiers, signature };
+}
+
+function recordComponents(decl: CstNode): MethodInfo["parameters"] {
+  const rec = first(decl, "recordDeclaration") ?? (decl.name === "recordDeclaration" ? decl : undefined);
+  if (!rec) return [];
+  const header = first(rec, "recordHeader");
+  const list = first(header, "recordComponentList");
+  if (!list) return [];
+  return kids(list, "recordComponent").map((c, i) => {
+    const ty = cstImage(first(c, "unannType")) || "?";
+    const arity = first(c, "variableArityRecordComponent");
+    const name =
+      identifierImage(first(c, "Identifier")) ||
+      identifierImage(first(arity, "Identifier")) ||
+      `comp${i}`;
+    const dots = arity || first(c, "DotDotDot") ? "..." : "";
+    return { type: ty + dots, name };
+  });
+}
+
+function collectMethods(body: CstNode | undefined, typeName: string, recordParams: MethodInfo["parameters"]): MethodInfo[] {
   if (!body) return [];
   const out: MethodInfo[] = [];
-  const memberKeys = [
-    "classBodyDeclaration",
-    "interfaceMemberDeclaration",
-    "enumBodyDeclaration",
-    "recordBodyDeclaration",
-    "annotationTypeMemberDeclaration",
-  ];
-  const walkMember = (member: CstNode) => {
-    const method =
-      first(member, "methodDeclaration") ??
-      first(member, "interfaceMethodDeclaration") ??
-      first(first(member, "classMemberDeclaration"), "methodDeclaration") ??
-      first(first(member, "interfaceMemberDeclaration"), "interfaceMethodDeclaration");
-    if (method) {
-      const info = extractMethod(method);
+  const visit = (n: CstNode) => {
+    const name = n.name;
+    if (name && TYPE_NODE.has(name)) return;
+    if (name === "methodDeclaration" || name === "interfaceMethodDeclaration") {
+      const info = extractMethod(n);
       if (info) out.push(info);
+      return;
+    }
+    if (name === "constructorDeclaration") {
+      const info = extractConstructor(n, typeName);
+      if (info) out.push(info);
+      return;
+    }
+    if (name === "compactConstructorDeclaration") {
+      out.push(extractCompactConstructor(n, typeName, recordParams));
+      return;
+    }
+    if (name === "annotationInterfaceElementDeclaration") {
+      const info = extractAnnoElement(n);
+      if (info) out.push(info);
+      return;
+    }
+    if (!n.children) return;
+    for (const arr of Object.values(n.children)) {
+      if (!Array.isArray(arr)) continue;
+      for (const c of arr) visit(c);
     }
   };
-  for (const key of memberKeys) {
-    for (const decl of kids(body, key)) walkMember(decl);
-  }
+  visit(body);
   return out;
 }
 
 function nestedTypeDecls(body: CstNode | undefined): CstNode[] {
   if (!body) return [];
   const out: CstNode[] = [];
-  const wrapKeys = [
-    "classBodyDeclaration",
-    "interfaceMemberDeclaration",
-    "enumBodyDeclaration",
-    "recordBodyDeclaration",
-  ];
-  for (const key of wrapKeys) {
-    for (const wrap of kids(body, key)) {
-      const member =
-        first(wrap, "classMemberDeclaration") ??
-        first(wrap, "interfaceMemberDeclaration") ??
-        wrap;
-      for (const tkey of ["classDeclaration", "interfaceDeclaration", "enumDeclaration", "recordDeclaration", "annotationTypeDeclaration"]) {
-        out.push(...kids(member, tkey), ...kids(wrap, tkey));
-      }
+  const visit = (n: CstNode) => {
+    if (n.name && NESTED_STOP.has(n.name)) return;
+    if (n.name && TYPE_NODE.has(n.name)) {
+      out.push(n);
+      return;
     }
-  }
+    if (!n.children) return;
+    for (const arr of Object.values(n.children)) {
+      if (!Array.isArray(arr)) continue;
+      for (const c of arr) visit(c);
+    }
+  };
+  visit(body);
   return out;
 }
 
-function typeNameAndBody(decl: CstNode): { kind: string; name: string; body?: CstNode; modifiers: string[] } | null {
-  const modifiers = typeModifiers(decl);
-  const tryNormal = (
-    wrapperKey: string,
-    normalKey: string,
-    bodyKey: string,
-    kind: string,
-  ): ReturnType<typeof typeNameAndBody> => {
-    const wrapper = wrapperKey ? first(decl, wrapperKey) ?? decl : decl;
-    const normal = first(wrapper, normalKey) ?? first(decl, normalKey) ?? wrapper;
-    const ident = first(normal, "typeIdentifier") ?? first(wrapper, "typeIdentifier") ?? first(decl, "typeIdentifier");
-    const name = identifierImage(ident);
-    if (!name) return null;
-    const body = first(normal, bodyKey) ?? first(wrapper, bodyKey) ?? first(decl, bodyKey);
-    return { kind, name, body, modifiers: modifiers.length ? modifiers : typeModifiers(wrapper) };
-  };
+type TypeInfo = {
+  kind: string;
+  name: string;
+  body?: CstNode;
+  modifiers: string[];
+  annotationText: string;
+};
 
-  if (first(decl, "normalClassDeclaration") || first(decl, "classDeclaration") || decl.name === "classDeclaration") {
-    const inner = first(decl, "classDeclaration") ?? decl;
-    return tryNormal("", "normalClassDeclaration", "classBody", "class") ?? tryNormal("", "normalClassDeclaration", "classBody", "class") ?? (() => {
-      const ident = first(first(inner, "normalClassDeclaration"), "typeIdentifier");
-      const name = identifierImage(ident);
-      if (!name) return null;
+function typeNameAndBody(decl: CstNode): TypeInfo | null {
+  const outerMods = typeModifiers(decl);
+  const outerAnno = annotationTextFromDecl(decl);
+
+  const enumDecl = first(decl, "enumDeclaration") ?? (decl.name === "enumDeclaration" ? decl : undefined);
+  if (enumDecl && (first(enumDecl, "typeIdentifier") || enumDecl.name === "enumDeclaration")) {
+    const name = identifierImage(first(enumDecl, "typeIdentifier"));
+    if (name) {
       return {
-        kind: "class",
+        kind: "enum",
         name,
-        body: first(first(inner, "normalClassDeclaration"), "classBody"),
-        modifiers: typeModifiers(inner),
+        body: first(enumDecl, "enumBody"),
+        modifiers: outerMods.length ? outerMods : typeModifiers(enumDecl),
+        annotationText: `${outerAnno} ${annotationTextFromDecl(enumDecl)}`,
       };
-    })();
+    }
   }
+
+  const recDecl = first(decl, "recordDeclaration") ?? (decl.name === "recordDeclaration" ? decl : undefined);
+  if (recDecl && (first(recDecl, "typeIdentifier") || recDecl.name === "recordDeclaration")) {
+    const name = identifierImage(first(recDecl, "typeIdentifier"));
+    if (name) {
+      return {
+        kind: "record",
+        name,
+        body: first(recDecl, "recordBody"),
+        modifiers: outerMods.length ? outerMods : typeModifiers(recDecl),
+        annotationText: `${outerAnno} ${annotationTextFromDecl(recDecl)}`,
+      };
+    }
+  }
+
+  const annoDecl =
+    first(decl, "annotationInterfaceDeclaration") ??
+    first(decl, "annotationTypeDeclaration") ??
+    (decl.name === "annotationInterfaceDeclaration" || decl.name === "annotationTypeDeclaration" ? decl : undefined);
+  if (annoDecl) {
+    const name = identifierImage(first(annoDecl, "typeIdentifier"));
+    if (name) {
+      return {
+        kind: "annotation",
+        name,
+        body: first(annoDecl, "annotationInterfaceBody") ?? first(annoDecl, "annotationTypeBody"),
+        modifiers: outerMods.length ? outerMods : typeModifiers(annoDecl),
+        annotationText: `${outerAnno} ${annotationTextFromDecl(annoDecl)}`,
+      };
+    }
+  }
+
   if (first(decl, "normalInterfaceDeclaration") || first(decl, "interfaceDeclaration") || decl.name === "interfaceDeclaration") {
     const inner = first(decl, "interfaceDeclaration") ?? decl;
     const normal = first(inner, "normalInterfaceDeclaration") ?? inner;
-    const name = identifierImage(first(normal, "typeIdentifier"));
-    if (!name) return null;
-    return { kind: "interface", name, body: first(normal, "interfaceBody"), modifiers: typeModifiers(inner) };
+    if (!first(inner, "annotationInterfaceDeclaration")) {
+      const name = identifierImage(first(normal, "typeIdentifier"));
+      if (name) {
+        return {
+          kind: "interface",
+          name,
+          body: first(normal, "interfaceBody"),
+          modifiers: outerMods.length ? outerMods : typeModifiers(inner),
+          annotationText: `${outerAnno} ${annotationTextFromDecl(inner)}`,
+        };
+      }
+    }
   }
-  if (first(decl, "enumDeclaration") || decl.name === "enumDeclaration") {
-    const inner = first(decl, "enumDeclaration") ?? decl;
-    const name = identifierImage(first(inner, "typeIdentifier"));
-    if (!name) return null;
-    return { kind: "enum", name, body: first(inner, "enumBody"), modifiers: typeModifiers(inner) };
+
+  if (first(decl, "normalClassDeclaration") || decl.name === "classDeclaration" || decl.name === "normalClassDeclaration") {
+    const inner = first(decl, "classDeclaration") ?? decl;
+    const normal = first(inner, "normalClassDeclaration") ?? first(decl, "normalClassDeclaration");
+    if (normal) {
+      const name = identifierImage(first(normal, "typeIdentifier"));
+      if (name) {
+        return {
+          kind: "class",
+          name,
+          body: first(normal, "classBody"),
+          modifiers: outerMods.length ? outerMods : typeModifiers(inner),
+          annotationText: `${outerAnno} ${annotationTextFromDecl(inner)}`,
+        };
+      }
+    }
   }
-  if (first(decl, "recordDeclaration") || decl.name === "recordDeclaration") {
-    const inner = first(decl, "recordDeclaration") ?? decl;
-    const name = identifierImage(first(inner, "typeIdentifier"));
-    if (!name) return null;
-    return { kind: "record", name, body: first(inner, "recordBody"), modifiers: typeModifiers(inner) };
-  }
-  if (first(decl, "annotationTypeDeclaration") || decl.name === "annotationTypeDeclaration") {
-    const inner = first(decl, "annotationTypeDeclaration") ?? decl;
-    const name = identifierImage(first(inner, "typeIdentifier"));
-    if (!name) return null;
-    return { kind: "annotation", name, body: first(inner, "annotationTypeBody"), modifiers: typeModifiers(inner) };
-  }
+
   return null;
 }
 
@@ -244,7 +369,6 @@ function walkType(
   decl: CstNode,
   pkg: string,
   outerNames: string[],
-  sourceText: string,
   fileHint?: string,
 ): LoaderClassRecord[] {
   const info = typeNameAndBody(decl);
@@ -252,20 +376,34 @@ function walkType(
   const names = [...outerNames, info.name];
   const binary = names.join("$");
   const fqcn = pkg ? `${pkg}.${binary}` : binary;
-  const methods = methodsFromBody(info.body);
+  const recParams = info.kind === "record" ? recordComponents(decl) : [];
+  let methods = collectMethods(info.body, info.name, recParams);
+  if (info.kind === "record" && recParams.length && !methods.some((m) => m.name === info.name)) {
+    methods = [
+      {
+        name: info.name,
+        returnType: info.name,
+        parameters: recParams,
+        modifiers: ["public"],
+        signature: `${info.name}(${recParams.map((p) => p.type).join(", ")})`,
+      },
+      ...methods,
+    ];
+  }
+  const flags = flagsFromAnnotations(info.annotationText);
   const rec: LoaderClassRecord = {
     fqcn,
     simpleName: info.name,
     pkg: pkg || undefined,
     modifiers: info.modifiers,
-    apiStatusInternal: /@ApiStatus\.Internal\b/.test(sourceText),
-    environment: /@Environment\b|@OnlyIn\b/.test(sourceText),
+    apiStatusInternal: flags.apiStatusInternal,
+    environment: flags.environment,
     methods,
-    file: fileHint,
+    file: repoSafeSourcePath(fileHint),
   };
   const nested: LoaderClassRecord[] = [rec];
   for (const n of nestedTypeDecls(info.body)) {
-    nested.push(...walkType(n, pkg, names, sourceText, fileHint));
+    nested.push(...walkType(n, pkg, names, fileHint));
   }
   return nested;
 }
@@ -273,11 +411,51 @@ function walkType(
 function topLevelDecls(unit: CstNode): CstNode[] {
   const out: CstNode[] = [];
   for (const td of kids(unit, "typeDeclaration")) {
-    for (const k of ["classDeclaration", "interfaceDeclaration", "enumDeclaration", "recordDeclaration", "annotationTypeDeclaration"]) {
+    for (const k of [
+      "classDeclaration",
+      "interfaceDeclaration",
+      "enumDeclaration",
+      "recordDeclaration",
+      "annotationTypeDeclaration",
+      "annotationInterfaceDeclaration",
+    ]) {
       out.push(...kids(td, k));
     }
   }
   return out;
+}
+
+/** 摘要里只保留相对 .java 路径，禁止本机盘符 / cache 绝对路径入库。 */
+export function repoSafeSourcePath(fileHint?: string): string | undefined {
+  if (!fileHint) return undefined;
+  const n = fileHint.replace(/\\/g, "/");
+  const marker = "loader-api-src/";
+  const idx = n.toLowerCase().lastIndexOf(marker);
+  if (idx >= 0) {
+    const rest = n.slice(idx + marker.length);
+    const slash = rest.indexOf("/");
+    return slash >= 0 ? rest.slice(slash + 1) : rest;
+  }
+  const pkg = n.match(/\/((?:net|org|com|cpw)\/.+\.java)$/i);
+  if (pkg) return pkg[1];
+  if (/^[A-Za-z]:\//.test(n) || n.startsWith("/") || n.startsWith("//")) {
+    const base = n.split("/").pop();
+    return base && base.endsWith(".java") ? base : undefined;
+  }
+  return n;
+}
+
+export function isThinLoaderSummary(prev: Pick<LoaderApiSummary, "classes" | "fqcnIndex" | "classCount">): boolean {
+  const classes = prev.classes ?? [];
+  if (!classes.length) return true;
+  if (classes.some((c) => Array.isArray(c.methods) && c.methods.some((m) => typeof m === "string"))) {
+    return true;
+  }
+  const indexLen = (prev.fqcnIndex ?? []).length;
+  if (classes.length === 400 && indexLen > 400) return true;
+  if (typeof prev.classCount === "number" && prev.classCount > classes.length + 10) return true;
+  if (indexLen > 0 && classes.length < indexLen * 0.5) return true;
+  return false;
 }
 
 export function extractCompilationUnit(javaText: string, fileHint?: string): LoaderClassRecord[] {
@@ -294,7 +472,7 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
         environment: false,
         methods: [],
         parseError: msg,
-        file: fileHint,
+        file: repoSafeSourcePath(fileHint),
       },
     ];
   }
@@ -304,7 +482,7 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
   if (decls.length === 0) return [];
   const out: LoaderClassRecord[] = [];
   for (const d of decls) {
-    out.push(...walkType(d, pkg, [], javaText, fileHint));
+    out.push(...walkType(d, pkg, [], fileHint));
   }
   return out;
 }

@@ -1,6 +1,17 @@
 {
   "ok": true,
   "decompiled": [
+    "1.6.4-modloader",
+    "1.20.4-neoforge.jar",
+    "1.21.1-neoforge.jar",
+    "26.1-neoforge.jar",
+    "1.13.2-rift",
+    "1.12.2-liteloader",
+    "1.21.1-qsl",
+    "1.20.4-forge.jar",
+    "1.21.11-neoforge.jar",
+    "1.21.3-neoforge.jar",
+    "1.21.8-neoforge.jar",
     "1.12.2-forge.jar",
     "1.13.2-forge.jar",
     "1.14.4-forge.jar",
@@ -12,17 +23,21 @@
     "1.20.1-fabric-api.jar",
     "1.20.1-forge.jar",
     "1.20.4-fabric-api.jar",
-    "1.20.4-forge.jar",
-    "1.20.4-neoforge.jar",
     "1.21.1-fabric-api.jar",
-    "1.21.1-neoforge.jar",
-    "1.21.11-neoforge.jar",
-    "1.21.3-neoforge.jar",
-    "1.21.8-neoforge.jar",
-    "26.1-neoforge.jar",
     "26.1.2-fabric-api.jar"
   ],
   "mappingsVersion": {
+    "1.6.4-modloader": "mcp-1.6.4",
+    "1.20.4-neoforge": "parchment-1.20.4-2024.04.14",
+    "1.21.1-neoforge": "parchment-1.21.1-2024.11.17",
+    "26.1-neoforge": "mojmap-unobfuscated-26.1",
+    "1.13.2-rift": "mcp-1.13.2",
+    "1.12.2-liteloader": "mcp-1.12.2",
+    "1.21.1-qsl": "qsl-git-1.21-871ca7abf109",
+    "1.20.4-forge": "official-1.20.4",
+    "1.21.11-neoforge": "parchment-1.21.11-2025.12.20",
+    "1.21.3-neoforge": "parchment-1.21.3-2024.12.07",
+    "1.21.8-neoforge": "parchment-1.21.8-2025.09.14",
     "1.12.2-forge": "snapshot-20171003-1.12",
     "1.13.2-forge": "snapshot-20180921-1.13",
     "1.14.4-forge": "snapshot-20190719-1.14.3",
@@ -33,17 +48,40 @@
     "1.19.4-forge": "official-1.19.4",
     "1.20.1-fabric-api": "yarn-1.20.1+build.10",
     "1.20.1-forge": "official-1.20.1",
-    "1.20.4-fabric-api": "mojmap-1.20.4",
-    "1.20.4-forge": "official-1.20.4",
-    "1.20.4-neoforge": "parchment-1.20.4-2024.04.14",
-    "1.21.1-fabric-api": "mojmap-1.21.1",
-    "1.21.1-neoforge": "parchment-1.21.1-2024.11.17",
-    "1.21.11-neoforge": "parchment-1.21.11-2025.12.20",
-    "1.21.3-neoforge": "parchment-1.21.3-2024.12.07",
-    "1.21.8-neoforge": "parchment-1.21.8-2025.09.14",
-    "26.1-neoforge": "mojmap-unobfuscated-26.1",
+    "1.20.4-fabric-api": "yarn-1.20.4",
+    "1.21.1-fabric-api": "yarn-1.21.1",
     "26.1.2-fabric-api": "mojmap-26.1.2"
   },
-  "cache": "D:\\mc-skill-temp",
-  "invalid": []
+  "cache": "$MC_SKILL_CACHE",
+  "invalid": [],
+  "notIndexed": [
+    {
+      "key": "1.14.4-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.16.5-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.17.1-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.18.2-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.19.4-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.21.3-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    },
+    {
+      "key": "1.21.11-fabric-api",
+      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
+    }
+  ]
 }

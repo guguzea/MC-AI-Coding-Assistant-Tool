@@ -10,7 +10,22 @@
       "fqcn": "com.mumfrey.liteloader.HUDRenderListener",
       "simpleName": "HUDRenderListener",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["onPreRenderHUD", "onPostRenderHUD"],
+      "methods": [
+        {
+          "name": "onPreRenderHUD",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onPreRenderHUD(...)"
+        },
+        {
+          "name": "onPostRenderHUD",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onPostRenderHUD(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": true,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
@@ -19,7 +34,29 @@
       "fqcn": "com.mumfrey.liteloader.RenderListener",
       "simpleName": "RenderListener",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["onRender", "onRenderGui", "onSetupCameraTransform"],
+      "methods": [
+        {
+          "name": "onRender",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onRender(...)"
+        },
+        {
+          "name": "onRenderGui",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onRenderGui(...)"
+        },
+        {
+          "name": "onSetupCameraTransform",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onSetupCameraTransform(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": true,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
@@ -28,7 +65,22 @@
       "fqcn": "com.mumfrey.liteloader.ViewportListener",
       "simpleName": "ViewportListener",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["onViewportResized", "onFullScreenToggled"],
+      "methods": [
+        {
+          "name": "onViewportResized",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onViewportResized(...)"
+        },
+        {
+          "name": "onFullScreenToggled",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onFullScreenToggled(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": true,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
@@ -37,7 +89,15 @@
       "fqcn": "com.mumfrey.liteloader.PluginChannelListener",
       "simpleName": "PluginChannelListener",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["onCustomPayload"],
+      "methods": [
+        {
+          "name": "onCustomPayload",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onCustomPayload(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": false,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
@@ -46,7 +106,29 @@
       "fqcn": "com.mumfrey.liteloader.LiteMod",
       "simpleName": "LiteMod",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["getVersion", "init", "upgradeSettings"],
+      "methods": [
+        {
+          "name": "getVersion",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "getVersion(...)"
+        },
+        {
+          "name": "init",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "init(...)"
+        },
+        {
+          "name": "upgradeSettings",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "upgradeSettings(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": false,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
@@ -55,11 +137,20 @@
       "fqcn": "com.mumfrey.liteloader.Tickable",
       "simpleName": "Tickable",
       "pkg": "com.mumfrey.liteloader",
-      "methods": ["onTick"],
+      "methods": [
+        {
+          "name": "onTick",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "onTick(...)"
+        }
+      ],
       "apiStatusInternal": false,
       "environment": false,
       "file": "liteloader/1.12.2/knowledge/common/verified-api.md"
     }
   ],
-  "note": "GitLab raw 现需登录，不能把 loader 源码写入仓库。摘要来自已打开的 1.12.2 接口，带 mappingsVersion=mcp-1.12.2。"
+  "note": "GitLab raw 现需登录，不能把 loader 源码写入仓库。摘要来自已打开的 1.12.2 接口，带 mappingsVersion=mcp-1.12.2。",
+  "fqcnIndexCount": 0
 }

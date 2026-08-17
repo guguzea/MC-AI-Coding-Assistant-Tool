@@ -9,6 +9,7 @@ import {
 } from "./keys.js";
 import {
   classSimpleName,
+  dedupeLoaderClasses,
   findSummary,
   listIndexed,
   normalizeClass,
@@ -83,10 +84,20 @@ function matchClasses(classes: LoaderClassRecord[], className: string): LoaderCl
   const q = className.trim();
   const exact = classes.filter((c) => c.fqcn === q);
   if (exact.length) return exact;
-  if (q.includes(".") || q.includes("$")) {
-    return classes.filter((c) => c.fqcn === q || c.fqcn.endsWith(`.${q}`) || c.fqcn.endsWith(`$${q.split("$").pop()}`));
+  if (q.includes(".")) {
+    return classes.filter((c) => c.fqcn.endsWith(`.${q}`));
+  }
+  if (q.includes("$")) {
+    return classes.filter((c) => c.fqcn.endsWith(`.${q}`));
   }
   return classes.filter((c) => c.simpleName === q || classSimpleName(c.fqcn) === q);
+}
+
+function indexHasClass(index: string[], className: string): boolean {
+  const q = className.trim();
+  return index.some(
+    (fq) => fq === q || fq.endsWith(`.${q}`) || (!q.includes(".") && !q.includes("$") && classSimpleName(fq) === q),
+  );
 }
 
 export function queryLoaderApi(args: QueryLoaderApiArgs) {
@@ -103,9 +114,9 @@ export function queryLoaderApi(args: QueryLoaderApiArgs) {
   const hit = findSummary(platform, minecraftVersion);
   if (!hit) return missingIndexPayload(platform, minecraftVersion);
 
-  const classes = (hit.summary.classes ?? []).map(normalizeClass);
+  const classes = dedupeLoaderClasses((hit.summary.classes ?? []).map(normalizeClass));
   const matches = matchClasses(classes, className);
-  if (matches.length > 1 && !className.includes(".") && !className.includes("$")) {
+  if (matches.length > 1) {
     return {
       found: false,
       code: "AMBIGUOUS" as const,
@@ -113,24 +124,31 @@ export function queryLoaderApi(args: QueryLoaderApiArgs) {
       minecraftVersion,
       key: hit.key,
       candidates: matches.map((c) => c.fqcn),
-      notes: ["simpleName 命中多条，请改用含 $ 的 FQCN。"],
-      action: actionable("AMBIGUOUS", `simpleName ${className} 命中 ${matches.length} 个类型。`, [
+      notes: ["命中多条，请改用含包名的 FQCN（嵌套类用 $）。"],
+      action: actionable("AMBIGUOUS", `${className} 命中 ${matches.length} 个类型。`, [
         `改用 FQCN（嵌套类用 $，例如 ${matches[0]?.fqcn}）`,
       ]),
     };
   }
   if (matches.length === 0) {
+    const indexed = indexHasClass(hit.summary.fqcnIndex ?? [], className);
     return {
       found: false,
+      code: indexed ? ("INDEXED_WITHOUT_BODY" as const) : undefined,
       platform,
       minecraftVersion,
       key: hit.key,
       mappingsVersion: hit.summary.mappingsVersion,
       source: hit.overlay ? "user_jar" : hit.summary.source ?? "official",
-      notes: [
-        "found:false 表示本 loader-api 摘要没有该类，不代表游戏里不存在。",
-        `可 search_loader_api 或改用 ${docsToolForPlatform(platform)}。`,
-      ],
+      notes: indexed
+        ? [
+            "fqcnIndex 有该类但 classes 无 MethodInfo 正文（摘要过瘦）。found:false 不代表游戏里不存在。",
+            `改用 ${docsToolForPlatform(platform)}。`,
+          ]
+        : [
+            "found:false 表示本 loader-api 摘要没有该类，不代表游戏里不存在。",
+            `可 search_loader_api 或改用 ${docsToolForPlatform(platform)}。`,
+          ],
     };
   }
   const rec = matches[0];
@@ -176,6 +194,7 @@ export function searchLoaderApi(args: SearchLoaderApiArgs) {
       indexed,
       skipped: catalog.keys,
       noIngest: catalog.noIngest,
+      mavenNotIndexed: catalog.mavenNotIndexed ?? [],
     };
   }
 

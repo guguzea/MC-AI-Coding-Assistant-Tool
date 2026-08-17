@@ -9,6 +9,7 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
@@ -194,7 +195,6 @@ for (const group of FILES) {
     mappingsVersion: group.mappingsVersion,
     mapping: group.mappingsVersion.startsWith("mcp") ? "mcp" : "mojmap",
     source: "official-raw",
-    cacheDir: dir.replace(/\\/g, "/"),
     classCount: classes.length,
     classes,
     fetched,
@@ -205,5 +205,11 @@ for (const group of FILES) {
   console.log(`${group.key}: ${classes.length} classes, ${fetched.filter((f) => f.ok).length}/${fetched.length} files`);
 }
 
-writeFileSync(join(OUT, "fetch-loader-api-sources-last.json"), JSON.stringify({ cache: CACHE, report }, null, 2), "utf8");
+const lastDir = join(CACHE, "loader-api-summaries");
+mkdirSync(lastDir, { recursive: true });
+writeFileSync(
+  join(lastDir, "fetch-loader-api-sources-last.json"),
+  JSON.stringify({ cache: "$MC_SKILL_CACHE", report: redactAbs(report, { cache: CACHE, repo: ROOT }) }, null, 2),
+  "utf8",
+);
 console.log("done", SRC);

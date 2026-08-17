@@ -306,6 +306,7 @@ node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12
 - **用户 ingest**：只写 `$MC_SKILL_CACHE/loader-api-summaries/`，**不入库、不共享给他人**。
 - **查询顺序**：官方先，本地 overlay 后，同 key 本地覆盖官方。
 - LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。
+- **Fabric 缺档（禁止借邻版）**：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.21.3` / `1.21.11` 的 fabric-api sources 按该档文档坐标拉取为 maven 404，查询返回 `LOADER_API_NOT_INDEXED`。已索引：`1.20.1` / `1.20.4` / `1.21.1` / `26.1.2`。`search_loader_api mode=list` 的 `mavenNotIndexed` 列出缺档。
 
 ### ingest 实战
 

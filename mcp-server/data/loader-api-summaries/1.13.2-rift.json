@@ -4,7 +4,6 @@
   "mapping": "mcp",
   "skippedExpansion": true,
   "source": "official-raw",
-  "cacheDir": "D:/mc-skill-temp/loader-api-src/1.13.2-rift",
   "classCount": 8,
   "classes": [
     {
@@ -12,96 +11,192 @@
       "simpleName": "BlockAdder",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "registerBlocks"
+        {
+          "name": "registerBlocks",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerBlocks(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/BlockAdder.java"
+      "file": "BlockAdder.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.CustomPayloadHandler",
       "simpleName": "CustomPayloadHandler",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "clientHandlesChannel",
-        "clientHandleCustomPayload",
-        "serverHandlesChannel",
-        "serverHandleCustomPayload"
+        {
+          "name": "clientHandlesChannel",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "clientHandlesChannel(...)"
+        },
+        {
+          "name": "clientHandleCustomPayload",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "clientHandleCustomPayload(...)"
+        },
+        {
+          "name": "serverHandlesChannel",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "serverHandlesChannel(...)"
+        },
+        {
+          "name": "serverHandleCustomPayload",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "serverHandleCustomPayload(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/CustomPayloadHandler.java"
+      "file": "CustomPayloadHandler.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.client.GameGuiAdder",
       "simpleName": "GameGuiAdder",
       "pkg": "org.dimdev.rift.listener.client",
       "methods": [
-        "displayGui",
-        "displayContainerGui"
+        {
+          "name": "displayGui",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "displayGui(...)"
+        },
+        {
+          "name": "displayContainerGui",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "displayContainerGui(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/GameGuiAdder.java"
+      "file": "GameGuiAdder.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.ItemAdder",
       "simpleName": "ItemAdder",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "registerItems"
+        {
+          "name": "registerItems",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerItems(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/ItemAdder.java"
+      "file": "ItemAdder.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.MessageAdder",
       "simpleName": "MessageAdder",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "registerMessages"
+        {
+          "name": "registerMessages",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerMessages(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/MessageAdder.java"
+      "file": "MessageAdder.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.client.OverlayRenderer",
       "simpleName": "OverlayRenderer",
       "pkg": "org.dimdev.rift.listener.client",
       "methods": [
-        "renderOverlay"
+        {
+          "name": "renderOverlay",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "renderOverlay(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/OverlayRenderer.java"
+      "file": "OverlayRenderer.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.PacketAdder",
       "simpleName": "PacketAdder",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "registerPacket",
-        "registerHandshakingPackets",
-        "registerPlayPackets",
-        "registerStatusPackets",
-        "registerLoginPackets"
+        {
+          "name": "registerPacket",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerPacket(...)"
+        },
+        {
+          "name": "registerHandshakingPackets",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerHandshakingPackets(...)"
+        },
+        {
+          "name": "registerPlayPackets",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerPlayPackets(...)"
+        },
+        {
+          "name": "registerStatusPackets",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerStatusPackets(...)"
+        },
+        {
+          "name": "registerLoginPackets",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerLoginPackets(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/PacketAdder.java"
+      "file": "PacketAdder.java"
     },
     {
       "fqcn": "org.dimdev.rift.listener.TileEntityTypeAdder",
       "simpleName": "TileEntityTypeAdder",
       "pkg": "org.dimdev.rift.listener",
       "methods": [
-        "registerTileEntityTypes"
+        {
+          "name": "registerTileEntityTypes",
+          "returnType": "?",
+          "parameters": [],
+          "modifiers": [],
+          "signature": "registerTileEntityTypes(...)"
+        }
       ],
       "apiStatusInternal": false,
       "environment": false,
-      "file": "D:/mc-skill-temp/loader-api-src/1.13.2-rift/TileEntityTypeAdder.java"
+      "file": "TileEntityTypeAdder.java"
     }
   ],
   "fetched": [
@@ -154,5 +249,6 @@
       "note": "cache"
     }
   ],
-  "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。"
+  "note": "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。",
+  "fqcnIndexCount": 0
 }

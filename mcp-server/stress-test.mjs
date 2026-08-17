@@ -179,6 +179,15 @@ async function main() {
   }
 
   disposeApiData();
+  try {
+    const { closeAllYarnDbs } = await import("./dist/mappings/yarn-sqlite.js");
+    closeAllYarnDbs();
+  } catch {
+    /* ignore */
+  }
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});
