@@ -24,7 +24,15 @@
     "1.20.1-forge.jar",
     "1.20.4-fabric-api.jar",
     "1.21.1-fabric-api.jar",
-    "26.1.2-fabric-api.jar"
+    "26.1.2-fabric-api.jar",
+    "1.14.4-fabric-api.jar",
+    "1.16.5-fabric-api.jar",
+    "1.17.1-fabric-api.jar",
+    "1.18.2-fabric-api.jar",
+    "1.19.4-fabric-api.jar",
+    "1.21.11-fabric-api.jar",
+    "1.21.3-fabric-api.jar",
+    "1.19.4-qsl"
   ],
   "mappingsVersion": {
     "1.6.4-modloader": "mcp-1.6.4",
@@ -50,38 +58,17 @@
     "1.20.1-forge": "official-1.20.1",
     "1.20.4-fabric-api": "yarn-1.20.4",
     "1.21.1-fabric-api": "yarn-1.21.1",
-    "26.1.2-fabric-api": "mojmap-26.1.2"
+    "26.1.2-fabric-api": "mojmap-26.1.2",
+    "1.14.4-fabric-api": "yarn-1.14.4+build.18",
+    "1.16.5-fabric-api": "yarn-1.16.5+build.10",
+    "1.17.1-fabric-api": "yarn-1.17.1+build.65",
+    "1.18.2-fabric-api": "yarn-1.18.2+build.4",
+    "1.19.4-fabric-api": "yarn-1.19.4+build.2",
+    "1.21.11-fabric-api": "yarn-1.21.11+build.6",
+    "1.21.3-fabric-api": "yarn-1.21.3+build.2",
+    "1.19.4-qsl": "qsl-git-1.19.4-ff5d1124c9eb"
   },
   "cache": "$MC_SKILL_CACHE",
   "invalid": [],
-  "notIndexed": [
-    {
-      "key": "1.14.4-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.16.5-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.17.1-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.18.2-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.19.4-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.21.3-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    },
-    {
-      "key": "1.21.11-fabric-api",
-      "reason": "LOADER_API_NOT_INDEXED：该档文档/MDK 坐标未能拉到 sources（常见 maven 404），禁止借邻版 jar"
-    }
-  ]
+  "notIndexed": []
 }

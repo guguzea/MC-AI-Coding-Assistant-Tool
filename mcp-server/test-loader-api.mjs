@@ -222,7 +222,7 @@ public class Other {
 {
   const listed = searchLoaderApi({ mode: "list" });
   assert.ok(Array.isArray(listed.indexed) && listed.indexed.length > 0);
-  assert.ok(Array.isArray(listed.mavenNotIndexed) && listed.mavenNotIndexed.length >= 1);
+  assert.ok(Array.isArray(listed.mavenNotIndexed));
   const s = searchLoaderApi({
     platform: "neoforge",
     minecraftVersion: "1.21.1",
@@ -341,7 +341,7 @@ void readFileSync;
     "methods must be real MethodInfo, not string upgrades",
   );
   const neoText = readFileSync(neoPath, "utf8");
-  assert.ok(!/mc-skill-temp|[A-Za-z]:\\/.test(neoText), "no local cache paths in neo summary");
+  assert.ok(!/mc-skill-temp|[A-Za-z]:\\\\/.test(neoText), "no local cache paths in neo summary");
   const idx = JSON.parse(readFileSync(join(root, "data", "loader-api-summaries", "index.json"), "utf8"));
   assert.equal(idx.cache, "$MC_SKILL_CACHE");
   const skipMeta = new Set([
@@ -359,15 +359,33 @@ void readFileSync;
     const row = (idx.jars || []).find((x) => String(x.file).replace(/\.jar$/i, "") === name.replace(/\.json$/i, ""));
     assert.equal(j.classCount, j.classes.length, `${name} classCount`);
     if (row) assert.equal(row.classCount, j.classes.length, `index.json ${name}`);
-    assert.ok(!/mc-skill-temp|[A-Za-z]:\\/.test(JSON.stringify(j)), `${name} must not embed drive paths`);
+    assert.ok(!/mc-skill-temp|[A-Za-z]:\\\\/.test(JSON.stringify(j)), `${name} must not embed drive paths`);
     if (!j.skippedExpansion) {
       assert.equal(isThinLoaderSummary(j), false, `${name} must not be thin`);
     }
   }
   const listed = searchLoaderApi({ mode: "list" });
-  assert.ok(Array.isArray(listed.mavenNotIndexed) && listed.mavenNotIndexed.some((x) => x.key === "1.18.2-fabric-api"));
-  const missFab = queryLoaderApi({ platform: "fabric", minecraftVersion: "1.18.2", className: "FabricItem" });
+  assert.ok(Array.isArray(listed.mavenNotIndexed));
+  assert.ok(
+    !listed.mavenNotIndexed.some((x) => x.key === "1.18.2-fabric-api"),
+    "1.18.2-fabric-api should be indexed after pin fix",
+  );
+  const fab182 = queryLoaderApi({
+    platform: "fabric",
+    minecraftVersion: "1.18.2",
+    className: "EventFactory",
+  });
+  assert.equal(fab182.found, true, `1.18.2 EventFactory: ${fab182.code || fab182.notes?.[0]}`);
+  const missFab = queryLoaderApi({ platform: "fabric", minecraftVersion: "1.15.2", className: "FabricItem" });
   assert.equal(missFab.code, "LOADER_API_NOT_INDEXED");
-  console.log(`data quality neo classes=${neo.classes?.length} index=${neo.fqcnIndex?.length}`);
+  const qsl = JSON.parse(readFileSync(join(root, "data", "loader-api-summaries", "1.21.1-qsl.json"), "utf8"));
+  assert.ok(qsl.classCount >= 80, `QSL thickened, got ${qsl.classCount}`);
+  const qslHit = queryLoaderApi({
+    platform: "quilt",
+    minecraftVersion: "1.21.1",
+    className: "RegistryEvents",
+  });
+  assert.equal(qslHit.found, true, `QSL RegistryEvents: ${qslHit.code || qslHit.notes?.[0]}`);
+  console.log(`data quality neo classes=${neo.classes?.length} index=${neo.fqcnIndex?.length} qsl=${qsl.classCount}`);
 }
 console.log("test-loader-api: all passed");

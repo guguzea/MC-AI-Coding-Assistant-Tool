@@ -48,7 +48,7 @@ plugins {
 ```groovy
 dependencies {
     // ❌ Fabric API 应该使用 modApi（需要传递依赖）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.31.1+build.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.1+1.17"
 }
 ```
 
@@ -56,7 +56,7 @@ dependencies {
 ```groovy
 dependencies {
     // ✅ Fabric API 使用 modApi
-    modApi "net.fabricmc.fabric-api:fabric-api:0.31.1+build.1"
+    modApi "net.fabricmc.fabric-api:fabric-api:0.46.1+1.17"
     // ✅ 第三方 mod 使用 modImplementation
     modImplementation "com.example:third-party:1.0.0"
 }

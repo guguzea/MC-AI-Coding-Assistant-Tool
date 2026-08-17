@@ -28,7 +28,7 @@
 3. **没有 `FabricMod` 接口！** 使用 `ModInitializer` 接口
 4. **Loom 版本必须是 `0.11-SNAPSHOT`**（不是 `1.4-SNAPSHOT`）
 5. **Fabric API maven 是 `net.fabricmc.fabric-api`**（不是 `net.fabric.sdk`）
-6. **Fabric API 版本是 `0.31.x`**（如 `0.31.1+build.1`）
+6. **Fabric API 版本是 `0.31.x`**（如 `0.46.1+1.17`）
 
 ---
 
@@ -97,7 +97,7 @@ RegistrySupplier<Item> MY_ITEM = Registry.register(...);
 
 - Fabric 1.17.1 支持 Minecraft 1.17.1
 - Fabric Loader 0.11.x（推荐 0.11.7）
-- Fabric API 0.31.x for 1.17.1
+- Fabric API 0.46.x for 1.17.1
 - Java 17+
 
 ---

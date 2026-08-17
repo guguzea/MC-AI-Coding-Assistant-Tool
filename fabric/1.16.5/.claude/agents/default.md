@@ -18,7 +18,7 @@
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **需要显式配置 Mixin Plugin**（1.16.x 特殊要求）|
-| Fabric API | 0.16.x（`net.fabricmc.fabric-api:fabric-api:0.16.x+build.xxx-1.16.5`）|
+| Fabric API | 0.16.x（`net.fabricmc.fabric-api:fabric-api:0.42.0+1.16`）|
 
 ---
 
@@ -230,7 +230,7 @@ fabric-mod/
 
 - Fabric 1.16.5 支持 Minecraft 1.16.5
 - Fabric Loader 0.11.x（推荐 0.11.2）
-- Fabric API 0.16.x（`fabric-api-0.16.24+build.4-1.16.5`）
+- Fabric API 0.42.x（`fabric-api-0.42.0+1.16`）
 - Java 16+
 
 ### 1.16.5 特有注意事项

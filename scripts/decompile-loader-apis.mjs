@@ -176,12 +176,19 @@ const { readZip, listZipEntries } = await import(
   pathToFileURL(join(ROOT, "mcp-server", "dist", "decompile", "zip-util.js")).href
 );
 const { createStoreZip } = await import(pathToFileURL(join(ROOT, "mcp-server", "dist", "mdk", "index.js")).href);
-const { extractCompilationUnit, isThinLoaderSummary, repoSafeSourcePath } = await import(
+const { extractCompilationUnit, isThinLoaderSummary, repoSafeSourcePath, fqcnFromSourceHint } = await import(
   pathToFileURL(join(ROOT, "mcp-server", "dist", "loader-api", "extract.js")).href
 );
 const { dedupeLoaderClasses } = await import(
   pathToFileURL(join(ROOT, "mcp-server", "dist", "loader-api", "store.js")).href
 );
+
+function redactEmbeddedPaths(text) {
+  if (!text) return text;
+  return String(text)
+    .replace(/[A-Za-z]:[\\/][^\s"']+/g, "[redacted-path]")
+    .replace(/mc-skill-temp[^\s"']*/gi, "[redacted-path]");
+}
 
 function upgradeStringMethods(classes) {
   return (classes ?? []).map((c) => ({
@@ -194,11 +201,22 @@ function upgradeStringMethods(classes) {
             : m,
         )
       : [],
+    parseError: c.parseError ? redactEmbeddedPaths(c.parseError) : c.parseError,
   }));
 }
 
 function sanitizeSummary(summary, key) {
-  const classes = upgradeStringMethods(summary.classes ?? []);
+  const classes = upgradeStringMethods(summary.classes ?? []).map((c) => {
+    const fq = String(c.fqcn || "");
+    if (/mc-skill-temp|[A-Za-z]:[\\/]/.test(fq) || /\.java$/i.test(fq)) {
+      const next = fqcnFromSourceHint(fq) || fqcnFromSourceHint(c.file) || fqcnFromSourceHint(c.sourcePath);
+      if (next) {
+        const simple = next.split(".").pop() || c.simpleName;
+        return { ...c, fqcn: next, simpleName: c.simpleName && c.simpleName !== "unknown" ? c.simpleName : simple };
+      }
+    }
+    return c;
+  });
   const decompile = summary.decompile ? { ...summary.decompile } : undefined;
   if (decompile) {
     delete decompile.outputDir;
@@ -272,10 +290,30 @@ function rebuildCatalogFromDisk() {
     }
     const key = name.replace(/\.json$/i, "");
     if (Array.isArray(j.classes) && j.classes.length) {
-      const next = dedupeLoaderClasses(j.classes);
+      const rewritten = j.classes.map((c) => {
+        let nextC = c;
+        const fq = String(c.fqcn || "");
+        if (/mc-skill-temp|[A-Za-z]:[\\/]/.test(fq) || /\.java$/i.test(fq)) {
+          const next = fqcnFromSourceHint(fq) || fqcnFromSourceHint(c.file) || fqcnFromSourceHint(c.sourcePath);
+          if (next) {
+            const simple = next.split(".").pop() || c.simpleName;
+            nextC = { ...c, fqcn: next, simpleName: c.simpleName && c.simpleName !== "unknown" ? c.simpleName : simple };
+          }
+        }
+        if (nextC.parseError) {
+          const redacted = redactEmbeddedPaths(nextC.parseError);
+          if (redacted !== nextC.parseError) nextC = { ...nextC, parseError: redacted };
+        }
+        return nextC;
+      });
+      const next = dedupeLoaderClasses(rewritten);
       const classCount = next.length;
       const fqcnIndexCount = (j.fqcnIndex || []).length;
-      const changed = next.length !== j.classes.length || j.classCount !== classCount || j.fqcnIndexCount !== fqcnIndexCount;
+      const changed =
+        next.length !== j.classes.length ||
+        j.classCount !== classCount ||
+        j.fqcnIndexCount !== fqcnIndexCount ||
+        rewritten.some((c, i) => c.fqcn !== j.classes[i]?.fqcn || c.parseError !== j.classes[i]?.parseError);
       j.classes = next;
       j.classCount = classCount;
       j.fqcnIndexCount = fqcnIndexCount;
@@ -607,6 +645,13 @@ for (const name of readdirSync(OUT).filter((n) => n.endsWith(".json") && !SKIP_J
     continue;
   }
   const srcDir = join(CACHE, "loader-api-src", key);
+  if (prev.source === "qsl-github-java") {
+    const cleaned = sanitizeSummary(prev, key);
+    writeFileSync(jsonPath, JSON.stringify(cleaned, null, 2), "utf8");
+    summaries.push({ ...cleaned, file: cleaned.file || key });
+    processedKeys.add(key);
+    continue;
+  }
   if (isThinLoaderSummary(prev) && existsSync(srcDir) && !USER_INGEST_KEYS.has(key)) {
     const classes = [];
     for (const jf of walkJava(srcDir)) {

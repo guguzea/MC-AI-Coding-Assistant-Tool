@@ -445,6 +445,19 @@ export function repoSafeSourcePath(fileHint?: string): string | undefined {
   return n;
 }
 
+/** 从源码路径推出 FQCN；解析失败时禁止把盘符路径写进 fqcn。 */
+export function fqcnFromSourceHint(fileHint?: string): string | undefined {
+  if (!fileHint) return undefined;
+  const n = fileHint.replace(/\\/g, "/");
+  const m = n.match(/\/((?:net|org|com|cpw)\/.+)\.java$/i);
+  if (m) return m[1].replace(/\//g, ".");
+  const safe = repoSafeSourcePath(fileHint);
+  if (safe && safe.endsWith(".java") && !/^[A-Za-z]:/.test(safe) && !safe.includes("mc-skill-temp")) {
+    return safe.replace(/\.java$/i, "").replace(/\//g, ".");
+  }
+  return undefined;
+}
+
 export function isThinLoaderSummary(prev: Pick<LoaderApiSummary, "classes" | "fqcnIndex" | "classCount">): boolean {
   const classes = prev.classes ?? [];
   if (!classes.length) return true;
@@ -466,12 +479,14 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
     const msg = err instanceof Error ? err.message : String(err);
     return [
       {
-        fqcn: fileHint ?? "unknown",
+        fqcn: fqcnFromSourceHint(fileHint) ?? "unknown",
         simpleName: "unknown",
         apiStatusInternal: false,
         environment: false,
         methods: [],
-        parseError: msg,
+        parseError: String(msg)
+          .replace(/[A-Za-z]:[\\/][^\s"']+/g, "[redacted-path]")
+          .replace(/mc-skill-temp[^\s"']*/gi, "[redacted-path]"),
         file: repoSafeSourcePath(fileHint),
       },
     ];

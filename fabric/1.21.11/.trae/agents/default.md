@@ -160,7 +160,7 @@ fabric-mod/
 
 - Fabric 1.21.11 支持 Minecraft 1.21.11
 - Fabric Loader 0.16.x（推荐 0.16.9）
-- Fabric API 0.200.x+build.3 for 1.21.11
+- Fabric API 0.141.3+1.21.11 for 1.21.11
 - Java 21+
 
 ---

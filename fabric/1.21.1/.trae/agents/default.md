@@ -24,7 +24,7 @@
 
 ### 重要版本变化（1.20.1 → 1.21.1）
 
-> ⚠️ **Fabric API 0.200.x 重大变化**：
+> ⚠️ **Fabric API 0.115.x 重大变化**：
 > - `fabric-networking-api-v1` 方法签名变更（`ServerPlayNetworking` 等）
 > - `fabric-attachment-api-v1` 取代 `fabric-capability-api-v1`（Capability 系统被移除）
 > - `fabric-language-kotlin` 需要特定版本兼容 1.21+
@@ -171,7 +171,7 @@ fabric-mod/
 
 - Fabric 1.21.1 支持 Minecraft 1.21.1
 - Fabric Loader 0.16.x（推荐 0.16.9）
-- Fabric API 0.200.1+build.3 for 1.21.1
+- Fabric API 0.115.6+1.21.1 for 1.21.1
 - Java 21+
 
 ---

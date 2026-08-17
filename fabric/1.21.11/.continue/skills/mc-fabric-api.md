@@ -18,12 +18,12 @@ Fabric API 是模块化的官方扩展库，提供 20+ 独立模块。每个模�
 ```groovy
 // 引入完整 API（包含所有模块）
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.141.3+1.21.11"
 }
 
 // 或选择性引入单个模块
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.141.3+1.21.11"
     modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:2.2.11+build.3"
     modImplementation "net.fabricmc.fabric-api:fabric-networking-api-v1:1.3.8+build.3"
     modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:2.2.7+build.3"
@@ -106,7 +106,7 @@ modImplementation "net.fabricmc.fabric-api:fabric-key-bindings-v0:1.0.0+build.3"
 
 | 模块 | 版本 | 用途 |
 |------|------|------|
-| fabric-api-base | 0.200.1+build.3 | 基础工具类 |
+| fabric-api-base | 0.141.3+1.21.11 | 基础工具类 |
 | fabric-command-api-v2 | 2.2.11+build.3 | 命令注册 |
 | fabric-networking-api-v1 | 1.3.8+build.3 | 网络通信 |
 | fabric-screen-api-v1 | 2.2.7+build.3 | Screen 扩展 |

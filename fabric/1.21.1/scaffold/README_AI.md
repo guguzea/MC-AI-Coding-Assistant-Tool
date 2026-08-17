@@ -38,7 +38,7 @@ mod_name=Example Mod
 minecraft_version=1.21.1
 yarn_mappings=1.21.1+build.2
 loader_version=0.16.9
-fabric_api_version=0.200.1+build.3
+fabric_api_version=0.115.6+1.21.1
 ```
 
 ## Building

@@ -5,7 +5,7 @@
 ## ⚠️ 1.17.x 关键差异
 
 - **Fabric API maven 是 `net.fabricmc.fabric-api`**（不是 `net.fabric.sdk`）
-- **Fabric API 版本是 `0.31.x`**（如 `0.31.1+build.1`）
+- **Fabric API 版本是 `0.31.x`**（如 `0.46.1+1.17`）
 
 ## 模式 1：命令注册（fabric-command-api-v2）
 

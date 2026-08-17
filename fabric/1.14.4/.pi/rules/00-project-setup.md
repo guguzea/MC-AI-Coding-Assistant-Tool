@@ -56,7 +56,7 @@ description: 00 — 项目结构与构建
   minecraft_version=1.14.4
   yarn_mappings=1.14.4+build.18
   loader_version=0.3.2
-  fabric_api_version=0.3.2+build.1
+  fabric_api_version=0.28.5+1.14
   mod_version=1.0.0
   mod_id=examplemod
   maven_group=com.example

@@ -18,15 +18,15 @@ Fabric API 是模块化的官方扩展库，提供 20+ 独立模块。每个模�
 ```groovy
 // 引入完整 API（包含所有模块）
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.141.3+1.21.11"
 }
 
 // 或选择性引入单个模块
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.200.1+build.3"
-    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:0.200.1+build.3"
-    modImplementation "net.fabricmc.fabric-api:fabric-networking-api-v1:0.200.1+build.3"
-    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.141.3+1.21.11"
+    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:0.141.3+1.21.11"
+    modImplementation "net.fabricmc.fabric-api:fabric-networking-api-v1:0.141.3+1.21.11"
+    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:0.141.3+1.21.11"
 }
 ```
 
@@ -62,13 +62,13 @@ if (FabricItemApi.INSTANCE.canStack(ItemStack.EMPTY, inventory)) {
 ### fabric-screen-api-v1（Screen API）
 
 ```groovy
-modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:0.200.1+build.3"
+modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:0.141.3+1.21.11"
 ```
 
 ### fabric-networking-api-v1（网络 API）
 
 ```groovy
-modImplementation "net.fabricmc.fabric-api:fabric-networking-api-v1:0.200.1+build.3"
+modImplementation "net.fabricmc.fabric-api:fabric-networking-api-v1:0.141.3+1.21.11"
 ```
 
 ### fabric-object-builder-api-v1（对象构建器）
@@ -89,7 +89,7 @@ public class MyBuilder {
 ### fabric-loot-api-v2（Loot Table API）
 
 ```groovy
-modImplementation "net.fabricmc.fabric-api:fabric-loot-api-v2:0.200.1+build.3"
+modImplementation "net.fabricmc.fabric-api:fabric-loot-api-v2:0.141.3+1.21.11"
 ```
 
 ### fabric-registry-sync-v0（Registry 同步）
@@ -99,23 +99,23 @@ modImplementation "net.fabricmc.fabric-api:fabric-loot-api-v2:0.200.1+build.3"
 ### fabric-keybindings-api-v1（快捷键 API）
 
 ```groovy
-modImplementation "net.fabricmc.fabric-api:fabric-key-bindings-v0:0.200.1+build.3"
+modImplementation "net.fabricmc.fabric-api:fabric-key-bindings-v0:0.141.3+1.21.11"
 ```
 
 ## 模块版本参考（1.21.11）
 
 | 模块 | 版本 | 用途 |
 |------|------|------|
-| fabric-api-base | 0.200.1+build.3 | 基础工具类 |
-| fabric-command-api-v2 | 0.200.1+build.3 | 命令注册 |
-| fabric-networking-api-v1 | 0.200.1+build.3 | 网络通信 |
-| fabric-screen-api-v1 | 0.200.1+build.3 | Screen 扩展 |
-| fabric-item-api-v1 | 0.200.1+build.3 | 物品 API |
-| fabric-object-builder-api-v1 | 0.200.1+build.3 | 对象构建器 |
-| fabric-loot-api-v2 | 0.200.1+build.3 | Loot Table |
-| fabric-datagen-api-v0 | 0.200.1+build.3 | 数据生成 |
-| fabric-rendering-v0 | 0.200.1+build.3 | 渲染基础 |
-| fabric-renderer-api-v1 | 0.200.1+build.3 | 渲染 API |
+| fabric-api-base | 0.141.3+1.21.11 | 基础工具类 |
+| fabric-command-api-v2 | 0.141.3+1.21.11 | 命令注册 |
+| fabric-networking-api-v1 | 0.141.3+1.21.11 | 网络通信 |
+| fabric-screen-api-v1 | 0.141.3+1.21.11 | Screen 扩展 |
+| fabric-item-api-v1 | 0.141.3+1.21.11 | 物品 API |
+| fabric-object-builder-api-v1 | 0.141.3+1.21.11 | 对象构建器 |
+| fabric-loot-api-v2 | 0.141.3+1.21.11 | Loot Table |
+| fabric-datagen-api-v0 | 0.141.3+1.21.11 | 数据生成 |
+| fabric-rendering-v0 | 0.141.3+1.21.11 | 渲染基础 |
+| fabric-renderer-api-v1 | 0.141.3+1.21.11 | 渲染 API |
 
 ## 常见错误
 

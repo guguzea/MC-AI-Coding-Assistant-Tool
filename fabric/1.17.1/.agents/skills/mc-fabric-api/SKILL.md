@@ -19,7 +19,7 @@ Fabric API 是模块化的官方扩展库，提供 20+ 独立模块。每个模�
 // 引入完整 API（包含所有模块）
 // ⚠️ 1.17.x 使用 net.fabricmc.fabric-api，不是 net.fabric.sdk
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.31.1+build.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.1+1.17"
 }
 
 // 或选择性引入单个模块

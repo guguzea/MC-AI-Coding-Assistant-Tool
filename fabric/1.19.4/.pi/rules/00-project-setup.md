@@ -52,7 +52,7 @@ description: 00 — 项目结构与构建
   minecraft_version=1.19.4
   yarn_mappings=1.19.4+build.2
   loader_version=0.14.21
-  fabric_api_version=0.76.1+1.19.4
+  fabric_api_version=0.87.2+1.19.4
   ```
 - **禁止**在 `build.gradle` 中直接写版本号，必须引用 `${minecraft_version}` 等属性
 

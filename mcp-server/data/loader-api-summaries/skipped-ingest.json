@@ -13,13 +13,5 @@
     { "platform": "bedrock", "reason": "不是 Java loader jar，请用 search_bedrock_docs" },
     { "platform": "forge", "versions": ["1.7.10", "1.8.9", "1.9.4", "1.10.2", "1.11.2"], "reason": "仅 javadoc / search_docs；1.7.10 maven MDK 404，禁止邻版 MDK" }
   ],
-  "mavenNotIndexed": [
-    { "key": "1.14.4-fabric-api", "platform": "fabric", "minecraftVersion": "1.14.4", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.16.5-fabric-api", "platform": "fabric", "minecraftVersion": "1.16.5", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.17.1-fabric-api", "platform": "fabric", "minecraftVersion": "1.17.1", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.18.2-fabric-api", "platform": "fabric", "minecraftVersion": "1.18.2", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.19.4-fabric-api", "platform": "fabric", "minecraftVersion": "1.19.4", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.21.3-fabric-api", "platform": "fabric", "minecraftVersion": "1.21.3", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" },
-    { "key": "1.21.11-fabric-api", "platform": "fabric", "minecraftVersion": "1.21.11", "reason": "该档文档坐标 maven 404，禁止借邻版 jar" }
-  ]
+  "mavenNotIndexed": []
 }

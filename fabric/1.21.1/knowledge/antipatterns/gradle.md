@@ -39,7 +39,7 @@ repositories {
 modImplementation "net.fabricmc.fabric-api:fabric-api:0.200"  // 缺少完整版本号
 
 // ✅ 正确
-modImplementation "net.fabricmc.fabric-api:fabric-api:0.200.1+build.3"
+modImplementation "net.fabricmc.fabric-api:fabric-api:0.115.6+1.21.1"
 ```
 
 ## ❌ 混用 modImplementation 和 modApi

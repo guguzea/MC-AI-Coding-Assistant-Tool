@@ -82137,7 +82137,7 @@
           "signature": "String toString()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/ByteBufferSeekableSource.java"
+      "file": "com/nothome/delta/ByteBufferSeekableSource.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.Checksum",
@@ -82248,7 +82248,7 @@
           "signature": "String toString()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/Checksum.java"
+      "file": "com/nothome/delta/Checksum.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.DebugDiffWriter",
@@ -82320,7 +82320,7 @@
           "signature": "void close()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/DebugDiffWriter.java"
+      "file": "com/nothome/delta/DebugDiffWriter.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.Delta",
@@ -82491,7 +82491,7 @@
           "signature": "void debug(String)"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/Delta.java"
+      "file": "com/nothome/delta/Delta.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.Delta$SourceState",
@@ -82525,7 +82525,7 @@
           "signature": "String toString()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/Delta.java"
+      "file": "com/nothome/delta/Delta.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.Delta$TargetState",
@@ -82671,7 +82671,7 @@
           "signature": "String getTextDump(ByteBuffer)"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/Delta.java"
+      "file": "com/nothome/delta/Delta.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.DiffWriter",
@@ -82734,7 +82734,7 @@
           "signature": "void close()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/DiffWriter.java"
+      "file": "com/nothome/delta/DiffWriter.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.GDiffPatcher",
@@ -82894,7 +82894,7 @@
           "signature": "void main(String)"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/GDiffPatcher.java"
+      "file": "com/nothome/delta/GDiffPatcher.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.GDiffWriter",
@@ -82966,7 +82966,7 @@
           "signature": "void close()"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/GDiffWriter.java"
+      "file": "com/nothome/delta/GDiffWriter.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.PatchException",
@@ -82978,7 +82978,7 @@
       "apiStatusInternal": false,
       "environment": false,
       "methods": [],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/PatchException.java"
+      "file": "com/nothome/delta/PatchException.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.RandomAccessFileSeekableSource",
@@ -83059,7 +83059,7 @@
           "signature": "int read(ByteBuffer)"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/RandomAccessFileSeekableSource.java"
+      "file": "com/nothome/delta/RandomAccessFileSeekableSource.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.repackage.com.nothome.delta.SeekableSource",
@@ -83096,7 +83096,7 @@
           "signature": "int read(ByteBuffer)"
         }
       ],
-      "file": "net/minecraftforge/fml/repackage/com/nothome/delta/SeekableSource.java"
+      "file": "com/nothome/delta/SeekableSource.java"
     },
     {
       "fqcn": "net.minecraftforge.fml.server.FMLServerHandler",

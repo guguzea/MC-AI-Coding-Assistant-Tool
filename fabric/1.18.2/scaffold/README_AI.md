@@ -40,7 +40,7 @@ fabric-mod/
 minecraft_version=1.18.2
 yarn_mappings=1.18.2+build.4
 loader_version=0.14.24
-fabric_api_version=0.44.1+build.3
+fabric_api_version=0.77.0+1.18.2
 
 mod_id=examplemod          # 全部小写，禁止含 `-`
 mod_name=Example Mod

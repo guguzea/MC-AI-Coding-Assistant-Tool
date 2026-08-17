@@ -40,7 +40,7 @@ fabric-mod/
 minecraft_version=1.21.3
 yarn_mappings=1.21.3+build.2
 loader_version=0.16.9
-fabric_api_version=0.200.1+build.3
+fabric_api_version=0.110.0+1.21.3
 
 mod_id=examplemod          # 全部小写，禁止含 `-`
 mod_name=Example Mod
@@ -225,7 +225,7 @@ public class ExampleModClient implements ClientModInitializer {
 
 ## ⚠️ 1.21.x 重要变化
 
-### Fabric API 0.200.x 重大变化
+### Fabric API 0.110.x 重大变化
 
 - `fabric-networking-api-v1`: `ServerPlayNetworking` 方法签名变更
 - `fabric-attachment-api-v1` 取代 `fabric-capability-api-v1`（Capability 系统被移除）

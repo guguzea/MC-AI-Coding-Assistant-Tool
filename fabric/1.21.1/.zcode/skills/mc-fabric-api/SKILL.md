@@ -18,7 +18,7 @@ Fabric API 是模块化的官方扩展库，提供 20+ 独立模块。每个模�
 ```groovy
 // 引入完整 API（包含所有模块）
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.115.6+1.21.1"
 }
 
 // 或选择性引入单个模块

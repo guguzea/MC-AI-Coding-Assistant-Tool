@@ -48,7 +48,7 @@ plugins {
 ```groovy
 dependencies {
     // ❌ Fabric API 应该使用 modApi（需要传递依赖）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.200.1+build.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.110.0+1.21.3"
 }
 ```
 
@@ -85,7 +85,7 @@ minecraft_version=1.20.4
 minecraft_version=1.21.3
 yarn_mappings=1.21.3+build.2
 loader_version=0.16.9
-fabric_api_version=0.200.1+build.3
+fabric_api_version=0.110.0+1.21.3
 ```
 
 ### 6. accessWidener 路径错误

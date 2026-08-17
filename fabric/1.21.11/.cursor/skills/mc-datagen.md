@@ -14,7 +14,7 @@ mappings: yarn
 ```groovy
 // build.gradle 添加依赖
 dependencies {
-    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:0.200.1+build.3"
+    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:0.141.3+1.21.11"
 }
 ```
 

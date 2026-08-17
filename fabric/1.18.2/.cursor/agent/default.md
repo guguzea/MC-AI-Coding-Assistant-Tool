@@ -149,7 +149,7 @@ fabric-mod/
 
 - Fabric 1.18.2 支持 Minecraft 1.18.2
 - Fabric Loader 0.14.x（推荐 0.14.24）
-- Fabric API 0.44.x for 1.18.2
+- Fabric API 0.77.x for 1.18.2
 - Java 17+
 
 ---

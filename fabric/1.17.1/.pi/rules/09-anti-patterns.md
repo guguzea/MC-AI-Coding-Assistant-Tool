@@ -217,12 +217,12 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 ```groovy
 // ❌ 错误：依赖传递性混淆
 dependencies {
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.31.1+build.1")  // 不传递依赖
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.46.1+1.17")  // 不传递依赖
 }
 
 // ✅ 正确：API 需要传递，实现不需要
 dependencies {
-    modApi("net.fabricmc.fabric-api:fabric-api:0.31.1+build.1")  // 传递依赖
+    modApi("net.fabricmc.fabric-api:fabric-api:0.46.1+1.17")  // 传递依赖
     modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
 }
 ```
