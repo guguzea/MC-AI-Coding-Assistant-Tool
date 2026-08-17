@@ -7,3 +7,5 @@ MCP 运行时（resolveCacheRoot）与本脚本都读 `MC_SKILL_CACHE`。不设�
 
 键形如 `1.20.4-neoforge`、`26.1-neoforge`、`1.20.4-fabric-api`。
 **不要**把摘要合并进 Parchment query_api。摘要必须含 mappingsVersion。
+
+以 MCP `search_loader_api mode=list` 为准：Fabric 1.14.4–1.21.11 / 26.1.2 已入库；`skipped-ingest.json` 的 `mavenNotIndexed` 现为空。LiteLoader/Rift/ModLoader 多为手摘极小摘要或 sidecar 模板，不是完整 jar ingest。

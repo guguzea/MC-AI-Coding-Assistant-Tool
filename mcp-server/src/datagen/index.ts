@@ -91,6 +91,16 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       errors: ["NeoForge Datagen 当前仅支持 1.21.x 与 26.1 模板；其它版本请手写或查阅 search_neoforge_docs"],
     };
   }
+  if (platform === "forge" && ver !== "1.20.1") {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: [
+        `Forge Datagen 模板仅覆盖 1.20.1（当前 version=${ver}）。1.12.2 无 DataGen，请手写 JSON 或 search_forge_docs，不要套用 1.21 ResourceLocation.fromNamespaceAndPath。`,
+      ],
+    };
+  }
 
   const mod = normalizeModIdentifier(query.modId);
   const target = normalizeModIdentifier(query.targetName);

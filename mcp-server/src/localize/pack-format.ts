@@ -3,6 +3,8 @@
  * Always surface packFormatNeedsReview — Agent must confirm with the user.
  */
 
+import { ownGet } from "../utils/own-record.js";
+
 const PACK_FORMAT_BY_MC: Record<string, number> = {
   "1.20.1": 15,
   "1.20.2": 18,
@@ -37,7 +39,7 @@ export function resolvePackFormat(mcVersion?: string): {
     };
   }
   const v = mcVersion.trim();
-  const mapped = PACK_FORMAT_BY_MC[v];
+  const mapped = ownGet(PACK_FORMAT_BY_MC, v);
   if (mapped != null) {
     return {
       packFormat: mapped,

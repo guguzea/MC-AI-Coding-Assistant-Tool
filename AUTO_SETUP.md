@@ -427,7 +427,7 @@ CLI 正常而 IDE 里没有工具 → 配置文件路径/键名/未重载。两�
 
 ## Step 6 — 安装 Skill（可选，与 MCP 无关）
 
-编码期请用 `activate_platform_pack`（session 进对话；要工程内常驻再 write）。**不要**把规则拷进知识库根。MCP 工具列表与 Skill 扫描是两套机制。重载 MCP **不会**让 Skill 面板出现条目。本仓库 Skill 在 `forge/<ver>/`、`fabric/<ver>/`、`neoforge/` 子树，**不要**提交到 `MC_skill` 仓库根 `.cursor/skills/`。
+编码期请用 `activate_platform_pack`：`session` 把该档 AGENTS / 默认规则 00+01+09 / Skill **索引**送进当前对话（`topics` / `includeAllRules` 见根 README）；要工程内常驻再 `write`（`hosts` 必填，`includeSkills` 默认 false）。**不要**把规则拷进知识库根。MCP 工具列表与 Skill 扫描是两套机制。重载 MCP **不会**让 Skill 面板出现条目。本仓库 Skill 在 `forge/<ver>/`、`fabric/<ver>/`、`neoforge/` 子树，**不要**提交到 `MC_skill` 仓库根 `.cursor/skills/`。
 
 ### 各 IDE 如何发现 Skill（打开本仓库根时）
 
@@ -442,7 +442,7 @@ CLI 正常而 IDE 里没有工具 → 配置文件路径/键名/未重载。两�
 | OpenCode / Codex / Pi | 从 CWD **向上**找 `.opencode/skills` / `.agents/skills` / `.pi/skills` | 根上没有 → 空 |
 | ZCode | 项目 `.zcode/skills/` | 根上无 |
 
-`scripts/sync-skills.ps1` 只把 Skill 镜像到**各平台版本目录**，从不写仓库根。Fabric `.cursor/skills/mc-*.md` 扁平文件对 Cursor 无效（靠 `.agents/skills/<name>/SKILL.md`）。库 Skill 在 `knowledge/libs/`，默认不安装。
+`scripts/sync-skills.ps1` 只把 Skill 镜像到**各平台版本目录**，从不写仓库根。Fabric `.cursor/skills/mc-*.md` 扁平文件对 Cursor 无效（靠 `.agents/skills/<name>/SKILL.md`）。库 Skill 在 `knowledge/libs/`（见该目录 `README.md`），默认不安装。
 
 不能强制 IDE 按 `forge/<ver>/.cursor/skills` 解析。MCP 配置改不了 Skill 扫描器。
 
@@ -535,21 +535,26 @@ npx @modelcontextprotocol/inspector node dist/index.js
 
 写模组时不要凭训练数据猜 1.20 / 1.21 / 26.x API。优先：
 
-1. 读仓库根 `AGENTS.md`，按平台打开 `forge|fabric|neoforge/<版本>/AGENTS.md` 与规则目录。
-2. **文档**：`search_*_docs` 或 `search_docs` →（可选）`get_*_doc_summary` → 确认相关后再 `get_*_doc_full`。  
+1. 读仓库根 `AGENTS.md`，判断平台与精确版本后调用 `activate_platform_pack action=session`（默认规则 00/01/09 + Skill 索引；不要直接打开邻版 `.cursor/rules`）。工程内常驻再 `write`（`hosts` 必填）。
+2. **文档**：先 `list_*_versions`，再 `search_*_docs` 或 `search_docs`（`version` 写死工程版本）→（可选）`get_*_doc_summary` → 确认相关后再 `get_*_doc_full`。  
+   - Forge **1.12.2** 用 `search_forge_docs` / `search_docs({platform:"forge"})`，**不要**用 `query_api`。  
    - 搜索默认 **hybrid**（L0 + 向量 RRF）；无语义库则纯 L0（`semantic: false`）。降级表见根目录 `README.md`「诚实降级」。  
    - **页面 `id` 必须用搜索结果里的 `id`**，不要用网站 URL 路径。  
    - 一次不要拉超过 2 个 full page。
-3. **API / 映射**：平台 API（DeferredRegister、Fabric Registry 等）用 `search_*_docs`，**不要**用 `query_api`。`query_api` / `get_method_params` 只查 Vanilla Parchment（约 1.16.5–1.20.4；**26.1+ 无索引**，`found:false` ≠ 类不存在）。Yarn↔Mojang 用 `convert_mapping`；崩溃短名用 `lookup_obfuscated`。26.1+ 无混淆层，不要用 Yarn 工具硬查。
-4. **工程**：`validate_project`、`diagnose_gradle`（**仅 ForgeGradle**；Loom 改 `search_fabric_docs`，NeoGradle 改 `search_neoforge_docs`）、`check_dependencies`、`crash_analyze`。
+3. **API / 映射**：平台 API（DeferredRegister、Fabric Registry 等）用 `search_*_docs` / `query_loader_api`，**不要**用 `query_api`。`query_api` / `get_method_params` 只查 Vanilla Parchment（约 1.16.5–1.20.4）。**1.12.2 常见 found:true 但 methods 为空**（不是完整 javadoc）；**26.1+ 无索引**，`found:false` ≠ 类不存在。Yarn↔Mojang 用 `convert_mapping`；崩溃短名用 `lookup_obfuscated`。26.1+ 无混淆层，不要用 Yarn 工具硬查。
+4. **工程**：`validate_project`、`diagnose_gradle`（ForgeGradle + Loom + NeoGradle/MDG；Rift / BaseMod / 基岩仍早退）、`check_dependencies`、`crash_analyze`。
 5. **移植**：先 `analyze_porting_path`；真正改工程才 `port_project`，且须写盘开关。
-6. 社区实务（发布 / 软依赖 / 崩溃分类）：`search_community_docs`。它**不替代**官方文档工具。
+6. **社区实务**（发布 / 软依赖 / 崩溃分类 / 机器 GUI）：`search_community_docs`（索引见 `community_knowledge/README.md`；**不替代**官方文档；用法见 `community_knowledge/AGENT_USAGE.md`）。
+7. **库模组**（选型 / 依赖树 / 集成）：`check_dependencies`（`detectedLibraries`）→ `search_community_docs`（`lib-<name>` 或 `library-catalog-2026`）→ 按路径 Read `knowledge/libs/<group>/mc-<name>/SKILL.md`（不确定先读 `mc-lib-catalog`）。库 Skill **不落盘**平台目录；数据链见根 README「社区知识与库模组」与 §7.5。
 
 调用前看清工具 schema 与根目录 `README.md`「工具边界」：
 
-- 平台专用工具不要套另一平台（`diagnose_gradle` / `validate_project` / `get_version_info` **仅 Forge**）
-- `query_api` **不是** Forge/Fabric API；`found:false` 多半是索引范围，不是「类不存在」
-- `search_community_docs` 不替代官方文档；`generate_*` 不写盘；`port_project` 默认 dryRun
+- 平台专用工具不要套另一平台（`get_version_info` **仅 Forge**；`diagnose_gradle` / `validate_project` 覆盖范围见根 README，不是「仅 ForgeGradle」）
+- `query_api` **不是** Forge/Fabric API，也**不是** 1.12.2 完整 javadoc（空壳 `methods:[]`）；`found:false` 多半是索引范围，不是「类不存在」
+- 改完 mcp-server 后 `npm run build` **并重载 MCP**；
+- 规则树用 `activate_platform_pack`；官方文档先 `list_*_versions` 再 `search_*_docs`
+- `search_community_docs` 不替代官方文档；社区短文不能当 API 规范（`community_knowledge/AGENT_USAGE.md`）；库 Skill 读 `knowledge/libs/` 源稿
+- `generate_*` 不写盘；`port_project` 默认 dryRun
 - 文档 `id` 只用搜索结果；不要把邻版本文档拷过来冒充
 
 ---
@@ -585,7 +590,9 @@ node dist/cli.js <工具名> --key=value
 | OpenCode 启动超时 | `timeout` ≥ 60000 |
 | Claude Desktop 无变化 | 托盘进程也要退出 |
 | `dist/index.js` 不存在 | `mcp-server/` 下 `npm ci && npm run build` |
-| 文档搜索为空 | 先看返回的 `semantic` / `warning`：无库会降级纯 L0。换标签（`item` / `mixin`）或 `class:` / `event:` / `method:`；`id` 必须来自搜索结果。**26.1+ 不要用 `query_api`**（无 extracted），改 `search_*_docs`。不要把其他版本文档拷过来冒充 |
+| 刚 build 完，IDE 里工具仍崩 / schema 仍旧 | **重载 MCP**。Cursor 进程不会自动换新 dist；用 `node mcp-server/dist/cli.js` 可立刻验证 |
+| `search_*_docs` 查 constructor 报 `abbr is not iterable` | 旧 dist。重载 MCP；源码已 `ownGet` |
+| 文档搜索为空 | 先看返回的 `semantic` / `warning`：无库会降级纯 L0。换标签（`item` / `mixin`）或 `class:` / `event:` / `method:`；`id` 必须来自搜索结果。**26.1+ 不要用 `query_api`**（无 extracted）。**1.12.2 不要把 query_api 空 methods 当签名**。不要把其他版本文档拷过来冒充 |
 | `PLATFORM_DATA_MISSING` | `diagnose_data_paths`；该平台数据包可能未下载 |
 | NeoForge `1.20.1` 文档 | 回退到 Forge 1.20.1 视图，属预期 |
 | Skill 面板没有条目 | 预期。走 Step 6，不要在本仓库根建 `.cursor/skills` |

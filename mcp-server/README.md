@@ -21,7 +21,7 @@ npm run build
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
 - T2 反编译工具族：**默认零下载**，仅显式调用时按需下载到 `$MC_SKILL_CACHE`（Java 17+ 前置）
 
-完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api`  26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘。
+完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api` 1.12.2 空壳 / 26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘；改 dist 后须重载 MCP。
 
 ---
 
@@ -128,7 +128,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
-| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*` |
+| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 79 条；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
 | Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
@@ -141,6 +141,12 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 自我更新 | `mc_skill_update` |
 
 补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`。
+
+### 社区知识与库模组（与官方文档分离）
+
+- **社区实务**：`community_knowledge/`（`MC_SKILL_COMMUNITY`）。MCP 四工具见上表「社区」行；**不替代** `search_*_docs`。依据短文写代码前须遵守 [`community_knowledge/AGENT_USAGE.md`](../community_knowledge/AGENT_USAGE.md)。
+- **库模组**：`knowledge/libs/` 下 **35** 份 Skill 源稿（**33** 唯一 skillId，五组含 `bedrock-only`），按仓库根 `AGENTS.md`「库模组 Skill」解析，**不落盘**平台 `.cursor/skills`。路由：`knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。
+- **数据链**：`library-catalog.ts`（50 条）+ `data/lib-manifests/all.json`（45 slug）+ `data/lib-api-summaries/`（44 库）→ `check_dependencies`。完整说明见仓库根 [`README.md`](../README.md)「社区知识与库模组」与 MCP 工具 §7 / §7.5。
 
 ### 字段映射（`convert_mapping`）
 
@@ -289,24 +295,32 @@ node dist/cli.js list-tools
 
 | 工具 | 用途 |
 |------|------|
-| `query_api` | Vanilla/Parchment **游戏** API（约 1.16.5–1.20.4）。不含 Forge/Fabric 类。 |
-| `query_loader_api` | 加载器/模组 API 摘要（Neo/Forge/Fabric-API/QSL）。必填 `platform`+`minecraftVersion`。 |
+| `query_api` | Vanilla/Parchment **游戏** API（约 1.16.5–1.20.4）。不含 Forge/Fabric 类。**1.12.2 类名空壳**（`found:true` + `methods:[]`）；**26.1+ 无索引**。 |
+| `query_loader_api` | 加载器/模组 API 摘要（Neo/Forge/Fabric-API/QSL）。必填 `platform`+`minecraftVersion`。1.12.2-forge 已索引。Fabric 1.14.4–1.21.11 / 26.1.2 已索引（以 `search_loader_api mode=list` 为准，不要再当成 maven 404）。 |
 | `activate_platform_pack` | 把该档规则送进**当前会话**，或写入**用户模组工程**的 IDE 目录。**不能**改 Cursor/Claude 等扫描器。 |
 
 CLI 与现行全局 flag 对齐：`--project` / `--file` / `--dry-run` / `--confirm`。不要写 `--projectRoot=`。ingest 的 jar 用 `--jarPath=`，不要用 `--file`。
 
 ```bash
+# 当前对话加载规则（默认 00/01/09 + Skill 索引；不写盘）
+node dist/cli.js activate_platform_pack --action=session --platform=fabric --minecraftVersion=1.20.1
+node dist/cli.js activate_platform_pack --action=session --platform=forge --minecraftVersion=1.12.2 --includeAllRules=true
+# 写入用户模组工程（hosts 必填；默认 dryRun）
 node dist/cli.js activate_platform_pack --action=write --platform=neoforge --minecraftVersion=1.21.1 --hosts=cursor --project <abs> --dry-run=false --confirm
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
+
+`session` 参数：`topics`（规则编号如 `02`）、`includeAllRules`（灌 00–10）。`write` 的 `includeSkills` 默认 false；true 时写 stub，不是知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。
+
+Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 
 ### 数据来源与边界（用户必读）
 
 - **官方索引**：`mcp-server/data/loader-api-summaries/`（维护者构建，随仓分发：Neo/Forge/Fabric/Quilt 精选档）。
 - **用户 ingest**：只写 `$MC_SKILL_CACHE/loader-api-summaries/`，**不入库、不共享给他人**。
 - **查询顺序**：官方先，本地 overlay 后，同 key 本地覆盖官方。
-- LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。
-- **Fabric 缺档（禁止借邻版）**：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.21.3` / `1.21.11` 的 fabric-api sources 按该档文档坐标拉取为 maven 404，查询返回 `LOADER_API_NOT_INDEXED`。已索引：`1.20.1` / `1.20.4` / `1.21.1` / `26.1.2`。`search_loader_api mode=list` 的 `mavenNotIndexed` 列出缺档。
+- LiteLoader / Rift / ModLoader **不是内置全集**；未 ingest 时 `PLATFORM_SKIPPED`。Bedrock 与 Forge 1.7.10–1.11.2 无 Java ingest。空 sidecar 模板见 `mcp-server/data/loader-api-summaries/sidecar-templates/`。手摘极小摘要（如 `1.12.2-liteloader` 6 类、`1.13.2-rift` 8 类、`1.6.4-modloader` 2 类）**不是**完整 loader javadoc。
+- **Fabric loader 摘要**：以 `search_loader_api mode=list` 为准。`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 均已入库。`skipped-ingest.json` 的 `mavenNotIndexed` 现为空；不要再把这些档写成 `LOADER_API_NOT_INDEXED`。
 
 ### ingest 实战
 

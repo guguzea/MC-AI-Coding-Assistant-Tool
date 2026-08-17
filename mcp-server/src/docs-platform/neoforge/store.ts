@@ -24,6 +24,7 @@ import {
   type SymbolIndex,
 } from "../search-utils.js";
 import { PlatformDataMissingError } from "../platform-data.js";
+import { ownGet } from "../../utils/own-record.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
 
@@ -213,7 +214,7 @@ export class NeoForgeDocStore {
     if (existsSync(join(this.dataDir, "index-l0.json"))) return this.dataDir;
 
     // Version fallback
-    const fallback = VERSION_FALLBACK[version];
+    const fallback = ownGet(VERSION_FALLBACK, version);
     if (fallback) {
       const fallbackNested = this.versionDataDir(fallback);
       if (existsSync(join(fallbackNested, "index-l0.json"))) return fallbackNested;
@@ -238,7 +239,7 @@ export class NeoForgeDocStore {
    */
   resolveEffectiveVersion(version: string): string {
     if (this.hasOwnDocTree(version)) return version;
-    const fallback = VERSION_FALLBACK[version];
+    const fallback = ownGet(VERSION_FALLBACK, version);
     if (fallback && this.hasOwnDocTree(fallback)) return fallback;
     return version;
   }

@@ -25,6 +25,9 @@ import { generateDatagen } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
 import { detectLoader, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
+import { getVersionInfo } from "./dist/version/index.js";
+import { resolvePackFormat } from "./dist/localize/pack-format.js";
+import { mapShortCommand } from "./dist/cli-parse.js";
 import { isQslSpecificQuery, filterFabricFallbackHits } from "./dist/docs-platform/quilt-fallback-filter.js";
 import {
   generateAddonManifest,
@@ -397,7 +400,23 @@ async function testSearchEnhancements() {
   );
 
   // AT 短查询白名单：不得被停用词表丢弃
-  const { enhancedSearch } = await import("./dist/docs-platform/search-utils.js");
+  const { enhancedSearch, expandQueryTerms } = await import("./dist/docs-platform/search-utils.js");
+  assert.ok(expandQueryTerms("constructor").includes("constructor"), "constructor must not hit Object.prototype");
+  assert.ok(expandQueryTerms("toString").includes("tostring"));
+  const ctorHits = enhancedSearch({
+    query: "constructor",
+    l0: [
+      {
+        id: "blocks/blocks",
+        label: "Blocks",
+        tags: ["block"],
+        priority: "🟡",
+      },
+    ],
+    limit: 5,
+    minTokenLength: 2,
+  });
+  assert.ok(Array.isArray(ctorHits), "constructor query must not throw");
   const atHits = enhancedSearch({
     query: "AT",
     l0: [
@@ -498,7 +517,18 @@ async function testDatagenAndMappingGates() {
     assert.ok(d.code?.includes("net.minecraftforge"), `${t} forge imports`);
     assert.ok(!d.code?.includes("net.neoforged"), `${t} must not be NeoForge`);
     if (t === "loottable") assert.ok(d.code?.includes("void generate()"), "loot generate()");
+    assert.ok(!d.code?.includes("fromNamespaceAndPath"), `${t} 1.20.1 must not use 1.21 factory`);
   }
+
+  const forge112 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "stone_block",
+    platform: "forge",
+    version: "1.12.2",
+  });
+  assert.equal(forge112.code, null);
+  assert.ok(forge112.errors?.some((e) => /仅覆盖 1\.20\.1/.test(e)), JSON.stringify(forge112));
 
   const nfRecipe = generateDatagen({
     providerType: "recipe",
@@ -514,6 +544,7 @@ async function testDatagenAndMappingGates() {
   for (const t of /** @type {const} */ (["advancement", "particle", "sound"])) {
     const forgeExtra = generateDatagen({ providerType: t, modId: "demo", targetName: "spark", platform: "forge", version: "1.20.1" });
     assert.ok(forgeExtra.code?.includes("net.minecraftforge"), `${t} forge path`);
+    assert.ok(!forgeExtra.code?.includes("fromNamespaceAndPath"), `${t} 1.20.1 factory`);
 
     const nfExtra = generateDatagen({
       providerType: t,
@@ -1794,6 +1825,35 @@ function testProjectPathFill() {
   assert.equal(badD.action?.code, "INVALID_INPUT");
 }
 
+async function testPrototypeOwnKeys() {
+  const protoKeys = ["constructor", "toString", "__proto__", "hasOwnProperty", "valueOf"];
+  for (const k of protoKeys) {
+    const vi = await getVersionInfo({ version: k, action: "register" });
+    assert.equal(vi.forgeVersion, "unknown", `get_version_info(${k}) must not hit Object.prototype`);
+    assert.ok(!/DeferredRegister/.test(vi.recommendation), vi.recommendation);
+
+    const mg = getMigrationGuide(k);
+    assert.equal(mg.found, false, `get_migration_guide(${k}) must not be found`);
+
+    const wf = getWorkflowTemplate(k);
+    assert.equal(wf.found, false, `get_workflow_template(${k}) must not be found`);
+
+    const pf = resolvePackFormat(k);
+    assert.equal(typeof pf.packFormat, "number", `pack_format(${k}) must be a number`);
+    assert.ok(pf.notes.some((n) => /未知 mcVersion/.test(n)), JSON.stringify(pf.notes));
+
+    const short = mapShortCommand(k);
+    assert.equal(short.tool, k, `SHORT_COMMANDS[${k}] must not resolve to Function`);
+  }
+
+  const v112 = await getVersionInfo({ version: "1.12.2", action: "register" });
+  assert.ok(/RegistryEvent/.test(v112.recommendation), v112.recommendation);
+  assert.ok(!/创建 DeferredRegister/.test(v112.recommendation), v112.recommendation);
+
+  const v165 = await getVersionInfo({ version: "1.16.5", action: "register" });
+  assert.ok(!/创建 DeferredRegister/.test(v165.recommendation), v165.recommendation);
+}
+
 function testPlan1Fixes() {
   assert.equal(detectMinecraftVersion({ gradleProperties: "minecraft_version=1.20.1\n" }), "1.20.1");
   assert.equal(detectMinecraftVersion({ gradleProperties: "mc_version=1.16.5\n" }), "1.16.5");
@@ -2059,6 +2119,7 @@ await testPlan2PrimerMdkFabricPorting();
 await testMdkUnpackFixtures();
 await testProjectPathFill();
 testPlan1Fixes();
+await testPrototypeOwnKeys();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

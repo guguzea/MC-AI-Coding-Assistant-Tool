@@ -1,3 +1,5 @@
+import { ownGet } from "../utils/own-record.js";
+
 export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }> = {
   "mc-new-block": {
     title: "新方块工作流",
@@ -215,7 +217,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 };
 
 export function getWorkflowTemplate(name: string): { found: boolean; name: string; title?: string; body?: string } {
-  const t = WORKFLOW_TEMPLATES[name];
+  const t = ownGet(WORKFLOW_TEMPLATES, name);
   if (!t) {
     return { found: false, name, body: `可用模板: ${Object.keys(WORKFLOW_TEMPLATES).join(", ")}` };
   }

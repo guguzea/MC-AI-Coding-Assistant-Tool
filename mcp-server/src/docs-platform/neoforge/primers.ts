@@ -5,6 +5,7 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { resolveDataDir } from "../../utils/path.js";
+import { ownGet } from "../../utils/own-record.js";
 import type { SearchResult } from "./store.js";
 
 export type PrimerLoader = "neoforge" | "forge" | "fork";
@@ -153,7 +154,7 @@ export function resetPrimerCache(): void {
 export function primerMatchesVersion(primer: PrimerEntry, version: string): boolean {
   if (!version) return false;
   if (primer.to === version || primer.from === version || primer.slug === version) return true;
-  const aliases = VERSION_ALIASES[version] ?? [];
+  const aliases = ownGet(VERSION_ALIASES, version) ?? [];
   return aliases.includes(primer.to) || aliases.includes(primer.slug);
 }
 

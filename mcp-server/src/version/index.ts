@@ -6,6 +6,8 @@
  * - 建立版本→变更点 索引
  */
 
+import { ownGet } from "../utils/own-record.js";
+
 export interface VersionQuery {
   version: string;
   action: string;
@@ -183,7 +185,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
 
 export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> {
   const { version, action } = query;
-  const known = VERSION_DB[version];
+  const known = ownGet(VERSION_DB, version);
 
   if (known) {
     const tailored = suggestBasedOnAction(known, action);
@@ -211,9 +213,16 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
   const lower = action.toLowerCase();
 
   if (lower.includes("注册") || lower.includes("register")) {
+    const noDeferred = info.gotchas.some((g) => /不支持 DeferredRegister/i.test(g));
+    const usesDeferred = /DeferredRegister/i.test(info.recommendation);
+    const registerHint = noDeferred
+      ? "注册流程：@SubscribeEvent + RegistryEvent.Register<T>（本版无 DeferredRegister）"
+      : usesDeferred
+        ? "注册流程：创建 DeferredRegister → 定义 RegistryObject → register(modEventBus)"
+        : "注册请按本版 recommendation，不要套用 1.20 DeferredRegister";
     return {
       ...info,
-      recommendation: `${info.recommendation}。注册流程：创建 DeferredRegister → 定义 RegistryObject → register(modEventBus)`,
+      recommendation: `${info.recommendation}。${registerHint}`,
     };
   }
   if (lower.includes("方块实体") || lower.includes("blockentity")) {

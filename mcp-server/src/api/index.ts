@@ -2,9 +2,10 @@
  * API 精确查询模块 — 基于真实数据
  *
  * 数据来源（按 Minecraft 版本）：
- * - 1.7.10–1.13.2: MCP stable 映射（1.13.2）+ ForgeJavaDocs
- * - 1.14.4–1.15.2: MCP stable CSV 映射
+ * - 1.7.10–1.13.2: 类名空壳（methods 几乎全空）+  MCP stable 映射（1.13.2）+ ForgeJavaDocs 文档树；不要把 query_api found:true 当完整签名
+ * - 1.14.4–1.15.2: MCP stable CSV 映射+ api-index 为空 {}（Parchment 约从 1.16.5 才有）
  * - 1.16.5–1.20.4: Parchment 映射（带 javadoc）
+ * - 1.21+ / 26.1+: 无 extracted 索引
  *
  * 性能优化：
  * - Worker Thread 预加载 JSON（避免主线程阻塞）
@@ -21,6 +22,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import type { WorkerOutMessage } from "../workers/types.js";
 import { resolveDataDir } from "../utils/path.js";
+import { ownGet } from "../utils/own-record.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
 import { ActionCodes, actionable, withAction, type ActionEnvelope } from "../utils/actionable.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
@@ -613,7 +615,16 @@ function buildClassResult(
   suggestions: string[],
   version: string
 ): ApiResult {
-  const related = pickRelated(version)[className.replace(/\./g, "/")] ?? [];
+  const related = ownGet(pickRelated(version), className.replace(/\./g, "/")) ?? [];
+  const notes: string[] = [];
+  if (related.length > 0) {
+    notes.push(`相关类：${related.map(n => n.replace(/\//g, ".")).join(", ")}`);
+  }
+  if (!cls.methods.length) {
+    notes.push(
+      "本索引该类无方法条目（常见于 1.7.10–1.12.2 javadoc 空壳）。found:true 不是完整签名；请用 search_forge_docs / query_loader_api / convert_mapping。",
+    );
+  }
   return {
     found: true,
     className,
@@ -622,9 +633,7 @@ function buildClassResult(
     methods: cls.methods,
     mappings: { mojang: className.replace(/\./g, "/"), parchment: className.replace(/\./g, "/") },
     suggestions,
-    notes: related.length > 0
-      ? [`相关类：${related.map(n => n.replace(/\//g, ".")).join(", ")}`]
-      : undefined,
+    notes: notes.length > 0 ? notes : undefined,
   };
 }
 
@@ -659,10 +668,15 @@ function buildMethodResult(
 const QUERY_API_EMPTY_INDEX =
   "当前版本无 Vanilla API 索引，无法执行 query_api；请用 search_*_docs 或反编译 jar。query_api 覆盖约 1.16.5–1.20.4。found:false 不代表游戏里没有该类。";
 
+const QUERY_API_SHELL_INDEX =
+  "该版 extracted 多为类名空壳（methods 为空）。found:true 只表示类名在索引里，不是完整 javadoc/签名。请改 search_forge_docs / query_loader_api / convert_mapping。";
+
 function queryApiCoverageWarning(version: string, classCount?: number): string | undefined {
   const v = version.trim();
   const outOfRange = isUnobfuscatedMcVersion(v) || /^1\.21(\.|$)/.test(v) || /^26\./.test(v);
   if (outOfRange || classCount === 0) return QUERY_API_EMPTY_INDEX;
+  // 1.7.10–1.13.2：有类名列表，但几乎没有方法条目
+  if (/^1\.(7|8|9|10|11|12|13)(\.|$)/.test(v)) return QUERY_API_SHELL_INDEX;
   return undefined;
 }
 

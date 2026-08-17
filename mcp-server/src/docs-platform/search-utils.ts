@@ -5,6 +5,8 @@
  * - relevance 打分（含 concepts/registry boost）
  */
 
+import { ownGet } from "../utils/own-record.js";
+
 export interface ScoredDocHit {
   id: string;
   score: number;
@@ -123,7 +125,7 @@ export function expandQueryTerms(raw: string): string[] {
     out.add(p);
     out.add(stemToken(p));
   }
-  const abbr = ABBREV_EXPAND[lower];
+  const abbr = ownGet(ABBREV_EXPAND, lower);
   if (abbr) {
     for (const w of abbr) out.add(w);
   }

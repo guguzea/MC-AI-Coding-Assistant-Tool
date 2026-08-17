@@ -14,7 +14,7 @@
 | `links/` | 无全文许可：仅标题、摘要、外链 URL |
 | `authored/` | 本仓库自写短文（可自由修改） |
 
-索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建）。
+索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前约 **79** 条：authored 71 / links 4 / permitted 4）。
 
 ## `authored/` 主题速查
 

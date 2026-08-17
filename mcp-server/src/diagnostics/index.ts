@@ -1,5 +1,6 @@
 import { analyzeCrash } from "../crash/index.js";
 import { actionable, ActionCodes } from "../utils/actionable.js";
+import { ownGet } from "../utils/own-record.js";
 import { LIBRARY_CATALOG } from "./library-catalog.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -103,7 +104,7 @@ export function getMigrationGuide(
   if (fromPrimers.found) {
     return fromPrimers;
   }
-  const guide = MIGRATION_GUIDES[key];
+  const guide = ownGet(MIGRATION_GUIDES, key);
   if (!guide) {
     return {
       found: false,
@@ -269,7 +270,7 @@ function detectLibraryMatches(text: string): DetectedLibrary[] {
   const out: DetectedLibrary[] = [];
   const seen = new Set<string>();
   for (const entry of LIBRARY_CATALOG) {
-    const keywords = [...entry.modIds, ...(CATALOG_ALIASES[entry.id] ?? [])].filter((k) => k.length > 0);
+    const keywords = [...entry.modIds, ...(ownGet(CATALOG_ALIASES, entry.id) ?? [])].filter((k) => k.length > 0);
     if (keywords.length === 0) continue;
     const hit = keywords.find((k) => hasKeyword(text, k));
     if (!hit || seen.has(entry.id)) continue;

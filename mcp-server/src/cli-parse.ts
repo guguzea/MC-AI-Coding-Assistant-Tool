@@ -3,6 +3,7 @@
  * 不含 IO（@file / stdin / --project 在 cli.ts 适配层）。
  */
 import * as z from "zod";
+import { ownGet } from "./utils/own-record.js";
 
 export type FlagScalar = string | boolean;
 export type FlagValue = FlagScalar | FlagScalar[];
@@ -60,7 +61,7 @@ export function kebabToCamel(key: string): string {
 }
 
 export function mapShortCommand(cmd: string): { tool: string; inject: Record<string, unknown> } {
-  const m = SHORT_COMMANDS[cmd];
+  const m = ownGet(SHORT_COMMANDS, cmd);
   if (!m) return { tool: cmd, inject: {} };
   return { tool: m.tool, inject: { ...(m.inject ?? {}) } };
 }
@@ -248,7 +249,7 @@ export function resolveFlagKey(
   if (schemaKeys.has(rawKey)) return rawKey;
   const camel = kebabToCamel(rawKey);
   if (schemaKeys.has(camel)) return camel;
-  const aliased = aliases[rawKey] ?? aliases[camel];
+  const aliased = ownGet(aliases, rawKey) ?? ownGet(aliases, camel);
   if (aliased && schemaKeys.has(aliased)) return aliased;
   return undefined;
 }

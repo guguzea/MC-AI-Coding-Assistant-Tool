@@ -28,6 +28,7 @@ import {
   stripScores,
   type SymbolIndex,
 } from "../search-utils.js";
+import { ownGet } from "../../utils/own-record.js";
 import { PlatformDataMissingError, type DocPlatform } from "../platform-data.js";
 
 // ── 类型定义 ─────────────────────────────────────────────────────────────
@@ -91,7 +92,7 @@ function platformDocLabel(platform?: string): string {
     rift: "Rift",
     modloader: "ModLoader",
   };
-  return map[platform ?? ""] ?? (platform ? platform : "Fabric");
+  return ownGet(map, platform ?? "") ?? (platform ? platform : "Fabric");
 }
 
 export class DocNotFoundError extends Error {
@@ -201,7 +202,7 @@ export class FabricDocStore {
     source = "fabric-docs",
     private readonly dirPrefix = "fabric",
   ) {
-    this.source = SUBDIR_MAP[source] ?? source ?? "fabric-docs";
+    this.source = ownGet(SUBDIR_MAP, source) ?? source ?? "fabric-docs";
     Object.defineProperty(this, "_version", { value: version, writable: false, enumerable: false });
   }
 

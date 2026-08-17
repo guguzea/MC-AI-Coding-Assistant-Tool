@@ -300,7 +300,7 @@ public class ${pascalName}AdvancementProvider extends ForgeAdvancementProvider {
                     InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIAMOND))
                 .save(
                     saver,
-                    ResourceLocation.fromNamespaceAndPath("${modId}", "${targetName}"),
+                    new ResourceLocation("${modId}", "${targetName}"),
                     existingFileHelper);
         }
     }
@@ -357,7 +357,7 @@ public class ${pascalName}SoundDefinitionsProvider extends SoundDefinitionsProvi
     public static final RegistryObject<SoundEvent> ${upper} = SOUND_EVENTS.register(
         "${targetName}",
         () -> SoundEvent.createVariableRangeEvent(
-            ResourceLocation.fromNamespaceAndPath("${modId}", "${targetName}")));
+            new ResourceLocation("${modId}", "${targetName}")));
 
     public ${pascalName}SoundDefinitionsProvider(
             PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -370,7 +370,7 @@ public class ${pascalName}SoundDefinitionsProvider extends SoundDefinitionsProvi
             ${upper}.get(),
             definition()
                 .subtitle("subtitles.${modId}.${targetName}")
-                .with(sound(ResourceLocation.fromNamespaceAndPath("${modId}", "${targetName}"))));
+                .with(sound(new ResourceLocation("${modId}", "${targetName}"))));
     }
 
     public static void gatherData(GatherDataEvent event) {

@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { ownGet } from "../utils/own-record.js";
 
 export type CrashKind =
   | "fml"
@@ -310,9 +311,9 @@ export function detectCrashKind(crashReport: string): CrashKind {
     );
 
   // 文件名里的 fml/opengl/memory/java 可信；fabric 须先排除 Quilt 正文指纹
-  if (kindFromName === "fml") return map[kindFromName];
+  if (kindFromName === "fml") return ownGet(map, kindFromName) ?? "unknown";
   if (kindFromName === "opengl" || kindFromName === "rendering" || kindFromName === "memory" || kindFromName === "java") {
-    return map[kindFromName];
+    return ownGet(map, kindFromName) ?? "unknown";
   }
 
   if (/org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
@@ -326,7 +327,7 @@ export function detectCrashKind(crashReport: string): CrashKind {
   }
 
   if (kindFromName === "fabric") return "fabric";
-  if (kindFromName && map[kindFromName] && hasLoaderFingerprint) return map[kindFromName];
+  if (kindFromName && ownGet(map, kindFromName) && hasLoaderFingerprint) return ownGet(map, kindFromName)!;
 
   if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";

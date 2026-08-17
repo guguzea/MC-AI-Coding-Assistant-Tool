@@ -116,11 +116,11 @@ id 'net.minecraftforge.gradle'
 1. 询问用户当前使用的平台和 Minecraft 版本
 2. 根据回答加载对应平台的规则
 
-确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / 技能索引送进当前对话。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun）。**禁止**读邻档 00–10。MCP **不能**开关 IDE 扫描器。
+确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / **技能索引**送进当前对话。默认只注入规则 **00 / 01 / 09**；方块/物品/网络等再传 `topics`（如 `["02","03"]`）或 `includeAllRules=true`。Skill 是索引（`relPosix`），按路径 Read，不要假定 37 份全文已在上下文。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun；`includeSkills` 默认 false，true 也只写 stub）。**禁止**读邻档 00–10。MCP **不能**开关 IDE 扫描器。
 
 ## 第二步：加载对应平台的规则
 
-确认平台后，阅读 `平台/版本/.cursor/rules/` 目录下的所有 `.mdc` 文件。
+优先走上面的 `activate_platform_pack session`，不要在知识库里直接打开邻版 `.cursor/rules`。确认平台后，需要的规则按编号补读：
 
 规则文件按编号顺序加载：
 
@@ -222,14 +222,14 @@ Decision: 选择注册方式
    - LiteLoader / Rift / ModLoader：暂无独立 Java 库组；不要把 Fabric/Forge 库 Skill 当这些加载器的 API
 2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
 3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`minecraftVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本）
-4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`
+4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
 
 ## 不确定时
 
 永远选择**保守**方案：
 - 不确定用哪个事件 → 选更通用的事件
-- 不确定方法名 → 用 IDE 自动补全、`query_api` 或查阅官方文档（含社区短文指向的原文）。`query_api` 仅 Vanilla/Parchment（约 1.16.5–1.20.4，**不含** Forge/Fabric 类，**26.1+ 无索引**）；平台 API 用 `search_*_docs`
+- 不确定方法名 → 用 IDE 自动补全、官方文档工具或 `query_api`（仅 Vanilla/Parchment，约 1.16.5–1.20.4；**不含** Forge/Fabric 类。**1.12.2 可能 found:true 但 methods 为空**；**26.1+ 无索引**）。平台 API 用 `search_*_docs` / `query_loader_api`。Forge 1.12.2 教程用 `search_forge_docs`（`version=1.12.2`），不要用 `query_api` 核 `Block` 构造。
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
 
 ## MCP Server 工具（可选）
@@ -238,11 +238,11 @@ Decision: 选择注册方式
 
 | 工具 | 功能 |
 | --- | --- |
-| `query_api` | 按类名查询 Vanilla/Parchment API 签名 |
+| `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引） |
 | `get_method_params` | 查询方法参数名（可选 version） |
-| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite） |
+| `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite；1.12.2 用 MCP SRG） |
 | `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint） |
-| `get_version_info` | 查询版本支持的 API 范围 |
+| `get_version_info` | 查询版本支持的 API 范围（**仅 Forge**） |
 | `mc_skill_update` | 检查/应用 tooling+data 更新（GitHub Release；确认后可写盘） |
 | `diagnose_gradle` | 诊断 Gradle 构建问题。ForgeGradle + Loom + NeoGradle/MDG；liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。 |
 | `generate_datagen` | 生成数据生成器代码 |
@@ -250,7 +250,9 @@ Decision: 选择注册方式
 | `validate_project` | 校验模组项目结构。Forge / Fabric / Quilt / NeoForge 真检查；LiteLoader/Rift/ModLoader/基岩 skipped。坏 recipe 只 warning。 |
 | `check_publish_ready` | 发布前清单（license/version/`build/libs`）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
-| `search_forge_docs` / `get_forge_doc_*` | Forge 文档 |
+| `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
+| `query_loader_api` / `search_loader_api` | 加载器/模组 API 摘要（必填 platform+minecraftVersion）。**不是** `query_api` |
+| `search_forge_docs` / `get_forge_doc_*` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 |
 | `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
 | `search_docs` / `get_doc_*` | 跨平台通用文档入口（`platform` 含 forge/fabric/neoforge/**quilt**/liteloader/rift/modloader）。Quilt 问 QSL 时禁止把 Fabric Registry 当命中 |
@@ -273,7 +275,8 @@ Decision: 选择注册方式
 
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
-- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。26.1+ / Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
+- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
+- **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
 - **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
@@ -289,7 +292,7 @@ Decision: 选择注册方式
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
 - **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，78 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
-- **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`。
+- **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。
 - **`PLATFORM_DATA_MISSING`**：对应平台文档数据缺失，先调 `diagnose_data_paths` 确认 `MC_SKILL_DATA` 指向本仓库 `data/`。

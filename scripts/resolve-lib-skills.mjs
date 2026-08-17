@@ -3,11 +3,12 @@
  * resolve-lib-skills.mjs — knowledge/libs §3.6 路径解析校验脚本
  *
  * 解析规则（不落盘，源稿即用）：
- *   1. 输入 (platform, mcVersion)；platform ∈ forge | fabric | quilt | neoforge
+ *   1. 输入 (platform, mcVersion)；platform ∈ forge | fabric | quilt | neoforge | bedrock
  *   2. 组映射：
  *        forge     → forge-only + all-platforms
  *        fabric/quilt → fabric-only + all-platforms
  *        neoforge  → neo-only + all-platforms
+ *        bedrock   → bedrock-only
  *   3. 候选 = 组内每个 mc-X/SKILL.md（X 为 skill 名）；先按组限定，再读 frontmatter `platforms` 二次确认
  *   4. 版本过滤：frontmatter `mcVersions`（兼容别名 `minecraftVersions`）留空/未写 → 不限；
  *      非空 → 数组任一窗口覆盖目标 mcVersion（支持 "1.20.1"、"1.20.1+"、"≤26.2"、"1.14-26.2"）
@@ -17,7 +18,7 @@
  *   node scripts/resolve-lib-skills.mjs --platform forge --version 1.20.1   # 单组合解析
  *   node scripts/resolve-lib-skills.mjs --validate                          # 校验模式（默认）
  *   校验模式：对 (forge,1.20.1)、(fabric,1.20.1)、(neoforge,1.20.4) 三组合跑 resolve，
- *   结果非空 + skillId 无重复（含全局四组查重）→ 通过；否则 fail-fast 退出码 1。
+ *   结果非空 + skillId 无重复（含全局五组查重）→ 通过；否则 fail-fast 退出码 1。
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
@@ -114,7 +115,7 @@ function walkSkillDirs(groupDir) {
   return out;
 }
 
-/** 收集四组全部 skill（含 frontmatter），附带组名 */
+/** 收集五组全部 skill（含 frontmatter），附带组名 */
 function loadAllSkills() {
   const skills = [];
   for (const group of ["all-platforms", "fabric-only", "neo-only", "forge-only", "bedrock-only"]) {

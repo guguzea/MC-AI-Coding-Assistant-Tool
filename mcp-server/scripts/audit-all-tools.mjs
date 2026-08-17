@@ -88,6 +88,14 @@ async function main() {
   r = unwrap(await docs.searchForgeDocs({ query: "DeferredRegister", version: "1.20.1" }));
   if (!(r.total > 0)) note("warn", "search_forge_docs", "DeferredRegister no hits", safe(r));
 
+  try {
+    r = unwrap(await docs.searchForgeDocs({ query: "constructor", version: "1.12.2" }));
+    if (!Array.isArray(r.results) && r.error) note("error", "search_forge_docs", "constructor query failed", safe(r));
+    else note("info", "search_forge_docs", "constructor query ok", { total: r.total, semantic: r.semantic });
+  } catch (e) {
+    note("error", "search_forge_docs", "constructor must not throw (Object.prototype)", String(e.message || e));
+  }
+
   r = unwrap(await docs.searchForgeDocs({ query: "registry", version: "9.9.9" }));
   const used = r.results?.[0]?.version;
   if (r.error) {
@@ -219,6 +227,14 @@ async function main() {
   r = getVersionInfo({ version: "99.0", action: "注册方块" });
   if (r.recommendation && !r.error && !r.unknown) {
     note("warn", "get_version_info", "unknown MC version still recommends without error flag", safe(r));
+  }
+  r = getVersionInfo({ version: "constructor", action: "register" });
+  if (r.forgeVersion !== "unknown" || typeof r.recommendation !== "string" || /undefined。注册流程/.test(r.recommendation)) {
+    note("error", "get_version_info", "constructor must not hit Object.prototype", safe(r));
+  }
+  r = getVersionInfo({ version: "1.12.2", action: "register" });
+  if (/创建 DeferredRegister/.test(r.recommendation || "")) {
+    note("error", "get_version_info", "1.12.2 register must not append DeferredRegister flow", safe(r));
   }
 
   // crash

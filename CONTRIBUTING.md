@@ -40,7 +40,7 @@
 └── knowledge/               # antipatterns / common / porting / version-changes
 ```
 
-社区实务知识写在仓库根 `community_knowledge/`（不要双写进 `forge/*/knowledge/`）。
+社区实务知识写在仓库根 `community_knowledge/`（不要双写进 `forge/*/knowledge/`）。库模组 Skill 源稿在 `knowledge/libs/`（见该目录 `README.md`）；社区用法见 `community_knowledge/AGENT_USAGE.md`。
 
 ### 步骤 2：改版本相关字段
 
@@ -205,6 +205,7 @@ mcp-server/
 2. 在 `src/index.ts` 或 `src/wave/register.ts` 注册
 3. 补充测试（`npm test`）与 `assert-no-yarn-json-slurp` 相关约束（若触及 Yarn）
 4. 更新 `README.md`、`AUTO_SETUP.md`、`mcp-server/README.md` 的工具列表
+5. 用户字符串当 `Record` 键时必须用 `ownGet`（`src/utils/own-record.ts`），禁止 `obj[query]`。`constructor` / `toString` 曾让 `search_*_docs` 崩溃、让 `get_version_info` 把 Function 当版本。工具边界与版本矩阵见根 README「按版本选工具」与「工具陷阱」。
 
 ### 本地开发命令
 
