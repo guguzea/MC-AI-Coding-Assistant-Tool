@@ -6,7 +6,7 @@
 
 | 维度 | Forge | Fabric |
 |------|-------|--------|
-| 入口注解 | `@Mod` | `FabricMod` 接口 + entrypoint |
+| 入口注解 | `@Mod` | `ModInitializer` 接口 + entrypoint |
 | Mod 配置 | `mods.toml` | `fabric.mod.json` |
 | 注册方式 | `DeferredRegister` + modEventBus | `Registry.register()` |
 | 注册时机 | `RegisterEvent` 自动触发 | `onInitialize()` 方法中执行 |
@@ -92,7 +92,7 @@ public class ExampleMod {
 
 ```java
 // ✅ Fabric
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     public static final String MOD_ID = "examplemod";
 
     @Override
@@ -119,7 +119,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
 
 // ✅ Fabric
-private static final RegistrySupplier<Block> MY_BLOCK = Registry.register(
+private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
     new Identifier(MOD_ID, "my_block"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE))
@@ -185,24 +185,21 @@ public class ModMessages {
     public static void register() { INSTANCE.registerMessage(ID++, MyMessage.class, ...); }
 }
 
-// ✅ Fabric 1.21.x
+// ✅ Fabric 1.21.x Yarn
 public record MyPayload(int data) implements CustomPayload {
     public static final CustomPayload.Id<MyPayload> ID =
-        new CustomPayload.Id<>(new Identifier(MOD_ID, "my_packet"));
-
-    public static MyPayload read(FriendlyByteBuf buf) {
-        return new MyPayload(buf.readInt());
-    }
+        new CustomPayload.Id<>(Identifier.of(MOD_ID, "my_packet"));
+    public static final PacketCodec<RegistryByteBuf, MyPayload> CODEC =
+        PacketCodec.tuple(PacketCodecs.VAR_INT, MyPayload::data, MyPayload::new);
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(this.data);
+    public Id<? extends CustomPayload> getId() {
+        return ID;
     }
 }
 
-// 在 onInitialize() 中注册
-PayloadTypeRegistry.c2s().register(MyPayload.ID, MyPayload::read);
-PayloadTypeRegistry.s2c().register(MyPayload.ID, MyPayload::read);
+PayloadTypeRegistry.playC2S().register(MyPayload.ID, MyPayload.CODEC);
+PayloadTypeRegistry.playS2C().register(MyPayload.ID, MyPayload.CODEC);
 ```
 
 ---
@@ -221,15 +218,16 @@ public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
     }
 }
 
-// ✅ Fabric 1.21.x
-public static final Key<MyData> MY_DATA = Key.create(
-    Registries.ATTACHMENT_TYPE,
-    new Identifier(MOD_ID, "my_data")
-);
+// ✅ Fabric 1.21.x Yarn
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
 
-// 使用
-entity.getData(MY_DATA);           // 获取
-entity.setData(MY_DATA, data);    // 设置
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(Identifier.of(MOD_ID, "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
 ```
 
 ---

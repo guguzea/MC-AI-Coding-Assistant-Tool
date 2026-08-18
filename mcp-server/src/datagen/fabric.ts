@@ -103,14 +103,14 @@ ${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     public static final TagKey<Item> EXAMPLE =
-        TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("${modId}", "${targetName}"));
+        TagKey.create(Registries.ITEM, Identifier.of("${modId}", "${targetName}"));
 
     public ${pascalName}ItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);

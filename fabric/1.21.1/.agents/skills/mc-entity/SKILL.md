@@ -1,6 +1,6 @@
 ﻿---
 name: mc-entity
-description: Fabric 实体开发。EntityType、FabricEntityTypeBuilder、MobCategory。触发词：实体、Entity、EntityType、SpawnRestriction
+description: Fabric 实体开发。EntityType、FabricEntityTypeBuilder、SpawnGroup。触发词：实体、Entity、EntityType、SpawnRestriction
 platform: fabric
 version: "1.21.1"
 dependencies: []
@@ -20,21 +20,21 @@ public class MyPigEntity extends PigEntity {
 }
 
 // 2. 注册实体类型
-private static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG =
+private static final EntityType<MyPigEntity> MY_PIG =
     Registry.register(
         Registries.ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_pig"),
-        EntityType.Builder.create(MyPigEntity::new, MobCategory.CREATURE)
+        Identifier.of(MOD_ID, "my_pig"),
+        EntityType.Builder.create(MyPigEntity::new, SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.9f, 1.4f))
-            .maxTrackOffset(10)
-            .trackRangeBlocks(10)
+            .maxTrackingRange(8)
+            .trackingTickInterval(3)
             .build()
     );
 
 // 3. 在 onInitialize() 中设置属性
 @Override
 public void onInitialize() {
-    EntityAttributeRegistry.register(MY_PIG,
+    FabricDefaultAttributeRegistry.register(MY_PIG,
         MobEntity.createMobAttributes()
             .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
             .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
@@ -49,7 +49,7 @@ IF 有行为实体（动物、怪物）
   → 继承对应实体类（如 AnimalEntity、MonsterEntity）
 
 IF 静态实体（不移动）
-  → EntityType.Builder.of(Entity::new, MobCategory.MISC)
+  → EntityType.Builder.create(Entity::new, SpawnGroup.MISC)
 
 IF 需要在世界中自然生成
   → 设置 SpawnRestriction
@@ -74,7 +74,7 @@ public class ExampleModClient implements ClientModInitializer {
 ```java
 @Override
 public void onInitialize() {
-    SpawnRestrictionRegistration.mobSpawn().register(
+    SpawnRestriction.register(
         MY_PIG,
         SpawnRestriction.Location.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,

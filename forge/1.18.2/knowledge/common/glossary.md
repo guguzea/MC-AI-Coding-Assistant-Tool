@@ -31,7 +31,7 @@
 : Forge 所有内置注册表的静态持有类。通过 `ForgeRegistries.BLOCKS`、`ForgeRegistries.ITEMS` 等字段访问。
 
 ### ResourceKey
-: Vanilla 注册表的键（如 `Registries.BIOME`），用于 `DeferredRegister.create(ResourceKey, modId)`。
+: Vanilla 注册表的键（如 `ForgeRegistries.BIOMES`），用于 `DeferredRegister.create(ResourceKey, modId)`。
 
 ### ForgeRegistries 字段（1.18.2）
 
@@ -77,8 +77,8 @@
 ### AttachCapabilitiesEvent
 : 在实体 / 方块实体上附加 Capability Provider 的事件。
 
-### RegisterEvent
-: 每个注册表触发一次的通知事件。`DeferredRegister` 内部封装了对 `RegisterEvent` 的订阅。
+### RegistryEvent.Register
+: 每个注册表触发一次的通知事件。`DeferredRegister` 内部封装了对 `RegistryEvent.Register` 的订阅。
 
 ---
 

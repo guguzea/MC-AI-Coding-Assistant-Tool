@@ -6,7 +6,7 @@
 
 ```java
 // 注册物品
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings()
@@ -19,7 +19,7 @@ private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
 
 ```java
 // 食物物品
-private static final RegistrySupplier<Item> MY_FOOD = Registry.register(
+private static final Item MY_FOOD = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_food"),
     new Item(new Item.Settings()
@@ -81,7 +81,7 @@ public enum MyToolMaterial implements ToolMaterial {
 
 ```java
 // 剑
-private static final RegistrySupplier<SwordItem> COPPER_SWORD = Registry.register(
+private static final SwordItem COPPER_SWORD = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_sword"),
     new SwordItem(MyToolMaterial.COPPER, 3, 1.6f,
@@ -89,7 +89,7 @@ private static final RegistrySupplier<SwordItem> COPPER_SWORD = Registry.registe
 );
 
 // 镐
-private static final RegistrySupplier<PickaxeItem> COPPER_PICKAXE = Registry.register(
+private static final PickaxeItem COPPER_PICKAXE = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_pickaxe"),
     new PickaxeItem(MyToolMaterial.COPPER, 1.0f, -2.8f,
@@ -97,7 +97,7 @@ private static final RegistrySupplier<PickaxeItem> COPPER_PICKAXE = Registry.reg
 );
 
 // 斧头
-private static final RegistrySupplier<AxeItem> COPPER_AXE = Registry.register(
+private static final AxeItem COPPER_AXE = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_axe"),
     new AxeItem(MyToolMaterial.COPPER, 5.0f, -3.0f,
@@ -105,7 +105,7 @@ private static final RegistrySupplier<AxeItem> COPPER_AXE = Registry.register(
 );
 
 // 铲子
-private static final RegistrySupplier<ShovelItem> COPPER_SHOVEL = Registry.register(
+private static final ShovelItem COPPER_SHOVEL = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_shovel"),
     new ShovelItem(MyToolMaterial.COPPER, 1.5f, -3.0f,
@@ -113,7 +113,7 @@ private static final RegistrySupplier<ShovelItem> COPPER_SHOVEL = Registry.regis
 );
 
 // 锄头
-private static final RegistrySupplier<HoeItem> COPPER_HOE = Registry.register(
+private static final HoeItem COPPER_HOE = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_hoe"),
     new HoeItem(MyToolMaterial.COPPER, -1.0f, -3.0f,
@@ -166,7 +166,7 @@ public enum MyArmorMaterial implements ArmorMaterial {
 }
 
 // 盔甲物品
-private static final RegistrySupplier<ArmorItem> COPPER_HELMET = Registry.register(
+private static final ArmorItem COPPER_HELMET = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "copper_helmet"),
     new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.HELMET,

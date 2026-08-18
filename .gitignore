@@ -65,7 +65,8 @@ out/
 mcp-server/_temp_tool_probe/
 mcp-server/_sweep-findings.json
 mcp-server/_audit-findings.json
-
+openspec/
+ralphy-spec/
 # SQLite journals (never commit)
 data/**/*.sqlite-journal
 data/**/*-journal

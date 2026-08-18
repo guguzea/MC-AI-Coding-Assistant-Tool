@@ -70,7 +70,7 @@ IF 需要可交互（右键打开 GUI、触发事件）
 
 IF 需要流体
   → 使用 Forge 专用流体系统
-  → 注册 Fluid + FluidType 两个类型
+  → 注册 Fluid（ForgeFlowingFluid）+ FluidAttributes，不要 FluidType
   → 参考 05-events.mdc 中的流体相关事件
 
 IF 需要特殊渲染（多面材质、透明度、动画）

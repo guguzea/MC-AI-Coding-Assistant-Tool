@@ -12,8 +12,8 @@ mappings: yarn
 ## 快速开始
 
 ```java
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
-    Registries.ITEM,
+private static final Item MY_ITEM = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings().maxCount(64))
 );
@@ -41,8 +41,8 @@ IF 自定义行为
 ## 食物
 
 ```java
-private static final RegistrySupplier<Item> MY_APPLE = Registry.register(
-    Registries.ITEM,
+private static final Item MY_APPLE = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "golden_apple"),
     new Item(new Item.Settings()
         .food(new FoodComponent.Builder()

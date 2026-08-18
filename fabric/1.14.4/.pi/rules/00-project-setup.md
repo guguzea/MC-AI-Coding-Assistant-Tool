@@ -138,7 +138,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API（选择性引入，* 表示兼容版本）
-    modImplementation "net.fabric.sdk:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {

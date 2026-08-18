@@ -1,6 +1,6 @@
 ﻿---
 name: mc-datagen
-description: Minecraft Forge 数据生成器。生成方块状态、物品模型、配方、战利品表、标签。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、RecipeProvider
+description: Minecraft Forge 数据生成器。GatherDataEvent、IDataProvider、RecipeProvider、LootTableProvider、LanguageProvider。触发词：DataGen、DataGenerator、LootTables、Recipes、BlockStates、TagProvider、AdvancementProvider、LanguageProvider
 ---
 
 # 数据生成器（Forge 1.15.2）
@@ -12,31 +12,31 @@ description: Minecraft Forge 数据生成器。生成方块状态、物品模型
 ./gradlew runData
 ```
 
-生成内容在 `build/cache/` 或 `src/generated/` 目录，**不要手动编辑**。
+生成内容在 `src/generated/resources/` 目录，**不要手动编辑**。
+**不要** `PackOutput` / `getLookupProvider()` / `addProvider(true, ...)` / `RecipeCategory`。
 
 ## 主类注册
 
 ```java
-// 在 mod 主类中注册 DataProvider
+// net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            generator.addProvider(true, output ->
-                new ModBlockTagsProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, output ->
-                new ModItemTagsProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, new ModRecipeProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, new ModLootTableProvider(output, event.getLookupProvider()));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(generator, helper);
+            generator.addProvider(blockTags);
+            generator.addProvider(new ModItemTagsProvider(generator, blockTags, helper));
+            generator.addProvider(new ModRecipeProvider(generator));
+            generator.addProvider(new ModLootTableProvider(generator));
         }
-
         if (event.includeClient()) {
-            generator.addProvider(true, new ModItemModelProvider(output, event.getExistingFileHelper()));
-            generator.addProvider(true, new ModBlockStateProvider(output, event.getExistingFileHelper()));
+            generator.addProvider(new ModItemModelsProvider(generator, helper));
+            generator.addProvider(new ModBlockStatesProvider(generator, helper));
+            generator.addProvider(new ModLanguageProvider(generator, "en_us"));
         }
     }
 }
@@ -44,89 +44,126 @@ public class DataGenerators {
 
 ## Decision: 选择 Provider
 
-| 数据类型 | Provider 类 |
-|----------|------------|
-| 方块状态变体 | `BlockStateProvider`（自定义子类） |
-| 方块/物品模型 | `ItemModelProvider`（自定义子类） |
-| 配方 | `RecipeProvider` |
-| 战利品表 | `LootTableProvider` |
+| 数据类型 | Provider |
+|----------|----------|
+| 方块状态变体 | `BlockStateProvider#registerStatesAndModels` |
+| 方块/物品模型 | `ItemModelProvider#registerModels` |
+| 配方 | `RecipeProvider`（覆盖 **registerRecipes**） |
+| 战利品表 | `LootTableProvider#getTables` |
+| 进度 | 优先手写 JSON |
+| 语言 | `LanguageProvider#addTranslations` |
 | 方块标签 | `BlockTagsProvider` |
-| 物品标签 | `ItemTagsProvider` |
+| 物品标签 | `ItemTagsProvider`（传入 BlockTagsProvider） |
+
+
 
 ## 配方生成
 
 ```java
-public class ModRecipes extends RecipeProvider {
-    public ModRecipes(PackOutput output, Collection<IConsumer<FinishedRecipe>> consumer) {
-        super(output, consumer);
+// datagen/ModRecipes.java
+public class ModRecipeProvider extends RecipeProvider {
+    public ModRecipeProvider(DataGenerator generator) {
+        super(generator);
     }
 
     @Override
-    protected void registerRecipes() {
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
-            .patternLine("ABA")
-            .patternLine("CDC")
-            .patternLine("ABA")
-            .key('A', Items.DIAMOND)
-            .key('B', Items.EMERALD)
-            .key('C', Items.IRON_INGOT)
-            .addCriterion("has_item", hasItem(ModItems.MY_INGOT.get()))
-            .buildRecipe(consumer);
+            .patternLine(" X ")
+            .patternLine(" X ")
+            .patternLine(" Y ")
+            .key('X', Items.DIAMOND)
+            .key('Y', Items.STICK)
+            .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND))
+            .build(consumer);
+
+        ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
+            .addIngredient(Items.GOLD_INGOT, 3)
+            .addIngredient(Items.DIAMOND)
+            .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT))
+            .build(consumer);
+
+        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
+            .build(consumer);
     }
 }
 ```
 
 ## 方块状态生成
 
+`BlockStateProvider` 构造：`DataGenerator`、`modId`、`ExistingFileHelper`。
+
 ```java
-public class ModBlockStateProvider extends BlockStateProvider {
-    public ModBlockStateProvider(PackOutput output, ExistingFileHelper efh) {
-        super(output, MOD_ID, efh);
+public class ModBlockStatesProvider extends BlockStateProvider {
+    public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper efh) {
+        super(generator, MOD_ID, efh);
     }
 
     @Override
     protected void registerStatesAndModels() {
-        // 无变体方块
         simpleBlock(ModBlocks.MY_BLOCK.get(),
-            models().cubeAll(name(ModBlocks.MY_BLOCK.get()), modLoc("block/my_block"))
+            models().cubeAll(ModBlocks.MY_BLOCK.getId().getPath(), modLoc("block/my_block"))
         );
     }
+}
+```
 
-    private String name(Block block) {
-        return block.getRegistryName().getPath();
+## 物品模型（来自方块）
+
+```java
+public class ModItemModelsProvider extends ItemModelProvider {
+    public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, MOD_ID, helper);
+    }
+
+    @Override
+    protected void registerModels() {
+        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block"));
     }
 }
 ```
 
 ## 战利品表
 
+覆盖 `LootTableProvider#getTables`。完整 `BlockLoot` / 1.14 `Consumer` 示例见 `07-datagen.mdc`。
+不要 `BlockLootSubProvider` / `FeatureFlags`。
+
+## 标签生成
+
+覆盖 **registerTags**。Forge 构造传入 `MOD_ID` 与 `ExistingFileHelper`。完整示例见 `07-datagen.mdc`。
+
+## 语言生成（ModLanguageProvider）
+
 ```java
-public class ModLootTables extends LootTableProvider {
-    public ModLootTables(PackOutput output, Collection<IConsumer<FinishedRecipe>> consumer) {
-        super(output, consumer);
+public class ModLanguageProvider extends LanguageProvider {
+    public ModLanguageProvider(DataGenerator generator, String locale) {
+        super(generator, MOD_ID, locale);
     }
 
     @Override
-    protected List<SubProviderEntry> getTables() {
-        return Collections.singletonList(
-            new SubProviderEntry(ModBlockLootTables::new, LootContextParamSets.BLOCK)
-        );
-    }
-
-    public static class ModBlockLootTables extends LootTableManager.BlockLootTable {
-        @Override
-        protected void addTables() {
-            dropSelf(ModBlocks.MY_BLOCK.get());
-        }
+    protected void addTranslations() {
+        add(ModItems.MY_ITEM.get(), "My Item");
+        add(ModBlocks.MY_BLOCK.get(), "My Block");
+        add("advancement." + MOD_ID + ".custom.root.title", "First Steps");
+        add("advancement." + MOD_ID + ".custom.root.description", "Obtain your first item");
     }
 }
 ```
 
+如需中文：`generator.addProvider(new ModLanguageProvider(generator, "zh_cn"));`
+
 ## 常见错误
 
-- ❌ 手动编辑生成的文件（重新运行会覆盖）
-- ❌ 标签 Provider 依赖顺序错误（标签必须在配方之前）
-- ❌ `modLoc()` vs `mcLoc()`：mod 内容用 `modLoc`，Minecraft 内容用 `mcLoc`
+- ❌ `PackOutput` / `getPackOutput()` — 1.15.2 用 `DataGenerator` 构造 Provider
+- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(IDataProvider)` 无 boolean
+- ❌ `event.getLookupProvider()` / `HolderLookup` — 1.19.3+
+- ❌ `RecipeCategory` — 1.19.3+
+- ❌ 手改 `src/generated/resources/`
+- ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
+- ❌ `modLoc()` 与 `mcLoc()` 用反
+- ❌ 标签 Provider 依赖顺序错误（先 BlockTags，再 ItemTags，再配方）
+- ❌ `ExistingFileHelper` 检查失败（引用的贴图不存在）
 
 ## 参考资料
 
@@ -137,4 +174,4 @@ public class ModLootTables extends LootTableProvider {
 | 配合 Skill | 协作说明 |
 |-----------|---------|
 | `mc-registry` | 注册完成后方可生成对应标签和配方 |
-| `mc-compat-jei` | DataGen 生成的配方自动被 JEI 读取 |
+| `mc-compat-jei` | DataGen 生成的配方自动被 JEI/EMI 读取 |

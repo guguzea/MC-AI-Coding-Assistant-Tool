@@ -55,7 +55,7 @@ public static final SoundType MY_BLOCK_SOUNDS = new SoundType(
     SoundEvents.BLOCK_STONE_FALL
 );
 
-Block.Properties.create(Material.WOOD).sound(MY_BLOCK_SOUNDS)
+new Block(Material.WOOD).sound(MY_BLOCK_SOUNDS)
 ```
 
 ## 播放声音

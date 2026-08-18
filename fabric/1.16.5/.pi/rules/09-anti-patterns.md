@@ -35,7 +35,7 @@ public class ExampleMod implements ModInitializer {
 
 // ✅ 正确
 public class ExampleMod implements ModInitializer {
-    private static final RegistrySupplier<Item> MY_ITEM =
+    private static final Item MY_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override

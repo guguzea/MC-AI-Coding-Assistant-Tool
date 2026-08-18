@@ -12,11 +12,11 @@ description: 04 — 实体开发
 
 ### 核心原则
 
-- 实体必须在 `Registry.register(Registries.ENTITY_TYPE, id, type)` 中注册
+- 实体必须在 `Registry.register(Registry.ENTITY_TYPE, id, type)` 中注册
 - 实体渲染器在客户端单独注册（`EntityRendererRegistry`）
 - 实体类继承 `Entity` 或其子类
 - 实体必须有 `EntityType.Builder`
-- 实体 ID 必须在 `fabric.mod.json` 的 `entrypoints` 中正确配置
+- `fabric.mod.json` 的 `client` entrypoint 写入口类名（不是实体 ID）
 
 ---
 
@@ -26,14 +26,14 @@ description: 04 — 实体开发
 
 ```
 IF 静态实体（不移动、不交互）
-  → EntityType.Builder.of(Entity::new, EntityCategory.MISC)
+  → EntityType.Builder.create(Entity::new, SpawnGroup.MISC)
 
 IF 有行为实体（动物、怪物）
-  → EntityType.Builder.of(MyEntity::new, EntityCategory.CREATURE)
+  → EntityType.Builder.create(MyEntity::new, SpawnGroup.CREATURE)
   → 重写 registerAttributes() 和 init() 方法
 
 IF 需要在服务端和客户端分别初始化
-  → 拆分 FabricMod 为 client/server entrypoints
+  → 拆分 ModInitializer 为 client/server entrypoints
 
 IF 仅客户端渲染（如护甲、held item）
   → 不需要注册实体，使用 LayerRenderer 或FeatureRenderer
@@ -52,16 +52,16 @@ public class MyPigEntity extends CowEntity {
 }
 
 // 2. 在 onInitialize() 中注册
-public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.register(
-    Registries.ENTITY_TYPE,
+public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
+    Registry.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
     EntityType.Builder.create(
         MyPigEntity::new,
-        EntityCategory.CREATURE
+        SpawnGroup.CREATURE
     )
     .dimensions(EntityDimensions.changing(0.9f, 1.4f))  // 宽, 高
-    .maxTrackOffset(10)
-    .trackRangeBlocks(10)
+    .maxTrackingRange(8)
+            .trackingTickInterval(3)
     .build()
 );
 ```
@@ -73,22 +73,20 @@ public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.
 @Override
 public void onInitialize() {
     // 注册属性
-    DefaultAttributeRegistry.register(MY_PIG,
-        DefaultAttributeBuilder.create()
-            .movementSpeed(0.25)
-            .maxHealth(20.0)
+    FabricDefaultAttributeRegistry.register(MY_PIG,
+        MobEntity.createMobAttributes()
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+            .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
             .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 3.0)
     );
 
-    // 注册实体...
-    Registry.register(Registries.ENTITY_TYPE, new Identifier(MOD_ID, "my_pig"), MY_PIG.get());
 }
 ```
 
 ## Spawn Restriction（生成限制）
 
 ```java
-SpawnRestrictionRegistration.mobSpawn().register(
+SpawnRestriction.register(
     MY_PIG,
     SpawnRestriction.Location.ON_GROUND,
     Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,

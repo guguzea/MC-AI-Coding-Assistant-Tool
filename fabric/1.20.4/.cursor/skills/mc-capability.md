@@ -1,53 +1,49 @@
 ---
 name: mc-capability
-description: Fabric Capability 系统。fabric-item-group-api-v1 用于物品分组，fabric-entity-events-v2 用于实体事件。触发词：Capability、FabricCapability
+description: Fabric Attachment 与实体事件。AttachmentRegistry、ServerLivingEntityEvents。触发词：Attachment、AFTER_DEATH、getAttached
 platform: fabric
 version: "1.20.4"
 dependencies: []
 mappings: yarn
 ---
 
-# Capability / 实体事件（Fabric 1.20.4）
+# Attachment 与实体事件（Fabric 1.20.4）
 
-## 概述
+## Attachment（`fabric-attachment-api-v1`）
 
-Fabric 使用 `fabric-entity-events-v2` 模块处理实体相关的 Capability 功能。
-
-## 添加依赖
-
-```groovy
-dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-entity-events-v2:2.2.3+1.20.4"
-}
-```
-
-## 实体事件
+本档已有 Attachment。不要用 NeoForge `entity.getData` / `Registries.ATTACHMENT_TYPE`。
 
 ```java
-// 在 onInitialize() 中
-EntityEvent.TICK.register((entity) -> {
-    if (entity instanceof PlayerEntity) {
-        // 每 tick 执行
-    }
-    return EntityEvent.TickResult.CONTINUE;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(new Identifier(MOD_ID, "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
+```
+
+## 实体生命周期事件
+
+没有 `EntityEvent.TICK`，也没有 `net.fabric.sdk` 坐标。依赖走 `fabric-api`（模块 `fabric-entity-events-v1`）。
+
+```java
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+
+ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+    // 服务端，实体已死亡
 });
 
-EntityEvent.DEATH.register((entity, source) -> {
-    if (entity instanceof PlayerEntity) {
-        LOGGER.info("Player died: " + entity.getName());
-    }
-    return EntityEvent.DeathResult.ALLOW;
+ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> true);
+
+ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> true);
+
+ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+    // 实体加载到世界
 });
 ```
 
-## 常见错误
-
-- ❌在非主线程处理实体事件
-- ❌忘记 `return` 结果
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-entity` | 实体事件用于实体行为修改 |
-| `mc-registry` | 注册实体类型 |
+每 tick 逻辑用 `ServerTickEvents` 或实体自己的 `tick()`。
+物品分组用 `ItemGroupEvents`，不是本 Skill 里的假 Capability API。

@@ -39,8 +39,7 @@ description: 01 — 注册系统
 // ✅ 正确：在 mods.toml 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 mods.toml / mcmod.info 的 modId 不一致（下划线合法；Forge modId 不能用连字符）
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 

@@ -6,7 +6,7 @@
 
 ```java
 // 错误
-public static final Block MY_BLOCK = new Block(Properties.create(Material.STONE));
+public static final Block MY_BLOCK = new Block(Material.STONE);
 ```
 
 **症状**：方块在世界显示为缺失方块（紫色黑色格子）。
@@ -19,7 +19,7 @@ public class ModBlocks {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(
-            new Block(Properties.create(Material.STONE))
+            new Block(Material.STONE)
                 .setRegistryName(MOD_ID, "my_block")
         );
     }

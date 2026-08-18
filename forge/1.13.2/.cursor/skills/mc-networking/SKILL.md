@@ -1,6 +1,6 @@
 ---
 name: mc-networking
-description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleNetworkWrapper。触发词：网络、消息、Network、SimpleNetworkWrapper、PacketDistributor、IMessage
+description: Minecraft Forge 网络通信。SimpleChannel、PacketDistributor、NetworkRegistry.newSimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、PacketBuffer
 platform: forge
 version: "1.13.2"
 dependencies: []
@@ -12,73 +12,58 @@ mappings: mcp
 ## 快速开始
 
 ```java
-// 创建 SimpleNetworkWrapper
-public static final SimpleNetworkWrapper INSTANCE =
-    NetworkRegistry.newSimpleChannel(
+private static final String PROTOCOL_VERSION = "1";
+public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
         new ResourceLocation(MOD_ID, "main"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals
-    );
+);
 
-// 注册消息
+private static int id = 0;
+
 public static void register() {
     INSTANCE.registerMessage(
-        MESSAGE_ID,
-        MyMessage.class,
-        MyMessage::toBytes,
-        MyMessage::new,
-        MyMessageHandler::onMessage
+            id++,
+            MyMessage.class,
+            MyMessage::encode,
+            MyMessage::new,
+            (msg, ctx) -> msg.handle(ctx)
     );
 }
 ```
+
+`newSimpleChannel` 返回 **`SimpleChannel`**。不要 `SimpleNetworkWrapper`，不要 `IMessage`。decoder 必须是 `Function<PacketBuffer, MSG>`（`MyMessage(PacketBuffer)`）。
 
 ## Decision: 选择数据包类型
 
 ```
 IF 客户端 → 服务端（玩家发起）
-  → 在客户端调用 INSTANCE.sendToServer(msg)
+  → INSTANCE.sendToServer(msg)
 
 IF 服务端 → 玩家（精准发送）
-  → INSTANCE.sendTo(msg, player)
+  → INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), msg)
 
 IF 服务端 → 全服广播
-  → INSTANCE.sendToAll(msg)
+  → INSTANCE.send(PacketDistributor.ALL.noArg(), msg)
 
-IF 服务端 → 区域内所有玩家
-  → INSTANCE.sendToAllTracking(msg, entity)
+IF 服务端 → 追踪实体的玩家
+  → INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg)
 ```
 
 ## 消息类结构
 
 ```java
-public class MyMessage implements IMessage {
-    private int value;
+public class MyMessage {
+    private final int value;
 
-    public MyMessage() {}  // 必须有无参构造函数
+    public MyMessage(int value) { this.value = value; }
 
-    public MyMessage(int value) {
-        this.value = value;
-    }
+    public MyMessage(PacketBuffer buf) { this.value = buf.readInt(); }
 
-    @Override
-    public void toBytes(PacketBuffer buf) {
-        buf.writeInt(value);
-    }
+    public void encode(PacketBuffer buf) { buf.writeInt(value); }
 
-    @Override
-    public void fromBytes(PacketBuffer buf) {
-        this.value = buf.readInt();
-    }
-}
-```
-
-## 消息处理器
-
-```java
-public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
-    @Override
-    public IMessage onMessage(MyMessage msg, Supplier<NetworkEvent.Context> ctx) {
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             EntityPlayerMP player = ctx.get().getSender();
             if (player != null) {
@@ -86,15 +71,16 @@ public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
             }
         });
         ctx.get().setPacketHandled(true);
-        return null;
     }
 }
 ```
 
 ## 常见错误
 
-- ❌ 在网络线程直接修改世界：所有游戏逻辑必须在 `enqueueWork()` 回调中执行
-- ❌ 消息 ID 冲突：每个消息 ID 在同一 channel 中必须唯一
+- ❌ `SimpleNetworkWrapper` / `IMessageHandler`
+- ❌ `sendToAll(msg)`（1.12）；本档用 `PacketDistributor.ALL.noArg()`
+- ❌ 在网络线程直接修改世界：必须 `enqueueWork()`
+- ❌ 消息 ID 冲突
 - ❌ `sendToServer()` 在服务端调用
 
 ## 参考资料

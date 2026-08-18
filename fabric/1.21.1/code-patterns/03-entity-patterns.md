@@ -6,21 +6,21 @@
 
 ```java
 // 注册实体类型
-public static final RegistrySupplier<EntityType<MyEntity>> MY_ENTITY = Registry.register(
+public static final EntityType<MyEntity> MY_ENTITY = Registry.register(
     Registries.ENTITY_TYPE,
-    new Identifier(MOD_ID, "my_entity"),
+    Identifier.of(MOD_ID, "my_entity"),
     EntityType.Builder.create(
         MyEntity::new,
-        MobCategory.CREATURE
+        SpawnGroup.CREATURE
     )
     .dimensions(EntityDimensions.changing(0.75f, 0.75f))  // 宽, 高
-    .maxTrackOffset(10)
-    .trackRangeBlocks(10)
+    .maxTrackingRange(8)
+            .trackingTickInterval(3)
     .build()
 );
 
 // 注册属性
-EntityAttributeSupplementRegistry.register(MY_ENTITY.get(), entity ->
+FabricDefaultAttributeRegistry.register(MY_ENTITY,
     MobEntity.createMobAttributes()
         .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
         .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
@@ -28,8 +28,8 @@ EntityAttributeSupplementRegistry.register(MY_ENTITY.get(), entity ->
 );
 
 // 注册生成限制
-SpawnRestrictionRegistration.mobSpawn().register(
-    MY_ENTITY.get(),
+SpawnRestriction.register(
+    MY_ENTITY,
     SpawnRestriction.Location.ON_GROUND,
     Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
     MyEntity::canSpawn
@@ -72,7 +72,7 @@ public class MyEntity extends MobEntity {
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(ExampleMod.MY_ENTITY.get(), (context) ->
+        EntityRendererRegistry.register(ExampleMod.MY_ENTITY, (context) ->
             new AnimalEntityRenderer<>(
                 context.getModelLoader().getModelPart(EntityModelLayers.COW),
                 new CowEntityModel(),
@@ -108,7 +108,7 @@ public class MyAnimalEntity extends AnimalEntity {
     @Override
     @Nullable
     public MyAnimalEntity createChild(ServerWorld world, @Nullable PassiveEntity other) {
-        return ExampleMod.MY_ANIMAL.get().create(world, SpawnReason.BREEDING);
+        return ExampleMod.MY_ANIMAL.create(world, SpawnReason.BREEDING);
     }
 }
 ```
@@ -138,7 +138,7 @@ public class MyRidableEntity extends MobEntity {
 
 ```java
 // 注册属性
-EntityAttributeSupplementRegistry.register(MY_ENTITY.get(), entity ->
+FabricDefaultAttributeRegistry.register(MY_ENTITY,
     MobEntity.createMobAttributes()
         .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
         .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
@@ -148,29 +148,20 @@ EntityAttributeSupplementRegistry.register(MY_ENTITY.get(), entity ->
         .add(EntityAttributes.GENERIC_LUCK, 0.0)
 );
 
-// 额外属性（使用 Fabric API）
-EntityAttributeSupplementRegistry.register(MY_ENTITY.get(), entity ->
-    EntityAttributeModifiers.createVariable(
-        EntityAttributes.GENERIC_MOVEMENT_SPEED,
-        0.1,
-        EntityAttributeModifier.Operation.MULTIPLY_TOTAL
-    )
-);
 ```
 
 ## 实体死亡掉落
 
 ```java
 // 使用 Mixin 或事件监听
-EntityEvents.ENTITY_DEATH.register((entity, source) -> {
-    if (entity.getType() == MY_ENTITY.get() && !entity.world.isClient) {
-        // 在实体死亡位置掉落物品
+ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+    if (entity.getType() == MY_ENTITY) {
         ItemEntity item = new ItemEntity(
-            entity.world,
+            entity.getWorld(),
             entity.getX(), entity.getY(), entity.getZ(),
             new ItemStack(Items.DIAMOND, 1)
         );
-        entity.world.spawnEntity(item);
+        entity.getWorld().spawnEntity(item);
     }
 });
 ```

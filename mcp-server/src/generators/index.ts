@@ -213,10 +213,49 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     };
   }
 
-  if (platform === "fabric_1.21" || platform === "fabric_26.1") {
-    const verLabel = platform === "fabric_26.1" ? "26.1" : "1.21";
+  if (platform === "fabric_1.21") {
     return {
-      code: `// Fabric ${verLabel} — CustomPacketPayload + PayloadTypeRegistry（ServerPlayNetworking）
+      code: `// Fabric 1.21.x — CustomPayload + PayloadTypeRegistry（Yarn）
+package com.example.${mod.value}.network;
+
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
+
+public record ${pascal}Payload(String message) implements CustomPayload {
+    public static final CustomPayload.Id<${pascal}Payload> ID =
+        new CustomPayload.Id<>(Identifier.of("${mod.value}", "${pkt.value}"));
+    public static final PacketCodec<RegistryByteBuf, ${pascal}Payload> CODEC =
+        PacketCodec.tuple(PacketCodecs.STRING, ${pascal}Payload::message, ${pascal}Payload::new);
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return ID;
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.playC2S().register(ID, CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(ID, (payload, context) -> {
+            /* validate on server */
+        });
+    }
+}
+`,
+      warnings: [
+        "Yarn 用 playC2S/playS2C、CustomPayload、net.minecraft.util.Identifier.of。",
+        "不要抄 26.1 的 clientboundPlay / CustomPacketPayload / resources.Identifier。",
+        "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+      ],
+    };
+  }
+
+  if (platform === "fabric_26.1") {
+    return {
+      code: `// Fabric 26.1 — CustomPacketPayload + PayloadTypeRegistry（Mojmap）
 package com.example.${mod.value}.network;
 
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -248,8 +287,9 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 }
 `,
       warnings: [
-        "须带版本后缀 fabric_1.21 / fabric_26.1，禁止只传 fabric。",
-        "依赖 fabric-networking-api；客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+        "26.1 Mojmap：serverboundPlay/clientboundPlay、CustomPacketPayload、Identifier.fromNamespaceAndPath。",
+        "不要把 Yarn 的 playC2S / CustomPayload 抄进 26.1。",
+        "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
       ],
     };
   }
@@ -537,7 +577,7 @@ public class ${pascal}Renderer extends MobRenderer<${pascal}, ${pascal}Model> {
     }
     @Override
     public ResourceLocation getTextureLocation(${pascal} entity) {
-        return ResourceLocation.fromNamespaceAndPath("${mod.value}", "textures/entity/${ent.value}.png");
+        return new ResourceLocation("${mod.value}", "textures/entity/${ent.value}.png");
     }
 }
 `,

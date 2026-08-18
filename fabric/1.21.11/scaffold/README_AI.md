@@ -44,7 +44,7 @@ src/main/
 ```java
 public record MyPayload(int data) implements CustomPayload {
     public static final CustomPayload.Id<MyPayload> ID = 
-        new CustomPayload.Id<>(new Identifier("modid", "my_packet"));
+        new CustomPayload.Id<>(Identifier.of("modid", "my_packet"));
 }
 ```
 
@@ -53,10 +53,15 @@ public record MyPayload(int data) implements CustomPayload {
 1.21.x 使用 Attachment API 替代旧的 Capability：
 
 ```java
-public static final Key<MyData> MY_DATA = Key.create(
-    Registries.ATTACHMENT_TYPE, 
-    new Identifier("modid", "my_data")
-);
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
+
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(Identifier.of("modid", "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
 ```
 
 ## 许可证

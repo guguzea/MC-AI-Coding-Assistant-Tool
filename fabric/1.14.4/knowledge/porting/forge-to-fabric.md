@@ -107,7 +107,7 @@ public class ExampleMod implements ModInitializer {
 }
 ```
 
-> **关键差异**：1.14.4 使用 `Registry.ITEM`（字段），而非 `Registries.ITEM`（枚举，1.17+）。
+> **关键差异**：1.14.4 使用 `Registry.ITEM`（字段），而非 `Registry.ITEM`（枚举，1.17+）。
 
 ---
 ## 步骤 3：注册系统迁移
@@ -117,13 +117,13 @@ public class ExampleMod implements ModInitializer {
 ```java
 // Forge
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(ForgeRegistry.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(Block.Properties.create(Material.STONE)));
 
 // ✅ Fabric 1.14.4
-private static final RegistrySupplier<Block> MY_BLOCK = Registry.register(
+private static final Block MY_BLOCK = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_block"),
     new Block(Block.Settings.copy(Blocks.STONE))  // ✅ 1.14.4 使用 Block.Settings
@@ -182,6 +182,6 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 1. **Java 版本**：Fabric 1.14.4 需要 Java 8（Forge 1.14.4 也需要 Java 8，版本一致）
 2. **Mixin 包名**：确保 `fabric.mixins.json` 的 `package` 与实际包名一致
 3. **客户端/服务端分离**：GUI 和渲染相关必须在 `ClientModInitializer` 中处理
-4. **Registry API**：1.14.4 使用 `Registry.ITEM` 而非 `Registries.ITEM`
+4. **Registry API**：1.14.4 使用 `Registry.ITEM` 而非 `Registry.ITEM`
 5. **Fabric API Maven**：依赖路径为 `net.fabricmc.fabric-api` 而非 `net.fabric.sdk`
 6. **Block.Settings**：1.14.4 使用 `Block.Settings` 而非 `FabricBlockSettings`

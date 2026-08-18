@@ -2,12 +2,12 @@
 name: mc-particle
 description: Fabric 粒子系统。ParticleType、ParticleHandler、DefaultParticleType。触发词：粒子、Particle、ParticleType
 platform: fabric
-version: "1.20.1"
+version: "1.16.5"
 dependencies: []
 mappings: yarn
 ---
 
-# 粒子系统（Fabric 1.20.1）
+# 粒子系统（Fabric 1.16.5）
 
 ## 快速开始
 
@@ -20,9 +20,9 @@ public class MyParticleType extends DefaultParticleType {
 }
 
 // 2. 注册粒子
-private static final RegistrySupplier<ParticleType<?>> MY_PARTICLE =
+private static final ParticleType<?> MY_PARTICLE =
     Registry.register(
-        Registries.PARTICLE_TYPE,
+        Registry.PARTICLE_TYPE,
         new Identifier(MOD_ID, "my_particle"),
         new MyParticleType()
     );
@@ -32,7 +32,7 @@ public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ParticleFactoryRegistry.INSTANCE.register(
-            (ParticleType<MyParticle>) MY_PARTICLE.get(),
+            (ParticleType<MyParticle>) MY_PARTICLE,
             MyParticle.Factory::new
         );
     }

@@ -47,12 +47,12 @@ IF 需要在 mod constructor 执行前引用已注册对象
 |----------|---------------------|------|
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
-| 方块实体 | `ForgeRegistries.BLOCK_ENTITIES` | 注意是 BLOCK_ENTITIES |
+| 方块实体 | `ForgeRegistries.TILE_ENTITIES` | 字段名仍是 TILE_ENTITIES |
 | 实体类型 | `ForgeRegistries.ENTITIES` | 注意是 ENTITIES |
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
-| 创造模式标签 | `IForgeRegistry.CREATIVE_TABS` | |
+| 创造模式标签 | `ItemGroup` | |
 
 ## 注册 ItemBlock
 
@@ -66,61 +66,41 @@ public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_bloc
 
 ## 注册方块实体（BlockEntity）
 
+本档没有 `EntityBlock` / `ServerTicker`。详见 `mc-blockentity`。
+
 ```java
-// 方块实现 EntityBlock
-public class MyBlock extends Block implements EntityBlock {
+public class MyBlock extends Block {
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MyBlockEntity(pos, state);
-    }
+    public boolean hasTileEntity(BlockState state) { return true; }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> ServerTicker<T> getServerTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return type == MY_BLOCK_ENTITY.get() ? MyBlockEntity::tick : null;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> ClientTicker<T> getClientTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return null;
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+        return MY_BE.get().create();
     }
 }
 
-// 注册 BlockEntityType
-public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID);
+public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
-public static final RegistryObject<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
-    BLOCK_ENTITIES.register("my_block",
-        () -> BlockEntityType.Builder.create(MyBlockEntity::new, EXAMPLE_BLOCK.get())
-            .build(null)
+public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
+    TILE_ENTITIES.register("my_be",
+        () -> BlockEntityType.Builder.of(MyBE::new, EXAMPLE_BLOCK.get()).build(null)
     );
 ```
 
 ## 注册实体属性
 
+自定义 `Attribute` 可用 `DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)`（1.16 已有该字段）。
+**原版实体属性映射**在 `FMLCommonSetupEvent.enqueueWork` 里用 `GlobalEntityTypeAttributes.put`，不要只靠 `registerAttributes()`（1.16 实体侧已改为 supplier 工厂）。
+
 ```java
-// 在 mod 构造函数中注册（非 FMLCommonSetupEvent）
 public static final DeferredRegister<Attribute> ATTRIBUTES =
     DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
 
-public static final RegistryObject<Attribute> MY_ATTRIBUTE =
-    ATTRIBUTES.register("my_attribute",
-        () -> new RangedAttribute("attribute.modid.my_attribute", 100.0, 1.0, 1024.0)
-    );
-
-// 在 mod 构造函数中
-ATTRIBUTES.register(modEventBus);
-
-// 实体上使用属性
-@Override
-protected void registerAttributes() {
-    super.registerAttributes();
-    this.getAttribute(ATTRIBUTES.get("my_attribute")).ifPresent(attr ->
-        this.getAttributeMap().registerAttribute(attr)
-    );
-}
+// FMLCommonSetupEvent
+event.enqueueWork(() -> {
+    GlobalEntityTypeAttributes.put(MY_ENTITY.get(), MyEntity.createAttributes().create());
+});
 ```
 
 ## 常见错误

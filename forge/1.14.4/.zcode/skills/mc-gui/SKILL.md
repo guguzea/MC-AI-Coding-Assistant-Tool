@@ -7,7 +7,7 @@ dependencies: []
 mappings: parchment
 ---
 
-# GUI/菜单开发（Forge 1.19.4）
+# GUI/菜单开发（Forge 1.14.4）
 
 ## Decision: 是否需要 Menu
 
@@ -24,15 +24,15 @@ IF 需要物品栏槽位（多格容器）
 
 ## 完整示例：方块交互打开 GUI
 
-### 1. 注册 MenuType
+### 1. 注册 ContainerType
 
 ```java
-public static final DeferredRegister<MenuType<?>> MENUS =
-    DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
+public static final DeferredRegister<ContainerType<?>> MENUS =
+    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
 
-public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
+public static final RegistryObject<ContainerType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
+        () -> IForgeContainerType.create(MyMenu::new)
     );
 
 // 在 mod 构造函数中
@@ -99,28 +99,22 @@ public class MyMenu extends AbstractContainerMenu {
 }
 ```
 
-### 3. 方块绑定 MenuProvider
+### 3. 方块打开 GUI
+
+本档用 `NetworkHooks.openGui`，不要 `openScreen`（邻版）。不要 `EntityBlock`。
 
 ```java
-public class MyBlock extends Block implements EntityBlock {
+public class MyBlock extends Block {
     @Override
-    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        return new SimpleMenuProvider(
-            (id, inv, player) -> new MyMenu(id, inv, player),
-            Component.translatable("block." + MOD_ID + ".my_block")
-        );
-    }
-
-    @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos,
-            Player player, InteractionHand hand, BlockHitResult result) {
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            MenuProvider p = state.getMenuProvider(level, pos);
-            if (p != null) {
-                NetworkHooks.openScreen(serverPlayer, p);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos,
+            PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isRemote && player instanceof ServerPlayerEntity) {
+            TileEntity te = world.getTileEntity(pos);
+            if (te instanceof INamedContainerProvider) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) te, pos);
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return ActionResultType.SUCCESS;
     }
 }
 ```
@@ -128,12 +122,12 @@ public class MyBlock extends Block implements EntityBlock {
 ### 4. 客户端 Screen 注册
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
-    public static void init(FMLClientSetupEvent event) {
+    public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            MenuScreens.register(MY_MENU.get(), MyScreen::new)
+            ScreenManager.registerFactory(MY_MENU.get(), MyScreen::new)
         );
     }
 }

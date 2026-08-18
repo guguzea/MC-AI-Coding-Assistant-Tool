@@ -31,7 +31,7 @@ public class ModBlocks {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(
-            new Block(Block.Properties.create(Material.ROCK))
+            new Block(Material.ROCK)
                 .setRegistryName(MOD_ID, "my_block")
         );
     }

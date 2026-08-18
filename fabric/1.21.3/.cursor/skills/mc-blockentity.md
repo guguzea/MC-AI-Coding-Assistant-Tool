@@ -2,12 +2,12 @@
 name: mc-blockentity
 description: Fabric 方块实体开发。BlockEntity、BlockEntityType、DefaultedList。触发词：BlockEntity、BlockEntityType、NbtCompound
 platform: fabric
-version: "1.20.1"
+version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
 
-# 方块实体（Fabric 1.20.1）
+# 方块实体（Fabric 1.21.3）
 
 ## 快速开始
 
@@ -43,11 +43,11 @@ public class MyBlock extends Block implements BlockEntityProvider {
 }
 
 // 3. 注册 BlockEntityType
-private static final RegistrySupplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
+private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_block_entity"),
-        BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK.get())
+        BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK)
             .build(null)
     );
 ```

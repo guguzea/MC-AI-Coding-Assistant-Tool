@@ -43,17 +43,17 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟。
 
-**正确方案**：使用 `CompoundNBT` 或自定义 `PacketBuffer` 批量序列化。
+**正确方案**：使用 `CompoundNBT` 或自定义 `FriendlyByteBuf` 批量序列化。
 
 ```java
-public class SyncAllDataMessage implements IMessage {
+public class SyncAllDataMessage {
     private CompoundNBT data;
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeCompoundTag(data);
     }
 
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         data = buf.readCompoundTag();
     }
 }
@@ -125,7 +125,9 @@ INSTANCE.registerMessage(0, MyMessage2.class, ...); // ❌ ID 冲突
 **正确方案**：使用统一的 ID 管理器。
 
 ```java
-public static int id(String name) {
-    return NetworkRegistry.chooseIdealPayloadId(id("main"), name);
+private static int nextDiscriminator = 0;
+
+public static int nextId() {
+    return nextDiscriminator++;
 }
 ```

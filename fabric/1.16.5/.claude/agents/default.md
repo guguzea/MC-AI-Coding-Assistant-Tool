@@ -66,9 +66,9 @@ Decision: 本规则集是否适用？
 | 注册 API | `Registry.ITEM`（VanillaRegistry 静态字段） | `Registry.register(Registry.ITEM, id, item)` |
 | Mod 入口 | `@Mod` 注解 + `FMLJavaModLoadingContext` | `ModInitializer` 接口 + `fabric.mod.json` entrypoints |
 | Mixin | 需配置 `org.spongepowered.mixin` 插件 | **需要显式配置 Mixin Plugin**（1.16.x）|
-| Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（方法名如 `method_12345`）|
+| Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（可读名如 `getHealth()`；`method_12345` 是 Intermediary）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
-| 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`EventDispatcher`）|
+| 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`net.fabricmc.fabric.api.event.Event`，如 `AttackBlockCallback`）|
 
 ---
 
@@ -82,7 +82,7 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
 
 // ❌ 1.16.5 错误写法（这是 1.17+ 的 API）
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ```
 
 ---
@@ -96,7 +96,7 @@ Yarn 使用清晰的命名风格：
 | 类名 | `ClassName` | `MinecraftClient`、`ItemStack` |
 | 方法名 | `camelCase` | `getHealth()`、`setPosition()` |
 | 字段名 | `camelCase` | `inventory`、`health` |
-| 混淆保留 | `class_NNNNN` / `method_NNNNN` | `class_12345` — 仅在 Yarn 未解析时出现 |
+| Intermediary（不是 Yarn） | `class_NNNNN` / `method_NNNNN` | Yarn 未映射时才会看到；不要当 Yarn 名用 |
 
 > **注意**：Forge 的 MCP 映射风格不同（如 `func_XXXXX`、`field_XXXXX`），混用会出错。
 
@@ -222,7 +222,7 @@ fabric-mod/
 
 ### 命名规范
 
-- `modId`：全小写，无 `-`，无空格
+- `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
 - 注册名称：`new Identifier(MOD_ID, "registry_name")`
 - 资源路径：`assets/{modid}/...` 全小写
 

@@ -25,7 +25,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ```
 IF 需要持久的 extra data（如机器存储、村民记忆）
-  → 方块实体（BlockEntity）→ 实现 EntityBlock 接口
+  → 方块实体（BlockEntity）→ 重写 hasTileEntity() + createTileEntity()
 
 IF 只是静态显示（无状态）
   → 普通方块
@@ -57,21 +57,18 @@ IF 方块不应出现在物品栏（如空气、光源方块）
   → 不注册 ItemBlock
 ```
 
-## EntityBlock 方块
+## 带 BlockEntity 的方块
+
+本档没有 `EntityBlock` / `ServerTicker`。详见 `mc-blockentity`。
 
 ```java
-public class MyMachineBlock extends Block implements EntityBlock {
-    // 返回新的方块实体实例
+public class MyMachineBlock extends Block {
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MyMachineBlockEntity(pos, state);
-    }
+    public boolean hasTileEntity(BlockState state) { return true; }
 
-    // 返回方块刻处理器（如果需要定时逻辑）
-    @Nullable
     @Override
-    public <T extends BlockEntity> ServerTicker<T> getServerTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return type == MyMachineBlockEntity.TYPE.get() ? MyMachineBlockEntity::tick : null;
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+        return MyMachineBE.TYPE.get().create();
     }
 }
 ```
@@ -79,18 +76,16 @@ public class MyMachineBlock extends Block implements EntityBlock {
 ## BlockEntity 基础结构
 
 ```java
-public class MyMachineBlockEntity extends BlockEntity {
+public class MyMachineBlockEntity extends BlockEntity implements ITickableTileEntity {
     private int progress = 0;
 
-    public MyMachineBlockEntity(BlockPos pos, BlockState state) {
-        super(MyMachineBlockEntity.TYPE.get(), pos, state);
+    public MyMachineBlockEntity() {
+        super(MyMachineBlockEntity.TYPE.get());
     }
 
-    // 刻处理逻辑（服务端）
-    public static <T extends BlockEntity> void tick(World world, BlockPos pos,
-            BlockState state, T blockEntity) {
-        if (world.isRemote) return;
-        // 定时逻辑...
+    @Override
+    public void tick() {
+        if (level == null || level.isClientSide) return;
     }
 
     // 同步（服务端 → 客户端）

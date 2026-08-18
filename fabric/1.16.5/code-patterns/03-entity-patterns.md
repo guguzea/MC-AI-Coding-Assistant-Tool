@@ -1,4 +1,4 @@
-# 实体模式（Fabric 1.20.1）
+# 实体模式（Fabric 1.16.5）
 
 ## 模式 1：基础生物实体
 
@@ -16,25 +16,25 @@ public class MyCowEntity extends CowEntity {
 }
 
 // 注册
-private static final RegistrySupplier<EntityType<MyCowEntity>> MY_COW =
+private static final EntityType<MyCowEntity> MY_COW =
     Registry.register(
-        Registries.ENTITY_TYPE,
+        Registry.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_cow"),
-        EntityType.Builder.create(MyCowEntity::new, MobCategory.CREATURE)
+        EntityType.Builder.create(MyCowEntity::new, SpawnGroup.CREATURE)
             .dimensions(EntityDimensions.changing(0.9f, 1.4f))
-            .maxTrackOffset(10)
-            .trackRangeBlocks(10)
+            .maxTrackingRange(8)
+            .trackingTickInterval(3)
             .build()
     );
 
 // 在 onInitialize() 中注册属性
-EntityAttributeRegistry.register(MY_COW,
+FabricDefaultAttributeRegistry.register(MY_COW,
     MobEntity.createMobAttributes()
         .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
         .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25));
 
 // 生成限制
-SpawnRestrictionRegistration.mobSpawn().register(
+SpawnRestriction.register(
     MY_COW,
     SpawnRestriction.Location.ON_GROUND,
     Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
@@ -55,7 +55,7 @@ SpawnRestrictionRegistration.mobSpawn().register(
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_COW.get(), (context) ->
+        EntityRendererRegistry.register(MY_COW, (context) ->
             new AnimalEntityRenderer<>(
                 context.getModelLoader().getModelPart(EntityModelLayers.COW),
                 new CowEntityModel(),

@@ -1,4 +1,4 @@
-# Yarn Mappings 反模式（Fabric 1.20.1）
+# Yarn Mappings 反模式（Fabric 1.21.3）
 
 ## 症状
 

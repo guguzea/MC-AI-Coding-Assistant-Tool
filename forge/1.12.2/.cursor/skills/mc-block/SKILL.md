@@ -15,7 +15,7 @@ mappings: mcp
 // 方块类
 public class MyBlock extends Block {
     public MyBlock() {
-        super(Block.Properties.create(Material.ROCK)
+        super(new Block(Material.ROCK)
             .hardnessAndResistance(1.5f, 6.0f)
             .harvestLevel("pickaxe", 0)
         );
@@ -50,7 +50,7 @@ IF 需要流体
 ## Block.Properties 常用配置
 
 ```java
-Block.Properties.create(Material.WOOD)
+new Block(Material.WOOD)
     .hardnessAndResistance(1.5f, 6.0f)    // 硬度和抗爆性
     .harvestLevel("pickaxe", 0)            // 挖掘等级
     .harvestTool("pickaxe")                // 工具类型

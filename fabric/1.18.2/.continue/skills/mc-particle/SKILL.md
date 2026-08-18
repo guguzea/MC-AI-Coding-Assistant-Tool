@@ -20,9 +20,9 @@ public class MyParticleType extends DefaultParticleType {
 }
 
 // 2. 注册粒子
-private static final RegistrySupplier<ParticleType<?>> MY_PARTICLE =
+private static final ParticleType<?> MY_PARTICLE =
     Registry.register(
-        Registries.PARTICLE_TYPE,
+        Registry.PARTICLE_TYPE,
         new Identifier(MOD_ID, "my_particle"),
         new MyParticleType()
     );
@@ -32,7 +32,7 @@ public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ParticleFactoryRegistry.INSTANCE.register(
-            (ParticleType<MyParticle>) MY_PARTICLE.get(),
+            (ParticleType<MyParticle>) MY_PARTICLE,
             MyParticle.Factory::new
         );
     }

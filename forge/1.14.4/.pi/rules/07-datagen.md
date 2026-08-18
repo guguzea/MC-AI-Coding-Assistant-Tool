@@ -14,7 +14,12 @@ description: 07 — 数据生成器
 
 - 数据生成（DataGen）在 Gradle 任务 `./gradlew runData` 或 `build` 期间执行
 - **禁止**在运行时修改数据生成器输出
-- 生成的 JSON 文件放在 `src/generated/resources/`（资源包）或 `src/main/data/`（数据包）
+- 生成的 JSON 放在 `src/generated/resources/`（ForgeGradle 配置的输出目录），不要手改
+- Provider 实现 **`IDataProvider`**；构造函数吃 **`DataGenerator`**，**不要** `PackOutput` / `getPackOutput()`（那是 1.19.3+）
+- `DataGenerator#addProvider(IDataProvider)`（1.18 文档写 `DataProvider`），**不要** `addProvider(true, ...)`（1.19.2+）
+- **不要** `event.getLookupProvider()` / `HolderLookup`（1.19.3+）
+- GatherDataEvent：`net.minecraftforge.fml.event.lifecycle.GatherDataEvent`
+- 官方文档：`IDataProvider`；`RecipeProvider#registerRecipes`；`TagsProvider#registerTags`；`ItemModelProvider#registerModels`；`BlockStateProvider#registerStatesAndModels`；`LanguageProvider#addTranslations`；`LootTableProvider#getTables`
 
 ### 目录结构
 
@@ -33,23 +38,25 @@ src/main/java/
 ### DataGenerators 入口类规范
 
 ```java
+// net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModItemTagsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModRecipeProvider(output));
-            generator.addProvider(true, new ModLootTableProvider(output));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(generator, helper);
+            generator.addProvider(blockTags);
+            generator.addProvider(new ModItemTagsProvider(generator, blockTags, helper));
+            generator.addProvider(new ModRecipeProvider(generator));
+            generator.addProvider(new ModLootTableProvider(generator));
         }
         if (event.includeClient()) {
-            generator.addProvider(true, new ModItemModelsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModBlockStatesProvider(output, existingFileHelper));
+            generator.addProvider(new ModItemModelsProvider(generator, helper));
+            generator.addProvider(new ModBlockStatesProvider(generator, helper));
+            generator.addProvider(new ModLanguageProvider(generator, "en_us"));
         }
     }
 }
@@ -57,17 +64,17 @@ public class DataGenerators {
 
 ### RecipeProvider 使用规范
 
-- 使用 `ShapedRecipes` 和 `ShapelessRecipes` 创建配方
-- 熔炉配方使用 `FurnaceRecipe`
-- 配方结果自动注册，**不需要**手动调用注册方法
-- 配方 ID 格式：`minecraft:...`（原版）或 `{modid}:...`（mod）
-- 必须调用 `.setRegistryName()` 保存
+- 覆盖 `registerRecipes(Consumer<IFinishedRecipe>)`
+- `ShapedRecipeBuilder.shapedRecipe` + `patternLine` + `key` + `addCriterion` + `build`
+- 无序：`ShapelessRecipeBuilder.shapelessRecipe` + `addIngredient`
+- 熔炉：`CookingRecipeBuilder.smelting`，**不要** `FurnaceRecipe.Builder`
+- **不要** `RecipeCategory`，**不要** `.save()`（本档是 `build(consumer)`）
+- **不要** `setRegistryName()` 保存配方
 
 ### LootTableProvider 使用规范
 
-- 使用 `LootTable` 和 `LootPool` 创建战利品表
-- `LootPool.Builder` 添加掉落池，`LootEntryItem` 添加物品掉落
-- `LootFunction` 应用修饰器（如 `SetCount`、`EnchantWithLevels`）
+- 覆盖 `#getTables`
+- **不要** `BlockLootSubProvider` / `FeatureFlags` / `LootTableProvider.SubProviderEntry`（1.20+）
 
 ---
 
@@ -78,12 +85,11 @@ public class DataGenerators {
 ```
 IF 生成合成配方
   → 使用 RecipeProvider 子类
-  → ShapedRecipeBuilder / ShapelessRecipeBuilder
+  → ShapedRecipeBuilder / ShapelessRecipeBuilder / CookingRecipeBuilder
   → 放到 data/{modid}/recipes/
 
 IF 生成战利品表
-  → 使用 LootTableProvider
-  → LootPool.Builder
+  → 使用 LootTableProvider（覆盖 #getTables）
   → 放到 data/{modid}/loot_tables/blocks/
 
 IF 生成方块标签（哪些方块可被某工具挖掘）
@@ -91,63 +97,60 @@ IF 生成方块标签（哪些方块可被某工具挖掘）
   → 放到 data/{modid}/tags/blocks/
 
 IF 生成物品标签
-  → 使用 ItemTagsProvider
+  → 使用 ItemTagsProvider（构造要传入 BlockTagsProvider）
   → 放到 data/{modid}/tags/items/
 
-IF 生成进度/ advancements
-  → 使用 AdvancementProvider
-  → 放到 data/{modid}/advancements/
+IF 生成进度 / advancements
+  → 1.14 原版 AdvancementProvider 仅原版进度；优先手写 JSON 到 data/{modid}/advancements/
 
 IF 生成物品模型（JSON）
-  → 使用 ItemModelProvider
+  → 使用 ItemModelProvider#registerModels
   → 放到 assets/{modid}/models/item/
 
 IF 生成方块状态（BlockState JSON）
-  → 使用 BlockStateProvider
+  → 使用 BlockStateProvider#registerStatesAndModels
   → 放到 assets/{modid}/blockstates/
+
+IF 生成语言文件
+  → 使用 LanguageProvider#addTranslations
+  → 放到 assets/{modid}/lang/
 ```
 
 ### Decision: 配方类型选择
 
 ```
 IF 配方有固定形状（工具、武器等）
-  → ShapedRecipeBuilder
-  → 定义行和列：.patternLine("XXX").patternLine(" X ").patternLine(" X ")
+  → ShapedRecipeBuilder.shapedRecipe
+  → 定义行：.patternLine("XXX").patternLine(" X ").patternLine(" X ")
 
 IF 配方成分无固定位置（药水、染料混合等）
-  → ShapelessRecipeBuilder
+  → ShapelessRecipeBuilder.shapelessRecipe
   → 用 .addIngredient() 添加成分
 
 IF 熔炉烧制
-  → 直接创建 FurnaceRecipe
-  → 使用 .setRegistryName() 注册
+  → CookingRecipeBuilder.smelting(Ingredient, ItemLike, float, int)
 
 IF 用自定义工作台配方
-  → 需要实现 IRecipe 或扩展现有配方
-  → 需要自定义 Container 和 GUI
+  → 实现 IRecipe + 自定义 Container 和 GUI
 ```
 
 ### Decision: 战利品表掉落方式
 
 ```
 IF 固定掉落某物品
-  → LootEntryItem.of(ItemStack)
-  → .addFunction(SetCount.setCount(Function))
+  → ItemLootEntry / LootItem + SetCount
 
 IF 掉落方块本身（方块被破坏时）
-  → dropSelf()
-  → 推荐用 DataGen 的 blockLootTables
+  → LootTable.builder + ItemLootEntry.builder（本档还没有 BlockLoot#dropSelf）
 
 IF 有条件的掉落（附魔工具挖掘等）
-  → LootFunction
-  → MatchTool + enchantment
+  → MatchTool + enchantment 条件
 
 IF 随机数量掉落
-  → RandomValueRange
-  → SetCount.setCount with RandomValueRange
+  → SetCount + RandomValueRange / UniformGenerator（以本版 mappings 为准）
 
 IF 掉落多个物品
-  → 多个 LootEntry
+  → 多个 LootPool / LootEntry
 ```
 
 ---
@@ -155,24 +158,25 @@ IF 掉落多个物品
 ## 示例：ModDataGenerators 入口
 
 ```java
-// datagen/ModDataGenerators.java
+// net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModItemTagsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModRecipeProvider(output));
-            generator.addProvider(true, new ModLootTableProvider(output));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(generator, helper);
+            generator.addProvider(blockTags);
+            generator.addProvider(new ModItemTagsProvider(generator, blockTags, helper));
+            generator.addProvider(new ModRecipeProvider(generator));
+            generator.addProvider(new ModLootTableProvider(generator));
         }
         if (event.includeClient()) {
-            generator.addProvider(true, new ModItemModelsProvider(output, existingFileHelper));
-            generator.addProvider(true, new ModBlockStatesProvider(output, existingFileHelper));
+            generator.addProvider(new ModItemModelsProvider(generator, helper));
+            generator.addProvider(new ModBlockStatesProvider(generator, helper));
+            generator.addProvider(new ModLanguageProvider(generator, "en_us"));
         }
     }
 }
@@ -182,9 +186,13 @@ public class DataGenerators {
 
 ```java
 // datagen/ModRecipes.java
-public class ModRecipes {
-    public static void register(IForgeRegistry<IRecipe<?>> registry) {
-        // 有形状配方
+public class ModRecipeProvider extends RecipeProvider {
+    public ModRecipeProvider(DataGenerator generator) {
+        super(generator);
+    }
+
+    @Override
+    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapedRecipeBuilder.shapedRecipe(ModItems.MY_ITEM.get())
             .patternLine(" X ")
             .patternLine(" X ")
@@ -192,21 +200,17 @@ public class ModRecipes {
             .key('X', Items.DIAMOND)
             .key('Y', Items.STICK)
             .addCriterion("has_diamond", InventoryChangeTrigger.Instance.hasItems(Items.DIAMOND))
-            .build(consumer, new ResourceLocation(MOD_ID, "my_item"));
+            .build(consumer);
 
-        // 无形状配方
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get())
             .addIngredient(Items.GOLD_INGOT, 3)
             .addIngredient(Items.DIAMOND)
             .addCriterion("has_gold", InventoryChangeTrigger.Instance.hasItems(Items.GOLD_INGOT))
-            .build(consumer, new ResourceLocation(MOD_ID, "other_item"));
+            .build(consumer);
 
-        // 熔炉配方
-        FurnaceRecipe.Builder()
-            .addInput(Items.DIRT)
-            .addOutput(Items.DIAMOND)
-            .addExperience(0.1f)
-            .build(consumer, new ResourceLocation(MOD_ID, "dirt_to_diamond"));
+        CookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .addCriterion("has_cobblestone", InventoryChangeTrigger.Instance.hasItems(Items.COBBLESTONE))
+            .build(consumer);
     }
 }
 ```
@@ -215,24 +219,32 @@ public class ModRecipes {
 
 ```java
 // datagen/ModLootTables.java
-public class ModLootTables {
-    public static void register(LootTableList list) {
-        // 简单掉落：破坏方块后掉落该方块物品
-        LootTables.register(list, new ResourceLocation(MOD_ID, "my_block"),
+public class ModLootTableProvider extends LootTableProvider {
+    public ModLootTableProvider(DataGenerator generator) {
+        super(generator);
+    }
+
+    @Override
+    protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
+        return ImmutableList.of(Pair.of(ModBlockLootTables::new, LootParameterSets.BLOCK));
+    }
+}
+
+public class ModBlockLootTables implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+    @Override
+    public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+        consumer.accept(
+            ModBlocks.MY_BLOCK.get().getLootTable(),
             LootTable.builder().addLootPool(
-                LootPool.builder().addEntry(
-                    ItemLootEntry.builder(ModBlocks.MY_BLOCK.get())
-                )
+                LootPool.builder().addEntry(ItemLootEntry.builder(ModBlocks.MY_BLOCK.get()))
             )
         );
-
-        // 自定义掉落
-        LootTables.register(list, new ResourceLocation(MOD_ID, "special_block"),
+        consumer.accept(
+            ModBlocks.SPECIAL_BLOCK.get().getLootTable(),
             LootTable.builder().addLootPool(
                 LootPool.builder().addEntry(
                     ItemLootEntry.builder(ModItems.SPECIAL_DROP.get())
                         .addFunction(SetCount.setCount(RandomValueRange.of(1, 3)))
-                        .addFunction(EnchantWithLevels.setEnchantLevel(RandomValueRange.of(1, 3)))
                 )
             )
         );
@@ -240,21 +252,91 @@ public class ModLootTables {
 }
 ```
 
+不要 `LootTables.register` / `LootTableList` / `FurnaceRecipe.Builder`。覆盖 `LootTableProvider#getTables`。
+
 ## 示例：方块标签
 
 ```java
-// datagen/ModBlockTagsProvider.java
 public class ModBlockTagsProvider extends BlockTagsProvider {
-    public ModBlockTagsProvider(PackOutput output, ExistingFileHelper helper) {
-        super(output, helper);
+    public ModBlockTagsProvider(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, MOD_ID, helper);
     }
 
     @Override
     protected void registerTags() {
-        getBuilder(BlockTags.MINEABLE_PICKAXE)
-            .add(ModBlocks.MY_BLOCK.get());
+        getBuilder(BlockTags.LOGS).add(ModBlocks.MY_BLOCK.get());
+    }
+}
+
+public class ModItemTagsProvider extends ItemTagsProvider {
+    public ModItemTagsProvider(DataGenerator generator, BlockTagsProvider blockTags, ExistingFileHelper helper) {
+        super(generator, blockTags, MOD_ID, helper);
+    }
+
+    @Override
+    protected void registerTags() {
+        getBuilder(ItemTags.LOGS).add(ModItems.MY_ITEM.get());
     }
 }
 ```
 
-> 注意：标签需要正确的命名空间。在 Forge 1.14.4 中，`#minecraft:xxx` 是原版标签，`#forge:xxx` 是 Forge 通用标签，`#{modid}:xxx` 是 mod 专属标签。
+> 注意：`#minecraft:xxx` 是原版标签，`#forge:xxx` 是 Forge 通用标签，`#{modid}:xxx` 是 mod 专属标签。不要 `BlockTags.MINEABLE_WITH_PICKAXE`（1.17+）。
+
+## 示例：模型 / 语言
+
+```java
+public class ModItemModelsProvider extends ItemModelProvider {
+    public ModItemModelsProvider(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, MOD_ID, helper);
+    }
+
+    @Override
+    protected void registerModels() {
+        withExistingParent(ModItems.MY_BLOCK_ITEM.getId().getPath(), modLoc("block/my_block"));
+        singleTexture(ModItems.MY_ITEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + ModItems.MY_ITEM.getId().getPath()));
+    }
+}
+
+public class ModBlockStatesProvider extends BlockStateProvider {
+    public ModBlockStatesProvider(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, MOD_ID, helper);
+    }
+
+    @Override
+    protected void registerStatesAndModels() {
+        simpleBlock(ModBlocks.MY_BLOCK.get());
+    }
+}
+
+public class ModLanguageProvider extends LanguageProvider {
+    public ModLanguageProvider(DataGenerator generator, String locale) {
+        super(generator, MOD_ID, locale);
+    }
+
+    @Override
+    protected void addTranslations() {
+        add(ModItems.MY_ITEM.get(), "My Item");
+        add(ModBlocks.MY_BLOCK.get(), "My Block");
+        add("advancement." + MOD_ID + ".custom.root.title", "First Steps");
+        add("advancement." + MOD_ID + ".custom.root.description", "Obtain your first item");
+    }
+}
+```
+
+## 常见错误
+
+- ❌ `PackOutput` / `getPackOutput()` — 1.14.4 用 `DataGenerator` 构造 Provider
+- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(IDataProvider)` 无 boolean
+- ❌ `event.getLookupProvider()` / `HolderLookup` — 1.19.3+
+- ❌ `RecipeCategory` — 1.19.3+
+- ❌ 手改 `src/generated/resources/`
+- ❌ `FurnaceRecipe.Builder` / `setRegistryName` 当 DataGen 保存配方
+- ❌ `modLoc()` 与 `mcLoc()` 用反
+- ❌ `BlockTags.MINEABLE_*` — 1.17+
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | 注册完成后方可生成对应标签和配方 |
+| `mc-compat-jei` | DataGen 生成的配方自动被 JEI/EMI 读取 |

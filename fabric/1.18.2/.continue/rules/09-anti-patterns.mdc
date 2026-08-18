@@ -20,19 +20,19 @@
 
 ```java
 // ❌ 错误
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM = new Item(new Item.Settings());
 
     // 类加载时注册，但应在 onInitialize() 中
     static {
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), MY_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), MY_ITEM);
     }
 }
 
 // ✅ 正确
-public class ExampleMod implements FabricMod {
-    private static final RegistrySupplier<Item> MY_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
+public class ExampleMod implements ModInitializer {
+    private static final Item MY_ITEM =
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override
     public void onInitialize() {
@@ -45,13 +45,13 @@ public class ExampleMod implements FabricMod {
 
 ```java
 // ❌ 错误
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 不同名！
+Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 不同名！
     new BlockItem(myBlock, new Item.Settings()));
 
 // ✅ 正确：使用完全相同的 Identifier
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
+Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
     new BlockItem(myBlock, new Item.Settings()));
 ```
 
@@ -220,7 +220,7 @@ dependencies {
 
 ```java
 // ❌ 错误：MinecraftClient 仅存在于客户端
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         MinecraftClient client = MinecraftClient.getInstance();  // 服务端崩溃！
@@ -261,5 +261,5 @@ public class MyMixin { ... }
 | `Mixin did not apply` | mixin 包名不匹配或 `fabric.mixins.json` 配置错误 | 检查 package 和配置 |
 | `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.18.2+build.4` |
 | `FabricLoader not found` | 依赖缺失 | 检查 `fabricloader` 在 depends 中 |
-| `No such registry` | Registry 类型错误 | 确认 `Registries.XXX` 正确 |
+| `No such registry` | Registry 类型错误 | 确认 `Registry.XXX` 正确 |
 | `duplicate id` | 注册 ID 重复 | 检查 mod ID 是否冲突 |

@@ -11,7 +11,7 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.16.5 |
-| 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 11**（Forge 1.16.5 推荐）/ Java 16 |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
 | Mappings | **Parchment**（`1.16.5-2021.06.09`，带参数名） |
@@ -132,6 +132,7 @@ src/main/java/
 1. 先读 `01-registry.mdc` 确认注册方式
 2. 再读对应主题的规则文件（如 `02-block.mdc`）
 3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
+4. 最后运行 `validate_project` 自查（`node mcp-server/dist/cli.js validate_project --project .`，或 MCP 工具 `validate_project`）
 
 ---
 
@@ -144,6 +145,6 @@ src/main/java/
 | Mappings | Parchment（推荐） | MCP / Parchment | 1.16.5 推荐 Parchment |
 | pack_format | **8** | 15+ | 资源包格式不同 |
 | DataGen | 存在但 API 简化 | 完整 DataGen | 1.16.5 DataGen 有限 |
-| Fluid 注册 | `FluidType` | `FluidType` | 相同 |
+| Fluid 注册 | `FluidAttributes` | `FluidType`（1.19+） | 本档无 FluidType |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

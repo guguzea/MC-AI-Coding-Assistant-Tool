@@ -14,15 +14,15 @@ mappings: mcp
 ```java
 // 注册 EntityType（参见 mc-registry Skill）
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
-    () -> EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+    () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
         .size(0.6f, 1.8f)
-        .trackerTrackingRange(8)
-        .updateInterval(3)
-        .fireImmune()
-    .build("my_entity")
+        .setTrackingRange(8)
+        .setUpdateInterval(3)
+        .immuneToFire()
+        .build("")
 );
 
 // 在 mod 构造函数中

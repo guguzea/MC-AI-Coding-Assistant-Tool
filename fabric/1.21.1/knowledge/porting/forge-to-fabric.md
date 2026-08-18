@@ -8,7 +8,7 @@
 | 事件系统 | `@SubscribeEvent` + EventBus | Event Callback |
 | 映射 | MCP / Parchment | Yarn |
 | 加载器 | `FMLLoadingPlugin` | `FabricLoader` |
-| 入口点 | `@Mod` | `FabricMod`/`ClientModInitializer` |
+| 入口点 | `@Mod` | `ModInitializer`/`ClientModInitializer` |
 | Mixin | 单独引入 | 内置 |
 
 ## 移植步骤
@@ -24,7 +24,7 @@ src/main/java/com/example/
 **Fabric**:
 ```
 src/main/java/com/example/
-├── ExampleMod.java         // implements FabricMod
+├── ExampleMod.java         // implements ModInitializer
 └── ExampleModClient.java  // implements ClientModInitializer (如需要)
 ```
 
@@ -81,7 +81,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 
 **Fabric**:
 ```java
-private static final RegistrySupplier<Item> MY_ITEM =
+private static final Item MY_ITEM =
     Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 ```

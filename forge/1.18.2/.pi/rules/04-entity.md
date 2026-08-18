@@ -167,7 +167,7 @@ public class MyEntity extends LivingEntity {
 // registry/ModEntities.java
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
-        DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+        DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITIES.register("my_entity", () ->

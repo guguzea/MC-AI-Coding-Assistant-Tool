@@ -2,12 +2,12 @@
 name: mc-mixin
 description: Fabric Mixin 注入。Loom 一流支持，fabric.mixins.json，@Mixin、@Inject、@At。触发词：Mixin、@Inject、@At、fabric.mixins.json、AccessWidener
 platform: fabric
-version: "1.20.1"
+version: "1.16.5"
 dependencies: []
 mappings: yarn
 ---
 
-# Mixin 注入（Fabric 1.20.1）
+# Mixin 注入（Fabric 1.16.5）
 
 ## 快速开始
 

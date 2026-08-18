@@ -1,53 +1,34 @@
 ---
 name: mc-capability
-description: Fabric Capability 系统。fabric-item-group-api-v1 用于物品分组，fabric-entity-events-v2 用于实体事件。触发词：Capability、FabricCapability
+description: Fabric 1.14.4 实体事件。AttackEntityCallback、ServerEntityEvents。触发词：实体事件、AttackEntityCallback
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# Capability / 实体事件（Fabric 1.20.1）
+# 实体事件（Fabric 1.14.4）
 
-## 概述
-
-Fabric 使用 `fabric-entity-events-v2` 模块处理实体相关的 Capability 功能。
-
-## 添加依赖
-
-```groovy
-dependencies {
-    modImplementation "net.fabric.sdk:fabric-entity-events-v2:2.2.3+1.20.1"
-}
-```
-
-## 实体事件
+Fabric **没有** Forge Capability，也 **没有** `ServerLivingEntityEvents`（该类不在本档索引中）。
+不要编造 `EntityEvent.TICK` / `EntityEvents`，不要写 `net.fabric.sdk`。
+不要用 1.20 的 `ItemGroupEvents` 当本档 API。依赖走 `fabric-api`。
 
 ```java
-// 在 onInitialize() 中
-EntityEvent.TICK.register((entity) -> {
-    if (entity instanceof PlayerEntity) {
-        // 每 tick 执行
-    }
-    return EntityEvent.TickResult.CONTINUE;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+
+AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+    return ActionResult.PASS;
 });
 
-EntityEvent.DEATH.register((entity, source) -> {
-    if (entity instanceof PlayerEntity) {
-        LOGGER.info("Player died: " + entity.getName());
-    }
-    return EntityEvent.DeathResult.ALLOW;
+ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+    // 实体加载到世界
+});
+
+ServerTickEvents.END_SERVER_TICK.register(server -> {
+    // 没有 EntityEvent.TICK；按需遍历实体
 });
 ```
 
-## 常见错误
-
-- ❌在非主线程处理实体事件
-- ❌忘记 `return` 结果
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-entity` | 实体事件用于实体行为修改 |
-| `mc-registry` | 注册实体类型 |
+死亡/受伤改数值：实体方法或 Mixin。物品分组用 `Item.Settings().group(ItemGroup.MISC)`。

@@ -1,4 +1,4 @@
-# Mixin 反模式（Fabric 1.20.1）
+# Mixin 反模式（Fabric 1.21.3）
 
 ## 症状
 

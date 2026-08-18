@@ -32,7 +32,7 @@ public static final DeferredRegister<ContainerType<?>> CONTAINERS =
 
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
-        () -> IContainerFactory.of(MyContainer::new)
+        () -> IForgeContainerType.create(MyContainer::new)
     );
 
 // 在 mod 构造函数中

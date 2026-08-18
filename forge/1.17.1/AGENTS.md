@@ -11,7 +11,7 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.17.1 |
-| 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 16**（Forge 1.17.1 最低要求） |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
 | Mappings | **Parchment**（`Parchment 1.17.1-2021.09.06`） |
@@ -141,7 +141,7 @@ src/main/java/
 | 功能 | 1.17.1 Forge | 1.20.x Forge | 备注 |
 |------|----------------|---------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| Fluid 注册 | `FluidType` | `FluidType` | 一致 |
+| Fluid 注册 | `FluidAttributes` | `FluidType`（1.19+） | 本档无 FluidType |
 | BlockEntity | 签名一致 | 签名一致 | - |
 | DataGen | 基础支持 | 完整支持 | 1.17.1 API 较基础 |
 | Java 版本 | Java 16 | Java 17+ | 关键差异 |

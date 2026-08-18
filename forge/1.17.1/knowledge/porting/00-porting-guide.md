@@ -226,7 +226,7 @@ ChunkPos 构造：`new ChunkPos(x, z)` → `ChunkPos.containing(x, z)`，`ChunkP
 | 风险域 | 识别方式 | 影响说明 | 缓解方案 |
 |--------|---------|---------|---------|
 | Registry | 搜索 `DeferredRegister`/`Registry.register`/`FabricRegistry` | Forge→NeoForge 包名变更有风险 | 使用 Architectury `DeferredRegister` 统一抽象 |
-| 网络层 | 搜索 `SimpleChannel`/`ClientPlayNetworking`/`PacketByteBuf` | 各 Loader 网络 API 差异最大 | 在 common 中用 `@ExpectPlatform` 抽象分层 |
+| 网络层 | 搜索 `SimpleChannel`/`ClientPlayNetworking`/`FriendlyByteBuf` | 各 Loader 网络 API 差异最大 | 在 common 中用 `@ExpectPlatform` 抽象分层 |
 | 配置层 | 搜索 `ForgeConfigSpec`/`Configuration`/`ConfigScreen` | Forge Config API Port 可跨 Loader 统一 | 引入 Forge Config API Port lib |
 | Mixin | 搜索 `mixin.json` | Mixin 必须在 loader 子工程各维护一份 | 拆分到子工程，避免 common 引用 mixin 包 |
 | 数据生成 | 搜索 `DataGenerator`/`DataProvider` | 各 Loader Datagen 注册方式不同 | Datagen 尽量在 loader 子工程处理 |

@@ -9,7 +9,7 @@
 
 ### 核心原则
 
-- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 必须 `Registry.register`；只 `new` 不注册的对象不会出现在游戏中
 - **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
@@ -34,8 +34,7 @@
 // ✅ 正确：在 fabric.mod.json 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 fabric.mod.json 的 id 不一致
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
@@ -164,5 +163,5 @@ public class ExampleMod implements ModInitializer {
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 
 // ❌ 错误（1.14.4 中 Registries 类不存在）
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ```

@@ -62,8 +62,8 @@
 ### AttachCapabilitiesEvent
 : 在实体 / 方块实体上附加 Capability Provider 的事件。
 
-### RegisterEvent
-: 每个注册表触发一次的通知事件。`DeferredRegister` 内部封装了对 `RegisterEvent` 的订阅。
+### RegistryEvent.Register
+: 每个注册表触发一次的通知事件。`DeferredRegister` 内部封装了对 `RegistryEvent.Register` 的订阅。
 
 ---
 

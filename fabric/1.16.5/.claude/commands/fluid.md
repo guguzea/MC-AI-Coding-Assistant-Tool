@@ -2,19 +2,19 @@
 name: mc-fluid
 description: Fabric 流体开发。Fluid、FluidType、FlowableFluid。触发词：流体、Fluid、FluidType
 platform: fabric
-version: "1.20.1"
+version: "1.16.5"
 dependencies: []
 mappings: yarn
 ---
 
-# 流体开发（Fabric 1.20.1）
+# 流体开发（Fabric 1.16.5）
 
 ## 快速开始
 
 ```java
 // 1. 创建流体
-private static final RegistrySupplier<Fluid> MY_FLUID = Registry.register(
-    Registries.FLUID,
+private static final Fluid MY_FLUID = Registry.register(
+    Registry.FLUID,
     new Identifier(MOD_ID, "my_fluid"),
     new FabricFlowableFluid.Settings()
         .slopeFindDistance(3)
@@ -25,9 +25,9 @@ private static final RegistrySupplier<Fluid> MY_FLUID = Registry.register(
 
 // 2. 注册方块状态映射
 Registry.register(
-    Registries.FLUID,
+    Registry.FLUID,
     new Identifier(MOD_ID, "my_fluid"),
-    MY_FLUID.get()
+    MY_FLUID
 );
 ```
 

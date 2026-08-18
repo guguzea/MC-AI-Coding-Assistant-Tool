@@ -136,7 +136,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API（选择性引入，* 表示兼容版本）
-    modImplementation "net.fabric.sdk:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {
@@ -200,7 +200,7 @@ tasks.named('jar').configure {
 
 > **注意**：Fabric 1.19.4 的 `fabric.mod.json` **没有** `environment` 字段，这是 1.20+ 才引入的。
 
-- `id` 禁止包含 `-`，必须全小写
+- `id` 必须全小写；允许字母/数字/下划线/连字符（官方示例 `example-mod`）
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
-- `entrypoints` 中的类必须实现 `FabricMod` 接口
+- `entrypoints` 中的类必须实现 `ModInitializer`（client 为 `ClientModInitializer`）
 - `depends` 中的 `fabricloader`、`minecraft` 是必需依赖

@@ -13,7 +13,7 @@
 | Fabric API | Fabric 官方模块化 API 库，提供各种扩展功能 |
 | Registry | Minecraft 的注册表系统，管理所有游戏内对象 |
 | Identifier | `namespace:id` 格式的资源标识符 |
-| RegistrySupplier | 懒加载的注册对象引用 |
+| Registry.register 返回值 | 已注册对象；不要用 Architectury 的 RegistrySupplier |
 
 ## Identifier 格式
 
@@ -59,10 +59,10 @@ namespace:id
 | `Registry.ITEM` | 物品 | `Items.DIAMOND` |
 | `Registry.ENTITY_TYPE` | 实体类型 | `EntityType.PIG` |
 | `Registry.PARTICLE_TYPE` | 粒子类型 | `ParticleTypes.AMBIENT_ENTITY_EFFECT` |
-| `Registry.MENU` | 菜单类型 | `GenericContainerScreenHandler` |
+| `Registry.SCREEN_HANDLER` | 菜单类型 | `GenericContainerScreenHandler` |
 | `Registry.SOUND_EVENT` | 声音事件 | `SoundEvents.ITEM_PICKUP` |
 
-> **注意**：1.16.5 使用 `Registry.ITEM` 而非 `Registries.ITEM`。`Registries` 是 1.17+ 才引入的枚举。
+> **注意**：1.16.5 使用 `Registry.ITEM` 而非 `Registry.ITEM`。`Registries` 是 1.17+ 才引入的枚举。
 
 ## Mod Entrypoints
 

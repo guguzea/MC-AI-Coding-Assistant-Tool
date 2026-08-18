@@ -6,7 +6,7 @@
 
 ```java
 // ❌ 错误
-public static final Block MY_BLOCK = new Block(Block.Properties.create(Material.ROCK)); // 太早
+public static final Block MY_BLOCK = new Block(Material.ROCK); // 太早
 ```
 
 **原因：** 静态字段初始化在 RegistryEvent 触发前执行，Registry 系统尚未就绪。
@@ -19,7 +19,7 @@ public class ModBlocks {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(
-            new Block(Block.Properties.create(Material.ROCK))
+            new Block(Material.ROCK)
                 .setRegistryName(MOD_ID, "my_block")
         );
     }

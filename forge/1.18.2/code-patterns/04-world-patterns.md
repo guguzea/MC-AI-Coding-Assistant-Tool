@@ -10,7 +10,7 @@
 ```java
 // 注册（使用 Vanilla Registry）
 public static final DeferredRegister<Biome> BIOMES =
-    DeferredRegister.create(Registries.BIOME, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.BIOMES, MOD_ID);
 
 public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
     () -> new Biome.BiomeBuilder()

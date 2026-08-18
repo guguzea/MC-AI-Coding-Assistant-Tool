@@ -1,190 +1,103 @@
-# 数据生成代码模式
+# DataGen 模式（Fabric 1.21.1）
 
-适用版本：Fabric 1.21.1
+## 模式 1：语言文件生成
 
-## 依赖
-
-```groovy
-dependencies {
-    modApi "net.fabricmc.fabric-api:fabric-datagen-api-v0:4.2.1+1.21"
-}
-```
-
-## DataGeneratorInitializer
-
-```java
-public class MyDatagen implements DataGeneratorInitializer {
+```yaml
+模式: Language Generation
+平台: Fabric
+分类: datagen
+依赖: [fabric-datagen-api-v0]
+扩展点: [DataGeneratorEntrypoint]
+---
+public class MyEnLangProvider extends FabricLanguageProvider {
+    public MyEnLangProvider(FabricDataOutput output,
+                            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
+    }
     @Override
-    public void initialize(RegistryWrapper.WrapperLookup registries,
-                           DataGenerator generator,
-                           Pack.Output output,
-                           ExistingFileHelper existingFileHelper) {
-        generator.addProvider(true, new MyRecipeProvider(output, registries));
-        generator.addProvider(true, new MyLootTableProvider(output));
-        generator.addProvider(true, new MyLanguageProvider(output, "en_us"));
-        generator.addProvider(true, new MyTagProvider(output, registries, existingFileHelper));
+    public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup,
+                                     TranslationBuilder translationBuilder) {
+        translationBuilder.add(MY_ITEM, "My Item");
+        translationBuilder.add(MY_BLOCK, "My Block");
+        translationBuilder.add(MY_ENTITY, "My Entity");
+        translationBuilder.add("itemGroup.examplemod.my_group", "My Items");
     }
 }
 ```
 
-## 注册 DataGen
+## 模式 2：配方生成
 
-```json
-{
-  "entrypoints": {
-    "init_data": ["com.example.examplemod.datagen.MyDatagen"]
-  }
-}
-```
-
-## 配方生成
-
-```java
-public class MyRecipeProvider implements DataStreamOutputSupplier.Writer {
-    private final Pack.Output output;
-    private final RegistryWrapper.WrapperLookup registries;
-    private final CompletableFuture<RegistryWrapper.WrapperLookup> registriesLookup;
-
-    public MyRecipeProvider(Pack.Output output, RegistryWrapper.WrapperLookup registries) {
-        this.output = output;
-        this.registries = registries;
-        this.registriesLookup = CompletableFuture.completedFuture(registries);
+```yaml
+模式: Recipe Generation
+平台: Fabric
+分类: datagen
+依赖: [fabric-datagen-api-v0]
+扩展点: [DataGeneratorEntrypoint]
+---
+public class MyRecipeProvider extends FabricRecipeProvider {
+    public MyRecipeProvider(FabricDataOutput output,
+                            CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                        Pack.GeneratorOutput output, ExistingFileHelper existingFileHelper) {
-        // Shaped 配方
-        createShapedRecipe()
-            .pattern("AAA")
-            .pattern("BBB")
-            .pattern("CCC")
-            .input('A', Items.DIAMOND)
-            .input('B', Items.GOLD_INGOT)
-            .input('C', Items.IRON_INGOT)
-            .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
-            .offerTo(output);
-
-        // Shapeless 配方
-        createShapelessRecipe()
+    public void generate(RecipeExporter exporter) {
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
             .input(Items.DIAMOND)
-            .input(Items.EMERALD)
-            .criterion(hasItem(Items.DIAMOND), conditionsFromItem(Items.DIAMOND))
-            .offerTo(output, new Identifier(MOD_ID, "diamond_emerald"));
+            .input(Items.GOLD_INGOT)
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .offerTo(exporter);
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_TOOL)
+            .pattern("AAA")
+            .pattern("A A")
+            .pattern(" A ")
+            .input('A', Items.DIAMOND)
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .offerTo(exporter);
     }
 }
 ```
 
-## Loot Table 生成
+## 模式 3：战利品表生成
 
-```java
-public class MyLootTableProvider implements DataStreamOutputSupplier.Writer {
-    private final Pack.Output output;
+```yaml
+模式: Loot Table Generation
+平台: Fabric
+分类: datagen
+依赖: [fabric-datagen-api-v0]
+扩展点: [DataGeneratorEntrypoint]
+---
+public class MyBlockLootProvider extends FabricBlockLootTableProvider {
+    public MyBlockLootProvider(FabricDataOutput output,
+                               CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
+    }
+    @Override
+    public void generate() {
+        addDrop(MY_BLOCK);
+        addDrop(MY_ORE, oreDrops(MY_ORE, MY_GEM));
+    }
+}
+```
 
-    public MyLootTableProvider(Pack.Output output) {
-        this.output = output;
+## 模式 4：标签生成
+
+```yaml
+模式: Tag Generation
+平台: Fabric
+分类: datagen
+依赖: [fabric-datagen-api-v0]
+扩展点: [DataGeneratorEntrypoint]
+---
+public class MyItemTagProvider extends FabricTagProvider.ItemTagProvider {
+    public MyItemTagProvider(FabricDataOutput output,
+                             CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                        Pack.GeneratorOutput output, ExistingFileHelper existingFileHelper) {
-        // 方块掉落
-        output.add(LootTables.BLOCK_DROP_SET,
-            BlockLootTableGenerator.dropsWithShears(ModBlocks.MY_BLOCK.get())
-        );
-
-        // 简单掉落
-        output.add(LootTables.BLOCK_DROP_SET,
-            BlockLootTableGenerator.drops(ModBlocks.MY_ORE.get())
-        );
-
-        // 自定义掉落
-        output.add(LootTables.BLOCK_DROP_SET,
-            BlockLootTableGenerator.builder()
-                .pool(builder -> builder
-                    .rolls(ConstantLootNumberProvider.create(1))
-                    .with(ItemEntry.builder(ModItems.MY_ITEM.get())
-                        .weight(1)
-                        .quality(0)
-                    )
-                    .with(ItemEntry.builder(Items.DIAMOND)
-                        .weight(5)
-                        .conditionally(SurvivesExplosionLootCondition.builder())
-                    )
-                )
-        );
+    protected void configure(RegistryWrapper.WrapperLookup lookup) {
+        getOrCreateTagBuilder(MY_ITEM_TAG).add(MY_ITEM);
     }
 }
 ```
-
-## 语言文件生成
-
-```java
-public class MyLanguageProvider implements DataStreamOutputSupplier.Writer {
-    private final Pack.Output output;
-    private final String languageId;
-
-    public MyLanguageProvider(Pack.Output output, String languageId) {
-        this.output = output;
-        this.languageId = languageId;
-    }
-
-    @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                        Pack.GeneratorOutput output, ExistingFileHelper existingFileHelper) {
-        RegistryEntryLookup<Item> itemLookup = registries.getWrapperOrThrow(Registries.ITEM_KEY);
-
-        output.add(languageId, "item." + MOD_ID + ".my_item", "My Item");
-        output.add(languageId, "block." + MOD_ID + ".my_block", "My Block");
-        output.add(languageId, "entity." + MOD_ID + ".my_entity", "My Entity");
-        output.add(languageId, "itemGroup." + MOD_ID, "Example Mod Items");
-    }
-}
-```
-
-## 标签生成
-
-```java
-public class MyTagProvider implements DataStreamOutputSupplier.Writer {
-    private final Pack.Output output;
-    private final RegistryWrapper.WrapperLookup registries;
-    private final ExistingFileHelper existingFileHelper;
-
-    public MyTagProvider(Pack.Output output, RegistryWrapper.WrapperLookup registries,
-                         ExistingFileHelper existingFileHelper) {
-        this.output = output;
-        this.registries = registries;
-        this.existingFileHelper = existingFileHelper;
-    }
-
-    @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                        Pack.GeneratorOutput output, ExistingFileHelper existingFileHelper) {
-        // 方块标签
-        this.output.add(Registries.BLOCK,
-            FabricTagBuilder.create(
-                    Optional.of(new Identifier("fabric", "needs_tool_level_4")),
-                    List.of(ModBlocks.MY_BLOCK.get()),
-                    Set.of()
-            )
-        );
-
-        // 物品标签
-        this.output.add(Registries.ITEM,
-            FabricTagBuilder.create(
-                    Optional.of(new Identifier("fabric", "piglin_loved")),
-                    List.of(Items.GOLD_INGOT),
-                    Set.of()
-            )
-        );
-    }
-}
-```
-
-## 运行 DataGen
-
-```bash
-./gradlew runDatagen
-```
-
-生成的文件将输出到 `src/generated/resources/`。

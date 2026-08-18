@@ -2,12 +2,12 @@
 name: mc-cloth-config
 description: Fabric Cloth Config 配置系统。ConfigBuilder、ConfigCategory、ConfigEntryBuilder。触发词：Cloth Config、ConfigBuilder、ConfigEntryBuilder、ConfigScreen
 platform: fabric
-version: "1.20.1"
+version: "1.19.4"
 dependencies: []
 mappings: yarn
 ---
 
-# Cloth Config（Fabric 1.20.1）
+# Cloth Config（Fabric 1.19.4）
 
 ## 概述
 

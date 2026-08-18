@@ -9,94 +9,44 @@ dependencies {
     // 完整 Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // 选择性引入（推荐）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-events-interaction-v0:0.6.1"
-    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:9.1.1"
-    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v2:3.0.0"
-    modImplementation "net.fabricmc.fabric-api:fabric-item-api-v1:9.1.1"
-    modImplementation "net.fabricmc.fabric-api:fabric-loot-api-v2:3.0.0"
-    modImplementation "net.fabricmc.fabric-api:fabric-datagen-api-v0:4.2.1"
+    // 完整 fabric-api 已含下列模块，不要手写过时独立版本号
+    // fabric-events-interaction-v0 / fabric-screen-api-v1 / fabric-command-api-v2
+    // fabric-item-api-v1 / fabric-loot-api-v3 / fabric-datagen-api-v1
 }
 ```
 
-## ItemEvents
+## 交互事件（Fabric API `fabric-events-interaction-v0`）
+
+不要编造 `ItemEvents` / `BlockEvents` / `EntityEvents` / `PlayerTickEvents`。
 
 ```java
-// 物品使用事件
-ItemEvents.USE_ITEM_ON_BLOCK.register((player, world, hand, hitResult) -> {
-    if (!world.isClient && player.getStackInHand(hand).isOf(Items.DIAMOND)) {
-        player.sendMessage(Text.literal("Used diamond!"));
-        player.getStackInHand(hand).decrement(1);
-        return ActionResult.SUCCESS;
-    }
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
+
+UseItemCallback.EVENT.register((player, world, hand) -> {
+    return TypedActionResult.pass(player.getStackInHand(hand));
+});
+
+UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
     return ActionResult.PASS;
 });
 
-// 物品使用时（右键空白）
-ItemEvents.USE_ITEM.register((player, world, hand) -> {
-    ItemStack stack = player.getStackInHand(hand);
-    if (!world.isClient && stack.isOf(Items.EMERALD)) {
-        // 处理
-        return ActionResult.SUCCESS;
-    }
-    return ActionResult.PASS;
-});
-```
-
-## EntityEvents
-
-```java
-// 实体受伤
-EntityEvents.ENTITY_HURT.register((entity, source, amount, flag) -> {
-    if (entity instanceof PlayerEntity && amount > 5.0f) {
-        entity.sendMessage(Text.literal("Ouch! You took " + amount + " damage!"));
-    }
-    return amount;  // 返回修改后的伤害值
+PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, blockEntity) -> {
+    return true; // false 则取消破坏
 });
 
-// 实体死亡
-EntityEvents.ENTITY_DEATH.register((entity, source) -> {
-    if (entity.getType() == EntityTypes.ZOMBIE) {
-        // 僵尸死亡时掉落
-        if (!entity.world.isClient) {
-            entity.world.spawnEntity(new ItemEntity(
-                entity.world, entity.getX(), entity.getY(), entity.getZ(),
-                new ItemStack(Items.DIAMOND)
-            ));
-        }
-    }
-});
-```
-
-## BlockEvents
-
-```java
-// 方块破坏前
-BlockEvents.BEFORE_BREAK.register((player, world, pos, state, blockEntity) -> {
-    if (state.isOf(Blocks.DIAMOND_ORE)) {
-        player.sendMessage(Text.literal("No mining diamonds!"));
-        return ActionResult.FAIL;  // 阻止破坏
-    }
-    return ActionResult.PASS;
+ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+    // 服务端，实体已死亡
 });
 
-// 方块放置前
-BlockEvents.BEFORE_PLACE.register((world, pos, state, player, hand, itemStack, hitResult) -> {
-    if (pos.getY() > world.getHeight()) {
-        return ActionResult.FAIL;
-    }
-    return ActionResult.PASS;
-});
-```
-
-## PlayerTickEvents
-
-```java
-// 玩家每 tick
-PlayerTickEvents.END.register(player -> {
-    if (!player.world.isClient && player.getBlockPos().getY() > 200) {
-        player.sendMessage(Text.literal("You're flying too high!"));
+ServerTickEvents.END_SERVER_TICK.register(server -> {
+    for (var player : server.getPlayerManager().getPlayerList()) {
+        // 每 tick 玩家逻辑
     }
 });
 ```
@@ -144,18 +94,14 @@ ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HandledScreens.register(
-            MY_SCREEN_HANDLER,
-            (containerSyncId, inventory, title) ->
-                new ExampleScreen(containerSyncId, inventory, title)
-        );
+        HandledScreens.register(MY_SCREEN_HANDLER, ExampleScreen::new);
     }
 }
 
 // 自定义 Screen
 public class ExampleScreen extends HandledScreen<ExampleScreenHandler> {
-    public ExampleScreen(int syncId, PlayerInventory inventory, Text title) {
-        super(new ExampleScreenHandler(syncId, inventory), inventory, title);
+    public ExampleScreen(ExampleScreenHandler handler, PlayerInventory inventory, Text title) {
+        super(handler, inventory, title);
     }
 
     @Override
@@ -177,7 +123,8 @@ public class ExampleScreen extends HandledScreen<ExampleScreenHandler> {
 ```java
 // 修改掉落表
 LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-    if (source == LootTableSource.MODIFIED && key.equals(LootTables.ENTITY_ZOMBIE)) {
+    // 1.21.x 是 loot.v3：参数为 RegistryKey + builder + source + registries
+    if (key.getValue().equals(Identifier.of("minecraft", "entities/zombie"))) {
         tableBuilder.pool(builder -> builder
             .with(ItemEntry.builder(Items.DIAMOND)
                 .weight(1)
@@ -190,44 +137,40 @@ LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
 
 ## Networking (1.21.x)
 
+Yarn 1.21.x 用 `CustomPayload` + `PayloadTypeRegistry.playC2S()` / `playS2C()`。不要 `CustomPayloadRegistry`、`ServerReceiver`、`PayloadTypeRegistry.s2c()`。
+
 ```java
-// 定义 Payload
-public class MyPacket implements CustomPayload {
-    public static final Id<MyPacket> ID = new Id<>(new Identifier(MOD_ID, "my_packet"));
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ClientPlayNetworking;
 
-    private final int value;
-
-    public MyPacket(int value) {
-        this.value = value;
-    }
-
-    public MyPacket(FriendlyByteBuf buf) {
-        this.value = buf.readInt();
-    }
+public record MyPayload(int data) implements CustomPayload {
+    public static final CustomPayload.Id<MyPayload> ID =
+        new CustomPayload.Id<>(Identifier.of(MOD_ID, "my_packet"));
+    public static final PacketCodec<RegistryByteBuf, MyPayload> CODEC =
+        PacketCodec.tuple(PacketCodecs.VAR_INT, MyPayload::data, MyPayload::new);
 
     @Override
-    public Id<MyPacket> getId() {
+    public Id<? extends CustomPayload> getId() {
         return ID;
-    }
-
-    public void write(FriendlyByteBuf buf) {
-        buf.writeInt(this.value);
-    }
-
-    public static class Receiver implements ServerReceiver<MyPacket> {
-        @Override
-        public void receive(MyPacket payload, ServerPlayerEntity player) {
-            player.sendMessage(Text.literal("Received: " + payload.value));
-        }
     }
 }
 
-// 注册
-CustomPayloadRegistry.register(MyPacket.Receiver::new, ID);
+PayloadTypeRegistry.playC2S().register(MyPayload.ID, MyPayload.CODEC);
+PayloadTypeRegistry.playS2C().register(MyPayload.ID, MyPayload.CODEC);
 
-// 发送（客户端）
-ClientPlayNetworking.send(MyPacket.ID, new MyPacket(123));
+ServerPlayNetworking.registerGlobalReceiver(MyPayload.ID, (payload, context) -> {
+    int value = payload.data();
+});
+ClientPlayNetworking.registerGlobalReceiver(MyPayload.ID, (payload, context) -> {
+    int value = payload.data();
+});
 
-// 发送（服务端）
-ServerPlayNetworking.send(player, MyPacket.ID, new MyPacket(123));
+ServerPlayNetworking.send(player, new MyPayload(123));
+ClientPlayNetworking.send(new MyPayload(123));
 ```

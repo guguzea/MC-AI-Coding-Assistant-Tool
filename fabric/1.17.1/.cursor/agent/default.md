@@ -25,7 +25,7 @@
 
 1. **没有 `Registries` 类！** 使用 `Registry.BLOCK`、`Registry.ITEM` 等静态字段
 2. **没有 `RegistrySupplier`！** 直接用静态字段持有注册后的对象
-3. **没有 `FabricMod` 接口！** 使用 `ModInitializer` 接口
+3. **没有 `ModInitializer` 接口！** 使用 `ModInitializer` 接口
 4. **Loom 版本必须是 `0.11-SNAPSHOT`**（不是 `1.4-SNAPSHOT`）
 5. **Fabric API maven 是 `net.fabricmc.fabric-api`**（不是 `net.fabric.sdk`）
 6. **Fabric API 版本是 `0.31.x`**（如 `0.46.1+1.17`）
@@ -72,7 +72,7 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(...
 Registry.register(Registry.ITEM, ...);
 
 // ❌ 错误：1.17.x 没有 RegistrySupplier！
-RegistrySupplier<Item> MY_ITEM = Registry.register(...);
+Item MY_ITEM = Registry.register(...);
 ```
 
 ---
@@ -85,11 +85,11 @@ RegistrySupplier<Item> MY_ITEM = Registry.register(...);
 - ❌ 不要在 Fabric 项目中使用 `@Mod` 或 `mods.toml`
 - ❌ 不要混用 Yarn 和 MCP 映射
 - ❌ 不要在 `onInitialize()` 之外注册内容（Mixin 初始化除外）
-- ❌ 不要使用 `Registries.ITEM` — 应使用 `Registry.ITEM`
+- ❌ 不要使用 `Registry.ITEM` — 应使用 `Registry.ITEM`
 
 ### 命名规范
 
-- `modId`：全小写，无 `-`，无空格
+- `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
 - 注册名称：`Identifier(MOD_ID, "registry_name")`
 - 资源路径：`assets/{modid}/...` 全小写
 

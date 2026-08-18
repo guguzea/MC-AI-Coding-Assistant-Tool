@@ -140,3 +140,19 @@ src/main/java/
 | 网络 | `SimpleNetworkWrapper` | `SimpleChannel` | API 略有不同 |
 | 数据生成 | JSON 手动编写 | DataGenerator | 1.12.2 无 DataGen |
 | 物理端分离 | Proxy 模式 | DistExecutor | 1.12.2 用 Proxy |
+
+---
+
+## MCP 文档与 API 工具（本档）
+
+打开 Forge 1.12.2 工程后：`activate_platform_pack action=session --platform=forge --minecraftVersion=1.12.2`。
+
+| 需求 | 用 | 不要用 |
+|------|-----|--------|
+| 官方教程（方块/注册/网络…） | 先 `list_forge_versions`，再 `search_forge_docs` 或 `search_docs({platform:"forge", version:"1.12.2"})`，`id` 取自结果后 `get_forge_doc_full` | `query_api`（类名空壳：`found:true` + `methods:[]`，不是 javadoc）；不要搜邻版 1.20.1 文档 |
+| Forge 类（`IForgeRegistry`、Capability…） | `query_loader_api` / `search_loader_api`（`platform=forge`，`minecraftVersion=1.12.2`） | `query_api` |
+| Vanilla / MCP 方法名 | `convert_mapping`（MCP SRG）或反编译 | Yarn / 把 `query_api` 空 methods 当签名 |
+| 版本建议 | `get_version_info version=1.12.2`（注册是 RegistryEvent，无 DeferredRegister） | 不要套 1.20 注册流程 |
+| DataGen | 手写 JSON | `generate_datagen`（仅覆盖 Forge 1.20.1） |
+
+查询用类名或短词（如 `Block`、`RegistryEvent`）。数据在 `data/forge_1.12.2/forge-docs/`。

@@ -11,7 +11,7 @@
 | **注册方块** | `Registry.register(Registry.BLOCK, id, block)` | `DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register()` |
 | **注册物品** | `Registry.register(Registry.ITEM, id, item)` | `DeferredRegister.create(ForgeRegistries.ITEMS, MODID).register()` |
 | **注册实体** | `EntityType.Builder.create().build(id)` + `Registry.register()` | `DeferredRegister.create(ForgeRegistries.ENTITIES, MODID).register()` |
-| **网络包** | `ClientPlayNetworking.send(id, buf)` / `ServerPlayNetworking.send(player, id, buf)` | `SimpleNetworkWrapper.sendTo(player, msg)` / `sendToAll(msg)` |
+| **网络包** | `ClientPlayNetworking.send(id, buf)` / `ServerPlayNetworking.send(player, id, buf)` | `SimpleChannel` + `PacketDistributor` |
 | **事件订阅** | `@Environment(EnvType.CLIENT)` 注解方法 | `@SubscribeEvent` on `MinecraftForge.EVENT_BUS` |
 | **Mixin** | `fabric.mod.json` 中 `mixins` 数组 | `neoforge.mods.toml` 或事件总线 |
 | **服务端检测** | 直接检测 | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> ...)` |

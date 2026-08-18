@@ -1,6 +1,6 @@
 ---
 name: mc-registry
-description: Fabric 注册系统。Registry.register、RegistrySupplier、Identifier。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
+description: Fabric 注册系统。Registry.register、Identifier、ModInitializer。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
 platform: fabric
 version: "1.21.1"
 dependencies: []
@@ -12,11 +12,11 @@ mappings: yarn
 ## 快速开始
 
 ```java
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     private static final String MOD_ID = "examplemod";
 
     // Registry.register 在类加载时执行
-    private static final RegistrySupplier<Item> MY_ITEM =
+    private static final Item MY_ITEM =
         Registry.register(Registries.ITEM,
             new Identifier(MOD_ID, "my_item"),
             new Item(new Item.Settings())
@@ -55,33 +55,33 @@ IF 平台 = Forge
 | 实体类型 | `Registries.ENTITY_TYPE` | `Identifier`, `EntityType` |
 | 粒子类型 | `Registries.PARTICLE_TYPE` | `Identifier`, `ParticleType` |
 | 声音事件 | `Registries.SOUND_EVENT` | `Identifier`, `SoundEvent` |
-| 菜单类型 | `Registries.MENU` | `Identifier`, `ScreenHandlerType` |
+| 菜单类型 | `Registries.SCREEN_HANDLER` | `Identifier`, `ScreenHandlerType` |
 | 附魔 | `Registries.ENCHANTMENT` | `Identifier`, `Enchantment` |
 | 流体 | `Registries.FLUID` | `Identifier`, `Fluid` |
 
-## RegistrySupplier 用法
+## 保存 Registry.register 返回值
 
 ```java
-// ✅ 推荐：RegistrySupplier 提供懒加载和 null 安全
-private static final RegistrySupplier<Item> MY_ITEM =
+// ✅ 推荐：保存 Registry.register 的返回值
+private static final Item MY_ITEM =
     Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 
-// 使用时调用 .get()
-ItemStack stack = new ItemStack(MY_ITEM.get());
+// 直接使用静态字段
+ItemStack stack = new ItemStack(MY_ITEM);
 ```
 
 ## BlockItem 注册
 
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
-private static final RegistrySupplier<Block> MY_BLOCK =
+private static final Block MY_BLOCK =
     Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"),
         new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
 
-private static final RegistrySupplier<Item> MY_BLOCK_ITEM =
+private static final Item MY_BLOCK_ITEM =
     Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
-        new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+        new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## Identifier 构造

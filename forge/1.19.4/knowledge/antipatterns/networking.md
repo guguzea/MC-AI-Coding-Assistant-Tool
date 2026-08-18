@@ -125,7 +125,9 @@ INSTANCE.registerMessage(0, MyMessage2.class, ...); // ❌ ID 冲突
 **正确方案**：使用统一的 ID 管理器。
 
 ```java
-public static int id(String name) {
-    return NetworkRegistry.chooseIdealPayloadId(id("main"), name);
+private static int nextDiscriminator = 0;
+
+public static int nextId() {
+    return nextDiscriminator++;
 }
 ```

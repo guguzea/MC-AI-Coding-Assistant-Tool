@@ -2,12 +2,12 @@
 name: mc-kotlin
 description: Fabric Kotlin 语言支持。fabric-language-kotlin、kotlin("jvm")、@PublishedApi。触发词：Kotlin、fabric-language-kotlin、build.gradle.kts
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# Kotlin 语言支持（Fabric 1.20.1）
+# Kotlin 语言支持（Fabric 1.14.4）
 
 ## 概述
 
@@ -48,7 +48,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.10.0+kotlin.1.9.20")
 
-    modApi("net.fabric.sdk:fabric-api:${fabric_api_version}")
+    modApi("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 }
 
 tasks.processResources {
@@ -74,7 +74,7 @@ tasks.processResources {
 ```kotlin
 // ExampleMod.kt
 @AutoStorageAware
-class ExampleMod : FabricMod {
+class ExampleMod : ModInitializer {
     override val modId = "examplemod"
     override val modName = "Example Mod"
     override val version = "1.0.0"
@@ -98,8 +98,8 @@ class ExampleMod : FabricMod {
 // @PublishedApi 用于在 lambda 中安全访问私有字段
 class MyItem(settings: Settings) : Item(settings) {
     companion object {
-        val MY_ITEM: RegistrySupplier<Item> = Registry.register(
-            Registries.ITEM,
+        val MY_ITEM: Item = Registry.register(
+            Registry.ITEM,
             Identifier(MOD_ID, "my_item"),
             MyItem(Settings())
         )

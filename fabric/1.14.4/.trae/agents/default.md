@@ -64,7 +64,7 @@
 | Mixin | 需配置 org.spongepowered.mixin 插件 | **需要显式 Mixin 插件配置** |
 | Mappings | MCP（方法名如 func_12345_a） | **Yarn**（方法名如 method_12345）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
-| 事件系统 | Forge 事件总线（@SubscribeEvent） | **Fabric 事件回调**（EventDispatcher）|
+| 事件系统 | Forge 事件总线（@SubscribeEvent） | **Fabric 事件回调**（Event 回调接口）|
 
 ---
 
@@ -77,7 +77,7 @@ Yarn 使用清晰的命名风格：
 | 类名 | ClassName | MinecraftClient、ItemStack |
 | 方法名 | camelCase | getHealth()、setPosition() |
 | 字段名 | camelCase | inventory、health |
-| 混淆保留 | class_NNNNN / method_NNNNN | class_12345 — 仅在 Yarn 未解析时出现 |
+| Intermediary（不是 Yarn） | class_NNNNN / method_NNNNN | Yarn 未映射时才会看到 |
 
 > **注意**：Forge 的 MCP 映射风格不同（如 func_XXXXX、field_XXXXX），混用会出错。
 

@@ -4,8 +4,8 @@
 
 - **没有 `Registries` 类！** 使用 `Registry.ENTITY_TYPE` 静态字段
 - **没有 `RegistrySupplier`！** 直接用静态字段持有注册后的对象
-- **属性注册**：使用 `MobEntity.create(null)` 而不是 `EntityAttributeRegistry`
-- **生成限制**：使用 `SpawnRestriction.register()` 而不是 `SpawnRestrictionRegistration.mobSpawn().register()`
+- **属性注册**：使用 `MobEntity.create(null)` 而不是 `FabricDefaultAttributeRegistry`
+- **生成限制**：使用 `SpawnRestriction.register()` 而不是 `SpawnRestriction.register()`
 
 ## 模式 1：基础生物实体
 
@@ -28,8 +28,8 @@ private static final EntityType<MyCowEntity> MY_COW = Registry.register(
     new Identifier(MOD_ID, "my_cow"),
     EntityType.Builder.create(MyCowEntity::new, SpawnGroup.CREATURE)
         .dimensions(EntityDimensions.changing(0.9f, 1.4f))
-        .maxTrackOffset(10)
-        .trackRangeBlocks(10)
+        .maxTrackingRange(8)
+            .trackingTickInterval(3)
         .build()
 );
 

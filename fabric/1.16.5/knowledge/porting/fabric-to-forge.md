@@ -88,7 +88,7 @@ public class ExampleMod {
 
 ```java
 // Fabric 1.16.5
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registry.ITEM,  // ❗ 1.16.5 使用 Registry 字段，非 Registries 枚举
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings())
@@ -96,7 +96,7 @@ private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
 
 // ✅ Forge
 public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+    DeferredRegister.create(ForgeRegistry.ITEMS, MOD_ID);
 
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()));
@@ -138,5 +138,5 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 1. **Java 版本**：Forge 1.16.5 可用 Java 8/11（Fabric 1.16.5 需要 Java 16）
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
-4. **Registry API**：Fabric 1.16.5 用 `Registry.ITEM`，Forge 用 `ForgeRegistries.ITEMS`
+4. **Registry API**：Fabric 1.16.5 用 `Registry.ITEM`，Forge 用 `ForgeRegistry.ITEMS`
 5. **Mappings 转换**：Fabric 用 Yarn（`method_XXXX`），Forge 用 MCP（`func_XXXX`）

@@ -4,30 +4,30 @@ description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
-# 实体开发（Forge 1.19.4）
+# 实体开发（Forge 1.14.4）
 
 ## 快速开始
 
 ```java
-// 注册 EntityType（参见 mc-registry Skill）
-public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+public static final DeferredRegister<EntityType<?>> ENTITIES =
+    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
-public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
-    () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
-        .sized(0.6f, 1.8f)
-        .clientTrackingRange(8)
-        .updateInterval(3)
-        .fireImmune()
-    .build("my_entity")
+public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITIES.register("my_entity",
+    () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+        .size(0.6f, 1.8f)
+        .setTrackingRange(8)
+        .setUpdateInterval(3)
+        .immuneToFire()
+        .build("")
 );
 
-// 在 mod 构造函数中
-ENTITY_TYPES.register(modEventBus);
+ENTITIES.register(modEventBus);
 ```
+
+> **注意**：1.14.4 MCP 用 `EntityClassification`，不是 `MobCategory`。`Builder.create` 不是 `of`。
 
 > **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，1.20.7+ 重命名为 `SpawnGroup`。
 
@@ -54,11 +54,9 @@ public class MyEntity extends LivingEntity {
     protected void registerAttributes() {
         super.registerAttributes();
         // 注册实体属性（生命值、移动速度、攻击伤害等）
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.0);
-        // 自定义属性
-        this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(0.5);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
     }
 
     @Override

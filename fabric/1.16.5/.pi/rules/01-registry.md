@@ -13,7 +13,7 @@ description: 01 — 注册系统
 
 ### 核心原则
 
-- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 必须 `Registry.register`；只 `new` 不注册的对象不会出现在游戏中
 - **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
@@ -21,7 +21,7 @@ description: 01 — 注册系统
 
 ### Registry API（1.16.5 关键差异）
 
-> ❌ **不要**使用 `Registries.ITEM`、`Registries.BLOCK` 等（这些是 1.17+ 才有的枚举）
+> ❌ **不要**使用 `Registry.ITEM`、`Registry.BLOCK` 等（这些是 1.17+ 才有的枚举）
 > ✅ 使用 `Registry.ITEM`、`Registry.BLOCK` 等静态字段
 
 ```java
@@ -50,8 +50,7 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 // ✅ 正确：在 fabric.mod.json 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 fabric.mod.json 的 id 不一致
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
@@ -112,21 +111,21 @@ public class ExampleMod implements ModInitializer {
     private static final String MOD_ID = "examplemod";
 
     // 静态初始化注册表
-    private static final RegistrySupplier<Item> MY_ITEM =
+    private static final Item MY_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
-    private static final RegistrySupplier<Block> MY_BLOCK =
+    private static final Block MY_BLOCK =
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
             new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f)));
 
     // BlockItem 与方块同名注册
-    private static final RegistrySupplier<Item> MY_BLOCK_ITEM =
+    private static final Item MY_BLOCK_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-            new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+            new BlockItem(MY_BLOCK, new Item.Settings()));
 
     @Override
     public void onInitialize() {
-        LOGGER.info("ExampleMod initialized — " + MY_ITEM.getId());
+        LOGGER.info("ExampleMod initialized — " + Registry.ITEM.getId(MY_ITEM));
     }
 }
 ```
@@ -140,13 +139,13 @@ public class ModItems {
 
     private static final String MOD_ID = "examplemod";
 
-    public static final RegistrySupplier<Item> MY_ITEM =
+    public static final Item MY_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"),
             new Item(new Item.Settings()));
 
-    public static final RegistrySupplier<Item> MY_BLOCK_ITEM =
+    public static final Item MY_BLOCK_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-            new BlockItem(ModBlocks.MY_BLOCK.get(), new Item.Settings()));
+            new BlockItem(ModBlocks.MY_BLOCK, new Item.Settings()));
 
     public static void initialize() {
         // 可在此添加初始化逻辑（如注册到 Tag）
@@ -167,16 +166,16 @@ public class ExampleMod implements ModInitializer {
 
 > **注意**：
 > - `Registry.register()` 在类加载时即完成注册，无需额外调用
-> - `RegistrySupplier<T>` 与 `RegistryObject<T>` 类似，提供懒加载和 null 安全
+> - `Registry.register` 返回已注册对象；不要用 Architectury 的 `RegistrySupplier`
 > - `BlockItem` 与方块使用相同 registry name，Minecraft 自动关联
 
 ---
 
-## RegistrySupplier vs 直接注册
+## 注册返回值
 
 ```java
-// ✅ 推荐：使用 RegistrySupplier（懒加载，IDE 友好）
-private static final RegistrySupplier<Item> MY_ITEM =
+// ✅ 推荐：保存 Registry.register 的返回值
+private static final Item MY_ITEM =
     Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(...));
 
 // ✅ 可行：直接静态字段（无懒加载）

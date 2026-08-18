@@ -72,7 +72,7 @@ private static final Item MY_ITEM =
         new Item(new Item.Settings()));
 
 // ❌ 禁止：1.17.x 没有 RegistrySupplier！
-private static final RegistrySupplier<Item> MY_ITEM = ...  // 编译错误！
+private static final Item MY_ITEM = ...  // 编译错误！
 ```
 
 ## BlockItem 注册
@@ -105,7 +105,7 @@ new Identifier("examplemod:my_item");         // 这会被当作完整 ID 而非
 - ❌ BlockItem 与 Block 使用不同 registry name — 物品形态缺失
 - ❌在 `onInitialize()` 外注册 — 注册可能不会生效
 - ❌忘记在 `fabric.mod.json` 中注册 `entrypoints` — mod 入口不会被调用
-- ❌ 使用 `Registries.ITEM` — 1.17.x 应使用 `Registry.ITEM`
+- ❌ 使用 `Registry.ITEM` — 1.17.x 应使用 `Registry.ITEM`
 
 ## 扩展点
 

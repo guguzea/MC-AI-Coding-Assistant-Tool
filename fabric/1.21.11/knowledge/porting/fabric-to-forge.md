@@ -6,7 +6,7 @@
 
 | 维度 | Fabric | Forge |
 |------|--------|-------|
-| 入口 | `FabricMod` + entrypoint | `@Mod` 注解 |
+| 入口 | `ModInitializer` + entrypoint | `@Mod` 注解 |
 | Mod 配置 | `fabric.mod.json` | `mods.toml` |
 | 注册方式 | `Registry.register()` in `onInitialize()` | `DeferredRegister` + modEventBus |
 | Mixin | Loom 原生支持 | `org.spongepowered.mixin` 插件 |
@@ -59,7 +59,7 @@ side = "BOTH"
 
 ```java
 // Fabric
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
@@ -90,7 +90,7 @@ public class ExampleMod {
 
 ```java
 // Fabric
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings())
@@ -160,11 +160,16 @@ public class ModMessages {
 ## 步骤 7：Attachment → Capability
 
 ```java
-// Fabric 1.21.x
-public static final Key<MyData> MY_DATA = Key.create(
-    Registries.ATTACHMENT_TYPE,
-    new Identifier(MOD_ID, "my_data")
-);
+// Fabric 1.21.x Yarn
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
+
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(Identifier.of(MOD_ID, "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
 
 // ✅ Forge
 public interface MyCapability { int getValue(); void setValue(int value); }
@@ -178,6 +183,6 @@ public static final Capability<MyCapability> MY_CAP = Capability.get(...);
 1. **Java 版本**：Forge 1.20.x 需要 Java 17，Fabric 1.21.11 需要 Java 21
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
-4. **RegistryObject vs RegistrySupplier**：API 略有不同
+4. **RegistryObject vs Registry.register 返回值**：API 略有不同
 5. **网络 API**：Fabric 1.21.x 使用 `CustomPayload`，Forge 使用 `SimpleChannel`
 6. **数据存储**：Fabric 1.21.x 使用 Attachment，Forge 使用 Capability

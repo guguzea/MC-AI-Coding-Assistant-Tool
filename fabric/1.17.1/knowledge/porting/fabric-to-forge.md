@@ -97,15 +97,15 @@ private static final Item MY_ITEM = Registry.register(
 
 // ✅ Forge
 public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+    DeferredRegister.create(ForgeRegistry.ITEMS, MOD_ID);
 
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()));
 ```
 
 > ⚠️ **Fabric → Forge 映射注意**：
-> - Fabric 的 `Registry.ITEM` → Forge 的 `ForgeRegistries.ITEMS`
-> - Fabric 的 `Registry.BLOCK` → Forge 的 `ForgeRegistries.BLOCKS`
+> - Fabric 的 `Registry.ITEM` → Forge 的 `ForgeRegistry.ITEMS`
+> - Fabric 的 `Registry.BLOCK` → Forge 的 `ForgeRegistry.BLOCKS`
 > - Fabric 的 `Identifier` → Forge 的 `ResourceLocation`（但 `new Identifier(id, name)` 仍然兼容）
 
 ---
@@ -147,5 +147,5 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 1. **Java 版本**：Forge 1.17.1 需要 Java 16-17
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
-4. **RegistryObject vs RegistrySupplier**：API 略有不同
+4. **RegistryObject vs Registry.register 返回值**：API 略有不同
 5. **`Registries` 类**：Forge 使用 `ForgeRegistries`，Fabric 使用 `Registry.XXX` 静态字段

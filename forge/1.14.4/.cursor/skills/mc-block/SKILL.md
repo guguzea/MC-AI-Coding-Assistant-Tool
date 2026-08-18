@@ -1,23 +1,20 @@
 ---
 name: mc-block
-description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、BlockEntity、EntityBlock、BlockBehaviour.Properties、方块实体
+description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、TileEntity、hasTileEntity、Block.Properties、方块实体
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
-# 方块开发（Forge 1.19.4）
+# 方块开发（Forge 1.14.4）
 
 ## 快速开始
 
 ```java
-// 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.STONE)
-        .strength(1.5f, 6.0f)
-        .requiresCorrectToolForDrops()
+    () -> new Block(Block.Properties.create(Material.ROCK)
+        .hardnessAndResistance(1.5f, 6.0f)
     )
 );
 ```
@@ -26,7 +23,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ```
 IF 需要持久的 extra data（如机器存储、村民记忆）
-  → 方块实体（BlockEntity）→ 实现 EntityBlock 接口
+  → 方块实体（TileEntity）→ 重写 hasTileEntity() + createTileEntity()
 
 IF 只是静态显示（无状态）
   → 普通方块
@@ -35,20 +32,15 @@ IF 需要流体
   → 流体（Fluid）→ 参考 `02-block.mdc`
 ```
 
-## BlockBehaviour.Properties 常用配置
+## Block.Properties 常用配置
 
 ```java
-BlockBehaviour.Properties.of(Material.WOOD)
-    .strength(1.5f, 6.0f)              // 硬度和抗爆性
-    .requiresCorrectToolForDrops()       // 需要正确工具才能掉落
-    .noOcclusion()                      // 不阻挡光影
-    .isRedstoneConductor(...)          // 红石导体
-    .isSuffocating(...)                // 窒息方块
-    .isViewBlocking(...)                // 阻挡视角
-    .hasPostProcess(...)               // 后处理效果
-    .emissiveRendering(...)            // 自发光
-    .noLootTablePoolsBuilder()         // 无掉落表
+Block.Properties.create(Material.WOOD)
+    .hardnessAndResistance(1.5f, 6.0f)
+    .harvestTool(ToolType.AXE)
 ```
+
+本档没有 `BlockBehaviour.Properties.of()` / `requiresCorrectToolForDrops()` / `noLootTablePoolsBuilder()`（邻版 API）。
 
 ## Decision: 物品形态（ItemBlock）
 
@@ -60,36 +52,38 @@ IF 方块不应出现在物品栏（如空气、光源方块）
   → 不注册 ItemBlock
 ```
 
-## EntityBlock 方块
+## 带 TileEntity 的方块
+
+本档没有 `EntityBlock` / `getTicker`。详见 `mc-blockentity`。
 
 ```java
-public class MyMachineBlock extends Block implements EntityBlock {
-    // 返回新的方块实体实例
+public class MyMachineBlock extends Block {
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new MyMachineBlockEntity(pos, state);
-    }
+    public boolean hasTileEntity(BlockState state) { return true; }
 
-    // 返回方块刻处理器（如果需要定时逻辑）
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-            Level level, BlockState state, BlockEntityType<T> type) {
-        // 仅在服务端执行
-        return level.isClientSide ? null :
-            (type == MyMachineBlockEntity.TYPE.get() ? MyMachineBlockEntity::tick : null);
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return MyMachineTE.TYPE.get().create();
     }
 }
 ```
 
-## BlockEntity 基础结构
+## TileEntity 基础结构
 
 ```java
-public class MyMachineBlockEntity extends BlockEntity {
+public class MyMachineTE extends TileEntity implements ITickableTileEntity {
     private int progress = 0;
 
-    public MyMachineBlockEntity(BlockPos pos, BlockState state) {
-        super(MyMachineBlockEntity.TYPE.get(), pos, state);
+    public MyMachineTE() {
+        super(MyMachineTE.TYPE.get());
+    }
+
+    @Override
+    public void tick() {
+        if (world == null || world.isRemote) return;
+    }
+}
+```
     }
 
     // 刻处理逻辑（服务端）

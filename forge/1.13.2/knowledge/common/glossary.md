@@ -63,11 +63,11 @@
 
 ## 网络
 
-### SimpleNetworkWrapper
-: Forge 1.13.2 的网络通道封装类。
+### SimpleChannel
+: Forge 1.13.2 的网络通道类（`NetworkRegistry.newSimpleChannel` 的返回类型）。不要与 1.12 的 `SimpleNetworkWrapper` 混淆。
 
-### IMessage
-: 网络消息接口。包含 `toBytes`/`fromBytes` 方法用于序列化。
+### PacketDistributor
+: 1.13+ 指定发包目标（`PLAYER` / `ALL` / `TRACKING_ENTITY` 等）。
 
 ### PacketBuffer
 : 1.13.2 的字节缓冲区类，用于网络消息序列化。

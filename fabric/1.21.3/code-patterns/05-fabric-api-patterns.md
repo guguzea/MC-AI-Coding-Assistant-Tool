@@ -1,4 +1,4 @@
-# Fabric API 模块模式（Fabric 1.20.1）
+# Fabric API 模块模式（Fabric 1.21.3）
 
 > Fabric 独有：Fabric API 提供 20+ 模块化 API。
 
@@ -15,10 +15,12 @@ public class MyCommands {
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             dispatcher.register(
-                LiteralArgumentBuilder.literal("mycommand")
+                CommandManager.literal("mycommand")
                     .executes(context -> {
-                        PlayerEntity player = context.getPlayer();
-                        player.sendMessage(Text.literal("Hello from Fabric!"));
+                        ServerPlayerEntity player = context.getSource().getPlayer();
+                        if (player != null) {
+                            player.sendMessage(Text.literal("Hello from Fabric!"));
+                        }
                         return 1;
                     })
             );
@@ -39,14 +41,14 @@ public void onInitialize() {
 模式: Key Binding
 平台: Fabric
 分类: fabric-api
-依赖: [fabric-keybindings-api-v0]
+依赖: [fabric-keybindings-api-v1]
 扩展点: [ClientModInitializer]
 ---
 public class MyKeyBindings {
     public static final KeyBinding MY_KEY = new KeyBinding(
         "key.examplemod.my_key",
         InputUtil.Type.KEYSYM,
-        InputUtil.fromCode(80),  // P 键
+        GLFW.GLFW_KEY_P,
         "category.examplemod"
     );
 }
@@ -77,15 +79,11 @@ public class ExampleModClient implements ClientModInitializer {
 ---
 // 使用 fabric-screen-api-v1 的高级 Widget
 public class MyAdvancedScreen extends Screen {
-    private final List<Selectable> selectables = new ArrayList<>();
-
     @Override
     protected void init() {
-        addSelectableChild(new SimpleNamedWidget(
-            Text.literal("Title"),
-            width / 2 - 50, height / 2 - 50, 100, 20,
-            Text.literal("My Screen"), textRenderer
-        ));
+        addDrawableChild(ButtonWidget.builder(Text.literal("OK"), btn -> {})
+            .dimensions(this.width / 2 - 50, this.height / 2 - 20, 100, 20)
+            .build());
     }
 }
 ```
@@ -99,42 +97,27 @@ public class MyAdvancedScreen extends Screen {
 依赖: [fabric-registry-sync-v0]
 扩展点: [onInitialize]
 ---
-// 注册自定义 Registry
-@Override
-public void onInitialize() {
-    // 注册自定义 Registry 类型
-    Registry.register(
-        Registries.CUSTOM_REGISTRY,
-        new Identifier(MOD_ID, "my_registry"),
-        MyRegistryKey
-    );
-}
+不要编造 `Registries.CUSTOM_REGISTRY`。自定义 Registry 用 Fabric API `FabricRegistryBuilder`（fabric-registry-sync-v0）。
 ```
 
-## 模式 5：Loot API（fabric-loot-api-v2）
+## 模式 5：Loot API（fabric-loot-api-v3）
 
 ```yaml
 模式: Loot Modification
 平台: Fabric
 分类: fabric-api
-依赖: [fabric-loot-api-v2]
+依赖: [fabric-loot-api-v3]
 扩展点: [LootTableEvents]
 扩展点: [onInitialize]
 ---
 public class MyLootModifiers {
     public static void register() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if (key.equals(LootTableIds.CHESTS_SIMPLE_DUNGEON)) {
+            if (key.getValue().equals(Identifier.of("minecraft", "chests/simple_dungeon"))) {
                 tableBuilder.pool(
                     LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
-                        .bonusRolls(0, 0)
-                        .entry(
-                            ItemEntry.builder(Items.DIAMOND)
-                                .weight(1)
-                                .build()
-                        )
-                        .build()
+                        .with(ItemEntry.builder(Items.DIAMOND).weight(1))
                 );
             }
         });

@@ -9,8 +9,8 @@
 依赖: []
 扩展点: [BlockItem]
 ---
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
-    Registries.ITEM,
+private static final Item MY_ITEM = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings().maxCount(64))
 );
@@ -25,8 +25,8 @@ private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
 依赖: []
 扩展点: [StatusEffect]
 ---
-private static final RegistrySupplier<Item> MY_APPLE = Registry.register(
-    Registries.ITEM,
+private static final Item MY_APPLE = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_golden_apple"),
     new Item(new Item.Settings()
         .food(new FoodComponent.Builder()
@@ -57,8 +57,8 @@ public enum MyToolMaterial implements ToolMaterial {
     // ... getDurability, getMiningSpeed, getAttackDamage, etc.
 }
 
-private static final RegistrySupplier<Item> COPPER_SWORD = Registry.register(
-    Registries.ITEM,
+private static final Item COPPER_SWORD = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "copper_sword"),
     new SwordItem(MyToolMaterial.COPPER, 3, 1.6f,
         new Item.Settings().maxDamage(250))
@@ -74,8 +74,8 @@ private static final RegistrySupplier<Item> COPPER_SWORD = Registry.register(
 依赖: []
 扩展点: [Custom behavior]
 ---
-private static final RegistrySupplier<Item> MY_HAMMER = Registry.register(
-    Registries.ITEM,
+private static final Item MY_HAMMER = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_hammer"),
     new Item(new Item.Settings().maxDamage(100)) {
         @Override

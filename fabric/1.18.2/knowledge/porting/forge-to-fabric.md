@@ -6,7 +6,7 @@
 
 | 维度 | Forge | Fabric |
 |------|-------|--------|
-| 入口注解 | `@Mod` | `FabricMod` 接口 + entrypoint |
+| 入口注解 | `@Mod` | `ModInitializer` 接口 + entrypoint |
 | Mod 配置 | `mods.toml` | `fabric.mod.json` |
 | 注册方式 | `DeferredRegister` + modEventBus | `Registry.register()` |
 | 注册时机 | `RegisterEvent` 自动触发 | `onInitialize()` 方法中执行 |
@@ -90,13 +90,13 @@ public class ExampleMod {
 
 ```java
 // ✅ Fabric
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     public static final String MOD_ID = "examplemod";
 
     @Override
     public void onInitialize() {
         // 所有注册在此执行
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"),
             new Item(new Item.Settings()));
     }
 }
@@ -111,14 +111,14 @@ public class ExampleMod implements FabricMod {
 ```java
 // Forge
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(ForgeRegistry.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
 
 // ✅ Fabric
-private static final RegistrySupplier<Block> MY_BLOCK = Registry.register(
-    Registries.BLOCK,
+private static final Block MY_BLOCK = Registry.register(
+    Registry.BLOCK,
     new Identifier(MOD_ID, "my_block"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE))
 );

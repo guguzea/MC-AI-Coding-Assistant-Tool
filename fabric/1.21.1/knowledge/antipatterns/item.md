@@ -11,7 +11,7 @@
 private static final Item MY_ITEM = new Item(new Item.Settings());
 
 // ✅ 正确
-private static final RegistrySupplier<Item> MY_ITEM =
+private static final Item MY_ITEM =
     Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 ```

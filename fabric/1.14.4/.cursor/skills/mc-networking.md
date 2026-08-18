@@ -2,12 +2,12 @@
 name: mc-networking
 description: Fabric 网络通信。FabricNetworkConstants、PacketByteBuf、ClientSidePacketRegistry。触发词：网络、Networking、PacketByteBuf、ServerPlayNetworking
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 网络通信（Fabric 1.20.1）
+# 网络通信（Fabric 1.14.4）
 
 ## 快速开始
 

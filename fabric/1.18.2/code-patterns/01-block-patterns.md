@@ -9,16 +9,16 @@
 依赖: []
 扩展点: [BlockItem, 方块实体]
 ---
-private static final RegistrySupplier<Block> MY_STONE = Registry.register(
-    Registries.BLOCK,
+private static final Block MY_STONE = Registry.register(
+    Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
-private static final RegistrySupplier<Item> MY_STONE_ITEM = Registry.register(
-    Registries.ITEM,
+private static final Item MY_STONE_ITEM = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_stone"),  // 同名
-    new BlockItem(MY_STONE.get(), new Item.Settings())
+    new BlockItem(MY_STONE, new Item.Settings())
 );
 ```
 
@@ -99,8 +99,8 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 依赖: []
 扩展点: [BlockItem]
 ---
-private static final RegistrySupplier<Block> MY_PLANT = Registry.register(
-    Registries.BLOCK,
+private static final Block MY_PLANT = Registry.register(
+    Registry.BLOCK,
     new Identifier(MOD_ID, "my_plant"),
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION)
         .noCollision()

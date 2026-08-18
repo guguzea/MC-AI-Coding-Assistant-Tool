@@ -20,7 +20,7 @@
 
 ```java
 // ❌ 错误
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM = new Item(new Item.Settings());
 
     // 类加载时注册，但应在 onInitialize() 中
@@ -30,8 +30,8 @@ public class ExampleMod implements FabricMod {
 }
 
 // ✅ 正确
-public class ExampleMod implements FabricMod {
-    private static final RegistrySupplier<Item> MY_ITEM =
+public class ExampleMod implements ModInitializer {
+    private static final Item MY_ITEM =
         Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override
@@ -220,7 +220,7 @@ dependencies {
 
 ```java
 // ❌ 错误：MinecraftClient 仅存在于客户端
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         MinecraftClient client = MinecraftClient.getInstance();  // 服务端崩溃！

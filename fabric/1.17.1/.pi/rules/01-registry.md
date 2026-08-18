@@ -13,7 +13,7 @@ description: 01 — 注册系统
 
 ### 核心原则
 
-- **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
+- 必须 `Registry.register`；只 `new` 不注册的对象不会出现在游戏中
 - **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
@@ -40,8 +40,7 @@ description: 01 — 注册系统
 // ✅ 正确：在 fabric.mod.json 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 fabric.mod.json 的 id 不一致
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
@@ -176,7 +175,7 @@ private static final Block MY_BLOCK =
     Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), new Block(...));
 
 // ❌ 禁止：1.17.x 没有 RegistrySupplier！
-private static final RegistrySupplier<Block> MY_BLOCK = ...  // 编译错误！
+private static final Block MY_BLOCK = ...  // 编译错误！
 
 // ❌ 禁止：直接 public static final Item（不会被注册系统管理）
 public static final Item MY_ITEM = new Item(...);  // 不会被注册

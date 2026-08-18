@@ -47,8 +47,8 @@ IF 需要在 mod constructor 执行前引用已注册对象
 |----------|---------------------|------|
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
-| 方块实体 | `ForgeRegistries.BLOCK_ENTITY_TYPES` | |
-| 实体类型 | `ForgeRegistries.ENTITY_TYPES` | |
+| 方块实体 | `ForgeRegistries.TILE_ENTITIES` | |
+| 实体类型 | `ForgeRegistries.ENTITIES` | |
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
@@ -66,47 +66,37 @@ public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_bloc
 
 ## 注册方块实体（TileEntity）
 
+本档没有 `EntityBlock`。不要 `ITileEntityProvider`（1.12）。用 `hasTileEntity` + `createTileEntity`。
+
 ```java
-// 方块实现 EntityBlock
-public class MyBlock extends Block implements ITileEntityProvider {
+public class MyBlock extends Block {
+    @Override
+    public boolean hasTileEntity(BlockState state) { return true; }
+
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new MyTileEntity();
+        return MY_TE.get().create();
     }
 }
 
-// 注册 TileEntityType
-public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
-public static final RegistryObject<BlockEntityType<MyTileEntity>> MY_TILE_ENTITY =
-    TILE_ENTITIES.register("my_block",
-        () -> BlockEntityType.Builder.create(MyTileEntity::new, EXAMPLE_BLOCK.get()).build(null)
+public static final RegistryObject<TileEntityType<MyTE>> MY_TE =
+    TILE_ENTITIES.register("my_te",
+        () -> TileEntityType.Builder.create(MyTE::new, EXAMPLE_BLOCK.get()).build(null)
     );
 ```
 
 ## 注册实体属性
 
+本档没有 `ForgeRegistries.ATTRIBUTES`。在实体里重写 `registerAttributes()`：
+
 ```java
-// 在 mod 构造函数中注册（非 FMLCommonSetupEvent）
-public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
-
-public static final RegistryObject<Attribute> MY_ATTRIBUTE =
-    ATTRIBUTES.register("my_attribute",
-        () -> new RangedAttribute("attribute.modid.my_attribute", 100.0, 1.0, 1024.0).setShouldWatch(true)
-    );
-
-// 在 mod 构造函数中
-ATTRIBUTES.register(modEventBus);
-
-// 实体上使用属性
 @Override
 protected void registerAttributes() {
     super.registerAttributes();
-    this.getAttribute(ATTRIBUTES.get("my_attribute")).ifPresent(attr ->
-        this.getAttributeMap().registerAttribute(attr)
-    );
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 }
 ```
 

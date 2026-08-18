@@ -14,7 +14,7 @@ description: 08 — 客户端 / 服务端分离
 
 - Fabric 使用 `EnvType`（`CLIENT` / `SERVER`）区分运行环境
 - 客户端专用代码必须放在 `ClientModInitializer` 中
-- 服务端代码在 `FabricMod.onInitialize()` 中
+- 服务端代码在 `ModInitializer.onInitialize()` 中
 - **禁止**在共享代码中直接引用客户端类
 - 使用 `@Environment(EnvType.CLIENT)` 注解标记客户端方法
 
@@ -33,7 +33,7 @@ IF 需要在客户端执行初始化
   → 在 ClientModInitializer.onInitializeClient() 中执行
 
 IF 需要在服务端执行初始化
-  → 在 FabricMod.onInitialize() 中执行（排除客户端）
+  → 在 ModInitializer.onInitialize() 中执行（排除客户端）
 
 IF 需要共享初始化的回调
   → 使用 mixin 或事件系统，在两端都执行
@@ -45,11 +45,11 @@ IF 需要共享初始化的回调
 
 ```java
 // 服务端 + 共享逻辑
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // 服务端逻辑和共享逻辑
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
     }
 }
 
@@ -60,7 +60,7 @@ public class ExampleModClient implements ClientModInitializer {
         // 仅客户端执行的代码
         EntityRendererRegistry.register(...);
         KeyBindingHelper.registerKeyBinding(...);
-        ClientSidePacketRegistry.INSTANCE.register(...);
+        ClientPlayNetworking.registerGlobalReceiver(PACKET_ID, (client, handler, buf, responseSender) -> {});
     }
 }
 ```
@@ -111,7 +111,7 @@ public void initServerOnly() {
 
 ```java
 // ❌ 错误：在共享代码中创建客户端渲染器
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     public void onInitialize() {
         // 不要在这里调用 EntityRendererRegistry！
         // 这会在服务端启动时崩溃

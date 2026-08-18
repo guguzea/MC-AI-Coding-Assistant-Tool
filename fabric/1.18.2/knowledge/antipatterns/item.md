@@ -14,8 +14,8 @@
 **错误代码：**
 ```java
 // ❌ 默认 durability 为 Integer.MAX_VALUE，物品永远不会消耗
-private static final RegistrySupplier<Item> MY_TOOL = Registry.register(
-    Registries.ITEM,
+private static final Item MY_TOOL = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_tool"),
     new Item(new Item.Settings())
 );
@@ -23,8 +23,8 @@ private static final RegistrySupplier<Item> MY_TOOL = Registry.register(
 
 **正确方案：**
 ```java
-private static final RegistrySupplier<Item> MY_TOOL = Registry.register(
-    Registries.ITEM,
+private static final Item MY_TOOL = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_tool"),
     new Item(new Item.Settings().maxDamage(100))  // ✅ 设置耐久
 );

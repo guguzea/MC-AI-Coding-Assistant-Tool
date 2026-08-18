@@ -14,7 +14,7 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.14.4 |
-| 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 11**（Forge 1.14.4 要求） |
 | Gradle | Gradle 7.x + ForgeGradle 3.x |
 | Mappings | **MCP**（`minecraft "1.14.4"` 下默认） |

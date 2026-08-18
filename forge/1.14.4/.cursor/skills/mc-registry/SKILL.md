@@ -4,14 +4,14 @@ description: Minecraft Forge 注册系统。注册方块、物品、实体、方
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
-# Registry 注册系统（Forge 1.19.4）
+# Registry 注册系统（Forge 1.14.4）
 
 ## 快速开始
 
-**始终使用 DeferredRegister**，这是 Forge 1.19.4 官方推荐的注册方式：
+**始终使用 DeferredRegister**，这是 Forge 1.14.4 官方文档推荐的注册方式：
 
 ```java
 // 1. 创建 DeferredRegister（通常在 mod 主类或单独的注册类中）
@@ -20,7 +20,7 @@ public static final DeferredRegister<Block> BLOCKS =
 
 // 2. 创建 RegistryObject 持有引用
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE))
+    () -> new Block(Block.Properties.create(Material.ROCK).hardnessAndResistance(1.5f, 6.0f))
 );
 
 // 3. 在 mod 构造函数中注册到 modEventBus
@@ -34,7 +34,7 @@ IF 注册方块/物品/实体/Biomes/SoundEvents 等
   → 使用 DeferredRegister<T> + RegistryObject<T>
 
 IF 注册自定义 Registry（全新注册表）
-  → 使用 RegistryEvent.NewRegistry + DeferredRegister.create(ResourceKey)
+  → 使用 RegistryEvent.NewRegistry + RegistryBuilder（本档没有 ForgeRegistries.Keys）
 
 IF 需要在 mod constructor 执行前引用已注册对象
   → ❌ 禁止：在静态字段初始化中引用另一个 DeferredRegister 的 RegistryObject
@@ -47,13 +47,13 @@ IF 需要在 mod constructor 执行前引用已注册对象
 |----------|---------------------|------|
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
-| 方块实体 | `ForgeRegistries.BLOCK_ENTITY_TYPES` | |
-| 实体类型 | `ForgeRegistries.ENTITY_TYPES` | |
-| 生物群系 | `Registries.BIOME`（Vanilla） | 用 `ResourceKey` |
+| 方块实体 | `ForgeRegistries.TILE_ENTITIES` | |
+| 实体类型 | `ForgeRegistries.ENTITIES` | |
+| 生物群系 | `ForgeRegistries.BIOMES` | 1.14 字段直接在 ForgeRegistries 上 |
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
-| 创造模式标签 | `Registries.CREATIVE_MODE_TAB` | Vanilla |
+| 创造模式标签 | `ItemGroup` | Vanilla |
 
 ## 注册 ItemBlock
 
@@ -65,57 +65,40 @@ public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_bloc
 );
 ```
 
-## 注册方块实体（BlockEntity）
+## 注册方块实体（TileEntity）
+
+本档没有 `EntityBlock` / `getTicker`。详见 `mc-blockentity`。
 
 ```java
-// 方块实现 EntityBlock
-public class MyBlock extends Block implements EntityBlock {
+public class MyBlock extends Block {
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new MyBlockEntity(pos, state);
-    }
+    public boolean hasTileEntity(BlockState state) { return true; }
 
-    @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-            Level level, BlockState state, BlockEntityType<T> type) {
-        return type == MY_BLOCK_ENTITY.get() ? MyBlockEntity::tick : null;
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return MY_TE.get().create();
     }
 }
 
-// 注册 BlockEntityType
-public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
-public static final RegistryObject<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
-    BLOCK_ENTITIES.register("my_block",
-        () -> BlockEntityType.Builder.of(MyBlockEntity::new, EXAMPLE_BLOCK.get())
-            .build(null)
+public static final RegistryObject<TileEntityType<MyTE>> MY_TE =
+    TILE_ENTITIES.register("my_te",
+        () -> TileEntityType.Builder.create(MyTE::new, EXAMPLE_BLOCK.get()).build(null)
     );
 ```
 
 ## 注册实体属性
 
+本档**没有** `ForgeRegistries.ATTRIBUTES`。在实体里重写 `registerAttributes()`，用 `SharedMonsterAttributes`：
+
 ```java
-// 在 mod 构造函数中注册（非 FMLCommonSetupEvent）
-public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(ForgeRegistries.Keys.ATTRIBUTES, MOD_ID);
-
-public static final RegistryObject<Attribute> MY_ATTRIBUTE =
-    ATTRIBUTES.register("my_attribute",
-        () -> new RangedAttribute("attribute.modid.my_attribute", 100.0, 1.0, 1024.0)
-    );
-
-// 在 mod 构造函数中
-ATTRIBUTES.register(modEventBus);
-
-// 实体上使用属性
 @Override
 protected void registerAttributes() {
     super.registerAttributes();
-    this.getAttribute(ATTRIBUTES.get("my_attribute")).ifPresent(attr ->
-        this.getAttributeMap().registerAttribute(attr)
-    );
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 }
 ```
 
@@ -128,7 +111,7 @@ protected void registerAttributes() {
 
 ## 参考资料
 
-- Forge 官方文档：https://docs.minecraftforge.net/en/1.19.4/concepts/registries/
+- Forge 官方文档：https://docs.minecraftforge.net/en/1.14.x/concepts/registries/
 - 详细示例：参见 `01-registry.mdc`
 
 ## 扩展点

@@ -51,7 +51,7 @@ IF 服务端 → 区域内所有玩家
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-public class MyMessage implements IMessage {
+public class MyMessage {
     private int value;
     private ResourceLocation targetId;
 

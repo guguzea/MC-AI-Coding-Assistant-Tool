@@ -11,7 +11,7 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.18.2 |
-| 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 17**（Forge 1.18.2 要求） |
 | Gradle | Gradle 7.x + ForgeGradle 5.x |
 | Mappings | **Parchment**（1.18.2-2022.07.31） |

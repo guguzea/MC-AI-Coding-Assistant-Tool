@@ -30,9 +30,9 @@ public class ExampleMod implements ModInitializer {
 
 **正确方案：**
 ```java
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     // ✅ 1.16.5 使用 Registry 字段（而非 Registries 枚举）
-    private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+    private static final Item MY_ITEM = Registry.register(
         Registry.ITEM,
         new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings())

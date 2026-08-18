@@ -19,23 +19,35 @@ description: 06 — 网络通信
 
 ### SimpleNetworkWrapper 配置
 
+官方 SimpleImpl：`NetworkRegistry.INSTANCE.newSimpleChannel` 返回 **`SimpleNetworkWrapper`**（不是 1.13+ 的 `SimpleChannel`）。
+
 ```java
-private static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE
-        .newSimpleChannel(MODID)
-        .registerMessage(id, MessageClass.class, MessageClass::toBytes, MessageClass::new, MessageClass::handle);
+public static final SimpleNetworkWrapper INSTANCE =
+        NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+
+private static int disc = 0;
+
+public static void registerMessages() {
+    // registerMessage(handler, message, discriminator, 接收端)
+    INSTANCE.registerMessage(MyMessage.Handler.class, MyMessage.class, disc++, Side.SERVER);
+    INSTANCE.registerMessage(MyClientMessage.Handler.class, MyClientMessage.class, disc++, Side.CLIENT);
+}
 ```
+
+- 通道名用短字符串，通常就是 **mod id**（不要 `modid:main` 这种 1.13+ ResourceLocation 通道）
+- **不要** lambda `encode`/`decode`、**不要** `NetworkDirection`、**不要** `sendTo(msg, networkManager, direction)`
 
 ### 消息类规范
 
-- 消息类必须有 `toBytes(ByteBuf)` 和构造函数（用于 `PacketBuffer` 反序列化）
-- 无需实现接口
-- 消息类必须有无参构造函数（用于反序列化）
+- 实现 **`IMessage`**：`toBytes(ByteBuf)` / `fromBytes(ByteBuf)`
+- **必须**有无参构造函数（反序列化要用）
+- 无需实现别的接口
 - **禁止**在消息类中存储对世界或实体的直接引用（序列化后引用会断开）
 
 ### 注册时机
 
-- `SimpleNetworkWrapper` 实例创建在 `init` 阶段
-- 消息注册在 `init` 阶段
+- `SimpleNetworkWrapper` 实例创建在 `preInit` / `init` 阶段
+- `registerMessage` 在 `init` 阶段（与通道创建同一处即可）
 
 ---
 
@@ -45,15 +57,16 @@ private static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE
 
 ```
 IF 需要服务端主动推送给客户端（服务器通知客户端）
-  → 使用 SimpleNetworkWrapper.sendTo()（服务端发送给指定玩家）
+  → 使用 SimpleNetworkWrapper.sendTo()（服务端发送给指定 EntityPlayerMP）
   → 或使用 SimpleNetworkWrapper.sendToAll()（服务端广播）
+  → 或 sendToDimension / sendToAllAround / sendToAllTracking
 
 IF 需要客户端主动请求服务端（客户端触发服务端逻辑）
   → 使用 SimpleNetworkWrapper.sendToServer()（客户端发送给服务端）
   → 验证客户端发送的数据（永远不要信任客户端！）
 
 IF 需要双向同步（游戏内实时同步）
-  → 组合使用 C2S 和 S2C 消息
+  → 同一消息类要对 Side.SERVER 和 Side.CLIENT 各 registerMessage 一次
 ```
 
 ### Decision: 消息方向
@@ -62,16 +75,19 @@ IF 需要双向同步（游戏内实时同步）
 ┌─────────────────────┐
 │      服务端 Mod       │
 │                     │
-│  INSTANCE.sendTo()   │──────────→ 客户端（指定 Player）
+│  INSTANCE.sendTo()   │──────────→ 客户端（指定 EntityPlayerMP）
 │                     │
 │  INSTANCE.sendToAll()│──────────→ 所有客户端（服务器广播）
 │                     │
-│  客户端发来消息 ────────→│ 客户端发来消息
+│  客户端发来消息 ────────→│ sendToServer
 └─────────────────────┘
 ```
 
-- `sendTo(player, msg)` — 服务端发送给指定玩家
+- `sendTo(msg, playerMP)` — 服务端发送给指定玩家（参数顺序是 **消息在前、玩家在后**）
 - `sendToAll(msg)` — 服务端广播给所有玩家
+- `sendToDimension(msg, dimId)` — 当前维度
+- `sendToAllAround(msg, TargetPoint)` — 球形范围
+- `sendToAllTracking(msg, entity)` / `sendToAllTracking(msg, TargetPoint)`
 - `sendToServer(msg)` — 客户端发送给服务端
 
 ### Decision: 什么时候用网络包
@@ -84,7 +100,8 @@ IF 实现实体状态同步（属性修改）
   → 服务端修改 → 发送数据给客户端 → 客户端更新渲染
 
 IF 实现方块实体数据同步
-  → 使用 TileEntity.syncData 或自定义网络包
+  → 优先 SPacketUpdateTileEntity（getUpdatePacket / onDataPacket）
+  → 数据量大或需定向同步时再用自定义 IMessage
 
 IF 需要玩家交互确认（如打开门）
   → 使用 PlayerInteractEvent（在服务端自然处理，无需网络包）
@@ -95,48 +112,36 @@ IF 需要玩家交互确认（如打开门）
 ## 示例：消息类定义
 
 ```java
-// messages/MessageExample.java
-public class MessageExample implements IMessage {
+// messages/MyMessage.java
+public class MyMessage implements IMessage {
     private int value;
-    private ResourceLocation targetId;
 
-    public MessageExample() {}
+    public MyMessage() {}
 
-    public MessageExample(int value, ResourceLocation targetId) {
+    public MyMessage(int value) {
         this.value = value;
-        this.targetId = targetId;
     }
 
     @Override
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(ByteBuf buf) {
         this.value = buf.readInt();
-        this.targetId = buf.readResourceLocation();
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(value);
-        buf.writeResourceLocation(targetId);
     }
-}
-```
 
-## 示例：消息处理器
-
-```java
-// messages/MessageExampleHandler.java
-public static class MessageExampleHandler implements IMessageHandler<MessageExample, IMessage> {
-    @Override
-    public IMessage onMessage(MessageExample message, MessageContext ctx) {
-        // 从网络上下文获取逻辑端
-        EntityPlayer player = ctx.getServerHandler().player;
-        if (player != null) {
-            // 服务端处理逻辑
+    public static class Handler implements IMessageHandler<MyMessage, IMessage> {
+        @Override
+        public IMessage onMessage(MyMessage message, MessageContext ctx) {
+            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            int amount = message.value;
             player.getServerWorld().addScheduledTask(() -> {
-                // 在主线程执行游戏逻辑
+                player.inventory.addItemStackToInventory(new ItemStack(Items.DIAMOND, amount));
             });
+            return null;
         }
-        return null;
     }
 }
 ```
@@ -146,25 +151,19 @@ public static class MessageExampleHandler implements IMessageHandler<MessageExam
 ```java
 // network/NetworkHandler.java
 public class NetworkHandler {
-    public static SimpleNetworkWrapper INSTANCE;
-    private static int id = 0;
+    public static final SimpleNetworkWrapper INSTANCE =
+            NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    private static int disc = 0;
 
     public static void registerMessages() {
-        INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-        INSTANCE.registerMessage(id++, MessageExample.class,
-                MessageExample::toBytes,
-                MessageExample::new,
-                MessageExampleHandler::onMessage);
+        INSTANCE.registerMessage(MyMessage.Handler.class, MyMessage.class, disc++, Side.SERVER);
     }
 
-    // 服务端发送消息给指定玩家
-    public static void sendTo(PlayerEntity player, MessageExample message) {
-        INSTANCE.sendTo(message, player.connection.getNetworkManager(),
-                NetworkDirection.PLAY_TO_CLIENT);
+    public static void sendTo(EntityPlayerMP player, MyMessage message) {
+        INSTANCE.sendTo(message, player);
     }
 
-    // 服务端广播消息给所有玩家
-    public static void sendToAll(MessageExample message) {
+    public static void sendToAll(MyMessage message) {
         INSTANCE.sendToAll(message);
     }
 }
@@ -173,8 +172,27 @@ public class NetworkHandler {
 ## 示例：客户端发送消息
 
 ```java
-// 在客户端代码中（玩家输入等触发）
-NetworkHandler.INSTANCE.sendToServer(new MessageExample(value, targetId));
+NetworkHandler.INSTANCE.sendToServer(new MyMessage(value));
 ```
 
-> 重要：收到消息后**永远不要**直接修改世界或实体。必须用 `addScheduledTask()` 将操作排队到主线程执行。
+> 重要：1.8+ 默认在**网络线程**收包。收到消息后**永远不要**直接修改世界或实体。必须用 `IThreadListener.addScheduledTask()`（服务端从 `EntityPlayerMP#getServerWorld()`，客户端从 `Minecraft.getMinecraft()`）排到主线程。
+
+> 服务端处理客户端包时不要信任坐标：先 `world.isBlockLoaded(pos)`，避免任意区块加载攻击。
+
+## 常见错误
+
+- ❌ `SimpleChannel` / `NetworkDirection` / `FriendlyByteBuf` — 那是 1.13+ / 1.17+
+- ❌ `registerMessage(id, Class, encode, decode, handler)` lambda 五段式 — 本档是四参数 `(handler, message, id, Side)`
+- ❌ `sendTo(msg, networkManager, NetworkDirection)` / `PlayerEntity`
+- ❌ `ctx.side == EnumFacing.*` — 用 `net.minecraftforge.fml.relauncher.Side`
+- ❌ 通道名写成 `modid:main`
+- ❌ 在 handler 里直接改世界（未 `addScheduledTask`）
+- ❌ discriminator 冲突；双向包必须对两个 `Side` 各注册一次
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | 网络通道与消息在 init 注册 |
+| `mc-capability` | Capability 数据可通过 IMessage 同步 |
+| `mc-entity` | 实体额外生成数据见 `IEntityAdditionalSpawnData` |

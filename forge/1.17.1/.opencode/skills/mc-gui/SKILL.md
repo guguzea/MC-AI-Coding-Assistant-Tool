@@ -32,7 +32,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)
+        () -> IForgeMenuType.create(MyMenu::new)
     );
 
 // 在 mod 构造函数中

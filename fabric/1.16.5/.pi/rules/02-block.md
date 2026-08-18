@@ -63,21 +63,21 @@ FabricBlockSettings.create()
 
 ```java
 // 普通方块
-private static final RegistrySupplier<Block> MY_STONE = Registry.register(
+private static final Block MY_STONE = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 注册同名 BlockItem
-private static final RegistrySupplier<Item> MY_STONE_ITEM = Registry.register(
+private static final Item MY_STONE_ITEM = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_stone"),
-    new BlockItem(MY_STONE.get(), new Item.Settings())
+    new BlockItem(MY_STONE, new Item.Settings())
 );
 
 // 无碰撞方块（如草、花）
-private static final RegistrySupplier<Block> MY_PLANT = Registry.register(
+private static final Block MY_PLANT = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_plant"),
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION).noCollision().breakInstantly())
@@ -89,11 +89,11 @@ private static final RegistrySupplier<Block> MY_PLANT = Registry.register(
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-    new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 
 // ❌ 错误：BlockItem 使用不同的 registry name
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 错误！
-    new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## BlockEntity（带数据存储的方块）
@@ -117,10 +117,10 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 }
 
 // 3. 注册 BlockEntityType
-public static final RegistrySupplier<BlockEntityType<MyChestBlockEntity>> MY_CHEST =
+public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(Registry.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_chest"),
-        BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK.get())
+        BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK)
             .build(null));
 ```
 
@@ -188,21 +188,21 @@ FabricBlockSettings.copyOf(Blocks.STONE)
 
 ```java
 // 普通方块
-private static final RegistrySupplier<Block> MY_STONE = Registry.register(
+private static final Block MY_STONE = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 注册同名 BlockItem
-private static final RegistrySupplier<Item> MY_STONE_ITEM = Registry.register(
+private static final Item MY_STONE_ITEM = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_stone"),
-    new BlockItem(MY_STONE.get(), new Item.Settings())
+    new BlockItem(MY_STONE, new Item.Settings())
 );
 
 // 无碰撞方块（如草、花）
-private static final RegistrySupplier<Block> MY_PLANT = Registry.register(
+private static final Block MY_PLANT = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_plant"),
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION).noCollision().breakInstantly())
@@ -226,11 +226,11 @@ public class MySlabBlock extends Block {
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-    new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 
 // ❌ 错误：BlockItem 使用不同的 registry name
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 错误！
-    new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## BlockEntity（带数据存储的方块）
@@ -256,10 +256,10 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 }
 
 // 3. 注册 BlockEntityType
-public static final RegistrySupplier<BlockEntityType<MyChestBlockEntity>> MY_CHEST =
+public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(Registry.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_chest"),
-        BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK.get())
+        BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK)
             .build(null));
 ```
 
@@ -268,7 +268,7 @@ public static final RegistrySupplier<BlockEntityType<MyChestBlockEntity>> MY_CHE
 - ❌ `BlockItem` 与 `Block` 使用不同的 registry name — 物品会显示为缺失
 - ❌忘记注册 `BlockItem` — 方块在世界中存在但无法放入物品栏
 - ❌ 在 `onInitialize()` 外注册 — 注册不会生效
-- ❌ `RegistrySupplier<Block>` 中未调用 `.get()` 传给 `BlockItem` — 导致 null 引用
+- ❌ 把未注册的 Block 传给 BlockItem
 - ❌ 在服务端创建 `BlockRenderType` — 渲染相关只能在客户端
 
 ## 扩展点

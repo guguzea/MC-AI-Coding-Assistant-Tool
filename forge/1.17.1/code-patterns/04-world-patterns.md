@@ -38,7 +38,7 @@ public class MyStructure extends Structure {
     public GenerationStub buildStructure(GenerationContext context) {
         // 自定义结构生成逻辑
         return start(
-            ResourceLocationUtils.fromNamespaceAndPath(MOD_ID, "my_structure"),
+            new ResourceLocation(MOD_ID, "my_structure"),
             context
         ).type(StructureFeature.TEMPLATES);
     }

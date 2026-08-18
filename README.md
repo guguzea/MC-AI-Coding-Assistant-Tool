@@ -87,6 +87,22 @@ MC_skill/
 | ModLoader | ✅ 完成 | `modloader/1.6.4/` + 安全 API 表；禁止用 Forge Javadoc / `func_*` 冒充 |
 
 
+### 支持版本
+
+规则树（`activate_platform_pack action=list`）与官方文档数据（`list_*_versions`）**可能不一致**：有规则无文档、或有文档无完整 00–10 规则均属正常。Agent 须以工程**精确**版本为准，禁止用邻档顶上。
+
+| 平台 | 规则树（`平台/<ver>/`） | 文档数据（`list_*_versions`） | 主推 | 备注 |
+|------|-------------------------|-------------------------------|------|------|
+| **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 仅改口 AGENTS。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
+| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.11` · `26.1.2` | 同上 11 档 | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap** |
+| **NeoForge** | `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路 |
+| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.11` | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | 仅 QSL 差异（00/01/05）；02–10 读 `fabric/<ver>` |
+| **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（多为 L0-only） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
+| **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（L0-only） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
+| **ModLoader** | `1.2.5` · `1.5.2` · `1.6.4` | 无 Java 文档树 | **1.6.4** | 只用 safe-api 表；禁止 Forge Javadoc |
+| **基岩版** | 扁平 `bedrock/`（`*`） | `search_bedrock_docs` + `docsStatus` | 按 manifest | 无 `平台/<ver>/` 分档；实验开关按 `min_engine_version` |
+
+查询本机已建档列表：`node mcp-server/dist/cli.js activate_platform_pack --action=list`；文档档：`list_forge_versions` / `list_fabric_versions` / `list_neoforge_versions` / `list_doc_versions`。
 
 
 ## 多 IDE 支持
@@ -697,7 +713,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | ----------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
 | `mc-new-block`    | 新方块工作流  | DeferredRegister 注册 → BlockItem → 模型（generate_model）→ lang（generate_lang）→ loot（generate_datagen）→ 可选 tags/recipe |
 | `mc-new-entity`   | 新实体工作流  | EntityType + 属性 → SpawnPlacement/生物蛋 → 渲染器（generate_entity_renderer）→ loot/音效                                     |
-| `mc-new-gui`      | GUI 工作流 | MenuType + AbstractContainerMenu → Screen 注册 → SimpleChannel 同步槽位                                                 |
+| `mc-new-gui`      | GUI 工作流 | MenuType + AbstractContainerMenu → Screen 注册 → 按平台同步（Forge SimpleChannel / NeoForge Payload / Fabric ServerPlayNetworking） |
 | `mc-crash-triage` | 崩溃分诊    | analyze_log/crash_analyze → search_community_docs → validate_project + mixin_analyze → diagnose_gradle            |
 | `mc-port-mod`     | 移植模组    | analyze_porting_path → 确认目标 → port_project dryRun → get_migration_guide                                           |
 | `mc-build-mod`    | 模组构建流程  | validate_project / diagnose_gradle → gradlew build → 确认 build/libs jar → 失败则分析日志；可接真机循环                          |

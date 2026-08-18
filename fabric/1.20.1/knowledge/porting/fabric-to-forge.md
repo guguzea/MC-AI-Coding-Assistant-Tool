@@ -6,7 +6,7 @@
 
 | 维度 | Fabric | Forge |
 |------|--------|-------|
-| 入口 | `FabricMod` + entrypoint | `@Mod` 注解 |
+| 入口 | `ModInitializer` + entrypoint | `@Mod` 注解 |
 | Mod 配置 | `fabric.mod.json` | `mods.toml` |
 | 注册方式 | `Registry.register()` in `onInitialize()` | `DeferredRegister` + modEventBus |
 | Mixin | Loom 原生支持 | `org.spongepowered.mixin` 插件 |
@@ -57,7 +57,7 @@ side = "BOTH"
 
 ```java
 // Fabric
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
@@ -88,7 +88,7 @@ public class ExampleMod {
 
 ```java
 // Fabric
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings())
@@ -141,4 +141,4 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 1. **Java 版本**：Forge 1.20.1 需要 Java 17
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
-4. **RegistryObject vs RegistrySupplier**：API 略有不同
+4. **RegistryObject vs Registry.register 返回值**：API 略有不同

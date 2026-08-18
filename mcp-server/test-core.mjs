@@ -1711,11 +1711,17 @@ async function testPlan2PrimerMdkFabricPorting() {
 
   const fabPkt = genPkt("my_mod", "sync_msg", "fabric_1.21");
   assert.ok(fabPkt.code?.includes("PayloadTypeRegistry"), fabPkt.code?.slice(0, 400));
+  assert.ok(fabPkt.code?.includes("playC2S"), fabPkt.code?.slice(0, 500));
+  assert.ok(fabPkt.code?.includes("net.minecraft.util.Identifier"), fabPkt.code?.slice(0, 500));
+  assert.ok(!fabPkt.code?.includes("fromNamespaceAndPath"), fabPkt.code?.slice(0, 500));
+  assert.ok(!fabPkt.code?.includes("serverboundPlay"), fabPkt.code?.slice(0, 500));
   assert.ok(!/net\.minecraftforge/.test(fabPkt.code || ""));
   assert.ok(!/net\.neoforged/.test(fabPkt.code || ""));
 
   const fabPkt261 = genPkt("my_mod", "sync_msg", "fabric_26.1");
   assert.ok(fabPkt261.code?.includes("ServerPlayNetworking"));
+  assert.ok(fabPkt261.code?.includes("serverboundPlay"), fabPkt261.code?.slice(0, 500));
+  assert.ok(!fabPkt261.code?.includes("playC2S"), fabPkt261.code?.slice(0, 500));
   assert.ok(!/net\.minecraftforge/.test(fabPkt261.code || ""));
 
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
@@ -2024,6 +2030,7 @@ public class ExampleMod { }
 
   const rendOk = generateEntityRenderer("my_mod", "slime", "forge", "1.20.1");
   assert.ok(rendOk.code?.includes("@OnlyIn"), rendOk.code);
+  assert.ok(!rendOk.code?.includes("fromNamespaceAndPath"), rendOk.code);
 
   const triage = getWorkflowTemplate("mc-crash-triage");
   assert.equal(triage.found, true);

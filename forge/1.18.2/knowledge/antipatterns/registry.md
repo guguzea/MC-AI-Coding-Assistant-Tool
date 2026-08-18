@@ -134,5 +134,5 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 DeferredRegister.create(ForgeRegistries.BLOCKENTITIES, MOD_ID)
 DeferredRegister.create(ForgeRegistries.ENTITYTYPES, MOD_ID)
 DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID)
-DeferredRegister.create(ForgeRegistries.FLUIDTYPES, MOD_ID)
+DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)
 ```

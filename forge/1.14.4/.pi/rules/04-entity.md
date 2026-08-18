@@ -20,19 +20,19 @@ description: 04 — 实体开发
 ### EntityType.Builder 配置
 
 ```java
-EntityType.Builder.<MyEntity>create(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.<MyEntity>create(MyEntity::new, EntityClassification.CREATURE)
     .size(float width, float height)                  // 碰撞箱大小
-    .trackingRange(int range)                         // 客户端追踪范围
-    .updateInterval(int ticks)                        // 服务端更新间隔
-    .fireImmune()                                    // 免疫火焰伤害
-    .build(String modId)
+    .setTrackingRange(int range)                      // 客户端追踪范围
+    .setUpdateInterval(int ticks)                     // 服务端更新间隔
+    .immuneToFire()                                   // 免疫火焰伤害
+    .build("")
 ```
 
 ### 实体属性（Attribute）
 
-- 每个实体**必须**通过 `DeferredRegister<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
-- 属性注册在 mod 构造函数中通过 modEventBus 完成（使用 DeferredRegister）
-- **禁止**在 Entity 构造函数中注册属性（太早，属性系统尚未初始化）
+- 本档**没有** `ForgeRegistries.ATTRIBUTES` / `DeferredRegister<Attribute>`
+- 在实体类重写 `registerAttributes()`，用 `SharedMonsterAttributes` 设基值
+- **禁止**在 Entity 构造函数中改属性（太早，属性系统尚未初始化）
 
 ### AI Goal / Target Goal
 
@@ -66,35 +66,34 @@ IF 实体需要完全控制渲染和碰撞
   → 继承 Entity（不推荐，需要大量手动实现）
 ```
 
-### Decision: 选择 MobCategory（生物分类）
+### Decision: 选择 EntityClassification（生物分类）
 
 ```
 IF 自然生成的动物/怪物
-  → MobCategory.CREATURE（被动生物）
-  → MobCategory.MONSTER（敌对生物）
-  → MobCategory.WATER_CREATURE（水生生物）
-  → MobCategory.AMBIENT（环境生物，如蝙蝠）
+  → EntityClassification.CREATURE（被动生物）
+  → EntityClassification.MONSTER（敌对生物）
+  → EntityClassification.WATER_CREATURE（水生生物）
+  → EntityClassification.AMBIENT（环境生物，如蝙蝠）
 
 IF NPC 或乘客
-  → MobCategory.MISC（杂项）
+  → EntityClassification.MISC（杂项）
   → 不会自然生成
 
 IF 乘坐实体
-  → 使用 MobCategory.MISC 或在实体类中覆盖 getType().getCategory()
+  → 使用 EntityClassification.MISC 或在实体类中覆盖 getType().getCategory()
 ```
 
 ### Decision: 属性注册时机
 
 ```
-IF 在 Mod init 中直接注册属性（不使用 DeferredRegister）
+IF 在 Entity 构造函数里改属性
   → ❌ 错误：太早，Attributes 系统未就绪
 
-IF 使用 DeferredRegister + modEventBus
-  → ✅ 正确：在 mod 构造函数中通过 modEventBus 完成
-  → 属性系统已在 modEventBus 阶段就绪
+IF 在 registerAttributes() 里 super 之后 setBaseValue
+  → ✅ 正确：1.14.4 原版属性走这条路径
 
-IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
-  → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
+IF 使用 DeferredRegister<Attribute> / ForgeRegistries.ATTRIBUTES
+  → ❌ 错误：该注册表字段是 1.16+
 ```
 
 ### Decision: 渲染器选择
@@ -116,36 +115,14 @@ IF 自定义模型（Biped、Quadruped 等）
 ## 示例：定义实体属性
 
 ```java
-// init/ModAttributes.java
-public class ModAttributes {
-    // 推荐：使用 DeferredRegister（需 modEventBus）
-    public static final DeferredRegister<Attribute> ATTRIBUTES =
-        DeferredRegister.create(ForgeRegistries.ATTRIBUTES, ExampleMod.MOD_ID);
-
-    public static final RegistryObject<Attribute> EXAMPLE_HEALTH =
-        ATTRIBUTES.register("example.health",
-            () -> new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0).setShouldWatch(true));
-
-    public static final RegistryObject<Attribute> EXAMPLE_DAMAGE =
-        ATTRIBUTES.register("example.damage",
-            () -> new RangedAttribute("attribute.examplemod.damage", 2.0, 0.0, 1024.0).setShouldWatch(true));
-
-    public static void register(IEventBus eventBus) {
-        ATTRIBUTES.register(eventBus);
-    }
+@Override
+protected void registerAttributes() {
+    super.registerAttributes();
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
 }
 ```
-
-```java
-// ExampleMod.java 构造函数中
-public ExampleMod() {
-    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    ModAttributes.register(modEventBus);
-    // ... 其他注册
-}
-```
-
-> 注意：`ForgeRegistries.ATTRIBUTES` 是注册表，`DeferredRegister.create()` 需要传入 `IRegistry` 而非 `ResourceKey`。属性注册在 mod 构造函数中通过 modEventBus 完成，而不是在 `FMLCommonSetupEvent` 中。
 
 ## 示例：实体类
 
@@ -189,7 +166,7 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITIES.register("my_entity", () ->
-            EntityType.Builder.<MyEntity>create(MyEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.<MyEntity>create(MyEntity::new, EntityClassification.CREATURE)
                 .size(0.6f, 1.8f)
                 .trackingRange(8)
                 .updateInterval(3)
@@ -214,7 +191,7 @@ public ExampleMod() {
 ```java
 // ❌ 错误示例：setRegistryName + 直接 new（已过时）
 event.getRegistry().register(
-    EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+    EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
         ...
         .build("my_mod:my_entity")
 );

@@ -42,7 +42,7 @@ public class ModFluids {
 ```java
 public class MyFluidBlock extends BlockFluidClassic {
     public MyFluidBlock(Fluid fluid) {
-        super(fluid, Block.Properties.create(Material.WATER)
+        super(fluid, new Block(Material.WATER)
             .hardnessAndResistance(100.0f)
             .noDrops()
         );

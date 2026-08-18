@@ -46,7 +46,7 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 ```java
 // 正确：单次批量同步
-public class SyncAllDataMessage implements IMessage {
+public class SyncAllDataMessage {
     private NBTTagCompound data;
 
     public void toBytes(PacketBuffer buf) {
@@ -98,7 +98,7 @@ private static final String PROTOCOL_VERSION = "1.0";
 **正确方案**：始终使用版本比较函数。
 
 ```java
-public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.newSimpleChannel(
+public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
     new ResourceLocation(MOD_ID, "main"),
     () -> PROTOCOL_VERSION,
     PROTOCOL_VERSION::equals,  // 客户端协议版本
@@ -123,7 +123,9 @@ INSTANCE.registerMessage(0, MyMessage2.class, ...); // ❌ ID 冲突
 **正确方案**：使用统一的 ID 管理器。
 
 ```java
-public static int id(String name) {
-    return NetworkRegistry.chooseIdealPayloadId(id("main"), name);
+private static int nextDiscriminator = 0;
+
+public static int nextId() {
+    return nextDiscriminator++;
 }
 ```

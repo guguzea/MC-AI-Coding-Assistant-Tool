@@ -48,7 +48,7 @@
 | 风险域 | 识别方式 | 影响说明 |
 |--------|---------|---------|
 | Registry | 搜索 `DeferredRegister`/`Registry.register` | 1.14.x 已支持 |
-| 网络层 | 搜索 `SimpleNetworkWrapper`/`NetworkRegistry` | 基本兼容 |
+| 网络层 | 搜索 `SimpleChannel`/`NetworkRegistry`/`PacketDistributor` | 1.13+ 已不是 SimpleNetworkWrapper |
 | 事件系统 | 搜索 `@SubscribeEvent`/`EventBus` | 基本兼容 |
 | 资源加载 | 搜索 `ResourceLocation`/`Assets` | 基本兼容 |
 

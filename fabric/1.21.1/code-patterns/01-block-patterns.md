@@ -6,17 +6,17 @@
 
 ```java
 // 注册方块
-private static final RegistrySupplier<Block> MY_BLOCK = Registry.register(
+private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
     new Identifier(MOD_ID, "my_block"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 注册同名 BlockItem
-private static final RegistrySupplier<Item> MY_BLOCK_ITEM = Registry.register(
+private static final Item MY_BLOCK_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_block"),
-    new BlockItem(MY_BLOCK.get(), new Item.Settings())
+    new BlockItem(MY_BLOCK, new Item.Settings())
 );
 ```
 
@@ -95,7 +95,7 @@ public class MyBlock extends Block {
 new Block(FabricBlockSettings.copyOf(Blocks.DANDELION).noCollision().breakInstantly())
 
 // 透明方块（需要设置渲染层）
-BlockRenderLayerMap.INSTANCE.putBlock(MY_BLOCK.get(), RenderLayer.getTranslucent());
+BlockRenderLayerMap.INSTANCE.putBlock(MY_BLOCK, RenderLayer.getTranslucent());
 ```
 
 ## BlockEntity
@@ -106,7 +106,7 @@ public class MyBlockEntity extends BlockEntity {
     private int counter = 0;
 
     public MyBlockEntity(BlockPos pos, BlockState state) {
-        super(MY_BLOCK_ENTITY.get(), pos, state);
+        super(MY_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -128,11 +128,11 @@ public class MyBlockEntity extends BlockEntity {
 }
 
 // 注册 BlockEntityType
-public static final RegistrySupplier<BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
+public static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_block_entity"),
-        BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK.get()).build(null)
+        BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK).build(null)
     );
 
 // 方块实现 BlockEntityProvider

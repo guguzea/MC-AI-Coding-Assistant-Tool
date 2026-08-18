@@ -21,9 +21,9 @@ public class MyScreenHandler extends ScreenHandler {
 }
 
 // 注册 ScreenHandler
-private static final RegistrySupplier<ScreenHandlerType<MyScreenHandler>> MY_SCREEN =
+private static final ScreenHandlerType<MyScreenHandler> MY_SCREEN =
     Registry.register(
-        Registries.MENU,
+        Registry.SCREEN_HANDLER,
         new Identifier(MOD_ID, "my_screen"),
         new ScreenHandlerType<>(MyScreenHandler::new)
     );
@@ -36,8 +36,8 @@ public class MyScreen extends Screen {
 
     @Override
     protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.literal("OK"),
-            btn -> this.close()).dimensions(width/2-50, height/2, 100, 20).build());
+        addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2, 100, 20,
+            new LiteralText("OK"), btn -> this.onClose()));
     }
 }
 
@@ -45,7 +45,7 @@ public class MyScreen extends Screen {
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HandledScreens.register(MY_SCREEN.get(), MyScreen::new);
+        HandledScreens.register(MY_SCREEN, MyScreen::new);
     }
 }
 ```
@@ -60,7 +60,7 @@ IF 容器型界面（箱子）
   → ScreenHandler + HandledScreens
 
 IF 需要服务端数据同步
-  → TypedScreenHandlerFactory
+  → NamedScreenHandlerFactory
 ```
 
 ## 常见错误

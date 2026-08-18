@@ -12,7 +12,7 @@
 - 实体渲染器在客户端单独注册（`EntityRendererRegistry`）
 - 实体类继承 `Entity` 或其子类
 - 实体必须有 `FabricEntityTypeBuilder` 或 `EntityType.Builder`
-- 实体 ID 必须在 `fabric.mod.json` 的 `entrypoints` 中正确配置
+- `fabric.mod.json` 的 `client` entrypoint 写入口类名（不是实体 ID）
 
 ---
 
@@ -22,14 +22,14 @@
 
 ```
 IF 静态实体（不移动、不交互）
-  → EntityType.Builder.of(Entity::new, MobCategory.MISC)
+  → EntityType.Builder.create(Entity::new, SpawnGroup.MISC)
 
 IF 有行为实体（动物、怪物）
   → FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, Entity::new)
-  → 重写 registerAttributes() 和 init() 方法
+  → FabricDefaultAttributeRegistry.register + SpawnRestriction.register
 
 IF 需要在服务端和客户端分别初始化
-  → 拆分 FabricMod 为 client/server entrypoints
+  → 拆分 ModInitializer 为 client/server entrypoints
 
 IF 仅客户端渲染（如护甲、held item）
   → 不需要注册实体，使用 LayerRenderer 或FeatureRenderer
@@ -51,22 +51,24 @@ public class MyPigEntity extends CowEntity {
 public static final EntityType<MyPigEntity> MY_PIG =
     Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "my_pig"),
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyPigEntity::new)
-            .dimensions(0.9f, 1.4f)    // width, height
-            .maxTrackingRange(10)
-            .trackingTickInterval(10)
+            .dimensions(EntityDimensions.changing(0.9f, 1.4f))
+            .trackRangeBlocks(10)
+            .trackedUpdateRate(3)
             .build()
     );
 
 // 3. 在 onInitialize() 中设置属性
 @Override
 public void onInitialize() {
-    MobEntity example = (MobEntity) MY_PIG.create(null);
-    example.getAttributeContainer().register(Attributes.MAX_HEALTH, 20.0);
-    example.getAttributeContainer().register(Attributes.MOVEMENT_SPEED, 0.25);
+    FabricDefaultAttributeRegistry.register(MY_PIG,
+        MobEntity.createMobAttributes()
+            .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+    );
 }
 ```
 
-> ⚠️ **1.17.x 属性注册**：在 `onInitialize()` 中，通过 `MobEntity.create(null)` 创建临时实例来注册属性（传 null 因为不需要完整初始化世界）。`EntityAttributeRegistry` 和 `MobEntity.createMobAttributes()` 是 1.18+ 的 API。
+> 1.16.5+ 用 `FabricDefaultAttributeRegistry.register(type, MobEntity.createMobAttributes()...)`。不要编造 `EntityAttributeRegistry`，也不要用 `MobEntity.create(null)`。
 
 ## Spawn Restriction（生成限制）
 
@@ -114,7 +116,7 @@ public class ExampleModClient implements ClientModInitializer {
 - ❌实体渲染器在服务端执行 — `EntityRendererRegistry` 仅在客户端有效
 - ❌忘记设置 `SpawnRestriction` — 实体无法在世界中自然生成
 - ❌在 `onInitialize()` 外注册 — 注册不会生效
-- ❌ `Registries.ENTITY_TYPE` — 1.17.x 应使用 `Registry.ENTITY_TYPE`
+- ❌ `Registry.ENTITY_TYPE` — 1.17.x 应使用 `Registry.ENTITY_TYPE`
 
 ## 扩展点
 

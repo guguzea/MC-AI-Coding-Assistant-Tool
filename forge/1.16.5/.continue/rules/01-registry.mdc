@@ -23,10 +23,10 @@
 |----------|---------------------------|--------|
 | 方块 | `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
 | 物品 | `DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
-| 方块实体 | `DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID)` | modEventBus |
-| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)` | modEventBus |
+| 方块实体 | `DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)` | modEventBus |
+| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)` | modEventBus |
 | 附魔 | `DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MOD_ID)` | modEventBus |
-| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidType` | modEventBus |
+| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidAttributes` | modEventBus |
 | 粒子类型 | `DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID)` | modEventBus |
 | 声音事件 | `DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
 
@@ -36,8 +36,7 @@
 // ✅ 正确：在 mods.toml 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 mods.toml / mcmod.info 的 modId 不一致（下划线合法；Forge modId 不能用连字符）
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
@@ -101,18 +100,18 @@ IF 注册 物品
   → 在 ITEMS.register() 中注册
 
 IF 注册 方块实体（BlockEntity）
-  → 方块实现 EntityBlock 接口，重写 newBlockEntity()
-  → 使用 DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID)
-  → 在 BLOCK_ENTITY_TYPES.register() 中注册 BlockEntityType
+  → 方块重写 hasTileEntity() + createTileEntity()（本档没有 EntityBlock）
+  → 使用 DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)
+  → 用 BlockEntityType.Builder.of(...).build(null) 注册
 
 IF 注册 实体（Entity）
-  → 使用 DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)
-  → 在 ENTITY_TYPES.register() 中注册 EntityType
+  → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
+  → 在 ENTITIES.register() 中注册 EntityType
   → 必须在 mods.toml 中声明 entity 字段
 
 IF 注册 流体
-  → Fluid 注册 + FluidType 注册（两个 DeferredRegister）
-  → Fluid 提供流体属性，FluidType 提供交互行为
+  → 只注册 Fluid 到 ForgeRegistries.FLUIDS
+  → 用 FluidAttributes.builder；不要 FluidType（1.19+）
 
 IF 注册 其他内容（附魔/粒子/声音等）
   → 确认对应的 Registry 类型
@@ -169,7 +168,7 @@ public class ExampleMod {
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-        DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+        DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
@@ -277,10 +276,10 @@ public class ExampleMod {
 
 ## Forge 1.16.5 注册方式对比
 
-| 特性 | `DeferredRegister`（推荐） | `RegisterEvent`（备选） |
+| 特性 | `DeferredRegister`（推荐） | `RegistryEvent.Register`（备选） |
 |------|--------------------------|------------------------|
 | 代码风格 | 静态声明，集中在类顶部 | 事件监听回调中手动注册 |
-| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `ResourceLocation.fromNamespaceAndPath()` |
+| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `new ResourceLocation(modid, path)` |
 | IDE 补全 | 好（声明集中） | 一般（分散在事件回调中） |
 | 适用场景 | 所有标准 Forge 注册 | 高级自定义或遗留代码迁移 |
 | 官方推荐 | **是**（Docs 明确说明） | 可用，但不推荐 |

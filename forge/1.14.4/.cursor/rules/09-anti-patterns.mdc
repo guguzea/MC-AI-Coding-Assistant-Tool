@@ -19,14 +19,13 @@ public MyEntity(EntityType<?> type, World world) {
 
 **错误症状**：`NullPointerException` 或属性不生效
 
-**正确方案**：使用 `DeferredRegister<Attribute>` + modEventBus（在 mod 构造函数中完成）
+**正确方案**：在 `registerAttributes()` 里设置基值，不要 `ForgeRegistries.ATTRIBUTES`（1.16+）。
 
 ```java
-public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
-
-public static void register(IEventBus eventBus) {
-    ATTRIBUTES.register(eventBus);
+@Override
+protected void registerAttributes() {
+    super.registerAttributes();
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 }
 ```
 
@@ -190,7 +189,7 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 ```java
 // 正确：单次批量同步
-public class SyncAllDataMessage implements IMessage {
+public class SyncAllDataMessage {
     private NBTTagCompound data;
 
     public void toBytes(PacketBuffer buf) {

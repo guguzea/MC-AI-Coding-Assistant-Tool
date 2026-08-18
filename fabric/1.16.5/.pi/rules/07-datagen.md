@@ -12,9 +12,10 @@ description: 07 — 数据生成器
 
 ### 核心原则
 
-- Fabric 1.16.5 **没有**内置的 DataGenerator 框架（如 1.17+ 的 `fabric-datagen-api`）
-- 数据生成主要通过**手动编写 JSON 文件**到 `src/main/resources/data/`
-- 标签（Tags）通过 `FabricTagRegistry` 或手动 JSON 生成
+- Fabric 1.16.5 **没有**内置的 DataGenerator 框架（1.17+ 才有 `fabric-datagen-api` / `DataGeneratorEntrypoint`）
+- 数据生成主要通过**手动编写 JSON 文件**到 `src/main/resources/data/` 与 `assets/`
+- 标签（Tags）通过 `TagRegistry` 或手动 JSON 生成
+- **禁止**编造 `DataGeneratorInitializer`、`init_data`、`ExistingFileHelper`
 
 ---
 
@@ -33,7 +34,7 @@ IF 生成配方/战利品表/进度
   → 手动创建 JSON 文件到 data/{modid}/
 
 IF 生成标签（tags）
-  → 使用 FabricTagRegistry 或手动创建 JSON
+  → 使用 TagRegistry 或手动创建 JSON
 ```
 
 ---
@@ -49,8 +50,8 @@ src/main/resources/
 │   ├── loot_tables/{id}.json
 │   ├── recipes/{id}.json
 │   └── tags/
-│       ├── block/{id}.json
-│       └── item/{id}.json
+│       ├── blocks/{id}.json
+│       └── items/{id}.json
 ├── assets/{modid}/
 │   ├── models/
 │   │   ├── item/{id}.json
@@ -96,10 +97,10 @@ src/main/resources/
 
 ```java
 public class MyTags {
-    public static final Tag.Identified<Block> MY_BLOCK_TAG =
+    public static final Tag<Block> MY_BLOCK_TAG =
         TagRegistry.block(new Identifier(MOD_ID, "my_block_tag"));
 
-    public static final Tag.Identified<Item> MY_ITEM_TAG =
+    public static final Tag<Item> MY_ITEM_TAG =
         TagRegistry.item(new Identifier(MOD_ID, "my_item_tag"));
 }
 ```
@@ -111,3 +112,11 @@ public class MyTags {
 - ❌ 期望有 1.17+ 风格的 DataGenerator — 1.16.5 需要手动生成 JSON
 - ❌ 忘记 `pack.mcmeta` — Minecraft 无法识别资源包
 - ❌ 语言文件放在错误位置 — 应在 `assets/{modid}/lang/`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-item` | 手写物品模型 JSON |
+| `mc-block` | 手写方块模型和掉落表 JSON |
+| `mc-registry` | 配方引用已注册的物品 |

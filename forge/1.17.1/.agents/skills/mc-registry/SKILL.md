@@ -48,12 +48,12 @@ IF 需要在 mod constructor 执行前引用已注册对象
 | 方块 | `ForgeRegistries.BLOCKS` | |
 | 物品 | `ForgeRegistries.ITEMS` | |
 | 方块实体 | `ForgeRegistries.BLOCK_ENTITIES` | |
-| 实体类型 | `ForgeRegistries.ENTITY_TYPES` | |
-| 生物群系 | `Registries.BIOME`（Vanilla） | 用 `ResourceKey` |
+| 实体类型 | `ForgeRegistries.ENTITIES` | |
+| 生物群系 | `ForgeRegistries.BIOMES`（Vanilla） | 用 `ResourceKey` |
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
-| 创造模式标签 | `Registries.CREATIVE_MODE_TAB` | Vanilla |
+| 创造模式标签 | `ItemGroup` | 本档没有 `CreativeModeTab` / `CREATIVE_MODE_TAB` 注册表 |
 
 ## 注册 ItemBlock
 

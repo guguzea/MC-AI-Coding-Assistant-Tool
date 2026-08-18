@@ -6,7 +6,7 @@
 
 | 维度 | Forge | Fabric |
 |------|-------|--------|
-| 入口注解 | `@Mod` | `FabricMod` 接口 + entrypoint |
+| 入口注解 | `@Mod` | `ModInitializer` 接口 + entrypoint |
 | Mod 配置 | `mods.toml` | `fabric.mod.json` |
 | 注册方式 | `DeferredRegister` + modEventBus | `Registry.register()` |
 | 注册时机 | `RegisterEvent` 自动触发 | `onInitialize()` 方法中执行 |
@@ -112,7 +112,7 @@ public class ExampleMod implements ModInitializer {
 ```java
 // Forge
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(ForgeRegistry.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));

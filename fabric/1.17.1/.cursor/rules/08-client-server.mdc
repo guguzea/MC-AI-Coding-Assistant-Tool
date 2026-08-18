@@ -10,7 +10,7 @@
 
 - Fabric 使用 `EnvType`（`CLIENT` / `SERVER`）区分运行环境
 - 客户端专用代码必须放在 `ClientModInitializer` 中
-- 服务端代码在 `FabricMod.onInitialize()` 中
+- 服务端代码在 `ModInitializer.onInitialize()` 中
 - **禁止**在共享代码中直接引用客户端类
 
 ---
@@ -28,7 +28,7 @@ IF 需要在客户端执行初始化
   → 在 ClientModInitializer.onInitializeClient() 中执行
 
 IF 需要在服务端执行初始化
-  → 在 FabricMod.onInitialize() 中执行（排除客户端）
+  → 在 ModInitializer.onInitialize() 中执行（排除客户端）
 
 IF 需要共享初始化的回调
   → 使用 mixin 或事件系统，在两端都执行
@@ -56,7 +56,7 @@ public class ExampleModClient implements ClientModInitializer {
         // 仅客户端执行的代码
         EntityRendererRegistry.register(...);
         KeyBindingHelper.registerKeyBinding(...);
-        ClientSidePacketRegistry.INSTANCE.register(...);
+        ClientPlayNetworking.registerGlobalReceiver(PACKET_ID, (client, handler, buf, responseSender) -> {});
     }
 }
 ```

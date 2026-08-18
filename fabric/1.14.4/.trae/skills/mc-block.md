@@ -2,27 +2,27 @@
 name: mc-block
 description: Fabric 方块开发。FabricBlockSettings、Block、BlockItem、BlockEntity。触发词：方块、Block、FabricBlockSettings、BlockEntity
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 方块开发（Fabric 1.20.1）
+# 方块开发（Fabric 1.14.4）
 
 ## 快速开始
 
 ```java
-private static final RegistrySupplier<Block> MY_STONE = Registry.register(
-    Registries.BLOCK,
+private static final Block MY_STONE = Registry.register(
+    Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+    new Block(FabricBlockSettings.copy(Blocks.STONE).hardness(1.5f))
 );
 
 // 同名 BlockItem
-private static final RegistrySupplier<Item> MY_STONE_ITEM = Registry.register(
-    Registries.ITEM,
+private static final Item MY_STONE_ITEM = Registry.register(
+    Registry.ITEM,
     new Identifier(MOD_ID, "my_stone"),  // 同名！
-    new BlockItem(MY_STONE.get(), new Item.Settings())
+    new BlockItem(MY_STONE, new Item.Settings())
 );
 ```
 
@@ -45,8 +45,8 @@ IF 需要自定义渲染
 ## FabricBlockSettings 常用配置
 
 ```java
-FabricBlockSettings.create()
-    .strength(1.5f)                          // 硬度和抗爆性
+FabricBlockSettings.of(Material.STONE)
+    .hardness(1.5f)                          // 1.14.x FabricBlockSettings 用 hardness/resistance，单参数 strength 不是这个包的 API
     .strength(1.5f, 6.0f)                   // hardness, resistance
     .breakByTool(FabricToolTags.PICKAXES)    // 需要镐
     .requiresTool()                           // 需要工具
@@ -90,13 +90,13 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 }
 
 // 3. 注册 BlockEntityType
-private static final RegistrySupplier<BlockEntityType<MyChestBlockEntity>> MY_CHEST =
+private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(
-        Registries.BLOCK_ENTITY_TYPE,
+        Registry.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_chest"),
         BlockEntityType.Builder.create(
             MyChestBlockEntity::new,
-            MY_CHEST_BLOCK.get()
+            MY_CHEST_BLOCK
         ).build(null)
     );
 ```

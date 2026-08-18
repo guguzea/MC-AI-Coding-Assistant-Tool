@@ -9,9 +9,9 @@
 ### 核心原则
 
 - GUI 代码**仅在客户端**执行（`ClientModInitializer`）
-- Screen 类继承 `Screen` 或其子类
-- Screen 通过 `HandledScreens` 注册
-- **禁止**在服务端引用任何 GUI 类
+- Screen 类继承 `Screen` 或其子类（容器屏通常再包一层 HandledScreen / ContainerScreen）
+- 容器屏通过 `ScreenRegistry.register（或原版 HandledScreens.register）` 注册
+- **禁止**在服务端引用任何 GUI 类（`Screen`、`ButtonWidget`、`DrawContext` 等）
 
 ---
 
@@ -20,19 +20,25 @@
 ### Decision: 选择 GUI 框架
 
 ```
-IF 简单的输入界面（文本框）
-  → Screen + TextFieldWidget
+IF 简单的输入界面（文本框、按钮、说明）
+  → Screen + TextFieldWidget + ButtonWidget
 
-IF 容器型 GUI（如箱子、熔炉）
-  → Screen + HandledScreen + ScreenHandler
+IF 容器型 GUI（箱子、熔炉、机器）
+  → HandledScreen + ScreenHandler + NamedScreenHandlerFactory
 
-IF 使用 Fabric API Screen 模块
-  → 使用 HandledScreen + ScreenHandler 模式
+IF 打开时要同步额外数据（坐标、流体量等）
+  → 额外数据：ExtendedScreenHandlerFactory（不要编造 TypedScreenHandlerFactory）
+
+IF 给原版 Screen 加控件
+  → ScreenEvents.AFTER_INIT + Screens.getButtons
 ```
 
 ---
 
 ## 基本 Screen
+
+按钮在 `init()` 里创建；**标题/说明文字在 `render()` 里画**，不要在 `init()` 里 `drawString`。
+不要用 `TextWidget`（部分档没有）或 `SimpleNamedWidget`（编造）。
 
 ```java
 public class MyScreen extends Screen {
@@ -45,39 +51,34 @@ public class MyScreen extends Screen {
 
     @Override
     protected void init() {
-        // 添加按钮
         addDrawableChild(new ButtonWidget(width / 2 - 50, height / 2 + 20, 100, 20,
-            Text.literal("Click Me"), btn -> {
+            new LiteralText("Click Me"), btn -> {
                 // 按钮点击逻辑
-                this.close();
+                this.onClose();
             }));
-
-        // 添加文本
-        addDrawableChild(new TextWidget(width / 2 - 50, height / 2 - 20, 100, 20,
-            Text.literal("Hello Fabric!"), textRenderer));
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
+        this.textRenderer.drawWithShadow(matrices, new LiteralText("Hello Fabric!"),
+            width / 2 - 50, height / 2 - 20, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }
 ```
 
-> ⚠️ **1.17.x Screen API**：`ButtonWidget` 使用构造函数而非 `builder()`。`render` 方法参数为 `MatrixStack matrices`（1.20+ 改为 `DrawContext`）。
-
 ## 注册 Screen
 
 ```java
-// 在 ClientModInitializer 中注册
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HandledScreens.register(
+        ScreenRegistry.register(
             ModScreenHandlers.MY_SCREEN_HANDLER,
             MyScreen::new
         );
+        // 1.16+ 原版也可以 HandledScreens.register；Fabric 文档常用 ScreenRegistry
     }
 }
 ```
@@ -85,16 +86,19 @@ public class ExampleModClient implements ClientModInitializer {
 ## ScreenHandler（服务端数据）
 
 ```java
-// ScreenHandler 在服务端创建
 public class MyScreenHandler extends ScreenHandler {
     private final Inventory playerInventory;
     private final Inventory blockInventory;
+
+    public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
+        this(syncId, playerInventory, new SimpleInventory(9));
+    }
 
     public MyScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockInventory) {
         super(ModScreenHandlers.MY_SCREEN_HANDLER, syncId);
         this.playerInventory = playerInventory;
         this.blockInventory = blockInventory;
-        // ...
+        // 给方块槽和玩家物品栏循环 addSlot(...)，没有 addPlayerInventory() 这种原版方法
     }
 
     @Override
@@ -103,42 +107,100 @@ public class MyScreenHandler extends ScreenHandler {
     }
 }
 
-// 注册 ScreenHandler Type
-// ⚠️ 1.17.x: Registry.SCREEN_HANDLER 存在，但需要确认具体类名
 public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
-    Registry.register(Registry.SCREEN_HANDLER,
-        new Identifier(MOD_ID, "my_screen"),
+    Registry.register(
+        Registry.SCREEN_HANDLER,
+        new Identifier("examplemod", "my_screen"),
         new ScreenHandlerType<>(MyScreenHandler::new)
     );
 ```
 
-## 打开 Screen
+## NamedScreenHandlerFactory（普通打开）
+
+不要用 `TypedScreenHandlerFactory`（编造名）。普通 GUI 实现原版 `NamedScreenHandlerFactory`。
 
 ```java
-// 在服务端触发打开（通过网络包）
-public void openScreen(PlayerEntity player) {
-    player.openHandledScreen(
-        new SimpleNamedScreenHandlerFactory(
-            (syncId, playerInventory, entity) -> new MyScreenHandler(syncId, playerInventory, inventory),
-            Text.literal("My Block")
-        )
-    );
+public class MyScreenHandlerFactory implements NamedScreenHandlerFactory {
+    private final Inventory inventory;
+
+    public MyScreenHandlerFactory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory,
+                                    PlayerEntity player) {
+        return new MyScreenHandler(syncId, playerInventory, inventory);
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return new LiteralText("My Block");
+    }
 }
+
+public void openScreen(PlayerEntity player) {
+    player.openHandledScreen(new MyScreenHandlerFactory(blockEntity.getInventory()));
+}
+```
+
+## ExtendedScreenHandlerFactory（额外数据同步）
+
+需要同步坐标等到客户端时，实现 Fabric `ExtendedScreenHandlerFactory`，在 `writeScreenOpeningData` 里写 `PacketByteBuf`。
+
+```java
+public class MyPosScreenFactory implements ExtendedScreenHandlerFactory {
+    private final BlockPos pos;
+
+    public MyPosScreenFactory(BlockPos pos) {
+        this.pos = pos;
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        buf.writeBlockPos(pos);
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return new LiteralText("My Block");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new MyScreenHandler(syncId, inv, pos);
+    }
+}
+```
+
+## Fabric Screen API（`fabric-screen-api-v1`）
+
+给**已经打开的原版/其他模组 Screen** 加按钮，用 `ScreenEvents.AFTER_INIT`，不要编造 `SimpleNamedWidget` / `ScreenApi`。
+模块已含在 `fabric-api` 中，不要手写过时坐标版本。
+
+```java
+ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+    // 仅处理目标 Screen；用 Screens.getButtons(screen) 访问按钮列表
+    if (screen instanceof InventoryScreen) {
+        // 按需 addDrawableChild / addButton（随 MC 版本）
+    }
+});
 ```
 
 ## 常见错误
 
-- ❌ 在 `onInitialize()` 中注册 `HandledScreens` — 服务端崩溃，应在 `ClientModInitializer`
-- ❌ 在 Screen 类中直接操作服务端数据 — 应通过 `ScreenHandler` 同步
-- ❌ 在 `render()` 方法中创建新对象 — 性能问题，应在 `init()` 中创建
-- ❌ `ScreenHandler` 中忘记调用 `addPlayerInventory()` — 玩家物品栏不显示
-- ❌ 在 Screen 中忘记调用 `super.render()` — 背景和子元素不渲染
+- ❌ 在 `onInitialize()`（主 entrypoint）里注册客户端 Screen — 专用服务端会崩溃，应在 `ClientModInitializer`
+- ❌ 在 Screen 类中直接改服务端库存/方块实体 — 应通过 ScreenHandler 的槽位/同步
+- ❌ 在 `render()` 里 `new` 按钮或分配大对象 — 控件在 `init()` 创建
+- ❌ 忘记给玩家物品栏 `addSlot` — 物品栏不显示（没有 `addPlayerInventory()` 这种原版方法）
+- ❌ 在 Screen 中忘记 `super.render(...)` — 背景和子控件不渲染
+- ❌ 使用 `TypedScreenHandlerFactory` / `HandlerScreen` / `Menu`（Yarn 容器是 ScreenHandler，不是 Mojmap Menu）
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-registry` | ScreenHandler 通过 Registry.register() 注册 |
-| `mc-item` | 物品可以触发打开 Screen |
-| `mc-block` | 方块实体可以提供 ScreenHandler |
-| `mc-networking` | 网络包用于打开/关闭 Screen |
+| `mc-registry` | ScreenHandler / ContainerType 通过 `Registry.register` 注册 |
+| `mc-item` | 物品右键可 `openHandledScreen` / `openContainer` |
+| `mc-block` | 方块实体提供 Factory / 打开包数据 |
+| `mc-networking` | 槽位不够时再用自定义 Payload 同步进度条等 |

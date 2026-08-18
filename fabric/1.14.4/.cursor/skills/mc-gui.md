@@ -1,78 +1,97 @@
 ---
 name: mc-gui
-description: Fabric GUI/Screen 开发。Screen、HandledScreens、ScreenHandler。触发词：GUI、Screen、HandledScreens、ScreenHandler
+description: Fabric 1.14.4 GUI。Container、ContainerType、ScreenProviderRegistry。触发词：GUI、Container、Screen、ScreenProviderRegistry
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# GUI 开发（Fabric 1.20.1）
+# GUI 开发（Fabric 1.14.4）
+
+1.14.x Yarn 服务端菜单是 `Container` / `ContainerType` / `Registry.CONTAINER`。
+客户端用 `ScreenProviderRegistry`，打开用 `ContainerProviderRegistry`。
+不要抄 1.16+ 的 `ScreenHandler` / `HandledScreens` / `NamedScreenHandlerFactory` / `ButtonWidget.builder` / `Text.literal`。
+不要写 `net.fabric.sdk`。
 
 ## 快速开始
 
 ```java
-// 服务端：ScreenHandler
-public class MyScreenHandler extends ScreenHandler {
-    public MyScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ModScreenHandlers.MY_SCREEN, syncId);
-        // ...
-    }
-}
-
-// 注册 ScreenHandler
-private static final RegistrySupplier<ScreenHandlerType<MyScreenHandler>> MY_SCREEN =
-    Registry.register(
-        Registries.MENU,
-        new Identifier(MOD_ID, "my_screen"),
-        new ScreenHandlerType<>(MyScreenHandler::new)
-    );
-
-// 客户端：Screen
-public class MyScreen extends Screen {
-    public MyScreen(Text title) {
-        super(title);
+public class MyContainer extends Container {
+    public MyContainer(int syncId, PlayerInventory playerInventory) {
+        super(null, syncId);
+        // addSlot(...)：方块槽 + 玩家物品栏
     }
 
     @Override
-    protected void init() {
-        addDrawableChild(ButtonWidget.builder(Text.literal("OK"),
-            btn -> this.close()).dimensions(width/2-50, height/2, 100, 20).build());
+    public boolean canUse(PlayerEntity player) {
+        return true;
     }
 }
 
-// 客户端：注册 Screen
+public static final Identifier MY_SCREEN_ID = new Identifier(MOD_ID, "my_screen");
+
+public static final ContainerType<MyContainer> MY_SCREEN = Registry.register(
+    Registry.CONTAINER,
+    MY_SCREEN_ID,
+    new ContainerType<>(MyContainer::new)
+);
+```
+
+客户端注册与按钮：
+
+```java
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        HandledScreens.register(MY_SCREEN.get(), MyScreen::new);
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            MY_SCREEN_ID,
+            (ContainerScreenFactory<MyContainer>) container -> new MyScreen()
+        );
     }
 }
+
+public class MyScreen extends Screen {
+    @Override
+    protected void init() {
+        addButton(new ButtonWidget(width / 2 - 50, height / 2, 100, 20,
+            "OK", btn -> this.closeScreen()));
+    }
+}
+```
+
+服务端打开：
+
+```java
+ContainerProviderRegistry.INSTANCE.openContainer(
+    MY_SCREEN_ID, (ServerPlayerEntity) player, buf -> {});
 ```
 
 ## Decision: 选择 GUI 类型
 
 ```
 IF 简单界面（按钮、文本）
-  → Screen + TextFieldWidget
+  → Screen + TextFieldWidget + addButton(ButtonWidget 构造函数)
 
-IF 容器型界面（箱子）
-  → ScreenHandler + HandledScreens
+IF 容器型界面（箱子、机器）
+  → Container + ScreenProviderRegistry + ContainerProviderRegistry
 
-IF 需要服务端数据同步
-  → TypedScreenHandlerFactory
+IF 需要同步额外数据
+  → openContainer 的 PacketByteBuf writer（不要编造 TypedScreenHandlerFactory）
 ```
 
 ## 常见错误
 
-- ❌在 `onInitialize()` 中注册 `HandledScreens` — 服务端崩溃
-- ❌在 Screen 中直接修改服务端数据 — 通过 ScreenHandler 同步
-- ❌忘记 `super.render()` — 背景和子元素不渲染
+- ❌ 在 `onInitialize()` 里注册客户端 Screen — 专用服务端崩溃，应在 `ClientModInitializer`
+- ❌ 在 Screen 里直接改服务端库存 — 通过 Container 槽位同步
+- ❌ 忘记 `super.render()` — 背景和子控件不渲染
+- ❌ 用 `HandledScreens` / `ScreenHandler` / `Text.literal` / `ButtonWidget.builder` — 都不是本档 API
+- ❌ `MatrixStack` 版 `render` — 1.14.4 的 `render` 没有 MatrixStack 参数
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-registry` | ScreenHandler 通过 Registry.register() 注册 |
-| `mc-block` | 方块实体提供 ScreenHandler |
-| `mc-networking` | 网络包用于打开/关闭 GUI |
+| `mc-registry` | `ContainerType` 用 `Registry.register(Registry.CONTAINER, ...)` |
+| `mc-block` | 方块实体里调用 `ContainerProviderRegistry.openContainer` |
+| `mc-networking` | 槽位不够时再发自定义包 |

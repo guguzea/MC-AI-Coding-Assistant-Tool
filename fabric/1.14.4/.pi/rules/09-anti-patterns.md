@@ -221,12 +221,12 @@ plugins {
 ```groovy
 // ❌ 错误：依赖传递性混淆
 dependencies {
-    modImplementation("net.fabric.sdk:fabric-api:0.28.5+1.14")  // 不传递依赖
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.28.5+1.14")  // 不传递依赖
 }
 
 // ✅ 正确：API 需要传递，实现不需要
 dependencies {
-    modApi("net.fabric.sdk:fabric-api:0.28.5+1.14")  // 传递依赖
+    modApi("net.fabricmc.fabric-api:fabric-api:0.28.5+1.14")  // 传递依赖
     modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
 }
 ```
@@ -278,7 +278,7 @@ public class MyMixin { ... }
 
 ```java
 // ❌ 错误：1.14.4 中不存在 Registries 类
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 
 // ✅ 正确：使用 Registry 静态字段
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);

@@ -63,7 +63,7 @@ mod_license=MIT
 
 ```java
 // 静态字段
-private static final RegistrySupplier<Block> MY_BLOCK =
+private static final Block MY_BLOCK =
     Registry.register(
         Registry.BLOCK,
         new Identifier(MOD_ID, "my_block"),
@@ -71,18 +71,18 @@ private static final RegistrySupplier<Block> MY_BLOCK =
     );
 
 // 同名 BlockItem
-private static final RegistrySupplier<Item> MY_BLOCK_ITEM =
+private static final Item MY_BLOCK_ITEM =
     Registry.register(
         Registry.ITEM,
         new Identifier(MOD_ID, "my_block"),  // 必须同名！
-        new BlockItem(MY_BLOCK.get(), new Item.Settings().group(ItemGroup.BUILDING_BLOCKS))
+        new BlockItem(MY_BLOCK, new Item.Settings().group(ItemGroup.BUILDING_BLOCKS))
     );
 ```
 
 ### 添加新物品
 
 ```java
-private static final RegistrySupplier<Item> MY_ITEM =
+private static final Item MY_ITEM =
     Registry.register(
         Registry.ITEM,
         new Identifier(MOD_ID, "my_item"),
@@ -98,7 +98,7 @@ public class MyEntity extends AnimalEntity {
 }
 
 // 在静态字段中注册
-public static final RegistrySupplier<EntityType<MyEntity>> MY_ENTITY =
+public static final EntityType<MyEntity> MY_ENTITY =
     Registry.register(
         Registry.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_entity"),

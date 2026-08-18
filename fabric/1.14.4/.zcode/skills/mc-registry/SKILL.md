@@ -1,23 +1,23 @@
 ﻿---
 name: mc-registry
-description: Fabric 注册系统。Registry.register、RegistrySupplier、Identifier。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
+description: Fabric 注册系统。Registry.register、Identifier、ModInitializer。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 注册系统（Fabric 1.20.1）
+# 注册系统（Fabric 1.14.4）
 
 ## 快速开始
 
 ```java
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     private static final String MOD_ID = "examplemod";
 
     // Registry.register 在类加载时执行
-    private static final RegistrySupplier<Item> MY_ITEM =
-        Registry.register(Registries.ITEM,
+    private static final Item MY_ITEM =
+        Registry.register(Registry.ITEM,
             new Identifier(MOD_ID, "my_item"),
             new Item(new Item.Settings())
         );
@@ -33,7 +33,7 @@ public class ExampleMod implements FabricMod {
 
 ```
 IF 注册 方块/物品/实体/方块实体/粒子/声音
-  → Registry.register(Registries.XXX, id, object)
+  → Registry.register(Registry.XXX, id, object)
 
 IF 注册 Mixin
   → 在 fabric.mixins.json 中声明，不在 onInitialize 中
@@ -49,39 +49,39 @@ IF 平台 = Forge
 
 | 注册内容 | Registries 枚举 | 必需参数 |
 |---------|----------------|---------|
-| 方块 | `Registries.BLOCK` | `Identifier`, `Block` |
-| 物品 | `Registries.ITEM` | `Identifier`, `Item` |
-| 方块实体类型 | `Registries.BLOCK_ENTITY_TYPE` | `Identifier`, `BlockEntityType` |
-| 实体类型 | `Registries.ENTITY_TYPE` | `Identifier`, `EntityType` |
-| 粒子类型 | `Registries.PARTICLE_TYPE` | `Identifier`, `ParticleType` |
-| 声音事件 | `Registries.SOUND_EVENT` | `Identifier`, `SoundEvent` |
-| 菜单类型 | `Registries.MENU` | `Identifier`, `ScreenHandlerType` |
-| 附魔 | `Registries.ENCHANTMENT` | `Identifier`, `Enchantment` |
-| 流体 | `Registries.FLUID` | `Identifier`, `Fluid` |
+| 方块 | `Registry.BLOCK` | `Identifier`, `Block` |
+| 物品 | `Registry.ITEM` | `Identifier`, `Item` |
+| 方块实体类型 | `Registry.BLOCK_ENTITY_TYPE` | `Identifier`, `BlockEntityType` |
+| 实体类型 | `Registry.ENTITY_TYPE` | `Identifier`, `EntityType` |
+| 粒子类型 | `Registry.PARTICLE_TYPE` | `Identifier`, `ParticleType` |
+| 声音事件 | `Registry.SOUND_EVENT` | `Identifier`, `SoundEvent` |
+| 菜单类型 | `Registry.CONTAINER` | `Identifier`, `ScreenHandlerType` |
+| 附魔 | `Registry.ENCHANTMENT` | `Identifier`, `Enchantment` |
+| 流体 | `Registry.FLUID` | `Identifier`, `Fluid` |
 
-## RegistrySupplier 用法
+## 保存 Registry.register 返回值
 
 ```java
-// ✅ 推荐：RegistrySupplier 提供懒加载和 null 安全
-private static final RegistrySupplier<Item> MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+// ✅ 推荐：保存 Registry.register 的返回值
+private static final Item MY_ITEM =
+    Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 
-// 使用时调用 .get()
-ItemStack stack = new ItemStack(MY_ITEM.get());
+// 直接使用静态字段
+ItemStack stack = new ItemStack(MY_ITEM);
 ```
 
 ## BlockItem 注册
 
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
-private static final RegistrySupplier<Block> MY_BLOCK =
-    Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"),
-        new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+private static final Block MY_BLOCK =
+    Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
+        new Block(FabricBlockSettings.copy(Blocks.STONE)));
 
-private static final RegistrySupplier<Item> MY_BLOCK_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
-        new BlockItem(MY_BLOCK.get(), new Item.Settings()));
+private static final Item MY_BLOCK_ITEM =
+    Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
+        new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## Identifier 构造

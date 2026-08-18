@@ -2,17 +2,17 @@
 name: mc-item
 description: Fabric 物品开发。FabricItemSettings、Item、FoodComponent、ToolMaterial。触发词：物品、Item、ItemStack、ToolMaterial、FoodComponent
 platform: fabric
-version: "1.20.1"
+version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
 
-# 物品开发（Fabric 1.20.1）
+# 物品开发（Fabric 1.21.3）
 
 ## 快速开始
 
 ```java
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings().maxCount(64))
@@ -41,7 +41,7 @@ IF 自定义行为
 ## 食物
 
 ```java
-private static final RegistrySupplier<Item> MY_APPLE = Registry.register(
+private static final Item MY_APPLE = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "golden_apple"),
     new Item(new Item.Settings()

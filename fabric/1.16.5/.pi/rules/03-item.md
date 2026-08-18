@@ -49,7 +49,7 @@ IF 需要自定义行为
 
 ```java
 // 普通物品（无限耐久）
-private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+private static final Item MY_ITEM = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings()
@@ -61,7 +61,7 @@ private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
 ## 食物
 
 ```java
-private static final RegistrySupplier<Item> MY_APPLE = Registry.register(
+private static final Item MY_APPLE = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "golden_apple"),
     new Item(new Item.Settings()
@@ -105,7 +105,7 @@ public enum MyToolMaterial implements ToolMaterial {
 
 ```java
 // 剑
-private static final RegistrySupplier<MySwordItem> COPPER_SWORD = Registry.register(
+private static final MySwordItem COPPER_SWORD = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "copper_sword"),
     new MySwordItem(MyToolMaterial.COPPER, 3, 1.6f,
@@ -113,7 +113,7 @@ private static final RegistrySupplier<MySwordItem> COPPER_SWORD = Registry.regis
 );
 
 // 镐
-private static final RegistrySupplier<MyPickaxeItem> COPPER_PICKAXE = Registry.register(
+private static final MyPickaxeItem COPPER_PICKAXE = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "copper_pickaxe"),
     new MyPickaxeItem(MyToolMaterial.COPPER, 1.0f, -2.8f,

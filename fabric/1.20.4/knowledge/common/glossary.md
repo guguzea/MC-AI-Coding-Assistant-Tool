@@ -1,4 +1,4 @@
-# 术语表（Fabric 1.20.1）
+# 术语表（Fabric 1.20.4）
 
 > 本文件定义 Fabric 开发中常用的术语和 Yarn 命名约定。
 
@@ -13,7 +13,7 @@
 | Fabric API | Fabric 官方模块化 API 库，提供各种扩展功能 |
 | Registry | Minecraft 的注册表系统，管理所有游戏内对象 |
 | Identifier | `namespace:id` 格式的资源标识符 |
-| RegistrySupplier | 懒加载的注册对象引用 |
+| Registry.register 返回值 | 已注册对象；不要用 Architectury 的 RegistrySupplier |
 
 ## Identifier 格式
 
@@ -60,7 +60,7 @@ namespace:id
 | `Registries.ITEM` | 物品 | `Items.DIAMOND` |
 | `Registries.ENTITY_TYPE` | 实体类型 | `EntityType.PIG` |
 | `Registries.PARTICLE_TYPE` | 粒子类型 | `ParticleTypes.AMBIENT_ENTITY_EFFECT` |
-| `Registries.MENU` | 菜单类型 | `GenericContainerScreenHandler` |
+| `Registries.SCREEN_HANDLER` | 菜单类型 | `GenericContainerScreenHandler` |
 | `Registries.SOUND_EVENT` | 声音事件 | `SoundEvents.ITEM_PICKUP` |
 
 ## Mod Entrypoints
@@ -69,7 +69,7 @@ namespace:id
 |-----------|------|
 | `main` | 主入口，服务端和共享逻辑 |
 | `client` | 客户端专用（渲染器、快捷键） |
-| `init_data` | DataGen 入口 |
+| `fabric-datagen` | DataGen 入口（`DataGeneratorEntrypoint`） |
 
 ## 文件约定
 

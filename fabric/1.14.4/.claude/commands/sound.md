@@ -2,25 +2,25 @@
 name: mc-sound
 description: Fabric 声音系统。SoundEvent、SoundEvents、SoundCategory。触发词：声音、Sound、SoundEvent
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 声音系统（Fabric 1.20.1）
+# 声音系统（Fabric 1.14.4）
 
 ## 快速开始
 
 ```java
 // 1. 创建 SoundEvent
-private static final RegistrySupplier<SoundEvent> MY_SOUND = Registry.register(
-    Registries.SOUND_EVENT,
+private static final SoundEvent MY_SOUND = Registry.register(
+    Registry.SOUND_EVENT,
     new Identifier(MOD_ID, "my_sound"),
     SoundEvent.of(new Identifier(MOD_ID, "my_sound"))
 );
 
 // 2. 播放声音
-player.playSound(MY_SOUND.get(), 1.0f, 1.0f);
+player.playSound(MY_SOUND, 1.0f, 1.0f);
 ```
 
 ## Decision: 选择声音用途

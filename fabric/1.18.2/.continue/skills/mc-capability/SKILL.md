@@ -1,53 +1,35 @@
 ﻿---
 name: mc-capability
-description: Fabric Capability 系统。fabric-item-group-api-v1 用于物品分组，fabric-entity-events-v2 用于实体事件。触发词：Capability、FabricCapability
+description: Fabric 实体事件。ServerEntityCombatEvents、ServerEntityEvents。触发词：实体事件、AFTER_KILLED_OTHER_ENTITY
 platform: fabric
 version: "1.18.2"
 dependencies: []
 mappings: yarn
 ---
 
-# Capability / 实体事件（Fabric 1.18.2）
+# 实体事件（Fabric 1.18.2）
 
-## 概述
-
-Fabric 使用 `fabric-entity-events-v2` 模块处理实体相关的 Capability 功能。
-
-## 添加依赖
-
-```groovy
-dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-entity-events-v2:2.2.3+1.18.2"
-}
-```
-
-## 实体事件
+Fabric **没有** Forge Capability。本档 **没有** `ServerLivingEntityEvents.AFTER_DEATH`（约 1.19.4 才有）。
+不要编造 `EntityEvent.TICK` / `EntityEvents.ENTITY_DEATH`，也不要写 `net.fabric.sdk`。
+依赖走 `fabric-api`（`fabric-entity-events-v1` + lifecycle）。
 
 ```java
-// 在 onInitialize() 中
-EntityEvent.TICK.register((entity) -> {
-    if (entity instanceof PlayerEntity) {
-        // 每 tick 执行
-    }
-    return EntityEvent.TickResult.CONTINUE;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+
+AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+    return ActionResult.PASS;
 });
 
-EntityEvent.DEATH.register((entity, source) -> {
-    if (entity instanceof PlayerEntity) {
-        LOGGER.info("Player died: " + entity.getName());
-    }
-    return EntityEvent.DeathResult.ALLOW;
+ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killed) -> {
+    // 击杀者 entity 杀死了 killed（服务端）
+});
+
+ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+    // 实体加载到世界
 });
 ```
 
-## 常见错误
-
-- ❌在非主线程处理实体事件
-- ❌忘记 `return` 结果
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-entity` | 实体事件用于实体行为修改 |
-| `mc-registry` | 注册实体类型 |
+受害者「即将死亡」若没有事件，用 Mixin 或实体 `onDeath`。
+每 tick 用 `ServerTickEvents` 或实体 `tick()`。

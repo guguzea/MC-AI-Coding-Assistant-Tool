@@ -10,7 +10,7 @@
 | **包名空间** | `net.fabricmc` | `net.minecraftforge` | `net.neoforged` | common 层用 `Registries` enum |
 | **注册方块** | `Registry.register(Registries.BLOCK, id, block)` | `DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register()` | 同 Forge | `DeferredRegister.create(MOD_ID, Registries.BLOCK)` |
 | **注册物品** | `Registry.register(Registries.ITEM, id, item)` | `DeferredRegister.create(ForgeRegistries.ITEMS, MODID).register()` | 同 Forge | `DeferredRegister.create(MOD_ID, Registries.ITEM)` |
-| **注册实体** | `EntityType.Builder.create().build(id)` + `Registry.register()` | `DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MODID).register()` | 同 Forge | `DeferredRegister.create(MOD_ID, Registries.ENTITY_TYPE)` |
+| **注册实体** | `EntityType.Builder.create().build(id)` + `Registry.register()` | `DeferredRegister.create(ForgeRegistries.ENTITIES, MODID).register()` | 同 Forge | `DeferredRegister.create(MOD_ID, Registries.ENTITY_TYPE)` |
 | **注册方块实体** | `BlockEntityType.Builder.create(...).build(null)` + `Registry.register()` | `DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPE, MODID).register()` | 同 Forge | `DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE)` |
 | **网络包（发送）** | `ClientPlayNetworking.send(id, buf)` / `ServerPlayNetworking.send(player, id, buf)` | `channel.send(player, msg)` | `channel.send(player, msg)` | `@ExpectPlatform` 抽象 `sendPacket()` |
 | **网络包（接收）** | `ClientPlayNetworking.registerGlobalHandler(id, handler)` | `channel.register(MSG_INDEX, MSG_TYPE, (msg, ctx) -> {})` | 同 Forge | common 中声明 handler 接口 |

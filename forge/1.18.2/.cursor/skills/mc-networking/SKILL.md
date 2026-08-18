@@ -48,7 +48,7 @@ IF 服务端 → 区域内所有玩家
 ## 消息类结构
 
 ```java
-public class MyMessage implements IMessage {
+public class MyMessage {
     private int value;
     private ResourceLocation targetId;
 

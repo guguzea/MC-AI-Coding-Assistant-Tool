@@ -13,8 +13,8 @@ mappings: yarn
 
 ```java
 // 1. 创建流体
-private static final RegistrySupplier<Fluid> MY_FLUID = Registry.register(
-    Registries.FLUID,
+private static final Fluid MY_FLUID = Registry.register(
+    Registry.FLUID,
     new Identifier(MOD_ID, "my_fluid"),
     new FabricFlowableFluid.Settings()
         .slopeFindDistance(3)
@@ -25,9 +25,9 @@ private static final RegistrySupplier<Fluid> MY_FLUID = Registry.register(
 
 // 2. 注册方块状态映射
 Registry.register(
-    Registries.FLUID,
+    Registry.FLUID,
     new Identifier(MOD_ID, "my_fluid"),
-    MY_FLUID.get()
+    MY_FLUID
 );
 ```
 

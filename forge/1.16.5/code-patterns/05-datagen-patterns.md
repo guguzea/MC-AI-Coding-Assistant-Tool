@@ -1,33 +1,45 @@
 # DataGen 快速参考（Forge 1.16.5）
 
+```yaml
+模式: 数据生成器
+分类: datagen
+```
+
 ## 常用 Provider 速查
 
 | 数据 | Provider |
 |------|----------|
 | 方块状态变体 | `BlockStateProvider` |
-| 物品模型（继承方块） | `ItemModelProvider`（子类，`withExistingParent`） |
-| 物品模型（独立） | `ItemModelProvider`（子类，`basicFlat`/`basicCubeAll`） |
-| 配方（有序） | `ShapedRecipeBuilder.shaped()` |
-| 配方（无序） | `ShapelessRecipeBuilder.shapeless()` |
-| 配方（熔炉） | `SimpleCookingRecipeBuilder.smelting()` 在 `registerRecipes()` 中 |
+| 物品模型 | `ItemModelProvider` |
+| 配方（有序） | `ShapedRecipeBuilder` |
+| 配方（无序） | `ShapelessRecipeBuilder` |
+| 配方（熔炉） | `SimpleCookingRecipeBuilder.smelting`（在 `buildShapelessRecipes` 内） |
 | 方块标签 | `BlockTagsProvider` |
 | 物品标签 | `ItemTagsProvider` |
-| 战利品表 | `LootTableProvider` |
+| 战利品表 | `LootTableProvider#getTables` |
 
 ## 快速模板
 
 ```java
+// net.minecraftforge.fml.event.lifecycle.GatherDataEvent
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(generator));
-            generator.addProvider(true, new ModItemTagsProvider(generator));
-            generator.addProvider(true, new ModRecipeProvider(generator));
-            generator.addProvider(true, new ModLootTableProvider(generator));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(generator, helper);
+            generator.addProvider(blockTags);
+            generator.addProvider(new ModItemTagsProvider(generator, blockTags, helper));
+            generator.addProvider(new ModRecipeProvider(generator));
+            generator.addProvider(new ModLootTableProvider(generator));
+        }
+        if (event.includeClient()) {
+            generator.addProvider(new ModItemModelsProvider(generator, helper));
+            generator.addProvider(new ModBlockStatesProvider(generator, helper));
+            generator.addProvider(new ModLanguageProvider(generator, "en_us"));
         }
     }
 }
@@ -36,40 +48,34 @@ public class DataGenerators {
 ## 配方速写
 
 ```java
-// 有序配方
-ShapedRecipeBuilder.shapedRecipe(Blocks.COBBLESTONE, 1)
-    .patternLine("###")
-    .patternLine("#X#")
-    .patternLine("###")
-    .key('#', Items.DIAMOND)
-    .key('X', Blocks.DIRT)
-    .addCriterion("has_diamond", hasItem(Items.DIAMOND))
-    .build(consumer);
+// datagen/ModRecipes.java
+public class ModRecipeProvider extends RecipeProvider {
+    public ModRecipeProvider(DataGenerator generator) {
+        super(generator);
+    }
 
-// 无序配方
-ShapelessRecipeBuilder.shapelessRecipe(Items.DIAMOND, 9)
-    .addIngredient(Blocks.DIRT)
-    .addCriterion("has_dirt", hasItem(Blocks.DIRT))
-    .build(consumer);
+    @Override
+    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+            .pattern(" X ")
+            .pattern(" X ")
+            .pattern(" Y ")
+            .define('X', Items.DIAMOND)
+            .define('Y', Items.STICK)
+            .unlockedBy("has_diamond", has(Items.DIAMOND))
+            .save(consumer);
 
-// 熔炉配方
-CookingRecipeBuilder.smeltingRecipe(Ingredient.from(Items.DIRT),
-        Items.DIAMOND, 0.1f, 200)
-    .addCriterion("has_dirt", hasItem(Items.DIRT))
-    .build(consumer);
-```
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
+            .requires(Items.GOLD_INGOT, 3)
+            .requires(Items.DIAMOND)
+            .unlockedBy("has_gold", has(Items.GOLD_INGOT))
+            .save(consumer);
 
-## 战利品表
-
-```java
-@Override
-protected void addTables() {
-    this.registerLootTable(Blocks.DIRT, LootTable.builder()
-        .addLootPool(LootPool.builder()
-            .rolls(ConstantRange.of(1))
-            .addEntry(ItemLootEntry.builder(Blocks.DIRT))
-            .acceptCondition(SurvivesExplosion.builder())
-        )
-    );
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
+            .save(consumer);
+    }
 }
 ```
+
+

@@ -1,6 +1,6 @@
 ﻿---
 name: mc-blockentity
-description: Minecraft Forge 方块实体开发。TileEntity 注册、tick、数据同步。触发词：TileEntity、BlockEntityType、ITileEntityProvider、markDirty
+description: Minecraft Forge 方块实体开发。TileEntity 注册、ITickableTileEntity、Container 联动、TileEntityRenderer。触发词：TileEntity、TileEntityType、hasTileEntity、createTileEntity、markDirty、getUpdateTag
 platform: forge
 version: "1.15.2"
 dependencies: []
@@ -12,109 +12,114 @@ mappings: mcp
 ## 快速开始
 
 ```java
-// 注册 BlockEntityType（用 DeferredRegister）
-public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
+public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
+    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
-public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
-    BLOCK_ENTITIES.register("mybe",
-        () -> BlockEntityType.Builder.create(MyBE::new, validBlocks).build(null)
+public static final RegistryObject<TileEntityType<MyTE>> MY_TE =
+    TILE_ENTITIES.register("myte",
+        () -> TileEntityType.Builder.create(MyTE::new, validBlocks).build(null)
     );
 
-// 在 mod 构造函数中
-BLOCK_ENTITIES.register(modEventBus);
+TILE_ENTITIES.register(modEventBus);
 ```
 
-`validBlocks` 是持有此 TileEntity 的 Block 实例集合。
+不要 `BlockEntityType`（1.17+ Mojmap）。`Builder.create` 不是 `of`。
 
 ## TileEntity 类结构
 
 ```java
-public class MyBE extends TileEntity {
-    public MyBE() {
-        super(MyBEs.MY_BE.get());
+public class MyTE extends TileEntity implements ITickableTileEntity {
+    public MyTE() {
+        super(MY_TE.get());
     }
 
-    // tick 逻辑
     @Override
     public void tick() {
-        if (world.isRemote) return;
-        // 服务端每 tick 执行一次
+        if (world == null || world.isRemote) return;
     }
 }
 ```
 
-## 关联到 Block（ITileEntityProvider）
+不要在无 `ITickableTileEntity` 的类上写 `tick()`——普通 `TileEntity` 没有这个方法。
+
+## 关联到 Block
+
+本档没有 `EntityBlock`。也不要 `ITileEntityProvider`（1.12 接口）。
 
 ```java
-public class MyBlock extends Block implements ITileEntityProvider {
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new MyBE();
-    }
-
+public class MyBlock extends Block {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
-}
-```
-
-## 数据持久化
-
-```java
-public class MyBE extends TileEntity {
-    private int counter;
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        super.write(compound);  // 必须调用 super
-        compound.putInt("counter", counter);
-        return compound;
-    }
-
-    @Override
-    public void read(NBTTagCompound compound) {
-        super.read(compound);
-        counter = compound.getInt("counter");
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return MY_TE.get().create();
     }
 }
 ```
 
-## 数据同步
+## 数据持久化（write / read）
+
+1.13+ MCP 用 `CompoundNBT`，不是 1.12 的 `NBTTagCompound`。
 
 ```java
-// BE 端
 @Override
-public NBTTagCompound getUpdatePacket() {
-    NBTTagCompound nbt = new NBTTagCompound();
-    write(nbt);
+public CompoundNBT write(CompoundNBT nbt) {
+    nbt = super.write(nbt);
+    nbt.putInt("counter", counter);
     return nbt;
 }
 
 @Override
-public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-    read(pkt.getNbtCompound());
+public void read(CompoundNBT nbt) {
+    super.read(nbt);
+    counter = nbt.getInt("counter");
+}
+```
+
+数据变化后 `markDirty()`。
+
+## 数据同步
+
+`getUpdatePacket()` 返回的是数据包，不是 NBT。
+
+```java
+@Override
+public CompoundNBT getUpdateTag() {
+    return this.write(new CompoundNBT());
 }
 
-// 服务端通知更新
-level.notifyBlockUpdate(pos, state, state, 3);
+@Override
+public SUpdateTileEntityPacket getUpdatePacket() {
+    return new SUpdateTileEntityPacket(this.pos, -1, this.getUpdateTag());
+}
+
+@Override
+public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    this.read(pkt.getNbtCompound());
+}
+
+world.notifyBlockUpdate(pos, state, state, 3);
 ```
 
 ## 常见错误
 
-- ❌ `write()`/`read()` 重写后忘记调用 `super`
-- ❌ 在 `read()` 中访问 world
-- ❌ 忘记 `markDirty()` 标记数据已修改
+- ❌ `write` / `read` 忘记 `super`
+- ❌ 在 `read` 里访问尚未就绪的 `world`
+- ❌ 忘记 `markDirty()`
+- ❌ `getUpdatePacket` 返回 `CompoundNBT`
+- ❌ `EntityBlock` / `getTicker` / `BlockEntityType`
 
 ## 参考资料
 
-- 官方文档：https://docs.minecraftforge.net/en/1.15.2/
+- Forge 1.15.x TileEntities 文档（`search_forge_docs`）
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
 | `mc-gui` | Container 与 TileEntity 联动 |
-| `mc-networking` | 高频同步使用自定义网络包方案 |
-| `mc-registry` | BlockEntityType 通过 DeferredRegister 注册 |
+| `mc-networking` | 高频同步使用自定义网络包 |
+| `mc-registry` | `TileEntityType` 注册到 `ForgeRegistries.TILE_ENTITIES` |

@@ -13,14 +13,14 @@ mappings: yarn
 
 ```java
 // 1. 创建 SoundEvent
-private static final RegistrySupplier<SoundEvent> MY_SOUND = Registry.register(
+private static final SoundEvent MY_SOUND = Registry.register(
     Registries.SOUND_EVENT,
     new Identifier(MOD_ID, "my_sound"),
     SoundEvent.of(new Identifier(MOD_ID, "my_sound"))
 );
 
 // 2. 播放声音
-player.playSound(MY_SOUND.get(), 1.0f, 1.0f);
+player.playSound(MY_SOUND, 1.0f, 1.0f);
 ```
 
 ## Decision: 选择声音用途

@@ -1,10 +1,9 @@
-# 网络通信模式
+# 网络通信模式（Forge 1.12.2）
 
 ## 消息类
 
 ```java
 public class MyMessage implements IMessage {
-
     private int data;
 
     public MyMessage() {}
@@ -14,12 +13,12 @@ public class MyMessage implements IMessage {
     }
 
     @Override
-    public void fromBytes(PacketBuffer buf) {
+    public void fromBytes(ByteBuf buf) {
         data = buf.readInt();
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(data);
     }
 }
@@ -29,14 +28,12 @@ public class MyMessage implements IMessage {
 
 ```java
 public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
-
     @Override
     public IMessage onMessage(MyMessage message, MessageContext ctx) {
-        if (ctx.side == EnumFacing.Side.SERVER) {
-            ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
-                EntityPlayerMP player = ctx.getServerHandler().player;
+        if (ctx.side == Side.SERVER) {
+            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            player.getServerWorld().addScheduledTask(() -> {
                 // 处理消息
-                player.getHeldItemMainhand().getOrCreateTag().setInteger("data", message.data);
             });
         }
         return null;
@@ -48,24 +45,12 @@ public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
 
 ```java
 public class NetworkHandler {
-
-    public static SimpleNetworkWrapper INSTANCE;
+    public static final SimpleNetworkWrapper INSTANCE =
+            NetworkRegistry.INSTANCE.newSimpleChannel(ExampleMod.MOD_ID);
     private static int packetId = 0;
 
     public static void init() {
-        INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(ExampleMod.MOD_ID);
-        registerMessage(MyMessage.class, new MyMessageHandler());
-    }
-
-    private static <REQ, REPLY> void registerMessage(
-            Class<REQ> messageType, IMessageHandler<REQ, REPLY> handler) {
-        INSTANCE.registerMessage(
-            packetId++,
-            messageType,
-            messageType,
-            NetworkRegistry.instance().nextID(),
-            handler
-        );
+        INSTANCE.registerMessage(MyMessageHandler.class, MyMessage.class, packetId++, Side.SERVER);
     }
 
     public static void sendToServer(MyMessage message) {
@@ -81,9 +66,8 @@ public class NetworkHandler {
 ## 使用
 
 ```java
-// 发送消息
 NetworkHandler.sendToServer(new MyMessage(42));
 
-// 初始化（在主类的 init 或 preInit 中）
+// 在主类 init 中
 NetworkHandler.init();
 ```

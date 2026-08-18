@@ -25,8 +25,7 @@
 // ✅ 正确：在 mcmod.info 中声明的 mod ID
 public static final String MODID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MODID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 mods.toml / mcmod.info 的 modId 不一致（下划线合法；Forge modId 不能用连字符）
 private static final String MODID = "ExampleMod";    // 不能大写
 ```
 
@@ -114,9 +113,9 @@ public class ModBlocks {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        EXAMPLE_BLOCK = new Block(Block.Properties.create(Material.ROCK))
-                .setHardness(1.5f)
-                .setResistance(6.0f)
+        EXAMPLE_BLOCK = new Block(Material.ROCK)
+                .setHardness(1.5F)
+                .setResistance(6.0F)
                 .setRegistryName(ExampleMod.MODID, "example_block");
         event.getRegistry().register(EXAMPLE_BLOCK);
     }
@@ -160,7 +159,7 @@ public class ExampleMod {
     public static CommonProxy proxy;
 
     // 直接在静态字段中创建并注册
-    public static final Block MY_BLOCK = new Block(Block.Properties.create(Material.ROCK))
+    public static final Block MY_BLOCK = new Block(Material.ROCK)
             .setRegistryName(MODID, "my_block");
 
     @EventHandler

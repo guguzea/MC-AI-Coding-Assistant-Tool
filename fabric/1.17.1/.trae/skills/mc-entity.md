@@ -20,7 +20,7 @@ public class MyPigEntity extends PigEntity {
 }
 
 // 2. 注册实体类型
-// ⚠️ 1.17.x 使用 Registry.ENTITY_TYPE，不是 Registries.ENTITY_TYPE
+// ⚠️ 1.17.x 使用 Registry.ENTITY_TYPE，不是 Registry.ENTITY_TYPE
 private static final EntityType<MyPigEntity> MY_PIG =
     Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "my_pig"),
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyPigEntity::new)
@@ -33,9 +33,11 @@ private static final EntityType<MyPigEntity> MY_PIG =
 // 3. 在 onInitialize() 中设置属性
 @Override
 public void onInitialize() {
-    MobEntity example = (MobEntity) MY_PIG.create(null);
-    example.getAttributeContainer().register(Attributes.MAX_HEALTH, 20.0);
-    example.getAttributeContainer().register(Attributes.MOVEMENT_SPEED, 0.25);
+    FabricDefaultAttributeRegistry.register(MY_PIG,
+        MobEntity.createMobAttributes()
+            .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+    );
 }
 ```
 
@@ -46,7 +48,7 @@ IF 有行为实体（动物、怪物）
   → 继承对应实体类（如 AnimalEntity、MonsterEntity）
 
 IF 静态实体（不移动）
-  → FabricEntityTypeBuilder.create(MobCategory.MISC, Entity::new)
+  → FabricEntityTypeBuilder.create(SpawnGroup.MISC, Entity::new)
 
 IF 需要在世界中自然生成
   → 设置 SpawnRestriction

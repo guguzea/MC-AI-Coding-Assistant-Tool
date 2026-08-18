@@ -12,9 +12,12 @@ description: 07 — 数据生成器
 
 ### 核心原则
 
-- Fabric 1.17.1 的数据生成器 API 与 1.20.x 有显著差异
-- 建议手动编写 JSON 文件而非依赖 DataGen（1.17.1 DataGen API 较繁琐）
-- 如使用 DataGen，需引入 `fabric-datagen-api-v0` 模块
+- Fabric 1.17.1 **开始有** `DataGeneratorEntrypoint` + `fabric-datagen`，但 API 仍偏早期
+- **推荐**手写 JSON 到 `src/main/resources/`（稳定、好对照原版）
+- 若走 DataGen：入口是 `DataGeneratorEntrypoint.onInitializeDataGenerator`，**不是** `DataGeneratorInitializer` / `init_data`
+- 本档配方类是 `FabricRecipesProvider.generateRecipes`（注意复数 Recipes）；不要抄 1.20 的 `createPack()`
+- `FabricDataGenerator.addProvider(Function)` 直接挂 provider；**没有** `createPack()`
+- **禁止** `ExistingFileHelper`、`DataStreamOutputSupplier.Writer`、Forge 的 `ItemModelProvider`
 
 ---
 
@@ -24,21 +27,19 @@ description: 07 — 数据生成器
 
 ```
 IF 生成 配方 / 战利品表 / 进度 / 语言文件
-  → 推荐直接手写 JSON 到 src/main/resources/data/{modid}/
-  → 避免复杂的 DataGen 配置
+  → 推荐直接手写 JSON 到 src/main/resources/data/{modid}/ 与 assets/{modid}/
 
 IF 生成 物品/方块模型 JSON
   → 手写 JSON 到 src/main/resources/assets/{modid}/
-  → 参考 Minecraft 原版模型的 JSON 格式
 
 IF 必须使用 DataGen（保持代码驱动）
-  → 引入 fabric-datagen-api-v0
-  → 1.17.1 的入口点和工作方式与 1.20.x 不同
+  → fabric-api + DataGeneratorEntrypoint
+  → generator.addProvider(MyRecipeProvider::new)
 ```
 
 ---
 
-## 手动生成资源 JSON（推荐）
+## 手动资源文件（推荐方式）
 
 ### 物品模型 JSON
 
@@ -52,7 +53,27 @@ IF 必须使用 DataGen（保持代码驱动）
 }
 ```
 
-### 方块模型 JSON
+### 语言文件
+
+```json
+// src/main/resources/assets/examplemod/lang/en_us.json
+{
+  "item.examplemod.my_item": "My Item",
+  "block.examplemod.my_block": "My Block",
+  "entity.examplemod.my_entity": "My Entity"
+}
+```
+
+### 方块状态 JSON
+
+```json
+// src/main/resources/assets/examplemod/blockstates/my_block.json
+{
+  "variants": {
+    "": { "model": "examplemod:block/my_block" }
+  }
+}
+```
 
 ```json
 // src/main/resources/assets/examplemod/models/block/my_block.json
@@ -73,12 +94,10 @@ IF 必须使用 DataGen（保持代码驱动）
   "pattern": [
     "AAA",
     "A A",
-    " AAA"
+    "AAA"
   ],
   "key": {
-    "A": {
-      "item": "minecraft:diamond"
-    }
+    "A": { "item": "minecraft:diamond" }
   },
   "result": {
     "item": "examplemod:my_item",
@@ -87,49 +106,73 @@ IF 必须使用 DataGen（保持代码驱动）
 }
 ```
 
-### 语言文件
-
-```json
-// src/main/resources/assets/examplemod/lang/en_us.json
-{
-  "item.examplemod.my_item": "My Item",
-  "block.examplemod.my_block": "My Block"
-}
-```
 
 ---
 
-## DataGen（可选，复杂度较高）
+## DataGen（可选）
 
 ### 添加 DataGen 依赖
 
 ```groovy
-// build.gradle
+// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-datagen-api-v0 的假版本号
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-datagen-api-v0:0.7.3+1.17.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 ```
 
-### 注册 DataGeneratorInitializer
+### 创建 DataGeneratorEntrypoint
+
+```java
+public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator generator) {
+        generator.addProvider(MyRecipeProvider::new);
+    }
+}
+```
+
+### 注册 fabric-datagen
 
 ```json
 // fabric.mod.json
 {
   "entrypoints": {
-    "init": ["com.example.examplemod.MyDatagen"]
+    "fabric-datagen": [
+      "com.example.examplemod.ExampleModDataGenerator"
+    ]
   }
 }
 ```
 
-> ⚠️ **1.17.1 DataGen 限制**：DataGen 在 1.17.1 中是实验性功能，API 经常变化。推荐使用手动 JSON 以确保稳定性。
+### 配方 provider（1.17.1）
 
----
+```java
+public class MyRecipeProvider extends FabricRecipesProvider {
+    public MyRecipeProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator);
+    }
+
+    @Override
+    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+        ShapedRecipeJsonFactory.create(MY_ITEM)
+            .pattern("AAA")
+            .pattern("A A")
+            .pattern(" A ")
+            .input('A', Items.DIAMOND)
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .offerTo(exporter);
+    }
+}
+```
+
+> ⚠️ **1.17.1 DataGen 限制**：早期 API，provider 种类比 1.18+ 少。推荐手写 JSON 以确保稳定性。
 
 ## 常见错误
 
-- ❌ 忘记在 `fabric.mod.json` 中注册 `init` entrypoint — DataGen 不执行
+- ❌ 注册 `init_data` / `init` 当 datagen 入口 — 应用 `fabric-datagen`
+- ❌ 使用 `DataGeneratorInitializer` 或 `ExistingFileHelper` — 不是 Fabric 入口
+- ❌ 把 1.19.4+ 的 `generator.createPack()` 抄到 1.17.1
 - ❌ 引用未注册的资源 — 游戏找不到资源文件
-- ❌ DataGen 使用 1.20.x API — 1.17.1 DataGen API 完全不同
 
 ## 扩展点
 

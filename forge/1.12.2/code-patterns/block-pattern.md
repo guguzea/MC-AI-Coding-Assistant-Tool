@@ -6,10 +6,10 @@
 public class MyBlock extends Block {
 
     public MyBlock() {
-        super(Block.Properties.create(Material.ROCK)
-            .hardnessAndResistance(3.0f, 5.0f)
-            .sound(SoundType.STONE)
-        );
+        super(Material.ROCK);
+        setHardness(3.0F);
+        setResistance(5.0F);
+        setSoundType(SoundType.STONE);
         setRegistryName(ExampleMod.MOD_ID, "my_block");
     }
 
@@ -71,7 +71,7 @@ public class VariantBlock extends Block {
     public static final PropertyEnum<EnumVariant> VARIANT = PropertyEnum.create("variant", EnumVariant.class);
 
     public VariantBlock() {
-        super(Block.Properties.create(Material.ROCK));
+        super(Material.ROCK);
         setRegistryName(ExampleMod.MOD_ID, "variant_block");
     }
 

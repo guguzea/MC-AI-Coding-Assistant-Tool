@@ -199,8 +199,8 @@ tasks.named('jar').configure {
 }
 ```
 
-- `id` 禁止包含 `-`，必须全小写
+- `id` 必须全小写；允许字母/数字/下划线/连字符（官方示例 `example-mod`）
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
-- `entrypoints` 中的类必须实现 `FabricMod` 接口
+- `entrypoints` 中的类必须实现 `ModInitializer`（client 为 `ClientModInitializer`）
 - `depends` 中的 `fabricloader`、`minecraft` 是必需依赖
 - `environment`：`"*"` 表示全平台，`"client"` 仅客户端，`"server"` 仅服务端

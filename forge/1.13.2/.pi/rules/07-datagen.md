@@ -12,45 +12,27 @@ description: 07 — 数据生成器
 
 ### 数据生成时机
 
-- 数据生成（DataGen）在 Gradle 任务 `./gradlew runData` 或 `build` 期间执行
-- **禁止**在运行时修改数据生成器输出
-- 生成的 JSON 文件放在 `src/main/resources/` 或 `src/generated/resources/`
+- 1.13.2 DataGen **很早**；`query_loader_api` 未收录 `GatherDataEvent`
+- **推荐**手写 JSON 到 `src/main/resources/`（`data/{modid}/` 与 `assets/{modid}/`）
+- **禁止**在运行时修改这些 JSON
+- **禁止** `PackOutput`、`generator.getOutput()`、`IDataProvider output = generator.getOutput()`、`ShapedRecipes` / `ShapedRecipesBuilder` 假工厂、`FurnaceRecipes`
+- 若工程里确有 `GatherDataEvent`：只用 `event.getGenerator().addProvider(IDataProvider)`，构造吃 `DataGenerator`，对照 1.14.4 档，不要抄 1.20
 
 ### 目录结构
 
 ```
-src/main/java/
-└── {package}/
-    └── datagen/
-        └── ModDataGenerators.java      # 入口类
+src/main/resources/
+├── assets/{modid}/
+│   ├── models/item/
+│   ├── models/block/
+│   ├── blockstates/
+│   └── lang/
+└── data/{modid}/
+    ├── recipes/
+    ├── loot_tables/
+    ├── advancements/
+    └── tags/
 ```
-
-### DataGenerators 入口类规范
-
-```java
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenerators {
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        IDataProvider output = generator.getOutput();
-
-        if (event.includeServer()) {
-            // 服务器端数据生成
-        }
-        if (event.includeClient()) {
-            // 客户端数据生成
-        }
-    }
-}
-```
-
-### RecipeProvider 使用规范
-
-- 使用 `ShapedRecipes` 和 `ShapelessRecipes` 创建配方
-- 熔炉配方使用 `FurnaceRecipes`
-- 配方结果自动注册，**不需要**手动调用注册方法
-- 配方 ID 格式：`minecraft:...`（原版）或 `{modid}:...`（mod）
 
 ---
 
@@ -60,8 +42,12 @@ public class DataGenerators {
 
 ```
 IF 生成合成配方
-  → 使用 ShapedRecipes / ShapelessRecipes
+  → 手写 JSON
   → 放到 data/{modid}/recipes/
+
+IF 生成战利品表
+  → 手写 JSON
+  → 放到 data/{modid}/loot_tables/
 
 IF 生成方块状态（BlockState JSON）
   → 手动编写 JSON 文件
@@ -76,58 +62,31 @@ IF 生成语言文件
   → 放到 assets/{modid}/lang/
 ```
 
-> **注意**：Forge 1.13.2 的 DataGen API 相对基础，大部分资源文件需要手动编写 JSON。
+### Decision: 配方类型选择
+
+```
+IF 有形状 → minecraft:crafting_shaped JSON
+IF 无序 → minecraft:crafting_shapeless JSON
+IF 熔炉 → minecraft:smelting JSON
+```
+
+> **注意**：Forge 1.13.2 的 DataGen API 相对基础，大部分资源文件需要手动编写 JSON。1.13 起配方已从 1.12 的 `assets/{modid}/recipes` 迁到 `data/{modid}/recipes`。
 
 ---
 
-## 示例：ModDataGenerators 入口
+## 示例：手写配方 JSON
 
-```java
-// datagen/ModDataGenerators.java
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenerators {
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        IDataProvider output = generator.getOutput();
+文件：`data/{modid}/recipes/my_item.json`
 
-        if (event.includeServer()) {
-            generator.addProvider(new RecipeProvider(output));
-        }
-        if (event.includeClient()) {
-            generator.addProvider(new BlockStateProvider(output, MOD_ID, event.getExistingFileHelper()));
-            generator.addProvider(new ItemModelProvider(output, MOD_ID, event.getExistingFileHelper()));
-        }
-    }
-}
-```
-
-## 示例：合成配方
-
-```java
-// datagen/RecipeProvider.java
-public class RecipeProvider extends RecipeProvider {
-    public RecipeProvider(IDataProvider output) {
-        super(output);
-    }
-
-    @Override
-    protected void registerRecipes() {
-        ShapedRecipesBuilder.shapedRecipe(ModItems.MY_ITEM.get(), 1)
-            .patternLine(" X ")
-            .patternLine(" X ")
-            .patternLine(" Y ")
-            .key('X', Items.DIAMOND)
-            .key('Y', Items.STICK)
-            .addCriterion("has_diamond", hasItem(Items.DIAMOND))
-            .build(consumer);
-
-        ShapelessRecipesBuilder.shapelessRecipe(ModItems.OTHER_ITEM.get(), 1)
-            .addIngredient(Items.GOLD_INGOT, 3)
-            .addIngredient(Items.DIAMOND)
-            .addCriterion("has_gold", hasItem(Items.GOLD_INGOT))
-            .build(consumer);
-    }
+```json
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" X ", " X ", " Y "],
+  "key": {
+    "X": { "item": "minecraft:diamond" },
+    "Y": { "item": "minecraft:stick" }
+  },
+  "result": { "item": "examplemod:my_item" }
 }
 ```
 
@@ -138,7 +97,7 @@ public class RecipeProvider extends RecipeProvider {
 ```json
 {
   "variants": {
-    "": { "model": "modid:block/my_block" }
+    "": { "model": "examplemod:block/my_block" }
   }
 }
 ```
@@ -149,8 +108,21 @@ public class RecipeProvider extends RecipeProvider {
 
 ```json
 {
-  "parent": "modid:block/my_block"
+  "parent": "item/generated",
+  "textures": { "layer0": "examplemod:item/my_item" }
 }
 ```
 
-> 注意：Forge 1.13.2 的资源文件大部分需要手动编写，不像 1.14+ 有完善的 DataGen 支持。
+## 常见错误
+
+- ❌ `generator.getOutput()` — 不是本版 API
+- ❌ `PackOutput` / `addProvider(true, ...)`
+- ❌ `ShapedRecipesBuilder` / `FurnaceRecipes`
+- ❌ 把 1.12 的 recipes 仍放在 `assets/`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | 注册完成后方可生成对应标签和配方 |
+| `mc-compat-jei` | DataGen 生成的配方自动被 JEI/EMI 读取 |

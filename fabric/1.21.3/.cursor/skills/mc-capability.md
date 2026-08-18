@@ -1,53 +1,29 @@
 ---
 name: mc-capability
-description: Fabric Capability 系统。fabric-item-group-api-v1 用于物品分组，fabric-entity-events-v2 用于实体事件。触发词：Capability、FabricCapability
+description: Fabric Attachment API。AttachmentRegistry、AttachmentType、getAttached。触发词：Attachment、Capability、AttachmentRegistry
 platform: fabric
-version: "1.20.1"
+version: "1.21.3"
 dependencies: []
 mappings: yarn
 ---
 
-# Capability / 实体事件（Fabric 1.20.1）
+# Attachment（Fabric 1.21.3）
 
-## 概述
-
-Fabric 使用 `fabric-entity-events-v2` 模块处理实体相关的 Capability 功能。
-
-## 添加依赖
-
-```groovy
-dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-entity-events-v2:2.2.3+1.21"
-}
-```
-
-## 实体事件
+Fabric 没有 NeoForge `AttachmentType` 注册表或 `entity.getData`。用 `fabric-attachment-api-v1`（含在 `fabric-api`）：
 
 ```java
-// 在 onInitialize() 中
-EntityEvent.TICK.register((entity) -> {
-    if (entity instanceof PlayerEntity) {
-        // 每 tick 执行
-    }
-    return EntityEvent.TickResult.CONTINUE;
-});
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
 
-EntityEvent.DEATH.register((entity, source) -> {
-    if (entity instanceof PlayerEntity) {
-        LOGGER.info("Player died: " + entity.getName());
-    }
-    return EntityEvent.DeathResult.ALLOW;
-});
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(Identifier.of("examplemod", "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
 ```
 
-## 常见错误
+不要写 `Key.create(Registries.ATTACHMENT_TYPE)` 或 `net.fabric.sdk:...`。
 
-- ❌在非主线程处理实体事件
-- ❌忘记 `return` 结果
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-entity` | 实体事件用于实体行为修改 |
-| `mc-registry` | 注册实体类型 |
+实体生命周期仍用 `ServerLivingEntityEvents.AFTER_DEATH` / `ALLOW_DEATH` / `ALLOW_DAMAGE` 和 `ServerEntityEvents.ENTITY_LOAD`，不要编造 `EntityEvent.TICK`。
+每 tick 用 `ServerTickEvents` 或实体 `tick()`。

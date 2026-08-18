@@ -1,4 +1,4 @@
-# Mixin 模式（Fabric 1.20.1）
+# Mixin 模式（Fabric 1.16.5）
 
 > Fabric 独有：Mixin 是 Fabric 开发的核心部分，Loom 提供原生支持。
 

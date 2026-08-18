@@ -9,18 +9,17 @@
 ### Block 子类规范
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
-- 推荐使用 `Block.Properties.create(Material)` 创建属性
+- 用 `new Block(Material)`，再链式 `setHardness` / `setResistance` / `setSoundType`（没有 `Block.Properties`）
 - 禁止重写已废弃的方法
 
-### Block.Properties 常用配置
+### 1.12.2 方块属性（setter）
 
 ```java
-Block.Properties.create(Material material)
-    .hardness(float hardness)                    // 破坏时间
-    .resistance(float resistance)                 // 抗爆性
-    .harvestLevel(String toolClass, int level)  // 挖掘等级
-    .harvestTool(ToolType tool)                 // 工具类型
-    .sound(SoundType sound)                     // 放置/破坏音效
+new Block(Material.ROCK)
+    .setHardness(1.5F)
+    .setResistance(10.0F)
+    .setSoundType(SoundType.STONE)
+    .setHarvestLevel("pickaxe", 0);
 ```
 
 ### 注册约束
@@ -112,7 +111,7 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/BlockExample.java
 public class BlockExample extends Block {
     public BlockExample() {
-        super(Block.Properties.create(Material.ROCK)
+        super(new Block(Material.ROCK)
                 .hardness(1.5f)
                 .resistance(6.0f)
         );
@@ -156,7 +155,7 @@ public class ModItems {
 // blocks/BlockExampleContainer.java
 public class BlockExampleContainer extends BlockContainer {
     public BlockExampleContainer() {
-        super(Block.Properties.create(Material.WOOD), BlockExampleContainer.class);
+        super(new Block(Material.WOOD), BlockExampleContainer.class);
         setDefaultState(blockState.getBaseState());
     }
 

@@ -70,6 +70,8 @@ entity.examplemod.my_entity.name=My Entity
 - ❌ 使用 .json 语言文件（1.12.2 用 .lang）
 - ❌ pack_format 错误（1.12.2 = 4）
 - ❌ 资源路径含大写
+- ❌ 把配方/战利品放到 `data/{modid}/` — 那是 1.13+；本档在 `assets/{modid}/`
+- ❌ `minecraft:smelting` JSON — 1.13+；熔炉用 `GameRegistry.addSmelting`
 
 ## 参考资料
 

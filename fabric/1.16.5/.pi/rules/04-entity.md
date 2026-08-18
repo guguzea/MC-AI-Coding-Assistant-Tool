@@ -15,7 +15,7 @@ description: 04 — 实体开发
 - 实体必须在 `Registry.register(Registry.ENTITY_TYPE, id, type)` 中注册
 - 实体渲染器在客户端单独注册（`EntityRendererRegistry`）
 - 实体类继承 `Entity` 或其子类
-- 实体 ID 必须在 `fabric.mod.json` 的 `entrypoints` 中正确配置
+- `fabric.mod.json` 的 `client` entrypoint 写入口类名（不是实体 ID）
 
 ---
 
@@ -25,10 +25,10 @@ description: 04 — 实体开发
 
 ```
 IF 静态实体（不移动、不交互）
-  → EntityType.Builder.create(EntityCategory.MISC, Entity::new)
+  → EntityType.Builder.create(SpawnGroup.MISC, Entity::new)
 
 IF 有行为实体（动物、怪物）
-  → EntityType.Builder.create(EntityCategory.CREATURE, MyEntity::new)
+  → EntityType.Builder.create(SpawnGroup.CREATURE, MyEntity::new)
 
 IF 需要在服务端和客户端分别初始化
   → 拆分 ModInitializer 为 client entrypoints
@@ -50,19 +50,19 @@ public class MyPigEntity extends CowEntity {
 }
 
 // 2. 在 onInitialize() 中注册
-public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.register(
+public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
     Registry.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
     EntityType.Builder.create(
-        EntityCategory.CREATURE,  // ❗ 使用 EntityCategory 而非 MobCategory
-        MyPigEntity::new
+        MyPigEntity::new,
+        SpawnGroup.CREATURE
     )
-    .size(0.9f, 1.4f)  // ❗ 1.16.x 用 size() 而非 dimensions()
+    .size(0.9f, 1.4f)
     .build()
 );
 ```
 
-> **注意**：Fabric 1.16.5 使用 `EntityCategory`（Fabric API），而非 `MobCategory`（Minecraft 内核）。两者 `CREATURE` 值相同，可混用但推荐使用 `EntityCategory`。
+Yarn 1.16.5 的生成分类枚举是 `SpawnGroup`。属性用 `FabricDefaultAttributeRegistry.register`。
 
 ## 实体渲染器（客户端）
 
@@ -71,7 +71,7 @@ public static final RegistrySupplier<EntityType<MyPigEntity>> MY_PIG = Registry.
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG.get(), (context) ->
+        EntityRendererRegistry.register(MY_PIG, (context) ->
             new AnimalEntityRenderer<>(context.getModelLoader()
                 .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
         );
@@ -94,7 +94,7 @@ public class ExampleModClient implements ClientModInitializer {
 
 - ❌ 忘记在 `fabric.mod.json` 中添加客户端 entrypoint — 实体无渲染
 - ❌ 实体渲染器在服务端执行 — `EntityRendererRegistry` 仅在客户端有效
-- ❌ `EntityType.Builder` 使用 `MobCategory` — 应使用 `EntityCategory`（Fabric API）
+- ❌ 把 Mojmap 的 `MobCategory` 抄进 Yarn 1.16.5（本档是 `SpawnGroup`）
 - ❌ 在 `onInitialize()` 外注册 — 注册不会生效
 
 ## 扩展点

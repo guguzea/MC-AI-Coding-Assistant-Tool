@@ -5,40 +5,41 @@
 分类: datagen
 ```
 
-## pack_format
-
-1.18.2 的 pack_format = **8**。
-
 ## 常用 Provider 速查
 
 | 数据 | Provider |
 |------|----------|
 | 方块状态变体 | `BlockStateProvider` |
-| 物品模型（继承方块） | `ItemModelProvider`（子类，withExistingParent） |
-| 物品模型（独立） | `ItemModelProvider`（子类，basicFlat/basicCubeAll） |
+| 物品模型 | `ItemModelProvider` |
 | 配方（有序） | `ShapedRecipeBuilder` |
 | 配方（无序） | `ShapelessRecipeBuilder` |
-| 配方（熔炉） | `SimpleCookingRecipeBuilder.smelting()` 在 `RecipeProvider.buildRecipes()` 中 |
+| 配方（熔炉） | `SimpleCookingRecipeBuilder.smelting`（在 `buildCraftingRecipes` 内） |
 | 方块标签 | `BlockTagsProvider` |
 | 物品标签 | `ItemTagsProvider` |
-| 战利品表 | `LootTableProvider` |
+| 战利品表 | `LootTableProvider#getTables` |
 
 ## 快速模板
 
 ```java
+// net.minecraftforge.forge.event.lifecycle.GatherDataEvent
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
+        ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, new ModItemTagsProvider(output,
-                event.getLookupProvider(), event.getLookupProvider()));
-            generator.addProvider(true, new ModRecipeProvider(output));
-            generator.addProvider(true, new ModLootTableProvider(output));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(generator, helper);
+            generator.addProvider(blockTags);
+            generator.addProvider(new ModItemTagsProvider(generator, blockTags, helper));
+            generator.addProvider(new ModRecipeProvider(generator));
+            generator.addProvider(new ModLootTableProvider(generator));
+        }
+        if (event.includeClient()) {
+            generator.addProvider(new ModItemModelsProvider(generator, helper));
+            generator.addProvider(new ModBlockStatesProvider(generator, helper));
+            generator.addProvider(new ModLanguageProvider(generator, "en_us"));
         }
     }
 }
@@ -47,45 +48,37 @@ public class DataGenerators {
 ## 配方速写
 
 ```java
-// 有序配方
-ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Blocks.COBBLESTONE, 1)
-    .pattern("###")
-    .pattern("#X#")
-    .pattern("###")
-    .define('#', Items.DIAMOND)
-    .define('X', Blocks.DIRT)
-    .unlockedBy("has_diamond", has(Items.DIAMOND))
-    .save(consumer);
+// datagen/ModRecipes.java
+public class ModRecipeProvider extends RecipeProvider {
+    public ModRecipeProvider(DataGenerator generator) {
+        super(generator);
+    }
 
-// 无序配方
-ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.DIAMOND, 9)
-    .requires(Blocks.DIRT)
-    .unlockedBy("has_dirt", has(Blocks.DIRT))
-    .save(consumer);
+    @Override
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(ModItems.MY_ITEM.get())
+            .pattern(" X ")
+            .pattern(" X ")
+            .pattern(" Y ")
+            .define('X', Items.DIAMOND)
+            .define('Y', Items.STICK)
+            .unlockedBy("has_diamond", has(Items.DIAMOND))
+            .save(consumer);
 
-// 熔炉配方
-SimpleCookingRecipeBuilder.smelting(
-        Ingredient.of(Items.DIRT),
-        RecipeCategory.MISC,
-        Items.DIAMOND, 0.1f, 200)
-    .unlockedBy("has_dirt", has(Items.DIRT))
-    .save(consumer);
-```
+        ShapelessRecipeBuilder.shapeless(ModItems.OTHER_ITEM.get())
+            .requires(Items.GOLD_INGOT, 3)
+            .requires(Items.DIAMOND)
+            .unlockedBy("has_gold", has(Items.GOLD_INGOT))
+            .save(consumer);
 
-## 战利品表
-
-```java
-public class ModLootTableProvider extends LootTableProvider {
-    public ModLootTableProvider(PackOutput output) {
-        super(output, Collections.emptySet(), List.of(
-            new LootTableSubprovider() {
-                public void generate() {
-                    add(EXAMPLE_BLOCK.get(),
-                        BlockLootTables.createSingleItemTable(EXAMPLE_ITEM.get())
-                    );
-                }
-            }
-        ));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+            .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
+            .save(consumer);
     }
 }
 ```
+
+## pack_format
+
+1.18.2 的 pack_format = **8**。
+

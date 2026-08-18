@@ -1,41 +1,45 @@
 ﻿---
 name: mc-datagen
-description: Fabric 数据生成器。DataGeneratorInitializer、fabric-datagen-api。触发词：DataGen、DataGenerator、ModelProvider、RecipeProvider
+description: Fabric 1.14.4 没有 fabric-datagen。手写 JSON 到 resources。触发词：DataGen、DataGenerator、配方 JSON、模型 JSON
 platform: fabric
-version: "1.20.1"
+version: "1.14.4"
 dependencies: []
 mappings: yarn
 ---
 
-# 数据生成器（Fabric 1.20.1）
+# 数据生成器（Fabric 1.14.4）
 
 ## 快速开始
 
-```groovy
-// build.gradle 添加依赖
-dependencies {
-    modApi "net.fabric.sdk:fabric-datagen-api-v0:4.2.1+1.20.1"
-}
-```
+本版 **没有** `DataGeneratorEntrypoint`。不要写 `DataGeneratorInitializer`、`init_data`、`ExistingFileHelper`。
 
-```java
-// 创建 DataGeneratorInitializer
-public class MyDatagen implements DataGeneratorInitializer {
-    @Override
-    public void initialize(RegistryWrapper.WrapperLookup registries,
-                           DataGenerator generator,
-                           Pack.Output output,
-                           ExistingFileHelper existingFileHelper) {
-        // 注册各生成器
-    }
+把 JSON 放到 `src/main/resources/`：
+
+```json
+// assets/examplemod/models/item/my_item.json
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "examplemod:item/my_item"
+  }
 }
 ```
 
 ```json
-// fabric.mod.json 中注册
+// data/examplemod/recipes/my_recipe.json
 {
-  "entrypoints": {
-    "init_data": ["com.example.examplemod.MyDatagen"]
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:diamond" }
+  },
+  "result": {
+    "item": "examplemod:my_item",
+    "count": 1
   }
 }
 ```
@@ -44,28 +48,28 @@ public class MyDatagen implements DataGeneratorInitializer {
 
 ```
 IF 生成模型 JSON
-  → ItemModelProvider / BlockModelProvider
+  → assets/{modid}/models/
 
 IF 生成配方
-  → RecipeProvider
+  → data/{modid}/recipes/
 
 IF 生成战利品表
-  → BlockLootTableGenerator
+  → data/{modid}/loot_tables/
 
 IF 生成语言文件
-  → LanguageProvider
+  → assets/{modid}/lang/
 ```
 
 ## 常见错误
 
-- ❌忘记在 `fabric.mod.json` 中注册 `init_data` — DataGen 不执行
-- ❌手动编辑 `src/generated/resources/` — 文件会被重新生成覆盖
-- ❌忘记添加 datagen 依赖 — DataGenerator 接口不存在
+- ❌ 去注册 `fabric-datagen` / `init_data` — 1.14.4 没有该入口
+- ❌ 抄 1.20 的 `FabricRecipeProvider` 到本档
+- ❌ 语言文件放错目录 — 应在 `assets/{modid}/lang/`
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-item` | DataGen 生成物品模型 |
-| `mc-block` | DataGen 生成方块模型和掉落表 |
-| `mc-registry` | DataGen 引用已注册的对象 |
+| `mc-item` | 手写物品模型 JSON |
+| `mc-block` | 手写方块模型和掉落表 JSON |
+| `mc-registry` | 配方引用已注册的物品 |

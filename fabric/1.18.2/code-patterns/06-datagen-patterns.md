@@ -7,27 +7,16 @@
 平台: Fabric
 分类: datagen
 依赖: [fabric-datagen-api-v0]
-扩展点: [DataGeneratorInitializer]
+扩展点: [DataGeneratorEntrypoint]
 ---
-public class MyLangProvider implements DataStreamOutputSupplier.Writer {
+public class MyEnLangProvider extends FabricLanguageProvider {
+    public MyEnLangProvider(FabricDataGenerator g) { super(g); }
     @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                         DataGenerator.GeneratorOutput output,
-                         ExistingFileHelper existingFileHelper) {
-        // 生成英文语言文件
-        output.add(Locale.ENGLISH,
-            "item.examplemod.my_item", "My Item",
-            "block.examplemod.my_block", "My Block",
-            "entity.examplemod.my_entity", "My Entity",
-            "itemGroup.examplemod.my_group", "My Items"
-        );
-
-        // 生成中文语言文件
-        output.add(Locale.ZH_CN,
-            "item.examplemod.my_item", "我的物品",
-            "block.examplemod.my_block", "我的方块",
-            "entity.examplemod.my_entity", "我的实体"
-        );
+    public void generateTranslations(TranslationBuilder translationBuilder) {
+        translationBuilder.add(MY_ITEM, "My Item");
+        translationBuilder.add(MY_BLOCK, "My Block");
+        translationBuilder.add(MY_ENTITY, "My Entity");
+        translationBuilder.add("itemGroup.examplemod.my_group", "My Items");
     }
 }
 ```
@@ -39,31 +28,25 @@ public class MyLangProvider implements DataStreamOutputSupplier.Writer {
 平台: Fabric
 分类: datagen
 依赖: [fabric-datagen-api-v0]
-扩展点: [DataGeneratorInitializer]
+扩展点: [DataGeneratorEntrypoint]
 ---
-public class MyRecipeProvider implements DataStreamOutputSupplier.Writer {
-    @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                         DataGenerator.GeneratorOutput output,
-                         ExistingFileHelper existingFileHelper) {
-        // Shapeless 配方
-        ShapelessRecipeJsonBuilder.create(
-                RecipeProvider.getItemConvertible(MY_ITEM.get()), 1)
-            .input(Items.DIAMOND)
-            .input(Items.GOLD_INGOT)
-            .criterion("has_diamond",
-                conditionsFromItem(Items.DIAMOND))
-            .offerTo(exporter);
+public class MyRecipeProvider extends FabricRecipeProvider {
+    public MyRecipeProvider(FabricDataGenerator g) { super(g); }
 
-        // Shaped 配方
-        ShapedRecipeJsonBuilder.create(
-                RecipeProvider.getItemConvertible(MY_TOOL.get()), 1)
+    @Override
+    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+        ShapedRecipeJsonFactory.create(MY_TOOL)
             .pattern("AAA")
-            .pattern(" A ")
+            .pattern("A A")
             .pattern(" A ")
             .input('A', Items.DIAMOND)
-            .criterion("has_diamond",
-                conditionsFromItem(Items.DIAMOND))
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .offerTo(exporter);
+
+        ShapelessRecipeJsonFactory.create(MY_ITEM)
+            .input(Items.DIAMOND)
+            .input(Items.GOLD_INGOT)
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
             .offerTo(exporter);
     }
 }
@@ -76,36 +59,14 @@ public class MyRecipeProvider implements DataStreamOutputSupplier.Writer {
 平台: Fabric
 分类: datagen
 依赖: [fabric-datagen-api-v0]
-扩展点: [DataGeneratorInitializer]
+扩展点: [DataGeneratorEntrypoint]
 ---
-public class MyLootTableProvider implements DataStreamOutputSupplier.Writer {
+public class MyBlockLootProvider extends FabricBlockLootTableProvider {
+    public MyBlockLootProvider(FabricDataGenerator g) { super(g); }
     @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                         DataGenerator.GeneratorOutput output,
-                         ExistingFileHelper existingFileHelper) {
-        // 方块掉落表
-        output.add(
-            Registries.BLOCK.getId(MY_BLOCK.get()),
-            BlockLootTableGenerator.dropsWithShears(MY_BLOCK.get())
-        );
-
-        // 自定义掉落表
-        output.add(
-            Registries.BLOCK.getId(MY_ORE.get()),
-            LootTable.builder()
-                .pool(LootPool.builder()
-                    .rolls(ConstantLootNumberProvider.create(1))
-                    .bonusRolls(UniformLootNumberProvider.create(0, 1))
-                    .entry(ItemEntry.builder(MY_GEM.get())
-                        .weight(1)
-                        .build())
-                    .entry(ItemEntry.builder(Items.DIAMOND)
-                        .weight(1)
-                        .build())
-                    .condition(SurvivesExplosionLootCondition.builder())
-                    .build())
-                .build()
-        );
+    protected void generateBlockLootTables() {
+        addDrop(MY_BLOCK);
+        addDrop(MY_ORE, oreDrops(MY_ORE, MY_GEM));
     }
 }
 ```
@@ -117,32 +78,14 @@ public class MyLootTableProvider implements DataStreamOutputSupplier.Writer {
 平台: Fabric
 分类: datagen
 依赖: [fabric-datagen-api-v0]
-扩展点: [DataGeneratorInitializer]
+扩展点: [DataGeneratorEntrypoint]
 ---
-public class MyTagProvider implements DataStreamOutputSupplier.Writer {
-    @Override
-    public void generate(RegistryWrapper.WrapperLookup registries,
-                         DataGenerator.GeneratorOutput output,
-                         ExistingFileHelper existingFileHelper) {
-        // 方块标签
-        output.add(
-            FabricTagProvider.getTagId(FabricTagKeys.BLOCKS),
-            FabricTagBuilder.create()
-                .add(Blocks.DIAMOND_BLOCK)
-                .add(MY_BLOCK.get())
-                .setReplace(false)
-                .build()
-        );
-
-        // 物品标签
-        output.add(
-            FabricTagProvider.getTagId(FabricTagKeys.ITEMS),
-            FabricTagBuilder.create()
-                .add(Items.DIAMOND)
-                .add(MY_ITEM.get())
-                .setReplace(false)
-                .build()
-        );
-    }
+# 手写 tags JSON，或查本版 FabricTagProvider
+{
+  "replace": false,
+  "values": [
+    "minecraft:diamond",
+    "examplemod:my_item"
+  ]
 }
 ```

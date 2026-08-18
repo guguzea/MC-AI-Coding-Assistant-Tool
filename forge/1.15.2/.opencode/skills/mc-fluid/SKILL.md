@@ -1,6 +1,6 @@
 ﻿---
 name: mc-fluid
-description: Minecraft Forge 流体开发。创建流体 Fluid、FluidBlock、桶物品。触发词：Fluid、FluidBlock、FluidStack、BucketItem
+description: Minecraft Forge 流体开发。创建流体 Fluid、ForgeFlowingFluid、FluidAttributes、桶物品。触发词：Fluid、FluidAttributes、FlowingFluid、BucketItem、桶、bucket、流体
 platform: forge
 version: "1.15.2"
 dependencies: []
@@ -9,57 +9,71 @@ mappings: mcp
 
 # 流体开发（Forge 1.15.2）
 
-## Decision: 创建流体类型
+## Decision: 创建流体
 
 ```
 IF 只需要静态流体（不流动）
-  → Fluid + FluidBlock 即可
+  → 仍建议同时注册 Source + Flowing
 
 IF 需要流动、填装、无限水源
-  → Fluid + FluidBlock + BucketItem
+  → ForgeFlowingFluid.Source + ForgeFlowingFluid.Flowing + FlowingFluidBlock + BucketItem
 ```
+
+**本档没有 `FluidType`。** 1.13–1.18 用 `FluidAttributes.builder`。不要 `FluidFlowing` 这种编造类名。
 
 ## 完整示例：自定义流体
 
-### 1. 注册 Fluid
+### 1. 定义流体属性
 
 ```java
-public static final RegistryObject<Fluid> MY_FLUID =
-    FLUIDS.register("my_fluid",
-        () -> new FluidFlowing("my_fluid", FluidAttributes.Builder.builder(
-                new ResourceLocation("block/water_still"),
-                new ResourceLocation("block/water_flow"))
+public static final ResourceLocation STILL_RL = new ResourceLocation(MOD_ID, "block/my_fluid_still");
+public static final ResourceLocation FLOW_RL = new ResourceLocation(MOD_ID, "block/my_fluid_flow");
+
+public static final ForgeFlowingFluid.Properties FLUID_PROPERTIES =
+    new ForgeFlowingFluid.Properties(
+        MY_FLUID_SOURCE,
+        MY_FLUID_FLOWING,
+        FluidAttributes.builder(STILL_RL, FLOW_RL)
             .density(1000)
             .viscosity(1000)
-        )
-    );
-
-// 在 mod 构造函数中
-FLUIDS.register(modEventBus);
+            .temperature(300)
+            .luminosity(0)
+            .color(0xFF3F76E4)
+    )
+        .bucket(() -> MY_BUCKET.get())
+        .block(() -> MY_FLUID_BLOCK.get());
 ```
 
-### 2. 注册流体方块
+### 2. 注册 Source / Flowing
 
 ```java
-public static final RegistryObject<FluidBlock> MY_FLUID_BLOCK =
+public static final DeferredRegister<Fluid> FLUIDS =
+    DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID);
+
+public static final RegistryObject<FlowingFluid> MY_FLUID_SOURCE =
+    FLUIDS.register("my_fluid", () -> new ForgeFlowingFluid.Source(FLUID_PROPERTIES));
+
+public static final RegistryObject<FlowingFluid> MY_FLUID_FLOWING =
+    FLUIDS.register("my_fluid_flowing", () -> new ForgeFlowingFluid.Flowing(FLUID_PROPERTIES));
+```
+
+### 3. 注册流体方块与桶
+
+```java
+public static final RegistryObject<FlowingFluidBlock> MY_FLUID_BLOCK =
     BLOCKS.register("my_fluid",
-        () -> new FluidBlock(() -> ModFluids.MY_FLUID.get(), Block.Properties.create(Material.WATER)
-            .doesNotBlockMovement()
-            .hardnessAndResistance(100.0f)
-            .noDrops()
+        () -> new FlowingFluidBlock(MY_FLUID_SOURCE,
+            Block.Properties.create(Material.WATER)
+                .doesNotBlockMovement()
+                .hardnessAndResistance(100.0f)
+                .noDrops()
         )
     );
-```
 
-### 3. 注册桶物品
-
-```java
 public static final RegistryObject<Item> MY_BUCKET =
     ITEMS.register("my_fluid_bucket",
-        () -> new BucketItem(() -> ModFluids.MY_FLUID_SOURCE.get(),
-            new Item.Properties()
-                .maxStackSize(1)
-                .group(CreativeModeTab.TAB_MISC)
+        () -> new BucketItem(MY_FLUID_SOURCE,
+            new Item.Properties().maxStackSize(1).group(ItemGroup.MISC)
         )
     );
 ```
@@ -68,17 +82,20 @@ public static final RegistryObject<Item> MY_BUCKET =
 
 | 类型 | 注册表 | 备注 |
 |------|--------|------|
-| `Fluid` | `ForgeRegistries.FLUIDS` | 用 `new FluidFlowing` |
-| `Block` | `ForgeRegistries.BLOCKS` | 用 `FluidBlock` |
+| `Fluid`（Source / Flowing） | `ForgeRegistries.FLUIDS` | `ForgeFlowingFluid.Source` / `Flowing` |
+| `Block` | `ForgeRegistries.BLOCKS` | `FlowingFluidBlock` |
+| `Item` | `ForgeRegistries.ITEMS` | `BucketItem` |
 
 ## 常见错误
 
-- ❌ `FluidBlock` 使用 `Material.WATER` 但未设置 `noDrops()` → 挖掘时掉落桶物品
-- ❌ 在服务端初始化流体相关资源 → 纹理等客户端资源必须客户端加载
+- ❌ `FluidType` / `FluidFlowing`（邻版或编造）
+- ❌ `FluidBlock` 用 `Material.WATER` 但未 `.noDrops()`
+- ❌ 在服务端初始化流体贴图
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-registry` | Fluid/Block/Item 用标准注册表 |
+| `mc-registry` | Fluid/Block/Item 用标准 `DeferredRegister` |
 | `mc-datagen` | 流体可生成方块状态 JSON |
+| `mc-block` | 流体方块是 `FlowingFluidBlock` |

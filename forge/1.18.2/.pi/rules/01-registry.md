@@ -14,23 +14,23 @@ description: 01 — 注册系统
 ### 核心原则
 
 - **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
-- 所有注册必须通过 **Forge 事件系统**（最终由 `RegisterEvent` 触发）
+- 所有注册必须通过 **Forge 事件系统**（最终由 `RegistryEvent.Register` 触发）
 - mod ID 必须与 `mods.toml` 中的 `modId` 完全一致
 - **推荐使用 `DeferredRegister`**：`DeferredRegister` 是 Forge 官方推荐的注册方式，Forge 1.18 起即可用于所有注册表，1.18.2 完全支持
-- `RegisterEvent` 仍可用，但不推荐（`DeferredRegister` 封装了它，更安全）
+- `RegistryEvent.Register` 仍可用，但不推荐（`DeferredRegister` 封装了它，更安全）
 
 ### 注册时机
 
-`DeferredRegister` 通过 modEventBus 在正确的 `RegisterEvent` 时机自动执行注册，无需手动监听。
+`DeferredRegister` 通过 modEventBus 在正确的 `RegistryEvent.Register` 时机自动执行注册，无需手动监听。
 
 | 注册内容 | DeferredRegister 工厂方法 | 注册到 |
 |----------|---------------------------|--------|
 | 方块 | `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
 | 物品 | `DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
 | 方块实体 | `DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID)` | modEventBus |
-| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)` | modEventBus |
+| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)` | modEventBus |
 | 附魔 | `DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MOD_ID)` | modEventBus |
-| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidType` | modEventBus |
+| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidAttributes` | modEventBus |
 | 粒子类型 | `DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID)` | modEventBus |
 | 声音事件 | `DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
 
@@ -42,8 +42,7 @@ description: 01 — 注册系统
 // ✅ 正确：在 mods.toml 中声明的 mod ID
 private static final String MOD_ID = "examplemod";
 
-// ❌ 错误：硬编码或不一致
-private static final String MOD_ID = "example_mod";  // 下划线不能用在 resource locations
+// ❌ 错误：含大写，或与 mods.toml / mcmod.info 的 modId 不一致（下划线合法；Forge modId 不能用连字符）
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
@@ -112,13 +111,13 @@ IF 注册 方块实体（BlockEntity）
   → 在 BLOCK_ENTITIES.register() 中注册 BlockEntityType
 
 IF 注册 实体（Entity）
-  → 使用 DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)
-  → 在 ENTITY_TYPES.register() 中注册 EntityType
+  → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
+  → 在 ENTITIES.register() 中注册 EntityType
   → 必须在 mods.toml 中声明 entity 字段
 
 IF 注册 流体
-  → Fluid 注册 + FluidType 注册（两个 DeferredRegister）
-  → Fluid 提供流体属性，FluidType 提供交互行为
+  → 只注册 Fluid 到 ForgeRegistries.FLUIDS（ForgeFlowingFluid + FluidAttributes）
+  → 不要 FluidType（1.19+ 才有独立注册表）
 
 IF 注册 其他内容（附魔/粒子/声音等）
   → 确认对应的 Registry 类型
@@ -285,10 +284,10 @@ public class ExampleMod {
 
 ## Forge 1.18.2 注册方式对比
 
-| 特性 | `DeferredRegister`（推荐） | `RegisterEvent`（备选） |
+| 特性 | `DeferredRegister`（推荐） | `RegistryEvent.Register`（备选） |
 |------|--------------------------|------------------------|
 | 代码风格 | 静态声明，集中在类顶部 | 事件监听回调中手动注册 |
-| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `ResourceLocation.fromNamespaceAndPath()` |
+| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `new ResourceLocation(modid, path)` |
 | IDE 补全 | 好（声明集中） | 一般（分散在事件回调中） |
 | 适用场景 | 所有标准 Forge 注册 | 高级自定义或遗留代码迁移 |
 | 官方推荐 | **是**（Docs 明确说明） | 可用，但不推荐 |

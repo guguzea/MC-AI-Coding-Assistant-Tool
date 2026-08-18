@@ -16,19 +16,19 @@
 ### EntityType.Builder 配置
 
 ```java
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
-    .size(float width, float height)              // 碰撞箱大小
-    .trackerTrackingRange(int range)              // 客户端追踪范围
-    .updateInterval(int ticks)                   // 服务端更新间隔
-    .fireImmune()                               // 免疫火焰伤害
-    .build(String modId)
+EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+    .size(float width, float height)
+    .setTrackingRange(int range)
+    .setUpdateInterval(int ticks)
+    .immuneToFire()
+    .build("")
 ```
 
 ### 实体属性（Attribute）
 
-- 每个实体**必须**通过 `DeferredRegister<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
-- 属性注册在 mod 构造函数中通过 modEventBus 完成（使用 DeferredRegister）
-- **禁止**在 Entity 构造函数中注册属性（太早，属性系统尚未初始化）
+- 本档**没有** `ForgeRegistries.ATTRIBUTES`
+- 在实体类重写 `registerAttributes()`，用 `SharedMonsterAttributes`
+- **禁止**在 Entity 构造函数中改属性
 
 ### AI Goal / Target Goal
 
@@ -113,36 +113,13 @@ IF 自定义模型（Biped、Quadruped 等）
 ## 示例：定义实体属性
 
 ```java
-// init/ModAttributes.java
-public class ModAttributes {
-    // 推荐：使用 DeferredRegister（需 modEventBus）
-    public static final DeferredRegister<Attribute> ATTRIBUTES =
-        DeferredRegister.create(ForgeRegistries.ATTRIBUTES, ExampleMod.MOD_ID);
-
-    public static final RegistryObject<Attribute> EXAMPLE_HEALTH =
-        ATTRIBUTES.register("example.health",
-            () -> new RangedAttribute("attribute.examplemod.health", 100.0, 1.0, 1024.0).setShouldWatch(true));
-
-    public static final RegistryObject<Attribute> EXAMPLE_DAMAGE =
-        ATTRIBUTES.register("example.damage",
-            () -> new RangedAttribute("attribute.examplemod.damage", 2.0, 0.0, 1024.0).setShouldWatch(true));
-
-    public static void register(IEventBus eventBus) {
-        ATTRIBUTES.register(eventBus);
-    }
+@Override
+protected void registerAttributes() {
+    super.registerAttributes();
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 }
 ```
-
-```java
-// ExampleMod.java 构造函数中
-public ExampleMod() {
-    IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    ModAttributes.register(modEventBus);
-    // ... 其他注册
-}
-```
-
-> 注意：`ForgeRegistries.ATTRIBUTES` 是注册表，`DeferredRegister.create()` 需要传入 `IRegistry` 而非直接的 `Attribute`。属性注册在 mod 构造函数中通过 modEventBus 完成，而不是在 `FMLCommonSetupEvent` 中。
 
 ## 示例：实体类
 
@@ -183,7 +160,7 @@ public class MyEntity extends LivingEntity {
 // registry/ModEntities.java
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-        DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
+        DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITY_TYPES.register("my_entity", () ->

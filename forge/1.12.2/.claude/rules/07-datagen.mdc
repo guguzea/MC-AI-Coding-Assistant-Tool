@@ -29,15 +29,15 @@ src/main/resources/
         ├── blockstates/
         │   └── my_block.json
         └── textures/
-            ├── block/
+            ├── blocks/
             │   └── my_block.png
-            └── item/
+            └── items/
                 └── my_item.png
 
 src/main/resources/
-└── data/
+└── assets/
     └── {modid}/
-        ├── recipes/
+        ├── recipes/                 # 1.12 JSON 配方在 assets，不是 data/
         │   └── my_recipe.json
         ├── loot_tables/
         │   └── blocks/
@@ -55,11 +55,11 @@ src/main/resources/
 ```
 IF 生成合成配方
   → 手动编写 JSON
-  → 放到 data/{modid}/recipes/
+  → 放到 assets/{modid}/recipes/
 
 IF 生成战利品表
   → 手动编写 JSON
-  → 放到 data/{modid}/loot_tables/blocks/
+  → 放到 assets/{modid}/loot_tables/blocks/
 
 IF 生成语言文件
   → 手动编写 .lang 文件
@@ -83,8 +83,8 @@ IF 配方有固定形状（工具、武器等）
 IF 配方成分无固定位置（药水、染料混合等）
   → 手动编写 Shapeless Crafting Recipe JSON
 
-IF 熔炉烧制/烟熏/营火烧制
-  → 手动编写 Smelting Recipe JSON
+IF 熔炉烧制
+  → GameRegistry.addSmelting（1.12 熔炉配方不是 datapack JSON；烟熏/营火是 1.14+）
 ```
 
 ---
@@ -120,13 +120,10 @@ IF 熔炉烧制/烟熏/营火烧制
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:gold_ingot",
-      "count": 3
-    },
-    {
-      "item": "minecraft:diamond"
-    }
+    { "item": "minecraft:gold_ingot" },
+    { "item": "minecraft:gold_ingot" },
+    { "item": "minecraft:gold_ingot" },
+    { "item": "minecraft:diamond" }
   ],
   "result": {
     "item": "examplemod:my_item",
@@ -135,19 +132,13 @@ IF 熔炉烧制/烟熏/营火烧制
 }
 ```
 
-## 示例：熔炉配方 JSON
+## 示例：熔炉配方（代码，不是 JSON）
 
-```json
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "minecraft:dirt"
-  },
-  "result": "minecraft:diamond",
-  "experience": 0.1,
-  "cookingtime": 200
-}
+```java
+GameRegistry.addSmelting(Items.COBBLESTONE, new ItemStack(Items.STONE), 0.1f);
 ```
+
+1.12 的 JSON 配方只有合成（`minecraft:crafting_shaped` / `shapeless`，以及 Forge `forge:ore_shaped`）。不要抄 1.13+ 的 `minecraft:smelting` JSON。
 
 ## 示例：战利品表 JSON
 
@@ -206,7 +197,7 @@ IF 熔炉烧制/烟熏/营火烧制
 ```json
 {
   "variants": {
-    "": { "model": "examplemod:block/my_block" }
+    "": { "model": "examplemod:blocks/my_block" }
   }
 }
 ```
@@ -221,3 +212,10 @@ entity.examplemod.my_entity.name=My Entity
 ```
 
 > 注意：语言文件中 `tile.` 前缀用于方块显示名称，`item.` 前缀用于物品显示名称。
+
+## 常见错误
+
+- ❌ 把配方/战利品/进度放到 `data/{modid}/` — 那是 1.13+ 数据包布局；1.12 在 `assets/{modid}/`
+- ❌ `minecraft:smelting` JSON — 1.13+；本档用 `GameRegistry.addSmelting`
+- ❌ 贴图路径 `item/` `block/` — 1.12 常用 `items/` `blocks/`
+

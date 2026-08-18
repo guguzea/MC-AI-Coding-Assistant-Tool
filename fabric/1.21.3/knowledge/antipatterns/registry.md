@@ -1,4 +1,4 @@
-# 注册相关反模式（Fabric 1.20.1）
+# 注册相关反模式（Fabric 1.21.3）
 
 ## 症状
 
@@ -13,7 +13,7 @@
 
 **错误代码：**
 ```java
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     // ❌ 类加载时注册，但 onInitialize() 还未执行
     private static final Item MY_ITEM = Registry.register(
         Registries.ITEM,
@@ -30,9 +30,9 @@ public class ExampleMod implements FabricMod {
 
 **正确方案：**
 ```java
-public class ExampleMod implements FabricMod {
+public class ExampleMod implements ModInitializer {
     // ✅ 静态初始化在类加载时执行，但仍然正确注册
-    private static final RegistrySupplier<Item> MY_ITEM = Registry.register(
+    private static final Item MY_ITEM = Registry.register(
         Registries.ITEM,
         new Identifier(MOD_ID, "my_item"),
         new Item(new Item.Settings())

@@ -12,10 +12,11 @@ description: 07 — 数据生成器
 
 ### 核心原则
 
-- Fabric 1.14.4 的数据生成器支持有限，主要通过 **Loom 自动生成** 基础资源
-- 高级数据生成（如配方、战利品表、标签）需要手动编写 JSON 文件在 `src/main/resources/` 下
-- 手动编写的 JSON 文件遵循 Minecraft 标准数据包/资源包格式
-- **禁止**手动编辑 Loom 管理的生成目录
+- Fabric 1.14.4 **没有** `fabric-datagen` / `DataGeneratorEntrypoint`（那是 1.17+）
+- 配方、战利品表、标签、模型、语言都靠 **手写 JSON** 放到 `src/main/resources/`
+- 手动 JSON 遵循当时的数据包 / 资源包格式
+- **禁止**编造 `DataGeneratorInitializer`、`init_data`、`ExistingFileHelper`
+- **禁止**手动编辑 Loom 管理的生成目录（如果工程里有）
 
 ---
 
@@ -35,46 +36,9 @@ IF 生成配方/战利品表/进度
 
 IF 生成标签（tags）
   → 手动编写 JSON 在 src/main/resources/data/{modid}/tags/
-
-IF 使用 Fabric API 数据生成模块
-  → fabric-datagen-api-v1 + DataGeneratorInitializer
 ```
 
 ---
-
-## 添加 DataGen 依赖
-
-```groovy
-// build.gradle
-dependencies {
-    modApi "net.fabric.sdk:fabric-datagen-api-v1:0.1.5+build.8"
-}
-```
-
-## 创建 DataGeneratorInitializer
-
-```java
-public class MyDatagen implements DataGeneratorInitializer {
-    @Override
-    public void initialize(RegistryWrapper.RegistryLookup registries,
-                           DataGenerator generator,
-                           File outputDir,
-                           ExistingFileHelper existingFileHelper) {
-        // 注册各类型生成器
-    }
-}
-```
-
-## 注册 DataGeneratorInitializer
-
-```java
-// src/main/resources/fabric.mod.json
-{
-  "entrypoints": {
-    "init_data": ["com.example.examplemod.MyDatagen"]
-  }
-}
-```
 
 ## 手动资源文件（推荐方式）
 
@@ -83,7 +47,7 @@ public class MyDatagen implements DataGeneratorInitializer {
 ```json
 // src/main/resources/assets/examplemod/models/item/my_item.json
 {
-  "parent": "item/generated",
+  "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "examplemod:item/my_item"
   }
@@ -110,39 +74,58 @@ public class MyDatagen implements DataGeneratorInitializer {
     "": { "model": "examplemod:block/my_block" }
   }
 }
+```
 
+```json
 // src/main/resources/assets/examplemod/models/block/my_block.json
 {
-  "parent": "block/cube_all",
+  "parent": "minecraft:block/cube_all",
   "textures": {
     "all": "examplemod:block/my_block"
   }
 }
 ```
 
-## 运行 DataGen
+### 配方 JSON
+
+```json
+// src/main/resources/data/examplemod/recipes/my_recipe.json
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:diamond" }
+  },
+  "result": {
+    "item": "examplemod:my_item",
+    "count": 1
+  }
+}
+```
+
+
+## 运行
 
 ```bash
-# 生成所有数据
 ./gradlew build
-
-# 清理
-./gradlew clean
 ```
+
+手写资源随 jar 打包，没有 `runDatagen` 这一步。
 
 ## 常见错误
 
-- ❌忘记在 `fabric.mod.json` 中注册 `init_data` entrypoint — DataGen 不执行
-- ❌ 引用未注册的资源 — DataGen 找不到现有文件
-- ❌ 在 DataGen 中使用动态路径 — 必须使用确定的 `Identifier`
-- ❌忘记添加 `fabric-datagen-api` 依赖 — DataGenerator 接口不存在
-- ❌ 手动编辑 Loom 自动生成的目录 — 文件会被重新生成覆盖
+- ❌ 去写 `DataGeneratorInitializer` / `init_data` — 1.14.4 没有 fabric-datagen
+- ❌ 引用未注册的资源 — 游戏找不到模型或配方
+- ❌ 语言文件放错目录 — 应在 `assets/{modid}/lang/`
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
-|------------|---------|
-| `mc-item` | DataGen 生成物品模型 JSON |
-| `mc-block` | DataGen 生成方块模型和掉落表 |
-| `mc-entity` | DataGen 生成实体语言名和 loot table |
-| `mc-registry` | DataGen 引用已注册的方块/物品/实体 |
+|-----------|---------|
+| `mc-item` | 手写物品模型 JSON |
+| `mc-block` | 手写方块模型和掉落表 JSON |
+| `mc-registry` | 配方引用已注册的物品 |

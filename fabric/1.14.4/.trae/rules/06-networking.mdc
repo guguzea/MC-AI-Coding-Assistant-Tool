@@ -133,7 +133,7 @@ public class ExampleModClient implements ClientModInitializer {
 
 ```groovy
 // build.gradle
-modImplementation "net.fabric.sdk:fabric-networking-v0:0.1.3+build.7"
+modImplementation "net.fabricmc.fabric-api:fabric-networking-v0:0.1.3+build.7"
 ```
 
 ## 常见错误
