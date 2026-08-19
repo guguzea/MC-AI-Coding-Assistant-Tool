@@ -80,7 +80,7 @@ MC_skill/
 | Forge    | ✅ 完成 | 多版本规则（主推 **1.20.1**）；数据目录 `data/forge_`*                 |
 | Fabric   | ✅ 完成 | 多版本规则（主推 **1.20.1 / 1.21.x / 26.x**）；数据目录 `data/fabric_*`；**26.1+ 仅 mojmap** |
 | NeoForge | ✅ 完成 | 规则集在 `neoforge/`（主推 **1.20.4+ / 26.x**）；文档数据见 `data/neoforge_*`（主文档默认 **26.1**；primer 可有 26.2） |
-| Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05），02–10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
+| Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05）+ **本档 QSL Skill 3**（registry/events/networking），02–10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
 | 基岩版   | ✅ 完成 | 扁平 `bedrock/`；`search_bedrock_docs` + 滞后 `docsStatus`；实验开关按 `min_engine_version` 分层 |
 | LiteLoader | ✅ 完成 | `liteloader/1.12.2/` 纯客户端 + `HYBRID.md`；`diagnose_gradle` 对 liteloader 插件走轻量模式 |
 | Rift     | ✅ 完成 | `rift/1.13.2/`；元数据 `riftmod.json`；方法名只来自已抓 wiki/源码 |
@@ -93,10 +93,10 @@ MC_skill/
 
 | 平台 | 规则树（`平台/<ver>/`） | 文档数据（`list_*_versions`） | 主推 | 备注 |
 |------|-------------------------|-------------------------------|------|------|
-| **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 仅改口 AGENTS。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
-| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.11` · `26.1.2` | 同上 11 档 | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap** |
-| **NeoForge** | `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路 |
-| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.11` | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | 仅 QSL 差异（00/01/05）；02–10 读 `fabric/<ver>` |
+| **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 为 javadoc 核实表 + 短规则（**ready**）。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
+| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 仅 versioned fabric-docs（无 wiki）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11` |
+| **NeoForge** | `1.20.1` · `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路。`1.20.1` 本档核实表 + 短规则（Forge 兼容数据） |
+| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.11` | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05 为 QSL 差异，02–10 读 `fabric/<ver>` |
 | **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（多为 L0-only） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
 | **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（L0-only） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
 | **ModLoader** | `1.2.5` · `1.5.2` · `1.6.4` | 无 Java 文档树 | **1.6.4** | 只用 safe-api 表；禁止 Forge Javadoc |
@@ -304,7 +304,7 @@ MC_skill/
 | Forge **1.14.4 / 1.15.2** `api-index.json` | 占位 `{}`，Parchment 约从 1.16.5 才有 | 换 `version=1.16.5+` 查相近 Vanilla 名，或靠文档 / MCP 映射，不要当有完整 javadoc |
 | Fabric **26.1.2** | 仅 `fabric-docs`（页数少），**无** `fabric-wiki` | `source` 保持默认 `fabric-docs`；不要把 1.21.x wiki 当 26.1.2 |
 | Forge **1.12.2** | `list_forge_versions` **含** 1.12.2；有 `forge-docs` 教程树。`query_api` 可能 `found:true` 但 `methods:[]`（类名空壳） | `search_forge_docs` / `search_docs({platform:"forge", version:"1.12.2"})` → `get_forge_doc_full`。Forge 类用 `query_loader_api`。**禁止**把空 methods 当完整签名 |
-| Forge **1.7.10–1.11.2** | **无教程规则树**（不要造假 Capability 教程）。搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_docs({platform:"forge"})` / `forge_javadoc`。可选 `forge/1.7.10/AGENTS.md` 只含改口。不要用 1.12.2 / 1.20.1 规则顶上 |
+| Forge **1.7.10–1.11.2** | `1.7.10` 有 javadoc 核实表与短 00/01/09；其余档搜索落到 Javadoc 类名，`semantic: false` | 当类名索引用；`search_forge_docs version=1.7.10` / `search_docs({platform:"forge"})`。不要用 1.12.2 / 1.20.1 规则顶上，也不要假 pin 1.7.10 MDK |
 | `diagnose_gradle` / `validate_project` | **ForgeGradle + Loom + Neo/MDG**；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查（`passed`/`failed`）；LiteLoader/Rift/ModLoader/基岩 `skipped`。基岩 → `validate_addon_manifest` | Java 扫描上限默认 300，可用 `MC_SKILL_JAVA_SCAN_MAX_FILES` 提高（超限 warning 含「检查可能不完整」） |
 | `get_server_status.updateHint` 显示有更新 | 可能是检查缓存过期 | 以 `mc_skill_update action=check` 为准；git describe 已超前 Release 则不必 apply |
 
@@ -440,7 +440,8 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | `forge/1.20.1` 及多数 Forge 版本 | **34** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D |
 | `forge/1.15.2` | **35** | 目录 | 上表 + `mc-events` |
 | `fabric/*`（11 个版本，含 26.1.2） | **37** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D |
-| `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档补齐后与 Forge 内容类型对齐，薄档（1.20.6 / 1.21.5 / 1.21.10）仍为 6 个 |
+| `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档与薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 同名集合（entity/datagen 等），不再是 6 个 |
+| `quilt/<ver>` 本档磁盘 Skill | **3** | 目录 | 仅 QSL 差异 `mc-registry` / `mc-events` / `mc-networking`；entity/gui 等继续 Fabric overlay，不计入本档磁盘数 |
 
 | 分类           | Skills                                                                                                                           |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -494,7 +495,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `query_loader_api` | 查 Forge/NeoForge/Fabric-API/QSL 摘要中的类与 `MethodInfo`。**必填** `platform` + `minecraftVersion`，无默认 1.20.1。**不是** `query_api`。`found:false` 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要 → `PLATFORM_SKIPPED`（可 `ingest_loader_api`）。 |
 | `search_loader_api` | 在 `fqcnIndex` 上子串搜索（`limit` 默认 20 封顶 50）。`mode=list` 列出已索引档 / skipped / cache overlay。 |
 | `ingest_loader_api` | 用户自备 jar（官方不代下的 LiteLoader/Rift/ModLoader）抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，**禁止写仓库 `data/`**。`jarPath` 绝对路径 + `mappingsVersion` 必填。默认 dryRun。不要用 `--file`。 |
-| `detect_mod_project` | 只读探测模组工程（Quilt 在 Fabric 前）。`projectPath`（CLI `--project`）优先于 `MC_SKILL_PROJECT_ROOT`。对不上规则树 → `PACK_NOT_FOUND`，禁止邻档 00–10。 |
+| `detect_mod_project` | 只读探测模组工程（Quilt 在 Fabric 前）。`projectPath`（CLI `--project`）优先于 `MC_SKILL_PROJECT_ROOT`。知识库根 / 某版 `scaffold` → `KNOWLEDGE_REPO_NOT_MOD`（Architectury 的 `forge/`+`fabric/` 无版本 `pack.meta.json` 不误伤）。对不上规则树 → `PACK_NOT_FOUND`，禁止邻档 00–10。 |
 | `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 6；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填，`includeSkills` 默认 false（true 也只写 stub）。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
@@ -638,7 +639,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
 | `validate_at`                                          | 字节码级校验 Forge/NeoForge `*_at.cfg`：类/成员存在性（继承链/record/内部类）、映射层不匹配建议、跨文件冲突。 |
 | `validate_aw`                                          | 字节码级校验 Fabric `.accesswidener`：header/namespace、条目类型、存在性、transitive、跨文件冲突。 |
 | `audit_resources`                                      | 静态检查模型纹理引用、孤儿纹理、modId 命名等。                                           |
-| `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验。                  |
+| `validate_datapack_json`                               | recipe / loot_table / advancement / tag 精简 JSON 校验（1.21+ recipe `result` 可为对象；不是完整 pack_format schema）。                  |
 | `get_workflow_template`                                | 工作流全文（以 `get_workflow_template` 列表为准；与 MCP Prompt 同名；Cursor tools 兜底）。         |
 | `list_knowledge_resources` / `read_knowledge_resource` | 列出/读取 `mcskill://`（含 patterns、schema、workflow、community 等）。          |
 
@@ -651,7 +652,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 ### 10. 代码生成模板（7）
 
-`generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`（骨架代码/JSON，非写盘）。
+`generate_model`（`kind` 默认 `block`；`item` 只出物品模型）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 吐 Cloth Config 骨架并 warning，不是改口 mc-config）、`generate_entity_renderer`、`generate_worldgen`（骨架代码/JSON，非写盘）。
 
 `localize_mod`：自有模组 `diff`/`draft_zh`，或第三方 jar `extract`/`pack_draft`；无机器翻译，标 `needsTranslation`；无 `en_us` 时可回退其它语言作源。
 

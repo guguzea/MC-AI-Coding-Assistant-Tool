@@ -1,5 +1,7 @@
 {
-  "status": "draft",
-  "pack-status": "draft",
-  "note": "空壳档：禁止 session/write。不要发明 00–10 教程正文。"
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "forge",
+  "minecraftVersion": "1.7.10",
+  "note": "javadoc 核实表；无完整 MkDocs 教程"
 }

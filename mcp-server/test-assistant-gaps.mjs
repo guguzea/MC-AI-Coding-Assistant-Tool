@@ -46,6 +46,13 @@ const NEW_WORKFLOWS = [
   "mc-dimension-structure",
   "mc-access",
   "mc-bedrock-addon",
+  "mc-fluid",
+  "mc-enchant-potion",
+  "mc-energy",
+  "mc-creative-tags",
+  "mc-kotlin",
+  "mc-jei",
+  "mc-ci-publish-extra",
 ];
 
 function skillPath(ver, name) {
@@ -191,6 +198,7 @@ function skillPath(ver, name) {
     assert.equal(d.action?.code, "PACK_NOT_FOUND");
     assert.ok((d.candidates ?? []).includes("1.21.1"), JSON.stringify(d.candidates));
     assert.notEqual(d.knowledgeVersion, "1.21.1");
+    assert.ok((d.warnings ?? []).some((w) => /不要把 1\.21 当成 1\.21\.1/.test(w)), JSON.stringify(d.warnings));
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -247,9 +255,6 @@ function skillPath(ver, name) {
       );
       assert.doesNotMatch(body, /使用了["“]/, `${ver}/${name} 禁止过程水印`);
     }
-  }
-  for (const thin of ["1.20.6", "1.21.5", "1.21.10"]) {
-    assert.equal(skillPath(thin, "mc-entity"), null, `薄档 ${thin} 不应扩 mc-entity`);
   }
   console.log("Neo main skills search_neoforge_docs: ok");
 }
@@ -419,4 +424,315 @@ description: |
   console.log("wave description single source: ok");
 }
 
+{
+  const {
+    waveToolSchemas,
+    GENERATE_CONFIG_DESCRIPTION,
+    GENERATE_NETWORK_PACKET_DESCRIPTION,
+    GENERATE_CAPABILITY_DESCRIPTION,
+    GENERATE_MODEL_DESCRIPTION,
+  } = await import("./dist/wave/register.js");
+  const cfg = waveToolSchemas.find((t) => t.name === "generate_config");
+  const pkt = waveToolSchemas.find((t) => t.name === "generate_network_packet");
+  const cap = waveToolSchemas.find((t) => t.name === "generate_capability");
+  const mdl = waveToolSchemas.find((t) => t.name === "generate_model");
+  assert.equal(cfg?.description, GENERATE_CONFIG_DESCRIPTION);
+  assert.match(String(cfg?.description), /Cloth Config/);
+  assert.doesNotMatch(String(cfg?.description), /改口 mc-config/);
+  assert.equal(pkt?.description, GENERATE_NETWORK_PACKET_DESCRIPTION);
+  assert.equal(cap?.description, GENERATE_CAPABILITY_DESCRIPTION);
+  assert.equal(mdl?.description, GENERATE_MODEL_DESCRIPTION);
+  console.log("generate_* description single source: ok");
+}
+
+{
+  const { sessionPlatformPack } = await import("./dist/platform-pack/session.js");
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1" });
+  assert.equal(s.ok, true);
+  assert.equal(s.rulesMode, "base");
+  assert.deepEqual((s.rules ?? []).map((r) => r.id), ["00", "01", "09"]);
+  assert.ok((s.warnings ?? []).some((w) => w.includes("已加载底座规则 00/01/09")));
+  assert.ok((s.warnings ?? []).some((w) => w.includes("传 task 或 topics")));
+  console.log("session base warning wording: ok");
+}
+
+{
+  const { detectModProject } = await import("./dist/platform-pack/detect.js");
+  const { resolveRepoRoot } = await import("./dist/utils/path.js");
+  const d = detectModProject({ projectPath: resolveRepoRoot() });
+  assert.equal(d.ok, false);
+  assert.equal(d.action?.code, "KNOWLEDGE_REPO_NOT_MOD");
+  console.log("detect knowledge repo root: ok");
+}
+
+{
+  const root = mkdtempSync(join(tmpdir(), "mc-arch-nometa-"));
+  try {
+    mkdirSync(join(root, "forge"), { recursive: true });
+    mkdirSync(join(root, "fabric"), { recursive: true });
+    writeFileSync(join(root, "AGENTS.md"), "# user architectury workspace\n", "utf8");
+    writeFileSync(join(root, "forge", "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+    writeFileSync(join(root, "fabric", "build.gradle"), "plugins { id 'fabric-loom' }\n", "utf8");
+    writeFileSync(join(root, "build.gradle"), "plugins { id 'architectury-plugin' }\n", "utf8");
+    writeFileSync(join(root, "gradle.properties"), "minecraft_version=1.20.1\n", "utf8");
+    const d = detectModProject({ projectPath: root });
+    assert.notEqual(d.action?.code, "KNOWLEDGE_REPO_NOT_MOD", JSON.stringify(d.action));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  console.log("detect Architectury forge+fabric no pack.meta: ok");
+}
+
+{
+  const { validateDatapackJson } = await import("./dist/datapack/index.js");
+  const r = validateDatapackJson({
+    kind: "recipe",
+    version: "1.21.1",
+    jsonContent: JSON.stringify({
+      type: "minecraft:crafting_shaped",
+      pattern: ["#"],
+      key: { "#": "minecraft:stone" },
+      result: { id: "minecraft:diamond", count: 1 },
+    }),
+  });
+  assert.equal(r.valid, true, JSON.stringify(r.errors));
+  console.log("datapack 1.21 object result: ok");
+}
+
+{
+  const { generateModel, generateLang } = await import("./dist/generators/index.js");
+  const item = generateModel("my_mod", "widget", "1.21.1", "item");
+  assert.ok(item.files);
+  assert.ok(!Object.keys(item.files ?? {}).some((k) => k.includes("blockstates")));
+  assert.ok(Object.keys(item.files ?? {}).some((k) => k.includes("models/item/")));
+  const block = generateModel("my_mod", "widget", "1.21.1");
+  assert.ok(Object.keys(block.files ?? {}).some((k) => k.includes("blockstates")));
+  const lang = generateLang("my_mod", { sound_step: "Step", effect_glow: "Glow" }, "1.21.1");
+  const en = JSON.parse(lang.files?.["assets/my_mod/lang/en_us.json"] ?? "{}");
+  assert.equal(en["sounds.my_mod.step"], "Step");
+  assert.equal(en["effect.my_mod.glow"], "Glow");
+  console.log("generate_model kind=item + lang prefixes: ok");
+}
+
+{
+  const { getVersionInfo } = await import("./dist/version/index.js");
+  const neo = await getVersionInfo({ version: "1.21.1", action: "register", platform: "neoforge" });
+  assert.equal(neo.ok, false);
+  assert.equal(neo.action?.code, "WRONG_TOOL");
+  const f1211 = await getVersionInfo({ version: "1.21.1", action: "docs", platform: "forge" });
+  assert.notEqual(f1211.forgeVersion, "unknown");
+  const unknown = await getVersionInfo({ version: "1.99.9", action: "docs", platform: "forge" });
+  assert.match(unknown.gotchas.join("\n"), /search_forge_docs/);
+  console.log("get_version_info forge-only + 1.21.1: ok");
+}
+
+{
+  const { portProject } = await import("./dist/porting/index.js");
+  const r = JSON.parse(
+    await portProject({
+      projectPath: join(tmpdir(), "mc-skill-port-rift-dummy"),
+      targetPlatform: "rift",
+      action: "extract_common",
+      dryRun: true,
+    }),
+  );
+  assert.equal(r.ok, false);
+  assert.equal(r.error.code, "UNSUPPORTED_PORT");
+  assert.ok(Array.isArray(r.error.next) && r.error.next.length > 0, JSON.stringify(r.error));
+  console.log("port_project rift UNSUPPORTED_PORT next: ok");
+}
+
+{
+  const { diagnoseGradle } = await import("./dist/gradle/index.js");
+  const g = diagnoseGradle({
+    buildGradle: "plugins { id 'org.quiltmc.loom' version '1.7.4' }\n",
+    quiltModJson: JSON.stringify({ schema_version: 1, quilt_loader: { id: "q", version: "1" } }),
+    modsToml: 'modLoader="javafml"\n',
+  });
+  assert.ok((g.warnings ?? []).some((w) => /Quilt Loom/.test(w)), JSON.stringify(g));
+  assert.ok(!(g.errors ?? []).some((e) => /javafml|modEventBus|DeferredRegister/.test(e)), JSON.stringify(g.errors));
+  console.log("diagnose_gradle quilt extras: ok");
+}
+
+{
+  const { validateProject } = await import("./dist/validate/index.js");
+  const v = validateProject({
+    buildGradle: "plugins { id 'fabric-loom' }\n",
+    fabricModJson: JSON.stringify({ schemaVersion: 1, id: "demo" }),
+    javaFiles: [{ path: "Demo.java", content: "public class Demo { DeferredRegister x; }\n" }],
+  });
+  assert.ok(v.errors?.every((e) => !/未调用.*register\(modEventBus\)/.test(e)), JSON.stringify(v.errors));
+  console.log("validate fabric skips Forge DeferredRegister ERROR: ok");
+}
+
+{
+  const { detectMinecraftVersionFromIncludedSubprojects } = await import("./dist/utils/minecraft-version.js");
+  const v = detectMinecraftVersionFromIncludedSubprojects({
+    settingsGradle: "include 'build'\ninclude 'submod'\n",
+    readSubprojectProperties: (inc) => {
+      if (inc === "build") return "minecraft_version=9.9.9\n";
+      if (inc === "submod") return "minecraft_version=1.20.1\n";
+      return undefined;
+    },
+  });
+  assert.equal(v, "1.20.1");
+  const root = mkdtempSync(join(tmpdir(), "mc-inc-ver-"));
+  try {
+    writeFileSync(join(root, "settings.gradle"), "include 'submod'\n", "utf8");
+    mkdirSync(join(root, "submod"), { recursive: true });
+    writeFileSync(join(root, "submod", "gradle.properties"), "minecraft_version=1.20.1\n", "utf8");
+    writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+    mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+    writeFileSync(
+      join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+      'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="demo"\n',
+      "utf8",
+    );
+    const d = detectModProject({ projectPath: root });
+    assert.equal(d.minecraftVersion, "1.20.1", JSON.stringify(d));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  console.log("included subproject gradle.properties version: ok");
+}
+
+{
+  const { spawnSync } = await import("node:child_process");
+  const { readdirSync } = await import("node:fs");
+  const thin = ["1.20.6", "1.21.5", "1.21.10"];
+  const sample = [
+    "mc-entity",
+    "mc-datagen",
+    "mc-capability",
+    "mc-particle",
+    "mc-ai",
+    "mc-energy",
+    "mc-multiblock",
+    "mc-villager",
+    "mc-weather",
+    "mc-compat-jei",
+  ];
+  for (const ver of thin) {
+    const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: ver, skillNames: ["mc-entity"] });
+    const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
+    assert.ok(entity, `${ver} mc-entity body`);
+    assert.doesNotMatch(String(entity.text), /DONOR_SKILL/);
+    assert.match(String(entity.text), /search_neoforge_docs/);
+    assert.match(String(entity.text), new RegExp(`version=${ver.replaceAll(".", "\\.")}`));
+    const entIdx = (s.skills ?? []).find((x) => x.name === "mc-entity");
+    assert.match(String(entIdx?.relPosix ?? ""), new RegExp(`neoforge/${ver.replaceAll(".", "\\.")}`));
+    for (const name of sample) {
+      const p = skillPath(ver, name);
+      assert.ok(p, `${ver} missing ${name}`);
+      const text = readFileSync(p, "utf8");
+      assert.match(text, /search_neoforge_docs/, `${ver} ${name} missing search_neoforge_docs`);
+      assert.match(text, new RegExp(`version=${ver.replaceAll(".", "\\.")}`), `${ver} ${name} version`);
+    }
+  }
+  console.log("plan4 neo thin mc-entity + sample skills: ok");
+
+  const quiltVers = ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.11"];
+  for (const ver of quiltVers) {
+    const disk = join(repo, "quilt", ver, ".cursor", "skills");
+    const names = existsSync(disk) ? readdirSync(disk).filter((n) => n.startsWith("mc-")) : [];
+    assert.equal(names.length, 3, `${ver} disk skills=${names.join(",")}`);
+    assert.ok(names.includes("mc-registry") && names.includes("mc-events") && names.includes("mc-networking"));
+    const q = sessionPlatformPack({
+      platform: "quilt",
+      minecraftVersion: ver,
+      skillNames: ["mc-registry", "mc-events", "mc-networking"],
+    });
+    assert.ok((q.skills ?? []).some((x) => x.name === "mc-registry" && /quilt\//.test(String(x.relPosix))));
+    for (const name of ["mc-registry", "mc-events", "mc-networking"]) {
+      const p = join(repo, "quilt", ver, ".cursor", "skills", name, "SKILL.md");
+      const text = readFileSync(p, "utf8");
+      assert.match(text, /search_docs/, `${ver} ${name}`);
+      assert.doesNotMatch(text, /DONOR_SKILL/);
+    }
+  }
+  console.log("plan4 quilt QSL 3 skills: ok");
+
+  const ll = sessionPlatformPack({ platform: "liteloader", minecraftVersion: "1.12.2", skillNames: ["mc-events"] });
+  assert.ok((ll.skills ?? []).some((x) => x.name === "mc-events"));
+  const llBody = (ll.skillBodies ?? []).find((b) => b.name === "mc-events");
+  assert.ok(llBody);
+  assert.doesNotMatch(String(llBody.text), /ModInitializer/);
+  const rift = sessionPlatformPack({ platform: "rift", minecraftVersion: "1.13.2", skillNames: ["mc-events"] });
+  assert.ok((rift.skills ?? []).some((x) => x.name === "mc-events"));
+  const riftBody = (rift.skillBodies ?? []).find((b) => b.name === "mc-events");
+  assert.doesNotMatch(String(riftBody?.text), /ModInitializer/);
+  console.log("plan4 old-loader skills: ok");
+
+  const tmpSkillRoot = mkdtempSync(join(tmpdir(), "mc-lint-old-"));
+  try {
+    const skillAbs = join(tmpSkillRoot, "liteloader", "1.12.2", ".cursor", "skills", "mc-bad", "SKILL.md");
+    mkdirSync(dirname(skillAbs), { recursive: true });
+    writeFileSync(
+      skillAbs,
+      "---\nname: mc-bad\n---\n\n```java\npublic class ModInitializer {\n  void boom(FooBar x) {}\n}\n```\n",
+      "utf8",
+    );
+    const listAbs = join(tmpSkillRoot, "list.txt");
+    writeFileSync(listAbs, `${skillAbs}\n`, "utf8");
+    const r = spawnSync(
+      process.execPath,
+      [join(repo, "mcp-server", "scripts", "lint-skill-verified-api.mjs"), `--list=${listAbs}`],
+      { encoding: "utf8" },
+    );
+    assert.notEqual(r.status, 0, r.stdout + r.stderr);
+    assert.match(`${r.stderr}\n${r.stdout}`, /blacklist ModInitializer|表外类名/);
+  } finally {
+    rmSync(tmpSkillRoot, { recursive: true, force: true });
+  }
+  console.log("plan4 lint old-loader blacklist: ok");
+
+  function countTableRows(rel) {
+    const t = readFileSync(join(repo, rel), "utf8");
+    return t
+      .split(/\r?\n/)
+      .filter((l) => /^\|/.test(l) && !/^\|\s*-+/.test(l) && !/^\|\s*(名称|API|做法)\b/.test(l)).length;
+  }
+  assert.ok(countTableRows("neoforge/1.20.1/knowledge/common/verified-api-1.20.1.md") >= 10);
+  assert.ok(countTableRows("forge/1.7.10/knowledge/common/verified-api.md") >= 10);
+  const neo1201 = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.1" });
+  assert.equal(neo1201.ok, true, JSON.stringify(neo1201.action));
+  const f1211 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.21.1" });
+  assert.equal(f1211.ok, false);
+  assert.equal(f1211.action?.code, "PACK_NOT_FOUND");
+  console.log("plan4 ready/draft verified-api: ok");
+
+  const { listFabricVersions } = await import("./dist/docs-platform/fabric/index.js");
+  const listed = JSON.parse((await listFabricVersions()).content[0].text);
+  const hollow = ["1.21.4", "1.21.5", "1.21.8", "1.21.10"];
+  for (const ver of hollow) {
+    const hasDocs = (listed.versions ?? []).includes(ver);
+    const sess = sessionPlatformPack({ platform: "fabric", minecraftVersion: ver });
+    if (hasDocs) {
+      assert.equal(sess.ok, true, `${ver} docs listed but session failed ${JSON.stringify(sess.action)}`);
+    } else {
+      assert.equal(sess.ok, false, `${ver} must stay PACK_NOT_FOUND`);
+      assert.equal(sess.action?.code, "PACK_NOT_FOUND");
+    }
+  }
+  console.log("plan4 fabric hollow: ok");
+  for (const ver of ["1.21.4", "1.21.8", "1.21.10"]) {
+    assert.ok(countTableRows(`fabric/${ver}/knowledge/common/verified-api-${ver}.md`) >= 10);
+    const p = join(repo, "fabric", ver, ".cursor", "skills", "mc-registry", "SKILL.md");
+    const text = readFileSync(p, "utf8");
+    assert.match(text, /search_fabric_docs/, `${ver} mc-registry`);
+    assert.match(text, new RegExp(`version=${ver.replaceAll(".", "\\.")}`));
+  }
+  assert.ok(!(listed.versions ?? []).includes("1.21.5"));
+  console.log("plan4 fabric 1.21.4/8/10 skills + 1.21.5 PACK_NOT_FOUND: ok");
+
+  const pkt1215 = generateNetworkPacket("demo", "sync", "neoforge_1.21.5");
+  assert.match(String(pkt1215.code), /RegisterPayloadHandlersEvent/);
+  assert.match(String(pkt1215.code), /DirectionalPayloadHandler/);
+  const pkt12110 = generateNetworkPacket("demo", "sync", "neoforge_1.21.10");
+  assert.match(String(pkt12110.code), /RegisterClientPayloadHandlersEvent/);
+  assert.doesNotMatch(String(pkt12110.code), /DirectionalPayloadHandler/);
+  console.log("plan4 generate_network_packet 1.21.5/1.21.10: ok");
+}
+
 console.log("test-assistant-gaps: all passed");
+

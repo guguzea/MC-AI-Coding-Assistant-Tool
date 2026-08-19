@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+    // NeoForge Gradle 插件 id / 版本：search_neoforge_docs version=1.20.1 gettingstarted，或 download_official_mdk。禁止默写邻档插件号。
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

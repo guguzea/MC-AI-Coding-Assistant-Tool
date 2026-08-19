@@ -184,6 +184,72 @@ const VERSION_DB: Record<string, VersionInfo> = {
       minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.12.2",
     },
   },
+  "1.21.1": {
+    version: "1.21.1",
+    forgeVersion: "52.x",
+    recommendation: "用 search_forge_docs + list_forge_versions；本仓库规则包可能仍为 draft，禁止用 Neo 1.21.1 00–10 顶上",
+    keyChanges: [
+      "Forge 1.21.x 与 NeoForge 并行；不要把 Neo 文档当 Forge 教程",
+    ],
+    gotchas: [
+      "规则树若 pack-status=draft 则 session/write 禁止",
+      "请用 search_forge_docs，不要假设 1.20.1 DeferredRegister 文档 URL",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.21.1.html",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.21.1",
+    },
+  },
+  "1.15.2": {
+    version: "1.15.2",
+    forgeVersion: "31.x",
+    recommendation: "ForgeGradle 3 结构，注册以该版 search_forge_docs 为准",
+    keyChanges: [
+      "1.14–1.15 资源与注册已与 1.12 不兼容",
+    ],
+    gotchas: [
+      "不要套用 1.20 DeferredRegister 记忆",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.15.2.html",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.15.2",
+    },
+  },
+  "1.13.2": {
+    version: "1.13.2",
+    forgeVersion: "25.x",
+    recommendation: "扁平化与 1.13 注册；用 search_forge_docs，不要套 1.12 或 1.16 记忆",
+    keyChanges: [
+      "1.13 扁平化，数字 ID 移除",
+    ],
+    gotchas: [
+      "不支持 DeferredRegister",
+    ],
+    links: {
+      forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.13.2.html",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.13.2",
+    },
+  },
+  "1.7.10": {
+    version: "1.7.10",
+    forgeVersion: "10.13.x",
+    recommendation: "仅 javadoc / 核实表；无完整 00–10 教程树时不要发明 API",
+    keyChanges: [
+      "Java 7/8，ForgeGradle 1.x",
+    ],
+    gotchas: [
+      "官方 MDK 可能 MDK_NOT_PINNED / 404，禁止伪造 pin",
+      "不要用 1.12+ RegistryEvent 或 DeferredRegister",
+    ],
+    links: {
+      forgeChangelog: "",
+      parchmentMappings: "",
+      minecraftWiki: "https://minecraft.wiki/w/Java Edition 1.7.10",
+    },
+  },
 };
 
 export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> {

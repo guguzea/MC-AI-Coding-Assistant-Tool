@@ -32,7 +32,7 @@ export const SKILL_BODY_LIMIT = 6;
 export const NEXT_READS_LIMIT = 8;
 
 const BASE_ONLY_WARNING =
-  "仅注入底座 00/01/09；做方块/GUI/实体等请传有效 task 或 topics。ok=true 表示平台包可用，但规则未按任务扩展。";
+  "已加载底座规则 00/01/09；如涉及方块/GUI/网络等主题，请调用 session 时传 task 或 topics，否则主题规则不在上下文中。";
 
 const NO_PLATFORM_SKILLS_WARNING =
   "该档无平台 Skill 索引，session 成功不等于技能齐全；库 Skill 若有也只在显式 skillNames 时注入。请用已注入规则 + 核实表 / search_docs。";

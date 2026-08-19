@@ -1,0 +1,24 @@
+plugins {
+    // Loom 版本以 https://fabricmc.net/develop/ 与 search_fabric_docs version=1.21.10 为准，禁止默写
+    id "net.fabricmc.fabric-loom"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // mappings / fabric-loader 版本以 search_fabric_docs version=1.21.10 与官方模板为准，禁止默写
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}

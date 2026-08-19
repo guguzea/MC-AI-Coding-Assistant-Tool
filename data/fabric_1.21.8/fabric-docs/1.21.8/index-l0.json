@@ -1,0 +1,331 @@
+[
+  {
+    "id": "1.21.8/develop_networking",
+    "version": "1.21.8",
+    "label": "Networking",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/networking.md",
+    "tags": [
+      "registry",
+      "networking",
+      "event",
+      "sides",
+      "blockentity"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:40.438Z",
+    "sha256": "f2fe15468a027c4c2cb57daf402ebb897358ecb9db326723c56524af442ec806"
+  },
+  {
+    "id": "1.21.8/develop_items_first-item",
+    "version": "1.21.8",
+    "label": "Creating Your First Item",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/items/first-item.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "event",
+      "item",
+      "recipe",
+      "resource",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 8,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:43.374Z",
+    "sha256": "3549da51c8deab2893cb68d694dbda77680a854cba6c9b3b7f517b7538e6af67"
+  },
+  {
+    "id": "1.21.8/develop_items_item-models",
+    "version": "1.21.8",
+    "label": "Item Models",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/items/item-models.md",
+    "tags": [
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:44.668Z",
+    "sha256": "24331fb136f966487edd1635e837ee705b00827d50896bc343b32f0b4c1e9927"
+  },
+  {
+    "id": "1.21.8/develop_blocks_first-block",
+    "version": "1.21.8",
+    "label": "Creating Your First Block",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/blocks/first-block.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "loot",
+      "resource"
+    ],
+    "priority": "⭐",
+    "sectionCount": 9,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:48.724Z",
+    "sha256": "749963b308799db9c936764d260dabdc3c3873f2aa0027d4eb0412af6dd6595f"
+  },
+  {
+    "id": "1.21.8/develop_blocks_block-models",
+    "version": "1.21.8",
+    "label": "Block Models",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/blocks/block-models.md",
+    "tags": [
+      "registry",
+      "item",
+      "block",
+      "resource",
+      "particle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:49.839Z",
+    "sha256": "0b3e36180eadb64382e62ed8175e11223f4b746e05bff036bbe0dcd26778dd8b"
+  },
+  {
+    "id": "1.21.8/develop_blocks_block-entities",
+    "version": "1.21.8",
+    "label": "Block Entities",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/blocks/block-entities.md",
+    "tags": [
+      "registry",
+      "block",
+      "blockentity",
+      "entity"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:51.128Z",
+    "sha256": "548816886db76d40e7dfbe0ecd0c3443a7407bae3ba18f0d9bfe76bb45cfb5e5"
+  },
+  {
+    "id": "1.21.8/develop_events",
+    "version": "1.21.8",
+    "label": "Events",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/events.md",
+    "tags": [
+      "entrypoint",
+      "event",
+      "item",
+      "block",
+      "loot",
+      "mixin"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:53.502Z",
+    "sha256": "f2b1e64fe01acb0608415f61c365f01fc75445733cff71d2c727cec5022e8c66"
+  },
+  {
+    "id": "1.21.8/develop_commands_basics",
+    "version": "1.21.8",
+    "label": "Creating Commands",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/commands/basics.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "block",
+      "command"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:59.083Z",
+    "sha256": "438e83f1ca3c21599ab18db3c3aea48f5daa6b4bb973fef9e81ad81108387a0a"
+  },
+  {
+    "id": "1.21.8/develop_data-generation_setup",
+    "version": "1.21.8",
+    "label": "Data Generation Setup",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/data-generation/setup.md",
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "recipe",
+      "loot",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:01.947Z",
+    "sha256": "a8ae81efab617e831e23d3f13f042eae2d78222822b0f9fa71c1c8a4612080d8"
+  },
+  {
+    "id": "1.21.8/develop_data-generation_recipes",
+    "version": "1.21.8",
+    "label": "Recipe Generation",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/data-generation/recipes.md",
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "recipe"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:02.772Z",
+    "sha256": "4fed6057cc8d13a8d039a2c798b0910e578553064c64b8bf19ccf5f10d9addf3"
+  },
+  {
+    "id": "1.21.8/develop_data-generation_loot-tables",
+    "version": "1.21.8",
+    "label": "Loot Table Generation",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/data-generation/loot-tables.md",
+    "tags": [
+      "entrypoint",
+      "datagen",
+      "item",
+      "block",
+      "entity",
+      "loot"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:03.872Z",
+    "sha256": "faa88ca51ea5a2771cf48796d18cf6c59b57b316da0c81ecd647a03774fc0dc2"
+  },
+  {
+    "id": "1.21.8/develop_data-generation_tags",
+    "version": "1.21.8",
+    "label": "Tag Generation",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/data-generation/tags.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "datagen",
+      "item",
+      "entity",
+      "tag",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:05.112Z",
+    "sha256": "80a6ffbfac880edee7d6b87a69105705e8ffa5b87de86a37151e0ac45f1c29d4"
+  },
+  {
+    "id": "1.21.8/develop_loom_index",
+    "version": "1.21.8",
+    "label": "Loom",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/loom/index.md",
+    "tags": [
+      "sides",
+      "mixin",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 7,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:10.514Z",
+    "sha256": "c371d645a1f917b97c469b821b4ede08b439f8c478b27dd7f6edf4523f0d585d"
+  },
+  {
+    "id": "1.21.8/develop_rendering_basic-concepts",
+    "version": "1.21.8",
+    "label": "Basic Rendering Concepts",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/rendering/basic-concepts.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:11.740Z",
+    "sha256": "cd4e5e6f6f13da7ee939800ed274f2a92797ab20399ac38d9a874c647f0222fb"
+  },
+  {
+    "id": "1.21.8/develop_rendering_gui_custom-screens",
+    "version": "1.21.8",
+    "label": "Custom Screens",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/rendering/gui/custom-screens.md",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:12.135Z",
+    "sha256": "5852474091689c4e188e0eb4ee6d23d86e73d161bcb3674f05e20f2f2454c5df"
+  },
+  {
+    "id": "1.21.8/develop_codecs",
+    "version": "1.21.8",
+    "label": "Codecs",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/codecs.md",
+    "tags": [
+      "registry",
+      "item",
+      "block",
+      "resource"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:17.507Z",
+    "sha256": "a7a380efa98318f5f6b8b3b8e28bcbdd3db874a90667edea4a391109f1226dd9"
+  },
+  {
+    "id": "1.21.8/develop_items_custom-tools",
+    "version": "1.21.8",
+    "label": "Tools and Weapons",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/items/custom-tools.md",
+    "tags": [
+      "item",
+      "block",
+      "resource",
+      "config"
+    ],
+    "priority": "🟡",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:25:47.290Z",
+    "sha256": "5aa9d1d9657a4f53d235192cbbec77c89551969bb89c264c948426df228e11b6"
+  },
+  {
+    "id": "1.21.8/develop_getting-started_creating-a-project",
+    "version": "1.21.8",
+    "label": "Creating a Project",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/getting-started/creating-a-project.md",
+    "tags": [
+      "resource",
+      "config"
+    ],
+    "priority": "🟢",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:08.939Z",
+    "sha256": "70cb80bcb88db0cbbcefd95a1eace8ac6ddc064b1cc4f4cc0400bb39b082b500"
+  },
+  {
+    "id": "1.21.8/develop_porting_index",
+    "version": "1.21.8",
+    "label": "Porting to 1.21.8",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/porting/index.md",
+    "tags": [],
+    "priority": "🟢",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-19T15:26:20.441Z",
+    "sha256": "a1740fe92b236b4d55ee7701933a9977b80eb5d567f1ba5e5b8dbbfb1b5c0a9f"
+  }
+]

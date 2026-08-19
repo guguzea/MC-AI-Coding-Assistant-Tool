@@ -42,7 +42,7 @@ id 'fabric-loom'
 **例外（禁止读邻版 01–10）：**
 
 - 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `knowledgeVersion=26.1.2`，不要用 `minecraftVersion=26.1`）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
-- 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`list_fabric_versions` 目前无 1.21.4 / 1.21.5 / 1.21.8 / 1.21.10，也无 `data/fabric_1.21.8` 等树 → `PACK_NOT_FOUND`。
+- 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无 fabric-docs `versions/`** → `PACK_NOT_FOUND`。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
 
@@ -57,7 +57,7 @@ neoforge "20.4.237"
 id 'net.neoforged.gradle.userdev'
 ```
 
-如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；九档：`1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** 未建档版本（文档有、规则树无）：`1.20.1` — **禁止**用邻档顶上，改口 `search_neoforge_docs`（NeoForge 1.20.1 已有 Forge 兼容数据）。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
+如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** `1.20.1` 本档核实表 + 短规则（Forge 兼容数据），禁止用 1.20.4 00–10 顶上。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
 
 工作流提醒（**不是硬门**）：仅当用户要走完整新方块 / 新物品 / 方块实体 / 新实体 / GUI / Mixin / 世界生成 / 配置 / GameTest / 崩溃分诊 / 移植 / 从零构建 / 环境搭建 / 真机循环 / 发布清单 / 汉化 / 反编译研究时才调用 `get_workflow_template`（`mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-publish` / `mc-setup-env` 等）。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。从零工程才 `download_official_mdk`。
 

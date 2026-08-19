@@ -1,0 +1,9 @@
+---
+description: 06-networking NeoForge 1.20.1
+globs:
+alwaysApply: false
+---
+
+# 06 — 网络
+
+search_neoforge_docs query=networking version=1.20.1。以该版文档为准，禁止默写 SimpleChannel 是否仍是本档正解，也禁止抄 Neo 1.21 PayloadHandlers。

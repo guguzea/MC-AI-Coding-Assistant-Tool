@@ -119,6 +119,7 @@ export interface AnalyzePortingError {
     code: string;
     message: string;
     hint?: string;
+    next?: string[];
   };
 }
 

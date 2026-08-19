@@ -1,13 +1,19 @@
 # NeoForge 1.20.6 已核实 API
 
-来源：search_neoforge_docs（version=1.20.6）items / blocks / gettingstarted/modfiles / networking / concepts/events。
+来源：search_neoforge_docs（version=1.20.6）。每条可追溯文档 id。禁止把 Forge RegistryObject / SimpleChannel 当本档正解。
 
-| 名称 | 出处 |
-|------|------|
-| DeferredRegister.Items / createItems / createBlocks | items / blocks |
+| 名称 | 出处文档 id |
+|------|-------------|
+| DeferredRegister.Items / createItems | items |
+| DeferredRegister.Blocks / createBlocks / DeferredBlock | blocks |
 | @Mod + IEventBus | gettingstarted/modfiles |
-| networking 页 Payload（以该版文档为准，不要抄 1.21.1 复数 Handlers 除非该页写明） | networking |
+| Payload（networking 页；事件类名以该页为准） | networking |
 | ModConfigSpec | misc/config |
-| Data Attachments | datastorage/attachments |
+| AttachmentType / Data Attachments | datastorage/attachments |
+| BlockEntity / BlockEntityType.Builder | blockentities |
+| MenuType | gui/menus |
+| GatherDataEvent / RecipeProvider / LanguageProvider | resources |
+| DataMapType / RegisterDataMapTypesEvent | datamaps |
+| @SubscribeEvent / LivingJumpEvent | concepts/events |
+| 无独立 entities 页；禁止默写 EntityType.Builder | concepts/registries |
 
-禁止把 Forge `RegistryObject` / `SimpleChannel` 当本档正解。资源 id：`ResourceLocation`。

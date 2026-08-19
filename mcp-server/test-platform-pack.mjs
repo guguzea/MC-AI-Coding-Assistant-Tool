@@ -356,13 +356,12 @@ function assertHasRuleIds(s, want, label) {
   const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.6", task: "mc-new-entity" });
   assertHasRuleIds(s, ["00", "01", "09", "04"], "thin 1.20.6 entity");
   const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
-  assert.ok(entity, "thin 1.20.6 should inject donor mc-entity");
-  assert.match(String(entity.text), /\[DONOR_SKILL 禁止直接抄写\]/);
-  assert.match(String(entity.text), /search_neoforge_docs\(version=1\.20\.6\)/);
-  assert.ok(!(String(entity.text).includes("search_neoforge_docs(version=1.20.4)")));
+  assert.ok(entity, "thin 1.20.6 should inject local mc-entity");
+  assert.doesNotMatch(String(entity.text), /\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.match(String(entity.text), /search_neoforge_docs/);
+  assert.match(String(entity.text), /version=1\.20\.6/);
   const entIdx = (s.skills ?? []).find((x) => x.name === "mc-entity");
-  assert.match(String(entIdx?.source ?? ""), /1\.20\.4/);
-  assert.match(String(entIdx?.mappingNote ?? ""), /search_neoforge_docs\(version=1\.20\.6\)/);
+  assert.match(String(entIdx?.relPosix ?? ""), /neoforge\/1\.20\.6/);
   console.log("session neo 1.20.6 thin entity: ok");
 }
 
@@ -382,7 +381,8 @@ function assertHasRuleIds(s, want, label) {
   assert.equal(s.ok, true);
   assert.equal(s.rulesMode, "base");
   assertHasRuleIds(s, ["00", "01", "09"], "default base");
-  assert.ok((s.warnings ?? []).some((w) => /仅注入底座/.test(w)));
+  assert.ok((s.warnings ?? []).some((w) => /已加载底座规则 00\/01\/09/.test(w)));
+  assert.ok((s.warnings ?? []).some((w) => /传 task 或 topics/.test(w)));
   console.log("session default base warning: ok");
 }
 
@@ -431,11 +431,10 @@ function assertHasRuleIds(s, want, label) {
 {
   const ll = sessionPlatformPack({ platform: "liteloader", minecraftVersion: "1.12.2" });
   assert.equal(ll.ok, true);
-  assert.equal((ll.skills ?? []).length, 0);
-  assert.ok((ll.warnings ?? []).some((w) => /无平台 Skill 索引/.test(w)));
+  assert.ok((ll.skills ?? []).some((x) => x.name === "mc-events"), JSON.stringify(ll.skills?.map((x) => x.name)));
   const f17 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.7.10" });
-  assert.equal(f17.ok, false);
-  assert.equal(f17.action?.code, "PACK_NOT_FOUND");
+  assert.equal(f17.ok, true, JSON.stringify(f17.action));
+  assert.ok((f17.skills ?? []).some((x) => x.name === "mc-registry"));
   console.log("session empty platform skills warning: ok");
 }
 
@@ -484,13 +483,13 @@ function assertHasRuleIds(s, want, label) {
   const { listPacks } = await import("./dist/platform-pack/catalog.js");
   const listed = listPacks();
   assert.ok(
-    listed.drafts.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"),
-    JSON.stringify(listed.drafts.map((p) => `${p.platform}/${p.minecraftVersion}`)),
+    listed.packs.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"),
+    JSON.stringify(listed.packs.map((p) => `${p.platform}/${p.minecraftVersion}`).slice(0, 30)),
   );
-  assert.ok(!listed.packs.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"));
+  assert.ok(!listed.drafts.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"));
   const sess = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.7.10" });
-  assert.equal(sess.ok, false);
-  assert.equal(sess.action?.code, "PACK_NOT_FOUND");
+  assert.equal(sess.ok, true, JSON.stringify(sess.action));
+  assert.ok((sess.skills ?? []).some((x) => x.name === "mc-registry"));
   const tmp = mkdtempSync(join(tmpdir(), "mc-pack-1710-"));
   const w = activatePlatformPack({
     action: "write",
@@ -500,10 +499,9 @@ function assertHasRuleIds(s, want, label) {
     projectPath: tmp,
     dryRun: true,
   });
-  assert.equal(w.ok, false);
-  assert.equal(w.action?.code, "PACK_NOT_FOUND");
+  assert.equal(w.ok, true, JSON.stringify(w.action));
   rmSync(tmp, { recursive: true, force: true });
-  console.log("1.7.10 draft PACK_NOT_FOUND: ok");
+  console.log("1.7.10 ready session: ok");
 }
 
 {
@@ -614,7 +612,9 @@ function assertHasRuleIds(s, want, label) {
   });
   const body = (q.skillBodies ?? []).find((b) => b.name === "mc-registry");
   assert.ok(body, "quilt overlay skillBodies mc-registry");
-  assert.match(String(body.text), /\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.doesNotMatch(String(body.text), /\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.match(String(body.text), /search_docs/);
+  assert.match(String(body.relPosix ?? body.absPath ?? ""), /quilt\/1\.21\.1/);
   const tmp = mkdtempSync(join(tmpdir(), "mc-quilt-ovmiss-"));
   const packDir = join(tmp, "quilt", "9.8.8");
   mkdirSync(join(packDir, ".cursor", "rules"), { recursive: true });
@@ -637,9 +637,22 @@ function assertHasRuleIds(s, want, label) {
   console.log("forge libSkills stay out of skills[]: ok");
 }
 
+{
+  const { readdirSync } = await import("node:fs");
+  const qDisk = readdirSync(join(repo, "quilt", "1.21.1", ".cursor", "skills")).filter((n) => n.startsWith("mc-"));
+  assert.equal(qDisk.length, 3, qDisk.join(","));
+  const neo = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.1" });
+  assert.equal(neo.ok, true, JSON.stringify(neo.action));
+  const f1211 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.21.1" });
+  assert.equal(f1211.ok, false);
+  assert.equal(f1211.action?.code, "PACK_NOT_FOUND");
+  console.log("plan4 quilt disk 3 + neo 1.20.1 / forge 1.21.1 draft: ok");
+}
+
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;
 else delete process.env.MC_SKILL_PROJECT_ROOT;
 if (savedAllow) process.env.MC_SKILL_ALLOW_WRITE = savedAllow;
 else delete process.env.MC_SKILL_ALLOW_WRITE;
 
 console.log("test-platform-pack: all passed");
+

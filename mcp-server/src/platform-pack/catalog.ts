@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { join, relative } from "path";
+import { basename, dirname, join, relative } from "path";
 import { resolveRepoRoot } from "../utils/path.js";
 
 export const PACK_PLATFORMS = [
@@ -437,6 +437,7 @@ export function mappingNoteForFabricSkill(fabricVer: string): string {
   );
 }
 
+/** 薄档本地 Skill 优先；此处仅补本档仍缺的名字。 */
 export const NEO_SKILL_DONORS: Record<string, string> = {
   "1.20.6": "1.20.4",
   "1.21.5": "1.21.3",
@@ -509,4 +510,52 @@ export function readText(abs: string, maxChars = 120_000): string {
   const t = readFileSync(abs, "utf8");
   if (t.length <= maxChars) return t;
   return `${t.slice(0, maxChars)}\n\n…[截断 ${t.length - maxChars} 字符]`;
+}
+
+const KNOWLEDGE_PLATFORM_DIRS = ["forge", "fabric", "neoforge"] as const;
+
+function platformDirHasVersionPack(platformDir: string): boolean {
+  if (!existsSync(platformDir) || !statSync(platformDir).isDirectory()) return false;
+  let names: string[] = [];
+  try {
+    names = readdirSync(platformDir);
+  } catch {
+    return false;
+  }
+  for (const name of names) {
+    if (!/^\d+(\.\d+)*$/.test(name)) continue;
+    const verDir = join(platformDir, name);
+    try {
+      if (!statSync(verDir).isDirectory()) continue;
+    } catch {
+      continue;
+    }
+    if (existsSync(join(verDir, "pack.meta.json")) || existsSync(join(verDir, "AGENTS.md"))) return true;
+  }
+  return false;
+}
+
+/** 知识库根（MC_skill），不是用户模组工程。A：AGENTS.md + 至少两个平台且各有版本档；B：mcp-server/package.json 对本助手。 */
+export function isMcSkillKnowledgeRepo(root: string): boolean {
+  const pkgPath = join(root, "mcp-server", "package.json");
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as { name?: string; description?: string };
+      const name = String(pkg.name ?? "");
+      const desc = String(pkg.description ?? "");
+      if (name === "mc-ai-coding-assistant-tool" || /MC AI Coding Assistant/i.test(desc)) return true;
+    } catch {
+      /* ignore */
+    }
+  }
+  if (!existsSync(join(root, "AGENTS.md"))) return false;
+  const hits = KNOWLEDGE_PLATFORM_DIRS.filter((p) => platformDirHasVersionPack(join(root, p)));
+  return hits.length >= 2;
+}
+
+/** 知识库某版 scaffold/，不要当成用户工程。 */
+export function isKnowledgePackScaffold(root: string): boolean {
+  if (basename(root).toLowerCase() !== "scaffold") return false;
+  const parent = dirname(root);
+  return existsSync(join(parent, "AGENTS.md"));
 }

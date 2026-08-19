@@ -571,6 +571,7 @@ export async function analyzePortingPath(args: unknown) {
   const targetPlatform = userTargetPlatform ?? (currentPlatform === "forge" ? "neoforge" : currentPlatform);
 
   if (UNSUPPORTED_PORT.has(currentPlatform) || UNSUPPORTED_PORT.has(targetPlatform)) {
+    const portPlat = UNSUPPORTED_PORT.has(targetPlatform) ? targetPlatform : currentPlatform;
     const e: AnalyzePortingError = {
       ok: false,
       error: {
@@ -580,6 +581,13 @@ export async function analyzePortingPath(args: unknown) {
           currentPlatform === "rift" && targetPlatform === "fabric"
             ? "Rift→Fabric 可手写移植笔记；port_project 保持 dryRun，无现成模板则只输出路线。"
             : "请改用对应平台规则树；Quilt↔Fabric 才视为低风险自动路线。",
+        next: [
+          `读 ${portPlat} 档 AGENTS.md；activate_platform_pack action=session --platform=${portPlat}`,
+          `search_docs({platform:"${portPlat}"})`,
+          portPlat === "rift" || currentPlatform === "rift"
+            ? "Rift→Fabric 只出笔记，port_project 保持 dryRun"
+            : "不要对基岩 / LiteLoader / Rift / ModLoader 自动改工程",
+        ],
       },
     };
     return JSON.stringify(e, null, 2);
@@ -899,6 +907,13 @@ export async function portProject(args: unknown) {
       error: {
         code: "UNSUPPORTED_PORT",
         message: `port_project 不支持目标平台 ${targetPlatform}（仅笔记，不改工程）`,
+        next: [
+          `读 ${targetPlatform} 档 AGENTS.md；activate_platform_pack action=session --platform=${targetPlatform}`,
+          `search_docs({platform:"${targetPlatform}"})`,
+          targetPlatform === "rift"
+            ? "Rift→Fabric 只出笔记，port_project 保持 dryRun"
+            : "不要对基岩 / LiteLoader / Rift / ModLoader 自动改工程",
+        ],
       },
     });
   }

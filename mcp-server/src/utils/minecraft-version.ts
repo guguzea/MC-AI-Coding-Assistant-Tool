@@ -1,3 +1,5 @@
+import { PROJECT_SCAN_SKIP_DIRS } from "./project-files.js";
+
 /**
  * 从 gradle.properties / 根 build.gradle 推断 Minecraft 版本。
  * 不能确定时返回 "unknown"，禁止默认 1.20.1。
@@ -58,6 +60,31 @@ export function detectMinecraftVersion(opts: {
   const forgeCoord = bg.match(/net\.minecraftforge:forge:(\d+\.\d+(?:\.\d+)?)-/);
   if (forgeCoord) return forgeCoord[1];
 
+  return "unknown";
+}
+
+/** 根未命中版本时，只读 settings.gradle 一层 include 子工程的 gradle.properties。 */
+export function detectMinecraftVersionFromIncludedSubprojects(opts: {
+  settingsGradle?: string;
+  readSubprojectProperties: (includeName: string) => string | undefined;
+}): string {
+  const settings = opts.settingsGradle ?? "";
+  const names: string[] = [];
+  const re = /include\s*\(?\s*['"]([^'"]+)['"]/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(settings))) {
+    const name = m[1].replace(/\\/g, "/").split("/")[0]?.trim();
+    if (!name || name === "." || name === "..") continue;
+    if (PROJECT_SCAN_SKIP_DIRS.has(name)) continue;
+    names.push(name);
+    if (names.length >= 8) break;
+  }
+  for (const name of names) {
+    const props = opts.readSubprojectProperties(name);
+    if (!props?.trim()) continue;
+    const v = detectMinecraftVersion({ gradleProperties: props });
+    if (v !== "unknown") return v;
+  }
   return "unknown";
 }
 

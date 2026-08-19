@@ -1,0 +1,20 @@
+﻿---
+name: mc-registry
+description: Quilt 1.19.4 mc-registry（QSL 差异）。名字只来自本档 qsl-verified.md。
+platform: quilt
+version: "1.19.4"
+dependencies: []
+docsTool: search_docs
+---
+
+# mc-registry（Quilt 1.19.4）
+
+核实表：knowledge/common/qsl-verified.md。
+必须 search_docs({platform:"quilt"}) 且 version=1.19.4。02–10 仍读 fabric/1.19.4 overlay。
+
+Vanilla Registry.register。QSL RegistryEvents 未打开，禁止把 1.21 分支方法名冒充本档。
+
+入口：org.quiltmc.loader.api.entrypoint.ModInitializer#onInitialize(ModContainer)。quilt.mod.json entrypoints.init。
+
+禁止 QuiltRegistry.register()。禁止把 net.fabricmc.fabric.api.event.registry 当 QSL。
+简单物品/方块可用 Vanilla Registry.register（不是 FAPI 专属）。

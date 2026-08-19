@@ -1,0 +1,7 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "fabric",
+  "minecraftVersion": "1.21.10",
+  "note": "versioned fabric-docs only; no wiki clone"
+}

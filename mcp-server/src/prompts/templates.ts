@@ -210,7 +210,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（不执行 Gradle）。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 禁止 SimpleChannel；1.20.4 为 RegisterPayloadHandlerEvent（单数），1.21+ 为 RegisterPayloadHandlersEvent。
-3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。
+3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.10 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。无该档模板则 error，改口 search_*_docs。
 4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
   },
   "mc-capability": {
@@ -259,11 +259,61 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-bedrock-addon": {
     title: "基岩 Add-On 清单",
-    body: `清单（不执行 Gradle）。对应 bedrock 的 mc-addon-* Skill。禁止 Java query_api / Yarn / Mixin。
+    body: `清单（不执行 Gradle / 不跑流水线）。对应 bedrock 的 mc-addon-* Skill。禁止 Java query_api / Yarn / Mixin。
 1. 包根 manifest.json（format_version + modules）。validate_addon_manifest。
-2. BP 实体：generate_bp_entity 只吐 JSON 文本，不写盘。validate_bp_json。
-3. 文档用 search_bedrock_docs，不要 search_forge_docs。
-4. 不要对基岩工程 activate Java 平台包或跑 diagnose_gradle。`,
+2. BP：行为实体/战利品等 JSON。generate_bp_entity 只吐文本。validate_bp_json。
+3. RP：纹理/模型/语言。不要抄 Java assets 路径当基岩 RP。
+4. script 模块（若有）：对照 search_bedrock_docs，不要 Fabric ModInitializer。
+5. 再 validate_addon_manifest + validate_bp_json。不要 activate Java 平台包或 diagnose_gradle。`,
+  },
+  "mc-fluid": {
+    title: "流体工作流",
+    body: `清单（不执行 Gradle）。
+1. activate_platform_pack action=session（可 topics 02）。读本档 mc-fluid / 核实表。
+2. 类名必须 search_*_docs 且 version 写死本档。禁止默写 FluidType 邻档签名。
+3. 资源：fluid 贴图/still-flow JSON 按该时代路径。不要对 LiteLoader/Rift/ModLoader 调 generate_datagen。`,
+  },
+  "mc-enchant-potion": {
+    title: "附魔与药水清单",
+    body: `清单（不执行 Gradle）。
+1. session 读 mc-enchantment / mc-potion / mc-effect。
+2. 注册与酿造以该档核实表 + search_*_docs 为准，禁止默写。
+3. 语言键 generate_lang（须 version）。`,
+  },
+  "mc-energy": {
+    title: "能量系统清单",
+    body: `清单（不执行 Gradle）。
+1. session 读 mc-energy / mc-capability。Neo 用 Data Attachment，不是 Forge Capability。
+2. Fabric/Quilt 改口 CCA 或该档附件 API。禁止把 IFE 抄错加载器。
+3. 核不到则 search_*_docs，禁止默写 IEnergyStorage。`,
+  },
+  "mc-creative-tags": {
+    title: "创造标签 / Item Group 清单",
+    body: `清单（不执行 Gradle）。
+1. 确认平台：Neo/Forge CreativeModeTab 或该档等价；Fabric ItemGroup；Quilt 可能走 QFAPI（以 qsl-verified 为准）。
+2. search_*_docs version 写死本档。禁止把 Fabric ItemGroup 写进 Forge。
+3. 数据包 tags 用 validate_datapack_json kind=tag。`,
+  },
+  "mc-kotlin": {
+    title: "Kotlin 模组清单",
+    body: `清单（不执行 Gradle）。
+1. Forge/Neo：Kotlin for Forge（库 Skill mc-kff，knowledge/libs）。Fabric：fabric-language-kotlin。
+2. 不要混用 gradle.kts 记忆与 Java 入口。session 仍用本档 Java 规则 + 库 Skill。
+3. 不执行 Gradle，只出依赖与入口清单。`,
+  },
+  "mc-jei": {
+    title: "JEI/REI 兼容清单",
+    body: `清单（不执行 Gradle）。
+1. 软依赖。session 可读 mc-compat-jei；库集成见 knowledge/libs 与 community lib-* 短文。
+2. 不要把 Fabric REI 当 Neo JEI。plugin 入口以该库文档为准。
+3. 不跑游戏、不拷 mods。`,
+  },
+  "mc-ci-publish-extra": {
+    title: "CI 发布额外清单",
+    body: `清单（不执行 CI、不跑流水线、不上传）。
+1. check_publish_ready：license/version、build/libs 像正式 jar。
+2. 列出建议的 GitHub Actions 步骤名（setup-java、gradle build、upload 工件）——只出清单。
+3. 对照 community_knowledge/authored/publishing.md。不要调 Curse/Modrinth API。`,
   },
   "mc-setup-env": {
     title: "开发环境搭建",

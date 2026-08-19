@@ -904,14 +904,16 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     }
   }
 
-  // 4. 增强校验规则
-  checkDeferredRegisterIntegrity(javaFiles, errors, warnings);
-  checkModAnnotation(javaFiles, modsTomlModId, errors, warnings);
-  checkBlockEntityReferences(javaFiles, errors, warnings);
-  checkBlockItemIntegrity(javaFiles, warnings);
-  checkObjectHolder(javaFiles, modsTomlModId, warnings);
-  checkMixinConfig(mixinsJson, javaFiles, warnings);
-  checkDuplicateRegistryNames(javaFiles, warnings);
+  // 4. 增强校验规则（仅 Forge 路径；Fabric/Quilt/Neo 已在上方 early return）
+  if (loader === "forge") {
+    checkDeferredRegisterIntegrity(javaFiles, errors, warnings);
+    checkModAnnotation(javaFiles, modsTomlModId, errors, warnings);
+    checkBlockEntityReferences(javaFiles, errors, warnings);
+    checkBlockItemIntegrity(javaFiles, warnings);
+    checkObjectHolder(javaFiles, modsTomlModId, warnings);
+    checkMixinConfig(mixinsJson, javaFiles, warnings);
+    checkDuplicateRegistryNames(javaFiles, warnings);
+  }
   warnings.push(...recipeWarnings);
 
   let crashAnalyses: ValidationResult["crashAnalyses"];

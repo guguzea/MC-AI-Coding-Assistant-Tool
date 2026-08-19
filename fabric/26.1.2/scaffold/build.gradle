@@ -1,0 +1,23 @@
+plugins {
+    id "net.fabricmc.fabric-loom" version "1.11-SNAPSHOT"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:0.17.0"
+}
+
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}

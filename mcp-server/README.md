@@ -101,7 +101,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### MDK 解压依赖（`download_official_mdk`）
 
-`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_26.1`），省略返回 error。
+`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.5` / `neoforge_1.21.10` / `neoforge_26.1` / `fabric_1.21` / `fabric_26.1`），省略返回 error。
 
 ### 5. 开发
 
@@ -130,13 +130,13 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
 | 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 79 条；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
-| Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
-| Wave C 生成 | `generate_model`、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
+| Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`（1.21+ recipe `result` 可为对象）、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
+| Wave C 生成 | `generate_model`（kind 默认 block）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 为 Cloth 骨架）、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |
 | Wave C 诊断 | `analyze_log`、`get_migration_guide`、`check_dependencies` |
 | T2 反编译（Wave C） | `get_minecraft_source`、`analyze_mod_jar`、`decompile_mod_jar`、`search_mod_code` |
 | MDK | `download_official_mdk` |
 | T4 字节码校验（Wave D） | `validate_at`、`validate_aw`（+ `mixin_analyze` 的 `deep:true` 深度模式） |
-| Loader API / 平台包 | `query_loader_api`、`search_loader_api`、`ingest_loader_api`、`detect_mod_project`、`activate_platform_pack` |
+| Loader API / 平台包 | `query_loader_api`、`search_loader_api`、`ingest_loader_api`、`detect_mod_project`（知识库根 → `KNOWLEDGE_REPO_NOT_MOD`）、`activate_platform_pack` |
 | 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity` |
 | 自我更新 | `mc_skill_update` |
 
@@ -310,7 +310,7 @@ node dist/cli.js activate_platform_pack --action=write --platform=neoforge --min
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
 
-`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 6）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 的 `includeSkills` 默认 false；true 时写 stub，不是知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。
+`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 6）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 的 `includeSkills` 默认 false；true 时写 stub，不是知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
 
 Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 

@@ -63,6 +63,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       if (recipeRequiresResult(data.type) && !("result" in data)) {
         errors.push("缺少必需字段: result");
       }
+      // result 可为字符串或对象（1.21+ id/count）；有键即过，不因类型 fail
       if (data.type === "minecraft:crafting_shaped" || data.type === "minecraft:crafting_shapeless") {
         if (!("ingredients" in data) && !("key" in data)) {
           errors.push("合成配方需要 key/ingredients");

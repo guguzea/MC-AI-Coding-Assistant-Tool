@@ -19,6 +19,7 @@ import {
   fabricRulesOverlay,
   findPack,
   inspectPack,
+  isMcSkillKnowledgeRepo,
   listMergedPackSkills,
   listRuleFiles,
   mappingNoteForFabricSkill,
@@ -69,11 +70,7 @@ function posixRel(rel: string): string {
 }
 
 function isKnowledgeRepo(root: string): boolean {
-  return (
-    existsSync(join(root, "mcp-server")) &&
-    existsSync(join(root, "AGENTS.md")) &&
-    (existsSync(join(root, "forge")) || existsSync(join(root, "fabric")))
-  );
+  return isMcSkillKnowledgeRepo(root);
 }
 
 function resolveUserProject(projectPath?: string): {
@@ -337,7 +334,14 @@ export function writePlatformPack(args: WriteArgs) {
   let version = String(args.minecraftVersion ?? "").trim();
   if (!platform || !version) {
     const det = detectModProject({ projectPath: proj.root });
-    if (!det.ok || !det.packFound) {
+    if (!det.ok) {
+      return {
+        ok: false,
+        resolvedProjectRoot: proj.root,
+        action: det.action,
+      };
+    }
+    if (!det.packFound) {
       return {
         ok: false,
         resolvedProjectRoot: proj.root,

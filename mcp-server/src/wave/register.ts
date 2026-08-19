@@ -96,6 +96,13 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-dimension-structure",
     "mc-access",
     "mc-bedrock-addon",
+    "mc-fluid",
+    "mc-enchant-potion",
+    "mc-energy",
+    "mc-creative-tags",
+    "mc-kotlin",
+    "mc-jei",
+    "mc-ci-publish-extra",
     "mc-full-mod",
   ]),
 });
@@ -118,10 +125,22 @@ export const listKnowledgeResourcesSchema = z.object({});
 export const readKnowledgeResourceSchema = z.object({ uri: z.string() });
 export const ANALYZE_LOG_DESCRIPTION = "Analyze game / crash log excerpt";
 export const READ_KNOWLEDGE_RESOURCE_DESCRIPTION = "Read knowledge resource by URI";
+export const GENERATE_CONFIG_DESCRIPTION =
+  "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖。不写盘。";
+export const GENERATE_NETWORK_PACKET_DESCRIPTION =
+  "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.10 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。只传 fabric 会 error。返回 Java 骨架文本，不写盘。";
+export const GENERATE_CAPABILITY_DESCRIPTION =
+  "Generate Capability / DataAttachment skeleton。platform 与 version 必填。forge 1.20.1 Capability；neoforge 仅 1.20.4+ Data Attachment（不是 Forge Capability）；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。";
+export const GENERATE_MODEL_DESCRIPTION =
+  "Generate block model JSON templates。version 必填。kind 默认 block；kind=item 只出物品模型（无 blockstates）。返回 JSON 骨架文本，不写盘。";
+export const DETECT_MOD_PROJECT_DESCRIPTION =
+  "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。" +
+  "知识库根 / 某版 scaffold → KNOWLEDGE_REPO_NOT_MOD。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。";
 export const generateModelSchema = z.object({
   modId: z.string(),
   blockName: z.string(),
   version: z.string().describe("必填 MC 版本"),
+  kind: z.enum(["block", "item"]).optional().describe("默认 block；item 为物品模型"),
 });
 export const generateLangSchema = z.object({
   modId: z.string(),
@@ -132,7 +151,7 @@ export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
   packetName: z.string(),
   platform: z
-    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_26.1", "fabric_1.21", "fabric_26.1"])
+    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_1.21.5", "neoforge_1.21.10", "neoforge_26.1", "fabric_1.21", "fabric_26.1"])
     .describe("必填。须带版本后缀；禁止只传 fabric / neoforge"),
 });
 export const generateCapabilitySchema = z.object({
@@ -449,9 +468,9 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("generate_model", {
     title: "Generate block model JSON templates",
-    description: "Generate block model JSON templates。version 必填。返回方块模型 JSON 骨架文本，不写盘。",
+    description: GENERATE_MODEL_DESCRIPTION,
     inputSchema: generateModelSchema,
-  }, async (a) => jsonResult(generateModel(a.modId, a.blockName, a.version)));
+  }, async (a) => jsonResult(generateModel(a.modId, a.blockName, a.version, a.kind)));
 
   server.registerTool("generate_lang", {
     title: "Generate en_us + zh_cn lang JSON",
@@ -461,24 +480,20 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("generate_network_packet", {
     title: "Generate network packet skeleton",
-    description: "Generate network packet skeleton。返回网络包 Java 骨架文本，不写盘。",
+    description: GENERATE_NETWORK_PACKET_DESCRIPTION,
     inputSchema: generateNetworkPacketSchema,
   }, async (a) =>
     jsonResult(generateNetworkPacket(a.modId, a.packetName, a.platform)));
 
   server.registerTool("generate_capability", {
     title: "Generate Capability / DataAttachment skeleton",
-    description:
-      "Generate Capability / DataAttachment skeleton。platform 与 version 必填。" +
-      "forge 1.20.1 Capability；neoforge 1.20.4+ Attachment；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。",
+    description: GENERATE_CAPABILITY_DESCRIPTION,
     inputSchema: generateCapabilitySchema,
   }, async (a) => jsonResult(generateCapability(a.modId, a.name, a.platform, a.version)));
 
   server.registerTool("generate_config", {
     title: "Generate config spec skeleton",
-    description:
-      "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。" +
-      "neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 改口 mc-config。不写盘。",
+    description: GENERATE_CONFIG_DESCRIPTION,
     inputSchema: generateConfigSchema,
   }, async (a) => jsonResult(generateConfig(a.modId, a.loader, a.version)));
 
@@ -689,9 +704,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "detect_mod_project",
     {
       title: "Detect mod loader / MC version / platform pack",
-      description:
-        "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。" +
-        "对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。",
+      description: DETECT_MOD_PROJECT_DESCRIPTION,
       inputSchema: detectModProjectSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(detectModProject(args)),
@@ -705,7 +718,7 @@ export function registerWaveExtensions(server: McpServer): void {
         "topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 6）；topics 永不注入正文。" +
         "库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。" +
         "includeSkills 已 deprecated，仅在未传 writeSkillStubs 时映射为 stub 开关。write 默认写 Skill stub（未传 writeSkillStubs 且未传 includeSkills 时）。includeSkillBodies 才写全文。" +
-        "ok=true 且带「仅底座」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。" +
+        "ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。" +
         "rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。" +
         "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。",
       inputSchema: activatePlatformPackSchema,
@@ -784,11 +797,11 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "localize_mod", description: "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。", inputSchema: localizeModSchema },
   { name: "list_knowledge_resources", description: "列出 mcskill:// 资源 URI；配合 read_knowledge_resource 读取正文。", inputSchema: listKnowledgeResourcesSchema },
   { name: "read_knowledge_resource", description: READ_KNOWLEDGE_RESOURCE_DESCRIPTION, inputSchema: readKnowledgeResourceSchema },
-  { name: "generate_model", description: "Generate block model JSON templates。version 必填。返回方块模型 JSON 骨架文本，不写盘。", inputSchema: generateModelSchema },
+  { name: "generate_model", description: GENERATE_MODEL_DESCRIPTION, inputSchema: generateModelSchema },
   { name: "generate_lang", description: "Generate en_us + zh_cn lang JSON。version 必填。返回 en_us/zh_cn lang JSON 骨架，不写盘、无机器翻译。", inputSchema: generateLangSchema },
-  { name: "generate_network_packet", description: "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。只传 fabric 会 error。返回 Java 骨架文本，不写盘。", inputSchema: generateNetworkPacketSchema },
-  { name: "generate_capability", description: "Generate Capability / DataAttachment skeleton。platform 与 version 必填。forge 1.20.1 Capability；neoforge 仅 1.20.4+ Data Attachment（不是 Forge Capability）；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。", inputSchema: generateCapabilitySchema },
-  { name: "generate_config", description: "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖。不写盘。", inputSchema: generateConfigSchema },
+  { name: "generate_network_packet", description: GENERATE_NETWORK_PACKET_DESCRIPTION, inputSchema: generateNetworkPacketSchema },
+  { name: "generate_capability", description: GENERATE_CAPABILITY_DESCRIPTION, inputSchema: generateCapabilitySchema },
+  { name: "generate_config", description: GENERATE_CONFIG_DESCRIPTION, inputSchema: generateConfigSchema },
   { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。支持 forge 1.20.1 / 1.20.4（@OnlyIn）与 neoforge 26.1（EntityRenderer + Identifier）。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
   { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。Fabric/Quilt 只出 feature JSON，禁止 forge biome_modifier。返回骨架文本，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: ANALYZE_LOG_DESCRIPTION, inputSchema: analyzeLogSchema },
@@ -806,8 +819,8 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "query_loader_api", description: "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。", inputSchema: queryLoaderApiSchema },
   { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。", inputSchema: searchLoaderApiSchema },
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
-  { name: "detect_mod_project", description: "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。", inputSchema: detectModProjectSchema },
-  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 6）；topics 永不注入正文。库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。write：writeSkillStubs 优先于 includeSkills（deprecated）；二者都未传时默认写 stub；includeSkillBodies 才写全文。ok=true 且带「仅底座」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。write 默认 dryRun；hosts 必填。目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
+  { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
+  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 6）；topics 永不注入正文。库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。write：writeSkillStubs 优先于 includeSkills（deprecated）；二者都未传时默认写 stub；includeSkillBodies 才写全文。ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。write 默认 dryRun；hosts 必填。目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];
