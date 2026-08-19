@@ -110,9 +110,11 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
     Registry.register(
         Registries.SCREEN_HANDLER,
         new Identifier("examplemod", "my_screen"),
-        new ScreenHandlerType<>(MyScreenHandler::new)
+        new ScreenHandlerType<>(MyScreenHandler::new, FeatureFlags.VANILLA_FEATURES)
     );
 ```
+
+1.19.3+ 构造是 `(Factory, FeatureSet)`。Yarn 字段 `FeatureFlags.VANILLA_FEATURES`（官方 Yarn javadoc）。wiki `tutorial:screenhandler` 也可用 `FeatureSet.empty()`。
 
 ## NamedScreenHandlerFactory（普通打开）
 
@@ -193,6 +195,7 @@ ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> 
 - ❌ 在 `render()` 里 `new` 按钮或分配大对象 — 控件在 `init()` 创建
 - ❌ 忘记给玩家物品栏 `addSlot` — 物品栏不显示（没有 `addPlayerInventory()` 这种原版方法）
 - ❌ 在 Screen 中忘记 `super.render(...)` — 背景和子控件不渲染
+- ❌ 把 `FeatureFlags.VANILLA`（Yarn `FeatureFlag`）传给 `ScreenHandlerType` — 第二参是 `FeatureSet`，用 `FeatureFlags.VANILLA_FEATURES`（Yarn javadoc 1.19.4–1.21.11）。不要用 Mojmap `VANILLA_SET`。
 - ❌ 使用 `TypedScreenHandlerFactory` / `HandlerScreen` / `Menu`（Yarn 容器是 ScreenHandler，不是 Mojmap Menu）
 
 ## 扩展点

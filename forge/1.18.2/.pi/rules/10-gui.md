@@ -148,7 +148,7 @@ public class MyBlock extends Block {
         if (!level.isClientSide) {
             MenuProvider menuProvider = state.getMenuProvider(level, pos);
             if (menuProvider != null) {
-                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.value(),
+                level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK,
                     SoundSource.BLOCKS, 0.5f, 0.8f);
                 player.openMenu(menuProvider);
             }

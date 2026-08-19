@@ -1,4 +1,4 @@
-import { actionable, ActionCodes, withAction } from "../utils/actionable.js";
+import { actionable, ActionCodes, withAction, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { searchRegistryEntries, listRegistryNames, registryDataAvailable } from "./store.js";
 
 export { buildRegistryIndex, vanillaRegistryDir, vanillaRegistrySqlitePath } from "./builder.js";
@@ -30,7 +30,18 @@ function looksLikeJavaIdentifier(q: string): boolean {
 }
 
 export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
-  const version = input.version ?? "1.20.1";
+  if (missingMcVersion(input.version)) {
+    return {
+      found: false,
+      matches: [],
+      nameLayer: "registry_id",
+      version: "",
+      relatedTools: ["convert_mapping", "query_api"],
+      notes: ["请指定 version，禁止默认 1.20.1"],
+      action: versionRequiredAction(),
+    };
+  }
+  const version = input.version!.trim();
   const query = input.query.trim();
   const relatedTools = ["convert_mapping", "query_api"];
   const notes = [

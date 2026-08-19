@@ -11,7 +11,7 @@
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
 - 实体必须通过 `DeferredRegister<EntityType>` 注册
-- 必须在 `mods.toml` 中添加 `[[entities]]` 声明
+- 实体用 `DeferredRegister` 注册。官方 `mods.toml` **没有** `[[entities]]` 表（常见是 `[[mods]]` / `[[dependencies.*]]`）；不要编实体 TOML 段
 
 ### EntityType.Builder 配置
 
@@ -62,21 +62,21 @@ IF 实体需要完全控制渲染和碰撞
   → 继承 Entity（不推荐，需要大量手动实现）
 ```
 
-### Decision: 选择 MobCategory（生物分类）
+### Decision: 选择 EntityClassification（生物分类）
 
 ```
 IF 自然生成的动物/怪物
-  → MobCategory.CREATURE（被动生物）
-  → MobCategory.MONSTER（敌对生物）
-  → MobCategory.WATER_CREATURES（水生生物）
-  → MobCategory.AMBIENT（环境生物，如蝙蝠）
+  → EntityClassification.CREATURE（被动生物）
+  → EntityClassification.MONSTER（敌对生物）
+  → EntityClassification.WATER_CREATURE（水生生物）
+  → EntityClassification.AMBIENT（环境生物，如蝙蝠）
 
 IF NPC 或乘客
-  → MobCategory.MISC（杂项）
+  → EntityClassification.MISC（杂项）
   → 不会自然生成
 
 IF 乘坐实体
-  → 使用 MobCategory.MISC 或在实体类中覆盖 getType().getClassification()
+  → 使用 EntityClassification.MISC 或在实体类中覆盖 getType().getClassification()
 ```
 
 ### Decision: 属性注册时机
@@ -164,12 +164,12 @@ public class ModEntities {
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITY_TYPES.register("my_entity", () ->
-            EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+            EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
                 .size(0.6f, 1.8f)
-                .trackerTrackingRange(8)
-                .updateInterval(3)
-                .fireImmune()
-                .build(MOD_ID + ":my_entity")
+                .setTrackingRange(8)
+                .setUpdateInterval(3)
+                .immuneToFire()
+                .build("my_entity")
         );
 
     public static void register(IEventBus eventBus) {
@@ -189,7 +189,7 @@ public ExampleMod() {
 ```java
 // ❌ 错误示例：setRegistryName + 直接 new（已过时）
 event.getRegistry().register(
-    EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+    EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
         ...
         .build("my_mod:my_entity")
 );

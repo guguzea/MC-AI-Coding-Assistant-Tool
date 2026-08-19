@@ -142,7 +142,7 @@ public class ClientSetup {
 ### 5. Screen 类（CLIENT ONLY）
 
 ```java
-public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
+public class MyScreen extends AbstractContainerScreen<MyMenu> {
     private int progress; // 本地缓存，用于渲染
 
     public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
@@ -164,14 +164,12 @@ public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
-        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
-            0, 0, this.imageWidth, this.imageHeight);
-        // 叠加进度条
+    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
+        blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
-        graphics.fill(this.leftPos, this.topPos,
-            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
+        fill(poseStack, this.leftPos, this.topPos, this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
     }
 
     private static final ResourceLocation BACKGROUND_TEXTURE =
@@ -202,6 +200,7 @@ Forge 1.19.4 推荐使用 `ContainerData`/`SimpleContainerData` 而非 `DataSlot
 - ❌ 方块 `getMenuProvider` 返回 null → `use()` 中检查 null
 - ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `broadcastChanges()` 批量同步
 - ❌ `stillValid()` 始终返回 true → 添加距离检查 `player.distanceToSqr(...) <= 8.0`
+- ❌ `MenuType` 第二参传 `FeatureFlags.VANILLA` → 那是 `FeatureFlag`。本档 Mojmap 用 `FeatureFlags.DEFAULT_FLAGS` / `VANILLA_SET`（`FeatureFlagSet`）。不要抄 Yarn 的 `VANILLA_FEATURES`
 
 ## 扩展点
 

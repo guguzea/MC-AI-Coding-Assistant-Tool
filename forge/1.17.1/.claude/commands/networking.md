@@ -1,6 +1,6 @@
 ﻿---
 name: mc-networking
-description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、IMessage
+description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、FriendlyByteBuf
 platform: forge
 version: "1.17.1"
 dependencies: []
@@ -102,7 +102,7 @@ public static void broadcast(MyBroadcastMessage msg) {
 
 ## 常见错误
 
-- ❌ `IMessageHandler` vs `IClientHandler`：确认方向（C2S 用 IMessageHandler，S2C 消息自动忽略）
+- ❌ `IMessage` / `IMessageHandler`：那是 1.12 `SimpleNetworkWrapper`。本档用 `SimpleChannel.registerMessage` + encode/decode/handle
 - ❌ 在网络线程直接修改世界：所有游戏逻辑必须在 `enqueueWork()` 回调中执行
 - ❌ 消息 ID 冲突：每个消息 ID 在同一 channel 中必须唯一
 - ❌ `sendToServer()` 在服务端调用：检查 `LogicalSide`

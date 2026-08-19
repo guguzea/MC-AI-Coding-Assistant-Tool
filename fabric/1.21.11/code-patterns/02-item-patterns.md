@@ -11,7 +11,7 @@
 ---
 private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_item"),
+    Identifier.of(MOD_ID, "my_item"),
     new Item(new Item.Settings().maxCount(64))
 );
 ```
@@ -27,7 +27,7 @@ private static final Item MY_ITEM = Registry.register(
 ---
 private static final Item MY_APPLE = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_golden_apple"),
+    Identifier.of(MOD_ID, "my_golden_apple"),
     new Item(new Item.Settings()
         .food(new FoodComponent.Builder()
             .hunger(4)
@@ -59,7 +59,7 @@ public enum MyToolMaterial implements ToolMaterial {
 
 private static final Item COPPER_SWORD = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "copper_sword"),
+    Identifier.of(MOD_ID, "copper_sword"),
     new SwordItem(MyToolMaterial.COPPER, 3, 1.6f,
         new Item.Settings().maxDamage(250))
 );
@@ -76,7 +76,7 @@ private static final Item COPPER_SWORD = Registry.register(
 ---
 private static final Item MY_HAMMER = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_hammer"),
+    Identifier.of(MOD_ID, "my_hammer"),
     new Item(new Item.Settings().maxDamage(100)) {
         @Override
         public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {

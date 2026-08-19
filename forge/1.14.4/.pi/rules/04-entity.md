@@ -15,7 +15,7 @@ description: 04 — 实体开发
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
 - 实体必须通过 `DeferredRegister<EntityType>` 注册
-- 必须在 `mods.toml` 中添加 `[[entities]]` 声明
+- 实体用 `DeferredRegister` 注册。官方 `mods.toml` **没有** `[[entities]]` 表（常见是 `[[mods]]` / `[[dependencies.*]]`）；不要编实体 TOML 段
 
 ### EntityType.Builder 配置
 

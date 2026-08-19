@@ -33,15 +33,15 @@ Fabric 使用 Loom 编译器，Mixin 支持是一等的。只需在 `fabric.mixi
 @Mixin(PlayerEntity.class)
 public class MixinPlayerEntity {
     @Shadow
-    public abstract int getHealth();
+    public abstract float getHealth();
 
     @Inject(at = @At("HEAD"), method = "tick")
-    private void onTick(CallbackInfoReturnable ci) {
+    private void onTick(CallbackInfo ci) {
         // 在 tick 方法开头执行
     }
 
     @Inject(at = @At("RETURN"), method = "getHealth")
-    private void onGetHealth(CallbackInfoReturnable<Integer> cir) {
+    private void onGetHealth(CallbackInfoReturnable<Float> cir) {
         // 在 getHealth 返回后执行
         System.out.println("Health: " + cir.getReturnValue());
     }
@@ -63,7 +63,7 @@ IF 注入到类方法
   → @Inject + CallbackInfo
 
 IF 修改方法返回值
-  → @ModifyReturnValue
+  → @Inject RETURN + CallbackInfoReturnable；@ModifyReturnValue 仅 MixinExtras
 
 IF 修改方法参数
   → @ModifyVariable
@@ -120,17 +120,19 @@ public abstract class MixinPlayerEntity {
 }
 ```
 
-## @ModifyReturnValue
+## @ModifyReturnValue（MixinExtras，不是 Mixin 核心）
+
+工程没有 `mixin-extras` 依赖时不要用。核心 Mixin 改返回值用 `@Inject` + `CallbackInfoReturnable`。
 
 ```java
 @Mixin(PlayerEntity.class)
 public class MixinPlayerEntity {
     @ModifyReturnValue(
-        method = "getHealth()I",
+        method = "getHealth()F",
         at = @At("RETURN")
     )
-    private int addHealthBonus(int original) {
-        return original + 10;  // 生命值 +10
+    private float addHealthBonus(float original) {
+        return original + 10f;
     }
 }
 ```
@@ -143,9 +145,8 @@ Access Widener 可以将 `private` / `protected` 成员开放为 `public`，无�
 
 ```
 # examplemod.accesswidener
-accessWidener v2
-accessWidener class net/minecraft/entity/LivingEntity health # 开放 health 字段
-accessWidener method net/minecraft/entity/LivingEntity getHealth()I public # 开放 getHealth 方法
+accessWidener v2 named
+accessible method net/minecraft/entity/LivingEntity getHealth ()F
 ```
 
 ### 2. 在 build.gradle 中配置 Loom

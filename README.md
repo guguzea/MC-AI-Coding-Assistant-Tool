@@ -288,7 +288,7 @@ MC_skill/
 | `action` | 作用 |
 |----------|------|
 | `list` | 已建档平台 / 版本 |
-| `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix`，不是全部 Skill 全文）。默认只注入规则 **00 / 01 / 09**；`topics`（如 `["02","06"]`）加主题；`includeAllRules=true` 才灌 00–10。拿到索引后按 `relPosix` 再 Read 知识库文件。库 Skill 仍读 `knowledge/libs/`。 |
+| `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix` / `absPath`）。默认只注入规则 **00 / 01 / 09**；`topics` 与 `task` **追加**到底座（并集，永不替换）；`skillNames` 与 `task` 建议名去重后注入 `skillBodies`（总条数上限 6）。`topics` 永不注入 Skill 正文。库 Skill 不进 `nextReads`，只有显式 `skillNames` 才注入库正文。`includeAllRules=true` 才灌 00–10 规则全文。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。库 Skill 仍读 `knowledge/libs/`。 |
 | `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `all`）。默认 `dryRun`；`includeSkills` 默认 **false**，为 true 时写入的是 **stub**（提示去读知识库路径），不是 Skill 全文。目标不能是本知识库根。 |
 | `deactivate` | 按清单撤写 |
 
@@ -439,8 +439,8 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 |-----------|------|------|------|
 | `forge/1.20.1` 及多数 Forge 版本 | **34** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D |
 | `forge/1.15.2` | **35** | 目录 | 上表 + `mc-events` |
-| `fabric/*`（10 个版本） | **37** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D |
-| `neoforge` | **35** | 目录 | 16 基础（含 `mc-events`）+ 19 Wave D |
+| `fabric/*`（11 个版本，含 26.1.2） | **37** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D |
+| `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档补齐后与 Forge 内容类型对齐，薄档（1.20.6 / 1.21.5 / 1.21.10）仍为 6 个 |
 
 | 分类           | Skills                                                                                                                           |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -495,7 +495,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `search_loader_api` | 在 `fqcnIndex` 上子串搜索（`limit` 默认 20 封顶 50）。`mode=list` 列出已索引档 / skipped / cache overlay。 |
 | `ingest_loader_api` | 用户自备 jar（官方不代下的 LiteLoader/Rift/ModLoader）抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，**禁止写仓库 `data/`**。`jarPath` 绝对路径 + `mappingsVersion` 必填。默认 dryRun。不要用 `--file`。 |
 | `detect_mod_project` | 只读探测模组工程（Quilt 在 Fabric 前）。`projectPath`（CLI `--project`）优先于 `MC_SKILL_PROJECT_ROOT`。对不上规则树 → `PACK_NOT_FOUND`，禁止邻档 00–10。 |
-| `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics` / `includeAllRules` 见上文）。write 默认 dryRun，`hosts` 必填，`includeSkills` 默认 false（true 也只写 stub）。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
+| `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 6；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填，`includeSkills` 默认 false（true 也只写 stub）。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
 ### 2. 工程辅助

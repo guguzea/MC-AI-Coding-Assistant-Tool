@@ -9,8 +9,8 @@
 ### @SubscribeEvent 基础规范
 
 - 所有事件处理方法必须标注 `@SubscribeEvent`
-- 事件类必须在 `@EventBusSubscriber` 或手动注册到事件总线
-- `bus` 属性决定事件总线：`EventBusSubscriber.Bus.FORGE`（默认）或 `EventBusSubscriber.Bus.MOD`
+- 游戏事件：`@Mod.EventBusSubscriber(modid = ...)` 挂到 Forge `EVENT_BUS`，或 `MinecraftForge.EVENT_BUS.register(...)`
+- 生命周期：`@Mod` 类上的 `@EventHandler`（`FMLPreInitializationEvent` 等）。本档**没有** `EventBusSubscriber.Bus.MOD` / `Bus.FORGE`
 
 ### 生命周期事件
 
@@ -74,7 +74,7 @@ IF 监听方块放置/破坏
   → BlockEvent.PlaceEvent
 
 IF 监听配方解锁（合成/烧炼/烟熏等）
-  → RegistryEvent.NewRegistry 或 RegistryEvent.Register<Recipe>
+  → RegistryEvent.Register<IRecipe>
 
 IF 监听 Tick（每帧逻辑）
   → TickEvent
@@ -112,7 +112,7 @@ IF 不确定
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
-| 添加合成配方 | `RegistryEvent.Register<Recipe>` | 或在 @Init 中直接注册 |
+| 添加合成配方 | `RegistryEvent.Register<IRecipe>` | 官方 Registries 页列出的类型是 `IRecipe` |
 | 监听烧炼 | `FurnaceFuelBurnTimeEvent` | 熔炉燃料燃烧时间 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `LivingSpawnEvent` | |
@@ -123,7 +123,7 @@ IF 不确定
 
 ```java
 // init/ModEventSubscriber.java
-@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
 public class ModEventSubscriber {
 
     @SubscribeEvent

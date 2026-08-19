@@ -99,8 +99,8 @@ public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
         .size(0.6f, 1.8f)
-        .clientTrackingRange(8)
-        .build(...)
+        .setTrackingRange(8)
+        .build("my_entity")
 );
 
 // 在构造函数中注册到 modEventBus：

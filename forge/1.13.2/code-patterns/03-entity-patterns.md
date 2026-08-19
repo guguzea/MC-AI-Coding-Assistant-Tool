@@ -38,10 +38,8 @@ public class MyEntity extends LivingEntity {
 
 # 注册
 public static final EntityType<MyEntity> MY_ENTITY =
-    EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
-        .size(0.6f, 1.8f)
-        .trackingRange(8)
-        .updateInterval(3)
+    EntityType.Builder.create(MyEntity.class, MyEntity::new)
+        .tracker(8, 3, true)
         .build("my_entity");
 
 @SubscribeEvent

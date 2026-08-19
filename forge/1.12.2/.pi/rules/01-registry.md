@@ -21,7 +21,7 @@ description: 01 — 注册系统
 
 ### 注册时机
 
-使用 `@EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)` 订阅 `RegistryEvent.Register<T>`。
+使用 `@Mod.EventBusSubscriber(modid = ...)` 订阅 `RegistryEvent.Register<T>`。本档**没有** `EventBusSubscriber.Bus.FORGE` / `Bus.MOD`（那是 1.13+）。
 
 ### mod ID 规范
 
@@ -60,7 +60,7 @@ IF 注册 方块 / 物品 / 实体 等标准内容
   → 使用 @EventBusSubscriber + RegistryEvent.Register<T>
 
 IF 注册 方块实体
-  → 使用 RegistryEvent.Register<BlockEvent> 或单独的注册
+  → GameRegistry.registerTileEntity(Class, ResourceLocation)
 
 IF 平台 = Fabric
   → 跳转 fabric/1.12.2/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
@@ -80,8 +80,8 @@ IF 注册 物品
   → @EventBusSubscriber + RegistryEvent.Register<Item>
   → 使用 event.getRegistry().register(new Item().setRegistryName(...))
 
-IF 注册 方块实体类型
-  → @EventBusSubscriber + RegistryEvent.Register<BlockEvent>
+IF 注册 方块实体（TileEntity）
+  → `GameRegistry.registerTileEntity(Class, ResourceLocation)`（官方 Registries 页列出的 RegistryEvent 类型**不含** TileEntity）
 
 IF 注册 实体类型
   → @EventBusSubscriber + RegistryEvent.Register<EntityEntry>
@@ -111,7 +111,7 @@ IF 运行时物品/方块显示为紫色黑色方块（缺失模型）
 
 ```java
 // com/example/mod/registry/ModBlocks.java
-@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
 public class ModBlocks {
     public static Block EXAMPLE_BLOCK;
 
@@ -128,7 +128,7 @@ public class ModBlocks {
 
 ```java
 // com/example/mod/registry/ModItems.java
-@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
 public class ModItems {
     public static Item EXAMPLE_ITEM;
     public static Item EXAMPLE_BLOCK_ITEM;

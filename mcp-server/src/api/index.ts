@@ -24,7 +24,7 @@ import type { WorkerOutMessage } from "../workers/types.js";
 import { resolveDataDir } from "../utils/path.js";
 import { ownGet } from "../utils/own-record.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
-import { ActionCodes, actionable, withAction, type ActionEnvelope } from "../utils/actionable.js";
+import { ActionCodes, actionable, withAction, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -684,7 +684,18 @@ function queryApiCoverageWarning(version: string, classCount?: number): string |
 
 export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   const { className, methodName } = query;
-  const version = query.version ?? DEFAULT_VERSION;
+  if (missingMcVersion(query.version)) {
+    return withAction(
+      {
+        found: false,
+        className,
+        mappings: { mojang: toSlash(className), parchment: toSlash(className) },
+        suggestions: ["请指定 version，禁止默认 1.20.1"],
+      },
+      versionRequiredAction(),
+    );
+  }
+  const version = query.version!.trim();
 
   // 确保该版本的预加载已完成（或降级）
   await startPreloader(version);

@@ -62,15 +62,22 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
 
   if (uri === "mcskill://version-changes/1.21") {
     const candidates = [
-      join(resolveRepoRoot(), "forge", "1.20.1", "knowledge", "version-changes", "1.21.x.md"),
-      join(resolveRepoRoot(), "neoforge", "knowledge", "version-changes", "1.20.x.md"),
+      join(resolveRepoRoot(), "fabric", "1.21.11", "knowledge", "version-changes", "1.21.x.md"),
+      join(resolveRepoRoot(), "fabric", "1.21.11", "knowledge", "version-changes", "1.21.md"),
     ];
     for (const p of candidates) {
+      const norm = p.replace(/\\/g, "/");
+      if (/\/1\.20\.x\.md$/i.test(norm)) continue;
       if (existsSync(p)) {
         return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
       }
     }
-    return { found: false, uri, mimeType: "text/plain", text: "1.21 专章尚未写入知识库" };
+    return {
+      found: false,
+      uri,
+      mimeType: "text/plain",
+      text: "1.21 专章尚未写入知识库（禁止回退 1.20.x.md）",
+    };
   }
 
   if (uri === "mcskill://antipatterns/registry") {

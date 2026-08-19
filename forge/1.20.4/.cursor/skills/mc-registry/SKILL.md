@@ -109,13 +109,10 @@ public static final RegistryObject<Attribute> MY_ATTRIBUTE =
 // 在 mod 构造函数中
 ATTRIBUTES.register(modEventBus);
 
-// 实体上使用属性
-@Override
-protected void registerAttributes() {
-    super.registerAttributes();
-    this.getAttribute(ATTRIBUTES.get("my_attribute")).ifPresent(attr ->
-        this.getAttributeMap().registerAttribute(attr)
-    );
+// 自定义 Attribute 写进 createAttributes，再用 EntityAttributeCreationEvent.put
+public static AttributeSupplier.Builder createAttributes() {
+    return Mob.createMobAttributes()
+        .add(MY_ATTRIBUTE.get(), 100.0D);
 }
 ```
 

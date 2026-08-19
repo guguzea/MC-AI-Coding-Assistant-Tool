@@ -13,17 +13,9 @@ Mixin 通过修改已编译的字节码实现运行时注入。NeoForge 使用 M
 
 ## 快速开始
 
-### 1. 添加依赖（build.gradle）
+### 1. 构建
 
-```gradle
-plugins {
-    id 'org.spongepowered.mixin' version '0.7.+'
-}
-
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-}
-```
+扁平 `neoforge/.cursor` 不是 1.21.x 规则树。NeoForge 1.21.1 文档 `gettingstarted/modfiles` 用 `[[mixins]]` + `config`，**不是** `org.spongepowered.mixin` `0.7.+`。按精确版本读 `neoforge/<ver>/`。
 
 ### 2. 配置 mixins.json
 
@@ -59,7 +51,7 @@ IF 修改方法参数值
   → @ModifyVariable
 
 IF 修改方法返回值
-  → @ModifyReturnValue
+  → @Inject RETURN + CallbackInfoReturnable；@ModifyReturnValue 仅 MixinExtras
 
 IF 调用原方法前/后执行代码
   → @Inject + At.HEAD / At.TAIL

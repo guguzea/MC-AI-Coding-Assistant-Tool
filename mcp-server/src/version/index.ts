@@ -7,10 +7,12 @@
  */
 
 import { ownGet } from "../utils/own-record.js";
+import { actionable, ActionCodes, type ActionEnvelope } from "../utils/actionable.js";
 
 export interface VersionQuery {
   version: string;
   action: string;
+  platform?: string;
 }
 
 export interface VersionInfo {
@@ -25,6 +27,8 @@ export interface VersionInfo {
     parchmentMappings: string;
     minecraftWiki: string;
   };
+  ok?: boolean;
+  action?: ActionEnvelope;
 }
 
 const VERSION_DB: Record<string, VersionInfo> = {
@@ -184,6 +188,33 @@ const VERSION_DB: Record<string, VersionInfo> = {
 };
 
 export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> {
+  const platform = (query.platform ?? "").trim().toLowerCase();
+  if (platform !== "forge") {
+    return {
+      ok: false,
+      version: query.version,
+      forgeVersion: "unknown",
+      recommendation:
+        "本工具仅 Forge；Fabric/Neo 请用 search_*_docs。不要把 get_version_info 当跨平台顾问。",
+      keyChanges: [],
+      gotchas: ["WRONG_TOOL：platform 必须显式为 forge"],
+      links: {
+        forgeChangelog: "",
+        parchmentMappings: "",
+        minecraftWiki: "",
+      },
+      action: actionable(
+        ActionCodes.WRONG_TOOL,
+        "本工具仅 Forge；Fabric/Neo 请用 search_*_docs。不要把 get_version_info 当跨平台顾问。",
+        [
+          "传入 platform=forge 后再查 Forge 版本建议",
+          "Fabric 用 search_fabric_docs",
+          "NeoForge 用 search_neoforge_docs",
+        ],
+        ["search_forge_docs", "search_fabric_docs", "search_neoforge_docs"],
+      ),
+    };
+  }
   const { version, action } = query;
   const known = ownGet(VERSION_DB, version);
 

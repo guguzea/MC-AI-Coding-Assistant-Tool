@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, statSync } from "fs";
-import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { actionable, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { ownGet } from "../utils/own-record.js";
 
 export type CrashKind =
@@ -394,6 +394,19 @@ function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
 }
 
 export function analyzeCrash(query: CrashQuery): CrashResult {
+  if (missingMcVersion(query.version)) {
+    const action = versionRequiredAction();
+    return {
+      ok: false,
+      probableCause: action.message,
+      fixSuggestions: action.nextSteps,
+      deobfuscated: [],
+      relatedMistakes: [],
+      crashKind: "unknown",
+      logHints: [],
+      action,
+    };
+  }
   let crashReport = query.crashReport;
   if (!crashReport?.trim() && query.crashReportPath) {
     const p = query.crashReportPath;

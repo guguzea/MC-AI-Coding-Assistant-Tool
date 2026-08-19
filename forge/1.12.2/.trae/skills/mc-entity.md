@@ -28,20 +28,19 @@ public class MyEntity extends EntityLiving {
     }
 }
 
-// 注册（参见 mc-registry Skill）
+// 注册：官方 Registries 页用 EntityEntry + EntityEntryBuilder（不是 1.14+ EntityType.Builder）
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModEntities {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<EntityEntry> event) {
-        EntityRegistry.registerGlobalEntityType(
-            EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
-                .setName("My Entity")
-                .setRegistryName(MOD_ID, "my_entity")
-                .setTrackingRange(64)
-                .setShouldDespawn(true)
-                .size(0.6f, 1.8f)
-                .build(MOD_ID + ":my_entity"),
-            MOD_ID
+        event.getRegistry().register(
+            EntityEntryBuilder.create()
+                .entity(MyEntity.class)
+                .id(new ResourceLocation(MOD_ID, "my_entity"), 0)
+                .name("my_entity")
+                .tracker(64, 3, true)
+                .egg(0xFFFFFF, 0xAAAAAA)
+                .build()
         );
     }
 }
@@ -91,8 +90,9 @@ public class RenderMyEntity extends RenderLiving<MyEntity> {
 
 ## 常见错误
 
-- ❌ 忘记在 mcmod.info 中添加 entity 字段
-- ❌ 忘记注册渲染器
+- ❌ `EntityType.Builder` / `EntityClassification`：那是 1.14+。本档用 `EntityEntryBuilder` + `EnumCreatureType`
+- ❌ 官方 `mcmod.info` 字段表**没有** `entities` / `entityTypes`（见 gettingstarted/structuring）
+- ❌ 忘记注册渲染器（`RenderingRegistry.registerEntityRenderingHandler` + `IRenderFactory`）
 - ❌ `applyEntityAttributes()` 不调用 `super`
 
 ## 参考资料

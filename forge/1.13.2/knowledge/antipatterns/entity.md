@@ -28,11 +28,12 @@ protected void registerAttributes() {
 
 ```java
 // 错误
-EntityType.Builder.create(new MyEntity(...), MobCategory.CREATURE) // ❌ 应该是构造函数引用
+EntityType.Builder.create(new MyEntity(...), ...) // ❌ 第一参是 Class，第二参是 Function<World, T>
+
 ```
 
-**正确方案**：传入构造函数引用
+**正确方案**：传入实体 Class 与 `World -> Entity` 工厂（Forge 1.13.2 javadoc）
 
 ```java
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.create(MyEntity.class, MyEntity::new)
 ```

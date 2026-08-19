@@ -1,6 +1,6 @@
 ---
 name: mc-entity
-description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、MobCategory、EntityRenderer
+description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、EntityClassification、EntityRenderer
 platform: forge
 version: "1.14.4"
 dependencies: []
@@ -27,27 +27,25 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITIES.re
 ENTITIES.register(modEventBus);
 ```
 
-> **注意**：1.14.4 MCP 用 `EntityClassification`，不是 `MobCategory`。`Builder.create` 不是 `of`。
-
-> **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，1.20.7+ 重命名为 `SpawnGroup`。
+> **注意**：1.14.4 MCP 用 `EntityClassification`，不是 `MobCategory`。`Builder.create` 不是 `of`。`SpawnGroup` 是 Yarn 名，不要抄进本档。
 
 ## 实体类基础结构
 
 ```java
 public class MyEntity extends LivingEntity {
-    protected MyEntity(EntityType<? extends MyEntity> type, Level level) {
-        super(type, level);
-        this.noPhysics = true;
+    protected MyEntity(EntityType<? extends MyEntity> type, World world) {
+        super(type, world);
+        this.noClip = true;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        // 添加 AI 目标
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        // 添加 AI 目标（Forge 1.14.4 javadoc：SwimGoal / WaterAvoidingRandomWalkingGoal；玩家类是 PlayerEntity）
+        this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 
     @Override
@@ -82,12 +80,12 @@ public class MyEntity extends LivingEntity {
 ## EntityRenderer 注册（客户端）
 
 ```java
-// 客户端 — EntityRenderersEvent.RegisterRenderers 中注册
+// 客户端 — FMLClientSetupEvent + RenderingRegistry（本档没有 EntityRenderersEvent）
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(MyEntity.TYPE.get(), MyEntityRenderer::new);
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(MY_ENTITY.get(), MyEntityRenderer::new);
     }
 }
 
@@ -118,7 +116,7 @@ IF 自定义 Biped 模型
 
 IF 自定义任意模型
   → EntityModel + LayerDefinition + bakeLayer()
-  → 通过 EntityRenderersEvent.RegisterLayerDefinitions 注册 ModelLayer
+  → 本档没有 EntityRenderersEvent；用 RenderingRegistry.registerEntityRenderingHandler
 ```
 
 ## 实体数据同步（服务端 ↔ 客户端）
@@ -139,7 +137,7 @@ this.entityData.set(DATA_HEALTH, 50); // 设置（自动同步）
 - ❌ `EntityType.Builder.build()` 接受 String 参数，不是 Direction
 - ❌ 忘记 `ENTITY_TYPES.register(modEventBus)`（实体不注册）
 - ❌ `LivingRenderer`（不存在）→ 正确：`LivingEntityRenderer`
-- ❌ `EntityRenderers.register()`（旧 API）→ 正确：`EntityRenderersEvent.RegisterRenderers`
+- ❌ `EntityRenderersEvent`（1.17+）→ 本档用 `RenderingRegistry.registerEntityRenderingHandler`
 
 ## 参考资料
 

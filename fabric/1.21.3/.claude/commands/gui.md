@@ -24,8 +24,8 @@ public class MyScreenHandler extends ScreenHandler {
 private static final ScreenHandlerType<MyScreenHandler> MY_SCREEN =
     Registry.register(
         Registries.SCREEN_HANDLER,
-        new Identifier(MOD_ID, "my_screen"),
-        new ScreenHandlerType<>(MyScreenHandler::new)
+        Identifier.of(MOD_ID, "my_screen"),
+        new ScreenHandlerType<>(MyScreenHandler::new, FeatureFlags.VANILLA_FEATURES)
     );
 
 // 客户端：Screen

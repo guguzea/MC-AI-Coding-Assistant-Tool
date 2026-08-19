@@ -18,7 +18,7 @@ public class ExampleMod implements ModInitializer {
     // Registry.register 在类加载时执行
     private static final Item MY_ITEM =
         Registry.register(Registries.ITEM,
-            new Identifier(MOD_ID, "my_item"),
+            Identifier.of(MOD_ID, "my_item"),
             new Item(new Item.Settings())
         );
 
@@ -64,7 +64,7 @@ IF 平台 = Forge
 ```java
 // ✅ 推荐：保存 Registry.register 的返回值
 private static final Item MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 
 // 直接使用静态字段
@@ -76,23 +76,24 @@ ItemStack stack = new ItemStack(MY_ITEM);
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 private static final Block MY_BLOCK =
-    Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"),
+    Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"),
         new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
 
 private static final Item MY_BLOCK_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // 同名！
         new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## Identifier 构造
 
-```java
-// ✅ 正确
-new Identifier("fabric", "diamond");          // fabric:diamond
-new Identifier(MOD_ID, "my_item");           // examplemod:my_item
+Yarn 1.21+ `Identifier` 两参构造是 **private**（官方 Yarn javadoc）。用工厂方法：
 
-// ❌ 错误：不要直接写字符串
-new Identifier("examplemod:my_item");         // 这会被当作完整 ID 而非 namespace:id
+```java
+// ✅
+Identifier.of("fabric", "diamond");
+Identifier.of(MOD_ID, "my_item");
+Identifier.of("examplemod:my_item"); // 单参 of(String) 解析 ns:path
+// ❌ new Identifier(ns, path) — 构造 private，编不过
 ```
 
 ## 常见错误

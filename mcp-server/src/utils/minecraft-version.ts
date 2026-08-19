@@ -24,10 +24,18 @@ export function detectMinecraftVersion(opts: {
 
   const fromProps =
     props.match(/^\s*minecraft_version\s*=\s*(\S+)/m)?.[1] ??
+    props.match(/^\s*mod_minecraft_version\s*=\s*(\S+)/m)?.[1] ??
     props.match(/^\s*mc_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*minecraftVersion\s*=\s*(\S+)/m)?.[1];
-  if (fromProps) {
-    const v = extractDottedVersion(fromProps);
+    props.match(/^\s*minecraftVersion\s*=\s*(\S+)/m)?.[1] ??
+    props.match(/^\s*mcVersion\s*=\s*(\S+)/m)?.[1] ??
+    props.match(/^\s*modMinecraftVersion\s*=\s*(\S+)/m)?.[1];
+  const neoVerRaw = props.match(/^\s*neo_version\s*=\s*(\S+)/m)?.[1];
+  // neo_version 在 MDK 里常是加载器版本（21.1.x），只有写成 1.x / 26.x 才当 MC 版本
+  const neoAsMc =
+    neoVerRaw && /^(1|26)\.\d/.test(stripQuotes(neoVerRaw)) ? neoVerRaw : undefined;
+  const propsHit = fromProps ?? neoAsMc;
+  if (propsHit) {
+    const v = extractDottedVersion(propsHit);
     if (v) return v;
   }
 

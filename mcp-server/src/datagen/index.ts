@@ -55,7 +55,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       code: null,
       usedModId: query.modId,
       usedTargetName: query.targetName,
-      errors: ["platform is required（forge | neoforge | fabric | quilt），禁止默认 forge"],
+      errors: [
+        "platform is required（forge | neoforge | fabric | quilt），禁止默认 forge。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_*_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。",
+      ],
     };
   }
   if (!version?.trim()) {
@@ -63,7 +65,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       code: null,
       usedModId: query.modId,
       usedTargetName: query.targetName,
-      errors: ["version is required，禁止默认 1.20.1"],
+      errors: [
+        "version is required，禁止默认 1.20.1。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_*_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。",
+      ],
     };
   }
   const ver = version.trim();
@@ -76,7 +80,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
         usedModId: query.modId,
         usedTargetName: query.targetName,
         errors: [
-          `尚无 Fabric/Quilt Datagen 模板覆盖 version=${ver}。请用 search_fabric_docs / 该档 07-datagen，不要生成 Forge DataGen。`,
+          `尚无 Fabric/Quilt Datagen 模板覆盖 version=${ver}。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_fabric_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。不要生成 Forge DataGen。`,
         ],
       };
     }
@@ -88,7 +92,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       code: null,
       usedModId: query.modId,
       usedTargetName: query.targetName,
-      errors: ["NeoForge Datagen 当前仅支持 1.21.x 与 26.1 模板；其它版本请手写或查阅 search_neoforge_docs"],
+      errors: [
+        "NeoForge Datagen 当前仅支持 1.21.x 与 26.1 模板。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_neoforge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。",
+      ],
     };
   }
   if (platform === "forge" && ver !== "1.20.1") {
@@ -97,7 +103,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       usedModId: query.modId,
       usedTargetName: query.targetName,
       errors: [
-        `Forge Datagen 模板仅覆盖 1.20.1（当前 version=${ver}）。1.12.2 无 DataGen，请手写 JSON 或 search_forge_docs，不要套用 1.21 ResourceLocation.fromNamespaceAndPath。`,
+        `Forge Datagen 模板仅覆盖 1.20.1（当前 version=${ver}）。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_forge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。1.12.2 无 DataGen，不要套用 1.21 ResourceLocation.fromNamespaceAndPath。`,
       ],
     };
   }

@@ -19,7 +19,7 @@
 id 'org.quiltmc.loom'
 ```
 
-如果匹配 → 跳转到 `quilt/<mc版本>/AGENTS.md`（再读 `fabric/<mc版本>` 的 02–10 规则，本目录只写 QSL 差异）。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=quilt` + 精确 `minecraftVersion`）。session 注入本档 AGENTS/规则；02–10 经同版 Fabric overlay。禁止把 `quilt/<ver>/.cursor` 或邻版 Fabric 当加载器 Read。本目录只写 QSL 差异。
 
 库 Skill：Quilt 仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/` 源稿。
 
@@ -37,7 +37,7 @@ id 'org.quiltmc.loom'
 id 'fabric-loom'
 ```
 
-如果匹配 → 跳转到 `fabric/<mc版本>/AGENTS.md`。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=fabric` + 精确 `minecraftVersion`）。禁止把 `fabric/<ver>/.cursor` 当加载器 Read。
 
 **例外（禁止读邻版 01–10）：**
 
@@ -57,7 +57,7 @@ neoforge "20.4.237"
 id 'net.neoforged.gradle.userdev'
 ```
 
-如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再跳转 `neoforge/<mc版本>/AGENTS.md`（九档：`1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10。** 未建档版本（文档有、规则树无）：`1.20.1` — **禁止**用邻档顶上，改口 `search_neoforge_docs`（NeoForge 1.20.1 已有 Forge 兼容数据）。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
+如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；九档：`1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** 未建档版本（文档有、规则树无）：`1.20.1` — **禁止**用邻档顶上，改口 `search_neoforge_docs`（NeoForge 1.20.1 已有 Forge 兼容数据）。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
 
 工作流提醒（**不是硬门**）：仅当用户要走完整新方块 / 新物品 / 方块实体 / 新实体 / GUI / Mixin / 世界生成 / 配置 / GameTest / 崩溃分诊 / 移植 / 从零构建 / 环境搭建 / 真机循环 / 发布清单 / 汉化 / 反编译研究时才调用 `get_workflow_template`（`mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-publish` / `mc-setup-env` 等）。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。从零工程才 `download_official_mdk`。
 
@@ -68,9 +68,9 @@ id 'net.neoforged.gradle.userdev'
 ```
 Decision:
 → IF 有 litemod.json / LiteMod，且没有 javafml mods.toml / @Mod
-    → 纯客户端：跳转 liteloader/<mc版本>/AGENTS.md（主推 1.12.2）
+    → 纯客户端：activate_platform_pack action=session（platform=liteloader，精确版本；主推 1.12.2）
 → ELSE IF 两边元数据都在，且 apply plugin: 'net.minecraftforge.gradle.liteloader'
-    → 混合 liteloader_forge：先读 liteloader/<ver>/HYBRID.md，再读 forge/1.12.2 的 01–03 + LiteLoader 的 05/08
+    → 混合 liteloader_forge：先读 liteloader/<ver>/HYBRID.md；再 activate_platform_pack action=session platform=forge minecraftVersion=1.12.2 topics=["01","02","03"]。LiteLoader 的 05/08 用 session topics 追加。禁止直接 Read forge/1.12.2/.cursor 当加载器。
 → ELSE IF 分别 apply 了 net.minecraftforge.gradle.forge 和另一个 LiteLoader 插件
     → 拒绝：混合工程只允许 liteloader 专用插件
 → ELSE IF 两边元数据都在但没有该专用插件
@@ -90,25 +90,25 @@ loaderVersion="[44,)"
 id 'net.minecraftforge.gradle'
 ```
 
-如果匹配 → 跳转到 `forge/<mc版本>/AGENTS.md`
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=forge` + 精确 `minecraftVersion`）。禁止把 `forge/<ver>/.cursor` 当加载器 Read。
 
 ### 6. 检查 Rift
 
 查找 **`riftmod.json`**（官方拼写；兼容误写的 `rift.mod.json`）或 `tweaker-client` + `RiftLoaderClientTweaker`。
 
-如果匹配 → 跳转到 `rift/1.13.2/AGENTS.md`。方法名只许来自该目录 `knowledge/common/` 与已核实源码，禁止用 Fabric 记忆填写。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=rift`，`minecraftVersion=1.13.2`）。方法名只许来自该档核实表与已核实源码，禁止用 Fabric 记忆填写。禁止把 `rift/1.13.2/.cursor` 当加载器 Read。
 
 ### 7. 检查 Risugami's ModLoader
 
 查找 `BaseMod` 子类且 **没有** Forge/FML（无 `cpw.mods.fml` / `net.minecraftforge`）。工程通常是 MCP + Eclipse，无 Gradle。
 
-如果匹配 → 跳转到 `modloader/1.6.4/AGENTS.md`。生成代码 **只能**用该目录安全 API 表内的名字。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=modloader`，`minecraftVersion=1.6.4`）。生成代码 **只能**用该档安全 API 表内的名字。禁止把 `modloader/1.6.4/.cursor` 当加载器 Read。
 
 ### 8. 检查基岩版 Add-On
 
 查找包根 `manifest.json` 且含 `format_version` + `modules`（`resources` / `data` / `script` / `world_template`）。
 
-如果匹配 → 跳转到 `bedrock/AGENTS.md`。不要用 Java `query_api` / Yarn / Mixin。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=bedrock`）。不要用 Java `query_api` / Yarn / Mixin。禁止把 `bedrock/.cursor` 当加载器 Read。
 
 ### 9. 未知平台
 
@@ -116,11 +116,11 @@ id 'net.minecraftforge.gradle'
 1. 询问用户当前使用的平台和 Minecraft 版本
 2. 根据回答加载对应平台的规则
 
-确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / **技能索引**送进当前对话。默认只注入规则 **00 / 01 / 09**；方块/物品/网络等再传 `topics`（如 `["02","03"]`）或 `includeAllRules=true`。Skill 是索引（`relPosix`），按路径 Read，不要假定 37 份全文已在上下文。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun；`includeSkills` 默认 false，true 也只写 stub）。**禁止**读邻档 00–10。MCP **不能**开关 IDE 扫描器。
+确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / **技能索引**送进当前对话。默认只注入规则 **00 / 01 / 09**；方块/物品/网络等再传 `topics`（如 `["02","03"]`）或 `task`（如 `mc-new-gui`）**追加**（并集，永不替换底座），或 `includeAllRules=true`。Skill 索引含 `relPosix` 与 `absPath`；少量正文只在 `skillNames` 或 `task` 建议名时进入 `skillBodies`（上限 6）。不要假定全部 Skill 全文已在上下文。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun；`includeSkills` 默认 false，true 也只写 stub）。**禁止**读邻档 00–10，禁止把知识库 `.cursor` 当加载器。MCP **不能**开关 IDE 扫描器。
 
 ## 第二步：加载对应平台的规则
 
-优先走上面的 `activate_platform_pack session`，不要在知识库里直接打开邻版 `.cursor/rules`。确认平台后，需要的规则按编号补读：
+优先走上面的 `activate_platform_pack session`，不要在知识库里直接打开邻版 `.cursor/rules`。确认平台后，需要的规则用 `topics` 或 `task` 追加到 session（并集）；禁止把 `平台/<ver>/.cursor` 当加载器 Read。规则编号含义：
 
 规则文件按编号顺序加载：
 

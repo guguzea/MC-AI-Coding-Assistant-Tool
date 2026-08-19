@@ -23,7 +23,7 @@ public class MyParticleType extends DefaultParticleType {
 private static final ParticleType<?> MY_PARTICLE =
     Registry.register(
         Registries.PARTICLE_TYPE,
-        new Identifier(MOD_ID, "my_particle"),
+        Identifier.of(MOD_ID, "my_particle"),
         new MyParticleType()
     );
 

@@ -1,6 +1,6 @@
 ---
 name: mc-blockentity
-description: Minecraft Forge TileEntity 开发。TileEntity 注册、Ticker、NBT 序列化。触发词：TileEntity、TileEntityType、ITickable、writeToNBT、readFromNBT
+description: Minecraft Forge TileEntity 开发。TileEntity 注册、ITickable、NBT 序列化。触发词：TileEntity、ITickable、writeToNBT、readFromNBT
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -16,8 +16,8 @@ mappings: mcp
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class ModTileEntities {
     @SubscribeEvent
-    public static void register(RegistryEvent.Register<TileEntity> event) {
-        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
+    public static void register(RegistryEvent.Register<Block> event) {
+        GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(MOD_ID, "my_tile"));
     }
 }
 ```

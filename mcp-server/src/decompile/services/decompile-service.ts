@@ -12,7 +12,7 @@
 
 import { existsSync, readFileSync, statSync } from "fs";
 import { join } from "path";
-import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
+import { actionable, withAction, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../../utils/actionable.js";
 import {
   parseMinecraftVersion,
   resolveMappingChoice,
@@ -101,7 +101,10 @@ function toErrorResult(
 }
 
 export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<MinecraftSourceResult> {
-  const version = (args.version ?? "1.20.1").trim();
+  if (missingMcVersion(args.version)) {
+    return toErrorResult("VERSION_REQUIRED", versionRequiredAction());
+  }
+  const version = args.version!.trim();
 
   // 0. 参数校验（版本 / 映射 / 类名）
   const vi = parseMinecraftVersion(version);

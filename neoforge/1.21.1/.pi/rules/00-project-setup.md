@@ -24,7 +24,7 @@ public class ExampleMod {
     public static final String MODID = "examplemod";
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-    public ExampleMod(IEventBus modEventBus)（可再加 ModContainer，以该版 MDK 为准） {
+    public ExampleMod(IEventBus modEventBus) { // 可再加 ModContainer，以该版 MDK 为准
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
     }

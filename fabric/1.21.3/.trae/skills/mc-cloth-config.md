@@ -96,7 +96,7 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         // 注册配置屏幕
         ClothConfigAddon.setNewDefaultValue(
-            new Identifier(MOD_ID, "config"), new ModConfig()
+            Identifier.of(MOD_ID, "config"), new ModConfig()
         );
     }
 }

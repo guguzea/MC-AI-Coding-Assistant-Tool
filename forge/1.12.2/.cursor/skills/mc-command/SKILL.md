@@ -1,6 +1,6 @@
 ---
 name: mc-command
-description: Commands.literal、权限、客户端命令。触发词：command、Brigadier、argument
+description: ICommand、CommandBase、权限。触发词：command、ICommand、CommandBase
 platform: forge
 version: "1.12.2"
 dependencies: []

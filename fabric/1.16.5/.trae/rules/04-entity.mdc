@@ -53,12 +53,13 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
         MyPigEntity::new,
         SpawnGroup.CREATURE
     )
-    .size(0.9f, 1.4f)
-    .build()
+    .setDimensions(0.9f, 1.4f)
+    .build("my_pig")
 );
 ```
 
 Yarn 1.16.5 的生成分类枚举是 `SpawnGroup`。属性用 `FabricDefaultAttributeRegistry.register`。
+Vanilla `EntityType.Builder` 尺寸方法是 `setDimensions(float,float)`，`build` 需要 String id（官方 Yarn javadoc）；不要写 `.size()` 或无参 `build()`。
 
 ## 实体渲染器（客户端）
 
@@ -67,10 +68,7 @@ Yarn 1.16.5 的生成分类枚举是 `SpawnGroup`。属性用 `FabricDefaultAttr
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (context) ->
-            new AnimalEntityRenderer<>(context.getModelLoader()
-                .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
-        );
+        EntityRendererRegistry.register(MY_PIG, PigEntityRenderer::new);
     }
 }
 ```

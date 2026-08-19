@@ -184,6 +184,24 @@ export function findPack(
   return inspected.pack;
 }
 
+/** 精确包不存在时列出同系列已建档版本（1.21 → 1.21.1/1.21.3/…）。禁止静默折叠。 */
+export function listSameSeriesCandidates(
+  platform: string,
+  minecraftVersion: string,
+  repoRoot = resolveRepoRoot(),
+): string[] {
+  const p = platform.trim().toLowerCase();
+  const v = minecraftVersion.trim();
+  if (!p || !v || p === "unknown") return [];
+  const { packs } = listPacks(repoRoot);
+  const prefix = v.endsWith(".") ? v : `${v}.`;
+  return packs
+    .filter((x) => x.platform === p)
+    .map((x) => x.minecraftVersion)
+    .filter((pv) => pv === v || pv.startsWith(prefix))
+    .sort();
+}
+
 export function listRuleFiles(packDir: string): Array<{ id: string; fileName: string; abs: string }> {
   const dir = join(packDir, ".cursor", "rules");
   if (!existsSync(dir)) return [];
@@ -207,9 +225,124 @@ export type SkillIndexEntry = {
   name: string;
   description: string;
   relPosix: string;
+  absPath: string;
   source?: string;
   mappingNote?: string;
 };
+
+export function toPosixAbs(abs: string): string {
+  return abs.replace(/\\/g, "/");
+}
+
+/** 与 scripts/resolve-lib-skills.mjs coversVersion 同口径。 */
+export function cmpMcVersions(a: string, b: string): number {
+  const pa = String(a).split(".").map((s) => parseInt(s, 10) || 0);
+  const pb = String(b).split(".").map((s) => parseInt(s, 10) || 0);
+  const n = Math.max(pa.length, pb.length);
+  for (let i = 0; i < n; i++) {
+    const x = pa[i] || 0;
+    const y = pb[i] || 0;
+    if (x !== y) return x < y ? -1 : 1;
+  }
+  return 0;
+}
+
+export function coversMcVersion(token: string, mcVersion: string): boolean {
+  const t = String(token).trim();
+  if (!t || t === "*") return true;
+  let m = t.match(/^(\d[\d.]*)\+$/);
+  if (m) return cmpMcVersions(mcVersion, m[1]) >= 0;
+  m = t.match(/^≤(\d[\d.]*)$/);
+  if (m) return cmpMcVersions(mcVersion, m[1]) <= 0;
+  m = t.match(/^(\d[\d.]*)-(\d[\d.]*)$/);
+  if (m) return cmpMcVersions(mcVersion, m[1]) >= 0 && cmpMcVersions(mcVersion, m[2]) <= 0;
+  return t === mcVersion || mcVersion.startsWith(`${t}.`);
+}
+
+function parseYamlList(value: string): string[] {
+  const v = String(value).trim();
+  if (v.startsWith("[") && v.endsWith("]")) {
+    return v
+      .slice(1, -1)
+      .split(",")
+      .map((s) => s.trim().replace(/^["']|["']$/g, ""))
+      .filter((s) => s !== "");
+  }
+  const bare = v.replace(/^["']|["']$/g, "");
+  return bare === "" ? [] : [bare];
+}
+
+function parseFrontmatterMap(text: string): Record<string, string> {
+  const meta: Record<string, string> = {};
+  if (!text.startsWith("---")) return meta;
+  const end = text.indexOf("\n---", 3);
+  if (end < 0) return meta;
+  for (const line of text.slice(3, end).split(/\r?\n/)) {
+    const m = line.match(/^([\w-]+):\s*(.*)$/);
+    if (!m) continue;
+    meta[m[1]] = m[2].trim();
+  }
+  return meta;
+}
+
+const LIB_GROUPS: Record<string, string[]> = {
+  forge: ["forge-only", "all-platforms"],
+  fabric: ["fabric-only", "all-platforms"],
+  quilt: ["fabric-only", "all-platforms"],
+  neoforge: ["neo-only", "all-platforms"],
+  bedrock: ["bedrock-only"],
+};
+
+/** 库 Skill 索引：组映射 + platforms 二次确认 + mcVersions 窗口。absPath 为知识库绝对路径。 */
+export function listLibSkillIndex(
+  platform: string,
+  mcVersion: string,
+  repoRoot = resolveRepoRoot(),
+): SkillIndexEntry[] {
+  const p = platform.trim().toLowerCase();
+  const ver = mcVersion.trim();
+  const groups = LIB_GROUPS[p];
+  if (!groups || !ver) return [];
+  const libsRoot = join(repoRoot, "knowledge", "libs");
+  const out: SkillIndexEntry[] = [];
+  const seen = new Set<string>();
+  for (const group of groups) {
+    const groupDir = join(libsRoot, group);
+    if (!existsSync(groupDir) || !statSync(groupDir).isDirectory()) continue;
+    let names: string[] = [];
+    try {
+      names = readdirSync(groupDir);
+    } catch {
+      continue;
+    }
+    for (const name of names) {
+      if (!/^mc-/.test(name)) continue;
+      const skillFile = join(groupDir, name, "SKILL.md");
+      if (!existsSync(skillFile) || !statSync(skillFile).isFile()) continue;
+      const body = readFileSync(skillFile, "utf8");
+      const meta = parseFrontmatterMap(body);
+      const platforms = parseYamlList(meta.platforms ?? "");
+      if (!platforms.includes(p)) continue;
+      const versionTokens = [
+        ...parseYamlList(meta.mcVersions ?? ""),
+        ...parseYamlList(meta.minecraftVersions ?? ""),
+      ];
+      if (versionTokens.length > 0 && !versionTokens.some((t) => coversMcVersion(t, ver))) continue;
+      const fm = frontmatterDescription(body);
+      const skillName = fm.name || name;
+      if (seen.has(skillName)) continue;
+      seen.add(skillName);
+      const rel = relative(repoRoot, skillFile).replace(/\\/g, "/");
+      out.push({
+        name: skillName,
+        description: fm.description,
+        relPosix: rel,
+        absPath: toPosixAbs(skillFile),
+      });
+    }
+  }
+  return out.sort((a, b) => a.name.localeCompare(b.name));
+}
 
 function frontmatterDescription(text: string): { name?: string; description: string } {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -247,7 +380,12 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
       const skillName = fm.name || name.replace(/\.md$/, "");
       if (seen.has(skillName)) continue;
       seen.add(skillName);
-      out.push({ name: skillName, description: fm.description, relPosix: rel });
+      out.push({
+        name: skillName,
+        description: fm.description,
+        relPosix: rel,
+        absPath: toPosixAbs(abs),
+      });
     }
   }
   return out.sort((a, b) => a.name.localeCompare(b.name));

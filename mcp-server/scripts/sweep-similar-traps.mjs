@@ -83,7 +83,7 @@ async function main() {
         note("error", name, `${k} threw`, String(e.message || e));
       }
     }
-    const vi = await getVersionInfo({ version: k, action: "register" });
+    const vi = await getVersionInfo({ version: k, action: "register", platform: "forge" });
     if (vi.forgeVersion !== "unknown") note("error", "get_version_info", k, clip(vi));
     if (getMigrationGuide(k).found) note("error", "get_migration_guide", k);
     if (getWorkflowTemplate(k).found) note("error", "get_workflow_template", k);
@@ -91,7 +91,7 @@ async function main() {
     if (mapShortCommand(k).tool !== k) note("error", "mapShortCommand", k);
   }
 
-  const v112 = await getVersionInfo({ version: "1.12.2", action: "register" });
+  const v112 = await getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
   if (/创建 DeferredRegister/.test(v112.recommendation)) {
     note("error", "get_version_info", "1.12.2 still appends DeferredRegister", v112.recommendation);
   } else {
@@ -178,7 +178,7 @@ async function main() {
     buildGradle: "plugins { id 'fabric-loom' }\n",
     gradleProperties: "minecraft_version=1.20.1\n",
   });
-  analyzeCrash({ crashReport: "---- Minecraft Crash Report ----\njava.lang.NullPointerException\n" });
+  analyzeCrash({ crashReport: "---- Minecraft Crash Report ----\njava.lang.NullPointerException\n", version: "1.20.1" });
   analyzeLog({ logText: "[Server thread/ERROR]: boom\n", version: "1.20.1" });
   checkDependencies("plugins { id 'fabric-loom' }\n", undefined, JSON.stringify({ id: "x" }));
 
@@ -210,7 +210,7 @@ async function main() {
 
   generateLang("demo", { "item.demo.x": "X" });
   generateModel("demo", "x");
-  generateWorldgen("demo", "x");
+  generateWorldgen("demo", "x", "forge", "1.20.1");
   generateNetworkPacket("demo", "Sync", "forge_1.20.1");
   generateCapability("demo", "Mana", "forge", "1.20.1");
   generateConfig("demo", "forge", "1.20.1");

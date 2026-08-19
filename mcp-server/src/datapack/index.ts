@@ -1,3 +1,5 @@
+import { versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
+
 export interface ValidateDatapackInput {
   jsonContent: string;
   kind: "recipe" | "loot_table" | "advancement" | "tag";
@@ -10,6 +12,7 @@ export interface ValidateDatapackResult {
   kind: string;
   errors: string[];
   warnings: string[];
+  action?: ReturnType<typeof versionRequiredAction>;
 }
 
 function recipeRequiresResult(type: unknown): boolean {
@@ -26,7 +29,18 @@ function requireKeys(obj: Record<string, unknown>, keys: string[], errors: strin
 }
 
 export function validateDatapackJson(input: ValidateDatapackInput): ValidateDatapackResult {
-  const version = input.version ?? "1.20.1";
+  if (missingMcVersion(input.version)) {
+    const action = versionRequiredAction();
+    return {
+      valid: false,
+      version: "",
+      kind: input.kind,
+      errors: [action.message],
+      warnings: [],
+      action,
+    };
+  }
+  const version = input.version!.trim();
   const errors: string[] = [];
   const warnings: string[] = [];
 

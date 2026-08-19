@@ -15,7 +15,7 @@ description: 04 — 实体开发
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
 - 实体必须通过 `DeferredRegister<EntityType>` 注册
-- 必须在 `mods.toml` 中添加 `[[entities]]` 声明
+- 实体用 `DeferredRegister` 注册。官方 `mods.toml` **没有** `[[entities]]` 表（常见是 `[[mods]]` / `[[dependencies.*]]`）；不要编实体 TOML 段
 
 ### EntityType.Builder 配置
 
@@ -30,7 +30,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 ### 实体属性（Attribute）
 
-- 每个实体**必须**通过 `DeferredRegister<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
+- 原版生物属性：静态 `createAttributes()` + `EntityAttributeCreationEvent.put(type, supplier.build())`。自定义 Attribute 才用 `DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)`
 - 属性注册在 mod 构造函数中通过 modEventBus 完成（使用 DeferredRegister）
 - **禁止**在 Entity 构造函数中注册属性（太早，属性系统尚未初始化）
 
@@ -90,15 +90,16 @@ IF 乘坐实体
 ### Decision: 属性注册时机
 
 ```
-IF 在 Mod init 中直接注册属性（不使用 DeferredRegister）
-  → ❌ 错误：太早，Attributes 系统未就绪
+IF 原版生物生命/速度/伤害
+  → 静态 createAttributes() + EntityAttributeCreationEvent.put
+  → 不要 LivingEntity.registerAttributes()
 
-IF 使用 DeferredRegister + modEventBus
-  → ✅ 正确：在 mod 构造函数中通过 modEventBus 完成
-  → 属性系统已在 modEventBus 阶段就绪
+IF 自定义 Attribute 类型（新属性 ID）
+  → DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)
+  → 再写进 createAttributes().add(MY_ATTR.get(), value)
 
-IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
-  → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
+IF 在 Entity 构造函数里改属性
+  → ❌ 太早，属性系统尚未挂到该 EntityType
 ```
 
 ---

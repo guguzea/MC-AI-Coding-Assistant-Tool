@@ -14,14 +14,14 @@ mappings: yarn
 ```java
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_stone"),
+    Identifier.of(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 同名 BlockItem
 private static final Item MY_STONE_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_stone"),  // 同名！
+    Identifier.of(MOD_ID, "my_stone"),  // 同名！
     new BlockItem(MY_STONE, new Item.Settings())
 );
 ```
@@ -93,7 +93,7 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_chest"),
+        Identifier.of(MOD_ID, "my_chest"),
         BlockEntityType.Builder.create(
             MyChestBlockEntity::new,
             MY_CHEST_BLOCK

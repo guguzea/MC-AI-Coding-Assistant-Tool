@@ -6,10 +6,10 @@
 
 ```java
 // ❌ 错误
-EntityType.Builder.create(new MyEntity(world), MobCategory.CREATURE)...
+EntityType.Builder.create(new MyEntity(world), EntityClassification.CREATURE)...
 
 // ✅ 正确：传入构造函数引用
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)...
+EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)...
 ```
 
 ---
@@ -20,7 +20,7 @@ EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)...
 
 ```java
 // ❌ 错误
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
     .build("my_entity");
 // build(String) 签名不匹配
 ```

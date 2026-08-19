@@ -20,7 +20,7 @@ Fabric 使用 Loom 编译器，Mixin 支持是一等的。只需在 `fabric.mixi
   "required": true,
   "minVersion": "0.8",
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_16",
   "client": ["client.MyClientMixin"],
   "server": [],
   "mixins": ["common.MyCommonMixin"]
@@ -33,10 +33,10 @@ Fabric 使用 Loom 编译器，Mixin 支持是一等的。只需在 `fabric.mixi
 @Mixin(PlayerEntity.class)
 public class MixinPlayerEntity {
     @Shadow
-    public abstract int getHealth();
+    public abstract float getHealth();
 
     @Inject(at = @At("HEAD"), method = "method_5857")  // Yarn 方法名
-    private void onTick(CallbackInfoReturnable ci) {
+    private void onTick(CallbackInfo ci) {
         // 在 tick 方法开头执行
     }
 }
@@ -57,7 +57,7 @@ IF 注入到类方法
   → @Inject + CallbackInfo
 
 IF 修改方法返回值
-  → @ModifyReturnValue
+  → @Inject RETURN + CallbackInfoReturnable；@ModifyReturnValue 仅 MixinExtras
 
 IF 修改方法参数
   → @ModifyVariable
@@ -113,9 +113,8 @@ public abstract class MixinPlayerEntity {
 
 ```
 # examplemod.accesswidener
-accessWidener v2
-accessWidener class net/minecraft/entity/LivingEntity health # 开放 health 字段
-accessWidener method net/minecraft/entity/LivingEntity getHealth()I public # 开放 getHealth 方法
+accessWidener v2 named
+accessible method net/minecraft/entity/LivingEntity getHealth ()F
 ```
 
 ### 2. 在 build.gradle 中配置 Loom

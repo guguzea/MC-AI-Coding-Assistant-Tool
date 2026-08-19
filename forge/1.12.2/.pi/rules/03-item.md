@@ -15,7 +15,7 @@ description: 03 — 物品开发
 - 基础物品类继承 `Item`（`net.minecraft.item.Item`）
 - 物品必须通过 `RegistryEvent.Register<Item>` 注册
 
-### Item.Properties 配置
+### Item setter 配置（没有 `Item.Properties`）
 
 ```java
 new Item()
@@ -30,53 +30,18 @@ new Item()
 ### ToolMaterial（工具材料）规范
 
 ```java
-// 定义自定义工具材料
-public enum MyToolMaterial implements ToolMaterial {
-    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> {
-        return Ingredient.fromItems(Items.DIAMOND);
-    });
-
-    private final int harvestLevel;
-    private final int maxUses;
-    private final float efficiency;
-    private final float damage;
-    private final int enchantability;
-    private final Supplier<Ingredient> repairMaterial;
-
-    MyToolMaterial(int harvestLevel, int maxUses, float efficiency, float damage,
-                   int enchantability, Supplier<Ingredient> repairMaterial) {
-        this.harvestLevel = harvestLevel;
-        this.maxUses = maxUses;
-        this.efficiency = efficiency;
-        this.damage = damage;
-        this.enchantability = enchantability;
-        this.repairMaterial = repairMaterial;
-    }
-
-    @Override
-    public int getMaxUses() { return maxUses; }
-
-    @Override
-    public float getEfficiency() { return efficiency; }
-
-    @Override
-    public float getAttackDamage() { return damage; }
-
-    @Override
-    public int getHarvestLevel() { return harvestLevel; }
-
-    @Override
-    public int getEnchantability() { return enchantability; }
-
-    @Override
-    public Ingredient getRepairMaterial() { return repairMaterial.get(); }
-}
+public static final Item.ToolMaterial MY_MATERIAL = EnumHelper.addToolMaterial(
+    "MY_MATERIAL", 3, 1561, 8.0F, 3.0F, 15
+);
 ```
 
-- `getHarvestLevel()`：挖掘等级（木=0，石=1，铁=2，金=3，钻=4）
-- `getMaxUses()`：耐久值
-- `getEfficiency()`：挖掘速度
-- `getAttackDamage()`：附加攻击伤害
+`ToolMaterial` 是原版枚举，不要 `implements IItemTier`（1.14+）。自定义材料用 `EnumHelper.addToolMaterial(name, harvestLevel, maxUses, efficiency, damage, enchantability)`。
+
+- harvestLevel：木=0，石=1，铁=2，钻=3
+- maxUses：耐久
+- efficiency：挖掘速度
+- damage：附加攻击
+- enchantability：附魔能力
 
 ### 注册约束
 
@@ -137,16 +102,12 @@ IF 复用现有材料
 // items/ItemExample.java
 public class ItemExample extends Item {
     public ItemExample() {
-        super(new Item.Properties()
-                .maxStackSize(64)
-                .rarity(EnumRarity.COMMON)
-        );
+        setMaxStackSize(64);
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        // 右键点击时的逻辑
-        return ActionResult.newActionResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+        return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
     }
 }
 ```
@@ -164,7 +125,7 @@ public class ItemSwordExample extends ItemSword {
 
 ```java
 // 注册剑
-public static final Item EXAMPLE_SWORD = new ItemSwordExample(MyToolMaterial.MY_MATERIAL)
+public static final Item EXAMPLE_SWORD = new ItemSwordExample(MY_MATERIAL)
         .setRegistryName(MODID, "example_sword")
         .setTranslationKey(MODID + ".example_sword");
 ```
@@ -174,44 +135,22 @@ public static final Item EXAMPLE_SWORD = new ItemSwordExample(MyToolMaterial.MY_
 ```java
 // items/ItemArmorExample.java
 public class ItemArmorExample extends ItemArmor {
-    public ItemArmorExample(ArmorMaterial material, int slot, Item.Properties properties) {
-        super(material, slot, properties);
+    public ItemArmorExample(ItemArmor.ArmorMaterial material, int renderIndex, EntityEquipmentSlot slot) {
+        super(material, renderIndex, slot);
     }
 }
 ```
 
 ```java
-// 定义盔甲材料
-public enum MyArmorMaterial implements ArmorMaterial {
-    MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20);
-
-    private final String name;
-    private final int durability;
-    private final int[] damageReduction;
-    private final int enchantability;
-
-    MyArmorMaterial(String name, int durability, int[] damageReduction, int enchantability) {
-        this.name = name;
-        this.durability = durability;
-        this.damageReduction = damageReduction;
-        this.enchantability = enchantability;
-    }
-
-    @Override
-    public int getDurability(EnumArmorSlot slot) { return durability; }
-
-    @Override
-    public int getDamageReductionAmount(EnumArmorSlot slot) { return damageReduction[slot.getIndex()]; }
-
-    @Override
-    public int getEnchantability() { return enchantability; }
-
-    @Override
-    public String getName() { return name; }
-
-    @Override
-    public float getToughness() { return 0; }
-}
+public static final ItemArmor.ArmorMaterial MY_ARMOR = EnumHelper.addArmorMaterial(
+    "MY_MATERIAL",
+    "mymod:my_armor",
+    40,
+    new int[]{4, 7, 9, 4},
+    20,
+    SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+    0.0F
+);
 ```
 
 ## 示例：食物

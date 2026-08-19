@@ -82,7 +82,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 **Fabric**:
 ```java
 private static final Item MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 ```
 

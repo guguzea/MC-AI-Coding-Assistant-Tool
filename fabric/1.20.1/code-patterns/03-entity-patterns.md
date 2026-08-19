@@ -21,10 +21,10 @@ private static final EntityType<MyCowEntity> MY_COW =
         Registries.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_cow"),
         EntityType.Builder.create(MyCowEntity::new, SpawnGroup.CREATURE)
-            .dimensions(EntityDimensions.changing(0.9f, 1.4f))
+            .setDimensions(0.9f, 1.4f)
             .maxTrackingRange(8)
             .trackingTickInterval(3)
-            .build()
+            .build("my_cow")
     );
 
 // 在 onInitialize() 中注册属性
@@ -55,12 +55,7 @@ SpawnRestriction.register(
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_COW, (context) ->
-            new AnimalEntityRenderer<>(
-                context.getModelLoader().getModelPart(EntityModelLayers.COW),
-                new CowEntityModel(),
-                0.5f)
-        );
+        EntityRendererRegistry.register(ExampleMod.MY_ENTITY, PigEntityRenderer::new);
     }
 }
 ```

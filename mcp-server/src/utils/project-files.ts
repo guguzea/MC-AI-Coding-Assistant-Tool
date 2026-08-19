@@ -190,10 +190,38 @@ export interface LoadedModProject {
   litemodJson?: string;
   riftmodJson?: string;
   addonManifest?: string;
+  fabricModJsons: string[];
+  quiltModJsons: string[];
+  modsTomls: string[];
+  neoModsTomls: string[];
   javaFiles: Array<{ path: string; content: string }>;
   javaTruncated: boolean;
   javaWarning?: string;
   crashReports: Array<{ path: string; content: string }>;
+}
+
+function readWalkBodies(root: string, match: (rel: string, name: string) => boolean): string[] {
+  const out: string[] = [];
+  for (const abs of walkProjectFiles(root, match)) {
+    try {
+      const body = readFileSync(abs, "utf8");
+      if (body.trim()) out.push(body);
+    } catch {
+      /* skip unreadable */
+    }
+  }
+  return out;
+}
+
+function uniqueBodies(preferred: string | undefined, rest: string[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const b of [preferred, ...rest]) {
+    if (!b?.trim() || seen.has(b)) continue;
+    seen.add(b);
+    out.push(b);
+  }
+  return out;
 }
 
 export function loadModProject(root: string): LoadedModProject {
@@ -207,27 +235,63 @@ export function loadModProject(root: string): LoadedModProject {
       mixinsJson = undefined;
     }
   }
+  const fabricPreferred = readFirstRel(root, [
+    "src/main/resources/fabric.mod.json",
+    "fabric.mod.json",
+  ]);
+  const quiltPreferred = readFirstRel(root, [
+    "src/main/resources/quilt.mod.json",
+    "quilt.mod.json",
+  ]);
+  const modsPreferred = readFirstRel(root, [
+    "src/main/resources/META-INF/mods.toml",
+    "META-INF/mods.toml",
+  ]);
+  const neoPreferred = readFirstRel(root, [
+    "src/main/resources/META-INF/neoforge.mods.toml",
+    "META-INF/neoforge.mods.toml",
+  ]);
+  const fabricModJsons = uniqueBodies(
+    fabricPreferred,
+    readWalkBodies(
+      root,
+      (rel, name) => name === "fabric.mod.json" && rel.replace(/\\/g, "/").includes("src/main/resources/"),
+    ),
+  );
+  const quiltModJsons = uniqueBodies(
+    quiltPreferred,
+    readWalkBodies(
+      root,
+      (rel, name) => name === "quilt.mod.json" && rel.replace(/\\/g, "/").includes("src/main/resources/"),
+    ),
+  );
+  const modsTomls = uniqueBodies(
+    modsPreferred,
+    readWalkBodies(
+      root,
+      (rel, name) => name === "mods.toml" && rel.replace(/\\/g, "/").includes("META-INF/"),
+    ),
+  );
+  const neoModsTomls = uniqueBodies(
+    neoPreferred,
+    readWalkBodies(
+      root,
+      (rel, name) => name === "neoforge.mods.toml" && rel.replace(/\\/g, "/").includes("META-INF/"),
+    ),
+  );
+  const gpRoot = readOptionalRel(root, "gradle.properties") ?? "";
+  const gpNested = readWalkBodies(root, (rel, name) => name === "gradle.properties" && rel.replace(/\\/g, "/") !== "gradle.properties");
+  const gradleProperties = [gpRoot, ...gpNested].filter((s) => s.trim()).join("\n") || undefined;
+
   return {
     root,
-    modsToml: readFirstRel(root, [
-      "src/main/resources/META-INF/mods.toml",
-      "META-INF/mods.toml",
-    ]),
-    neoModsToml: readFirstRel(root, [
-      "src/main/resources/META-INF/neoforge.mods.toml",
-      "META-INF/neoforge.mods.toml",
-    ]),
+    modsToml: modsTomls[0],
+    neoModsToml: neoModsTomls[0],
     buildGradle: readFirstRel(root, ["build.gradle", "build.gradle.kts"]),
-    gradleProperties: readOptionalRel(root, "gradle.properties"),
+    gradleProperties,
     mixinsJson,
-    fabricModJson: readFirstRel(root, [
-      "src/main/resources/fabric.mod.json",
-      "fabric.mod.json",
-    ]),
-    quiltModJson: readFirstRel(root, [
-      "src/main/resources/quilt.mod.json",
-      "quilt.mod.json",
-    ]),
+    fabricModJson: fabricModJsons[0],
+    quiltModJson: quiltModJsons[0],
     litemodJson: readFirstRel(root, ["litemod.json", "src/main/resources/litemod.json"]),
     riftmodJson: readFirstRel(root, [
       "riftmod.json",
@@ -235,6 +299,10 @@ export function loadModProject(root: string): LoadedModProject {
       "src/main/resources/riftmod.json",
     ]),
     addonManifest: readFirstRel(root, ["manifest.json", "BP/manifest.json"]),
+    fabricModJsons,
+    quiltModJsons,
+    modsTomls,
+    neoModsTomls,
     javaFiles: java.files,
     javaTruncated: java.truncated,
     javaWarning: java.warning,

@@ -14,7 +14,7 @@ mappings: yarn
 ```java
 private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_item"),
+    Identifier.of(MOD_ID, "my_item"),
     new Item(new Item.Settings().maxCount(64))
 );
 ```
@@ -43,7 +43,7 @@ IF 自定义行为
 ```java
 private static final Item MY_APPLE = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "golden_apple"),
+    Identifier.of(MOD_ID, "golden_apple"),
     new Item(new Item.Settings()
         .food(new FoodComponent.Builder()
             .hunger(4)

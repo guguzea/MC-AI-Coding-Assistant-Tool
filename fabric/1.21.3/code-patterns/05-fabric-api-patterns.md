@@ -135,7 +135,7 @@ public class MyLootModifiers {
 扩展点: [Networking]
 ---
 public class MyNetworkingV2 {
-    public static final Identifier MY_PACKET = new Identifier(MOD_ID, "my_packet");
+    public static final Identifier MY_PACKET = Identifier.of(MOD_ID, "my_packet");
 
     public static void init() {
         // 注册网络接收器

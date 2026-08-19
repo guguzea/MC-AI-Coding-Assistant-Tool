@@ -98,7 +98,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            ContainerScreens.register(MY_CONTAINER.get(), MyScreen::new)
+            MenuScreens.register(MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -127,9 +127,9 @@ public class MyScreen extends ContainerScreen<MyContainer> {
     }
 
     @Override
-    protected void renderGuiContainerBackground(float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.coloredLossyTexture(0xFFFFFFFF, 0xFF55FF55);
-        // 绘制背景
+    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+        this.minecraft.getTextureManager().bind(BACKGROUND_TEXTURE);
+        blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 }
 ```
@@ -148,7 +148,7 @@ int value = this.menu.dataSlots.get(0);
 
 ## 常见错误
 
-- ❌ `ContainerScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `MenuScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
 - ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `detectAndSendChanges()`
 

@@ -158,7 +158,8 @@ ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "player_join")
 
 ```java
 // ❌ Forge mixin 配置 (build.gradle)
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 // ✅ Fabric 1.14.4 mixin 配置

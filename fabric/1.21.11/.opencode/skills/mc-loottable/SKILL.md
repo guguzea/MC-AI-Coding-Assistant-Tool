@@ -7,16 +7,27 @@ dependencies: []
 mappings: yarn
 ---
 
-# mc-loottable
+# 战利品表（Fabric 1.21.11）
 
-> Wave D 技能骨架（fabric 1.21.11）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+- JSON：`data/<modid>/loot_table/...`（1.21 路径是 loot_table 单数）
+- 改原版表：`net.fabricmc.fabric.api.loot.v3.LootTableEvents`（loader-api 已核）
 
-## 快速入口
+```java
+LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+    // RegistryKey<LootTable> key；LootTable.Builder；RegistryWrapper.WrapperLookup
+});
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.11/knowledge/antipatterns/`
+## Decision Flow
 
-## 下一步
+```
+IF 自定义掉落
+  → 数据包 JSON 或 FabricBlockLootTableProvider
+IF 改原版表
+  → LootTableEvents.MODIFY（v3 四参）
+```
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+## 常见错误
+
+- ❌ v2 五参 `(resourceManager, lootManager, id, ...)`
+- ❌ 26.1.2 Mojmap `ResourceKey` / `HolderLookup.Provider` 当本档 Yarn 必写名（本档 Yarn 用 `RegistryKey` / `RegistryWrapper.WrapperLookup`）

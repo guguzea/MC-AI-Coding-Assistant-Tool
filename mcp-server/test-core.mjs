@@ -883,7 +883,8 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }
   const en = JSON.parse(lang.files["assets/demo/lang/en_us.json"]);
   assert.equal(en["item.demo.sword"], "Sword");
   assert.equal(en["item.demo.gem"], "Gem");
-  assert.equal(en["block.demo.ruby"], "Ruby");
+  assert.equal(en["block.demo.ruby"], undefined);
+  assert.ok(!("ruby" in en));
   assert.ok(lang.warnings?.some((w) => /ruby/.test(w)));
 }
 
@@ -916,18 +917,18 @@ async function testCrashAnalyzeKindAndMissingDep() {
   const { analyzeCrash, detectCrashKind } = await import("./dist/crash/index.js");
   const fmlName = "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: examplelib\n";
   assert.equal(detectCrashKind(fmlName), "fml");
-  const result = analyzeCrash({ crashReport: fmlName });
+  const result = analyzeCrash({ crashReport: fmlName, version: "1.20.1" });
   assert.equal(result.crashKind, "fml");
   assert.match(result.probableCause, /缺少强制依赖|前置/);
   assert.ok(Array.isArray(result.logHints) && result.logHints.length > 0);
 
   const beNull =
     '---- Minecraft Crash Report ----\nDescription: Unexpected error\n\njava.lang.NullPointerException: Cannot invoke "net.minecraft.world.level.block.entity.BlockEntity.getBlockState()" because "be" is null\n';
-  const beResult = analyzeCrash({ crashReport: beNull });
+  const beResult = analyzeCrash({ crashReport: beNull, version: "1.20.1" });
   assert.match(beResult.probableCause, /BlockEntity 引用为 null|未取到 BE/);
   assert.doesNotMatch(beResult.probableCause, /world 为 null/);
 
-  const unknown = analyzeCrash({ crashReport: "not a crash report at all" });
+  const unknown = analyzeCrash({ crashReport: "not a crash report at all", version: "1.20.1" });
   assert.equal(unknown.crashKind, "unknown");
   assert.match(unknown.probableCause, /minecraft\.wiki\/w\/Crash_report/);
   assert.ok(unknown.fixSuggestions.some((s) => /minecraft\.wiki\/w\/Crash_report/.test(s)));
@@ -1834,7 +1835,7 @@ function testProjectPathFill() {
 async function testPrototypeOwnKeys() {
   const protoKeys = ["constructor", "toString", "__proto__", "hasOwnProperty", "valueOf"];
   for (const k of protoKeys) {
-    const vi = await getVersionInfo({ version: k, action: "register" });
+    const vi = await getVersionInfo({ version: k, action: "register", platform: "forge" });
     assert.equal(vi.forgeVersion, "unknown", `get_version_info(${k}) must not hit Object.prototype`);
     assert.ok(!/DeferredRegister/.test(vi.recommendation), vi.recommendation);
 
@@ -1852,11 +1853,11 @@ async function testPrototypeOwnKeys() {
     assert.equal(short.tool, k, `SHORT_COMMANDS[${k}] must not resolve to Function`);
   }
 
-  const v112 = await getVersionInfo({ version: "1.12.2", action: "register" });
+  const v112 = await getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
   assert.ok(/RegistryEvent/.test(v112.recommendation), v112.recommendation);
   assert.ok(!/创建 DeferredRegister/.test(v112.recommendation), v112.recommendation);
 
-  const v165 = await getVersionInfo({ version: "1.16.5", action: "register" });
+  const v165 = await getVersionInfo({ version: "1.16.5", action: "register", platform: "forge" });
   assert.ok(!/创建 DeferredRegister/.test(v165.recommendation), v165.recommendation);
 }
 
@@ -2001,7 +2002,7 @@ public class ExampleMod { }
 
   const capFab = generateCapability("my_mod", "mana", "fabric", "1.20.1");
   assert.equal(capFab.code, null);
-  assert.ok(capFab.errors?.some((e) => /CCA|Cardinal/.test(e)), JSON.stringify(capFab));
+  assert.ok(capFab.errors?.some((e) => /CCA|Cardinal|cca/i.test(e)), JSON.stringify(capFab));
 
   const capNeoNoVer = generateCapability("my_mod", "mana", "neoforge");
   assert.equal(capNeoNoVer.code, null);
@@ -2043,16 +2044,19 @@ public class ExampleMod { }
   const special = validateDatapackJson({
     kind: "recipe",
     jsonContent: JSON.stringify({ type: "minecraft:crafting_special_armordye" }),
+    version: "1.20.1",
   });
   assert.equal(special.valid, true, JSON.stringify(special));
   const trim = validateDatapackJson({
     kind: "recipe",
     jsonContent: JSON.stringify({ type: "minecraft:smithing_trim", template: {}, base: {}, addition: {} }),
+    version: "1.20.1",
   });
   assert.equal(trim.valid, true, JSON.stringify(trim));
   const shaped = validateDatapackJson({
     kind: "recipe",
     jsonContent: JSON.stringify({ type: "minecraft:crafting_shaped", pattern: ["#"], key: { "#": { item: "minecraft:stone" } } }),
+    version: "1.20.1",
   });
   assert.equal(shaped.valid, false);
   assert.ok(shaped.errors.some((e) => /result/.test(e)));

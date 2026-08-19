@@ -28,15 +28,10 @@ public class ModBlocks {
 
 ## TileEntity 注册
 
-```java
-@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID)
-public class ModTileEntities {
+官方 Registries 页列出的 RegistryEvent 类型不含 TileEntity。
 
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<TileEntity> event) {
-        TileEntity.register(ExampleMod.MOD_ID + ".my_tile", MyTileEntity.class);
-    }
-}
+```java
+GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(ExampleMod.MOD_ID, "my_tile"));
 ```
 
 ## 实体注册
@@ -48,16 +43,12 @@ public class ModEntities {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<EntityEntry> event) {
         event.getRegistry().register(
-            EntityRegistry.registerModEntity(
-                new ResourceLocation(ExampleMod.MOD_ID, "my_entity"),
-                MyEntity.class,
-                "my_entity",
-                0,
-                ExampleMod.INSTANCE,
-                64, // tracking range
-                3,  // update interval
-                true
-            )
+            EntityEntryBuilder.create()
+                .entity(MyEntity.class)
+                .id(new ResourceLocation(ExampleMod.MOD_ID, "my_entity"), 0)
+                .name("my_entity")
+                .tracker(64, 3, true)
+                .build()
         );
     }
 }

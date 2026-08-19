@@ -6,10 +6,10 @@
 
 ```java
 // ❌ 错误
-EntityType.Builder.of(new MyEntity(world), MobCategory.CREATURE)...
+EntityType.Builder.of(new MyEntity(world), EntityClassification.CREATURE)...
 
 // ✅ 正确：传入构造函数引用
-EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)...
+EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)...
 ```
 
 ---
@@ -20,7 +20,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)...
 
 ```java
 // ❌ 错误
-EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
     .build("my_entity");
 // build(String) 签名不匹配
 ```
@@ -29,28 +29,23 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 ---
 
-## 错误：属性未在 registerAttributes 中设置默认值
+## 错误：用 LivingEntity.registerAttributes() 设原版属性
 
-**症状：** 实体的最大生命值、移动速度为 0 或异常
+**症状：** 1.16.5 没有实例方法 `registerAttributes()`；属性未挂到 EntityType，生命/速度为 0。
+
+**正确方案：** 静态工厂 + `EntityAttributeCreationEvent.put`（第二参是 `AttributeModifierMap`）：
 
 ```java
-// ❌ 忘记设置基础值
-@Override
-protected void registerAttributes() {
-    super.registerAttributes();
-    // 没有设置 max health → 默认 0
+public static AttributeModifierMap.MutableAttribute createAttributes() {
+    return MobEntity.createMobAttributes()
+        .add(Attributes.MAX_HEALTH, 20.0D)
+        .add(Attributes.MOVEMENT_SPEED, 0.3D)
+        .add(Attributes.ATTACK_DAMAGE, 3.0D);
 }
-```
 
-**正确方案：**
-```java
-@Override
-protected void registerAttributes() {
-    super.registerAttributes();
-    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
-    this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(0.5);
+@SubscribeEvent
+public static void onAttributes(EntityAttributeCreationEvent event) {
+    event.put(MY_ENTITY.get(), MyEntity.createAttributes().create());
 }
 ```
 

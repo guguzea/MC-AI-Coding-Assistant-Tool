@@ -32,7 +32,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> IForgeMenuType.create(MyMenu::new)
+        () -> new MenuType<>(MyMenu::new)
     );
 
 // 在 mod 构造函数中
@@ -45,7 +45,7 @@ MENUS.register(modEventBus);
 public class MyMenu extends AbstractContainerMenu {
     private final SimpleContainerData dataSlots;
 
-    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用）
+    // 服务端构造函数（3 参数：通过 NetworkHooks.openGui 调用）
     public MyMenu(int windowId, Inventory inv, Player player) {
         super(MY_MENU.get(), windowId);
         // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
@@ -117,7 +117,7 @@ public class MyBlock extends Block implements EntityBlock {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             MenuProvider p = state.getMenuProvider(level, pos);
             if (p != null) {
-                NetworkHooks.openScreen(serverPlayer, p);
+                NetworkHooks.openGui(serverPlayer, p);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
@@ -142,7 +142,7 @@ public class ClientSetup {
 ### 5. Screen 类（CLIENT ONLY）
 
 ```java
-public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
+public class MyScreen extends AbstractContainerScreen<MyMenu> {
     private int progress; // 本地缓存，用于渲染
 
     public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
@@ -164,14 +164,12 @@ public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
-        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
-            0, 0, this.imageWidth, this.imageHeight);
-        // 叠加进度条
+    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
+        blit(poseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
-        graphics.fill(this.leftPos, this.topPos,
-            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
+        fill(poseStack, this.leftPos, this.topPos, this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
     }
 
     private static final ResourceLocation BACKGROUND_TEXTURE =

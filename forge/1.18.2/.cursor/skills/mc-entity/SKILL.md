@@ -48,13 +48,11 @@ public class MyEntity extends LivingEntity {
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, Player.class, true));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        // 注册实体属性（生命值、移动速度、攻击伤害等）
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.0);
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes()
+            .add(Attributes.MAX_HEALTH, 20.0D)
+            .add(Attributes.MOVEMENT_SPEED, 0.3D)
+            .add(Attributes.ATTACK_DAMAGE, 3.0D);
     }
 
     @Override

@@ -62,10 +62,10 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
     Registries.ENTITY_TYPE,
     Identifier.of(MOD_ID, "my_pig"),
     EntityType.Builder.create(MyPigEntity::new, SpawnGroup.CREATURE)
-        .dimensions(EntityDimensions.changing(0.9f, 1.4f))
+        .dimensions(0.9f, 1.4f)
         .maxTrackingRange(8)
         .trackingTickInterval(3)
-        .build()
+        .build("my_pig")
 );
 
 @Override
@@ -85,6 +85,7 @@ public void onInitialize() {
 ```
 
 不要 `EntityAttributeRegistry`、`EntityAttributeSupplementRegistry`、`DefaultAttributeRegistry.register`（模组侧）、`SpawnRestrictionRegistration`。
+Yarn `EntityType.Builder.build` 需要 **String id**（官方 Yarn javadoc）；无参 `build()` 是 `FabricEntityTypeBuilder`。`dimensions` 是 `(float, float)`，不是 `EntityDimensions.changing`。
 
 ## 实体渲染器（客户端）
 

@@ -1,10 +1,10 @@
 import { existsSync, statSync } from "fs";
 import { isAbsolute, resolve } from "path";
-import { detectLoader } from "../diagnostics/index.js";
-import { actionable } from "../utils/actionable.js";
+import { detectProjectLoaders, javaBlobFromFiles } from "../diagnostics/index.js";
+import { actionable, ActionCodes } from "../utils/actionable.js";
 import { loadModProject } from "../utils/project-files.js";
 import { docsToolForPlatform } from "../loader-api/keys.js";
-import { findPack, knowledgeVersion, listPacks } from "./catalog.js";
+import { findPack, knowledgeVersion, listPacks, listSameSeriesCandidates } from "./catalog.js";
 import { detectMinecraftVersion } from "../utils/minecraft-version.js";
 
 export type DetectModProjectArgs = {
@@ -48,20 +48,50 @@ export function detectModProject(args: DetectModProjectArgs = {}) {
   const resolved = resolveDetectRoot(args.projectPath);
   if (!resolved.ok) return { ok: false, action: resolved.action };
   const loaded = loadModProject(resolved.root);
-  const loader = detectLoader(
-    loaded.buildGradle ?? "",
-    loaded.modsToml,
-    loaded.fabricModJson,
-    loaded.neoModsToml,
-    {
+  const detected = detectProjectLoaders({
+    buildGradle: loaded.buildGradle,
+    modsToml: loaded.modsToml,
+    fabricModJson: loaded.fabricModJson,
+    neoModsToml: loaded.neoModsToml,
+    extras: {
       quiltModJson: loaded.quiltModJson,
       litemodJson: loaded.litemodJson,
       riftmodJson: loaded.riftmodJson,
       addonManifest: loaded.addonManifest,
     },
-  );
+    javaBlob: javaBlobFromFiles(loaded.javaFiles),
+    fabricModJsons: loaded.fabricModJsons,
+    quiltModJsons: loaded.quiltModJsons,
+    modsTomls: loaded.modsTomls,
+    neoModsTomls: loaded.neoModsTomls,
+  });
+  const loader = detected.primary;
   const minecraftVersion = parseMcVersion(loaded.gradleProperties, loaded.buildGradle);
   const platform = loader === "liteloader_forge" ? "liteloader" : loader;
+
+  if (detected.multiLoader) {
+    const listed = detected.loaders.join(", ");
+    return {
+      ok: true,
+      projectRoot: resolved.root,
+      resolvedFrom: resolved.from,
+      loader,
+      loaders: detected.loaders,
+      multiLoader: true,
+      architectury: detected.architectury,
+      platform: "unknown",
+      minecraftVersion,
+      packFound: false,
+      action: actionable(
+        ActionCodes.PICK_PLATFORM,
+        `检测到多加载器${detected.architectury ? "/Architectury" : ""}：${listed}。请询问用户指定 platform，禁止静默选 Fabric 或 Forge。在用户指定前不得调用 activate_platform_pack。`,
+        [
+          `向用户列出 loaders[]（${listed}）并询问要用哪一个 platform`,
+          "用户指定后再 activate_platform_pack action=session --platform=... --minecraftVersion=...",
+        ],
+      ),
+    };
+  }
   const pack =
     platform !== "unknown" && minecraftVersion
       ? findPack(platform, minecraftVersion)
@@ -71,6 +101,14 @@ export function detectModProject(args: DetectModProjectArgs = {}) {
 
   if (!pack) {
     const kv = minecraftVersion && platform !== "unknown" ? knowledgeVersion(platform, minecraftVersion) : "";
+    const candidates =
+      minecraftVersion && platform !== "unknown"
+        ? listSameSeriesCandidates(platform, minecraftVersion)
+        : [];
+    const ask =
+      candidates.length > 0
+        ? `精确包不存在。同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默当成 ${candidates[0]}。`
+        : "或 activate_platform_pack action=list 查看已建档版本";
     return {
       ok: true,
       projectRoot: resolved.root,
@@ -80,14 +118,15 @@ export function detectModProject(args: DetectModProjectArgs = {}) {
       minecraftVersion,
       knowledgeVersion: kv || undefined,
       packFound: false,
+      candidates: candidates.length ? candidates : undefined,
       action: actionable(
         "PACK_NOT_FOUND",
         platform === "unknown"
           ? "未能判定加载器，无法激活平台包。"
-          : `没有 ${platform} ${minecraftVersion ?? "?"} 的规则树（禁止读邻档 00–10）。`,
+          : `没有 ${platform} ${minecraftVersion ?? "?"} 的规则树（禁止读邻档 00–10）。${candidates.length ? ask : ""}`,
         [
           `改用 ${docsToolForPlatform(platform === "unknown" ? "forge" : platform)}`,
-          "或 activate_platform_pack action=list 查看已建档版本",
+          candidates.length ? ask : "或 activate_platform_pack action=list 查看已建档版本",
         ],
         [docsToolForPlatform(platform === "unknown" ? "forge" : platform)],
       ),

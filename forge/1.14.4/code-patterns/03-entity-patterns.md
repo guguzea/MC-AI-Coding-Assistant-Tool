@@ -8,11 +8,11 @@ public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
     DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
-    () -> EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
+    () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
         .size(0.6f, 1.8f)
-        .trackingRange(8)
-        .updateInterval(3)
-        .fireImmune()
+        .setTrackingRange(8)
+        .setUpdateInterval(3)
+        .immuneToFire()
         .build("my_entity")
 );
 

@@ -95,10 +95,7 @@ public void onInitialize() {
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (context) ->
-            new AnimalEntityRenderer<>(context.getModelLoader()
-                .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
-        );
+        EntityRendererRegistry.register(MY_PIG, PigEntityRenderer::new);
     }
 }
 ```

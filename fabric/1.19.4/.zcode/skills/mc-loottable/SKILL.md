@@ -7,16 +7,27 @@ dependencies: []
 mappings: yarn
 ---
 
-# mc-loottable
+# 战利品表（Fabric 1.19.4）
 
-> Wave D 技能骨架（fabric 1.19.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+- JSON：`data/<modid>/loot_tables/...`
+- 改原版表：`net.fabricmc.fabric.api.loot.v2.LootTableEvents`（loader-api 已核）
 
-## 快速入口
+```java
+LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+    // Identifier id；LootTable.Builder tableBuilder
+});
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.19.4/knowledge/antipatterns/`
+## Decision Flow
 
-## 下一步
+```
+IF 自定义掉落
+  → 数据包 JSON 或本档 DataGen loot provider
+IF 改原版表
+  → LootTableEvents.MODIFY（v2 五参）
+```
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+## 常见错误
+
+- ❌ `LootTableLoadingCallback`（v1）
+- ❌ v3 的 `RegistryKey<LootTable>` 四参 lambda

@@ -13,10 +13,10 @@ public static final EntityType<MyEntity> MY_ENTITY = Registry.register(
         MyEntity::new,
         SpawnGroup.CREATURE
     )
-    .dimensions(EntityDimensions.changing(0.75f, 0.75f))  // 宽, 高
+    .dimensions(0.75f, 0.75f)  // 宽, 高；Yarn EntityType.Builder 是 dimensions(float,float)
     .maxTrackingRange(8)
             .trackingTickInterval(3)
-    .build()
+    .build("my_entity")
 );
 
 // 注册属性
@@ -72,13 +72,7 @@ public class MyEntity extends MobEntity {
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(ExampleMod.MY_ENTITY, (context) ->
-            new AnimalEntityRenderer<>(
-                context.getModelLoader().getModelPart(EntityModelLayers.COW),
-                new CowEntityModel(),
-                0.5f
-            )
-        );
+        EntityRendererRegistry.register(ExampleMod.MY_ENTITY, PigEntityRenderer::new);
     }
 }
 ```

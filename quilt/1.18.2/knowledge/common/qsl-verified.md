@@ -15,7 +15,7 @@
 
 | 做法 | 说明 |
 |------|------|
-| Vanilla `Registry.register(Registries.*, id, value)` | 简单 Item/Block/BlockEntity **可用**（不是 FAPI 专属） |
+| Vanilla `Registry.register(Registry.ITEM/BLOCK, id, value)` | 简单 Item/Block **可用**（1.18.2 没有 `Registries`；不是 FAPI 专属） |
 | QSL Core Registry | 本档对应 QSL 分支未在本收口打开到 `RegistryEvents.java`。**禁止**把 1.21 分支方法名冒充本档。已核实的 1.21 源见 `quilt/1.21.1/knowledge/common/qsl-verified.md`。 |
 | 禁止 | `QuiltRegistry.register()`；`net.fabricmc.fabric.api.event.registry` 当 QSL |
 

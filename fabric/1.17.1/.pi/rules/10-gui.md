@@ -119,6 +119,8 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
     );
 ```
 
+本档构造仍是单参 `new ScreenHandlerType<>(factory)`（Parchment 1.16.5 / 1.18.2 已核 `MenuType(MenuSupplier)`；FeatureFlags 是 1.19.3+）。
+
 ## NamedScreenHandlerFactory（普通打开）
 
 不要用 `TypedScreenHandlerFactory`（编造名）。普通 GUI 实现原版 `NamedScreenHandlerFactory`。

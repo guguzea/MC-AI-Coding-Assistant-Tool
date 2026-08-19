@@ -15,10 +15,11 @@ mappings: mcp
 // 方块类
 public class MyBlock extends Block {
     public MyBlock() {
-        super(new Block(Material.ROCK)
-            .hardnessAndResistance(1.5f, 6.0f)
-            .harvestLevel("pickaxe", 0)
-        );
+        super(Material.ROCK);
+        setHardness(1.5F);
+        setResistance(6.0F);
+        setHarvestLevel("pickaxe", 0);
+        setSoundType(SoundType.STONE);
     }
 }
 
@@ -47,15 +48,15 @@ IF 需要流体
   → 流体（Fluid）→ 参考 `02-block.mdc`
 ```
 
-## Block.Properties 常用配置
+## 方块 setter 常用配置（没有 `Block.Properties`）
 
 ```java
 new Block(Material.WOOD)
-    .hardnessAndResistance(1.5f, 6.0f)    // 硬度和抗爆性
-    .harvestLevel("pickaxe", 0)            // 挖掘等级
-    .harvestTool("pickaxe")                // 工具类型
-    .lightValue(0)                          // 发光值
-    .sound(SoundType.WOOD)                  // 音效
+    .setHardness(1.5F)
+    .setResistance(6.0F)
+    .setHarvestLevel("pickaxe", 0)
+    .setLightLevel(0.0F)
+    .setSoundType(SoundType.WOOD);
 ```
 
 ## TileEntity 方块

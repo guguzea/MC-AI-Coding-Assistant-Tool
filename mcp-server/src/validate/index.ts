@@ -16,7 +16,8 @@
  */
 
 import {
-  detectLoader,
+  detectProjectLoaders,
+  javaBlobFromFiles,
   type CheckDependenciesExtras,
   type DetectedLoader,
 } from "../diagnostics/index.js";
@@ -29,6 +30,7 @@ import {
   preferExplicit,
   resolveProjectDir,
 } from "../utils/project-files.js";
+import { detectMinecraftVersion } from "../utils/minecraft-version.js";
 import {
   datapackRecipeWarnings,
   validateFabricOrQuilt,
@@ -624,15 +626,12 @@ function warningForSkippedLoader(loader: DetectedLoader): string {
   }
 }
 
-/** 用已有输入调 detectLoader，并扫 Java/清单正文补强（不扩展 schema）。 */
+/** 用已有输入调 detectProjectLoaders（含 Java 补强），与 detect_mod_project 共用判定。 */
 export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
   const gradle = query.buildGradle ?? "";
-  const modsToml = query.modsToml;
-  const javaBlob = (query.javaFiles ?? [])
-    .map((f) => `${f.path}\n${f.content}`)
-    .join("\n");
   const extras: CheckDependenciesExtras = {};
   if (query.quiltModJson) extras.quiltModJson = query.quiltModJson;
+  const javaBlob = javaBlobFromFiles(query.javaFiles);
   if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) {
     extras.addonManifest = javaBlob;
   }
@@ -645,37 +644,19 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
   if (/RiftLoader|riftmod\.json|rift\.mod\.json/i.test(javaBlob)) {
     extras.riftmodJson = javaBlob;
   }
-
-  const fromDetect = detectLoader(gradle, modsToml, query.fabricModJson, query.neoModsToml, extras);
-  if (fromDetect !== "unknown" && fromDetect !== "forge") {
-    return fromDetect;
+  const extraText = `${query.modsToml ?? ""}\n${query.gradleProperties ?? ""}`;
+  if (/"format_version"/.test(extraText) && /"modules"/.test(extraText)) {
+    extras.addonManifest = extras.addonManifest ?? extraText;
   }
-  // NeoForge 的 mods.toml 也常写 javafml，detectLoader 会判成 forge；
-  // 有 neoforged 源码且无 forge 包名时改口，避免把 Neo 工程当 Forge 校验。
-  if (fromDetect === "forge") {
-    if (/net\.neoforged/.test(javaBlob) && !/net\.minecraftforge/.test(javaBlob)) {
-      return "neoforge";
-    }
-    return "forge";
-  }
-
-  if (/org\.quiltmc|quilt\.mod\.json|quilt_loader/i.test(javaBlob)) return "quilt";
-  if (/net\.neoforged|neoforge\.mods\.toml/i.test(javaBlob)) return "neoforge";
-  if (/net\.fabricmc|implements\s+ModInitializer|fabric\.mod\.json/i.test(javaBlob)) {
-    return "fabric";
-  }
-  if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) return "liteloader";
-  if (/RiftLoader|riftmod\.json|rift\.mod\.json/i.test(javaBlob)) return "rift";
-  if (
-    /extends\s+BaseMod\b/.test(javaBlob) &&
-    !/cpw\.mods\.fml|net\.minecraftforge/.test(javaBlob)
-  ) {
-    return "modloader";
-  }
-  if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) return "bedrock";
-  const extraText = `${modsToml ?? ""}\n${query.gradleProperties ?? ""}`;
-  if (/"format_version"/.test(extraText) && /"modules"/.test(extraText)) return "bedrock";
-  return fromDetect;
+  const { primary } = detectProjectLoaders({
+    buildGradle: gradle,
+    modsToml: query.modsToml,
+    fabricModJson: query.fabricModJson,
+    neoModsToml: query.neoModsToml,
+    extras,
+    javaBlob,
+  });
+  return primary;
 }
 
 // ── 主函数 ────────────────────────────────────────────────────────────────
@@ -899,9 +880,16 @@ export function validateProject(query: ValidateQuery): ValidationResult {
 
   let crashAnalyses: ValidationResult["crashAnalyses"];
   if (includeCrashAnalysis && crashReports.length > 0) {
+    const crashVersion = detectMinecraftVersion({
+      gradleProperties: query.gradleProperties,
+      buildGradle: query.buildGradle,
+    });
     crashAnalyses = crashReports.map((c) => ({
       path: c.path,
-      ...analyzeCrash({ crashReport: c.content }),
+      ...analyzeCrash({
+        crashReport: c.content,
+        ...(crashVersion !== "unknown" ? { version: crashVersion } : {}),
+      }),
     }));
   }
 

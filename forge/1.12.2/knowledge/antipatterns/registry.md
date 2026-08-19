@@ -79,16 +79,10 @@ public class ModBlocks {
 // 方块实现了 createTileEntity() 但忘记注册
 ```
 
-**正确方案：** 在 RegistryEvent.Register<TileEntity> 中注册
+**正确方案：** 在 `GameRegistry.registerTileEntity` 中注册
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public class ModTileEntities {
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<TileEntity> event) {
-        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
-    }
-}
+GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(MOD_ID, "my_tile"));
 ```
 
 ---

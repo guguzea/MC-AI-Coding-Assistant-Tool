@@ -1,4 +1,4 @@
-import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult } from "./common.js";
+import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform } from "./common.js";
 
 export function generateModel(modId: string, blockName: string): GeneratorResult {
   const mod = normalizeModIdentifier(modId);
@@ -48,8 +48,10 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
     } else if (k.startsWith("entity_")) {
       key = `entity.${mod.value}.${k.slice("entity_".length)}`;
     } else {
-      key = `block.${mod.value}.${k}`;
-      warnings.push(`键 "${k}" 无点号且无法从 item_/block_/entity_ 前缀推断，已按 block.${mod.value}.${k} 处理`);
+      warnings.push(
+        `键 "${k}" 无点号且无法从 item_/block_/entity_ 前缀推断，已跳过（不会写成 block.${mod.value}.${k}）`,
+      );
+      continue;
     }
     en[key] = v;
     zh[key] = v;
@@ -81,14 +83,18 @@ export function generateNetworkPacket(
     return {
       code: null,
       errors: [
-        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_26.1 | fabric_1.21 | fabric_26.1",
+        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
+          noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
   }
   if (!(allowed as readonly string[]).includes(platform)) {
     return {
       code: null,
-      errors: [`未知 platform=${platform}。可选：${allowed.join(" | ")}`],
+      errors: [
+        `未知 platform=${platform}。可选：${allowed.join(" | ")}。` +
+          noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
+      ],
     };
   }
   const mod = normalizeModIdentifier(modId);
@@ -331,17 +337,19 @@ export function generateCapability(
   version?: string,
 ): GeneratorResult {
   if (!platform) {
-    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt），禁止默认 Forge Capability"] };
+    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt），禁止默认 Forge Capability。" + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
   }
   if (!version?.trim()) {
-    return { code: null, errors: ["version is required"] };
+    return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
   }
   const p = platform.trim().toLowerCase();
   if (p === "fabric" || p === "quilt") {
     return {
       code: null,
       errors: [
-        "Fabric/Quilt 无内置 Capability。请用 Cardinal Components API（CCA）Skill（knowledge/libs/fabric-only/mc-cca）或 search_fabric_docs，不要生成 Forge Capability。",
+        "Fabric/Quilt 无内置 Capability。" +
+          noNativeGeneratorError("search_fabric_docs", "规则 05 / mc-capability Skill / knowledge/libs/fabric-only/mc-cca") +
+          " 不要生成 Forge Capability。",
       ],
     };
   }
@@ -350,12 +358,13 @@ export function generateCapability(
       return {
         code: null,
         errors: [
-          `NeoForge Data Attachment 仅支持 1.20.4+（收到 version=${version}）。1.20.1 或更低不要生成 Attachment。`,
+          `NeoForge Data Attachment 仅支持 1.20.4+（收到 version=${version}）。` +
+            noNativeGeneratorError("search_neoforge_docs", "规则 05 / mc-capability Skill"),
         ],
       };
     }
   } else if (p !== "forge") {
-    return { code: null, errors: [`未知 platform=${platform}。可选：forge | neoforge | fabric | quilt`] };
+    return { code: null, errors: [`未知 platform=${platform}。可选：forge | neoforge | fabric | quilt。` + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
   }
 
   const mod = normalizeModIdentifier(modId);
@@ -414,10 +423,10 @@ export function generateConfig(
   version?: string,
 ): GeneratorResult {
   if (!loader) {
-    return { code: null, errors: ["loader 必填（forge | neoforge | fabric | quilt），禁止默认 forge"] };
+    return { code: null, errors: ["loader 必填（forge | neoforge | fabric | quilt），禁止默认 forge。" + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
   }
   if (!version?.trim()) {
-    return { code: null, errors: ["version is required，禁止猜测 1.20.4 或 1.21"] };
+    return { code: null, errors: ["version is required，禁止猜测 1.20.4 或 1.21。" + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
@@ -491,7 +500,10 @@ public class ${toPascalCase(mod.value)}Config {
     }
     return {
       code: null,
-      errors: [`NeoForge config 当前支持 1.20.4（ForgeConfigSpec + net.neoforged）与 1.21+/26.1（ModConfigSpec）。收到 version=${version}`],
+      errors: [
+        `NeoForge config 当前支持 1.20.4（ForgeConfigSpec + net.neoforged）与 1.21+/26.1（ModConfigSpec）。收到 version=${version}。` +
+          noNativeGeneratorError("search_neoforge_docs", "规则 00 / mc-config Skill"),
+      ],
     };
   }
 
@@ -517,10 +529,10 @@ export function generateEntityRenderer(
   version?: string,
 ): GeneratorResult {
   if (!platform) {
-    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt）"] };
+    return { code: null, errors: ["platform 必填（forge | neoforge | fabric | quilt）。" + noNativeGeneratorError("search_*_docs", "规则 04 / mc-entity Skill")] };
   }
   if (!version?.trim()) {
-    return { code: null, errors: [`version is required。当前支持 ${ENTITY_RENDERER_SUPPORTED}`] };
+    return { code: null, errors: [`version is required。当前支持 ${ENTITY_RENDERER_SUPPORTED}。` + noNativeGeneratorError("search_*_docs", "规则 04 / mc-entity Skill")] };
   }
   const p = platform.trim().toLowerCase();
   const v = version.trim();
@@ -530,14 +542,18 @@ export function generateEntityRenderer(
     return {
       code: null,
       errors: [
-        `当前支持 ${ENTITY_RENDERER_SUPPORTED}。Fabric/Quilt 禁止生成 @OnlyIn/Dist；请用该档 EntityRenderer 客户端注册。`,
+        `当前支持 ${ENTITY_RENDERER_SUPPORTED}。Fabric/Quilt 禁止生成 @OnlyIn/Dist。` +
+          noNativeGeneratorError("search_fabric_docs", "规则 04 / mc-entity Skill"),
       ],
     };
   }
   if (!forgeOk && !neo261) {
     return {
       code: null,
-      errors: [`当前支持 ${ENTITY_RENDERER_SUPPORTED}（收到 platform=${platform} version=${version}），禁止默默生成。`],
+      errors: [
+        `当前支持 ${ENTITY_RENDERER_SUPPORTED}（收到 platform=${platform} version=${version}），禁止默默生成。` +
+          noNativeGeneratorError(docsToolForGeneratorPlatform(p), "规则 04 / mc-entity Skill"),
+      ],
     };
   }
   const mod = normalizeModIdentifier(modId);
@@ -585,34 +601,103 @@ public class ${pascal}Renderer extends MobRenderer<${pascal}, ${pascal}Model> {
   };
 }
 
-export function generateWorldgen(modId: string, featureName: string): GeneratorResult {
+export function generateWorldgen(
+  modId: string,
+  featureName: string,
+  platform?: string,
+  version?: string,
+): GeneratorResult {
+  if (!platform?.trim()) {
+    return {
+      code: null,
+      errors: [
+        "platform 必填（forge | neoforge | fabric | quilt）。该版本无原生生成器时不要理解为游戏里做不了：改用 search_*_docs + 手动编写，参考规则 07-datagen / mc-worldgen Skill。",
+      ],
+    };
+  }
+  if (!version?.trim()) {
+    return {
+      code: null,
+      errors: [
+        "version 必填。该版本无原生生成器时不要理解为游戏里做不了：改用 search_*_docs + 手动编写，参考规则 07-datagen / mc-worldgen Skill。",
+      ],
+    };
+  }
+  const p = platform.trim().toLowerCase();
+  const allowed = ["forge", "neoforge", "fabric", "quilt"];
+  if (!allowed.includes(p)) {
+    return {
+      code: null,
+      errors: [
+        `未知 platform=${platform}。可选：${allowed.join(" | ")}。无模板时改用 search_*_docs + 07-datagen / mc-worldgen Skill。`,
+      ],
+    };
+  }
   const mod = normalizeModIdentifier(modId);
   const feat = normalizeModIdentifier(featureName);
   if (!mod || !feat) return { code: null, errors: ["无效标识符"] };
   const id = `${mod.value}:${feat.value}`;
+  const featureFiles: Record<string, string> = {
+    [`data/${mod.value}/worldgen/configured_feature/${feat.value}.json`]: JSON.stringify(
+      {
+        type: "minecraft:ore",
+        config: {
+          size: 4,
+          discard_chance_on_air_exposure: 0,
+          targets: [
+            {
+              target: { predicate_type: "minecraft:tag_match", tag: "minecraft:stone_ore_replaceables" },
+              state: { Name: "minecraft:iron_ore" },
+            },
+          ],
+        },
+      },
+      null,
+      2,
+    ),
+    [`data/${mod.value}/worldgen/placed_feature/${feat.value}.json`]: JSON.stringify(
+      {
+        feature: id,
+        placement: [{ type: "minecraft:count_on_every_layer", count: 1 }],
+      },
+      null,
+      2,
+    ),
+  };
+  if (p === "fabric" || p === "quilt") {
+    return {
+      code: null,
+      files: featureFiles,
+      warnings: [
+        "仅 configured_feature / placed_feature。注入群系用该档 BiomeModifications / 07-datagen，禁止 forge/biome_modifier。类名核 search_fabric_docs。",
+      ],
+    };
+  }
+  if (p === "neoforge") {
+    return {
+      code: null,
+      files: {
+        ...featureFiles,
+        [`data/${mod.value}/neoforge/biome_modifier/${feat.value}.json`]: JSON.stringify(
+          {
+            type: "neoforge:add_features",
+            biomes: "#minecraft:is_overworld",
+            features: id,
+            step: "underground_ores",
+          },
+          null,
+          2,
+        ),
+      },
+      warnings: [
+        "NeoForge biome_modifier JSON；type/事件名以 search_neoforge_docs 该版页面为准，不要抄 Forge SimpleChannel 或邻档。",
+      ],
+    };
+  }
   return {
     code: null,
     files: {
-      [`data/${mod.value}/worldgen/configured_feature/${feat.value}.json`]: JSON.stringify(
-        {
-          type: "minecraft:ore",
-          config: {
-            size: 4,
-            discard_chance_on_air_exposure: 0,
-            targets: [{ target: { predicate_type: "minecraft:tag_match", tag: "minecraft:stone_ore_replaceables" }, state: { Name: "minecraft:iron_ore" } }],
-          },
-        },
-        null,
-        2,
-      ),
-      [`data/${mod.value}/worldgen/placed_feature/${feat.value}.json`]: JSON.stringify(
-        {
-          feature: id,
-          placement: [{ type: "minecraft:count_on_every_layer", count: 1 }],
-        },
-        null,
-        2,
-      ),
+      ...featureFiles,
       [`data/${mod.value}/forge/biome_modifier/${feat.value}.json`]: JSON.stringify(
         {
           type: "forge:add_features",
@@ -624,6 +709,6 @@ export function generateWorldgen(modId: string, featureName: string): GeneratorR
         2,
       ),
     },
-    warnings: ["Forge biome_modifier JSON；Fabric/NeoForge 路径不同"],
+    warnings: ["Forge biome_modifier JSON（forge:add_features）"],
   };
 }

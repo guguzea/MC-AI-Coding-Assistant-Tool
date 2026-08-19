@@ -11,13 +11,13 @@
 ---
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_stone"),
+    Identifier.of(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 private static final Item MY_STONE_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_stone"),  // 同名
+    Identifier.of(MOD_ID, "my_stone"),  // 同名
     new BlockItem(MY_STONE, new Item.Settings())
 );
 ```
@@ -101,7 +101,7 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 ---
 private static final Block MY_PLANT = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_plant"),
+    Identifier.of(MOD_ID, "my_plant"),
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION)
         .noCollision()
         .breakInstantly()

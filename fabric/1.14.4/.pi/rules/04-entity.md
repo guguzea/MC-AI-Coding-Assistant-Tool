@@ -50,10 +50,12 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
     Registry.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
     EntityType.Builder.<MyPigEntity>create(MyPigEntity::new, EntityCategory.CREATURE)
-        .size(0.9f, 1.4f)
-        .build(null)
+        .setDimensions(0.9f, 1.4f)
+        .build("my_pig")
 );
 ```
+
+Yarn 1.14.4+build.18 tiny：Vanilla `EntityType.Builder` 尺寸方法是 `setDimensions(float,float)`，`build` 需要 String id。不要写 MCP 的 `.size()` 或 `.build(null)`。
 
 ## 实体渲染器（客户端）
 
@@ -61,8 +63,10 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (dispatcher, context) ->
-            new LivingEntityRenderer<MyPigEntity>(dispatcher, new MyPigEntityModel(), 0.5f)
+        // 包：net.fabricmc.fabric.api.client.render.EntityRendererRegistry
+        // register 是实例方法，第一参是 Class（不是 EntityType）
+        EntityRendererRegistry.INSTANCE.register(MyPigEntity.class, (dispatcher, context) ->
+            new PigEntityRenderer(dispatcher)
         );
     }
 }
@@ -83,4 +87,5 @@ public class ExampleModClient implements ClientModInitializer {
 
 - 忘记 `client` entrypoint — 实体无渲染
 - 把 1.16+ 的 `FabricDefaultAttributeRegistry` / `SpawnGroup` / `Registries` 抄到 1.14.4
+- Vanilla Builder 写成 `.size()` 或 `.build(null)`（本档 Yarn 是 `setDimensions` + `build("id")`）
 - 用 Forge `RegistryObject` 包住 `Registry.register` 的返回值

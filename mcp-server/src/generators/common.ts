@@ -36,3 +36,16 @@ export interface GeneratorResult {
 }
 
 export type PlatformTarget = "forge_1.20.1" | "neoforge_1.21";
+
+/** 生成器白名单未覆盖时的统一改口（不发明 Java 模板）。 */
+export function noNativeGeneratorError(docsTool: string, skillOrRule: string): string {
+  return `该版本无原生生成器，不要理解为游戏里做不了。请改用 ${docsTool} 手动编写，参考 ${skillOrRule}。`;
+}
+
+export function docsToolForGeneratorPlatform(platform: string): string {
+  const p = platform.trim().toLowerCase();
+  if (p.startsWith("neoforge") || p === "neo") return "search_neoforge_docs";
+  if (p.startsWith("fabric") || p === "quilt") return "search_fabric_docs";
+  if (p.startsWith("forge")) return "search_forge_docs";
+  return "search_*_docs";
+}

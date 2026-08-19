@@ -310,7 +310,7 @@ node dist/cli.js activate_platform_pack --action=write --platform=neoforge --min
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
 
-`session` 参数：`topics`（规则编号如 `02`）、`includeAllRules`（灌 00–10）。`write` 的 `includeSkills` 默认 false；true 时写 stub，不是知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。
+`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 6）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 的 `includeSkills` 默认 false；true 时写 stub，不是知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。
 
 Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 

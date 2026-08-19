@@ -66,7 +66,7 @@ mod_license=MIT
 private static final Block MY_BLOCK =
     Registry.register(
         Registries.BLOCK,
-        new Identifier(MOD_ID, "my_block"),
+        Identifier.of(MOD_ID, "my_block"),
         new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
     );
 
@@ -74,7 +74,7 @@ private static final Block MY_BLOCK =
 private static final Item MY_BLOCK_ITEM =
     Registry.register(
         Registries.ITEM,
-        new Identifier(MOD_ID, "my_block"),  // 必须同名！
+        Identifier.of(MOD_ID, "my_block"),  // 必须同名！
         new BlockItem(MY_BLOCK, new Item.Settings())
     );
 ```
@@ -85,7 +85,7 @@ private static final Item MY_BLOCK_ITEM =
 private static final Item MY_ITEM =
     Registry.register(
         Registries.ITEM,
-        new Identifier(MOD_ID, "my_item"),
+        Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings().maxCount(64))
     );
 ```
@@ -101,8 +101,8 @@ public class MyEntity extends AnimalEntity {
 public static final EntityType<MyEntity> MY_ENTITY =
     Registry.register(
         Registries.ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_entity"),
-        FabricEntityTypeBuilder.create(MobCategory.CREATURE, MyEntity::new)
+        Identifier.of(MOD_ID, "my_entity"),
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyEntity::new)
             .dimensions(EntityDimensions.changing(0.9f, 1.4f))
             .build()
     );

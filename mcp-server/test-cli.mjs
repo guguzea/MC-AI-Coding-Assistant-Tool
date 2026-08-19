@@ -13,6 +13,9 @@ const fixture = join(root, "test-fixtures", "forge-mini");
 const crashFile = join(root, "test-fixtures", "crash-sample.txt");
 
 function run(args, opts = {}) {
+  if (args[0] === "crash_analyze" && !args.some((a) => /^--version(=|$)/.test(String(a)))) {
+    args = [args[0], "--version=1.20.1", ...args.slice(1)];
+  }
   const env = {
     ...process.env,
     MC_SKILL_DATA: process.env.MC_SKILL_DATA || join(root, "..", "data"),

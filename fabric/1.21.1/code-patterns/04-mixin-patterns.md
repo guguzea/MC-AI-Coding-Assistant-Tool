@@ -60,7 +60,7 @@ public class PlayerMixin {
     private void onIncrementStat(PlayerEntity player, Identifier id) {
         // 替换原有方法调用
         // 例如：跳过某些统计
-        if (!id.equals(new Identifier("minecraft:jump"))) {
+        if (!id.equals(Identifier.of("minecraft:jump"))) {
             player.incrementStat(id);
         }
     }

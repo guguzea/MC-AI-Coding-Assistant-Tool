@@ -7,16 +7,30 @@ dependencies: []
 mappings: yarn
 ---
 
-# mc-worldgen
+# 世界生成（Fabric 1.17.1）
 
-> Wave D 技能骨架（fabric 1.17.1）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+loader-api：`addFeature` 仍是 **ConfiguredFeature** 的 `RegistryKey`（与 1.16.5 同形）。Yarn。
 
-## 快速入口
+```java
+BiomeModifications.addFeature(
+    BiomeSelectors.foundInOverworld(),
+    GenerationStep.Feature.VEGETAL_DECORATION,
+    MY_CONFIGURED_FEATURE
+);
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.17.1/knowledge/antipatterns/`
+已核：`addFeature` / `addStructure` / `addCarver(3 参含 GenerationStep.Carver)` / `addSpawn(..., SpawnGroup, ...)` / `create(Identifier)`。
 
-## 下一步
+## Decision Flow
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+```
+IF 1.18+ 写法
+  → 不要：本档还不是 PlacedFeature
+IF 生物
+  → addSpawn
+```
+
+## 常见错误
+
+- ❌ `PlacedFeature` 当 addFeature 第三参
+- ❌ 26.1.2 Mojmap 名

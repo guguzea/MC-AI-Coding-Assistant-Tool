@@ -96,7 +96,7 @@ public static final DeferredRegister<ContainerType<?>> CONTAINERS =
 
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
-        () -> IContainerFactory.of(MyContainer::new)
+        () -> IForgeContainerType.create(MyContainer::new)
     );
 ```
 
@@ -108,7 +108,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            ContainerScreens.register(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
+            MenuScreens.register(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -158,7 +158,7 @@ public class MyBlock extends Block {
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `ContainerScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `MenuScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ Container not implementing `canInteractWith` properly → any player can access
 - ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `detectAndSendChanges()`
 - ❌ ContainerData set from client → must be set server-side only

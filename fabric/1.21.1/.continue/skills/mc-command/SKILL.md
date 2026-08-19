@@ -1,22 +1,37 @@
 ﻿---
 name: mc-command
-description: Commands.literal、权限、客户端命令。触发词：command、Brigadier、argument
+description: CommandManager.literal、权限、客户端命令。触发词：command、Brigadier、argument
 platform: fabric
 version: "1.21.1"
 dependencies: []
 mappings: yarn
 ---
 
-# mc-command
+# 命令（Fabric 1.21.1）
 
-> Wave D 技能骨架（fabric 1.21.1）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+loader-api：`net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback`。Yarn：`CommandManager.literal`。三参：dispatcher、`CommandRegistryAccess`、`CommandManager.RegistrationEnvironment`。
 
-## 快速入口
+```java
+CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+    dispatcher.register(
+        CommandManager.literal("test_command")
+            .executes(ctx -> 1)
+    );
+});
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.21.1/knowledge/antipatterns/`
+不要抄 1.18 的两参 `(dispatcher, dedicated)`，不要抄 26.1.2 `Commands.literal` / `CommandSourceStack`。
 
-## 下一步
+## Decision Flow
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+```
+IF 服务端命令
+  → command.v2 三参 CommandRegistrationCallback + CommandManager.literal
+IF 仅客户端
+  → ClientCommandRegistrationCallback（client 源码）；核不到包名就停
+```
+
+## 常见错误
+
+- ❌ command.v1 两参
+- ❌ Mojmap `Commands` / `sendSuccess` 当本档 Yarn 必写名

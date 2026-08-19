@@ -9,6 +9,8 @@ mappings: yarn
 
 # 实体开发（Fabric 1.16.5）
 
+> 入库 `develop_entities_first-entity` 常指向 **latest Mojmap**（`PathfinderMob` / `EntityRenderState` / `addAdditionalSaveData`）。本档 Yarn，不要抄那页类名。属性用 `FabricDefaultAttributeRegistry.register`（loader-api 已核）。
+
 ## 快速开始
 
 ```java
@@ -25,8 +27,8 @@ private static final EntityType<MyPigEntity> MY_PIG =
         Registry.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_pig"),
         EntityType.Builder.create(MyPigEntity::new, SpawnGroup.CREATURE)
-            .size(0.9f, 1.4f)
-            .build()
+            .setDimensions(0.9f, 1.4f)
+            .build("my_pig")
     );
 
 // 3. 在 onInitialize() 中设置属性
@@ -59,9 +61,10 @@ IF 需要在世界中自然生成
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (context) ->
-            new AnimalEntityRenderer<>(context.getModelLoader()
-                .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
+        // 包：net.fabricmc.fabric.api.client.rendereregistry.v1
+        // register 是实例方法，不是 1.17+ 的静态 register
+        EntityRendererRegistry.INSTANCE.register(MY_PIG, (dispatcher, context) ->
+            new PigEntityRenderer(dispatcher)
         );
     }
 }

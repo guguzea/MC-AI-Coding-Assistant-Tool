@@ -11,13 +11,13 @@
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
 - 实体必须通过 `DeferredRegister<EntityType>` 注册
-- 必须在 `mods.toml` 中添加 `[[entities]]` 声明
+- 实体用 `DeferredRegister` 注册。官方 `mods.toml` **没有** `[[entities]]` 表（常见是 `[[mods]]` / `[[dependencies.*]]`）；不要编实体 TOML 段
 
 ### EntityType.Builder 配置
 
 ```java
 EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
-    .size(float width, float height)            // 碰撞箱大小
+    .sized(float width, float height)            // 碰撞箱大小（Forge 1.16.5 javadoc 是 sized，不是 size）
     .clientTrackingRange(int range)              // 客户端追踪范围
     .updateInterval(int ticks)                  // 服务端更新间隔
     .fireImmune()                               // 免疫火焰伤害
@@ -26,7 +26,7 @@ EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
 
 ### 实体属性（Attribute）
 
-- 每个实体**必须**通过 `DeferredRegister<Attribute>` 注册属性（最大生命值、攻击伤害、移动速度等）
+- 原版生物属性：静态 `createAttributes()` + `EntityAttributeCreationEvent.put`。自定义 Attribute 才用 `DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)`
 - 属性注册在 mod 构造函数中通过 modEventBus 完成（使用 DeferredRegister）
 - **禁止**在 Entity 构造函数中注册属性（太早，属性系统尚未初始化）
 
@@ -39,8 +39,8 @@ EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
 ### 渲染器规范
 
 - 渲染器必须放在 `client` 包下
-- 必须通过 `EntityRenderersEvent.RegisterRenderers` 注册（不是直接调用 `EntityRenderers.register()`）
-- 必须在 `FMLClientSetupEvent` 中订阅 `EntityRenderersEvent.RegisterRenderers`（不是 `FMLCommonSetupEvent`）
+- 必须通过 `RenderingRegistry.registerEntityRenderingHandler` 注册（本档没有 `EntityRenderersEvent`）
+- 在 `FMLClientSetupEvent` 里调用 `RenderingRegistry`（不是 `FMLCommonSetupEvent`）
 - 纹理文件路径：`textures/entity/{entity_path}/{name}.png`
 
 ---
@@ -82,15 +82,16 @@ IF 乘坐实体
 ### Decision: 属性注册时机
 
 ```
-IF 在 Mod init 中直接注册属性（不使用 DeferredRegister）
-  → ❌ 错误：太早，Attributes 系统未就绪
+IF 原版生物生命/速度/伤害
+  → 静态 createAttributes() + EntityAttributeCreationEvent.put
+  → 不要 LivingEntity.registerAttributes()
 
-IF 使用 DeferredRegister + modEventBus
-  → ✅ 正确：在 mod 构造函数中通过 modEventBus 完成
-  → 属性系统已在 modEventBus 阶段就绪
+IF 自定义 Attribute 类型（新属性 ID）
+  → DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)
+  → 再写进 createAttributes().add(MY_ATTR.get(), value)
 
-IF 在 FMLCommonSetupEvent.enqueueWork() 中注册
-  → ⚠️ 可用但不推荐：已有 DeferredRegister 方案更简洁
+IF 在 Entity 构造函数里改属性
+  → ❌ 太早，属性系统尚未挂到该 EntityType
 ```
 
 ### Decision: 渲染器选择
@@ -143,6 +144,15 @@ public ExampleMod() {
 }
 ```
 
+原版生物属性映射（不是自定义 Attribute 类型）用事件：
+
+```java
+@SubscribeEvent
+public static void onAttributes(EntityAttributeCreationEvent event) {
+    event.put(ModEntities.MY_ENTITY.get(), MyEntity.createAttributes().create());
+}
+```
+
 ## 示例：实体类
 
 ```java
@@ -179,7 +189,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITIES.register("my_entity", () ->
             EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
-                .size(0.6f, 1.8f)
+                .sized(0.6f, 1.8f)
                 .clientTrackingRange(8)
                 .updateInterval(3)
                 .fireImmune()
@@ -218,12 +228,7 @@ type.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // 渲染器通过 EntityRenderersEvent.RegisterRenderers 注册
-    }
-
-    @SubscribeEvent
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.MY_ENTITY.get(), MyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MY_ENTITY.get(), MyEntityRenderer::new);
     }
 }
 ```
@@ -245,5 +250,5 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 ```
 
 > 注意：
-> 1. `EntityRenderers` 在 Forge 1.16.5 中通过 `EntityRenderersEvent.RegisterRenderers` 事件注册
+> 1. 本档用 `RenderingRegistry.registerEntityRenderingHandler`（`EntityRenderersEvent` 是 1.17+）
 > 2. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）

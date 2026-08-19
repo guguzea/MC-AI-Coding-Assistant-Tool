@@ -5,7 +5,7 @@ import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { resolveDataDir } from "../utils/path.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
-import { ActionCodes, actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { ActionCodes, actionable, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import {
   convertYarnMember,
   getMappingEra,
@@ -223,9 +223,21 @@ function outputFromFieldRow(
 }
 
 export function convertMapping(query: MappingQuery): MappingResult {
-  const version = query.version ?? DEFAULT_VERSION;
   const { from, to, memberName, ownerClass, descriptor } = query;
   const direction = `${from}→${to}`;
+  if (missingMcVersion(query.version)) {
+    return {
+      found: false,
+      original: memberName,
+      converted: null,
+      direction,
+      confidence: "low",
+      mappingType: "class",
+      notes: ["请指定 version，禁止默认 1.20.1"],
+      action: versionRequiredAction(),
+    };
+  }
+  const version = query.version!.trim();
 
   // 5.5 兼容：to=mojang 保持旧行为（混淆短名），notes 提示改用 obfuscated 层
   const mojangHint =
@@ -731,7 +743,19 @@ export interface ParamResult {
 }
 
 export function getMethodParams(query: ParamQuery): ParamResult {
-  const version = query.version ?? DEFAULT_VERSION;
+  if (missingMcVersion(query.version)) {
+    return {
+      found: false,
+      className: query.className,
+      methodName: query.methodName,
+      parameters: [],
+      descriptor: "",
+      returnType: "void",
+      note: "请指定 version，禁止默认 1.20.1",
+      action: versionRequiredAction(),
+    };
+  }
+  const version = query.version!.trim();
   const { apiIndex, classNames } = loadParchment(version);
   const { className, methodName, descriptor } = query;
   const slash = toSlash(className);

@@ -129,27 +129,17 @@ ServerTickEvents.END_SERVER_TICK.register(server -> { ... });
 
 ### Forge / NeoForge
 
-```java
-// 消息类
-public class MyMessage implements IMessage {
-    private int data;
-    public MyMessage(int data) { this.data = data; }
-    public MyMessage(FriendlyByteBuf buf) { this.data = buf.readInt(); }
-    @Override public void toBytes(FriendlyByteBuf buf) { buf.writeInt(data); }
-    @Override public void fromBytes(FriendlyByteBuf buf) { data = buf.readInt(); }
-}
+Forge 1.17–1.20 仍用 `SimpleChannel`。NeoForge **1.21.1 起不要抄下面这段**（loader-api 未收录 `SimpleChannel`；官方是 Payload）。见 `neoforge/<ver>/.cursor/rules/06-networking.mdc`。
 
-// 注册
+```java
+// Forge SimpleChannel（不要当 NeoForge 1.21+ 正文）
 SimpleChannel channel = NetworkRegistry.newSimpleChannel(id);
 channel.registerMessage(id++, MyMessage.class,
     MyMessage::toBytes, MyMessage::new, (msg, ctx) -> {
         ctx.enqueueWork(() -> { /* 处理 */ });
         ctx.setPacketHandled(true);
     });
-
-// 发送
 channel.sendToServer(new MyMessage(42));
-channel.send(PacketDistributor.PLAYER.with(() -> player), new MyMessage(42));
 ```
 
 ### Fabric

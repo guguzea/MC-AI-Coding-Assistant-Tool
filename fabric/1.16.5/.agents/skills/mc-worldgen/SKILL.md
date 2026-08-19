@@ -7,16 +7,33 @@ dependencies: []
 mappings: yarn
 ---
 
-# mc-worldgen
+# 世界生成（Fabric 1.16.5）
 
-> Wave D 技能骨架（fabric 1.16.5）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+官方 wiki 常无独立教程。签名来自本版 **loader-api** `BiomeModifications`。Yarn。1.16.5 的 `addFeature` 吃的是 **ConfiguredFeature** 的 `RegistryKey`，不是 1.18+ 的 PlacedFeature。
 
-## 快速入口
+```java
+BiomeModifications.addFeature(
+    BiomeSelectors.foundInOverworld(),
+    GenerationStep.Feature.VEGETAL_DECORATION,
+    MY_CONFIGURED_FEATURE
+);
+```
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.16.5/knowledge/antipatterns/`
+已核：`addFeature(Predicate, GenerationStep.Feature, RegistryKey<ConfiguredFeature<?, ?>>)`；`addStructure`；`addCarver(Predicate, GenerationStep.Carver, RegistryKey<ConfiguredCarver<?>>)`；`addSpawn(..., SpawnGroup, EntityType, weight, min, max)`；`create(Identifier)`。
 
-## 下一步
+## Decision Flow
 
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+```
+IF 往群系加 configured feature
+  → addFeature（不是 PlacedFeature）
+IF 结构
+  → addStructure
+IF 生物
+  → addSpawn + SpawnGroup
+```
+
+## 常见错误
+
+- ❌ 抄 1.18+ `RegistryKey<PlacedFeature>`
+- ❌ Mojmap `GenerationStep.Decoration` / `MobCategory`
+- ❌ Forge `BiomeLoadingEvent`

@@ -131,10 +131,28 @@ function testWorkflow() {
   assert.equal(publish.found, true);
   assert.ok(publish.body?.includes("build/libs"));
 
-  for (const name of ["mc-new-item", "mc-new-blockentity", "mc-mixin", "mc-worldgen", "mc-config", "mc-gametest"]) {
+  for (const name of [
+    "mc-new-item",
+    "mc-new-blockentity",
+    "mc-mixin",
+    "mc-worldgen",
+    "mc-config",
+    "mc-gametest",
+    "mc-networking",
+    "mc-capability",
+    "mc-recipe-data",
+    "mc-audio-vfx",
+    "mc-commands",
+    "mc-dimension-structure",
+    "mc-access",
+    "mc-bedrock-addon",
+  ]) {
     const w = getWorkflowTemplate(name);
     assert.equal(w.found, true, name);
   }
+  const worldgen = getWorkflowTemplate("mc-worldgen");
+  assert.ok(worldgen.body?.includes("generate_worldgen"), worldgen.body);
+  assert.ok(/platform/.test(worldgen.body ?? ""), "mc-worldgen 须提示 generate_worldgen 传 platform");
 }
 
 function testPatternsResource() {

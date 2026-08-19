@@ -15,8 +15,8 @@ mappings: yarn
 // 1. 创建 SoundEvent
 private static final SoundEvent MY_SOUND = Registry.register(
     Registries.SOUND_EVENT,
-    new Identifier(MOD_ID, "my_sound"),
-    SoundEvent.of(new Identifier(MOD_ID, "my_sound"))
+    Identifier.of(MOD_ID, "my_sound"),
+    SoundEvent.of(Identifier.of(MOD_ID, "my_sound"))
 );
 
 // 2. 播放声音

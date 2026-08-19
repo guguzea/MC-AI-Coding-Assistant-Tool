@@ -42,10 +42,8 @@ public class ModFluids {
 ```java
 public class MyFluidBlock extends BlockFluidClassic {
     public MyFluidBlock(Fluid fluid) {
-        super(fluid, new Block(Material.WATER)
-            .hardnessAndResistance(100.0f)
-            .noDrops()
-        );
+        super(fluid, Material.WATER);
+        setHardness(100.0F);
     }
 }
 ```
@@ -54,12 +52,11 @@ public class MyFluidBlock extends BlockFluidClassic {
 
 ```java
 public class MyBucket extends ItemBucket {
-    public MyBucket(Fluid fluid) {
-        super(fluid, new Item.Properties()
-            .maxStackSize(1)
-            .containerItem(Items.BUCKET)
-        );
-        this.setRegistryName(MOD_ID, "my_fluid_bucket");
+    public MyBucket(Block containedBlock) {
+        super(containedBlock);
+        setMaxStackSize(1);
+        setContainerItem(Items.BUCKET);
+        setRegistryName(MOD_ID, "my_fluid_bucket");
     }
 }
 ```

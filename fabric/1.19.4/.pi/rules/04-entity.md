@@ -30,7 +30,7 @@ IF 静态实体（不移动、不交互）
 
 IF 有行为实体（动物、怪物）
   → EntityType.Builder.create(MyEntity::new, SpawnGroup.CREATURE)
-  → 重写 registerAttributes() 和 init() 方法
+  → FabricDefaultAttributeRegistry.register + MobEntity.createMobAttributes()
 
 IF 需要在服务端和客户端分别初始化
   → 拆分 ModInitializer 为 client/server entrypoints
@@ -59,10 +59,10 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
         MyPigEntity::new,
         SpawnGroup.CREATURE
     )
-    .dimensions(EntityDimensions.fixed(0.9f, 1.4f))  // 宽, 高
+    .setDimensions(0.9f, 1.4f)
     .maxTrackingRange(8)
             .trackingTickInterval(3)
-    .build()
+    .build("my_pig")
 );
 ```
 
@@ -101,10 +101,7 @@ SpawnRestriction.register(
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (context) ->
-            new AnimalEntityRenderer<>(context.getModelLoader()
-                .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
-        );
+        EntityRendererRegistry.register(MY_PIG, PigEntityRenderer::new);
     }
 }
 ```

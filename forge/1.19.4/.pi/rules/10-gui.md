@@ -102,7 +102,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> IContainerFactory.of(MyMenu::new)
+        () -> IForgeMenuType.create(MyMenu::new)
     );
 ```
 
@@ -160,19 +160,9 @@ public class MyBlock extends Block {
     public MenuProvider getMenuProvider(BlockState state, Level level,
             BlockPos pos) {
         return new SimpleMenuProvider(
-            (windowId, inv, player) -> new MyMenu(windowId, inv, InvMenu.noGlobalStd()), // wrong
+            (windowId, inv, player) -> new MyMenu(windowId, inv),
             Component.literal("My Menu")
         );
-        // Better: use IContainerFactory with the registered MenuType
-        return new MenuProvider() {
-            @Override public Component getDisplayName() {
-                return Component.literal("My Menu");
-            }
-            @Override public AbstractContainerMenu createMenu(int windowId,
-                    Inventory inv, Player player) {
-                return new MyMenu(windowId, inv, player);
-            }
-        };
     }
 }
 ```

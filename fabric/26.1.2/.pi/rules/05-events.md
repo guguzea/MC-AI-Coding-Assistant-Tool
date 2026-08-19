@@ -44,6 +44,7 @@ description: 05 — 事件系统
 → 实体死亡 → ServerLivingEntityEvents.AFTER_DEATH
 → 生命周期 → ServerLifecycleEvents.SERVER_STARTED / SERVER_STOPPING
 → 数据包重载 → ServerLifecycleEvents.END_DATA_PACK_RELOAD
+→ 自定义按键 → 仅客户端：KeyMappingHelper.registerKeyMapping + ClientTickEvents（文档 develop_key-mappings）
 → 不要 @SubscribeEvent / IEventBus
 → 核不到 → search_fabric_docs version=26.1.2
 ```
@@ -101,12 +102,16 @@ ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
 });
 ```
 
+### 按键（仅客户端）
+
+文档 `26.1.2/develop_key-mappings`。loader-api：`net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(KeyMapping)`。分类翻译键 `key.category.<namespace>.<path>`。响应用 `ClientTickEvents`，不要在服务端入口注册。
+
 ## 常见错误
 
 - ❌ 把 Yarn 的 `ActionResult` / `PlayerEntity` / `world.isClient` 抄进 26.1.2
 - ❌ `PayloadTypeRegistry.playS2C()`（那是 Yarn 1.21；本档网络见 `06-networking.mdc`）
 - ❌ `gui.setScreen`（26.2 旁路，不是本档）
-- ❌ 模块坐标写成 `net.fabric.sdk`
+- ❌ 在服务端入口调用 KeyMappingHelper / 注册 KeyMapping
 
 ## 扩展点
 
@@ -116,3 +121,4 @@ ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
 | `mc-entity` | ServerLivingEntityEvents |
 | `mc-networking` | 事件里发 CustomPacketPayload |
 | `mc-gui` | 客户端 tick 打开 Screen |
+| `mc-fabric-api` | KeyMappingHelper |

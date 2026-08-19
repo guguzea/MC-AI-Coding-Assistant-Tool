@@ -196,14 +196,14 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 ```java
 // 正确：单次批量同步
-public class SyncAllDataMessage implements IMessage {
+public class SyncAllDataMessage {
     private CompoundTag data;
 
-    public void toBytes(PacketByteBuf buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(data);
     }
 
-    public void fromBytes(PacketByteBuf buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         data = buf.readNbt();
     }
 }

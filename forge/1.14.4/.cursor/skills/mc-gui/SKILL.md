@@ -1,25 +1,25 @@
 ---
 name: mc-gui
-description: Minecraft Forge GUI/菜单开发。创建自定义 ContainerMenu、Screen、DataSlot 数据同步。触发词：Screen、Menu、ContainerMenu、MenuType、MenuScreens、quickMoveStack、IContainerFactory、ContainerData、DataSlot
+description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、数据同步。触发词：Screen、Container、ContainerType、ScreenManager、transferStackInSlot、IForgeContainerType
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
 # GUI/菜单开发（Forge 1.14.4）
 
-## Decision: 是否需要 Menu
+## Decision: 是否需要 Container
 
 ```
 IF 交互时需要持久数据存储（机器进度、箱子物品）
-  → 使用 AbstractContainerMenu + MenuType + Screen
+  → 使用 Container + ContainerType + ContainerScreen
 
 IF 只是显示 UI（无数据）
-  → 直接使用 Screen（无需 Menu）
+  → 直接使用 Screen（无需 Container）
 
 IF 需要物品栏槽位（多格容器）
-  → AbstractContainerMenu（slot 管理 + quickMoveStack）
+  → Container（slot 管理 + transferStackInSlot）
 ```
 
 ## 完整示例：方块交互打开 GUI
@@ -39,14 +39,14 @@ public static final RegistryObject<ContainerType<MyMenu>> MY_MENU =
 MENUS.register(modEventBus);
 ```
 
-### 2. 实现 AbstractContainerMenu
+### 2. 实现 Container
 
 ```java
-public class MyMenu extends AbstractContainerMenu {
-    private final SimpleContainerData dataSlots;
+public class MyMenu extends Container {
+    private final IIntArray dataSlots;
 
-    // 服务端构造函数（3 参数：通过 NetworkHooks.openScreen 调用）
-    public MyMenu(int windowId, Inventory inv, Player player) {
+    // 客户端工厂走 IForgeContainerType：int + PlayerInventory + PacketBuffer
+    public MyMenu(int windowId, PlayerInventory inv, PacketBuffer extraData) {
         super(MY_MENU.get(), windowId);
         // 添加槽位（示例：3 行 9 列容器 = 27 格，索引 0-26）
         for (int row = 0; row < 3; row++) {
@@ -56,18 +56,18 @@ public class MyMenu extends AbstractContainerMenu {
         }
 
         // 同步数据（服务端 → 客户端）
-        this.dataSlots = new SimpleContainerData(1); // 1 个整数同步
-        this.addDataSlots(this.dataSlots);
+        this.dataSlots = new IntArray(1); // 1 个整数同步
+        this.trackIntArray(this.dataSlots);
     }
 
     // 提供 getter 让 Screen 读取数据
-    public SimpleContainerData getData() {
+    public IIntArray getData() {
         return this.dataSlots;
     }
 
     // Shift-点击转移物品
     @Override
-    public ItemStack quickMoveStack(Player player, int slotIndex) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
 
@@ -93,7 +93,7 @@ public class MyMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return true; // 或添加距离检查
     }
 }
@@ -136,10 +136,10 @@ public class ClientSetup {
 ### 5. Screen 类（CLIENT ONLY）
 
 ```java
-public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
+public class MyScreen extends ContainerScreen<MyMenu> {
     private int progress; // 本地缓存，用于渲染
 
-    public MyScreen(MyMenu menu, Inventory playerInventory, Component title) {
+    public MyScreen(MyMenu menu, PlayerInventory playerInventory, ITextComponent title) {
         super(menu, playerInventory, title);
         this.progress = 0;
     }
@@ -151,21 +151,20 @@ public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
     }
 
     @Override
-    protected void containerTick() {
-        super.containerTick();
+    protected void tick() {
+        super.tick();
         // 每帧同步数据
         this.progress = this.menu.getData().get(0);
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // blit 在 this.leftPos / this.topPos 位置绘制背景 PNG
-        graphics.blit(BACKGROUND_TEXTURE, this.leftPos, this.topPos,
-            0, 0, this.imageWidth, this.imageHeight);
-        // 叠加进度条
-        int barWidth = (int)(this.progress / 100.0 * this.imageWidth);
-        graphics.fill(this.leftPos, this.topPos,
-            this.leftPos + barWidth, this.topPos + 14, 0xFF55FF55);
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
+        int x = (this.width - this.xSize) / 2;
+        int y = (this.height - this.ySize) / 2;
+        this.blit(x, y, 0, 0, this.xSize, this.ySize);
+        int barWidth = (int)(this.progress / 100.0 * this.xSize);
+        fill(x, y, x + barWidth, y + 14, 0xFF55FF55);
     }
 
     private static final ResourceLocation BACKGROUND_TEXTURE =
@@ -173,9 +172,9 @@ public class MyScreen extends AbstractContainerMenuScreen<MyMenu> {
 }
 ```
 
-## ContainerData 同步（服务端 ↔ 客户端）
+## IIntArray 同步（服务端 ↔ 客户端）
 
-Menu 自己持有 `SimpleContainerData` 并提供 `getData()` getter，Screen 通过 `menu.getData()` 访问：
+Container 自己持有 `IIntArray` 并提供 `getData()` getter，Screen 通过 `menu.getData()` 访问：
 
 ```java
 // 服务端设置
@@ -185,22 +184,18 @@ this.menu.getData().set(0, newValue); // 自动同步到客户端
 int value = this.menu.getData().get(0);
 ```
 
-## DataSlot（槽位级别同步，已过时）
-
-Forge 1.19.4 推荐使用 `ContainerData`/`SimpleContainerData` 而非 `DataSlot`。
-
 ## 常见错误
 
-- ❌ `MenuScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
-- ❌ `quickMoveStack` 返回空导致物品丢失 → 始终实现完整的转移逻辑
-- ❌ 方块 `getMenuProvider` 返回 null → `use()` 中检查 null
-- ❌ 在 Menu 构造函数中直接修改世界数据 → 使用 `broadcastChanges()` 批量同步
-- ❌ `stillValid()` 始终返回 true → 添加距离检查 `player.distanceToSqr(...) <= 8.0`
+- ❌ `ScreenManager.registerFactory()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
+- ❌ 方块未提供 `INamedContainerProvider` → `onBlockActivated` 里检查 TileEntity
+- ❌ 在 Container 构造函数中直接修改世界数据 → 使用 `detectAndSendChanges()`
+- ❌ `canInteractWith()` 始终返回 true → 添加距离检查
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-------------|-----------|
-| `mc-registry` | MenuType、Slot 等需要 DeferredRegister 注册 |
+| `mc-registry` | ContainerType、Slot 等需要 DeferredRegister 注册 |
 | `mc-item` | 物品栏槽位中的 ItemStack 交互 |
 | `mc-capability` | Container 可附加 Capability 管理自定义数据 |

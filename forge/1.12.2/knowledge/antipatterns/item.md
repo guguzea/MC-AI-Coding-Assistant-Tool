@@ -1,41 +1,20 @@
 # 物品/工具反模式
 
-## 错误：ToolMaterial 接口方法不完整
+## 错误：把 1.14+ 的 `IItemTier` 抄进 1.12.2
 
-**症状：** 编译错误，找不到方法
+**症状：** 找不到 `IItemTier` / `Ingredient.fromItems`
 
 ```java
-// ❌ 错误
-public enum MyTier implements IItemTier {
-    COPPER(3, 1561, 8.0f, 3.0f, 15);
-
-    @Override public int getMaxUses() { return durability; }
-    // 缺少其他方法
-}
+// ❌ 本档没有 IItemTier
+public enum MyTier implements IItemTier { ... }
 ```
 
-**正确方案：** 实现所有 6 个方法
+**正确方案：** `Item.ToolMaterial` 是原版枚举；自定义用 `EnumHelper.addToolMaterial`
 
 ```java
-public enum MyTier implements IItemTier {
-    COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
-
-    private final int harvestLevel;
-    private final int maxUses;
-    private final float efficiency;
-    private final float damage;
-    private final int enchantability;
-    private final Supplier<Ingredient> repair;
-
-    MyTier(...) { ... }
-
-    @Override public int getMaxUses() { return maxUses; }
-    @Override public float getEfficiency() { return efficiency; }
-    @Override public float getAttackDamage() { return damage; }
-    @Override public int getHarvestLevel() { return harvestLevel; }
-    @Override public int getEnchantability() { return enchantability; }
-    @Override public Ingredient getRepairMaterial() { return repair.get(); }
-}
+public static final Item.ToolMaterial COPPER = EnumHelper.addToolMaterial(
+    "COPPER", 2, 200, 5.0F, 1.5F, 10
+);
 ```
 
 ---

@@ -100,11 +100,11 @@ FabricBlockSettings.create()
 实体类型，注册实体时使用。
 
 ```java
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
-    .dimensions(EntityDimensions.changing(0.9f, 1.4f))
-    .maxTrackOffset(10)
-    .trackRangeBlocks(10)
-    .build()
+EntityType.Builder.create(MyEntity::new, SpawnGroup.CREATURE)
+    .dimensions(0.9f, 1.4f)
+    .maxTrackingRange(8)
+    .trackingTickInterval(3)
+    .build("my_entity")
 ```
 
 ## 版本术语

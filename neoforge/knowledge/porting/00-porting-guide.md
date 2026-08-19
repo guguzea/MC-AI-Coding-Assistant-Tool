@@ -9,7 +9,7 @@
 | 注册系统 | DeferredRegister / RegistryObject | DeferredRegister / DeferredHolder | Registry#register |
 | Mixin 支持 | via ForgeGradle | via NeoGradle | 内置 |
 | 事件系统 | @SubscribeEvent + MinecraftForge.EVENT_BUS | @SubscribeEvent + NeoForge.EVENT_BUS | @Environment / Callback |
-| 网络通信 | SimpleChannel (net.minecraftforge.network) | SimpleChannel (net.neoforged.neoforge.network) | Fabric API |
+| 网络通信 | SimpleChannel (`net.minecraftforge.network`) | **不要**抄 SimpleChannel。1.20.4 起走 Payload（官方 menus 页仍可能写 `NetworkHooks.openScreen`；1.21.1 网络页是 `RegisterPayloadHandlersEvent`）。按 `neoforge/<精确版本>/.cursor/rules/06-networking.mdc` | Fabric `PayloadTypeRegistry` / `CustomPayload` |
 | 元数据文件 | mods.toml | neoforge.mods.toml | fabric.mod.json |
 | Mod ID 依赖 | `modId="forge"` | `modId="neoforge"` | N/A |
 | 包名空间 | net.minecraftforge | net.neoforged | net.fabricmc.fabric.* |
@@ -143,14 +143,9 @@ public static final Item MY_ITEM = Registry.register(
 ### 网络通信变更
 
 ```java
-// NeoForge
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.handling.IPacketHandler;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
-
-// Fabric
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+// NeoForge 1.21.x：不要写 SimpleChannel。用 RegisterPayloadHandlersEvent + CustomPacketPayload
+// 全文见该档 neoforge/<ver>/.cursor/rules/06-networking.mdc 与官方
+// https://docs.neoforged.net/docs/1.21.1/networking/payload/
 ```
 
 ### DeferredRegister → Registry.register

@@ -17,7 +17,7 @@ public class ExampleMod implements ModInitializer {
     // ❌ 类加载时注册，但 onInitialize() 还未执行
     private static final Item MY_ITEM = Registry.register(
         Registries.ITEM,
-        new Identifier(MOD_ID, "my_item"),
+        Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings())
     );
 
@@ -34,7 +34,7 @@ public class ExampleMod implements ModInitializer {
     // ✅ 静态初始化在类加载时执行，但仍然正确注册
     private static final Item MY_ITEM = Registry.register(
         Registries.ITEM,
-        new Identifier(MOD_ID, "my_item"),
+        Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings())
     );
 
@@ -51,15 +51,15 @@ public class ExampleMod implements ModInitializer {
 
 **错误代码：**
 ```java
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block_item"),  // ❌ 不同名
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block_item"),  // ❌ 不同名
     new BlockItem(myBlock, new Item.Settings()));
 ```
 
 **正确方案：**
 ```java
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // ✅ 同名
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // ✅ 同名
     new BlockItem(myBlock, new Item.Settings()));
 ```
 
@@ -68,14 +68,14 @@ Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // ✅ �
 **错误代码：**
 ```java
 // 注册了方块，但没有物品形态
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
 // ❌ 忘记注册 BlockItem
 ```
 
 **正确方案：**
 ```java
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // ✅ 必需
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // ✅ 必需
     new BlockItem(myBlock, new Item.Settings()));
 ```
 
@@ -84,7 +84,7 @@ Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // ✅ �
 **错误代码：**
 ```java
 // ❌ 使用了错误的 Registry 类型
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),
     new BlockItem(myBlock, new Item.Settings()));  // BlockItem 应该是 ITEM
 ```
 
@@ -93,9 +93,9 @@ Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
 **错误代码：**
 ```java
 // ❌ 直接写完整字符串
-new Identifier("examplemod:my_item");  // 这会被当作 namespace = "examplemod:my_item"
+Identifier.of("examplemod:my_item");  // 这会被当作 namespace = "examplemod:my_item"
 // ✅ 正确方式
-new Identifier(MOD_ID, "my_item");
+Identifier.of(MOD_ID, "my_item");
 ```
 
 ## 诊断清单

@@ -13,12 +13,15 @@ mappings: mojmap
 
 # 10 — GUI（NeoForge 1.21.1）
 
-来源：https://docs.neoforged.net/docs/1.21.1/gui/menus/
+来源（官方原文；本档 data 未入库 gui 页，以线上版为准）：
+- https://docs.neoforged.net/docs/1.21.1/gui/menus/
+- https://docs.neoforged.net/docs/1.21.1/gui/screens/
 
 - 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
-- `AbstractContainerMenu` + 客户端 `Screen` + `MenuScreens.register`。
-- MenuType + AbstractContainerMenu；槽位同步不要用 SimpleChannel。打开菜单以该版 gui/menus 文档为准。
-- 额外数据同步：DataSlot / ContainerData，或 06 的 Payload。**禁止 SimpleChannel。**
-
-1.20.4 文档出现 `IForgeMenuType.create` 与 `NetworkHooks.openScreen`。更高版本名称可能变，先 `search_neoforge_docs version=1.21.1 query=MenuType`。
-
+- 无 extra data：官方示例 `new MenuType(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)`（本档原文无 `<>`）。
+- extra data：`IMenuTypeExtension.create(...)` + 客户端构造读 extra buf。**不是** 1.20.4 文档名 `IForgeMenuType`。loader-api：`create(IContainerFactory)`，实例 `create(int, Inventory, RegistryFriendlyByteBuf)`。
+- 打开：逻辑服务端 `IPlayerExtension#openMenu`。官方示例 `serverPlayer.openMenu(new SimpleMenuProvider((id, inv, player) -> new MyMenu(id, inv), Component.translatable(...)))`。带 extra 的 `Consumer<RegistryFriendlyByteBuf>` 只给 `IContainerFactory` 菜单用。
+- Screen：物理客户端、mod bus 上 `RegisterMenuScreensEvent`：`event.register(MY_MENU.get(), MyContainerScreen::new)`。**不要**写 `MenuScreens.register`。
+- 槽位同步：`Slot` / `SlotItemHandler`、`DataSlot` / `ContainerData`；额外自定义走 06 Payload。**禁止 SimpleChannel。**
+- 方块：官方示例 `getMenuProvider` + `useWithoutItem` 里 `serverPlayer.openMenu(...)`，返回 `InteractionResult.sidedSuccess(level.isClientSide)`。
+- loader-api **未收录** `NetworkHooks`。不要抄 1.20.4 的 `NetworkHooks.openScreen`。

@@ -12,7 +12,7 @@ private static final Item MY_ITEM = new Item(new Item.Settings());
 
 // ✅ 正确
 private static final Item MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 ```
 
@@ -24,13 +24,13 @@ private static final Item MY_ITEM =
 
 ```java
 // ❌ 错误
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 不同名！
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block_item"),  // 不同名！
     new BlockItem(myBlock, new Item.Settings()));
 
 // ✅ 正确
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // 同名！
     new BlockItem(myBlock, new Item.Settings()));
 ```
 
@@ -85,10 +85,10 @@ new Item(new Item.Settings().food(
 
 ```java
 // ❌ 错误
-new Identifier("my-mod", "my_item")  // mod ID 不能有横杠
+Identifier.of("my-mod", "my_item")  // mod ID 不能有横杠
 
 // ✅ 正确
-new Identifier("mymod", "my_item")  // 使用下划线或直接拼接
+Identifier.of("mymod", "my_item")  // 使用下划线或直接拼接
 ```
 
 ## ❌ 注册名使用大写或横杠
@@ -99,9 +99,9 @@ new Identifier("mymod", "my_item")  // 使用下划线或直接拼接
 
 ```java
 // ❌ 错误
-new Identifier(MOD_ID, "My_Item")     // 大写
-new Identifier(MOD_ID, "my-item")     // 横杠
+Identifier.of(MOD_ID, "My_Item")     // 大写
+Identifier.of(MOD_ID, "my-item")     // 横杠
 
 // ✅ 正确
-new Identifier(MOD_ID, "my_item")     // 全小写，下划线分隔
+Identifier.of(MOD_ID, "my_item")     // 全小写，下划线分隔
 ```

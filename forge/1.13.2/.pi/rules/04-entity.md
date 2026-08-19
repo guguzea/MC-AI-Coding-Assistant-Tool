@@ -15,17 +15,15 @@ description: 04 — 实体开发
 - 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
 - 推荐继承 `LivingEntity`，除非需要完全自定义行为
 - 实体必须通过 `RegistryEvent.Register<EntityType>` 注册
-- 必须在 `mods.toml` 中添加 `[[entities]]` 声明
+- 官方 `mods.toml` **没有** `[[entities]]` 表；不要编实体 TOML 段。本档不要把 1.14+ 的 `DeferredRegister` 当唯一写法
 
 ### EntityType.Builder 配置
 
 ```java
-EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
-    .size(float width, float height)             // 碰撞箱大小
-    .trackingRange(int range)                   // 客户端追踪范围
-    .updateInterval(int ticks)                  // 服务端更新间隔
-    .fireImmune()                              // 免疫火焰伤害
-    .build(String modId)
+// Forge 1.13.2-25.0.220 javadoc：create(Class, Function<World, T>)，然后 tracker + build
+EntityType.Builder.create(MyEntity.class, MyEntity::new)
+    .tracker(8, 3, true)   // range, updateFrequency, sendVelocityUpdates
+    .build("my_entity")
 ```
 
 ### 实体属性（Attribute）
@@ -64,21 +62,12 @@ IF 实体需要完全控制渲染和碰撞
   → 继承 Entity（不推荐，需要大量手动实现）
 ```
 
-### Decision: 选择 MobCategory（生物分类）
+### Decision: 生成分类
 
 ```
-IF 自然生成的动物/怪物
-  → MobCategory.CREATURE（被动生物）
-  → MobCategory.MONSTER（敌对生物）
-  → MobCategory.WATER_CREATURE（水生生物）
-  → MobCategory.AMBIENT（环境生物，如蝙蝠）
-
-IF NPC 或乘客
-  → MobCategory.MISC（杂项）
-  → 不会自然生成
-
-IF 乘坐实体
-  → 使用 MobCategory.MISC 或在实体类中覆盖 getType().getCategory()
+1.13.2 官方 EntityType.Builder.create 是 (Class, Function<World, T>)，
+没有 MobCategory / EntityClassification 参数。不要抄 1.14+ 的 create(factory, classification)。
+被动/敌对差异走实体基类（见上）与原版生成逻辑，不要编造本档没有的 Builder 分类重载。
 ```
 
 ### Decision: 渲染器选择
@@ -137,11 +126,8 @@ public class MyEntity extends LivingEntity {
 // registry/ModEntities.java
 public class ModEntities {
     public static final EntityType<MyEntity> MY_ENTITY =
-        EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE)
-            .size(0.6f, 1.8f)
-            .trackingRange(8)
-            .updateInterval(3)
-            .fireImmune()
+        EntityType.Builder.create(MyEntity.class, MyEntity::new)
+            .tracker(8, 3, true)
             .build("my_entity");
 
     public static void register() {
@@ -165,7 +151,7 @@ public class ExampleMod {
 ```java
 // ❌ 错误示例：没有 setRegistryName
 event.getRegistry().register(
-    EntityType.Builder.create(MyEntity::new, MobCategory.CREATURE).build("my_entity")
+    EntityType.Builder.create(MyEntity.class, MyEntity::new).tracker(8, 3, true).build("my_entity")
 ); // 没有注册名，无法引用
 ```
 

@@ -10,7 +10,7 @@ description: 01 — Quilt 注册（QSL ≠ FAPI Registry）
 
 - QSL Core Registry 与 Fabric API Registry **不完全相同**（Addition Events Helper、按条目排除同步等）
 - Quilted Fabric API 在 **有 QSL 替代** 处 **弃用** 对应 FAPI 模块
-- 简单物品/方块仍可用 **Vanilla** `Registry.register(Registries.*, id, value)`（与 Fabric 共享，不是 FAPI 专属）
+- 简单物品/方块仍可用 **Vanilla** `Registry.register(Registry.ITEM/BLOCK, id, value)`（1.18.2 **没有** `Registries` 枚举，那是 1.19.3+；不是 FAPI 专属）
 - **不要**生成 `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当作 QSL
 
 ## Decision Flow

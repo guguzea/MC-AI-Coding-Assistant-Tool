@@ -1,29 +1,23 @@
 ---
 name: mc-mixin
-description: Minecraft Forge Mixin 注入。安全使用 @Mixin、@Inject、@At、@ModifyVariable。触发词：Mixin、@Inject、@At、mixins.json、AccessWidener、ASM
+description: Minecraft Forge Mixin 注入。安全使用 @Mixin、@Inject、@At、@ModifyVariable。触发词：Mixin、@Inject、@At、mixins.json、AccessTransformer、ASM
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
-# Mixin 注入（Forge 1.19.4）
+# Mixin 注入（Forge 1.14.4）
 
-Mixin 通过修改已编译的字节码实现运行时注入。Forge 使用 Mixin 框架。
+官方 1.14.x 文档检索**没有**独立 Mixin 教程页。下列 `@Inject` / `mixins.json` 形态与后续 Forge 相同，但 **Gradle 插件坐标、`mods.toml [[mixins]]`、JAVA_17 都不是本档已核内容**。核不到构建步骤就停，不要把 1.19.4 模板当 1.14 官方 MDK。
+
+Mixin 通过修改已编译的字节码实现运行时注入。
 
 ## 快速开始
 
-### 1. 添加依赖（build.gradle）
+### 1. 构建（不要抄未核插件坐标）
 
-```gradle
-plugins {
-    id 'org.spongepowered.mixin' version '0.7.+'
-}
-
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-}
-```
+官方 1.14.x 文档与 1.20.1 MDK 都**没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 运行时随 Forge 提供；`mixins.json` 见 Sponge Mixin wiki。核不到本档 Gradle 插件坐标就停。
 
 ### 2. 配置 mixins.json
 
@@ -34,7 +28,7 @@ mixin {
   "required": true,
   "minVersion": "0.8",
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_8",
   "refmap": "${mod_id}.refmap.json",
   "client": ["client.SomeMixin"],
   "server": [],
@@ -42,12 +36,9 @@ mixin {
 }
 ```
 
-### 3. mods.toml 中声明
+### 3. mods.toml
 
-```toml
-[[mixins]]
-config = "${mod_id}.mixins.json"
-```
+`[[mixins]]` **不是** 1.20.1 官方 MDK 原文（该 MDK 的 `mods.toml` 无此段）。NeoForge 1.21.1 文档 `gettingstarted/modfiles` 才核到 `[[mixins]]` + `config`。本档不要把邻加载器 TOML 当 Forge MDK。
 
 ## Decision: 选择注入目标
 
@@ -59,31 +50,31 @@ IF 修改方法参数值
   → @ModifyVariable
 
 IF 修改方法返回值
-  → @ModifyReturnValue
+  → @Inject RETURN + CallbackInfoReturnable；@ModifyReturnValue 仅 MixinExtras
 
 IF 调用原方法前/后执行代码
-  → @Inject + At.SHEAD / At.TAIL
+  → @Inject + HEAD / At.TAIL
 ```
 
 ## @Inject 用法
 
 ```java
-@Mixin(Player.class)
+@Mixin(PlayerEntity.class)
 public class MixinPlayer {
     @Inject(
         at = @At(value = "HEAD"),  // 在方法开头注入
-        method = "attack(Lnet/minecraft/world/entity/LivingEntity;)V"
+        method = "attackTargetEntityWithCurrentItem(Lnet/minecraft/entity/Entity;)V"
     )
-    private void onAttack(LivingEntity target, CallbackInfo ci) {
+    private void onAttack(Entity target, CallbackInfo ci) {
         // 在原方法执行前运行
         System.out.println("Player attacks!");
     }
 
     @Inject(
         at = @At(value = "RETURN"),  // 在方法返回前注入
-        method = "attack(Lnet/minecraft/world/entity/LivingEntity;)V"
+        method = "attackTargetEntityWithCurrentItem(Lnet/minecraft/entity/Entity;)V"
     )
-    private void afterAttack(LivingEntity target, CallbackInfo ci) {
+    private void afterAttack(Entity target, CallbackInfo ci) {
         // 在原方法执行完毕后运行
     }
 }
@@ -133,7 +124,7 @@ public void someMethod(CallbackInfo ci) {
 
 ```java
 @ModifyArg(
-    at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;damage(III)V"),
+    at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;damageItem(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V"),
     index = 0
 )
 private int modifyDamageAmount(int amount) {
@@ -144,7 +135,7 @@ private int modifyDamageAmount(int amount) {
 ## @Shadow（引用目标类字段/方法）
 
 ```java
-@Mixin(Player.class)
+@Mixin(PlayerEntity.class)
 public abstract class MixinPlayer {
     @Shadow
     public abstract int getScore();
@@ -155,26 +146,25 @@ public abstract class MixinPlayer {
 }
 ```
 
-## Access Widener（替代 Mixin 的轻量方案，与 Mixin 是完全不同的独立技术）
+## Access Transformer（Forge AT；不是 Fabric Access Widener）
 
-Access Widener 开放 `private`/`protected` 成员为 `public`，无需字节码注入。当 Mixin 过于复杂时使用此方案。
+Forge 用 `accesstransformer.cfg` 放宽可见性，无需字节码注入。当 Mixin 过于复杂时使用此方案。
 
 ### 与 Mixin 的区别
 
-| | Mixin | Access Widener |
+| | Mixin | Access Transformer |
 |--|-------|----------------|
 | 作用 | 在方法/字段中注入新逻辑 | 直接改变成员可见性 |
-| 配置位置 | `mixin {}` 块 + `mixins.json` | `minecraft { accessTransformers }` |
-| 运行时机 | 运行时字节码注入 | 编译时重映射 |
+| 配置位置 | `mixin {}` 块 + `mixins.json` | `minecraft { accessTransformer }` |
+| 运行时机 | 运行时字节码注入 | 编译期 / 重映射 |
 
-### 配置 Access Widener
+### 配置 Access Transformer
 
 文件：`src/main/resources/META-INF/accesstransformer.cfg`
 ```
-# 开放 private 方法为 public
-public net.minecraft.world.entity.Entity getHealth()V
-# 开放 protected 字段为 public
-public net.minecraft.world.entity.Entity health F
+# 形态示例（1.14.4 包名是 net.minecraft.entity，不是 world.entity）
+# 具体成员用 MCP named 或 SRG，以工程 mappings 为准
+public net.minecraft.entity.LivingEntity getHealth()F
 ```
 
 build.gradle 中启用（**不是 `mixin {}` 块，而是 `minecraft {}` 块**）：
@@ -184,7 +174,7 @@ minecraft {
 }
 ```
 
-plugins 中**不需要** `org.spongepowered.mixin` 插件。Access Widener 只需要 ForgeGradle 内置支持。
+plugins 中**不需要** `org.spongepowered.mixin` 插件。Access Transformer 由 ForgeGradle 读取 `accesstransformer.cfg`。
 
 ## 常见错误
 
@@ -203,4 +193,4 @@ plugins 中**不需要** `org.spongepowered.mixin` 插件。Access Widener 只�
 
 | 配合 Skill | 协作说明 |
 |-------------|-----------|
-| `mc-registry` | Access Widener 开放注册类的 private 成员供 Mixin 访问 |
+| `mc-registry` | Access Transformer 开放注册类的 private 成员供 Mixin 访问 |

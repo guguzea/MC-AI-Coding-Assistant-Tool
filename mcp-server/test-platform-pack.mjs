@@ -262,6 +262,220 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   console.log("draft pack: findPack PACK_NOT_FOUND, listPacks drafts[]");
 }
 
+function sessionRuleIds(s) {
+  return (s.rules ?? []).map((r) => r.id);
+}
+
+function assertHasRuleIds(s, want, label) {
+  const ids = sessionRuleIds(s);
+  for (const w of want) {
+    assert.ok(ids.includes(w), `${label}: missing ${w} in ${ids.join(",")}`);
+  }
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", topics: ["10"] });
+  assert.equal(s.ok, true);
+  assertHasRuleIds(s, ["00", "01", "09", "10"], "topics 10");
+  assert.equal(s.rulesMode, "extended");
+  console.log("session topics 10 additive: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    skillNames: ["mc-gui"],
+  });
+  assert.equal((s.skillBodies ?? []).length, 1);
+  assert.equal(s.skillBodies[0].name, "mc-gui");
+  assert.ok(s.skillBodies[0].absPath, "skillBodies absPath");
+  assert.ok(s.skills?.some((x) => x.absPath), "skills[].absPath");
+  console.log("session skillNames mc-gui: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    skillNames: ["mc-not-a-real-skill"],
+  });
+  assert.equal((s.skillBodies ?? []).length, 0);
+  assert.ok((s.warnings ?? []).some((w) => /mc-not-a-real-skill/.test(w)));
+  console.log("session unknown skillName: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", task: "mc-new-gui" });
+  assertHasRuleIds(s, ["00", "01", "09", "10", "08", "06"], "task mc-new-gui");
+  assert.equal(s.rulesMode, "extended");
+  const names = (s.skillBodies ?? []).map((b) => b.name);
+  assert.ok(names.includes("mc-gui"), `bodies=${names.join(",")}`);
+  console.log("session task mc-new-gui: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-new-gui",
+    topics: ["02"],
+  });
+  assertHasRuleIds(s, ["00", "01", "09", "10", "08", "06", "02"], "task+topics union");
+  console.log("session task+topics union: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-new-gui",
+    skillNames: ["mc-gui"],
+  });
+  assert.equal((s.skillBodies ?? []).length, 1);
+  assert.equal(s.skillBodies[0].name, "mc-gui");
+  console.log("session task+skillNames dedupe mc-gui: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", topics: ["mixin"] });
+  assert.deepEqual(sessionRuleIds(s).sort(), ["00", "01", "09"]);
+  assert.equal((s.skillBodies ?? []).length, 0);
+  assert.ok((s.nextReads ?? []).some((n) => n.name === "mc-mixin"), JSON.stringify(s.nextReads));
+  console.log("session topics mixin nextReads: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", task: "mc-new-entity" });
+  assertHasRuleIds(s, ["04"], "task entity");
+  assert.ok((s.skillBodies ?? []).some((b) => b.name === "mc-entity"));
+  console.log("session full pack mc-new-entity: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.6", task: "mc-new-entity" });
+  assertHasRuleIds(s, ["00", "01", "09", "04"], "thin 1.20.6 entity");
+  assert.ok(!(s.skillBodies ?? []).some((b) => b.name === "mc-entity"));
+  assert.ok((s.warnings ?? []).some((w) => /mc-entity/.test(w)));
+  assert.ok(!(s.nextReads ?? []).some((n) => n.name === "mc-entity"));
+  console.log("session neo 1.20.6 thin entity: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    skillNames: ["mc-gui", "mc-item", "mc-block", "mc-entity", "mc-events", "mc-networking", "mc-mixin"],
+  });
+  assert.equal((s.skillBodies ?? []).length, 6);
+  assert.ok((s.warnings ?? []).some((w) => /上限 6/.test(w)));
+  console.log("session skillBodies cap 6: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1" });
+  assert.equal(s.ok, true);
+  assert.equal(s.rulesMode, "base");
+  assertHasRuleIds(s, ["00", "01", "09"], "default base");
+  assert.ok((s.warnings ?? []).some((w) => /仅注入底座/.test(w)));
+  console.log("session default base warning: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "not-a-real-task",
+  });
+  assert.equal(s.rulesMode, "base");
+  assertHasRuleIds(s, ["00", "01", "09"], "unknown task");
+  console.log("session unknown task base: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    topics: ["not-a-topic"],
+  });
+  assert.equal(s.rulesMode, "base");
+  assertHasRuleIds(s, ["00", "01", "09"], "illegal topics");
+  assert.ok((s.warnings ?? []).some((w) => /not-a-topic/.test(w)));
+  console.log("session illegal topics base: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-quilt-sess-"));
+  const packDir = join(tmp, "quilt", "9.8.8");
+  mkdirSync(join(packDir, ".cursor", "rules"), { recursive: true });
+  writeFileSync(join(packDir, "AGENTS.md"), "# quilt 9.8.8\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "00-project-setup.mdc"), "# 00\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "01-registry.mdc"), "# 01\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "09-anti-patterns.mdc"), "# 09\n", "utf8");
+  const q = sessionPlatformPack({
+    platform: "quilt",
+    minecraftVersion: "9.8.8",
+    repoRoot: tmp,
+  });
+  assert.equal(q.ok, true, JSON.stringify(q).slice(0, 400));
+  assert.ok((q.warnings ?? []).some((w) => /overlay|search_fabric_docs/.test(w)), (q.warnings ?? []).join(" | "));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("session quilt overlay missing warning: ok");
+}
+
+{
+  const ll = sessionPlatformPack({ platform: "liteloader", minecraftVersion: "1.12.2" });
+  assert.equal(ll.ok, true);
+  assert.equal((ll.skills ?? []).length, 0);
+  assert.ok((ll.warnings ?? []).some((w) => /无平台 Skill 索引/.test(w)));
+  const f17 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.7.10" });
+  assert.equal(f17.ok, true);
+  assert.equal((f17.skills ?? []).length, 0);
+  assert.ok((f17.warnings ?? []).some((w) => /无平台 Skill 索引/.test(w)));
+  console.log("session empty platform skills warning: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "forge",
+    minecraftVersion: "1.20.1",
+    skillNames: ["mc-geckolib"],
+  });
+  assert.ok((s.libSkills ?? []).some((x) => x.name === "mc-geckolib"));
+  assert.equal((s.skillBodies ?? []).length, 1);
+  assert.match(String(s.skillBodies[0].absPath), /knowledge\/libs/);
+  assert.ok(!(s.nextReads ?? []).some((n) => n.name === "mc-geckolib"));
+  console.log("session forge 1.20.1 geckolib: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "forge",
+    minecraftVersion: "1.12.2",
+    skillNames: ["mc-geckolib"],
+  });
+  assert.ok(!(s.libSkills ?? []).some((x) => x.name === "mc-geckolib"));
+  assert.equal((s.skillBodies ?? []).length, 0);
+  assert.ok((s.warnings ?? []).some((w) => /mc-geckolib/.test(w)));
+  console.log("session forge 1.12.2 geckolib filtered: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", task: "mc-new-gui" });
+  const libNames = new Set((s.libSkills ?? []).map((x) => x.name));
+  for (const n of s.nextReads ?? []) {
+    assert.ok(!libNames.has(n.name), `nextReads must not include lib skill ${n.name}`);
+  }
+  const viaActivate = activatePlatformPack({
+    action: "session",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-new-gui",
+  });
+  assertHasRuleIds(viaActivate, ["00", "01", "09", "10", "08", "06"], "activate forward task");
+  console.log("session nextReads excludes libSkills: ok");
+}
+
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;
 else delete process.env.MC_SKILL_PROJECT_ROOT;
 if (savedAllow) process.env.MC_SKILL_ALLOW_WRITE = savedAllow;

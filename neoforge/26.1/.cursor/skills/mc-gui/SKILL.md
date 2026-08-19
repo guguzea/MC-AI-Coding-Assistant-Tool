@@ -13,12 +13,14 @@ mappings: mojmap
 
 # 10 — GUI（NeoForge 26.1）
 
-来源：https://docs.neoforged.net/docs/gui/menus/
+官方 `https://docs.neoforged.net/docs/gui/menus/` **已 404**（2026-08-19 核）。本档 data **没有** `gui/menus` / `gui/screens` 入库页。已入库相关页：`inventories/container`。
+
+以本档 loader-api 为准（已核）：
 
 - 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
-- `AbstractContainerMenu` + 客户端 `Screen` + `MenuScreens.register`。
-- 菜单 API 以 26.1 gui 文档为准。
-- 额外数据同步：DataSlot / ContainerData，或 06 的 Payload。**禁止 SimpleChannel。**
-
-1.20.4 文档出现 `IForgeMenuType.create` 与 `NetworkHooks.openScreen`。更高版本名称可能变，先 `search_neoforge_docs version=26.1 query=MenuType`。
-
+- extra data：`IMenuTypeExtension.create(IContainerFactory)`；实例 `create(int, Inventory, RegistryFriendlyByteBuf)`。
+- 打开：`IPlayerExtension#openMenu(MenuProvider, BlockPos)` 或 `openMenu(MenuProvider, Consumer<RegistryFriendlyByteBuf>)`。`serverPlayer.openMenu(new SimpleMenuProvider(...))`。带 Consumer 的重载只给 `IContainerFactory` 菜单用。
+- Screen：物理客户端、mod bus 上 `RegisterMenuScreensEvent#register(MenuType, MenuScreens.ScreenConstructor)`。**不要**写 `MenuScreens.register`。
+- 容器实现优先官方 `inventories/container`：`ItemStackHandler`、`BaseContainerBlockEntity`、物品容器用 `DataComponents.CONTAINER` + `StackCopySlot`。
+- 槽位同步：`DataSlot` / `ContainerData`，或 06 的 Payload。**禁止 SimpleChannel。**
+- Java **25**；不要抄 1.20.4 的 `NetworkHooks.openScreen` / `IForgeMenuType`。

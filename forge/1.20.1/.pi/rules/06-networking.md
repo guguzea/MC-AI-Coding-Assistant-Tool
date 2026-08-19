@@ -30,13 +30,15 @@ public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
 );
 ```
 
-### 消息类（IMessage）规范
+### 消息类规范
 
-- 实现 `IMessage`（含 `toBytes`/`fromBytes`）
-- 无需实现 `IMessageHandler`，处理器通过 `registerMessage` 的第 5 参数（`BiConsumer<MSG, Supplier<NetworkEvent.Context>>`）注入
-- 消息类必须有无参构造函数（用于反序列化）
-- **禁止**在消息类中存储对世界或实体的直接引用（序列化后引用会断开）
-- 使用 `PacketByteBuf`（继承自 `FriendlyByteBuf`）手动读写基础类型和 `ResourceLocation`
+- **不要**实现 `IMessage` / `IMessageHandler`（那是 1.12 `SimpleNetworkWrapper`）
+- 普通类 + `registerMessage(id, Class, encoder, decoder, consumer)`
+- encoder：`BiConsumer<MSG, FriendlyByteBuf>`
+- decoder：`Function<FriendlyByteBuf, MSG>`
+- consumer：`BiConsumer<MSG, Supplier<NetworkEvent.Context>>`
+- **禁止**在消息类中存储对世界或实体的直接引用
+- 使用 `FriendlyByteBuf` 手动读写基础类型和 `ResourceLocation`
 
 ### 注册时机
 
@@ -65,7 +67,7 @@ IF 需要双向同步（游戏内实时同步）
 
 IF 同步大量数据
   → ❌ 不要逐字段发送（高网络开销）
-  → 使用 `CompoundTag` 或自定义 `PacketByteBuf` 批量序列化
+  → 使用 `CompoundTag` 或自定义 `FriendlyByteBuf` 批量序列化
   → 或考虑用 `SynchedEntityData`（实体数据同步）
 ```
 
@@ -116,7 +118,7 @@ IF 实现进度/成就触发
 
 ```java
 // messages/MyMessage.java
-public class MyMessage implements IMessage {
+public class MyMessage {
     private int value;
     private ResourceLocation targetId;
 
@@ -127,14 +129,12 @@ public class MyMessage implements IMessage {
         this.targetId = targetId;
     }
 
-    @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeInt(value);
         buf.writeResourceLocation(targetId);
     }
 
-    @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void decode(FriendlyByteBuf buf) {
         this.value = buf.readInt();
         this.targetId = buf.readResourceLocation();
     }
@@ -230,16 +230,16 @@ INSTANCE.send(PacketDistributor.ALL.noArg(), new MyBroadcastMessage(data));
 
 ```java
 // 请求消息（客户端→服务端）
-public class MyRequest implements IMessage {
+public class MyRequest {
     private int data;
     public MyRequest(int data) { this.data = data; }
     public MyRequest() {}
-    public void toBytes(PacketByteBuf buf) { buf.writeInt(data); }
-    public void fromBytes(PacketByteBuf buf) { data = buf.readInt(); }
+    public void toBytes(FriendlyByteBuf buf) { buf.writeInt(data); }
+    public void fromBytes(FriendlyByteBuf buf) { data = buf.readInt(); }
 }
 
 // 回复消息（服务端→客户端）
-public class MyReply implements IMessage {
+public class MyReply {
     private boolean success;
     private int resultValue;
     public MyReply() {}
@@ -247,11 +247,11 @@ public class MyReply implements IMessage {
         this.success = success;
         this.resultValue = resultValue;
     }
-    public void toBytes(PacketByteBuf buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeBoolean(success);
         buf.writeInt(resultValue);
     }
-    public void fromBytes(PacketByteBuf buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         success = buf.readBoolean();
         resultValue = buf.readInt();
     }

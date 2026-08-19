@@ -14,7 +14,7 @@
 | Mixin | `org.spongepowered.mixin` 插件 | **需要显式配置 Mixin Plugin**（1.16.x）|
 | 事件系统 | `@SubscribeEvent` + Forge 事件总线 | **Fabric 事件回调** |
 | Mappings | MCP（`func_XXXXX`） | Yarn（`method_XXXXX`）|
-| Java 版本 | Forge 1.16.5 需要 Java 8/11 | Fabric 1.16.5 需要 **Java 16** |
+| Java 版本 | Forge 1.16.5 需要 Java 8 | Fabric 1.16.5 需要 **Java 8**（Java 16 从 MC 1.17 起） |
 
 ---
 ## 步骤 1：项目结构迁移
@@ -136,28 +136,28 @@ private static final Block MY_BLOCK = Registry.register(
 > - 没有 `Registries` 枚举类
 
 ---
-## 步骤 4：实体迁移（EntityCategory）
+## 步骤 4：实体迁移（SpawnGroup）
 
 ```java
-// Forge
+// Forge 1.16.5（MCP：EntityClassification + size）
 public static final RegistryObject<EntityType<MyPig>> MY_PIG =
     ENTITIES.register("my_pig", () ->
-        EntityType.Builder.create(MobCategory.CREATURE, MyPig::new)
+        EntityType.Builder.create(MyPig::new, EntityClassification.CREATURE)
             .size(0.9f, 1.4f)
-            .build("")
+            .build("my_pig")
     );
 
-// ✅ Fabric 1.16.5
+// ✅ Fabric 1.16.5（Yarn：factory 在前，SpawnGroup，setDimensions）
 public static final EntityType<MyPig> MY_PIG = Registry.register(
     Registry.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
-    EntityType.Builder.create(EntityCategory.CREATURE, MyPig::new)  // ❗ EntityCategory 而非 MobCategory
-        .size(0.9f, 1.4f)  // ❗ 1.16.x 用 size() 而非 dimensions()
-        .build()
+    EntityType.Builder.create(MyPig::new, SpawnGroup.CREATURE)
+        .setDimensions(0.9f, 1.4f)
+        .build("my_pig")
 );
 ```
 
-> **关键差异**：Fabric 1.16.5 使用 `EntityCategory.CREATURE`（Fabric API），而非 `MobCategory.CREATURE`（Minecraft 内核）。两者 `CREATURE` 值相同，可混用但推荐使用 `EntityCategory`。
+> **关键差异**：Yarn 1.16.5 生成分类是 `SpawnGroup`（不是 1.14 的 `EntityCategory`，也不是 Mojmap `MobCategory`）。Vanilla Builder 用 `setDimensions(float,float)` + `build(String)`；不要写 `.size()` 或无参 `build()`。
 
 ---
 ## 步骤 5：事件系统迁移
@@ -182,7 +182,8 @@ ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "player_join")
 
 ```java
 // ❌ Forge mixin 配置 (build.gradle)
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 // ✅ Fabric 1.16.5 mixin 配置

@@ -46,7 +46,7 @@ public class MyBlock extends Block implements BlockEntityProvider {
 private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_block_entity"),
+        Identifier.of(MOD_ID, "my_block_entity"),
         BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK)
             .build(null)
     );

@@ -285,7 +285,7 @@ public class ExampleMod {
 | 特性 | `DeferredRegister`（推荐） | `RegisterEvent`（备选） |
 |------|--------------------------|------------------------|
 | 代码风格 | 静态声明，集中在类顶部 | 事件监听回调中手动注册 |
-| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `ResourceLocation.fromNamespaceAndPath()` |
+| mod ID 前缀 | 自动，无需手动拼接 | 需手动 `new ResourceLocation(modid, path)` |
 | IDE 补全 | 好（声明集中） | 一般（分散在事件回调中） |
 | 适用场景 | 所有标准 Forge 注册 | 高级自定义或遗留代码迁移 |
 | 官方推荐 | **是**（Docs 明确说明） | 可用，但不推荐 |

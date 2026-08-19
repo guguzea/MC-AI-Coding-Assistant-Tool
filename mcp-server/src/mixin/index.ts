@@ -1,6 +1,6 @@
 import { parseMixinsJson, parseMixinJavaSource, findMixinClassInFiles } from "./parser.js";
 import { resolveMixinMethodTarget } from "./resolve.js";
-import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { actionable, type ActionEnvelope, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { deepValidateMixins, resolveValidationJar, cacheMissActionable } from "./deep-validate.js";
 import { loadModProject, mergeJavaFiles, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 
@@ -63,13 +63,25 @@ const SUPPORT_MATRIX = [
 ];
 
 export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnalyzeResult> {
+  if (missingMcVersion(input.version)) {
+    const action = versionRequiredAction();
+    return {
+      ok: false,
+      version: "",
+      mixins: [],
+      warnings: [],
+      errors: [action.message],
+      supportMatrix: SUPPORT_MATRIX,
+      action,
+    };
+  }
   let javaWarning: string | undefined;
   if (input.projectPath) {
     const resolved = resolveProjectDir(input.projectPath);
     if (!resolved.ok) {
       return {
         ok: false,
-        version: input.version ?? "1.20.1",
+        version: input.version!,
         mixins: [],
         warnings: [],
         errors: [resolved.action.message],
@@ -89,7 +101,7 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
       javaFiles: mergeJavaFiles(input.javaFiles, mixinJava.length ? mixinJava : loaded.javaFiles),
     };
   }
-  const version = input.version ?? "1.20.1";
+  const version = input.version!.trim();
   const javaFiles = input.javaFiles ?? [];
   const warnings: string[] = [];
   const errors: string[] = [];

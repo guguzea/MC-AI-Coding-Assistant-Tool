@@ -154,34 +154,7 @@ CHANNEL.sendToServer(new MyMessage(42));
 
 ### NeoForge 版本
 
-```java
-// 包名变更
-import net.neoforged.neoforge.network.NetworkRegistry;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
-import net.neoforged.neoforge.network.handling.IPacketHandler;
-
-public class MyMessage {
-    private int value;
-    // 构造函数、toBytes、fromBytes...
-}
-
-// 注册（API 相同，但包路径不同）
-private static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-    new ResourceLocation(MOD_ID, "main"),
-    () -> VERSION,
-    VERSION::equals,
-    VERSION::equals
-);
-
-CHANNEL.registerMessage(0, MyMessage.class, MyMessage::toBytes, MyMessage::new,
-    (msg, ctx) -> {
-        ctx.enqueueWork(() -> handleMessage(msg, ctx));
-        ctx.setPacketHandled(true);
-    });
-
-// 发送（API 相同）
-CHANNEL.sendToServer(new MyMessage(42));
-```
+**不要**只改包名继续用 `SimpleChannel`。1.21.1 官方是 `RegisterPayloadHandlersEvent` + `CustomPacketPayload`（https://docs.neoforged.net/docs/1.21.1/networking/payload/）。按 `neoforge/<精确版本>/.cursor/rules/06-networking.mdc` 写。
 
 ---
 

@@ -1,6 +1,6 @@
 ﻿---
 name: mc-item
-description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物。触发词：物品、Item、ItemStack、Item.Properties、ToolMaterial、ItemSword
+description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物。触发词：物品、Item、ItemStack、ToolMaterial、ItemSword
 platform: forge
 version: "1.12.2"
 dependencies: []
@@ -18,7 +18,8 @@ public class ModItems {
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Item> event) {
         event.getRegistry().register(
-            new Item(new Item.Properties().maxStackSize(64))
+            new Item()
+                .setMaxStackSize(64)
                 .setRegistryName(MOD_ID, "my_item")
         );
     }
@@ -44,19 +45,12 @@ IF 可在创造模式标签中找到
   → 使用 .setCreativeTab()
 ```
 
-## ToolMaterial 枚举
+## 自定义 ToolMaterial（不要实现 `IItemTier`，那是 1.14+）
 
 ```java
-public enum MyTier implements IItemTier {
-    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
-
-    @Override public int getMaxUses() { return 1561; }
-    @Override public float getEfficiency() { return 8.0f; }
-    @Override public float getAttackDamage() { return 3.0f; }
-    @Override public int getHarvestLevel() { return 3; }
-    @Override public int getEnchantability() { return 15; }
-    @Override public Ingredient getRepairMaterial() { return Ingredient.fromItems(Items.DIAMOND); }
-}
+public static final Item.ToolMaterial MY_MATERIAL = EnumHelper.addToolMaterial(
+    "MY_MATERIAL", 3, 1561, 8.0F, 3.0F, 15
+);
 ```
 
 ## 剑（Sword）

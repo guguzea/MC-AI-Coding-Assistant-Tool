@@ -37,8 +37,8 @@ Block.Properties.of(Material material)
 ### 方块实体（BlockEntity）约束
 
 - 有状态或需要持久化的方块必须使用 BlockEntity（而非仅靠 Block）
-- BlockEntity 必须在方块类中重写 `newBlockEntity()` 方法
-- BlockEntity 的 `saveAdditional`/`load` 方法处理 NBT 序列化（使用 `CompoundNBT`，不是 `CompoundTag`）
+- 本档没有 `EntityBlock` / `newBlockEntity`。方块重写 `hasTileEntity` + `createTileEntity`
+- BlockEntity 用 `save(CompoundTag)` / `load(BlockState, CompoundTag)`。不要 `saveAdditional`（1.17+）
 - **禁止**在 `load()` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -61,7 +61,7 @@ IF 需要可放置物品、不可交互的基础方块
 
 IF 需要存储数据（箱子、熔炉等）
   → 方块实体方块（Block + BlockEntity）
-  → 需要在方块类重写 newBlockEntity()
+  → 方块重写 hasTileEntity + createTileEntity
   → 需要注册 BlockEntityType
   → 需要在 mods.toml 中添加 blockEntity 字段
 
@@ -106,7 +106,7 @@ IF 液体
 ```
 IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
   → 必须使用 BlockEntity
-  → 在方块类重写 newBlockEntity()
+  → 方块重写 hasTileEntity + createTileEntity
   → 注册时先注册方块再注册 BlockEntityType
 
 IF 需要每 tick 逻辑（自动机、计时器）
@@ -171,8 +171,13 @@ public class MyBlockEntityBlock extends Block {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return ModBlockEntities.MY_BLOCK_ENTITY.get().create(pos, state);
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public BlockEntity createTileEntity(BlockState state, IBlockReader world) {
+        return ModBlockEntities.MY_BLOCK_ENTITY.get().create();
     }
 
     @Override
@@ -192,19 +197,20 @@ public class MyBlockEntityBlock extends Block {
 public class MyBlockEntity extends BlockEntity {
     private CompoundNBT data = new CompoundNBT();
 
-    public MyBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MY_BLOCK_ENTITY.get(), pos, state);
+    public MyBlockEntity() {
+        super(ModBlockEntities.MY_BLOCK_ENTITY.get());
     }
 
     @Override
-    protected void saveAdditional(CompoundNBT nbt) {
-        super.saveAdditional(nbt);
+    public CompoundNBT save(CompoundNBT nbt) {
+        nbt = super.save(nbt);
         nbt.put("data", data.copy());
+        return nbt;
     }
 
     @Override
-    public void load(CompoundNBT nbt) {
-        super.load(nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         if (nbt.contains("data", 10)) { // 10 = TAG_COMPOUND
             this.data = nbt.getCompound("data");
         }

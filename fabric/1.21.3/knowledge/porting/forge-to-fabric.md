@@ -97,7 +97,7 @@ public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // 所有注册在此执行
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
             new Item(new Item.Settings()));
     }
 }
@@ -120,7 +120,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 // ✅ Fabric
 private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_block"),
+    Identifier.of(MOD_ID, "my_block"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE))
 );
 ```
@@ -139,7 +139,7 @@ public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 }
 
 // ✅ Fabric
-PlayerConnectEvents.JOIN.register((player, sender, server) -> {
+ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
     // 处理玩家加入
 });
 ```
@@ -150,7 +150,8 @@ PlayerConnectEvents.JOIN.register((player, sender, server) -> {
 
 ```java
 // Forge mixin 配置 (build.gradle)
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 // ✅ Fabric mixin 配置（由 Loom 管理）

@@ -1,21 +1,15 @@
 # 实体反模式
 
-## 错误：忘记在 mcmod.info 中添加 entity 字段
+## 错误：在 `mcmod.info` 里编 `entities` 字段
 
-**症状：** 实体不在游戏中生成，但无任何异常
+**症状：** 误以为实体没注册；官方 gettingstarted/structuring 字段表没有 `entities`
 
 ```json
-// ❌ 遗漏
-// mcmod.info 中没有 entities 字段
-
-// ✅ 正确
-{
-  "modid": "examplemod",
-  "entities": {
-    "examplemod:my_entity": "My Entity"
-  }
-}
+// ❌ 官方 mcmod.info 没有此字段
+"entities": { "examplemod:my_entity": "My Entity" }
 ```
+
+**正确方案：** `RegistryEvent.Register<EntityEntry>` + `EntityEntryBuilder`，不要抄 1.14+ `EntityType.Builder`
 
 ---
 

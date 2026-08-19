@@ -138,7 +138,7 @@ public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 }
 
 // ✅ Fabric
-PlayerConnectEvents.JOIN.register((player, sender, server) -> {
+ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
     // 处理玩家加入
 });
 ```
@@ -149,7 +149,8 @@ PlayerConnectEvents.JOIN.register((player, sender, server) -> {
 
 ```java
 // Forge mixin 配置 (build.gradle)
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 // ✅ Fabric mixin 配置（由 Loom 管理）

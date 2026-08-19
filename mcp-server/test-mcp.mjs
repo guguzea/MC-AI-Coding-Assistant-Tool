@@ -283,6 +283,7 @@ async function runTests() {
   console.log("[Test A1] Query class: net.minecraft.world.entity.LivingEntity");
   const r1 = await callTool("query_api", {
     className: "net.minecraft.world.entity.LivingEntity",
+    version: "1.20.1",
   });
   const content1 = JSON.parse(r1.result.content[0].text);
   assert.equal(content1.found, true, `LivingEntity API lookup failed: ${JSON.stringify(content1.suggestions)}`);
@@ -295,6 +296,7 @@ async function runTests() {
   const r2 = await callTool("query_api", {
     className: "net.minecraft.world.entity.LivingEntity",
     methodName: "getMaxHealth",
+    version: "1.20.1",
   });
   const content2 = JSON.parse(r2.result.content[0].text);
   assert.equal(content2.found, true, `getMaxHealth lookup failed: ${JSON.stringify(content2.suggestions)}`);
@@ -310,6 +312,7 @@ async function runTests() {
   console.log("[Test A3] Fuzzy: Blck (expect suggestions)");
   const r3 = await callTool("query_api", {
     className: "net.minecraft.world.level.block.entity.Blck",
+    version: "1.20.1",
   });
   const content3 = JSON.parse(r3.result.content[0].text);
   assert.equal(content3.found, false, `Blck must not be a hit: ${JSON.stringify(content3.suggestions)}`);
@@ -490,6 +493,7 @@ async function runTests() {
 
   console.log("[Test C6] crash_analyze missing dependency");
   const rc6 = await callTool("crash_analyze", {
+    version: "1.20.1",
     crashReport:
       "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: examplelib\n",
   });

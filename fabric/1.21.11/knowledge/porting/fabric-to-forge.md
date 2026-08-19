@@ -62,7 +62,7 @@ side = "BOTH"
 public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
             new Item(new Item.Settings()));
     }
 }
@@ -92,7 +92,7 @@ public class ExampleMod {
 // Fabric
 private static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_item"),
+    Identifier.of(MOD_ID, "my_item"),
     new Item(new Item.Settings())
 );
 
@@ -112,7 +112,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 
 ```java
 // Fabric
-PlayerConnectEvents.JOIN.register((player, sender, server) -> {
+ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
     // 处理玩家加入
 });
 
@@ -132,7 +132,8 @@ public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 
 // ✅ mixins.json (Forge) + build.gradle 配置
 // build.gradle 中添加
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 ```
 

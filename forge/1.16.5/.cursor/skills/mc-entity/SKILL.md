@@ -18,7 +18,7 @@ public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
-        .size(0.6f, 1.8f)
+        .sized(0.6f, 1.8f)
         .clientTrackingRange(8)
         .updateInterval(3)
         .fireImmune()
@@ -48,13 +48,11 @@ public class MyEntity extends LivingEntity {
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        // 注册实体属性（生命值、移动速度、攻击伤害等）
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20.0);
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(3.0);
+    public static AttributeModifierMap.MutableAttribute createAttributes() {
+        return MobEntity.createMobAttributes()
+            .add(Attributes.MAX_HEALTH, 20.0D)
+            .add(Attributes.MOVEMENT_SPEED, 0.3D)
+            .add(Attributes.ATTACK_DAMAGE, 3.0D);
     }
 }
 ```
@@ -73,12 +71,12 @@ public class MyEntity extends LivingEntity {
 ## EntityRenderer 注册（客户端）
 
 ```java
-// 客户端 — EntityRenderersEvent.RegisterRenderers 中注册
+// 客户端 — FMLClientSetupEvent + RenderingRegistry（本档没有 EntityRenderersEvent）
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
-    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(MyEntity.TYPE.get(), MyEntityRenderer::new);
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(MY_ENTITY.get(), MyEntityRenderer::new);
     }
 }
 
@@ -106,7 +104,7 @@ IF 自定义 Biped 模型
 
 IF 自定义任意模型
   → EntityModel + LayerDefinition
-  → 通过 EntityRenderersEvent.RegisterLayerDefinitions 注册 ModelLayer
+  → 本档没有 EntityRenderersEvent；用 RenderingRegistry.registerEntityRenderingHandler
 ```
 
 ## 常见错误

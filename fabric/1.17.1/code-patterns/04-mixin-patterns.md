@@ -27,7 +27,7 @@
 @Mixin(PlayerEntity.class)
 public class CommonMixin {
     @Inject(at = @At("HEAD"), method = "tick")
-    private void onTick(CallbackInfoReturnable ci) {
+    private void onTick(CallbackInfo ci) {
         // 每 tick 执行
     }
 }

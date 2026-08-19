@@ -63,21 +63,21 @@ FabricBlockSettings.create()
 // 普通方块
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_stone"),
+    Identifier.of(MOD_ID, "my_stone"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 注册同名 BlockItem
 private static final Item MY_STONE_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_stone"),
+    Identifier.of(MOD_ID, "my_stone"),
     new BlockItem(MY_STONE, new Item.Settings())
 );
 
 // 无碰撞方块（如草、花）
 private static final Block MY_PLANT = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_plant"),
+    Identifier.of(MOD_ID, "my_plant"),
     new Block(FabricBlockSettings.copyOf(Blocks.DANDELION).noCollision().breakInstantly())
 );
 
@@ -98,11 +98,11 @@ public class MySlabBlock extends Block {
 
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),
     new BlockItem(MY_BLOCK, new Item.Settings()));
 
 // ❌ 错误：BlockItem 使用不同的 registry name
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 错误！
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block_item"),  // 错误！
     new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
@@ -131,7 +131,7 @@ public class MyChestBlock extends Block implements BlockEntityProvider {
 // 3. 注册 BlockEntityType
 public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(Registries.BLOCK_ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_chest"),
+        Identifier.of(MOD_ID, "my_chest"),
         BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK)
             .build(null));
 ```

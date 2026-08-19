@@ -4,7 +4,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-new-block": {
     title: "新方块工作流",
     body: `1. 确认平台与精确 MC 版本。从零工程：download_official_mdk（dryRun 先看；26.1.x/26.2 须选 buildPlugin）。已有工程不要下 MDK。
-2. 读该档 01-registry / mc-registry，不要默认 Forge 1.20：
+2. 先 activate_platform_pack action=session（可 task=mc-new-block），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。不要默认 Forge 1.20：
    - Forge：DeferredRegister（该版规则）
    - NeoForge：该档 DeferredRegister / DeferredBlock / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo；禁止 NeoForgeAddonPlugin
    - Fabric：Registry.register；26.1.2 用官方名 + implementation，不要 modImplementation
@@ -18,7 +18,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-new-entity": {
     title: "新实体工作流",
     body: `1. 确认平台与精确 MC 版本（从零才 download_official_mdk；已有工程不要下）
-2. 读该档 04-entity：
+2. 先 activate_platform_pack action=session（可 task=mc-new-entity），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor：
    - Forge/NeoForge：EntityType + 该档注册 API（Neo 用 DeferredHolder 族，禁止把 Forge RegistryObject 当 Neo）
    - Fabric/Quilt：Registry.register EntityType；基岩用 BP/RP JSON，不是 EntityType
    - 老平台：核实表里的 Adder / BaseMod 钩子；表外禁止输出
@@ -28,7 +28,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-new-gui": {
     title: "GUI 工作流",
     body: `1. 确认平台与 MC 版本（已有工程不要下 MDK）
-2. 按平台分支，不要默认 MenuType：
+2. 先 activate_platform_pack action=session（可 task=mc-new-gui），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。按平台分支，不要默认 MenuType：
    - 现代 NeoForge / Forge：MenuType + AbstractContainerMenu（该档 10-gui / mc-gui）；Screen + MenuScreens.register（客户端）
    - Fabric / Quilt：该版 10-gui（Quilt 02–10 仍读 fabric/<ver>）
    - LiteLoader：GuiScreen / HUDRenderListener（核实表）；禁止 MenuType
@@ -59,7 +59,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-build-mod": {
     title: "模组构建流程",
     body: `1. 确认平台 / 精确 MC 版本 / mappings。从零工程：调用 download_official_mdk（dryRun 先看 URL/hash；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle，二者官方都提供）。已有工程加内容不要下 MDK。
-2. 读 MDK 返回的 buildPlugin / mappings / entryClass，再加载对应 00–10；未建档版本禁止读邻档规则，改口 search_*_docs。
+2. 读 MDK 返回的 buildPlugin / mappings / entryClass，再 activate_platform_pack action=session（需要全套规则才 includeAllRules=true）；未建档版本禁止读邻档规则，改口 search_*_docs。禁止 Read 平台/<ver>/.cursor。
 3. validate_project（Forge/Fabric/Quilt/NeoForge 真检查，看 status）；LiteLoader/Rift/基岩 skipped。必要时 diagnose_gradle / check_dependencies
 4. 构建：Forge/NeoForge 用 ./gradlew build；Fabric 用 Loom 等价任务；需要资源时先跑 DataGen
 5. 确认产出 jar：build/libs/（排除 -sources、-javadoc 等）
@@ -141,7 +141,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-new-item": {
     title: "新物品工作流",
     body: `1. 确认平台与精确 MC 版本。已有工程不要 download_official_mdk。
-2. 读该档 03-item / mc-item，不要默认 Forge 1.20 Item：
+2. 先 activate_platform_pack action=session（可 task=mc-new-item），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。不要默认 Forge 1.20 Item：
    - Forge：DeferredRegister ITEMS（该版规则）
    - NeoForge：该档 DeferredItem / DeferredHolder；禁止 RegistryObject 冒充 1.20.4+ Neo
    - Fabric：Registry.register；26.1.2 用官方名 + implementation
@@ -154,7 +154,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-new-blockentity": {
     title: "方块实体工作流",
     body: `1. 确认平台与精确 MC 版本
-2. 读该档 02-block / 04 或 mc-blockentity：
+2. 先 activate_platform_pack action=session（可 task=mc-new-blockentity），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor：
    - Forge/NeoForge：BlockEntityType + 该档注册（Neo 用 DeferredHolder 族）
    - Fabric/Quilt：BlockEntityType.Builder + Registry.register
    - 老平台：核实表 TileEntity；表外禁止输出
@@ -172,13 +172,13 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-worldgen": {
     title: "世界生成工作流",
-    body: `1. 确认平台与精确 MC 版本。读该档 worldgen / 07；禁止默认 Forge biome_modifier。
+    body: `1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。禁止默认 Forge biome_modifier。
 2. 配置：configured_feature / placed_feature JSON 或该档 Datagen。
 3. 注入生物群系：
    - Forge 1.20.1：forge:add_features biome_modifier
    - NeoForge：该档 biome modifier / datagen（26.1 以 Identifier 为准）
    - Fabric/Quilt：BiomeModifications 或该版文档；核不到则 search_fabric_docs
-4. generate_worldgen 只是 JSON 骨架；类名必须能在本版文档核到。`,
+4. generate_worldgen 须同时传 platform 与 version（fabric/quilt 不出 forge/biome_modifier）。类名必须能在本版文档核到。`,
   },
   "mc-config": {
     title: "配置工作流",
@@ -192,7 +192,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-gametest": {
     title: "GameTest 工作流",
     body: `1. 确认平台与 MC 版本。GameTest 不是所有加载器都有同一套 API。
-2. Forge/NeoForge：读该档 gametest / 官方 docs；用 search_*_docs 核类名，禁止默记 1.20.1。
+2. Forge/NeoForge：先 activate_platform_pack action=session（可 task=mc-gametest），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。再用 search_*_docs 核类名，禁止默记 1.20.1。
 3. Fabric：Fabric GameTest / 该版 wiki；核不到则 stub，不要编 Forge GameTest。
 4. 结构文件放 data/<modid>/gametest 或该版路径；先跑 ./gradlew 对应 test 任务，不要假设 runGameTestServer 通用。`,
   },
@@ -204,6 +204,66 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 3. changelog 与支持的 MC/loader 版本
 4. 可选 check_publish_ready（若已注册）做机器检查；默认不写盘、不调外网
 5. 用户自行上传。`,
+  },
+  "mc-networking": {
+    title: "网络通信清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-networking；规则 06-networking。
+1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
+2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 禁止 SimpleChannel；1.20.4 为 RegisterPayloadHandlerEvent（单数），1.21+ 为 RegisterPayloadHandlersEvent。
+3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。
+4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
+  },
+  "mc-capability": {
+    title: "能力 / 附件清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-capability。
+1. 确认平台与精确 MC 版本。
+2. Forge：Capability + AttachCapabilitiesEvent。NeoForge 1.20.4+：Data Attachment，不是 Forge Capability。Fabric/Quilt：CCA（mc-cca），禁止生成 Forge Capability。
+3. generate_capability 的 platform 与 version 必填。
+4. 核 search_*_docs；无模板改口规则 05 / mc-capability，不要默写邻档类名。`,
+  },
+  "mc-recipe-data": {
+    title: "配方 / 掉落 / 进度数据包清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
+1. 确认平台与精确 MC 版本。
+2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
+3. generate_datagen 仅白名单版本（Forge 1.20.1、NeoForge 1.21.x/26.1、Fabric/Quilt 1.21 与 26.1）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
+  },
+  "mc-audio-vfx": {
+    title: "音效 / 粒子清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-sound / mc-particle。
+1. 确认平台与精确 MC 版本。
+2. sounds.json 与粒子 JSON 按该档 assets 路径；先 activate_platform_pack action=session 取规则后再写注册 API，禁止 Read 平台/<ver>/.cursor，禁止抄邻档。
+3. 无生成器模板时 search_*_docs 手动编写，参考 mc-sound / mc-particle。不要理解为游戏里做不了。`,
+  },
+  "mc-commands": {
+    title: "命令清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-command。
+1. 确认平台与精确 MC 版本。
+2. 先 activate_platform_pack action=session（可 skillNames=["mc-command"]），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。Brigadier / Commands / 权限来源以本版文档为准。
+3. 类名核 search_*_docs。LiteLoader/Rift/ModLoader 只用核实表，禁止 DeferredRegister。`,
+  },
+  "mc-dimension-structure": {
+    title: "维度 / 结构清单",
+    body: `清单（不执行 Gradle）。对应 Skill：mc-dimension / mc-structure。
+1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。
+2. 结构：template pool / structure set 按该档 07；不要默认 Forge biome_modifier。
+3. generate_worldgen 须传 platform 与 version。类名核 search_*_docs。`,
+  },
+  "mc-access": {
+    title: "AT / AW 访问变换清单",
+    body: `清单（不执行 Gradle）。无独立 Skill；工具：validate_at / validate_aw。
+1. 确认平台：Forge/NeoForge 用 Access Transformer（*_at.cfg）；Fabric/Quilt 用 Access Widener。
+2. validate_at / validate_aw：可传 projectPath 扫描；deep 字节码校验需已缓存客户端 jar。
+3. 未缓存返回 CACHE_MISS，不要自动下载。mixin 改目标可衔接 mixin_analyze。`,
+  },
+  "mc-bedrock-addon": {
+    title: "基岩 Add-On 清单",
+    body: `清单（不执行 Gradle）。对应 bedrock 的 mc-addon-* Skill。禁止 Java query_api / Yarn / Mixin。
+1. 包根 manifest.json（format_version + modules）。validate_addon_manifest。
+2. BP 实体：generate_bp_entity 只吐 JSON 文本，不写盘。validate_bp_json。
+3. 文档用 search_bedrock_docs，不要 search_forge_docs。
+4. 不要对基岩工程 activate Java 平台包或跑 diagnose_gradle。`,
   },
   "mc-setup-env": {
     title: "开发环境搭建",

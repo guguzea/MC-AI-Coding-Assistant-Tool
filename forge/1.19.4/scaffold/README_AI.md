@@ -97,7 +97,7 @@ public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
     DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID);
 
-// 注册实体类型（注意：1.19.4 使用 MobCategory，1.20.7+ 使用 SpawnGroup）
+// 注册实体类型（Forge / Mojmap：MobCategory。Yarn 的 SpawnGroup 不要抄进本档）
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
         .sized(0.6f, 1.8f)
@@ -218,7 +218,7 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 
 ## 版本注意事项（1.19.4）
 
-- **MobCategory**：1.19.4 使用 `MobCategory` 作为生物分类枚举，1.20.7+ 重命名为 `SpawnGroup`
+- **MobCategory**：1.19.4 Forge / Mojmap 用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是本档 1.20.7 重命名
 - **pack_format**：1.19.4 的资源包/数据包格式为 `9`
 - **Parchment 映射**：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.04.04`
 - **Forge 版本**：`43.2.0`（对应 Minecraft 1.19.4）

@@ -91,16 +91,17 @@ public static final RegistryObject<BlockEntityType<MyBE>> MY_BE =
 ## 注册实体属性
 
 自定义 `Attribute` 可用 `DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID)`（1.16 已有该字段）。
-**原版实体属性映射**在 `FMLCommonSetupEvent.enqueueWork` 里用 `GlobalEntityTypeAttributes.put`，不要只靠 `registerAttributes()`（1.16 实体侧已改为 supplier 工厂）。
+**原版实体属性映射**用 `EntityAttributeCreationEvent.put`（第二参是 `AttributeModifierMap`）。不要 `LivingEntity.registerAttributes()`。
 
 ```java
 public static final DeferredRegister<Attribute> ATTRIBUTES =
     DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
 
-// FMLCommonSetupEvent
-event.enqueueWork(() -> {
-    GlobalEntityTypeAttributes.put(MY_ENTITY.get(), MyEntity.createAttributes().create());
-});
+// mod 总线：EntityAttributeCreationEvent（不要 LivingEntity.registerAttributes）
+@SubscribeEvent
+public static void onAttributes(EntityAttributeCreationEvent event) {
+    event.put(MY_ENTITY.get(), MyEntity.createAttributes().create());
+}
 ```
 
 ## 常见错误

@@ -69,20 +69,20 @@ Block#onBlockActivated (Server) ──► creates IItemHandler ──► openCon
 
 ```
 IF interactable block with persistent data (machine, chest)
-  → AbstractContainerMenu + ContainerType + IItemHandler + ContainerScreen
+  → Container + ContainerType + IItemHandler + ContainerScreen
 
 IF just a simple interaction (no data)
   → Screen directly (without Container)
 
 IF inventory with multiple slots
-  → AbstractContainerMenu (for slot management and transferStackInSlot)
+  → Container (for slot management and transferStackInSlot)
 ```
 
 ## ContainerType Registration
 
 ```java
 // 1. Define the Container class
-public class MyContainer extends AbstractContainerMenu {
+public class MyContainer extends Container {
     public MyContainer(int windowId, PlayerInventory inv, IItemHandler handler) {
         super(MY_CONTAINER_TYPE.get(), windowId);
         // slot layout...
@@ -106,7 +106,7 @@ public static final DeferredRegister<ContainerType<?>> CONTAINERS =
 
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
-        () -> new ContainerType<>(MyContainer::new)
+        () -> IForgeContainerType.create(MyContainer::new)
     );
 ```
 
@@ -136,10 +136,9 @@ public boolean onBlockActivated(World world, BlockPos pos, BlockState state, Pla
                                  Hand hand, RayTraceResult hit) {
     if (!world.isRemote) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof IItemHandlerProvider) {
+        if (tile instanceof INamedContainerProvider) {
             NetworkHooks.openGui((ServerPlayerEntity) player,
-                new ResourceLocation(MOD_ID, "my_gui"),
-                buf -> buf.writeBlockPos(pos));
+                (INamedContainerProvider) tile, pos);
         }
     }
     return true;
@@ -163,5 +162,5 @@ public static void onGuiOpen(GuiOpenEvent event) {
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
 - ❌ `ScreenManager.registerFactory()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ `transferStackInSlot` not implemented → Shift-click does nothing
-- ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `onContainerClosed()` and `detectAndSendChanges()`
+- ❌ Modifying world state in `Container` constructor → too early, use `onContainerClosed()` and `detectAndSendChanges()`
 - ❌ Capability handler returning null → must return valid handler or `NullItemHandler`

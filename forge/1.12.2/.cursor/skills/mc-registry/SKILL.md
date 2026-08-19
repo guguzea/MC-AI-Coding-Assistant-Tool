@@ -47,21 +47,17 @@ IF 平台 = Fabric
 |----------|----------|------|
 | 方块 | `RegistryEvent.Register<Block>` | |
 | 物品 | `RegistryEvent.Register<Item>` | |
-| 方块实体 | `RegistryEvent.Register<TileEntity>` | 用 TileEntity.register() |
-| 实体类型 | `RegistryEvent.Register<EntityEntry>` | 用 EntityRegistry |
+| 方块实体 | 无 `RegistryEvent.Register<TileEntity>` | `GameRegistry.registerTileEntity(Class, ResourceLocation)` |
+| 实体类型 | `RegistryEvent.Register<EntityEntry>` | `EntityEntryBuilder` |
 | 附魔 | `RegistryEvent.Register<Enchantment>` | |
 | 声音事件 | `RegistryEvent.Register<SoundEvent>` | |
 
 ## 注册 TileEntity
 
+官方 Registries 页的 `RegistryEvent` 支持类型**不含** TileEntity。
+
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public class ModTileEntities {
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<TileEntity> event) {
-        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
-    }
-}
+GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(MOD_ID, "my_tile"));
 ```
 
 ## 常见错误

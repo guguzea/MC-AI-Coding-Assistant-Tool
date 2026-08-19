@@ -29,14 +29,14 @@ public class ExampleMod implements ModInitializer {
 
     // 类加载时注册，但应在 onInitialize() 中
     static {
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), MY_ITEM);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), MY_ITEM);
     }
 }
 
 // ✅ 正确
 public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override
     public void onInitialize() {
@@ -49,13 +49,13 @@ public class ExampleMod implements ModInitializer {
 
 ```java
 // ❌ 错误
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 不同名！
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block_item"),  // 不同名！
     new BlockItem(myBlock, new Item.Settings()));
 
 // ✅ 正确：使用完全相同的 Identifier
-Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // 同名！
     new BlockItem(myBlock, new Item.Settings()));
 ```
 

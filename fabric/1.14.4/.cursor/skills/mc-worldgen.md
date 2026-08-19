@@ -7,16 +7,17 @@ dependencies: []
 mappings: yarn
 ---
 
-# mc-worldgen
+# 世界生成（Fabric 1.14.4）
 
-> Wave D 技能骨架（fabric 1.14.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+本档 **loader-api 未收录** `BiomeModifications`。不要抄 1.16+ `addFeature`。
 
-## 快速入口
+自定义特征用数据包 JSON。核不到 Java API 就停，改口 `search_loader_api` / `search_fabric_docs version=1.14.4`。
 
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`fabric/1.14.4/knowledge/antipatterns/`
+## Decision Flow
 
-## 下一步
-
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+```
+IF 只改 JSON 世界生成
+  → 数据包
+IF 要往原版群系塞 feature
+  → 本档没有 BiomeModifications；禁止编造
+```

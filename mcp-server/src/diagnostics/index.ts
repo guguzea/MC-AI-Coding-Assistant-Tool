@@ -1,5 +1,5 @@
 import { analyzeCrash } from "../crash/index.js";
-import { actionable, ActionCodes } from "../utils/actionable.js";
+import { actionable, ActionCodes, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { ownGet } from "../utils/own-record.js";
 import { LIBRARY_CATALOG } from "./library-catalog.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
@@ -15,7 +15,11 @@ export interface AnalyzeLogInput {
 }
 
 export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
-  const version = input.version ?? "1.20.1";
+  if (missingMcVersion(input.version)) {
+    const action = versionRequiredAction();
+    return { ok: false, action, error: action.message };
+  }
+  const version = input.version!.trim();
   let text = input.logText;
   if (!text?.trim() && input.logPath) {
     const p = input.logPath;
@@ -257,6 +261,110 @@ export function detectLoader(
   }
 
   return "unknown";
+}
+
+export function javaBlobFromFiles(files?: Array<{ path: string; content: string }>): string {
+  return (files ?? []).map((f) => `${f.path}\n${f.content}`).join("\n");
+}
+
+/** Java 补强：Neo（有 neoforged 无 forge 包名）与 BaseMod。detect / validate 共用。 */
+export function reinforceLoaderWithJava(fromDetect: DetectedLoader, javaBlob: string): DetectedLoader {
+  if (fromDetect !== "unknown" && fromDetect !== "forge") {
+    return fromDetect;
+  }
+  if (fromDetect === "forge") {
+    if (/net\.neoforged/.test(javaBlob) && !/net\.minecraftforge/.test(javaBlob)) {
+      return "neoforge";
+    }
+    return "forge";
+  }
+  if (/org\.quiltmc|quilt\.mod\.json|quilt_loader/i.test(javaBlob)) return "quilt";
+  if (/net\.neoforged|neoforge\.mods\.toml/i.test(javaBlob)) return "neoforge";
+  if (/net\.fabricmc|implements\s+ModInitializer|fabric\.mod\.json/i.test(javaBlob)) {
+    return "fabric";
+  }
+  if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) return "liteloader";
+  if (/RiftLoader|riftmod\.json|rift\.mod\.json/i.test(javaBlob)) return "rift";
+  if (/extends\s+BaseMod\b/.test(javaBlob) && !/cpw\.mods\.fml|net\.minecraftforge/.test(javaBlob)) {
+    return "modloader";
+  }
+  if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) return "bedrock";
+  return fromDetect;
+}
+
+export interface ProjectLoaderDetection {
+  primary: DetectedLoader;
+  loaders: DetectedLoader[];
+  multiLoader: boolean;
+  architectury: boolean;
+}
+
+export function detectProjectLoaders(input: {
+  buildGradle?: string;
+  modsToml?: string;
+  fabricModJson?: string;
+  neoModsToml?: string;
+  extras?: CheckDependenciesExtras;
+  javaBlob?: string;
+  fabricModJsons?: string[];
+  quiltModJsons?: string[];
+  modsTomls?: string[];
+  neoModsTomls?: string[];
+}): ProjectLoaderDetection {
+  const gradle = input.buildGradle ?? "";
+  const architectury = /architectury/i.test(gradle);
+  const javaBlob = input.javaBlob ?? "";
+  const extras: CheckDependenciesExtras = { ...(input.extras ?? {}) };
+  if (!extras.quiltModJson?.trim() && input.quiltModJsons?.some((s) => s.trim())) {
+    extras.quiltModJson = input.quiltModJsons.find((s) => s.trim());
+  }
+
+  const fromDetect = detectLoader(
+    gradle,
+    input.modsToml,
+    input.fabricModJson,
+    input.neoModsToml,
+    extras,
+  );
+  const primary = reinforceLoaderWithJava(fromDetect, javaBlob);
+
+  const anyQuilt =
+    Boolean(extras.quiltModJson?.trim()) ||
+    (input.quiltModJsons ?? []).some((s) => s.trim()) ||
+    /org\.quiltmc\.loom|quilt-loom|quilt\.mod\.json/i.test(gradle);
+  const anyFabric =
+    Boolean(input.fabricModJson?.trim()) ||
+    (input.fabricModJsons ?? []).some((s) => s.trim()) ||
+    (/fabric-loom|fabric-api/i.test(gradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(gradle));
+  const anyNeo =
+    Boolean(input.neoModsToml?.trim()) ||
+    (input.neoModsTomls ?? []).some((s) => s.trim()) ||
+    /neogradle|net\.neoforged/i.test(gradle) ||
+    (/net\.neoforged/.test(javaBlob) && !/net\.minecraftforge/.test(javaBlob));
+  const anyForgeMeta = [input.modsToml, ...(input.modsTomls ?? [])].some(
+    (t) => t && /modLoader\s*=\s*"javafml"/i.test(t) && !/neoforge/i.test(t),
+  );
+  const anyForgeGradle = /net\.minecraftforge\.gradle(?!\.liteloader)|id\s+['"]net\.minecraftforge\.gradle['"]/i.test(
+    gradle,
+  );
+
+  const found = new Set<DetectedLoader>();
+  if (anyQuilt) found.add("quilt");
+  if (anyFabric) found.add("fabric");
+  if (anyNeo) found.add("neoforge");
+  if ((anyForgeMeta || anyForgeGradle || /net\.minecraftforge/.test(javaBlob)) && !anyNeo) {
+    found.add("forge");
+  }
+  if (primary !== "unknown") found.add(primary);
+
+  const loaders = [...found];
+  const multiLoader = architectury || loaders.length > 1;
+  return {
+    primary,
+    loaders: loaders.length ? loaders : [primary],
+    multiLoader,
+    architectury,
+  };
 }
 
 // 生成 catalog 之外的别名/关键字补充（JEI/EMI/REI 归 library-integration-jei-emi；owo 的 fabric.mod.json id 是 "owo"）

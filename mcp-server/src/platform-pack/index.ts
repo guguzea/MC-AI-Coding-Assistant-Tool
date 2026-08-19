@@ -15,6 +15,8 @@ export type ActivateArgs = {
   hosts?: string[];
   topics?: string[];
   includeAllRules?: boolean;
+  task?: string;
+  skillNames?: string[];
   includeSkills?: boolean;
   dryRun?: boolean;
   confirmed?: boolean;
@@ -32,6 +34,8 @@ export function activatePlatformPack(args: ActivateArgs) {
       minecraftVersion: String(args.minecraftVersion ?? ""),
       topics: args.topics,
       includeAllRules: args.includeAllRules,
+      task: args.task,
+      skillNames: args.skillNames,
     });
   }
   if (action === "write") {

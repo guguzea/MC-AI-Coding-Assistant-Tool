@@ -222,17 +222,17 @@ async function main() {
 
   // version
   step("get_version_info");
-  r = getVersionInfo({ version: "1.20.1", action: "注册方块" });
+  r = getVersionInfo({ version: "1.20.1", action: "注册方块", platform: "forge" });
   if (!r.recommendation) note("warn", "get_version_info", "weak", safe(r));
-  r = getVersionInfo({ version: "99.0", action: "注册方块" });
+  r = getVersionInfo({ version: "99.0", action: "注册方块", platform: "forge" });
   if (r.recommendation && !r.error && !r.unknown) {
     note("warn", "get_version_info", "unknown MC version still recommends without error flag", safe(r));
   }
-  r = getVersionInfo({ version: "constructor", action: "register" });
+  r = getVersionInfo({ version: "constructor", action: "register", platform: "forge" });
   if (r.forgeVersion !== "unknown" || typeof r.recommendation !== "string" || /undefined。注册流程/.test(r.recommendation)) {
     note("error", "get_version_info", "constructor must not hit Object.prototype", safe(r));
   }
-  r = getVersionInfo({ version: "1.12.2", action: "register" });
+  r = getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
   if (/创建 DeferredRegister/.test(r.recommendation || "")) {
     note("error", "get_version_info", "1.12.2 register must not append DeferredRegister flow", safe(r));
   }
@@ -240,12 +240,14 @@ async function main() {
   // crash
   step("crash_analyze");
   r = analyzeCrash({
+    version: "1.20.1",
     crashReport:
       "---- Minecraft Crash Report ----\nFile: crash-2024-01-01_12.00.00-fml.txt\nMissing or unsupported mandatory dependencies: foo\n",
   });
   if (r.crashKind !== "fml") note("warn", "crash_analyze", "expected fml", safe(r));
 
   r = analyzeCrash({
+    version: "1.20.1",
     crashReport:
       '---- Minecraft Crash Report ----\njava.lang.NullPointerException: Cannot invoke "net.minecraft.world.level.block.entity.BlockEntity.getBlockState()" because "be" is null\n',
   });
@@ -257,7 +259,7 @@ async function main() {
     note("info", "crash_analyze", "BE-null ok", r.probableCause);
   }
 
-  r = analyzeCrash({ crashReport: "hello world" });
+  r = analyzeCrash({ crashReport: "hello world", version: "1.20.1" });
   note("info", "crash_analyze", "garbage input", safe(r));
 
   // gradle

@@ -7,9 +7,9 @@
 | 注册系统 | `Registry.register()` | `DeferredRegister` |
 | 事件系统 | Event Callback | `@SubscribeEvent` + EventBus |
 | 映射 | Yarn | MCP / Parchment |
-| 加载器 | `FabricLoader` | `FMLLoadingPlugin` |
+| 加载器 | `FabricLoader` | `FMLLoader` / Forge 入口 `@Mod`（不要写 1.12 的 `FMLLoadingPlugin`） |
 | 入口点 | `ModInitializer`/`ClientModInitializer` | `@Mod` |
-| Mixin | 内置 | 单独引入 |
+| Mixin | Loom 内置 | 随 Forge 提供；1.20.1 MDK 无 `org.spongepowered.mixin` `0.7.+` |
 
 ## 移植步骤
 
@@ -34,7 +34,7 @@ src/main/java/com/example/
 **Fabric**:
 ```java
 private static final Item MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
         new Item(new Item.Settings()));
 ```
 

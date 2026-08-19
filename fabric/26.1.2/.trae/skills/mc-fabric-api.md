@@ -1,6 +1,6 @@
 ﻿---
 name: mc-fabric-api
-description: Fabric API 模块系统。fabric-command-api-v2、内容注册表、networking。触发词：Fabric API、fabric-api、modImplementation、fabric-networking
+description: Fabric API 模块系统。fabric-command-api-v2、内容注册表、networking。触发词：Fabric API、fabric-api、implementation、fabric-networking
 platform: fabric
 version: "26.1.2"
 dependencies: []
@@ -17,11 +17,11 @@ Fabric API 是模块化的官方扩展库。日常开发引入 **完整 `fabric-
 
 ```groovy
 dependencies {
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 ```
 
-`fabric_api_version` 写在 `gradle.properties`，与当前 Minecraft 匹配。不要用 `net.fabric.sdk:`。需要传递给其它 mod 时再用 `modApi`。
+`fabric_api_version` 写在 `gradle.properties`，与当前 Minecraft 匹配。不要用 `net.fabric.sdk:`。需要传递给其它 mod 时再用 `api`（本档不要 `modApi`）。
 
 ## 常用模块
 
@@ -90,6 +90,8 @@ fabric-loot-api-v3（`LootTableEvents` + `RegistryKey`，见 `05-events.mdc`）
 | fabric-renderer-api-v1 | 渲染 API |
 
 版本号随 `fabric-api` BOM，不要在规则里写死 `0.4.29+1.20.1` 这种邻版数字。
+
+按键：文档 `develop_key-mappings`。`KeyMappingHelper.registerKeyMapping(KeyMapping)`（`net.fabricmc.fabric.api.client.keymapping.v1`），仅客户端 + `ClientTickEvents`。分类翻译 `key.category.<namespace>.<path>`。
 
 ## 常见错误
 

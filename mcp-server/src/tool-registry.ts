@@ -97,14 +97,14 @@ import {
 export const queryApiSchema = z.object({
   className: z.string().describe("类全限定名，如 net.minecraft.world.entity.LivingEntity"),
   methodName: z.string().optional().describe("方法名，可选，如 getHealth"),
-  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
 });
 
 export const getMethodParamsSchema = z.object({
   className: z.string().describe("类全限定名"),
   methodName: z.string().describe("方法名（Parchment/Mojang 层名；Yarn 名请先 convert_mapping）"),
   descriptor: z.string().optional().describe("完整 JNI 描述符（用于区分重载，如 (Lnet/minecraft/world/entity/LivingEntity;)V）"),
-  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
 });
 
 export const convertMappingSchema = z.object({
@@ -117,7 +117,7 @@ export const convertMappingSchema = z.object({
   memberName: z.string().describe("成员名（字段或方法）"),
   ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
   descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
-  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
   memberKind: z
     .enum(["class", "method", "field", "auto"])
     .optional()
@@ -136,6 +136,10 @@ export const getServerStatusSchema = z.object({
 export const getVersionInfoSchema = z.object({
   version: z.string().describe("Minecraft 版本，如 1.20.1"),
   action: z.string().describe("要执行的操作，如 注册方块、创建方块实体、注册流体"),
+  platform: z
+    .string()
+    .optional()
+    .describe("必须为 forge。缺省或非 forge 返回 WRONG_TOOL；不要当跨平台顾问"),
 });
 
 export const diagnoseGradleSchema = z.object({
@@ -170,7 +174,7 @@ export const generateDatagenSchema = z.object({
 export const crashAnalyzeSchema = z.object({
   crashReport: z.string().optional().describe("崩溃报告全文（从 '---- Minecraft Crash Report ----' 开始；与 crashReportPath 二选一）"),
   crashReportPath: z.string().optional().describe("崩溃报告文件路径（与 crashReport 二选一）"),
-  version: z.string().optional().describe("Minecraft 版本，默认 1.20.1"),
+  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
 });
 
 export const validateProjectSchema = z.object({
@@ -251,14 +255,14 @@ server.registerTool(
   {
     title: "Query Vanilla/Parchment API",
     description:
-      "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。" +
+      "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。" +
       "适用于：需要确认某个 Minecraft API 的正确用法时。" +
       "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。" +
       "【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳）。1.14.4/1.15.2 与 1.21+/26.1+ 无可用方法索引。found:false 表示本索引没有该类。平台 API 请用 query_loader_api 或 search_*_docs。",
     inputSchema: queryApiSchema,
   },
   async ({ className, methodName, version }): Promise<CallToolResult> => {
-    const result = await queryApi({ className, methodName, version: version ?? "1.20.1" });
+    const result = await queryApi({ className, methodName, version });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -363,11 +367,12 @@ server.registerTool(
       "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
       "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
       "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。" +
-      "【边界】不要用于 Fabric / NeoForge 工程。1.12.2 及以下版本注册是 RegistryEvent，不要套 DeferredRegister。",
+      "【边界】仅 Forge。platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。" +
+      "不要用于 Fabric / NeoForge 工程，请改用 search_*_docs。1.12.2 及以下版本注册是 RegistryEvent，不要套 DeferredRegister。",
     inputSchema: getVersionInfoSchema,
   },
-  async ({ version, action }): Promise<CallToolResult> => {
-    const result = await getVersionInfo({ version, action });
+  async ({ version, action, platform }): Promise<CallToolResult> => {
+    const result = await getVersionInfo({ version, action, platform });
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -431,7 +436,7 @@ server.registerTool(
     inputSchema: crashAnalyzeSchema,
   },
   async (args): Promise<CallToolResult> => {
-    const result = analyzeCrash({ ...args, version: args.version ?? "1.20.1" });
+    const result = analyzeCrash(args);
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
   }
 );
@@ -1014,11 +1019,11 @@ export type ToolSchemaEntry = {
 };
 
 export const indexToolSchemas: ToolSchemaEntry[] = [
-  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳），不是完整 javadoc。1.14.4/1.15.2 索引为空；1.21+ / 26.1+ 无索引。found:false 表示本索引没有该类。平台 API 请用 query_loader_api 或 search_*_docs。", inputSchema: queryApiSchema },
+  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳），不是完整 javadoc。1.14.4/1.15.2 索引为空；1.21+ / 26.1+ 无索引。found:false 表示本索引没有该类。平台 API 请用 query_loader_api 或 search_*_docs。", inputSchema: queryApiSchema },
   { name: "get_method_params", description: "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。适用于：当知道方法名但不确定参数顺序和名称时。需提供 className + methodName；重载方法建议附上 descriptor。返回参数索引、名称和 JNI 描述符。【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ 无索引。found:false 表示索引没有该方法，不代表运行时不存在。", inputSchema: getMethodParamsSchema },
   { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
-  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】不要用于 Fabric / NeoForge 工程。1.12.2 注册是 RegistryEvent，不要套 DeferredRegister。未知 version（含 constructor 等原型键）返回 forgeVersion=unknown，不是把 Object.prototype 当版本。", inputSchema: getVersionInfoSchema },
+  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。不要用于 Fabric / NeoForge 工程，请改用 search_*_docs。1.12.2 注册是 RegistryEvent，不要套 DeferredRegister。未知 version（含 constructor 等原型键）返回 forgeVersion=unknown，不是把 Object.prototype 当版本。", inputSchema: getVersionInfoSchema },
   { name: "diagnose_gradle", description: "校验 ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。Loom：插件 id（26.1 必须 net.fabricmc.fabric-loom）、Java toolchain（1.21=21，26.1=25）、Yarn vs 去混淆、26.1 禁止 modImplementation。Neo/MDG：插件 id、minecraft_version/neo_version、26.1 须能看出 buildPlugin、Java 21 vs 25。含 net.minecraftforge.gradle.liteloader 时走轻量模式。Rift / BaseMod / 基岩仍早退。", inputSchema: diagnoseGradleSchema },
   { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：platform 与 version 均必填。Forge 仅 1.20.1、NeoForge 1.21.x、NeoForge 26.1（GatherDataEvent.Client + Identifier）、Fabric/Quilt 1.21 与 26.1（Loom DataGeneratorEntrypoint）。其它 Forge 版本（含 1.12.2）返回 error。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘。", inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },

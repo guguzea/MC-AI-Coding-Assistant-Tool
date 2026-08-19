@@ -89,13 +89,7 @@ public void update() {
 **正确方案**：
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public class ModTileEntities {
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<TileEntity> event) {
-        TileEntity.register(MOD_ID + ":my_tile", MyTileEntity.class);
-    }
-}
+GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(MOD_ID, "my_tile"));
 ```
 
 ---

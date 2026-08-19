@@ -57,7 +57,7 @@ IF 需要可放置物品、不可交互的基础方块
 IF 需要存储数据（箱子、熔炉等）
   → 方块实体方块（Block + BlockContainer）
   → 需要在方块类重写 createNewTileEntity()
-  → 需要注册 TileEntityType
+  → 需要 `GameRegistry.registerTileEntity`
 
 IF 需要可交互（右键打开 GUI、触发事件）
   → 基础方块 + onBlockActivated 事件
@@ -111,17 +111,17 @@ IF 只需要静态方块（装饰、完整方块）
 // blocks/BlockExample.java
 public class BlockExample extends Block {
     public BlockExample() {
-        super(new Block(Material.ROCK)
-                .hardness(1.5f)
-                .resistance(6.0f)
-        );
+        super(Material.ROCK);
+        setHardness(1.5F);
+        setResistance(6.0F);
+        setSoundType(SoundType.STONE);
     }
 }
 ```
 
 ```java
 // registry/ModBlocks.java
-@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
 public class ModBlocks {
     public static Block EXAMPLE_BLOCK;
 
@@ -136,7 +136,7 @@ public class ModBlocks {
 
 ```java
 // registry/ModItems.java
-@EventBusSubscriber(modid = ExampleMod.MODID, bus = EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
 public class ModItems {
     public static Item EXAMPLE_BLOCK_ITEM;
 
@@ -155,8 +155,8 @@ public class ModItems {
 // blocks/BlockExampleContainer.java
 public class BlockExampleContainer extends BlockContainer {
     public BlockExampleContainer() {
-        super(new Block(Material.WOOD), BlockExampleContainer.class);
-        setDefaultState(blockState.getBaseState());
+        super(Material.WOOD);
+        setDefaultState(this.blockState.getBaseState());
     }
 
     @Override
@@ -174,7 +174,7 @@ public class BlockExampleContainer extends BlockContainer {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileEntityExample) {
             player.addItemStackToInventory(((TileEntityExample) tile).getStack());

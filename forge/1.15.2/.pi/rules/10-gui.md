@@ -101,7 +101,7 @@ public class MyContainer extends Container {
 // 2. Register ContainerType
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
-        () -> IForgeContainer.create().type(MyContainer::new).windowId().build(null)
+        () -> IForgeContainerType.create(MyContainer::new)
     );
 ```
 

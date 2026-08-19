@@ -128,7 +128,8 @@ public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 
 // ✅ mixins.json (Forge) + build.gradle 配置
 // build.gradle 中添加
-plugins { id 'org.spongepowered.mixin' version '0.7.+' }
+// 官方 1.20.1 Forge MDK **没有** `id 'org.spongepowered.mixin' version '0.7.+'`。Mixin 随 Forge 提供；核不到本档插件坐标就停。
+// 不要写：plugins { id 'org.spongepowered.mixin' version '0.7.+' }
 mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 ```
 

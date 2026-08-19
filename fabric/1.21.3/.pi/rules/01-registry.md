@@ -17,7 +17,7 @@ description: 01 — 注册系统
 - **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
-- 使用 `Identifier` 构造 `ResourceLocation`：`new Identifier(MOD_ID, "registry_name")`
+- 使用 Yarn `Identifier.of(MOD_ID, "registry_name")`（1.21 构造器是 private；不要写 `new Identifier`，也不要抄 Mojmap `ResourceLocation`）
 
 ### 注册时机
 
@@ -46,10 +46,10 @@ private static final String MOD_ID = "ExampleMod";    // 不能大写
 
 ```java
 // ✅ 正确：全小写，下划线分隔
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_awesome_item"), myItem);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_awesome_item"), myItem);
 
 // ❌ 错误：驼峰命名
-Registry.register(Registries.ITEM, new Identifier(MOD_ID, "myAwesomeItem"), myItem);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "myAwesomeItem"), myItem);
 
 ```
 
@@ -101,15 +101,15 @@ public class ExampleMod implements ModInitializer {
 
     // 静态初始化注册表
     private static final Item MY_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     private static final Block MY_BLOCK =
-        Registry.register(Registries.BLOCK, new Identifier(MOD_ID, "my_block"),
+        Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"),
             new Block(FabricBlockSettings.create().strength(1.5f)));
 
     // BlockItem 与方块同名注册
     private static final Item MY_BLOCK_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),
             new BlockItem(MY_BLOCK, new Item.Settings()));
 
     @Override
@@ -131,11 +131,11 @@ public class ModItems {
     private static final String MOD_ID = "examplemod";
 
     public static final Item MY_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"),
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"),
             new Item(new Item.Settings()));
 
     public static final Item MY_BLOCK_ITEM =
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),
             new BlockItem(ModBlocks.MY_BLOCK, new Item.Settings()));
 
     public static void initialize() {
@@ -167,11 +167,11 @@ public class ExampleMod implements ModInitializer {
 ```java
 // ✅ 推荐：保存 Registry.register 的返回值
 private static final Item MY_ITEM =
-    Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(...));
+    Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), new Item(...));
 
 // ✅ 可行：直接静态字段（无懒加载）
 private static final Item MY_ITEM = Registry.register(Registries.ITEM,
-    new Identifier(MOD_ID, "my_item"), new Item(...));
+    Identifier.of(MOD_ID, "my_item"), new Item(...));
 
 // ❌ 禁止：直接 public static final Item（不会被注册系统管理）
 public static final Item MY_ITEM = new Item(...);  // 不会被注册

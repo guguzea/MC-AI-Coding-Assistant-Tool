@@ -92,7 +92,7 @@ export function datapackRecipeWarnings(projectRoot: string | undefined): string[
     bytes += Buffer.byteLength(content, "utf8");
     n += 1;
     const rel = abs.replace(/\\/g, "/");
-    const r = validateDatapackJson({ jsonContent: content, kind: "recipe" });
+    const r = validateDatapackJson({ jsonContent: content, kind: "recipe", version: "unknown" });
     for (const e of r.errors) {
       warnings.push(`数据包 JSON（warning，不判 failed）${rel}: ${e}`);
     }

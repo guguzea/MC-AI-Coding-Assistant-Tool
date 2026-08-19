@@ -8,14 +8,14 @@
 // 注册方块
 private static final Block MY_BLOCK = Registry.register(
     Registries.BLOCK,
-    new Identifier(MOD_ID, "my_block"),
+    Identifier.of(MOD_ID, "my_block"),
     new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
 );
 
 // 注册同名 BlockItem
 private static final Item MY_BLOCK_ITEM = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_block"),
+    Identifier.of(MOD_ID, "my_block"),
     new BlockItem(MY_BLOCK, new Item.Settings())
 );
 ```
@@ -131,7 +131,7 @@ public class MyBlockEntity extends BlockEntity {
 public static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
-        new Identifier(MOD_ID, "my_block_entity"),
+        Identifier.of(MOD_ID, "my_block_entity"),
         BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK).build(null)
     );
 

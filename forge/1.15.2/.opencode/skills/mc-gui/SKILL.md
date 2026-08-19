@@ -29,7 +29,7 @@ IF 需要物品栏槽位（多格容器）
 ```java
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
-        () -> IForgeContainer.create().type(MyContainer::new).windowId().build(null)
+        () -> IForgeContainerType.create(MyContainer::new)
     );
 
 // 在 mod 构造函数中

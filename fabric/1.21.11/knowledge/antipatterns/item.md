@@ -16,7 +16,7 @@
 // ❌ 默认 durability 为 Integer.MAX_VALUE，物品永远不会消耗
 private static final Item MY_TOOL = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_tool"),
+    Identifier.of(MOD_ID, "my_tool"),
     new Item(new Item.Settings())
 );
 ```
@@ -25,7 +25,7 @@ private static final Item MY_TOOL = Registry.register(
 ```java
 private static final Item MY_TOOL = Registry.register(
     Registries.ITEM,
-    new Identifier(MOD_ID, "my_tool"),
+    Identifier.of(MOD_ID, "my_tool"),
     new Item(new Item.Settings().maxDamage(100))  // ✅ 设置耐久
 );
 ```

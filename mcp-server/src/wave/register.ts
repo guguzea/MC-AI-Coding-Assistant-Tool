@@ -41,7 +41,7 @@ import { inspectRuntime } from "../runtime-inspect/index.js";
 export const queryRegistrySchema = z.object({
   query: z.string().describe("资源 ID 或子串，如 stone、minecraft:diamond"),
   registry: z.string().optional().describe("限定注册表名，如 blocks、items"),
-  version: z.string().optional().describe("MC 版本，默认 1.20.1"),
+  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
   limit: z.number().optional(),
 });
 export const mixinAnalyzeSchema = z.object({
@@ -49,7 +49,7 @@ export const mixinAnalyzeSchema = z.object({
     .array(z.object({ path: z.string(), content: z.string() }))
     .optional(),
   mixinsJson: z.string().optional(),
-  version: z.string().optional(),
+  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
   deep: z
     .boolean()
     .optional()
@@ -67,7 +67,7 @@ export const auditResourcesSchema = z.object({
 export const validateDatapackJsonSchema = z.object({
   jsonContent: z.string(),
   kind: z.enum(["recipe", "loot_table", "advancement", "tag"]),
-  version: z.string().optional(),
+  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
 });
 export const getWorkflowTemplateSchema = z.object({
   name: z.enum([
@@ -88,6 +88,14 @@ export const getWorkflowTemplateSchema = z.object({
     "mc-gametest",
     "mc-publish",
     "mc-setup-env",
+    "mc-networking",
+    "mc-capability",
+    "mc-recipe-data",
+    "mc-audio-vfx",
+    "mc-commands",
+    "mc-dimension-structure",
+    "mc-access",
+    "mc-bedrock-addon",
   ]),
 });
 export const localizeModSchema = z.object({
@@ -136,11 +144,16 @@ export const generateEntityRendererSchema = z.object({
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge 1.20.1/1.20.4 与 neoforge 26.1 生成代码"),
   version: z.string().describe("必填。forge 仅 1.20.1 / 1.20.4；neoforge 仅 26.1"),
 });
-export const generateWorldgenSchema = z.object({ modId: z.string(), featureName: z.string() });
+export const generateWorldgenSchema = z.object({
+  modId: z.string(),
+  featureName: z.string(),
+  platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。fabric/quilt 不出 forge/biome_modifier"),
+  version: z.string().describe("必填 MC 版本"),
+});
 export const analyzeLogSchema = z.object({
   logText: z.string().optional().describe("日志全文（与 logPath 二选一）"),
   logPath: z.string().optional().describe("日志文件路径（与 logText 二选一）"),
-  version: z.string().optional(),
+  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
 });
 export const getMigrationGuideSchema = z.object({
   route: z.string().describe("迁移路线，如 1.21.11->26.1 或 forge->neoforge"),
@@ -188,7 +201,7 @@ export const lookupObfuscatedSchema = z.object({
 });
 // ── T2 反编译工具族（wave 21–24）──────────────────────────────────────────────
 export const getMinecraftSourceSchema = z.object({
-  version: z.string().optional().describe("MC 版本，默认 1.20.1（支持 1.14–1.21.11 与 26.1+）"),
+  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1（支持 1.14–1.21.11 与 26.1+）"),
   className: z.string().describe("完整类名，如 net.minecraft.world.item.Item"),
   mapping: z
     .enum(["yarn", "mojmap", "auto"])
@@ -285,9 +298,26 @@ export const activatePlatformPackSchema = z.object({
     .array(z.string())
     .optional()
     .describe("write/deactivate 必填：cursor|claude|continue|trae|opencode|codex|zcode|pi，或 all。禁止默认 Cursor"),
-  topics: z.array(z.string()).optional().describe("session：规则编号如 02、10"),
-  includeAllRules: z.boolean().optional(),
-  includeSkills: z.boolean().optional().describe("write：默认 false；true 才写 Skill Stub"),
+  topics: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "session：只追加规则号到底座 00/01/09（并集，永不替换）。永远不注入 skillBodies。mixin 只作 skill hint→nextReads。",
+    ),
+  includeAllRules: z.boolean().optional().describe("session：true 灌 00–10 规则全文，仍不自动灌全部 Skill 正文。"),
+  task: z
+    .string()
+    .optional()
+    .describe(
+      "session：只追加其映射规则号（与 topics 并集）。建议 skill 名可进 skillBodies。未知 task 仍 ok，rulesMode=base。",
+    ),
+  skillNames: z
+    .array(z.string())
+    .optional()
+    .describe(
+      "session：与 task 建议名去重后注入 skillBodies（总条数上限 6）。先查平台包 skills[]，未命中再查已按版本过滤的 libSkills[]。",
+    ),
+  includeSkills: z.boolean().optional().describe("仅 write：默认 false；true 才写 Skill Stub。不要和 session 的 skillNames 混用。"),
   dryRun: z.boolean().optional().default(true),
   confirmed: z.boolean().optional(),
   projectPath: z.string().optional().describe("用户模组工程绝对路径（CLI --project）。write 真写只认此 allowlist"),
@@ -452,9 +482,10 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("generate_worldgen", {
     title: "Generate worldgen JSON templates",
-    description: "Generate worldgen JSON templates。返回世界生成 JSON 骨架，不写盘。",
+    description:
+      "Generate worldgen JSON templates。platform 与 version 必填。Fabric/Quilt 只出 feature JSON，禁止 forge biome_modifier。返回骨架文本，不写盘。",
     inputSchema: generateWorldgenSchema,
-  }, async (a) => jsonResult(generateWorldgen(a.modId, a.featureName)));
+  }, async (a) => jsonResult(generateWorldgen(a.modId, a.featureName, a.platform, a.version)));
 
   // ── Wave C: diagnostics ──────────────────────────────────────────────────
   server.registerTool("analyze_log", {
@@ -659,7 +690,11 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Activate platform rules for session or write into a mod project",
       description:
-        "list / session / write / deactivate。session 不写盘、不依赖项目根，返回该档 AGENTS/规则/技能索引。" +
+        "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。" +
+        "topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 6）；topics 永不注入正文。" +
+        "库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。" +
+        "includeSkills 仅 write stub。ok=true 且带「仅底座」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。" +
+        "rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。" +
         "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。",
       inputSchema: activatePlatformPackSchema,
     },
@@ -743,7 +778,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_capability", description: "Generate Capability / DataAttachment skeleton。platform 与 version 必填。forge → Forge Capability；neoforge → 仅 1.20.4+ Data Attachment（不是 Forge Capability）；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。", inputSchema: generateCapabilitySchema },
   { name: "generate_config", description: "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖。不写盘。", inputSchema: generateConfigSchema },
   { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。支持 forge 1.20.1 / 1.20.4（@OnlyIn）与 neoforge 26.1（EntityRenderer + Identifier）。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
-  { name: "generate_worldgen", description: "Generate worldgen JSON templates。返回世界生成 JSON 骨架，不写盘。", inputSchema: generateWorldgenSchema },
+  { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。Fabric/Quilt 只出 feature JSON，禁止 forge biome_modifier。返回骨架文本，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: "Analyze game / crash log excerpt", inputSchema: analyzeLogSchema },
   { name: "get_migration_guide", description: "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。route 如 1.21.11->26.1 / 26.2 / forge->neoforge。", inputSchema: getMigrationGuideSchema },
   { name: "download_official_mdk", description: "下载官方 MDK 到 $MC_SKILL_CACHE。GitHub pin commit SHA；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle。默认 dryRun。", inputSchema: downloadOfficialMdkSchema },
@@ -760,7 +795,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。", inputSchema: searchLoaderApiSchema },
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。", inputSchema: detectModProjectSchema },
-  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引（topics / includeAllRules）。write 默认 dryRun；hosts 必填；includeSkills 默认 false（true 也只写 stub）。目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
+  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 6）；topics 永不注入正文。库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。includeSkills 仅 write stub。ok=true 且带「仅底座」warning = 平台包可用但规则未按任务扩展（不要当失败，也不要当已灌 02–10）。rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。write 默认 dryRun；hosts 必填；includeSkills 默认 false（true 也只写 stub）。目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];

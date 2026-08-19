@@ -25,6 +25,9 @@ export interface GradleQuery {
   riftmodJson?: string;
   addonManifest?: string;
   quiltModJson?: string;
+  modsToml?: string;
+  fabricModJson?: string;
+  neoModsToml?: string;
   projectPath?: string;
 }
 
@@ -82,6 +85,9 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
       riftmodJson: preferExplicit(query.riftmodJson, loaded.riftmodJson),
       addonManifest: preferExplicit(query.addonManifest, loaded.addonManifest),
       quiltModJson: preferExplicit(query.quiltModJson, loaded.quiltModJson),
+      modsToml: preferExplicit(query.modsToml, loaded.modsToml),
+      fabricModJson: preferExplicit(query.fabricModJson, loaded.fabricModJson),
+      neoModsToml: preferExplicit(query.neoModsToml, loaded.neoModsToml),
     };
   }
   const buildGradle = query.buildGradle;
@@ -91,9 +97,9 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     ]);
     return { status: "failed", passed: false, ok: false, errors: [action.message], warnings: [], suggestions: [], action };
   }
-  const { gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson } = query;
+  const { gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson, modsToml, fabricModJson, neoModsToml } = query;
   const extras = { litemodJson, riftmodJson, addonManifest, quiltModJson };
-  const loader = detectLoader(buildGradle, undefined, undefined, undefined, extras);
+  const loader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml, extras);
 
   if (/fabric-loom|org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || loader === "quilt" || quiltModJson?.trim()) {
     const quilt = loader === "quilt" || /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || Boolean(quiltModJson?.trim());

@@ -9,6 +9,8 @@ mappings: yarn
 
 # 实体开发（Fabric 1.17.1）
 
+> 入库 `develop_entities_first-entity` 常指向 **latest Mojmap**（`PathfinderMob` / `EntityRenderState` / `addAdditionalSaveData`）。本档 Yarn，不要抄那页类名。属性用 `FabricDefaultAttributeRegistry.register`（loader-api 已核）。
+
 ## 快速开始
 
 ```java
@@ -20,13 +22,12 @@ public class MyPigEntity extends PigEntity {
 }
 
 // 2. 注册实体类型
-// ⚠️ 1.17.x 使用 Registry.ENTITY_TYPE，不是 Registry.ENTITY_TYPE
+// 1.17.x 仍是 Registry.ENTITY_TYPE（Registries 是 1.19.3+）
 private static final EntityType<MyPigEntity> MY_PIG =
     Registry.register(Registry.ENTITY_TYPE, new Identifier(MOD_ID, "my_pig"),
         FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyPigEntity::new)
-            .dimensions(0.9f, 1.4f)
-            .maxTrackingRange(10)
-            .trackingTickInterval(10)
+            .dimensions(EntityDimensions.changing(0.9f, 1.4f))
+            .trackable(8, 3)
             .build()
     );
 
@@ -60,10 +61,8 @@ IF 需要在世界中自然生成
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(MY_PIG, (context) ->
-            new AnimalEntityRenderer<>(context.getModelLoader()
-                .getModelPart(EntityModelLayers.COW), new CowEntityModel(), 0.5f)
-        );
+        // 包：net.fabricmc.fabric.api.client.rendering.v1（静态 register）
+        EntityRendererRegistry.register(MY_PIG, PigEntityRenderer::new);
     }
 }
 ```

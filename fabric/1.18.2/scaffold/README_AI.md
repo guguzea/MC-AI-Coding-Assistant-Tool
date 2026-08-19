@@ -102,9 +102,9 @@ public static final EntityType<MyEntity> MY_ENTITY =
     Registry.register(
         Registry.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_entity"),
-        EntityType.Builder.create(MyEntity::new, EntityCategory.CREATURE)
-            .dimensions(0.9f, 1.4f)
-            .build()
+        EntityType.Builder.create(MyEntity::new, SpawnGroup.CREATURE)
+            .setDimensions(0.9f, 1.4f)
+            .build("my_entity")
     );
 ```
 

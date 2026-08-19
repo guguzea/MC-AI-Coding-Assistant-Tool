@@ -28,9 +28,18 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
     Registry.ENTITY_TYPE,
     new Identifier(MOD_ID, "my_pig"),
     EntityType.Builder.<MyPigEntity>create(MyPigEntity::new, EntityCategory.CREATURE)
-        .size(0.9f, 1.4f)
-        .build(null)
+        .setDimensions(0.9f, 1.4f)
+        .build("my_pig")
 );
 ```
 
-渲染器在 `ClientModInitializer` 里 `EntityRendererRegistry.register`。
+Yarn 1.14.4+build.18：`setDimensions(float,float)` + `build(String)`。不要写 MCP 的 `.size()` / `.build(null)`。
+
+渲染器在 `ClientModInitializer`。包名 `net.fabricmc.fabric.api.client.render.EntityRendererRegistry`；`register` 是**实例方法**，第一参是 **`Class`**（不是 EntityType）：
+
+```java
+EntityRendererRegistry.INSTANCE.register(MyPigEntity.class, (dispatcher, context) -> {
+    return new PigEntityRenderer(dispatcher);
+});
+```
+

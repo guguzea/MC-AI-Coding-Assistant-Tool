@@ -15,7 +15,7 @@ mappings: yarn
 // 1. 创建流体
 private static final Fluid MY_FLUID = Registry.register(
     Registries.FLUID,
-    new Identifier(MOD_ID, "my_fluid"),
+    Identifier.of(MOD_ID, "my_fluid"),
     new FabricFlowableFluid.Settings()
         .slopeFindDistance(3)
         .levelDecreasePerBlock(1)
@@ -26,7 +26,7 @@ private static final Fluid MY_FLUID = Registry.register(
 // 2. 注册方块状态映射
 Registry.register(
     Registries.FLUID,
-    new Identifier(MOD_ID, "my_fluid"),
+    Identifier.of(MOD_ID, "my_fluid"),
     MY_FLUID
 );
 ```

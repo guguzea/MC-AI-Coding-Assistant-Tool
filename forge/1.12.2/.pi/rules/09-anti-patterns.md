@@ -122,13 +122,10 @@ public class BlockContainer extends Block implements IHasModel {
 
 **错误症状**：`TileEntity` 不工作，容器无法打开
 
-**正确方案**：注册 `TileEntityType`
+**正确方案**：`GameRegistry.registerTileEntity`（官方 Registries 页的 RegistryEvent 类型不含 TileEntity；没有 `TileEntityType`）
 
 ```java
-@SubscribeEvent
-public static void registerTileEntities(RegistryEvent.Register<TileEntity> event) {
-    event.getRegistry().register(new TileEntityType(...).setRegistryName(MODID, "my_tile"));
-}
+GameRegistry.registerTileEntity(MyTileEntity.class, new ResourceLocation(MODID, "my_tile"));
 ```
 
 ---

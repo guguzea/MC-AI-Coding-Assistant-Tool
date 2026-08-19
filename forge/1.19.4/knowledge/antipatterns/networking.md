@@ -43,17 +43,17 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟。
 
-**正确方案**：使用 `CompoundTag` 或自定义 `PacketByteBuf` 批量序列化。
+**正确方案**：使用 `CompoundTag` 或自定义 `FriendlyByteBuf` 批量序列化。
 
 ```java
-public class SyncAllDataMessage implements IMessage {
+public class SyncAllDataMessage {
     private CompoundTag data;
 
-    public void toBytes(PacketByteBuf buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(data);
     }
 
-    public void fromBytes(PacketByteBuf buf) {
+    public void fromBytes(FriendlyByteBuf buf) {
         data = buf.readNbt();
     }
 }

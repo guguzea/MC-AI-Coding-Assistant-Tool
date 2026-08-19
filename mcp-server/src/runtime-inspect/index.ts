@@ -215,7 +215,9 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     try {
       logTail = readTail(logFile, maxBytes, maxLines);
       if (logTail.truncated) warnings.push(`日志已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      logAnalysis = summarizeLog(analyzeLog({ logText: logTail.text, version: query.version }));
+      logAnalysis = query.version?.trim()
+        ? summarizeLog(analyzeLog({ logText: logTail.text, version: query.version }))
+        : { skipped: true, reason: "未指定 version，未调用 analyze_log（禁止默认 1.20.1）" };
     } catch (e) {
       warnings.push(`读取日志失败：${(e as Error).message}`);
     }
@@ -226,7 +228,12 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     try {
       const tail = readTail(crashFile, maxBytes, maxLines);
       if (tail.truncated) warnings.push(`crash-report 已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      crashAnalysis = analyzeCrash({ crashReport: tail.text, version: query.version });
+      crashAnalysis = query.version?.trim()
+        ? analyzeCrash({ crashReport: tail.text, version: query.version })
+        : undefined;
+      if (!query.version?.trim()) {
+        warnings.push("未指定 version，未调用 crash_analyze（禁止默认 1.20.1）");
+      }
     } catch (e) {
       warnings.push(`读取 crash-report 失败：${(e as Error).message}`);
     }

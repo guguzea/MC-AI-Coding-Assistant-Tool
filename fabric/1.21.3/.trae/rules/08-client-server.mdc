@@ -45,7 +45,7 @@ public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // 服务端逻辑和共享逻辑
-        Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), myItem);
     }
 }
 

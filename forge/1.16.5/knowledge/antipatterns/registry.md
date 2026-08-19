@@ -114,14 +114,14 @@ public static final String MOD_ID = "mymod123";  // ❌ 不一致
 
 ```java
 // ❌ 错误
-EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
     .build(Direction.DISPENSER, "my_entity");  // Direction 不存在
 ```
 
 **正确方案：**
 ```java
 // ✅ 直接传入 String
-EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
+EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
     .build("my_entity");
 ```
 

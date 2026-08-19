@@ -102,7 +102,7 @@ public static final EntityType<MyEntity> MY_ENTITY =
     Registry.register(
         Registries.ENTITY_TYPE,
         new Identifier(MOD_ID, "my_entity"),
-        FabricEntityTypeBuilder.create(MobCategory.CREATURE, MyEntity::new)
+        FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MyEntity::new)
             .dimensions(EntityDimensions.changing(0.9f, 1.4f))
             .build()
     );
