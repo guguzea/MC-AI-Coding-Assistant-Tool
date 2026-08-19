@@ -25,7 +25,7 @@ description: 09 — 反模式库
 ```java
 // ❌ 错误
 public class ExampleMod implements ModInitializer {
-    private static final Item MY_ITEM = new Item(new Item.Properties());
+    private static final Item MY_ITEM = new Item(new Item.Settings());
 
     // 类加载时注册，但应在 onInitialize() 中
     static {
@@ -36,7 +36,7 @@ public class ExampleMod implements ModInitializer {
 // ✅ 正确
 public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM =
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Properties()));
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override
     public void onInitialize() {
@@ -51,12 +51,12 @@ public class ExampleMod implements ModInitializer {
 // ❌ 错误
 Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 不同名！
-    new BlockItem(myBlock, new Item.Properties()));
+    new BlockItem(myBlock, new Item.Settings()));
 
 // ✅ 正确：使用完全相同的 Identifier
 Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！
-    new BlockItem(myBlock, new Item.Properties()));
+    new BlockItem(myBlock, new Item.Settings()));
 ```
 
 ---
@@ -278,7 +278,7 @@ public class MyMixin { ... }
 
 ```java
 // ❌ 错误：1.14.4 中不存在 Registries 类
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 
 // ✅ 正确：使用 Registry 静态字段
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
@@ -287,11 +287,12 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ### ❌ Block.Properties 使用错误
 
 ```java
-// ❌ 错误：AbstractBlock.Settings 是 1.17+ 的类
+// ❌ 错误：AbstractBlock.Settings 是 1.17+ 的类；Mojmap Block.Properties 也不是 Yarn 1.14 名
 new Block(AbstractBlock.Settings.create(Material.STONE));
-
-// ✅ 正确（1.14.4）
 new Block(Block.Properties.create(Material.STONE));
+
+// ✅ 正确（Yarn 1.14.4）
+new Block(Block.Settings.of(Material.STONE));
 ```
 
 ### ❌ EntityType MobCategory 使用错误

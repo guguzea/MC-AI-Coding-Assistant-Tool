@@ -36,8 +36,24 @@ import {
   primerSummaryPayload,
   searchNeoForgePrimers,
 } from "../neoforge/primers.js";
+import { actionable, ActionCodes } from "../../utils/actionable.js";
 
 const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
+
+function platformRequiredResult(): CallToolResult {
+  return {
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        ok: false,
+        action: actionable(ActionCodes.INVALID_INPUT, "请指定 platform，禁止默认 forge", [
+          "传入 platform（forge/fabric/neoforge/quilt/liteloader/rift/modloader）",
+          "先 list_doc_versions 查看该平台可用版本",
+        ], ["list_doc_versions", "list_forge_versions", "list_fabric_versions", "list_neoforge_versions"]),
+      }, null, 2),
+    }],
+  };
+}
 
 // ── 通用工具 store 缓存（key = platform:DATA_DIR，支持数据目录变化时正确失效）────────────
 
@@ -132,14 +148,14 @@ export const searchForgeDocsSchema = {
 
 参数说明：
   - query: 搜索关键词，可以是类名、概念或功能描述。
-  - version: Minecraft/Forge 版本。默认使用最高版本，版本不存在时自动降级（如 1.18→1.18.x→最高可用版本）。
+  - version: Minecraft/Forge 版本（必填）。仅同系列（任意 N.M.*）；跨主版本 VERSION_NOT_FOUND。请先 list_forge_versions。
   - tags: 可选标签过滤（小写无连字符，如 registry, event, capability, networking, datagen, sides, client, server）。
 
 另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，
 适合在已知类名后精确查询某个方法的签名。`,
   inputSchema: z.object({
     query: z.string().describe("搜索关键词（类名、概念或功能描述，支持 class:/event:/method: 前缀和 | OR 分组）"),
-    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。仅同系列；跨主版本 VERSION_NOT_FOUND。示例：1.16.8→1.16.5。请先 list_forge_versions。"),
     tags: z
       .array(z.string())
       .optional()
@@ -216,7 +232,7 @@ export async function searchForgeDocs(
                 ok: false,
                 error: e.message,
                 code: "VERSION_NOT_FOUND",
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
               null,
               2,
@@ -249,7 +265,7 @@ export const getForgeDocSummarySchema = {
 返回内容：每个 <h2> 章节的标题 + 150-200 字摘要 + 首段概述。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。仅同系列；跨主版本 VERSION_NOT_FOUND。示例：1.16.8→1.16.5。请先 list_forge_versions。"),
   }),
 } as const;
 
@@ -278,7 +294,7 @@ export async function getForgeDocSummary(
             text: JSON.stringify(
               {
                 error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
               null,
               2,
@@ -329,7 +345,7 @@ highlight_key=true 时，关键要点（🔴新手必读、🟠常见错误、�
   若关键摘要已够用则不必细读全文。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。仅同系列；跨主版本 VERSION_NOT_FOUND。示例：1.16.8→1.16.5。请先 list_forge_versions。"),
     highlight_key: z
       .boolean()
       .optional()
@@ -364,7 +380,7 @@ export async function getForgeDocFull(
             text: JSON.stringify(
               {
                 error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
               null,
               2,
@@ -411,7 +427,7 @@ export const getForgeDocRelatedSchema = {
 返回与目标页面共享最多 section 关键词的其他页面，按相关性降序排列。`,
   inputSchema: z.object({
     id: z.string().describe("页面 ID，来自 search_forge_docs 返回的 results[].id"),
-    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。版本不存在时自动降级。示例：1.18→1.18.x，1.17→1.17.1。"),
+    version: z.string().min(1, "版本号不能为空").describe("Minecraft/Forge 版本（必填）。仅同系列；跨主版本 VERSION_NOT_FOUND。示例：1.16.8→1.16.5。请先 list_forge_versions。"),
     limit: z
       .number()
       .optional()
@@ -456,7 +472,7 @@ export async function getForgeDocRelated(
             text: JSON.stringify(
               {
                 error: e.message,
-                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+                hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
               null,
               2,
@@ -532,7 +548,7 @@ function handleError(e: unknown, platform: string = "forge"): CallToolResult {
           error: {
             code: "VERSION_NOT_FOUND",
             message: rec.message ?? String(e),
-            hint: `请使用支持的版本：${versions.join(", ") || "未知"}`,
+            hint: `请使用支持的版本：${versions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
           },
         }, null, 2),
       }],
@@ -579,20 +595,32 @@ export const listVersionsSchema = {
 如需同时查询多个平台，请分别调用 list_doc_versions({ platform: "forge" }) 和 list_doc_versions({ platform: "fabric" })。
 
 参数说明：
-  - platform: 平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），默认 forge。基岩请用 search_bedrock_docs。`,
+  - platform: 平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。`,
   inputSchema: z.object({
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
-      .optional()
-      .default("forge")
-      .describe("平台，默认 forge"),
+      .describe("平台（必填）。请先 list_doc_versions"),
   }),
 } as const;
 
 export async function listVersions(
   args: z.infer<typeof listVersionsSchema.inputSchema>,
 ): Promise<CallToolResult> {
-  const platform = args.platform ?? "forge";
+  const platform = args.platform;
+  if (!platform) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          action: actionable(ActionCodes.INVALID_INPUT, "请指定 platform，禁止默认 forge", [
+            "传入 platform（forge/fabric/neoforge/quilt/liteloader/rift/modloader）",
+            "分别调用 list_doc_versions 查询各平台",
+          ], ["list_doc_versions", "list_forge_versions", "list_fabric_versions", "list_neoforge_versions"]),
+        }, null, 2),
+      }],
+    };
+  }
   try {
     const store = getGenericStore(platform);
     const versions = store.getAvailableVersions();
@@ -638,7 +666,7 @@ export const searchDocsSchema = {
 参数说明：
   - query: 搜索关键词
   - version: Minecraft 版本（必填）
-  - platform: 平台，默认 forge
+  - platform: 平台（必填，禁止默认 forge）
   - tags: 可选标签过滤
   - source: 仅 platform=fabric 时有效：fabric-docs（默认）/ fabric-wiki / all`,
   inputSchema: z.object({
@@ -646,9 +674,7 @@ export const searchDocsSchema = {
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
-      .optional()
-      .default("forge")
-      .describe("平台，默认 forge"),
+      .describe("平台（必填）。请先 list_doc_versions"),
     tags: z.array(z.string()).optional().describe("标签过滤"),
     source: z
       .enum(["fabric-docs", "fabric-wiki", "all"])
@@ -661,7 +687,8 @@ export async function searchDocs(
   args: z.infer<typeof searchDocsSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const platform = args.platform ?? "forge";
+    if (!args.platform) return platformRequiredResult();
+    const platform = args.platform;
     const fabricSource = args.source ?? "fabric-docs";
 
     if (platform === "quilt") {
@@ -861,7 +888,7 @@ export async function searchDocs(
       ],
     };
   } catch (e) {
-    return handleError(e, args.platform ?? "forge");
+    return handleError(e, args.platform);
   }
 }
 
@@ -878,16 +905,15 @@ export const getDocSummarySchema = {
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
-      .optional()
-      .default("forge")
-      .describe("平台，默认 forge"),
+      .describe("平台（必填）。请先 list_doc_versions"),
   }),
 } as const;
 
 export async function getDocSummary(
   args: z.infer<typeof getDocSummarySchema.inputSchema>,
 ): Promise<CallToolResult> {
-  const platform = args.platform ?? "forge";
+  if (!args.platform) return platformRequiredResult();
+  const platform = args.platform;
   try {
     if (platform === "quilt") {
       return await getQuiltDocSummary({ id: args.id, version: args.version });
@@ -931,9 +957,7 @@ highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
-      .optional()
-      .default("forge")
-      .describe("平台，默认 forge"),
+      .describe("平台（必填）。请先 list_doc_versions"),
     highlight_key: z
       .boolean()
       .optional()
@@ -945,7 +969,8 @@ highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见
 export async function getDocFull(
   args: z.infer<typeof getDocFullSchema.inputSchema>,
 ): Promise<CallToolResult> {
-  const platform = args.platform ?? "forge";
+  if (!args.platform) return platformRequiredResult();
+  const platform = args.platform;
   try {
     if (platform === "quilt") {
       return await getQuiltDocFull({
@@ -997,9 +1022,7 @@ export const getDocRelatedSchema = {
     version: z.string().min(1, "版本号不能为空").describe("Minecraft 版本（必填）。请先用 list_doc_versions 查询可用版本。"),
     platform: z
       .enum(SEARCH_DOC_PLATFORMS)
-      .optional()
-      .default("forge")
-      .describe("平台，默认 forge"),
+      .describe("平台（必填）。请先 list_doc_versions"),
     limit: z.number().optional().default(5).describe("最多返回条数，默认 5"),
   }),
 } as const;
@@ -1007,7 +1030,8 @@ export const getDocRelatedSchema = {
 export async function getDocRelated(
   args: z.infer<typeof getDocRelatedSchema.inputSchema>,
 ): Promise<CallToolResult> {
-  const platform = args.platform ?? "forge";
+  if (!args.platform) return platformRequiredResult();
+  const platform = args.platform;
   try {
     if (platform === "quilt") {
       return getQuiltDocRelated({ id: args.id, version: args.version, limit: args.limit });

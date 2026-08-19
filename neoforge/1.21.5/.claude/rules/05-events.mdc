@@ -1,17 +1,14 @@
----
-description: 05 — 事件（neoforge 1.21.5）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 05 — 事件（NeoForge 1.21.5）
 
-# 05 — 事件
+来源：https://docs.neoforged.net/docs/1.21.5/concepts/events/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+两条总线：
 
-## Decision Flow
+- **游戏总线** `NeoForge.EVENT_BUS`。官方示例是 **`LivingEvent.LivingJumpEvent`**（嵌套名）。逻辑端 `entity.level().isClientSide()`。
+- **mod bus**：生命周期顺序与 1.20.6 同类（`FMLConstructModEvent` → 注册事件 → `FMLCommonSetupEvent` → 分端 Setup → IMC → `FMLLoadCompleteEvent`）。并行事件 `#enqueueWork`。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+`@EventBusSubscriber` 在本档会同时登记到游戏总线 **和** mod 总线（文档写等价于两边 `register`）。仍建议写 `modid`。客户端：`FMLEnvironment.dist` 或 `@EventBusSubscriber(value = Dist.CLIENT, modid = "...")`。
+
+取消用 `ICancellableEvent`。不要监听 abstract 超类事件。Name tag 示例是 `RenderNameTagEvent.CanRender`。
+
+禁止：`MinecraftForge.EVENT_BUS`；Payload 塞进 `FMLCommonSetupEvent`。

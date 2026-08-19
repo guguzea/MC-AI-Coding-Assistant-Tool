@@ -34,7 +34,7 @@ export interface GradleQuery {
 export interface GradleResult {
   status?: "passed" | "failed" | "skipped";
   skipped?: boolean;
-  passed?: boolean;
+  passed?: boolean | null;
   errors: string[];
   warnings: string[];
   suggestions: string[];
@@ -53,8 +53,8 @@ function skippedGradle(
   return {
     status: "skipped",
     skipped: true,
-    passed: false,
-    ok: false,
+    passed: null,
+    ok: true,
     errors: [],
     warnings,
     suggestions,

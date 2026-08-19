@@ -20,7 +20,7 @@ public static final DeferredRegister<Block> BLOCKS =
 
 // 2. 创建 RegistryObject 持有引用
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
-    () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE))
+    () -> new Block(BlockBehaviour.Properties.of().color(MaterialColor.STONE))
 );
 
 // 3. 在 mod 构造函数中注册到 modEventBus
@@ -55,9 +55,9 @@ IF 需要在 mod constructor 执行前引用已注册对象
 | 药水 | `ForgeRegistries.POTIONS` | |
 | 创造模式标签 | `Registries.CREATIVE_MODE_TAB` | Vanilla |
 
-## 注册 ItemBlock
+## 注册 BlockItem
 
-方块的 ItemBlock 与方块同名注册，Forge 自动关联：
+方块的 BlockItem 与方块同名注册，Forge 自动关联：
 
 ```java
 public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",

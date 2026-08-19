@@ -9,6 +9,8 @@ mappings: yarn
 
 # GUI 开发（Fabric 1.20.4）
 
+Yarn 移位是 `quickMove`。本档 loader-api 仍有 `ScreenRegistry.register`；wiki 用 `HandledScreens.register`。额外数据仍是 `writeScreenOpeningData`（1.21.1 才改成 `getScreenOpeningData`）。
+
 ## 快速开始
 
 ```java
@@ -68,6 +70,7 @@ IF 需要服务端数据同步
 - ❌在 `onInitialize()` 中注册 `HandledScreens` — 服务端崩溃
 - ❌在 Screen 中直接修改服务端数据 — 通过 ScreenHandler 同步
 - ❌忘记 `super.render()` — 背景和子元素不渲染
+- ❌抄 `transferSlot` 或 1.21 的 `getScreenOpeningData` — 本档额外数据是 `writeScreenOpeningData`
 
 ## 扩展点
 

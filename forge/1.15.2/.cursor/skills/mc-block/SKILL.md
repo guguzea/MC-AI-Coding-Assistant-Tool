@@ -26,7 +26,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ```
 IF 需要持久的 extra data（如机器存储）
-  → 方块实体（TileEntity）→ 实现 ITileEntityProvider 接口
+  → TileEntity：方块重写 hasTileEntity() + createTileEntity()（IForgeBlock）。不要再用已 @Deprecated 的 ITileEntityProvider
 
 IF 只是静态显示（无状态）
   → 普通方块
@@ -47,28 +47,28 @@ Block.Properties.create(Material.WOOD)
     .sound(SoundType.WOOD)                           // 音效
 ```
 
-## Decision: 物品形态（ItemBlock）
+## Decision: 物品形态（BlockItem）
 
 ```
 IF 方块在创造模式标签中有对应物品
-  → 注册同名 ItemBlock（Forge 自动关联显示）
+  → 注册同名 BlockItem（Forge 自动关联显示）
 
 IF 方块不应出现在物品栏（如空气、光源方块）
-  → 不注册 ItemBlock
+  → 不注册 BlockItem
 ```
 
 ## 方块实体方块
 
 ```java
-public class MyMachineBlock extends Block implements ITileEntityProvider {
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new MyMachineTileEntity();
-    }
-
+public class MyMachineBlock extends Block {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new MyMachineTileEntity();
     }
 }
 ```
@@ -76,31 +76,22 @@ public class MyMachineBlock extends Block implements ITileEntityProvider {
 ## TileEntity 基础结构
 
 ```java
-public class MyMachineTileEntity extends TileEntity {
+public class MyMachineTileEntity extends TileEntity implements ITickableTileEntity {
     private int progress = 0;
 
     public MyMachineTileEntity() {
         super(MyMachineTileEntities.MY_MACHINE.get());
     }
 
-    // 刻处理逻辑（服务端）
     @Override
     public void tick() {
-        if (world.isRemote) return;
+        if (world == null || world.isRemote) return;
         // 定时逻辑...
     }
 
-    // 同步（服务端 → 客户端）
     @Override
-    public NBTTagCompound getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        write(nbt);
-        return nbt;
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        read(pkt.getNbtCompound());
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 }
 ```

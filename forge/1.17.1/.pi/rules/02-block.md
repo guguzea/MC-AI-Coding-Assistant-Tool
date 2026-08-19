@@ -14,7 +14,7 @@ description: 02 — 方块开发
 
 - 方块类必须继承 `Block`（`net.minecraft.world.level.block.Block`）
 - 推荐使用 `BlockBehaviour.Properties.of(Material)` 创建属性
-- 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法（Forge 1.17.x 已在大部分方法上标注 `@Deprecated`）
+- 右键交互重写 `BlockBehaviour#use`（返回 `InteractionResult`）。不要 1.12 的 `onBlockActivated`
 
 ### BlockBehaviour.Properties 常用配置
 
@@ -25,7 +25,7 @@ BlockBehaviour.Properties.of(Material material)
     .requiresCorrectToolForDrops()                      // 需要正确工具才能掉落
     .noOcclusion()                                      // 不阻挡光
     .isRedstoneConductor((state, level, pos) -> true) // 红石导体
-    .jumpThreshold(float value)                        // 生物跳跃阈值（台阶）
+    .jumpFactor(float value)                        // 跳跃速度倍率（Parchment 是 jumpFactor，不是 jumpThreshold）
     .sound(SoundType type)                             // 放置/破坏音效
 ```
 
@@ -34,13 +34,13 @@ BlockBehaviour.Properties.of(Material material)
 - **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
 - 必须通过 `DeferredRegister<Block>` 注册（参见 `01-registry.mdc`）
 - 注册名称必须全小写
-- ItemBlock 需要单独注册（与方块使用相同 registry name）
+- BlockItem 需要单独注册（与方块使用相同 registry name）
 
 ### 方块实体（BlockEntity）约束
 
 - 有状态或需要持久化的方块必须使用 BlockEntity（而非仅靠 Block）
-- BlockEntity 必须在方块类中重写 `newBlockEntity()` 方法
-- BlockEntity 的 `saveAdditional`/`load` 方法处理 NBT 序列化（使用 `CompoundTag`，不是 `NBTTagCompound`）
+- 带 BE 的方块必须 `implements EntityBlock` 并实现 `newBlockEntity()`；每 tick 用 `getTicker()`
+- Parchment 1.17.1：**没有** `saveAdditional`。写出 `save(CompoundTag)` **返回** CompoundTag；读入 `load(CompoundTag)`
 - **禁止**在 `load()` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -58,18 +58,17 @@ BlockBehaviour.Properties.of(Material material)
 ```
 IF 需要可放置物品、不可交互的基础方块
   → 基础方块（extends Block）
-  → 注册后注册 ItemBlock
+  → 注册后注册 BlockItem
   → 创建 blockstates JSON 和 models JSON
 
 IF 需要存储数据（箱子、熔炉等）
   → 方块实体方块（Block + BlockEntity）
   → 需要在方块类重写 newBlockEntity()
   → 需要注册 BlockEntityType
-  → 需要在 mods.toml 中添加 blockEntity 字段
 
 IF 需要可交互（右键打开 GUI、触发事件）
-  → 基础方块 + onBlockActivated 事件
-  → 或使用 MenuProvider + ITickableBlockEntity 实现 GUI
+  → 方块重写 use()（返回 InteractionResult），不要 MCP onBlockActivated
+  → 或使用 MenuProvider + EntityBlock#getTicker 实现 GUI
 
 IF 需要流体
   → 使用 Forge 专用流体系统
@@ -77,7 +76,6 @@ IF 需要流体
   → 参考 05-events.mdc 中的流体相关事件
 
 IF 需要特殊渲染（多面材质、透明度、动画）
-  → 使用 IBucketMenu 相关的流体方块
   → 或自定义 BlockState + BakedQuad
   → 参考 08-client-server.mdc 中的渲染规则
 ```
@@ -113,7 +111,7 @@ IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
   → 注册时先注册方块再注册 BlockEntityType
 
 IF 需要每 tick 逻辑（自动机、计时器）
-  → 必须使用 BlockEntity + ITickable<BlockEntity>
+  → 必须使用 BlockEntity + EntityBlock#getTicker
   → 在 ModBlocks 中注册 BlockEntityType 时关联 Block
 
 IF 只需要静态方块（装饰、完整方块）
@@ -123,7 +121,7 @@ IF 只需要静态方块（装饰、完整方块）
 
 ---
 
-## 示例：基础方块（带 ItemBlock）
+## 示例：基础方块（带 BlockItem）
 
 ```java
 // blocks/MyBlock.java
@@ -168,7 +166,7 @@ event.getRegistry().register(
 
 ```java
 // blocks/MyBlockEntityBlock.java
-public class MyBlockEntityBlock extends Block {
+public class MyBlockEntityBlock extends Block implements EntityBlock {
     public MyBlockEntityBlock() {
         super(Properties.of(Material.WOOD).noOcclusion());
     }
@@ -200,9 +198,10 @@ public class MyBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.put("data", data.copy());
+        return nbt;
     }
 
     @Override

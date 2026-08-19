@@ -39,10 +39,10 @@ IF 盔甲
   → 继承 ItemArmor + ArmorMaterial
 
 IF 可食用
-  → 继承 Item + onItemRightClick() 中使用 player.getFoodStats()
+  → 继承 ItemFood；饱食也能吃用 setAlwaysEdible()
 
 IF 可在创造模式标签中找到
-  → 使用 .setCreativeTab()
+  → .setCreativeTab(CreativeTabs)
 ```
 
 ## 自定义 ToolMaterial（不要实现 `IItemTier`，那是 1.14+）
@@ -68,8 +68,8 @@ public class MySword extends ItemSword {
 ## 常见错误
 
 - ❌ 使用 `DeferredRegister`（1.12.2 没有）
-- ❌ 忘记 `setRegistryName`
-- ❌ `ToolMaterial` 接口方法不完整
+- ❌ 忘记 `setRegistryName` / 用 `setTranslationKey`（本档是 `setUnlocalizedName`）
+- ❌ 把 `Item.ToolMaterial` 当接口实现，或抄 `IItemTier`
 
 ## 参考资料
 

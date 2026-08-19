@@ -1,17 +1,21 @@
----
-description: 10 — GUI（neoforge 1.21.10）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 10 — GUI（NeoForge 1.21.10）
 
-# 10 — GUI
+来源（官方原文）：
+- https://docs.neoforged.net/docs/1.21.10/inventories/container/
+- https://docs.neoforged.net/docs/1.21.10/rendering/screens/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+本档文档树 **没有** `gui/menus` / `gui/screens`（`get_neoforge_doc_full` `DOC_NOT_FOUND`；线上 `/docs/1.21.10/gui/menus/` 404）。**禁止**把 1.21.5/1.21.8 的 `MenuType` 构造、`IMenuTypeExtension`、`openMenu` / `useWithoutItem` 返回值改版本号冒充。
 
-## Decision Flow
+## 容器（不是完整 MenuType 教程）
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+- NeoForge 写优先用 `ItemStacksResourceHandler`，`Container` 页主要给原版对照 / 多加载器。
+- 方块实体可继承 `BaseContainerBlockEntity`（同时是 `Container`、`MenuProvider`、`Nameable`）：实现 `getItems` / `setItems`、`getDefaultName`、`createMenu(int, Inventory)` 返回 `AbstractContainerMenu`。
+- 物品容器用数据组件 `DataComponents.CONTAINER`（`ItemContainerContents`）。直接对 `Container` 改栈的菜单必须 `#copy()`，文档给 `StackCopySlot`。
+- 配置屏（不是物品菜单）：`container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new)`，见 https://docs.neoforged.net/docs/1.21.10/misc/config/
+
+## Screen（渲染页已核）
+
+- 独立 GUI 继承 `Screen`，构造 `super(Component title)`；控件在 `init` 里 `addRenderableWidget`。
+- 容器 GUI 继承 `AbstractContainerScreen<T>`，构造 `(MyMenu, Inventory, Component)`。背景 `renderBg` 用 `graphics.blit(RenderPipelines.GUI_TEXTURED, ResourceLocation.fromNamespaceAndPath(...), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256)`。`pose()` 是 **`Matrix3x2fStack`**（`pushMatrix` / `popMatrix`），不是更早档的 `PoseStack` 那套。
+- 注册：物理客户端、mod bus 上 `RegisterMenuScreensEvent`：`event.register(MY_MENU.get(), MyContainerScreen::new)`。**不要**写 `MenuScreens.register` / `NetworkHooks.openScreen`。
+- 额外同步走 06 Payload（`RegisterClientPayloadHandlersEvent` + `ClientPacketDistributor`）。禁止 SimpleChannel。

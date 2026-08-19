@@ -28,7 +28,7 @@ IF 只是手持物品（无特殊行为）
   → Item
 
 IF 剑/工具（影响挖掘速度、攻击伤害）
-  → SwordItem / DiggerItem
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（镐斧铲父类 DiggerItem）
 
 IF 盔甲
   → ArmorItem + ArmorMaterial
@@ -68,9 +68,9 @@ public enum MyTier implements Tier {
 
 ```java
 // 正确：4 参数构造函数（来源：Parchment 层 / Forge 1.17.1）
-// 参数：(Tier tier, float attackDamageModifier, float attackSpeedModifier, Item.Properties)
+// 参数：(Tier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3.0f, 1.6f, new Item.Properties()
+    () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
         .tab(CreativeModeTab.TAB_COMBAT)
         .durability(1561)
     )
@@ -82,14 +82,14 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 - **最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）**
 - 例如：传 `3.0f` → 最终伤害 = 3.0 + 3.0 = **6.0**
 
-**攻击速度参考值：** 钻石剑默认 1.6f
+**攻击速度构造参数：** 原版铁/钻石剑是 `-2.4f`（HUD 显示约 1.6 次/秒，不要把显示值写进构造函数）
 
-## 挖掘工具（DiggerItem）
+## 镐（PickaxeItem；父类是 DiggerItem）
 
 ```java
-// 镐：public DiggerItem(float attackDamage, float attackSpeed, Tier, TagKey<Block>, Properties)
+// PickaxeItem(Tier, int attackDamageModifier, float attackSpeedModifier, Properties)
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
         new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
 );
 ```
@@ -107,7 +107,7 @@ public enum MyArmorMaterial implements ArmorMaterial {
 
 // 注册各部位
 public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.HELMET,
+    () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlot.HEAD,
         new Item.Properties().tab(CreativeModeTab.TAB_COMBAT))
 );
 ```
@@ -121,7 +121,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
         .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
+            .effect(new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
             .alwaysEat()
             .fast()
             .meat()
@@ -138,8 +138,8 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 ```java
 @Override
 public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-    // ✅ 正确：使用 lambda 接受装备槽位回调
-    stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+    // ✅ Parchment：hurtAndBreak(int, LivingEntity, Consumer<LivingEntity>)
+    stack.hurtAndBreak(1, attacker, e -> e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
     return true;
 }
 ```
@@ -147,11 +147,11 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 ## 常见错误
 
 - ❌ `SwordItem(Tier, Item.Properties)` — Forge 1.17.1 **只有 4 参数版本**，不存在 2 参数版本
-- ❌ `SwordItem(Tier, float attackDamage, float attackSpeed, Properties)` — `attackDamage` 类型应为 `float`
+- ❌ `SwordItem(Tier, float attackDamage, float attackSpeed, Properties)` — `attackDamageModifier` 类型应为 `int`
 - ❌ `Tier.getAttackDamageBonus()` 返回值含工具类型加成（剑已内置 +3.0f）
-- ❌ 忘记 `durability` 在 Item.Properties 中设置（默认 Integer.MAX_VALUE）
+- ❌ 把未损坏物品的耐久当成 `Integer.MAX_VALUE`。未调用 `.durability(n)` 时 maxDamage 为 0
 - ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ Forge 用 `MobEffects.JUMP`
-- ❌ `LivingEntity.getSlotForHand()` 不存在 → 使用 lambda 形式
+- ❌ `hurtAndBreak` 第三参是 `Consumer<LivingEntity>`，不要写成槽位 lambda；破碎回调用 `broadcastBreakEvent`
 
 ## 参考资料
 

@@ -10,6 +10,7 @@ mappings: yarn
 # 实体开发（Fabric 1.21.1）
 
 > 入库 `develop_entities_first-entity` 常指向 **latest Mojmap**（`PathfinderMob` / `EntityRenderState` / `addAdditionalSaveData`）。本档 Yarn，不要抄那页类名。属性用 `FabricDefaultAttributeRegistry.register`（loader-api 已核）。
+> Yarn 1.21.1：属性仍是 `GENERIC_*`；生成位置是 `SpawnLocationTypes.ON_GROUND`（不是 `SpawnRestriction.Location`）。`FabricEntityTypeBuilder.build()` 无参仍可用。
 
 ## 快速开始
 
@@ -75,7 +76,7 @@ public class ExampleModClient implements ClientModInitializer {
 public void onInitialize() {
     SpawnRestriction.register(
         MY_PIG,
-        SpawnRestriction.Location.ON_GROUND,
+        SpawnLocationTypes.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
         MyPigEntity::canSpawn
     );
@@ -87,6 +88,8 @@ public void onInitialize() {
 - ❌忘记在客户端 entrypoint 注册渲染器 — 实体显示为紫色
 - ❌忘记设置 SpawnRestriction — 实体无法自然生成
 - ❌ EntityDimensions 使用 `changing` vs `fixed` 错误 — 碰撞异常
+- ❌抄 `SpawnRestriction.Location` — 本档 Yarn 是 `SpawnLocationTypes.ON_GROUND`
+- ❌抄 1.21.3+ 的 `EntityAttributes.MAX_HEALTH` — 本档仍是 `GENERIC_MAX_HEALTH`
 - ❌在 `onInitialize()` 外注册 — 注册不生效
 
 ## 扩展点

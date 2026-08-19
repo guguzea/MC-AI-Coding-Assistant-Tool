@@ -21,17 +21,12 @@
 
 ### Dist（物理端）约束
 
-**首选方案：使用 `DistExecutor` 判断物理端**
+**首选方案：使用 `DistExecutor.runWhenOn`（本档 javadoc 没有 `unsafeRunWhenOn`）**
 
 ```java
-// 客户端执行（DistExecutor 自动处理类加载隔离）
-DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
-
-// 服务端执行
-DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> dedicatedOnly());
 ```
-
-> **注意**：`safe*` 变体在 Java 9+ 开发环境中有问题（抛出 `BootstrapMethodError`），**推荐始终使用 `unsafe*`**。
 
 **次选方案：`FMLEnvironment#dist`**
 
@@ -83,7 +78,8 @@ IF 监听 Tick（每帧逻辑）
   → 注意：不要在 Tick 中做重操作，会导致卡顿
 
 IF 监听 Capability 附加
-  → AttachCapabilitiesEvent<Entity / Block / Item / Chunk>
+  → AttachCapabilitiesEvent<Entity / TileEntity / ItemStack / World / Chunk>
+  → **没有** AttachCapabilitiesEvent<Block>
 
 IF 监听服务端/客户端启动
   → FMLCommonSetupEvent
@@ -99,7 +95,7 @@ IF 监听 Registry 注册
 ```
 IF 事件涉及世界修改（放置方块、生成实体）
   → 服务端处理
-  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或确保在服务端线程
+  → 逻辑服务端（`!world.isRemote`）。不要用 `@OnlyIn(Dist.DEDICATED_SERVER)` 包游戏逻辑（单人客户端物理端也会跑逻辑服务端）
 
 IF 事件涉及渲染、输入
   → 客户端处理
@@ -157,7 +153,7 @@ private void commonSetup(final FMLCommonSetupEvent event) {
 ## 示例：FMLClientSetupEvent（客户端初始化）
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {

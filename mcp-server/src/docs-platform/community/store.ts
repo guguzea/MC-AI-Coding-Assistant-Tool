@@ -107,6 +107,10 @@ export class CommunityDocStore {
     return this.entries;
   }
 
+  listReadableEntries(): CommunityIndexEntry[] {
+    return this.loadIndex().filter((e) => e.sourceKind === "authored" || e.sourceKind === "permitted");
+  }
+
   listSources(): {
     root: string;
     total: number;

@@ -77,14 +77,14 @@ private static final String MOD_ID = "examplemod";
 
 ## 方块/TileEntity 相关
 
-### ❌ 在 TileEntity 的 `readFromNBT`/`writeToNBT` 中读取世界数据
+### ❌ 在 TileEntity 的 `read`/`write` 中读取世界数据
 
 ```java
 // 错误
 @Override
-public void readFromNBT(NBTTagCompound compound) {
-    super.readFromNBT(compound);
-    BlockState state = world.getBlockState(pos); // ❌ world 可能为 null
+public void read(NBTTagCompound compound) {
+    super.read(compound);
+    IBlockState state = world.getBlockState(pos); // ❌ world 可能为 null
 }
 ```
 

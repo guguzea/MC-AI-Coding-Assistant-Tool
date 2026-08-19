@@ -50,15 +50,16 @@ public class CommonProxy {
 
 ```
 IF 监听玩家右键点击方块
-  → PlayerInteractEvent 右键变体
-  → 注意：此事件仅在服务端触发
+  → PlayerInteractEvent.RightClickBlock
+  → 客户端和服务端都会发；用 event.getWorld().isRemote 分端（不要写成「仅服务端」）
 
 IF 监听生物死亡
   → LivingDeathEvent
-  → 注意：此事件仅在服务端触发
+  → 改世界/掉落在 `!world.isRemote`；不要假设「绝对只有服务端会进 handler」
 
 IF 监听物品被使用完成（食物吃完等）
-  → EntityJoinWorldEvent 或覆盖 Item 的 onFoodEaten
+  → 覆盖 ItemFood#onFoodEaten，或 LivingEntityUseItemEvent（1.11+）
+  → 不要用 EntityJoinWorldEvent 当「吃完」
 
 IF 监听实体掉落物品
   → LivingDropsEvent
@@ -80,7 +81,9 @@ IF 监听 Tick（每帧逻辑）
   → TickEvent
 
 IF 监听 Capability 附加
-  → AttachCapabilitiesEvent<Entity / Block / Item>
+  → AttachCapabilitiesEvent<Entity / TileEntity / ItemStack / World / Chunk>
+  → 官方 capabilities 页列出这五种泛型；**没有** AttachCapabilitiesEvent<Block>
+  → 持久化用 ICapabilitySerializable，不要把 serializeNBT 写在纯 ICapabilityProvider 上
 
 IF 监听服务端/客户端启动
   → FMLPreInitializationEvent / FMLInitializationEvent / FMLPostInitializationEvent
@@ -108,7 +111,7 @@ IF 不确定
 
 | 需求 | 推荐事件 | 注意事项 |
 |------|----------|----------|
-| 玩家右键触发动作 | `PlayerInteractEvent` | 注意 `use` 方法的返回值 |
+| 玩家右键触发动作 | `PlayerInteractEvent` | 两端都会发；改世界在 `!isRemote` |
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
@@ -220,37 +223,37 @@ public class ClientProxy extends CommonProxy {
 @SubscribeEvent
 public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
     if (event.getObject() instanceof EntityPlayer) {
-        event.addCapability(
-            new ResourceLocation(ExampleMod.MODID, "my_capability"),
-            new ICapabilityProvider() {
-                private final MyCapability instance = new MyCapability();
+                event.addCapability(
+                    new ResourceLocation(ExampleMod.MODID, "my_capability"),
+                    new ICapabilitySerializable<NBTTagCompound>() {
+                        private final MyCapability instance = new MyCapability();
 
-                @Override
-                public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                    return capability == MY_CAPABILITY;
-                }
+                        @Override
+                        public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                            return capability == MY_CAPABILITY;
+                        }
 
-                @Override
-                public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                    if (capability == MY_CAPABILITY) {
-                        return (T) instance;
+                        @Override
+                        public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                            if (capability == MY_CAPABILITY) {
+                                return MY_CAPABILITY.cast(instance);
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        public NBTTagCompound serializeNBT() {
+                            return instance.saveNBT();
+                        }
+
+                        @Override
+                        public void deserializeNBT(NBTTagCompound nbt) {
+                            instance.loadNBT(nbt);
+                        }
                     }
-                    return null;
-                }
-
-                @Override
-                public NBTTagCompound serializeNBT() {
-                    return instance.saveNBT();
-                }
-
-                @Override
-                public void deserializeNBT(NBTTagCompound nbt) {
-                    instance.loadNBT(nbt);
-                }
-            }
-        );
+                );
     }
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、Block、Item 上附加 Capability，每个只能附加一次（ID 唯一）。
+> 关键点：官方 capabilities 页：`AttachCapabilitiesEvent` 泛型只有 Entity / TileEntity / ItemStack / World / Chunk。持久化用 `ICapabilitySerializable`。IEEP 已弃用。

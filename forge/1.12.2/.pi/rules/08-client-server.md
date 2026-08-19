@@ -37,7 +37,7 @@ src/main/java/
     └── ClientProxy.java        # 客户端代理（@SideOnly(Side.CLIENT)）
 ```
 
-- **禁止**将 `@SideOnly(Side.CLIENT)` 的类放在 proxy 包以外
+- 客户端类用 `@SideOnly(Side.CLIENT)`；不必强制只放在 proxy 包
 - **禁止**在 CommonProxy 中调用任何客户端特有方法
 
 ### FMLInitializationEvent vs 其他生命周期事件
@@ -78,7 +78,7 @@ IF 代码既涉及渲染又涉及逻辑
 
 ```
 IF 只需在客户端显示额外信息（如 GUI 覆盖层）
-  → 使用 TickEvent.Client 或 RenderGameOverlayEvent
+  → 使用 TickEvent.ClientTickEvent 或 RenderGameOverlayEvent
 
 IF 需要在客户端渲染自定义模型
   → 继承 Model / Render 类
@@ -86,7 +86,7 @@ IF 需要在客户端渲染自定义模型
 
 IF 需要服务端数据同步到客户端
   → 使用 SimpleNetworkWrapper（参见 06-networking.mdc）
-  → 使用 TileEntity.syncData
+  → TileEntity：`getUpdatePacket` / `onDataPacket` / `getUpdateTag`（官方 tileentity 页；`new SPacketUpdateTileEntity(getPos(), 1, nbt)`）
 
 IF 需要客户端触发服务端逻辑
   → 使用 PlayerInteractEvent（在服务端自然处理）

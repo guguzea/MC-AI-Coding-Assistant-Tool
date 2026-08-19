@@ -16,7 +16,7 @@ mappings: mcp
 ```java
 // 1. 在 mod 主类或单独的注册类中定义静态字段
 public static final Block MY_BLOCK = new Block(
-    Block.Properties.create(Material.STONE)
+    Block.Properties.create(Material.ROCK)
         .hardnessAndResistance(1.5f, 6.0f)
 );
 

@@ -23,7 +23,7 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ```
 IF 需要持久的 extra data（如机器存储、村民记忆）
-  → 方块实体（TileEntity）→ 重写 hasTileEntity() + createTileEntity()
+  → 方块实体（TileEntity）→ 重写 hasTileEntity() + createTileEntity(BlockState, IBlockReader)
 
 IF 只是静态显示（无状态）
   → 普通方块
@@ -34,22 +34,29 @@ IF 需要流体
 
 ## Block.Properties 常用配置
 
+来源：ForgeJavaDocs-NG `1.14.4-28.2.23`。
+
 ```java
 Block.Properties.create(Material.WOOD)
     .hardnessAndResistance(1.5f, 6.0f)
     .harvestTool(ToolType.AXE)
+    .harvestLevel(0)
+    .sound(SoundType.WOOD)
+    .lightValue(0)
+    .doesNotBlockMovement()
+    .noDrops()
 ```
 
-本档没有 `BlockBehaviour.Properties.of()` / `requiresCorrectToolForDrops()` / `noLootTablePoolsBuilder()`（邻版 API）。
+本档没有 `BlockBehaviour.Properties.of()` / `requiresCorrectToolForDrops()` / `notSolid()`（邻版 API）。
 
-## Decision: 物品形态（ItemBlock）
+## Decision: 物品形态（BlockItem）
 
 ```
-IF 方块在创意模式标签中有对应物品
-  → 注册同名 ItemBlock（Forge 自动关联显示）
+IF 方块在创造模式标签中有对应物品
+  → 注册同名 BlockItem
 
 IF 方块不应出现在物品栏（如空气、光源方块）
-  → 不注册 ItemBlock
+  → 不注册 BlockItem
 ```
 
 ## 带 TileEntity 的方块
@@ -82,34 +89,28 @@ public class MyMachineTE extends TileEntity implements ITickableTileEntity {
     public void tick() {
         if (world == null || world.isRemote) return;
     }
-}
-```
-    }
 
-    // 刻处理逻辑（服务端）
-    public static <T extends BlockEntity> void tick(Level level, BlockPos pos,
-            BlockState state, T blockEntity) {
-        if (level.isClientSide) return;
-        // 定时逻辑...
-    }
-
-    // 同步（服务端 → 客户端）
-    // 1.19.4 推荐直接实现 getUpdateTag() / handleUpdateTag()
-    // Forge 会自动处理数据包同步，无需手动 override getUpdatePacket()
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag nbt = super.getUpdateTag();
+    public CompoundNBT write(CompoundNBT nbt) {
+        nbt = super.write(nbt);
         nbt.putInt("progress", progress);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag nbt) {
-        super.handleUpdateTag(nbt);
+    public void read(CompoundNBT nbt) {
+        super.read(nbt);
         this.progress = nbt.getInt("progress");
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 }
 ```
+
+数据变化后 `markDirty()`。同步细节见 `mc-blockentity`。不要抄 1.17+ 的 `saveAdditional` / `setChanged` / `getTicker`。
 
 ## BlockState JSON 格式
 
@@ -134,10 +135,11 @@ public class MyMachineTE extends TileEntity implements ITickableTileEntity {
 
 ## 常见错误
 
-- ❌ `BlockEntity.newBlockEntity()` 返回 null（必须返回新实例）
-- ❌ 在 BlockEntity 构造函数中访问 world（world 可能为 null）
-- ❌ `getTicker()` 在客户端返回非 null（tick 只应在服务端执行）
-- ❌忘记 `requiresCorrectToolForDrops()` 导致任何物品都能掉落
+- ❌ 在 TileEntity 构造函数中访问 world（world 可能为 null）
+- ❌ `write` 写成 void、或不 `return` CompoundNBT
+- ❌ 用 1.12 的 `NBTTagCompound` / `setInteger`（本档是 `CompoundNBT` + `putInt`）
+- ❌ `createTileEntity(World, BlockState)`（本档签名是 `(BlockState, IBlockReader)`）
+- ❌ 抄 `getTicker()` / `EntityBlock` / `requiresCorrectToolForDrops()`
 
 ## 参考资料
 

@@ -7,10 +7,10 @@ import {
   fabricRulesOverlay,
   inspectPack,
   listLibSkillIndex,
+  listMergedPackSkills,
   listRuleFiles,
   listSameSeriesCandidates,
-  listSkillIndex,
-  mergeQuiltFabricSkills,
+  wrapDonorSkillBody,
   readText,
   type SkillIndexEntry,
 } from "./catalog.js";
@@ -176,7 +176,7 @@ export function resolveTopicIds(
 export function quiltOverlayWarnings(overlay: { status: string; note: string } | undefined): string[] {
   if (!overlay || overlay.status === "ok") return [];
   return [
-    `无同版 Fabric overlay（${overlay.status}）：02–10 可能未注入、Skill 索引可能为空。${overlay.note} 改口 search_fabric_docs，禁止邻版 Fabric。不要把 ok 理解成 Quilt 开发包齐全。`,
+    `无同版 Fabric overlay（${overlay.status}）：02–10 可能未注入、skills[] 可能为空。${overlay.note} 改口 search_docs(platform=quilt) / search_fabric_docs，禁止邻版 Fabric。不要把 ok 理解成 Quilt 开发包齐全。`,
   ];
 }
 
@@ -239,6 +239,11 @@ export function sessionPlatformPack(args: SessionArgs) {
   }
   const pack = inspected.pack;
   const warnings: string[] = [];
+  if (platform === "fabric" && minecraftVersion !== pack.minecraftVersion) {
+    warnings.push(
+      `查 Fabric 文档请用 knowledgeVersion=${pack.minecraftVersion}，不要用 minecraftVersion=${minecraftVersion}`,
+    );
+  }
   const includeAll = args.includeAllRules === true;
   const taskLookup = lookupTask(args.task);
   if (taskLookup.warning) warnings.push(taskLookup.warning);
@@ -278,10 +283,14 @@ export function sessionPlatformPack(args: SessionArgs) {
     }
   }
 
-  const skills =
-    pack.platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir
-      ? mergeQuiltFabricSkills(pack.packDir, overlay.fabricDir, pack.minecraftVersion)
-      : listSkillIndex(pack.packDir);
+  const { skills, donorWarning } = listMergedPackSkills(
+    pack.platform,
+    pack.minecraftVersion,
+    pack.packDir,
+    overlay,
+    repoRoot,
+  );
+  if (donorWarning) warnings.push(donorWarning);
   const libSkills = listLibSkillIndex(platform, minecraftVersion, repoRoot);
 
   if (skills.length === 0) warnings.push(NO_PLATFORM_SKILLS_WARNING);
@@ -317,7 +326,7 @@ export function sessionPlatformPack(args: SessionArgs) {
       name: hit.name,
       absPath: hit.absPath,
       relPosix: hit.relPosix,
-      text: readText(hit.absPath),
+      text: hit.mappingNote ? wrapDonorSkillBody(hit.mappingNote, readText(hit.absPath)) : readText(hit.absPath),
     });
     inBodies.add(canonicalSkillName(hit.name));
   }
@@ -368,7 +377,8 @@ export function sessionPlatformPack(args: SessionArgs) {
     ok: true,
     dest: "session",
     platform: pack.platform,
-    minecraftVersion: pack.minecraftVersion,
+    minecraftVersion,
+    knowledgeVersion: pack.minecraftVersion,
     packDir: pack.packDir.replace(/\\/g, "/"),
     agents: readText(pack.agentsPath),
     rules: ruleBodies,
@@ -383,7 +393,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     rulesMode,
     warnings,
     libSkillsNote:
-      "库 Skill 默认只给索引、不进 nextReads。只有显式 skillNames 才注入库正文（计入 skillBodies 上限 6）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
+      "库 Skill 只在 libSkills[]，不进入 skills[] 与 nextReads。须读 libSkills[]；只有显式 skillNames 才注入库正文（计入 skillBodies 上限 6）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
     includeAllRules: includeAll,
     topicWarnings: topicWarnings.length ? topicWarnings : undefined,
     contextWarning: includeAll

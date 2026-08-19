@@ -8,8 +8,9 @@
 
 ### Entity 基础规范
 
-- 实体类继承 `Entity`（基础）或 `EntityLiving`（可移动/有生命）
-- 推荐继承 `EntityLiving`，除非需要完全自定义行为
+- 实体类继承 `Entity`（基础）、`EntityLiving`（可移动/有生命）或 `EntityCreature` / `EntityMob`（AI 任务）
+- 近战/目标 AI（`EntityAIAttackMelee`、`EntityAIHurtByTarget`、`EntityAINearestAttackableTarget`）的构造参数是 **`EntityCreature`**（javadoc 14.23.5.2854），不要把这些任务塞进只继承 `EntityLiving` 的类
+- 推荐：被动生物 `EntityCreature`，敌对 `EntityMob`；不要为了抄 1.14+ `Mob` 而改名
 - 实体必须通过 `RegistryEvent.Register<EntityEntry>` 注册（官方 Registries 页列出的类型含 `EntityEntry`）
 - 用 `EntityEntryBuilder` 创建条目。`EntityEntryBuilder#id()` 相当于 `setRegistryName()`，并额外接收模组内部网络 int ID
 - 官方 `mcmod.info` 字段表**没有** `entities` / `entityTypes`
@@ -51,9 +52,12 @@ EntityEntryBuilder.create()
 ### Decision: 选择实体基类
 
 ```
-IF 实体需要移动、AI、装备栏、药水效果等
+IF 实体需要近战/寻路/目标 AI
+  → 继承 EntityCreature（被动）或 EntityMob（敌对）
+  → EntityAIAttackMelee 等任务要求 EntityCreature
+
+IF 实体需要移动、生命、但不挂 Creature AI
   → 继承 EntityLiving
-  → 获得完整的实体行为系统
 
 IF 实体是静态物品（掉落物、经验球等）
   → 使用现有的 EntityItem、EntityXPOrb 等
@@ -87,9 +91,9 @@ IF 覆盖默认渲染
   → 继承 RenderLiving 或直接注册 Render 类
 
 IF 自定义模型
-  → 继承 RenderLiving<Entity>
-  → 在 Model 中实现自定义模型
-  → 需要提供 .json 模型文件和材质贴图
+  → 继承 RenderLiving<YourEntity>
+  → 用 ModelBase 子类（不是方块/物品 JSON 模型）
+  → 贴图走 getEntityTexture → assets/{modid}/textures/entity/...
 ```
 
 ---
@@ -98,7 +102,7 @@ IF 自定义模型
 
 ```java
 // entities/EntityExample.java
-public class EntityExample extends EntityLiving {
+public class EntityExample extends EntityCreature {
     public static final int TRACKING_RANGE = 64;
     public static final int UPDATE_RATE = 3;
 
@@ -181,6 +185,7 @@ public class ClientProxy extends CommonProxy {
 ```
 
 > 注意：
-> 1. 实体渲染器通过 `RenderingRegistry.registerEntityRenderingHandler()` 注册
-> 2. 纹理文件路径：`textures/entity/example_entity.png`（对应 `assets/{modid}/textures/entity/example_entity.png`）
+> 1. 渲染器用 **IRenderFactory** 重载，在 **preInit** 注册（javadoc：带 `Render` 实例的重载已 Deprecated）。
+> 2. 纹理：`assets/{modid}/textures/entity/example_entity.png`
 > 3. 不要在 `mcmod.info` 里编 `entityTypes` 字段（官方字段表没有）
+> 4. 示例 AI 需要 `EntityCreature`；不要把 `EntityAIAttackMelee` 接到纯 `EntityLiving` 上

@@ -5,6 +5,8 @@ description: 02 — 方块开发
 # 02 — 方块开发
 
 > 适用版本：Fabric 1.14.4
+> Yarn：[`Block.Settings`](https://github.com/FabricMC/yarn/blob/1.14.4/mappings/net/minecraft/block/Block.mapping)（`of` / `strength` / `noCollision` / `dropsLike`）
+> FAPI 1.14 包名是 **`net.fabricmc.fabric.api.block.FabricBlockSettings`**（loader-api）。不要把后期 `object.builder.v1` 或 Mojmap `Block.Properties` 当本档默认。
 
 ---
 
@@ -15,7 +17,7 @@ description: 02 — 方块开发
 - 方块必须在 `Registry.register(Registry.BLOCK, id, block)` 中注册
 - 如需方块物品形态，在 `Registry.ITEM` 中注册同名 `BlockItem`
 - 方块类继承 `Block` 或其子类
-- 使用 `Block.Properties` 配置方块属性
+- 原版用 `Block.Settings`；需要 `breakByTool` / `breakByHand` / `hardness`（单参数）时用 FAPI `FabricBlockSettings`
 - **禁止**在服务端直接创建客户端专用对象
 
 ---
@@ -26,66 +28,63 @@ description: 02 — 方块开发
 
 ```
 IF 简单静态方块
-  → new Block(Block.Properties.create(Material.STONE))
+  → new Block(Block.Settings.of(Material.STONE))
+  → 或 FabricBlockSettings.of(Material.STONE) / FabricBlockSettings.copy(Blocks.STONE)
 
 IF 可配置方块（如可交互、可放置）
-  → 自定义 Block 子类
+  → 自定义 Block 子类（右键 Yarn 是 activate，不是 onUse）
 
-IF 方块需要存储数据（inventory、energy 等）
-  → 方块实现 BlockEntityProvider + 注册 BlockEntityType
+IF 方块需要存储数据（inventory 等）
+  → 方块实现 BlockEntityProvider + 注册 BlockEntityType（Registry.BLOCK_ENTITY）
 
 IF 需要自定义渲染
-  → 注册自定义 BlockRenderType 或使用 BlockEntity + custom renderer
+  → 重写 getRenderType，或 BlockEntity + 客户端 TESR/BER
 ```
 
 ---
 
-## Block.Properties
+## Block.Settings / FabricBlockSettings
+
+Yarn 原版 `Block.Settings`：`of(Material)`、`strength(float)`、`strength(float, float)`、`noCollision()`、`dropsLike(Block)`、`slipperiness`、`lightLevel`、`sounds`、`copy`。没有 `hardnessAndResistance`、`noCollission`、`doesNotBlockMovement`、`velocityMultiplier`、`jumpVelocityMultiplier`、`mapColor` 方法。
+
+FAPI `net.fabricmc.fabric.api.block.FabricBlockSettings`（loader-api 已核）：`of`、`copy(Block)`、`hardness(float)`、`resistance(float)`、`strength(float, float)`（**无**单参 `strength`）、`breakByTool(Tag)` / `breakByTool(Tag, miningLevel)`、`breakByHand(boolean)`、`materialColor`、`dropsLike`、`noCollision`、`friction` / `slipperiness`。本类 **没有** `requiresTool`、`solidBlock`、`suffocates`、`mapColor`（用地图色请用 `materialColor`）。
 
 ```java
-// 基础配置
-Block.Properties.create(Material.STONE)
-    .hardnessAndResistance(1.5f)                  // 硬度和抗爆性
-    .hardnessAndResistance(1.5f, 6.0f)           // hardness, resistance
-    .breakByTool(ToolType.PICKAXE)                // 需要镐挖掘（Fabric API）
-    .requiresTool()                               // 需要工具
-    .breakByHand(false)                           // 不能空手破坏
-    .dropsFrom(Blocks.STONE)                      // 掉落物同另一个方块（Fabric API）
-    .mapColor(MapColor.STONE)                     // 地图颜色
-    .noCollission()                               // 无碰撞箱（注意：1.14 中是 noCollission）
-    .slipperiness(0.98f)                         // 摩擦力
-    .velocityMultiplier(0.98f)                    // 速度倍率
-    .jumpVelocityMultiplier(0.95f)                // 跳跃倍率
+FabricBlockSettings.of(Material.STONE)
+    .hardness(1.5f)
+    .strength(1.5f, 6.0f)
+    .breakByTool(FabricToolTags.PICKAXES, 1)  // wiki mining_levels 1.1x–1.17
+    .breakByHand(false)
+    .dropsLike(Blocks.STONE)
+    .materialColor(MaterialColor.STONE)
+    .noCollision()
+    .slipperiness(0.98f)
 ```
 
 ## 常用方块创建
 
 ```java
-// 普通方块
 private static final Block MY_STONE = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
-    new Block(Block.Properties.create(Material.STONE).hardnessAndResistance(1.5f))
+    new Block(Block.Settings.of(Material.STONE).strength(1.5f, 6.0f))
 );
 
-// 注册同名 BlockItem
 private static final Item MY_STONE_ITEM = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_stone"),
-    new BlockItem(MY_STONE, new Item.Properties())
+    new BlockItem(MY_STONE, new Item.Settings())
 );
 
-// 无碰撞方块（如草、花）
 private static final Block MY_PLANT = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_plant"),
-    new Block(Block.Properties.create(Material.PLANTS).doesNotBlockMovement())
+    new Block(Block.Settings.of(Material.PLANT).noCollision())
 );
 
-// 可配置方块
 public class MySlabBlock extends Block {
-    public MySlabBlock(Properties properties) {
-        super(properties);
+    public MySlabBlock(Settings settings) {
+        super(settings);
     }
 
     @Override
@@ -100,44 +99,58 @@ public class MySlabBlock extends Block {
 ```java
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-    new BlockItem(MY_BLOCK, new Item.Properties()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 
 // ❌ 错误：BlockItem 使用不同的 registry name
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),  // 错误！
-    new BlockItem(MY_BLOCK, new Item.Properties()));
+Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block_item"),
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ## BlockEntity（带数据存储的方块）
 
-```java
-// 1. 创建 BlockEntity 类
-public class MyChestBlockEntity extends BlockEntity {
-    private NonNullList<ItemStack> inventory;
+Yarn 1.14.4：`BlockEntity(BlockEntityType)`（**没有** `BlockPos, BlockState` 三参构造）；NBT 是 `toTag` / `fromTag` + `CompoundTag`；`createBlockEntity(BlockView)`；注册表字段是 **`Registry.BLOCK_ENTITY`**（不是 `BLOCK_ENTITY_TYPE`）；`BlockEntityType.Builder.create(Supplier, Block...)`；列表用 `DefaultedList.ofSize`。不要 Forge `RegistryObject` / `TileEntityType` / `NonNullList`。
 
-    public MyChestBlockEntity(TileEntityType<?> type) {
-        super(type);
-        this.inventory = NonNullList.withSize(27, ItemStack.EMPTY);
+```java
+public class MyChestBlockEntity extends BlockEntity {
+    private final DefaultedList<ItemStack> inventory =
+        DefaultedList.ofSize(27, ItemStack.EMPTY);
+
+    public MyChestBlockEntity() {
+        super(ModBlockEntities.MY_CHEST);
     }
 
-    // ... read/write 方法
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        super.toTag(tag);
+        Inventories.toTag(tag, inventory);
+        return tag;
+    }
+
+    @Override
+    public void fromTag(CompoundTag tag) {
+        super.fromTag(tag);
+        Inventories.fromTag(tag, inventory);
+    }
 }
 
-// 2. 方块实现 BlockEntityProvider
 public class MyChestBlock extends Block implements BlockEntityProvider {
-    @Override
-    public BlockEntity createBlockEntity(BlockBlockEntityType<?> type) {
-        return type.create(MyBlockEntities.MY_CHEST);
+    public MyChestBlock(Settings settings) {
+        super(settings);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockEntity createBlockEntity(BlockView view) {
+        return new MyChestBlockEntity();
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState();
     }
 }
 
-// 3. 注册 BlockEntityType
-public static final RegistryObject<BlockEntityType<MyChestBlockEntity>> MY_CHEST =
-    Registry.register(Registry.BLOCK_ENTITY_TYPE,
+public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
+    Registry.register(Registry.BLOCK_ENTITY,
         new Identifier(MOD_ID, "my_chest"),
         BlockEntityType.Builder.create(MyChestBlockEntity::new, MY_CHEST_BLOCK)
             .build(null));
@@ -148,7 +161,8 @@ public static final RegistryObject<BlockEntityType<MyChestBlockEntity>> MY_CHEST
 - ❌ `BlockItem` 与 `Block` 使用不同的 registry name — 物品会显示为缺失
 - ❌忘记注册 `BlockItem` — 方块在世界中存在但无法放入物品栏
 - ❌ 在 `onInitialize()` 外注册 — 注册不会生效
-- ❌ 在服务端创建 `BlockRenderType` — 渲染相关只能在客户端
+- ❌ 在服务端创建客户端渲染对象
+- ❌ `Block.Properties` / `Registry.BLOCK_ENTITY_TYPE` / `writeNbt` / `NbtCompound` / `RegistryObject`
 
 ## 扩展点
 
@@ -158,3 +172,4 @@ public static final RegistryObject<BlockEntityType<MyChestBlockEntity>> MY_CHEST
 | `mc-datagen` | 方块注册后可生成方块模型 JSON |
 | `mc-gui` | BlockEntity 用于 GUI 交互（如箱子） |
 | `mc-item` | BlockItem 关联方块和物品 |
+| `mc-blockentity` | 方块实体构造与 NBT |

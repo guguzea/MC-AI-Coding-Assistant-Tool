@@ -1,17 +1,13 @@
 ﻿---
-description: 04 — 实体（neoforge 1.21.5）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 04 — 实体（NeoForge 1.21.5）
 ---
 
-# 04 — 实体
+# 04 — 实体（NeoForge 1.21.5）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.21.5/entities/
 
-## Decision Flow
+`DeferredRegister.createEntities(modid)`。`EntityType.Builder.of(MyEntity::new, MobCategory.MISC)` 后必须 `.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(modid, id)))`。短写法 `registerEntityType("id", MyEntity::new, MobCategory.MISC)`（可再传 `UnaryOperator<EntityType.Builder>`）。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+实体类构造 `(EntityType<? extends MyEntity>, Level)`。本档存盘方法是 `readAdditionalSaveData(CompoundTag)` / `addAdditionalSaveData(CompoundTag)`，另有 `defineSynchedData(SynchedEntityData.Builder)`、`hurtServer(ServerLevel, DamageSource, float)`。不要抄 1.21.10 的 `ValueInput` / `ValueOutput`。
+
+自定义构造不要做成恰好两参数（会和工厂构造冲突）。渲染只放客户端。禁止 Forge 1.12 `EntityRegistry`。

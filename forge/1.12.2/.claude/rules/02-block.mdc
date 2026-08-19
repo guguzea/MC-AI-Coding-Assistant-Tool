@@ -29,11 +29,12 @@ new Block(Material.ROCK)
 - 注册名称必须全小写
 - ItemBlock 需要单独注册
 
-### 方块实体（BlockContainer）约束
+### 方块实体约束
 
-- 有状态或需要持久化的方块必须使用 `BlockContainer`（而非仅靠 `Block`）
-- BlockContainer 在方块类中重写 `createNewTileEntity(World, IBlockState)` 方法
-- BlockContainer 的 `readFromNBT/writeToNBT` 方法处理 NBT 序列化
+- 有状态或需要持久化的方块：继承 `BlockContainer`，或普通 `Block` 重写 `hasTileEntity(IBlockState)` + `createTileEntity(World, IBlockState)`
+- `ITileEntityProvider.createNewTileEntity` 签名是 `(World, int meta)`，**不是** `(World, IBlockState)`
+- NBT 在 **TileEntity** 上：`writeToNBT(NBTTagCompound)` **返回** NBTTagCompound；`readFromNBT(NBTTagCompound)`。不要写在 Block 上
+- 无参构造 `TileEntity()`。每 tick 实现 `ITickable#update()`（不是 1.13 的 `tick()`）
 - **禁止**在 `readFromNBT` 中直接读取世界数据
 
 ### IBlockState 配置
@@ -71,17 +72,17 @@ IF 需要特殊渲染（多面材质、透明度、动画）
 
 ```
 IF 自然方块（石头、木头、草）
-  → Material.STONE / Material.WOOD / Material.GRASS
+  → Material.ROCK / Material.WOOD / Material.GRASS
 
 IF 泥土类
   → Material.GROUND / Material.SAND / Material.SNOW
 
 IF 玻璃/冰/透明
   → Material.GLASS / Material.ICE
-  → 需要 .doesNotBlockMovement() 和 .notSolid()
+  → 碰撞/完整方块靠重写 isFullCube / isOpaqueCube 等，不要抄 1.13+ Properties.notSolid()
 
 IF 植物
-  → Material.PLANT / Material.VINE
+  → Material.PLANTS / Material.VINE
   → 不能放置方块，需要特殊放置逻辑
 
 IF 液体
@@ -96,8 +97,7 @@ IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
   → 在方块类重写 createNewTileEntity()
 
 IF 需要每 tick 逻辑（自动机、计时器）
-  → 必须使用 BlockContainer + TileEntity
-  → TileEntity 使用 @SuppressWarnings("deprecation") 标记
+  → TileEntity 实现 ITickable，方法是 update()
 
 IF 只需要静态方块（装饰、完整方块）
   → 普通 Block 即可，不需要 BlockContainer
@@ -176,10 +176,7 @@ public class BlockExampleContainer extends BlockContainer {
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TileEntityExample) {
-            player.addItemStackToInventory(((TileEntityExample) tile).getStack());
-        }
-        super.breakBlock(world, pos, state, player);
+        super.breakBlock(world, pos, state);
     }
 }
 ```

@@ -235,9 +235,10 @@ public class MyBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putInt("syncData", this.syncData);
+        return nbt;
     }
 
     @Override

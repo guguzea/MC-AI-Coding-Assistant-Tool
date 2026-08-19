@@ -62,8 +62,8 @@ IF 处理服务端启动/关闭
   → ServerLifecycleEvents.SERVER_STARTED / SERVER_STOPPING / SERVER_STOPPED
 
 IF 处理数据包加载/重载
-  → ServerLifecycleEvents.START_DATA_PACK_RELOAD / END_DATA_PACK_RELOAD
-  → 不要 CallbackEvaluator、DataPackRegistry（编造名）
+  → loader-api 索引有 `ServerLifecycleEvents$StartDataPackReload` 等嵌套类型，但**字段表为空**，未用 1.14 FAPI javadoc 钉死静态字段名
+  → 优先 `SERVER_STARTED`；不要编造 CallbackEvaluator、DataPackRegistry
 ```
 
 ---

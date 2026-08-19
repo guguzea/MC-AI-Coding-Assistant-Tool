@@ -9,19 +9,20 @@ mappings: yarn
 
 # 方块开发（Fabric 1.16.5）
 
+FAPI 用 `net.fabricmc.fabric.api.block.FabricBlockSettings`：`copy(Block)` / `of(Material)` / `hardness`。不要 `create()`、`copyOf(Blocks.STONE)`、`mapColor`、`requiresTool`（本档 loader-api 未列出）。
+
 ## 快速开始
 
 ```java
 private static final Block MY_STONE = Registry.register(
     Registry.BLOCK,
     new Identifier(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+    new Block(FabricBlockSettings.copy(Blocks.STONE).hardness(1.5f))
 );
 
-// 同名 BlockItem
 private static final Item MY_STONE_ITEM = Registry.register(
     Registry.ITEM,
-    new Identifier(MOD_ID, "my_stone"),  // 同名！
+    new Identifier(MOD_ID, "my_stone"),
     new BlockItem(MY_STONE, new Item.Settings())
 );
 ```
@@ -30,66 +31,69 @@ private static final Item MY_STONE_ITEM = Registry.register(
 
 ```
 IF 静态方块（无特殊行为）
-  → new Block(FabricBlockSettings)
+  → new Block(FabricBlockSettings.copy(Blocks.STONE)) 或 of(Material.STONE)
 
 IF 需要交互
   → 自定义 Block 子类
 
 IF 需要存储数据
-  → Block + BlockEntity
+  → Block + BlockEntity（Registry.BLOCK_ENTITY_TYPE）
 
 IF 需要自定义渲染
-  → Block + custom renderer
+  → Block + 客户端 renderer
 ```
 
 ## FabricBlockSettings 常用配置
 
 ```java
-FabricBlockSettings.create()
-    .strength(1.5f)                          // 硬度和抗爆性
-    .strength(1.5f, 6.0f)                   // hardness, resistance
-    .breakByTool(FabricToolTags.PICKAXES)    // 需要镐
-    .requiresTool()                           // 需要工具
-    .dropsLike(Blocks.STONE)                 // 掉落同另一方块
-    .mapColor(MapColor.STONE)                // 地图颜色
-    .noCollision()                           // 无碰撞
-    .solidBlock(Blocks::isSolid)             // 是否固体
-    .suffocates(Blocks::isSolid, bound)     // 是否窒息
+FabricBlockSettings.of(Material.STONE)
+    .hardness(1.5f)
+    .strength(1.5f, 6.0f)
+    .breakByTool(FabricToolTags.PICKAXES, 1)
+    .breakByHand(false)
+    .dropsLike(Blocks.STONE)
+    .materialColor(MapColor.STONE_GRAY)
+    .noCollision()
 ```
 
 ## BlockEntity（带数据存储）
 
+Yarn：无参/`BlockEntityType` 构造；`writeNbt`；`fromTag(BlockState, NbtCompound)`；`createBlockEntity(BlockView)`。
+
 ```java
-// 1. BlockEntity 类
 public class MyChestBlockEntity extends BlockEntity {
     private final DefaultedList<ItemStack> inventory =
         DefaultedList.ofSize(27, ItemStack.EMPTY);
 
-    public MyChestBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MY_CHEST, pos, state);
+    public MyChestBlockEntity() {
+        super(ModBlockEntities.MY_CHEST);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        // 保存数据到 NBT
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
+        return nbt;
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        Inventories.readNbt(nbt, inventory);
+    public void fromTag(BlockState state, NbtCompound tag) {
+        super.fromTag(state, tag);
+        Inventories.readNbt(tag, inventory);
     }
 }
 
-// 2. 方块实现 BlockEntityProvider
 public class MyChestBlock extends Block implements BlockEntityProvider {
+    public MyChestBlock(Settings settings) {
+        super(settings);
+    }
+
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new MyChestBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new MyChestBlockEntity();
     }
 }
 
-// 3. 注册 BlockEntityType
 private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
     Registry.register(
         Registry.BLOCK_ENTITY_TYPE,
@@ -105,8 +109,8 @@ private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
 
 - ❌ BlockItem 与 Block 使用不同 registry name — 物品形态缺失
 - ❌忘记注册 BlockItem — 方块无法放入物品栏
-- ❌ 在服务端创建 BlockRenderType — 渲染是客户端的
-- ❌忘记实现 `writeNbt` / `readNbt` — BlockEntity 数据不持久化
+- ❌ 在服务端创建客户端渲染对象
+- ❌ 三参构造 / `readNbt` / `createBlockEntity(BlockPos, BlockState)`
 
 ## 扩展点
 
@@ -115,3 +119,4 @@ private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
 | `mc-registry` | 方块通过 Registry.register() 注册 |
 | `mc-gui` | BlockEntity 用于 GUI 交互 |
 | `mc-datagen` | DataGen 生成方块模型和掉落表 |
+| `mc-blockentity` | NBT 细节 |

@@ -36,8 +36,15 @@ import {
   primerSummaryPayload,
   searchNeoForgePrimers,
 } from "./primers.js";
+import { missingMcVersion, versionRequiredAction } from "../../utils/actionable.js";
 
 const DATA_ROOT = resolveDataDir();
+
+function versionRequiredDocResult(): CallToolResult {
+  return {
+    content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
+  };
+}
 
 const store = new NeoForgeDocStore(DATA_ROOT);
 
@@ -137,7 +144,7 @@ export const searchNeoForgeDocsSchema = {
     "增强功能：支持标签过滤；自动去除 the/and/of 等停用词；按相关性排序。",
   inputSchema: z.object({
     query: z.string().describe("搜索查询关键词"),
-    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
+    version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
     tags: z.array(z.string()).optional().describe("标签过滤（如 [\"deferredregister\", \"networking\"]）"),
   }),
 } as const;
@@ -152,7 +159,8 @@ export async function searchNeoForgeDocs(args: {
       return platformDataMissingResult("neoforge");
     }
     const s = getGenericStore() as NeoForgeDocStore;
-    const version = args.version ?? "26.1";
+    if (missingMcVersion(args.version)) return versionRequiredDocResult();
+    const version = args.version!.trim();
     const resolution = s.describeVersionResolution(version);
     let detailed: ReturnType<NeoForgeDocStore["searchIndexDetailed"]>;
     try {
@@ -230,7 +238,7 @@ export const getNeoForgeDocSummarySchema = {
     "返回每个 <h2> 章节的标题和 150-200 字摘要。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID（如 \"concepts/registries\"）"),
-    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
+    version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
   }),
 } as const;
 
@@ -239,7 +247,8 @@ export async function getNeoForgeDocSummary(args: {
   version?: string;
 }): Promise<CallToolResult> {
   try {
-    const version = args.version ?? "26.1";
+    if (missingMcVersion(args.version)) return versionRequiredDocResult();
+    const version = args.version!.trim();
     if (isPrimerDocId(args.id)) {
       const primer = findPrimer(args.id);
       if (!primer) {
@@ -279,7 +288,7 @@ export const getNeoForgeDocFullSchema = {
     "**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID"),
-    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
+    version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
     highlight_key: z.boolean().optional().default(true).describe("是否突出显示关键段落"),
   }),
 } as const;
@@ -290,7 +299,8 @@ export async function getNeoForgeDocFull(args: {
   highlight_key?: boolean;
 }): Promise<CallToolResult> {
   try {
-    const version = args.version ?? "26.1";
+    if (missingMcVersion(args.version)) return versionRequiredDocResult();
+    const version = args.version!.trim();
     if (isPrimerDocId(args.id)) {
       const primer = findPrimer(args.id);
       if (!primer) {
@@ -332,7 +342,7 @@ export const getNeoForgeDocRelatedSchema = {
     "返回与目标页面共享最多标签关键词的其他页面，按相关性降序排列。",
   inputSchema: z.object({
     id: z.string().describe("文档页面 ID"),
-    version: z.string().optional().default("26.1").describe("NeoForge 版本，默认 26.1"),
+    version: z.string().describe("NeoForge 版本（必填）。请先 list_neoforge_versions"),
     limit: z.number().optional().default(5).describe("返回数量，默认 5"),
   }),
 } as const;
@@ -343,7 +353,8 @@ export async function getNeoForgeDocRelated(args: {
   limit?: number;
 }): Promise<CallToolResult> {
   try {
-    const version = args.version ?? "26.1";
+    if (missingMcVersion(args.version)) return versionRequiredDocResult();
+    const version = args.version!.trim();
     if (isPrimerDocId(args.id)) {
       const primer = findPrimer(args.id);
       if (!primer) {

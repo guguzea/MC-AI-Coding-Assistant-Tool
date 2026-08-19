@@ -1,17 +1,14 @@
----
-description: 05 — 事件（neoforge 1.20.6）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 05 — 事件（NeoForge 1.20.6）
 
-# 05 — 事件
+来源：https://docs.neoforged.net/docs/1.20.6/concepts/events/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+两条总线：
 
-## Decision Flow
+- **游戏总线** `NeoForge.EVENT_BUS`：游玩中事件。官方示例 `LivingJumpEvent`（**不是**更晚档嵌套的 `LivingEvent.LivingJumpEvent`）。逻辑端用 `entity.level().isClientSide()`。
+- **mod bus**：生命周期。顺序含 `FMLConstructModEvent` → `RegisterEvent` / `NewRegistryEvent` / `DataPackRegistryEvent.NewRegistry` → `FMLCommonSetupEvent` → `FMLClientSetupEvent` 或 `FMLDedicatedServerSetupEvent` → IMC → `FMLLoadCompleteEvent`。并行生命周期用 `#enqueueWork`。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+注册：`IEventBus#addListener`、`@SubscribeEvent`、`@EventBusSubscriber(modid = "...")`。默认总线是 **`Bus.GAME`**；mod 总线事件必须 `bus = Bus.MOD`。mod 总线事件超接口 `IModBusEvent`。
+
+取消：`ICancellableEvent` 的 `setCanceled` / `isCanceled`。不要监听 abstract 的 `BlockEvent` / `LivingEvent` 等（会崩）。客户端事件：`FMLEnvironment.dist` 或 `@EventBusSubscriber(value = Dist.CLIENT, modid = "...")`。
+
+禁止：`MinecraftForge.EVENT_BUS`；把 Payload 注册写进 `FMLCommonSetupEvent` 当 SimpleChannel。

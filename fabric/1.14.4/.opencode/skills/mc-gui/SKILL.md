@@ -14,18 +14,25 @@ mappings: yarn
 不要抄 1.16+ 的 `ScreenHandler` / `HandledScreens` / `NamedScreenHandlerFactory` / `ButtonWidget.builder` / `Text.literal`。
 不要写 `net.fabric.sdk`。
 
+Yarn 已核：`Container(ContainerType, int)`、`Screen(Text)`、`ButtonWidget(..., String, PressAction)`、`transferSlot`。
+
 ## 快速开始
 
 ```java
 public class MyContainer extends Container {
     public MyContainer(int syncId, PlayerInventory playerInventory) {
-        super(null, syncId);
+        super(MY_SCREEN, syncId);
         // addSlot(...)：方块槽 + 玩家物品栏
     }
 
     @Override
     public boolean canUse(PlayerEntity player) {
         return true;
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+        return ItemStack.EMPTY;
     }
 }
 
@@ -46,23 +53,32 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             MY_SCREEN_ID,
-            (ContainerScreenFactory<MyContainer>) container -> new MyScreen()
+            (ContainerScreenFactory<MyContainer>) container ->
+                new MyScreen(new TranslatableText("gui.examplemod.my_screen"))
         );
     }
 }
 
 public class MyScreen extends Screen {
+    public MyScreen(Text title) {
+        super(title);
+    }
+
     @Override
     protected void init() {
         addButton(new ButtonWidget(width / 2 - 50, height / 2, 100, 20,
-            "OK", btn -> this.closeScreen()));
+            "OK", btn -> this.minecraft.openScreen(null)));
     }
 }
 ```
 
-服务端打开：
+服务端打开（同一 Identifier；工厂签名已核 loader-api）：
 
 ```java
+ContainerProviderRegistry.INSTANCE.registerFactory(
+    MY_SCREEN_ID,
+    (syncId, identifier, player, buf) -> new MyContainer(syncId, player.inventory));
+
 ContainerProviderRegistry.INSTANCE.openContainer(
     MY_SCREEN_ID, (ServerPlayerEntity) player, buf -> {});
 ```
@@ -87,6 +103,8 @@ IF 需要同步额外数据
 - ❌ 忘记 `super.render()` — 背景和子控件不渲染
 - ❌ 用 `HandledScreens` / `ScreenHandler` / `Text.literal` / `ButtonWidget.builder` — 都不是本档 API
 - ❌ `MatrixStack` 版 `render` — 1.14.4 的 `render` 没有 MatrixStack 参数
+- ❌ `super()` / `super(null, syncId)` — Yarn 是 `Container(ContainerType, int)`
+- ❌ 抄 wiki 现页 `quickMove` — 本档 Yarn 名是 `transferSlot`
 
 ## 扩展点
 

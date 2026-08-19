@@ -33,12 +33,7 @@ public class ModRegistry {
 ```
 IF 注册方块/物品/实体/TileEntity 等
   → 使用 @EventBusSubscriber + RegistryEvent.Register<T>
-
-IF 平台 = Forge 1.18+
-  → 使用 DeferredRegister（1.12.2 没有 DeferredRegister）
-
-IF 平台 = Fabric
-  → 使用 Registry.register() in onInitialize
+  → 本档没有 DeferredRegister，也不要用 Fabric Registry.register
 ```
 
 ## Decision: 常用注册表

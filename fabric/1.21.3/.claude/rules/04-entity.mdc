@@ -48,8 +48,11 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.world.Heightmap;
 
 public class MyPigEntity extends PigEntity {
@@ -65,19 +68,19 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
         .dimensions(0.9f, 1.4f)
         .maxTrackingRange(8)
         .trackingTickInterval(3)
-        .build("my_pig")
+        .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "my_pig")))
 );
 
 @Override
 public void onInitialize() {
     FabricDefaultAttributeRegistry.register(MY_PIG,
         MobEntity.createMobAttributes()
-            .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+            .add(EntityAttributes.MAX_HEALTH, 20.0)
+            .add(EntityAttributes.MOVEMENT_SPEED, 0.25)
     );
     SpawnRestriction.register(
         MY_PIG,
-        SpawnRestriction.Location.ON_GROUND,
+        SpawnLocationTypes.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
         MyPigEntity::canSpawn
     );
@@ -85,7 +88,9 @@ public void onInitialize() {
 ```
 
 不要 `EntityAttributeRegistry`、`EntityAttributeSupplementRegistry`、`DefaultAttributeRegistry.register`（模组侧）、`SpawnRestrictionRegistration`。
-Yarn `EntityType.Builder.build` 需要 **String id**（官方 Yarn javadoc）；无参 `build()` 是 `FabricEntityTypeBuilder`。`dimensions` 是 `(float, float)`，不是 `EntityDimensions.changing`。
+Yarn 1.21.3 属性是 `MAX_HEALTH` / `MOVEMENT_SPEED`（[yarn 1.21.3+build.2 javadoc](https://maven.fabricmc.net/docs/yarn-1.21.3%2Bbuild.2/net/minecraft/entity/attribute/EntityAttributes.html)），不要抄 1.21.1 的 `GENERIC_*`。
+生成位置：`SpawnLocationTypes.ON_GROUND`（与 1.21.1 mapping 同结构），不要 `SpawnRestriction.Location`。
+Yarn 1.21.3 `EntityType.Builder.build` 要 **RegistryKey**（[yarn 1.21.3 EntityType.mapping](https://github.com/FabricMC/yarn/blob/1.21.3/mappings/net/minecraft/entity/EntityType.mapping) / [javadoc](https://maven.fabricmc.net/docs/yarn-1.21.3%2Bbuild.2/net/minecraft/entity/EntityType.Builder.html)），不要抄 1.21.1 的 `build(String)`。`FabricEntityTypeBuilder.build()` 无参也不再存在，要 `build(RegistryKey)`。`dimensions` 是 `(float, float)`，不是 `EntityDimensions.changing`（那是 FabricEntityTypeBuilder 的 `dimensions(EntityDimensions)`）。
 
 ## 实体渲染器（客户端）
 

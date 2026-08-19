@@ -213,12 +213,12 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
                 private final MyCapability instance = new MyCapability();
 
                 @Override
-                public NBTTagCompound serializeNBT() {
+                public CompoundNBT serializeNBT() {
                     return instance.saveNBT();
                 }
 
                 @Override
-                public void deserializeNBT(NBTTagCompound nbt) {
+                public void deserializeNBT(CompoundNBT nbt) {
                     instance.loadNBT(nbt);
                 }
 

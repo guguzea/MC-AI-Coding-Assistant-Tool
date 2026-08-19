@@ -83,7 +83,7 @@ public class ModRecipeProvider extends RecipeProvider {
             .unlockedBy("has_gold", has(Items.GOLD_INGOT))
             .save(consumer);
 
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
+        SimpleCookingRecipeBuilder.smelting(Ingredient.fromItems(Items.COBBLESTONE), Items.STONE, 0.1f, 200)
             .unlockedBy("has_cobblestone", has(Items.COBBLESTONE))
             .save(consumer);
     }

@@ -1,6 +1,6 @@
 ---
 name: mc-networking
-description: Fabric 网络通信。FabricNetworkConstants、PacketByteBuf、ClientSidePacketRegistry。触发词：网络、Networking、PacketByteBuf、ServerPlayNetworking
+description: Fabric 1.14.4 网络。ClientSidePacketRegistry、ServerSidePacketRegistry、PacketByteBuf。触发词：网络、Networking、PacketByteBuf、ClientSidePacketRegistry
 platform: fabric
 version: "1.14.4"
 dependencies: []
@@ -9,28 +9,30 @@ mappings: yarn
 
 # 网络通信（Fabric 1.14.4）
 
+默认用 networking **v0**（`net.fabricmc.fabric.api.network`）。
+[FAPI javadoc](https://maven.fabricmc.net/docs/fabric-api-0.74.1+1.19.4/net/fabricmc/fabric/api/network/ClientSidePacketRegistry.html)：
+客户端 registry **接收 S2C**、**发送 C2S**；服务端 registry **接收 C2S**、**发送 S2C**。
+不要抄 Skill 旧稿里对调的 `register`，也不要用 `ServerPlayNetworking` / `packetContext.queue()` / `PacketByteBuf.createUnpooled()`。
+
 ## 快速开始
 
 ```java
-// 定义包 ID
 public static final Identifier MY_PACKET_ID = new Identifier(MOD_ID, "my_packet");
 
-// 服务端接收（客户端发送）
+// C2S：服务端接收
 public static void registerServerReceivers() {
-    ClientSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
-        packetContext.queue(() -> {
-            int value = buf.readInt();
+    ServerSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
+        int value = buf.readInt();
+        packetContext.getTaskQueue().execute(() -> {
             PlayerEntity player = packetContext.getPlayer();
-            // 处理
         });
     });
 }
 
-// 服务端发送（客户端接收）
+// S2C：客户端接收
 public static void registerClientReceivers() {
-    ServerSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
-        packetContext.queue(() -> {
-            // 处理
+    ClientSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
+        packetContext.getTaskQueue().execute(() -> {
         });
     });
 }
@@ -40,32 +42,31 @@ public static void registerClientReceivers() {
 
 ```
 IF 客户端 → 服务端
-  → ClientSidePacketRegistry.register()
+  → ServerSidePacketRegistry.register（收）+ ClientSidePacketRegistry.sendToServer（发）
 
 IF 服务端 → 客户端
-  → ServerSidePacketRegistry.INSTANCE.register()
+  → ClientSidePacketRegistry.register（收）+ ServerSidePacketRegistry.sendToPlayer（发）
 
 IF 需要双向
-  → 两端分别注册
+  → 两端分别注册，不要混用 networking.v1
 ```
 
 ## 发送数据包
 
 ```java
-// 服务端向客户端发送
-ServerPlayNetworking.send(player, MY_PACKET_ID,
-    PacketByteBuf.createUnpooled().writeInt(value));
-
-// 客户端向服务端发送
-ClientPlayNetworking.send(MY_PACKET_ID,
-    PacketByteBuf.createUnpooled().writeInt(value));
+PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+buf.writeInt(value);
+ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, MY_PACKET_ID, buf);
+ClientSidePacketRegistry.INSTANCE.sendToServer(MY_PACKET_ID, buf);
 ```
 
 ## 常见错误
 
-- ❌在非主线程处理数据 — 使用 `packetContext.queue()`
-- ❌忘记在客户端 entrypoint 注册 — 客户端接收器不生效
-- ❌包 ID 命名空间不一致 — 两端必须完全相同
+- ❌ C2S 接收写在 `ClientSidePacketRegistry.register` — 那是 S2C
+- ❌ `packetContext.queue()` — 用 `getTaskQueue().execute`
+- ❌ `ServerPlayNetworking.send` / `PacketByteBuf.createUnpooled()`
+- ❌ 忘记在 `ClientModInitializer` 注册 S2C
+- ❌ 包 ID 两端不一致
 
 ## 扩展点
 

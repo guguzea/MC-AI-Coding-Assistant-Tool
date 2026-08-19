@@ -28,7 +28,7 @@ new Item.Properties()
 
 ```java
 public enum MyItemTier implements IItemTier {
-    MY_MATERIAL(4, 2000, 10.0f, 4.0f, 20, () -> Ingredient.of(Items.DIAMOND));
+    MY_MATERIAL(4, 2000, 10.0f, 4.0f, 20, () -> Ingredient.fromItems(Items.DIAMOND));
 
     // getLevel(), getUses(), getSpeed(), getAttackDamageBonus(), getEnchantmentValue(), getRepairMaterial()
 }
@@ -76,9 +76,9 @@ IF 需要普通物品（无特殊功能）
   → 最简单的物品
 
 IF 需要工具（剑、镐、斧、铲）
-  → extends DiggerItem / SwordItem
+  → extends PickaxeItem / AxeItem / ShovelItem / SwordItem
+  → 镐斧铲父类是 MCP `ToolItem`（不要抄 Mojmap `DiggerItem`）
   → 需要定义 IItemTier
-  → 需要在 constructor 传入：speed, damage, durability, tier 属性
 
 IF 需要盔甲
   → extends ArmorItem
@@ -157,7 +157,7 @@ public class MyItem extends Item {
 ```java
 // items/MyTier.java
 public enum MyTier implements IItemTier {
-    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.DIAMOND));
+    MY_MATERIAL(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
 
     private final int level;
     private final int uses;
@@ -198,7 +198,7 @@ public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
 // items/MyArmorMaterial.java
 public enum MyArmorMaterial implements IArmorTier {
     MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0f, 0.1f, () -> Ingredient.of(Items.DIAMOND));
+        SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0f, 0.1f, () -> Ingredient.fromItems(Items.DIAMOND));
 
     // getDurability(SlotType), getDefenseForType(SlotType), getEnchantmentValue(),
     // getEquipSound(), getToughness(), getKnockbackResistance(), getRepairIngredient()

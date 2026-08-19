@@ -107,6 +107,11 @@ public class MyScreenHandler extends ScreenHandler {
     public boolean canUse(PlayerEntity player) {
         return blockInventory.canPlayerUse(player);
     }
+
+    @Override
+    public ItemStack quickMove(PlayerEntity player, int slot) {
+        return ItemStack.EMPTY;
+    }
 }
 
 public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
@@ -118,6 +123,9 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 ```
 
 1.19.3+ 构造是 `(Factory, FeatureSet)`。Yarn 字段 `FeatureFlags.VANILLA_FEATURES`（官方 Yarn javadoc）。wiki `tutorial:screenhandler` 也可用 `FeatureSet.empty()`。
+
+Yarn 移位是 `quickMove(PlayerEntity, int)`（[yarn 1.21.1 ScreenHandler.mapping](https://github.com/FabricMC/yarn/blob/1.21.1/mappings/net/minecraft/screen/ScreenHandler.mapping)；wiki [tutorial:screenhandler](https://wiki.fabricmc.net/tutorial:screenhandler) 用 `HandledScreens.register`）。本档 loader-api **没有** `ScreenRegistry`，不要抄 1.20.4 的 `ScreenRegistry.register`。
+额外数据：`ExtendedScreenHandlerFactory#getScreenOpeningData`（1.21.1 loader-api），不是 `writeScreenOpeningData`。
 
 ## NamedScreenHandlerFactory（普通打开）
 

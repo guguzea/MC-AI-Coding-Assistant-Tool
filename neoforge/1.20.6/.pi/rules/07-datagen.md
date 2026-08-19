@@ -1,17 +1,24 @@
 ﻿---
-description: 07 — 数据生成（neoforge 1.20.6）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 07 — DataGen（NeoForge 1.20.6）
 ---
 
-# 07 — 数据生成
+# 07 — DataGen（NeoForge 1.20.6）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.20.6/resources/
 
-## Decision Flow
+事件：**`GatherDataEvent`（尚未拆成 Client/Server 子类）**。
 
+```java
+@SubscribeEvent // mod event bus
+public static void gatherData(GatherDataEvent event) {
+    DataGenerator generator = event.getGenerator();
+    PackOutput output = generator.getPackOutput();
+    ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+    CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+    generator.addProvider(event.includeServer(), new MyRecipeProvider(output, lookupProvider));
+}
 ```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+
+`RecipeProvider` 构造：`PackOutput` + `CompletableFuture<HolderLookup.Provider>`，`buildRecipes(RecipeOutput)`。语言走 `LanguageProvider`。客户端 provider 用 `event.includeClient()`。
+
+不要用 1.12 `LanguageRegistry`。不要把 1.21.5 的 `GatherDataEvent.Client` / `createProvider` / `RecipeProvider.Runner` 抄进本档。

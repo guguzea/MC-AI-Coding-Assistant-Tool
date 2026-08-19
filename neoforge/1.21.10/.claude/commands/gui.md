@@ -12,4 +12,4 @@ mappings: mojmap
 禁止从邻档复制。Java 21。`ResourceLocation`。
 
 对照 `neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md` 与 search_neoforge_docs version=1.21.10。
-网络：RegisterPayloadHandlersEvent + PayloadRegistrar（以 networking 页为准），禁止 SimpleChannel。
+Screen：`RegisterMenuScreensEvent`（见 rendering/screens）。本档无 `gui/menus` 页，不要抄邻档 `MenuType`/`openMenu`。额外同步走 06；禁止 SimpleChannel / `NetworkHooks`。

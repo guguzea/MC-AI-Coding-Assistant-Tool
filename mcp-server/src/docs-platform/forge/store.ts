@@ -104,6 +104,44 @@ export class VersionNotFoundError extends Error {
   }
 }
 
+/** 系列键：去掉尾部 .x 后的前两段数字。1.16.8 / 1.16.x / 1.16 → 1.16；26.1.2 → 26.1 */
+export function seriesKey(version: string): string | null {
+  const n = version.trim().replace(/\.x$/i, "");
+  return n.match(/^(\d+\.\d+)/)?.[1] ?? null;
+}
+
+function versionRankParts(version: string): number[] {
+  return version.split(".").map((p) => {
+    if (p === "x" || p === "X") return -1;
+    const n = Number(p);
+    return Number.isFinite(n) ? n : -1;
+  });
+}
+
+/** 数字补丁 > .x > 缺段。1.16.5 > 1.16.x > 1.16 */
+export function compareMcVersions(a: string, b: string): number {
+  const pa = versionRankParts(a);
+  const pb = versionRankParts(b);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const da = pa[i] ?? -2;
+    const db = pb[i] ?? -2;
+    if (da !== db) return da - db;
+  }
+  return 0;
+}
+
+/** 精确命中，否则同系列最高档；无亲缘则 null。 */
+export function resolveFromAvailable(requested: string, available: string[]): string | null {
+  if (available.includes(requested)) return requested;
+  const key = seriesKey(requested);
+  if (!key) return null;
+  const same = available.filter((v) => seriesKey(v) === key);
+  if (same.length === 0) return null;
+  same.sort(compareMcVersions);
+  return same[same.length - 1] ?? null;
+}
+
 // ── Store 实现 ──────────────────────────────────────────────────────────
 
 interface CacheEntry<T> {
@@ -227,29 +265,11 @@ export class ForgeDocStore {
     });
   }
 
-  /** 版本降级策略（递归查找有数据的版本）。
-   *
-   * 示例降级链：
-   * - 1.18.x  → 1.18.x（直接）
-   * - 1.18    → 1.18.x（带 x）
-   * - 1.18.1  → 1.18.x（精确点号）
-   * - 1.19.2  → 1.19.x → 1.19.4（存在 1.19.x 时）
-   * - 1.21    → 最高可用版本（跨主版本降级）
-   */
+  /** 版本解析：精确命中，否则同系列（major.minor）最高有数据档。禁止跨主版本。 */
   resolveVersion(requested: string): string {
     const available = this.getAvailableVersions();
-    if (available.includes(requested)) return requested;
-
-    const withX = requested.endsWith(".x") ? requested : requested.replace(/(\.\d+)$/, ".x");
-    if (available.includes(withX)) return withX;
-
-    const majorMinor = requested.match(/^(\d+\.\d+)/)?.[1];
-    if (majorMinor) {
-      const xMatch = available.find(v => v.startsWith(majorMinor + "."));
-      if (xMatch) return xMatch;
-    }
-
-    if (available.length > 0) return available[0];
+    const resolved = resolveFromAvailable(requested, available);
+    if (resolved) return resolved;
     throw new VersionNotFoundError(requested, available);
   }
 
@@ -273,7 +293,7 @@ export class ForgeDocStore {
 
   /**
    * L0 + L1 符号增强搜索。
-   * 版本不存在时自动降级；调用方可经 getLastSearchMeta / searchIndexDetailed 获取 versionFallback。
+   * 无同系列档时 VERSION_NOT_FOUND；调用方可经 getLastSearchMeta / searchIndexDetailed 获取 versionFallback。
    */
   searchIndex(
     query: string,

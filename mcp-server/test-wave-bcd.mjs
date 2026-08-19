@@ -90,7 +90,7 @@ function testDatapack() {
 }
 
 function testGenerators() {
-  const m = generateModel("my_mod", "test_block");
+  const m = generateModel("my_mod", "test_block", "1.20.1");
   assert.ok(m.files);
   const pkt = generateNetworkPacket("my_mod", "sync_msg", "neoforge_1.21");
   assert.ok(pkt.code?.includes("StreamCodec"));

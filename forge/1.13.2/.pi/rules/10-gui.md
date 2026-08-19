@@ -4,232 +4,116 @@ description: 10 — GUI / Container 开发
 
 # 10 — GUI / Container 开发
 
-> 适用版本：Forge 1.13.2
+> 适用版本：Forge 1.13.2（javadoc 1.13.2-25.0.220）
 
 ---
 
 ## 约束
 
-### GUI 系统概述
+本档 **没有** `ContainerType` / `IForgeContainerType`（javadoc 404）。**没有** `player.openContainer(modid, id, PacketBuffer)`。客户端 GUI 工厂是 **`ExtensionPoint.GUIFACTORY`**，不是 1.14 的 `ScreenManager`.
 
-Forge 1.13.2 使用基于 `Container` 和 `IGuiHandler` 的 GUI 系统：
+### 推荐打开路径（NetworkHooks）
 
-```
-Player interacts
-      │
-      ▼
-Block#onBlockActivated (Server) ──► openGui ──► IGuiHandler
-                                                       │
-                                                       ▼
-                                              Container + GuiScreen pair
-```
+服务端：`NetworkHooks.openGui(EntityPlayerMP, IInteractionObject)`（还有 `BlockPos` / `Consumer<PacketBuffer>` 重载）。`IInteractionObject#getGuiID()` 当 `ResourceLocation` 用，命名空间要能对上模组。
 
-### Container 注册
+`IInteractionObject`：`createContainer(InventoryPlayer, EntityPlayer)` + `getGuiID()`。
 
-- `Container` 需要在服务端构造
-- `ContainerType` 需要通过 `RegistryEvent.Register<Container>` 注册
+客户端：`ModLoadingContext.registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> (FMLPlayMessages.OpenContainer msg) -> GuiScreen)`。
 
-### Dist 约束
+### 仍存在的旧 IGuiHandler
 
-- GUI 打开逻辑在**服务端**执行
-- GUI 渲染在**客户端**执行
-- 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断物理端
+`IGuiHandler` 仍是 `getServerGuiElement(int, EntityPlayer, World, int, int, int)` / `getClientGuiElement(...)`（loader-api 已核）。**不要**编 `createServerGui(int, PlayerInventory, PacketBuffer)`。
+
+容器 GUI 客户端类继承 **`GuiContainer`**（`drawGuiContainerBackgroundLayer`），不要把该方法写进裸 `GuiScreen`。
+
+名字仍是 `EntityPlayer` / `InventoryPlayer` / `Container` / `TileEntity`，不是 1.14 的 `PlayerEntity` / `PlayerInventory`。
 
 ---
 
 ## Decision Flow
 
-### Decision: Container/GUI 类型选择
-
 ```
-IF 交互时需要持久数据存储（机器进度、箱子物品）
-  → 使用 Container + ContainerType + GuiScreen
+IF 方块/TE 有槽位
+  → TE 实现 IInteractionObject（或提供该接口对象）
+  → 服务端 NetworkHooks.openGui((EntityPlayerMP) player, interactionObject, pos)
+  → 客户端 ExtensionPoint.GUIFACTORY 返回 GuiContainer
 
-IF 只是显示 UI（无数据）
-  → 直接使用 GuiScreen（无需 Container）
+IF 无数据的纯 UI
+  → GuiScreen + 自己发包（见 06 SimpleChannel）
 
-IF 需要物品栏槽位（多格容器）
-  → Container（slot 管理 + transferStackInSlot）
+IF 仍走旧 IGuiHandler
+  → NetworkRegistry.INSTANCE.registerGuiHandler + player.openGui（xyz int）
+  → 方法签名必须是 EntityPlayer + World + x,y,z
 ```
 
 ---
 
-## 示例：Container 注册
+## 示例：IInteractionObject + 打开
 
 ```java
-// containers/ModContainers.java
-public class ModContainers {
-    public static ContainerType<MyContainer> MY_CONTAINER;
+public class MyTileEntity extends TileEntity implements IInteractionObject {
+    @Override
+    public Container createContainer(InventoryPlayer playerInventory, EntityPlayer player) {
+        return new MyContainer(playerInventory, this);
+    }
 
-    public static void register() {
-        MY_CONTAINER = IForgeContainerType.create((windowId, inv, data) -> {
-            BlockPos pos = data.readBlockPos();
-            TileEntity te = inv.player.getEntityWorld().getTileEntity(pos);
-            if (te instanceof MyTileEntity) {
-                return new MyContainer(windowId, inv, (MyTileEntity) te);
-            }
-            return null;
-        });
-        MY_CONTAINER.setRegistryName(new ResourceLocation(MOD_ID, "my_container"));
+    @Override
+    public String getGuiID() {
+        return MOD_ID + ":my_container";
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return new TextComponentTranslation("container.examplemod.my");
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return false;
     }
 }
 ```
 
 ```java
-// containers/MyContainer.java
-public class MyContainer extends Container {
-    private final MyTileEntity tileEntity;
-
-    public MyContainer(int windowId, PlayerInventory inv, MyTileEntity te) {
-        super(ModContainers.MY_CONTAINER, windowId);
-        this.tileEntity = te;
-
-        // 添加槽位
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(inv, col + row * 9, 8 + col * 18, 18 + row * 18));
-            }
-        }
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack stack1 = slot.getStack();
-            stack = stack1.copy();
-
-            // 从容器 → 玩家物品栏
-            if (index < 27) {
-                if (!this.mergeItemStack(stack1, 27, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else {
-                // 从玩家物品栏 → 容器
-                if (!this.mergeItemStack(stack1, 0, 27, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-
-            if (stack1.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return stack;
-    }
-
-    @Override
-    public boolean canInteractWith(PlayerEntity player) {
-        return tileEntity.isUsableByPlayer(player);
-    }
+// 服务端右键
+if (!world.isRemote && player instanceof EntityPlayerMP) {
+    NetworkHooks.openGui((EntityPlayerMP) player, (IInteractionObject) te, pos);
 }
 ```
 
-## 示例：IGuiHandler
+## 示例：客户端 GUIFACTORY
 
 ```java
-// gui/ModGuis.java
-public class ModGuis {
-    public static final int MY_GUI = 0;
-
-    public static void register() {
-        NetworkRegistry.INSTANCE.registerGuiHandler(ExampleMod.MOD_ID, new IGuiHandler() {
-            @Override
-            public Container createServerGui(int id, PlayerInventory inv, PacketBuffer data) {
-                if (id == MY_GUI) {
-                    BlockPos pos = data.readBlockPos();
-                    TileEntity te = inv.player.getEntityWorld().getTileEntity(pos);
-                    if (te instanceof MyTileEntity) {
-                        return new MyContainer(id, inv, (MyTileEntity) te);
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public Object getClientGuiElement(int id, PlayerInventory inv, PacketBuffer data) {
-                if (id == MY_GUI) {
-                    BlockPos pos = data.readBlockPos();
-                    TileEntity te = inv.player.getEntityWorld().getTileEntity(pos);
-                    if (te instanceof MyTileEntity) {
-                        return new MyGuiScreen(new MyContainer(id, inv, (MyTileEntity) te));
-                    }
-                }
-                return null;
-            }
-        });
-    }
-}
+ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.GUIFACTORY, () -> msg -> {
+    // 按 getGuiID / extra data 构造 GuiContainer
+    return new MyGuiContainer(new MyContainer(...));
+});
 ```
 
-## 示例：GuiScreen
+## 示例：GuiContainer
 
 ```java
-// gui/client/MyGuiScreen.java
-public class MyGuiScreen extends GuiScreen {
-    private final MyContainer container;
-    private int containerWidth;
-    private int containerHeight;
+public class MyGuiContainer extends GuiContainer {
+    private static final ResourceLocation TEXTURES =
+            new ResourceLocation(MOD_ID, "textures/gui/container/example.png");
 
-    public MyGuiScreen(MyContainer container) {
-        this.container = container;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        this.containerWidth = this.width / 2 - 80;
-        this.containerHeight = this.height / 2 - 50;
-    }
-
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        super.render(mouseX, mouseY, partialTicks);
-        this.drawString(this.font, "My GUI", this.containerWidth + 60, this.containerHeight, 0xFFFFFF);
+    public MyGuiContainer(MyContainer container) {
+        super(container);
+        this.xSize = 176;
+        this.ySize = 166;
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.drawDefaultBackground();
-    }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return true;
+        this.minecraft.getTextureManager().bindTexture(TEXTURES);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
     }
 }
 ```
-
-## 示例：打开 GUI
-
-```java
-// 方块中右键打开 GUI
-@Override
-public boolean onBlockActivated(World world, BlockPos pos, BlockState state,
-                              PlayerEntity player, Direction side,
-                              float hitX, float hitY, float hitZ) {
-    if (!world.isRemote) {
-        player.openContainer(
-            ExampleMod.MOD_ID,
-            MY_GUI,
-            buf -> buf.writeBlockPos(pos)
-        );
-    }
-    return true;
-}
-```
-
----
 
 ## 常见错误
 
-- ❌ 在服务端以外的物理端调用 `openContainer` → 必须在服务端执行
-- ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
-- ❌ 在 `GuiScreen` 中修改服务端数据 → 使用网络包同步
-- ❌ Container 的 `canInteractWith` 始终返回 true → 添加距离检查
+- ❌ `IForgeContainerType` / `ContainerType` / `ScreenManager.register` — 1.14+
+- ❌ `PlayerEntity` / `PlayerInventory` — 本档是 `EntityPlayer` / `InventoryPlayer`
+- ❌ 在裸 `GuiScreen` 上写 `drawGuiContainerBackgroundLayer`
+- ❌ 把 IGuiHandler 改成 PacketBuffer 工厂签名

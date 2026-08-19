@@ -15,7 +15,7 @@ mappings: parchment
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.STONE)
+        .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
     )
@@ -50,14 +50,14 @@ BlockBehaviour.Properties.of(Material.WOOD)
     .noLootTablePoolsBuilder()         // 无掉落表
 ```
 
-## Decision: 物品形态（ItemBlock）
+## Decision: 物品形态（BlockItem）
 
 ```
 IF 方块在创意模式标签中有对应物品
-  → 注册同名 ItemBlock（Forge 自动关联显示）
+  → 注册同名 BlockItem（Forge 自动关联显示）
 
 IF 方块不应出现在物品栏（如空气、光源方块）
-  → 不注册 ItemBlock
+  → 不注册 BlockItem
 ```
 
 ## EntityBlock 方块

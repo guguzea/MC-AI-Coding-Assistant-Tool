@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { actionable, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
+import { lookupObfuscated } from "../mappings/lookup-obfuscated.js";
 import { ownGet } from "../utils/own-record.js";
 
 export type CrashKind =
@@ -37,6 +38,9 @@ export interface CrashResult {
   logHints?: string[];
   ok?: boolean;
   action?: ActionEnvelope;
+  /** 无 version 时为 false：IO/模式库成功，反混淆未跑 */
+  analysisComplete?: boolean;
+  relatedTools?: string[];
 }
 
 // 已知的常见崩溃原因模式（从 8 种扩展至 16 种 + 加载期）
@@ -393,20 +397,58 @@ function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
   return hints;
 }
 
-export function analyzeCrash(query: CrashQuery): CrashResult {
-  if (missingMcVersion(query.version)) {
-    const action = versionRequiredAction();
+function relatedToolsForCrashVersion(version: string): string[] {
+  if (/^26\.|^1\.21/.test(version.trim())) {
+    return ["search_neoforge_docs", "search_fabric_docs", "lookup_obfuscated"];
+  }
+  return ["lookup_obfuscated", "convert_mapping", "search_forge_docs"];
+}
+
+function lookupCrashTokens(crashReport: string, version: string): string[] {
+  const tokens = new Set<string>();
+  const named = /\b((?:func|method|field)_[0-9A-Za-z_]+)\b/g;
+  let m: RegExpExecArray | null;
+  while ((m = named.exec(crashReport))) {
+    tokens.add(m[1]);
+    if (tokens.size >= 16) break;
+  }
+  const shortRe = /\.([a-z]{1,3})\(/g;
+  while (tokens.size < 20 && (m = shortRe.exec(crashReport))) {
+    tokens.add(m[1]);
+  }
+  const lines: string[] = [];
+  for (const t of tokens) {
+    const r = lookupObfuscated({ name: t, version });
+    if (r.found) {
+      lines.push(`${t} → ${r.yarn ?? r.mojang ?? "?"}`);
+    }
+  }
+  return lines;
+}
+
+function finishCrash(partial: CrashResult, version: string | undefined, crashReport: string): CrashResult {
+  const deobfuscated = [...(partial.deobfuscated ?? [])];
+  if (missingMcVersion(version)) {
     return {
-      ok: false,
-      probableCause: action.message,
-      fixSuggestions: action.nextSteps,
-      deobfuscated: [],
-      relatedMistakes: [],
-      crashKind: "unknown",
-      logHints: [],
-      action,
+      ...partial,
+      deobfuscated,
+      ok: true,
+      analysisComplete: false,
+      action: versionRequiredAction(),
     };
   }
+  const v = version!.trim();
+  deobfuscated.push(...lookupCrashTokens(crashReport, v));
+  return {
+    ...partial,
+    deobfuscated,
+    ok: true,
+    analysisComplete: true,
+    relatedTools: relatedToolsForCrashVersion(v),
+  };
+}
+
+export function analyzeCrash(query: CrashQuery): CrashResult {
   let crashReport = query.crashReport;
   if (!crashReport?.trim() && query.crashReportPath) {
     const p = query.crashReportPath;
@@ -480,14 +522,18 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
 
   for (const { pattern, cause, fix, relatedMistakes } of KNOWN_PATTERNS) {
     if (pattern.test(crashReport)) {
-      return {
-        probableCause: cause,
-        fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind),
-        deobfuscated,
-        relatedMistakes,
-        crashKind,
-        logHints: buildLogHints(crashKind, true),
-      };
+      return finishCrash(
+        {
+          probableCause: cause,
+          fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind),
+          deobfuscated,
+          relatedMistakes,
+          crashKind,
+          logHints: buildLogHints(crashKind, true),
+        },
+        query.version,
+        crashReport,
+      );
     }
   }
 
@@ -500,25 +546,29 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
         ? unknownHint
         : "崩溃原因不明确，请将堆栈信息与 Forge/Fabric 文档对照分析";
 
-  return {
-    probableCause: fmlHint,
-    fixSuggestions: rewriteFixesForLoader(
-      [
-        `将崩溃堆栈的完整内容粘贴到 ${CRASH_REPORT_WIKI} 对照 Description / Stacktrace / System Details`,
-        "检查是否涉及自定义模组内容",
-        "尝试使用 parchment 映射以获得更清晰的可读堆栈",
-        ...(crashKind === "fml"
-          ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
-          : crashKind === "unknown"
-            ? ["确认粘贴的是完整 crash-*.txt（含 ---- Minecraft Crash Report ---- 标题），而不是 latest.log 片段"]
-            : []),
-      ],
-      crashReport,
+  return finishCrash(
+    {
+      probableCause: fmlHint,
+      fixSuggestions: rewriteFixesForLoader(
+        [
+          `将崩溃堆栈的完整内容粘贴到 ${CRASH_REPORT_WIKI} 对照 Description / Stacktrace / System Details`,
+          "检查是否涉及自定义模组内容",
+          "尝试使用 parchment 映射以获得更清晰的可读堆栈",
+          ...(crashKind === "fml"
+            ? ["核对立即失败的 mandatory 依赖与 loader 版本", "同时打开 logs/latest.log 同时间戳段落"]
+            : crashKind === "unknown"
+              ? ["确认粘贴的是完整 crash-*.txt（含 ---- Minecraft Crash Report ---- 标题），而不是 latest.log 片段"]
+              : []),
+        ],
+        crashReport,
+        crashKind,
+      ),
+      deobfuscated,
+      relatedMistakes: [],
       crashKind,
-    ),
-    deobfuscated,
-    relatedMistakes: [],
-    crashKind,
-    logHints: buildLogHints(crashKind, false),
-  };
+      logHints: buildLogHints(crashKind, false),
+    },
+    query.version,
+    crashReport,
+  );
 }

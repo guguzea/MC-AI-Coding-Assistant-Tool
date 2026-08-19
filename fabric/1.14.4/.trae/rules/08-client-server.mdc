@@ -23,7 +23,7 @@
 ```
 IF 判断当前环境是否为客户端
   → FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
-  → World.isRemote（1.14.4 中是 isRemote，不是 isClient）
+  → World.isClient（Yarn 字段；[yarn 1.14.4 World.mapping](https://github.com/FabricMC/yarn/blob/1.14.4/mappings/net/minecraft/world/World.mapping)）。不要用 MCP/Forge 的 `isRemote`
 
 IF 需要在客户端执行初始化
   → 在 ClientModInitializer.onInitializeClient() 中执行
@@ -80,7 +80,7 @@ if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 }
 
 // 在 World 实例上判断
-if (!world.isRemote) {
+if (!world.isClient) {
     // 服务端逻辑
 } else {
     // 客户端逻辑
@@ -164,7 +164,7 @@ public class ServerWorldMixin {
 - ❌ 忘记 `@Environment(EnvType.CLIENT)` 注解 — 客户端代码打包到服务端
 - ❌ 在 Mixin 中引用客户端类但未在 `fabric.mixins.json` 的 `client` 中声明 — 注入失败
 - ❌ 在共享代码中使用 `Minecraft.getInstance()` — 服务端无 `Minecraft` 类
-- ❌ 混淆 `world.isRemote` 和 `world.isClient` — 1.14.4 中使用 `isRemote`
+- ❌ 混淆 `world.isRemote` 和 `world.isClient` — Yarn 1.14.4 用 **`world.isClient`**，不要抄 MCP `isRemote`
 
 ## 扩展点
 

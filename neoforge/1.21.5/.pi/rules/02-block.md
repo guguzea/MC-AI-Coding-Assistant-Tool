@@ -1,17 +1,26 @@
 ﻿---
-description: 02 — 方块（neoforge 1.21.5）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 02 — 方块（NeoForge 1.21.5）
 ---
 
-# 02 — 方块
+# 02 — 方块（NeoForge 1.21.5）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.21.5/blocks/
 
-## Decision Flow
+世界里只有一份 `Block` 单例，坐标上是引用。用 `DeferredRegister.createBlocks(modid)`，`#register` 返回 `DeferredBlock`。助手：`registerBlock` / `registerSimpleBlock`（内部会 `setId`）。手写 `register` 时必须 `.setId(ResourceKey.create(Registries.BLOCK, registryName))`，否则抛异常。
 
+```java
+public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks("yourmodid");
+public static final DeferredBlock<Block> MY_BETTER_BLOCK = BLOCKS.register(
+    "my_better_block",
+    registryName -> new Block(BlockBehaviour.Properties.of()
+        .setId(ResourceKey.create(Registries.BLOCK, registryName))
+        .destroyTime(2.0f)
+        .explosionResistance(10.0f)
+        .sound(SoundType.GRAVEL)
+        .lightLevel(state -> 7)
+    ));
 ```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+
+官方强调的 Properties：`setId`、`destroyTime`、`explosionResistance`、`sound`、`lightLevel`、`friction`。随机刻用 `randomTicks()`。**禁止**在注册窗口外 `new Block()`。
+
+`BlockItem` 必须另注册。方块子类若只收 `Properties`，可用 `BlockBehaviour.simpleCodec`；额外参数走 `RecordCodecBuilder.mapCodec` + `propertiesCodec()`。方块实体见 https://docs.neoforged.net/docs/1.21.5/blockentities/：注册 `BlockEntityType`，不是注册 BE 实例。

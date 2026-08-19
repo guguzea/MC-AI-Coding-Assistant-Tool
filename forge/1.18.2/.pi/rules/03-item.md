@@ -54,14 +54,14 @@ new Item.Properties()
         .saturationMod(float modifier)    // 饱和度修正
         .meat()                           // 狗可食用
         .alwaysEat()                      // 总是可食用（即使饱食）
-        .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200), 1.0f)
+        .effect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200), 1.0f)
         .build()
     )
 ```
 
 ### 注册约束
 
-- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- BlockItem 关联方块时，registry name 必须与方块完全相同
 - 工具/盔甲使用 `Tier` 时，需要在构造中传入 `.defaultDurability(durability)`
 - 物品的创造模式标签可以通过 `.tab()` 在 Properties 中设置，或通过事件注册
 
@@ -81,8 +81,8 @@ IF 需要普通物品（无特殊功能）
   → 最简单的物品
 
 IF 需要工具（剑、镐、斧、铲）
-  → extends DiggerItem
-  → 需要定义 ItemTier
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（镐斧铲父类是 DiggerItem；剑不是）
+  → 需要定义 Tier
   → 需要在 constructor 传入：speed, damage, durability, tier, attackSpeed属性
 
 IF 需要盔甲
@@ -117,7 +117,7 @@ IF 自定义工具材料
   → 在物品类中引用：super(speed, damage, durability, tier)
 
 IF 复用现有材料
-  → Tier.STONE / Tier.IRON / Tier.DIAMOND / Tier.GOLD（静态字段）
+  → Tiers.WOOD / Tiers.STONE / Tiers.IRON / Tiers.GOLD / Tiers.DIAMOND / Tiers.NETHERITE
 ```
 
 ---
@@ -180,7 +180,7 @@ public enum MyTier implements Tier {
 // 例如：damage=3.0f → 总攻击伤害 = 3.0f + 3.0f = 6.0f
 // 注意：attackDamageModifier 参数类型是 int，不是 float
 public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
-    () -> new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT))
+    () -> new SwordItem(MyTier.MY_MATERIAL, 3, -2.4f, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT))
 );
 //                           ^^^ int 参数：基础攻击加成
 //                                    ^^^^ float 参数：攻击速度
@@ -202,8 +202,8 @@ public enum MyArmorMaterial implements ArmorMaterial {
 ```java
 // items/MyArmorItem.java
 public class MyArmorItem extends ArmorItem {
-    public MyArmorItem(MyArmorMaterial material, Type type, Properties properties) {
-        super(material, type, properties);
+    public MyArmorItem(ArmorMaterial material, EquipmentSlot slot, Properties properties) {
+        super(material, slot, properties);
     }
 }
 ```
@@ -220,7 +220,7 @@ public class MyFoodItem extends Item {
                 .nutrition(4)
                 .saturationMod(0.3f)
                 .meat()
-                .effect(() -> new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
+                .effect(new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
                 .build())
         );
     }

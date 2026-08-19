@@ -9,10 +9,12 @@ mappings: yarn
 
 # 方块实体（Fabric 1.21.11）
 
+Yarn 1.21.11：子类重写 `writeData(WriteView)` / `readData(ReadView)`（`net.minecraft.storage`）。不要写 Mojmap 的 `saveAdditional(ValueOutput)`，也不要抄 1.21.1 的 `writeNbt(NbtCompound, WrapperLookup)`。库存用 `Inventories.writeData` / `readData`。
+构造 `(BlockEntityType, BlockPos, BlockState)`；`createBlockEntity(BlockPos, BlockState)`；注册 `Registries.BLOCK_ENTITY_TYPE`。
+
 ## 快速开始
 
 ```java
-// 1. 创建 BlockEntity
 public class MyBlockEntity extends BlockEntity {
     private final DefaultedList<ItemStack> inventory =
         DefaultedList.ofSize(27, ItemStack.EMPTY);
@@ -22,27 +24,29 @@ public class MyBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        Inventories.writeData(view, inventory);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        Inventories.readNbt(nbt, inventory);
+    protected void readData(ReadView view) {
+        super.readData(view);
+        Inventories.readData(view, inventory);
     }
 }
 
-// 2. 方块实现 BlockEntityProvider
 public class MyBlock extends Block implements BlockEntityProvider {
+    public MyBlock(Settings settings) {
+        super(settings);
+    }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MyBlockEntity(pos, state);
     }
 }
 
-// 3. 注册 BlockEntityType
 private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
     Registry.register(
         Registries.BLOCK_ENTITY_TYPE,
@@ -54,8 +58,9 @@ private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
 
 ## 常见错误
 
-- ❌忘记实现 `writeNbt` / `readNbt` — 数据不持久化
+- ❌忘记持久化方法 — 数据不持久化
 - ❌BlockEntityType 引用未注册的 Block — 崩溃
+- ❌抄错版本的 NBT 签名（1.17 返回值 / 1.16 fromTag / 1.21 WrapperLookup / 1.21.11 WriteView）
 
 ## 扩展点
 
@@ -63,3 +68,4 @@ private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
 |-----------|---------|
 | `mc-registry` | BlockEntityType 通过 Registry.register() 注册 |
 | `mc-gui` | BlockEntity 用于 GUI 交互 |
+| `mc-block` | 方块实现 BlockEntityProvider |

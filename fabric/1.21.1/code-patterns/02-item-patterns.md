@@ -67,7 +67,7 @@ public enum MyToolMaterial implements ToolMaterial {
     }
 
     @Override public int getDurability() { return itemDurability; }
-    @Override public float getMiningSpeed() { return miningSpeed; }
+    @Override public float getMiningSpeedMultiplier() { return miningSpeed; }
     @Override public float getAttackDamage() { return attackDamage; }
     @Override public int getMiningLevel() { return miningLevel; }
     @Override public int getEnchantability() { return enchantability; }

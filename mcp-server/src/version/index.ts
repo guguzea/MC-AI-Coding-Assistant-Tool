@@ -170,7 +170,6 @@ const VERSION_DB: Record<string, VersionInfo> = {
     forgeVersion: "14.23.x",
     recommendation: "Legacy 版本，使用 @SubscribeEvent + RegistryEvent",
     keyChanges: [
-      "mcmod.info → mods.toml",
       "@ForgeSubscribe → @SubscribeEvent",
       "Legacy 注册方式",
     ],
@@ -230,7 +229,7 @@ export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> 
     keyChanges: [],
     gotchas: [
       `Minecraft ${version} 不在已知版本列表中`,
-      `建议查阅：https://docs.minecraftforge.net/en/1.20.x/`,
+      "请用 search_forge_docs + list_forge_versions，不要假设 1.20.x 文档 URL",
     ],
     links: {
       forgeChangelog: "",
@@ -263,10 +262,21 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
     };
   }
   if (lower.includes("属性") || lower.includes("attribute")) {
-    return {
-      ...info,
-      recommendation: `属性通过 ForgeRegistries.Keys.ATTRIBUTES 注册，使用 RangedAttribute 管理范围属性`,
-    };
+    const usesDeferred = /DeferredRegister/i.test(info.recommendation);
+    const is117plus = (() => {
+      const m = info.version.match(/^(\d+)\.(\d+)/);
+      if (!m) return false;
+      const maj = Number(m[1]);
+      const min = Number(m[2]);
+      return maj > 1 || (maj === 1 && min >= 17);
+    })();
+    if (usesDeferred || is117plus) {
+      return {
+        ...info,
+        recommendation: `属性通过 ForgeRegistries.Keys.ATTRIBUTES 注册，使用 RangedAttribute 管理范围属性`,
+      };
+    }
+    return info;
   }
 
   return info;

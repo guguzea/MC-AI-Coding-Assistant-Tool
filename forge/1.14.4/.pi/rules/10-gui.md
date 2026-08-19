@@ -25,15 +25,11 @@ description: 10 — GUI / Container / Screen
 ## DistExecutor
 
 ```java
-// Run on the CLIENT only
-DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> MyClass::clientInit);
-
-// Run on the DEDICATED_SERVER only
-DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> MyClass::serverInit);
-
-// Safe version with supplier (avoids classloading issues on wrong side)
-DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> MyClass.clientInit());
+DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> MyClass.dedicatedInit());
 ```
+
+本档 DistExecutor **只有** `runWhenOn` / `callWhenOn` / `runForDist`（loader-api），**没有** `unsafeRunWhenOn` / `safeRunWhenOn`。
 
 **Note:** `@OnlyIn` exists but **there is NO reason for using this annotation directly. Use `DistExecutor` or a check on `FMLEnvironment#dist` instead.**
 
@@ -54,15 +50,11 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 Player interacts
       │
       ▼
-Block#onBlockActivated (Server) ──► creates IItemHandler ──► openContainer (Server)
+Block#onBlockActivated (逻辑服务端) ──► NetworkHooks.openGui(ServerPlayerEntity, INamedContainerProvider, pos)
                                                            │
                                                            ▼
-                                                   Container + ContainerScreen pair
-                                                           │
-                                                   Container.openGui()
-                                                           │
-                                                           ▼
-                                                   Renders Screen
+                                                   Container + ContainerScreen
+                                                   （客户端 ScreenManager.registerFactory）
 ```
 
 ## Decision: Container type
@@ -83,20 +75,14 @@ IF inventory with multiple slots
 ```java
 // 1. Define the Container class
 public class MyContainer extends Container {
-    public MyContainer(int windowId, PlayerInventory inv, IItemHandler handler) {
-        super(MY_CONTAINER_TYPE.get(), windowId);
-        // slot layout...
-    }
-
-    // Shift-click transfer logic
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-        return ItemStack.EMPTY; // or implement slot transfer
+    public MyContainer(int windowId, PlayerInventory inv, PacketBuffer extraData) {
+        super(MY_CONTAINER.get(), windowId);
+        // extraData.readBlockPos() 后拿 TE / IItemHandler
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
-        return true;
+        return player.getDistanceSq(this.pos) <= 64.0D;
     }
 }
 
@@ -110,14 +96,16 @@ public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     );
 ```
 
-## Screen registration (CLIENT ONLY)
+## Screen 注册（仅物理客户端）
+
+`FMLClientSetupEvent` 在 **mod bus**。不要把 `GuiOpenEvent` 当 Screen 注册手段。
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(MY_CONTAINER_TYPE.get(), MyScreen::new);
+        ScreenManager.registerFactory(MY_CONTAINER.get(), MyScreen::new);
     }
 }
 ```
@@ -142,18 +130,6 @@ public boolean onBlockActivated(World world, BlockPos pos, BlockState state, Pla
         }
     }
     return true;
-}
-```
-
-## GUI Handler
-
-```java
-// In mod's GUI handler registry
-@SubscribeEvent
-public static void onGuiOpen(GuiOpenEvent event) {
-    if (event.getGui() != null) {
-        // Handle GUI opening
-    }
 }
 ```
 

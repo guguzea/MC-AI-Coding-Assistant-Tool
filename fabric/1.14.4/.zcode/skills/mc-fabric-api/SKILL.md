@@ -56,9 +56,10 @@ CompostingChanceRegistry.INSTANCE.add(MY_ITEM, 0.3f);
 
 Screen 注册与额外数据见 `10-gui.mdc` / `mc-gui`。不要在这里抄邻版 `ScreenRegistry` 或 `HandledScreens` 而不对版本。
 
-### fabric-networking-api-v1
+### fabric-networking-v0
 
-包注册与收发见 `06-networking.mdc` / `mc-networking`。不要把 1.21 的 `PayloadTypeRegistry` 抄到 1.20.4 及更早，也不要把 26.1 Mojmap 抄到 Yarn 档。
+本档默认 `ClientSidePacketRegistry` / `ServerSidePacketRegistry`（见 `06-networking.mdc` / `mc-networking`）。
+不要把 C2S/S2C 的 `register` 写反，不要把 1.16+ `ServerPlayNetworking` 或 1.21 `PayloadTypeRegistry` 当 1.14 默认教程。
 
 ### fabric-object-builder-api-v1
 
@@ -84,7 +85,7 @@ fabric-loot-tables / loot-api **v1**（改现有表用 `LootTableLoadingCallback
 |------|------|
 | fabric-api-base | 基础工具 |
 | fabric-command-api-v1 | 命令注册 |
-| fabric-networking-api-v1 | 网络通信 |
+| fabric-networking-v0 | 网络通信（v0 registry；不是 1.16+ v1） |
 | fabric-object-builder-api-v1 | 方块/物品/实体设置 helper |
 | fabric-datagen-api-v0 | 数据生成（1.17+；1.14/1.16 无） |
 | fabric-renderer-api-v1 | 渲染 API |
@@ -103,5 +104,5 @@ fabric-loot-tables / loot-api **v1**（改现有表用 `LootTableLoadingCallback
 | 配合 Skill | 协作说明 |
 |-----------|---------|
 | `mc-registry` | Fabric API 扩展注册能力 |
-| `mc-networking` | fabric-networking-api-v1 |
+| `mc-networking` | fabric-networking-v0 |
 | `mc-gui` | Screen / Menu |

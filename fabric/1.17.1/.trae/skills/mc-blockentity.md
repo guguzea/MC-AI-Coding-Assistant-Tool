@@ -9,10 +9,12 @@ mappings: yarn
 
 # 方块实体（Fabric 1.17.1）
 
+Yarn 1.17.1：`writeNbt` **返回** `NbtCompound`；`readNbt` 单参 void。构造 `(type, pos, state)`。
+构造 `(BlockEntityType, BlockPos, BlockState)`；`createBlockEntity(BlockPos, BlockState)`；注册 `Registry.BLOCK_ENTITY_TYPE`。
+
 ## 快速开始
 
 ```java
-// 1. 创建 BlockEntity
 public class MyBlockEntity extends BlockEntity {
     private final DefaultedList<ItemStack> inventory =
         DefaultedList.ofSize(27, ItemStack.EMPTY);
@@ -22,9 +24,10 @@ public class MyBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, inventory);
+        return nbt;
     }
 
     @Override
@@ -34,27 +37,31 @@ public class MyBlockEntity extends BlockEntity {
     }
 }
 
-// 2. 方块实现 BlockEntityProvider
 public class MyBlock extends Block implements BlockEntityProvider {
+    public MyBlock(Settings settings) {
+        super(settings);
+    }
+
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new MyBlockEntity(pos, state);
     }
 }
 
-// 3. 注册 BlockEntityType
-// ⚠️ 1.17.x 使用 Registry.BLOCK_ENTITY_TYPE
 private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
-    Registry.register(Registry.BLOCK_ENTITY_TYPE,
+    Registry.register(
+        Registry.BLOCK_ENTITY_TYPE,
         new Identifier(MOD_ID, "my_block_entity"),
         BlockEntityType.Builder.create(MyBlockEntity::new, MY_BLOCK)
-            .build(null));
+            .build(null)
+    );
 ```
 
 ## 常见错误
 
-- ❌忘记实现 `writeNbt` / `readNbt` — 数据不持久化
+- ❌忘记持久化方法 — 数据不持久化
 - ❌BlockEntityType 引用未注册的 Block — 崩溃
+- ❌抄错版本的 NBT 签名（1.17 返回值 / 1.16 fromTag / 1.21 WrapperLookup / 1.21.11 WriteView）
 
 ## 扩展点
 
@@ -62,3 +69,4 @@ private static final BlockEntityType<MyBlockEntity> MY_BLOCK_ENTITY =
 |-----------|---------|
 | `mc-registry` | BlockEntityType 通过 Registry.register() 注册 |
 | `mc-gui` | BlockEntity 用于 GUI 交互 |
+| `mc-block` | 方块实现 BlockEntityProvider |

@@ -1,21 +1,23 @@
 ﻿---
 name: mc-item
-description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、Tier、SwordItem、DiggerItem、ArmorItem
+description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、IItemTier、SwordItem、PickaxeItem、ArmorItem
 platform: forge
 version: "1.14.4"
 dependencies: []
-mappings: parchment
+mappings: mcp
 ---
 
-# 物品开发（Forge 1.19.4）
+# 物品开发（Forge 1.14.4）
+
+MCP。没有铜锭。镐斧铲父类是 `ToolItem`，不要抄后期 Mojmap `DiggerItem`。创造栏用 `ItemGroup` + `Item.Properties.group()`。
 
 ## 快速开始
 
 ```java
-// 注册（参见 mc-registry Skill）
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .stacksTo(64)
+        .maxStackSize(64)
+        .group(ItemGroup.MISC)
     )
 );
 ```
@@ -27,133 +29,99 @@ IF 只是手持物品（无特殊行为）
   → Item
 
 IF 剑/工具（影响挖掘速度、攻击伤害）
-  → SwordItem / DiggerItem
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（父类 ToolItem）
 
 IF 盔甲
-  → ArmorItem + ArmorMaterial
+  → ArmorItem + IArmorMaterial
 
 IF 可食用
-  → Item + .food(FoodProperties.Builder)
+  → Item + .food(Food.Builder)
 
 IF 可在创造模式标签中找到
-  → 注册到 CreativeModeTab（参见 mc-registry Skill）
+  → .group(ItemGroup)
 ```
 
-## 工具层级 Tier
+## 工具层级 IItemTier
+
+MCP 六方法：`getHarvestLevel` / `getMaxUses` / `getEfficiency` / `getAttackDamage` / `getEnchantability` / `getRepairMaterial`。修复用 `Ingredient.fromItems`。
 
 ```java
-public enum MyTier implements Tier {
-    COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.DIAMOND));
+public enum MyTier implements IItemTier {
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, () -> Ingredient.fromItems(Items.IRON_INGOT));
 
-    private final int level;
-    private final int uses;          // 耐久度
-    private final float speed;        // 挖掘速度
-    private final float damage;       // 攻击伤害加成（不含类型加成）
-    private final int enchantment;
+    private final int harvestLevel;
+    private final int maxUses;
+    private final float efficiency;
+    private final float attackDamage;
+    private final int enchantability;
     private final Supplier<Ingredient> repair;
 
-    MyTier(...) { ... }
+    MyTier(int harvestLevel, int maxUses, float efficiency, float attackDamage,
+           int enchantability, Supplier<Ingredient> repair) {
+        this.harvestLevel = harvestLevel;
+        this.maxUses = maxUses;
+        this.efficiency = efficiency;
+        this.attackDamage = attackDamage;
+        this.enchantability = enchantability;
+        this.repair = repair;
+    }
 
-    @Override public int getLevel() { return level; }
-    @Override public int getUses() { return uses; }
-    @Override public float getSpeed() { return speed; }
-    @Override public float getAttackDamageBonus() { return damage; }
-    @Override public int getEnchantmentValue() { return enchantment; }
-    @Override public Ingredient getRepairIngredient() { return repair.get(); }
+    @Override public int getHarvestLevel() { return harvestLevel; }
+    @Override public int getMaxUses() { return maxUses; }
+    @Override public float getEfficiency() { return efficiency; }
+    @Override public float getAttackDamage() { return attackDamage; }
+    @Override public int getEnchantability() { return enchantability; }
+    @Override public Ingredient getRepairMaterial() { return repair.get(); }
 }
 ```
 
 ## 剑（SwordItem）
 
 ```java
-// 正确：4 参数构造函数（来源：Parchment 1.19.4）
-// 参数：(Tier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)
-public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .durability(1561)
+// MCP：SwordItem(IItemTier, int attackDamage, float attackSpeed, Item.Properties)
+public static final RegistryObject<Item> IRON_LIKE_SWORD = ITEMS.register("iron_like_sword",
+    () -> new SwordItem(MyTier.IRON_LIKE, 3, -2.4f, new Item.Properties()
+        .group(ItemGroup.COMBAT)
+        .defaultMaxDamage(250)
     )
 );
 ```
 
-**攻击伤害计算：**
-- `attackDamageModifier` 是基础加成（内部转为 float）
-- **最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）**
-- 例如：传 `3` → 最终伤害 = 3 + 3.0 = **6.0**
-
-**攻击速度参考值：** 钻石剑默认 1.6f
-
-## 挖掘工具（DiggerItem）
+## 挖掘工具（PickaxeItem）
 
 ```java
-// 镐：public DiggerItem(float attackDamageBonus, float attackSpeed, Tier, TagKey<Block>, Properties)
-public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
-        new Item.Properties())
+public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
+    () -> new PickaxeItem(MyTier.IRON_LIKE, 1, -2.8f,
+        new Item.Properties().group(ItemGroup.TOOLS))
 );
 ```
 
 ## 盔甲
 
-```java
-public enum MyArmorMaterial implements ArmorMaterial {
-    COPPER("copper", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_IRON, 0.0f, 0.0f, () -> Ingredient.of(Items.COPPER_INGOT));
-
-    // 格式：new int[]{ boots, leggings, chestplate, helmet }
-    // 护甲值按 Minecraft 护甲公式计算
-}
-
-// 注册各部位
-public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.HELMET,
-        new Item.Properties())
-);
-```
+MCP 用 `IArmorMaterial` + `ArmorItem(..., EquipmentSlotType, Properties)`。不要抄 1.19+ 的 `ArmorItem.Type`。构造参数以 `03-item.mdc` 和 MCP `IArmorMaterial` 为准（1.14 还没有击退抗性那一档）。
 
 ## 食物
 
-```java
-public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
-    () -> new Item(new Item.Properties()
-        .food(new FoodProperties.Builder()
-            .nutrition(4)
-            .saturationMod(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 100, 1), 1.0f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
-            .alwaysEat()       // 不消耗饱食度
-            .fast()            // 快速食用
-            .meat()            // 肉类（可喂食狼）
-            .build())
-        )
-    )
-);
-```
+见 `03-item.mdc` 的 `Food.Builder`。饱食也能吃用 `setAlwaysEdible()`（不是 `alwaysEat()`）。效果用 `effect(EffectInstance, float)`，没有 Supplier 重载。
 
-## hurtAndBreak（工具耐久损耗）
+## 耐久
 
-在 `hurtEnemy()` 或 `inventoryTick()` 中正确处理耐久：
+1.14.4 用 `ItemStack.damageItem`，不要抄后期 `hurtAndBreak`。
 
 ```java
 @Override
-public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-    // ✅ 正确：使用 lambda 接受装备槽位回调
-    stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    stack.damageItem(1, attacker, entity -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
     return true;
 }
 ```
 
 ## 常见错误
 
-- ❌ `SwordItem(Tier, Item.Properties)` — Forge 1.19.4 **只有 4 参数版本**，不存在 2 参数版本
-- ❌ `SwordItem(Tier, float attackDamage, float attackSpeed, Properties)` — `attackDamage` 类型应为 `int`，不是 `float`
-- ❌ `Tier.getAttackDamageBonus()` 返回值含工具类型加成（剑已内置 +3.0f）
-- ❌ 忘记 `durability` 在 Item.Properties 中设置（默认 Integer.MAX_VALUE）
-- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ Forge 用 `MobEffects.JUMP`
-- ❌ `LivingEntity.getSlotForHand()` 不存在 → 使用 lambda 形式
-
-## 参考资料
-
-- 详细示例：参见 `03-item.mdc`
+- ❌ 抄 1.19+ `Item.Properties.stacksTo` / `CreativeModeTab` / `DiggerItem` / `ArmorItem.Type`
+- ❌ `Items.COPPER_INGOT`（1.14.4 没有铜）
+- ❌ `Ingredient.of`（本档 MCP 用 `fromItems`）
+- ❌ Yarn `ToolMaterial` / `getStackInHand`
 
 ## 扩展点
 
@@ -161,4 +129,4 @@ public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity atta
 |-------------|-----------|
 | `mc-registry` | 物品通过 DeferredRegister 注册，BlockItem 需要方块引用 |
 | `mc-datagen` | 物品注册后可生成物品模型 JSON |
-| `mc-capability` | 物品可附加 Capability（initCapabilities） |
+| `mc-capability` | 物品可附加 Capability |

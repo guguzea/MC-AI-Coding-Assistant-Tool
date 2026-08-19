@@ -1,17 +1,13 @@
 ﻿---
-description: 07 — 数据生成（neoforge 1.21.10）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 07 — DataGen（NeoForge 1.21.10）
 ---
 
-# 07 — 数据生成
+# 07 — DataGen（NeoForge 1.21.10）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.21.10/resources/
 
-## Decision Flow
+`GatherDataEvent.Client` / `GatherDataEvent.Server` 已拆。先 `createDatapackRegistryObjects`，再 `createProvider`。`RecipeProvider.Runner` 用法与 1.21.5 页相同。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+相对 1.21.5 资源表多了：客户端 `EquipmentAssetProvider`、`waypoint_style`；服务端 `RecipePrioritiesProvider`、`datapacks`、`dialog` 等文件夹。模型仍走 `ModelProvider`。
+
+不要用未拆分的 `GatherDataEvent` + `includeServer()` 当本档主路径。不要用 1.12 `LanguageRegistry`。

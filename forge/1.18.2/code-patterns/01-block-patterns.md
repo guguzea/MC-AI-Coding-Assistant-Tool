@@ -14,13 +14,13 @@ public static final DeferredRegister<Block> BLOCKS =
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
     () -> new Block(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.STONE)
+        .color(MaterialColor.STONE)
         .strength(1.5f, 6.0f)
         .requiresCorrectToolForDrops()
     )
 );
 
-// ItemBlock
+// BlockItem
 public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
     () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
         .tab(CreativeModeTab.TAB_BUILDING_BLOCKS)
@@ -129,7 +129,7 @@ public class MachineBlockEntity extends BlockEntity {
 ```java
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
     () -> new Block(BlockBehaviour.Properties.of()
-        .mapColor(MapColor.STONE)
+        .color(MaterialColor.STONE)
         .strength(3.0f, 3.0f)
         .requiresCorrectToolForDrops()
     )

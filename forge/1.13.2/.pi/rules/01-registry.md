@@ -160,16 +160,16 @@ public class ExampleMod {
 
     // 创建静态字段持有注册对象
     public static final Block MY_BLOCK = new Block(
-        Block.Properties.create(Material.STONE)
+        Block.Properties.create(Material.ROCK)
             .hardnessAndResistance(1.5f, 6.0f)
     );
 
     // BlockItem 与方块同名
     public static final Item MY_BLOCK_ITEM = new ItemBlock(MY_BLOCK,
-        new Item.Properties().group(ItemGroup.TAB_BUILDING_BLOCKS));
+        new Item.Properties().group(ItemGroup.BUILDING_BLOCKS));
 
     public static final Item MY_ITEM = new Item(
-        new Item.Properties().group(ItemGroup.TAB_MISC).maxStackSize(64)
+        new Item.Properties().group(ItemGroup.MISC).maxStackSize(64)
     );
 
     public ExampleMod() {

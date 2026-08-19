@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join, resolve } from "path";
 import { analyzeCrash } from "../crash/index.js";
 import { analyzeLog } from "../diagnostics/index.js";
-import { actionable, ActionCodes } from "../utils/actionable.js";
+import { actionable, ActionCodes, missingMcVersion, versionRequiredAction } from "../utils/actionable.js";
 
 export interface InspectRuntimeQuery {
   logsDir?: string;
@@ -228,12 +228,7 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     try {
       const tail = readTail(crashFile, maxBytes, maxLines);
       if (tail.truncated) warnings.push(`crash-report 已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      crashAnalysis = query.version?.trim()
-        ? analyzeCrash({ crashReport: tail.text, version: query.version })
-        : undefined;
-      if (!query.version?.trim()) {
-        warnings.push("未指定 version，未调用 crash_analyze（禁止默认 1.20.1）");
-      }
+      crashAnalysis = analyzeCrash({ crashReport: tail.text, version: query.version });
     } catch (e) {
       warnings.push(`读取 crash-report 失败：${(e as Error).message}`);
     }
@@ -262,6 +257,7 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     "构建问题用 diagnose_gradle；结构问题用 validate_project（看 status）",
   ];
 
+  const noVer = missingMcVersion(query.version);
   return {
     ok: true,
     logsDir: logsDir ?? null,
@@ -274,5 +270,7 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     warnings,
     nextSteps,
     limits: { maxLines, maxBytes },
+    analysisComplete: !noVer,
+    ...(noVer ? { action: versionRequiredAction() } : {}),
   };
 }

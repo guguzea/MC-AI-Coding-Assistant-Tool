@@ -228,9 +228,9 @@ const _defaultData: VersionData = {
   preloadPromise: null,
 };
 
-/** 获取指定版本的数据，缺失时返回默认版本（兜底） */
+/** 获取指定版本的数据；缺失时返回空壳，禁止回退 1.20.1 */
 function getVersionData(version: string): VersionData {
-  return _versionData.get(version) ?? _versionData.get(DEFAULT_VERSION) ?? _defaultData;
+  return _versionData.get(version) ?? _defaultData;
 }
 
 /** 解析某版本对应的 extracted 数据目录。
@@ -705,26 +705,30 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   const withCoverage = (r: ApiResult): ApiResult =>
     coverageWarning ? { ...r, warning: r.warning ?? coverageWarning } : r;
 
-  // 数据不可用时的降级响应
-  if (!vData.loaded) {
+  // 数据不可用：无索引目录或 Worker 未就绪（同一 DATA_UNAVAILABLE 信封）
+  if (vData.missingData || !vData.loaded) {
+    const nextSteps = vData.missingData
+      ? [
+          "该版本无 extracted API 索引目录",
+          "改用 search_*_docs 或 get_minecraft_source",
+          "确认 MC_SKILL_DATA 指向仓库 data/",
+        ]
+      : [
+          "调用 get_server_status 查看 preload 状态（Worker 未就绪）",
+          "确认 MC_SKILL_DATA 指向仓库 data/ 目录",
+          "必要时重启 MCP Server",
+        ];
     return withCoverage(withAction(
       {
         found: false,
         className,
         mappings: { mojang: toSlash(className), parchment: toSlash(className) },
-        suggestions: [
-          `MCP Server 数据加载失败（${version}），请重启 MCP Server 或检查数据目录`,
-          `确认 data/forge_${version}/extracted/ 含 api-index.json 与 class-names.json`,
-        ],
+        suggestions: nextSteps,
       },
       actionable(
         ActionCodes.DATA_UNAVAILABLE,
         `API 索引未就绪（version=${version}）`,
-        [
-          "调用 get_server_status 查看 preload 状态",
-          "确认 MC_SKILL_DATA 指向仓库 data/ 目录",
-          "必要时重启 MCP Server",
-        ],
+        nextSteps,
         ["get_server_status", "diagnose_data_paths"],
       ),
     ));

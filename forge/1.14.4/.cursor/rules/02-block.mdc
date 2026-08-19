@@ -10,34 +10,44 @@
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
 - 推荐使用 `Block.Properties.create(Material)` 创建属性
-- 禁止重写 `use`、`onDestroyedByPlayer` 等与物理交互相关的旧版方法（Forge 1.14+ 已在大部分方法上标注 `@Deprecated`）
+- 右键交互重写 `onBlockActivated`（返回 `ActionResultType`）。1.14.4 **没有**后期 Mojmap `use`
 
 ### Block.Properties 常用配置
+
+来源：ForgeJavaDocs-NG `1.14.4-28.2.23` 的 `Block.Properties`。
 
 ```java
 Block.Properties.create(Material material)
     .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
-    .hardnessAndResistance(float hardness)                    // 硬度相同，抗爆性 = 硬度 * 5
-    .harvestLevel(int level)                                 // 挖掘等级（0=木,1=石,2=铁,3=钻）
+    .hardnessAndResistance(float hardness)                    // 抗爆性 = 硬度 * 5
+    .harvestLevel(int level)                                 // 挖掘等级
     .harvestTool(ToolType tool)                              // 所需工具类型
-    .requiresCorrectToolForDrops()                            // 需要正确工具才能掉落
     .doesNotBlockMovement()                                   // 不阻挡实体移动
-    .sound(SoundType type)                                   // 放置/破坏音效
-    .lightValue(int value)                                    // 发光等级 0-15
+    .slipperiness(float slipperiness)
+    .sound(SoundType type)
+    .lightValue(int value)                                    // 发光 0-15
+    .tickRandomly()
+    .variableOpacity()
+    .noDrops()
+    .lootFrom(Block block)
 ```
+
+另有 `create(Material, DyeColor)` / `create(Material, MaterialColor)` / `from(Block)`。
+
+> 1.14.4 **没有** `requiresCorrectToolForDrops()`、**没有** `notSolid()`、**没有** `BlockBehaviour.Properties.of()`。
 
 ### 注册约束
 
 - **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
 - 必须通过 `DeferredRegister<Block>` 注册（参见 `01-registry.mdc`）
 - 注册名称必须全小写
-- ItemBlock 需要单独注册（与方块使用相同 registry name）
+- `BlockItem` 需要单独注册（与方块使用相同 registry name）
 
 ### 方块实体（TileEntity）约束
 
 - 有状态或需要持久化的方块必须使用 TileEntity（而非仅靠 Block）
-- TileEntity 必须在方块类中重写 `createTileEntity()` 方法
-- TileEntity 的 `write`/`read` 方法处理 NBT 序列化（使用 `NBTTagCompound`，不是 `CompoundNBT`）
+- 方块侧重写 `hasTileEntity(BlockState)` + `createTileEntity(BlockState, IBlockReader)`（`IForgeBlock`）
+- TileEntity 的 `write(CompoundNBT)` **返回** `CompoundNBT`；读入 `read(CompoundNBT)`。不要用 1.12 的 `NBTTagCompound`
 - **禁止**在 `read` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -55,18 +65,19 @@ Block.Properties.create(Material material)
 ```
 IF 需要可放置物品、不可交互的基础方块
   → 基础方块（extends Block）
-  → 注册后注册 ItemBlock
+  → 注册后注册同名 BlockItem
   → 创建 blockstates JSON 和 models JSON
 
 IF 需要存储数据（箱子、熔炉等）
   → 方块实体方块（Block + TileEntity）
-  → 需要在方块类重写 createTileEntity()
-  → 需要注册 TileEntityType
-  → 需要在 mods.toml 中添加 tileEntity 字段
+  → 方块类重写 hasTileEntity / createTileEntity
+  → 注册 TileEntityType
+  → 不要在 mods.toml 里写伪造的 tileEntity 字段
 
 IF 需要可交互（右键打开 GUI、触发事件）
-  → 基础方块 + onBlockActivated 事件
-  → 或使用 IHasMenu + ITickableTileEntity 实现 GUI
+  → 基础方块 + onBlockActivated
+  → GUI 容器走 INamedContainerProvider + Container，不要伪造 IHasMenu
+  → 每 tick 逻辑让 TileEntity 实现 ITickableTileEntity（不是 ITickable）
 
 IF 需要流体
   → 使用 Forge 专用流体系统
@@ -74,8 +85,8 @@ IF 需要流体
   → 参考 05-events.mdc 中的流体相关事件
 
 IF 需要特殊渲染（多面材质、透明度、动画）
-  → 使用 ISimpleBlockRenderingHandler 的流体方块
-  → 或自定义 BlockState + BakedQuad
+  → 自定义 BlockState + IBakedModel / TESR
+  → 不要抄 1.7/1.12 的 ISimpleBlockRenderingHandler
   → 参考 08-client-server.mdc 中的渲染规则
 ```
 
@@ -84,14 +95,14 @@ IF 需要特殊渲染（多面材质、透明度、动画）
 ```
 IF 自然方块（石头、木头、草）
   → Material.ROCK / Material.WOOD / Material.GRASS
-  → 需要 .harvestLevel() + .requiresCorrectToolForDrops() 时用 ROCK/WOOD
+  → 需要指定挖掘工具时用 .harvestTool() + .harvestLevel()
 
 IF 泥土类
   → Material.EARTH / Material.SAND / Material.SNOW
 
 IF 玻璃/冰/透明
   → Material.GLASS / Material.ICE
-  → 需要 .doesNotBlockMovement() 和 .notSolid()
+  → 不碰撞时用 .doesNotBlockMovement()（本档 Properties 没有 notSolid）
 
 IF 植物
   → Material.PLANTS / Material.REPLACEABLE_PLANT
@@ -106,11 +117,11 @@ IF 液体
 ```
 IF 需要存储玩家数据（容器内容、熔炉燃料/物品）
   → 必须使用 TileEntity
-  → 在方块类重写 createTileEntity()
+  → 在方块类重写 hasTileEntity / createTileEntity
   → 注册时先注册方块再注册 TileEntityType
 
 IF 需要每 tick 逻辑（自动机、计时器）
-  → 必须使用 TileEntity + ITickable
+  → TileEntity + ITickableTileEntity
   → 在 ModBlocks 中注册 TileEntityType 时关联 Block
 
 IF 只需要静态方块（装饰、完整方块）
@@ -120,7 +131,7 @@ IF 只需要静态方块（装饰、完整方块）
 
 ---
 
-## 示例：基础方块（带 ItemBlock）
+## 示例：基础方块（带 BlockItem）
 
 ```java
 // blocks/MyBlock.java
@@ -177,7 +188,7 @@ public class MyBlockEntityBlock extends Block {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, BlockState state) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new MyTileEntity();
     }
 }
@@ -186,20 +197,21 @@ public class MyBlockEntityBlock extends Block {
 ```java
 // tiles/MyTileEntity.java
 public class MyTileEntity extends TileEntity {
-    private NBTTagCompound data = new NBTTagCompound();
+    private CompoundNBT data = new CompoundNBT();
 
     public MyTileEntity() {
         super(ModTileEntities.MY_TILE_ENTITY.get());
     }
 
     @Override
-    public void write(NBTTagCompound compound) {
-        super.write(compound);
+    public CompoundNBT write(CompoundNBT compound) {
+        compound = super.write(compound);
         compound.put("data", data.copy());
+        return compound;
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         if (compound.contains("data", Constants.NBT.TAG_COMPOUND)) {
             this.data = compound.getCompound("data");

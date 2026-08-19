@@ -10,8 +10,7 @@
 ```java
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_MISC)
-        .stacksTo(64)
+                .stacksTo(64)
     )
 );
 ```
@@ -48,9 +47,8 @@ public enum MyTier implements Tier {
 // 最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）
 // 例如：attackDamageModifier=3 → 总伤害 = 3 + 3.0 = 6.0
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
-        .tab(CreativeModeTab.TAB_COMBAT)
-        .durability(1561)
+    () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
+                .durability(1561)
     )
 );
 ```
@@ -58,11 +56,11 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 ## 镐
 
 ```java
-// PickaxeItem(float attackDamageBonus, float attackSpeed, Tier, TagKey<Block>, Properties)
-// attackDamageBonus：类型加成外额外增加的攻击伤害（镐通常为 1.0f）
+// PickaxeItem(Tier, int attackDamageModifier, float attackSpeedModifier, Properties)
+// 镐的 attackDamageModifier 通常为 1（int）
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
-        new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
+        new Item.Properties())
 );
 ```
 
@@ -95,11 +93,10 @@ public static RegistryObject<Item> COPPER_BOOTS      = ITEMS.register("copper_bo
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .tab(CreativeModeTab.TAB_FOOD)
-        .food(new FoodProperties.Builder()
+                .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
+            .effect(new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
             .alwaysEat()
             .build())
     )
@@ -112,8 +109,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
 public class MyUseItem extends Item {
     public MyUseItem() {
         super(new Item.Properties()
-            .tab(CreativeModeTab.TAB_BREWING)
-            .stacksTo(16)
+                        .stacksTo(16)
         );
     }
 
@@ -151,7 +147,7 @@ public class MySwordItem extends SwordItem {
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         // ✅ 正确：lambda 回调传入装备槽位
-        stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+        stack.hurtAndBreak(1, attacker, e -> e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
     }
 

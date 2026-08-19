@@ -124,11 +124,16 @@ export function detectModProject(args: DetectModProjectArgs = {}) {
         platform === "unknown"
           ? "未能判定加载器，无法激活平台包。"
           : `没有 ${platform} ${minecraftVersion ?? "?"} 的规则树（禁止读邻档 00–10）。${candidates.length ? ask : ""}`,
-        [
-          `改用 ${docsToolForPlatform(platform === "unknown" ? "forge" : platform)}`,
-          candidates.length ? ask : "或 activate_platform_pack action=list 查看已建档版本",
-        ],
-        [docsToolForPlatform(platform === "unknown" ? "forge" : platform)],
+        platform === "unknown"
+          ? [
+              "向用户询问 platform，禁止默认 Forge",
+              "或 activate_platform_pack action=list 查看已建档版本",
+            ]
+          : [
+              `改用 ${docsToolForPlatform(platform)}`,
+              candidates.length ? ask : "或 activate_platform_pack action=list 查看已建档版本",
+            ],
+        platform === "unknown" ? ["activate_platform_pack"] : [docsToolForPlatform(platform)],
       ),
     };
   }

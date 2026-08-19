@@ -1,17 +1,11 @@
----
-description: 05 — 事件（neoforge 1.21.10）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 05 — 事件（NeoForge 1.21.10）
 
-# 05 — 事件
+来源：https://docs.neoforged.net/docs/1.21.10/concepts/events/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+与 1.21.5 同类：游戏总线 `NeoForge.EVENT_BUS`；示例 **`LivingEvent.LivingJumpEvent`**。`@EventBusSubscriber` 会同时订游戏总线和 mod 总线。
 
-## Decision Flow
+客户端物理端检查官方写的是 **`FMLEnvironment#getDist()`**（不是本档更早的 `FMLEnvironment.dist` 字段）。`@EventBusSubscriber(value = Dist.CLIENT, modid = "...")` 仍可用。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+生命周期、`ICancellableEvent`、不要听 abstract 事件、`RenderNameTagEvent.CanRender` 与 1.21.5 页一致。
+
+禁止：`MinecraftForge.EVENT_BUS`；Payload 塞进 `FMLCommonSetupEvent`。

@@ -1,17 +1,13 @@
----
-description: 03 — 物品（neoforge 1.21.10）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 03 — 物品（NeoForge 1.21.10）
 
-# 03 — 物品
+来源：https://docs.neoforged.net/docs/1.21.10/items/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**（`registerItem` 内部会写入）。第三参仍是 `new Item.Properties()`，不是 26.1 的 unary operator。
 
-## Decision Flow
+官方列出的常用 Properties：`setId`、`overrideDescription`、`useBlockDescriptionPrefix`（BlockItem 应调用）、`stacksTo`、`durability`、`fireResistant`、`rarity`、`setNoCombineRepair`（不是 `setNoRepair`）、`jukeboxPlayable`、`food`。余量与冷却：`craftRemainder`、`usingConvertsTo`、`useCooldown`。工具/盔甲向：`enchantable`、`repairable`、`equippable` / `equippableUnswappable`。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+创造栏：加入原版页用 `BuildCreativeModeTabContentsEvent`（模组总线、逻辑客户端），`event.getTabKey() == CreativeModeTabs.INGREDIENTS` 后 `event.accept(...)`。自建页注册 `CreativeModeTab.builder()` 的 `displayItems`。
+
+1.21+ 物品数据优先 Data Components，不要把 1.12 NBT 当主存储。
+
+禁止：`RegistryObject<Item>` 当 NeoForge 1.21.10 持有类型；禁止 Fabric `Registry.register` 冒充。

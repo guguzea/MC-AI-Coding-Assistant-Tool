@@ -21,7 +21,7 @@ public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_b
     )
 );
 
-// ItemBlock
+// BlockItem
 public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
     () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
         

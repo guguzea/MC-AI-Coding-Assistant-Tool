@@ -15,7 +15,7 @@ Player interacts
 Block#onBlockActivated (Server) ──► player.openGui ──► IGuiHandler ──► getServerGuiElement
                                                                         │
                                                                         ▼
-                                                              ContainerMenu + GuiScreen pair
+                                                              Container + GuiContainer pair
 ```
 
 ### Proxy 模式
@@ -82,7 +82,7 @@ public class ContainerExample extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return !this.world.getBlockState(this.pos).isSideSolid(this.world, this.pos, EnumFacing.DOWN);
+        return player.getDistanceSq(this.pos) <= 64.0D;
     }
 
     @Override

@@ -105,7 +105,7 @@ public class ExampleMod implements ModInitializer {
 
     private static final Block MY_BLOCK =
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
-            new Block(FabricBlockSettings.create().strength(1.5f)));
+            new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f)));
 
     // BlockItem 与方块同名注册
     private static final Item MY_BLOCK_ITEM =

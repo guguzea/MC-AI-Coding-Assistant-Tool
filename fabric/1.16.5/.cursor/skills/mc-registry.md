@@ -42,12 +42,12 @@ IF 注册 客户端专用组件（渲染器/快捷键）
   → 在 ClientModInitializer 中处理
 
 IF 平台 = Forge
-  → 跳转 forge/1.20.1/.cursor/rules/01-registry.mdc
+  → 跳转 forge/1.16.5/.cursor/rules/01-registry.mdc
 ```
 
 ## Registry 类型
 
-| 注册内容 | Registries 枚举 | 必需参数 |
+| 注册内容 | Registry 静态字段 | 必需参数 |
 |---------|----------------|---------|
 | 方块 | `Registry.BLOCK` | `Identifier`, `Block` |
 | 物品 | `Registry.ITEM` | `Identifier`, `Item` |
@@ -77,7 +77,7 @@ ItemStack stack = new ItemStack(MY_ITEM);
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 private static final Block MY_BLOCK =
     Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
-        new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+        new Block(FabricBlockSettings.copy(Blocks.STONE)));
 
 private static final Item MY_BLOCK_ITEM =
     Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名！

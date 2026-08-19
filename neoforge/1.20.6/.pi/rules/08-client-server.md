@@ -1,17 +1,13 @@
 ﻿---
-description: 08 — 物理端（neoforge 1.20.6）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 08 — 物理端（NeoForge 1.20.6）
 ---
 
-# 08 — 物理端
+# 08 — 物理端（NeoForge 1.20.6）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.20.6/concepts/sides/
 
-## Decision Flow
-
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+- 物理客户端 / 物理服务端 / 逻辑客户端 / 逻辑服务端 分开。物理端枚举 `Dist`，逻辑端枚举 `LogicalSide`。
+- 逻辑端：有 `Level` 时用 `level.isClientSide()`。
+- 物理端：`FMLEnvironment.dist`（`Dist.CLIENT` / `Dist.DEDICATED_SERVER`）。文档推荐另写 `@Mod(value = MODID, dist = Dist.CLIENT)` 的客户端入口类，不要在服务端加载 `net.minecraft.client`。
+- 跨端传数据必须发包。禁止在服务端线程碰 `Minecraft.getInstance()`。
+- 网络：本档 payload **默认网络线程**（见 06）。主线程逻辑用 `IPayloadContext#enqueueWork`。不要抄 1.21.5「默认主线程」。

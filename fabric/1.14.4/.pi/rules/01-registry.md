@@ -17,7 +17,7 @@ description: 01 — 注册系统
 - **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
-- 使用 `Identifier` 构造 `ResourceLocation`：`new Identifier(MOD_ID, "registry_name")`
+- 使用 Yarn `Identifier`：`new Identifier(MOD_ID, "registry_name")`（不要写 MCP `ResourceLocation`）
 
 ### 注册时机
 
@@ -25,12 +25,13 @@ description: 01 — 注册系统
 |---------|-----|---------|
 | 方块 | `Registry.register(Registry.BLOCK, id, block)` | `onInitialize()` |
 | 物品 | `Registry.register(Registry.ITEM, id, item)` | `onInitialize()` |
-| 方块实体 | `Registry.register(Registry.BLOCK_ENTITY_TYPE, id, type)` | `onInitialize()` |
+| 方块实体 | `Registry.register(Registry.BLOCK_ENTITY, id, type)` | `onInitialize()` |
 | 实体类型 | `Registry.register(Registry.ENTITY_TYPE, id, type)` | `onInitialize()` |
 | 粒子类型 | `Registry.register(Registry.PARTICLE_TYPE, id, type)` | `onInitialize()` |
 | 声音事件 | `Registry.register(Registry.SOUND_EVENT, id, soundEvent)` | `onInitialize()` |
 | 附魔 | `Registry.register(Registry.ENCHANTMENT, id, enchantment)` | `onInitialize()` |
 | 流体 | `Registry.register(Registry.FLUID, id, fluid)` | `onInitialize()` |
+| 容器类型 | `Registry.register(Registry.CONTAINER, id, type)` | `onInitialize()`（Yarn `ContainerType`，不是 `ScreenHandlerType`） |
 
 ### mod ID 规范
 
@@ -66,8 +67,8 @@ IF 注册 方块 / 物品 / 实体 / 方块实体 / 附魔 / 粒子 / 声音等�
   → 使用 Registry.register() 在 onInitialize() 中执行
 
 IF 注册 方块实体类型
-  → Registry.register(Registry.BLOCK_ENTITY_TYPE, id, BlockEntityType)
-  → 方块的 blockEntityType 属性指向该 BlockEntityType
+  → Registry.register(Registry.BLOCK_ENTITY, id, BlockEntityType)
+  → Yarn 字段名是 BLOCK_ENTITY，不是后期的 BLOCK_ENTITY_TYPE
 
 IF 注册 Mixin
   → 在 fabric.mixins.json 中声明，不需要在 onInitialize() 中注册
@@ -79,16 +80,16 @@ IF 平台 = Forge
 ### Decision: 注册顺序（依赖关系）
 
 ```
-IF 一个方块有对应的 ItemBlock
-  → 必须先注册 Block，再注册 ItemBlock
-  → ItemBlock 的 registry name 必须与 Block 完全相同
+IF 一个方块有对应的 BlockItem
+  → 必须先注册 Block，再注册 BlockItem
+  → BlockItem 的 registry name 必须与 Block 完全相同
 
 IF 一个方块有 BlockEntity
   → 必须先注册 Block，再注册 BlockEntityType
   → 方块的 BlockEntityProvider 接口提供 BlockEntity 实例
 
-IF 一个物品有 Fabric API Capability
-  → Capability 注册应在 onInitialize() 中通过 Fabric API 处理
+IF 需要物品附加数据
+  → 1.14 原版没有 Forge Capability / 后期 Cardinal Components；用 NBT 或第三方库，不要编造 Fabric Capability 注册 API
 ```
 
 ---
@@ -103,21 +104,21 @@ public class ExampleMod implements ModInitializer {
 
     // 静态初始化注册表
     private static final Item MY_ITEM =
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Properties()));
+        Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     private static final Block MY_BLOCK =
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
-            new Block(Block.Properties.create(Material.STONE).hardnessAndResistance(1.5f)));
+            new Block(Block.Settings.of(Material.STONE).strength(1.5f, 6.0f)));
 
     // BlockItem 与方块同名注册
     private static final Item MY_BLOCK_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-            new BlockItem(MY_BLOCK, new Item.Properties()));
+            new BlockItem(MY_BLOCK, new Item.Settings()));
 
     @Override
     public void onInitialize() {
         // 所有注册在类加载时即完成
-        System.out.println("ExampleMod initialized — " + MY_ITEM.getRegistryId());
+        System.out.println("ExampleMod initialized — " + Registry.ITEM.getId(MY_ITEM));
     }
 }
 ```
@@ -133,11 +134,11 @@ public class ModItems {
 
     public static final Item MY_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"),
-            new Item(new Item.Properties()));
+            new Item(new Item.Settings()));
 
     public static final Item MY_BLOCK_ITEM =
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),
-            new BlockItem(ModBlocks.MY_BLOCK, new Item.Properties()));
+            new BlockItem(ModBlocks.MY_BLOCK, new Item.Settings()));
 
     public static void initialize() {
         // 可在此添加初始化逻辑（如注册到 Tag）
@@ -167,5 +168,5 @@ public class ExampleMod implements ModInitializer {
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 
 // ❌ 错误（1.14.4 中 Registries 类不存在）
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ```

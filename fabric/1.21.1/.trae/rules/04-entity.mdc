@@ -50,6 +50,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.world.Heightmap;
 
 public class MyPigEntity extends PigEntity {
@@ -77,7 +78,7 @@ public void onInitialize() {
     );
     SpawnRestriction.register(
         MY_PIG,
-        SpawnRestriction.Location.ON_GROUND,
+        SpawnLocationTypes.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
         MyPigEntity::canSpawn
     );
@@ -85,6 +86,8 @@ public void onInitialize() {
 ```
 
 不要 `EntityAttributeRegistry`、`EntityAttributeSupplementRegistry`、`DefaultAttributeRegistry.register`（模组侧）、`SpawnRestrictionRegistration`。
+Yarn 1.21.1 第二参是 `SpawnLocation`：用 `SpawnLocationTypes.ON_GROUND`（[yarn SpawnLocationTypes.mapping](https://github.com/FabricMC/yarn/blob/1.21.1/mappings/net/minecraft/entity/SpawnLocationTypes.mapping)），不要抄 1.20 的 `SpawnRestriction.Location`。
+属性字段仍是 `GENERIC_MAX_HEALTH` / `GENERIC_MOVEMENT_SPEED`（[yarn 1.21.1+build.3 javadoc](https://maven.fabricmc.net/docs/yarn-1.21.1%2Bbuild.3/net/minecraft/entity/attribute/EntityAttributes.html)）。不要把 1.21.3+ 去掉 GENERIC_ 前缀的名字抄进本档。
 Yarn `EntityType.Builder.build` 需要 **String id**（官方 Yarn javadoc）；无参 `build()` 是 `FabricEntityTypeBuilder`。`dimensions` 是 `(float, float)`，不是 `EntityDimensions.changing`。
 
 ## 实体渲染器（客户端）
@@ -114,6 +117,7 @@ public class ExampleModClient implements ClientModInitializer {
 - 忘记 `client` entrypoint — 实体无渲染
 - 在服务端调用 `EntityRendererRegistry`
 - 把 26.1 文档的 `MobCategory` / `Identifier.fromNamespaceAndPath` / `BuiltInRegistries` 抄进 Yarn 1.21.1
+- 抄 `SpawnRestriction.Location` — 本档是 `SpawnLocationTypes.ON_GROUND`
 - 忘记 `FabricDefaultAttributeRegistry` — 实体属性异常或崩溃
 
 ## 扩展点

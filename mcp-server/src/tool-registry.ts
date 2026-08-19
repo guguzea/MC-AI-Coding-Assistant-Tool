@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
+import { missingMcVersion, versionRequiredAction } from "./utils/actionable.js";
 import { getBuildStatus } from "./utils/build-status.js";
 import { patchToolCollection } from "./tool-handlers.js";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
@@ -129,8 +130,8 @@ export const convertMappingSchema = z.object({
 });
 
 export const getServerStatusSchema = z.object({
-  version: z.string().optional().describe("关注的 MC 版本，默认 1.20.1"),
-  warmup: z.boolean().optional().describe("若 true，先预热该版本再返回状态"),
+  version: z.string().optional().describe("关注的 MC 版本；warmup 为 true 时必填，禁止默认 1.20.1"),
+  warmup: z.boolean().optional().describe("仅当为 true 时预热该版本；缺省不预热"),
 });
 
 export const getVersionInfoSchema = z.object({
@@ -174,7 +175,7 @@ export const generateDatagenSchema = z.object({
 export const crashAnalyzeSchema = z.object({
   crashReport: z.string().optional().describe("崩溃报告全文（从 '---- Minecraft Crash Report ----' 开始；与 crashReportPath 二选一）"),
   crashReportPath: z.string().optional().describe("崩溃报告文件路径（与 crashReport 二选一）"),
-  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
+  version: z.string().optional().describe("Minecraft 版本（可选）。缺省仍解析 crashKind，但不跑 lookup_obfuscated；analysisComplete=false"),
 });
 
 export const validateProjectSchema = z.object({
@@ -332,13 +333,18 @@ server.registerTool(
     inputSchema: getServerStatusSchema,
   },
   async ({ version, warmup }): Promise<CallToolResult> => {
-    const v = version ?? "1.20.1";
-    if (warmup !== false) {
-      await warmupApi([v]);
+    if (warmup === true) {
+      if (missingMcVersion(version)) {
+        return {
+          content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
+        };
+      }
+      await warmupApi([version!.trim()]);
     }
+    const focusVersion = String(version ?? "").trim();
     const result = {
       ok: true,
-      focus: getApiPreloadStatus(v),
+      focus: focusVersion ? getApiPreloadStatus(focusVersion) : { note: "未指定 version，返回总体状态（未预热）" },
       api: listApiPreloadStatuses(),
       dataPaths: diagnoseDataPaths(),
       /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错，但 warnings 必报） */
@@ -793,7 +799,7 @@ server.registerTool(
     title: "List Available Doc Versions (Multi-Platform)",
     description:
       "返回指定平台的可用文档版本列表。" +
-      "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），默认 forge。基岩请用 search_bedrock_docs。",
+      "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。",
     inputSchema: listVersionsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -808,7 +814,7 @@ server.registerTool(
     title: "Search Documentation (Multi-Platform)",
     description:
       "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0），支持多平台（Forge/NeoForge/Fabric）。" +
-      "platform 参数指定平台，默认 forge。" +
+      "platform 参数指定平台，必填，禁止默认 forge。" +
       "适用于：需要了解平台特有功能的官方说明时。" +
       "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。",
     inputSchema: searchDocsSchema.inputSchema,
@@ -1047,7 +1053,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "get_neoforge_doc_full", description: "获取 NeoForge 文档页面全文（L2/L2+）。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。**永远不要一次性加载超过 2 个 full page**。", inputSchema: getNeoForgeDocFullSchema.inputSchema },
   { name: "get_neoforge_doc_related", description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。", inputSchema: getNeoForgeDocRelatedSchema.inputSchema },
   { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
-  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform：forge/neoforge/fabric/quilt/liteloader/rift/modloader，默认 forge。基岩请用 search_bedrock_docs。", inputSchema: listVersionsSchema.inputSchema },
+  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform：forge/neoforge/fabric/quilt/liteloader/rift/modloader，必填。基岩请用 search_bedrock_docs。", inputSchema: listVersionsSchema.inputSchema },
   { name: "search_docs", description: "通用文档搜索（hybrid：L0 关键词 + 语义检索）。platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader。Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。", inputSchema: searchDocsSchema.inputSchema },
   { name: "get_doc_summary", description: getDocSummarySchema.description, inputSchema: getDocSummarySchema.inputSchema },
   { name: "get_doc_full", description: getDocFullSchema.description, inputSchema: getDocFullSchema.inputSchema },

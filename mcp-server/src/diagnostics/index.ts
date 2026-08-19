@@ -65,7 +65,11 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
 
 function relatedToolsForLog(text: string, _version: string): string[] {
   const tools = ["crash_analyze", "search_community_docs"];
-  if (/net\.fabricmc|fabric-loader|quilt\.mod|org\.quiltmc/i.test(text)) {
+  if (/quilt\.mod|org\.quiltmc/i.test(text)) {
+    tools.push("search_docs");
+    return tools;
+  }
+  if (/net\.fabricmc|fabric-loader/i.test(text)) {
     tools.push("search_fabric_docs");
     return tools;
   }
@@ -355,6 +359,11 @@ export function detectProjectLoaders(input: {
   if ((anyForgeMeta || anyForgeGradle || /net\.minecraftforge/.test(javaBlob)) && !anyNeo) {
     found.add("forge");
   }
+  const anyLite =
+    Boolean(extras.litemodJson?.trim()) ||
+    /net\.minecraftforge\.gradle\.liteloader/.test(gradle) ||
+    /\bLiteMod\b|litemod\.json|com\.mumfrey\.liteloader/i.test(`${gradle}\n${javaBlob}`);
+  if (anyLite) found.add("liteloader");
   if (primary !== "unknown") found.add(primary);
 
   const loaders = [...found];

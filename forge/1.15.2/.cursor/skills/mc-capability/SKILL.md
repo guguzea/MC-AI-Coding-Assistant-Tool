@@ -19,21 +19,21 @@ public interface IExampleData {
 }
 
 // 2. 实现 ICapabilitySerializable（自带存储，无需单独 IStorage）
-public class ExampleData implements IExampleData, ICapabilitySerializable<NBTTagCompound> {
+public class ExampleData implements IExampleData, ICapabilitySerializable<CompoundNBT> {
     private int value = 0;
 
     @Override public int getValue() { return value; }
     @Override public void setValue(int v) { this.value = v; }
 
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = new NBTTagCompound();
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = new CompoundNBT();
         nbt.putInt("value", value);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         this.value = nbt.getInt("value");
     }
 }

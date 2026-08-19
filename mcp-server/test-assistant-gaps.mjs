@@ -254,4 +254,169 @@ function skillPath(ver, name) {
   console.log("Neo main skills search_neoforge_docs: ok");
 }
 
+{
+  const { getApiPreloadStatus } = await import("./dist/api/index.js");
+  const st = getApiPreloadStatus("1.20.1");
+  assert.notEqual(st.loaded, true, JSON.stringify(st));
+  console.log("get_server_status no warmup idle 1.20.1: ok");
+}
+
+{
+  const { lookupObfuscated } = await import("./dist/mappings/lookup-obfuscated.js");
+  const lu = lookupObfuscated({ name: "func_110143_aJ" });
+  assert.equal(lu.action?.code, "VERSION_REQUIRED");
+  const { validateAtHandler } = await import("./dist/mixin/deep-validate.js");
+  const at = validateAtHandler({});
+  assert.equal(at.action?.code, "VERSION_REQUIRED");
+  console.log("lookup/AT VERSION_REQUIRED: ok");
+}
+
+{
+  const { searchDocs } = await import("./dist/docs-platform/forge/index.js");
+  const r = await searchDocs({ query: "DeferredRegister" });
+  const j = JSON.parse(r.content[0].text);
+  assert.equal(j.ok, false);
+  assert.match(String(j.action?.message ?? ""), /platform/);
+  console.log("search_docs no platform: ok");
+}
+
+{
+  const { searchNeoForgeDocs } = await import("./dist/docs-platform/neoforge/index.js");
+  const r = await searchNeoForgeDocs({ query: "DeferredRegister" });
+  const j = JSON.parse(r.content[0].text);
+  assert.equal(j.action?.code, "VERSION_REQUIRED");
+  console.log("search_neoforge_docs no version: ok");
+}
+
+{
+  const full = getWorkflowTemplate("mc-full-mod");
+  assert.equal(full.found, true);
+  assert.match(String(full.body ?? ""), /仅从零/);
+  const enumVals = getWorkflowTemplateSchema.shape.name.options;
+  assert.ok(enumVals.includes("mc-full-mod"));
+  console.log("mc-full-mod workflow: ok");
+}
+
+{
+  const { waveToolSchemas } = await import("./dist/wave/register.js");
+  const er = waveToolSchemas.find((t) => t.name === "generate_entity_renderer");
+  assert.match(String(er?.description ?? ""), /neoforge 26\.1/);
+  const { generateEntityRenderer } = await import("./dist/generators/index.js");
+  const fab = generateEntityRenderer("demo", "slime", "fabric", "1.21.1");
+  assert.equal(fab.code, null);
+  assert.ok((fab.errors ?? []).length > 0);
+  const err = (fab.errors ?? []).join("\n");
+  assert.match(err, /Fabric|Quilt/);
+  assert.equal("fallback" in fab, false);
+  console.log("generate_entity_renderer fabric: ok");
+}
+
+{
+  const { resolveFromAvailable, VersionNotFoundError, ForgeDocStore } = await import(
+    "./dist/docs-platform/forge/store.js"
+  );
+  assert.equal(resolveFromAvailable("1.16.8", ["1.16.1", "1.16.5"]), "1.16.5");
+  assert.equal(resolveFromAvailable("1.16.5", ["1.16.x"]), "1.16.x");
+  assert.equal(resolveFromAvailable("1.16.8", ["1.16.5", "1.16.x"]), "1.16.5");
+  assert.equal(resolveFromAvailable("1.16", ["1.16.5"]), "1.16.5");
+  assert.equal(resolveFromAvailable("1.19", ["1.19.2", "1.19.4"]), "1.19.4");
+  assert.equal(resolveFromAvailable("1.19.2", ["1.19.2", "1.19.4"]), "1.19.2");
+  assert.equal(resolveFromAvailable("26.1.2", ["26.1"]), "26.1");
+  assert.equal(resolveFromAvailable("1.12.2", ["1.20.1"]), null);
+  const { searchForgeDocs } = await import("./dist/docs-platform/forge/index.js");
+  const miss = await searchForgeDocs({ query: "blocks", version: "9.9.9" });
+  const missJ = JSON.parse(miss.content[0].text);
+  assert.match(String(missJ.hint ?? missJ.action?.message ?? JSON.stringify(missJ)), /list_forge_versions/);
+  assert.ok(VersionNotFoundError);
+  assert.ok(ForgeDocStore);
+  console.log("resolveFromAvailable matrix: ok");
+}
+
+{
+  const { inspectRuntime } = await import("./dist/runtime-inspect/index.js");
+  const dir = mkdtempSync(join(tmpdir(), "mc-insp-"));
+  try {
+    writeFileSync(
+      join(dir, "crash-2024-01-01_12.00.00-client.txt"),
+      "---- Minecraft Crash Report ----\nFabric Loader 0.16.0\n",
+      "utf8",
+    );
+    const r = inspectRuntime({ crashReportsDir: dir });
+    assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400));
+    assert.equal(r.analysisComplete, false);
+    assert.equal(r.action?.code, "VERSION_REQUIRED");
+    assert.equal(r.crashAnalysis?.crashKind, "fabric");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+  console.log("inspect_runtime analysisComplete: ok");
+}
+
+{
+  const { analyzeLog } = await import("./dist/diagnostics/index.js");
+  const quilt = analyzeLog({
+    logText: "org.quiltmc.loader.impl.QuiltLoaderImpl failed\nquilt.mod.json missing",
+    version: "1.21.1",
+  });
+  assert.equal(quilt.ok, true, JSON.stringify(quilt).slice(0, 300));
+  assert.ok(quilt.relatedTools.includes("search_docs"), JSON.stringify(quilt.relatedTools));
+  assert.ok(!quilt.relatedTools.includes("search_fabric_docs"), JSON.stringify(quilt.relatedTools));
+  const fab = analyzeLog({
+    logText: "net.fabricmc.loader.impl.FabricLoaderImpl\nfabric-loader 0.16",
+    version: "1.21.1",
+  });
+  assert.ok(fab.relatedTools.includes("search_fabric_docs"));
+  assert.ok(!fab.relatedTools.includes("search_docs"), JSON.stringify(fab.relatedTools));
+  console.log("analyze_log quilt vs fabric relatedTools: ok");
+}
+
+{
+  const { knowledgeVersion, frontmatterDescription } = await import("./dist/platform-pack/catalog.js");
+  assert.equal(knowledgeVersion("fabric", "26.1"), "26.1.2");
+  assert.equal(knowledgeVersion("fabric", "26.1.1"), "26.1.2");
+  assert.equal(knowledgeVersion("fabric", "26.1.2"), "26.1.2");
+  assert.equal(knowledgeVersion("fabric", "26.2"), "26.2");
+  assert.equal(knowledgeVersion("fabric", "1.21.11"), "1.21.11");
+  const fm = frontmatterDescription(`---
+name: demo
+description: |
+  first line of the skill
+  second line continues
+---
+# Demo
+`);
+  assert.match(fm.description, /first line/);
+  assert.match(fm.description, /second line/);
+  assert.doesNotMatch(fm.description, /^first line of the skill$/);
+  console.log("knowledgeVersion fabric fold + frontmatter block: ok");
+}
+
+{
+  const { listKnowledgeResources, readKnowledgeResource } = await import("./dist/prompts/index.js");
+  const listed = listKnowledgeResources();
+  assert.ok(listed.some((r) => r.uri === "mcskill://community/authored/publishing"));
+  const pub = readKnowledgeResource("mcskill://community/authored/publishing");
+  assert.equal(pub.found, true);
+  assert.ok(String(pub.text).length > 40);
+  const linkish = listed.find((r) => r.uri.startsWith("mcskill://community/") && r.uri.includes("links/"));
+  if (linkish) {
+    const body = readKnowledgeResource(linkish.uri);
+    assert.equal(body.found, false);
+  }
+  console.log("list_knowledge_resources community: ok");
+}
+
+{
+  const { waveToolSchemas, ANALYZE_LOG_DESCRIPTION, READ_KNOWLEDGE_RESOURCE_DESCRIPTION } = await import(
+    "./dist/wave/register.js"
+  );
+  const al = waveToolSchemas.find((t) => t.name === "analyze_log");
+  const rk = waveToolSchemas.find((t) => t.name === "read_knowledge_resource");
+  assert.ok(al?.description);
+  assert.equal(al.description, ANALYZE_LOG_DESCRIPTION);
+  assert.ok(rk?.description);
+  assert.equal(rk.description, READ_KNOWLEDGE_RESOURCE_DESCRIPTION);
+  console.log("wave description single source: ok");
+}
+
 console.log("test-assistant-gaps: all passed");

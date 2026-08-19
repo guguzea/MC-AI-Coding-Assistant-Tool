@@ -7,6 +7,7 @@
 - QSL Core Registry 与 Fabric API Registry **不完全相同**（Addition Events Helper、按条目排除同步等）
 - Quilted Fabric API 在 **有 QSL 替代** 处 **弃用** 对应 FAPI 模块
 - 简单物品/方块仍可用 **Vanilla** `Registry.register(Registries.*, id, value)`（与 Fabric 共享，不是 FAPI 专属）
+- 需要监听条目添加：已核 `org.quiltmc.qsl.registry.api.event.RegistryEvents#getEntryAddEvent(Registry)`；高层监视 `RegistryMonitor#create(Registry)`（见 `05-events.mdc` / `qsl-verified.md`）
 - **不要**生成 `net.fabricmc.fabric.api.event.registry` / `FabricRegistryBuilder` / `RegistrySyncManager` 当作 QSL
 
 ## Decision Flow

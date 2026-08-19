@@ -11,8 +11,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
    - Quilt：Vanilla Registry.register + ModInitializer(ModContainer)；禁止编 QuiltRegistry；02–10 仍读 fabric/<ver>
    - LiteLoader / Rift / ModLoader：只使用该版核实表；禁止 DeferredRegister / generate_datagen
 3. 注册 BlockItem（现代档）或该时代等价物
-4. 资源：现代档 generate_model 或 DataGen；老平台手写 assets/ JSON
-5. lang：generate_lang（en_us/zh_cn）
+4. 资源：现代档 generate_model（须传 version）或 DataGen；老平台手写 assets/ JSON
+5. lang：generate_lang（须传 version；en_us/zh_cn）
 6. 战利品/合成：Forge 1.20.1 与 NeoForge 1.21.x 才 generate_datagen；其余手写 data/ 或 ModLoader.addRecipe`,
   },
   "mc-new-entity": {
@@ -103,7 +103,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
   "mc-localize-mod": {
     title: "模组汉化工作流",
     body: `【原则】不调用外网机翻 API；localize_mod 只做 diff/草稿/抽 jar；中文由 Agent 填写。默认不写游戏目录。
-社区短文：authored/localization-lang；新建骨架可用 generate_lang。
+社区短文：authored/localization-lang；新建骨架可用 generate_lang（须传 version）。
 
 1. 判定模式：
    - own：自有工程 assets/<modid>/lang/
@@ -121,7 +121,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
    - pack_draft（可带 mcVersion）→ 复述 packFormatNeedsReview / pack_format 与源语言回退
    - Agent 译 needsTranslation → 用户手动放入 resourcepacks/
 4. 自检：游戏内切简体中文；占位符 %s/%d；是否仍显示原始 key
-5. 可选：无 lang 骨架时先 generate_lang`,
+5. 可选：无 lang 骨架时先 generate_lang（须传 version）`,
   },
   "mc-decompile-mod": {
     title: "模组反编译研究（定位真实实现 → 修改建议）",
@@ -148,7 +148,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
    - Quilt：Vanilla Registry + ModInitializer(ModContainer)；02–10 读 fabric/<ver>
    - 老平台：核实表；禁止 DeferredRegister
 3. 创造栏 / 食物 / 工具属性按该档 03，不要抄邻版
-4. 模型：generate_model 或 DataGen；lang：generate_lang
+4. 模型：generate_model（须传 version）或 DataGen；lang：generate_lang（须传 version）
 5. 合成：generate_datagen 仅 Forge 1.20.1 与 NeoForge 1.21.x / 已提供的 26.1 模板；其余手写 data/`,
   },
   "mc-new-blockentity": {
@@ -273,6 +273,16 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
 4. 输出：建议 JDK、runClient/runServer、映射选择、gradle.properties 修正清单。
 5. 提醒用户手动 ./gradlew genEclipseRuns 或 genIntellijRuns（如适用），不自动执行。
 6. validate_project：Fabric/Quilt/NeoForge 看 status passed/failed（不是 skipped）。LiteLoader/Rift/ModLoader/基岩仍 skipped，改口文档工具。任何平台都不得把「validate_project 通过」当成环境搭建结束。`,
+  },
+  "mc-full-mod": {
+    title: "从零新模组总链",
+    body: `【仅从零新模组】此链只适用于从零创建。修改已有代码请勿调用本工作流，改用对应 mc-new-* / 规则+Skill / search_*_docs。
+1. mc-setup-env：detect_mod_project + 该平台 JDK/Gradle/映射；从零才 download_official_mdk。
+2. 按需求串联对应 mc-new-*（方块/物品/方块实体/实体/GUI/世界生成等）；每次先 activate_platform_pack action=session。
+3. mc-build-mod：validate_project 看 status，再构建产出 jar。
+4. mc-ingame-iterate：隔离实例 mods 目录 + 读 latest.log / crash-reports。
+5. 可选 mc-localize-mod（无机器翻译）。
+6. mc-publish：check_publish_ready，不要把本链当改已有代码的入口。`,
   },
 };
 

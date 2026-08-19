@@ -64,7 +64,7 @@ IF 需要双向同步（游戏内实时同步）
 
 IF 同步大量数据
   → ❌ 不要逐字段发送（高网络开销）
-  → 使用 NBTTagCompound 批量序列化
+  → 使用 CompoundNBT 批量序列化
 ```
 
 ### Decision: 消息方向

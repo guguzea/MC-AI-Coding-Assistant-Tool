@@ -218,29 +218,29 @@ public class MyTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
-        this.syncData = compound.getInteger("syncData");
+        this.syncData = compound.getInt("syncData");
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        super.write(compound);
-        compound.putInteger("syncData", this.syncData);
+    public CompoundNBT write(CompoundNBT compound) {
+        compound = super.write(compound);
+        compound.putInt("syncData", this.syncData);
         return compound;
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = super.getUpdateTag();
-        nbt.putInteger("syncData", syncData);
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT nbt = super.getUpdateTag();
+        nbt.putInt("syncData", syncData);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NBTTagCompound nbt) {
+    public void handleUpdateTag(CompoundNBT nbt) {
         super.handleUpdateTag(nbt);
-        this.syncData = nbt.getInteger("syncData");
+        this.syncData = nbt.getInt("syncData");
     }
 
     // 在服务端逻辑中修改数据后，同步到客户端

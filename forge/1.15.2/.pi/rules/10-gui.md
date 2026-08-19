@@ -125,15 +125,15 @@ public class ClientSetup {
 private int syncData;
 
 @Override
-public NBTTagCompound getUpdatePacket() {
-    NBTTagCompound nbt = new NBTTagCompound();
+public CompoundNBT getUpdateTag() {
+    CompoundNBT nbt = super.getUpdateTag();
     nbt.putInt("syncData", syncData);
     return nbt;
 }
 
 @Override
-public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-    syncData = pkt.getNbtCompound().getInt("syncData");
+public SUpdateTileEntityPacket getUpdatePacket() {
+    return new SUpdateTileEntityPacket(this.pos, -1, this.getUpdateTag());
 }
 
 // Set from server

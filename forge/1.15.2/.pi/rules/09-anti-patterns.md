@@ -83,7 +83,7 @@ private static final String MOD_ID = "examplemod";
 ```java
 // 错误
 @Override
-public void read(NBTTagCompound nbt) {
+public void read(CompoundNBT nbt) {
     super.read(nbt);
     BlockState state = world.getBlockState(pos); // ❌ world 可能为 null 或 world 未完全加载
     if (state.getBlock() == Blocks.DIAMOND_BLOCK) {
@@ -171,12 +171,12 @@ channel.sendToServer(new SyncFieldMessage("field3", value3)); // ❌ 高网络�
 
 **错误症状**：网络阻塞，服务器卡顿，玩家感受到明显延迟
 
-**正确方案**：使用 `NBTTagCompound` 或自定义 `PacketBuffer` 批量序列化
+**正确方案**：使用 `CompoundNBT` 或自定义 `PacketBuffer` 批量序列化
 
 ```java
 // 正确：单次批量同步
 public class SyncAllDataMessage {
-    private NBTTagCompound data;
+    private CompoundNBT data;
 
     public void toBytes(PacketBuffer buf) {
         buf.writeCompoundTag(data);

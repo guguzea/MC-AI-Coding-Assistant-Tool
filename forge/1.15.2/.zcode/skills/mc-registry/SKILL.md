@@ -52,11 +52,11 @@ IF 需要在 mod constructor 执行前引用已注册对象
 | 声音事件 | `ForgeRegistries.SOUND_EVENTS` | |
 | 附魔 | `ForgeRegistries.ENCHANTMENTS` | |
 | 药水 | `ForgeRegistries.POTIONS` | |
-| 创造模式标签 | `CreativeModeTabs` | Vanilla |
+| 创造模式标签 | `ItemGroup` | Vanilla |
 
-## 注册 ItemBlock
+## 注册 BlockItem
 
-方块的 ItemBlock 与方块同名注册，Forge 自动关联：
+方块的 BlockItem 与方块同名注册，Forge 自动关联：
 
 ```java
 public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",

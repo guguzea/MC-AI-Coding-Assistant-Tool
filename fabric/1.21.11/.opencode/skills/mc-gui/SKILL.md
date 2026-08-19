@@ -9,6 +9,8 @@ mappings: yarn
 
 # GUI 开发（Fabric 1.21.11）
 
+Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。不要把 26.1.2 Mojmap 网络/菜单 API 抄进本档。
+
 ## 快速开始
 
 ```java
@@ -68,6 +70,7 @@ IF 需要服务端数据同步
 - ❌在 `onInitialize()` 中注册 `HandledScreens` — 服务端崩溃
 - ❌在 Screen 中直接修改服务端数据 — 通过 ScreenHandler 同步
 - ❌忘记 `super.render()` — 背景和子元素不渲染
+- ❌抄 `ScreenRegistry.register` 或 26.1.2 Mojmap `MenuType` / `CustomPacketPayload`
 
 ## 扩展点
 

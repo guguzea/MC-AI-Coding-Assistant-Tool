@@ -19,10 +19,10 @@ import {
   fabricRulesOverlay,
   findPack,
   inspectPack,
+  listMergedPackSkills,
   listRuleFiles,
-  listSkillIndex,
   mappingNoteForFabricSkill,
-  mergeQuiltFabricSkills,
+  wrapDonorSkillBody,
   readText,
 } from "./catalog.js";
 import { detectModProject } from "./detect.js";
@@ -44,6 +44,8 @@ export type WriteArgs = {
   minecraftVersion?: string;
   hosts?: string[];
   includeSkills?: boolean;
+  writeSkillStubs?: boolean;
+  includeSkillBodies?: boolean;
   dryRun?: boolean;
   confirmed?: boolean;
   projectPath?: string;
@@ -161,7 +163,7 @@ function skillStub(relPosix: string, name: string, description: string, platform
     `# ${name}`,
     "",
     `必须先 Read 知识库相对路径 \`${relPosix}\`（相对 MC Skill 仓库根，用 MCP/detect 解析的仓库根拼接）。`,
-    "找不到则调用 `activate_platform_pack action=session` 取索引，不要凭 stub description 写代码。",
+    "找不到则再调用 `activate_platform_pack action=session` 并传 `skillNames` 取 `absPath`，不要凭 stub description 写代码。",
     "禁止把本机盘符路径写死进工程。仓库根变更或换机器后本 stub 会失效。",
     "",
   ].join("\n");
@@ -172,26 +174,43 @@ function quiltCopiedSkill(abs: string, name: string, description: string, fabric
   const note = mappingNoteForFabricSkill(fabricVer);
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!m) {
-    return `---\nname: ${name}\ndescription: ${description}\nsource: fabric/${fabricVer}\n---\n\n${note}\n\n${raw}`;
+    return wrapDonorSkillBody(
+      note,
+      `---\nname: ${name}\ndescription: ${description}\nsource: fabric/${fabricVer}\n---\n\n${raw}`,
+    );
   }
   let fm = m[1];
   if (!/^source:/m.test(fm)) fm += `\nsource: fabric/${fabricVer}`;
-  return `---\n${fm}\n---\n\n${note}\n\n${m[2]}`;
+  return wrapDonorSkillBody(note, `---\n${fm}\n---\n\n${m[2]}`);
 }
 
 function skillContentForWrite(
-  sk: { name: string; description: string; relPosix: string; source?: string },
+  sk: { name: string; description: string; relPosix: string; source?: string; mappingNote?: string },
   platform: string,
   version: string,
+  includeBodies: boolean,
 ): string {
-  if (platform === "quilt" && sk.source?.startsWith("fabric/")) {
+  if (includeBodies) {
+    if (platform === "quilt" && sk.source?.startsWith("fabric/")) {
+      const abs = join(resolveRepoRoot(), sk.relPosix.split("/").join(sep));
+      if (existsSync(abs)) {
+        const fabricVer = sk.source.slice("fabric/".length);
+        return quiltCopiedSkill(abs, sk.name, sk.description, fabricVer);
+      }
+    }
     const abs = join(resolveRepoRoot(), sk.relPosix.split("/").join(sep));
     if (existsSync(abs)) {
-      const fabricVer = sk.source.slice("fabric/".length);
-      return quiltCopiedSkill(abs, sk.name, sk.description, fabricVer);
+      const raw = readText(abs);
+      return sk.mappingNote ? wrapDonorSkillBody(sk.mappingNote, raw) : raw;
     }
   }
   return skillStub(sk.relPosix, sk.name, sk.description, platform, version);
+}
+
+function resolveWriteSkillStubs(args: WriteArgs): boolean {
+  if (args.writeSkillStubs !== undefined) return args.writeSkillStubs;
+  if (args.includeSkills !== undefined) return args.includeSkills;
+  return true;
 }
 
 function loadManifest(projectRoot: string): Manifest | null {
@@ -210,15 +229,14 @@ function buildWritePlan(opts: {
   version: string;
   hosts: PackHost[];
   includeSkills: boolean;
+  includeSkillBodies: boolean;
 }): { ops: PlannedFile[]; skipped: Array<{ rel: string; reason: string }>; overlayNote?: string } {
   const pack = findPack(opts.platform, opts.version);
   if (!pack) return { ops: [], skipped: [{ rel: "", reason: "PACK_NOT_FOUND" }] };
   const rules = listRuleFiles(pack.packDir);
   const overlay = opts.platform === "quilt" ? fabricRulesOverlay(opts.version) : undefined;
   const skills = opts.includeSkills
-    ? opts.platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir
-      ? mergeQuiltFabricSkills(pack.packDir, overlay.fabricDir, opts.version)
-      : listSkillIndex(pack.packDir)
+    ? listMergedPackSkills(opts.platform, pack.minecraftVersion, pack.packDir, overlay).skills
     : [];
   const existingManifest = loadManifest(opts.projectRoot);
   const owned = new Set((existingManifest?.createdFiles ?? []).map(posixRel));
@@ -271,7 +289,7 @@ function buildWritePlan(opts: {
         ops.push({
           kind: "create",
           rel,
-          content: skillContentForWrite(sk, opts.platform, opts.version),
+          content: skillContentForWrite(sk, opts.platform, opts.version, opts.includeSkillBodies),
           host,
         });
       }
@@ -357,7 +375,8 @@ export function writePlatformPack(args: WriteArgs) {
     platform: pack.platform,
     version: pack.minecraftVersion,
     hosts,
-    includeSkills: args.includeSkills === true,
+    includeSkills: resolveWriteSkillStubs(args),
+    includeSkillBodies: args.includeSkillBodies === true,
   });
 
   const howToWrite = {

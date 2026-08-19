@@ -47,7 +47,7 @@ public enum MyTier implements Tier {
 // SwordItem(Tier tier, int attackDamageModifier, float attackSpeedModifier, Item.Properties)
 // 最终攻击伤害 = attackDamageModifier + 3.0f（剑类内置固定加成）
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3, 1.6f, new Item.Properties()
+    () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
         .tab(CreativeModeTab.TAB_COMBAT)
         .durability(1561)
     )
@@ -59,7 +59,7 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 ```java
 // PickaxeItem(float attackDamageBonus, float attackSpeed, Tier, TagKey<Block>, Properties)
 public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f,
         new Item.Properties().tab(CreativeModeTab.TAB_TOOLS))
 );
 ```
@@ -77,13 +77,13 @@ public enum MyArmorMaterial implements ArmorMaterial {
 }
 
 public static RegistryObject<Item> COPPER_HELMET    = ITEMS.register("copper_helmet",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.HELMET, new Item.Properties()));
+    () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlot.HEAD, new Item.Properties()));
 public static RegistryObject<Item> COPPER_CHESTPLATE = ITEMS.register("copper_chestplate",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlot.CHEST, new Item.Properties()));
 public static RegistryObject<Item> COPPER_LEGGINGS   = ITEMS.register("copper_leggings",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlot.LEGS, new Item.Properties()));
 public static RegistryObject<Item> COPPER_BOOTS      = ITEMS.register("copper_boots",
-    () -> new ArmorItem(MyArmorMaterial.COPPER, ArmorItem.Type.BOOTS, new Item.Properties()));
+    () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlot.FEET, new Item.Properties()));
 ```
 
 ## 食物
@@ -95,7 +95,7 @@ public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_a
         .food(new FoodProperties.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
+            .effect(new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
             .alwaysEat()
             .build())
     )
@@ -145,7 +145,7 @@ public class MySwordItem extends SwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.hurtAndBreak(1, attacker, slot -> attacker.getItemBySlot(slot));
+        stack.hurtAndBreak(1, attacker, e -> e.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         return true;
     }
 }

@@ -1,17 +1,15 @@
 ﻿---
-description: 10 — GUI（neoforge 1.20.6）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 10 — GUI（NeoForge 1.20.6）
 ---
 
-# 10 — GUI
+# 10 — GUI（NeoForge 1.20.6）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.20.6/gui/menus/
 
-## Decision Flow
-
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+- 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
+- 无 extra data：官方示例 `new MenuType(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)`（原文无 `<>`）。
+- extra data：`IMenuTypeExtension.create(...)`。正文写 `RegistryFriendlyByteBuf`；同页示例构造写 `FriendlyByteBuf extraData`。**不是** `IForgeMenuType`。
+- 打开：逻辑服务端 `IPlayerExtension#openMenu` + `SimpleMenuProvider`。带 extra 的 `Consumer` 只给 `IContainerFactory` 菜单用。
+- 方块：`getMenuProvider` + `useWithoutItem`；官方返回 **`InteractionResult.sidedSuccess(level.isClientSide)`**（正文还写客户端 SUCCESS、服务端打开后 CONSUME）。
+- 槽位：`SlotItemHandler` / `IItemHandler`；整数 `DataSlot` / `ContainerData`。额外自定义走 06 Payload。**禁止 SimpleChannel。**
+- Screen 注册见 https://docs.neoforged.net/docs/1.20.6/gui/screens/ ；不要抄 `MenuScreens.register` / `NetworkHooks.openScreen`。

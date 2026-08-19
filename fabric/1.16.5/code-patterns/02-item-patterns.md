@@ -51,16 +51,15 @@ private static final Item MY_APPLE = Registry.register(
 扩展点: [ToolMaterial]
 ---
 public enum MyToolMaterial implements ToolMaterial {
-    COPPER(2, 250, 6.0f, 2.0f, 15,
-        FabricToolTags.PICKAXES, () -> Items.COPPER_INGOT);
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT));
 
-    // ... getDurability, getMiningSpeed, getAttackDamage, etc.
+    // getDurability, getMiningSpeedMultiplier, getAttackDamage, getMiningLevel, getEnchantability, getRepairIngredient
 }
 
-private static final Item COPPER_SWORD = Registry.register(
+private static final Item IRON_LIKE_SWORD = Registry.register(
     Registry.ITEM,
-    new Identifier(MOD_ID, "copper_sword"),
-    new SwordItem(MyToolMaterial.COPPER, 3, 1.6f,
+    new Identifier(MOD_ID, "iron_like_sword"),
+    new SwordItem(MyToolMaterial.IRON_LIKE, 3, -2.4f,
         new Item.Settings().maxDamage(250))
 );
 ```
@@ -108,10 +107,10 @@ public class MyWandItem extends Item {
             // 服务端逻辑：给予效果、生成实体等
             player.addStatusEffect(
                 new StatusEffectInstance(StatusEffects.SPEED, 600, 0));
-            player.getItemStack(hand).damage(1, player,
+            player.getStackInHand(hand).damage(1, player,
                 (p) -> p.sendToolBreakStatus(hand));
         }
-        return TypedActionResult.success(player.getItemStack(hand));
+        return TypedActionResult.success(player.getStackInHand(hand));
     }
 }
 ```

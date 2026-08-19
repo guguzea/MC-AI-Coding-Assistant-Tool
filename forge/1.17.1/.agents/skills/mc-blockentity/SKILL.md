@@ -64,16 +64,17 @@ public class MyBlock extends Block implements EntityBlock {
 
 **注意**：`getTicker` 每 tick 调用，避免复杂计算；必要时用计数器隔 tick 执行。
 
-## 数据持久化（saveAdditional / load）
+## 数据持久化（save / load）
 
 ```java
 public class MyBE extends BlockEntity {
     private int counter;
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);  // 必须调用 super！
+    public CompoundTag save(CompoundTag tag) {
+        super.save(tag);  // 必须调用 super！
         tag.putInt("counter", counter);
+        return tag;
     }
 
     @Override
@@ -166,9 +167,9 @@ public class ClientSetup {
 ```
 
 ```java
-public class MyBER extends BlockEntityRenderer<MyBE> {
-    public MyBER(EntityRendererProvider.Context context) {
-        super(context);
+public class MyBER implements BlockEntityRenderer<MyBE> {
+    public MyBER(BlockEntityRendererProvider.Context context) {
+        // BlockEntityRenderer 在 1.17.1 是接口，不要 extends / super(context)
     }
 
     @Override
@@ -197,7 +198,7 @@ IF 数据属于 Container/Menu 展示用
 
 ## 常见错误
 
-- ❌ `saveAdditional` / `load` 重写后忘记调用 `super`（保留字段被覆盖）
+- ❌ `save` / `load` 重写后忘记调用 `super`（1.17.1 写出是返回 CompoundTag 的 `save`，没有 saveAdditional）
 - ❌ 数据变化后忘记调用 `setChanged()`
 - ❌ `getTicker` 中写复杂计算（每 tick 执行，会导致卡顿）
 - ❌ 用 `BlockEntityType.Builder.of(MyBE::new, blocks)` 时 `blocks` 传 null（至少传空集）

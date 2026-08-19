@@ -19,18 +19,16 @@ description: 01 — 注册系统
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
 - 使用 `Identifier` 构造：`new Identifier(MOD_ID, "registry_name")`
 
-### Registry API（1.16.5 关键差异）
+### Registry API（1.16.5）
 
-> ❌ **不要**使用 `Registry.ITEM`、`Registry.BLOCK` 等（这些是 1.17+ 才有的枚举）
-> ✅ 使用 `Registry.ITEM`、`Registry.BLOCK` 等静态字段
+Yarn 1.16.5 用 **`Registry` 静态字段**（[`Registry.mapping`](https://github.com/FabricMC/yarn/blob/1.16.5/mappings/net/minecraft/util/registry/Registry.mapping)）：`ITEM` / `BLOCK` / `BLOCK_ENTITY_TYPE` / `SCREEN_HANDLER`。**没有** 1.19.3+ 的 `Registries` 类。
 
 ```java
-// ✅ 正确：1.16.5 使用 Registry 静态字段
+// ✅ 正确
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
-Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
 
-// ❌ 错误：这是 1.17+ 的 API
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+// ❌ 错误：Registries 是 1.19.3+
+Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ```
 
 ### 注册时机
@@ -116,7 +114,7 @@ public class ExampleMod implements ModInitializer {
 
     private static final Block MY_BLOCK =
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"),
-            new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f)));
+            new Block(FabricBlockSettings.copy(Blocks.STONE).hardness(1.5f)));
 
     // BlockItem 与方块同名注册
     private static final Item MY_BLOCK_ITEM =

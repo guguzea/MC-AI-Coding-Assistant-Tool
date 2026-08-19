@@ -12,7 +12,7 @@
 
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { basename, join, relative } from "path";
-import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { actionable, missingMcVersion, versionRequiredAction, type ActionEnvelope } from "../utils/actionable.js";
 import { PROJECT_SCAN_SKIP_DIRS, walkProjectFiles } from "../utils/project-files.js";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { buildJarIndex } from "./bytecode.js";
@@ -546,7 +546,10 @@ function validateAccessCore(
 }
 
 export function validateAtHandler(args: ValidateAtArgs): Record<string, unknown> {
-  const version = args.version ?? "1.20.1";
+  if (missingMcVersion(args.version)) {
+    return { ok: false, action: versionRequiredAction() };
+  }
+  const version = args.version!.trim();
   const resolved = resolveAtContent(args);
   if ("error" in resolved) return resolved.error;
   const jar = resolveValidationJar(version, args.jarPath);
@@ -573,7 +576,10 @@ export function validateAtHandler(args: ValidateAtArgs): Record<string, unknown>
 }
 
 export function validateAwHandler(args: ValidateAwArgs): Record<string, unknown> {
-  const version = args.version ?? "1.20.1";
+  if (missingMcVersion(args.version)) {
+    return { ok: false, action: versionRequiredAction() };
+  }
+  const version = args.version!.trim();
   const resolved = resolveAwContent(args);
   if ("error" in resolved) return resolved.error;
   const jar = resolveValidationJar(version, args.jarPath);

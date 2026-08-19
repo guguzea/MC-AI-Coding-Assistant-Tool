@@ -9,7 +9,7 @@
  */
 import { detectNamingStyle } from "../mixin/method-string.js";
 import { readableSignature } from "../utils/descriptor.js";
-import { ActionCodes, actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { ActionCodes, actionable, missingMcVersion, versionRequiredAction, type ActionEnvelope } from "../utils/actionable.js";
 import {
   getMappingEra,
   getSchemaVersion,
@@ -18,8 +18,6 @@ import {
   type LookupByObfuscatedResult,
 } from "./yarn-sqlite.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscated.js";
-
-const DEFAULT_VERSION = "1.20.1";
 
 export interface LookupObfuscatedQuery {
   name: string;
@@ -173,8 +171,15 @@ export function resolveObfuscatedThreeWay(version: string, token: string): Obfus
 }
 
 export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscatedResult {
-  const version = query.version ?? DEFAULT_VERSION;
   const token = query.name.trim();
+  if (missingMcVersion(query.version)) {
+    return {
+      found: false,
+      original: token,
+      action: versionRequiredAction(),
+    };
+  }
+  const version = query.version!.trim();
 
   if (isUnobfuscatedMcVersion(version)) {
     return {

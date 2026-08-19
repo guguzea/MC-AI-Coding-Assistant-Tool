@@ -127,9 +127,9 @@ IF 注册 其他内容（附魔/粒子/声音等）
 ### Decision: 注册顺序（依赖关系）
 
 ```
-IF 一个方块有对应的 ItemBlock
-  → 必须先注册 Block，再注册 ItemBlock
-  → ItemBlock 的 registry name 必须与 Block 完全相同
+IF 一个方块有对应的 BlockItem
+  → 必须先注册 Block，再注册 BlockItem
+  → BlockItem 的 registry name 必须与 Block 完全相同
 
 IF 一个方块有 BlockEntity
   → 必须先注册 Block，再注册 BlockEntityType
@@ -179,13 +179,13 @@ public class ExampleMod {
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
+            .color(MaterialColor.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
         )
     );
 
-    // 注册方块对应的 ItemBlock（同名，Forge 自动关联）
+    // 注册方块对应的 BlockItem（同名，Forge 自动关联）
     public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_block",
         () -> new BlockItem(MY_BLOCK.get(), new Item.Properties())
     );
@@ -231,7 +231,7 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
+            .color(MaterialColor.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
         )

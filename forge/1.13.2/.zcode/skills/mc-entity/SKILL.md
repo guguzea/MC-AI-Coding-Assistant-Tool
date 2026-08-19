@@ -1,6 +1,6 @@
 ﻿---
 name: mc-entity
-description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、RenderingRegistry
+description: Minecraft Forge 实体开发。创建生物、实体属性、AI 任务、实体渲染器。触发词：实体、Entity、EntityLiving、EntityType、RenderingRegistry
 platform: forge
 version: "1.13.2"
 dependencies: []
@@ -9,11 +9,12 @@ mappings: mcp
 
 # 实体开发（Forge 1.13.2）
 
+本档 MCP：**`EntityLiving` / `EntityCreature`**。没有 `LivingEntity` / `Goal` / `SwimGoal`（javadoc 1.13.2-25.0.220）。
+
 ## 快速开始
 
 ```java
-// 定义实体类
-public class MyEntity extends LivingEntity {
+public class MyEntity extends EntityCreature {
     protected MyEntity(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -21,81 +22,51 @@ public class MyEntity extends LivingEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
+    protected void initEntityAI() {
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
     }
 }
 
-// 注册 EntityType
-public static final EntityType<MyEntity> MY_ENTITY =
-    EntityType.Builder.create(MyEntity.class, MyEntity::new)
-        .tracker(8, 3, true)
-        .build("my_entity");
+public static EntityType<MyEntity> MY_ENTITY;
 
 @SubscribeEvent
 public void onEntitiesRegistry(RegistryEvent.Register<EntityType<?>> event) {
-    event.getRegistry().register(MY_ENTITY.setRegistryName(
-        new ResourceLocation(MOD_ID, "my_entity")
-    ));
+    MY_ENTITY = EntityType.Builder.create(MyEntity.class, MyEntity::new)
+            .tracker(8, 3, true)
+            .build("my_entity");
+    MY_ENTITY.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
+    event.getRegistry().register(MY_ENTITY);
 }
 ```
+
+`Builder.create` 是 `(Class, Function<World, T>)`，没有 `EntityClassification` 参数。
 
 ## Decision: 选择实体基类
 
 | 场景 | 基类 |
 |------|------|
-| 基础生物（动物/怪物） | `AnimalEntity`（支持繁殖） |
-| 站立型实体 | `LivingEntity` |
-| 投掷物（雪球、末影珍珠） | `ThrowableEntity` |
-| 物品实体 | `ItemEntity` |
-| 矿车/船只 | `AbstractMinecartEntity` / `BoatEntity` |
+| 近战/目标 AI | `EntityCreature` / `EntityMob`（`EntityAIAttackMelee` 要 Creature） |
+| 有生命但不挂 Creature AI | `EntityLiving` |
+| 投掷物 | 原版投掷物基类（打开 javadoc，不要抄 1.14 `ThrowableEntity`） |
+| 物品 | `EntityItem` |
 
-## EntityRenderer 注册（客户端）
+## 渲染（客户端，FMLClientSetupEvent）
 
 ```java
-// 在客户端初始化中注册
-public class ClientSetup {
-    public static void register() {
-        RenderingRegistry.registerEntityRenderingHandler(
-            MY_ENTITY,
-            MyEntityRenderer::new
-        );
-    }
-}
-
-// 渲染器
-public class MyEntityRenderer extends RenderLiving<MyEntity> {
-    public MyEntityRenderer(EntityRendererManager manager) {
-        super(manager, new MyEntityModel(), 0.5f);
-    }
-
-    @Override
-    protected ResourceLocation getEntityTexture(MyEntity entity) {
-        return new ResourceLocation(MOD_ID, "textures/entity/my_entity.png");
-    }
-}
+RenderingRegistry.registerEntityRenderingHandler(MyEntity.class, MyEntityRenderer::new);
 ```
+
+参数是 **Class**，不是 `EntityType`。`RenderLiving` + `RenderManager` + `getEntityTexture`。
 
 ## 常见错误
 
-- ❌ EntityType.Builder.create() 第一个参数是构造函数引用，不是 Entity 实例
-- ❌ 忘记 `setRegistryName()`（实体不注册）
-- ❌ `RenderingRegistry.registerEntityRenderingHandler()`（旧 API）→ 正确：`RenderingRegistry.registerEntityRenderingHandler()`
+- ❌ `LivingEntity` / `registerGoals` / `SwimGoal`
+- ❌ `registerEntityRenderingHandler(MY_ENTITY, factory)` 传 EntityType
+- ❌ 忘记 `setRegistryName`
 
-## 参考资料
-
-- 详细示例：参见 `04-entity.mdc`
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-registry` | 实体类型通过 RegistryEvent.Register<EntityType> 注册 |
-| `mc-capability` | 实体可附加 Capability |
+详见 `04-entity.mdc`。

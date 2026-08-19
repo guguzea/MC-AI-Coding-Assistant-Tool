@@ -24,7 +24,7 @@ new Item.Properties()
     .requiredFeatures(FeatureFlags...)           // 特性门控
 ```
 
-> **注意**：`Item.Properties` 在 Forge 1.19.4 中**没有 `tab()` 方法**。物品的创造模式标签通过 `BuildCreativeModeTabContentsEvent` 单独注册，不要写在 Properties 里。
+> **注意**：`Item.Properties` 在 Forge 1.19.4 中**没有 `tab()` 方法**。物品的创造模式标签通过 `CreativeModeTabEvent.BuildContents` 单独注册，不要写在 Properties 里。
 
 ### ItemTier（工具材料）规范
 
@@ -51,16 +51,16 @@ new Item.Properties()
         .saturationMod(float modifier)    // 饱和度修正
         .meat()                           // 狗可食用
         .alwaysEat()                      // 总是可食用（即使饱食）
-        .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200), 1.0f)
+        .effect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200), 1.0f)
         .build()
     )
 ```
 
 ### 注册约束
 
-- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- BlockItem 关联方块时，registry name 必须与方块完全相同
 - 工具/盔甲使用 `Tier` 时，需要在构造中传入 `.defaultDurability(durability)`
-- **物品的创造模式标签通过 `BuildCreativeModeTabContentsEvent` 注册**（在 Mod 构造函数的 modEventBus 上），不写在 `Item.Properties` 里
+- **物品的创造模式标签通过 `CreativeModeTabEvent.BuildContents` 注册**（在 Mod 构造函数的 modEventBus 上），不写在 `Item.Properties` 里
 
 ---
 
@@ -78,8 +78,8 @@ IF 需要普通物品（无特殊功能）
   → 最简单的物品
 
 IF 需要工具（剑、镐、斧、铲）
-  → extends DiggerItem
-  → 需要定义 ItemTier
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（镐斧铲父类是 DiggerItem；剑不是）
+  → 需要定义 Tier
   → 需要在 constructor 传入：speed, damage, durability, tier, attackSpeed属性
 
 IF 需要盔甲
@@ -114,23 +114,23 @@ IF 自定义工具材料
   → 在物品类中引用：super(speed, damage, durability, tier)
 
 IF 复用现有材料
-  → Tier.STONE / Tier.IRON / Tier.DIAMOND / Tier.GOLD（静态字段）
+  → Tiers.WOOD / Tiers.STONE / Tiers.IRON / Tiers.GOLD / Tiers.DIAMOND / Tiers.NETHERITE
 ```
 
 ### Decision: 物品放置在哪个 Creative Tab
 
-> **重要**：物品不写在 `Item.Properties` 中，而是通过 `BuildCreativeModeTabContentsEvent` 注册。
+> **重要**：物品不写在 `Item.Properties` 中，而是通过 `CreativeModeTabEvent.BuildContents` 注册。
 
 ```
 IF 建筑方块 → CreativeModeTabs.BUILDING_BLOCKS
 IF 自然方块 → CreativeModeTabs.NATURAL_BLOCKS
-IF 工具 → CreativeModeTabs.TOOLS
+IF 工具 → CreativeModeTabs.TOOLS_AND_UTILITIES
 IF 武器 → CreativeModeTabs.COMBAT
-IF 食物 → CreativeModeTabs.FOOD_AND_DRINK
-IF 材料 → CreativeModeTabs.MATERIALS
-IF 红石 → CreativeModeTabs.REDSTONE
-IF 交通 → CreativeModeTabs.TRANSPORTATION
-IF 杂项 → CreativeModeTabs.MISC
+IF 食物 → CreativeModeTabs.FOOD_AND_DRINKS
+IF 材料 → CreativeModeTabs.INGREDIENTS
+IF 红石 → CreativeModeTabs.REDSTONE_BLOCKS
+IF 交通 → CreativeModeTabs.TOOLS_AND_UTILITIES（1.19.3+ 已并入工具与实用）
+IF 杂项 / 材料 → CreativeModeTabs.INGREDIENTS（Mojmap 没有 TAB_MISC）
 IF 搜索 → CreativeModeTabs.SEARCH（不推荐）
 ```
 
@@ -141,8 +141,8 @@ IF 搜索 → CreativeModeTabs.SEARCH（不推荐）
 FMLJavaModLoadingContext.get().getModEventBus().addListener(MyMod::onBuildContents);
 
 // 事件处理：
-public static void onBuildContents(BuildCreativeModeTabContentsEvent event) {
-    if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+public static void onBuildContents(CreativeModeTabEvent.BuildContents event) {
+    if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS) {
         event.accept(MY_BLOCK_ITEM);        // BlockItem 接受 ItemLike
         event.accept(MY_ITEM);             // 普通物品
     }
@@ -208,11 +208,11 @@ public enum MyTier implements Tier {
 // 例如：damage=3.0f → 总攻击伤害 = 3.0f + 3.0f = 6.0f
 // 注意：attackDamageModifier 参数类型是 int，不是 float
 public static final RegistryObject<Item> MY_SWORD = ITEMS.register("my_sword",
-    () -> new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f, new Item.Properties())
+    () -> new SwordItem(MyTier.MY_MATERIAL, 3, -2.4f, new Item.Properties())
 );
 //                           ^^^ int 参数：基础攻击加成
 //                                    ^^^^ float 参数：攻击速度
-// 创造模式标签通过 BuildCreativeModeTabContentsEvent 注册到 CreativeModeTabs.COMBAT
+// 创造模式标签通过 CreativeModeTabEvent.BuildContents 注册到 CreativeModeTabs.COMBAT
 ```
 
 ## 示例：盔甲
@@ -248,7 +248,7 @@ public class MyFoodItem extends Item {
                 .nutrition(4)
                 .saturationMod(0.3f)
                 .meat()
-                .effect(() -> new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
+                .effect(new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
                 .build())
         );
     }
@@ -259,7 +259,7 @@ public class MyFoodItem extends Item {
         return stack;
     }
 }
-// 创造模式标签通过 BuildCreativeModeTabContentsEvent 注册到 CreativeModeTabs.FOOD_AND_DRINK
+// 创造模式标签通过 CreativeModeTabEvent.BuildContents 注册到 CreativeModeTabs.FOOD_AND_DRINKS
 ```
 
 > 注：`effect()` 中的 `MobEffectInstance` 第一个参数是 `MobEffect`（如 `MobEffects.JUMP`），不是 `int` ID。

@@ -135,7 +135,7 @@ public class MyMessage implements IMessage {
     public static class Handler implements IMessageHandler<MyMessage, IMessage> {
         @Override
         public IMessage onMessage(MyMessage message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             int amount = message.value;
             player.getServerWorld().addScheduledTask(() -> {
                 player.inventory.addItemStackToInventory(new ItemStack(Items.DIAMOND, amount));
@@ -176,6 +176,8 @@ NetworkHandler.INSTANCE.sendToServer(new MyMessage(value));
 ```
 
 > 重要：1.8+ 默认在**网络线程**收包。收到消息后**永远不要**直接修改世界或实体。必须用 `IThreadListener.addScheduledTask()`（服务端从 `EntityPlayerMP#getServerWorld()`，客户端从 `Minecraft.getMinecraft()`）排到主线程。
+
+> 官方 SimpleImpl 示例仍写 `playerEntity`（旧 MCP 名）。**14.23.5.2854 javadoc** 字段是 `NetHandlerPlayServer#player`。本档 MCP 用 `player`。
 
 > 服务端处理客户端包时不要信任坐标：先 `world.isBlockLoaded(pos)`，避免任意区块加载攻击。
 

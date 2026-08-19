@@ -12,4 +12,4 @@ mappings: mojmap
 禁止从邻档复制。Java 21。`ResourceLocation`。
 
 对照 `neoforge/1.21.10/knowledge/common/verified-api-1.21.10.md` 与 search_neoforge_docs version=1.21.10。
-网络：RegisterPayloadHandlersEvent + PayloadRegistrar（以 networking 页为准），禁止 SimpleChannel。
+事件：`NeoForge.EVENT_BUS`；示例 `LivingEvent.LivingJumpEvent`。物理端 `FMLEnvironment#getDist()`。禁止 `MinecraftForge.EVENT_BUS`。

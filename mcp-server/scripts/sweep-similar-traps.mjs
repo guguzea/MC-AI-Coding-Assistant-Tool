@@ -208,8 +208,8 @@ async function main() {
   );
   await tryCall("lookup_obfuscated", () => lookupObfuscated({ name: "er", version: "1.20.1" }));
 
-  generateLang("demo", { "item.demo.x": "X" });
-  generateModel("demo", "x");
+  generateLang("demo", { "item.demo.x": "X" }, "1.20.1");
+  generateModel("demo", "x", "1.20.1");
   generateWorldgen("demo", "x", "forge", "1.20.1");
   generateNetworkPacket("demo", "Sync", "forge_1.20.1");
   generateCapability("demo", "Mana", "forge", "1.20.1");

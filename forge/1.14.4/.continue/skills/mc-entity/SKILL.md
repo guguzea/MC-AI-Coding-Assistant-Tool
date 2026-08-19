@@ -32,16 +32,14 @@ ENTITIES.register(modEventBus);
 ## 实体类基础结构
 
 ```java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends CreatureEntity {
     protected MyEntity(EntityType<? extends MyEntity> type, World world) {
         super(type, world);
-        this.noClip = true;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        // 添加 AI 目标（Forge 1.14.4 javadoc：SwimGoal / WaterAvoidingRandomWalkingGoal；玩家类是 PlayerEntity）
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
         this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
@@ -51,17 +49,14 @@ public class MyEntity extends LivingEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        // 注册实体属性（生命值、移动速度、攻击伤害等）
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        // 同步数据（EntityDataAccessor）
-        this.entityData.define(DATA_ID, 0);
+    protected void registerData() {
+        super.registerData();
     }
 }
 ```
@@ -85,21 +80,18 @@ public class MyEntity extends LivingEntity {
 public class ClientSetup {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(MY_ENTITY.get(), MyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(MyEntity.class, MyEntityRenderer::new);
     }
 }
 
 // 渲染器
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
-    public MyEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new MyEntityModel<>(context.bakeLayer(MyEntityModel.LAYER_LOCATION)), 0.5f);
-        // 添加层（如 ItemInHandLayer）
-        this.addLayer(new ItemInHandLayer<>(this,
-            context.getItemRenderer(), context.getBlockRenderer()));
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
+    public MyEntityRenderer(EntityRendererManager manager) {
+        super(manager, new MyEntityModel<>(), 0.5f);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(MyEntity entity) {
+    protected ResourceLocation getEntityTexture(MyEntity entity) {
         return new ResourceLocation(MOD_ID, "textures/entity/my_entity.png");
     }
 }
@@ -112,32 +104,32 @@ IF 基础渲染（无自定义模型）
   → 直接使用空的 LivingEntityRenderer 或已有渲染器
 
 IF 自定义 Biped 模型
-  → BipedModel + HumanoidMobRenderer
+  → BipedModel + LivingRenderer / MobRenderer（构造吃 EntityRendererManager）
 
 IF 自定义任意模型
-  → EntityModel + LayerDefinition + bakeLayer()
-  → 本档没有 EntityRenderersEvent；用 RenderingRegistry.registerEntityRenderingHandler
+  → EntityModel + LivingRenderer
+  → 本档没有 EntityRenderersEvent / bakeLayer / EntityRendererProvider
 ```
 
 ## 实体数据同步（服务端 ↔ 客户端）
 
 ```java
 // 定义同步数据标识符
-private static final EntityDataAccessor<Integer> DATA_HEALTH =
-    SynchedEntityData.defineId(MyEntity.class, EntityDataSerializers.INT);
+private static final DataParameter<Integer> DATA_HEALTH =
+    EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
 
-// 读取/设置
-this.entityData.get(DATA_HEALTH);    // 读取
-this.entityData.set(DATA_HEALTH, 50); // 设置（自动同步）
+this.getDataManager().get(DATA_HEALTH);
+this.getDataManager().set(DATA_HEALTH, 50);
 ```
 
 ## 常见错误
 
-- ❌ `EntityType.Builder.of()` 第一个参数是 `EntityType.IFactory<Entity>`（构造函数引用），不是 Entity 实例
-- ❌ `EntityType.Builder.build()` 接受 String 参数，不是 Direction
-- ❌ 忘记 `ENTITY_TYPES.register(modEventBus)`（实体不注册）
-- ❌ `LivingRenderer`（不存在）→ 正确：`LivingEntityRenderer`
-- ❌ `EntityRenderersEvent`（1.17+）→ 本档用 `RenderingRegistry.registerEntityRenderingHandler`
+- ❌ `EntityType.Builder.of()` — 本档是 `create`
+- ❌ `RenderingRegistry.registerEntityRenderingHandler` 传入 `EntityType` — 本档只有 `Class` 重载
+- ❌ `LivingEntityRenderer` / `EntityRendererProvider` / `getTextureLocation` / `bakeLayer` — 1.17+；本档是 `LivingRenderer` + `getEntityTexture`
+- ❌ `SynchedEntityData` / `defineSynchedData` — 本档是 `EntityDataManager` + `registerData`
+- ❌ `MeleeAttackGoal` 接到纯 `LivingEntity` — 要 `CreatureEntity`
+- ❌ `EntityRenderersEvent`
 
 ## 参考资料
 

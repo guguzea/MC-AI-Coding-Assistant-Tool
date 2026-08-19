@@ -1,17 +1,9 @@
----
-description: 04 — 实体（neoforge 1.21.10）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
----
+# 04 — 实体（NeoForge 1.21.10）
 
-# 04 — 实体
+来源：https://docs.neoforged.net/docs/1.21.10/entities/
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+注册与 1.21.5 同类：`DeferredRegister.createEntities`、`EntityType.Builder.of` + `.build(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(...)))`，或 `registerEntityType`。
 
-## Decision Flow
+本档存盘方法是 **`readAdditionalSaveData(ValueInput)` / `addAdditionalSaveData(ValueOutput)`**，不是 `CompoundTag`。其余：`defineSynchedData(SynchedEntityData.Builder)`、`hurtServer`。
 
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+自定义构造不要恰好两参数。渲染只放客户端。禁止 `EntityRegistry`。

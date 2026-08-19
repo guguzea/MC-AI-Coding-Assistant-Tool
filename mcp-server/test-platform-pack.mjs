@@ -355,9 +355,14 @@ function assertHasRuleIds(s, want, label) {
 {
   const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.6", task: "mc-new-entity" });
   assertHasRuleIds(s, ["00", "01", "09", "04"], "thin 1.20.6 entity");
-  assert.ok(!(s.skillBodies ?? []).some((b) => b.name === "mc-entity"));
-  assert.ok((s.warnings ?? []).some((w) => /mc-entity/.test(w)));
-  assert.ok(!(s.nextReads ?? []).some((n) => n.name === "mc-entity"));
+  const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
+  assert.ok(entity, "thin 1.20.6 should inject donor mc-entity");
+  assert.match(String(entity.text), /\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.match(String(entity.text), /search_neoforge_docs\(version=1\.20\.6\)/);
+  assert.ok(!(String(entity.text).includes("search_neoforge_docs(version=1.20.4)")));
+  const entIdx = (s.skills ?? []).find((x) => x.name === "mc-entity");
+  assert.match(String(entIdx?.source ?? ""), /1\.20\.4/);
+  assert.match(String(entIdx?.mappingNote ?? ""), /search_neoforge_docs\(version=1\.20\.6\)/);
   console.log("session neo 1.20.6 thin entity: ok");
 }
 
@@ -429,9 +434,8 @@ function assertHasRuleIds(s, want, label) {
   assert.equal((ll.skills ?? []).length, 0);
   assert.ok((ll.warnings ?? []).some((w) => /无平台 Skill 索引/.test(w)));
   const f17 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.7.10" });
-  assert.equal(f17.ok, true);
-  assert.equal((f17.skills ?? []).length, 0);
-  assert.ok((f17.warnings ?? []).some((w) => /无平台 Skill 索引/.test(w)));
+  assert.equal(f17.ok, false);
+  assert.equal(f17.action?.code, "PACK_NOT_FOUND");
   console.log("session empty platform skills warning: ok");
 }
 
@@ -474,6 +478,163 @@ function assertHasRuleIds(s, want, label) {
   });
   assertHasRuleIds(viaActivate, ["00", "01", "09", "10", "08", "06"], "activate forward task");
   console.log("session nextReads excludes libSkills: ok");
+}
+
+{
+  const { listPacks } = await import("./dist/platform-pack/catalog.js");
+  const listed = listPacks();
+  assert.ok(
+    listed.drafts.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"),
+    JSON.stringify(listed.drafts.map((p) => `${p.platform}/${p.minecraftVersion}`)),
+  );
+  assert.ok(!listed.packs.some((p) => p.platform === "forge" && p.minecraftVersion === "1.7.10"));
+  const sess = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.7.10" });
+  assert.equal(sess.ok, false);
+  assert.equal(sess.action?.code, "PACK_NOT_FOUND");
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-1710-"));
+  const w = activatePlatformPack({
+    action: "write",
+    platform: "forge",
+    minecraftVersion: "1.7.10",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    dryRun: true,
+  });
+  assert.equal(w.ok, false);
+  assert.equal(w.action?.code, "PACK_NOT_FOUND");
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("1.7.10 draft PACK_NOT_FOUND: ok");
+}
+
+{
+  const still = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1" });
+  assert.equal(still.ok, true);
+  const noVer = sessionPlatformPack({ platform: "forge" });
+  assert.notEqual(noVer.action?.code, "VERSION_REQUIRED");
+  console.log("session 不传 version 仍非 VERSION_REQUIRED: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-stubdef-"));
+  const preview = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    dryRun: true,
+  });
+  assert.equal(preview.ok, true);
+  const rels = (preview.planned ?? []).map((p) => p.rel);
+  assert.ok(rels.some((r) => /SKILL\.md$/.test(r)), rels.slice(0, 8).join(","));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("write default skill stub: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-nostub-"));
+  const preview = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    includeSkills: false,
+    dryRun: true,
+  });
+  assert.equal(preview.ok, true);
+  const rels = (preview.planned ?? []).map((p) => p.rel);
+  assert.ok(!rels.some((r) => /SKILL\.md$/.test(r)), rels.filter((r) => /SKILL/.test(r)).join(","));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("write includeSkills false no stub: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: "26.1" });
+  assert.equal(s.ok, true, JSON.stringify(s).slice(0, 400));
+  assert.equal(s.minecraftVersion, "26.1");
+  assert.equal(s.knowledgeVersion, "26.1.2");
+  assert.match(String(s.packDir), /fabric\/26\.1\.2/);
+  assert.ok((s.warnings ?? []).some((w) => /不要用 minecraftVersion=26\.1/.test(w)), (s.warnings ?? []).join(" | "));
+  const miss = sessionPlatformPack({ platform: "fabric", minecraftVersion: "26.2" });
+  assert.equal(miss.ok, false);
+  assert.equal(miss.action?.code, "PACK_NOT_FOUND");
+  const cross = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21" });
+  assert.equal(cross.ok, false);
+  assert.equal(cross.action?.code, "PACK_NOT_FOUND");
+  console.log("session fabric 26.1 knowledgeVersion fold: ok");
+}
+
+{
+  const root = mkdtempSync(join(tmpdir(), "mc-fab-261-"));
+  try {
+    mkdirSync(join(root, "src", "main", "resources"), { recursive: true });
+    writeFileSync(join(root, "gradle.properties"), "minecraft_version=26.1\n", "utf8");
+    writeFileSync(
+      join(root, "build.gradle"),
+      `plugins { id "fabric-loom" version "1.11.8" }\n`,
+      "utf8",
+    );
+    writeFileSync(
+      join(root, "src", "main", "resources", "fabric.mod.json"),
+      JSON.stringify({ schemaVersion: 1, id: "demo" }),
+      "utf8",
+    );
+    const d = detectModProject({ projectPath: root });
+    assert.equal(d.ok, true, JSON.stringify(d).slice(0, 400));
+    assert.equal(d.minecraftVersion, "26.1");
+    assert.equal(d.knowledgeVersion, "26.1.2");
+    assert.equal(d.packFound, true);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+  console.log("detect fabric 26.1 knowledgeVersion: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.6", topics: ["mixin"] });
+  assert.ok((s.nextReads ?? []).some((n) => n.name === "mc-mixin"), JSON.stringify(s.nextReads));
+  const gui = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.6", task: "mc-new-gui" });
+  const libNames = new Set((gui.libSkills ?? []).map((x) => x.name));
+  for (const n of gui.nextReads ?? []) {
+    assert.ok(!libNames.has(n.name), `nextReads must not include lib skill ${n.name}`);
+  }
+  for (const ver of ["1.21.5", "1.21.10"]) {
+    const t = sessionPlatformPack({ platform: "neoforge", minecraftVersion: ver });
+    assert.ok((t.skills ?? []).some((x) => x.name === "mc-entity"), `${ver} skills missing mc-entity`);
+  }
+  console.log("session neo thin donor nextReads: ok");
+}
+
+{
+  const q = sessionPlatformPack({
+    platform: "quilt",
+    minecraftVersion: "1.21.1",
+    skillNames: ["mc-registry"],
+  });
+  const body = (q.skillBodies ?? []).find((b) => b.name === "mc-registry");
+  assert.ok(body, "quilt overlay skillBodies mc-registry");
+  assert.match(String(body.text), /\[DONOR_SKILL 禁止直接抄写\]/);
+  const tmp = mkdtempSync(join(tmpdir(), "mc-quilt-ovmiss-"));
+  const packDir = join(tmp, "quilt", "9.8.8");
+  mkdirSync(join(packDir, ".cursor", "rules"), { recursive: true });
+  writeFileSync(join(packDir, "AGENTS.md"), "# quilt 9.8.8\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "00-project-setup.mdc"), "# 00\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "01-registry.mdc"), "# 01\n", "utf8");
+  writeFileSync(join(packDir, ".cursor", "rules", "09-anti-patterns.mdc"), "# 09\n", "utf8");
+  const missing = sessionPlatformPack({ platform: "quilt", minecraftVersion: "9.8.8", repoRoot: tmp });
+  assert.equal(missing.ok, true);
+  assert.ok((missing.warnings ?? []).some((w) => /skills\[\] 可能为空/.test(w)));
+  assert.ok((missing.warnings ?? []).some((w) => /禁止邻版/.test(w)));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("quilt overlay skillBodies prefix + missing warning: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.20.1" });
+  assert.ok(!(s.skills ?? []).some((x) => x.name === "mc-geckolib"));
+  assert.ok((s.libSkills ?? []).some((x) => x.name === "mc-geckolib"));
+  console.log("forge libSkills stay out of skills[]: ok");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

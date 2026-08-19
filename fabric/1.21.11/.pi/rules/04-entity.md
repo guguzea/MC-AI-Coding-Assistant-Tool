@@ -52,8 +52,11 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.SpawnLocationTypes;
 import net.minecraft.world.Heightmap;
 
 public class MyPigEntity extends PigEntity {
@@ -69,19 +72,19 @@ public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
         .dimensions(0.9f, 1.4f)
         .maxTrackingRange(8)
         .trackingTickInterval(3)
-        .build("my_pig")
+        .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(MOD_ID, "my_pig")))
 );
 
 @Override
 public void onInitialize() {
     FabricDefaultAttributeRegistry.register(MY_PIG,
         MobEntity.createMobAttributes()
-            .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-            .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25)
+            .add(EntityAttributes.MAX_HEALTH, 20.0)
+            .add(EntityAttributes.MOVEMENT_SPEED, 0.25)
     );
     SpawnRestriction.register(
         MY_PIG,
-        SpawnRestriction.Location.ON_GROUND,
+        SpawnLocationTypes.ON_GROUND,
         Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
         MyPigEntity::canSpawn
     );
@@ -89,7 +92,9 @@ public void onInitialize() {
 ```
 
 不要 `EntityAttributeRegistry`、`EntityAttributeSupplementRegistry`、`DefaultAttributeRegistry.register`（模组侧）、`SpawnRestrictionRegistration`。
-Yarn `EntityType.Builder.build` 需要 **String id**（官方 Yarn javadoc）；无参 `build()` 是 `FabricEntityTypeBuilder`。`dimensions` 是 `(float, float)`，不是 `EntityDimensions.changing`。
+Yarn 1.21.11 属性是 `MAX_HEALTH` / `MOVEMENT_SPEED`（[yarn 1.21.11+build.6 javadoc](https://maven.fabricmc.net/docs/yarn-1.21.11%2Bbuild.6/net/minecraft/entity/attribute/EntityAttributes.html)），不要抄 `GENERIC_*`。
+生成位置：`SpawnLocationTypes.ON_GROUND`，不要 `SpawnRestriction.Location`。
+Yarn 1.21.11 `EntityType.Builder.build` 要 **RegistryKey**，不要抄 1.21.1 的 `build(String)` 或无参 `FabricEntityTypeBuilder.build()`。`dimensions` 是 `(float, float)`。
 
 ## 实体渲染器（客户端）
 

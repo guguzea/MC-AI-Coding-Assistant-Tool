@@ -108,10 +108,10 @@ public class MyWandItem extends Item {
             // 服务端逻辑：给予效果、生成实体等
             player.addStatusEffect(
                 new StatusEffectInstance(StatusEffects.SPEED, 600, 0));
-            player.getItemStack(hand).damage(1, player,
+            player.getStackInHand(hand).damage(1, player,
                 (p) -> p.sendToolBreakStatus(hand));
         }
-        return TypedActionResult.success(player.getItemStack(hand));
+        return TypedActionResult.success(player.getStackInHand(hand));
     }
 }
 ```

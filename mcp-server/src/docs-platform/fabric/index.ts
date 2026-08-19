@@ -27,6 +27,7 @@ import {
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
+import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
   findFabricPorting,
   isFabricPortingId,
@@ -35,6 +36,10 @@ import {
 
 function getDataRoot(): string {
   return resolveDataDir();
+}
+
+function fabricDocsVersion(requested: string): { requested: string; resolved: string } {
+  return { requested, resolved: knowledgeVersion("fabric", requested) };
 }
 
 // 按 source 缓存 store 实例（避免重复创建；key 含 dataRoot）
@@ -184,7 +189,8 @@ export async function searchFabricDocs(
     if (!hasPlatformDocData("fabric", getDataRoot())) {
       return platformDataMissingResult("fabric");
     }
-    const { query, version, tags, source } = args;
+    const { query, tags, source } = args;
+    const { requested, resolved: version } = fabricDocsVersion(args.version);
 
     let results: ReturnType<typeof getStore.prototype.searchIndex>;
 
@@ -237,7 +243,7 @@ export async function searchFabricDocs(
     }
 
     const extraWarn =
-      version === "26.2" || version.startsWith("26.2")
+      requested === "26.2" || requested.startsWith("26.2")
         ? "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。"
         : undefined;
 
@@ -249,9 +255,9 @@ export async function searchFabricDocs(
             withDocsFallbackFields({
               ok: true,
               query,
-              version,
+              version: requested,
               resolvedVersion: version,
-              versionFallback: false,
+              versionFallback: requested !== version,
               source,
               tags,
               semantic: semanticRanked,
@@ -330,9 +336,10 @@ export async function getFabricDocSummary(
       };
     }
     const resolvedSource = args.source ?? "fabric-docs";
-    const result = getStore(args.version, resolvedSource).loadSummary(
+    const version = fabricDocsVersion(args.version).resolved;
+    const result = getStore(version, resolvedSource).loadSummary(
       args.id,
-      args.version,
+      version,
     );
     return {
       content: [
@@ -409,9 +416,10 @@ export async function getFabricDocFull(
       };
     }
     const resolvedSource = args.source ?? "fabric-docs";
-    const result = await getStore(args.version, resolvedSource).loadFullDoc(
+    const version = fabricDocsVersion(args.version).resolved;
+    const result = await getStore(version, resolvedSource).loadFullDoc(
       args.id,
-      args.version,
+      version,
       args.highlight_key ?? true,
     );
     return {
@@ -462,9 +470,10 @@ export async function getFabricDocRelated(
 ): Promise<CallToolResult> {
   try {
     const resolvedSource = args.source ?? "fabric-docs";
-    const result = getStore(args.version, resolvedSource).getRelatedDocs(
+    const version = fabricDocsVersion(args.version).resolved;
+    const result = getStore(version, resolvedSource).getRelatedDocs(
       args.id,
-      args.version,
+      version,
       args.limit ?? 5,
     );
     return {

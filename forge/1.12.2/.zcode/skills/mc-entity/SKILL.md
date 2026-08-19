@@ -50,7 +50,8 @@ public class ModEntities {
 
 | 场景 | 基类 |
 |------|------|
-| 基础生物（动物/怪物） | `EntityLiving` |
+| 近战/目标 AI | `EntityCreature` / `EntityMob`（`EntityAIAttackMelee` 要 Creature） |
+| 有生命但不挂 Creature AI | `EntityLiving` |
 | 投掷物（雪球、末影珍珠） | `EntityThrowable` |
 | 物品实体 | `EntityItem` |
 | 存储实体 | `TileEntity`（或 `Entity`) |

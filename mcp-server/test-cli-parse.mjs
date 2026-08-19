@@ -141,6 +141,13 @@ import {
 }
 
 {
+  assert.equal(isToolFailure({ status: "skipped", passed: null, ok: true }, false, false), false);
+  assert.equal(isToolFailure({ passed: null }, false, false), false);
+  assert.equal(isToolFailure({ passed: false }, false, false), true);
+  assert.equal(isToolFailure({ error: { code: "X" } }, false, false), true);
+}
+
+{
   const keys = new Set(["crashReport", "memberName", "dryRun"]);
   assert.equal(resolveFlagKey("crashReport", keys), "crashReport");
   assert.equal(resolveFlagKey("crash-report", keys), "crashReport");
@@ -162,6 +169,18 @@ import {
   assert.ok(DATA_DIR_TOOLS.has("query_loader_api"));
   assert.ok(DATA_DIR_TOOLS.has("search_loader_api"));
   assert.ok(DATA_DIR_TOOLS.has("query_api"));
+}
+
+{
+  const { waveToolSchemas, ANALYZE_LOG_DESCRIPTION, READ_KNOWLEDGE_RESOURCE_DESCRIPTION } = await import(
+    "./dist/wave/register.js"
+  );
+  const al = waveToolSchemas.find((t) => t.name === "analyze_log");
+  const rk = waveToolSchemas.find((t) => t.name === "read_knowledge_resource");
+  assert.equal(al?.description, ANALYZE_LOG_DESCRIPTION);
+  assert.ok(String(al?.description ?? "").length > 0);
+  assert.equal(rk?.description, READ_KNOWLEDGE_RESOURCE_DESCRIPTION);
+  assert.ok(String(rk?.description ?? "").length > 0);
 }
 
 console.log("test-cli-parse: ok");

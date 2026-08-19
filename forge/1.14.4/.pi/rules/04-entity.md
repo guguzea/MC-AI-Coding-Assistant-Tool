@@ -36,9 +36,7 @@ EntityType.Builder.<MyEntity>create(MyEntity::new, EntityClassification.CREATURE
 
 ### AI Goal / Target Goal
 
-- 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
-- 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `WaterBoundGoal`、`LookAtGoal` 等
+- 使用 `Goal` / `goalSelector`。近战 `MeleeAttackGoal` 的构造参数是 **`CreatureEntity`**（javadoc 28.2.23），不要把该 Goal 接到纯 `LivingEntity` 上。
 
 ### 渲染器规范
 
@@ -54,9 +52,12 @@ EntityType.Builder.<MyEntity>create(MyEntity::new, EntityClassification.CREATURE
 ### Decision: 选择实体基类
 
 ```
-IF 实体需要移动、AI、装备栏、药水效果等
+IF 实体需要近战/目标 Goal
+  → 继承 CreatureEntity（或 MonsterEntity）
+  → MeleeAttackGoal 要求 CreatureEntity
+
+IF 实体需要移动、生命、但不挂 Creature Goal
   → 继承 LivingEntity
-  → 获得完整的实体行为系统
 
 IF 实体是静态物品（掉落物、经验球等）
   → 使用现有的 ItemEntity、ExperienceOrb 等
@@ -105,9 +106,8 @@ IF 覆盖默认 Steve 模型
   → 覆盖 PlayerRenderer
 
 IF 自定义模型（Biped、Quadruped 等）
-  → 继承对应基类：RenderLiving<Entity, Model>
-  → 在 ModelBase 中实现自定义模型
-  → 需要提供 .json 模型文件和材质贴图
+  → 继承 LivingRenderer / RenderLiving
+  → 用 EntityModel / ModelBase 子类，不是方块 JSON 模型
 ```
 
 ---
@@ -128,7 +128,7 @@ protected void registerAttributes() {
 
 ```java
 // entities/MyEntity.java
-public class MyEntity extends LivingEntity {
+public class MyEntity extends CreatureEntity {
     private int attackCooldown = 0;
 
     protected MyEntity(EntityType<?> type, World world) {
@@ -168,9 +168,9 @@ public class ModEntities {
         ENTITIES.register("my_entity", () ->
             EntityType.Builder.<MyEntity>create(MyEntity::new, EntityClassification.CREATURE)
                 .size(0.6f, 1.8f)
-                .trackingRange(8)
-                .updateInterval(3)
-                .fireImmune()
+                .setTrackingRange(8)
+                .setUpdateInterval(3)
+                .immuneToFire()
                 .build(MOD_ID + ":my_entity")
         );
 
@@ -208,7 +208,7 @@ public class ClientSetup {
     public static void onClientSetup(FMLClientSetupEvent event) {
         // 渲染器通过 RenderingRegistry.registerEntityRenderingHandler 注册
         RenderingRegistry.registerEntityRenderingHandler(
-            ModEntities.MY_ENTITY.get(),
+            MyEntity.class,
             MyEntityRenderer::new
         );
     }
@@ -233,7 +233,7 @@ public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyE
 ```
 
 > 注意：
-> 1. `RenderingRegistry` 在 Forge 1.14.4 中通过 `FMLClientSetupEvent` 注册（不是 `EntityRenderersEvent`）
-> 2. `HeldItemLayer` 需要 `EntityRendererManager` 中的 `ItemRenderer`
-> 3. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）
-> 4. `ModelLayer` 用于定义层标识，通过 `RenderingRegistry` 注册，渲染器中用 `ModelHelper` 获取
+> 1. 渲染在 `FMLClientSetupEvent` 注册（不是 1.17+ `EntityRenderersEvent`）。
+> 2. Builder 追踪方法是 **`setTrackingRange` / `setUpdateInterval` / `immuneToFire`**（javadoc），不是后来的 `trackingRange` / `fireImmune`。
+> 3. 贴图：`assets/{modid}/textures/entity/my_entity.png`。
+> 4. 不要写本档没有的 `ModelLayer` / `ModelHelper`（那是更晚的实体层 API）。

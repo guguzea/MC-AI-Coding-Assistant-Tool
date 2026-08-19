@@ -138,7 +138,7 @@ public class ModItems {
         // 普通物品
         EXAMPLE_ITEM = new Item()
                 .setRegistryName(ExampleMod.MODID, "example_item")
-                .setTranslationKey(ExampleMod.MODID + ".example_item");
+                .setUnlocalizedName(ExampleMod.MODID + ".example_item");
         event.getRegistry().register(EXAMPLE_ITEM);
 
         // 方块物品

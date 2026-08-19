@@ -1,17 +1,13 @@
 ﻿---
-description: 08 — 物理端（neoforge 1.21.5）draft。只许填本版文档 id。
-globs:
-alwaysApply: true
-status: draft
+description: 08 — 物理端（NeoForge 1.21.5）
 ---
 
-# 08 — 物理端
+# 08 — 物理端（NeoForge 1.21.5）
 
-> pack-status: draft。禁止把本 FIXME 当可执行规则。
-> 引用自该版 l0，禁止邻档 API。只许填本版 `search_neoforge_docs` / index-l0 能核到的 id。
+来源：https://docs.neoforged.net/docs/1.21.5/concepts/sides/
 
-## Decision Flow
-
-```
-FIXME: 只许填本版文档 id。核不到则保持本段留白，优于填错。
-```
+- 物理 / 逻辑四端分开。物理 `Dist`，逻辑 `LogicalSide`。
+- 逻辑端：`level.isClientSide()`。
+- 物理端：`FMLEnvironment.dist`。文档推荐 `@Mod(value = MODID, dist = Dist.CLIENT)` 客户端入口。
+- 跨端必须发包。禁止服务端线程碰 `Minecraft.getInstance()`。
+- 网络：本档 payload **默认主线程**；重计算 `HandlerThread.NETWORK` + `enqueueWork`（见 06）。不要抄 1.20.6「默认网络线程」。

@@ -364,9 +364,9 @@ async function testSearchEnhancements() {
   );
 
   const fallback = parseToolText(await searchForgeDocs({ query: "block", version: "9.9.9" }));
-  assert.equal(fallback.versionFallback, true);
-  assert.ok(fallback.resolvedVersion);
-  assert.notEqual(fallback.resolvedVersion, "9.9.9");
+  assert.equal(fallback.ok, false);
+  assert.equal(fallback.code, "VERSION_NOT_FOUND");
+  assert.match(String(fallback.hint ?? ""), /list_forge_versions/);
 
   const dataRoot = resolveDataDir();
   const forgeStore = new ForgeDocStore(dataRoot);
@@ -459,7 +459,9 @@ async function testSearchEnhancements() {
   assert.ok(summary.id.includes("registr"), "1.20.1 short id should resolve");
 
   const docsFb = parseToolText(await searchDocs({ query: "block", version: "9.9.9", platform: "forge" }));
-  assert.equal(docsFb.versionFallback, true);
+  assert.equal(docsFb.ok, false);
+  assert.equal(docsFb.error?.code, "VERSION_NOT_FOUND");
+  assert.match(String(docsFb.error?.hint ?? ""), /list_forge_versions/);
 
   // 数据层验收：Fabric label 可读；NeoForge 1.20.4 含 concepts/registries
   const fabricL0Path = join(dataRoot, "fabric_1.20.1", "fabric-docs", "1.20.1", "index-l0.json");
@@ -761,6 +763,7 @@ async function testDatagenAndMappingGates() {
     version: "1.21.1",
   });
   assert.equal(q1211.found, false);
+  assert.equal(q1211.action?.code, "DATA_UNAVAILABLE");
   assert.ok(q1211.warning && /无 Vanilla API 索引/.test(q1211.warning), JSON.stringify(q1211).slice(0, 500));
   disposeApiData();
 
@@ -879,7 +882,7 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }
     "item.demo.sword": "Sword",
     item_gem: "Gem",
     ruby: "Ruby",
-  });
+  }, "1.20.1");
   const en = JSON.parse(lang.files["assets/demo/lang/en_us.json"]);
   assert.equal(en["item.demo.sword"], "Sword");
   assert.equal(en["item.demo.gem"], "Gem");
@@ -950,6 +953,15 @@ async function testCrashAnalyzeKindAndMissingDep() {
     ),
     "quilt",
   );
+
+  const fabricNoVer = analyzeCrash({
+    crashReport: "---- Minecraft Crash Report ----\nFabric Loader 0.16.0\nnet.fabricmc.loader.impl.FabricLoaderImpl\n",
+  });
+  assert.equal(fabricNoVer.crashKind, "fabric");
+  assert.ok(Array.isArray(fabricNoVer.deobfuscated));
+  assert.equal(fabricNoVer.analysisComplete, false);
+  assert.equal(fabricNoVer.ok, true);
+  assert.equal(fabricNoVer.action?.code, "VERSION_REQUIRED");
 }
 
 async function testPlatformDataMissing() {
@@ -1508,6 +1520,13 @@ async function testReviewFixes() {
   assert.ok(quiltVal.errors.some((e) => /quilt.mod.json/.test(e)));
   assert.equal(quiltVal.deprecated_legacy_passed, undefined);
 
+  const unknownVal = validateProject({
+    javaFiles: [{ path: "src/Foo.java", content: "public class Foo {}\n" }],
+  });
+  assert.equal(unknownVal.status, "skipped", JSON.stringify(unknownVal));
+  assert.equal(unknownVal.passed, null, JSON.stringify(unknownVal));
+  assert.equal(unknownVal.ok, true, JSON.stringify(unknownVal));
+
   const fabricVal = validateProject({
     javaFiles: [{
       path: "src/main/java/com/example/ExampleMod.java",
@@ -1547,7 +1566,8 @@ async function testReviewFixes() {
     }],
   });
   assert.equal(bedrockVal.status, "skipped", JSON.stringify(bedrockVal));
-  assert.equal(bedrockVal.passed, false, JSON.stringify(bedrockVal));
+  assert.equal(bedrockVal.passed, null, JSON.stringify(bedrockVal));
+  assert.equal(bedrockVal.ok, true, JSON.stringify(bedrockVal));
   assert.deepEqual(bedrockVal.errors, []);
   assert.match(bedrockVal.warnings[0], /validate_addon_manifest/);
   assert.equal(bedrockVal.deprecated_legacy_passed, undefined);

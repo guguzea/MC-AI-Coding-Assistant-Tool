@@ -103,6 +103,11 @@ public class MyScreenHandler extends ScreenHandler {
     public boolean canUse(PlayerEntity player) {
         return blockInventory.canPlayerUse(player);
     }
+
+    @Override
+    public ItemStack quickMove(PlayerEntity player, int slot) {
+        return ItemStack.EMPTY;
+    }
 }
 
 public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
@@ -114,6 +119,9 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 ```
 
 1.19.3+ 构造是 `(Factory, FeatureSet)`。Yarn 字段 `FeatureFlags.VANILLA_FEATURES`（官方 Yarn javadoc）。wiki `tutorial:screenhandler` 也可用 `FeatureSet.empty()`。
+
+Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。不要把 26.1.2 Mojmap `MenuType` / `CustomPacketPayload` 抄进本档。
+额外数据：`getScreenOpeningData`（1.21.11 loader-api 已核）。
 
 ## NamedScreenHandlerFactory（普通打开）
 

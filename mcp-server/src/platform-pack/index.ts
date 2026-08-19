@@ -18,6 +18,8 @@ export type ActivateArgs = {
   task?: string;
   skillNames?: string[];
   includeSkills?: boolean;
+  writeSkillStubs?: boolean;
+  includeSkillBodies?: boolean;
   dryRun?: boolean;
   confirmed?: boolean;
   projectPath?: string;
@@ -45,6 +47,8 @@ export function activatePlatformPack(args: ActivateArgs) {
       minecraftVersion: args.minecraftVersion,
       hosts: args.hosts,
       includeSkills: args.includeSkills,
+      writeSkillStubs: args.writeSkillStubs,
+      includeSkillBodies: args.includeSkillBodies,
       dryRun: args.dryRun,
       confirmed: args.confirmed,
       projectPath: args.projectPath,

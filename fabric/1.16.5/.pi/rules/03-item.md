@@ -5,6 +5,7 @@ description: 03 — 物品开发
 # 03 — 物品开发
 
 > 适用版本：Fabric 1.16.5
+> Yarn：[`ToolMaterial#getMiningSpeedMultiplier`](https://github.com/FabricMC/yarn/blob/1.16.5/mappings/net/minecraft/item/ToolMaterial.mapping)；工具父类是 `MiningToolItem`（无 `DiggerItem.mapping`）；`Ingredient.ofItems`；NBT/手持见 `LivingEntity#getStackInHand`。
 
 ---
 
@@ -15,7 +16,7 @@ description: 03 — 物品开发
 - 物品必须在 `Registry.register(Registry.ITEM, id, item)` 中注册
 - mod ID 使用 `new Identifier(MOD_ID, "name")` 构造
 - **禁止**通过 `new Item()` 后不注册的方式使用
-- 物品默认耐久无限（`durability` 默认 Integer.MAX_VALUE）
+- Yarn `Item.Settings` 默认 `maxCount(64)`、`maxDamage` 为 0（不可损坏），不是 `Integer.MAX_VALUE`
 
 ---
 
@@ -28,19 +29,20 @@ IF 只是手持物品（无特殊行为）
   → new Item(new Item.Settings())
 
 IF 是工具（剑/镐/斧/铲）
-  → 使用 DiggerItem 或自定义工具类
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（镐斧铲父类 MiningToolItem）
+  → 不要 DiggerItem、不要编造 DurableToolItem
 
 IF 是盔甲
   → 使用 ArmorItem + ArmorMaterial
 
 IF 是食物
-  → Item + .food(FoodComponent)
+  → Item.Settings.food(FoodComponent)
 
 IF 是可耐久工具
-  → 使用 DurableToolItem 或继承 Item 并实现 repair
+  → Settings.maxDamage(...)；材质实现 ToolMaterial
 
 IF 需要自定义行为
-  → 继承 Item 并重写 use()、onEntityUse()、inventoryTick() 等方法
+  → 继承 Item 并重写 use()、useOnBlock()、useOnEntity()、inventoryTick()
 ```
 
 ---
@@ -48,17 +50,18 @@ IF 需要自定义行为
 ## 基本物品
 
 ```java
-// 普通物品（无限耐久）
 private static final Item MY_ITEM = Registry.register(
     Registry.ITEM,
     new Identifier(MOD_ID, "my_item"),
     new Item(new Item.Settings()
         .maxCount(64)
-        .maxDamageIfAbsent(100))  // 耐久度（非工具类）
+        .maxDamageIfAbsent(100))
 );
 ```
 
 ## 食物
+
+`alwaysEdible()` 是饱食时也能吃，不是「不消耗饱食度」。
 
 ```java
 private static final Item MY_APPLE = Registry.register(
@@ -69,7 +72,7 @@ private static final Item MY_APPLE = Registry.register(
             .hunger(4)
             .saturationModifier(1.2f)
             .statusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 100, 1), 1.0f)
-            .alwaysEdible()      // 不消耗饱食度
+            .alwaysEdible()
             .build())
         .maxCount(64))
 );
@@ -77,49 +80,55 @@ private static final Item MY_APPLE = Registry.register(
 
 ## 工具（以剑为例）
 
+1.16.5 **没有铜锭**。`ToolMaterial` 只有六个方法，不要塞 `TagKey` / `FabricToolTags`。`getMiningSpeedMultiplier`（不是 1.14 的 `getMiningSpeed`）。修复用 `Ingredient.ofItems`。
+
 ```java
-// 自定义工具材质
 public enum MyToolMaterial implements ToolMaterial {
-    COPPER(2, 250, 6.0f, 2.0f, 15,
-        FabricToolTags.PICKAXES,    // 可挖掘方块
-        () -> Items.COPPER_INGOT);  // 修复材料
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, Ingredient.ofItems(Items.IRON_INGOT));
 
     private final int miningLevel;
     private final int itemDurability;
     private final float miningSpeed;
     private final float attackDamage;
     private final int enchantability;
-    private final TagKey<Block> breakableBlocks;
-    private final Supplier<Item> repairIngredient;
+    private final Ingredient repairIngredient;
 
-    MyToolMaterial(...) { ... }
+    MyToolMaterial(int miningLevel, int itemDurability, float miningSpeed,
+                   float attackDamage, int enchantability, Ingredient repairIngredient) {
+        this.miningLevel = miningLevel;
+        this.itemDurability = itemDurability;
+        this.miningSpeed = miningSpeed;
+        this.attackDamage = attackDamage;
+        this.enchantability = enchantability;
+        this.repairIngredient = repairIngredient;
+    }
 
-    @Override public int getDurability() { return itemDurability; }
-    @Override public float getMiningSpeed() { return miningSpeed; }
-    @Override public float getAttackDamage() { return attackDamage + 1.0f; } // 剑基础伤害 +1.5
     @Override public int getMiningLevel() { return miningLevel; }
+    @Override public int getDurability() { return itemDurability; }
+    @Override public float getMiningSpeedMultiplier() { return miningSpeed; }
+    @Override public float getAttackDamage() { return attackDamage; }
     @Override public int getEnchantability() { return enchantability; }
-    @Override public Ingredient getRepairIngredient() { return Ingredient.of(repairIngredient.get()); }
+    @Override public Ingredient getRepairIngredient() { return repairIngredient; }
 }
 ```
 
 ```java
-// 剑
-private static final MySwordItem COPPER_SWORD = Registry.register(
+private static final SwordItem IRON_LIKE_SWORD = Registry.register(
     Registry.ITEM,
-    new Identifier(MOD_ID, "copper_sword"),
-    new MySwordItem(MyToolMaterial.COPPER, 3, 1.6f,
-        new Item.Settings().maxDamage(250))
+    new Identifier(MOD_ID, "iron_like_sword"),
+    new SwordItem(MyToolMaterial.IRON_LIKE, 3, -2.4f,
+        new Item.Settings())
 );
 
-// 镐
-private static final MyPickaxeItem COPPER_PICKAXE = Registry.register(
+private static final PickaxeItem IRON_LIKE_PICKAXE = Registry.register(
     Registry.ITEM,
-    new Identifier(MOD_ID, "copper_pickaxe"),
-    new MyPickaxeItem(MyToolMaterial.COPPER, 1.0f, -2.8f,
-        new Item.Settings().maxDamage(250))
+    new Identifier(MOD_ID, "iron_like_pickaxe"),
+    new PickaxeItem(MyToolMaterial.IRON_LIKE, 1, -2.8f,
+        new Item.Settings())
 );
 ```
+
+自定义镐加入 `data/fabric/tags/items/pickaxes.json`（[wiki mining_levels](https://wiki.fabricmc.net/tutorial:1.1x-1.17:mining_levels)）。
 
 ## 耐久损耗
 
@@ -144,11 +153,10 @@ public class MySpecialItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         if (!world.isClient) {
-            // 服务端逻辑
-            player.getItemStack(hand).damage(1, player,
+            player.getStackInHand(hand).damage(1, player,
                 (p) -> p.sendToolBreakStatus(hand));
         }
-        return TypedActionResult.success(player.getItemStack(hand));
+        return TypedActionResult.success(player.getStackInHand(hand));
     }
 }
 ```
@@ -160,6 +168,7 @@ public class MySpecialItem extends Item {
 - ❌ 耐久物品忘记设置 `maxDamage` — 物品无法消耗耐久
 - ❌ 在 `onInitialize()` 外注册 — 注册不会生效
 - ❌ `FoodComponent.Builder` 中忘记 `.hunger()` — 食物不会被消耗
+- ❌ `DiggerItem` / `DurableToolItem` / `TagKey` / `Items.COPPER_INGOT` / `getItemStack` / `Ingredient.of`
 
 ## 扩展点
 
@@ -168,4 +177,4 @@ public class MySpecialItem extends Item {
 | `mc-registry` | 物品通过 Registry.register() 注册 |
 | `mc-datagen` | 物品注册后可生成物品模型 JSON |
 | `mc-block` | BlockItem 需要先有注册的 Block |
-| `mc-capability` | Item 可附加 Fabric Capability |
+| `mc-capability` | 1.16 原版没有 Forge Capability；第三方库另见对应 Skill |

@@ -45,10 +45,15 @@ export function readPackStatus(packDir: string): PackActivationStatus {
   return "ready";
 }
 
+function is26_1Line(v: string): boolean {
+  return v === "26.1" || v.startsWith("26.1.");
+}
+
 export function knowledgeVersion(platform: string, mcVersion: string): string {
   const p = platform.toLowerCase();
   const v = mcVersion.trim();
-  if (p === "neoforge" && v.startsWith("26.1")) return "26.1";
+  if (p === "neoforge" && is26_1Line(v)) return "26.1";
+  if (p === "fabric" && is26_1Line(v)) return "26.1.2";
   return v;
 }
 
@@ -344,11 +349,39 @@ export function listLibSkillIndex(
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function frontmatterDescription(text: string): { name?: string; description: string } {
+function parseYamlDescription(fm: string): string {
+  const lines = fm.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const simple = lines[i].match(/^description:\s*(.*)$/);
+    if (!simple) continue;
+    const rest = simple[1];
+    if (/^[|>][+-]?$/.test(rest.trim())) {
+      const block: string[] = [];
+      for (let j = i + 1; j < lines.length; j++) {
+        if (lines[j] === "" || /^\s/.test(lines[j])) {
+          block.push(lines[j].replace(/^\s+/, ""));
+          continue;
+        }
+        break;
+      }
+      return block.join(" ").replace(/\s+/g, " ").trim();
+    }
+    if (rest.trim()) return rest.trim().replace(/^["']|["']$/g, "");
+    const cont: string[] = [];
+    for (let j = i + 1; j < lines.length; j++) {
+      if (/^\s+\S/.test(lines[j])) cont.push(lines[j].trim());
+      else break;
+    }
+    return cont.join(" ").replace(/\s+/g, " ").trim();
+  }
+  return "";
+}
+
+export function frontmatterDescription(text: string): { name?: string; description: string } {
   const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) return { description: text.split("\n").find((l) => l.startsWith("# "))?.replace(/^#\s+/, "") ?? "" };
   const name = m[1].match(/^name:\s*(.+)$/m)?.[1]?.trim();
-  const description = m[1].match(/^description:\s*(.+)$/m)?.[1]?.trim() ?? "";
+  const description = parseYamlDescription(m[1]);
   return { name, description };
 }
 
@@ -391,11 +424,50 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+export const DONOR_SKILL_BANNER = "[DONOR_SKILL 禁止直接抄写]";
+
+export function wrapDonorSkillBody(mappingNote: string, body: string): string {
+  return `\n\n---\n${DONOR_SKILL_BANNER}\n${mappingNote}\n---\n\n${body}`;
+}
+
 export function mappingNoteForFabricSkill(fabricVer: string): string {
   return (
     `本 Skill 正文来自 Fabric ${fabricVer} 规则包，映射以该 Fabric 档为准（多为 Yarn named；26.1.2 为官方名）。` +
     `请与当前 Quilt 工程的 mappings 对齐后再抄代码。禁止把 class_ / method_ / field_ 中间名当 API。`
   );
+}
+
+export const NEO_SKILL_DONORS: Record<string, string> = {
+  "1.20.6": "1.20.4",
+  "1.21.5": "1.21.3",
+  "1.21.10": "1.21.8",
+};
+
+export function mappingNoteForNeoDonor(thinVer: string, donorVer: string): string {
+  return (
+    `本 Skill 正文来自 neoforge/${donorVer}，仅作结构/流程提示，不是 ${thinVer} 官方 API。` +
+    `不得直接使用 donor 正文里的类名/方法。先 search_neoforge_docs(version=${thinVer}) 核对类名/方法签名（不要用 version=${donorVer}），` +
+    `再读本档 verified-api，对不上就改口官方文档、禁止照抄。官方文档：https://docs.neoforged.net/docs/${thinVer}/`
+  );
+}
+
+export function mergeDonorSkills(
+  localDir: string,
+  donorDir: string,
+  source: string,
+  mappingNote: string,
+  repoRoot = resolveRepoRoot(),
+): SkillIndexEntry[] {
+  const local = listSkillIndex(localDir, repoRoot);
+  const donor = listSkillIndex(donorDir, repoRoot);
+  const byName = new Map<string, SkillIndexEntry>();
+  for (const s of donor) {
+    byName.set(s.name, { ...s, source, mappingNote });
+  }
+  for (const s of local) {
+    byName.set(s.name, s);
+  }
+  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function mergeQuiltFabricSkills(
@@ -404,18 +476,33 @@ export function mergeQuiltFabricSkills(
   fabricVer: string,
   repoRoot = resolveRepoRoot(),
 ): SkillIndexEntry[] {
-  const quilt = listSkillIndex(quiltDir, repoRoot);
-  const fabric = listSkillIndex(fabricDir, repoRoot);
-  const byName = new Map<string, SkillIndexEntry>();
   const note = mappingNoteForFabricSkill(fabricVer);
   const source = `fabric/${fabricVer}`;
-  for (const s of fabric) {
-    byName.set(s.name, { ...s, source, mappingNote: note });
+  return mergeDonorSkills(quiltDir, fabricDir, source, note, repoRoot);
+}
+
+export function listMergedPackSkills(
+  platform: string,
+  packVersion: string,
+  packDir: string,
+  overlay: { status: string; fabricDir?: string } | undefined,
+  repoRoot = resolveRepoRoot(),
+): { skills: SkillIndexEntry[]; donorWarning?: string } {
+  if (platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir) {
+    return { skills: mergeQuiltFabricSkills(packDir, overlay.fabricDir, packVersion, repoRoot) };
   }
-  for (const s of quilt) {
-    byName.set(s.name, s);
+  const donorVer = platform === "neoforge" ? NEO_SKILL_DONORS[packVersion] : undefined;
+  if (donorVer) {
+    const donorDir = join(repoRoot, "neoforge", donorVer);
+    if (existsSync(join(donorDir, "AGENTS.md"))) {
+      const note = mappingNoteForNeoDonor(packVersion, donorVer);
+      return {
+        skills: mergeDonorSkills(packDir, donorDir, `neoforge/${donorVer}`, note, repoRoot),
+        donorWarning: `Skill 索引含同系列主档 neoforge/${donorVer} 并入；类名/签名以本档 search_neoforge_docs(version=${packVersion}) 为准；00–10 仍只用本档。`,
+      };
+    }
   }
-  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
+  return { skills: listSkillIndex(packDir, repoRoot) };
 }
 
 export function readText(abs: string, maxChars = 120_000): string {

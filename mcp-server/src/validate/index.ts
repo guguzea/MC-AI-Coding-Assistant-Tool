@@ -20,6 +20,7 @@ import {
   javaBlobFromFiles,
   type CheckDependenciesExtras,
   type DetectedLoader,
+  type ProjectLoaderDetection,
 } from "../diagnostics/index.js";
 import { analyzeCrash, type CrashResult } from "../crash/index.js";
 import type { ActionEnvelope } from "../utils/actionable.js";
@@ -60,7 +61,7 @@ export interface ValidateQuery {
 export interface ValidationResult {
   status: "passed" | "failed" | "skipped";
   skipped?: boolean;
-  passed: boolean;
+  passed: boolean | null;
   errors: string[];
   warnings: string[];
   checks: string[];
@@ -608,6 +609,7 @@ const SKIPPED_LOADERS = new Set<DetectedLoader>([
   "rift",
   "modloader",
   "bedrock",
+  "unknown",
 ]);
 
 function warningForSkippedLoader(loader: DetectedLoader): string {
@@ -621,13 +623,15 @@ function warningForSkippedLoader(loader: DetectedLoader): string {
       return "validate_project 不覆盖 Risugami's ModLoader。请改用 search_docs({platform:\"modloader\"})。";
     case "bedrock":
       return "validate_project 不是基岩校验器。请改用 validate_addon_manifest / search_bedrock_docs。";
+    case "unknown":
+      return "未能判定加载器，validate_project 未跑检查。请指定平台后改用对应文档/校验工具，禁止当 Forge。";
     default:
       return "validate_project 不覆盖该加载器。请改用对应平台的文档/校验工具。";
   }
 }
 
 /** 用已有输入调 detectProjectLoaders（含 Java 补强），与 detect_mod_project 共用判定。 */
-export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
+function detectValidateProject(query: ValidateQuery): ProjectLoaderDetection {
   const gradle = query.buildGradle ?? "";
   const extras: CheckDependenciesExtras = {};
   if (query.quiltModJson) extras.quiltModJson = query.quiltModJson;
@@ -648,7 +652,7 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
   if (/"format_version"/.test(extraText) && /"modules"/.test(extraText)) {
     extras.addonManifest = extras.addonManifest ?? extraText;
   }
-  const { primary } = detectProjectLoaders({
+  return detectProjectLoaders({
     buildGradle: gradle,
     modsToml: query.modsToml,
     fabricModJson: query.fabricModJson,
@@ -656,7 +660,10 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
     extras,
     javaBlob,
   });
-  return primary;
+}
+
+export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
+  return detectValidateProject(query).primary;
 }
 
 // ── 主函数 ────────────────────────────────────────────────────────────────
@@ -714,8 +721,37 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   } = filled.query;
   query = filled.query;
 
-  const loader = detectValidateLoader(query);
+  const detectedLoaders = detectValidateProject(query);
+  const loader = detectedLoaders.primary;
   const recipeWarnings = datapackRecipeWarnings(query.projectPath);
+  const hybridLiteForge =
+    detectedLoaders.loaders.includes("liteloader") &&
+    detectedLoaders.loaders.includes("forge") &&
+    loader !== "liteloader_forge";
+  if (hybridLiteForge) {
+    const warnings = [
+      "同时存在 LiteLoader 与 Forge 元数据，但未检测到 apply plugin: 'net.minecraftforge.gradle.liteloader'。validate_project 未跑 Forge 检查；请向用户确认平台（PICK_PLATFORM）。",
+    ];
+    if (javaWarning) warnings.push(javaWarning);
+    return {
+      status: "skipped",
+      skipped: true,
+      passed: null,
+      ok: true,
+      errors: [],
+      warnings,
+      checks: ["loader 识别（混合工程，未跑校验）"],
+      action: actionable(
+        ActionCodes.PICK_PLATFORM,
+        "请先看 status/skipped，不要只看 passed；这不是项目损坏，而是本工具未跑检查。" + warnings[0],
+        [
+          "向用户列出 loaders[] 并询问 platform",
+          '混合工程需 apply plugin: \'net.minecraftforge.gradle.liteloader\'',
+        ],
+        ["search_docs", "detect_mod_project"],
+      ),
+    };
+  }
   if (loader === "fabric" || loader === "quilt") {
     const r = validateFabricOrQuilt(query, loader);
     if (javaWarning) r.warnings.unshift(javaWarning);
@@ -734,8 +770,8 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     return {
       status: "skipped",
       skipped: true,
-      passed: false,
-      ok: false,
+      passed: null,
+      ok: true,
       errors: [],
       warnings,
       checks: ["loader 识别（未跑校验）"],

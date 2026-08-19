@@ -2,6 +2,7 @@ import { readFileSync, existsSync } from "fs";
 import { join } from "path";
 import { resolveDataDir, resolveCommunityDir, resolveRepoRoot } from "../utils/path.js";
 import { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES } from "./templates.js";
+import { getCommunityDocStore } from "../docs-platform/community/store.js";
 
 export { getWorkflowTemplate, listWorkflowTemplateNames, WORKFLOW_TEMPLATES };
 
@@ -24,6 +25,13 @@ export function listKnowledgeResources(): KnowledgeResource[] {
       uri: `mcskill://workflow/${name}`,
       name: `workflow-${name}`,
       description: WORKFLOW_TEMPLATES[name].title,
+    });
+  }
+  for (const e of getCommunityDocStore().listReadableEntries()) {
+    resources.push({
+      uri: `mcskill://community/${e.id}`,
+      name: e.id.replace(/\//g, "-"),
+      description: e.label || e.summary,
     });
   }
   return resources;
@@ -89,16 +97,25 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
 
   if (uri.startsWith("mcskill://community/")) {
     const id = uri.replace("mcskill://community/", "");
-    const p = join(resolveCommunityDir(), "authored", `${id}.md`);
-    if (existsSync(p)) {
-      return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
+    try {
+      const full = getCommunityDocStore().getFull(id);
+      if (full.linkOnly) {
+        return {
+          found: false,
+          uri,
+          mimeType: "text/plain",
+          text: "请使用 get_community_doc_full；links 条目不内联网页正文（AGENT_USAGE.md）",
+        };
+      }
+      return { found: true, uri, mimeType: "text/markdown", text: full.content };
+    } catch {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text: "请使用 get_community_doc_full；links 条目不内联网页正文（AGENT_USAGE.md）",
+      };
     }
-    return {
-      found: false,
-      uri,
-      mimeType: "text/plain",
-      text: "请使用 get_community_doc_full；links 条目不内联网页正文（AGENT_USAGE.md）",
-    };
   }
 
   if (uri === "mcskill://patterns/README") {

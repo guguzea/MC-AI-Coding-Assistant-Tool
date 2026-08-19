@@ -12,11 +12,17 @@ description: 06 — 网络通信
 
 ### 核心原则
 
-- Fabric 网络使用 `Identifier` 作为包 ID
-- 客户端只能向服务端发送数据包，服务端可以向客户端发送
-- 网络包必须是确定性的（不含随机或非确定性状态）
-- `network` 必须在 `fabric.mod.json` 中声明
-- 使用 `Identifier` 作为包 ID 命名空间
+- 包 ID 用 Yarn `net.minecraft.util.Identifier`
+- 本档默认教程是 **networking v0**：`net.fabricmc.fabric.api.network.ClientSidePacketRegistry` / `ServerSidePacketRegistry`（[FAPI javadoc](https://maven.fabricmc.net/docs/fabric-api-0.74.1+1.19.4/net/fabricmc/fabric/api/network/ServerSidePacketRegistry.html) 仍写明职责；1.14 同期就是这套）
+- **C2S 接收**在服务端：`ServerSidePacketRegistry.INSTANCE.register`
+- **S2C 接收**在客户端：`ClientSidePacketRegistry.INSTANCE.register`（`ClientModInitializer`）
+- **C2S 发送**：`ClientSidePacketRegistry.INSTANCE.sendToServer(id, buf)`
+- **S2C 发送**：`ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, id, buf)`
+- 回调在网络线程：用 `packetContext.getTaskQueue().execute(...)`（loader-api：`PacketContext#getTaskQueue`，不是 `queue()`）
+- 不要编造 `PacketByteBuf.createUnpooled()`（Yarn `PacketByteBuf` 无此静态方法）。写 `new PacketByteBuf(Unpooled.buffer())`
+- 不要抄 1.16+ 当默认：`ServerPlayNetworking` / `PayloadTypeRegistry`。loader-api 摘要里若出现 `networking.v1`，只在工程 **确实依赖带 v1 的 FAPI jar** 时再用
+- 依赖写完整 `fabric-api`，不要钉死 `fabric-networking-v0:0.1.3+...`，也不要编造 `fabric-entity-dragon-v0`
+- `fabric.mod.json` **没有** `network` 键；不需要为发包专门加 mixin
 
 ---
 
@@ -25,17 +31,19 @@ description: 06 — 网络通信
 ### Decision: 选择网络通信方式
 
 ```
-IF 服务端向客户端单向推送数据
-  → ServerSidePacketRegistry.register()
+IF 服务端向客户端推送（S2C）
+  → 客户端 ClientSidePacketRegistry.INSTANCE.register
+  → 服务端 ServerSidePacketRegistry.INSTANCE.sendToPlayer
 
-IF 客户端向服务端单向请求
-  → ClientSidePacketRegistry.register()
+IF 客户端向服务端请求（C2S）
+  → 服务端 ServerSidePacketRegistry.INSTANCE.register（ModInitializer）
+  → 客户端 ClientSidePacketRegistry.INSTANCE.sendToServer
 
-IF 需要双向通信
-  → 分别为服务端和客户端注册不同的包处理器
+IF 需要双向
+  → 两端分别 register；发送用上面两套 send*
 
-IF 使用 Fabric API 网络模块
-  → fabric-entity-dragon-v0 或 fabric-networking-v0
+IF 工程 FAPI 已是 networking-api-v1
+  → 才改用 ServerPlayNetworking / ClientPlayNetworking；不要和 v0 混用
 ```
 
 ---
@@ -43,65 +51,52 @@ IF 使用 Fabric API 网络模块
 ## 基础网络注册
 
 ```java
-// C2S: 客户端向服务端
-// S2C: 服务端向客户端
+import io.netty.buffer.Unpooled;
+import net.minecraft.util.PacketByteBuf;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
 public class MyNetworking {
-    // 包 ID
-    public static final Identifier MY_PACKET_ID =
-        new Identifier(MOD_ID, "my_packet");
+    public static final Identifier MY_PACKET_ID = new Identifier(MOD_ID, "my_packet");
 
-    // C2S 注册（客户端发送，服务端接收）
-    public static final ClientSidePacketRegistry CLIENT_PACKET_REGISTRY =
-        ClientSidePacketRegistry.INSTANCE;
-
+    // C2S：服务端接收（主入口）
     public static void registerServerReceivers() {
-        CLIENT_PACKET_REGISTRY.register(MY_PACKET_ID, (packetContext, attachedData) -> {
+        ServerSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
+            int value = buf.readInt();
             packetContext.getTaskQueue().execute(() -> {
-                // 在服务端线程执行
-                ServerPlayerEntity player = packetContext.getPlayer();
-                int value = attachedData.readInt();
-                // 处理数据包
+                ServerPlayerEntity player = (ServerPlayerEntity) packetContext.getPlayer();
+                // 主线程处理
             });
         });
     }
 
-    // S2C 注册（服务端发送，客户端接收）
+    // S2C：客户端接收
     public static void registerClientReceivers() {
-        ServerSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, attachedData) -> {
+        ClientSidePacketRegistry.INSTANCE.register(MY_PACKET_ID, (packetContext, buf) -> {
+            int value = buf.readInt();
             packetContext.getTaskQueue().execute(() -> {
-                // 在客户端线程执行
+                // 客户端主线程
             });
         });
     }
 }
 ```
+
+`PacketRegistry#register(Identifier, PacketConsumer)` 与 `PacketConsumer#accept(PacketContext, PacketByteBuf)` 已核 loader-api。
 
 ## 发送数据包
 
 ```java
-// 服务端向客户端发送
 public void sendToClient(ServerPlayerEntity player, int value) {
-    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player,
-        MY_PACKET_ID, PacketByteBuf.createUnpooled().writeInt(value));
+    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    buf.writeInt(value);
+    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, MY_PACKET_ID, buf);
 }
 
-// 客户端向服务端发送
 public void sendToServer(int value) {
-    ClientSidePacketRegistry.INSTANCE.sendToServer(MY_PACKET_ID,
-        PacketByteBuf.createUnpooled().writeInt(value));
-}
-```
-
-## fabric.mod.json 配置
-
-```json
-{
-  "entrypoints": {
-    "main": ["com.example.examplemod.ExampleMod"],
-    "client": ["com.example.examplemod.ExampleModClient"]
-  },
-  "mixins": ["examplemod.mixins.json"]
+    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    buf.writeInt(value);
+    ClientSidePacketRegistry.INSTANCE.sendToServer(MY_PACKET_ID, buf);
 }
 ```
 
@@ -111,42 +106,29 @@ public void sendToServer(int value) {
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // 注册客户端接收器
         MyNetworking.registerClientReceivers();
 
-        // 注册快捷键
         KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.examplemod.open_gui",
             InputUtil.Type.KEYSYM,
-            InputUtil.Type.KEYSYM.createFromCode(80),  // P 键
+            80, // GLFW_KEY_P；Yarn KeyBinding(String, Type, int, String)
             "category.examplemod"
         ));
-
-        // 快捷键回调
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (KeyBindings.OPEN_GUI.isPressed()) {
-                // 打开 GUI 并发送网络包
-                sendToServer(value);
-            }
-        });
     }
 }
 ```
 
-## 使用 Fabric Networking API
-
-```groovy
-// build.gradle
-modImplementation "net.fabricmc.fabric-api:fabric-networking-v0:0.1.3+build.7"
-```
+Yarn 1.14.4 `KeyBinding` 四参最后一参是 **int code**，不要把 `InputUtil.Type.KEYSYM.createFromCode(80)`（返回 `KeyCode`）塞进第三参。
 
 ## 常见错误
 
-- ❌ 在非主线程处理网络数据 — 使用 `packetContext.getTaskQueue().execute()`
-- ❌ 忘记在 `fabric.mod.json` 中注册 entrypoint — 网络回调不生效
-- ❌ 在服务端处理客户端数据时修改世界状态 — 确认线程安全
-- ❌ 包 ID 命名空间不一致 — 服务端和客户端 ID 必须完全相同
-- ❌ 在 `onInitialize()` 中注册客户端网络 — 应在 `ClientModInitializer.onInitializeClient()` 中
+- ❌ 把 C2S `register` 写在 `ClientSidePacketRegistry` — 那是 **S2C 接收**
+- ❌ 把 S2C `register` 写在 `ServerSidePacketRegistry` — 那是 **C2S 接收**
+- ❌ `packetContext.queue()` — 本档是 `getTaskQueue().execute`
+- ❌ `PacketByteBuf.createUnpooled()` / `ServerPlayNetworking.send` 当 v0 教程
+- ❌ 在网络线程改世界
+- ❌ 在 `onInitialize()` 注册 S2C 接收器
+- ❌ 包 ID 两端不一致
 
 ## 扩展点
 

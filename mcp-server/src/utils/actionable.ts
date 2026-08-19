@@ -56,7 +56,17 @@ export function versionRequiredAction(): ActionEnvelope {
     "请指定版本（VERSION_REQUIRED），禁止默认 1.20.1",
     [
       "传入精确 Minecraft 版本，例如 1.20.1、1.21.1、26.1",
-      "不要假设默认 1.20.1",
+      "先 list_forge_versions / list_fabric_versions / list_neoforge_versions / list_doc_versions 查看已索引版本",
+      "不要假设默认 1.20.1 或 26.1",
     ],
+    ["list_forge_versions", "list_fabric_versions", "list_neoforge_versions", "list_doc_versions"],
   );
+}
+
+/** validate_project / diagnose_gradle：skipped 不是失败；仅 passed===false 为失败。 */
+export function isValidationFailure(result: unknown): boolean {
+  if (!result || typeof result !== "object") return false;
+  const r = result as Record<string, unknown>;
+  if (r.status === "skipped") return false;
+  return r.passed === false;
 }

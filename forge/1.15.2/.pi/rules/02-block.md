@@ -14,7 +14,7 @@ description: 02 — 方块开发
 
 - 方块类必须继承 `Block`（`net.minecraft.block.Block`）
 - 推荐使用 `Block.Properties.create(Material)` 创建属性
-- 禁止重写 `use`、`onBlockActivated` 等与物理交互相关的旧版方法（Forge 1.15.2 已在大部分方法上标注 `@Deprecated`）
+- 右键交互重写 `onBlockActivated`（返回 `ActionResultType`）。1.15.2 没有 Mojmap `use`
 
 ### Block.Properties 常用配置
 
@@ -33,13 +33,13 @@ Block.Properties.create(Material material)
 - **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
 - 必须通过 `DeferredRegister<Block>` 注册（参见 `01-registry.mdc`）
 - 注册名称必须全小写
-- ItemBlock 需要单独注册（与方块使用相同 registry name）
+- BlockItem 需要单独注册（与方块使用相同 registry name）
 
 ### 方块实体（TileEntity）约束
 
 - 有状态或需要持久化的方块必须使用 TileEntity（而非仅靠 Block）
 - TileEntity 必须在方块类中重写 `createTileEntity()` 方法
-- TileEntity 的 `write()`/`read()` 方法处理 NBT 序列化（使用 `NBTTagCompound`）
+- TileEntity 的 `write(CompoundNBT)` **返回** CompoundNBT；读入 `read(CompoundNBT)`（不要 1.12 的 `NBTTagCompound`）
 - **禁止**在 `read()` 中直接读取世界数据（会导致 NPE）
 
 ### BlockState 配置
@@ -57,17 +57,16 @@ Block.Properties.create(Material material)
 ```
 IF 需要可放置物品、不可交互的基础方块
   → 基础方块（extends Block）
-  → 注册后注册 ItemBlock
+  → 注册后注册 BlockItem
   → 创建 blockstates JSON 和 models JSON
 
 IF 需要存储数据（箱子、熔炉等）
   → 方块实体方块（Block + TileEntity）
   → 需要在方块类重写 createTileEntity()
   → 需要注册 TileEntityType
-  → 需要在 mods.toml 中添加 blockEntity 字段
 
 IF 需要可交互（右键打开 GUI、触发事件）
-  → 基础方块 + onBlockActivated 事件
+  → 方块重写 onBlockActivated（返回 ActionResultType）
   → 或使用 Container + ITickableTileEntity 实现 GUI
 
 IF 需要流体
@@ -76,8 +75,7 @@ IF 需要流体
   → 参考 05-events.mdc 中的流体相关事件
 
 IF 需要特殊渲染（多面材质、透明度、动画）
-  → 使用 IBucketMenu 相关的流体方块
-  → 或自定义 BlockState + BakedQuad
+  → 自定义 BlockState + BakedQuad
   → 参考 08-client-server.mdc 中的渲染规则
 ```
 
@@ -122,7 +120,7 @@ IF 只需要静态方块（装饰、完整方块）
 
 ---
 
-## 示例：基础方块（带 ItemBlock）
+## 示例：基础方块（带 BlockItem）
 
 ```java
 // blocks/MyBlock.java
@@ -187,21 +185,21 @@ public class MyTileEntityBlock extends Block {
 ```java
 // tiles/MyTileEntity.java
 public class MyTileEntity extends TileEntity {
-    private NBTTagCompound data = new NBTTagCompound();
+    private CompoundNBT data = new CompoundNBT();
 
     public MyTileEntity() {
         super(ModTileEntities.MY_TILE_ENTITY.get());
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         compound.put("data", data.copy());
         return compound;
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         if (compound.contains("data", Constants.NBT.TAG_COMPOUND)) {
             this.data = compound.getCompound("data");

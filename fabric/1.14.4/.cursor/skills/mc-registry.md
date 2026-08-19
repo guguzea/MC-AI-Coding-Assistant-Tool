@@ -42,20 +42,20 @@ IF 注册 客户端专用组件（渲染器/快捷键）
   → 在 ClientModInitializer 中处理
 
 IF 平台 = Forge
-  → 跳转 forge/1.20.1/.cursor/rules/01-registry.mdc
+  → 跳转 forge/1.14.4/.cursor/rules/01-registry.mdc
 ```
 
 ## Registry 类型
 
-| 注册内容 | Registries 枚举 | 必需参数 |
+| 注册内容 | Registry 静态字段 | 必需参数 |
 |---------|----------------|---------|
 | 方块 | `Registry.BLOCK` | `Identifier`, `Block` |
 | 物品 | `Registry.ITEM` | `Identifier`, `Item` |
-| 方块实体类型 | `Registry.BLOCK_ENTITY_TYPE` | `Identifier`, `BlockEntityType` |
+| 方块实体类型 | `Registry.BLOCK_ENTITY` | `Identifier`, `BlockEntityType` |
 | 实体类型 | `Registry.ENTITY_TYPE` | `Identifier`, `EntityType` |
 | 粒子类型 | `Registry.PARTICLE_TYPE` | `Identifier`, `ParticleType` |
 | 声音事件 | `Registry.SOUND_EVENT` | `Identifier`, `SoundEvent` |
-| 菜单类型 | `Registry.CONTAINER` | `Identifier`, `ScreenHandlerType` |
+| 容器类型 | `Registry.CONTAINER` | `Identifier`, `ContainerType` |
 | 附魔 | `Registry.ENCHANTMENT` | `Identifier`, `Enchantment` |
 | 流体 | `Registry.FLUID` | `Identifier`, `Fluid` |
 
@@ -91,8 +91,8 @@ private static final Item MY_BLOCK_ITEM =
 new Identifier("fabric", "diamond");          // fabric:diamond
 new Identifier(MOD_ID, "my_item");           // examplemod:my_item
 
-// ❌ 错误：不要直接写字符串
-new Identifier("examplemod:my_item");         // 这会被当作完整 ID 而非 namespace:id
+// 单字符串也可以（wiki：new Identifier("namespace:path")），推荐两参
+new Identifier("examplemod", "my_item");
 ```
 
 ## 常见错误

@@ -41,7 +41,7 @@ id 'fabric-loom'
 
 **例外（禁止读邻版 01–10）：**
 
-- 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
+- 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `knowledgeVersion=26.1.2`，不要用 `minecraftVersion=26.1`）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
 - 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`list_fabric_versions` 目前无 1.21.4 / 1.21.5 / 1.21.8 / 1.21.10，也无 `data/fabric_1.21.8` 等树 → `PACK_NOT_FOUND`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
@@ -184,8 +184,7 @@ private void doServerThing() { ... }
 
 ```
 Decision: 选择注册方式
-→ IF Minecraft >= 1.20.5 AND 平台 = Forge → 使用 DeferredRegister
-→ ELSE IF 平台 = Forge → 使用 RegistryEvent.register
+→ IF 平台 = Forge → 使用该档 01-registry（DeferredRegister 或 RegistryEvent，禁止套用邻版）
 → ELSE IF 平台 = Fabric → 使用 Registry.register() in onInitialize
 → ELSE IF 平台 = Quilt → 优先 QSL / org.quiltmc（见 quilt/<ver>/01-registry.mdc），不要生成 FAPI Registry 当 QSL
 → ELSE → 询问用户

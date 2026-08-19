@@ -105,6 +105,11 @@ public class MyScreenHandler extends ScreenHandler {
     public boolean canUse(PlayerEntity player) {
         return blockInventory.canPlayerUse(player);
     }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+        return ItemStack.EMPTY;
+    }
 }
 
 public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
@@ -116,6 +121,9 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 ```
 
 本档构造仍是单参 `new ScreenHandlerType<>(factory)`（Parchment 1.16.5 / 1.18.2 已核 `MenuType(MenuSupplier)`；FeatureFlags 是 1.19.3+）。
+
+Yarn 移位是 `transferSlot(PlayerEntity, int)`（[yarn 1.16.5 ScreenHandler.mapping](https://github.com/FabricMC/yarn/blob/1.16.5/mappings/net/minecraft/screen/ScreenHandler.mapping)）。wiki 现页 `tutorial:screenhandler` 写 `quickMove`，那是 **1.19.4+** Yarn 名，不要抄进本档。
+容器屏：FAPI `ScreenRegistry.register`（本档 loader-api 已核）或原版 `HandledScreens.register`。`ScreenEvents.AFTER_INIT` 是 FAPI 静态字段（[fabric 1.16 ScreenEvents.java](https://github.com/FabricMC/fabric/blob/1.16/fabric-screen-api-v1/src/main/java/net/fabricmc/fabric/api/client/screen/v1/ScreenEvents.java)）。
 
 ## NamedScreenHandlerFactory（普通打开）
 

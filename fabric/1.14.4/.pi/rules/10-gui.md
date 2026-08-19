@@ -14,8 +14,8 @@ description: 10 — GUI / Screen 开发
 
 - GUI 代码**仅在客户端**执行（`ClientModInitializer`）
 - Screen 类继承 `Screen` 或其子类（容器屏通常再包一层 HandledScreen / ContainerScreen）
-- 容器屏通过 `ScreenProviderRegistry.INSTANCE.registerFactory` 注册
-- **禁止**在服务端引用任何 GUI 类（`Screen`、`ButtonWidget`、`DrawContext` 等）
+- 容器屏通过 `ScreenProviderRegistry.INSTANCE.registerFactory` 注册（loader-api 已核；与 `ContainerProviderRegistry` 共用同一个 `Identifier`）
+- **禁止**在服务端引用任何 GUI 类（`Screen`、`ButtonWidget` 等）。不要抄 1.20+ `DrawContext`
 
 ---
 
@@ -44,24 +44,25 @@ IF 给原版 Screen 加控件
 按钮在 `init()` 里创建；**标题/说明文字在 `render()` 里画**，不要在 `init()` 里 `drawString`。
 不要用 `TextWidget`（部分档没有）或 `SimpleNamedWidget`（编造）。
 
+Yarn 1.14.4 `Screen` 构造是 `(Text title)`（[yarn 1.14.4 Screen.mapping](https://github.com/FabricMC/yarn/blob/1.14.4/mappings/net/minecraft/client/gui/screen/Screen.mapping)）。`ButtonWidget` 第 5 参是 `String`。`render` 无 `MatrixStack`。`renderBackground` 只有 `(int alpha)`。
+
 ```java
 public class MyScreen extends Screen {
-    public MyScreen() {
-        super();
+    public MyScreen(Text title) {
+        super(title);
     }
 
     @Override
     protected void init() {
         addButton(new ButtonWidget(width / 2 - 50, height / 2 + 20, 100, 20,
             "Click Me", btn -> {
-                // 按钮点击逻辑
-                this.closeScreen();
+                this.minecraft.openScreen(null);
             }));
     }
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
+        this.renderBackground(0);
         this.drawString(this.font, "Hello Fabric!", width / 2 - 50, height / 2 - 20, 0xFFFFFF);
         super.render(mouseX, mouseY, delta);
     }
@@ -76,7 +77,7 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             new Identifier("examplemod", "my_screen"),
-            (ContainerScreenFactory<MyContainer>) container -> new MyScreen()
+            (ContainerScreenFactory<MyContainer>) container -> new MyScreen(new TranslatableText("gui.examplemod.my_screen"))
         );
     }
 }
@@ -94,10 +95,16 @@ public class MyContainer extends Container {
     }
 
     public MyContainer(int syncId, PlayerInventory playerInventory, Inventory blockInventory) {
-        super();
+        super(MY_CONTAINER, syncId); // Yarn：Container(ContainerType, int)
         this.playerInventory = playerInventory;
         this.blockInventory = blockInventory;
         // 给方块槽和玩家物品栏 addSlot(...)
+    }
+
+    // Yarn 1.14.4 移位是 transferSlot，不是 wiki 现页的 quickMove
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+        return ItemStack.EMPTY; // 按槽位 insertItem，参考 wiki 现页逻辑但用本档方法名
     }
 
     @Override
@@ -118,9 +125,17 @@ public static final ContainerType<MyContainer> MY_CONTAINER = Registry.register(
 
 ## 打开容器（服务端）
 
-1.14.4 用 Fabric `ContainerProviderRegistry`，不要 `player.openHandledScreen` / `NamedScreenHandlerFactory`。
+1.14.4 用 Fabric `ContainerProviderRegistry`（loader-api：`registerFactory` + `openContainer`），不要 `player.openHandledScreen` / `NamedScreenHandlerFactory`。
+
+服务端先按同一 `Identifier` 注册工厂，再打开：
 
 ```java
+// 主入口（逻辑服务端也要有工厂）
+ContainerProviderRegistry.INSTANCE.registerFactory(
+    MY_SCREEN_ID,
+    (syncId, identifier, player, buf) -> new MyContainer(syncId, player.inventory)
+);
+
 public void openScreen(PlayerEntity player) {
     if (!(player instanceof ServerPlayerEntity serverPlayer)) return;
     ContainerProviderRegistry.INSTANCE.openContainer(
@@ -132,6 +147,8 @@ public void openScreen(PlayerEntity player) {
     );
 }
 ```
+
+`ContainerFactory#create(int, Identifier, PlayerEntity, PacketByteBuf)` 已核 loader-api。不要编造 1.16 `ExtendedScreenHandlerFactory`。
 
 ## 给已有 Screen 加控件
 
@@ -152,6 +169,6 @@ public void openScreen(PlayerEntity player) {
 | 配合 Skill | 协作说明 |
 |-----------|---------|
 | `mc-registry` | Container / ContainerType 通过 `Registry.register` 注册 |
-| `mc-item` | 物品右键可 `openHandledScreen` / `openContainer` |
+| `mc-item` | 物品右键走 `ContainerProviderRegistry.openContainer`（不要抄 1.16 `openHandledScreen`） |
 | `mc-block` | 方块实体提供 Factory / 打开包数据 |
 | `mc-networking` | 槽位不够时再用自定义 Payload 同步进度条等 |

@@ -1,6 +1,6 @@
 # 04 — 实体开发
 
-> 适用版本：Forge 1.13.2
+> 适用版本：Forge 1.13.2（javadoc 1.13.2-25.0.220）
 
 ---
 
@@ -8,36 +8,30 @@
 
 ### Entity 基础规范
 
-- 实体类继承 `LivingEntity`（可移动/有生命）或 `Entity`（基础）
-- 推荐继承 `LivingEntity`，除非需要完全自定义行为
-- 实体必须通过 `RegistryEvent.Register<EntityType>` 注册
-- 官方 `mods.toml` **没有** `[[entities]]` 表；不要编实体 TOML 段。本档不要把 1.14+ 的 `DeferredRegister` 当唯一写法
+- 本档 MCP 名是 **`EntityLiving` / `EntityLivingBase` / `EntityCreature`**，**没有** `LivingEntity`（javadoc 404）。
+- 构造：`EntityLiving(EntityType<?> type, World worldIn)`。
+- 近战 AI `EntityAIAttackMelee` 仍要求 **`EntityCreature`**。
+- 注册：`RegistryEvent.Register<EntityType<?>>` + `setRegistryName`。官方 `mods.toml` **没有** `[[entities]]`。不要把 1.14+ `DeferredRegister` 当本档唯一写法。
 
-### EntityType.Builder 配置
+### EntityType.Builder（已核）
 
 ```java
-// Forge 1.13.2-25.0.220 javadoc：create(Class, Function<World, T>)，然后 tracker + build
 EntityType.Builder.create(MyEntity.class, MyEntity::new)
     .tracker(8, 3, true)   // range, updateFrequency, sendVelocityUpdates
     .build("my_entity")
 ```
 
-### 实体属性（Attribute）
+`create` 是 `(Class, Function<World, T>)`。**没有** `MobCategory` / `EntityClassification` 参数。不要抄 1.14+ 的 `create(factory, classification)`。
 
-- 每个实体**必须**在 `registerAttributes()` 方法中注册属性
-- 属性注册在实体类内部处理，不需要通过事件系统
+### 属性与 AI
 
-### AI Goal / Target Goal
+- 属性：`registerAttributes()`（先 `super`，再 `getAttribute(SharedMonsterAttributes.*).setBaseValue(...)`）。不是 1.12 的 `applyEntityAttributes()`，也不是 1.16+ `createAttributes()`。
+- AI：仍是 `EntityAITasks` + `initEntityAI()` + `tasks.addTask` / `targetTasks.addTask`。**没有** `Goal` / `SwimGoal` / `registerGoals`（那些 1.14+）。
 
-- 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
-- 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `GoalFloat`、`LookAtGoal` 等
+### 渲染
 
-### 渲染器规范
-
-- 渲染器必须放在客户端包下
-- 必须通过 `RenderingRegistry.registerEntityRenderingHandler()` 注册
-- 纹理文件路径：`textures/entity/{entity_path}/{name}.png`
+- `RenderingRegistry.registerEntityRenderingHandler(Class<T>, IRenderFactory)`，在 **`FMLClientSetupEvent`** 里调（javadoc）。参数是 **实体 Class**，不是 `EntityType`。
+- 贴图：`assets/{modid}/textures/entity/...`。`RenderLiving` + `ModelBase`，不是方块 JSON 模型。
 
 ---
 
@@ -46,49 +40,39 @@ EntityType.Builder.create(MyEntity.class, MyEntity::new)
 ### Decision: 选择实体基类
 
 ```
-IF 实体需要移动、AI、装备栏、药水效果等
-  → 继承 LivingEntity
-  → 获得完整的实体行为系统
+IF 需要近战/目标 AI
+  → EntityCreature 或 EntityMob（EntityAIAttackMelee 要 EntityCreature）
 
-IF 实体是静态物品（掉落物、经验球等）
-  → 使用现有的 ItemEntity、ExperienceOrb 等
-  → 通常不需要自定义 Entity
+IF 需要生命/移动但不挂 Creature AI
+  → EntityLiving
 
-IF 实体需要完全控制渲染和碰撞
-  → 继承 Entity（不推荐，需要大量手动实现）
+IF 掉落物、经验球等
+  → 用原版 EntityItem / EntityXPOrb，通常不必自写
+
+IF 完全自定义碰撞/渲染
+  → Entity（工作量大）
 ```
 
 ### Decision: 生成分类
 
 ```
-1.13.2 官方 EntityType.Builder.create 是 (Class, Function<World, T>)，
-没有 MobCategory / EntityClassification 参数。不要抄 1.14+ 的 create(factory, classification)。
-被动/敌对差异走实体基类（见上）与原版生成逻辑，不要编造本档没有的 Builder 分类重载。
+1.13.2 Builder.create 没有分类参数。被动/敌对走基类，不要编造本档没有的 Builder 分类重载。
 ```
 
-### Decision: 渲染器选择
+### Decision: 渲染器
 
 ```
-IF 基础实体（无自定义模型）
-  → 使用 RenderLiving 配合内置模型
-
-IF 覆盖默认 Steve 模型
-  → 覆盖 LivingRenderer
-
-IF 自定义模型（Biped、Quadruped 等）
-  → 继承对应基类：RenderLiving<Entity, Model>
-  → 需要提供 .json 模型文件和材质贴图
+IF 自定义模型
+  → RenderLiving + ModelBase 子类
+  → FMLClientSetupEvent 里 registerEntityRenderingHandler(MyEntity.class, factory)
 ```
 
 ---
 
-## 示例：定义实体属性
+## 示例：实体类
 
 ```java
-// entities/MyEntity.java
-public class MyEntity extends LivingEntity {
-    private int attackCooldown = 0;
-
+public class MyEntity extends EntityCreature {
     protected MyEntity(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -96,90 +80,61 @@ public class MyEntity extends LivingEntity {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        // 注册实体属性
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+    protected void initEntityAI() {
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIWanderAvoidWater(this, 1.0D));
+        this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(4, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
 }
 ```
 
-## 示例：实体注册
+## 示例：注册
 
 ```java
-// registry/ModEntities.java
 public class ModEntities {
-    public static final EntityType<MyEntity> MY_ENTITY =
-        EntityType.Builder.create(MyEntity.class, MyEntity::new)
-            .tracker(8, 3, true)
-            .build("my_entity");
+    public static EntityType<MyEntity> MY_ENTITY;
 
-    public static void register() {
+    public static void register(RegistryEvent.Register<EntityType<?>> event) {
+        MY_ENTITY = EntityType.Builder.create(MyEntity.class, MyEntity::new)
+                .tracker(8, 3, true)
+                .build("my_entity");
         MY_ENTITY.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
+        event.getRegistry().register(MY_ENTITY);
     }
 }
 ```
 
-```java
-// ExampleMod.java
-@Mod(ExampleMod.MOD_ID)
-public class ExampleMod {
-    // ...
-    @SubscribeEvent
-    public void onEntitiesRegistry(RegistryEvent.Register<EntityType<?>> event) {
-        event.getRegistry().register(ModEntities.MY_ENTITY);
-    }
-}
-```
+## 示例：客户端渲染
 
 ```java
-// ❌ 错误示例：没有 setRegistryName
-event.getRegistry().register(
-    EntityType.Builder.create(MyEntity.class, MyEntity::new).tracker(8, 3, true).build("my_entity")
-); // 没有注册名，无法引用
-```
-
-## 示例：客户端渲染器注册
-
-```java
-// client/ClientSetup.java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
-    public static void register() {
-        RenderingRegistry.registerEntityRenderingHandler(
-            ModEntities.MY_ENTITY,
-            MyEntityRenderer::new
-        );
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(MyEntity.class, MyEntityRenderer::new);
     }
 }
 ```
 
 ```java
-// client/rendering/MyEntityRenderer.java
 public class MyEntityRenderer extends RenderLiving<MyEntity> {
-    public MyEntityRenderer(EntityRendererManager manager) {
-        super(manager, new MyEntityModel(), 0.5f);
+    public MyEntityRenderer(RenderManager manager) {
+        super(manager, new ModelBiped(), 0.5F);
     }
 
     @Override
     protected ResourceLocation getEntityTexture(MyEntity entity) {
-        return new ResourceLocation(ExampleMod.MOD_ID, "textures/entity/my_entity.png");
+        return new ResourceLocation(MOD_ID, "textures/entity/my_entity.png");
     }
 }
 ```
 
-> 注意：
-> 1. `RenderingRegistry` 在 Forge 1.13.2 中用于注册实体渲染器
-> 2. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）
-> 3. 使用 `RenderLiving` 作为基类配合 `Model` 实现自定义模型
+> 禁止：`LivingEntity` / `PlayerEntity` / `Goal` / `registerGoals` / 把 `EntityType` 传进 `registerEntityRenderingHandler`。

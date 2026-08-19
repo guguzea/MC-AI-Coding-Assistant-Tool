@@ -386,6 +386,7 @@ export function isToolFailure(result: unknown, isError: boolean, failOnError: bo
   if (!result || typeof result !== "object") return false;
   const r = result as Record<string, unknown>;
   if (r.ok === false) return true;
+  if (r.status === "skipped") return false;
   if (r.passed === false) return true;
   if (r.found === false && !failOnError) {
     /* 查询无命中默认成功 */

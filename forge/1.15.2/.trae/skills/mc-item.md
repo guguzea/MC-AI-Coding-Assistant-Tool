@@ -16,7 +16,7 @@ mappings: mcp
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
         .maxStackSize(64)
-        .group(CreativeModeTab.TAB_MISC)
+        .group(ItemGroup.MISC)
     )
 );
 ```
@@ -37,13 +37,13 @@ IF 可食用
   → Item + .food()
 
 IF 可在创造模式标签中找到
-  → 使用 .tab() 设置 CreativeModeTab
+  → 使用 .group(ItemGroup) 设置创造栏（官方文档方法名是 group，不是 tab）
 ```
 
 ## ITier
 
 ```java
-public enum MyTier implements ITier {
+public enum MyTier implements IItemTier {
     COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.fromItems(Items.DIAMOND));
 
     private final int level;
@@ -55,11 +55,11 @@ public enum MyTier implements ITier {
 
     MyTier(...) { ... }
 
-    @Override public int getLevel() { return level; }
-    @Override public int getUses() { return uses; }
-    @Override public float getSpeed() { return speed; }
-    @Override public float getAttackDamageBonus() { return damage; }
-    @Override public int getEnchantmentValue() { return enchantment; }
+    @Override public int getHarvestLevel() { return level; }
+    @Override public int getMaxUses() { return uses; }
+    @Override public float getEfficiency() { return speed; }
+    @Override public float getAttackDamage() { return damage; }
+    @Override public int getEnchantability() { return enchantment; }
     @Override public Ingredient getRepairMaterial() { return repair.get(); }
 }
 ```
@@ -68,23 +68,23 @@ public enum MyTier implements ITier {
 
 ```java
 // 正确：4 参数构造函数
-// 参数：(ITier tier, float attackDamage, float attackSpeed, Item.Properties)
-// 攻击伤害计算：attackDamage + 3.0f（剑的类型加成）
+// 参数：(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties)
+// 攻击伤害计算：attackDamageIn + 3.0f（剑的类型加成）
 public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 3.0f, -2.4f, new Item.Properties()
-        .group(CreativeModeTab.TAB_COMBAT)
+    () -> new SwordItem(MyTier.COPPER, 3, -2.4f, new Item.Properties()
+        .group(ItemGroup.COMBAT)
     )
 );
 ```
 
-## 挖掘工具（DiggerItem）
+## 挖掘工具（PickaxeItem）
 
 ```java
-// 镐：public DiggerItem(float attackDamage, float attackSpeed, ITier tier, IItemTier, Properties)
-// 斧：同 DiggerItem
-public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f, new Item.Properties()
-        .group(CreativeModeTab.TAB_TOOLS)
+// MCP：PickaxeItem(ITier, int attackDamage, float attackSpeed, Item.Properties)
+// 镐斧铲父类是 ToolItem，没有 Mojmap DiggerItem
+public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
+    () -> new PickaxeItem(MyTier.COPPER, 1, -2.8f, new Item.Properties()
+        .group(ItemGroup.TOOLS)
     )
 );
 ```
@@ -94,17 +94,17 @@ public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper
 ```java
 public enum MyArmorMaterial implements IArmorMaterial {
     COPPER("copper", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_IRON, 3.0f, 0.1f);
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0f);
 
-    // 格式：new int[]{ boots, leggings, chestplate, helmet }
     // getDurability(), getDamageReductionAmount(), getEnchantability()
-    // getEquipSound(), getToughness(), getKnockbackResistance(), getRepairMaterial()
+    // getSoundEvent(), getToughness(), getRepairMaterial(), getName()
+    // 1.15.2 没有 getKnockbackResistance
 }
 
 // 注册各部位
 public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_helmet",
     () -> new ArmorItem(MyArmorMaterial.COPPER, EquipmentSlotType.HEAD,
-        new Item.Properties().group(CreativeModeTab.TAB_COMBAT))
+        new Item.Properties().group(ItemGroup.COMBAT))
 );
 ```
 
@@ -113,13 +113,13 @@ public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_
 ```java
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
-        .group(CreativeModeTab.TAB_FOOD)
+        .group(ItemGroup.FOOD)
         .food(new Food.Builder()
             .hunger(4)
             .saturation(1.2f)
-            .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)
-            .alwaysEat()
-            .fast()
+            .effect(() -> new EffectInstance(Effects.ABSORPTION, 2400, 0), 1.0f)
+            .setAlwaysEdible()
+            .fastToEat()
             .meat()
             .build())
         )
@@ -144,7 +144,9 @@ public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity atta
 
 - ❌ `SwordItem(Tier, Item.Properties)` — Forge 1.15.2 只有 4 参数版本，不存在 2 参数版本
 - ❌ `Tier` 用法：Forge 用 `ITier`，不是 Fabric 的 `ToolMaterial`
-- ❌ `MobEffects.JUMP_BOOST`（Fabric Yarn 名）→ Forge 用 `MobEffects.JUMP`
+- ❌ `MobEffects.JUMP` / `StatusEffects.JUMP_BOOST` → 1.15.2 MCP 用 `Effects.JUMP_BOOST`
+- ❌ `.tab(CreativeModeTab)` → 官方文档是 `.group(ItemGroup)`
+- ❌ `Food.Builder.alwaysEat()` / `fast()` → `setAlwaysEdible()` / `fastToEat()`
 
 ## 参考资料
 

@@ -1,6 +1,9 @@
 import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform } from "./common.js";
 
-export function generateModel(modId: string, blockName: string): GeneratorResult {
+export function generateModel(modId: string, blockName: string, version?: string): GeneratorResult {
+  if (!version?.trim()) {
+    return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
+  }
   const mod = normalizeModIdentifier(modId);
   const block = normalizeModIdentifier(blockName);
   if (!mod || !block) return { code: null, errors: ["无效 modId/blockName"] };
@@ -23,19 +26,24 @@ export function generateModel(modId: string, blockName: string): GeneratorResult
     ),
   };
 
+  const warnings: string[] = ["骨架不随 pack_format 变"];
+  if (mod.warned || block.warned) warnings.push("标识符已归一化");
   return {
     code: `// 见 files：blockstate + cube_all 模型\n// modId=${mod.value} block=${block.value}`,
     files,
-    warnings: mod.warned || block.warned ? ["标识符已归一化"] : undefined,
+    warnings,
   };
 }
 
-export function generateLang(modId: string, entries: Record<string, string>): GeneratorResult {
+export function generateLang(modId: string, entries: Record<string, string>, version?: string): GeneratorResult {
+  if (!version?.trim()) {
+    return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
+  }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
   const en: Record<string, string> = {};
   const zh: Record<string, string> = {};
-  const warnings: string[] = [];
+  const warnings: string[] = ["骨架不随 pack_format 变"];
   if (mod.warned) warnings.push("标识符已归一化");
   for (const [k, v] of Object.entries(entries)) {
     let key: string;
@@ -62,7 +70,7 @@ export function generateLang(modId: string, entries: Record<string, string>): Ge
       [`assets/${mod.value}/lang/en_us.json`]: JSON.stringify(en, null, 2),
       [`assets/${mod.value}/lang/zh_cn.json`]: JSON.stringify(zh, null, 2),
     },
-    warnings: warnings.length ? warnings : undefined,
+    warnings,
   };
 }
 
@@ -363,7 +371,17 @@ export function generateCapability(
         ],
       };
     }
-  } else if (p !== "forge") {
+  } else if (p === "forge") {
+    if (!isForgeCapabilityVersion(version)) {
+      return {
+        code: null,
+        errors: [
+          `Forge Capability 生成器仅支持 1.20.1（及 1.18.2–1.20.4）（收到 version=${version}）。` +
+            noNativeGeneratorError("search_forge_docs", "规则 05 / mc-capability Skill"),
+        ],
+      };
+    }
+  } else {
     return { code: null, errors: [`未知 platform=${platform}。可选：forge | neoforge | fabric | quilt。` + noNativeGeneratorError("search_*_docs", "规则 05 / mc-capability Skill")] };
   }
 
@@ -407,6 +425,18 @@ public class ${pascal}Capability {
 }
 `,
   };
+}
+
+function isForgeCapabilityVersion(version: string): boolean {
+  const t = version.trim();
+  if (t === "1.20.1") return true;
+  const m = t.match(/^1\.(18|19|20)\.(\d+)$/);
+  if (!m) return false;
+  const minor = Number(m[1]);
+  const patch = Number(m[2]);
+  if (minor === 18) return patch >= 2;
+  if (minor === 19) return true;
+  return patch <= 4;
 }
 
 function isNeoForgeAttachmentVersion(version: string): boolean {

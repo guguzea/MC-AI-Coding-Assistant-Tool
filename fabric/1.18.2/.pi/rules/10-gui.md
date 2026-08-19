@@ -109,6 +109,11 @@ public class MyScreenHandler extends ScreenHandler {
     public boolean canUse(PlayerEntity player) {
         return blockInventory.canPlayerUse(player);
     }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+        return ItemStack.EMPTY;
+    }
 }
 
 public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
@@ -120,6 +125,9 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 ```
 
 本档构造仍是单参 `new ScreenHandlerType<>(factory)`（Parchment 1.16.5 / 1.18.2 已核 `MenuType(MenuSupplier)`；FeatureFlags 是 1.19.3+）。
+
+Yarn 移位是 `transferSlot(PlayerEntity, int)`（[yarn 1.18.2 ScreenHandler.mapping](https://github.com/FabricMC/yarn/blob/1.18.2/mappings/net/minecraft/screen/ScreenHandler.mapping)）。wiki 现页 `quickMove` 是 **1.19.4+** Yarn，不要抄进本档。
+容器屏：`ScreenRegistry.register` 或 `HandledScreens.register`。
 
 ## NamedScreenHandlerFactory（普通打开）
 

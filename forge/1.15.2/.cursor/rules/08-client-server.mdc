@@ -199,28 +199,21 @@ public class MyTileEntity extends TileEntity {
     }
 
     @Override
-    public void read(NBTTagCompound nbt) {
+    public void read(CompoundNBT nbt) {
         super.read(nbt);
         this.syncData = nbt.getInt("syncData");
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound nbt) {
+    public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
         nbt.putInt("syncData", this.syncData);
         return nbt;
     }
 
     @Override
-    public NBTTagCompound getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        write(nbt);
-        return nbt;
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        read(pkt.getNbtCompound());
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 
     // 在服务端逻辑中修改数据后，同步到客户端

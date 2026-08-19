@@ -1,6 +1,6 @@
 ﻿---
 name: mc-item
-description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、IItemTier、SwordItem、DiggerItem、ArmorItem
+description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、IItemTier、SwordItem、PickaxeItem、ArmorItem
 platform: forge
 version: "1.16.5"
 dependencies: []
@@ -28,7 +28,7 @@ IF 只是手持物品（无特殊行为）
   → Item
 
 IF 剑/工具（影响挖掘速度、攻击伤害）
-  → SwordItem / DiggerItem
+  → SwordItem / PickaxeItem / AxeItem / ShovelItem（父类 ToolItem，不要 DiggerItem）
 
 IF 盔甲
   → ArmorItem + IArmorTier
@@ -44,7 +44,7 @@ IF 可在创造模式标签中找到
 
 ```java
 public enum MyTier implements IItemTier {
-    COPPER(3, 1561, 8.0f, 3.0f, 15, () -> Ingredient.of(Items.COPPER_INGOT));
+    IRON_LIKE(2, 250, 6.0f, 2.0f, 14, () -> Ingredient.fromItems(Items.IRON_INGOT));
 
     private final int level;
     private final int uses;          // 耐久度
@@ -69,10 +69,10 @@ public enum MyTier implements IItemTier {
 ```java
 // 正确：4 参数构造函数（Parchment 1.16.5）
 // 参数：(IItemTier tier, float attackSpeed, float damage, Item.Properties)
-public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_sword",
-    () -> new SwordItem(MyTier.COPPER, 1.6f, 3.0f, new Item.Properties()
+public static final RegistryObject<Item> IRON_LIKE_SWORD = ITEMS.register("iron_like_sword",
+    () -> new SwordItem(MyTier.IRON_LIKE, 3, -2.4f, new Item.Properties()
         .tab(ItemGroup.TAB_COMBAT)
-        .durability(1561)
+        .durability(250)
     )
 );
 ```
@@ -82,12 +82,13 @@ public static final RegistryObject<Item> COPPER_SWORD = ITEMS.register("copper_s
 - SwordItem 的 base damage 为 3.0f（剑类内置）
 - 例如：`damage=3.0f` → 最终伤害 = 3.0f + 3.0f = **6.0**
 
-## 挖掘工具（DiggerItem）
+## 挖掘工具（PickaxeItem）
 
 ```java
-// DiggerItem(float attackDamage, float attackSpeed, IItemTier, ToolType, Item.Properties)
-public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper_pickaxe",
-    () -> new PickaxeItem(MyTier.COPPER, 1.0f, -2.8f,
+// MCP 1.16.5：PickaxeItem(IItemTier, int attackDamage, float attackSpeed, Item.Properties)
+// 镐斧铲父类是 ToolItem，没有 Mojmap DiggerItem
+public static final RegistryObject<Item> IRON_LIKE_PICKAXE = ITEMS.register("iron_like_pickaxe",
+    () -> new PickaxeItem(MyTier.IRON_LIKE, 1, -2.8f,
         new Item.Properties().tab(ItemGroup.TAB_TOOLS))
 );
 ```
@@ -97,7 +98,7 @@ public static final RegistryObject<Item> COPPER_PICKAXE = ITEMS.register("copper
 ```java
 public enum MyArmorMaterial implements IArmorTier {
     COPPER("copper", 40, new int[]{4, 7, 9, 4}, 20,
-        SoundEvents.ARMOR_EQUIP_IRON, 3.0f, 0.1f, () -> Ingredient.of(Items.COPPER_INGOT));
+        SoundEvents.ARMOR_EQUIP_IRON, 3.0f, 0.1f, () -> Ingredient.fromItems(Items.IRON_INGOT));
 
     // format: new int[]{ boots, leggings, chestplate, helmet }
     // durability multiplier, enchantability, toughness, knockback resistance
