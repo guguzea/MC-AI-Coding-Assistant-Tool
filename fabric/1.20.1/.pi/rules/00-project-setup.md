@@ -24,7 +24,7 @@ description: 00 — 项目结构与构建
 - ❌ 不要混用 Fabric 的 `fabric-loom` 插件和 Forge 的 `forge` 插件
 - ❌ 不要删除 `loom` 配置块中的必需行
 - ❌ 不要在 `minecraft {}` 块中修改版本号（应通过 `dependencies` 或 `mappings` 配置）
-- ❌ 不要在 `onInitialize()` 之外注册任何内容（Mixin 初始化除外）
+- ❌ 不要只 `new` 不 `Registry.register`；禁止先 `new` 再在 `static {}` 里 register。静态字段上的 `Registry.register` 合法，但必须在 `onInitialize()` 引用该类以触发加载
 
 #### 正确的构建命令
 

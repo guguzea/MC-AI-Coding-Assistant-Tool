@@ -51,8 +51,8 @@
     { "id": "loom", "url": "https://docs.fabricmc.net/develop/loom", "gitPath": "develop/loom/index.md", "priority": "🟡" },
     { "id": "rendering-basic-concepts", "url": "https://docs.fabricmc.net/develop/rendering/basic-concepts", "gitPath": "develop/rendering/basic-concepts.md", "priority": "🟡" },
     { "id": "rendering-gui-custom-screens", "url": "https://docs.fabricmc.net/develop/rendering/gui/custom-screens", "gitPath": "develop/rendering/gui/custom-screens.md", "priority": "🟡" },
-    { "id": "saved-data", "url": "https://docs.fabricmc.net/develop/saved-data", "gitPath": "develop/saved-data.md", "priority": "🟡" },
-    { "id": "codecs", "url": "https://docs.fabricmc.net/develop/codecs", "gitPath": "develop/codecs.md", "priority": "🟡" },
+    { "id": "saved-data", "url": "https://docs.fabricmc.net/develop/serialization/saved-data", "gitPath": "develop/serialization/saved-data.md", "priority": "🟡" },
+    { "id": "codecs", "url": "https://docs.fabricmc.net/develop/serialization/codecs", "gitPath": "develop/serialization/codecs.md", "priority": "🟡" },
     { "id": "key-mappings", "url": "https://docs.fabricmc.net/develop/key-mappings", "gitPath": "develop/key-mappings.md", "priority": "🟢" },
     { "id": "porting-index", "url": "https://docs.fabricmc.net/develop/porting", "gitPath": "develop/porting/index.md", "priority": "🟢", "notes": "Fabric API 移植文档，含 API 对照表" }
   ],

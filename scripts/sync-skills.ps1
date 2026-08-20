@@ -3,6 +3,7 @@
 #
 # 将 .cursor/skills/ 与 .cursor/rules/ 同步到：
 #   .claude/ .continue/ .trae/ .opencode/ .agents/ .zcode/ .pi/
+#   skills 另写 .pi/skills；rules 另写 .opencode/rules、.agents/rules、.zcode/rules
 #
 # 用法：
 #   .\scripts\sync-skills.ps1 -TargetDir H:\MC_skill\forge\1.19.4
@@ -83,6 +84,7 @@ function Sync-SkillContent {
     Ensure-Dir "$Base\.opencode\skills\$SkillName"
     Ensure-Dir "$Base\.agents\skills\$SkillName"
     Ensure-Dir "$Base\.zcode\skills\$SkillName"
+    Ensure-Dir "$Base\.pi\skills\$SkillName"
 
     $claudeName = ($SkillName -replace '^mc-', '') + ".md"
     Write-TextRetry "$Base\.claude\commands\$claudeName" $Normalized
@@ -91,6 +93,7 @@ function Sync-SkillContent {
     Write-TextRetry "$Base\.opencode\skills\$SkillName\SKILL.md" $Normalized
     Write-TextRetry "$Base\.agents\skills\$SkillName\SKILL.md" $Normalized
     Write-TextRetry "$Base\.zcode\skills\$SkillName\SKILL.md" $Normalized
+    Write-TextRetry "$Base\.pi\skills\$SkillName\SKILL.md" $Normalized
 }
 
 function Sync-VersionDir {
@@ -118,9 +121,13 @@ function Sync-VersionDir {
     Ensure-Dir "$Base\.trae\skills"
     Ensure-Dir "$Base\.trae\agents"
     Ensure-Dir "$Base\.opencode\skills"
+    Ensure-Dir "$Base\.opencode\rules"
     Ensure-Dir "$Base\.agents\skills"
+    Ensure-Dir "$Base\.agents\rules"
     Ensure-Dir "$Base\.zcode\skills"
+    Ensure-Dir "$Base\.zcode\rules"
     Ensure-Dir "$Base\.pi\rules"
+    Ensure-Dir "$Base\.pi\skills"
 
     # Skills
     Write-Host "[Skills] Syncing from .cursor/skills/..." -ForegroundColor Yellow
@@ -152,6 +159,9 @@ function Sync-VersionDir {
         Copy-Item $rule.FullName "$Base\.claude\rules\$($rule.Name)" -Force
         Copy-Item $rule.FullName "$Base\.continue\rules\$($rule.Name)" -Force
         Copy-Item $rule.FullName "$Base\.trae\rules\$($rule.Name)" -Force
+        Copy-Item $rule.FullName "$Base\.opencode\rules\$($rule.Name)" -Force
+        Copy-Item $rule.FullName "$Base\.agents\rules\$($rule.Name)" -Force
+        Copy-Item $rule.FullName "$Base\.zcode\rules\$($rule.Name)" -Force
 
         $ruleText = [System.IO.File]::ReadAllText($rule.FullName, [System.Text.Encoding]::UTF8)
         $piName = [System.IO.Path]::GetFileNameWithoutExtension($rule.Name) + ".md"

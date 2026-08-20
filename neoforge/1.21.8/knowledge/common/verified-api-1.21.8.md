@@ -1,8 +1,9 @@
 # NeoForge 1.21.8 已核实 API
 
-签字：官方文档 https://docs.neoforged.net/docs/1.21.8/ + 官方 MDK（download_official_mdk 精确 1.21.8）。  
-反编译：`scripts/validate-rules-against-cache.mjs` 从 `$MC_SKILL_CACHE` 抽签名回填。摘要 JSON **必须**含 `mappingsVersion`，否则不得覆盖本表。  
-clone-audit：与邻档教程骨架相似是预期（换类名），**误报不算验收失败**；本表即源码/文档签字。
+签字：官方文档 https://docs.neoforged.net/docs/1.21.8/ + 官方 MDK（download_official_mdk 精确 
+1.21.8）。  + **官方 API jar 反编译摘要**（`mcp-server/data/loader-api-summaries/1.21.8-neoforge.json`，`decompile-loader-apis.mjs` / `query_loader_api`）。  
+**核实优先级**：jar 摘要与反编译 FQCN **高于**本库 `search_neoforge_docs` 缺页（`DOC_NOT_FOUND` 不得把已入库反编译项标成「未核实」）。  
+摘要 JSON **必须**含 `mappingsVersion`，否则不得写进本表。clone-audit：与邻档教程骨架相似是预期，误报不算验收失败。
 
 ## 入口
 
@@ -28,10 +29,15 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 |---|---|
 | `RegisterPayloadHandlersEvent` | **要** |
 | `PayloadRegistrar` | **要** |
+| `RegisterClientPayloadHandlersEvent` | **要**（物理客户端 handler 注册） |
+| `ClientPacketDistributor.sendToServer` | **要**（C2S） |
 | `IPayloadContext` | **要** |
 | `ResourceLocation` | ResourceLocation.fromNamespaceAndPath("mymod", "my_data") |
 | StreamCodec / type() | 要 |
+| `DirectionalPayloadHandler` | **禁止**（本档 jar 无此类；勿从 1.21.5 抄） |
 | SimpleChannel / IMessage / newSimpleChannel | **禁止** |
+
+网络类名来源：`1.21.8-neoforge.json`（mappingsVersion: `parchment-1.21.8-2025.09.14`）。
 
 ## 其它
 

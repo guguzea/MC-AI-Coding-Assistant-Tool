@@ -183,4 +183,12 @@ import {
   assert.ok(String(rk?.description ?? "").length > 0);
 }
 
+{
+  const { getMethodParamsSchema, convertMappingSchema } = await import("./dist/tool-registry.js");
+  const methodJson = zodToJsonSchema(getMethodParamsSchema);
+  const mappingJson = zodToJsonSchema(convertMappingSchema);
+  assert.ok((methodJson.required ?? []).includes("version"), JSON.stringify(methodJson.required));
+  assert.ok((mappingJson.required ?? []).includes("version"), JSON.stringify(mappingJson.required));
+}
+
 console.log("test-cli-parse: ok");

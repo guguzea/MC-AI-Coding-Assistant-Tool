@@ -20,27 +20,26 @@ description: 09 — 反模式库
 
 ## 1. 注册系统反模式
 
-### ❌ 在 onInitialize() 外注册
+### ❌ 先 new、再在 static {} 里 register
 
 ```java
-// ❌ 错误
+// ❌ 错误：先 new 再在 static 块里 register
 public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM = new Item(new Item.Settings());
 
-    // 类加载时注册，但应在 onInitialize() 中
     static {
         Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), MY_ITEM);
     }
 }
 
-// ✅ 正确
+// ✅ 正确：静态字段上直接 Registry.register；onInitialize 引用该类
 public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM =
         Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), new Item(new Item.Settings()));
 
     @Override
     public void onInitialize() {
-        // 静态初始化已在类加载时完成，但最佳实践是在此处初始化
+        LOGGER.info("ExampleMod initialized — " + Registries.ITEM.getId(MY_ITEM));
     }
 }
 ```
@@ -261,7 +260,7 @@ public class MyMixin { ... }
 
 | 崩溃信息 | 原因 | 解决方案 |
 |---------|------|---------|
-| `NullPointerException` at `Registry.register` | 注册在 `onInitialize()` 外执行 | 将注册移入 `onInitialize()` |
+| `NullPointerException` at `Registry.register` | 只 `new` 未 register，或在错误时机注册 | 静态字段上 `Registry.register`，并在 `onInitialize()` 引用该类 |
 | `Mixin did not apply` | mixin 包名不匹配或 `fabric.mixins.json` 配置错误 | 检查 package 和配置 |
 | `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.20.1+build.10` |
 | `FabricLoader not found` | 依赖缺失 | 检查 `fabricloader` 在 depends 中 |

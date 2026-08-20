@@ -1,7 +1,7 @@
 /**
- * Fabric / Quilt Datagen。
- * 1.21.x：DataGeneratorEntrypoint + FabricRecipeProvider + FabricBlockLootTableProvider（fabric-docs 1.21.11）。
- * 26.1.x：FabricPackOutput + FabricBlockLootSubProvider + Identifier（fabric-docs 26.1.2 参考源码）。
+ * Fabric Datagen。Quilt 无足够 QSL 类名，不走本模板。
+ * 1.21.1 / 1.21.4 / 1.21.8：FabricRecipeProvider#generate；1.21.10 / 1.21.11：#buildRecipes。
+ * 26.1.x：FabricPackOutput + FabricBlockLootSubProvider + Identifier（fabric-docs 26.1.2）。
  */
 import { toPascalCase } from "./common.js";
 
@@ -34,10 +34,11 @@ export function generateFabric(
   targetName: string,
   classBase: string,
   version26: boolean,
+  recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
-  return generateFabric21(providerType, modId, targetName, pascalName);
+  return generateFabric21(providerType, modId, targetName, pascalName, recipeMethod);
 }
 
 function generateFabric21(
@@ -45,8 +46,9 @@ function generateFabric21(
   modId: string,
   targetName: string,
   pascalName: string,
+  recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
 ): string {
-  const header = `// Fabric/Quilt Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
+  const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
 
 import java.util.concurrent.CompletableFuture;
@@ -68,8 +70,9 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
+    // Mojmap: RecipeOutput；Yarn 工程改为 RecipeExporter（禁止混映射）
     @Override
-    public void buildRecipes(RecipeOutput exporter) {
+    public void ${recipeMethod}(RecipeOutput exporter) {
         shapeless(RecipeCategory.MISC, Items.DIAMOND)
             .requires(Items.EMERALD)
             .unlockedBy("has_emerald", has(Items.EMERALD))

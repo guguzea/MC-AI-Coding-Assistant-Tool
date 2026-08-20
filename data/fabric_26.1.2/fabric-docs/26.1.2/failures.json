@@ -1,29 +1,4 @@
 {
   "version": "26.1.2",
-  "failures": [
-    {
-      "id": "saved-data",
-      "gitPath": "develop/saved-data.md",
-      "tried": [
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/26.1.2/develop/saved-data.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/26.1.2.x-archive/develop/saved-data.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/26.1.2/develop/saved-data.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/26.1.2/develop/saved-data.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/26.1.2.x/develop/saved-data.md",
-        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/saved-data"
-      ]
-    },
-    {
-      "id": "codecs",
-      "gitPath": "develop/codecs.md",
-      "tried": [
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/26.1.2/develop/codecs.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/26.1.2.x-archive/develop/codecs.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/26.1.2/develop/codecs.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/26.1.2/develop/codecs.md",
-        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/26.1.2.x/develop/codecs.md",
-        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/codecs"
-      ]
-    }
-  ]
+  "failures": []
 }

@@ -23,6 +23,8 @@ npm run build
 
 完整分类、降级与**工具边界（避免误判）**见根目录 [README.md](../README.md)。常见误判：`query_api` 1.12.2 空壳 / 26.1+ 无索引；`diagnose_gradle` 覆盖 ForgeGradle+Loom+Neo/MDG；`validate_project` 对 Fabric/Quilt/NeoForge 真检查，LiteLoader/Rift/基岩 skipped；文档 `id` 必须来自搜索结果；`generate_*` 不写盘；改 dist 后须重载 MCP。
 
+**人在环**：模组开发不是确定性流水线（创意、兼容取舍、API、性能、调试由人决定）。写盘 / Gradle / 拷 jar / 上传默认不代跑，须用户确认；不要把 dryRun 与「只吐文本」当成漏做的无人值守编排。
+
 ---
 
 ## 快速配置
@@ -101,7 +103,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### MDK 解压依赖（`download_official_mdk`）
 
-`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.5` / `neoforge_1.21.10` / `neoforge_26.1` / `fabric_1.21` / `fabric_26.1`），省略返回 error。
+`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `forge_1.20.4` / `forge_1.19.4` / `forge_1.18.2` / `forge_1.12.2` / `neoforge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.1` / `neoforge_1.21.3` / `neoforge_1.21.5` / `neoforge_1.21.10` / `neoforge_26.1` / `fabric_1.21` / `fabric_1.21.4` / `fabric_1.21.8` / `fabric_1.21.10` / `fabric_1.21.11` / `fabric_26.1` / `fabric_26.1.2`），省略返回 error。
 
 ### 5. 开发
 
@@ -310,7 +312,7 @@ node dist/cli.js activate_platform_pack --action=write --platform=neoforge --min
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
 
-`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 6）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
+`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 8）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
 
 Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 

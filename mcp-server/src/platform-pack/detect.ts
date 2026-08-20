@@ -51,6 +51,7 @@ export type DetectModProjectResult =
       candidates?: string[];
       warnings?: string[];
       next?: string;
+      suggestedSessionTask?: string;
       action?: DetectAction;
     };
 
@@ -197,6 +198,17 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
       candidates.length > 0
         ? `精确包不存在。同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默当成 ${candidates[0]}。`
         : "或 activate_platform_pack action=list 查看已建档版本";
+    const extraHints =
+      platform === "fabric" && minecraftVersion === "1.21.5"
+        ? [
+            "禁止读 fabric/1.21.4 或 1.21.8 的 00–10 顶上。",
+            "可改口 search_fabric_docs（先 list_fabric_versions）；最近有文档树的是 1.21.4 / 1.21.8，不要 fallback 正文。",
+          ]
+        : platform === "forge" && minecraftVersion === "1.21.1"
+          ? [
+              "禁止用 NeoForge 1.21.1 规则顶上。Forge 文档止于 1.20.4；可 search_forge_docs version=1.20.4（须标明不是 1.21.1 规则树）。",
+            ]
+          : [];
     return {
       ok: false,
       projectRoot: resolved.root,
@@ -209,10 +221,12 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
       candidates: candidates.length ? candidates : undefined,
       ...(versionWarnings.length ? { warnings: versionWarnings } : {}),
       action: actionable(
-        "PACK_NOT_FOUND",
         platform === "unknown"
-          ? "未能判定加载器，无法激活平台包。"
-          : `没有 ${platform} ${minecraftVersion ?? "?"} 的规则树（禁止读邻档 00–10）。${candidates.length ? ask : ""}`,
+          ? ActionCodes.PICK_PLATFORM
+          : "PACK_NOT_FOUND",
+        platform === "unknown"
+          ? "未能判定加载器（javafml 无法区分 Forge/NeoForge 时不要默默当 Forge）。请询问用户指定 platform。"
+          : `没有 ${platform} ${minecraftVersion ?? "?"} 的规则树（禁止读邻档 00–10）。ok≠已加载规则。${candidates.length ? ask : ""}`,
         platform === "unknown"
           ? [
               "向用户询问 platform，禁止默认 Forge",
@@ -221,6 +235,7 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
           : [
               `改用 ${docsToolForPlatform(platform)}`,
               candidates.length ? ask : "或 activate_platform_pack action=list 查看已建档版本",
+              ...extraHints,
             ],
         platform === "unknown" ? ["activate_platform_pack"] : [docsToolForPlatform(platform)],
       ),
@@ -239,6 +254,7 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
     packDir: pack.packDir,
     agentsPath: pack.agentsPath,
     next: "activate_platform_pack action=session（或 write，hosts 必填）",
+    suggestedSessionTask: "写方块/物品请 session 传 task=mc-new-block 或 mc-new-item；仅底座 00/01/09 不够。",
     ...(versionWarnings.length ? { warnings: versionWarnings } : {}),
   };
 }

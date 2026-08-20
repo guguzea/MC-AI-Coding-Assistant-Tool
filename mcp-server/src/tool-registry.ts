@@ -105,7 +105,7 @@ export const getMethodParamsSchema = z.object({
   className: z.string().describe("类全限定名"),
   methodName: z.string().describe("方法名（Parchment/Mojang 层名；Yarn 名请先 convert_mapping）"),
   descriptor: z.string().optional().describe("完整 JNI 描述符（用于区分重载，如 (Lnet/minecraft/world/entity/LivingEntity;)V）"),
-  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
+  version: z.string().min(1).describe("Minecraft 版本，必填，禁止默认 1.20.1"),
 });
 
 export const convertMappingSchema = z.object({
@@ -118,7 +118,7 @@ export const convertMappingSchema = z.object({
   memberName: z.string().describe("成员名（字段或方法）"),
   ownerClass: z.string().optional().describe("所属类；1.12–1.13 SRG+CSV 与 1.16+ 方法查询需要；纯 CSV（1.14–1.15）勿传"),
   descriptor: z.string().optional().describe("JNI 方法描述符，重载消歧强烈建议传入，如 ()F"),
-  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
+  version: z.string().min(1).describe("Minecraft 版本，必填，禁止默认 1.20.1"),
   memberKind: z
     .enum(["class", "method", "field", "auto"])
     .optional()
@@ -344,7 +344,7 @@ server.registerTool(
     const focusVersion = String(version ?? "").trim();
     const result = {
       ok: true,
-      focus: focusVersion ? getApiPreloadStatus(focusVersion) : { note: "未指定 version，返回总体状态（未预热）" },
+      focus: focusVersion ? getApiPreloadStatus(focusVersion) : { note: "未指定 focus version", preloaded: listApiPreloadStatuses() },
       api: listApiPreloadStatuses(),
       dataPaths: diagnoseDataPaths(),
       /** 语义索引可用性：hybrid | fts5-only | l0-only（缺库不抛错，但 warnings 必报） */
@@ -409,7 +409,7 @@ server.registerTool(
     description:
       "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。" +
       "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
-      "注意：platform 与 version 均必填。Forge 仅 1.20.1；NeoForge 1.21.x 与 26.1；Fabric/Quilt 1.21 与 26.1。" +
+      "注意：platform 与 version 均必填。Forge 1.20.1 与 1.20.4；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
       "其它 Forge 版本（含 1.12.2）返回 error。" +
       "返回完整的 Java 代码模板。" +
       "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。",
@@ -1031,7 +1031,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
   { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。不要用于 Fabric / NeoForge 工程，请改用 search_*_docs。1.12.2 注册是 RegistryEvent，不要套 DeferredRegister。未知 version（含 constructor 等原型键）返回 forgeVersion=unknown，不是把 Object.prototype 当版本。", inputSchema: getVersionInfoSchema },
   { name: "diagnose_gradle", description: "校验 ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。Loom：插件 id（26.1 必须 net.fabricmc.fabric-loom）、Java toolchain（1.21=21，26.1=25）、Yarn vs 去混淆、26.1 禁止 modImplementation。Neo/MDG：插件 id、minecraft_version/neo_version、26.1 须能看出 buildPlugin、Java 21 vs 25。含 net.minecraftforge.gradle.liteloader 时走轻量模式。Rift / BaseMod / 基岩仍早退。", inputSchema: diagnoseGradleSchema },
-  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：platform 与 version 均必填。Forge 仅 1.20.1、NeoForge 1.21.x、NeoForge 26.1（GatherDataEvent.Client + Identifier）、Fabric/Quilt 1.21 与 26.1（Loom DataGeneratorEntrypoint）。其它 Forge 版本（含 1.12.2）返回 error。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘。", inputSchema: generateDatagenSchema },
+  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：platform 与 version 均必填。Forge 1.20.1 与 1.20.4；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。其它 Forge 版本（含 1.12.2）返回 error。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘。", inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
   { name: "validate_project", description: "校验模组项目结构。Forge：mods.toml / DeferredRegister / @Mod。Fabric/Quilt：fabric.mod.json / quilt.mod.json 的 id 与 entrypoint 类；出现 Forge DeferredRegister 仅 WARN。NeoForge：neoforge.mods.toml、@Mod + IEventBus 构造；RegistryObject 不推荐；禁止 SimpleChannel。LiteLoader/Rift/ModLoader/基岩仍 skipped（基岩请用 validate_addon_manifest）。坏 recipe 只 warning。Java 扫描上限默认 300，可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高。", inputSchema: validateProjectSchema },
   { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。", inputSchema: searchForgeDocsSchema.inputSchema },

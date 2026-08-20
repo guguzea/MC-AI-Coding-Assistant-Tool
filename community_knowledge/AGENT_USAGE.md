@@ -6,6 +6,7 @@
 
 - 社区短文 = **实务清单、反模式、工程化提示**，不是 API 规范。
 - **注册 / 方法签名 / 事件总线细节** → 仍用 `search_forge_docs` / `search_fabric_docs` / `search_neoforge_docs`。`query_api` 只覆盖 Vanilla Parchment（约 1.16.5–1.20.4）
+- 本仓库整体是**人在环**副驾驶：创意、兼容取舍、API 选择、性能与调试由用户拍板；写盘 / Gradle / 拷 jar / 上传须确认。
 
 ## 强制：不清楚就去查原文
 

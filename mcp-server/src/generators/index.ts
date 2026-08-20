@@ -224,29 +224,254 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
   };
 }
 
+export const NETWORK_PACKET_PLATFORMS = [
+  "forge_1.20.1",
+  "forge_1.20.4",
+  "forge_1.19.4",
+  "forge_1.18.2",
+  "forge_1.12.2",
+  "neoforge_1.20.1",
+  "neoforge_1.20.4",
+  "neoforge_1.21",
+  "neoforge_1.21.1",
+  "neoforge_1.21.3",
+  "neoforge_1.21.5",
+  "neoforge_1.21.8",
+  "neoforge_1.21.10",
+  "neoforge_1.21.11",
+  "neoforge_26.1",
+  "fabric_1.21",
+  "fabric_1.21.4",
+  "fabric_1.21.8",
+  "fabric_1.21.10",
+  "fabric_1.21.11",
+  "fabric_26.1",
+  "fabric_26.1.2",
+] as const;
+
+export type NetworkPacketPlatform = (typeof NETWORK_PACKET_PLATFORMS)[number];
+
+function docsReviewHeader(tool: string, version: string): string {
+  return `// 修改此骨架前必须用 ${tool}(version=${version}) 复核；禁止邻档 API。\n`;
+}
+
+function withDocsReviewHeader(code: string, tool: string, version: string): string {
+  const header = docsReviewHeader(tool, version);
+  return code.startsWith(header) ? code : header + code;
+}
+
+function forgeSimpleChannelSkeleton(
+  mod: string,
+  pascal: string,
+  mcVersion: string,
+  watermark: boolean,
+): GeneratorResult {
+  const body = `// Forge ${mcVersion} — SimpleChannel 消息骨架
+package com.example.${mod}.network;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
+import java.util.function.Supplier;
+
+public class ${pascal}Packet {
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public static void encode(${pascal}Packet msg, FriendlyByteBuf buf) {
+        buf.writeUtf(msg.message);
+    }
+
+    public static ${pascal}Packet decode(FriendlyByteBuf buf) {
+        return new ${pascal}Packet(buf.readUtf());
+    }
+
+    public static void handle(${pascal}Packet msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> { /* server/client logic */ });
+        ctx.get().setPacketHandled(true);
+    }
+}
+`;
+  return {
+    code: watermark ? withDocsReviewHeader(body, "search_forge_docs", mcVersion) : body,
+    warnings: watermark
+      ? [
+          `Forge ${mcVersion} 用 SimpleChannel / NetworkRegistry.newSimpleChannel / FriendlyByteBuf（search_forge_docs version=${mcVersion}）。`,
+          "反面：PayloadTypeRegistry / RegisterPayloadHandlersEvent / RecipeOutput。",
+        ]
+      : undefined,
+  };
+}
+
+function neoforgeDirectionalPayloadSkeleton(
+  mod: string,
+  pkt: string,
+  pascal: string,
+  mcVersion: string,
+  watermark: boolean,
+): GeneratorResult {
+  const body = `// NeoForge ${mcVersion} — networking/payload（search_neoforge_docs version=${mcVersion}）
+package com.example.${mod}.network;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
+        new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("${mod}", "${pkt}"));
+
+    public static final StreamCodec<ByteBuf, ${pascal}Payload> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8,
+        ${pascal}Payload::message,
+        ${pascal}Payload::new);
+
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.playBidirectional(
+            TYPE,
+            STREAM_CODEC,
+            new DirectionalPayloadHandler<>(
+                ${pascal}Payload::handleClient,
+                ${pascal}Payload::handleServer));
+    }
+
+    private static void handleClient(final ${pascal}Payload data, final IPayloadContext context) {
+        /* main thread by default */
+    }
+
+    private static void handleServer(final ${pascal}Payload data, final IPayloadContext context) {
+        /* main thread by default */
+    }
+}
+`;
+  return {
+    code: watermark ? withDocsReviewHeader(body, "search_neoforge_docs", mcVersion) : body,
+    warnings: [
+      `${mcVersion} 用 RegisterPayloadHandlersEvent + PayloadRegistrar.playBidirectional + DirectionalPayloadHandler。`,
+      "不要把 1.21.10 的 RegisterClientPayloadHandlersEvent / ClientPacketDistributor 抄进本档。",
+      "反面：SimpleChannel / RegisterPayloadHandlerEvent（单数 Handler）。",
+    ],
+  };
+}
+
+function fabricYarnPayloadSkeleton(
+  mod: string,
+  pkt: string,
+  pascal: string,
+  mcVersion: string,
+  extraWarnings: string[],
+): GeneratorResult {
+  const body = `// Fabric ${mcVersion} — CustomPayload + PayloadTypeRegistry（Yarn）
+package com.example.${mod}.network;
+
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
+
+public record ${pascal}Payload(String message) implements CustomPayload {
+    public static final CustomPayload.Id<${pascal}Payload> ID =
+        new CustomPayload.Id<>(Identifier.of("${mod}", "${pkt}"));
+    public static final PacketCodec<RegistryByteBuf, ${pascal}Payload> CODEC =
+        PacketCodec.tuple(PacketCodecs.STRING, ${pascal}Payload::message, ${pascal}Payload::new);
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return ID;
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.playC2S().register(ID, CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(ID, (payload, context) -> {
+            /* validate on server */
+        });
+    }
+}
+`;
+  return {
+    code: withDocsReviewHeader(body, "search_fabric_docs", mcVersion),
+    warnings: extraWarnings,
+  };
+}
+
+function fabricMojmap26PayloadSkeleton(
+  mod: string,
+  pkt: string,
+  pascal: string,
+  mcVersion: string,
+  watermark: boolean,
+): GeneratorResult {
+  const body = `// Fabric ${mcVersion} — CustomPacketPayload + PayloadTypeRegistry（Mojmap）
+package com.example.${mod}.network;
+
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath("${mod}", "${pkt}");
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE = new CustomPacketPayload.Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ${pascal}Payload> CODEC =
+        StreamCodec.of(
+            (buf, payload) -> buf.writeUtf(payload.message()),
+            buf -> new ${pascal}Payload(buf.readUtf()));
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(TYPE, (payload, context) -> {
+            /* validate on server */
+        });
+    }
+}
+`;
+  return {
+    code: watermark ? withDocsReviewHeader(body, "search_fabric_docs", mcVersion) : body,
+    warnings: [
+      `${mcVersion} Mojmap：serverboundPlay/clientboundPlay、CustomPacketPayload、Identifier.fromNamespaceAndPath。`,
+      "不要把 Yarn 的 playC2S / CustomPayload 抄进 26.1。",
+      "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+    ],
+  };
+}
+
 export function generateNetworkPacket(
   modId: string,
   packetName: string,
   platform?: string,
 ): GeneratorResult {
-  const allowed = [
-    "forge_1.20.1",
-    "neoforge_1.20.1",
-    "neoforge_1.20.4",
-    "neoforge_1.21",
-    "neoforge_1.21.5",
-    "neoforge_1.21.8",
-    "neoforge_1.21.10",
-    "neoforge_1.21.11",
-    "neoforge_26.1",
-    "fabric_1.21",
-    "fabric_26.1",
-  ] as const;
+  const allowed = NETWORK_PACKET_PLATFORMS;
   if (!platform) {
     return {
       code: null,
       errors: [
-        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_1.21.5 | neoforge_1.21.8 | neoforge_1.21.10 | neoforge_1.21.11 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
+        "platform 必填，禁止默认 forge_1.20.1。可选：" +
+          allowed.join(" | ") +
+          "。" +
           noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
@@ -256,6 +481,13 @@ export function generateNetworkPacket(
       code: null,
       errors: [
         `未知 platform=${platform}。可选：${allowed.join(" | ")}。` +
+          (platform === "neoforge_1.20.6"
+            ? " NeoForge 1.20.6 仅有 networking 概述（RegisterPayloadHandlersEvent），无 payload 页故不写骨架。"
+            : platform === "fabric_1.21.1"
+              ? " Fabric 1.21.1 无 networking 页，禁止把 fabric_1.21 当 1.21.1。"
+              : platform === "fabric_1.20.4" || platform === "fabric_1.20.1"
+                ? " 该档无官方 networking 页。"
+                : "") +
           noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
@@ -408,6 +640,14 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     };
   }
 
+  if (platform === "neoforge_1.21.1") {
+    return neoforgeDirectionalPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.1", true);
+  }
+
+  if (platform === "neoforge_1.21.3") {
+    return neoforgeDirectionalPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.3", true);
+  }
+
   if (platform === "neoforge_1.21.8") {
     return neoforgeSplitPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.8", "ResourceLocation");
   }
@@ -425,84 +665,34 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
   }
 
   if (platform === "fabric_1.21") {
-    return {
-      code: `// Fabric 1.21.x — CustomPayload + PayloadTypeRegistry（Yarn）
-package com.example.${mod.value}.network;
+    return fabricYarnPayloadSkeleton(mod.value, pkt.value, pascal, "1.21", [
+      "模糊 token fabric_1.21：请改用已核实的 fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11。禁止把本骨架当 1.21.1（该档无 networking 页）。",
+      "Yarn 用 playC2S/playS2C、CustomPayload、net.minecraft.util.Identifier.of。",
+      "不要抄 26.1 的 clientboundPlay / CustomPacketPayload / resources.Identifier。",
+      "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+    ]);
+  }
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
-
-public record ${pascal}Payload(String message) implements CustomPayload {
-    public static final CustomPayload.Id<${pascal}Payload> ID =
-        new CustomPayload.Id<>(Identifier.of("${mod.value}", "${pkt.value}"));
-    public static final PacketCodec<RegistryByteBuf, ${pascal}Payload> CODEC =
-        PacketCodec.tuple(PacketCodecs.STRING, ${pascal}Payload::message, ${pascal}Payload::new);
-
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return ID;
-    }
-
-    public static void register() {
-        PayloadTypeRegistry.playC2S().register(ID, CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(ID, (payload, context) -> {
-            /* validate on server */
-        });
-    }
-}
-`,
-      warnings: [
-        "Yarn 用 playC2S/playS2C、CustomPayload、net.minecraft.util.Identifier.of。",
-        "不要抄 26.1 的 clientboundPlay / CustomPacketPayload / resources.Identifier。",
-        "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
-      ],
-    };
+  if (
+    platform === "fabric_1.21.4" ||
+    platform === "fabric_1.21.8" ||
+    platform === "fabric_1.21.10" ||
+    platform === "fabric_1.21.11"
+  ) {
+    const ver = platform.slice("fabric_".length);
+    return fabricYarnPayloadSkeleton(mod.value, pkt.value, pascal, ver, [
+      `Yarn ${ver}：PayloadTypeRegistry.playC2S / CustomPayload（search_fabric_docs version=${ver}）。`,
+      "不要抄 26.1 的 serverboundPlay / CustomPacketPayload。",
+      "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
+    ]);
   }
 
   if (platform === "fabric_26.1") {
-    return {
-      code: `// Fabric 26.1 — CustomPacketPayload + PayloadTypeRegistry（Mojmap）
-package com.example.${mod.value}.network;
+    return fabricMojmap26PayloadSkeleton(mod.value, pkt.value, pascal, "26.1", false);
+  }
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-
-public record ${pascal}Payload(String message) implements CustomPacketPayload {
-    public static final Identifier ID = Identifier.fromNamespaceAndPath("${mod.value}", "${pkt.value}");
-    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE = new CustomPacketPayload.Type<>(ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, ${pascal}Payload> CODEC =
-        StreamCodec.of(
-            (buf, payload) -> buf.writeUtf(payload.message()),
-            buf -> new ${pascal}Payload(buf.readUtf()));
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-
-    public static void register() {
-        PayloadTypeRegistry.serverboundPlay().register(TYPE, CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(TYPE, (payload, context) -> {
-            /* validate on server */
-        });
-    }
-}
-`,
-      warnings: [
-        "26.1 Mojmap：serverboundPlay/clientboundPlay、CustomPacketPayload、Identifier.fromNamespaceAndPath。",
-        "不要把 Yarn 的 playC2S / CustomPayload 抄进 26.1。",
-        "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
-      ],
-    };
+  if (platform === "fabric_26.1.2") {
+    return fabricMojmap26PayloadSkeleton(mod.value, pkt.value, pascal, "26.1.2", true);
   }
 
   if (platform === "neoforge_1.20.1") {
@@ -539,34 +729,70 @@ public class ${pascal}Packet {
     };
   }
 
-  return {
-    code: `// Forge 1.20.1 — SimpleChannel 消息骨架
+  if (platform === "forge_1.12.2") {
+    const body = `// Forge 1.12.2 — SimpleNetworkWrapper + IMessage
 package com.example.${mod.value}.network;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
-import java.util.function.Supplier;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-public class ${pascal}Packet {
-    private final String message;
+public class ${pascal}Packet implements IMessage {
+    public static final SimpleNetworkWrapper CHANNEL =
+        NetworkRegistry.INSTANCE.newSimpleChannel("${mod.value}");
+
+    private String message = "";
+
+    public ${pascal}Packet() {}
 
     public ${pascal}Packet(String message) { this.message = message; }
 
-    public static void encode(${pascal}Packet msg, FriendlyByteBuf buf) {
-        buf.writeUtf(msg.message);
+    @Override
+    public void toBytes(ByteBuf buf) {
+        byte[] data = message.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        buf.writeInt(data.length);
+        buf.writeBytes(data);
     }
 
-    public static ${pascal}Packet decode(FriendlyByteBuf buf) {
-        return new ${pascal}Packet(buf.readUtf());
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        int len = buf.readInt();
+        byte[] data = new byte[len];
+        buf.readBytes(data);
+        message = new String(data, java.nio.charset.StandardCharsets.UTF_8);
     }
 
-    public static void handle(${pascal}Packet msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> { /* server/client logic */ });
-        ctx.get().setPacketHandled(true);
+    public static class Handler implements IMessageHandler<${pascal}Packet, IMessage> {
+        @Override
+        public IMessage onMessage(${pascal}Packet message, MessageContext ctx) {
+            return null;
+        }
     }
 }
-`,
-  };
+`;
+    return {
+      code: withDocsReviewHeader(body, "search_forge_docs", "1.12.2"),
+      warnings: [
+        "1.12.2 是 SimpleNetworkWrapper + IMessage / IMessageHandler / ByteBuf，不是 SimpleChannel / FriendlyByteBuf。",
+        "反面：PayloadTypeRegistry / RecipeOutput。",
+      ],
+    };
+  }
+
+  if (platform === "forge_1.20.4") {
+    return forgeSimpleChannelSkeleton(mod.value, pascal, "1.20.4", true);
+  }
+  if (platform === "forge_1.19.4") {
+    return forgeSimpleChannelSkeleton(mod.value, pascal, "1.19.4", true);
+  }
+  if (platform === "forge_1.18.2") {
+    return forgeSimpleChannelSkeleton(mod.value, pascal, "1.18.2", true);
+  }
+
+  return forgeSimpleChannelSkeleton(mod.value, pascal, "1.20.1", false);
 }
 
 export function generateCapability(
@@ -746,16 +972,18 @@ public final class ${toPascalCase(mod.value)}Config {
       warnings: [
         "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖；未声明则无法编译。",
         "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
+        "Cloth Config 不是官方 loader API。",
+        ...(loader === "quilt" ? ["Quilt 不要把 Cloth Config 当成 QSL。"] : []),
       ],
     };
   }
 
   if (loader === "neoforge") {
     const v = version.trim();
-    const useModConfig = v.startsWith("1.21") || v.startsWith("26.1");
+    const useModConfig = v.startsWith("1.21") || v.startsWith("26.1") || /^1\.20\.(4|6)/.test(v);
     if (useModConfig) {
-      return {
-        code: `package com.example.${mod.value}.config;
+      const reviewed = /^1\.20\.(4|6)/.test(v);
+      const body = `package com.example.${mod.value}.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -763,26 +991,37 @@ public class ${toPascalCase(mod.value)}Config {
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec SPEC = BUILDER.build();
 }
-`,
+`;
+      return {
+        code: reviewed ? withDocsReviewHeader(body, "search_neoforge_docs", v.startsWith("1.20.4") ? "1.20.4" : "1.20.6") : body,
+        warnings: reviewed
+          ? [
+              `NeoForge ${v.startsWith("1.20.4") ? "1.20.4" : "1.20.6"} 官方配置 API 是 ModConfigSpec，不是 ForgeConfigSpec。`,
+            ]
+          : undefined,
       };
     }
-    if (v.startsWith("1.20.4") || /^1\.20\.[4-9]/.test(v) || /^1\.20\.\d{2}/.test(v)) {
-      return {
-        code: `package com.example.${mod.value}.config;
+    if (v.startsWith("1.20.1")) {
+      const body = `package com.example.${mod.value}.config;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ${toPascalCase(mod.value)}Config {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 }
-`,
+`;
+      return {
+        code: withDocsReviewHeader(body, "search_neoforge_docs", "1.20.1"),
+        warnings: [
+          "NeoForge 1.20.1 配置走 Forge 1.20.1 ForgeConfigSpec（forgeCompatible）；不要抄 1.20.4+ ModConfigSpec 当本档独有 API。",
+        ],
       };
     }
     return {
       code: null,
       errors: [
-        `NeoForge config 当前支持 1.20.4（ForgeConfigSpec + net.neoforged）与 1.21+/26.1（ModConfigSpec）。收到 version=${version}。` +
+        `NeoForge config 当前支持 1.20.1（ForgeConfigSpec）与 1.20.4+/1.21+/26.1（ModConfigSpec）。收到 version=${version}。` +
           noNativeGeneratorError("search_neoforge_docs", "规则 00 / mc-config Skill"),
       ],
     };

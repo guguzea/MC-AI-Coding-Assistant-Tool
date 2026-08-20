@@ -29,11 +29,11 @@ export type SessionArgs = {
 
 export const BASE_RULE_IDS = ["00", "01", "09"] as const;
 export const ALL_RULE_IDS = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"] as const;
-export const SKILL_BODY_LIMIT = 6;
+export const SKILL_BODY_LIMIT = 8;
 export const NEXT_READS_LIMIT = 8;
 
 const BASE_ONLY_WARNING =
-  "已加载底座规则 00/01/09；如涉及方块/GUI/网络等主题，请调用 session 时传 task 或 topics，否则主题规则不在上下文中。";
+  "已加载底座规则 00/01/09；写方块/物品请立刻再 session 传 task=mc-new-block / mc-new-item（或 topics）。如涉及 GUI/网络等主题，请传 task 或 topics，否则主题规则不在上下文中。";
 
 function missingBaseRulesWarning(missingIds: string[]): string {
   return `本档 .cursor/rules 缺少底座 ${missingIds.join("/")}，rules[] 未注入这些正文。不要把 ok=true 当已加载 00/01/09。`;
@@ -74,8 +74,8 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   blockentity: { rules: ["02"], skills: ["mc-blockentity"], nextReads: [] },
   "mc-new-gui": { rules: ["10", "08", "06"], skills: ["mc-gui"], nextReads: ["mc-networking"] },
   gui: { rules: ["10", "08", "06"], skills: ["mc-gui"], nextReads: ["mc-networking"] },
-  "mc-mixin": { rules: [], skills: ["mc-mixin"], nextReads: [] },
-  mixin: { rules: [], skills: ["mc-mixin"], nextReads: [] },
+  "mc-mixin": { rules: ["09"], skills: ["mc-mixin"], nextReads: [] },
+  mixin: { rules: ["09"], skills: ["mc-mixin"], nextReads: [] },
   "mc-worldgen": { rules: ["07"], skills: ["mc-worldgen"], nextReads: [] },
   worldgen: { rules: ["07"], skills: ["mc-worldgen"], nextReads: [] },
   "mc-networking": { rules: ["06"], skills: ["mc-networking"], nextReads: [] },
@@ -89,14 +89,19 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-ingame-iterate": { rules: ["00"], skills: [], nextReads: [] },
   "mc-localize-mod": { rules: ["00"], skills: [], nextReads: [] },
   "mc-decompile-mod": { rules: ["00"], skills: [], nextReads: [] },
-  "mc-config": { rules: [], skills: ["mc-config"], nextReads: [] },
-  "mc-gametest": { rules: [], skills: ["mc-gametest"], nextReads: [] },
+  "mc-config": { rules: ["00"], skills: ["mc-config"], nextReads: [] },
+  "mc-gametest": { rules: ["09"], skills: ["mc-gametest"], nextReads: [] },
   "mc-publish": { rules: ["00"], skills: [], nextReads: [] },
   "mc-recipe-data": { rules: ["07"], skills: ["mc-recipe", "mc-loottable", "mc-advancement"], nextReads: [] },
-  "mc-audio-vfx": { rules: [], skills: ["mc-sound", "mc-particle"], nextReads: [] },
-  "mc-commands": { rules: [], skills: ["mc-command"], nextReads: [] },
+  "mc-audio-vfx": { rules: ["00"], skills: ["mc-sound", "mc-particle"], nextReads: [] },
+  "mc-commands": { rules: [], skills: ["mc-command"], nextReads: ["mc-command"] },
   "mc-dimension-structure": { rules: ["07"], skills: ["mc-dimension", "mc-structure"], nextReads: ["mc-worldgen"] },
-  "mc-access": { rules: [], skills: [], nextReads: [] },
+  "mc-access": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning: "无独立 00–10 规则。Access Transformer / Access Widener 请用 validate_at / validate_aw，不要默写邻档 AT。",
+  },
   "mc-bedrock-addon": {
     rules: [],
     skills: [],
@@ -258,15 +263,26 @@ export function sessionPlatformPack(args: SessionArgs) {
       !draft && candidates.length
         ? `同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默折叠。`
         : undefined;
+    const extraHints =
+      platform === "fabric" && minecraftVersion === "1.21.5"
+        ? [
+            "禁止读 fabric/1.21.4 或 1.21.8 的 00–10 顶上。",
+            "可改口 search_fabric_docs（先 list_fabric_versions）；最近有文档树的是 1.21.4 / 1.21.8，不要 fallback 正文。ok≠已加载规则。",
+          ]
+        : platform === "forge" && minecraftVersion === "1.21.1"
+          ? [
+              "禁止用 NeoForge 1.21.1 规则顶上。Forge 文档止于 1.20.4；可 search_forge_docs version=1.20.4（须标明不是 1.21.1 规则树）。ok≠已加载规则。",
+            ]
+          : [];
     return {
       ok: false,
       candidates: candidates.length ? candidates : undefined,
       action: actionable(
         "PACK_NOT_FOUND",
         draft
-          ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。`
-          : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。${ask ? ask : ""}`,
-        [`改用 ${docsToolForPlatform(platform)}`, ...(ask ? [ask] : [])],
+          ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
+          : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。ok≠已加载规则。${ask ? ask : ""}`,
+        [`改用 ${docsToolForPlatform(platform)}`, ...(ask ? [ask] : []), ...extraHints],
         [docsToolForPlatform(platform)],
       ),
     };
@@ -315,7 +331,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     overlay,
     repoRoot,
   );
-  if (donorWarning) warnings.push(donorWarning);
+  if (donorWarning) warnings.unshift(donorWarning);
   const libSkills = listLibSkillIndex(platform, pack.minecraftVersion, repoRoot);
 
   if (skills.length === 0) warnings.push(NO_PLATFORM_SKILLS_WARNING);
@@ -421,7 +437,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     rulesMode,
     warnings,
     libSkillsNote:
-      "库 Skill 只在 libSkills[]，不进入 skills[] 与 nextReads。须读 libSkills[]；只有显式 skillNames 才注入库正文（计入 skillBodies 上限 6）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
+      "库 Skill 只在 libSkills[]，不进入 skills[] 与 nextReads。须读 libSkills[]；只有显式 skillNames 才注入库正文（计入 skillBodies 上限 8）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
     includeAllRules: includeAll,
     topicWarnings: topicWarnings.length ? topicWarnings : undefined,
     contextWarning: includeAll

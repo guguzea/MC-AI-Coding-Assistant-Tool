@@ -666,7 +666,7 @@ function buildMethodResult(
 }
 
 const QUERY_API_EMPTY_INDEX =
-  "当前版本无 Vanilla API 索引，无法执行 query_api；请用 search_*_docs 或反编译 jar。query_api 覆盖约 1.16.5–1.20.4。found:false 不代表游戏里没有该类。";
+  "当前版本无 Vanilla API 索引，无法执行 query_api（found:false / DATA_UNAVAILABLE 只表示本 Parchment 索引没有该类，不代表游戏里没有）。请改用 search_*_docs，或 get_minecraft_source。query_api 覆盖约 1.16.5–1.20.4；1.21+ / 26.1+ 无索引。";
 
 const QUERY_API_SHELL_INDEX =
   "该版 extracted 多为类名空壳（methods 为空）。found:true 只表示类名在索引里，不是完整 javadoc/签名。请改 search_forge_docs / query_loader_api / convert_mapping。";

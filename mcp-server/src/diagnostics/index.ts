@@ -198,6 +198,38 @@ export interface CheckDependenciesExtras {
   projectPath?: string;
 }
 
+/**
+ * javafml mods.toml：Neo 信号优先；loaderVersion 匹配多位如 [21,) / [47,)。
+ * 无法区分时返回 unknown（调用方应 PICK_PLATFORM），禁止默默 Forge。
+ * skip = 正文不像 javafml 元数据，让后续 Gradle 启发式继续。
+ */
+export function classifyJavaFmlToml(toml: string): "forge" | "neoforge" | "unknown" | "skip" {
+  const hasJavaFml = /modLoader\s*=\s*"javafml"/i.test(toml);
+  const hasLoaderVer = /loaderVersion\s*=\s*"\[\d+/i.test(toml);
+  if (!hasJavaFml && !hasLoaderVer) return "skip";
+
+  const neoNamed =
+    /neoforge\.mods\.toml/i.test(toml) ||
+    /\[\[dependencies\.neoforge\]\]/i.test(toml) ||
+    /modId\s*=\s*"neoforge"/i.test(toml);
+  const forgeNamed = /\[\[dependencies\.forge\]\]/i.test(toml) || /modId\s*=\s*"forge"/i.test(toml);
+
+  if (neoNamed && !forgeNamed) return "neoforge";
+  if (forgeNamed && !neoNamed) return "forge";
+  if (neoNamed && forgeNamed) return "unknown";
+
+  const m = toml.match(/loaderVersion\s*=\s*"\[(\d+),/i);
+  if (m) {
+    const n = Number(m[1]);
+    if (n === 21 || (n >= 1 && n <= 9)) return "neoforge";
+    if (n >= 13 && n !== 21) return "forge";
+    return "unknown";
+  }
+
+  if (hasJavaFml) return "unknown";
+  return "skip";
+}
+
 /** loader 判定：Quilt → Fabric → NeoForge → LiteLoader → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
 export function detectLoader(
   buildGradle: string,
@@ -247,8 +279,8 @@ export function detectLoader(
 
   const toml = modsToml?.trim();
   if (toml && toml.length > 0) {
-    if (/neoforge\.mods\.toml|modId\s*=\s*"neoforge"|loaderVersion\s*=\s*"\[\d,/.test(toml)) return "neoforge";
-    if (/modLoader\s*=\s*"javafml"|loaderVersion\s*=\s*"\[44,/.test(toml)) return "forge";
+    const javaFml = classifyJavaFmlToml(toml);
+    if (javaFml !== "skip") return javaFml;
   }
   if (/forge|minecraftforge/i.test(buildGradle) && !hasLiteMeta) return "forge";
 
@@ -558,6 +590,9 @@ export function checkDependencies(
     .filter((s) => s)
     .join("\n");
 
+  if (detectedLoader === "unknown" && /modLoader\s*=\s*"javafml"/i.test(modsToml ?? "") && !extras?.litemodJson) {
+    issues.push("仅有 javafml mods.toml，无法区分 Forge / NeoForge。请询问用户（PICK_PLATFORM），禁止默默当 Forge。");
+  }
   if (detectedLoader === "unknown" && (extras?.litemodJson || /litemod\.json|LiteMod/i.test(text)) && /modLoader\s*=\s*"javafml"|@Mod/.test(text)) {
     issues.push(
       "同时存在 LiteLoader 与 Forge 元数据，但未检测到 apply plugin: 'net.minecraftforge.gradle.liteloader'。请确认是混合工程还是残留 litemod；禁止默默当纯 Forge。",
@@ -600,7 +635,7 @@ export function checkDependencies(
     suggestions.push("cloth_frozen：Cloth Config 已冷冻（维护停滞），新模组可考虑 YACL / Fzzy Config");
   }
 
-  return {
+  const result: Record<string, unknown> = {
     ok: issues.length === 0,
     detectedLoader,
     issues,
@@ -610,4 +645,12 @@ export function checkDependencies(
     traps,
     relatedTools: ["diagnose_gradle", "analyze_porting_path", "search_community_docs"],
   };
+  if (detectedLoader === "unknown" && /modLoader\s*=\s*"javafml"/i.test(modsToml ?? "") && !extras?.litemodJson) {
+    result.action = actionable(
+      ActionCodes.PICK_PLATFORM,
+      "仅有 javafml mods.toml，无法区分 Forge / NeoForge。请询问用户指定 platform，禁止默默当 Forge。",
+      ["向用户询问 platform=forge 或 neoforge", "或提供 neoforge.mods.toml / [[dependencies.neoforge]]"],
+    );
+  }
+  return result;
 }

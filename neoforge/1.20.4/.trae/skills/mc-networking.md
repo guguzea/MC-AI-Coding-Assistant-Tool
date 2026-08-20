@@ -1,6 +1,6 @@
 ﻿---
 name: mc-networking
-description: NeoForge 1.20.4 mc-networking。类名只来自本档核实表与 search_neoforge_docs。
+description: NeoForge 1.20.4 mc-networking。类名来自本档核实表、loader-api 反编译摘要与 search_neoforge_docs。
 platform: neoforge
 version: "1.20.4"
 dependencies: []
@@ -13,9 +13,9 @@ mappings: mojmap
 
 # 06 — 网络（NeoForge 1.20.4）
 
-**本档不是 Forge SimpleChannel。** 1.20.4 的 `networking/payload` 页在本库为 `DOC_NOT_FOUND`；下列骨架仅反映**当时常见文档写法**（单数 `RegisterPayloadHandlerEvent`），**未核实**，禁止当已核 API 默写。
+**本档不是 Forge SimpleChannel。** 本库 `search_neoforge_docs` 的 `networking/payload` 页为 `DOC_NOT_FOUND`；下列类名与签名以 **官方 NeoForge 1.20.4 API jar 反编译**为准（`loader-api-summaries/1.20.4-neoforge.json`，`query_loader_api`），**不因缺页降级为未核实**。
 
-## 未核实骨架（勿当正解）
+## 核实骨架（jar 反编译）
 
 ```java
 @SubscribeEvent // mod event bus
@@ -42,8 +42,6 @@ public record MyData(String name, int age) implements CustomPacketPayload {
 }
 ```
 
-**未核实来源**：`/docs/1.20.4/networking/payload/` 缺页。需要网络 API 时先 `search_neoforge_docs query=networking version=1.20.4`。
+**核实来源**：`1.20.4-neoforge.json`（单数 `RegisterPayloadHandlerEvent`）。禁止 SimpleChannel；禁止把 1.21 复数 Handlers 当本档。
 
-禁止：`SimpleChannel` / `IMessage`；把 1.21 的 RegisterPayloadHandlersEvent（复数）当本档；把上述未核实骨架当已核正解。
-
-触发词：Payload、CustomPacketPayload。禁止 SimpleChannel。禁止默写未核实签名。
+触发词：Payload、CustomPacketPayload、`query_loader_api`。

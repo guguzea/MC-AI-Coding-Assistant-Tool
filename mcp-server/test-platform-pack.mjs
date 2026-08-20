@@ -369,11 +369,18 @@ function assertHasRuleIds(s, want, label) {
   const s = sessionPlatformPack({
     platform: "neoforge",
     minecraftVersion: "1.21.1",
-    skillNames: ["mc-gui", "mc-item", "mc-block", "mc-entity", "mc-events", "mc-networking", "mc-mixin"],
+    skillNames: ["mc-gui", "mc-item", "mc-block", "mc-entity", "mc-events", "mc-networking", "mc-mixin", "mc-datagen", "mc-recipe"],
   });
-  assert.equal((s.skillBodies ?? []).length, 6);
-  assert.ok((s.warnings ?? []).some((w) => /上限 6/.test(w)));
-  console.log("session skillBodies cap 6: ok");
+  assert.equal((s.skillBodies ?? []).length, 8);
+  assert.ok((s.warnings ?? []).some((w) => /上限 8/.test(w)));
+  console.log("session skillBodies cap 8: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", task: "mc-mixin" });
+  assertHasRuleIds(s, ["09"], "task mc-mixin");
+  assert.ok((s.skillBodies ?? []).some((b) => b.name === "mc-mixin") || (s.nextReads ?? []).some((n) => n.name === "mc-mixin"));
+  console.log("session task mc-mixin injects 09: ok");
 }
 
 {
@@ -685,6 +692,10 @@ function assertHasRuleIds(s, want, label) {
   for (const ver of ["1.21.5", "1.21.10"]) {
     const t = sessionPlatformPack({ platform: "neoforge", minecraftVersion: ver });
     assert.ok((t.skills ?? []).some((x) => x.name === "mc-entity"), `${ver} skills missing mc-entity`);
+    const donor = (t.warnings ?? []).find((w) => /并入/.test(w) || /同系列主档/.test(w));
+    if (donor) {
+      assert.equal((t.warnings ?? [])[0], donor, `${ver} donor warning should be first`);
+    }
   }
   console.log("session neo thin donor nextReads: ok");
 }

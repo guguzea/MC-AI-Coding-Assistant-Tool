@@ -21,10 +21,10 @@ import { resolvePlatformDataDir } from "./dist/docs-platform/store.js";
 import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
 import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
-import { generateDatagen } from "./dist/datagen/index.js";
-import { generateLang, generateCapability, generateConfig, generateEntityRenderer } from "./dist/generators/index.js";
+import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
+import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
-import { detectLoader, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
+import { detectLoader, classifyJavaFmlToml, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
@@ -1406,8 +1406,8 @@ async function testFivePlatformRouting() {
   const qReg = parseToolText(await searchDocs({ platform: "quilt", version: "1.21.11", query: "registry" }));
   assert.notEqual(qReg.error?.code, "VERSION_NOT_FOUND", JSON.stringify(qReg.error ?? {}).slice(0, 400));
   assert.equal(qReg.ok, true, JSON.stringify(qReg.error ?? qReg).slice(0, 400));
-  assert.equal(qReg.fallback, "fabric");
-  assert.match(String(qReg.warning ?? ""), /Quilt 官方文档无此版本/);
+  assert.notEqual(qReg.fallback, "fabric", "1.21.11 已入库 quilt-docs，不得回退 Fabric Registry");
+  assert.doesNotMatch(String(qReg.warning ?? ""), /Quilt 官方文档无此版本/);
 
   const q1211qsl = parseToolText(
     await searchDocs({ platform: "quilt", version: "1.21.11", query: "QSL QuiltRegistry" }),
@@ -1450,6 +1450,32 @@ async function testFivePlatformRouting() {
   });
   assert.equal(detectLoader("", undefined, undefined, undefined, { addonManifest }), "bedrock");
   assert.equal(detectLoader("public class mod_Example extends BaseMod {\n}"), "modloader");
+
+  const neoTomlOnly = 'modLoader="javafml"\nloaderVersion="[21,)"\n[[mods]]\nmodId="demo"\n[[dependencies.demo]]\nmodId="neoforge"\n';
+  assert.equal(detectLoader("", neoTomlOnly), "neoforge");
+  assert.equal(classifyJavaFmlToml(neoTomlOnly), "neoforge");
+  assert.equal(
+    detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n'),
+    "forge",
+  );
+  const javafmlBare = 'modLoader="javafml"\n[[mods]]\nmodId="demo"\n';
+  assert.equal(detectLoader("", javafmlBare), "unknown");
+  const deps = checkDependencies("", javafmlBare);
+  assert.equal(deps.detectedLoader, "unknown");
+  assert.equal(deps.action?.code, "PICK_PLATFORM");
+
+  assert.equal(parseNeo21Patch("1.21"), 0);
+  assert.equal(parseNeo21Patch("1.21.5"), 5);
+  assert.equal(parseNeo21Patch("21.1.0"), null);
+  const neoBuild = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "21.1.0",
+  });
+  assert.equal(neoBuild.code, null);
+  assert.ok(neoBuild.errors?.some((e) => /Minecraft 版本/.test(e)), JSON.stringify(neoBuild));
 
   // E2E-001：混合脚手架钉死 liteloader 插件 + stable_39，且有 LiteMod + Forge 入口
   const hybridRoot = join(REPO_ROOT, "liteloader", "1.12.2", "scaffold", "hybrid");
@@ -1891,12 +1917,48 @@ async function testPlan2PrimerMdkFabricPorting() {
   assert.ok(!fabPkt.code?.includes("serverboundPlay"), fabPkt.code?.slice(0, 500));
   assert.ok(!/net\.minecraftforge/.test(fabPkt.code || ""));
   assert.ok(!/net\.neoforged/.test(fabPkt.code || ""));
+  assert.ok(
+    fabPkt.warnings?.[0]?.includes("模糊 token") && /禁止把本骨架当 1\.21\.1/.test(fabPkt.warnings.join("\n")),
+    JSON.stringify(fabPkt.warnings),
+  );
 
   const fabPkt261 = genPkt("my_mod", "sync_msg", "fabric_26.1");
   assert.ok(fabPkt261.code?.includes("ServerPlayNetworking"));
   assert.ok(fabPkt261.code?.includes("serverboundPlay"), fabPkt261.code?.slice(0, 500));
   assert.ok(!fabPkt261.code?.includes("playC2S"), fabPkt261.code?.slice(0, 500));
   assert.ok(!/net\.minecraftforge/.test(fabPkt261.code || ""));
+
+  const networkCases = [
+    { token: "neoforge_1.21.1", mustInclude: ["RegisterPayloadHandlersEvent", "DirectionalPayloadHandler"], mustNotInclude: ["SimpleChannel", "RegisterPayloadHandlerEvent"] },
+    { token: "neoforge_1.21.3", mustInclude: ["RegisterPayloadHandlersEvent", "playBidirectional"], mustNotInclude: ["SimpleChannel"] },
+    { token: "fabric_1.21.4", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay", "RegisterPayloadHandlersEvent"] },
+    { token: "fabric_1.21.8", mustInclude: ["playC2S", "CustomPayload"], mustNotInclude: ["serverboundPlay"] },
+    { token: "fabric_1.21.10", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay"] },
+    { token: "fabric_1.21.11", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay"] },
+    { token: "fabric_26.1.2", mustInclude: ["serverboundPlay", "CustomPacketPayload"], mustNotInclude: ["playC2S"] },
+    { token: "forge_1.20.4", mustInclude: ["SimpleChannel", "FriendlyByteBuf", "NetworkEvent"], mustNotInclude: ["PayloadTypeRegistry", "RegisterPayloadHandlersEvent"] },
+    { token: "forge_1.19.4", mustInclude: ["FriendlyByteBuf", "NetworkEvent"], mustNotInclude: ["RecipeOutput", "PayloadTypeRegistry"] },
+    { token: "forge_1.18.2", mustInclude: ["FriendlyByteBuf"], mustNotInclude: ["PayloadTypeRegistry"] },
+    { token: "forge_1.12.2", mustInclude: ["IMessage", "SimpleNetworkWrapper"], mustNotInclude: ["FriendlyByteBuf", "PayloadTypeRegistry", "playC2S"] },
+  ];
+  for (const c of networkCases) {
+    const r = genPkt("demo", "sync", c.token);
+    assert.ok(r.code, `${c.token} should generate: ${JSON.stringify(r.errors)}`);
+    for (const s of c.mustInclude) {
+      assert.ok(r.code.includes(s), `${c.token} missing ${s}: ${r.code.slice(0, 240)}`);
+    }
+    for (const s of c.mustNotInclude) {
+      assert.ok(!r.code.includes(s), `${c.token} must not include ${s}`);
+    }
+  }
+  const noNet1204 = genPkt("demo", "sync", "fabric_1.20.4");
+  assert.equal(noNet1204.code, null);
+  const noNet1211 = genPkt("demo", "sync", "fabric_1.21.1");
+  assert.equal(noNet1211.code, null);
+  const noNetNeo1206 = genPkt("demo", "sync", "neoforge_1.20.6");
+  assert.equal(noNetNeo1206.code, null);
+  const noNet1201 = genPkt("demo", "sync", "fabric_1.20.1");
+  assert.equal(noNet1201.code, null);
 
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
   const fa = parseToolText(await searchFabricDocs({ query: "porting 26.2 vulkan", version: "26.1.2" }));
@@ -2186,6 +2248,114 @@ public class ExampleMod { }
   assert.ok(!/net\.minecraftforge/.test(fab261.code || ""));
   assert.ok(!/net\.neoforged/.test(fab261.code || ""));
 
+  const fabGen = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.4",
+  });
+  assert.ok(fabGen.code?.includes("void generate("), fabGen.code?.slice(0, 500));
+  assert.ok(!fabGen.code?.includes("void buildRecipes("), fabGen.code?.slice(0, 400));
+  assert.ok(
+    fabGen.warnings?.some((w) => /RecipeExporter/.test(w)),
+    JSON.stringify(fabGen.warnings),
+  );
+  assert.ok(fabGen.code?.includes("Yarn 工程改为 RecipeExporter"), fabGen.code?.slice(0, 800));
+
+  const fabBuild = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.10",
+  });
+  assert.ok(fabBuild.code?.includes("void buildRecipes("), fabBuild.code?.slice(0, 500));
+
+  const fabNoNet = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.20.4",
+  });
+  assert.equal(fabNoNet.code, null);
+
+  const fab215 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.5",
+  });
+  assert.equal(fab215.code, null);
+
+  const quiltDg = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "quilt",
+    version: "1.21.11",
+  });
+  assert.equal(quiltDg.code, null);
+  assert.ok(quiltDg.errors?.some((e) => /search_docs platform=quilt/.test(e)), JSON.stringify(quiltDg.errors));
+
+  const forge194 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "forge",
+    version: "1.19.4",
+  });
+  assert.equal(forge194.code, null);
+  assert.ok(!/RecipeOutput/.test(forge194.code || ""));
+
+  const forge1204 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "forge",
+    version: "1.20.4",
+  });
+  assert.ok(forge1204.code?.includes("FinishedRecipe"), forge1204.code?.slice(0, 400));
+  assert.ok(!forge1204.code?.includes("RecipeOutput"), forge1204.code?.slice(0, 300));
+
+  const neo1204 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "1.20.4",
+  });
+  assert.ok(neo1204.code?.includes("RecipeOutput"), neo1204.code?.slice(0, 400));
+  assert.ok(neo1204.code?.includes("PackOutput output)"), neo1204.code?.slice(0, 500));
+  assert.ok(!/CompletableFuture/.test(neo1204.code || ""), "1.20.4 neo must not copy 1.21 two-arg ctor");
+
+  const neo1206 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "1.20.6",
+  });
+  assert.ok(neo1206.code?.includes("CompletableFuture"), neo1206.code?.slice(0, 400));
+  assert.ok(neo1206.code?.includes("RecipeOutput"), neo1206.code?.slice(0, 300));
+
+  const neo1206loot = generateDatagen({
+    providerType: "loottable",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "1.20.6",
+  });
+  assert.equal(neo1206loot.code, null);
+  assert.ok(neo1206loot.errors?.some((e) => /仅核实 RecipeProvider/.test(e)), JSON.stringify(neo1206loot));
+
+  const neo1201pkt = generateNetworkPacket("demo", "sync", "neoforge_1.20.1");
+  assert.ok(neo1201pkt.code, JSON.stringify(neo1201pkt.errors));
+  assert.ok(!/Attachment/.test(neo1201pkt.code || ""));
+  assert.ok(!/RegisterPayloadHandlersEvent/.test(neo1201pkt.code || ""));
+
   const capFab = generateCapability("my_mod", "mana", "fabric", "1.20.1");
   assert.equal(capFab.code, null);
   assert.ok(capFab.errors?.some((e) => /CCA|Cardinal|cca/i.test(e)), JSON.stringify(capFab));
@@ -2200,6 +2370,19 @@ public class ExampleMod { }
 
   const capNeo1204 = generateCapability("my_mod", "mana", "neoforge", "1.20.4");
   assert.ok(capNeo1204.code?.includes("AttachmentType"), capNeo1204.code);
+
+  const cfgNeo1204 = generateConfig("my_mod", "neoforge", "1.20.4");
+  assert.ok(cfgNeo1204.code?.includes("ModConfigSpec"), cfgNeo1204.code);
+  assert.ok(!/ForgeConfigSpec/.test(cfgNeo1204.code || ""));
+  assert.ok(cfgNeo1204.warnings?.some((w) => /ModConfigSpec/.test(w)), JSON.stringify(cfgNeo1204.warnings));
+
+  const wfCfg = getWorkflowTemplate("mc-config");
+  assert.equal(wfCfg.found, true);
+  assert.ok(/ModConfigSpec/.test(wfCfg.body), wfCfg.body);
+  assert.ok(!/NeoForge 1\.20\.4：ForgeConfigSpec/.test(wfCfg.body), wfCfg.body);
+
+  const cfgNeo1201 = generateConfig("my_mod", "neoforge", "1.20.1");
+  assert.ok(cfgNeo1201.code?.includes("ForgeConfigSpec"), cfgNeo1201.code);
 
   const cfgNoVer = generateConfig("my_mod", "neoforge");
   assert.equal(cfgNoVer.code, null);

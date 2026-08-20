@@ -1,8 +1,11 @@
 # NeoForge 1.20.4 已核实 API
 
-签字：官方文档 https://docs.neoforged.net/docs/1.20.4/ + 官方 MDK（NeoForgeMDKs/MDK-1.20.4-NeoGradle @ 8cd443623d2fd12ef8a6912d2af1296d8522faac 与 MDK-1.20.4-ModDevGradle @ ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a）。  
-反编译：`scripts/validate-rules-against-cache.mjs` 从 `$MC_SKILL_CACHE` 抽签名回填。摘要 JSON **必须**含 `mappingsVersion`，否则不得覆盖本表。  
-clone-audit：与邻档教程骨架相似是预期（换类名），**误报不算验收失败**；本表即源码/文档签字。
+签字：官方文档 https://docs.neoforged.net/docs/1.20.4/ + 官方 MDK（NeoForgeMDKs/MDK-1.20.
+4-NeoGradle @ 8cd443623d2fd12ef8a6912d2af1296d8522faac 与 MDK-1.20.4-ModDevGradle @ 
+ddfff1d83adca54ac44fe70a6f3b85d3033f0e3a）。  
+反编译：`scripts/validate-rules-against-cache.mjs` 从 `$MC_SKILL_CACHE` 抽签名回填。摘要 JSON
+**核实优先级**：jar 摘要与反编译 FQCN **高于**本库 `search_neoforge_docs` 缺页（`DOC_NOT_FOUND` 不得把已入库反编译项标成「未核实」）。  
+摘要 JSON **必须**含 `mappingsVersion`，否则不得写进本表。clone-audit：与邻档教程骨架相似是预期，误报不算验收失败。
 
 ## 入口
 
@@ -33,6 +36,8 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 | StreamCodec / type() | 不要（本档用 write/id + FriendlyByteBuf 构造器） |
 | SimpleChannel / IMessage / newSimpleChannel | **禁止** |
 
+网络类名来源：`1.20.4-neoforge.json`（mappingsVersion: `official-1.20.4` / `parchment-1.20.4-2024.04.14`）。本库无 `networking/payload` 文档页时仍以 jar 为准。
+
 ## 其它
 
 - DataGen：GatherDataEvent
@@ -45,5 +50,6 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 | 编号 | 对照 URL | 抓取日 | 结论 |
 | 03 | https://docs.neoforged.net/docs/1.20.4/items/ | 2026-08-16 | 已按该版文档改写 |
 | 04 | — | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
+| 06 | — | — | payload 页 DOC_NOT_FOUND；网络 API 以 `1.20.4-neoforge.json` jar 反编译为准 |
 | 08 | https://docs.neoforged.net/docs/1.20.4/concepts/sides/ | 2026-08-16 | 已按该版文档改写（MDK ClientModEvents；payload 默认网络线程） |
 

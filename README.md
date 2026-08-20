@@ -7,6 +7,12 @@
 
 为 AI 提供一个「读懂 MC Mod 开发生态」的环境，消除知识陈旧、API 版本混淆、构建系统复杂、映射不一致等结构性障碍。
 
+## 定位：人在环的副驾驶（不是无人值守流水线）
+
+模组开发**不是**确定性流水线。创意设计（做什么内容）等必须由**人**判断,如果你无法拍板,可以让agent代劳,完成后agent会给你做出解释；
+Agent 负责版本门禁、文档检索、规则/反模式、骨架草稿、校验与崩溃分诊等。
+
+下列高风险操作默认停在清单或 `dryRun`，**必须有人在环**（先展示、经用户确认后再做）：写盘、运行 Gradle、拷贝 jar 到游戏目录、上传发布。
 ## 项目结构
 
 ```
@@ -149,8 +155,38 @@ MC_skill/
 
 **对 AI（打开一个 MC Mod 项目时）：**
 
-> 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。
+> 按根目录 `AGENTS.md` 判断平台与**精确**版本，然后调用 `activate_platform_pack action=session` 加载该档规则 / Skill 索引（不要直接读邻版 `平台/<ver>/.cursor`）。官方文档先 `list_*_versions`，再把 `version` 写死成工程版本去 `search_*_docs` / `search_docs`。创意、兼容取舍、API 选择由用户拍板,兼容取舍、API 选择在用户不想或者没有能力决定时,可以代劳,但是一定要对用户进行解释,解释模板见下文的解释模板部分；写盘 / Gradle / 拷 jar / 上传须确认后再做（人在环，不是无人值守流水线）。
+*解释模板*
+  1. 决策透明
+  任何代替用户做出的兼容取舍或 API 选择，都必须在决策后立即在回复中明确说明，不得默默执行。
+  格式示例：
 
+  我已替你选择使用 DeferredRegister，原因见下。
+
+  2. 解释必须包含四要素
+  每次代替用户决策，解释至少包含：
+
+  选择了什么：具体的技术点或方案（例如“使用 Forge 1.20.1 的 SimpleChannel 而不是 NeoForge 的 Payload”）。
+
+  为什么这样选：与当前版本、文档、最佳实践或用户项目情况的关联（例如“NeoForge 1.20.1 是 Forge 兼容层，官方文档指向 SimpleChannel”）。
+
+  主要替代方案：一到两个可选方案，并说明为何没有采用（例如“也可以使用 NeoForge 1.20.4+ 的 Payload，但你的版本是 1.20.1，不适用”）。
+
+  影响与风险：该选择可能带来的后果、限制或需要注意的地方（例如“这样写会在编译时依赖 net.minecraftforge 包，请确认你的工程已包含该依赖”）。
+
+  3. 语言适配用户水平
+  如果用户表示“不太懂技术”或“你决定就行”，解释应避免堆砌术语，用通俗语言说明选择会带来什么结果。
+
+  如果用户是专业开发者，可以给出更技术性的依据（如类名、方法签名、文档链接）。
+
+  无论哪种，都必须给出可验证的出处（例如 search_forge_docs 的结果、规则编号、官方文档链接），不能只说“最佳实践”。
+
+  4. 高风险决策需先行确认
+  低风险决策（如选择某个 API 写法、推荐某个依赖版本）：可以直接代劳，但执行后立即按第 2 条解释。
+
+  高风险决策（如切换加载器平台、更改包结构、移除依赖、修改构建脚本）：即使可以代劳，也应在执行前简要说明推荐方案和理由，等待用户回复确认，除非用户已经明确表示“不用问我，直接做”。
+
+  如果用户说“我不懂，你来决定”，则视为已授权，但仍需在决策后解释清楚，并告知如何回退。
 **对新项目使用脚手架：**
 
 > 使用对应平台版本下的 `scaffold/`（如 `forge/1.20.1/scaffold/`）生成带规则的项目骨架。
@@ -288,7 +324,7 @@ MC_skill/
 | `action` | 作用 |
 |----------|------|
 | `list` | 已建档平台 / 版本 |
-| `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix` / `absPath`）。默认只注入规则 **00 / 01 / 09**；`topics` 与 `task` **追加**到底座（并集，永不替换）；`skillNames` 与 `task` 建议名去重后注入 `skillBodies`（总条数上限 6）。`topics` 永不注入 Skill 正文。库 Skill 不进 `nextReads`，只有显式 `skillNames` 才注入库正文。`includeAllRules=true` 才灌 00–10 规则全文。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。库 Skill 仍读 `knowledge/libs/`。 |
+| `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix` / `absPath`）。默认只注入规则 **00 / 01 / 09**；`topics` 与 `task` **追加**到底座（并集，永不替换）；`skillNames` 与 `task` 建议名去重后注入 `skillBodies`（总条数上限 8）。`topics` 永不注入 Skill 正文。库 Skill 不进 `nextReads`，只有显式 `skillNames` 才注入库正文。`includeAllRules=true` 才灌 00–10 规则全文。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。库 Skill 仍读 `knowledge/libs/`。 |
 | `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `all`）。默认 `dryRun`。不要再用 `includeSkills`，改用 `writeSkillStubs`（二者都未传时默认 **true**，写入 stub，提示去读知识库路径，不是 Skill 全文）。`includeSkillBodies` 才写全文。目标不能是本知识库根。 |
 | `deactivate` | 按清单撤写 |
 
@@ -327,6 +363,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | 用网站 URL 当 `get_*_doc_full` 的 `id` | **必须**用搜索结果里的 `id` |
 | `search_community_docs` 可当官方 API | **不能**。`links` 条目不抓网页正文 |
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
+| 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、兼容取舍、API、性能、调试由人决定；高风险操作须确认后再执行 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
 | `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 仅 1.20.1**、NeoForge 1.21.x 与 26.1、Fabric/Quilt 1.21 与 26.1；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
@@ -497,7 +534,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `search_loader_api` | 在 `fqcnIndex` 上子串搜索（`limit` 默认 20 封顶 50）。`mode=list` 列出已索引档 / skipped / cache overlay。 |
 | `ingest_loader_api` | 用户自备 jar（官方不代下的 LiteLoader/Rift/ModLoader）抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，**禁止写仓库 `data/`**。`jarPath` 绝对路径 + `mappingsVersion` 必填。默认 dryRun。不要用 `--file`。 |
 | `detect_mod_project` | 只读探测模组工程（Quilt 在 Fabric 前）。`projectPath`（CLI `--project`）优先于 `MC_SKILL_PROJECT_ROOT`。知识库根 / 某版 `scaffold` → `KNOWLEDGE_REPO_NOT_MOD`（Architectury 的 `forge/`+`fabric/` 无版本 `pack.meta.json` 不误伤）。对不上规则树 → `PACK_NOT_FOUND`，禁止邻档 00–10。 |
-| `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 6；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填。不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写全文。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
+| `activate_platform_pack` | `list` / `session` / `write` / `deactivate`。session 不写盘、不依赖项目根：默认规则 **00/01/09** + Skill **索引**（`topics`/`task` 追加并集；`skillNames` 注入正文上限 8；见上文「规则包加载」）。write 默认 dryRun，`hosts` 必填。不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写全文。目标只能是用户模组工程（拒绝知识库根）。**不能**开关 IDE 扫描器。 |
 
 
 ### 2. 工程辅助
@@ -710,6 +747,8 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；数量以 `get_workflow_template` 列表为准。Cursor 等仅 tools 客户端用该工具获取同款全文。
 
+这些模板是 **Agent 步骤清单**（人在环）：对齐创意与版本取舍后给出检索/草稿/校验顺序。不代跑 Gradle、不自动拷 mods、不上传商店——高风险步骤写明「用户确认后执行」，这是设计。
+
 
 | 模板名               | 标题      | 流程要点                                                                                                              |
 | ----------------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -718,8 +757,8 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-new-gui`      | GUI 工作流 | MenuType + AbstractContainerMenu → Screen 注册 → 按平台同步（Forge SimpleChannel / NeoForge Payload / Fabric ServerPlayNetworking） |
 | `mc-crash-triage` | 崩溃分诊    | analyze_log/crash_analyze → search_community_docs → validate_project + mixin_analyze → diagnose_gradle            |
 | `mc-port-mod`     | 移植模组    | analyze_porting_path → 确认目标 → port_project dryRun → get_migration_guide                                           |
-| `mc-build-mod`    | 模组构建流程  | validate_project / diagnose_gradle → gradlew build → 确认 build/libs jar → 失败则分析日志；可接真机循环                          |
-| `mc-ingame-iterate` | 真机测试与修复循环 | 索取启动器与路径（官方/HMCL/PCL2 版本隔离）→ 装 jar → 复现 → 修 → 再测；可选兼容性测试。路径约定见模板正文与 [HMCL 隔离文档](https://docs.hmcl.net/launcher/isolation.html) |
+| `mc-build-mod`    | 模组构建流程  | validate_project / diagnose_gradle → **用户确认后** gradlew build → 确认 build/libs jar；失败则分析日志；可接真机循环 |
+| `mc-ingame-iterate` | 真机测试与修复循环 | 索取并核对启动器路径（官方/HMCL/PCL2 版本隔离）→ **用户确认后**装 jar → 复现 → 修 → 再测。路径约定见模板正文与 [HMCL 隔离文档](https://docs.hmcl.net/launcher/isolation.html) |
 | `mc-localize-mod` | 模组汉化 | 判定 own/third_party → `localize_mod` diff/draft 或 extract/pack_draft → Agent 填中文 → 自检；见 `authored/localization-lang` |
 | `mc-decompile-mod` | 模组反编译研究 | 定位 jar → `analyze_mod_jar` → `decompile_mod_jar` / `get_minecraft_source` → `search_mod_code` → 定位目标类 → 修改建议 → 衔接 `mc-build-mod` / `mc-ingame-iterate` |
 | `mc-new-item` | 新物品工作流 | 该档 03-item 注册 → 模型/lang → 合成（有模板才 generate_datagen） |
@@ -728,8 +767,8 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-worldgen` | 世界生成工作流 | configured/placed feature → 该档 biome 注入 |
 | `mc-config` | 配置工作流 | generate_config（loader+version 必填）或 Cloth Config |
 | `mc-gametest` | GameTest 工作流 | 按平台核文档，禁止默记 Forge 1.20.1 |
-| `mc-publish` | 发布清单 | 元数据 / build/libs / changelog / license；不上传 |
-| `mc-setup-env` | 开发环境搭建 | detect_mod_project → MDK dryRun 或 Loom/映射清单；不自动 genRuns |
+| `mc-publish` | 发布清单 | 元数据 / build/libs / changelog / license；尽量让用户自行上传（人在环，不代传） |
+| `mc-setup-env` | 开发环境搭建 | detect_mod_project → MDK dryRun 或 Loom/映射清单；genRuns 由用户确认后执行 |
 | `mc-full-mod` | 从零新模组总链 | 仅从零：setup-env → mc-new-* → build → ingame-iterate → 可选 localize/publish |
 | `mc-networking` | 网络通信清单 | session task=mc-networking → generate_network_packet（带版本后缀） |
 | `mc-capability` | 能力 / 附件清单 | Forge/Neo 1.20.1 Capability；Neo 1.20.4+ Attachment |
@@ -745,7 +784,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-creative-tags` | 创造栏与标签 | 03 |
 | `mc-kotlin` | Kotlin 模组 | 00；核该档文档 |
 | `mc-jei` | JEI 兼容 | mc-compat-jei |
-| `mc-ci-publish-extra` | CI 发布附加 | 00；不上传 |
+| `mc-ci-publish-extra` | CI 发布附加 | 00；只出步骤名，不代跑 CI、不上传（人在环） |
 
 
 ### 知识暴露（MCP Resources）

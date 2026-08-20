@@ -1,6 +1,6 @@
 {
   "version": "1.20.1",
-  "reason": "no fabric-docs versions/ tree for this MC version; search wiki or DOC_NOT_FOUND",
+  "reason": "无 versions/1.20.1 与可用归档；不要把 main/VitePress 当本档官方树。search 走 wiki 或 DOC_NOT_FOUND",
   "removedRaw": 25,
   "keptRaw": 0
 }

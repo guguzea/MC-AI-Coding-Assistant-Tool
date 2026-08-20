@@ -1,7 +1,7 @@
 /**
  * Quilt search_docs：有独立树用 quilt-docs；否则分类回退 Fabric。
  */
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore, FabricDocStore } from "./fabric/store.js";
@@ -31,6 +31,21 @@ export function hasQuiltDocsIndex(version: string, dataRoot = resolveDataDir()):
   const ver = String(version ?? "").trim();
   if (!ver || /[\\/]/.test(ver) || ver.includes("..")) return false;
   return existsSync(join(dataRoot, `quilt_${ver}`, "quilt-docs", ver, "index-l0.json"));
+}
+
+const QUILT_INDEX_FALLBACK: Record<string, string> = { "1.21.11": "1.21.1" };
+
+function quiltIndexHasPages(version: string, dataRoot = resolveDataDir()): boolean {
+  const ver = String(version ?? "").trim();
+  if (!ver || /[\\/]/.test(ver) || ver.includes("..")) return false;
+  const p = join(dataRoot, `quilt_${ver}`, "quilt-docs", ver, "index-l0.json");
+  if (!existsSync(p)) return false;
+  try {
+    const arr = JSON.parse(readFileSync(p, "utf8"));
+    return Array.isArray(arr) && arr.length > 0;
+  } catch {
+    return false;
+  }
 }
 
 function jsonOk(payload: unknown): CallToolResult {
@@ -102,6 +117,40 @@ export async function searchQuiltDocs(args: {
 }): Promise<CallToolResult> {
   const dataRoot = resolveDataDir();
   const qsl = isQslSpecificQuery(args.query);
+
+  if (!quiltIndexHasPages(args.version, dataRoot)) {
+    const fb = QUILT_INDEX_FALLBACK[args.version];
+    if (fb && fb !== args.version && quiltIndexHasPages(fb, dataRoot)) {
+      const inner = await searchQuiltDocs({ ...args, version: fb });
+      const text = inner.content?.[0] && inner.content[0].type === "text" ? inner.content[0].text : "{}";
+      const rec = JSON.parse(text) as Record<string, unknown>;
+      rec.version = args.version;
+      rec.requestedVersion = args.version;
+      rec.resolvedVersion = fb;
+      rec.fallback = "quilt";
+      rec.source_version = fb;
+      rec.warning = joinSearchWarnings(
+        typeof rec.warning === "string" ? rec.warning : undefined,
+        `Quilt ${args.version} 无可用 quilt-docs 页，已改口 ${fb}（fallback=quilt, source_version=${fb}）。禁止把 Fabric Registry 当 QSL。`,
+      );
+      return jsonOk(rec);
+    }
+    if (!quiltIndexHasPages(args.version, dataRoot) && !hasQuiltDocsIndex(args.version, dataRoot) && fb) {
+      return jsonOk({
+        ok: false,
+        query: args.query,
+        version: args.version,
+        platform: "quilt",
+        fallback: "quilt",
+        source_version: fb,
+        error: {
+          code: "VERSION_NOT_FOUND",
+          message: `Quilt 无 ${args.version} 文档树。请改用 version=${fb}（勿把 Fabric Registry 当 QSL）。`,
+          hint: `activate_platform_pack / search_docs platform=quilt version=${fb}`,
+        },
+      });
+    }
+  }
 
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
     const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");

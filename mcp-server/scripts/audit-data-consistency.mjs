@@ -21,7 +21,7 @@
  *      accidentally placed under a different version dir).
  *
  * CLI:
- *   --platform=forge|fabric|neoforge|all        (default: all)
+ *   --platform=forge|fabric|neoforge|quilt|liteloader|rift|all        (default: all)
  *   --version=<mcVersion>|<platform_mcver/subdir> (default: all)
  *       - "1.20.1" → MC version match
  *       - "forge_1.20.1/fabric-docs" → exact index record
@@ -36,7 +36,7 @@ import path from "node:path";
 import process from "node:process";
 import { DatabaseSync } from "node:sqlite";
 
-const PLATFORMS = ["forge", "fabric", "neoforge"];
+const PLATFORMS = ["forge", "fabric", "neoforge", "quilt", "liteloader", "rift"];
 const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
 const RAW_FRONTMATTER_VERSION_RX = /^version:\s*"([^"]+)"/m;
 const NEO_VERSION_RX = /^version:\s*"([^"]+)"/m;
@@ -83,7 +83,7 @@ function printHelp() {
       "Usage: node scripts/audit-data-consistency.mjs [options]",
       "",
       "Options:",
-      "  --platform=forge|fabric|neoforge|all   (default: all)",
+      "  --platform=forge|fabric|neoforge|quilt|liteloader|rift|all   (default: all)",
       "  --version=<mcVersion>|<platform>/<subdir>",
       "         e.g. --version=1.20.1",
       "              --version=forge_1.20.1/fabric-docs",
@@ -132,6 +132,9 @@ function docSubDirs(platform) {
   if (platform === "forge") return ["forge-docs", "extracted", "mappings"];
   if (platform === "fabric") return ["fabric-docs", "fabric-wiki", "mappings"];
   if (platform === "neoforge") return ["neoforge-docs"];
+  if (platform === "quilt") return ["quilt-docs"];
+  if (platform === "liteloader") return ["liteloader-docs"];
+  if (platform === "rift") return ["rift-docs"];
   return [];
 }
 
@@ -504,6 +507,75 @@ function checkForgeManifest(versionDir, platform, issues) {
   }
 }
 
+function gitPathToFilename(gitPath) {
+  return String(gitPath || "").replace(/\//g, "_");
+}
+
+function checkHollowMetaPages(platform, versionDir, version, obj, metaPath, issues) {
+  const pages = obj?.meta?.docs?.pages ?? obj?.docs?.pages;
+  if (!Array.isArray(pages)) return;
+  const subdirs = docSubDirs(platform).filter((s) => s.endsWith("-docs"));
+  const subdir = subdirs[0];
+  if (!subdir) return;
+  const doc = listDocsIndexes(versionDir, subdir, version);
+  const rawCount = (doc.rawFiles ?? []).filter((f) => f && !f.startsWith(".")).length;
+  if (pages.length > 0 && rawCount === 0) {
+    issues.push(rec(
+      "A-hollow-meta-pages",
+      "ERROR",
+      metaPath,
+      "meta.pages empty or equal to raw count",
+      `pages=${pages.length} raw=0`,
+    ));
+  }
+  const l0Path = path.join(doc.docRoot, "index-l0.json");
+  const l0text = safeReadFile(l0Path);
+  if (l0text !== null) {
+    try {
+      const arr = JSON.parse(l0text);
+      if (Array.isArray(arr) && arr.length === 0 && pages.length > 0) {
+        issues.push(rec(
+          "A-hollow-index-l0",
+          "ERROR",
+          l0Path,
+          "index-l0 matches meta.pages (empty iff no docs)",
+          `index-l0=[] meta.pages=${pages.length}`,
+        ));
+      }
+    } catch {
+      /* parse errors handled in D-index-parse */
+    }
+  }
+  const failPath = path.join(doc.docRoot, "failures.json");
+  const failText = safeReadFile(failPath);
+  if (failText === null) return;
+  let failObj;
+  try { failObj = JSON.parse(failText); } catch { return; }
+  const fails = Array.isArray(failObj) ? failObj : failObj.failures;
+  if (!Array.isArray(fails)) return;
+  const processed = new Set(doc.processedFiles ?? []);
+  for (const f of fails) {
+    if (!f || typeof f !== "object") continue;
+    const id = String(f.id ?? "");
+    const filename = f.filename || gitPathToFilename(f.gitPath);
+    const hit = [...processed].some((name) => {
+      if (filename && name === filename) return true;
+      if (id && name.replace(/_/g, "-").includes(id)) return true;
+      if (filename && name.includes(filename.replace(/\.md$/, ""))) return true;
+      return false;
+    });
+    if (hit) {
+      issues.push(rec(
+        "A-false-failure",
+        "ERROR",
+        failPath,
+        "failures.json id absent from processed",
+        `id=${id || filename} already in processed`,
+      ));
+    }
+  }
+}
+
 function checkMetaHeader(platform, versionDir, version, issues) {
   const metaPath = path.join(versionDir, "meta.json");
   if (platform === "fabric") {
@@ -524,6 +596,7 @@ function checkMetaHeader(platform, versionDir, version, issues) {
     } else if (declaredVersion !== version) {
       issues.push(rec("A-meta", "ERROR", metaPath, `version "${version}"`, `version "${declaredVersion}"`));
     }
+    checkHollowMetaPages(platform, versionDir, version, obj, metaPath, issues);
   }
   // Forge + NeoForge: rely on _manifest.json / chapter-key version segment
 }

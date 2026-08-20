@@ -180,7 +180,8 @@ async function testParseArgsBothVersionForms() {
 async function testParseIndexName() {
   assert.deepEqual(parseIndexName("forge_1.20.1"), { platform: "forge", version: "1.20.1", scope: "version", name: "forge_1.20.1" });
   assert.deepEqual(parseIndexName("fabric_1.21.1"), { platform: "fabric", version: "1.21.1", scope: "version", name: "fabric_1.21.1" });
-  assert.deepEqual(parseIndexName("neoforge_26.1"), { platform: "neoforge", version: "26.1", scope: "version", name: "neoforge_26.1" });
+  assert.deepEqual(parseIndexName("quilt_1.21.1"), { platform: "quilt", version: "1.21.1", scope: "version", name: "quilt_1.21.1" });
+  assert.deepEqual(parseIndexName("liteloader_1.12.2"), { platform: "liteloader", version: "1.12.2", scope: "version", name: "liteloader_1.12.2" });
   assert.equal(parseIndexName("porting"), null);
   assert.equal(parseIndexName("neoforge_primers"), null);
   assert.equal(parseIndexName("forge-porting"), null);
@@ -253,6 +254,34 @@ async function testForgeRawHeaderForms() {
   assert.equal(warns.length, 0, "both forge formats must be accepted (no WARN)");
 }
 
+async function testHollowFabricBundleErrors() {
+  const root = tmpRoot("hollow");
+  const ver = "1.20.1";
+  const versionDir = path.join(root, `fabric_${ver}`);
+  writeJSON(path.join(versionDir, "meta.json"), {
+    version: ver,
+    meta: { mcVersion: ver, docs: { pages: [{ id: "networking", filename: "develop_networking.md" }] } },
+  });
+  writeJSON(path.join(versionDir, "fabric-docs", ver, "index-l0.json"), []);
+  fs.mkdirSync(path.join(versionDir, "fabric-docs", ver, "raw"), { recursive: true });
+  const issues = auditIndex(root, { name: `fabric_${ver}`, platform: "fabric", version: ver });
+  assert.ok(issues.some((i) => i.check === "A-hollow-meta-pages" && i.level === "ERROR"), JSON.stringify(issues));
+  assert.ok(issues.some((i) => i.check === "A-hollow-index-l0" && i.level === "ERROR"), JSON.stringify(issues));
+}
+
+async function testHonestEmptyFabricMetaPassesHollow() {
+  const root = tmpRoot("honest-empty");
+  const ver = "1.20.1";
+  const versionDir = path.join(root, `fabric_${ver}`);
+  writeJSON(path.join(versionDir, "meta.json"), {
+    version: ver,
+    meta: { mcVersion: ver, docs: { pages: [] } },
+  });
+  writeJSON(path.join(versionDir, "fabric-docs", ver, "index-l0.json"), []);
+  const issues = auditIndex(root, { name: `fabric_${ver}`, platform: "fabric", version: ver });
+  assert.equal(issues.filter((i) => i.check.startsWith("A-hollow") && i.level === "ERROR").length, 0, JSON.stringify(issues));
+}
+
 const tests = [
   ["read-only contract", testReadOnlyContract],
   ["planted errors surfaced", testPlantedErrors],
@@ -263,6 +292,8 @@ const tests = [
   ["json output shape", testJsonOutputShape],
   ["nested Fabric meta version mismatch", testNestedFabricMetaVersionMismatch],
   ["forge raw header accepts both frontmatter and `> 版本：` formats", testForgeRawHeaderForms],
+  ["hollow fabric bundle meta pages ERROR", testHollowFabricBundleErrors],
+  ["honest empty fabric meta no hollow ERROR", testHonestEmptyFabricMetaPassesHollow],
 ];
 
 let failed = 0;
