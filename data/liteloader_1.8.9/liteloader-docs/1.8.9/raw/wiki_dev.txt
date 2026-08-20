@@ -1,0 +1,27 @@
+~~META:title=developer home~~
+~~NOTOC~~
+
+Welcome to LiteLoader
+=====================
+
+Welcome to the LiteLoader developer documentation, these pages are for mod developers who wish to use LiteLoader for their projects, if you're looking to download LiteLoader the head over to the [download page](http://www.liteloader.com/download) instead.
+
+====Getting Started with LiteLoader====
+
+Getting started with LiteLoader is quite straightforward, if you are an experienced modder comfortable with using SVN, Eclipse, and setting up multiple projects then you can check out the [[dev:quickstart|Quick Start Guide - for advanced users]], or for a more in-depth tutorial follow the [[dev:tutorial|Tutorial]] which covers each of the steps in the Quick Start Guide in more detail.
+
+Developer Reference
+===================
+
+* [[dev:litemod.json|Metadata and litemod.json]]
+* [[dev:revisions|Version and Revision]]
+* [[dev:interfaces|LiteLoader Interfaces]]
+
+Advanced Topics
+===============
+
+* [[dev:eventtransformer|Event Transformers]]
+* [[dev:overlays|Overlay Transformers]]
+* [[dev:accessors|Accessor Transformers]]
+
+* [[dev:jsonevents|Defining event transformers in json]]

@@ -94,11 +94,11 @@ MC_skill/
 | 平台 | 规则树（`平台/<ver>/`） | 文档数据（`list_*_versions`） | 主推 | 备注 |
 |------|-------------------------|-------------------------------|------|------|
 | **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 为 javadoc 核实表 + 短规则（**ready**）。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
-| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 仅 versioned fabric-docs（无 wiki）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11` |
+| **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 有 versioned fabric-docs **和** 现行 `fabric-wiki`（wiki 不是该档历史快照）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11` |
 | **NeoForge** | `1.20.1` · `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路。`1.20.1` 本档核实表 + 短规则（Forge 兼容数据） |
 | **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.11` | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05 为 QSL 差异，02–10 读 `fabric/<ver>` |
-| **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（多为 L0-only） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
-| **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（L0-only） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
+| **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（官方 wiki + hybrid 语义库；API 以核实表为准） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
+| **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（官方 wiki + hybrid；方法名以核实表为准） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
 | **ModLoader** | `1.2.5` · `1.5.2` · `1.6.4` | 无 Java 文档树 | **1.6.4** | 只用 safe-api 表；禁止 Forge Javadoc |
 | **基岩版** | 扁平 `bedrock/`（`*`） | `search_bedrock_docs` + `docsStatus` | 按 manifest | 无 `平台/<ver>/` 分档；实验开关按 `min_engine_version` |
 
@@ -257,7 +257,7 @@ MC_skill/
 | Fabric | 先 `list_fabric_versions`；**禁止**把邻版 wiki 当本版。26.1.2 仅 `fabric-docs`、无 wiki | 26.1+ 无 `query_api` 索引 | `search_loader_api mode=list`：`1.14.4` / `1.16.5` / `1.17.1` / `1.18.2` / `1.19.4` / `1.20.1` / `1.20.4` / `1.21.1` / `1.21.3` / `1.21.11` / `26.1.2` 的 fabric-api **已索引**（不要再当成 maven 404） |
 | Quilt | `search_docs({platform:"quilt"})`；问 QSL 禁止把 Fabric Registry 当命中 | 同左版本的 Vanilla 边界 | QSL 摘要见 `mode=list`（如 `1.19.4-qsl` / `1.21.1-qsl`） |
 | NeoForge | 先 `list_neoforge_versions`。`1.20.1` 回退 Forge 文档（兼容层） | 26.1+ 无 `query_api` | `*-neoforge` 多档已索引 |
-| LiteLoader / Rift / ModLoader | `search_docs`；多为 **L0-only**（无语义库） | `convert_mapping` / 反编译 | 仓库内多为手摘极小摘要；未 ingest → `PLATFORM_SKIPPED`。用户自备 jar 走 `ingest_loader_api`（默认 dryRun） |
+| LiteLoader / Rift / ModLoader | `search_docs`。LiteLoader/Rift 有官方 wiki **hybrid** 语义库；ModLoader 仍为 **L0-only** | `convert_mapping` / 反编译 | 仓库内核实表仍是 API 准绳；未 ingest → `PLATFORM_SKIPPED`。用户自备 jar 走 `ingest_loader_api`（默认 dryRun） |
 | 基岩 | `search_bedrock_docs`（带 `docsStatus`） | 无 Java `query_api` | `validate_addon_manifest` / `validate_bp_json`，不是 `validate_project` |
 
 9. 查询用类名或短词（`Block`、`class:RegistryEvent`）。失败先换短查询或改走 `search_docs`，不要把崩溃/空结果当成「该版没有文档」。
@@ -277,7 +277,7 @@ MC_skill/
 | `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | 仅 **Forge 1.20.1**（以及 Neo 1.21.x / 26.1、Fabric/Quilt 1.21 与 26.1）出代码；其它 version 返回 error |
 | `get_version_info` 1.12.2 action=register 仍教 DeferredRegister | gotchas 写「不支持」，recommendation 被强行追加 1.20 流程 | 1.12.2 注册是 `RegistryEvent.Register<T>` |
 | `search_loader_api` 对 Fabric 1.14.4 等返回空 | 文档曾写 maven 404 / `LOADER_API_NOT_INDEXED` | 以 `mode=list` 为准；`skipped-ingest.json` 的 `mavenNotIndexed` 现为空数组 |
-| 文档 `semantic: false` 或 warning 含 `stale` | 故意 L0-only（rift / modloader / 部分 liteloader），或 sqlite 落后于 processed/ | 看该次 JSON，不要只看 `get_server_status.semanticIndex.modeHint` |
+| 文档 `semantic: false` 或 warning 含 `stale` | 故意 L0-only（**仅 ModLoader** 三档），或 sqlite 落后于 processed/ | 看该次 JSON，不要只看 `get_server_status.semanticIndex.modeHint` |
 
 同类查找一律走 `ownGet`（`mcp-server/src/utils/own-record.ts`），不要写 `record[userString]`。
 
@@ -730,6 +730,22 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-gametest` | GameTest 工作流 | 按平台核文档，禁止默记 Forge 1.20.1 |
 | `mc-publish` | 发布清单 | 元数据 / build/libs / changelog / license；不上传 |
 | `mc-setup-env` | 开发环境搭建 | detect_mod_project → MDK dryRun 或 Loom/映射清单；不自动 genRuns |
+| `mc-full-mod` | 从零新模组总链 | 仅从零：setup-env → mc-new-* → build → ingame-iterate → 可选 localize/publish |
+| `mc-networking` | 网络通信清单 | session task=mc-networking → generate_network_packet（带版本后缀） |
+| `mc-capability` | 能力 / 附件清单 | Forge/Neo 1.20.1 Capability；Neo 1.20.4+ Attachment |
+| `mc-recipe-data` | 配方与数据包 | 07-datagen / mc-recipe / loot / advancement |
+| `mc-audio-vfx` | 音效与粒子 | mc-sound / mc-particle |
+| `mc-commands` | 命令 | mc-command |
+| `mc-dimension-structure` | 维度与结构 | mc-dimension / mc-structure |
+| `mc-access` | AT / AW | validate_at / validate_aw |
+| `mc-bedrock-addon` | 基岩 Add-On | search_bedrock_docs / validate_addon_manifest；不灌 Java 02–10 |
+| `mc-fluid` | 流体 | 02 + mc-fluid |
+| `mc-enchant-potion` | 附魔 / 药水 / 效果 | mc-enchantment / mc-potion / mc-effect |
+| `mc-energy` | 能量 | mc-energy / mc-capability |
+| `mc-creative-tags` | 创造栏与标签 | 03 |
+| `mc-kotlin` | Kotlin 模组 | 00；核该档文档 |
+| `mc-jei` | JEI 兼容 | mc-compat-jei |
+| `mc-ci-publish-extra` | CI 发布附加 | 00；不上传 |
 
 
 ### 知识暴露（MCP Resources）

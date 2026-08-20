@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Quilt 1.19.4 mc-networking（QSL 差异）。名字只来自本档 qsl-verified.md。
 platform: quilt
@@ -10,7 +10,7 @@ docsTool: search_docs
 # mc-networking（Quilt 1.19.4）
 
 核实表：knowledge/common/qsl-verified.md。
-必须 search_docs({platform:"quilt"}) 且 version=1.19.4。02–10 仍读 fabric/1.19.4 overlay。
+必须 search_docs({platform:"quilt"}) 且 version=1.19.4。06 用本目录短规则；02–04/07–08/10 overlay Fabric 1.19.4。
 
 QSL Networking API 以 README / qsl-verified 为准。search_docs({platform:"quilt"}) version=1.19.4。
 

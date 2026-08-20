@@ -1,0 +1,15 @@
+~~META:title=multimc~~
+
+Installing LiteLoader with MultiMC
+==================================
+
+[MultiMC](http://multimc.org/) has built-in support for LiteLoader and installing LiteLoader is extremely simple. To add LiteLoader to a MultiMC instance, take the following steps:
+
+* Click the **Edit Instance** button to show the instance editor dialogue
+ {{:user:install:mmc1.jpg?nolink&300|}}
+* Click the **Install LiteLoader** button, you will be presented with a dialogue showing the available versions
+ {{:user:install:mmc2.jpg?nolink&240|}}
+* LiteLoader will appear in the list, indicating it was installed successfully
+ {{:user:install:mmc3.jpg?nolink&300|}}
+
+That's it! LiteLoader is now installed successfully with MultiMC.

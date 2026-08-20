@@ -35,7 +35,7 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
    - Rift：GameGuiAdder / OverlayRenderer（核实表）
    - ModLoader：核实表 Gui；禁止 DeferredRegister
    - 基岩：BP/RP JSON，不要 MenuType
-3. 同步：NeoForge 1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer（26.1/1.21.11 用 Identifier）。Forge 1.20.1 才是 SimpleChannel。禁止把 SimpleChannel 写进 NeoForge。`,
+3. 同步：NeoForge 1.20.1 同 Forge 形态（SimpleChannel）；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer（26.1/1.21.11 用 Identifier）。禁止把 1.20.4+ Payload 写进 Neo 1.20.1。`,
   },
   "mc-crash-triage": {
     title: "崩溃分诊",
@@ -209,15 +209,15 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     title: "网络通信清单",
     body: `清单（不执行 Gradle）。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
-2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 禁止 SimpleChannel；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
-3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
+2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 1.20.1 同 Forge SimpleChannel 形态；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
+3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
 4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
   },
   "mc-capability": {
     title: "能力 / 附件清单",
     body: `清单（不执行 Gradle）。对应 Skill：mc-capability。
 1. 确认平台与精确 MC 版本。
-2. Forge：Capability + AttachCapabilitiesEvent。NeoForge 1.20.4+：Data Attachment，不是 Forge Capability。Fabric/Quilt：CCA（mc-cca），禁止生成 Forge Capability。
+2. Forge：Capability + AttachCapabilitiesEvent。NeoForge 1.20.1 同 Forge Capability 形态；1.20.4+：Data Attachment，不是 Forge Capability。Fabric/Quilt：CCA（mc-cca），禁止生成 Forge Capability。
 3. generate_capability 的 platform 与 version 必填。
 4. 核 search_*_docs；无模板改口规则 05 / mc-capability，不要默写邻档类名。`,
   },
@@ -226,7 +226,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（不执行 Gradle）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
-3. generate_datagen 仅白名单版本（Forge 1.20.1；NeoForge 1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric/Quilt 1.21 与 26.1）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+3. generate_datagen 仅白名单版本（Forge 1.20.1；NeoForge 1.20.1 复用 Forge 1.20.1 模板；NeoForge 1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric/Quilt 1.21 与 26.1）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
 4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
   },
   "mc-audio-vfx": {

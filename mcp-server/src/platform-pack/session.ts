@@ -5,14 +5,14 @@ import { docsToolForPlatform } from "../loader-api/keys.js";
 import { ownGet } from "../utils/own-record.js";
 import { resolveRepoRoot } from "../utils/path.js";
 import {
-  fabricRulesOverlay,
   inspectPack,
   listLibSkillIndex,
   listMergedPackSkills,
-  listRuleFiles,
   listSameSeriesCandidates,
-  wrapDonorSkillBody,
+  quiltOverlayWarnings,
   readText,
+  resolvePackRules,
+  wrapSkillBody,
   type SkillIndexEntry,
 } from "./catalog.js";
 
@@ -112,7 +112,7 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-jei": { rules: [], skills: ["mc-compat-jei"], nextReads: [] },
   "mc-ci-publish-extra": { rules: ["00"], skills: [], nextReads: [] },
   "mc-setup-env": { rules: ["00"], skills: [], nextReads: [] },
-  "mc-full-mod": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-full-mod": { rules: [...ALL_RULE_IDS], skills: [], nextReads: [] },
 };
 
 function isTaskSpec(v: unknown): v is TaskSpec {
@@ -212,12 +212,7 @@ export function resolveTopicIds(
   };
 }
 
-export function quiltOverlayWarnings(overlay: { status: string; note: string } | undefined): string[] {
-  if (!overlay || overlay.status === "ok") return [];
-  return [
-    `无同版 Fabric overlay（${overlay.status}）：02–10 可能未注入、skills[] 可能为空。${overlay.note} 改口 search_docs(platform=quilt) / search_fabric_docs，禁止邻版 Fabric。不要把 ok 理解成 Quilt 开发包齐全。`,
-  ];
-}
+export { quiltOverlayWarnings };
 
 function findSkill(index: SkillIndexEntry[], name: string): SkillIndexEntry | undefined {
   const want = canonicalSkillName(name);
@@ -283,6 +278,11 @@ export function sessionPlatformPack(args: SessionArgs) {
       `查 Fabric 文档请用 version=${pack.minecraftVersion}，不要用 minecraftVersion=${minecraftVersion}`,
     );
   }
+  if (platform === "neoforge" && minecraftVersion !== pack.minecraftVersion && /^26\.1/.test(minecraftVersion)) {
+    warnings.push(
+      `NeoForge ${minecraftVersion} 折叠到知识档 ${pack.minecraftVersion}；不为 26.1.x 单造规则树。`,
+    );
+  }
   const includeAll = args.includeAllRules === true;
   const taskLookup = lookupTask(args.task);
   if (taskLookup.warning) warnings.push(taskLookup.warning);
@@ -292,36 +292,21 @@ export function sessionPlatformPack(args: SessionArgs) {
   const { ids, warnings: topicWarnings, skillHints } = resolveTopicIds(args.topics, includeAll, extraRules);
   warnings.push(...topicWarnings);
 
-  const rules = listRuleFiles(pack.packDir);
-  const overlay =
-    pack.platform === "quilt" ? fabricRulesOverlay(pack.minecraftVersion, repoRoot) : undefined;
-  warnings.push(...quiltOverlayWarnings(overlay));
-
-  const ruleBodies: Array<{ id: string; fileName: string; source: string; text: string }> = [];
-  for (const id of ids) {
-    const local = rules.find((r) => r.id === id);
-    if (local) {
-      ruleBodies.push({
-        id,
-        fileName: local.fileName,
-        source: pack.packDir.replace(/\\/g, "/"),
-        text: readText(local.abs),
-      });
-      continue;
-    }
-    if (overlay?.status === "ok" && overlay.fabricDir && Number(id) >= 2) {
-      const fabricRules = listRuleFiles(overlay.fabricDir);
-      const fr = fabricRules.find((r) => r.id === id);
-      if (fr) {
-        ruleBodies.push({
-          id,
-          fileName: fr.fileName,
-          source: overlay.wanted,
-          text: readText(fr.abs),
-        });
-      }
-    }
-  }
+  const resolved = resolvePackRules({
+    platform: pack.platform,
+    packDir: pack.packDir,
+    packVersion: pack.minecraftVersion,
+    ruleIds: ids,
+    repoRoot,
+  });
+  const overlay = resolved.overlay;
+  warnings.push(...resolved.warnings);
+  const ruleBodies = resolved.ruleBodies.map(({ id, fileName, source, text }) => ({
+    id,
+    fileName,
+    source,
+    text,
+  }));
 
   const { skills, donorWarning } = listMergedPackSkills(
     pack.platform,
@@ -331,7 +316,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     repoRoot,
   );
   if (donorWarning) warnings.push(donorWarning);
-  const libSkills = listLibSkillIndex(platform, minecraftVersion, repoRoot);
+  const libSkills = listLibSkillIndex(platform, pack.minecraftVersion, repoRoot);
 
   if (skills.length === 0) warnings.push(NO_PLATFORM_SKILLS_WARNING);
 
@@ -366,7 +351,7 @@ export function sessionPlatformPack(args: SessionArgs) {
       name: hit.name,
       absPath: hit.absPath,
       relPosix: hit.relPosix,
-      text: hit.mappingNote ? wrapDonorSkillBody(hit.mappingNote, readText(hit.absPath)) : readText(hit.absPath),
+      text: wrapSkillBody(hit, readText(hit.absPath)),
     });
     inBodies.add(canonicalSkillName(hit.name));
   }
@@ -425,7 +410,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     packDir: pack.packDir.replace(/\\/g, "/"),
     agents: readText(pack.agentsPath),
     rules: ruleBodies,
-    ruleIndex: rules.map((r) => ({ id: r.id, fileName: r.fileName })),
+    ruleIndex: resolved.localIndex,
     overlay,
     verifiedApi: verifiedApiNotes(pack.packDir),
     skills,

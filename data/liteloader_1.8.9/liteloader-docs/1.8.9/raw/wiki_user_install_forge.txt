@@ -1,0 +1,31 @@
+~~META:title=loading with fml~~
+
+Installing LiteLoader with Forge or FML
+=======================================
+
+If you already have [Minecraft Forge](http://www.minecraftforge.net/) or FML installed, you have two options for installing LiteLoader:
+
+* **Option 1**
+ 
+Install LiteLoader and [[.:trail:forge|extend from]] the Forge/FML version.
+* **Option 2**
+ 
+Install LiteLoader [[#mod|as a mod]] (see below).
+
+<html><a name="mod"></a></html>
+Installing LiteLoader as a mod
+==============================
+
+LiteLoader supports being loaded as a mod by other [[info:modsystem|Mod Systems]] which recognise the **TweakClass** metadata entry in the jar file. Currently only LiteLoader and FML support this entry, but other Mod Systems may do so in the future.
+
+To load LiteLoader with another ModSystem, take the following steps:
+
+* Download the LiteLoader installer from the [[http://www.liteloader.com/download|Download Page]]
+* Ensure that the *Minecraft Launcher* is **closed**
+* Run the LiteLoader installer, you will be see the following screen
+ {{:user:install:installer.jpg?500|}}
+* Choose the **Extract LiteLoader jar** action
+* Click the **...** button and navigate to your [[info:versionedmods|versioned "mods" folder]] (eg. **''.minecraft/mods/1.7.10''** for Minecraft 1.7.10)
+* Click **OK** to extract the LiteLoader jar
+
+LiteLoader will now be loaded by the other ModSystem when the game starts up.

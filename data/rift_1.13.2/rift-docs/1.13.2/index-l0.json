@@ -37,5 +37,53 @@
     "sectionCount": 1,
     "source": "rift-docs",
     "fetchedAt": "2026-08-14T18:31:37.692Z"
+  },
+  {
+    "id": "1.13.2/wiki_home",
+    "version": "1.13.2",
+    "label": "Rift wiki Home",
+    "url": "https://github.com/DimensionalDevelopment/Rift/wiki",
+    "tags": [
+      "wiki"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "rift-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:52:46.821Z",
+    "sha256": "9d796e84fcd6eebc5383a51759c45a6a39f5c05d0d7d383ebf6c3eec6238e5f9"
+  },
+  {
+    "id": "1.13.2/wiki_making_mods",
+    "version": "1.13.2",
+    "label": "Making mods with Rift",
+    "url": "https://github.com/DimensionalDevelopment/Rift/wiki/Making-mods-with-Rift",
+    "tags": [
+      "wiki",
+      "tutorial",
+      "metadata"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "rift-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:52:46.821Z",
+    "sha256": "c6b56741fd94d1212b0394b5312451d9dcdeb8a2eb2d9e10e57e5ab30b71b8ea"
+  },
+  {
+    "id": "1.13.2/wiki_installing_multimc",
+    "version": "1.13.2",
+    "label": "Installing Rift in a MultiMC instance",
+    "url": "https://github.com/DimensionalDevelopment/Rift/wiki/Installing-Rift-in-a-MultiMC-instance",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "rift-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:52:46.821Z",
+    "sha256": "a2af983f5199d3c6546ff54a928dbb4d64b18c65deab6035b91fcbad37e29882"
   }
 ]

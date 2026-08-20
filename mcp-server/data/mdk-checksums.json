@@ -146,6 +146,21 @@
       "source": "github"
     },
     {
+      "id": "fabric-1.20.1-loom",
+      "platform": "fabric",
+      "minecraftVersion": "1.20.1",
+      "buildPlugin": "loom",
+      "repo": "https://github.com/FabricMC/fabric-example-mod",
+      "ref": "9ee42f58f0e0c8f8705b4c0191ad0ec590832751",
+      "archiveUrl": "https://github.com/FabricMC/fabric-example-mod/archive/9ee42f58f0e0c8f8705b4c0191ad0ec590832751.zip",
+      "sha256": "8898e985d482646b9697ad2355a930aa2f702f1277b96b4ac2c94e3bf075fb0f",
+      "license": "CC0-1.0",
+      "gitPolicy": "submodule_ok",
+      "mappings": "yarn",
+      "notes": "pin 该 commit，不要跟 1.20.1 branch HEAD。",
+      "source": "github"
+    },
+    {
       "id": "fabric-26.1.2-loom",
       "platform": "fabric",
       "minecraftVersion": "26.1.2",

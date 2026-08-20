@@ -21,7 +21,7 @@ description: 00 — 项目结构与构建
 
 #### 禁止的操作
 
-- ❌ 不要手动运行 `build` 任务以外的 Gradle 命令（`compileJava`、`processResources` 等应通过 `build` 间接触发）
+- ❌ 不要用 `compileJava` 代替完整 `build`；需要单独刷新资源时可以跑 `processResources`
 - ❌ 不要修改 `build.gradle` 中的 `minecraft` 和 `forge` 版本号（这两个版本号必须与项目目标版本匹配）
 - ❌ 不要删除或注释 `minecraft` 和 `forge` 配置块中的任何必需行
 - ❌ 不要混用 Fabric 的 `loom` 插件和 Forge 的 `forge` 插件
@@ -48,7 +48,7 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.19.4
   forge_version=45.4.0
-  mappings_version=1.19.4-2023.04.04
+  mapping_version=1.19.4-2023.04.04
   loader_version=45.4.0
   ```
   > 注意：
@@ -59,7 +59,7 @@ description: 00 — 项目结构与构建
 ### Mappings 约束
 
 - Forge 1.19.4 推荐使用 **Parchment**（带参数名和 javadoc）
-- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本
+- `gradle.properties` 中的 `mapping_version` 对应 Parchment 版本
 - **禁止**在 `build.gradle` 中切换到 `yarn`（除非用户明确要求且项目已适配）
 - Parchment 映射将混淆的 Minecraft 方法映射为可读名称，并提供参数名
 

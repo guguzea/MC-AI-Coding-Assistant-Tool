@@ -57,6 +57,61 @@ function getStore(version: string, source: string) {
 export const FABRIC_WIKI_CURRENT_SITE_WARNING =
   "fabric-wiki 是现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5/1.18.2 等旧档 API。";
 
+export const FABRIC_WIKI_NETWORKING_PAYLOAD_WARNING =
+  "现行 Wiki tutorial:networking 含 1.20.5 Payload 段，不是 1.20.4 API。PacketByteBufs / ServerPlayNetworking.send(Identifier, buf) 才是旧形态。禁止把 Payload 段当 1.20.4 官方页抄写。";
+
+function isFabric26_2Line(v: string): boolean {
+  return v === "26.2" || v.startsWith("26.2.");
+}
+
+function detectFabricDocsTopic(query: string): "networking" | "mixin" | "datagen" | null {
+  const q = query.toLowerCase();
+  if (/network/.test(q)) return "networking";
+  if (/\bmixin/.test(q)) return "mixin";
+  if (/datagen|data[- ]?gen|data generation/.test(q)) return "datagen";
+  return null;
+}
+
+function hitMatchesFabricTopic(
+  hit: { id?: string; label?: string; url?: string },
+  topic: string,
+): boolean {
+  const blob = `${hit.id ?? ""} ${hit.label ?? ""} ${hit.url ?? ""}`.toLowerCase();
+  if (topic === "networking") return /network/.test(blob);
+  if (topic === "mixin") return /mixin/.test(blob);
+  if (topic === "datagen") return /data-generation|datagen|data generation/.test(blob);
+  return true;
+}
+
+function fabricPageIdVersion(id: string): string | undefined {
+  return id.match(/^(\d+(?:\.\d+)*)\//)?.[1];
+}
+
+function annotateFabricGetResult(
+  requested: string,
+  id: string,
+  source: string,
+  payload: Record<string, unknown>,
+): Record<string, unknown> {
+  const wiki = source === "fabric-wiki";
+  const idVer = fabricPageIdVersion(id);
+  const neighbor = Boolean(idVer && idVer !== requested);
+  if (!wiki && !neighbor) return payload;
+  return withDocsFallbackFields({
+    ...payload,
+    version: requested,
+    requestedVersion: requested,
+    resolvedVersion: wiki ? "fabric-wiki" : idVer,
+    versionFallback: neighbor,
+    wikiFallback: wiki,
+    sourceUsed: wiki ? "fabric-wiki" : source,
+    warning: joinSearchWarnings(
+      typeof payload.warning === "string" ? payload.warning : undefined,
+      wiki ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,
+    ),
+  });
+}
+
 function fabricDocsIndexEmpty(version: string): boolean {
   const p = join(getDataRoot(), `fabric_${version}`, "fabric-docs", version, "index-l0.json");
   if (!existsSync(p)) return true;
@@ -229,6 +284,37 @@ export async function searchFabricDocs(
 
     const available = getStore(version, "fabric-docs").getAvailableVersions();
     if (!available.includes(version)) {
+      if (isFabric26_2Line(requested)) {
+        const portingHits = searchFabricPortingPages(query, version);
+        const extraWarn =
+          "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。";
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                withDocsFallbackFields({
+                  ok: true,
+                  query,
+                  version: requested,
+                  requestedVersion: requested,
+                  resolvedVersion: version,
+                  versionFallback: false,
+                  fallback: true,
+                  platform: "fabric",
+                  source: "porting-extra",
+                  sourceUsed: "porting-extra",
+                  warning: extraWarn,
+                  total: portingHits.length,
+                  results: portingHits,
+                }),
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
       throw new VersionNotFoundError(version, available);
     }
 
@@ -278,6 +364,24 @@ export async function searchFabricDocs(
       }) as typeof results;
     }
 
+    const topic = detectFabricDocsTopic(query);
+    let wikiTopicFallback = false;
+    if (topic && resolvedSource === "fabric-docs" && !docsEmpty) {
+      const asHits = results as Array<{ id: string; label?: string; url?: string }>;
+      const onTopic = asHits.filter((h) => hitMatchesFabricTopic(h, topic));
+      if (onTopic.length === 0) {
+        const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
+        const wikiOnTopic = wiki.results.filter((h) => hitMatchesFabricTopic(h, topic));
+        usedWikiFallback = true;
+        wikiTopicFallback = true;
+        results = (
+          wikiOnTopic.length
+            ? wikiOnTopic.map((r) => ({ ...r, _source: "fabric-wiki" as const }))
+            : []
+        ) as typeof results;
+      }
+    }
+
     const portingHits = searchFabricPortingPages(query, version);
     if (portingHits.length) {
       const seen = new Set((results as Array<{ id: string }>).map((r) => r.id));
@@ -305,8 +409,10 @@ export async function searchFabricDocs(
               ok: true,
               query,
               version: requested,
-              resolvedVersion: version,
+              requestedVersion: requested,
+              resolvedVersion: usedWikiFallback ? "fabric-wiki" : version,
               versionFallback: requested !== version,
+              wikiFallback: usedWikiFallback,
               platform: "fabric",
               source: resolvedSource,
               sourceUsed: usedWikiFallback ? "fabric-wiki" : resolvedSource,
@@ -319,6 +425,9 @@ export async function searchFabricDocs(
                 extraWarn,
                 emptyDocsNote,
                 wikiInvolved ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,
+                wikiTopicFallback && topic === "networking"
+                  ? FABRIC_WIKI_NETWORKING_PAYLOAD_WARNING
+                  : undefined,
               ),
               total: (results as unknown as Array<unknown>).length,
               results,
@@ -400,13 +509,17 @@ export async function getFabricDocSummary(
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            ...result,
-            _source: resolvedSource,
-            ...(resolvedSource === "fabric-wiki"
-              ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
-              : {}),
-          }, null, 2),
+          text: JSON.stringify(
+            annotateFabricGetResult(args.version, args.id, resolvedSource, {
+              ...result,
+              _source: resolvedSource,
+              ...(resolvedSource === "fabric-wiki"
+                ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
+                : {}),
+            }),
+            null,
+            2,
+          ),
         },
       ],
     };
@@ -487,13 +600,17 @@ export async function getFabricDocFull(
       content: [
         {
           type: "text",
-          text: JSON.stringify({
-            ...result,
-            _source: resolvedSource,
-            ...(resolvedSource === "fabric-wiki"
-              ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
-              : {}),
-          }, null, 2),
+          text: JSON.stringify(
+            annotateFabricGetResult(args.version, args.id, resolvedSource, {
+              ...result,
+              _source: resolvedSource,
+              ...(resolvedSource === "fabric-wiki"
+                ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
+                : {}),
+            }),
+            null,
+            2,
+          ),
         },
       ],
     };

@@ -389,6 +389,47 @@ async function testSearchEnhancements() {
   assert.ok(fabricEmpty.fabricDocsEmpty || /无版本化页/.test(String(fabricEmpty.warning ?? "")), JSON.stringify(fabricEmpty).slice(0, 400));
   assert.ok(fabricEmpty.wikiIsCurrentSite || /现行/.test(String(fabricEmpty.warning ?? "")), String(fabricEmpty.warning ?? "").slice(0, 300));
 
+  const fab262 = parseToolText(await searchFabricDocs({ query: "porting", version: "26.2" }));
+  assert.notEqual(fab262.error?.code, "VERSION_NOT_FOUND", JSON.stringify(fab262).slice(0, 400));
+  assert.ok(fab262.ok !== false, JSON.stringify(fab262).slice(0, 400));
+  assert.equal(fab262.sourceUsed ?? fab262.source, "porting-extra");
+  assert.match(String(fab262.warning ?? ""), /porting-extra|26\.2/);
+
+  const firstItem = parseToolText(await searchFabricDocs({ query: "first item", version: "1.20.4" }));
+  assert.ok(
+    (firstItem.results ?? []).some((r) => r.id === "1.20.4/develop_items_first-item"),
+    JSON.stringify(firstItem.results?.slice(0, 5)).slice(0, 500),
+  );
+  assert.notEqual(firstItem.fallback, true);
+
+  const net1204 = parseToolText(await searchFabricDocs({ query: "networking", version: "1.20.4" }));
+  const netIds = (net1204.results ?? []).map((r) => r.id);
+  assert.ok(!netIds.includes("1.20.4/develop_networking"), netIds.join(","));
+  assert.ok(
+    net1204.fallback === true || /wiki/i.test(String(net1204.sourceUsed ?? "")),
+    JSON.stringify({ fallback: net1204.fallback, sourceUsed: net1204.sourceUsed, warning: net1204.warning }).slice(0, 500),
+  );
+  assert.match(String(net1204.warning ?? ""), /不是 1\.20\.4/);
+  if (/wiki/i.test(String(net1204.sourceUsed ?? net1204.warning ?? ""))) {
+    assert.match(String(net1204.warning ?? ""), /现行|1\.20\.5|Payload/);
+  }
+
+  const armor1204 = parseToolText(await searchFabricDocs({ query: "armor", version: "1.20.4" }));
+  assert.ok(
+    (armor1204.results ?? []).some((r) => /1\.20\.4\/develop_items_custom-armor|custom-armor|food/.test(String(r.id))),
+    JSON.stringify(armor1204.results?.slice(0, 8)).slice(0, 600),
+  );
+  assert.notEqual(armor1204.fallback, true);
+
+  const sounds1211 = parseToolText(await searchFabricDocs({ query: "sounds", version: "1.21.1" }));
+  assert.ok(
+    (sounds1211.results ?? []).some((r) =>
+      /1\.21\.1\/develop_.*sound|text-and-translations/.test(String(r.id)),
+    ),
+    JSON.stringify(sounds1211.results?.slice(0, 8)).slice(0, 600),
+  );
+  assert.notEqual(sounds1211.fallback, true);
+
   const nf = parseToolText(await searchNeoForgeDocs({ query: "registry", version: "1.20.4" }));
   assert.ok(nf.total >= 1);
   for (const r of nf.results.slice(0, 5)) {
@@ -1244,6 +1285,72 @@ async function testObfuscatedLayerAndLookup() {
   );
 }
 
+async function testThinLoaderAndFabricWiki() {
+  const llIndex = join(REPO_ROOT, "data", "liteloader_1.12.2", "liteloader-docs", "1.12.2", "index-l0.json");
+  const llL0 = JSON.parse(readFileSync(llIndex, "utf8"));
+  assert.ok(llL0.some((e) => e.id === "1.12.2/verified-api"));
+  assert.ok(llL0.some((e) => e.id === "1.12.2/hybrid"));
+  assert.ok(llL0.some((e) => e.source === "liteloader-wiki" && String(e.id).includes("/wiki_")));
+  const verified = readFileSync(
+    join(REPO_ROOT, "data", "liteloader_1.12.2", "liteloader-docs", "1.12.2", "processed", "verified-api.md"),
+    "utf8",
+  );
+  assert.match(verified, /已核实客户端接口/);
+  assert.ok(!existsSync(join(REPO_ROOT, "data", "liteloader_1.12.2", "liteloader-docs", "1.12.2", "index-l1.json")));
+  assert.ok(
+    existsSync(join(REPO_ROOT, "data", "liteloader_1.12.2", "liteloader-docs", "1.12.2", "semantic", "db.sqlite")),
+    "liteloader 1.12.2 semantic db",
+  );
+
+  const llSearch = parseToolText(
+    await searchDocs({ platform: "liteloader", version: "1.12.2", query: "litemod.json" }),
+  );
+  assert.equal(llSearch.semantic, true, JSON.stringify({ semantic: llSearch.semantic, warning: llSearch.warning }).slice(0, 400));
+  assert.ok(llSearch.wikiIsCurrentSite || /现行站/.test(String(llSearch.warning ?? "")), String(llSearch.warning ?? "").slice(0, 300));
+  assert.ok(
+    (llSearch.results ?? []).some((r) => /wiki_/.test(r.id)),
+    JSON.stringify(llSearch.results?.slice(0, 5)).slice(0, 400),
+  );
+
+  const riftL0 = JSON.parse(
+    readFileSync(join(REPO_ROOT, "data", "rift_1.13.2", "rift-docs", "1.13.2", "index-l0.json"), "utf8"),
+  );
+  assert.ok(riftL0.some((e) => e.id === "1.13.2/listeners"));
+  assert.ok(riftL0.some((e) => e.id === "1.13.2/making-mods-wiki"));
+  assert.ok(riftL0.some((e) => e.id === "1.13.2/wiki_installing_multimc"));
+  const extract = readFileSync(
+    join(REPO_ROOT, "data", "rift_1.13.2", "rift-docs", "1.13.2", "processed", "making-mods-wiki.md"),
+    "utf8",
+  );
+  assert.match(extract, /已核实事实/);
+  assert.ok(
+    existsSync(join(REPO_ROOT, "data", "rift_1.13.2", "rift-docs", "1.13.2", "semantic", "db.sqlite")),
+    "rift semantic db",
+  );
+
+  const riftSearch = parseToolText(
+    await searchDocs({ platform: "rift", version: "1.13.2", query: "MultiMC" }),
+  );
+  assert.equal(riftSearch.semantic, true, JSON.stringify({ semantic: riftSearch.semantic, warning: riftSearch.warning }).slice(0, 400));
+  assert.ok(
+    (riftSearch.results ?? []).some((r) => r.id === "1.13.2/wiki_installing_multimc"),
+    JSON.stringify(riftSearch.results?.slice(0, 6)).slice(0, 400),
+  );
+  assert.ok(riftSearch.wikiIsCurrentSite || /归档/.test(String(riftSearch.warning ?? "")));
+
+  for (const ver of ["1.21.4", "1.21.8", "1.21.10"]) {
+    const wikiL0 = join(REPO_ROOT, "data", `fabric_${ver}`, "fabric-wiki", ver, "index-l0.json");
+    assert.ok(existsSync(wikiL0), `missing fabric-wiki for ${ver}`);
+    const arr = JSON.parse(readFileSync(wikiL0, "utf8"));
+    assert.ok(arr.length >= 7, `${ver} wiki L0 ${arr.length}`);
+    assert.ok(
+      existsSync(join(REPO_ROOT, "data", `fabric_${ver}`, "fabric-wiki", ver, "semantic", "db.sqlite")),
+      `${ver} fabric-wiki semantic db`,
+    );
+  }
+  assert.equal(existsSync(join(REPO_ROOT, "data", "fabric_26.1.2", "fabric-wiki")), false);
+}
+
 async function testFivePlatformRouting() {
   assert.equal(
     detectLoader("id 'fabric-loom'", undefined, '{"id":"x"}', undefined, { quiltModJson: '{"schema_version":1}' }),
@@ -1281,11 +1388,26 @@ async function testFivePlatformRouting() {
   assert.notEqual(q1201.error?.code, "VERSION_NOT_FOUND", JSON.stringify(q1201.error ?? {}).slice(0, 300));
   assert.notEqual(q1201.fallback, "fabric", "1.20.1 有 quilt-docs，不得误回退 Fabric");
 
-  const q1211 = parseToolText(await searchDocs({ platform: "quilt", version: "1.21.11", query: "registry" }));
-  assert.notEqual(q1211.error?.code, "VERSION_NOT_FOUND", JSON.stringify(q1211.error ?? {}).slice(0, 400));
-  assert.equal(q1211.ok, true, JSON.stringify(q1211.error ?? q1211).slice(0, 400));
-  assert.equal(q1211.fallback, "fabric");
-  assert.match(String(q1211.warning ?? ""), /Quilt 官方文档无此版本/);
+  const qNet = parseToolText(
+    await searchDocs({ platform: "quilt", version: "1.21.11", query: "ServerPlayNetworking" }),
+  );
+  const qNetHits = qNet.results ?? [];
+  const qNetExclusive = qNetHits.filter((r) =>
+    /ServerPlayNetworking|ClientPlayNetworking|PacketByteBufs|fabric\.api\.networking/.test(JSON.stringify(r)),
+  );
+  if (qNetExclusive.length) {
+    assert.ok(qNet.warning, JSON.stringify(qNet).slice(0, 400));
+    assert.notEqual(qNet.fallback, null);
+  }
+  if (qNet.error?.code === "FABRIC_EXCLUSIVE") {
+    assert.ok(qNet.warning, JSON.stringify(qNet).slice(0, 400));
+  }
+
+  const qReg = parseToolText(await searchDocs({ platform: "quilt", version: "1.21.11", query: "registry" }));
+  assert.notEqual(qReg.error?.code, "VERSION_NOT_FOUND", JSON.stringify(qReg.error ?? {}).slice(0, 400));
+  assert.equal(qReg.ok, true, JSON.stringify(qReg.error ?? qReg).slice(0, 400));
+  assert.equal(qReg.fallback, "fabric");
+  assert.match(String(qReg.warning ?? ""), /Quilt 官方文档无此版本/);
 
   const q1211qsl = parseToolText(
     await searchDocs({ platform: "quilt", version: "1.21.11", query: "QSL QuiltRegistry" }),
@@ -1657,10 +1779,17 @@ async function testReviewFixes() {
       limit: 5,
     }),
   );
-  assert.ok(Array.isArray(qRelatedFb), JSON.stringify(qRelatedFb).slice(0, 400));
-  if (qRelatedFb.length > 0) {
-    assert.equal(qRelatedFb[0].sourcePlatform, "fabric");
-    assert.match(String(qRelatedFb[0].warning || ""), /回退 Fabric|QSL/);
+  if (qRelatedFb.ok === false) {
+    assert.ok(
+      qRelatedFb.error?.code === "DOC_NOT_FOUND" || qRelatedFb.error?.code === "VERSION_NOT_FOUND",
+      JSON.stringify(qRelatedFb).slice(0, 400),
+    );
+  } else {
+    assert.ok(Array.isArray(qRelatedFb), JSON.stringify(qRelatedFb).slice(0, 400));
+    if (qRelatedFb.length > 0) {
+      assert.equal(qRelatedFb[0].sourcePlatform, "fabric");
+      assert.match(String(qRelatedFb[0].warning || ""), /回退 Fabric|QSL/);
+    }
   }
 
   const exclRelated = parseToolText(
@@ -1881,6 +2010,7 @@ async function testPrototypeOwnKeys() {
   for (const k of protoKeys) {
     const vi = await getVersionInfo({ version: k, action: "register", platform: "forge" });
     assert.equal(vi.forgeVersion, "unknown", `get_version_info(${k}) must not hit Object.prototype`);
+    assert.equal(vi.ok, false);
     assert.ok(!/DeferredRegister/.test(vi.recommendation), vi.recommendation);
 
     const mg = getMigrationGuide(k);
@@ -2064,7 +2194,9 @@ public class ExampleMod { }
   assert.equal(capNeoNoVer.code, null);
 
   const capNeo1201 = generateCapability("my_mod", "mana", "neoforge", "1.20.1");
-  assert.equal(capNeo1201.code, null);
+  assert.ok(capNeo1201.code, JSON.stringify(capNeo1201));
+  assert.match(String(capNeo1201.code), /Capability/);
+  assert.doesNotMatch(String(capNeo1201.code), /AttachmentType/);
 
   const capNeo1204 = generateCapability("my_mod", "mana", "neoforge", "1.20.4");
   assert.ok(capNeo1204.code?.includes("AttachmentType"), capNeo1204.code);
@@ -2181,6 +2313,7 @@ await testDatagenAndMappingGates();
 await testPortingFabricYarnAndProps();
 await testObfuscatedLayerAndLookup();
 await testFivePlatformRouting();
+await testThinLoaderAndFabricWiki();
 await testReviewFixes();
 await testPlan2PrimerMdkFabricPorting();
 await testMdkUnpackFixtures();

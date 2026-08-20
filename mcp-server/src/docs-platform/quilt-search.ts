@@ -373,7 +373,18 @@ export function getQuiltDocRelated(args: {
     });
   } catch (e) {
     if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
-      return jsonOk([]);
+      const code = isVersionNotFoundLike(e) ? "VERSION_NOT_FOUND" : "DOC_NOT_FOUND";
+      const rec = e as { message?: string };
+      return jsonOk({
+        ok: false,
+        platform: "quilt",
+        id: args.id,
+        version: args.version,
+        error: {
+          code,
+          message: rec.message ?? `${code}: ${args.id}`,
+        },
+      });
     }
     throw e;
   }

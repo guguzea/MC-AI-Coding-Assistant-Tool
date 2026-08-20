@@ -21,6 +21,10 @@ const FABRIC_EXCLUSIVE_CLASS = [
   /net\.fabricmc\.fabric\.api\.item\b/,
   /net\.fabricmc\.fabric\.api\.object\.builder/,
   /net\.fabricmc\.fabric\.api\.event\.lifecycle/,
+  /ServerPlayNetworking/,
+  /ClientPlayNetworking/,
+  /PacketByteBufs/,
+  /net\.fabricmc\.fabric\.api\.networking/,
 ];
 
 export function isFabricExclusiveHit(hit: {

@@ -552,14 +552,48 @@ export function joinSearchWarnings(...parts: Array<string | undefined | false>):
   return xs.length ? xs.join("；") : undefined;
 }
 
+/** LiteLoader / Rift 官方 wiki 挂在薄档 L0 上时的现行站警告（不触发 fabric-docs fallback 文案）。 */
+export function thinLoaderWikiWarning(
+  platform: string,
+  hits: Array<{ id?: string; url?: string; source?: string }>,
+): string | undefined {
+  const list = Array.isArray(hits) ? hits : [];
+  const hitWiki = (reId: RegExp, reUrl: RegExp, sources: string[]) =>
+    list.some((h) => {
+      const id = String(h.id ?? "");
+      const url = String(h.url ?? "");
+      const src = String(h.source ?? "");
+      return reId.test(id) || reUrl.test(url) || sources.includes(src);
+    });
+  if (platform === "liteloader" && hitWiki(/\/wiki_/, /liteloader\.com\/explore\/docs/i, ["liteloader-wiki"])) {
+    return "LiteLoader 官方 wiki 是未按 MC 版本切分的现行站（开发停在 1.12.2）。禁止当成该 version 专属官方树。API 以本档核实表为准。";
+  }
+  if (platform === "rift" && hitWiki(/\/wiki_/, /Rift\/wiki/i, ["rift-wiki"])) {
+    return "Rift GitHub wiki 是归档只读官方页。方法名以 listeners 核实表与已核实源码为准。";
+  }
+  return undefined;
+}
+
 export const DOCS_FALLBACK_PACK_NOTE =
   "仅作 API 参考，不得据此推断规则树适用；本版无树则 PACK_NOT_FOUND。";
 
 export function withDocsFallbackFields<T extends Record<string, unknown>>(payload: T): T {
   const versionFallback = Boolean(payload.versionFallback);
-  if (!versionFallback) return payload;
-  const requested = String(payload.version ?? "");
-  const resolved = String(payload.resolvedVersion ?? payload.source_version ?? "");
+  const wikiFallback = Boolean(payload.wikiFallback);
+  const explicit = payload.fallback === true;
+  if (!versionFallback && !wikiFallback && !explicit) return payload;
+  const requested = String(payload.requestedVersion ?? payload.version ?? "");
+  const resolved = wikiFallback
+    ? String(payload.sourceUsed ?? payload.source_version ?? "fabric-wiki")
+    : String(payload.resolvedVersion ?? payload.source_version ?? "");
+  const neighbor =
+    Boolean(requested && resolved && requested !== resolved) &&
+    !/^26\.1/.test(requested) &&
+    resolved !== "porting-extra";
+  const cn =
+    (wikiFallback || neighbor) && requested
+      ? `不是 ${requested} 官方 fabric-docs；正文来自 Fabric ${resolved} / 现行 Wiki。禁止当成本版官方页抄写。`
+      : undefined;
   return {
     ...payload,
     fallback: true,
@@ -567,7 +601,10 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
     warning: joinSearchWarnings(
       typeof payload.warning === "string" ? payload.warning : undefined,
       DOCS_FALLBACK_PACK_NOTE,
-      requested && resolved ? `请求版本 ${requested} 已映射到 ${resolved}` : undefined,
+      cn,
+      requested && resolved && !wikiFallback && requested !== resolved
+        ? `请求版本 ${requested} 已映射到 ${resolved}`
+        : undefined,
     ),
   };
 }

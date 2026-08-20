@@ -25,13 +25,12 @@
 
 **关键变化**：
 - Forge 1.20.2 之后不再更新，社区分叉为 NeoForge
-- `net.minecraftforge` 包 → `net.neoforged` 包（全局替换）
-- `mods.toml` 中 `modId="forge"` → `modId="neoforge"`
-- `RegistryObject<T>` → `DeferredHolder<T, T>`（泛型参数收紧）
-- NeoGradle 7 引入，build.gradle 配置大幅简化，移除 `fg.deobf`
+- Forge 1.20.2 仍用 `net.minecraftforge` / `RegistryObject`（不要把 Neo 包名写进 Forge 1.20.2）
+- 分叉到 NeoForge 后才是 `net.neoforged`、`mods.toml` 的 Neo 加载器、`DeferredHolder`
+- NeoGradle 引入后 build.gradle 配置简化，移除 `fg.deobf`
 
 **需要修改的文件类型**：
-- 所有 `import net.minecraftforge.*` → `import net.neoforged.*`
+- 仅在目标已是 NeoForge 时：`import net.minecraftforge.*` → `import net.neoforged.*`
 - `build.gradle`：升级 NeoGradle plugin 版本，移除 deobfuscate 配置
 - `mods.toml`：modId 字段
 - 所有 Java 文件中的 RegistryObject 引用

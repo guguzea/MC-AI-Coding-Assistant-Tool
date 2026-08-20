@@ -1,0 +1,21 @@
+~~META:title=manual install~~
+
+Installing LiteLoader Manually
+==============================
+
+Installing LiteLoader manually is straightforward, but the precise steps will vary depending on the launcher you are using. To install LiteLoader manually it is not necessary to download any files, all that is required is to make the neccessary edits to the JSON configuration files for the launcher.
+
+=== Manually installing with the Real Launcher ===
+
+* [[user:install:manual:1.6.4:vanilla|Manual Installation for LiteLoader for 1.6.4]]
+* [[user:install:manual:1.7.2:vanilla|Manual Installation for LiteLoader for 1.7.2]]
+* [[user:install:manual:1.7.10:vanilla|Manual Installation for LiteLoader for 1.7.10]]
+
+
+=== Manually installing with a third-party launcher ===
+
+* [[user:install:manual:1.6.4|Manual Installation for LiteLoader for 1.6.4]]
+* [[user:install:manual:1.7.2|Manual Installation for LiteLoader for 1.7.2]]
+* [[user:install:manual:1.7.10|Manual Installation for LiteLoader for 1.7.10]]
+
+

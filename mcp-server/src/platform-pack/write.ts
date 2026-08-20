@@ -16,16 +16,19 @@ import {
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
 import {
-  fabricRulesOverlay,
   findPack,
   inspectPack,
   isMcSkillKnowledgeRepo,
   listMergedPackSkills,
-  listRuleFiles,
   mappingNoteForFabricSkill,
+  FORGE_COMPAT_BANNER,
+  QSL_OVERLAY_BANNER,
+  resolvePackRules,
   wrapDonorSkillBody,
+  wrapSkillBody,
   readText,
 } from "./catalog.js";
+import { ALL_RULE_IDS } from "./session.js";
 import { detectModProject } from "./detect.js";
 import {
   entryBody,
@@ -150,7 +153,19 @@ function destRuleName(fileName: string, ext: ".mdc" | ".md"): string {
   return `mc-skill-${base}${ext}`;
 }
 
-function skillStub(relPosix: string, name: string, description: string, platform: string, version: string): string {
+function skillStub(
+  relPosix: string,
+  name: string,
+  description: string,
+  platform: string,
+  version: string,
+): string {
+  const banner =
+    platform === "quilt"
+      ? QSL_OVERLAY_BANNER
+      : platform === "neoforge" && version === "1.20.1"
+        ? FORGE_COMPAT_BANNER
+        : "";
   return [
     "---",
     `name: ${name}`,
@@ -159,6 +174,7 @@ function skillStub(relPosix: string, name: string, description: string, platform
     "",
     `# ${name}`,
     "",
+    ...(banner ? [banner, ""] : []),
     `必须先 Read 知识库相对路径 \`${relPosix}\`（相对 MC Skill 仓库根，用 MCP/detect 解析的仓库根拼接）。`,
     "找不到则再调用 `activate_platform_pack action=session` 并传 `skillNames` 取 `absPath`，不要凭 stub description 写代码。",
     "禁止把本机盘符路径写死进工程。仓库根变更或换机器后本 stub 会失效。",
@@ -182,7 +198,14 @@ function quiltCopiedSkill(abs: string, name: string, description: string, fabric
 }
 
 function skillContentForWrite(
-  sk: { name: string; description: string; relPosix: string; source?: string; mappingNote?: string },
+  sk: {
+    name: string;
+    description: string;
+    relPosix: string;
+    source?: string;
+    mappingNote?: string;
+    skillBanner?: string;
+  },
   platform: string,
   version: string,
   includeBodies: boolean,
@@ -198,7 +221,8 @@ function skillContentForWrite(
     const abs = join(resolveRepoRoot(), sk.relPosix.split("/").join(sep));
     if (existsSync(abs)) {
       const raw = readText(abs);
-      return sk.mappingNote ? wrapDonorSkillBody(sk.mappingNote, raw) : raw;
+      if (sk.skillBanner || sk.mappingNote) return wrapSkillBody(sk, raw);
+      return raw;
     }
   }
   return skillStub(sk.relPosix, sk.name, sk.description, platform, version);
@@ -230,8 +254,14 @@ function buildWritePlan(opts: {
 }): { ops: PlannedFile[]; skipped: Array<{ rel: string; reason: string }>; overlayNote?: string } {
   const pack = findPack(opts.platform, opts.version);
   if (!pack) return { ops: [], skipped: [{ rel: "", reason: "PACK_NOT_FOUND" }] };
-  const rules = listRuleFiles(pack.packDir);
-  const overlay = opts.platform === "quilt" ? fabricRulesOverlay(opts.version) : undefined;
+  const resolved = resolvePackRules({
+    platform: opts.platform,
+    packDir: pack.packDir,
+    packVersion: pack.minecraftVersion,
+    ruleIds: [...ALL_RULE_IDS],
+  });
+  const overlay = resolved.overlay;
+  const rules = resolved.ruleBodies;
   const skills = opts.includeSkills
     ? listMergedPackSkills(opts.platform, pack.minecraftVersion, pack.packDir, overlay).skills
     : [];
@@ -252,7 +282,7 @@ function buildWritePlan(opts: {
           continue;
         }
         const desc = `MC Skill ${opts.platform} ${opts.version} ${rule.id}`;
-        let content = readText(rule.abs);
+        let content = rule.text;
         const extra: Record<string, string> = {};
         if (layout.alwaysApply) extra.alwaysApply = "true";
         content = ensureFrontmatter(content, desc, extra);

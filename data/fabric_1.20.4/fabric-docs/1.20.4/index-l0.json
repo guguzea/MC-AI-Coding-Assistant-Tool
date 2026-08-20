@@ -122,6 +122,319 @@
     "sha256": "7acdabe63823ed46fddf9e23f7d39b0087c28e37e727aad7c599a23b3ae07dd2"
   },
   {
+    "id": "1.20.4/develop_blocks_blockstates",
+    "version": "1.20.4",
+    "label": "Block States",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/blocks/blockstates.md",
+    "tags": [
+      "event",
+      "block",
+      "blockentity",
+      "resource"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:22.918Z",
+    "sha256": "6613e53a7f1a419d43947a983b52f1478ce60e9bb51d143a3f2543b96d2788b4"
+  },
+  {
+    "id": "1.20.4/develop_commands_arguments",
+    "version": "1.20.4",
+    "label": "Command Arguments",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/commands/arguments.md",
+    "tags": [
+      "registry",
+      "command"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:24.134Z",
+    "sha256": "4254c14a2a8758eb03a4d6f04aa93124599703280d0efa3ba1bb02fa77844a7a"
+  },
+  {
+    "id": "1.20.4/develop_commands_suggestions",
+    "version": "1.20.4",
+    "label": "Command Suggestions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/commands/suggestions.md",
+    "tags": [
+      "item",
+      "entity",
+      "loot",
+      "command"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:24.699Z",
+    "sha256": "099b3e14fdcc78e71e1976bebe17e4c5358559c26727926036ecced4ca96213d"
+  },
+  {
+    "id": "1.20.4/develop_entities_effects",
+    "version": "1.20.4",
+    "label": "Mob Effects",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/entities/effects.md",
+    "tags": [
+      "registry",
+      "item",
+      "entity",
+      "resource"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:26.062Z",
+    "sha256": "c9679ca92f806a58d6b9328239b14065e816a3eb0c78794893b31bb12a594dfa"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_introduction-to-fabric-and-modding",
+    "version": "1.20.4",
+    "label": "Introduction to Fabric and Modding",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/introduction-to-fabric-and-modding.md",
+    "tags": [
+      "registry",
+      "event",
+      "item",
+      "block",
+      "entity",
+      "mixin",
+      "resource"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:27.572Z",
+    "sha256": "6c4ed2364037325a9da49ffc7e236d4b54b8dcd215576c191dd3c0fcf6f2e4b1"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_launching-the-game",
+    "version": "1.20.4",
+    "label": "Launching the Game",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/launching-the-game.md",
+    "tags": [
+      "sides",
+      "command",
+      "mixin",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:28.296Z",
+    "sha256": "3fc610a9bab7feb55e3c6188617306e96c6c5fb4804dd64007bf0b35d57e02c4"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_project-structure",
+    "version": "1.20.4",
+    "label": "Project Structure",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/project-structure.md",
+    "tags": [
+      "entrypoint",
+      "sides",
+      "mixin",
+      "resource",
+      "rendering",
+      "config"
+    ],
+    "priority": "⭐",
+    "sectionCount": 6,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:29.196Z",
+    "sha256": "96046003140eab9a11a31064e9c59b959d519d29bd892f816abc385a0b4c9950"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_setting-up-a-development-environment",
+    "version": "1.20.4",
+    "label": "Setting up a Development Environment",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/setting-up-a-development-environment.md",
+    "tags": [
+      "sides"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:30.178Z",
+    "sha256": "dc59ca58deb1d90055e9240266cce3f7f7fde6b6cec5de3c7e79fe731c8196bc"
+  },
+  {
+    "id": "1.20.4/develop_index",
+    "version": "1.20.4",
+    "label": "Developer Guides",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/index.md",
+    "tags": [
+      "networking",
+      "sides",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 0,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:31.338Z",
+    "sha256": "b1ba9b5f03d92e957d1fad6a003492f8c6e57c68b89b4e4a1da9ec2e0c95be1d"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-creative-tabs",
+    "version": "1.20.4",
+    "label": "Custom Creative Tabs",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-creative-tabs.md",
+    "tags": [
+      "event",
+      "item"
+    ],
+    "priority": "⭐",
+    "sectionCount": 2,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:33.374Z",
+    "sha256": "8fe314b69a2e878db0123fa5195fc369538abf0232c3b4a3a4398c1c7b99fcf7"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-item-interactions",
+    "version": "1.20.4",
+    "label": "Custom Item Interactions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-item-interactions.md",
+    "tags": [
+      "event",
+      "item",
+      "block"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:35.900Z",
+    "sha256": "db5c089d1746388497cc35cb673da3c40b4d16a9015641067da448e386dd1777"
+  },
+  {
+    "id": "1.20.4/develop_items_potions",
+    "version": "1.20.4",
+    "label": "Potions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/potions.md",
+    "tags": [
+      "registry",
+      "item",
+      "entity",
+      "mixin"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:37.680Z",
+    "sha256": "7812631a30dbd81515a1d88be0dc35d7a767c193f30260cae313f92eb160dcbd"
+  },
+  {
+    "id": "1.20.4/develop_rendering_gui-graphics",
+    "version": "1.20.4",
+    "label": "Drawing to the GUI",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/gui-graphics.md",
+    "tags": [
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:39.804Z",
+    "sha256": "b673b378d9acdb559eea484f8bf44b9ea9d43d58c46ff1f81e5838cf6f6ca551"
+  },
+  {
+    "id": "1.20.4/develop_rendering_gui_custom-widgets",
+    "version": "1.20.4",
+    "label": "Custom Widgets",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/gui/custom-widgets.md",
+    "tags": [
+      "event",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 3,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:40.905Z",
+    "sha256": "2aa40a17ce248873808ca826634182ddd5739b4d53830cdadf41998923f44f48"
+  },
+  {
+    "id": "1.20.4/develop_rendering_hud",
+    "version": "1.20.4",
+    "label": "Rendering in the Hud",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/hud.md",
+    "tags": [
+      "entrypoint",
+      "event",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:41.613Z",
+    "sha256": "79c63fd0f78517d272a350b7c1dad219abb575ae1bdfcddceafe6479b3d39d3c"
+  },
+  {
+    "id": "1.20.4/develop_rendering_particles_creating-particles",
+    "version": "1.20.4",
+    "label": "Creating Custom Particles",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/particles/creating-particles.md",
+    "tags": [
+      "entrypoint",
+      "sides",
+      "resource",
+      "rendering",
+      "particle"
+    ],
+    "priority": "⭐",
+    "sectionCount": 4,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:43.581Z",
+    "sha256": "8502a7cb91380977a0adb7e95715342c842f5aaa36926a1553c73eee6b795109"
+  },
+  {
+    "id": "1.20.4/develop_sounds_custom",
+    "version": "1.20.4",
+    "label": "Creating Custom Sounds",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/sounds/custom.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "resource",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:44.407Z",
+    "sha256": "a6476b463d56abccb1013af31c633f0e4f4c65835403e160b1187dd3398e8024"
+  },
+  {
+    "id": "1.20.4/develop_sounds_using-sounds",
+    "version": "1.20.4",
+    "label": "Playing Sounds",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/sounds/using-sounds.md",
+    "tags": [
+      "event",
+      "sides"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:46.749Z",
+    "sha256": "83153a3f70fcb6786d50ef7983ab364418f6b2827789205a7a9caca8f7e249f6"
+  },
+  {
+    "id": "1.20.4/develop_text-and-translations",
+    "version": "1.20.4",
+    "label": "Text and Translations",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/text-and-translations.md",
+    "tags": [
+      "event",
+      "command",
+      "rendering"
+    ],
+    "priority": "⭐",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:48.578Z",
+    "sha256": "f068cd08ed2eb0263050d28521cc3ef2411761da801c222352756483ee8f0f6b"
+  },
+  {
     "id": "1.20.4/develop_items_custom-tools",
     "version": "1.20.4",
     "label": "Tools and Weapons",
@@ -137,6 +450,53 @@
     "source": "github_raw_versioned",
     "fetchedAt": "2026-08-20T06:00:08.759Z",
     "sha256": "9e79011c55cfc9bae912a05a0c68fc0193add79d3e4918e302605722d4f2c077"
+  },
+  {
+    "id": "1.20.4/develop_entities_damage-types",
+    "version": "1.20.4",
+    "label": "Damage Types",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/entities/damage-types.md",
+    "tags": [
+      "entity",
+      "resource"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:25.284Z",
+    "sha256": "5072963a02237b338edfb1db9a19dc5ca667092bcbdeee7d8d311eb261d629a9"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-armor",
+    "version": "1.20.4",
+    "label": "Custom Armor",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-armor.md",
+    "tags": [
+      "item",
+      "entity",
+      "resource"
+    ],
+    "priority": "🟡",
+    "sectionCount": 5,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:32.269Z",
+    "sha256": "b8ad58e62da7dd8b3b53f16e1ce37ffa14293163fc01d5b34fd124bf10cff008"
+  },
+  {
+    "id": "1.20.4/develop_items_food",
+    "version": "1.20.4",
+    "label": "Food Items",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/food.md",
+    "tags": [
+      "item",
+      "entity",
+      "config"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T09:42:36.547Z",
+    "sha256": "aff38b5e4c4b8752ef80af458a29ce2bd6d0565f286b00b6b360dcbafc32eb9e"
   },
   {
     "id": "1.20.4/develop_getting-started_creating-a-project",

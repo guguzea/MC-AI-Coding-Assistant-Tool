@@ -1,0 +1,42 @@
+# Playing Sounds
+
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/sounds/using-sounds.md
+> 版本：1.21.11
+> GitHub 路径：develop/sounds/using-sounds.md
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T09:51:18.929Z
+> SHA256：4f5a6258662ddf5c46f2b30070e8dbd83d89d397b478e693118a716babe56d57
+> 分支：main
+
+---
+title: Playing Sounds
+description: Learn how to play sound events.
+authors:
+  - JR1811
+---
+
+Minecraft has a big selection of sounds which you can choose from. Check out the `SoundEvents` class to view all the vanilla sound event instances that Mojang has provided.
+
+## Using Sounds in Your Mod {#using-sounds}
+
+Make sure to execute the `playSound()` method on the logical server side when using sounds!
+
+In this example, the `interactLivingEntity()` and `useOn()` methods for a custom interactive item are used to play a "placing copper block" and a pillager sound.
+
+@[code lang=java transcludeWith=:::1](@/reference/1.21.11/src/main/java/com/example/docs/item/custom/CustomSoundItem.java)
+
+The `playSound()` method is used with the `LivingEntity` object. Only the SoundEvent, the volume and the pitch need to be specified. You can also use the `playSound()` method from the level instance to have a higher level of control.
+
+@[code lang=java transcludeWith=:::2](@/reference/1.21.11/src/main/java/com/example/docs/item/custom/CustomSoundItem.java)
+
+### SoundEvent and SoundCategory {#soundevent-and-soundcategory}
+
+The SoundEvent defines which sound will be played. You can also [register your own SoundEvents](./custom) to include your own sound.
+
+Minecraft has several audio sliders in the in-game settings. The `SoundCategory` enum is used to determine which slider will adjust your sound's volume.
+
+### Volume and Pitch {#volume-and-pitch}
+
+The volume parameter can be a bit misleading. In the range of `0.0f - 1.0f` the actual volume of the sound can be changed. If the number gets bigger than that, the volume of `1.0f` will be used and only the distance, in which your sound can be heard, gets adjusted. The block distance can be roughly calculated by `volume * 16`.
+
+The pitch parameter increases or decreases the pitch value and also changes the duration of the sound. In the range of `(0.5f - 1.0f)` the pitch and the speed gets decreased, while bigger numbers will increase the pitch and the speed. Numbers below `0.5f` will stay at the pitch value of `0.5f`.

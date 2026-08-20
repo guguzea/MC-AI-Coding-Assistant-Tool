@@ -27,7 +27,7 @@ export type PackInfo = {
   status?: PackActivationStatus;
 };
 
-function isVersionDirName(name: string): boolean {
+export function isVersionDirName(name: string): boolean {
   return /^\d+(\.\d+)*$/.test(name);
 }
 
@@ -112,22 +112,44 @@ export function listPacks(repoRoot = resolveRepoRoot()): { packs: PackInfo[]; tr
   return { packs, traps, drafts };
 }
 
-export function fabricRulesOverlay(
-  minecraftVersion: string,
-  repoRoot = resolveRepoRoot(),
-): {
+export type PackRulesOverlay = {
   wanted: string;
   status: "ok" | "missing" | "version_mismatch";
   note: string;
   fabricDir?: string;
-} {
-  const wanted = `fabric/${minecraftVersion}`;
-  const fabricDir = join(repoRoot, "fabric", minecraftVersion);
+  forgeDir?: string;
+  kind?: "fabric" | "forge_compat";
+};
+
+/** Quilt 可 overlay 的 Fabric 规则：不含 05/06（本档 QSL 事件 + Quilt 网络短规则）。 */
+export const QUILT_FABRIC_OVERLAY_IDS = new Set(["02", "03", "04", "07", "08", "09", "10"]);
+
+/** Neo 1.20.1 强制 overlay Forge 1.20.1：不含 00/01/09（本档 Neo 短规则）。 */
+export const FORGE_COMPAT_RULE_IDS = new Set(["02", "03", "04", "05", "06", "07", "08", "10"]);
+
+export const FORGE_COMPAT_BANNER =
+  "[FORGE_COMPAT_1.20.1] API 形态按 Forge 1.20.1：网络 SimpleChannel、数据 Capability；禁止 1.20.4+ Payload / Attachment / DeferredBlock；包名以工程现有 import 与 search_neoforge_docs(version=1.20.1) 为准，禁止默写。";
+
+export const QSL_OVERLAY_BANNER =
+  "[QSL_OVERLAY] 本规则正文来自同版 Fabric。注册/物品组用 QSL（org.quiltmc）。网络须工程有 QFAPI（Quilted Fabric API）才对照 FAPI；无 QFAPI 则 search_docs(platform=quilt)，禁止把 Fabric 网络教程当 QSL。";
+
+export function wrapBanneredBody(banner: string, note: string, body: string): string {
+  return `---\n${banner}\n${note}\n---\n\n${body}`;
+}
+
+export function fabricRulesOverlay(
+  minecraftVersion: string,
+  repoRoot = resolveRepoRoot(),
+): PackRulesOverlay {
+  const ver = knowledgeVersion("fabric", minecraftVersion);
+  const wanted = `fabric/${ver}`;
+  const fabricDir = join(repoRoot, "fabric", ver);
   if (!existsSync(fabricDir) || !existsSync(join(fabricDir, "AGENTS.md"))) {
     return {
       wanted,
       status: "missing",
       note: `没有 ${wanted} 规则树。仍返回 Quilt 本档；改口 search_fabric_docs，不要用邻版 Fabric。`,
+      kind: "fabric",
     };
   }
   const rulesDir = join(fabricDir, ".cursor", "rules");
@@ -136,6 +158,7 @@ export function fabricRulesOverlay(
       wanted,
       status: "missing",
       note: `${wanted} 无 .cursor/rules。仍返回 Quilt 本档；改口 search_fabric_docs。`,
+      kind: "fabric",
     };
   }
   let ruleNames: string[] = [];
@@ -151,9 +174,157 @@ export function fabricRulesOverlay(
       status: "version_mismatch",
       note: `${wanted} 有 AGENTS 但没有 02–10 规则。仍返回 Quilt 本档；改口 search_fabric_docs，不要用邻版 Fabric。`,
       fabricDir,
+      kind: "fabric",
     };
   }
-  return { wanted, status: "ok", note: `02–10 可读 ${wanted}/.cursor/rules`, fabricDir };
+  return { wanted, status: "ok", note: `02–10 可读 ${wanted}/.cursor/rules`, fabricDir, kind: "fabric" };
+}
+
+export function forgeCompatOverlay(
+  minecraftVersion: string,
+  repoRoot = resolveRepoRoot(),
+): PackRulesOverlay {
+  const wanted = `forge/${minecraftVersion}`;
+  const forgeDir = join(repoRoot, "forge", minecraftVersion);
+  if (!existsSync(forgeDir) || !existsSync(join(forgeDir, "AGENTS.md"))) {
+    return {
+      wanted,
+      status: "missing",
+      note: `没有 ${wanted} 规则树。Neo 1.20.1 无法 overlay Forge 兼容规则。`,
+      kind: "forge_compat",
+    };
+  }
+  const rulesDir = join(forgeDir, ".cursor", "rules");
+  if (!existsSync(rulesDir)) {
+    return {
+      wanted,
+      status: "missing",
+      note: `${wanted} 无 .cursor/rules。`,
+      kind: "forge_compat",
+    };
+  }
+  let ruleNames: string[] = [];
+  try {
+    ruleNames = readdirSync(rulesDir);
+  } catch {
+    ruleNames = [];
+  }
+  const overlayRules = ruleNames.filter((n) => /^(0[2-8]|10)-/.test(n));
+  if (!overlayRules.length) {
+    return {
+      wanted,
+      status: "version_mismatch",
+      note: `${wanted} 有 AGENTS 但没有 02–08/10 规则。`,
+      forgeDir,
+      kind: "forge_compat",
+    };
+  }
+  return {
+    wanted,
+    status: "ok",
+    note: `02–08/10 可读 ${wanted}/.cursor/rules（Forge 兼容形态）`,
+    forgeDir,
+    kind: "forge_compat",
+  };
+}
+
+export type ResolvedPackRule = {
+  id: string;
+  fileName: string;
+  source: string;
+  text: string;
+  abs: string;
+};
+
+export function quiltOverlayWarnings(overlay: { status: string; note: string } | undefined): string[] {
+  if (!overlay || overlay.status === "ok") return [];
+  return [
+    `无同版 Fabric overlay（${overlay.status}）：02–10 可能未注入、skills[] 可能为空。${overlay.note} 改口 search_docs(platform=quilt) / search_fabric_docs，禁止邻版 Fabric。不要把 ok 理解成 Quilt 开发包齐全。`,
+  ];
+}
+
+export function resolvePackOverlay(
+  platform: string,
+  packVersion: string,
+  repoRoot = resolveRepoRoot(),
+): PackRulesOverlay | undefined {
+  if (platform === "quilt") return fabricRulesOverlay(packVersion, repoRoot);
+  if (platform === "neoforge" && packVersion === "1.20.1") return forgeCompatOverlay("1.20.1", repoRoot);
+  return undefined;
+}
+
+export function resolvePackRules(opts: {
+  platform: string;
+  packDir: string;
+  packVersion: string;
+  ruleIds: string[];
+  repoRoot?: string;
+}): {
+  ruleBodies: ResolvedPackRule[];
+  overlay?: PackRulesOverlay;
+  warnings: string[];
+  localIndex: Array<{ id: string; fileName: string }>;
+} {
+  const repoRoot = opts.repoRoot ?? resolveRepoRoot();
+  const localRules = listRuleFiles(opts.packDir);
+  const overlay = resolvePackOverlay(opts.platform, opts.packVersion, repoRoot);
+  const warnings: string[] = [];
+  if (opts.platform === "quilt") warnings.push(...quiltOverlayWarnings(overlay));
+  else if (overlay && overlay.status !== "ok") {
+    warnings.push(`无 Forge 兼容 overlay（${overlay.status}）：${overlay.note}`);
+  }
+
+  const overlayIds =
+    opts.platform === "quilt"
+      ? QUILT_FABRIC_OVERLAY_IDS
+      : opts.platform === "neoforge" && opts.packVersion === "1.20.1"
+        ? FORGE_COMPAT_RULE_IDS
+        : new Set<string>();
+  const forceOverlay = opts.platform === "neoforge" && opts.packVersion === "1.20.1";
+  const donorDir =
+    overlay?.status === "ok" ? overlay.forgeDir ?? overlay.fabricDir : undefined;
+  const donorRules = donorDir ? listRuleFiles(donorDir) : [];
+
+  const ruleBodies: ResolvedPackRule[] = [];
+  for (const id of opts.ruleIds) {
+    const local = localRules.find((r) => r.id === id);
+    const useOverlay =
+      overlay?.status === "ok" && overlayIds.has(id) && donorDir && (forceOverlay || !local);
+    if (useOverlay) {
+      const fr = donorRules.find((r) => r.id === id);
+      if (fr) {
+        let text = readText(fr.abs);
+        if (forceOverlay) {
+          text = wrapBanneredBody(FORGE_COMPAT_BANNER, overlay.note, text);
+        } else if (opts.platform === "quilt") {
+          text = wrapBanneredBody(QSL_OVERLAY_BANNER, overlay.note, text);
+        }
+        ruleBodies.push({
+          id,
+          fileName: fr.fileName,
+          source: overlay.wanted,
+          text,
+          abs: fr.abs,
+        });
+        continue;
+      }
+    }
+    if (local) {
+      ruleBodies.push({
+        id,
+        fileName: local.fileName,
+        source: opts.packDir.replace(/\\/g, "/"),
+        text: readText(local.abs),
+        abs: local.abs,
+      });
+    }
+  }
+  return {
+    ruleBodies,
+    overlay,
+    warnings,
+    localIndex: localRules.map((r) => ({ id: r.id, fileName: r.fileName })),
+  };
 }
 
 export function inspectPack(
@@ -162,6 +333,12 @@ export function inspectPack(
   repoRoot = resolveRepoRoot(),
 ): { pack: PackInfo; status: PackActivationStatus } | null {
   const p = platform.trim().toLowerCase() as PackPlatform;
+  const rawVer = String(minecraftVersion ?? "").trim();
+  if (p !== "bedrock") {
+    if (!rawVer || rawVer.includes("..") || /[\\/]/.test(rawVer) || !isVersionDirName(rawVer)) {
+      return null;
+    }
+  }
   if (p === "bedrock") {
     const packDir = join(repoRoot, "bedrock");
     const agentsPath = join(packDir, "AGENTS.md");
@@ -233,6 +410,7 @@ export type SkillIndexEntry = {
   absPath: string;
   source?: string;
   mappingNote?: string;
+  skillBanner?: string;
 };
 
 export function toPosixAbs(abs: string): string {
@@ -261,7 +439,11 @@ export function coversMcVersion(token: string, mcVersion: string): boolean {
   if (m) return cmpMcVersions(mcVersion, m[1]) <= 0;
   m = t.match(/^(\d[\d.]*)-(\d[\d.]*)$/);
   if (m) return cmpMcVersions(mcVersion, m[1]) >= 0 && cmpMcVersions(mcVersion, m[2]) <= 0;
-  return t === mcVersion || mcVersion.startsWith(`${t}.`);
+  if (t === mcVersion) return true;
+  const tokenParts = t.split(".");
+  const verParts = mcVersion.split(".");
+  if (verParts.length <= tokenParts.length) return false;
+  return tokenParts.every((seg, i) => verParts[i] === seg);
 }
 
 function parseYamlList(value: string): string[] {
@@ -430,6 +612,14 @@ export function wrapDonorSkillBody(mappingNote: string, body: string): string {
   return `\n\n---\n${DONOR_SKILL_BANNER}\n${mappingNote}\n---\n\n${body}`;
 }
 
+export function wrapSkillBody(entry: Pick<SkillIndexEntry, "skillBanner" | "mappingNote">, body: string): string {
+  if (entry.skillBanner) {
+    return wrapBanneredBody(entry.skillBanner, entry.mappingNote ?? "", body);
+  }
+  if (entry.mappingNote) return wrapDonorSkillBody(entry.mappingNote, body);
+  return body;
+}
+
 export function mappingNoteForFabricSkill(fabricVer: string): string {
   return (
     `本 Skill 正文来自 Fabric ${fabricVer} 规则包，映射以该 Fabric 档为准（多为 Yarn named；26.1.2 为官方名）。` +
@@ -443,6 +633,14 @@ export const NEO_SKILL_DONORS: Record<string, string> = {
   "1.21.5": "1.21.3",
   "1.21.10": "1.21.8",
 };
+
+export function mappingNoteForForgeCompat(): string {
+  return (
+    "API 形态按 Forge 1.20.1：网络 SimpleChannel、数据 Capability。" +
+    "包名以工程现有 import 与 search_neoforge_docs(version=1.20.1) 为准，禁止默写。" +
+    "禁止 1.20.4+ Payload / Attachment / DeferredBlock。"
+  );
+}
 
 export function mappingNoteForNeoDonor(thinVer: string, donorVer: string): string {
   return (
@@ -486,11 +684,21 @@ export function listMergedPackSkills(
   platform: string,
   packVersion: string,
   packDir: string,
-  overlay: { status: string; fabricDir?: string } | undefined,
+  overlay: { status: string; fabricDir?: string; forgeDir?: string; wanted?: string } | undefined,
   repoRoot = resolveRepoRoot(),
 ): { skills: SkillIndexEntry[]; donorWarning?: string } {
   if (platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir) {
-    return { skills: mergeQuiltFabricSkills(packDir, overlay.fabricDir, packVersion, repoRoot) };
+    const fabricVer = (overlay.wanted ?? `fabric/${packVersion}`).replace(/^fabric\//, "");
+    return { skills: mergeQuiltFabricSkills(packDir, overlay.fabricDir, fabricVer, repoRoot) };
+  }
+  if (platform === "neoforge" && packVersion === "1.20.1" && overlay?.status === "ok" && overlay.forgeDir) {
+    const note = mappingNoteForForgeCompat();
+    const merged = mergeDonorSkills(packDir, overlay.forgeDir, "forge/1.20.1", note, repoRoot).map((s) =>
+      s.source?.startsWith("forge/")
+        ? { ...s, skillBanner: FORGE_COMPAT_BANNER, mappingNote: note }
+        : s,
+    );
+    return { skills: merged };
   }
   const donorVer = platform === "neoforge" ? NEO_SKILL_DONORS[packVersion] : undefined;
   if (donorVer) {

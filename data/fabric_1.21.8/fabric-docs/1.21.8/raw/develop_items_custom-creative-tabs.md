@@ -1,0 +1,44 @@
+# Custom Creative Tabs
+
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.8/develop/items/custom-creative-tabs.md
+> 版本：1.21.8
+> GitHub 路径：develop/items/custom-creative-tabs.md
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T09:47:41.566Z
+> SHA256：81e9f50d8028ee9fc1eb690e2db08480c18ed009e6095d6a4d06d8877d1be78f
+> 分支：main
+
+---
+title: Custom Creative Tabs
+description: Learn how to create your own creative tab and add items to it.
+authors:
+  - IMB11
+---
+
+Creative Tabs, also known as Item Groups, are the tabs in the creative inventory that store items. You can create your own creative tab to store your items in a separate tab. This is pretty useful if your mod adds a lot of items and you want to keep them organized in one location for your players to easily access.
+
+## Creating the Creative Tab {#creating-the-creative-tab}
+
+Adding a creative tab is pretty simple. Simply create a new static final field in your items class to store the creative tab and a resource key for it, you can then use the creative tab event similarly to how you added your items to the vanilla creative tabs:
+
+@[code transcludeWith=:::9](@/reference/1.21.8/src/main/java/com/example/docs/item/ModItems.java)
+
+@[code transcludeWith=:::_12](@/reference/1.21.8/src/main/java/com/example/docs/item/ModItems.java)
+
+You should see the creative tab is now in the creative inventory menu. However, it is untranslated - you must add a translation key to your translations file - similarly to how you translated your first item.
+
+![Creative tab without translation in creative menu](/assets/develop/items/itemgroups_0.png)
+
+## Adding a Translation Key {#adding-a-translation-key}
+
+If you used `Component.translatable` for the `displayName` method of the creative tab builder, you will need to add the translation to your language file.
+
+```json
+{
+  "itemGroup.fabric_docs_reference": "Fabric Docs Reference"
+}
+```
+
+Now, as you can see, the creative tab should be correctly named:
+
+![Fully completed item group with translation and items](/assets/develop/items/itemgroups_1.png)

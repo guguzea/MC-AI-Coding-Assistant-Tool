@@ -48,8 +48,7 @@ public class DataGenerators {
                 Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(
                     ModBlockLootSubProvider::new,
-                    LootContextParamSets.BLOCK)),
-                lookup));
+                    LootContextParamSets.BLOCK))));
         }
         if (event.includeClient()) {
             generator.addProvider(true, new ModItemModelsProvider(output, event.getExistingFileHelper()));
@@ -70,8 +69,8 @@ public class DataGenerators {
 ### LootTableProvider 使用规范
 
 - 使用 `BlockLootSubProvider` 子类管理方块掉落表
-- `LootPool.Builder` 添加掉落池，`ItemLootEntry` 添加物品掉落
-- `LootItemFunction` 应用修饰器（如 `setCount`、`explosionDecay`）
+- `LootPool.Builder` 添加掉落池，`LootItem.lootTableItem` 添加物品掉落
+- `LootItemFunction` 应用修饰器（如 `setCount`、`ApplyExplosionDecay.explosionDecay`）
 
 ---
 
@@ -179,8 +178,7 @@ public class DataGenerators {
                 Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(
                     ModBlockLootSubProvider::new,
-                    LootContextParamSets.BLOCK)),
-                lookup));
+                    LootContextParamSets.BLOCK))));
         }
         if (event.includeClient()) {
             generator.addProvider(true, new ModItemModelsProvider(output, event.getExistingFileHelper()));
@@ -239,7 +237,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
-    protected void addTables() {
+    protected void generate() {
         // 简单掉落：破坏方块后掉落该方块物品
         dropSelf(ModBlocks.MY_BLOCK.get());
 
@@ -247,10 +245,10 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
         this.add(ModBlocks.SPECIAL_BLOCK.get(),
             LootTable.lootTable()
                 .withPool(LootPool.lootPool()
-                    .add(ItemLootEntry.lootItem(ModItems.SPECIAL_DROP.get())
+                    .add(LootItem.lootTableItem(ModItems.SPECIAL_DROP.get())
                         .apply(SetItemCountFunction.setCount(
                             UniformGenerator.between(1, 3)))
-                        .apply(ExplosionDecay.explosionDecay())
+                        .apply(ApplyExplosionDecay.explosionDecay())
                     )
                 )
         );

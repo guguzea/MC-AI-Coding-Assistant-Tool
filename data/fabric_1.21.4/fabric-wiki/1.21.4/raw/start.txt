@@ -1,0 +1,89 @@
+# start
+
+> 来源：https://fabricmc.net/wiki/doku.php?id=start
+> 版本：1.21.4
+> 页面 ID：start
+> 优先级：🟡
+> 抓取源：wiki_raw
+> 警告：现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5 等旧档 API。
+
+====== Welcome to the Fabric Wiki! ======
+
+This resource is dedicated to Fabric. Fabric is a modular modding toolchain targeting Minecraft: Java Edition 1.14 and above, including snapshots.
+
+Information on the wiki is community contributed. Some pages on the wiki may be out-of-date or a work in progress. For official, properly versioned documentation, try the [[https://docs.fabricmc.net/|Fabric Docs]].
+
+This wiki is also available in the following languages:
+  * {{:china.png?nolink&32|}} [[zh_cn:start|简体中文 (Simplified Chinese)]]
+  * {{:france.png?nolink&32|}} [[fr:accueil|Français (French)]]
+  * {{:germany.png?nolink&32|}} [[de:start|Deutsch (German)]]
+  * {{:south-korea.png?nolink&32|}} [[ko_kr:start|한국어 (Korean)]]
+  * {{:russia.png?nolink&32|}} [[ru:start|Русский (Russian)]]
+  * {{:japan.png?nolink&32|}} [[ja:start|日本語 (Japanese)]]
+  * {{:es.png?nolink&32|}} [[es:start| Español]]
+
+**Make sure to check out our [[community:official_community_spaces|community spaces and rules]]!**
+
+  * [[faq:user|Frequently Asked Questions (from users)]]
+  * [[faq:expert|Frequently Asked Questions (expert mode)]] - a supplement to the above with more detailed answers
+
+===== Player Tutorials =====
+
+If you wish to use Fabric as a player, server administrator or modpack developer, you should view the [[player:tutorials:start|Player Tutorials]] section of the wiki.
+
+  * [[player:tutorials:start#installing_fabric_loader|Installing Fabric Loader]]
+  * [[https://docs.fabricmc.net/players/updating-fabric/|Updating Fabric Loader]]
+  * [[https://docs.fabricmc.net/players/installing-java/|Installing Java]]
+  * [[https://docs.fabricmc.net/players/troubleshooting/uploading-logs|Troubleshooting]]
+
+----
+===== Mod Developer Tutorials =====
+
+If you'd like to start developing with Fabric, you should check out the [[tutorial:start|Mod Developer Tutorials]] section of the wiki.
+
+  * [[tutorial:start#creating_your_first_mod|Creating Your First Mod]]
+  * [[https://docs.fabricmc.net/develop/items/first-item|Creating Your First Item]]
+  * [[https://docs.fabricmc.net/develop/blocks/first-block|Creating Your First Block]]
+  * [[https://docs.fabricmc.net/develop/saved-data|Saving Custom Data Across Restarts]]
+  * [[https://docs.fabricmc.net/develop/data-generation/setup|Data Generation]]
+  * [[tutorial:dimensionconcepts|World Generation]]
+  * [[tutorial:mixin_introduction|Introduction to Mixins]]
+  * [[https://docs.fabricmc.net/develop/commands/basics|Creating Commands]]
+  * [[https://docs.fabricmc.net/develop/events|Events]]
+  * [[https://docs.fabricmc.net/develop/entities/first-entity|Entities]]
+  * [[https://docs.fabricmc.net/develop/fluids/first-fluid|Fluids]]
+
+----
+
+===== Documentation =====
+
+If you want to know how projects in the Fabric toolchain work, you should check out the [[documentation:start|Documentation]] section of the wiki.
+
+  * [[documentation:start#specifications|Specifications]]
+  * [[documentation:start#technical_documentation|Technical Information]]
+  * [[documentation:start#external_documentation|External Documentation]]
+
+----
+===== Modpack and Launcher Developers =====
+
+:!: //These pages are outdated. We would welcome new versions targeting modern modpacking tools like Modrinth.//
+
+
+  * [[tutorial:mcupdater_modpacks|Using MCUpdater for Fabric modpacks]] (covers usage and creation)
+  * [[tutorial:technic_modpacks|Publishing Fabric modpacks on Technic]]
+  * [[tutorial:atlauncher_modpacks|Publishing Fabric modpacks on ATLauncher]]
+  * [[documentation:modpack_related_endpoints|Modpack-related endpoints]]
+  * [[https://docs.fabricmc.net/players/troubleshooting/dependency-overrides|Dependency Overrides]] (Loader ''0.11.1'' or later!)
+
+----
+
+===== Community =====
+Feeling like participating in Fabric community? You may see our [[community:official community spaces]], or also understand the [[community:library mods]] or [[community:optifine_alternatives|OptiFine alternatives]] provided by the community. All community pages can be found in the sidebar of this page.
+
+----
+===== Contributing to the Wiki =====
+
+The Wiki is mostly maintained by the community, for the community. If you are interested in contributing to the wiki, check out the following pages first:
+
+  * [[wiki:meta|Wiki Meta]] - Starting point for contributing to the wiki
+  * [[wiki:agenda|Wiki Agenda]] - See what is on the current agenda, and what other contributors are currently working on.

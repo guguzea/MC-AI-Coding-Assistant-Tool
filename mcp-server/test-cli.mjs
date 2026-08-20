@@ -457,7 +457,7 @@ function parseJson(r, label) {
   const r = run(["detect_mod_project", "--project", fixture]);
   if (r.status === 2) throw new Error(`detect_mod_project usage error:\n${r.stderr}\n${r.stdout}`);
   const j = parseJson(r, "detect-mod");
-  if (j.success !== true && j.result?.ok === false && j.result?.code === "PACK_NOT_FOUND") {
+  if (j.result?.ok === false && (j.result?.action?.code === "PACK_NOT_FOUND" || j.result?.code === "PACK_NOT_FOUND")) {
     console.log("detect_mod_project --project fixture: PACK_NOT_FOUND（fixture 无完整规则树，可接受）");
   } else if (j.success !== true && j.result?.ok === false) {
     throw new Error(`detect_mod_project unexpected fail: ${JSON.stringify(j).slice(0, 400)}`);

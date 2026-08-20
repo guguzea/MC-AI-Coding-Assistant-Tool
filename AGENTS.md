@@ -116,7 +116,7 @@ id 'net.minecraftforge.gradle'
 1. 询问用户当前使用的平台和 Minecraft 版本
 2. 根据回答加载对应平台的规则
 
-确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / **技能索引**送进当前对话。默认只注入规则 **00 / 01 / 09**；方块/物品/网络等再传 `topics`（如 `["02","03"]`）或 `task`（如 `mc-new-gui`）**追加**（并集，永不替换底座），或 `includeAllRules=true`。Skill 索引含 `relPosix` 与 `absPath`；少量正文只在 `skillNames` 或 `task` 建议名时进入 `skillBodies`（上限 6）。不要假定全部 Skill 全文已在上下文。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun；不要再用 `includeSkills`，改用 `writeSkillStubs`，默认 true，只写 stub）。**禁止**读邻档 00–10，禁止把知识库 `.cursor` 当加载器。MCP **不能**开关 IDE 扫描器。
+确认平台与**精确** Minecraft 版本后，调用 `activate_platform_pack`（`action=session`）把该档 `AGENTS.md` / 规则 / **技能索引**送进当前对话。默认只注入规则 **00 / 01 / 09**；方块/物品/网络等再传 `topics`（如 `["02","03"]`）或 `task`（如 `mc-new-gui`）**追加**（并集，永不替换底座），或 `includeAllRules=true`。Skill 索引含 `relPosix` 与 `absPath`；少量正文只在 `skillNames` 或 `task` 建议名时进入 `skillBodies`（上限 6）。不要假定全部 Skill 全文已在上下文。用户要工程内常驻再 `action=write`（`hosts` 必填，默认 dryRun；不要再用 `includeSkills`，改用 `writeSkillStubs`，默认 true，只写 stub；`includeSkillBodies` 才写知识库 Skill 全文）。**禁止**读邻档 00–10，禁止把知识库 `.cursor` 当加载器。MCP **不能**开关 IDE 扫描器。
 
 ## 第二步：加载对应平台的规则
 

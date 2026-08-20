@@ -351,5 +351,674 @@
     ],
     "source": "github_raw_versioned",
     "sha256": "7acdabe63823ed46fddf9e23f7d39b0087c28e37e727aad7c599a23b3ae07dd2"
+  },
+  {
+    "id": "1.20.4/develop_blocks_blockstates",
+    "version": "1.20.4",
+    "label": "Block States",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/blocks/blockstates.md",
+    "tags": [
+      "event",
+      "block",
+      "blockentity",
+      "resource"
+    ],
+    "firstParagraph": "<!-- Note: This example could be used for a custom recipe types guide, a condensor machine block with a custom \"Condensing\" recipe? -->",
+    "sections": [
+      {
+        "title": "Example: Pillar Block {#pillar-block}",
+        "level": 2,
+        "summary": "<!-- Note: This example could be used for a custom recipe types guide, a condensor machine block with a custom \"Condensing\" recipe?"
+      },
+      {
+        "title": "Custom Block States {#custom-block-states}",
+        "level": 2,
+        "summary": "Custom block states are great if your block has unique properties - sometimes you may find that your block can re-use vanilla properties."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "6613e53a7f1a419d43947a983b52f1478ce60e9bb51d143a3f2543b96d2788b4"
+  },
+  {
+    "id": "1.20.4/develop_commands_arguments",
+    "version": "1.20.4",
+    "label": "Command Arguments",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/commands/arguments.md",
+    "tags": [
+      "registry",
+      "command"
+    ],
+    "firstParagraph": "If vanilla does not have the argument type you need, you can create your own. To do this, you need to create a class that inherits the ArgumentType<T> interface where T is the type of the argument.",
+    "sections": [
+      {
+        "title": "Custom Argument Types {#custom-argument-types}",
+        "level": 2,
+        "summary": "If vanilla does not have the argument type you need, you can create your own. To do this, you need to create a class that inherits the ArgumentType<T> interface where T is the type of the argument."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "4254c14a2a8758eb03a4d6f04aa93124599703280d0efa3ba1bb02fa77844a7a"
+  },
+  {
+    "id": "1.20.4/develop_commands_suggestions",
+    "version": "1.20.4",
+    "label": "Command Suggestions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/commands/suggestions.md",
+    "tags": [
+      "item",
+      "entity",
+      "loot",
+      "command"
+    ],
+    "firstParagraph": "A SuggestionProvider is used to make a list of suggestions that will be sent to the client. A suggestion provider is a functional interface that takes a CommandContext and a SuggestionBuilder and r...",
+    "sections": [
+      {
+        "title": "Suggestion Providers {#suggestion-providers}",
+        "level": 2,
+        "summary": "A SuggestionProvider is used to make a list of suggestions that will be sent to the client. A suggestion provider is a functional interface that takes a CommandContext and a SuggestionBuilder and r..."
+      },
+      {
+        "title": "Using Suggestion Providers {#using-suggestion-providers}",
+        "level": 2,
+        "summary": "To use a suggestion provider, you need to call the suggests method on the argument builder. This method takes a SuggestionProvider and returns the modified argument builder with the suggestion prov..."
+      },
+      {
+        "title": "Built-in Suggestion Providers {#built-in-suggestion-providers}",
+        "level": 2,
+        "summary": "There are a few built-in suggestion providers that you can use: | Suggestion Provider                       | Description                                  | | --------------------------------------..."
+      },
+      {
+        "title": "Creating a Custom Suggestion Provider {#creating-a-custom-suggestion-provider}",
+        "level": 2,
+        "summary": "If a built-in provider doesn't satisfy your needs, you can create your own suggestion provider. To do this, you need to create a class that implements the SuggestionProvider interface and override ..."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "099b3e14fdcc78e71e1976bebe17e4c5358559c26727926036ecced4ca96213d"
+  },
+  {
+    "id": "1.20.4/develop_entities_damage-types",
+    "version": "1.20.4",
+    "label": "Damage Types",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/entities/damage-types.md",
+    "tags": [
+      "entity",
+      "resource"
+    ],
+    "firstParagraph": "Let's create a custom damage type called Tater. We start by creating a JSON file for your custom damage. This file will be placed in your mod's data directory, in a subdirectory named damage_type.",
+    "sections": [
+      {
+        "title": "Creating a Damage Type {#creating-a-damage-type}",
+        "level": 2,
+        "summary": "Let's create a custom damage type called Tater. We start by creating a JSON file for your custom damage. This file will be placed in your mod's data directory, in a subdirectory named damage_type."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "5072963a02237b338edfb1db9a19dc5ca667092bcbdeee7d8d311eb261d629a9"
+  },
+  {
+    "id": "1.20.4/develop_entities_effects",
+    "version": "1.20.4",
+    "label": "Mob Effects",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/entities/effects.md",
+    "tags": [
+      "registry",
+      "item",
+      "entity",
+      "resource"
+    ],
+    "firstParagraph": "In this tutorial we'll add a new custom effect called Tater which gives you one experience point every game tick.",
+    "sections": [
+      {
+        "title": "Custom Mob Effects {#custom-status-effects}",
+        "level": 2,
+        "summary": "In this tutorial we'll add a new custom effect called Tater which gives you one experience point every game tick."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "c9679ca92f806a58d6b9328239b14065e816a3eb0c78794893b31bb12a594dfa"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_introduction-to-fabric-and-modding",
+    "version": "1.20.4",
+    "label": "Introduction to Fabric and Modding",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/introduction-to-fabric-and-modding.md",
+    "tags": [
+      "registry",
+      "event",
+      "item",
+      "block",
+      "entity",
+      "mixin",
+      "resource"
+    ],
+    "firstParagraph": "Before you start, you should have a basic understanding of developing with Java, and an understanding of Object-Oriented Programming (OOP).",
+    "sections": [
+      {
+        "title": "Prerequisites {#prerequisites}",
+        "level": 2,
+        "summary": "Before you start, you should have a basic understanding of developing with Java, and an understanding of Object-Oriented Programming (OOP)."
+      },
+      {
+        "title": "What Is Fabric? {#what-is-fabric}",
+        "level": 2,
+        "summary": "Fabric is a lightweight modding toolchain for Minecraft: Java Edition. It is designed to be a simple and easy-to-use modding platform."
+      },
+      {
+        "title": "Why Is Fabric Necessary to Mod Minecraft? {#why-is-fabric-necessary-to-mod-minecraft}",
+        "level": 2,
+        "summary": "> Modding is the process of modifying a game in order to change its behavior or add new features - in the case of Minecraft, this can be anything from adding new items, blocks, or entities, to chan..."
+      },
+      {
+        "title": "What Does Fabric API Provide, and Why Is It Needed? {#what-does-fabric-api-provide-and-why-is-it-needed}",
+        "level": 2,
+        "summary": "> Fabric API is a set of APIs and tools for mod developers to use when creating mods. Fabric API provides a wide set of APIs that build on top of Minecraft's existing functionality - for example, p..."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "6c4ed2364037325a9da49ffc7e236d4b54b8dcd215576c191dd3c0fcf6f2e4b1"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_launching-the-game",
+    "version": "1.20.4",
+    "label": "Launching the Game",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/launching-the-game.md",
+    "tags": [
+      "sides",
+      "command",
+      "mixin",
+      "config"
+    ],
+    "firstParagraph": "If you're using IntelliJ IDEA, you can find the launch profiles in the top-right corner of the window. Click the dropdown menu to see the available launch profiles.",
+    "sections": [
+      {
+        "title": "Launch Profiles {#launch-profiles}",
+        "level": 2,
+        "summary": "If you're using IntelliJ IDEA, you can find the launch profiles in the top-right corner of the window. Click the dropdown menu to see the available launch profiles."
+      },
+      {
+        "title": "Gradle Tasks {#gradle-tasks}",
+        "level": 2,
+        "summary": "If you're using the command line, you can use the following Gradle commands to start the game: - ./gradlew runClient - Start the game in client mode. - ."
+      },
+      {
+        "title": "Hotswapping Classes {#hotswapping-classes}",
+        "level": 2,
+        "summary": "When you run the game in debug mode, you can hotswap your classes without restarting the game. This is useful for quickly testing changes to your code. You're still quite limited though:"
+      },
+      {
+        "title": "Hotswapping Mixins {#hotswapping-mixins}",
+        "level": 2,
+        "summary": "If you're using Mixins, you can hotswap your Mixin classes without restarting the game. This is useful for quickly testing changes to your Mixins."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "3fc610a9bab7feb55e3c6188617306e96c6c5fb4804dd64007bf0b35d57e02c4"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_project-structure",
+    "version": "1.20.4",
+    "label": "Project Structure",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/project-structure.md",
+    "tags": [
+      "entrypoint",
+      "sides",
+      "mixin",
+      "resource",
+      "rendering",
+      "config"
+    ],
+    "firstParagraph": "The fabric.mod.json file is the main file that describes your mod to Fabric Loader. It contains information such as the mod's ID, version, and dependencies.",
+    "sections": [
+      {
+        "title": "`fabric.mod.json` {#fabric-mod-json}",
+        "level": 2,
+        "summary": "The fabric.mod.json file is the main file that describes your mod to Fabric Loader. It contains information such as the mod's ID, version, and dependencies. The most important fields in the fabric."
+      },
+      {
+        "title": "Entrypoints {#entrypoints}",
+        "level": 2,
+        "summary": "As mentioned before, the fabric.mod.json file contains a field called entrypoints - this field is used to specify the entrypoints that your mod provides."
+      },
+      {
+        "title": "`src/main/resources` {#src-main-resources}",
+        "level": 2,
+        "summary": "The src/main/resources folder is used to store the resources that your mod uses, such as textures, models, and sounds. It's also the location of fabric.mod."
+      },
+      {
+        "title": "`src/client/resources` {#src-client-resources}",
+        "level": 2,
+        "summary": "The src/client/resources folder is used to store client-specific resources, such as textures, models, and sounds that are only used on the client side."
+      },
+      {
+        "title": "`src/main/java` {#src-main-java}",
+        "level": 2,
+        "summary": "The src/main/java folder is used to store the Java source code for your mod - it exists on both the client and server environments."
+      },
+      {
+        "title": "`src/client/java` {#src-client-java}",
+        "level": 2,
+        "summary": "The src/client/java folder is used to store client-specific Java source code, such as rendering code or client-side logic - such as block color providers."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "96046003140eab9a11a31064e9c59b959d519d29bd892f816abc385a0b4c9950"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_setting-up-a-development-environment",
+    "version": "1.20.4",
+    "label": "Setting up a Development Environment",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/setting-up-a-development-environment.md",
+    "tags": [
+      "sides"
+    ],
+    "firstParagraph": "To develop mods for Minecraft 1.20.4, you will need JDK 17.",
+    "sections": [
+      {
+        "title": "Installing JDK 17 {#installing-jdk-17}",
+        "level": 2,
+        "summary": "To develop mods for Minecraft 1.20.4, you will need JDK 17. If you need help installing Java, you can refer to the various Java installation guides in the player guides section."
+      },
+      {
+        "title": "Installing IntelliJ IDEA {#installing-intellij-idea}",
+        "level": 2,
+        "summary": "::: info You can obviously use other IDEs, such as Eclipse or Visual Studio Code, but the majority of the pages on this documentation site will assume that you are using IntelliJ IDEA - you should ..."
+      },
+      {
+        "title": "Installing IDEA Plugins {#installing-idea-plugins}",
+        "level": 2,
+        "summary": "Although these plugins aren't strictly necessary, they can make modding with Fabric much easier - you should consider installing them."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "dc59ca58deb1d90055e9240266cce3f7f7fde6b6cec5de3c7e79fe731c8196bc"
+  },
+  {
+    "id": "1.20.4/develop_index",
+    "version": "1.20.4",
+    "label": "Developer Guides",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/index.md",
+    "tags": [
+      "networking",
+      "sides",
+      "rendering"
+    ],
+    "firstParagraph": "",
+    "sections": [],
+    "source": "github_raw_versioned",
+    "sha256": "b1ba9b5f03d92e957d1fad6a003492f8c6e57c68b89b4e4a1da9ec2e0c95be1d"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-armor",
+    "version": "1.20.4",
+    "label": "Custom Armor",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-armor.md",
+    "tags": [
+      "item",
+      "entity",
+      "resource"
+    ],
+    "firstParagraph": "::: info If you plan to make multiple armor materials, consider using an Enum to store them. Vanilla does this in the ArmorMaterials class, which stores all the armor materials that are used in the...",
+    "sections": [
+      {
+        "title": "Creating an Armor Material {#creating-an-armor-material}",
+        "level": 2,
+        "summary": "::: info If you plan to make multiple armor materials, consider using an Enum to store them. Vanilla does this in the ArmorMaterials class, which stores all the armor materials that are used in the..."
+      },
+      {
+        "title": "Creating an Instance of the ArmorMaterial {#creating-an-instance-of-the-armormaterial}",
+        "level": 2,
+        "summary": "To use the armor material with the armor items, you'll need to create an instance of it - similar to a tool material: @code transcludeWith=:::_10"
+      },
+      {
+        "title": "Creating the Armor Items {#creating-the-armor-items}",
+        "level": 2,
+        "summary": "Now that you've created an instance of the material, you can create the armor items in your ModItems class: Obviously, an armor set doesn't need every type to be satisfied, you can have a set with ..."
+      },
+      {
+        "title": "Texturing and Modelling {#texturing-and-modelling}",
+        "level": 2,
+        "summary": "You will need to create two sets of textures: - Textures and models for the items themselves. - The actual armor texture that is visible when an entity wears the armor."
+      },
+      {
+        "title": "Armor Textures and Model {#armor-textures-and-model}",
+        "level": 2,
+        "summary": "When an entity wears your armor, currently the missing texture will appear: !Broken armor model on player"
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "b8ad58e62da7dd8b3b53f16e1ce37ffa14293163fc01d5b34fd124bf10cff008"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-creative-tabs",
+    "version": "1.20.4",
+    "label": "Custom Creative Tabs",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-creative-tabs.md",
+    "tags": [
+      "event",
+      "item"
+    ],
+    "firstParagraph": "Adding a creative tab is pretty simple. Simply create a new static final field in your items class to store the creative tab and a resource key for it, you can then use the item group event similar...",
+    "sections": [
+      {
+        "title": "Creating the Creative Tab {#creating-the-creative-tab}",
+        "level": 2,
+        "summary": "Adding a creative tab is pretty simple. Simply create a new static final field in your items class to store the creative tab and a resource key for it, you can then use the item group event similar..."
+      },
+      {
+        "title": "Adding a Translation Key {#adding-a-translation-key}",
+        "level": 2,
+        "summary": "If you used Component.translatable for the displayName method of the creative tab builder, you will need to add the translation to your language file."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "8fe314b69a2e878db0123fa5195fc369538abf0232c3b4a3a4398c1c7b99fcf7"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-item-interactions",
+    "version": "1.20.4",
+    "label": "Custom Item Interactions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-item-interactions.md",
+    "tags": [
+      "event",
+      "item",
+      "block"
+    ],
+    "firstParagraph": "For items, the most common InteractionResultHolder you'll see is for ItemStacks - this class tells the game what to replace the item stack (or not to replace) after the event has occured.",
+    "sections": [
+      {
+        "title": "InteractionResultHolder {#typedactionresult}",
+        "level": 2,
+        "summary": "For items, the most common InteractionResultHolder you'll see is for ItemStacks - this class tells the game what to replace the item stack (or not to replace) after the event has occured."
+      },
+      {
+        "title": "InteractionResult {#actionresult}",
+        "level": 2,
+        "summary": "Similarly, an InteractionResult tells the game the status of the event, whether it was passed/ignored, failed or successful."
+      },
+      {
+        "title": "Overridable Events {#overridable-events}",
+        "level": 2,
+        "summary": "Luckily, the Item class has many methods that can be overriden to add extra functionality to your items."
+      },
+      {
+        "title": "The `use()` Event {#use-event}",
+        "level": 2,
+        "summary": "Let's say you want to make an item that summons a lightning bolt infront of the player - you would need to create a custom class. @code transcludeWith=:::1"
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "db5c089d1746388497cc35cb673da3c40b4d16a9015641067da448e386dd1777"
+  },
+  {
+    "id": "1.20.4/develop_items_food",
+    "version": "1.20.4",
+    "label": "Food Items",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/food.md",
+    "tags": [
+      "item",
+      "entity",
+      "config"
+    ],
+    "firstParagraph": "To add a food component to an item, we can pass it to the FabricItemSettings instance:",
+    "sections": [
+      {
+        "title": "Adding the Food Component {#adding-the-food-component}",
+        "level": 2,
+        "summary": "To add a food component to an item, we can pass it to the FabricItemSettings instance: Right now, this just makes the item edible and nothing more."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "aff38b5e4c4b8752ef80af458a29ce2bd6d0565f286b00b6b360dcbafc32eb9e"
+  },
+  {
+    "id": "1.20.4/develop_items_potions",
+    "version": "1.20.4",
+    "label": "Potions",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/potions.md",
+    "tags": [
+      "registry",
+      "item",
+      "entity",
+      "mixin"
+    ],
+    "firstParagraph": "Adding a potion follows a similar path as adding an item. You will create an instance of your potion and register it by calling PotionBrewing.addMix.",
+    "sections": [
+      {
+        "title": "Custom Potions {#custom-potions}",
+        "level": 2,
+        "summary": "Adding a potion follows a similar path as adding an item. You will create an instance of your potion and register it by calling PotionBrewing.addMix."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "7812631a30dbd81515a1d88be0dc35d7a767c193f30260cae313f92eb160dcbd"
+  },
+  {
+    "id": "1.20.4/develop_rendering_gui-graphics",
+    "version": "1.20.4",
+    "label": "Drawing to the GUI",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/gui-graphics.md",
+    "tags": [
+      "rendering"
+    ],
+    "firstParagraph": "The GuiGraphics class can be used to easily draw square-based shapes. If you want to draw triangles, or any non-square based shape, you will need to use a BufferBuilder.",
+    "sections": [
+      {
+        "title": "Drawing Shapes {#drawing-shapes}",
+        "level": 2,
+        "summary": "The GuiGraphics class can be used to easily draw square-based shapes. If you want to draw triangles, or any non-square based shape, you will need to use a BufferBuilder. You can use the GuiGraphics."
+      },
+      {
+        "title": "The Scissor Manager {#the-scissor-manager}",
+        "level": 2,
+        "summary": "The GuiGraphics class has a built-in scissor manager. This allows you to easily clip your rendering to a specific area."
+      },
+      {
+        "title": "Drawing Textures {#drawing-textures}",
+        "level": 2,
+        "summary": "There is no one \"correct\" way to draw textures onto a screen, as the drawTexture(...) method has many different overloads. This section will go over the most common use cases."
+      },
+      {
+        "title": "Drawing Text {#drawing-text}",
+        "level": 2,
+        "summary": "The GuiGraphics class has various self-explanatory text rendering methods - for the sake of brevity, they will not be covered here. Let's say we want to draw \"Hello World\" onto the screen."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "b673b378d9acdb559eea484f8bf44b9ea9d43d58c46ff1f81e5838cf6f6ca551"
+  },
+  {
+    "id": "1.20.4/develop_rendering_gui_custom-widgets",
+    "version": "1.20.4",
+    "label": "Custom Widgets",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/gui/custom-widgets.md",
+    "tags": [
+      "event",
+      "rendering"
+    ],
+    "firstParagraph": "There are multiple ways to create a widget class, such as extending AbstractWidget. This class provides a lot of useful utilities, such as managing width, height, position, and handling events - it...",
+    "sections": [
+      {
+        "title": "Creating a Widget {#creating-a-widget}",
+        "level": 2,
+        "summary": "There are multiple ways to create a widget class, such as extending AbstractWidget. This class provides a lot of useful utilities, such as managing width, height, position, and handling events - it..."
+      },
+      {
+        "title": "Adding the Widget to the Screen {#adding-the-widget-to-the-screen}",
+        "level": 2,
+        "summary": "Like all widgets, you need to add it to the screen using the addRenderableWidget method, which is provided by the Screen class. Make sure you do this in the init method."
+      },
+      {
+        "title": "Widget Events {#widget-events}",
+        "level": 2,
+        "summary": "You can handle events such as mouse clicks, key presses, by overriding the mouseClicked, afterMouseAction, keyPressed, and other methods."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "2aa40a17ce248873808ca826634182ddd5739b4d53830cdadf41998923f44f48"
+  },
+  {
+    "id": "1.20.4/develop_rendering_hud",
+    "version": "1.20.4",
+    "label": "Rendering in the Hud",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/hud.md",
+    "tags": [
+      "entrypoint",
+      "event",
+      "rendering"
+    ],
+    "firstParagraph": "The HudRenderCallback event - provided by Fabric API - is called every frame, and is used to render things to the HUD.",
+    "sections": [
+      {
+        "title": "HudRenderCallback {#hudrendercallback}",
+        "level": 2,
+        "summary": "The HudRenderCallback event - provided by Fabric API - is called every frame, and is used to render things to the HUD. To register to this event, you can simply call HudRenderCallback.EVENT."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "79c63fd0f78517d272a350b7c1dad219abb575ae1bdfcddceafe6479b3d39d3c"
+  },
+  {
+    "id": "1.20.4/develop_rendering_particles_creating-particles",
+    "version": "1.20.4",
+    "label": "Creating Custom Particles",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/particles/creating-particles.md",
+    "tags": [
+      "entrypoint",
+      "sides",
+      "resource",
+      "rendering",
+      "particle"
+    ],
+    "firstParagraph": "We'll be adding a new sparkle particle which will mimic the movement of an end rod particle.",
+    "sections": [
+      {
+        "title": "Register a Custom Particle {#register-a-custom-particle}",
+        "level": 2,
+        "summary": "We'll be adding a new sparkle particle which will mimic the movement of an end rod particle. We first need to register a ParticleType in your mod initializer class using your mod id."
+      },
+      {
+        "title": "Client-Side Registration {#client-side-registration}",
+        "level": 2,
+        "summary": "After you have registered the particle in the ModInitializer entrypoint, you will also need to register the particle in the ClientModInitializer entrypoint."
+      },
+      {
+        "title": "Creating a JSON File and Adding Textures {#creating-a-json-file-and-adding-textures}",
+        "level": 2,
+        "summary": "You will need to create 2 folders in your resources/assets/example-mod/ folder. | Folder Path          | Explanation                                                                          | |----..."
+      },
+      {
+        "title": "Testing the New Particle {#testing-the-new-particle}",
+        "level": 2,
+        "summary": "Once you have completed the JSON file and saved your work, you are good to load up Minecraft and test everything out! You can see if everything has worked by typing the following command:"
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "8502a7cb91380977a0adb7e95715342c842f5aaa36926a1553c73eee6b795109"
+  },
+  {
+    "id": "1.20.4/develop_sounds_custom",
+    "version": "1.20.4",
+    "label": "Creating Custom Sounds",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/sounds/custom.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "event",
+      "sides",
+      "resource",
+      "rendering"
+    ],
+    "firstParagraph": "Your audio files need to be formatted in a specific way. OGG Vorbis is an open container format for multimedia data, such as audio, and is used in case of Minecraft's sound files.",
+    "sections": [
+      {
+        "title": "Preparing the Audio File {#preparing-the-audio-file}",
+        "level": 2,
+        "summary": "Your audio files need to be formatted in a specific way. OGG Vorbis is an open container format for multimedia data, such as audio, and is used in case of Minecraft's sound files."
+      },
+      {
+        "title": "Loading the Audio File {#loading-the-audio-file}",
+        "level": 2,
+        "summary": "Add the new resources/assets/example-mod/sounds directory for the sounds in your mod, and put the exported audio file metal_whistle.ogg in there."
+      },
+      {
+        "title": "Registering the Custom Sound {#registering-the-custom-sound}",
+        "level": 2,
+        "summary": "To add the custom sound to the mod, register a SoundEvent in the class which implements the ModInitializer entrypoint."
+      },
+      {
+        "title": "Cleaning up the Mess {#cleaning-up-the-mess}",
+        "level": 2,
+        "summary": "Depending on how many Registry entries there are, this can get messy quickly. To avoid that, we can make use of a new helper class. Add two new methods to the newly created helper class."
+      },
+      {
+        "title": "Using the Custom SoundEvent {#using-the-custom-soundevent}",
+        "level": 2,
+        "summary": "Use the helper class to access the custom SoundEvent. Checkout the Playing SoundEvents page to learn how to play sounds."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "a6476b463d56abccb1013af31c633f0e4f4c65835403e160b1187dd3398e8024"
+  },
+  {
+    "id": "1.20.4/develop_sounds_using-sounds",
+    "version": "1.20.4",
+    "label": "Playing Sounds",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/sounds/using-sounds.md",
+    "tags": [
+      "event",
+      "sides"
+    ],
+    "firstParagraph": "Make sure to execute the playSound() method on the logical server side when using sounds!",
+    "sections": [
+      {
+        "title": "Using Sounds in Your Mod {#using-sounds}",
+        "level": 2,
+        "summary": "Make sure to execute the playSound() method on the logical server side when using sounds! In this example, the interactLivingEntity() and useOn() methods for a custom interactive item are used to p..."
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "83153a3f70fcb6786d50ef7983ab364418f6b2827789205a7a9caca8f7e249f6"
+  },
+  {
+    "id": "1.20.4/develop_text-and-translations",
+    "version": "1.20.4",
+    "label": "Text and Translations",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/text-and-translations.md",
+    "tags": [
+      "event",
+      "command",
+      "rendering"
+    ],
+    "firstParagraph": "The simplest way to create a Component object is to make a literal. This is just a string that will be displayed as-is, by default without any formatting.",
+    "sections": [
+      {
+        "title": "Literal Text Components {#text-literals}",
+        "level": 2,
+        "summary": "The simplest way to create a Component object is to make a literal. This is just a string that will be displayed as-is, by default without any formatting. These are created using the Component."
+      },
+      {
+        "title": "Translatable Text Components {#translatable-text}",
+        "level": 2,
+        "summary": "When you want to provide multiple translations for the same string of text, you can use the Component.translatable method to reference a translation key in any language file."
+      },
+      {
+        "title": "Serializing Text {#serializing-text}",
+        "level": 2,
+        "summary": "<!-- NOTE: These have been put into the reference mod as they're likely to be updated to codecs in the next few updates."
+      },
+      {
+        "title": "Deserializing Text {#deserializing-text}",
+        "level": 2,
+        "summary": "Furthermore, to deserialize a JSON text object into an actual Component class, you can use the fromJson method: @code transcludeWith=:::2"
+      },
+      {
+        "title": "Formatting Text {#formatting-text}",
+        "level": 2,
+        "summary": "You may be familiar with Minecraft's formatting standards: You can apply these formattings using the ChatFormatting enum on the MutableComponent class:"
+      }
+    ],
+    "source": "github_raw_versioned",
+    "sha256": "f068cd08ed2eb0263050d28521cc3ef2411761da801c222352756483ee8f0f6b"
   }
 ]

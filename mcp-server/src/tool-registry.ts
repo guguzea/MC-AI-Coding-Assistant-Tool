@@ -98,7 +98,7 @@ import {
 export const queryApiSchema = z.object({
   className: z.string().describe("类全限定名，如 net.minecraft.world.entity.LivingEntity"),
   methodName: z.string().optional().describe("方法名，可选，如 getHealth"),
-  version: z.string().optional().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
+  version: z.string().min(1).describe("Minecraft 版本，必填，禁止默认 1.20.1"),
 });
 
 export const getMethodParamsSchema = z.object({

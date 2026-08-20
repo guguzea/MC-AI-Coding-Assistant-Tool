@@ -29,7 +29,7 @@ public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPE
 ENTITY_TYPES.register(modEventBus);
 ```
 
-> **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，1.20.7+ 重命名为 `SpawnGroup`。
+> **注意**：1.19.4 Forge / Mojmap 使用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是 Forge 1.20.7 重命名。
 
 ## 实体类基础结构
 

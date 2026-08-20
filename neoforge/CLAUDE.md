@@ -6,7 +6,7 @@
 Decision:
 → list_neoforge_versions + 工程 neo_version / minecraft_version
 → IF 版本 ∈ 1.20.4 | 1.20.6 | 1.21.1 | 1.21.3 | 1.21.5 | 1.21.8 | 1.21.10 | 1.21.11 | 26.1 → 只读 neoforge/<ver>/AGENTS.md 与该档 00–10
-→ ELSE IF 版本 ∈ 1.20.1 → 禁止读邻档 00–10，改口 search_neoforge_docs（1.20.1 有 Forge 兼容数据）
+→ ELSE IF 版本 ∈ 1.20.1 → session 注入 Forge 1.20.1 的 02–08/10（兼容层）；仍禁止读 neoforge/1.20.4 邻档 00–10。文档走 search_neoforge_docs（version=1.20.1）
 → ELSE → 询问用户。禁止默默读扁平 .cursor/rules
 ```
 
@@ -16,17 +16,18 @@ Decision:
 
 ## 禁止（写进本文件即错）
 
-- 把 NeoForge 网络写成 `SimpleChannel` / `IMessage` / `NetworkRegistry.newSimpleChannel`
+- 把 NeoForge **1.20.4+** 网络写成 `SimpleChannel` / `IMessage` / `NetworkRegistry.newSimpleChannel`
 - `NeoForgeAddonPlugin`、`BuildPlugin + init()` 当 Neo 入口
 - 邻档 00–10 顶上未建档版本
 - 官方 MDK 404 / 无 pin 时用邻版 MDK 顶上（必须返回 `MDK_NOT_PINNED`，禁止邻版）
 
 ## 网络口径（按档）
 
+- 1.20.1：Forge 兼容层，网络 SimpleChannel、数据 Capability（session overlay Forge 1.20.1；包名禁止默写）
 - 1.20.4：`RegisterPayloadHandlerEvent`（单数）+ `IPayloadRegistrar`
 - 1.21.1+：`RegisterPayloadHandlersEvent` + `PayloadRegistrar`
 - 26.1：`Identifier` + `RegisterPayloadHandlersEvent`（不要 `new ResourceLocation`）
-- Forge 1.20.1 才是 SimpleChannel
+- Forge 1.20.1 / Neo 1.20.1 才是 SimpleChannel 形态；Neo 1.20.4+ 才是 Payload
 
 ## 入口
 

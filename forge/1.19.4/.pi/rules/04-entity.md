@@ -28,7 +28,6 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
     .build(String modId)
 ```
 
-> **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，1.20.7+ 重命名为 `SpawnGroup`。两者功能完全相同。
 
 ### 实体属性（Attribute）
 
@@ -70,7 +69,6 @@ IF 实体需要完全控制渲染和碰撞
 
 ### Decision: 选择 MobCategory（生物分类）
 
-> **注意**：1.19.4 使用 `MobCategory`，1.20.7+ 使用 `SpawnGroup`。
 
 ```
 IF 自然生成的动物/怪物

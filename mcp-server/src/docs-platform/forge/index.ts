@@ -25,7 +25,7 @@ import {
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
@@ -781,6 +781,7 @@ export async function searchDocs(
         primerNote = "结果含 source=primer（迁移 Primer，不是 loader API 全文）";
       }
     }
+    const loaderWikiWarn = thinLoaderWikiWarning(platform, finalResults);
     return {
       content: [
         {
@@ -795,6 +796,7 @@ export async function searchDocs(
               ...(platform === "forge" && args.version === "1.20.4"
                 ? { fallback: true, source_route: "1.20.x" }
                 : {}),
+              ...(loaderWikiWarn ? { wikiIsCurrentSite: true } : {}),
               warning: joinSearchWarnings(
                 threwMissing
                   ? `NeoForge 无独立 ${args.version} 主文档树。未建档版本禁止读邻档 00–10。`
@@ -808,6 +810,7 @@ export async function searchDocs(
                 primerNote,
                 missingSemanticDbWarning(semanticHits === null),
                 semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
+                loaderWikiWarn,
               ),
               platform,
               tags: args.tags,
@@ -863,12 +866,15 @@ export async function getDocSummary(
       platform === "forge" || platform === "neoforge"
         ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
         : undefined;
+    const wikiWarn = thinLoaderWikiWarning(platform, [result]);
     return {
       content: [{
         type: "text",
         text: JSON.stringify({
           ...result,
-          ...(extra?.warning ? { warning: extra.warning, versionFallback: extra.versionFallback } : {}),
+          warning: joinSearchWarnings(extra?.warning, wikiWarn),
+          ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
+          ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
         }, null, 2),
       }],
     };
@@ -928,12 +934,17 @@ export async function getDocFull(
       platform === "forge" || platform === "neoforge"
         ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
         : undefined;
+    const wikiWarn = thinLoaderWikiWarning(platform, [
+      { id: args.id, url: result.meta?.url },
+    ]);
     return {
       content: [{
         type: "text",
         text: JSON.stringify({
           ...result,
-          ...(extra?.warning ? { warning: extra.warning, versionFallback: extra.versionFallback } : {}),
+          warning: joinSearchWarnings(extra?.warning, wikiWarn),
+          ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
+          ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
         }, null, 2),
       }],
     };

@@ -11,5 +11,468 @@
     "sectionCount": 1,
     "source": "liteloader-docs",
     "fetchedAt": "2026-08-16T09:25:15.995Z"
+  },
+  {
+    "id": "1.10.2/wiki_dev",
+    "version": "1.10.2",
+    "label": "developer home",
+    "url": "https://www.liteloader.com/explore/docs/dev",
+    "tags": [
+      "wiki"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "8e19bb5b953d43c2e3638ee999fe5924174c1eccfadc95e7763597b51f597edc"
+  },
+  {
+    "id": "1.10.2/wiki_dev_quickstart",
+    "version": "1.10.2",
+    "label": "quick start guide",
+    "url": "https://www.liteloader.com/explore/docs/dev:quickstart",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "0eb80a86e9767f1437c710aace65d21d2cba68d935a35ba5db936b512a74a773"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial",
+    "version": "1.10.2",
+    "label": "tutorial",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "779de252b28104153e5f7131382086553546a12e8c14dab12e2f03788c130881"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial_eclipse",
+    "version": "1.10.2",
+    "label": "1 - setting up eclipse",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial:eclipse",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "cc639d32513970ebd1d380051c1e1083c32cd3e8e5887788d9e05b1e8b89803c"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial_environment",
+    "version": "1.10.2",
+    "label": "5 - Recommended Environment",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial:environment",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "ead191224457ae2d721163991faa2b1f1e785decacd2763014d674d931e81e47"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial_mcp",
+    "version": "1.10.2",
+    "label": "3 - Setting up MCP",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial:mcp",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "df9de98df23a0efbb667f36ba2cee37571c81ec0cc8d8dcb5faa3a943de379d8"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial_source",
+    "version": "1.10.2",
+    "label": "4 - Getting the LiteLoader source",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial:source",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "506339a3f45f618820a6f9d4cb30692f0f55280bd2da7212d06064535b9237a3"
+  },
+  {
+    "id": "1.10.2/wiki_dev_tutorial_subversion",
+    "version": "1.10.2",
+    "label": "2 - Installing SVN Support",
+    "url": "https://www.liteloader.com/explore/docs/dev:tutorial:subversion",
+    "tags": [
+      "wiki",
+      "tutorial"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "932d21dd69718a2d154928044a56f8ffcfad3700f98b50880887ba7260afb6e1"
+  },
+  {
+    "id": "1.10.2/wiki_dev_interfaces",
+    "version": "1.10.2",
+    "label": "Interfaces",
+    "url": "https://www.liteloader.com/explore/docs/dev:interfaces",
+    "tags": [
+      "wiki",
+      "api"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "db2c0162d60d084ac50161b65c511c8e1d30d1b4d51a092d0283582cf13ba4ef"
+  },
+  {
+    "id": "1.10.2/wiki_dev_litemod_json",
+    "version": "1.10.2",
+    "label": "Metadata and litemod.json",
+    "url": "https://www.liteloader.com/explore/docs/dev:litemod.json",
+    "tags": [
+      "wiki",
+      "metadata"
+    ],
+    "priority": "⭐",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "2b1da3e44b038041ef2869f89a5fb9783825622b4537666c8a41cc5023ae3618"
+  },
+  {
+    "id": "1.10.2/wiki_dev_revisions",
+    "version": "1.10.2",
+    "label": "Version and Revision",
+    "url": "https://www.liteloader.com/explore/docs/dev:revisions",
+    "tags": [
+      "wiki"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "2cbad30e26662dbd20e7c00d86e481158518b67a1a28a8441b277d9f25379103"
+  },
+  {
+    "id": "1.10.2/wiki_info_tweak",
+    "version": "1.10.2",
+    "label": "about tweaks",
+    "url": "https://www.liteloader.com/explore/docs/info:tweak",
+    "tags": [
+      "wiki",
+      "loader"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "13c4f1165db00031072d8df5750b8a753c041c75f3810c9a78d67609798bc63a"
+  },
+  {
+    "id": "1.10.2/wiki_info_fml",
+    "version": "1.10.2",
+    "label": "fml",
+    "url": "https://www.liteloader.com/explore/docs/info:fml",
+    "tags": [
+      "wiki",
+      "loader"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "e4633aac8a1372c2f0e58a9d0a35a2ccb30652a0d8f654bc4146309476298caf"
+  },
+  {
+    "id": "1.10.2/wiki_info_modloader",
+    "version": "1.10.2",
+    "label": "modloader",
+    "url": "https://www.liteloader.com/explore/docs/info:modloader",
+    "tags": [
+      "wiki",
+      "loader"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "65a2702557f45f7cfd6c466991140631ee1949095c037d8b37cef74ae911d90c"
+  },
+  {
+    "id": "1.10.2/wiki_info_modsystem",
+    "version": "1.10.2",
+    "label": "ModSystems",
+    "url": "https://www.liteloader.com/explore/docs/info:modsystem",
+    "tags": [
+      "wiki",
+      "loader"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "06317436d58f0e16c224aaa6edf5af0800df3018b83a4eb6f5a42c1e4ec4447f"
+  },
+  {
+    "id": "1.10.2/wiki_info_versionedmods",
+    "version": "1.10.2",
+    "label": "versioned \"mods\" folder",
+    "url": "https://www.liteloader.com/explore/docs/info:versionedmods",
+    "tags": [
+      "wiki",
+      "loader"
+    ],
+    "priority": "🟢",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "3951fec182ca01361c80bd05fba300e036c4b52572e081ef39bc22ce232b7d78"
+  },
+  {
+    "id": "1.10.2/wiki_user_install",
+    "version": "1.10.2",
+    "label": "install",
+    "url": "https://www.liteloader.com/explore/docs/user:install",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "126bc1566555636494c694870298053f096ad3d1d07caecb47c9e1e4c9536f9f"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_installer",
+    "version": "1.10.2",
+    "label": "Installer",
+    "url": "https://www.liteloader.com/explore/docs/user:install:installer",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "a6a23b8e4525b26efd498a28106b68a46a90c35ce5b0958da1c00388b4e1596d"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_forge",
+    "version": "1.10.2",
+    "label": "loading with fml",
+    "url": "https://www.liteloader.com/explore/docs/user:install:forge",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "e2906b367436ec72271283534ab7156e08fda835c39101f366eb1efad55b4cc0"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_multimc",
+    "version": "1.10.2",
+    "label": "multimc",
+    "url": "https://www.liteloader.com/explore/docs/user:install:multimc",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "bec9b08eb51ebae156b251345ca4370cf4445a19b7e46676e4d592b5145cdd6a"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual",
+    "version": "1.10.2",
+    "label": "manual install",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "d12b0e9730ac6a47211d8b2d8cee878c4ff27048f4ce118242e54333d6817d4e"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_trail",
+    "version": "1.10.2",
+    "label": "installation trail",
+    "url": "https://www.liteloader.com/explore/docs/user:install:trail",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "3cd770627eef75d1a52b7da076acc884ff7264a44a7d438f1a3d83677ad07005"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_othertweaks",
+    "version": "1.10.2",
+    "label": "tweak mod installation",
+    "url": "https://www.liteloader.com/explore/docs/user:install:othertweaks",
+    "tags": [
+      "wiki",
+      "loader",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "8538ab648f4167a9dd824331e0654f670ee735377ae79a28fed28751c90f264b"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_6_4_vanilla",
+    "version": "1.10.2",
+    "label": "manual install for 1.6.4",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.6.4:vanilla",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "19d04e53a96a99960d9040a71117e81b4d2680a4179ef9898b52f9b4ec913fc0"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_7_2_vanilla",
+    "version": "1.10.2",
+    "label": "manual install for 1.7.2",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.7.2:vanilla",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "2b6096cf535f33589b1a798698203d6b67f43f208eafa678bd5e2545a56a17d4"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_7_10_vanilla",
+    "version": "1.10.2",
+    "label": "manual install for 1.7.10",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.7.10:vanilla",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "829348d70929b4d6e7a2b90f88b857c77c4173442e4a580ff9540e1a5c7ea0ef"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_6_4",
+    "version": "1.10.2",
+    "label": "manual install for 1.6.4",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.6.4",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "bd7f45f44185f569f490e2409f50270767d76289beb7d1587c26d9f7268dabd2"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_7_2",
+    "version": "1.10.2",
+    "label": "manual install for 1.7.2",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.7.2",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "8f054b60c55c266b884a599924648658cc54ce3a0781bf2a361f82860674baeb"
+  },
+  {
+    "id": "1.10.2/wiki_user_install_manual_1_7_10",
+    "version": "1.10.2",
+    "label": "manual install for 1.7.10",
+    "url": "https://www.liteloader.com/explore/docs/user:install:manual:1.7.10",
+    "tags": [
+      "wiki",
+      "install"
+    ],
+    "priority": "🟡",
+    "sectionCount": 1,
+    "source": "liteloader-wiki",
+    "wikiIsCurrentSite": true,
+    "fetchedAt": "2026-08-20T10:59:23.750Z",
+    "sha256": "cf905ba202f2d1995c62945deca2cf29b61b3fcee98911d76515bdef5eaf7039"
   }
 ]

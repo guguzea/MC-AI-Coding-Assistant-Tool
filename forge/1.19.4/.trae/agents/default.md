@@ -147,8 +147,6 @@ src/main/java/
 | Fluid 注册 | `FluidType` | `FluidType` | 一致 |
 | BlockEntity | 相同 | 相同 | - |
 | DataGen | `DataGenerators` | 相同 | - |
-| SpawnGroup | `MobCategory`（1.19.4） | `SpawnGroup`（1.20.7+） | 1.19.4 用 `MobCategory` |
-
-> **注意**：1.19.4 使用 `MobCategory` 作为生物分类枚举，而 1.20.7+ 重命名为 `SpawnGroup`。两者功能完全相同，只是类名不同。
+| 生物分类 | `MobCategory` | `MobCategory` | Forge / Mojmap 用 `MobCategory`；`SpawnGroup` 是 Yarn 名 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

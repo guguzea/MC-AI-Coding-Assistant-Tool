@@ -50,7 +50,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
     version: "1.20.4",
     forgeVersion: "49.x",
     note: "Forge 1.20.4 为最后一个官方版本，之后转向 NeoForge",
-    recommendation: "使用 DeferredRegister 作为主要注册方式；Forge 1.20.4 + NeoForge 20.4.237，与 1.20.1 API 基本兼容",
+    recommendation: "使用 DeferredRegister 作为主要注册方式；Forge 1.20.4 为最后官方版",
     keyChanges: [
       "Forge 1.20.4 为最后官方版，后续 NeoForge 维护",
       "与 1.20.1 注册 API 相同",
@@ -108,7 +108,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
     keyChanges: [
       "Java 16 → Java 17",
       "DeferredRegister 广泛使用",
-      "ForgeGradle 7 项目结构稳定",
+      "ForgeGradle 5 项目结构（不是 ForgeGradle 7）",
     ],
     gotchas: [
       "数据生成器（DataGenerator）架构与 1.17.x 有差异",
@@ -126,7 +126,7 @@ const VERSION_DB: Record<string, VersionInfo> = {
     recommendation: "DeferredRegister 正式引入，推荐使用",
     keyChanges: [
       "Java 8 → Java 16（必须）",
-      "ForgeGradle 7 完全重构",
+      "ForgeGradle 5 重构（不是 ForgeGradle 7）",
       "DeferredRegister 正式引入",
       "数据生成器完全重构",
       "包名从 net.minecraftforge 保持，但结构变化大",
@@ -303,6 +303,7 @@ export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> 
   }
 
   return {
+    ok: false,
     version,
     forgeVersion: "unknown",
     recommendation: `未收录版本 ${version}，请查阅官方文档`,

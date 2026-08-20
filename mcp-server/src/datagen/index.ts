@@ -138,7 +138,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       ],
     };
   }
-  if (platform === "neoforge" && !neoLegacy && !neoClient && !neo2111 && !neo261) {
+  if (platform === "neoforge" && ver !== "1.20.1" && !neoLegacy && !neoClient && !neo2111 && !neo261) {
     return {
       code: null,
       usedModId: query.modId,
@@ -202,6 +202,11 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   } else if (platform === "neoforge" && neoLegacy) {
     code = generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase);
   } else {
+    if (platform === "neoforge" && ver === "1.20.1") {
+      warnings.push(
+        "NeoForge 1.20.1 Datagen 复用 Forge 1.20.1 模板骨架；import 跟工程包名与 search_neoforge_docs(version=1.20.1)，禁止默写。不要用 1.20.4+ DeferredBlock / Attachment。",
+      );
+    }
     switch (providerType) {
       case "recipe":
         code = forge.generateRecipe(modId, targetName, classBase);

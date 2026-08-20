@@ -231,6 +231,7 @@ export function generateNetworkPacket(
 ): GeneratorResult {
   const allowed = [
     "forge_1.20.1",
+    "neoforge_1.20.1",
     "neoforge_1.20.4",
     "neoforge_1.21",
     "neoforge_1.21.5",
@@ -245,7 +246,7 @@ export function generateNetworkPacket(
     return {
       code: null,
       errors: [
-        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_1.21.5 | neoforge_1.21.8 | neoforge_1.21.10 | neoforge_1.21.11 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
+        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_1.21.5 | neoforge_1.21.8 | neoforge_1.21.10 | neoforge_1.21.11 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
           noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
@@ -504,6 +505,40 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     };
   }
 
+  if (platform === "neoforge_1.20.1") {
+    return {
+      code: `// NeoForge 1.20.1 — SimpleChannel 形态（与 Forge 1.20.1 API 兼容）
+package com.example.${mod.value}.network;
+
+import net.minecraft.network.FriendlyByteBuf;
+import java.util.function.Supplier;
+// NetworkEvent / SimpleChannel / registerMessage 的 import 跟工程现有包名与 search_neoforge_docs(version=1.20.1)，禁止默写。
+
+public class ${pascal}Packet {
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public static void encode(${pascal}Packet msg, FriendlyByteBuf buf) {
+        buf.writeUtf(msg.message);
+    }
+
+    public static ${pascal}Packet decode(FriendlyByteBuf buf) {
+        return new ${pascal}Packet(buf.readUtf());
+    }
+
+    public static void handle(${pascal}Packet msg, Supplier<?> ctx) {
+        // ctx 类型跟工程 NetworkEvent.Context；enqueueWork + setPacketHandled
+    }
+}
+`,
+      warnings: [
+        "NeoForge 1.20.1 网络是 SimpleChannel 形态，不是 1.20.4+ Payload。",
+        "包名以工程 import 与 search_neoforge_docs(version=1.20.1) 为准，禁止默写。",
+      ],
+    };
+  }
+
   return {
     code: `// Forge 1.20.1 — SimpleChannel 消息骨架
 package com.example.${mod.value}.network;
@@ -558,11 +593,13 @@ export function generateCapability(
     };
   }
   if (p === "neoforge") {
-    if (!isNeoForgeAttachmentVersion(version)) {
+    if (version.trim() === "1.20.1") {
+      // Capability 形态，见下方骨架
+    } else if (!isNeoForgeAttachmentVersion(version)) {
       return {
         code: null,
         errors: [
-          `NeoForge Data Attachment 仅支持 1.20.4+（收到 version=${version}）。` +
+          `NeoForge Data Attachment 仅支持 1.20.4+（收到 version=${version}）。1.20.1 请走 Capability 形态。` +
             noNativeGeneratorError("search_neoforge_docs", "规则 05 / mc-capability Skill"),
         ],
       };
@@ -585,6 +622,24 @@ export function generateCapability(
   const cap = normalizeModIdentifier(capName);
   if (!mod || !cap) return { code: null, errors: ["无效标识符"] };
   const pascal = stripJavaTypeSuffix(toJavaClassName(capName), "Capability");
+
+  if (p === "neoforge" && version.trim() === "1.20.1") {
+    return {
+      code: `// NeoForge 1.20.1 — Capability 形态（与 Forge 1.20.1 API 兼容；不是 Attachment）
+package com.example.${mod.value}.capability;
+
+// Capability / CapabilityManager / CapabilityToken 的 import 跟工程现有包名与 search_neoforge_docs(version=1.20.1)，禁止默写。
+
+public class ${pascal}Capability {
+    // public static final Capability<I${pascal}> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
+}
+`,
+      warnings: [
+        "NeoForge 1.20.1 数据附件是 Capability，不是 1.20.4+ Attachment。",
+        "包名以工程 import 与 search_neoforge_docs(version=1.20.1) 为准，禁止默写。",
+      ],
+    };
+  }
 
   if (p === "neoforge") {
     return {

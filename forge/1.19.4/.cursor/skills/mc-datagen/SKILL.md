@@ -29,9 +29,11 @@ public class DataGenerators {
             ModBlockTagsProvider blockTags = new ModBlockTagsProvider(output, event.getLookupProvider());
             generator.addProvider(true, blockTags);
             generator.addProvider(true, new ModItemTagsProvider(output, event.getLookupProvider(), blockTags.contentsGetter()));
-            generator.addProvider(true, new ModRecipeProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, output ->
-                new ModLootTableProvider(output, event.getLookupProvider()));
+            generator.addProvider(true, new ModRecipeProvider(output));
+            generator.addProvider(true, new ModLootTableProvider(output,
+                Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(
+                    ModBlockLootSubProvider::new, LootContextParamSets.BLOCK))));
         }
 
         if (event.includeClient()) {
@@ -61,8 +63,8 @@ public class DataGenerators {
 
 ```java
 public class ModRecipeProvider extends RecipeProvider {
-    public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public ModRecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override
@@ -133,13 +135,12 @@ public class ModItemModelsProvider extends ItemModelProvider {
 ```java
 // ModLootTableProvider
 public class ModLootTableProvider extends LootTableProvider {
-    public ModLootTableProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+    public ModLootTableProvider(PackOutput output) {
         super(output, Collections.emptySet(),
             List.of(
                 new SubProviderEntry(ModBlockLootSubProvider::new, LootContextParamSets.BLOCK),
                 new SubProviderEntry(ModEntityLootSubProvider::new, LootContextParamSets.EMPTY)
-            ),
-            registries
+            )
         );
     }
 }
@@ -151,7 +152,7 @@ public class ModBlockLootSubProvider extends BlockLootSubProvider {
     }
 
     @Override
-    protected void addTables() {
+    protected void generate() {
         this.dropSelf(ModBlocks.MY_BLOCK.get());
     }
 

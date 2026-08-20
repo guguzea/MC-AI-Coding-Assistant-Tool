@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-08-20T06:12:06.810Z",
+  "built_at": "2026-08-20T11:12:46.219Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -220,6 +220,18 @@
     },
     {
       "platform": "fabric",
+      "version": "1.21.10",
+      "source": "fabric-wiki",
+      "path": "H:/MC_skill/data/fabric_1.21.10/fabric-wiki/1.21.10/semantic/db.sqlite",
+      "chunks": 126,
+      "embedded": 126,
+      "built_at": "2026-08-20T11:12:46.163Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "1476a358e9d3635fc5c05aba0947d8bbfd4ef882c8470c27ab9eaee09c87ee31"
+    },
+    {
+      "platform": "fabric",
       "version": "1.21.11",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.21.11/fabric-docs/1.21.11/semantic/db.sqlite",
@@ -280,6 +292,18 @@
     },
     {
       "platform": "fabric",
+      "version": "1.21.4",
+      "source": "fabric-wiki",
+      "path": "H:/MC_skill/data/fabric_1.21.4/fabric-wiki/1.21.4/semantic/db.sqlite",
+      "chunks": 126,
+      "embedded": 126,
+      "built_at": "2026-08-20T11:12:31.920Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "cbf197b2c82d6adb33c9acd9338232187210e9965ac910544d3f5405c0e885c1"
+    },
+    {
+      "platform": "fabric",
       "version": "1.21.8",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.21.8/fabric-docs/1.21.8/semantic/db.sqlite",
@@ -289,6 +313,18 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "a9eb3900443e2e529f099e67c7789b53e4391eede0e7d20b3396abd886702189"
+    },
+    {
+      "platform": "fabric",
+      "version": "1.21.8",
+      "source": "fabric-wiki",
+      "path": "H:/MC_skill/data/fabric_1.21.8/fabric-wiki/1.21.8/semantic/db.sqlite",
+      "chunks": 126,
+      "embedded": 126,
+      "built_at": "2026-08-20T11:12:39.665Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "f7a973d0c9bdc4fdd7f1cafba2d18e4063cfb9e3429133f368b8999d6ec051c0"
     },
     {
       "platform": "fabric",
@@ -421,6 +457,42 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "9ce31523ad793cb6cbe32818ad96c6ef2ea61cc96c33d63326d9089e0ba3e786"
+    },
+    {
+      "platform": "liteloader",
+      "version": "1.10.2",
+      "source": "liteloader-docs",
+      "path": "H:/MC_skill/data/liteloader_1.10.2/liteloader-docs/1.10.2/semantic/db.sqlite",
+      "chunks": 120,
+      "embedded": 120,
+      "built_at": "2026-08-20T11:11:55.127Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "7d2e31d0620727e53a3d5a8e6a5eb09e80e30558a224721f619af58409da2041"
+    },
+    {
+      "platform": "liteloader",
+      "version": "1.12.2",
+      "source": "liteloader-docs",
+      "path": "H:/MC_skill/data/liteloader_1.12.2/liteloader-docs/1.12.2/semantic/db.sqlite",
+      "chunks": 124,
+      "embedded": 124,
+      "built_at": "2026-08-20T11:11:27.575Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "fa3b6426b20a4e07f8e6dbc9f309dccf3ae3436a4c088f9918360ac2aaa255a5"
+    },
+    {
+      "platform": "liteloader",
+      "version": "1.8.9",
+      "source": "liteloader-docs",
+      "path": "H:/MC_skill/data/liteloader_1.8.9/liteloader-docs/1.8.9/semantic/db.sqlite",
+      "chunks": 120,
+      "embedded": 120,
+      "built_at": "2026-08-20T11:12:08.572Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "6704695ced21e59ebecec05c5c936a793f23ddfc6960a5f76bf1a2e3e216cc37"
     },
     {
       "platform": "neoforge",
@@ -589,6 +661,18 @@
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
       "sha256": "2a0bfa6352db722e6b290b9baa395c5c6138b84d348a907a175fa0290b55b94a"
+    },
+    {
+      "platform": "rift",
+      "version": "1.13.2",
+      "source": "rift-docs",
+      "path": "H:/MC_skill/data/rift_1.13.2/rift-docs/1.13.2/semantic/db.sqlite",
+      "chunks": 30,
+      "embedded": 30,
+      "built_at": "2026-08-20T11:12:17.059Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "1c8765d586fca76724b5df895a1f9bf4bea462b1dffce872eded3e21e566ba9c"
     }
   ]
 }

@@ -21,7 +21,19 @@ export type DetectModProjectArgs = {
 type DetectAction = ReturnType<typeof actionable>;
 
 export type DetectModProjectResult =
-  | { ok: false; action: DetectAction; projectRoot?: string; resolvedFrom?: string }
+  | {
+      ok: false;
+      action: DetectAction;
+      projectRoot?: string;
+      resolvedFrom?: string;
+      loader?: string;
+      platform?: string;
+      minecraftVersion?: string | null;
+      knowledgeVersion?: string;
+      packFound?: boolean;
+      candidates?: string[];
+      warnings?: string[];
+    }
   | {
       ok: true;
       projectRoot: string;
@@ -186,7 +198,7 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
         ? `精确包不存在。同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默当成 ${candidates[0]}。`
         : "或 activate_platform_pack action=list 查看已建档版本";
     return {
-      ok: true,
+      ok: false,
       projectRoot: resolved.root,
       resolvedFrom: resolved.from,
       loader,

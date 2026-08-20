@@ -1,0 +1,42 @@
+~~META:title=manual install for 1.7.2~~
+
+The most important thing to understand when installing manually is that the version you create must have a consistent **id**. You must use the same **id** for every part of the installation process. In the example below we will use the id ''**1.7.2-LiteLoader1.7.2**'', if you choose a different **id** then you *must* alter this *everywhere* that the ID appears in order for the version to work.
+
+=== installation steps ===
+
+* First navigate to the ''versions'' folder inside your ''.minecraft'' folder
+* Create a folder in ''versions'' with the **id** of your new version, eg. ''**1.7.2-LiteLoader1.7.2**''
+* Inside the new folder create an empty text file with the **id** of your new version and the extension ''**.json**'', eg ''**1.7.2-LiteLoader1.7.2.json**''
+* Open the new file with a text editor and paste in the following JSON code:
+
+
+<code php>{
+    "id": "1.7.10-LiteLoader1.7.2",
+    "time": "2013-10-25T14:00:00+01:00",
+    "releaseTime": "2013-10-25T14:00:00+01:00",
+    "type": "release",
+    "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token} --tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker",
+    "libraries": [
+        {
+            "name": "com.mumfrey:liteloader:1.7.2",
+            "url": "http://dl.liteloader.com/versions/"
+        },
+        {
+            "name": "net.minecraft:launchwrapper:1.9"
+        },
+        {
+            "name": "org.ow2.asm:asm-all:4.1"
+        }
+    ],
+    "mainClass": "net.minecraft.launchwrapper.Launch",
+    "minimumLauncherVersion": 16,
+    "inheritsFrom": "1.7.2",
+    "jar": "1.7.2"
+}</code>
+
+* If you are using a different **id**, then you *must* change the value of ''id'' at the top of the file to match
+* If you wish to inherit from a different *version*, for example a version of *Minecraft Forge*, then change the ''inheritsFrom'' value to indicate the version to inherit from
+ * If you inherit from a different version, **you must copy the ''minecraftArguments'' value from the other version and append:** ''--tweakClass com.mumfrey.liteloader.launch.LiteLoaderTweaker''
+* Save the file and run the launcher
+* Create a new **Profile** and select the **version** you just created.
+* Launch the game and liteloader will be downloaded and installed automatically.

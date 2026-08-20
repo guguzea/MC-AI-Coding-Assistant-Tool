@@ -1,0 +1,17 @@
+~~META:title=tutorial~~
+
+Welcome to the LiteLoader tutorial, this tutorial walks you through setting up your environment and creating a LiteLoader mod.
+
+Tutorial Steps
+--------------
+
+The tutorial steps mirror the [[quickstart|Quick Start Guide]], so if you are an experienced mod-maker then you should start there rather than following these instructions.
+
+* [[dev:tutorial:eclipse|Set up Eclipse]]
+* [[dev:tutorial:subversion|Installing SVN Support]]
+* [[dev:tutorial:mcp|Setting up MCP]]
+* [[dev:tutorial:source|Getting the LiteLoader source]]
+* [[dev:tutorial:environment|Your JDK and Recommended Environment]]
+* [[dev:tutorial:project|Creating your mod project]]
+* [[dev:tutorial:class|Creating your mod class]]
+* [[dev:tutorial:ant|Creating your build script]]

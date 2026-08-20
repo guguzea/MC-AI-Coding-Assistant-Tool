@@ -49,12 +49,8 @@ const SAMPLE_TARGETS: Array<{ platform: string; version: string; source: string 
   { platform: "bedrock", version: "stable", source: "bedrock-docs" },
 ];
 
-/** 页少（1–3）故意不建向量库；缺 db 不算漏建 */
+/** 页少（1–3）故意不建向量库；缺 db 不算漏建。LiteLoader/Rift 已有官方 wiki + hybrid 库。 */
 const L0_ONLY_TREES = new Set([
-  "liteloader_1.12.2/liteloader-docs",
-  "liteloader_1.10.2/liteloader-docs",
-  "liteloader_1.8.9/liteloader-docs",
-  "rift_1.13.2/rift-docs",
   "modloader_1.6.4/modloader-docs",
   "modloader_1.5.2/modloader-docs",
   "modloader_1.2.5/modloader-docs",

@@ -1,0 +1,403 @@
+> 来源：https://fabricmc.net/wiki/doku.php?id=tutorial:blocks
+> 版本：1.21.10
+> 页面 ID：tutorial:blocks
+> 优先级：⭐
+> 抓取源：wiki_raw
+> 警告：现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5 等旧档 API。
+
+# Adding a Block
+Adding blocks to your mod follows a similar process to [adding an item](tutorial:items). You can create an instance of Block or a custom class, and then register it under Registries.BLOCK (for 1.19.3 and above) or Registry.BLOCK (for 1.19.2 and below). You also need to provide a texture and blockstate/model file to give your block visuals. For more information on the block model format, view the https://minecraft.wiki/Model|Minecraft Wiki Model page.
+
+## Creating a Block before 1.21.2
+:!: If you are using 1.21.2 or later versions, please directly see [#Registering blocks in 1.21.2+](#Registering blocks in 1.21.2+).
+
+Start by creating an instance of Block. It can be stored at any location, but we will start at the top of your ModInitializer. The Block constructor requires an AbstractBlock.Settings instance, which is a builder for configuring block properties. Fabric provides a FabricBlockSettings builder class with more available options.
+
+```java
+
+public class ExampleMod implements ModInitializer {
+
+    /* Declare and initialize our custom block instance.
+       We set our block material to `METAL`.
+       
+       `strength` sets both the hardness and the resistance of a block to the same value.
+       Hardness determines how long the block takes to break, and resistance determines how strong the block is against blast damage (e.g. explosions).
+       Stone has a hardness of 1.5f and a resistance of 6.0f, while Obsidian has a hardness of 50.0f and a resistance of 1200.0f.
+       
+       You can find the stats of all vanilla blocks in the class `Blocks`, where you can also reference other blocks.
+    */
+    
+    // For versions below 1.20:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+    // For versions below 1.20.5:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.create().strength(4.0f));
+    // For versions since 1.20.5 below 1.21.2:
+    public static final Block EXAMPLE_BLOCK = new Block(Block.Settings.create().strength(4.0f));
+    
+    @Override
+    public void onInitialize() {
+        
+    }
+}
+
+```
+
+## Registering your Block before 1.21.2
+Blocks should be registered under the Registries.BLOCK registry. Similar to registering [items](items), just call Registry.//register// and pass in the appropriate arguments. You can either register the block in onInitialize method or directly when creating the block instance in the static context, as the register method returns the block instance as well.
+
+If you're using version 1.19.2 or below, please replace Registries.BLOCK with Registry.BLOCK。
+
+```java
+
+public class ExampleMod implements ModInitializer {
+
+    // For versions below 1.20:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+    // For versions below 1.20.5:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.create().strength(4.0f));
+    // For versions since 1.20.5 below 1.21.2:
+    public static final Block EXAMPLE_BLOCK = new Block(Block.Settings.create().strength(4.0f));
+    
+    @Override
+    public void onInitialize() {
+        // For versions below 1.21:
+        // Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_block"), EXAMPLE_BLOCK);
+        // For versions since 1.21:
+        Registry.register(Registries.BLOCK, Identifier.of("tutorial", "example_block"), EXAMPLE_BLOCK);
+    }
+}
+
+```
+
+Your custom block will //not// be accessible as an item yet, but it can be seen in-game by using the command /setblock <position> tutorial:example_block.
+
+## Registering an Item for your Block before 1.21.2
+In most cases, you want to be able to place your block using an item. To do this, you need to register a corresponding BlockItem in the item registry. You can do this by registering an instance of BlockItem under Registries.ITEM. The registry name of the item should usually be the same as the registry name of the block.
+
+```java
+
+public class ExampleMod implements ModInitializer {
+
+    // For versions below 1.20:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+    // For versions below 1.20.5:
+    // public static final Block EXAMPLE_BLOCK = new Block(FabricBlockSettings.create().strength(4.0f));
+    // For versions since 1.20.5 below 1.21.2:
+    public static final Block EXAMPLE_BLOCK = new Block(Block.Settings.create().strength(4.0f));
+    
+    @Override
+    public void onInitialize() {
+        Registry.register(Registries.BLOCK, new Identifier("tutorial", "example_block"), EXAMPLE_BLOCK);
+        // For versions below 1.20.5:
+        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new FabricItemSettings()));
+        
+        // For versions below 1.21:
+        // Registry.register(Registries.ITEM, new Identifier("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new Item.Settings()));
+        
+        // For versions since 1.21:
+        Registry.register(Registries.ITEM, Identifier.of("tutorial", "example_block"), new BlockItem(EXAMPLE_BLOCK, new Item.Settings()));
+    }
+}
+
+```
+
+## Best practice of registering Blocks before 1.21.2
+:!: This section does not apply to versions 1.21.2 and later.
+
+Sometimes you have many blocks in the mod. If you register them in such ways, you have to write complex codes for each of them, and the code will be messy. Therefore, similar to registering items, we create a separate class for blocks, and a utility methods to register the block and item.
+```java
+
+public final class TutorialBlocks {
+    public static final Block EXAMPLE_BLOCK = register("example_block", new Block(Block.Settings.create().strength(4.0f)));
+    
+    private static <T extends Block> T register(String path, T block) {
+        Registry.register(Registries.BLOCK, Identifier.of("tutorial", path), block);
+        Registry.register(Registries.ITEM, Identifier.of("tutorial", path), new BlockItem(block, new Item.Settings()));
+        return block;
+    }
+    
+    public static void initialize() {
+    }
+}
+
+```
+
+Remember to initialize the TutorialBlocks class in the ModInitializer:
+```java
+
+public class ExampleMod implements ModInitializer {
+    @Override
+    public void onInitialize() {
+        TutorialBlocks.initialize();
+    }
+}
+
+```
+
+## Registering Blocks in 1.21.2+
+In 1.21.2+, RegistryKey should be added into the AbstractBlock.Settings for the block, as well as Item.Settings for the item. It looks troublesome, but luckily, Minecraft's Blocks.//register// and Items.//register// helps you do that.
+
+```java
+
+public class TutorialBlocks {
+  public static final Block EXAMPLE_BLOCK = register("example_block", Block::new, Block.Settings.create().strength(4.0f));
+
+  private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
+    final Identifier identifier = Identifier.of("tutorial", path);
+    final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
+
+    final Block block = Blocks.register(registryKey, factory, settings);
+    Items.register(block);
+    return block;
+  }
+}
+
+```
+
+In the code above, Blocks.//register// helps you to write the registry key into the AbstractBlock.Settings at first, and then create the block instance and register. Items.register directly creates a simple BlockItem instance, use the id same to the block, and then register it. If you need more complex operations, such as creating subclasses of BlockItem, you may call other methods with different signatures which are also named Items.//register//.
+
+
+<!-- key:🟠 role:常见错误 -->
+
+Do not forget to static-load the class in the mod initializer:
+```java
+
+    public class ExampleMod implements ModInitializer {
+     
+      @Override
+      public void onInitialize() {
+        // ...
+     
+        TutorialBlocks.init();
+      }
+    }
+
+```
+
+## Giving your Block Visuals
+At this point, your new block will appear as a purple and black checkerboard pattern in-game. This is Minecraft's way of showing you that something went wrong while loading the block's assets (or visuals). A full list of issues will be printed to your log when you run your client. You will need these files to give your block visuals:
+  * A https://minecraft.wiki/w/Blockstates_definition|blockstates definition
+  * A https://minecraft.wiki/w/Model#Uses_of_models|baked block model
+  * A texture for the block
+  * //For version 1.21.3 and below:// An item model file (if the block has an item associated with it).
+  * //For version 1.21.4 and above:// An item model definition for the item (if the block has an item associated with it).
+
+The files should be located here:
+
+  * Blockstates definition: src/main/resources/assets/tutorial/blockstates/example_block.json
+  * Baked Block Model: src/main/resources/assets/tutorial/models/block/example_block.json
+  * Texture for the block: src/main/resources/assets/tutorial/textures/block/example_block.png
+  * //For version 1.21.3 and below:// Item Model: src/main/resources/assets/tutorial/models/item/example_block.json
+  * //For version 1.21.4 and above:// Item Model: src/main/resources/assets/tutorial/items/example_block.json
+
+The blockstate definition file determines which model a block should use depending on its blockstate. Our block doesn't have any properties so it has only one state, so we cover everything with `""`. 
+
+```JavaScript
+
+{
+  "variants": {
+    "": { "model": "tutorial:block/example_block" }
+  }
+}
+
+```
+
+The block model file defines the shape and texture of your block. Our model will have block/cube_allas a parent, which applies the texture all to //all// sides of the block.
+
+```JavaScript
+
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "tutorial:block/example_block"
+  }
+}
+
+```
+
+In most cases, you will want the block to look the same in item form. 
+
+In version 1.21.3 and below, you can make an item model that has the block model file as a parent, which makes it appear exactly like the block:
+
+```JavaScript
+
+{
+  "parent": "tutorial:block/example_block"
+}
+
+```
+
+For version 1.21.4 and above, you can create an item model definition for the corresponding to let the item directly use the block model:
+```JavaScript
+
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "tutorial:block/example_block"
+  }
+}
+
+```
+
+Load up Minecraft and your block should have visuals!
+
+## Configuring Block Drops
+To make your block drop items when broken, you will need a //loot table//. The following file will cause your block to drop its respective item form when broken: 
+
+For versions since 1.21, the path is src/main/resources/data/tutorial/**loot_table**/blocks/example_block.json. Before version 1.21, the path was src/main/resources/data/tutorial/**loot_tables**/blocks/example_block.json.
+
+```JavaScript
+
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tutorial:example_block"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}
+
+```
+
+The condition minecraft:survives_explosion means that, if the block is destroyed in an explosion with decay (such as creeper explosion, not TNT explosion), it //may not// drop. If there is no this condition, the block always drops in explosions with decay.
+
+In minecraft 1.17, there has been a change for breaking blocks. Now, to define harvest tools and harvest levels, we need to use tags. Read about tags at: [Tags Tutorial](tutorial:tags). The tags that we need to add the block to are:
+
+ * Harvest tool: src/main/resources/data/minecraft/tags/**block**/mineable/<tooltype>.json, where <tooltype> can be any of: axe, pickaxe, shovel or hoe (replace "//**block**//" with "//**blocks**//" for versions below 1.21)
+ * Harvest level: src/main/resources/data/minecraft/tags/**block**/needs_<tier>_tool.json, where <tier> can be any of: stone, iron or diamond (//not including// netherite) (replace "//**block**//" with "//**blocks**//" for versions below 1.21)
+
+```JavaScript
+
+{
+  "replace": false,
+  "values": [
+    "tutorial:example_block"
+  ]
+}
+
+```
+
+```JavaScript
+
+{
+  "replace": false,
+  "values": [
+    "tutorial:example_block"
+  ]
+}
+
+```
+
+For the harvest level tags (needs_stone_tool, needs_iron_tool and needs_diamond_tool) to take effect, add requiresTool() to the Block.Settings in the block declaration (example of versions above 1.20.5):
+
+```java
+
+    public static final Block EXAMPLE_BLOCK = new ExampleBlock(Block.Settings.create().strength(4.0f).requiresTool());
+
+```
+
+## Creating a Custom Block Class
+The above approach works well for simple blocks but falls short when you want a block with //unique// mechanics. We'll create a //separate// class that extends Block to do this. The class needs a constructor that takes in an AbstractBlock.Settings argument:
+
+```java
+
+public class ExampleBlock extends Block {
+    public ExampleBlock(Settings settings) {
+        super(settings);
+    }
+}
+
+```
+
+You can override methods in the block class for custom functionality. Here's an implementation of the onUse method, which is called when you right-click the block. We check if the interaction is occurring on the server, and then send the player a message saying, //"Hello, world!"//
+
+```java
+
+public class ExampleBlock extends Block {
+
+    public ExampleBlock(Settings settings) {
+        super(settings);
+    }
+
+    // For versions below 1.20.5, the parameters should be "BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit"
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (!world.isClient) {
+            player.sendMessage(Text.literal("Hello, world!"), false);
+        }
+
+        return ActionResult.SUCCESS;
+    }
+}
+
+```
+
+To use your custom block class, replace new Block with new ExampleBlock:
+
+```java
+
+public final class TutorialBlocks {
+
+    public static final Block EXAMPLE_BLOCK = register("example_block", new ExampleBlock(Block.Settings.create().strength(4.0f)));
+    
+    // ...
+}
+
+```
+
+==== Custom Shape====
+
+
+<!-- key:🟠 role:常见错误 -->
+
+When using block models that do not //entirely// fill the block (eg. Anvil, Slab, Stairs), while its voxel shape is full, the hidden faces of the adjacent blocks will be exposed:
+
+{{:tutorial:voxelshape_wrong.png?200|}}
+
+To fix this, we have to define the VoxelShape of the new block:
+
+```java
+
+public class ExampleBlock extends Block {
+    [...]
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        return VoxelShapes.cuboid(0f, 0f, 0f, 1f, 1.0f, 0.5f);
+    }
+}
+
+```
+
+{{:tutorial:voxelshape_fixed.png?200|}}
+
+You can also define other types of shapes for the block. The type of shapes of blocks include:
+  * **outline shape**: the shape used as default value for most type of shapes. In the worlds, when you points to the shape, the translucent black outline is displayed according to this shape. Most times it should not be empty.
+  * **collision shape**: the shape used to calculate collisions. When entities (including players) are moving, their collision box usually cannot intersect the collision shape of blocks. Some blocks, such as fences and walls, may have a collision shape higher than one block. Some blocks, such as flowers, have an empty collision shape. Apart from modifying getCollisionShape method, you can also call noCollision in the Block.Settings when creating the block.
+
+<!-- key:🟠 role:常见错误 -->
+
+  * **raycasting shape**: the shape used to calculate raycasting (the process judging which block you are pointing to). You usually do not need to specify it.
+  * **camera collision shape**: the shape used to calculate the position of camera in third-person view. Glass and powder snow have an empty camera collision shape.
+
+## Next Steps
+  * [Adding simple state to a block, like ints and booleans](blockstate). 
+  * [Giving blocks a block entity so they can have advanced state like inventories](blockentity). Also needed for many things like GUI and custom block rendering.
+  * [Use data generator to generate block model, block model definition and item model definition for the block and item](datagen_model).
+  * [Use data generator to generate tags for the block](datagen_tags).
+
+<!-- key:🟠 role:常见错误 -->
+
+  * Don't forget your block cannot have a [translatable name](lang).
+
+To make your block flammable (that is, can be burned in fire), you may use FlammableBlockRegistry.

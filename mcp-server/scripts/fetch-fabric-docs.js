@@ -128,9 +128,54 @@ function writeMeta(meta) {
   writeFileSync(META_PATH, JSON.stringify(meta, null, 2), "utf8");
 }
 
-function loadUrlList() {
+function gitPathToFetchId(gitPath) {
+  return gitPath.replace(/\.md$/, "").replace(/\//g, "-");
+}
+
+let _mainTreePaths = null;
+
+async function listMainTreePaths() {
+  if (_mainTreePaths) return _mainTreePaths;
+  const url = `https://api.github.com/repos/${FABRIC_GH.owner}/${FABRIC_GH.repo}/git/trees/${BRANCH}?recursive=1`;
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "mc-skill-fetch-fabric-docs", Accept: "application/vnd.github+json" },
+    });
+    if (!res.ok) {
+      console.warn(`[fetch-fabric-docs] GitHub tree HTTP ${res.status}，仅用 toFetch`);
+      _mainTreePaths = [];
+      return _mainTreePaths;
+    }
+    const data = await res.json();
+    _mainTreePaths = (data.tree ?? []).filter((t) => t.type === "blob").map((t) => t.path);
+  } catch (e) {
+    console.warn(`[fetch-fabric-docs] GitHub tree 失败：${e.message}，仅用 toFetch`);
+    _mainTreePaths = [];
+  }
+  return _mainTreePaths;
+}
+
+async function loadUrlList() {
   const templates = JSON.parse(readFileSync(TEMPLATES_PATH, "utf8"));
-  return templates.toFetch ?? [];
+  const toFetch = (templates.toFetch ?? []).filter((e) => e.gitPath);
+  const tree = await listMainTreePaths();
+  const prefix = `versions/${VERSION}/`;
+  const byPath = new Map();
+  for (const e of toFetch) byPath.set(e.gitPath, { ...e });
+  for (const p of tree) {
+    if (!p.startsWith(prefix) || !p.endsWith(".md")) continue;
+    const gitPath = p.slice(prefix.length);
+    if (!gitPath.startsWith("develop/")) continue;
+    if (/(^|\/)(players|translated)\//.test(gitPath)) continue;
+    if (byPath.has(gitPath)) continue;
+    byPath.set(gitPath, {
+      id: gitPathToFetchId(gitPath),
+      gitPath,
+      url: `${FABRIC_GH.baseVitepressUrl}/${gitPath.replace(/\.md$/, "").replace(/\/index$/, "")}`,
+      priority: "🟢",
+    });
+  }
+  return [...byPath.values()];
 }
 
 /**
@@ -394,7 +439,7 @@ function deleteLocalDoc(filename) {
 
 async function main() {
   ensureDir(FABRIC_DIR);
-  const urls = loadUrlList();
+  const urls = await loadUrlList();
   const meta = readMeta();
   const now = new Date().toISOString().split("T")[0];
 

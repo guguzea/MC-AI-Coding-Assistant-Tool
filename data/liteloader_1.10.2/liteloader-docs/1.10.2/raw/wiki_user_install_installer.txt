@@ -1,0 +1,18 @@
+~~META:title=Installer~~
+
+Installing using the LiteLoader installer
+=========================================
+
+=== Prerequisites ===
+
+* You must be using the [[https://minecraft.net/download|real launcher]], if you are not using the real launcher then see the [[manual|manual installation procedure]] instead
+
+=== Installation Steps ===
+
+* First, download the installer from the [[http://www.liteloader.com/download|Download Page]]
+* Ensure that the *Minecraft Launcher* is **closed**
+* Run the LiteLoader installer, you will be presented with the following screen
+ {{:user:install:installer.jpg?500|}}
+* If your *.minecraft* directory is not shown in the selection box, then click the **...** button and browse to the correct location
+* Click **OK** to run the installation
+* Run the *Minecraft Launcher* and choose the **LiteLoader** profile you just created.

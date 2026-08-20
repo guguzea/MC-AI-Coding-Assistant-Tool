@@ -26,7 +26,7 @@ def replaceProperties = [
 
 ```groovy
 // ❌ 错误
-minecraft "net.minecraftforge:forge:1.20.1-47.2.0"
+minecraft "net.minecraftforge:forge:1.19.4-45.4.0"
 
 // ✅ 正确：引用 gradle.properties 中的属性
 minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"

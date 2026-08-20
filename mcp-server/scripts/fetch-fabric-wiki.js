@@ -39,6 +39,13 @@ const VERSION = VERSION_ARG ? VERSION_ARG.split("=")[1] : "1.20.1";
 const DRY_RUN = process.argv.includes("--dry-run");
 const FORCE = process.argv.includes("--force");
 
+/** 去混淆档禁止挂 Yarn 现行 Wiki 树。 */
+const SKIP_WIKI_VERSIONS = new Set(["26.1.2", "26.1", "26.2"]);
+if (SKIP_WIKI_VERSIONS.has(VERSION)) {
+  console.error(`[fetch-fabric-wiki] ${VERSION} 不建 wiki 树（现行 Wiki 用 Yarn 名，禁止当 26.1+ 去混淆 API）。`);
+  process.exit(2);
+}
+
 const WIKI_DIR = join(MC_SKILL_ROOT, "data", `fabric_${VERSION}`, "fabric-wiki", VERSION, "raw");
 mkdirSync(WIKI_DIR, { recursive: true });
 

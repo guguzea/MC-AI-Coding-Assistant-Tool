@@ -1,0 +1,20 @@
+~~META:title=tweak mod installation~~
+~~NOTOC~~
+
+Installing other Tweak Mods with LiteLoader
+===========================================
+
+Current [[info:ModSystem|ModSystems]] are [[info:Tweak|Tweaks]] themselves, but can also load *other* Tweak-based mods as part of their startup process. What this means is that once you have one [[info:ModSystem]] installed, installing other tweaks becomes incredibly simple.
+
+To install any other Tweak-based mod, simply drop the Tweak jar into your [[info:versionedmods|versioned mods folder]], this is simply a subfolder inside the regular "mods" folder named for the version of minecraft, eg. for Minecraft **1.8** this would be ''.minecraft/mods/**1.8**/''
+
+====Installing Optifine====
+
+**Optifine** doesn't require any additional steps, simply download it and drop the jar into the [[info:versionedmods|versioned mods folder]].
+
+====Installing ShadersModCore====
+
+**ShaderModCore** is a little more complex, but not much. How you install it depends on whether you are also using *Minecraft Forge* or not. Click one of the options below for details:
+
+* [[.:othertweaks:shaders|Installing ShadersModCore with LiteLoader]]
+* [[.:othertweaks:shadersforge|Installing ShadersModCore with LiteLoader and Forge]]

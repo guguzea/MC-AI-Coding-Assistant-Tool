@@ -178,8 +178,8 @@ const KNOWN_PATTERNS: Array<{
     pattern: /Packet.*discId|IMessage.*id|messageType.*conflict/i,
     cause: "网络包 ID 冲突或序列化错误",
     fix: [
-      "按加载器选择网络 API：NeoForge 用 Payload + PayloadRegistrar，不要 SimpleChannel",
-      "Forge 1.20.1 才检查 SimpleChannel 各消息 discId 是否唯一",
+      "按加载器选择网络 API：NeoForge 1.20.1 用 SimpleChannel 形态（与 Forge 1.20.1 兼容）；1.20.4+ 用 Payload + PayloadRegistrar",
+      "Forge 1.20.1 / NeoForge 1.20.1 才检查 SimpleChannel 各消息 discId 是否唯一",
       "检查 PacketBuffer 是否溢出（写入过多数据）",
     ],
     relatedMistakes: ["mc-networking: 消息 ID 重复"],
@@ -374,7 +374,10 @@ function rewriteFixesForLoader(
         return "NeoForge：CreativeModeTab / DeferredRegister 接到模组构造函数注入的 IEventBus，不要 FMLJavaModLoadingContext";
       }
       if (/SimpleChannel/i.test(s)) {
-        return "NeoForge 网络用 Payload（RegisterPayloadHandler(s)Event），不要 SimpleChannel";
+        if (v === "1.20.1") {
+          return "NeoForge 1.20.1 网络是 SimpleChannel 形态（与 Forge 1.20.1 兼容）；检查 discId 是否唯一。禁止 1.20.4+ Payload";
+        }
+        return "NeoForge 1.20.4+ 网络用 Payload（RegisterPayloadHandler(s)Event），不要 SimpleChannel";
       }
     }
     if (fabric || quilt) {

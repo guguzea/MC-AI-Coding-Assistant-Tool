@@ -13,7 +13,7 @@ const { sessionPlatformPack } = await import("./dist/platform-pack/session.js");
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { activatePlatformPack } = await import("./dist/platform-pack/index.js");
 const { packWriteTestHooks } = await import("./dist/platform-pack/write.js");
-const { fabricRulesOverlay } = await import("./dist/platform-pack/catalog.js");
+const { fabricRulesOverlay, inspectPack, coversMcVersion } = await import("./dist/platform-pack/catalog.js");
 const { upsertHostMarker, beginMarker } = await import("./dist/platform-pack/hosts.js");
 
 const savedRoot = process.env.MC_SKILL_PROJECT_ROOT;
@@ -774,6 +774,117 @@ function assertHasRuleIds(s, want, label) {
   assert.ok(!(s.warnings ?? []).some((w) => /已加载底座规则 00\/01\/09/.test(w)));
   rmSync(tmp, { recursive: true, force: true });
   console.log("session missing .cursor/rules does not claim base loaded: ok");
+}
+
+{
+  const neo = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.20.1",
+    includeAllRules: true,
+    skillNames: ["mc-networking"],
+  });
+  assert.equal(neo.ok, true, JSON.stringify(neo.action));
+  const r02 = (neo.rules ?? []).find((r) => r.id === "02");
+  const r06 = (neo.rules ?? []).find((r) => r.id === "06");
+  assert.ok(r02 && /forge\/1\.20\.1/.test(String(r02.source)), JSON.stringify(r02?.source));
+  assert.ok(r06 && /forge\/1\.20\.1/.test(String(r06.source)), JSON.stringify(r06?.source));
+  assert.match(String(r06.text), /FORGE_COMPAT_1\.20\.1/);
+  assert.match(String(r06.text), /SimpleChannel/);
+  assert.doesNotMatch(String(r06.text), /禁止 net\.neoforged/);
+  const net = (neo.skillBodies ?? []).find((b) => b.name === "mc-networking");
+  assert.ok(net, "neo 1.20.1 mc-networking skillBodies");
+  assert.match(String(net.text), /SimpleChannel/);
+  assert.ok(!/Payload-only|全档均是 Payload/.test(String(net.text)));
+  const tmp = mkdtempSync(join(tmpdir(), "mc-neo1201-write-"));
+  const preview = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.20.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    dryRun: true,
+  });
+  assert.equal(preview.ok, true, JSON.stringify(preview.action));
+  const rels = (preview.planned ?? []).map((p) => p.rel);
+  for (const id of ["02", "03", "04", "05", "06", "07", "08", "10"]) {
+    assert.ok(
+      rels.some((r) => r.includes(`${id}-`) || r.includes(`0${id}-`)),
+      `neo 1.20.1 write missing overlay rule ${id}: ${rels.slice(0, 12).join(",")}`,
+    );
+  }
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("neo 1.20.1 forge overlay session/write: ok");
+}
+
+{
+  const q = sessionPlatformPack({ platform: "quilt", minecraftVersion: "1.21.1", includeAllRules: true });
+  assert.equal(q.ok, true);
+  const r06 = (q.rules ?? []).find((r) => r.id === "06");
+  assert.ok(r06, "quilt 06 present");
+  assert.match(String(r06.source), /quilt\/1\.21\.1/);
+  assert.doesNotMatch(String(r06.text), /ServerPlayNetworking/);
+  assert.match(String(r06.text), /QFAPI|QSL/);
+  const tmp = mkdtempSync(join(tmpdir(), "mc-quilt-write-"));
+  const preview = activatePlatformPack({
+    action: "write",
+    platform: "quilt",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    dryRun: true,
+  });
+  assert.equal(preview.ok, true);
+  const texts = (preview.planned ?? []).filter((p) => /06-networking/.test(p.rel));
+  assert.ok(texts.length >= 1, "quilt write should include 06-networking");
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("quilt 06 is local short rule: ok");
+}
+
+{
+  assert.equal(coversMcVersion("1.2", "1.20.1"), false);
+  assert.equal(coversMcVersion("1.20", "1.20.1"), true);
+  assert.equal(inspectPack("forge", "../1.20.1"), null);
+  assert.equal(inspectPack("forge", "1.20.1/../1.20.1"), null);
+  const full = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.20.1", task: "mc-full-mod" });
+  assert.equal(full.ok, true);
+  assert.ok((full.rules ?? []).length > 3, `mc-full-mod rules=${(full.rules ?? []).map((r) => r.id).join(",")}`);
+  console.log("inspectPack / coversMcVersion / mc-full-mod: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-stubprio-"));
+  const def = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    dryRun: true,
+  });
+  assert.ok((def.planned ?? []).some((p) => /SKILL\.md$/.test(p.rel)), "writeSkillStubs default true");
+  const mapped = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    includeSkills: false,
+    dryRun: true,
+  });
+  assert.ok(!(mapped.planned ?? []).some((p) => /SKILL\.md$/.test(p.rel)), "includeSkills false maps to no stubs");
+  const prio = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["cursor"],
+    projectPath: tmp,
+    writeSkillStubs: false,
+    includeSkills: true,
+    dryRun: true,
+  });
+  assert.ok(!(prio.planned ?? []).some((p) => /SKILL\.md$/.test(p.rel)), "writeSkillStubs false wins over includeSkills true");
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("writeSkillStubs default/deprecated/priority: ok");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

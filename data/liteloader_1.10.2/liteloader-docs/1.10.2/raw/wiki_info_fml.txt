@@ -1,0 +1,10 @@
+~~META:title=fml~~
+
+forge modloader (fml)
+=====================
+
+Early versions of [[forge|Minecraft Forge]] were built on [[ModLoader]] by [[people:Risugami]] as the mod loading technology, since it was the mod loading platform of choice at the time. Multiplayer mod support was provided by [[ModLoaderMP]] by [[people:sdk|ScottyDoesKnow (SDK)]]. In early 2012 it was decided to switch to an in-house mod loading solution which would (at least at first) be backward-compatible with [[ModLoader]] but would incorporate the functionality provided by [[ModLoaderMP]] and remove the dependency on the third-party projects. **FML** was developed by [[people:cpw]] to fulfill this role.
+
+**FML** maintained a high level of compatibility with [[ModLoader]] mods until *Minecraft 1.7*, where the ModLoader baggage was finally jettisoned in favour of **FML**'s more flexible and advanced mod platform.
+
+See also: [FML on GitHub](https://github.com/MinecraftForge/FML)

@@ -1,0 +1,5 @@
+~~META:title=installation trail~~
+**Are you using the vanilla launcher?**
+
+* [[.:trail:vanilla|Yes, I'm using the real launcher]]
+* [[.:trail:3rdparty|No, I'm using a third-party launcher]]

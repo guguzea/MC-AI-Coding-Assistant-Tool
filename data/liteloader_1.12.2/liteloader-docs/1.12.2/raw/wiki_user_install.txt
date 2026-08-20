@@ -1,0 +1,22 @@
+~~META:title=install~~
+
+Installing LiteLoader
+=====================
+
+As a [[info:Tweak]], LiteLoader supports several different installation methods in order to accomodate a variety of environments, the simplest method being to use the [[user:install:installer|LiteLoader Installer]]. If you're not sure what method to use, follow the [[user:install:trail|Installation Trail]].
+
+* Using the [[user:install:installer|LiteLoader Installer]]
+* Installation if you are using [[user:install:multimc|MultiMC]]
+* Installing [[user:install:manual|manually]]
+* Installing when you [[user:install:forge|already have Minecraft Forge or FML installed]]
+
+LiteLoader also supports being installed along with other Tweaks such as [[http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1272953-optifine|Optifine]] and [[http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1286604-shaders-mod|Shaders Mod]], see the link below for instructions:
+
+* [[user:install:othertweaks|Installing other Tweaks mods (eg. Optifine, ShadersMod)]]
+
+Installation Flowchart
+======================
+
+If you're not sure which is the best method for you to use for installation, you can follow the [[user:install:trail|Installation Trail]] or follow the flow chart below.
+
+{{:user:flow.png?nolink|}}

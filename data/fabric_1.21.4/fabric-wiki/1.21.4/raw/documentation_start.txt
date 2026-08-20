@@ -1,0 +1,51 @@
+# documentation start
+
+> 来源：https://fabricmc.net/wiki/doku.php?id=documentation:start
+> 版本：1.21.4
+> 页面 ID：documentation:start
+> 优先级：🟡
+> 抓取源：wiki_raw
+> 警告：现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5 等旧档 API。
+
+====== Documentation ======
+
+This section of the wiki contains various documentation on how projects in the Fabric toolchain work.
+
+If anything in this section is not clear, or you are struggling to understand, you can always ask for clarification in the ''#toolchain-other'' channel on the [[https://discord.gg/v6v4pMv|Official Fabric Discord]]
+
+===== Specifications =====
+
+These pages contain specifications on the different files and file types used by the Fabric toolchain.
+
+  * [[documentation:fabric_mod_json|fabric.mod.json (Overview)]]
+  * [[documentation:fabric_mod_json_spec|fabric.mod.json (Full Spec)]]
+  * [[documentation:mapping_formats|Mapping Formats]]
+    * [[documentation:tiny|Tiny v1]]
+    * [[documentation:tiny2|Tiny v2]]
+    * [[documentation:enigma_mappings|Enigma]]
+
+===== Technical Information =====
+
+These pages contain technical information on how projects in the Fabric toolchain work.
+
+  * [[documentation:fabric_loader|Fabric Loader]]
+  * [[documentation:entrypoint|Entrypoints]]
+  * [[documentation:fabric_loom|Fabric Loom]]
+  * [[documentation:enigma|Enigma]]
+  * [[documentation:matcher|Matcher]]
+  * [[documentation:yarn|Yarn]]
+  * [[documentation:modpack_related_endpoints|Fabric Meta]]
+  * [[documentation:build_pipelines|Mod Build pipeline]]
+
+
+===== External Documentation =====
+
+You can find the documentation of external projects used by projects in the Fabric toolchain here.
+
+  * [[http://github.com/SpongePowered/Mixin/wiki|SpongePowered Mixin Documentation]]
+  * [[https://github.com/LlamaLad7/MixinExtras/wiki|MixinExtras Documentation]]
+
+
+
+
+
