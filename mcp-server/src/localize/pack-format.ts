@@ -18,6 +18,16 @@ const PACK_FORMAT_BY_MC: Record<string, number> = {
   "1.21.2": 42,
   "1.21.3": 42,
   "1.21.4": 46,
+  "1.21.5": 55,
+  "1.21.6": 63,
+  "1.21.7": 64,
+  "1.21.8": 64,
+  "1.21.9": 69,
+  "1.21.10": 69,
+  "1.21.11": 75,
+  "26.1": 84,
+  "26.1.1": 84,
+  "26.1.2": 84,
 };
 
 const DEFAULT_PACK_FORMAT = 15;
@@ -41,6 +51,9 @@ export function resolvePackFormat(mcVersion?: string): {
   const v = mcVersion.trim();
   const mapped = ownGet(PACK_FORMAT_BY_MC, v);
   if (mapped != null) {
+    if (/^(1\.21\.(9|10|11)|26\.1(\.\d+)?)$/.test(v)) {
+      notes.push("1.21.9+ 官方还有 min_format/max_format；本次仍只填 pack_format。");
+    }
     return {
       packFormat: mapped,
       mcVersionUsed: v,

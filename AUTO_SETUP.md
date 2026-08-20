@@ -427,7 +427,7 @@ CLI 正常而 IDE 里没有工具 → 配置文件路径/键名/未重载。两�
 
 ## Step 6 — 安装 Skill（可选，与 MCP 无关）
 
-编码期请用 `activate_platform_pack`：`session` 把该档 AGENTS / 默认规则 00+01+09 / Skill **索引**送进当前对话（`topics` / `includeAllRules` 见根 README）；要工程内常驻再 `write`（`hosts` 必填，`includeSkills` 默认 false）。**不要**把规则拷进知识库根。MCP 工具列表与 Skill 扫描是两套机制。重载 MCP **不会**让 Skill 面板出现条目。本仓库 Skill 在 `forge/<ver>/`、`fabric/<ver>/`、`neoforge/` 子树，**不要**提交到 `MC_skill` 仓库根 `.cursor/skills/`。
+编码期请用 `activate_platform_pack`：`session` 把该档 AGENTS / 默认规则 00+01+09 / Skill **索引**送进当前对话（`topics` / `includeAllRules` 见根 README）；要工程内常驻再 `write`（`hosts` 必填；不要再用 `includeSkills`，改用 `writeSkillStubs`，默认 true）。**不要**把规则拷进知识库根。MCP 工具列表与 Skill 扫描是两套机制。重载 MCP **不会**让 Skill 面板出现条目。本仓库 Skill 在 `forge/<ver>/`、`fabric/<ver>/`、`neoforge/` 子树，**不要**提交到 `MC_skill` 仓库根 `.cursor/skills/`。
 
 ### 各 IDE 如何发现 Skill（打开本仓库根时）
 

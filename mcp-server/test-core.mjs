@@ -384,6 +384,11 @@ async function testSearchEnhancements() {
   const fabricHit = parseToolText(await searchFabricDocs({ query: "Identifier", version: "26.1.2" }));
   assert.ok(fabricHit.total >= 1 || fabricHit.results?.length >= 1, "Fabric Identifier should hit via L1 symbols");
 
+  const fabricEmpty = parseToolText(await searchFabricDocs({ query: "blocks", version: "1.14.4" }));
+  assert.notEqual(fabricEmpty.error?.code, "VERSION_NOT_FOUND");
+  assert.ok(fabricEmpty.fabricDocsEmpty || /无版本化页/.test(String(fabricEmpty.warning ?? "")), JSON.stringify(fabricEmpty).slice(0, 400));
+  assert.ok(fabricEmpty.wikiIsCurrentSite || /现行/.test(String(fabricEmpty.warning ?? "")), String(fabricEmpty.warning ?? "").slice(0, 300));
+
   const nf = parseToolText(await searchNeoForgeDocs({ query: "registry", version: "1.20.4" }));
   assert.ok(nf.total >= 1);
   for (const r of nf.results.slice(0, 5)) {
@@ -1272,6 +1277,25 @@ async function testFivePlatformRouting() {
     assert.ok(/QSL|禁止回退|QuiltRegistry/.test(qsl.warning || qsl.error?.hint || qsl.error?.message || ""));
   }
 
+  const q1201 = parseToolText(await searchDocs({ platform: "quilt", version: "1.20.1", query: "registry" }));
+  assert.notEqual(q1201.error?.code, "VERSION_NOT_FOUND", JSON.stringify(q1201.error ?? {}).slice(0, 300));
+  assert.notEqual(q1201.fallback, "fabric", "1.20.1 有 quilt-docs，不得误回退 Fabric");
+
+  const q1211 = parseToolText(await searchDocs({ platform: "quilt", version: "1.21.11", query: "registry" }));
+  assert.notEqual(q1211.error?.code, "VERSION_NOT_FOUND", JSON.stringify(q1211.error ?? {}).slice(0, 400));
+  assert.equal(q1211.ok, true, JSON.stringify(q1211.error ?? q1211).slice(0, 400));
+  assert.equal(q1211.fallback, "fabric");
+  assert.match(String(q1211.warning ?? ""), /Quilt 官方文档无此版本/);
+
+  const q1211qsl = parseToolText(
+    await searchDocs({ platform: "quilt", version: "1.21.11", query: "QSL QuiltRegistry" }),
+  );
+  assert.notEqual(q1211qsl.fallback, "fabric", "1.21.11 QSL 查询禁止回退 Fabric");
+  assert.ok(
+    q1211qsl.ok === false || q1211qsl.error?.code === "FABRIC_EXCLUSIVE" || /QSL|禁止回退|QuiltRegistry/.test(JSON.stringify(q1211qsl)),
+    JSON.stringify(q1211qsl).slice(0, 400),
+  );
+
   const man = generateAddonManifest({
     packName: "Demo",
     packType: "script",
@@ -1876,9 +1900,21 @@ async function testPrototypeOwnKeys() {
   const v112 = await getVersionInfo({ version: "1.12.2", action: "register", platform: "forge" });
   assert.ok(/RegistryEvent/.test(v112.recommendation), v112.recommendation);
   assert.ok(!/创建 DeferredRegister/.test(v112.recommendation), v112.recommendation);
+  assert.ok(!/DeferredRegister/.test(v112.recommendation), v112.recommendation);
 
   const v165 = await getVersionInfo({ version: "1.16.5", action: "register", platform: "forge" });
   assert.ok(!/创建 DeferredRegister/.test(v165.recommendation), v165.recommendation);
+
+  const v194 = await getVersionInfo({ version: "1.19.4", action: "register", platform: "forge" });
+  assert.ok(/DeferredRegister/.test(v194.recommendation), v194.recommendation);
+
+  const v1204 = await getVersionInfo({ version: "1.20.4", action: "register", platform: "forge" });
+  assert.ok(/49/.test(v1204.forgeVersion), v1204.forgeVersion);
+  assert.ok(/DeferredRegister/.test(v1204.recommendation), v1204.recommendation);
+
+  const v1211 = await getVersionInfo({ version: "1.21.1", action: "register", platform: "forge" });
+  assert.ok(/search_forge_docs/.test(v1211.recommendation), v1211.recommendation);
+  assert.ok(!/创建 DeferredRegister/.test(v1211.recommendation), v1211.recommendation);
 }
 
 function testPlan1Fixes() {

@@ -34,7 +34,7 @@ forge-1.19.4-mod/
 ```properties
 # ---- Minecraft / Forge 版本（必须与 Forge 版本匹配）----
 minecraft_version=1.19.4
-forge_version=43.2.0
+forge_version=45.4.0
 
 # ---- Mappings ----
 # parchment: 社区映射（有参数名和 javadoc，推荐用于开发）
@@ -147,10 +147,10 @@ public static final RegistryObject<Item> MY_BLOCK_ITEM = ITEMS.register("my_bloc
 
 ```properties
 # ❌ 错误：在 gradle.properties 中
-forge_version=43.2.0
+forge_version=45.4.0
 
 # build.gradle 中
-minecraft "net.minecraftforge:forge:1.19.4-43.2.0"  # ❌ 硬编码
+minecraft "net.minecraftforge:forge:1.19.4-45.4.0"  # ❌ 硬编码
 
 # ✅ 正确：引用 gradle.properties 属性
 minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
@@ -219,6 +219,6 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 ## 版本注意事项（1.19.4）
 
 - **MobCategory**：1.19.4 Forge / Mojmap 用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是本档 1.20.7 重命名
-- **pack_format**：1.19.4 的资源包/数据包格式为 `9`
+- **pack_format**：1.19.4 数据包为 `12`、资源包为 `13`
 - **Parchment 映射**：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.04.04`
-- **Forge 版本**：`43.2.0`（对应 Minecraft 1.19.4）
+- **Forge 版本**：`45.4.0`（对应 Minecraft 1.19.4）

@@ -15,7 +15,7 @@ description: 07 — 数据生成器
 - 数据生成（DataGen）在 Gradle 任务 `./gradlew runData` 或 `build` 期间执行
 - **禁止**在运行时修改数据生成器输出
 - 生成的 JSON 放在 `src/generated/resources/`（ForgeGradle 配置的输出目录），不要手改
-- **pack_format**：1.19.4 使用 `pack_format = 9`
+- **pack_format**：1.19.4 数据包 `pack_format = 12`，资源包 `pack_format = 13`
 
 ### 目录结构
 

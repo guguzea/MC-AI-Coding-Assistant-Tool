@@ -85,5 +85,5 @@ src/main/java/com/example/mod/
 
 - **MobCategory** is used for entity spawn groups (renamed to `SpawnGroup` in 1.20.7+)
 - **Parchment mappings** recommended: `1.19.4-2023.04.04`
-- **pack_format = 9** for resources/datapacks (1.19.4)
-- **Forge 43.2.x** for Minecraft 1.19.4
+- **pack_format**：数据包 **12**、资源包 **13**（1.19.4）
+- **Forge 45.4.x** for Minecraft 1.19.4

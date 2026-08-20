@@ -6,7 +6,8 @@
  *
  * 数据源（按优先级；必须能归属到 --version，禁止现行站冒充旧档）：
  *   1. GitHub Raw 版本化树 versions/<ver>/<gitPath>（source=github_raw_versioned）
- *      官方 versions/ 有树：1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2（无 1.21.5）
+ *      官方 versions/ 有树：1.20.4 / 1.21.1 / 1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2（无 1.21.5）；
+ *      其它档以 --dry-run 的 probeSource= 为准，无命中保持空 L0
  *   2. 明确命中的归档分支（--branch≠main 或 ARCHIVE_BRANCHES；source=github_archive）
  * 禁止成功页：github_raw（main 根路径）、未加版本前缀的 VitePress 现行站。
  * 无 versions/ 的旧档应失败并删除已有污染 raw；search 走 wiki（现行站警告）或 DOC_NOT_FOUND。
@@ -24,7 +25,7 @@
  *   --version 1.21.1     等价于   --version=1.21.1
  *   --branch archive/1.20 等价于  --branch=archive/1.20
  *   --force              强制重新抓取
- *   --dry-run            仅预览，不写入
+ *   --dry-run            仅预览：打印 URL，并对最多 3 页探测 versions/ 或归档（不写盘）
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
@@ -419,6 +420,7 @@ async function main() {
     if (DRY_RUN) {
       const exists = existsSync(localPath) ? " [已缓存]" : " [需抓取]";
       console.log(`[DRY] ${entry.priority ?? "🟢"} ${id}${exists}`);
+      console.log(`       → versions/${VERSION}/${gitPath}`);
       console.log(`       → ${githubRawUrl}`);
       console.log(`       → archive: ${ARCHIVE_BRANCHES.map(b => `${FABRIC_GH.baseRawUrl}/${b}/${gitPath}`).join(", ")}`);
       continue;
@@ -474,6 +476,32 @@ async function main() {
       failures.push({ id, gitPath, error: err.message });
       failed++;
     }
+  }
+
+  if (DRY_RUN) {
+    const probeLimit = Math.min(3, urls.length);
+    let versioned = 0;
+    let archive = 0;
+    let failedProbe = 0;
+    for (let i = 0; i < probeLimit; i++) {
+      const entry = urls[i];
+      const result = await fetchPage(entry, BRANCH);
+      const src = result.source ?? "failed";
+      console.log(`[PROBE] ${entry.id} source=${src}${result.url ? ` ${result.url}` : ""}`);
+      if (src === "github_raw_versioned") versioned++;
+      else if (src === "github_archive") archive++;
+      else failedProbe++;
+    }
+    const hit = versioned > 0 ? "github_raw_versioned" : archive > 0 ? "github_archive" : "none";
+    console.log(
+      `[fetch-fabric-docs] dry-run probeSource=${hit} versioned=${versioned} archive=${archive} failed=${failedProbe}`,
+    );
+    if (hit === "none") {
+      console.log(`[fetch-fabric-docs] 无 versions/ 与归档命中，保持空 L0，不要 --force`);
+    } else {
+      console.log(`[fetch-fabric-docs] 可 --force 抓取`);
+    }
+    return;
   }
 
   // 记录元数据（含全失败：旧档空树也要留下 failures[]）

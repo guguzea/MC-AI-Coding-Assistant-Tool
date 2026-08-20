@@ -40,12 +40,12 @@ minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
 ```properties
 # ❌ 错误
-forge_version=43.2.0
-forge_version_range=[43.2.0,)  # 只匹配这一个版本
+forge_version=45.4.0
+forge_version_range=[45.4.0,)  # 只匹配这一个版本
 
-# ✅ 正确：匹配所有 43.x 版本
-forge_version=43.2.0
-forge_version_range=[43,)
+# ✅ 正确：匹配所有 45.x 版本
+forge_version=45.4.0
+forge_version_range=[45,)
 ```
 
 ---

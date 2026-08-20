@@ -31,12 +31,26 @@ export interface VersionInfo {
   action?: ActionEnvelope;
 }
 
+/** 注册 hint 用显式模式，避免靠 recommendation 词匹配误导。未列入的版本保持旧 fallback 句。 */
+type RegisterMode = "deferred" | "registryEvent" | "docsOnly";
+
+const REGISTER_MODE: Record<string, RegisterMode> = {
+  "1.20.4": "deferred",
+  "1.20.1": "deferred",
+  "1.19.4": "deferred",
+  "1.18.2": "deferred",
+  "1.17.1": "deferred",
+  "1.13.2": "registryEvent",
+  "1.12.2": "registryEvent",
+  "1.21.1": "docsOnly",
+};
+
 const VERSION_DB: Record<string, VersionInfo> = {
   "1.20.4": {
     version: "1.20.4",
-    forgeVersion: "47.x",
+    forgeVersion: "49.x",
     note: "Forge 1.20.4 为最后一个官方版本，之后转向 NeoForge",
-    recommendation: "Forge 1.20.4 + NeoForge 20.4.237，与 1.20.1 API 基本兼容",
+    recommendation: "使用 DeferredRegister 作为主要注册方式；Forge 1.20.4 + NeoForge 20.4.237，与 1.20.1 API 基本兼容",
     keyChanges: [
       "Forge 1.20.4 为最后官方版，后续 NeoForge 维护",
       "与 1.20.1 注册 API 相同",
@@ -73,13 +87,13 @@ const VERSION_DB: Record<string, VersionInfo> = {
   "1.19.4": {
     version: "1.19.4",
     forgeVersion: "45.x",
-    recommendation: "RegistryEvent.Register<T> 为主要方式",
+    recommendation: "使用 DeferredRegister 作为主要注册方式；RegisterEvent 仍可用但不推荐",
     keyChanges: [
       "ForgeGradle 5.x 升级到 6.x",
       "Mojang 映射名称变更",
     ],
     gotchas: [
-      "与 1.20.x 的注册 API 有显著差异",
+      "RegisterEvent 仍可用，但不推荐（DeferredRegister 封装了它）",
     ],
     links: {
       forgeChangelog: "https://maven.minecraftforge.net/net/minecraftforge/forge/index_1.19.4.html",
@@ -309,13 +323,15 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
   const lower = action.toLowerCase();
 
   if (lower.includes("注册") || lower.includes("register")) {
-    const noDeferred = info.gotchas.some((g) => /不支持 DeferredRegister/i.test(g));
-    const usesDeferred = /DeferredRegister/i.test(info.recommendation);
-    const registerHint = noDeferred
-      ? "注册流程：@SubscribeEvent + RegistryEvent.Register<T>（本版无 DeferredRegister）"
-      : usesDeferred
+    const mode = ownGet(REGISTER_MODE, info.version);
+    const registerHint =
+      mode === "deferred"
         ? "注册流程：创建 DeferredRegister → 定义 RegistryObject → register(modEventBus)"
-        : "注册请按本版 recommendation，不要套用 1.20 DeferredRegister";
+        : mode === "registryEvent"
+          ? "注册流程：@SubscribeEvent + RegistryEvent.Register<T>"
+          : mode === "docsOnly"
+            ? "请用 search_forge_docs / list_forge_versions 查本版注册 API，不要套用邻版注册写法"
+            : "注册请按本版 recommendation，不要套用 1.20 DeferredRegister";
     return {
       ...info,
       recommendation: `${info.recommendation}。${registerHint}`,

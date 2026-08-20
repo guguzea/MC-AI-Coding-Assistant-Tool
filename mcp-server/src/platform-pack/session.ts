@@ -2,6 +2,7 @@ import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import { actionable } from "../utils/actionable.js";
 import { docsToolForPlatform } from "../loader-api/keys.js";
+import { ownGet } from "../utils/own-record.js";
 import { resolveRepoRoot } from "../utils/path.js";
 import {
   fabricRulesOverlay,
@@ -60,7 +61,7 @@ const TOPIC_ALIASES: Record<string, string> = {
   capability: "05",
 };
 
-type TaskSpec = { rules: string[]; skills: string[]; nextReads: string[] };
+type TaskSpec = { rules: string[]; skills: string[]; nextReads: string[]; warning?: string };
 
 const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-new-block": { rules: ["02"], skills: ["mc-block"], nextReads: ["mc-blockentity"] },
@@ -82,7 +83,41 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   networking: { rules: ["06"], skills: ["mc-networking"], nextReads: [] },
   "mc-capability": { rules: ["05"], skills: ["mc-capability"], nextReads: [] },
   capability: { rules: ["05"], skills: ["mc-capability"], nextReads: [] },
+  "mc-crash-triage": { rules: ["09"], skills: [], nextReads: [] },
+  "mc-port-mod": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-build-mod": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-ingame-iterate": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-localize-mod": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-decompile-mod": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-config": { rules: [], skills: ["mc-config"], nextReads: [] },
+  "mc-gametest": { rules: [], skills: ["mc-gametest"], nextReads: [] },
+  "mc-publish": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-recipe-data": { rules: ["07"], skills: ["mc-recipe", "mc-loottable", "mc-advancement"], nextReads: [] },
+  "mc-audio-vfx": { rules: [], skills: ["mc-sound", "mc-particle"], nextReads: [] },
+  "mc-commands": { rules: [], skills: ["mc-command"], nextReads: [] },
+  "mc-dimension-structure": { rules: ["07"], skills: ["mc-dimension", "mc-structure"], nextReads: ["mc-worldgen"] },
+  "mc-access": { rules: [], skills: [], nextReads: [] },
+  "mc-bedrock-addon": {
+    rules: [],
+    skills: [],
+    nextReads: [],
+    warning:
+      "mc-bedrock-addon 不灌 Java 规则 02–10；请改用 search_bedrock_docs / validate_addon_manifest / validate_bp_json。",
+  },
+  "mc-fluid": { rules: ["02"], skills: ["mc-fluid"], nextReads: [] },
+  "mc-enchant-potion": { rules: ["03"], skills: ["mc-enchantment", "mc-potion", "mc-effect"], nextReads: [] },
+  "mc-energy": { rules: ["05"], skills: ["mc-energy", "mc-capability"], nextReads: [] },
+  "mc-creative-tags": { rules: ["03"], skills: [], nextReads: [] },
+  "mc-kotlin": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-jei": { rules: [], skills: ["mc-compat-jei"], nextReads: [] },
+  "mc-ci-publish-extra": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-setup-env": { rules: ["00"], skills: [], nextReads: [] },
+  "mc-full-mod": { rules: ["00"], skills: [], nextReads: [] },
 };
+
+function isTaskSpec(v: unknown): v is TaskSpec {
+  return Boolean(v) && typeof v === "object" && Array.isArray((v as TaskSpec).rules);
+}
 
 const RULE_SKILL_HINTS: Record<string, string[]> = {
   "02": ["mc-block", "mc-blockentity", "mc-fluid"],
@@ -116,8 +151,8 @@ function uniqueIds(ids: string[]): string[] {
 function lookupTask(raw?: string): { spec: TaskSpec | null; key: string; warning?: string } {
   const key = String(raw ?? "").trim().toLowerCase();
   if (!key) return { spec: null, key: "" };
-  const spec = TASK_SPECS[key];
-  if (!spec) {
+  const spec = ownGet(TASK_SPECS, key);
+  if (!isTaskSpec(spec)) {
     return { spec: null, key, warning: `未知 task "${raw}"，已忽略（规则仍用底座 00/01/09）。` };
   }
   return { spec, key };
@@ -147,7 +182,7 @@ export function parseTopicTokens(topics?: string[]): {
       continue;
     }
     const num = raw.match(/(^|\D)(\d{2})(\D|$)/);
-    const alias = TOPIC_ALIASES[lower];
+    const alias = ownGet(TOPIC_ALIASES, lower);
     const id = num ? num[2] : alias;
     if (!id) {
       warnings.push(`无法解析 topics 项 "${raw}"，已跳过（不会截成两字符）`);
@@ -252,6 +287,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   const taskLookup = lookupTask(args.task);
   if (taskLookup.warning) warnings.push(taskLookup.warning);
   const taskSpec = taskLookup.spec;
+  if (taskSpec?.warning) warnings.push(taskSpec.warning);
   const extraRules = taskSpec?.rules ?? [];
   const { ids, warnings: topicWarnings, skillHints } = resolveTopicIds(args.topics, includeAll, extraRules);
   warnings.push(...topicWarnings);
@@ -349,7 +385,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   for (const h of skillHints) pushHint(h);
   for (const h of taskSpec?.nextReads ?? []) pushHint(h);
   for (const id of extraRuleSet) {
-    for (const h of RULE_SKILL_HINTS[id] ?? []) pushHint(h);
+    for (const h of ownGet(RULE_SKILL_HINTS, id) ?? []) pushHint(h);
   }
   const libNames = new Set(libSkills.map((s) => canonicalSkillName(s.name)));
   const nextReads: Array<{ name: string; absPath: string; relPosix: string; description: string }> = [];

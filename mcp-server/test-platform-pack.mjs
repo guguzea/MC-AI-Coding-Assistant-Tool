@@ -401,6 +401,91 @@ function assertHasRuleIds(s, want, label) {
   const s = sessionPlatformPack({
     platform: "neoforge",
     minecraftVersion: "1.21.1",
+    task: "not-a-real-task",
+    topics: ["02"],
+  });
+  assert.equal(s.rulesMode, "extended");
+  assertHasRuleIds(s, ["00", "01", "09", "02"], "unknown task + topics union");
+  assert.ok((s.warnings ?? []).some((w) => /未知 task/.test(w)));
+  console.log("session unknown task topics union: ok");
+}
+
+{
+  for (const proto of ["constructor", "__proto__", "prototype"]) {
+    const s = sessionPlatformPack({
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      task: proto,
+    });
+    assert.equal(s.rulesMode, "base", proto);
+    assertHasRuleIds(s, ["00", "01", "09"], `proto ${proto}`);
+    assert.equal(sessionRuleIds(s).some((id) => !["00", "01", "09"].includes(id)), false, proto);
+    assert.ok((s.warnings ?? []).some((w) => /未知 task/.test(w)), proto);
+  }
+  console.log("session proto task constructor/__proto__/prototype: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-config",
+  });
+  assert.ok(!(s.warnings ?? []).some((w) => /未知 task/.test(w)), (s.warnings ?? []).join(" | "));
+  assertHasRuleIds(s, ["00", "01", "09"], "mc-config base rules");
+  console.log("session task mc-config known: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-gametest",
+  });
+  assert.ok(!(s.warnings ?? []).some((w) => /未知 task/.test(w)), (s.warnings ?? []).join(" | "));
+  console.log("session task mc-gametest known: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-bedrock-addon",
+  });
+  assert.equal(s.rulesMode, "base");
+  assert.deepEqual(sessionRuleIds(s).sort(), ["00", "01", "09"]);
+  assert.ok((s.warnings ?? []).some((w) => /bedrock|search_bedrock_docs/i.test(w)), (s.warnings ?? []).join(" | "));
+  console.log("session task mc-bedrock-addon base: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    task: "mc-recipe-data",
+  });
+  assertHasRuleIds(s, ["00", "01", "07", "09"], "mc-recipe-data");
+  assert.equal(s.rulesMode, "extended");
+  console.log("session task mc-recipe-data: ok");
+}
+
+{
+  const { listWorkflowTemplateNames } = await import("./dist/prompts/templates.js");
+  for (const name of listWorkflowTemplateNames()) {
+    const s = sessionPlatformPack({
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      task: name,
+    });
+    assert.ok(!(s.warnings ?? []).some((w) => /未知 task/.test(w)), `${name}: ${(s.warnings ?? []).join(" | ")}`);
+  }
+  console.log("session all workflow template names known: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
     topics: ["not-a-topic"],
   });
   assert.equal(s.rulesMode, "base");

@@ -7,6 +7,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deflateRawSync } from "node:zlib";
 import { localizeMod } from "./dist/localize/index.js";
+import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { getWorkflowTemplate } from "./dist/prompts/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -324,6 +325,18 @@ function testDeflatedJar() {
   assert.equal(r.source.z, "Zed");
 }
 
+function testPackFormatMap() {
+  assert.equal(resolvePackFormat("1.21.4").packFormat, 46);
+  const v218 = resolvePackFormat("1.21.8");
+  assert.equal(v218.packFormat, 64);
+  assert.notEqual(v218.packFormat, 15);
+  assert.equal(resolvePackFormat("1.21.5").packFormat, 55);
+  assert.equal(resolvePackFormat("26.1").packFormat, 84);
+  const unknown = resolvePackFormat("9.9.9");
+  assert.equal(unknown.packFormat, 15);
+  assert.ok(unknown.notes.some((n) => /未知 mcVersion/.test(n)));
+}
+
 function testWorkflow() {
   const t = getWorkflowTemplate("mc-localize-mod");
   assert.equal(t.found, true);
@@ -367,6 +380,7 @@ function main() {
     testJarNoLang,
     testJarBadZhContinues,
     testDeflatedJar,
+    testPackFormatMap,
     testWorkflow,
   ];
   for (const t of tests) {

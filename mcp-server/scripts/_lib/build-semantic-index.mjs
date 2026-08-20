@@ -40,6 +40,7 @@ import {
   EMBEDDING_MODEL,
   getEmbedder,
 } from "../../dist/docs-platform/semantic/embeddings.js";
+import { computeSourceFingerprint } from "../../dist/docs-platform/semantic/fingerprint.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 // scripts/_lib → mcp-server → 仓库根
@@ -250,28 +251,6 @@ function discoverDocs(dataRoot, target) {
     });
   }
   return { processedDir, docs, skipped, l0Count: l0.length, versionDir };
-}
-
-function computeSourceFingerprint(versionDir) {
-  const files = [];
-  const l0 = join(versionDir, "index-l0.json");
-  if (existsSync(l0)) files.push(l0);
-  const processed = join(versionDir, "processed");
-  if (existsSync(processed)) {
-    for (const name of readdirSync(processed).sort()) {
-      if (name.endsWith(".md")) files.push(join(processed, name));
-    }
-  }
-  if (files.length === 0) return "";
-  const h = createHash("sha256");
-  for (const f of files) {
-    const rel = f.slice(versionDir.length).replace(/\\/g, "/");
-    h.update(rel);
-    h.update("\0");
-    h.update(readFileSync(f));
-    h.update("\0");
-  }
-  return h.digest("hex");
 }
 
 function collectChunks(processedDir, docs) {

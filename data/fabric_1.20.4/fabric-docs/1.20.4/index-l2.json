@@ -1,1 +1,400 @@
-[]
+[
+  {
+    "id": "1.20.4/develop_items_first-item",
+    "version": "1.20.4",
+    "label": "Creating Your First Item",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/first-item.md",
+    "tags": [
+      "registry",
+      "entrypoint",
+      "event",
+      "item",
+      "recipe",
+      "resource",
+      "config"
+    ],
+    "sections": [
+      {
+        "title": "Preparing Your Items Class {#preparing-your-items-class}",
+        "level": 2,
+        "summary": "To simplify the registering of items, you can create a method that accepts an instance of an item and a string identifier."
+      },
+      {
+        "title": "Registering an Item {#registering-an-item}",
+        "level": 2,
+        "summary": "You can now register an item using the method now. The item constructor takes in an instance of the Item.Properties class as a parameter."
+      },
+      {
+        "title": "Adding the Item to a Creative Tab {#adding-the-item-to-a-creative-tab}",
+        "level": 2,
+        "summary": "::: info If you want to add the item to a custom CreativeModeTab, checkout the Custom Creative Tabs page for more information."
+      },
+      {
+        "title": "Naming The Item {#naming-the-item}",
+        "level": 2,
+        "summary": "The item currently doesn't have a translation, so you will need to add one. The translation key has already been provided by Minecraft: item.example-mod.suspicious_substance."
+      },
+      {
+        "title": "Adding a Texture and Model {#adding-a-texture-and-model}",
+        "level": 2,
+        "summary": "To give your item a texture and model, simply create a 16x16 texture image for your item and save it in the assets/example-mod/textures/item folder."
+      },
+      {
+        "title": "Making the Item Compostable or a Fuel {#making-the-item-compostable-or-a-fuel}",
+        "level": 2,
+        "summary": "Fabric API provides various registries that can be used to add additional properties to your item. For example, if you want to make your item compostable, you can use the CompostableItemRegistry:"
+      },
+      {
+        "title": "Adding a Basic Crafting Recipe {#adding-a-basic-crafting-recipe}",
+        "level": 2,
+        "summary": "<!-- In the future, an entire section on recipes and recipe types should be created. For now, this suffices."
+      },
+      {
+        "title": "Custom Tooltips {#custom-tooltips}",
+        "level": 2,
+        "summary": "If you want your item to have a custom tooltip, you will need to create a class that extends Item and override the appendHoverText method."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 1,
+    "file": "develop_items_first-item.md",
+    "processedFile": "processed/develop_items_first-item.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:06.052Z",
+    "sha256": "14fc4bedb2aaf0bd52259656b1f9970eb733f18cdbd058cf750f7e99f4333438"
+  },
+  {
+    "id": "1.20.4/develop_items_custom-tools",
+    "version": "1.20.4",
+    "label": "Tools and Weapons",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/items/custom-tools.md",
+    "tags": [
+      "item",
+      "block",
+      "resource",
+      "config"
+    ],
+    "sections": [
+      {
+        "title": "Creating a Tool Material {#creating-a-tool-material}",
+        "level": 2,
+        "summary": "::: info If you're creating multiple tool materials, consider using an Enum to store them. Vanilla does this in the ToolMaterials class, which stores all the tool materials that are used in the game."
+      },
+      {
+        "title": "Creating Tool Items {#creating-tool-items}",
+        "level": 2,
+        "summary": "Using the same way you registered your first item, you should register each tool similarly: @code transcludeWith=:::7"
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 1,
+    "file": "develop_items_custom-tools.md",
+    "processedFile": "processed/develop_items_custom-tools.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:08.759Z",
+    "sha256": "9e79011c55cfc9bae912a05a0c68fc0193add79d3e4918e302605722d4f2c077"
+  },
+  {
+    "id": "1.20.4/develop_blocks_first-block",
+    "version": "1.20.4",
+    "label": "Creating Your First Block",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/blocks/first-block.md",
+    "tags": [
+      "registry",
+      "datagen",
+      "item",
+      "block",
+      "loot",
+      "resource"
+    ],
+    "sections": [
+      {
+        "title": "Preparing Your Blocks Class {#preparing-your-blocks-class}",
+        "level": 2,
+        "summary": "If you've completed the Creating Your First Item page, this process will feel extremely familiar - you will need to create a method that registers your block, and it's block item."
+      },
+      {
+        "title": "Creating And Registering Your Block {#creating-and-registering-your-block}",
+        "level": 2,
+        "summary": "Similarly to items, blocks take a BlockBehaviour.Properties class in their constructor, which specifies properties about the block, such as its sound effects and mining level."
+      },
+      {
+        "title": "Adding Block Translations {#adding-block-translations}",
+        "level": 2,
+        "summary": "To add a translation, you must create a translation key in your translation file - assets/example-mod/lang/en_us.json."
+      },
+      {
+        "title": "Models and Textures {#models-and-textures}",
+        "level": 2,
+        "summary": "All block textures can be found in the assets/example-mod/textures/block folder - an example texture for the \"Condensed Dirt\" block is free to use."
+      },
+      {
+        "title": "Creating the Block State Definition {#creating-the-block-state-definition}",
+        "level": 2,
+        "summary": "The blockstate definition is used to instruct the game on which model to render based on the current state of the block."
+      },
+      {
+        "title": "Adding Block Drops {#adding-block-drops}",
+        "level": 2,
+        "summary": "When breaking the block in survival, you may see that the block does not drop - you might want this functionality, however to make your block drop as an item on break you must implement its loot ta..."
+      },
+      {
+        "title": "Recommending a Harvesting Tool {#recommending-a-harvesting-tool}",
+        "level": 2,
+        "summary": "You may also want your block to be harvestable only by a specific tool - for example, you may want to make your block faster to harvest with a shovel."
+      },
+      {
+        "title": "Mining Levels {#mining-levels}",
+        "level": 2,
+        "summary": "Similarly, the mining level tag can be found in the same folder, and respects the following format: - needsstonetool.json - A minimum level of stone tools - needsirontool."
+      },
+      {
+        "title": "Extra Notes {#extra-notes}",
+        "level": 2,
+        "summary": "If you're adding multiple blocks to your mod, you may want to consider using Data Generation to automate the process of creating block and item models, blockstate definitions, and loot tables."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 1,
+    "file": "develop_blocks_first-block.md",
+    "processedFile": "processed/develop_blocks_first-block.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:09.485Z",
+    "sha256": "52012805f47d361b018d86327f4bb2f6bb26b9d2dcfd5f787afb24cfbf8c25d0"
+  },
+  {
+    "id": "1.20.4/develop_events",
+    "version": "1.20.4",
+    "label": "Events",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/events.md",
+    "tags": [
+      "event",
+      "item",
+      "block",
+      "loot",
+      "mixin"
+    ],
+    "sections": [
+      {
+        "title": "Callbacks {#callbacks}",
+        "level": 2,
+        "summary": "Callbacks are a piece of code that is passed as an argument to an event. When the event is triggered by the game, the passed piece of code will be executed."
+      },
+      {
+        "title": "Listening to Events {#listening-to-events}",
+        "level": 2,
+        "summary": "This example registers an AttackBlockCallback to damage the player when they hit blocks that don't drop an item when hand-mined. @code lang=java transcludeWith=:::1"
+      },
+      {
+        "title": "Custom Events {#custom-events}",
+        "level": 2,
+        "summary": "Some areas of the game do not have hooks provided by the Fabric API, so you can either use a mixin or create your own event. We'll look at creating an event that is triggered when sheep are sheared."
+      }
+    ],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 3,
+    "file": "develop_events.md",
+    "processedFile": "processed/develop_events.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:15.842Z",
+    "sha256": "70f3cd8f744d64e965f8a54296e5758e9a83c34626ac24e08199e98bf0c1df8d"
+  },
+  {
+    "id": "1.20.4/develop_commands_basics",
+    "version": "1.20.4",
+    "label": "Creating Commands",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/commands/basics.md",
+    "tags": [
+      "registry",
+      "event",
+      "sides",
+      "block",
+      "command"
+    ],
+    "sections": [
+      {
+        "title": "The `Command` Interface {#the-command-interface}",
+        "level": 2,
+        "summary": "com.mojang.brigadier.Command is a functional interface, which runs some specific code, and throws a CommandSyntaxException in certain cases."
+      },
+      {
+        "title": "Registering a Basic Command {#registering-a-basic-command}",
+        "level": 2,
+        "summary": "Commands are registered within the CommandRegistrationCallback provided by the Fabric API. ::: info For information on registering callbacks, please see the Events guide. :::"
+      },
+      {
+        "title": "Client Commands {#client-commands}",
+        "level": 2,
+        "summary": "Fabric API has a ClientCommandManager in net.fabricmc.fabric.api.client.command.v2 package that can be used to register client-side commands. The code should exist only in client-side code."
+      },
+      {
+        "title": "Command Redirects {#command-redirects}",
+        "level": 2,
+        "summary": "Command redirects - also known as aliases - are a way to redirect the functionality of one command to another."
+      },
+      {
+        "title": "FAQ {#faq}",
+        "level": 2,
+        "summary": "- Catch or throw a CommandSyntaxException - CommandSyntaxException is not a RuntimeException. If you throw it, that should be in methods that throw CommandSyntaxException in method signatures, or i..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 5,
+    "file": "develop_commands_basics.md",
+    "processedFile": "processed/develop_commands_basics.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:19.233Z",
+    "sha256": "71a574f458349e94a525356bf56f3eb991c7671f10108414fa28a87874372e0b"
+  },
+  {
+    "id": "1.20.4/develop_getting-started_creating-a-project",
+    "version": "1.20.4",
+    "label": "Creating a Project",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/getting-started/creating-a-project.md",
+    "tags": [
+      "config"
+    ],
+    "sections": [
+      {
+        "title": "Generating a Project {#generating-a-project}",
+        "level": 2,
+        "summary": "You can use the Fabric Template Mod Generator to generate a new project for your mod - you should fill in the required fields, such as the package name and mod name, and the Minecraft version that ..."
+      },
+      {
+        "title": "Importing the Project {#importing-the-project}",
+        "level": 2,
+        "summary": "Once you've opened the project in IntelliJ IDEA, the IDE should automatically load the project's Gradle configuration and perform the necessary setup tasks."
+      },
+      {
+        "title": "Manual Project Creation {#manual-project-creation}",
+        "level": 2,
+        "summary": "::: warning You will need Git installed in order to clone the example mod repository. ::: If you cannot use the Fabric Template Mod Generator, you can create a new project manually by following the..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 1,
+    "keySections": 0,
+    "file": "develop_getting-started_creating-a-project.md",
+    "processedFile": "processed/develop_getting-started_creating-a-project.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:31.353Z",
+    "sha256": "36c6aa239a7821693f5f43272d285595fd9f7d35c1662fcd4640cd968c735745"
+  },
+  {
+    "id": "1.20.4/develop_rendering_basic-concepts",
+    "version": "1.20.4",
+    "label": "Basic Rendering Concepts",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/basic-concepts.md",
+    "tags": [
+      "entrypoint",
+      "event",
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "The `Tesselator` {#the-tessellator}",
+        "level": 2,
+        "summary": "The Tesselator is the main class used to render things in Minecraft. It is a singleton, meaning that there is only one instance of it in the game. You can get the instance using Tesselator."
+      },
+      {
+        "title": "The `BufferBuilder` {#the-bufferbuilder}",
+        "level": 2,
+        "summary": "The BufferBuilder is the class used to format and upload rendering data to OpenGL. It is used to create a buffer, which is then uploaded to OpenGL to draw."
+      },
+      {
+        "title": "The `PoseStack` {#the-matrixstack}",
+        "level": 2,
+        "summary": "After learning how to write to the BufferBuilder, you might be wondering how to transform your model - or even animate it. This is where the PoseStack class comes in."
+      },
+      {
+        "title": "Quaternions (Rotating Things) {#quaternions-rotating-things}",
+        "level": 2,
+        "summary": "Quaternions are a way of representing rotations in 3D space. They are used to rotate the top matrix on the PoseStack via the mulPose(Quaternion, x, y, z) method."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 2,
+    "keySections": 2,
+    "file": "develop_rendering_basic-concepts.md",
+    "processedFile": "processed/develop_rendering_basic-concepts.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:37.022Z",
+    "sha256": "2583068c7ac27688ee96c91a50490abeb4d6be15c3002d1c3b851942df5b8b60"
+  },
+  {
+    "id": "1.20.4/develop_rendering_gui_custom-screens",
+    "version": "1.20.4",
+    "label": "Custom Screens",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/rendering/gui/custom-screens.md",
+    "tags": [
+      "rendering"
+    ],
+    "sections": [
+      {
+        "title": "Creating a Screen {#creating-a-screen}",
+        "level": 2,
+        "summary": "To create a screen, you need to extend the Screen class and override the init method - you may optionally override the render method as well - but make sure to call it's super method or it wont ren..."
+      },
+      {
+        "title": "Opening the Screen {#opening-the-screen}",
+        "level": 2,
+        "summary": "You can open the screen using the MinecraftClient's setScreen method - you can do this from many places, such as a key binding, a command, or a client packet handler."
+      },
+      {
+        "title": "Closing the Screen {#closing-the-screen}",
+        "level": 2,
+        "summary": "If you want to close the screen, simply set the screen to null: If you want to be fancy, and return to the previous screen, you can pass the current screen into the CustomScreen constructor and sto..."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 3,
+    "keySections": 0,
+    "file": "develop_rendering_gui_custom-screens.md",
+    "processedFile": "processed/develop_rendering_gui_custom-screens.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:37.777Z",
+    "sha256": "43fb08412d3df26109638d1d960d62eff1385fc1347c55bc3b6d652de3bae085"
+  },
+  {
+    "id": "1.20.4/develop_codecs",
+    "version": "1.20.4",
+    "label": "Codecs",
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.20.4/develop/codecs.md",
+    "tags": [
+      "registry",
+      "item",
+      "block",
+      "resource"
+    ],
+    "sections": [
+      {
+        "title": "Using Codecs {#using-codecs}",
+        "level": 2,
+        "summary": "The basic usage of a codec is to serialize and deserialize objects to and from a specific format. Since a few vanilla classes already have codecs defined, we can use those as an example."
+      },
+      {
+        "title": "Building Codecs {#building-codecs}",
+        "level": 2,
+        "summary": "Now that we've seen how to use codecs, let's take a look at how we can build our own. Suppose we have the following class, and we want to deserialize instances of it from json files: private final ..."
+      },
+      {
+        "title": "References {#references}",
+        "level": 2,
+        "summary": "- A much more comprehensive documentation of Codecs and related APIs can be found at the Unofficial DFU JavaDoc."
+      }
+    ],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 23,
+    "keySections": 13,
+    "file": "develop_codecs.md",
+    "processedFile": "processed/develop_codecs.md",
+    "source": "github_raw_versioned",
+    "fetchedAt": "2026-08-20T06:00:41.108Z",
+    "sha256": "7acdabe63823ed46fddf9e23f7d39b0087c28e37e727aad7c599a23b3ae07dd2"
+  }
+]

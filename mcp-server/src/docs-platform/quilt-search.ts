@@ -1,6 +1,8 @@
 /**
  * Quilt search_docs：有独立树用 quilt-docs；否则分类回退 Fabric。
  */
+import { existsSync } from "fs";
+import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { createFabricDocStore, FabricDocStore } from "./fabric/store.js";
 import { hasPlatformDocData, platformDataMissingPayload } from "./platform-data.js";
@@ -16,10 +18,20 @@ export const QUILT_EXCLUSIVE_WARNING =
 const QUILT_FABRIC_FALLBACK_WARNING =
   "Quilt 无此页，已回退 Fabric 全文。QSL 专用 API 不要用 Fabric Registry 页。";
 
+const QUILT_VERSION_FABRIC_FALLBACK_WARNING =
+  "Quilt 官方文档无此版本，已回退到同版本 Fabric 文档，但 QSL API 请务必以 Quilt 官方为准。";
+
 const QUILT_CURRENT_SITE_WARNING =
   "Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。";
 
 type DocHit = { id?: string; label?: string; url?: string; tags?: string[] };
+
+/** 只认本档 quilt-docs L0，禁止用「任意 quilt_* 存在」代替。 */
+export function hasQuiltDocsIndex(version: string, dataRoot = resolveDataDir()): boolean {
+  const ver = String(version ?? "").trim();
+  if (!ver || /[\\/]/.test(ver) || ver.includes("..")) return false;
+  return existsSync(join(dataRoot, `quilt_${ver}`, "quilt-docs", ver, "index-l0.json"));
+}
 
 function jsonOk(payload: unknown): CallToolResult {
   const rec = payload && typeof payload === "object" ? (payload as Record<string, unknown>) : { value: payload };
@@ -91,7 +103,7 @@ export async function searchQuiltDocs(args: {
   const dataRoot = resolveDataDir();
   const qsl = isQslSpecificQuery(args.query);
 
-  if (hasPlatformDocData("quilt", dataRoot)) {
+  if (hasQuiltDocsIndex(args.version, dataRoot)) {
     const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
     try {
       const detailedRes = store.searchIndexDetailed(args.query, args.version, args.tags);
@@ -169,6 +181,7 @@ export async function searchQuiltDocs(args: {
       });
     }
     const filtered = filterFabricFallbackHits(results);
+    const versionMissingQuilt = hasPlatformDocData("quilt", dataRoot);
     return jsonOk({
       ok: true,
       query: args.query,
@@ -178,7 +191,9 @@ export async function searchQuiltDocs(args: {
       platform: "quilt",
       fallback: "fabric",
       warning: joinSearchWarnings(
-        "无独立 Quilt 文档树，已回退 Fabric（已过滤 FAPI 专属 Registry/ItemGroup 等）。QSL 专用页可能缺失。取全文可继续 platform=quilt（会自动回退 Fabric）或改 platform=fabric。",
+        versionMissingQuilt
+          ? QUILT_VERSION_FABRIC_FALLBACK_WARNING
+          : "无独立 Quilt 文档树，已回退 Fabric（已过滤 FAPI 专属 Registry/ItemGroup 等）。QSL 专用页可能缺失。取全文可继续 platform=quilt（会自动回退 Fabric）或改 platform=fabric。",
         filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属命中` : undefined,
         missingSemanticDbWarning(semanticHits === null),
         semanticStaleSearchWarning(resolveDataDir(), "fabric", fabricDetailed.resolvedVersion, "fabric-docs"),
@@ -197,7 +212,7 @@ export async function searchQuiltDocs(args: {
 
 export async function getQuiltDocSummary(args: { id: string; version: string }): Promise<CallToolResult> {
   const dataRoot = resolveDataDir();
-  if (hasPlatformDocData("quilt", dataRoot)) {
+  if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
       const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
       const result = store.loadSummary(args.id, args.version);
@@ -252,7 +267,7 @@ export async function getQuiltDocFull(args: {
 }): Promise<CallToolResult> {
   const dataRoot = resolveDataDir();
   const highlight = args.highlight_key ?? true;
-  if (hasPlatformDocData("quilt", dataRoot)) {
+  if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
       const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
       const result = await store.loadFullDoc(args.id, args.version, highlight);
@@ -326,7 +341,7 @@ export function getQuiltDocRelated(args: {
 }): CallToolResult {
   const dataRoot = resolveDataDir();
   const limit = args.limit ?? 5;
-  if (hasPlatformDocData("quilt", dataRoot)) {
+  if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
       const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
       return jsonRelatedList(store.getRelatedDocs(args.id, args.version, limit));

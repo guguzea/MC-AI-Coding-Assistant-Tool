@@ -47,9 +47,9 @@ description: 00 — 项目结构与构建
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.19.4
-  forge_version=43.2.0
+  forge_version=45.4.0
   mappings_version=1.19.4-2023.04.04
-  loader_version=43.2.0
+  loader_version=45.4.0
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -79,7 +79,7 @@ src/main/java/
 src/main/resources/
 ├── META-INF/
 │   └── mods.toml       # Forge 元数据（必需）
-├── pack.mcmeta         # 资源包标识（必需，1.19.4 使用 pack_format=9）
+├── pack.mcmeta         # 资源包标识（必需，1.19.4 资源包 pack_format=13；数据包为 12）
 └── assets/
     └── {modid}/        # 资源文件
         ├── lang/
@@ -124,7 +124,7 @@ IF 报错包含 "Incompatible Java version"
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
-  → Forge 版本对应关系：1.19.4 → 43.x.x
+  → Forge 版本对应关系：1.19.4 → 45.x.x
 
 IF 报错包含 "No resource bundling found"
   → 这是正常的（非客户端打包时），可忽略
@@ -261,4 +261,4 @@ side = "BOTH"
 - `modId` 禁止包含 `-`，必须全小写
 - `version` 建议与 `gradle.properties` 中的 `mod_version` 保持一致
 - `[[dependencies.xxx]]` 的 `modId` 必须与外层 `modId` 一致
-- `loaderVersion` 的格式：`"[43,)"` 表示 Forge 43 及以上
+- `loaderVersion` 的格式：`"[45,)"` 表示 Forge 45 及以上
