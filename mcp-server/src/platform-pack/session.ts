@@ -34,6 +34,10 @@ export const NEXT_READS_LIMIT = 8;
 const BASE_ONLY_WARNING =
   "已加载底座规则 00/01/09；如涉及方块/GUI/网络等主题，请调用 session 时传 task 或 topics，否则主题规则不在上下文中。";
 
+function missingBaseRulesWarning(missingIds: string[]): string {
+  return `本档 .cursor/rules 缺少底座 ${missingIds.join("/")}，rules[] 未注入这些正文。不要把 ok=true 当已加载 00/01/09。`;
+}
+
 const NO_PLATFORM_SKILLS_WARNING =
   "该档无平台 Skill 索引，session 成功不等于技能齐全；库 Skill 若有也只在显式 skillNames 时注入。请用已注入规则 + 核实表 / search_docs。";
 
@@ -371,7 +375,10 @@ export function sessionPlatformPack(args: SessionArgs) {
     if ((validTask || validTopic) && expanded) rulesMode = "extended";
     else rulesMode = "base";
   }
-  if (rulesMode === "base" && !includeAll) warnings.push(BASE_ONLY_WARNING);
+  const injectedIds = new Set(ruleBodies.map((r) => r.id));
+  const missingBase = BASE_RULE_IDS.filter((id) => !injectedIds.has(id));
+  if (missingBase.length) warnings.push(missingBaseRulesWarning(missingBase));
+  else if (rulesMode === "base" && !includeAll) warnings.push(BASE_ONLY_WARNING);
 
   return {
     ok: true,

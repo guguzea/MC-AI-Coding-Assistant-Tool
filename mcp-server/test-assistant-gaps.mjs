@@ -696,6 +696,12 @@ description: |
   assert.ok(countTableRows("forge/1.7.10/knowledge/common/verified-api.md") >= 10);
   const neo1201 = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.1" });
   assert.equal(neo1201.ok, true, JSON.stringify(neo1201.action));
+  for (const id of ["00", "01", "09"]) {
+    assert.ok(
+      (neo1201.rules ?? []).some((r) => r.id === id),
+      `neoforge 1.20.1 missing rule ${id}`,
+    );
+  }
   const f1211 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.21.1" });
   assert.equal(f1211.ok, false);
   assert.equal(f1211.action?.code, "PACK_NOT_FOUND");
@@ -721,6 +727,11 @@ description: |
     const text = readFileSync(p, "utf8");
     assert.match(text, /search_fabric_docs/, `${ver} mc-registry`);
     assert.match(text, new RegExp(`version=${ver.replaceAll(".", "\\.")}`));
+    const sess = sessionPlatformPack({ platform: "fabric", minecraftVersion: ver });
+    const ids = (sess.rules ?? []).map((r) => r.id);
+    for (const id of ["00", "01", "09"]) {
+      assert.ok(ids.includes(id), `${ver} session missing ${id} in ${ids.join(",")}`);
+    }
   }
   assert.ok(!(listed.versions ?? []).includes("1.21.5"));
   console.log("plan4 fabric 1.21.4/8/10 skills + 1.21.5 PACK_NOT_FOUND: ok");

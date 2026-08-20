@@ -164,6 +164,7 @@ data/
 ### 贡献注意
 
 - **不要**把 `agent-tools/`、`临时文件*.md`、本地 audit 输出提交进仓库（见 `.gitignore`）
+- 根 `.gitignore` 的 `/.cursor/` **只**排除仓库根 IDE 目录。平台包 `fabric/<ver>/.cursor/rules` 等必须入库（`activate_platform_pack session` 只从这里注入规则）。**不要**改回 `.cursor/`，否则新档规则对 clone 不可见、`rules[]` 为空却仍提示「已加载底座 00/01/09」
 - **不要**假设 `mcp-server/data/` 是运行时路径；MCP 读取的是 `MC_SKILL_DATA` 指向的仓库根 `data/`
 - 大体积 `*.jar` / `*.zip` 的忽略规则见根 `.gitignore`；完整包走 Release artifact + `SHA256SUMS` + `data-manifest.json`
 - Redistribute `data/` 时附带 [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md)

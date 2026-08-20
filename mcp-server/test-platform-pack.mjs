@@ -643,10 +643,52 @@ function assertHasRuleIds(s, want, label) {
   assert.equal(qDisk.length, 3, qDisk.join(","));
   const neo = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.20.1" });
   assert.equal(neo.ok, true, JSON.stringify(neo.action));
+  assertHasRuleIds(neo, ["00", "01", "09"], "neoforge 1.20.1 base");
   const f1211 = sessionPlatformPack({ platform: "forge", minecraftVersion: "1.21.1" });
   assert.equal(f1211.ok, false);
   assert.equal(f1211.action?.code, "PACK_NOT_FOUND");
   console.log("plan4 quilt disk 3 + neo 1.20.1 / forge 1.21.1 draft: ok");
+}
+
+{
+  const gi = readFileSync(join(repo, ".gitignore"), "utf8");
+  const patterns = gi
+    .split(/\r?\n/)
+    .map((l) => l.replace(/#.*$/, "").trim())
+    .filter(Boolean);
+  assert.ok(patterns.includes("/.cursor/"), "gitignore must ignore only repo-root /.cursor/");
+  assert.ok(!patterns.includes(".cursor/"), "gitignore must not ignore nested pack .cursor/");
+  assert.ok(!patterns.includes(".cursor"));
+  const advertised = [
+    ["fabric", "1.21.4"],
+    ["fabric", "1.21.8"],
+    ["fabric", "1.21.10"],
+    ["neoforge", "1.20.1"],
+  ];
+  for (const [platform, ver] of advertised) {
+    const s = sessionPlatformPack({ platform, minecraftVersion: ver });
+    assert.equal(s.ok, true, `${platform} ${ver}: ${JSON.stringify(s.action)}`);
+    assertHasRuleIds(s, ["00", "01", "09"], `${platform} ${ver} base`);
+    assert.ok(
+      !(s.warnings ?? []).some((w) => /缺少底座/.test(w)),
+      `${platform} ${ver} warnings=${(s.warnings ?? []).join(" | ")}`,
+    );
+  }
+  console.log("gitignore + advertised packs inject 00/01/09: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-norules-"));
+  const packDir = join(tmp, "fabric", "9.9.7");
+  mkdirSync(packDir, { recursive: true });
+  writeFileSync(join(packDir, "AGENTS.md"), "# fabric 9.9.7\n", "utf8");
+  const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: "9.9.7", repoRoot: tmp });
+  assert.equal(s.ok, true, JSON.stringify(s.action));
+  assert.equal((s.rules ?? []).length, 0);
+  assert.ok((s.warnings ?? []).some((w) => /缺少底座 00\/01\/09/.test(w)), (s.warnings ?? []).join(" | "));
+  assert.ok(!(s.warnings ?? []).some((w) => /已加载底座规则 00\/01\/09/.test(w)));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("session missing .cursor/rules does not claim base loaded: ok");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;
