@@ -10,7 +10,7 @@
 依赖: []
 扩展点: [渲染器, AI]
 ---
-public class MyEntity extends LivingEntity {
+public class MyEntity extends EntityCreature {
     protected MyEntity(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -24,15 +24,14 @@ public class MyEntity extends LivingEntity {
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+    protected void initEntityAI() {
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0, true));
+        this.tasks.addTask(2, new EntityAIWanderAvoidWater(this, 1.0));
+        this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));
+        this.tasks.addTask(4, new EntityAILookIdle(this));
 
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
     }
 }
 

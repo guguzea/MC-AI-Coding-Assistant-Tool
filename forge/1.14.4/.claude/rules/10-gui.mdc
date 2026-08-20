@@ -84,7 +84,7 @@ public class MyContainer extends Container {
 
 // 2. Register ContainerType
 public static final DeferredRegister<ContainerType<?>> CONTAINERS =
-    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.CONTAINERS, MOD_ID);
 
 public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
     CONTAINERS.register("my_container",
@@ -109,9 +109,13 @@ public class ClientSetup {
 ## Container → TileEntity binding
 
 ```java
-// In TileEntity
-public IItemHandler getCapability(Capability<IItemHandler> cap, Direction side) {
-    return handler;
+// In TileEntity（ICapabilityProvider）
+@Override
+public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        return LazyOptional.of(() -> (T) handler);
+    }
+    return super.getCapability(cap, side);
 }
 
 // In Block

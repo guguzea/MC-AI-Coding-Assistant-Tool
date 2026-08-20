@@ -16,7 +16,7 @@ description: 06 — 网络通信
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
 - 禁止在客户端包类中直接访问服务端独有类（如 `WorldServer`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
-- 使用 `level.isClientSide` 判断当前逻辑端（1.16.5 使用 `isRemote`，不是 `isClientSide`）
+- 使用 `level.isClientSide` 判断当前逻辑端（应使用 `isClientSide`）
 
 ### SimpleChannel 配置
 
@@ -36,8 +36,8 @@ public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
 
 - **不要** `IMessage` / `IMessageHandler`（1.12 SimpleImpl）
 - 普通类 + `registerMessage(id, Class, encoder, decoder, consumer)`
-- encoder：`BiConsumer<MSG, FriendlyByteBuf>`
-- decoder：`Function<FriendlyByteBuf, MSG>`（不要无参 `MyMessage::new`，除非构造函数吃 `FriendlyByteBuf`）
+- encoder：`BiConsumer<MSG, PacketBuffer>`
+- decoder：`Function<PacketBuffer, MSG>`（不要无参 `MyMessage::new`，除非构造函数吃 `PacketBuffer`）
 - consumer：`BiConsumer<MSG, Supplier<NetworkEvent.Context>>`
 - **禁止**在消息类中存储对世界或实体的直接引用
 
@@ -104,11 +104,11 @@ public class MyMessage {
         this.value = value;
     }
 
-    public MyMessage(FriendlyByteBuf buf) {
+    public MyMessage(PacketBuffer buf) {
         this.value = buf.readInt();
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(PacketBuffer buf) {
         buf.writeInt(value);
     }
 

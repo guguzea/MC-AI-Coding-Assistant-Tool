@@ -59,7 +59,7 @@ namespace:id
 | `Registry.ITEM` | 物品 | `Items.DIAMOND` |
 | `Registry.ENTITY_TYPE` | 实体类型 | `EntityType.PIG` |
 | `Registry.PARTICLE_TYPE` | 粒子类型 | `ParticleTypes.AMBIENT_ENTITY_EFFECT` |
-| `Registry.CONTAINER` | 菜单类型 | `ChestScreenHandler` |
+| `Registry.CONTAINER` | 菜单类型 | `Container` / `ChestContainer` |
 | `Registry.SOUND_EVENT` | 声音事件 | `SoundEvents.ITEM_PICKUP` |
 
 > **注意**：1.14.4 使用 `Registry.ITEM` 而非 `Registry.ITEM`。`Registries` 是 1.17+ 才引入的枚举。

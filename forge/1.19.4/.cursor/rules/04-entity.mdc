@@ -36,7 +36,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 - 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
 - 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `GoalFloat`、`GoalLookAtPlayer` 等
+- 每个 Entity 实例创建对应的 `FloatGoal`、`LookAtPlayerGoal` 等
 
 ### 渲染器规范
 
@@ -108,7 +108,7 @@ IF 覆盖默认 Steve 模型
   → 覆盖 PlayerRenderer
 
 IF 自定义模型（Biped、Quadruped 等）
-  → 继承对应基类：LivingRenderer<Entity, Model>
+  → 继承对应基类：LivingEntityRenderer<Entity, Model>
   → 在 BakedModel 中实现自定义模型
   → 需要提供 .json 模型文件和材质贴图
 ```
@@ -248,7 +248,7 @@ public class ClientSetup {
 public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MyEntityModel.LAYER_LOCATION)), 0.5f);
-        this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer(), context.getBlockRenderer()));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemRenderer(), context.getBlockRenderDispatcher()));
     }
 
     @Override
@@ -260,6 +260,6 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
 
 > 注意：
 > 1. `EntityRenderers` 在 Forge 1.19.4 中通过 `EntityRenderersEvent.RegisterRenderers` 事件注册（不是 `ClientSetup` 中直接调用）
-> 2. `ItemInHandLayer` 需要 `EntityRendererProvider.Context` 中的 `ItemRenderer` 和 `BlockRenderer`
+> 2. `ItemInHandLayer` 需要 `EntityRendererProvider.Context` 中的 `ItemRenderer` 和 `BlockRenderDispatcher`
 > 3. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）
-> 4. `EntityModelLayer` 用于定义层标识，通过 `EntityRenderersEvent.RegisterLayerDefinitions` 注册，渲染器中用 `context.bakeLayer()` 获取
+> 4. `ModelLayerLocation` 用于定义层标识，通过 `EntityRenderersEvent.RegisterLayerDefinitions` 注册，渲染器中用 `context.bakeLayer()` 获取

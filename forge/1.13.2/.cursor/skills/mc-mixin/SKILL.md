@@ -22,7 +22,7 @@ buildscript {
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
@@ -38,7 +38,7 @@ apply plugin: 'org.spongepowered.mixin'
   "required": true,
   "minVersion": "0.7.11",
   "package": "com.example.examplemod.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_11",
   "refmap": "${mod_id}.refmap.json",
   "client": ["client.SomeMixin"],
   "server": [],
@@ -56,7 +56,7 @@ config = "${mod_id}.mixins.json"
 ## @Inject 用法
 
 ```java
-@Mixin(PlayerEntity.class)
+@Mixin(EntityPlayer.class)
 public class MixinPlayer {
     @Inject(at = @At("HEAD"), method = "attack(Lnet/minecraft/entity/Entity;)V")
     private void onAttack(CallbackInfo ci) {

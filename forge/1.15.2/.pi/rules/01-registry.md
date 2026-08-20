@@ -82,7 +82,7 @@ IF 注册 方块 / 物品 / 实体 / 方块实体 / 附魔 / 粒子 / 声音等�
   → 使用 DeferredRegister<T> + RegistryObject<T>（推荐方式）
 
 IF 注册自定义 Registry
-  → 使用 DeferredRegister.create(ResourceKey) + makeRegistry()
+  → 使用 RegistryBuilder + RegistryEvent.NewRegistry + makeRegistry()
 
 IF 平台 = Fabric
   → 跳转 fabric/1.15.2/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）

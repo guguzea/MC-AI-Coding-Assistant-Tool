@@ -11,7 +11,7 @@
 **关键变化**：
 - Forge 版本号：`47.x` → `49.x`
 - Parchment 映射：`2023.09.03-1.20.1` → `2024.11.30-1.20.4`
-- `pack_format`：**保持 15**（无需修改）
+- 数据包 pack_format **26**、资源包 **22**（1.20.3–1.20.4；与 1.20.1 的 15 不同）
 
 **需要修改的文件**：
 - `gradle.properties`：`minecraft_version`、`forge_version`、`mapping_version`

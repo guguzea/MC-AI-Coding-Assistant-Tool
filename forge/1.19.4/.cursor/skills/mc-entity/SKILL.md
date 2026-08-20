@@ -95,7 +95,7 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
         super(context, new MyEntityModel<>(context.bakeLayer(MyEntityModel.LAYER_LOCATION)), 0.5f);
         // 添加层（如 ItemInHandLayer）
         this.addLayer(new ItemInHandLayer<>(this,
-            context.getItemRenderer(), context.getBlockRenderer()));
+            context.getItemRenderer(), context.getBlockRenderDispatcher()));
     }
 
     @Override

@@ -5,8 +5,7 @@
 ```
 Decision:
 → list_neoforge_versions + 工程 neo_version / minecraft_version
-→ IF 版本 ∈ 1.20.4 | 1.20.6 | 1.21.1 | 1.21.3 | 1.21.5 | 1.21.8 | 1.21.10 | 1.21.11 | 26.1 → 只读 neoforge/<ver>/AGENTS.md 与该档 00–10
-→ ELSE IF 版本 ∈ 1.20.1 → 禁止读邻档 00–10，改口 search_neoforge_docs（1.20.1 有 Forge 兼容数据）
+→ IF 版本 ∈ 1.20.1 | 1.20.4 | 1.20.6 | 1.21.1 | 1.21.3 | 1.21.5 | 1.21.8 | 1.21.10 | 1.21.11 | 26.1 → 只读 neoforge/<ver>/AGENTS.md 与该档 00–10（1.20.1 是独立短规则树，禁止用 1.20.4 00–10 顶上）
 → ELSE → 询问用户。禁止默默读扁平 .cursor/rules
 ```
 

@@ -81,15 +81,15 @@ public class ClientSetup {
     public static void init(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(
             MyEntity.TYPE.get(),
-            MyEntityRenderer::new
+            manager -> new MyEntityRenderer(manager, new MyEntityModel<>(), 0.5f)
         );
     }
 }
 
 // 渲染器
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
-    public MyEntityRenderer(EntityRendererManager manager) {
-        super(manager, new MyEntityModel<>(), 0.5f);
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
+    public MyEntityRenderer(EntityRendererManager manager, MyEntityModel<MyEntity> model, float shadow) {
+        super(manager, model, shadow);
     }
 
     @Override

@@ -97,7 +97,7 @@ The callback has three parameters:
 
 In the mod's initializer, we just register a simple command:
 
-@[code lang=java transcludeWith=:::test_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::test_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 
 <!-- key:🟠 role:常见错误 -->
@@ -129,8 +129,8 @@ From this point onwards, we will be extracting the logic written within the lamb
 If desired, you can also make sure a command is only registered under some specific circumstances, for example, only in
 the dedicated environment:
 
-@[code lang=java highlight={2} transcludeWith=:::dedicated_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
-@[code lang=java transcludeWith=:::execute_dedicated_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java highlight={2} transcludeWith=:::dedicated_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::execute_dedicated_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 ### Command Requirements {#command-requirements}
 
@@ -138,8 +138,8 @@ Let's say you have a command that you only want moderators to be able to execute
 comes into play. The `requires()` method has one argument of a `Predicate<S>` which will supply a `CommandSourceStack`
 to test with and determine if the `CommandSource` can execute the command.
 
-@[code lang=java highlight={3} transcludeWith=:::required_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
-@[code lang=java transcludeWith=:::execute_required_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java highlight={3} transcludeWith=:::required_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::execute_required_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 This command will only execute if the source of the command is a moderator at a minimum, including command
 blocks. Otherwise, the command is not registered.
@@ -154,20 +154,20 @@ also why you cannot <kbd>Tab</kbd>-complete most commands when you do not enable
 
 To add a sub command, you register the first literal node of the command normally. To have a sub command, you have to append the next literal node to the existing node.
 
-@[code lang=java highlight={3} transcludeWith=:::sub_command_one](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
-@[code lang=java transcludeWith=:::execute_sub_command_one](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java highlight={3} transcludeWith=:::sub_command_one](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::execute_sub_command_one](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 Similar to arguments, sub command nodes can also be set optional. In the following case, both `/command_two`
 and `/command_two sub_command_two` will be valid.
 
-@[code lang=java highlight={2,8} transcludeWith=:::sub_command_two](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
-@[code lang=java transcludeWith=:::execute_command_sub_command_two](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java highlight={2,8} transcludeWith=:::sub_command_two](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::execute_command_sub_command_two](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 ## Client Commands {#client-commands}
 
-Similarly, Fabric API provides the `ClientCommandRegistrationCallback` event in `net.fabricmc.fabric.api.client.command.v2` package that can be used to register client-side commands, replacing the vanilla `Commands` class with the equivalent `ClientCommands`. The code should exist only in client-side code.
+Fabric API has a `ClientCommandManager` in `net.fabricmc.fabric.api.client.command.v2` package that can be used to register client-side commands. The code should exist only in client-side code.
 
-@[code lang=java transcludeWith=:::1](@/reference/latest/src/client/java/com/example/docs/client/command/ExampleModClientCommands.java)
+@[code lang=java transcludeWith=:::1](@/reference/1.21.11/src/client/java/com/example/docs/client/command/ExampleModClientCommands.java)
 
 ## Command Redirects {#command-redirects}
 
@@ -179,8 +179,8 @@ Brigadier [will only redirect command nodes with arguments](https://github.com/M
 
 :::
 
-@[code lang=java transcludeWith=:::redirect_command](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
-@[code lang=java transcludeWith=:::execute_redirected_by](@/reference/latest/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::redirect_command](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
+@[code lang=java transcludeWith=:::execute_redirected_by](@/reference/1.21.11/src/main/java/com/example/docs/command/ExampleModCommands.java)
 
 ## FAQ {#faq}
 

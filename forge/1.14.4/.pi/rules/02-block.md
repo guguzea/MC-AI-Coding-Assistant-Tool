@@ -164,7 +164,7 @@ public class MyBlock extends Block {
 ```java
 // Registration using DeferredRegister (recommended)
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
     BLOCKS.register("my_block", MyBlock::new);

@@ -64,7 +64,7 @@ Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_block"),  // 同名�
 
 ```java
 // ❌ 错误：Registries 类在 1.17.x 中不存在
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 
 // ✅ 正确：1.17.x 使用 Registry 静态字段
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);

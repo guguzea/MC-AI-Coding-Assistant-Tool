@@ -10,13 +10,13 @@ description: 07 — Script API 与实验开关
 
 ```
 → 未点名 Beta → 只生成 stable；不写 Beta 事件
-→ 点名 @minecraft/server-beta 或 Beta 事件（如 BlockExplodeAfterEvent）
+→ 点名 @minecraft/server-beta 或 Beta 事件
     → 允许生成；回复必须写「须在世界设置打开 Beta APIs」
     → pack：dependencies 声明 beta 模块
-    → 需要 eval 才写 capabilities: ["script_eval"]
+    → 需要 eval → capabilities 写法**未核实**（Learn pack-manifest 无 `script_eval`）
     → 禁止 experimentalGameplay、禁止虚构 worldgen/experimental.json
 → min_engine_version < 约 1.19.80：对照该引擎归档，不要倒灌现行 capabilities
-→ ≥ 1.19.80：世界实验走 level.dat experiments.gametest；pack 不能替玩家打开
+→ ≥ 1.19.80：世界实验开关**未核实**（勿写死 `level.dat experiments.gametest`）；pack 不能替玩家打开
 → UI → 只用 stable @minecraft/server-ui（stable/script-server-ui）
 ```
 

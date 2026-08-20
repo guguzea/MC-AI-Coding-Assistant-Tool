@@ -92,8 +92,7 @@ public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityMod
     public MyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new MyEntityModel<>(context.bakeLayer(MyEntityModel.LAYER_LOCATION)), 0.5f);
         // 添加层（如 ItemInHandLayer）
-        this.addLayer(new ItemInHandLayer<>(this,
-            context.getItemRenderer(), context.getBlockRenderer()));
+        this.addLayer(new ItemInHandLayer<>(this));
     }
 
     @Override
@@ -114,7 +113,7 @@ IF 自定义 Biped 模型
 
 IF 自定义任意模型
   → EntityModel + LayerDefinition + bakeLayer()
-  → 通过 EntityRenderersEvent.RegisterLayerDefinitions 注册 ModelLayer
+  → 通过 EntityRenderersEvent.RegisterLayerDefinitions 注册 ModelLayerLocation
 ```
 
 ## 实体数据同步（服务端 ↔ 客户端）

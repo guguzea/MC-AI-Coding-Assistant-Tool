@@ -6,7 +6,7 @@ description: 04 — 实体（NeoForge 1.21.8）
 
 来源：https://docs.neoforged.net/docs/1.21.8/entities/
 
-用 `DeferredRegister.Entities` / `DeferredRegister.create(Registries.ENTITY_TYPE, MODID)`。`EntityType.Builder` 最后 `.build(...)` 的 ResourceKey 参数以该版文档为准。
+主入口：`DeferredRegister.createEntities` / `DeferredRegister.Entities`。存盘用 `ValueInput` / `ValueOutput`（本版 entities 页），不要抄更早档的 `CompoundTag`。`EntityType.Builder` 最后 `.build(...)` 的参数以该版文档为准。
 
 渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = MOD)`。不要在服务端加载 Renderer。
 

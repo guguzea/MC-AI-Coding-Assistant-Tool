@@ -15,7 +15,7 @@ skillId: mc-yacl
 
 # YACL 配置库集成要点
 
-自写短文。版本与 API 细节以 [YACL](https://github.com/isxander/yet-another-config-lib) 当前 README 与示例 mod 为准。
+自写短文。版本与 API 细节以 [YACL](https://github.com/isXander/YetAnotherConfigLib) 当前 README 与示例 mod 为准。
 
 ## 何时用 / 何时不用
 
@@ -46,7 +46,7 @@ Decision: 要不要用 YACL
 ## 集成要点（伪代码级）
 
 ```java
-// 客户端专用：GUI 构建只应在 Dist.CLIENT 触发，公共代码留门闩
+// 客户端专用：GUI 构建只在客户端触发（Forge/Neo：`Dist.CLIENT`；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`），公共代码留门闩
 // 类名以官方为准：YetAnotherConfigLib（YACL）包内 Builder 风格入口
 // 典型流程：buildScreen(holder) → 分组/条目 → 保存回调写回你的配置持有类 → 返回 Screen
 // Screen 塞给 Minecraft 的 setScreen(...) 或 Mod Menu 配置入口回调
@@ -58,7 +58,7 @@ Decision: 要不要用 YACL
 
 ## 常见坑
 
-- Screen 类被公共/服务端代码引用 → 专用服崩溃（应用 `Dist.CLIENT` 门闩）
+- Screen 类被公共/服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 只 `compileOnly` 却当硬依赖用，未装 YACL 时 `NoClassDefFoundError`
 - 期待 YACL 支持 1.19 以下版本 → 版本窗口外无构建，换 Cloth
 - 手写配置路径与库冲突，或双份配置（ForgeConfigSpec + YACL 各一份）
@@ -75,7 +75,7 @@ Decision: 要不要用 YACL
 - MCP：`generate_config`、`check_dependencies`、`search_community_docs`
 - Skill：`mc-yacl`；相关：`mc-config`、`mc-gui`
 - 全览：§二.1 配置库、§五 陷阱 7（Cloth 冷冻，新模组转向 YACL / owo-config / Fzzy）；`authored/library-catalog-2026`、`authored/lib-cloth-config`、`authored/lib-fzzy-config`、`authored/library-integration`
-- 官方：https://github.com/isxander/yet-another-config-lib ；Cloth：https://github.com/shedaniel/cloth-config
+- 官方：https://github.com/isXander/YetAnotherConfigLib ；Cloth：https://github.com/shedaniel/cloth-config
 - 不清楚时：打开 YACL README + 示例 mod，或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

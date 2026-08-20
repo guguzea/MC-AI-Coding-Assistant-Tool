@@ -45,7 +45,7 @@ Decision: 用不用 LibGui
 
 - 按"Modrinth 下载 + 玩家手动装"分发：页面已 404，改 maven + JiJ
 - 引了 maven 坐标却没 JiJ 打包：玩家缺 LibGui，NoClassDefFoundError
-- 把 GUI 构建代码放进公共/服务端代码：专用服崩溃（Dist.CLIENT 门闩）
+- 把 GUI 构建代码放进公共/服务端代码：专用服崩溃（client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources）
 - 照抄 1.16 时代旧教程类名/包名：已重构，以当前 README 为准
 
 ## 自检

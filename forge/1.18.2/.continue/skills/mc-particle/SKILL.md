@@ -1,6 +1,6 @@
 ﻿---
 name: mc-particle
-description: Minecraft Forge 粒子效果开发。ParticleType 注册、ParticleProvider、particles.json、SpriteSet、渲染。触发词：Particle、ParticleType、ParticleProvider、RegisterParticleProvidersEvent、ParticleRenderType
+description: Minecraft Forge 粒子效果开发。ParticleType 注册、ParticleProvider、particles.json、SpriteSet、渲染。触发词：Particle、ParticleType、ParticleProvider、ParticleFactoryRegisterEvent、ParticleRenderType
 platform: forge
 version: "1.18.2"
 dependencies: []
@@ -56,9 +56,10 @@ public class MyParticle extends TextureSheetParticle {
 @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ParticleProviders {
     @SubscribeEvent
-    public static void registerParticles(RegisterParticleProvidersEvent event) {
+    public static void registerParticles(ParticleFactoryRegisterEvent event) {
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
         // 配合 particles/*.json 的多纹理粒子
-        event.registerSpriteSet(
+        engine.register(
             ModParticles.MY_PARTICLE.get(),
             MyParticle::new
         );

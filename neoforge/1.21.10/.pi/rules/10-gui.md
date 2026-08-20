@@ -17,9 +17,7 @@ description: 10 — GUI（NeoForge 1.21.10）
 - 物品容器用数据组件 `DataComponents.CONTAINER`（`ItemContainerContents`）。直接对 `Container` 改栈的菜单必须 `#copy()`，文档给 `StackCopySlot`。
 - 配置屏（不是物品菜单）：`container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new)`，见 https://docs.neoforged.net/docs/1.21.10/misc/config/
 
-## Screen（渲染页已核）
+## Screen（rendering/screens 本档 DOC_NOT_FOUND，未核实）
 
-- 独立 GUI 继承 `Screen`，构造 `super(Component title)`；控件在 `init` 里 `addRenderableWidget`。
-- 容器 GUI 继承 `AbstractContainerScreen<T>`，构造 `(MyMenu, Inventory, Component)`。背景 `renderBg` 用 `graphics.blit(RenderPipelines.GUI_TEXTURED, ResourceLocation.fromNamespaceAndPath(...), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256)`。`pose()` 是 **`Matrix3x2fStack`**（`pushMatrix` / `popMatrix`），不是更早档的 `PoseStack` 那套。
-- 注册：物理客户端、mod bus 上 `RegisterMenuScreensEvent`：`event.register(MY_MENU.get(), MyContainerScreen::new)`。**不要**写 `MenuScreens.register` / `NetworkHooks.openScreen`。
+- 独立 GUI / 容器 GUI 的 blit、`Matrix3x2fStack`、`RegisterMenuScreensEvent` **未**用本档 `get_neoforge_doc_full` 核到。禁止把邻档 `rendering/screens` 改版本号冒充。改口 `search_neoforge_docs`。
 - 额外同步走 06 Payload（`RegisterClientPayloadHandlersEvent` + `ClientPacketDistributor`）。禁止 SimpleChannel。

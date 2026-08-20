@@ -7,7 +7,7 @@
 1. **Registry API**：RegistryEvent → DeferredRegister
 2. **Java**：Java 8 → Java 17
 3. **Gradle**：4.9 + FG 2.3 → 8.x + FG 6.x
-4. **pack_format**：4 → 9
+4. **资源包 format**：3 → 9（1.12 无 1.13 式数据包）
 5. **NBT**：NBTTagCompound → CompoundTag
 6. **方块实体**：TileEntity → BlockEntity
 

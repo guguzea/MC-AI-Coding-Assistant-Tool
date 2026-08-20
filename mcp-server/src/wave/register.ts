@@ -128,7 +128,7 @@ export const READ_KNOWLEDGE_RESOURCE_DESCRIPTION = "Read knowledge resource by U
 export const GENERATE_CONFIG_DESCRIPTION =
   "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1 用 ModConfigSpec；1.20.4 用 ForgeConfigSpec + net.neoforged。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖。不写盘。";
 export const GENERATE_NETWORK_PACKET_DESCRIPTION =
-  "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.10 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。只传 fabric 会 error。返回 Java 骨架文本，不写盘。";
+  "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_26.1）。未列出的 platform 拒绝；只传 fabric 会 error。返回 Java 骨架文本，不写盘。";
 export const GENERATE_CAPABILITY_DESCRIPTION =
   "Generate Capability / DataAttachment skeleton。platform 与 version 必填。forge 1.20.1 Capability；neoforge 仅 1.20.4+ Data Attachment（不是 Forge Capability）；fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。";
 export const GENERATE_MODEL_DESCRIPTION =
@@ -151,7 +151,7 @@ export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
   packetName: z.string(),
   platform: z
-    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_1.21.5", "neoforge_1.21.10", "neoforge_26.1", "fabric_1.21", "fabric_26.1"])
+    .enum(["forge_1.20.1", "neoforge_1.20.4", "neoforge_1.21", "neoforge_1.21.5", "neoforge_1.21.8", "neoforge_1.21.10", "neoforge_1.21.11", "neoforge_26.1", "fabric_1.21", "fabric_26.1"])
     .describe("必填。须带版本后缀；禁止只传 fabric / neoforge"),
 });
 export const generateCapabilitySchema = z.object({

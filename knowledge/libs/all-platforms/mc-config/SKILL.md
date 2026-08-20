@@ -27,7 +27,7 @@ IF MC 版本在 YACL 窗口外（< 1.19）
 ## 硬 / 软依赖与类加载隔离
 
 - GUI 库一律软依赖：主代码 `compileOnly`，开发自测加 `runtimeOnly`；`fabric.mod.json` 用 `suggests`，`mods.toml` 用 optional
-- Screen 构建只在 `Dist.CLIENT` 触发；Screen 类放 client 包，公共代码只留「打开配置屏」的客户端门闩
+- Screen 构建只在客户端触发：Forge/Neo 用 `Dist.CLIENT` 门闩；Fabric/Quilt 用 client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources；Screen 类放 client 包，公共代码只留「打开配置屏」的客户端门闩
 - 未装库时模组必须正常进游戏（不加载库类，无 NoClassDefFoundError）
 - Fabric 用 Mod Menu 软依赖挂「Config」按钮（modId `modmenu`）；Forge / Neo 自建按钮或 ModMenuPort
 
@@ -39,7 +39,7 @@ IF MC 版本在 YACL 窗口外（< 1.19）
 ## 官方文档
 
 - Cloth Config：https://github.com/shedaniel/cloth-config
-- YACL：https://github.com/isxander/yet-another-config-lib
+- YACL：https://github.com/isXander/YetAnotherConfigLib
 - Fzzy Config：https://github.com/Fuzss/fzzy-config
 - owo-config：https://docs.wispforest.io/
 

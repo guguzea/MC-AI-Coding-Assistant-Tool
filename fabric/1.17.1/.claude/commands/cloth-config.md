@@ -33,7 +33,7 @@ public class ModConfig {
 
     public ModConfig() {
         builder = ConfigBuilder.create()
-            .title(Text.literal("My Mod Config"))
+            .title(new LiteralText("My Mod Config"))
             .setDefaultTitle("My Mod Config")
             .setSavingRunnable(() -> {
                 // 保存配置
@@ -42,13 +42,13 @@ public class ModConfig {
         ConfigCategory general = builder.getOrCreateCategory("general");
 
         general.addEntry(ConfigEntryBuilder.create()
-            .startBooleanToggle(Text.literal("Enable Feature"), true)
+            .startBooleanToggle(new LiteralText("Enable Feature"), true)
             .setSaveConsumer(value -> enableFeature = value)
             .build()
         );
 
         general.addEntry(ConfigEntryBuilder.create()
-            .startIntSlider(Text.literal("Value"), 10, 1, 100)
+            .startIntSlider(new LiteralText("Value"), 10, 1, 100)
             .setSaveConsumer(value -> this.value = value)
             .build()
         );

@@ -19,9 +19,7 @@ private static final DeferredRegister<SoundEvent> SOUNDS =
 
 public static final RegistryObject<SoundEvent> MY_SOUND =
     SOUNDS.register("my_sound",
-        () -> SoundEvent.createVariableRangeEvent(
-            new ResourceLocation(MOD_ID, "my_sound")
-        )
+        () -> new SoundEvent(new ResourceLocation(MOD_ID, "my_sound"))
     );
 
 // 在 mod 构造函数中
@@ -95,7 +93,7 @@ level.playSound(
 
 ## 常见错误
 
-- ❌ 废弃的 `new SoundEvent(id)` 构造函数 → 使用 `SoundEvent.createVariableRangeEvent(id)`
+- ❌ 使用 `SoundEvent.createVariableRangeEvent(id)` → 本档用 `new SoundEvent(id)`
 - ❌ `sounds.json` 中 `sounds` 写成对象而非数组 → 必须是 `["ns:sound"]` 格式
 - ❌ 忘记在 `sounds.json` 中注册事件名 → `SoundEvent` 存在但游戏无法解析
 - ❌ 长音乐文件没有 `"stream": true` → OGG 文件全部加载到内存

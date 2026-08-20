@@ -5,7 +5,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 6,
+    "pack_format": 5,
     "description": "My Datapack"
   }
 }

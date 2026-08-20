@@ -12,7 +12,7 @@
 - **禁止**在运行时修改数据生成器输出
 - 生成的 JSON 放在 `src/generated/resources/`（ForgeGradle 配置的输出目录），不要手改
 - Provider 实现 **`DataProvider`**；构造函数吃 **`DataGenerator`**，**不要** `PackOutput` / `getPackOutput()`（那是 1.19.3+）
-- `DataGenerator#addProvider(IDataProvider)`（1.18 文档写 `DataProvider`），**不要** `addProvider(true, ...)`（1.19.2+）
+- `DataGenerator#addProvider(DataProvider)`（1.18 文档写 `DataProvider`），**不要** `addProvider(true, ...)`（1.19.2+）
 - **不要** `event.getLookupProvider()` / `HolderLookup`（1.19.3+）
 - GatherDataEvent：`net.minecraftforge.forge.event.lifecycle.GatherDataEvent`
 - 配方覆盖 `buildCraftingRecipes`（query_api 1.17.1）；标签 `addTags`；1.17 才有 `BlockTags.MINEABLE_WITH_PICKAXE`
@@ -313,7 +313,7 @@ public class ModLanguageProvider extends LanguageProvider {
 ## 常见错误
 
 - ❌ `PackOutput` / `getPackOutput()` — 1.17.1 用 `DataGenerator` 构造 Provider
-- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(IDataProvider)` 无 boolean
+- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(DataProvider)` 无 boolean
 - ❌ `event.getLookupProvider()` / `HolderLookup` — 1.19.3+
 - ❌ `RecipeCategory` — 1.19.3+
 - ❌ 手改 `src/generated/resources/`

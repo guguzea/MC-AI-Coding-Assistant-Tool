@@ -34,7 +34,7 @@ EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
 
 - 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
 - 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `GoalFloat`、`GoalLookAtPlayer` 等
+- 每个 Entity 实例创建对应的 `SwimGoal`、`LookAtGoal` 等
 
 ### 渲染器规范
 
@@ -207,7 +207,7 @@ public class ClientSetup {
         // 渲染器通过 RenderingRegistry.registerEntityRenderingHandler 注册
         RenderingRegistry.registerEntityRenderingHandler(
             ModEntities.MY_ENTITY.get(),
-            MyEntityRenderer::new
+            manager -> new MyEntityRenderer(manager, new MyEntityModel<>(), 0.5f)
         );
     }
 }
@@ -217,9 +217,9 @@ public class ClientSetup {
 
 ```java
 // client/rendering/MyEntityRenderer.java
-public class MyEntityRenderer extends LivingEntityRenderer<MyEntity, MyEntityModel<MyEntity>> {
-    public MyEntityRenderer(EntityRendererManager manager) {
-        super(manager, new MyEntityModel<>(), 0.5f);
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
+    public MyEntityRenderer(EntityRendererManager manager, MyEntityModel<MyEntity> model, float shadow) {
+        super(manager, model, shadow);
     }
 
     @Override

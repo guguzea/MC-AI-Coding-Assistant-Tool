@@ -40,7 +40,7 @@ Loom uses multiple different plugin IDs:
 
 While setting up a multi-project build that depends on another Loom project, you should use the `namedElements` configuration when depending on the other project. By default, a project's "outputs" are remapped to intermediary names. The `namedElements` configuration contains the project outputs that have not been remapped.
 
-```gradle
+```groovy
 dependencies {
  implementation project(path: ":name", configuration: "namedElements")
 }
@@ -48,9 +48,9 @@ dependencies {
 
 If you are using split source sets in a multi-project build, you will also need to add a dependency for the other project's client source set.
 
-```gradle
+```groovy
 dependencies {
- clientImplementation this.project(":name").sourceSets.client.output
+ clientImplementation project(":name").sourceSets.client.output
 }
 ```
 
@@ -62,7 +62,18 @@ The following snippet from a `build.gradle` file shows how you can enable this f
 
 Minecraft 1.18 (1.19 recommended), Loader 0.14 and Loom 1.0 or later are required to split the client and common code.
 
-<<< @/reference/build.gradle#split-sources
+```groovy
+loom {
+ splitEnvironmentSourceSets()
+
+ mods {
+   example-mod {
+     sourceSet sourceSets.main
+     sourceSet sourceSets.client
+   }
+ }
+ }
+```
 
 ## Resolving Issues {#issues}
 

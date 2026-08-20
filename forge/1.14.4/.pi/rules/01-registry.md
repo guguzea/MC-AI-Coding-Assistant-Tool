@@ -25,14 +25,14 @@ description: 01 — 注册系统
 
 | 注册内容 | DeferredRegister 工厂方法 | 注册到 |
 |---------|---------------------------|--------|
-| 方块 | `DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
-| 物品 | `DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
-| 方块实体 | `DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)` | modEventBus |
-| 实体类型 | `DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)` | modEventBus |
-| 附魔 | `DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MOD_ID)` | modEventBus |
-| 流体 | `DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidAttributes` | modEventBus |
-| 粒子类型 | `DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MOD_ID)` | modEventBus |
-| 声音事件 | `DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
+| 方块 | `new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID)` | modEventBus |
+| 物品 | `new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID)` | modEventBus |
+| 方块实体 | `new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID)` | modEventBus |
+| 实体类型 | `new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID)` | modEventBus |
+| 附魔 | `new DeferredRegister<>(ForgeRegistries.ENCHANTMENTS, MOD_ID)` | modEventBus |
+| 流体 | `new DeferredRegister<>(ForgeRegistries.FLUIDS, MOD_ID)` + `FluidAttributes` | modEventBus |
+| 粒子类型 | `new DeferredRegister<>(ForgeRegistries.PARTICLE_TYPES, MOD_ID)` | modEventBus |
+| 声音事件 | `new DeferredRegister<>(ForgeRegistries.SOUND_EVENTS, MOD_ID)` | modEventBus |
 
 ### mod ID 规范
 
@@ -82,7 +82,7 @@ IF 注册 方块 / 物品 / 实体 / 方块实体 / 附魔 / 粒子 / 声音等�
   → 使用 DeferredRegister<T> + RegistryObject<T>（推荐方式）
 
 IF 注册自定义 Registry
-  → 使用 DeferredRegister.create(ResourceKey) + makeRegistry()
+  → 使用 RegistryBuilder + RegistryEvent.NewRegistry + makeRegistry()
 
 IF 平台 = Fabric
   → 跳转 fabric/1.14.4/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
@@ -95,21 +95,21 @@ IF 平台 = NeoForge
 
 ```
 IF 注册 方块
-  → 使用 DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID)
+  → 使用 new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID)
   → 在 BLOCKS.register() 中注册
   → 如需物品形态，在 ITEMS.register() 中注册同名 BlockItem
 
 IF 注册 物品
-  → 使用 DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID)
+  → 使用 new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID)
   → 在 ITEMS.register() 中注册
 
 IF 注册 方块实体（TileEntity）
   → 方块重写 hasTileEntity() + createTileEntity()
-  → 使用 DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)
+  → 使用 new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID)
   → 用 TileEntityType.Builder.create(...).build(null) 注册
 
 IF 注册 实体（Entity）
-  → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
+  → 使用 new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID)
   → 在 ENTITIES.register() 中注册 EntityType
   → 必须在 mods.toml 中声明 entity 字段
 
@@ -168,11 +168,11 @@ public class ExampleMod {
 
     // 创建 DeferredRegister（持有某类对象的延迟注册器）
     public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
-        DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<TileEntityType<?>> BLOCK_ENTITIES =
-        DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
     // 注册方块（lambda 内可安全引用其他已注册的 RegistryObject）
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
@@ -223,7 +223,7 @@ public class ModBlocks {
     private ModBlocks() {}  // 工具类，禁止实例化
 
     public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(ForgeRegistries.BLOCKS, ExampleMod.MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.BLOCKS, ExampleMod.MOD_ID);
 
     public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
         () -> new Block(Block.Properties.create(Material.ROCK)
@@ -239,7 +239,7 @@ public class ModItems {
     private ModItems() {}
 
     public static final DeferredRegister<Item> ITEMS =
-        DeferredRegister.create(ForgeRegistries.ITEMS, ExampleMod.MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.ITEMS, ExampleMod.MOD_ID);
 
     // 物品直接注册
     public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",

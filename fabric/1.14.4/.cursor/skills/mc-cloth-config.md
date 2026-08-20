@@ -31,15 +31,15 @@ dependencies {
 public class ModConfig implements ConfigSerializable {
     @ConfigEntry.Gui.Excluded
     public ConfigBuilder builder = ConfigBuilder.create()
-        .title(Text.literal("My Mod Config"))
+        .title(new LiteralText("My Mod Config"))
         .category(ConfigCategory.createBuilder()
-            .name(Text.literal("General"))
+            .name(new LiteralText("General"))
             .option(ConfigEntry.BoolOption.createBuilder(true)
-                .name(Text.literal("Enable Feature"))
-                .tooltip(Text.literal("Enable or disable the feature"))
+                .name(new LiteralText("Enable Feature"))
+                .tooltip(new LiteralText("Enable or disable the feature"))
                 .build())
             .option(ConfigEntry.IntSliderOption.createBuilder(10, 1, 100)
-                .name(Text.literal("Value"))
+                .name(new LiteralText("Value"))
                 .build())
             .build())
         .save(() -> {
@@ -72,7 +72,7 @@ public class MyConfigScreen extends ConfigScreen {
             // 保存配置
         });
 
-        builder.addLabel(Text.literal("My Configuration"));
+        builder.addLabel(new LiteralText("My Configuration"));
         builder.addEntry(EntryBuilder.startBooleanToggle(
                 new TranslatableText("config.my_mod.enable_feature"))
             .setDefaultValue(true)

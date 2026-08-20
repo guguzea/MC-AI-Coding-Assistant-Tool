@@ -28,7 +28,7 @@ IF 需要物品栏槽位（多格容器）
 
 ```java
 public static final DeferredRegister<ContainerType<?>> MENUS =
-    DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.CONTAINERS, MOD_ID);
 
 public static final RegistryObject<ContainerType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
@@ -69,25 +69,25 @@ public class MyMenu extends Container {
     @Override
     public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(slotIndex);
+        Slot slot = this.inventorySlots.get(slotIndex);
 
-        if (slot.hasItem()) {
-            ItemStack slotStack = slot.getItem();
+        if (slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
             stack = slotStack.copy();
 
             // 从玩家物品栏（索引 0-35）→ 容器（索引 36 开始）
             if (slotIndex < 36) {
-                if (!this.moveItemStackTo(slotStack, 36, this.slots.size(), false)) {
+                if (!this.mergeItemStack(slotStack, 36, this.inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
                 // 从容器 → 玩家物品栏
-                if (!this.moveItemStackTo(slotStack, 0, 36, false)) {
+                if (!this.mergeItemStack(slotStack, 0, 36, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
-            slot.setChanged();
+            slot.onSlotChanged();
         }
         return stack;
     }

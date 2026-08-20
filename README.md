@@ -339,6 +339,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `get_*_doc_full` 一次拉很多页 | **最多 2 页**，避免上下文溢出 |
 | `updateHint.available` = 必须更新 | 缓存可能过期；先 `mc_skill_update check` |
 | 缺 26.2 / 26.1.2 wiki 就复制邻版 | **禁止克隆冒充** |
+| `DOC_NOT_FOUND` / 规则树空壳就抄邻版 API | **禁止**。保持未核实 stub，不是漏写 |
 
 写模组时的选用顺序：平台规则（`AGENTS.md`）→ `search_*_docs`（平台 API）→ `query_api`（仅有索引的 Vanilla）→ 反编译（确实要源码）。不要反过来用 `query_api` 猜 Forge 事件名。
 

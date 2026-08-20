@@ -9,7 +9,7 @@ mappings: "库按各 loader 预重映射；公共代码不直接引用渲染类�
 
 # playerAnimator 玩家动画（操作指引）
 
-给 AI 的操作指引：为玩家（第一/第三人称）加关键帧动画，如攻击、施法、持握姿态。详细信息用 `search_community_docs` 查 `authored/lib-playeranimator`，API 细节以 [官方仓库](https://github.com/KosmX/playerAnimator) 当前 README 与示例 mod 为准。
+给 AI 的操作指引：为玩家（第一/第三人称）加关键帧动画，如攻击、施法、持握姿态。详细信息用 `search_community_docs` 查 `authored/lib-playeranimator`，API 细节以 [官方仓库](https://github.com/KosmX/fabricPlayerAnimation) 当前 README 与示例 mod 为准。
 
 ## 何时用 / 何时不用
 
@@ -60,7 +60,7 @@ Decision: 玩家动画方案
 
 ## 参考
 
-- 官方：https://github.com/KosmX/playerAnimator
+- 官方：https://github.com/KosmX/fabricPlayerAnimation
 - 社区：`search_community_docs` → `authored/lib-playeranimator`
 - 相关 Skill：`mc-renderer`、`mc-geckolib`、`mc-networking`
 - 不确定时：打开 playerAnimator README + 示例 mod，未核对前不写死任何类名/方法签名

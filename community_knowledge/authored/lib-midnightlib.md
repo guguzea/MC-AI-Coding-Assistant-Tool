@@ -48,7 +48,7 @@ Decision: 要不要用 MidnightLib
 ```java
 // 类名以官方为准：MidnightLib 提供简单配置对象与配置界面入口
 // 典型流程：定义配置字段与默认值 → 初始化 → 打开配置 Screen（客户端）
-// 打开界面：客户端门闩内 setScreen(...)；Forge 侧注意 Dist.CLIENT
+// 打开界面：客户端门闩内 setScreen(...)；Forge/Neo 用 `Dist.CLIENT`；Fabric/Quilt 用 client 源集 + `@Environment(EnvType.CLIENT)`
 // 分发：JiJ 打包后无需用户单独装 MidnightLib，代码里按常规依赖使用
 ```
 
@@ -58,7 +58,7 @@ Decision: 要不要用 MidnightLib
 ## 常见坑
 
 - 声明了依赖却忘了 JiJ 打包 → 用户必须手动装 MidnightLib，违背轻量初衷
-- Screen 类被公共/服务端代码引用 → 专用服崩溃（应用 `Dist.CLIENT` 门闩）
+- Screen 类被公共/服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - JiJ 配置写错（Loom `include` 漏写）→ 打包后运行时 `ClassNotFoundException`
 - 期待 26.2 以上版本 → 以官方发布为准，勿假定滚动跟进
 

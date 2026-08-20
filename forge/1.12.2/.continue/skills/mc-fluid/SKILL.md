@@ -13,10 +13,10 @@ mappings: mcp
 
 ```
 IF 只需要静态流体（不流动）
-  → Fluid + FluidRegistry
+  → Fluid + FluidRegistry.registerFluid()
 
 IF 需要流动、填装、无限水源
-  → FluidRegistry.registerFluid() + BucketHandler
+  → FluidRegistry.registerFluid() + FluidRegistry.addBucketForFluid()
 ```
 
 ## 完整示例：自定义流体
@@ -24,16 +24,15 @@ IF 需要流动、填装、无限水源
 ### 1. 注册流体
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public class ModFluids {
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<Fluid> event) {
-        event.getRegistry().register(
-            new Fluid("my_fluid", new ResourceLocation(MOD_ID, "blocks/my_fluid"),
-                                         new ResourceLocation(MOD_ID, "blocks/my_fluid_flowing"))
-                .setRegistryName(MOD_ID, "my_fluid")
-        );
-    }
+public static final Fluid MY_FLUID = new Fluid("my_fluid",
+    new ResourceLocation(MOD_ID, "blocks/my_fluid_still"),
+    new ResourceLocation(MOD_ID, "blocks/my_fluid_flowing"))
+    .setUnlocalizedName(MOD_ID + ".my_fluid");
+
+@Mod.EventHandler
+public void preInit(FMLPreInitializationEvent event) {
+    FluidRegistry.registerFluid(MY_FLUID);
+    FluidRegistry.addBucketForFluid(MY_FLUID); // 可选：自动桶物品
 }
 ```
 
@@ -63,6 +62,7 @@ public class MyBucket extends ItemBucket {
 
 ## 常见错误
 
+- ❌ 使用 `RegistryEvent.Register<Fluid>` — 1.12 用 `FluidRegistry.registerFluid`
 - ❌ 只注册 Fluid 而不创建方块 → 流体无法放置
 - ❌ 忘记 BucketHandler 注册 → 桶无法装填
 
@@ -74,5 +74,5 @@ public class MyBucket extends ItemBucket {
 
 | 配合 Skill | 协作说明 |
 |------------|---------|
-| `mc-registry` | Fluid 通过 RegistryEvent 注册 |
+| `mc-registry` | Fluid 通过 FluidRegistry 注册 |
 | `mc-block` | 流体方块本质是 BlockFluidClassic |

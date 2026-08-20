@@ -15,7 +15,7 @@ public static final Block MY_BLOCK = new Block(Properties.of(Material.STONE));
 
 ```java
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(BuiltInRegistries.BLOCK, MOD_ID);
 
 public static final DeferredHolder<Block, Block> MY_BLOCK =
     BLOCKS.register("my_block", () -> new Block(Properties.of(Material.STONE)));

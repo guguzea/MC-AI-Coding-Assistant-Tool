@@ -36,31 +36,31 @@ public class MyContainer extends Container {
         // 玩家物品栏
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                this.addSlotToContainer(new Slot(playerInv, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
         // 玩家快捷栏
         for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInv, col, 8 + col * 18, 142));
+            this.addSlotToContainer(new Slot(playerInv, col, 8 + col * 18, 142));
         }
 
         // 方块物品栏
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                this.addSlot(new Slot(tileInv, col + row * 3, 62 + col * 18, 17 + row * 18));
+                this.addSlotToContainer(new Slot(tileInv, col + row * 3, 62 + col * 18, 17 + row * 18));
             }
         }
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         // Shift-click 逻辑
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity player) {
+    public boolean canInteractWith(EntityPlayer player) {
         return tile.isUsableByPlayer(player);
     }
 }
@@ -83,7 +83,7 @@ public class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
         if (tile instanceof MyTileEntity) {
-            return new MyGui(new MyContainer(player.inventory, (IInventory) tile), player.inventory);
+            return new MyGui(new MyContainer(player.inventory, (IInventory) tile));
         }
         return null;
     }
@@ -95,7 +95,7 @@ public class GuiHandler implements IGuiHandler {
 ```java
 @Mod.EventHandler
 public void init(FMLInitializationEvent event) {
-    NetworkRegistry.INSTANCE.registerGuiHandler(MOD_ID, new GuiHandler());
+    NetworkRegistry.INSTANCE.registerGuiHandler(ExampleMod.instance, new GuiHandler());
 }
 ```
 
@@ -107,7 +107,7 @@ public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
                                 EntityPlayer player, EnumHand hand,
                                 EnumFacing facing, float hitX, float hitY, float hitZ) {
     if (!world.isRemote) {
-        player.openGui(MOD_ID, 0, world, pos.getX(), pos.getY(), pos.getZ());
+        player.openGui(ExampleMod.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
     }
     return true;
 }
@@ -117,26 +117,17 @@ public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
 
 ```java
 @SideOnly(Side.CLIENT)
-public class MyGui extends GuiScreen {
-    private final Container container;
-    private final IInventory playerInventory;
+public class MyGui extends GuiContainer {
+  public MyGui(Container container) {
+    super(container);
+    this.xSize = 176;
+    this.ySize = 166;
+  }
 
-    public MyGui(Container container, IInventory playerInventory) {
-        this.container = container;
-        this.playerInventory = playerInventory;
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        drawRect(x, y, x + 176, y + 166, 0xFF000000);
-    }
+  @Override
+  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    drawRect(0, 0, this.xSize, this.ySize, 0xFF000000);
+  }
 }
 ```
 

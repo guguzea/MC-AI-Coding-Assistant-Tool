@@ -43,8 +43,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.eventbus.api.Bus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-// 注意：无 @Mod 注解类，使用 BuildPlugin 模式
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
 ```
 
 ### Gradle 配置变更
@@ -72,24 +72,31 @@ modId="forge"  # Forge 依赖使用 "forge"
 modId="neoforge"  # NeoForge 依赖使用 "neoforge"
 ```
 
-### BuildPlugin 模式（替代 @Mod 注解）
+### 入口类（Forge ≤1.20.1 与 NeoForge）
 
 ```java
 // Forge 1.20.1
 @Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
-    public ExampleMod(FMLCommonSetupEvent event) { ... }
-}
-
-// NeoForge 1.20.4
-public class ExampleMod {
-    public static void init(IEventBus modEventBus) {
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
-        NeoForge.EVENT_BUS.register(ExampleMod.class);
     }
 
     @SubscribeEvent
-    public static void onCommonSetup(FMLCommonSetupEvent event) { ... }
+    public void onCommonSetup(FMLCommonSetupEvent event) { ... }
+}
+
+// NeoForge 1.20.4
+@Mod(ExampleMod.MOD_ID)
+public class ExampleMod {
+    public ExampleMod(IEventBus modBus) {
+        BLOCKS.register(modBus);
+        NeoForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onCommonSetup(FMLCommonSetupEvent event) { ... }
 }
 ```
 
@@ -107,8 +114,7 @@ public class ExampleMod {
 }
 
 // Fabric
-@Mod(MOD_ID)
-public class ExampleMod implements InitializingDrawableEvent, CallbackAware {
+public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() { ... }
 }
@@ -152,7 +158,7 @@ public static final Item MY_ITEM = Registry.register(
 
 ```java
 // NeoForge
-public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(NeoForgeRegistries.ITEMS, MOD_ID);
+public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, MOD_ID);
 public static final DeferredHolder<Item, Item> MY_ITEM = ITEMS.register("my_item", () -> new Item(...));
 
 // Fabric
@@ -168,7 +174,7 @@ public static final Item MY_ITEM = Registry.register(Registries.ITEM, new Identi
 | Mod ID 大小写 | 全部小写 | 全部小写 | 全部小写 |
 | 包名空间 | net.minecraftforge | net.neoforged | net.fabricmc |
 | 事件总线 | MinecraftForge.EVENT_BUS | NeoForge.EVENT_BUS | Callback 接口 |
-| Registry 持有类 | ForgeRegistries | NeoForgeRegistries | Registries (Vanilla) |
+| Registry 持有类 | ForgeRegistries | Registries / BuiltInRegistries | Registries (Vanilla) |
 | Capability 接口 | ICapabilityProvider | ICapabilityProvider | N/A |
 | Dist 注解 | @OnlyIn(Dist.CLIENT) | @OnlyIn(Dist.CLIENT) | @Environment(EnvType.CLIENT) |
 

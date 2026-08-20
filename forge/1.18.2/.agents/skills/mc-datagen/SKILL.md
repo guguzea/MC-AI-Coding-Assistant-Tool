@@ -156,7 +156,7 @@ public class ModLanguageProvider extends LanguageProvider {
 ## 常见错误
 
 - ❌ `PackOutput` / `getPackOutput()` — 1.18.2 用 `DataGenerator` 构造 Provider
-- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(IDataProvider)` 无 boolean
+- ❌ `addProvider(true, provider)` — 本档 `DataGenerator#addProvider(DataProvider)` 无 boolean
 - ❌ `event.getLookupProvider()` / `HolderLookup` — 1.19.3+
 - ❌ `RecipeCategory` — 1.19.3+
 - ❌ 手改 `src/generated/resources/`

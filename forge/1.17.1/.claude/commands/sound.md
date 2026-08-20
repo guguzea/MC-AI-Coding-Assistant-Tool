@@ -19,16 +19,14 @@ private static final DeferredRegister<SoundEvent> SOUNDS =
 
 public static final RegistryObject<SoundEvent> MY_SOUND =
     SOUNDS.register("my_sound",
-        () -> SoundEvent.createVariableRangeEvent(
-            new ResourceLocation(MOD_ID, "my_sound")
-        )
+        () -> new SoundEvent(new ResourceLocation(MOD_ID, "my_sound"))
     );
 
 // 在 mod 构造函数中
 SOUNDS.register(modEventBus);
 ```
 
-> 使用 `SoundEvent.createVariableRangeEvent(id)`，不要用已废弃的构造函数。
+> 使用 `new SoundEvent(id)` 注册可变范围声音。
 
 ### 2. sounds.json
 
@@ -144,7 +142,7 @@ IF 客户端触发、仅本地玩家听到
 
 ## 常见错误
 
-- ❌ 废弃的 `new SoundEvent(id)` 构造函数 → 使用 `SoundEvent.createVariableRangeEvent(id)`
+- ❌ 使用 `SoundEvent.createVariableRangeEvent(id)` → 本档用 `new SoundEvent(id)`
 - ❌ `sounds.json` 中 `sounds` 写成对象而非数组 → 必须是 `["ns:sound"]` 格式
 - ❌ `sounds` key 使用了命名空间前缀（如 `"minecraft:stone"`）→ `sounds.json` 中的 key 本身无命名空间
 - ❌ 忘记在 `sounds.json` 中注册事件名 → `SoundEvent` 存在但游戏无法解析

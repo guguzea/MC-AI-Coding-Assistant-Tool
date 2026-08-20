@@ -8,13 +8,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,9 +32,9 @@ public class ExampleMod {
     // DeferredRegister — Forge 1.14.4 推荐的注册方式
     // 延迟注册到 RegistryEvent，无需手动监听
     public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
-        DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
 
     // 注册方块
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
@@ -78,7 +79,7 @@ public class ExampleMod {
 
     // ---- 服务端事件 ----
     @SubscribeEvent
-    public void onServerStarting(PlayerEvent.ServerStartingEvent event) {
+    public void onServerStarting(FMLServerStartingEvent event) {
         LOGGER.info("Server starting: {}", event.getServer().getWorld().getWorldInfo().getWorldName());
     }
 

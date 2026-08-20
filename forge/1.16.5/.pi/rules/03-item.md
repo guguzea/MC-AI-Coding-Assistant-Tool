@@ -20,7 +20,7 @@ description: 03 — 物品开发
 
 ```java
 new Item.Properties()
-    .maxStackSize(int maxStackSize)             // 默认 64
+    .stacksTo(int maxStackSize)             // 默认 64
     .durability(int maxDamage)                  // 有耐久物品
     .craftRemainder(Item copyFrom)              // 消耗后保留物品
     .fireResistant()                            // 防火（鞘翅等）
@@ -44,11 +44,11 @@ public enum MyItemTier implements IItemTier {
 - `getAttackDamageBonus()`：附加攻击伤害
 - `getEnchantmentValue()`：附魔能力值
 
-### 食物属性（FoodProperties）
+### 食物属性（Food）
 
 ```java
 new Item.Properties()
-    .food(new FoodProperties.Builder()
+    .food(new Food.Builder()
         .nutrition(int saturation)        // 饱食度（0-20）
         .saturationMod(float modifier)    // 饱和度修正
         .meat()                           // 狗可食用
@@ -60,7 +60,7 @@ new Item.Properties()
 
 ### 注册约束
 
-- ItemBlock 关联方块时，registry name 必须与方块完全相同
+- BlockItem 关联方块时，registry name 必须与方块完全相同
 - 工具/盔甲使用 `IItemTier` 时，需要在构造中传入对应参数
 - **物品的创造模式标签通过 `.tab(ItemGroup)` 设置**
 
@@ -143,7 +143,7 @@ IF 搜索 → ItemGroup.SEARCH（不推荐）
 public class MyItem extends Item {
     public MyItem() {
         super(new Item.Properties()
-            .maxStackSize(64)
+            .stacksTo(64)
             .tab(ItemGroup.TAB_MISC)
         );
     }
@@ -226,7 +226,7 @@ public class MyFoodItem extends Item {
     public MyFoodItem() {
         super(new Item.Properties()
             .tab(ItemGroup.TAB_FOOD)
-            .food(new FoodProperties.Builder()
+            .food(new Food.Builder()
                 .nutrition(4)
                 .saturationMod(0.3f)
                 .meat()

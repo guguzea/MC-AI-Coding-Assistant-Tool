@@ -35,7 +35,7 @@ Decision: 用不用 Text Placeholder API
 
 ## 官方文档
 
-- 仓库：https://github.com/Patbox/text_placeholder_api （README + 示例）
+- 仓库：https://github.com/Patbox/TextPlaceholderAPI （README + 示例）
 
 ## communityDocId 引用
 

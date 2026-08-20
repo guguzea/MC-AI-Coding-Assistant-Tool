@@ -76,14 +76,14 @@ Decision: 本规则集是否适用？
 
 | 维度 | 1.18.x | 1.20.x |
 |------|--------|--------|
-| Registry | `Registry.BLOCK`（静态字段） | `Registry.BLOCK`（实例） |
+| Registry | `Registry.BLOCK`（静态字段） | `Registries.ITEM` / `Registries.BLOCK` |
 | `fabric.mod.json` | **无** `environment` 字段 | 有 `environment` 字段 |
-| Block class | `Block`（旧命名） | `AbstractBlock`（重命名） |
-| BlockItem | `BlockItem`（相同） | `BlockItem`（相同） |
-| Pack format | **8** | **22** |
-| FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder`（相同） |
+| Block class | `Block` + `AbstractBlock.Settings` | `Block` + `AbstractBlock.Settings`（类名未改成「只有 AbstractBlock」） |
+| BlockItem | `BlockItem` | `BlockItem` |
+| Pack format（数据包） | **9** | **15**（1.20.1） |
+| FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder` |
 | EntityType | `EntityType.Builder.create()` | `EntityType.Builder.create()` |
-| EntityCategory | `EntityCategory.CREATURE` | `EntityCategory.CREATURE` |
+| 实体分类 | `SpawnGroup`（Yarn 1.18） | `SpawnGroup` |
 
 ---
 

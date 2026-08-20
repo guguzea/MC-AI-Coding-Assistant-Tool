@@ -65,7 +65,7 @@ public class MyMessage {
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            EntityPlayerMP player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender();
             if (player != null) {
                 // 服务端处理
             }

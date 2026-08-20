@@ -16,10 +16,10 @@ IF 配方已通过 JSON 手动编写
   → JEI 自动读取 JSON，无需额外代码
 
 IF 需要自定义配方 UI（如自定义工作台）
-  → 使用 JEI IRecipeHandler API
+  → @JEIPlugin + IModPlugin
 
 IF 需要显示子类（sub-categories）
-  → 使用 JEI CategoryExtension
+  → IModPlugin.register() 内 CategoryExtension
 ```
 
 ## 方案 A：JEI 自动读取（JSON，无代码，最佳）
@@ -41,22 +41,19 @@ dependencies {
 ### 注册 JEI 插件
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID)
-public class JEIPlugin {
-    @SubscribeEvent
-    public static void register(RegistryEvent.Register<IRecipeHandler>> event) {
-        // 注册自定义配方处理器
-    }
-
-    @SubscribeEvent
-    public static void registerCategories(RegistryEvent.Register<IRecipeCategory>> event) {
-        // 注册自定义配方分类
+@JEIPlugin
+public class MyJEIPlugin implements IModPlugin {
+    @Override
+    public void register(IModRegistry registry) {
+        // 注册自定义配方处理器、隐藏配方等
+        // registry.handleRecipes(MyRecipe.class, MyRecipeHandler::new, MY_RECIPE_CATEGORY);
     }
 }
 ```
 
 ## 常见错误
 
+- ❌ 使用 `RegistryEvent.Register<IRecipeHandler>` — JEI 用 `@JEIPlugin` + `IModPlugin`
 - ❌ 在服务端注册 JEI → JEI 只在客户端存在
 - ❌ 配方 JSON 放在错误路径 → 应在 `assets/{modid}/recipes/`
 - ❌ 忘记刷新 JEI 缓存

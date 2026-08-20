@@ -46,8 +46,7 @@ public class MyAttachmentType implements AttachmentType<MyAttachmentData> {
     // Fabric 1.20.1 使用 EntityAttributeModifierEvent + EntityAttachmentsComponent
 }
 
-// 或者使用 Fabric API
-import net.fabricmc.fabric.api.entity.PlayerEntityAttachmentType;
+// 或者使用 Fabric Attachment API（fabric-attachment-api-v1）
 ```
 
 ---
@@ -58,10 +57,10 @@ import net.fabricmc.fabric.api.entity.PlayerEntityAttachmentType;
 
 ```java
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(Registries.BLOCK, MOD_ID);
 
 public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(NeoForgeRegistries.ITEMS, MOD_ID);
+    DeferredRegister.create(Registries.ITEM, MOD_ID);
 
 public static final DeferredHolder<Block, Block> MY_BLOCK =
     BLOCKS.register("my_block", () -> new Block(...));
@@ -82,7 +81,7 @@ public static void init(IEventBus modEventBus) {
 public static final Item MY_ITEM = Registry.register(
     Registries.ITEM,
     new Identifier(MOD_ID, "my_item"),
-    new Item(new Item.Properties().durability(100))
+    new Item(new Item.Settings().maxDamage(100))
 );
 
 public static final Block MY_BLOCK = Registry.register(
@@ -93,7 +92,7 @@ public static final Block MY_BLOCK = Registry.register(
 
 // BlockItem 需要单独注册
 Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_block"),
-    new BlockItem(MY_BLOCK, new Item.Properties()));
+    new BlockItem(MY_BLOCK, new Item.Settings()));
 ```
 
 ---

@@ -35,10 +35,10 @@ public class ModEvents {
 ## Decision: 选择事件总线
 
 ```
-IF Forge 原生事件（Registry、LivingDrops、PlayerInteract 等）
+IF Forge 原生事件（LivingDrops、PlayerInteract 等）
   → Bus.FORGE
 
-IF Mod 自定义事件
+IF Mod 生命周期 / RegistryEvent.Register<T>
   → Bus.MOD
 ```
 
@@ -61,7 +61,7 @@ IF 监听 Tick
   → TickEvent.ServerTickEvent / WorldTickEvent
 
 IF 监听 Registry 注册
-  → RegistryEvent.Register<T>
+  → RegistryEvent.Register<T>（Bus.MOD）
 
 IF 监听服务端启动
   → FMLCommonSetupEvent

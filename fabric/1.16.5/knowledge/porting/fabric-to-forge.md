@@ -74,8 +74,8 @@ public class ExampleMod {
     public static final String MOD_ID = "examplemod";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(modEventBus);
     }
 }
@@ -96,7 +96,7 @@ private static final Item MY_ITEM = Registry.register(
 
 // ✅ Forge
 public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(ForgeRegistry.ITEMS, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()));
@@ -139,5 +139,5 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 1. **Java 版本**：Forge 1.16.5 可用 Java 8/11（Fabric 1.16.5 需要 Java 16）
 2. **Mixin 配置**：Forge 需要额外配置 mixin 插件
 3. **事件总线**：Forge 使用 `MinecraftForge.EVENT_BUS.register(this)`
-4. **Registry API**：Fabric 1.16.5 用 `Registry.ITEM`，Forge 用 `ForgeRegistry.ITEMS`
+4. **Registry API**：Fabric 1.16.5 用 `Registry.ITEM`，Forge 用 `ForgeRegistries.ITEMS`
 5. **Mappings 转换**：Fabric 用 Yarn（`method_XXXX`），Forge 用 MCP（`func_XXXX`）

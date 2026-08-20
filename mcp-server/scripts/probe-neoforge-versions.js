@@ -78,9 +78,9 @@ const VERSION_CONFIG = [
     neoforgeVersion: "26.1.x",
     javaVersion: 25,
     mappings: "mojmaps+parchment",
-    route: "",
-    docBase: "https://docs.neoforged.net/docs/",
-    testUrl: "https://docs.neoforged.net/docs/gettingstarted/",
+    route: "26.1",
+    docBase: "https://docs.neoforged.net/docs/26.1/",
+    testUrl: "https://docs.neoforged.net/docs/26.1/gettingstarted/",
     available: null,
     httpStatus: null,
     versionLabel: null,
@@ -405,6 +405,21 @@ function extractVersionLabel(html) {
 
 async function probeVersion(cfg) {
   const res = await fetchHtml(cfg.testUrl);
+  if (!res.ok && cfg.version === "26.1") {
+    // /docs/26.1/ 常 404；回退未版本化 /docs/ 并标记，禁止日后 --force 用现行最新覆盖
+    console.log(`  ${cfg.version}: pinned /docs/26.1/ HTTP ${res.status}; trying unversioned /docs/`);
+    const unversioned = { ...cfg, route: "", docBase: "https://docs.neoforged.net/docs/", testUrl: "https://docs.neoforged.net/docs/gettingstarted/" };
+    const ures = await fetchHtml(unversioned.testUrl);
+    if (!ures.ok) {
+      console.log(`  ${cfg.version}: HTTP ${ures.status}`);
+      return { ...unversioned, available: false, httpStatus: ures.status, chapters: [], unversionedCurrent: true };
+    }
+    const versionLabel = extractVersionLabel(ures.html);
+    const chapters = extractChapterPaths(ures.html, "");
+    console.log(`  ${cfg.version}: HTTP ${ures.status} | ${chapters.length} chapters | "${versionLabel}" (unversionedCurrent)`);
+    return { ...unversioned, available: true, httpStatus: ures.status, versionLabel, chapters, unversionedCurrent: true };
+  }
+
   if (!res.ok) {
     console.log(`  ${cfg.version}: HTTP ${res.status}`);
     return { ...cfg, available: false, httpStatus: res.status, chapters: [] };

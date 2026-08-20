@@ -158,7 +158,7 @@ public class MyEntity extends CreatureEntity {
 // registry/ModEntities.java
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
-        DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
+        new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID);
 
     public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY =
         ENTITIES.register("my_entity", () ->

@@ -82,4 +82,4 @@ namespace:id
 | `fabric.mod.json` | Mod 元数据配置 |
 | `fabric.mixins.json` | Mixin 配置 |
 | `*.accesswidener` | Access Widener 规则 |
-| `pack.mcmeta` | 资源包标识（1.17.x 使用 `pack_format: 6`）|
+| `pack.mcmeta` | 资源包标识（1.17.x 使用 `pack_format: 7`）|

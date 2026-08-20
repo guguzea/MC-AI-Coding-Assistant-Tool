@@ -50,7 +50,7 @@ public static final ForgeFlowingFluid.Properties FLUID_PROPERTIES =
 
 ```java
 public static final DeferredRegister<Fluid> FLUIDS =
-    DeferredRegister.create(ForgeRegistries.FLUIDS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.FLUIDS, MOD_ID);
 
 public static final RegistryObject<FlowingFluid> MY_FLUID_SOURCE =
     FLUIDS.register("my_fluid",

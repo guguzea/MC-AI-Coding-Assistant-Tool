@@ -81,7 +81,7 @@ function toMd(html, url) {
     .replace(/\s+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
-  return `> 来源：${url}\n> 抓取时间：${new Date().toISOString()}\n\n${text.slice(0, 80_000)}\n`;
+  return `> 来源：${url}\n> 抓取时间：${new Date().toISOString()}\n> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。\n\n${text.slice(0, 80_000)}\n`;
 }
 
 async function main() {
@@ -100,7 +100,7 @@ async function main() {
       try {
         const raw = await fetchText(page.url);
         const md = page.url.endsWith(".md")
-          ? `> 来源：${page.url}\n> 抓取时间：${new Date().toISOString()}\n\n${raw}`
+          ? `> 来源：${page.url}\n> 抓取时间：${new Date().toISOString()}\n> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。\n\n${raw}`
           : toMd(raw, page.url);
         const id = `${ver}/${page.id}`;
         if (!dry) writeFileSync(join(processed, `${page.id}.md`), md, "utf8");

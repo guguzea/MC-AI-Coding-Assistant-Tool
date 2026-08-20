@@ -8,9 +8,12 @@
  *   node scripts/fetch-neoforge-docs.js --version=26.1  # fetch specific version
  *   node scripts/fetch-neoforge-docs.js --dry-run       # show URLs without fetching
  *   node scripts/fetch-neoforge-docs.js --force         # re-fetch even if file exists
+ *
+ * 26.1 的 route 为空时抓现行 /docs/。若 probe 到 /docs/26.1/ 则应把 manifest.route 钉成 26.1。
+ * 空 route 且已有入库树时，--force 拒绝覆盖（防止 26.2 成为现行后把 26.1 树写成 26.2）。
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { fetchPageHtml, isLikelyValidHtmlPage, htmlTableToMarkdown } from "./_lib/pipeline-helpers.mjs";
@@ -418,6 +421,25 @@ async function main() {
 
   for (const version of versions) {
     console.log(`\n=== Fetching NeoForge ${version} ===`);
+    const cfg = manifest.versions[version];
+    const route = cfg?.route ?? "";
+    if (!route) {
+      const pinned = await fetchPage(`${DOCS_BASE}/docs/${version}/gettingstarted/`);
+      if (pinned.ok && pinned.html) {
+        console.log(`  Pinned empty-route ${version} → /docs/${version}/ for this run`);
+        cfg.route = version;
+      } else if (force) {
+        const existingRaw = join(OUT_DIR, `neoforge_${version}`, "neoforge-docs", version, "raw");
+        const hasTree = existsSync(existingRaw) && readdirSync(existingRaw).some((f) => f.endsWith(".md"));
+        if (hasTree) {
+          console.error(`REFUSE: ${version} route 为空，--force 会用现行未版本化 /docs/ 覆盖已入库树。请先把 manifest.route 钉到 /docs/${version}/，或去掉 --force。`);
+          continue;
+        }
+      } else {
+        console.log(`  NOTE: ${version} unversionedCurrent=/docs/（无 /docs/${version}/）。结果应标 unversionedCurrent=true。`);
+      }
+    }
+
     const pages = collectPages(version);
     console.log(`  Pages to fetch: ${pages.length}`);
 

@@ -4,27 +4,21 @@
  *
  * 从 FabricMC/fabric-docs GitHub 仓库抓取 .md 源文件。
  *
- * 数据源（按优先级）：
- *   1. GitHub Raw 当前 main 分支（https://raw.githubusercontent.com/FabricMC/fabric-docs/main/<gitPath>）
- *      → 直接获取 Markdown 源，包含 frontmatter，无需 HTML→Markdown 转换
- *   2. fabric-docs 历史归档（https://raw.githubusercontent.com/FabricMC/fabric-docs/<branch>/<gitPath>）
- *      → 仅在 main 上找不到目标 gitPath 时尝试归档分支（旧版本可能位于 archive/<version> 等分支）
- *   3. VitePress 官方（https://docs.fabricmc.net/...）
- *      → 作为 fallback，保留 HTML→MD 转换逻辑
+ * 数据源（按优先级；必须能归属到 --version，禁止现行站冒充旧档）：
+ *   1. GitHub Raw 版本化树 versions/<ver>/<gitPath>（source=github_raw_versioned）
+ *      官方 versions/ 有树：1.21.4 / 1.21.8 / 1.21.10 / 1.21.11 / 26.1.2（无 1.21.5）
+ *   2. 明确命中的归档分支（--branch≠main 或 ARCHIVE_BRANCHES；source=github_archive）
+ * 禁止成功页：github_raw（main 根路径）、未加版本前缀的 VitePress 现行站。
+ * 无 versions/ 的旧档应失败并删除已有污染 raw；search 走 wiki（现行站警告）或 DOC_NOT_FOUND。
  *
  * 输出：data/fabric_<version>/fabric-docs/<version>/raw/<slug>.md
- * 每个文件顶部四行元数据：
- *   > 来源：<最终访问的 URL>
- *   > 版本：<version>
- *   > GitHub 路径：<gitPath>
- *   > 抓取源：github_raw|github_archive|vitepress
- *   > 抓取时间：<ISO 8601 UTC>
- *   > SHA256：<正文 sha256 摘要>
+ * 每个文件顶部元数据含 来源 / 版本 / GitHub 路径 / 抓取源 / 抓取时间 / SHA256。
+ * 抓取源仅 github_raw_versioned|github_archive。
  *
  * 用法：
- *   node scripts/fetch-fabric-docs.js --version 1.21.1 [--force] [--dry-run]
- *   node scripts/fetch-fabric-docs.js --version=1.21.1
- *   node scripts/fetch-fabric-docs.js --version=1.20.1 --branch=main
+ *   node scripts/fetch-fabric-docs.js --version 1.21.4 [--force] [--dry-run]
+ *   node scripts/fetch-fabric-docs.js --version=26.1.2
+ *   node scripts/fetch-fabric-docs.js --version=1.20.1 --branch=archive/1.20
  *
  * CLI 参数解析（统一方式，同时支持两种风格）：
  *   --version 1.21.1     等价于   --version=1.21.1
@@ -33,7 +27,7 @@
  *   --dry-run            仅预览，不写入
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { createHash } from "crypto";
 import { fileURLToPath } from "url";
@@ -83,7 +77,7 @@ const CLI = parseCli(process.argv.slice(2));
 const VERSION = CLI.kv.get("version");
 if (!VERSION) {
   console.error("[fetch-fabric-docs] 缺少 --version 参数。");
-  console.error("用法：node scripts/fetch-fabric-docs.js --version 1.21.1 [--force] [--dry-run]");
+  console.error("用法：node scripts/fetch-fabric-docs.js --version 1.21.4 [--force] [--dry-run]");
   process.exit(2);
 }
 
@@ -139,15 +133,15 @@ function loadUrlList() {
 }
 
 /**
- * 主入口：从 GitHub Raw 抓取 → 归档分支 → VitePress fallback。
+ * 只接受能归属到 --version 的源。禁止 main 根路径 / 现行 VitePress 冒充该档。
  * 返回 { content, url, source, fetchedAt, sha256, branch }。
  */
 async function fetchPage(entry, branch = FABRIC_GH.branch) {
-  const { id, gitPath, url: vitepressUrl } = entry;
+  const { gitPath, url: vitepressUrl } = entry;
   const tried = [];
 
-  // 0. Versioned tree on main (26.x / recent): versions/<ver>/<gitPath>
-  if (branch === "main" && VERSION) {
+  // 0. Versioned tree: versions/<ver>/<gitPath>（main 或指定 branch 上都先试）
+  if (VERSION) {
     const versionedPath = `versions/${VERSION}/${gitPath}`;
     const versionedUrl = `${FABRIC_GH.baseRawUrl}/${branch}/${versionedPath}`;
     tried.push(versionedUrl);
@@ -163,20 +157,22 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
     }
   }
 
-  // 1. GitHub Raw（main 或指定 branch）
-  const githubRawUrl = `${FABRIC_GH.baseRawUrl}/${branch}/${gitPath}`;
-  tried.push(githubRawUrl);
-  const r = await tryRaw(githubRawUrl);
-  if (r) {
-    return {
-      ...r,
-      source: r.source ?? (branch === "main" ? "github_raw" : "github_archive"),
-      url: githubRawUrl,
-      branch,
-    };
+  // 1. 显式 --branch≠main：该分支上的未前缀路径视为归档命中
+  if (branch !== "main") {
+    const githubRawUrl = `${FABRIC_GH.baseRawUrl}/${branch}/${gitPath}`;
+    tried.push(githubRawUrl);
+    const r = await tryRaw(githubRawUrl);
+    if (r) {
+      return {
+        ...r,
+        source: "github_archive",
+        url: githubRawUrl,
+        branch,
+      };
+    }
   }
 
-  // 2. 归档分支（仅当未在 main 上找到时尝试）
+  // 2. 已知归档分支（不把 main 根路径当本档）
   if (branch === "main") {
     for (const archiveBranch of ARCHIVE_BRANCHES) {
       const archiveUrl = `${FABRIC_GH.baseRawUrl}/${archiveBranch}/${gitPath}`;
@@ -193,27 +189,8 @@ async function fetchPage(entry, branch = FABRIC_GH.branch) {
     }
   }
 
-  // 3. VitePress fallback（26.x 站点路径为 /<version>/develop/...）
-  const vpCandidates = [];
   if (vitepressUrl) {
-    if (VERSION && /^26\./.test(VERSION)) {
-      // https://docs.fabricmc.net/develop/foo → https://docs.fabricmc.net/26.1.2/develop/foo
-      const prefixed = vitepressUrl.replace("https://docs.fabricmc.net/", `https://docs.fabricmc.net/${VERSION}/`);
-      vpCandidates.push(prefixed);
-    }
-    vpCandidates.push(vitepressUrl);
-  }
-  for (const vpUrl of vpCandidates) {
-    tried.push(`vitepress:${vpUrl}`);
-    const vp = await tryVitepress(vpUrl);
-    if (vp) {
-      return {
-        ...vp,
-        source: "vitepress",
-        url: vpUrl,
-        branch,
-      };
-    }
+    tried.push(`vitepress-skipped-unversioned:${vitepressUrl}`);
   }
 
   return { content: null, url: vitepressUrl, source: "failed", tried, branch };
@@ -395,6 +372,23 @@ function writeRawFile(entry, content, source, fetchedAt, sha, finalUrl, branch) 
   return { filename, filepath };
 }
 
+function isPollutedCachedRaw(filepath) {
+  if (!existsSync(filepath)) return false;
+  const text = readFileSync(filepath, "utf8");
+  const src = text.match(/> 抓取源：(\S+)/);
+  const source = src?.[1] ?? "";
+  if (source === "github_raw" || source === "vitepress") return true;
+  return false;
+}
+
+function deleteLocalDoc(filename) {
+  const rawPath = join(FABRIC_DIR, filename);
+  const processedPath = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION, "processed", filename);
+  for (const p of [rawPath, processedPath]) {
+    if (existsSync(p)) unlinkSync(p);
+  }
+}
+
 // ── 主逻辑 ──────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -432,8 +426,8 @@ async function main() {
 
     process.stdout.write(`[${entry.priority ?? "🟢"}] ${id} ... `);
 
-    // 检查本地缓存（--force 时跳过）
-    if (!FORCE && existsSync(localPath)) {
+    // 污染缓存（未版本化 main / 现行 vitepress）即使无 --force 也作废
+    if (!FORCE && existsSync(localPath) && !isPollutedCachedRaw(localPath)) {
       console.log(`⏭️  已缓存（使用 --force 强制重新抓取）`);
       skipped++;
       continue;
@@ -443,7 +437,8 @@ async function main() {
       const result = await fetchPage(entry, BRANCH);
 
       if (!result.content) {
-        console.log(`⚠️  全部来源失败（GitHub Raw + archive + VitePress 均失败）`);
+        console.log(`⚠️  无版本化/归档源（已拒绝未版本化 main 与现行 VitePress）`);
+        deleteLocalDoc(filename);
         failures.push({ id, gitPath, tried: result.tried ?? [] });
         failed++;
         continue;
@@ -475,13 +470,14 @@ async function main() {
       console.log(`✓ [${result.source}@${result.branch}] (${result.content.length} chars, sha256=${result.sha256.slice(0, 12)}…)`);
     } catch (err) {
       console.log(`✗ ${err.message}`);
+      deleteLocalDoc(filename);
       failures.push({ id, gitPath, error: err.message });
       failed++;
     }
   }
 
-  // 记录元数据
-  if (success > 0 && !DRY_RUN) {
+  // 记录元数据（含全失败：旧档空树也要留下 failures[]）
+  if (!DRY_RUN) {
     meta.meta = meta.meta ?? {};
     meta.meta.lastUpdatedAt = now;
     meta.meta.platform = "fabric";
@@ -491,16 +487,19 @@ async function main() {
       sourceRepo: `${FABRIC_GH.owner}/${FABRIC_GH.repo}`,
       branch: BRANCH,
       archiveBranches: ARCHIVE_BRANCHES,
+      acceptedSources: ["github_raw_versioned", "github_archive"],
       pages: provenanceLog,
       failures,
     };
-    // 不破坏旧字段（如有 meta.mcVersion 等），仅在缺失时补充
     writeMeta(meta);
+    const versionDir = join(DATA_ROOT, `fabric_${VERSION}`, "fabric-docs", VERSION);
+    ensureDir(versionDir);
+    writeFileSync(join(versionDir, "failures.json"), JSON.stringify({ version: VERSION, failures }, null, 2), "utf8");
   }
 
   console.log(`\n完成：${success} 成功，${skipped} 跳过，${failed} 失败`);
-  if (success > 0) {
-    console.log(`运行 process-fabric-docs.js 处理抓取结果。`);
+  if (!DRY_RUN) {
+    console.log(`运行 process-fabric-docs.js 处理抓取结果（无成功页时写空索引）。`);
   }
   if (failed > 0) {
     console.log(`\n失败列表：`);

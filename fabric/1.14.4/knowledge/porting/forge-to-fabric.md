@@ -10,7 +10,7 @@
 | 入口注解 | `@Mod` | `ModInitializer` 接口 + entrypoint |
 | Mod 配置 | `mods.toml` | `fabric.mod.json` |
 | 注册方式 | `DeferredRegister` + modEventBus | `Registry.register()` |
-| 注册时机 | `RegisterEvent` 自动触发 | `onInitialize()` 方法中执行 |
+| 注册时机 | `DeferredRegister` + modEventBus | `onInitialize()` 方法中执行 |
 | Mixin | `org.spongepowered.mixin` 插件 | Mixin（需要配置 fabric.mixins.json）|
 | 事件系统 | `@SubscribeEvent` + Forge 事件总线 | **Fabric 事件回调** |
 | Mappings | MCP（`func_XXXXX`） | Yarn（`method_XXXXX`）|
@@ -84,8 +84,8 @@ dependencies {
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
     }
@@ -117,7 +117,7 @@ public class ExampleMod implements ModInitializer {
 ```java
 // Forge
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistry.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(Block.Properties.create(Material.STONE)));

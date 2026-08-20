@@ -28,8 +28,9 @@ Decision: 用不用 Impersonate
 
 ## 核心 API 速查
 
-- 顶层 API 包：`io.github.ladysnake`；入口 `io.github.ladysnake.impersonate.Impersonate`（1.16.3/fabric 反编译核对）
-- 客户端实现类：`io.github.ladysnake.impersonate.impl.ImpersonateClient`（仅供参考，勿在服务端调用）
+- ModInitializer 入口：`io.github.ladysnake.impersonate.Impersonate`
+- 调用入口：`Impersonator.get(player).impersonate(...)`（1.16.3/fabric 反编译核对）
+- 客户端实现类：`io.github.ladysnake.impersonate.impl.ImpersonateClient`（UNVERIFIED，仅供参考，勿在服务端调用）
 - 伪装/取消入口的方法签名：短文未列，**以官方 README + 示例为准**（禁止臆造，勿照抄旧版本教程）
 - 触发点：命令执行、服务端事件等服务端逻辑；其他玩家视角的皮肤/名牌同步由库负责
 

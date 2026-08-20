@@ -43,7 +43,7 @@ clone-audit：与邻档教程骨架相似是预期（换类名），**误报不�
 
 | 编号 | 对照 URL | 抓取日 | 结论 |
 | 03 | https://docs.neoforged.net/docs/1.21.1/items/ | 2026-08-16 | 已按该版文档改写（Supplier + 无 setId 必填） |
-| 04 | https://docs.neoforged.net/docs/1.21.1/entities/ | 2026-08-16 | 本编号 API 与邻档相同，非未核克隆 |
+| 04 | — | — | 无独立 entities 页（DOC_NOT_FOUND）；04-entity 为 stub |
 | 08 | https://docs.neoforged.net/docs/1.21.1/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
 
 - 1.21.1 起事件名变成复数 Handlers。payload 用 CustomPacketPayload.Type + StreamCodec + playBidirectional/ToClient/ToServer。

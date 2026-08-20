@@ -72,7 +72,8 @@ public void onServerTick(TickEvent.ServerTickEvent event) {
 ```java
 // 错误（客户端代码）
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderLevelStageEvent event) {
+    if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
     world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在渲染线程修改世界
 }
 ```
@@ -83,7 +84,8 @@ public void onRender(RenderGameOverlayEvent.Post event) {
 
 ```java
 @SubscribeEvent
-public void onRender(RenderGameOverlayEvent.Post event) {
+public void onRender(RenderLevelStageEvent event) {
+    if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
     NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
 }
 ```
@@ -106,72 +108,37 @@ public static void onClientSetup(FMLClientSetupEvent event) {
 
 ---
 
-## Capability 相关
+## Attachments 相关
 
 ### ❌ Capability 未检查 null
 
 ```java
 // 错误
-player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
-    cap.setData(someData); // 如果 Capability 未附加，数据可能丢失
-});
+player.getData(ModAttachments.MY_DATA).setData(someData); // 如果 Attachment 未注册，可能 NPE
 ```
 
 **正确方案**：
 
 ```java
-player.getCapability(ModCapabilities.MY_CAP).ifPresent(cap -> {
-    cap.setData(someData);
-});
-
-// 或使用 orElse
-IMyCapability cap = player.getCapability(ModCapabilities.MY_CAP).orElse(null);
-if (cap != null) {
-    cap.setData(someData);
+var data = player.getData(ModAttachments.MY_DATA);
+if (data != null) {
+    data.setData(someData);
 }
 ```
 
 ---
 
-### ❌ `LazyOptional` 泄漏
-
-```java
-// 错误
-@Override
-public void setRemoved() {
-    super.setRemoved();
-    // ❌ 没有 invalidate LazyOptional
-}
-```
-
-**症状**：内存泄漏，World 不释放，卸载区块后大量对象无法 GC。
-
-**正确方案**：
-
-```java
-private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
-
-@Override
-public void setRemoved() {
-    opt.invalidate();  // 关键：必须调用
-    super.setRemoved();
-}
-```
-
----
-
-### ❌ 在 `AttachCapabilitiesEvent` 中修改数据
+### ❌ 在 `RegisterAttachmentsEvent` 中修改运行时数据
 
 ```java
 // 错误
 @SubscribeEvent
-public static void attachToPlayer(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof Player player) {
-        player.getCapability(CAP).ifPresent(cap -> cap.setData(123)); // ❌ 只注册 Provider
-    }
+public static void registerAttachments(RegisterAttachmentsEvent event) {
+    event.register(...);
+    player.getData(ModAttachments.MY_DATA).setData(123); // ❌ 只注册 AttachmentType
 }
 ```
 
 **症状**：数据修改时机不对，可能被覆盖。
 
-**正确方案**：`AttachCapabilitiesEvent` 只负责附加 Provider，不做数据修改。
+**正确方案**：`RegisterAttachmentsEvent` 只负责注册 `AttachmentType`；运行时数据在实体创建或 `PlayerEvent` 等时机修改。

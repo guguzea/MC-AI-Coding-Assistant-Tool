@@ -10,7 +10,7 @@
 ```java
 // DeferredRegister 方式（官方推荐）
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
     () -> new Block(Block.Properties.create(Material.ROCK)

@@ -1,9 +1,12 @@
-# data generation loot tables
+# Loot Table Generation
 
-> 来源：https://docs.fabricmc.net/develop/data-generation/loot-tables
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/data-generation/loot-tables.md
 > 版本：1.21.11
 > GitHub 路径：develop/data-generation/loot-tables.md
-> 抓取源：github_raw
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T03:52:45.769Z
+> SHA256：ab452b104e9f95930c2965c518e8fc54e27cd786b0381f9ff528d20c2864bb24
+> 分支：main
 
 ---
 title: Loot Table Generation
@@ -30,7 +33,7 @@ Make sure you've completed the [datagen setup](./setup) process first.
 
 You will need different providers (classes) for blocks, chests, and entities. Remember to add them all to your pack in your `DataGeneratorEntrypoint` within the `onInitializeDataGenerator` method.
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:register](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:register](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
 
 ## Loot Tables Explained {#loot-tables-explained}
 
@@ -42,7 +45,7 @@ Loot pools have **entries**, **conditions**, functions, **rolls**, and **bonus r
 
 In order for blocks to drop items - including itself - we need to make a loot table. Create a class that extends `FabricBlockLootTableProvider`:
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:block-provider](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModBlockLootTableProvider.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:block-provider](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModBlockLootTableProvider.java)
 
 Make sure to add this provider to your pack!
 
@@ -50,18 +53,18 @@ There's a lot of helper methods available to help you build your loot tables. We
 
 Let's add a few drops in the `generate` method:
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:block-drops](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModBlockLootTableProvider.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:block-drops](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModBlockLootTableProvider.java)
 
 ## Chests {#chests}
 
 Chest loot is a little bit tricker than block loot. Create a class that extends `SimpleFabricLootTableProvider` similar to the example below **and add it to your pack**.
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:chest-provider](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModChestLootTableProvider.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:chest-provider](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModChestLootTableProvider.java)
 
 We'll need a `ResourceKey<LootTable>` for our loot table. Let's put that in a new class called `ModLootTables`. Make sure this is in your `main` source set if you're using split sources.
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:mod-loot-tables](@/reference/latest/src/main/java/com/example/docs/ModLootTables.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:mod-loot-tables](@/reference/1.21.11/src/main/java/com/example/docs/ModLootTables.java)
 
 Then, we can generate a loot table inside the `generate` method of your provider.
 
-@[code lang=java transcludeWith=:::datagen-loot-tables:chest-loot](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModChestLootTableProvider.java)
+@[code lang=java transcludeWith=:::datagen-loot-tables:chest-loot](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModChestLootTableProvider.java)

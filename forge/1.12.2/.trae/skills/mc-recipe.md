@@ -12,23 +12,19 @@ mappings: mcp
 ## 快速总览
 
 ```
-实现 IRecipe → 注册配方类型 → 添加到配方管理器
+实现 IRecipe → RecipeSorter.register → JSON 或代码注册
 ```
 
 ## 1. 实现 IRecipe 类
 
 ```java
 public class MyRecipe implements IRecipe {
-    private final ResourceLocation id;
     private final Ingredient input;
     private final ItemStack output;
-    private final int processingTime;
 
-    public MyRecipe(ResourceLocation id, Ingredient input, ItemStack output, int time) {
-        this.id = id;
+    public MyRecipe(Ingredient input, ItemStack output) {
         this.input = input;
         this.output = output;
-        this.processingTime = time;
     }
 
     @Override
@@ -50,32 +46,10 @@ public class MyRecipe implements IRecipe {
     public ItemStack getRecipeOutput() {
         return output.copy();
     }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModRecipeSerializers.MY_RECIPE;
-    }
-
-    @Override
-    public IRecipeType<?> getType() {
-        return ModRecipeTypes.MY_TYPE;
-    }
 }
 ```
 
-## 2. 注册配方类型
-
-```java
-public static final RecipeType<IRecipe> MY_TYPE =
-    RecipeType.register(MOD_ID + ":my_recipe");
-```
-
-## 3. 在 FMLInitializationEvent 中注册配方
+## 2. 注册自定义配方类型
 
 ```java
 @Mod.EventHandler
@@ -88,6 +62,7 @@ public void init(FMLInitializationEvent event) {
 
 - ❌ `getCraftingResult` 返回原对象而非副本
 - ❌ `matches()` 不正确实现
+- ❌ 使用 1.13+ 的 `IRecipeSerializer` / `RecipeType.register` / `getId()` — 1.12 只有上述四个 `IRecipe` 方法
 
 ## 参考资料
 

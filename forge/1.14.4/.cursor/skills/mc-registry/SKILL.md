@@ -16,7 +16,7 @@ mappings: mcp
 ```java
 // 1. 创建 DeferredRegister（通常在 mod 主类或单独的注册类中）
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 
 // 2. 创建 RegistryObject 持有引用
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
@@ -81,7 +81,7 @@ public class MyBlock extends Block {
 }
 
 public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
 public static final RegistryObject<TileEntityType<MyTE>> MY_TE =
     TILE_ENTITIES.register("my_te",

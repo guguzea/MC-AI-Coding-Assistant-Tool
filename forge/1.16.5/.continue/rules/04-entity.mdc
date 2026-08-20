@@ -34,7 +34,7 @@ EntityType.Builder.of(MyEntity::new, EntityClassification.CREATURE)
 
 - 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
 - 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `GoalFloat`、`GoalLookAtPlayer` 等
+- 每个 Entity 实例创建对应的 `FloatGoal`、`LookAtPlayerGoal` 等
 
 ### 渲染器规范
 
@@ -167,10 +167,10 @@ public class MyEntity extends LivingEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));           // 游泳
+        this.goalSelector.addGoal(0, new FloatGoal(this));           // 游泳
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));  // 近战攻击
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));

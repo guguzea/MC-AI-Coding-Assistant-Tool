@@ -31,12 +31,12 @@ src/main/resources/
 {
   "pack": {
     "description": "Example Mod",
-    "pack_format": 6
+    "pack_format": 4
   }
 }
 ```
 
-> Forge 1.13.2 使用 `pack_format = 6`
+> Forge 1.13.2 数据包使用 `pack_format = 4`
 
 ## BlockState JSON
 

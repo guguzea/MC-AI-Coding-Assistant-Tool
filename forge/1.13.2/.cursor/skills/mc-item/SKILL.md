@@ -15,7 +15,7 @@ mappings: mcp
 // 注册（参见 mc-registry Skill）
 public static final Item MY_ITEM = new Item(
     new Item.Properties()
-        .group(ItemGroup.TAB_MISC)
+        .group(ItemGroup.MISC)
         .maxStackSize(64)
 );
 
@@ -34,16 +34,16 @@ IF 只是手持物品（无特殊行为）
   → Item
 
 IF 剑/工具（影响挖掘速度、攻击伤害）
-  → SwordItem / PickaxeItem / AxeItem / ShovelItem
+  → ItemSword / ItemPickaxe / ItemAxe / ItemSpade（不是 SwordItem / PickaxeItem）
 
 IF 盔甲
-  → ArmorItem + IArmorTier
+  → ItemArmor + IArmorMaterial
 
 IF 可食用
-  → Item + .effect() / setAlwaysEdible()
+  → 子类化 Item 覆盖 onItemUseFinish 等；或 ItemFood#setAlwaysEdible()
 
 IF 可在 ItemGroup 中找到
-  → 设置 .group(ItemGroup)
+  → 设置 .group(ItemGroup)（字段是 MISC / TOOLS / COMBAT，不是 TAB_MISC）
 ```
 
 ## 工具层级 IItemTier
@@ -77,15 +77,15 @@ public enum MyTier implements IItemTier {
 }
 ```
 
-## 剑（SwordItem）
+## 剑（ItemSword）
 
 ```java
-public static final Item MY_SWORD = new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f,
-    new Item.Properties().group(ItemGroup.TAB_COMBAT));
+public static final Item MY_SWORD = new ItemSword(MyTier.MY_MATERIAL, 3, 1.6f,
+    new Item.Properties().group(ItemGroup.COMBAT));
 ```
 
 **攻击伤害计算：**
-- `SwordItem(ToolMaterial, float damage, float speed, Item.Properties)` 的 damage 参数是基础加成
+- `ItemSword(IItemTier, int damage, float speed, Item.Properties)` 的 damage 参数是基础加成
 - **最终攻击伤害 = damage + 3.0f（剑类内置固定加成）**
 - 例如：传 `3` → 最终伤害 = 3 + 3.0 = **6.0**
 
@@ -94,7 +94,7 @@ public static final Item MY_SWORD = new SwordItem(MyTier.MY_MATERIAL, 3, 1.6f,
 ## 盔甲
 
 ```java
-public enum MyArmorMaterial implements IArmorTier {
+public enum MyArmorMaterial implements IArmorMaterial {
     MY_MATERIAL("my_material", 40, new int[]{4, 7, 9, 4}, 20,
         SoundEvents.BLOCK_ANVIL_PLACE, 3.0f, 0.1f);
 
@@ -127,26 +127,29 @@ public enum MyArmorMaterial implements IArmorTier {
     @Override public float getKnockbackResistance() { return knockbackResistance; }
 }
 
-public static final Item MY_HELMET = new ArmorItem(MyArmorMaterial.MY_MATERIAL,
+public static final Item MY_HELMET = new ItemArmor(MyArmorMaterial.MY_MATERIAL,
     EquipmentSlotType.HEAD,
-    new Item.Properties().group(ItemGroup.TAB_COMBAT));
+    new Item.Properties().group(ItemGroup.COMBAT));
 ```
 
 ## 食物
 
+1.13.2 `Item.Properties` **没有** `.food()` / `.saturation()` / `.effect()`。
+
 ```java
-public static final Item MY_FOOD = new Item(
-    new Item.Properties()
-        .group(ItemGroup.TAB_FOOD)
-        .saturation(0.3f)
-        .setAlwaysEdible()
-        .effect(() -> new PotionEffect(MobEffects.JUMP_BOOST, 200, 1), 1.0f)
-);
+public class MyFood extends ItemFood {
+    public MyFood() {
+        super(4, 0.3f, false, new Item.Properties().group(ItemGroup.FOOD));
+        setAlwaysEdible();
+    }
+}
 ```
 
 ## 常见错误
 
-- ❌ `MobEffects.JUMP_BOOST`（Yarn 名）→ Forge 用 `MobEffects.JUMP_BOOST`（相同）
+- ❌ `ItemGroup.TAB_MISC` — 用 `ItemGroup.MISC`
+- ❌ `SwordItem` / `PickaxeItem` — MCP 是 `ItemSword` / `ItemPickaxe`
+- ❌ `.saturation()` / `.effect()` on Properties — 用 `ItemFood` 或子类化 `Item`
 - ❌ 忘记 `maxStackSize`（默认 64）
 - ❌ 忘记 `.group()` 导致物品不在任何标签页
 
@@ -159,5 +162,5 @@ public static final Item MY_FOOD = new Item(
 | 配合 Skill | 协作说明 |
 |-----------|---------|
 | `mc-registry` | 物品通过 RegistryEvent.Register<Item> 注册 |
-| `mc-block` | BlockItem 需要先有方块 |
+| `mc-block` | ItemBlock 需要先有方块 |
 | `mc-capability` | ItemStack 可附加 Capability |

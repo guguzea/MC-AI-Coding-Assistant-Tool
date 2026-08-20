@@ -26,7 +26,7 @@
 
 **主要变更：**
 - ForgeGradle 5.x → 6.x（部分版本）
-- pack_format: 8 → 9
+- pack_format: 9（数据包）
 - 基本 API 一致
 
 ```groovy
@@ -53,7 +53,7 @@ pack_format=15
 
 **需要处理：**
 1. ForgeGradle 5.x → 6.x
-2. pack_format: 8 → 15
+2. pack_format: 9 → 15
 3. 世界高度相关代码
 4. Gradle 7.x → 8.x
 5. Java 17（不变）
@@ -66,14 +66,14 @@ pack_format=15
 
 | Fabric | Forge |
 |--------|-------|
-| `Registry.register(Registries.BLOCK, id, block)` | `DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register()` |
+| `Registry.register(Registry.BLOCK, id, block)` | `DeferredRegister.create(ForgeRegistries.BLOCKS, MODID).register()` |
 
 ### 2.2 事件系统对比
 
 | Fabric | Forge |
 |--------|-------|
 | `@Environment(EnvType.CLIENT)` | `@OnlyIn(Dist.CLIENT)` |
-| `FabricServer_tickEvents` | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, ...)` |
+| `ServerTickEvents` | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, ...)` |
 
 ### 2.3 资源加载对比
 

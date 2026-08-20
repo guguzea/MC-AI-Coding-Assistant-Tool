@@ -4,10 +4,8 @@ description: 04 — 实体（NeoForge 1.20.4）
 
 # 04 — 实体（NeoForge 1.20.4）
 
-来源：https://docs.neoforged.net/docs/1.20.4/entities/
+来源：本档 `search_neoforge_docs` **没有**独立 `entities` 页（`get_neoforge_doc_full id=entities` 返回 `DOC_NOT_FOUND`）。
 
-用 `DeferredRegister.Entities` / `DeferredRegister.create(Registries.ENTITY_TYPE, MODID)`。`EntityType.Builder` 最后 `.build(...)` 的 ResourceKey 参数以该版文档为准。
+实体 API 未核实。禁止输出 `DeferredRegister.Entities` 等具体签名。用 `search_neoforge_docs query=entities version=1.20.4`；若仍无页则停。不要用 1.21.8 实体页回填。
 
-渲染只放客户端：`@EventBusSubscriber(value = Dist.CLIENT, bus = MOD)`。不要在服务端加载 Renderer。
-
-生成、属性、生成蛋：查该版 entities 页，不要抄 Forge 1.12 `EntityRegistry`。
+禁止：Forge 1.12 `EntityRegistry`；把邻档 entities 页改版本号当本档已核。

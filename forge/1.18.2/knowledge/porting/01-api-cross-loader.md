@@ -21,7 +21,7 @@
 | **数据生成** | `FabricDataGenerator` | `DataGenerators.gatherData()` + `GatherDataEvent` |
 | **资源（assets）** | `src/main/resources/assets/<modid>/` | `src/main/resources/assets/<modid>/` |
 | **Mod ID 元数据** | `fabric.mod.json` | `mods.toml` |
-| **服务端检测** | `FabricServer_tickEvents` 或直接检测 | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> ...)` |
+| **服务端检测** | `ServerTickEvents` 或直接检测 | `DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> ...)` |
 | **客户端检测** | `EnvType.CLIENT` | `DistExecutor.runWhenOn(Dist.CLIENT, () -> ...)` |
 
 ---

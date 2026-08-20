@@ -13,7 +13,7 @@ mappings: mcp
 
 ```java
 public static final DeferredRegister<EntityType<?>> ENTITIES =
-    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITIES.register("my_entity",
     () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
@@ -70,7 +70,7 @@ public class MyEntity extends CreatureEntity {
 | 投掷物（雪球、末影珍珠） | `Projectile` |
 | 物品实体 | `ItemEntity` |
 | 矿车/船只 | `AbstractMinecart` / `Boat` |
-| 存储实体 | `StorageEntity`（或 BlockEntity） |
+| 存储实体 | `StorageEntity`（或 TileEntity） |
 
 ## EntityRenderer 注册（客户端）
 
@@ -101,7 +101,7 @@ public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyE
 
 ```
 IF 基础渲染（无自定义模型）
-  → 直接使用空的 LivingEntityRenderer 或已有渲染器
+  → 直接使用空的 LivingRenderer 或已有渲染器
 
 IF 自定义 Biped 模型
   → BipedModel + LivingRenderer / MobRenderer（构造吃 EntityRendererManager）

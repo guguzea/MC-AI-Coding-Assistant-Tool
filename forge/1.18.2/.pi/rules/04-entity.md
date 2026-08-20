@@ -38,7 +38,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 
 - 使用 `Goal` 实现自主行为（行走、攻击、飞行等）
 - 使用 `TargetGoal` 实现目标选择逻辑
-- 每个 Entity 实例创建对应的 `GoalFloat`、`GoalLookAtPlayer` 等
+- 每个 Entity 实例创建对应的 `FloatGoal`、`LookAtPlayerGoal` 等
 
 ### 渲染器规范
 
@@ -191,6 +191,31 @@ public class ModEntities {
 public ExampleMod() {
     IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
     ModEntities.register(modEventBus);
+}
+```
+
+
+
+## 示例：模型层注册
+
+```java
+// client/model/MyEntityModel.java
+public class MyEntityModel extends EntityModel<MyEntity> {
+    public static final ModelLayerLocation LAYER_LOCATION =
+        new ModelLayerLocation(new ResourceLocation(MOD_ID, "my_entity"), "main");
+
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        // ... add model parts ...
+        return LayerDefinition.create(mesh, 64, 64);
+    }
+}
+
+// client/ClientSetup.java
+@SubscribeEvent
+public static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    event.registerLayerDefinition(MyEntityModel.LAYER_LOCATION, MyEntityModel::createBodyLayer);
 }
 ```
 

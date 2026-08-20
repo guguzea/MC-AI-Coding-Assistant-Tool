@@ -245,7 +245,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   const warnings: string[] = [];
   if (platform === "fabric" && minecraftVersion !== pack.minecraftVersion) {
     warnings.push(
-      `查 Fabric 文档请用 knowledgeVersion=${pack.minecraftVersion}，不要用 minecraftVersion=${minecraftVersion}`,
+      `查 Fabric 文档请用 version=${pack.minecraftVersion}，不要用 minecraftVersion=${minecraftVersion}`,
     );
   }
   const includeAll = args.includeAllRules === true;

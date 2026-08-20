@@ -1,9 +1,12 @@
-# blocks block models
+# Block Models
 
-> 来源：https://docs.fabricmc.net/develop/blocks/block-models
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/blocks/block-models.md
 > 版本：1.21.11
 > GitHub 路径：develop/blocks/block-models.md
-> 抓取源：github_raw
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T03:52:40.684Z
+> SHA256：3c69555ba67759eeedb2a721ff9ab743316e4cdee5a9b4a54d393144191aaaf7
+> 分支：main
 
 ---
 title: Block Models

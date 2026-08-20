@@ -84,8 +84,8 @@ dependencies {
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
     }
@@ -117,7 +117,7 @@ public class ExampleMod implements ModInitializer {
 ```java
 // Forge
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistry.BLOCKS, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));

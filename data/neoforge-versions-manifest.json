@@ -11,6 +11,7 @@
       "javaVersion": 25,
       "mappings": "mojmaps+parchment",
       "route": "",
+      "unversionedCurrent": true,
       "docBase": "https://docs.neoforged.net/docs/",
       "testUrl": "https://docs.neoforged.net/docs/gettingstarted/",
       "available": true,

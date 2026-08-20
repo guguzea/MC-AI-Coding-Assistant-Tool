@@ -15,8 +15,8 @@ mappings: parchment
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
     () -> new Block(Block.Properties.of(Material.WOOD)
-        .hardnessAndResistance(1.5f, 6.0f)
-        .requiresTool()
+        .strength(1.5f, 6.0f)
+        .requiresCorrectToolForDrops()
     )
 );
 ```
@@ -38,8 +38,8 @@ IF 需要流体
 
 ```java
 Block.Properties.of(Material.WOOD)
-    .hardnessAndResistance(1.5f, 6.0f)     // 硬度和抗爆性
-    .requiresTool()                         // 需要正确工具才能掉落
+    .strength(1.5f, 6.0f)     // 硬度和抗爆性
+    .requiresCorrectToolForDrops()                         // 需要正确工具才能掉落
     .noOcclusion()                         // 不阻挡光影
     .isRedstoneConductor(...)             // 红石导体
     .isSuffocating(...)                  // 窒息方块
@@ -47,14 +47,14 @@ Block.Properties.of(Material.WOOD)
     .sound(SoundType type)               // 音效
 ```
 
-## Decision: 物品形态（ItemBlock）
+## Decision: 物品形态（BlockItem）
 
 ```
 IF 方块在创意模式标签中有对应物品
-  → 注册同名 ItemBlock（Forge 自动关联显示）
+  → 注册同名 BlockItem（Forge 自动关联显示）
 
 IF 方块不应出现在物品栏（如空气、光源方块）
-  → 不注册 ItemBlock
+  → 不注册 BlockItem
 ```
 
 ## 带 BlockEntity 的方块
@@ -130,7 +130,7 @@ public class MyMachineBlockEntity extends BlockEntity implements ITickableTileEn
 - ❌ `createBlockEntity()` 返回 null（必须返回新实例）
 - ❌ 在 BlockEntity 构造函数中访问 world（world 可能为 null）
 - ❌ `getServerTicker()` 在客户端返回非 null（tick 只应在服务端执行）
-- ❌忘记 `requiresTool()` 导致任何物品都能掉落
+- ❌忘记 `requiresCorrectToolForDrops()` 导致任何物品都能掉落
 
 ## 参考资料
 

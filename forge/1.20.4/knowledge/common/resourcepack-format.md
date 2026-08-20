@@ -5,13 +5,13 @@
 ```json
 {
   "pack": {
-    "pack_format": 15,
+    "pack_format": 22,
     "description": "My Resource Pack"
   }
 }
 ```
 
-> 1.20–1.20.4 的 pack_format = **15**，与数据包相同。
+> 1.20.3–1.20.4 的资源包 pack_format = **22**（数据包为 26）。
 
 ## 目录结构
 

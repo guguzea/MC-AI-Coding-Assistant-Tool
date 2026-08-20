@@ -140,7 +140,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 }
 
 // 或者使用 DistExecutor
-DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientMethod());
 ```
 
-> 注意：`DistExecutor.unsafeRunForDist` 和类似方法用于在不同物理端运行不同代码。
+> 注意：`DistExecutor.runForDist` 和类似方法用于在不同物理端运行不同代码。

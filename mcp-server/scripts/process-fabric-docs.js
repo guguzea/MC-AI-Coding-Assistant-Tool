@@ -18,8 +18,9 @@
  *   ⭐ 高权重：注册表、事件、能力、网络等核心章节
  *
  * 使用：
- *   node scripts/process-fabric-docs.js                    # 默认 1.21.1
- *   node scripts/process-fabric-docs.js --version 1.20.1  # 指定版本
+ *   node scripts/process-fabric-docs.js --version 1.21.4
+ *   node scripts/process-fabric-docs.js --version 26.1.2
+ * raw 为空时写空 index-l0/l1/l2（旧档清除污染后），search_fabric_docs 对本源无命中，改走 wiki 或 DOC_NOT_FOUND。
  */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "fs";
@@ -361,15 +362,17 @@ function generateL2Plus(content, keys) {
 function processVersion(version) {
   const versionDir = join(DATA_DIR, version);
   const rawDir = join(versionDir, "raw");
-  if (!existsSync(rawDir)) {
-    console.error(`❌ 版本目录不存在: ${rawDir}`);
-    console.error(`   请先运行 fetch-fabric-docs.js 爬取文档。`);
-    return;
-  }
+  mkdirSync(rawDir, { recursive: true });
 
   const files = readdirSync(rawDir).filter(f => f.endsWith(".md") && !f.startsWith("_"));
   if (files.length === 0) {
-    console.error(`❌ 版本 ${version} 的 raw/ 目录下没有找到 .md 文件`);
+    mkdirSync(versionDir, { recursive: true });
+    mkdirSync(join(versionDir, "processed"), { recursive: true });
+    const empty = [];
+    writeFileSync(join(versionDir, "index-l0.json"), JSON.stringify(empty, null, 2), "utf-8");
+    writeFileSync(join(versionDir, "index-l1.json"), JSON.stringify(empty, null, 2), "utf-8");
+    writeFileSync(join(versionDir, "index-l2.json"), JSON.stringify(empty, null, 2), "utf-8");
+    console.log(`空树：${version} 无版本化 raw，已写空索引。search_fabric_docs 不要把现行站当本档 API。`);
     return;
   }
 

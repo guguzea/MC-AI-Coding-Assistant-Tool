@@ -73,8 +73,8 @@ public class ExampleMod {
     public static final String MOD_ID = "examplemod";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(modEventBus);
     }
 }
@@ -96,7 +96,7 @@ private static final Item MY_ITEM = Registry.register(
 
 // ✅ Forge
 public static final DeferredRegister<Item> ITEMS =
-    DeferredRegister.create(ForgeRegistry.ITEMS, MOD_ID);
+    DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()));

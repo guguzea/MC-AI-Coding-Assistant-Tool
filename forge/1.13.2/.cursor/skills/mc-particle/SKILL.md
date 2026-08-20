@@ -11,7 +11,20 @@ mappings: mcp
 
 ## 快速开始
 
-### 1. 创建粒子类
+### 1. 注册 ParticleType
+
+```java
+public static ParticleType<BasicParticleType> MY_PARTICLE;
+
+@SubscribeEvent
+public static void register(RegistryEvent.Register<ParticleType<?>> event) {
+    MY_PARTICLE = new ParticleType<BasicParticleType>(false, BasicParticleType::new) {};
+    MY_PARTICLE.setRegistryName(new ResourceLocation(MOD_ID, "my_particle"));
+    event.getRegistry().register(MY_PARTICLE);
+}
+```
+
+### 2. 创建粒子类
 
 ```java
 public class MyParticle extends Particle {
@@ -35,17 +48,13 @@ public class MyParticle extends Particle {
 }
 ```
 
-### 2. 注册粒子工厂
+### 3. 注册粒子工厂（客户端）
 
-```java
-public static void register() {
-    ParticleRegistry.MY_PARTICLE = new ParticleType(false);
-    ParticleRegistry.MY_PARTICLE.setRegistryName(new ResourceLocation(MOD_ID, "my_particle"));
-}
-```
+在 `FMLClientSetupEvent` 或 `ParticleFactoryRegisterEvent` 中注册 `IParticleFactory`，不要用 `ParticleRegistry`。
 
 ## 常见错误
 
+- ❌ `ParticleRegistry` — 1.13 用 `RegistryEvent.Register<ParticleType<?>>`
 - ❌ 粒子在服务端生成 → 使用 `world.spawnParticle()` 在客户端生成
 
 ## 参考资料

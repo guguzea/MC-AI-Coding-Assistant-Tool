@@ -28,7 +28,7 @@ IF 用户问要不要写 REI 插件
 
 - Fabric：`fabric.mod.json` 用 `suggests`（写进 `depends` 会让玩家缺库进不了游戏），modId：JEI=`jei`、EMI=`emi`、REI=`roughlyenoughitems`；开发依赖 `compileOnly` + `runtimeOnly` 自测
 - Forge / NeoForge：`mods.toml` / `neoforge.mods.toml` 写 optional 依赖；Gradle 坐标按官方 README 分 artifact（Forge/Neo 与 Fabric 不同），以官方为准
-- 兼容入口只在客户端：`Dist.CLIENT` 门闩 + client 包，服务端禁止引用查看器类
+- 兼容入口只在客户端：Forge/Neo 用 `Dist.CLIENT` 门闩 + client 包；Fabric/Quilt 用 client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources；服务端禁止引用查看器类
 
 ## 集成要点
 

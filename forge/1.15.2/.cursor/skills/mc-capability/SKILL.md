@@ -18,7 +18,7 @@ public interface IExampleData {
     void setValue(int value);
 }
 
-// 2. 实现 ICapabilitySerializable（自带存储，无需单独 IStorage）
+// 2. 实现 ICapabilitySerializable
 public class ExampleData implements IExampleData, ICapabilitySerializable<CompoundNBT> {
     private int value = 0;
 
@@ -45,28 +45,26 @@ public class ExampleData implements IExampleData, ICapabilitySerializable<Compou
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class CapabilityEvents {
     @SubscribeEvent
-    public static void registerCaps(RegistryEvent.Register<Capabilities> event) {
-        // Capability 已在 Forge 中注册
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        CapabilityManager.INSTANCE.register(
+            IExampleData.class,
+            new ExampleDataStorage(),
+            ExampleData::new
+        );
     }
 
-    // 附加到玩家
     @SubscribeEvent
     public static void attachToPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (!(event.getObject() instanceof PlayerEntity)) return;
         event.addCapability(
             new ResourceLocation(MOD_ID, "example_data"),
-            new ICapabilityProvider<IExampleData>() {
+            new ICapabilityProvider() {
                 private final IExampleData instance = new ExampleData();
-
-                @Override
-                public boolean hasCapability(Capability<IExampleData> cap, Direction side) {
-                    return cap == ModCapabilities.EXAMPLE_DATA;
-                }
+                private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
 
                 @Override
                 public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-                    return cap == ModCapabilities.EXAMPLE_DATA ? 
-                        LazyOptional.of(() -> (T) instance) : LazyOptional.empty();
+                    return cap == ModCapabilities.EXAMPLE_DATA ? opt.cast() : LazyOptional.empty();
                 }
             }
         );
@@ -77,13 +75,9 @@ public class CapabilityEvents {
 ## 查询 Capability
 
 ```java
-// ✅ 推荐：ifPresent 模式
 player.getCapability(ModCapabilities.EXAMPLE_DATA).ifPresent(data -> {
     data.setValue(10);
 });
-
-// ❌ 错误：直接调用
-int val = player.getCapability(CAP).orElse(null).getValue(); // NPE!
 ```
 
 ## Decision: 选择附加目标
@@ -92,24 +86,22 @@ int val = player.getCapability(CAP).orElse(null).getValue(); // NPE!
 |------|------|
 | 玩家 / 所有实体 | `AttachCapabilitiesEvent<Entity>` + 检查 `instanceof PlayerEntity` |
 | TileEntity | `AttachCapabilitiesEvent<TileEntity>` |
-| ItemStack | `ItemStack.initCapabilities()`（无需事件） |
+| ItemStack | `ItemStack.getCapability()` |
 
 ## 内置 Capability
 
 ```java
-// ItemHandler（物品栏）
 player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-// FluidHandler（流体栏）
 player.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-// EnergyStorage（能量）
 player.getCapability(CapabilityEnergy.ENERGY)
 ```
 
 ## 常见错误
 
-- ❌ `getCapability()` 返回 null（永远返回 `LazyOptional`，用 `ifPresent`）
+- ❌ `getCapability()` 返回 null — 返回 `LazyOptional<T>`
+- ❌ `hasCapability` / `ICapabilityProvider<IExampleData>` — 只实现 `getCapability(..., Direction)`
+- ❌ `RegistryEvent.Register<Capabilities>` — 用 `CapabilityManager.INSTANCE.register`
 - ❌ 在 `AttachCapabilitiesEvent` 中修改数据（只注册 Provider）
-- ❌ `LazyOptional` 泄漏：`invalidate()` 中必须调用 `close()`
 
 ## 参考资料
 

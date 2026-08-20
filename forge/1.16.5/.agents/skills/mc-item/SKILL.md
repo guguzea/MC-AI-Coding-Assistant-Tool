@@ -15,7 +15,7 @@ mappings: parchment
 // 注册（参见 mc-registry Skill）
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
-        .maxStackSize(64)
+        .stacksTo(64)
         .tab(ItemGroup.TAB_MISC)
     )
 );
@@ -34,7 +34,7 @@ IF 盔甲
   → ArmorItem + IArmorTier
 
 IF 可食用
-  → Item + .food(FoodProperties.Builder)
+  → Item + .food(Food.Builder)
 
 IF 可在创造模式标签中找到
   → 注册到 ItemGroup（参见 mc-registry Skill）
@@ -117,7 +117,7 @@ public static final RegistryObject<Item> COPPER_HELMET = ITEMS.register("copper_
 public static final RegistryObject<Item> GOLDEN_APPLE = ITEMS.register("golden_apple",
     () -> new Item(new Item.Properties()
         .tab(ItemGroup.TAB_FOOD)
-        .food(new FoodProperties.Builder()
+        .food(new Food.Builder()
             .nutrition(4)
             .saturationMod(1.2f)
             .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 2400, 0), 1.0f)

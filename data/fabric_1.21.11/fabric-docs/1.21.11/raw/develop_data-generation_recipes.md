@@ -1,9 +1,12 @@
-# data generation recipes
+# Recipe Generation
 
-> 来源：https://docs.fabricmc.net/develop/data-generation/recipes
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/data-generation/recipes.md
 > 版本：1.21.11
 > GitHub 路径：develop/data-generation/recipes.md
-> 抓取源：github_raw
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T03:52:44.680Z
+> SHA256：e081cf3aaec7b6051cc533c37c00950ccf335e6ca6daff628ab0a4809df389c8
+> 分支：main
 
 ---
 title: Recipe Generation
@@ -29,23 +32,23 @@ Make sure you've completed the [datagen setup](./setup) process first.
 
 First, we'll need our provider. Make a class that extends `FabricRecipeProvider`. All our recipe generation will happen inside the `buildRecipes` method of our provider.
 
-@[code lang=java transcludeWith=:::datagen-recipes:provider](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+@[code lang=java transcludeWith=:::datagen-recipes:provider](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
 
 To finish setup, add this provider to your `DataGeneratorEntrypoint` within the `onInitializeDataGenerator` method.
 
-@[code lang=java transcludeWith=:::datagen-recipes:register](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
+@[code lang=java transcludeWith=:::datagen-recipes:register](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModDataGenerator.java)
 
 ## Shapeless Recipes {#shapeless-recipes}
 
 Shapeless recipes are fairly straightforward. Just add them to the `buildRecipes` method in your provider:
 
-@[code lang=java transcludeWith=:::datagen-recipes:shapeless](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+@[code lang=java transcludeWith=:::datagen-recipes:shapeless](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
 
 ## Shaped Recipes {#shaped-recipes}
 
 For a shaped recipe, you define the shape using a `String`, then define what each `char` in the `String` represents.
 
-@[code lang=java transcludeWith=:::datagen-recipes:shaped](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+@[code lang=java transcludeWith=:::datagen-recipes:shaped](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
 
 ::: tip
 
@@ -57,4 +60,4 @@ There's a lot of helper methods for creating common recipes. Check out what `Rec
 
 Other recipes work similarly, but require a few extra parameters. For example, smelting recipes need to know how much experience to award.
 
-@[code lang=java transcludeWith=:::datagen-recipes:other](@/reference/latest/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)
+@[code lang=java transcludeWith=:::datagen-recipes:other](@/reference/1.21.11/src/client/java/com/example/docs/datagen/ExampleModRecipeProvider.java)

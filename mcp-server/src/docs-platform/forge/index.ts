@@ -16,7 +16,7 @@ import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
 import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform } from "../store.js";
-import { createFabricDocStore } from "../fabric/store.js";
+import { searchFabricDocs } from "../fabric/index.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
   asPlatformDataMissingResult,
@@ -201,9 +201,15 @@ export async function searchForgeDocs(
               version: args.version,
               resolvedVersion: detailed.resolvedVersion,
               versionFallback: detailed.versionFallback,
+              ...(args.version === "1.20.4"
+                ? { fallback: true, source_route: "1.20.x" }
+                : {}),
               warning: joinSearchWarnings(
                 detailed.versionFallback
                   ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
+                  : undefined,
+                args.version === "1.20.4"
+                  ? "Forge 1.20.4 无独立 /en/1.20.4/ 路由，正文来自 /en/1.20.x/。不要当成独立 1.20.4 全文。"
                   : undefined,
                 missingSemanticDbWarning(semanticHits === null),
               ),
@@ -700,90 +706,12 @@ export async function searchDocs(
     }
 
     if (platform === "fabric") {
-      const dataRoot = resolveDataDir();
-      let results: SearchResultLike[];
-      let resolvedVersion = args.version;
-      let versionFallback = false;
-
-      if (fabricSource === "all") {
-        const docs = createFabricDocStore(args.version, "fabric-docs", dataRoot)
-          .searchIndexDetailed(args.query, args.version, args.tags);
-        const wiki = createFabricDocStore(args.version, "fabric-wiki", dataRoot)
-          .searchIndexDetailed(args.query, args.version, args.tags);
-        const merged = [
-          ...docs.results.map((r) => ({ ...r, _source: "fabric-docs" as const })),
-          ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
-        ];
-        merged.sort((a, b) => ((b as { score?: number }).score ?? 0) - ((a as { score?: number }).score ?? 0));
-        results = merged.slice(0, 20);
-        resolvedVersion = docs.resolvedVersion;
-        versionFallback = docs.versionFallback || wiki.versionFallback;
-      } else {
-        const detailed = createFabricDocStore(args.version, fabricSource, dataRoot)
-          .searchIndexDetailed(args.query, args.version, args.tags);
-        results = detailed.results;
-        resolvedVersion = detailed.resolvedVersion;
-        versionFallback = detailed.versionFallback;
-      }
-
-      // 语义检索（两源各自查询）；无语义库 → null，保持纯 L0
-      const sources = fabricSource === "all" ? ["fabric-docs", "fabric-wiki"] : [fabricSource];
-      let semanticRanked = false;
-      let semanticMissing = false;
-      const semanticList: Array<{
-        docId: string;
-        score?: number;
-        label: string;
-        url?: string;
-        tags?: string[];
-        priority?: string;
-        sectionCount?: number;
-      }> = [];
-      for (const src of sources) {
-        const hits = await semanticSearch(args.query, "fabric", args.version, src, dataRoot);
-        if (hits === null) semanticMissing = true;
-        else semanticRanked = true;
-        if (hits) semanticList.push(...hits);
-      }
-      if (semanticRanked) {
-        results = mergeSemanticResults(results, semanticList, {
-          tags: args.tags,
-          limit: 20,
-          version: resolvedVersion,
-        });
-      }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(
-              withDocsFallbackFields({
-                ok: true,
-                query: args.query,
-                version: args.version,
-                resolvedVersion,
-                versionFallback,
-                warning: joinSearchWarnings(
-                  versionFallback
-                    ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
-                    : undefined,
-                  missingSemanticDbWarning(semanticMissing),
-                  semanticStaleSearchWarning(dataRoot, "fabric", resolvedVersion, fabricSource === "all" ? "fabric-docs" : fabricSource),
-                ),
-                platform,
-                source: fabricSource,
-                tags: args.tags,
-                semantic: semanticRanked,
-                total: results.length,
-                results,
-              }),
-              null,
-              2,
-            ),
-          },
-        ],
-      };
+      return searchFabricDocs({
+        query: args.query,
+        version: args.version,
+        tags: args.tags,
+        source: fabricSource,
+      });
     }
 
     const store = getGenericStore(platform);
@@ -864,12 +792,18 @@ export async function searchDocs(
               version: args.version,
               resolvedVersion,
               versionFallback,
+              ...(platform === "forge" && args.version === "1.20.4"
+                ? { fallback: true, source_route: "1.20.x" }
+                : {}),
               warning: joinSearchWarnings(
                 threwMissing
                   ? `NeoForge 无独立 ${args.version} 主文档树。未建档版本禁止读邻档 00–10。`
                   : undefined,
                 versionFallback
                   ? `请求版本 ${args.version} 无独立文档，已降级到 ${resolvedVersion}`
+                  : undefined,
+                platform === "forge" && args.version === "1.20.4"
+                  ? "Forge 1.20.4 无独立 /en/1.20.4/ 路由，正文来自 /en/1.20.x/。不要当成独立 1.20.4 全文。"
                   : undefined,
                 primerNote,
                 missingSemanticDbWarning(semanticHits === null),

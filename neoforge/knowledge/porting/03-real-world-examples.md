@@ -48,21 +48,25 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.eventbus.api.SubscribeEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraft.core.registries.Registries;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.IEventBus;
 
+@Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
     public static final DeferredRegister<Item> ITEMS =
-        DeferredRegister.create(NeoForgeRegistries.ITEMS, MOD_ID);
+        DeferredRegister.create(Registries.ITEM, MOD_ID);
 
     public static final DeferredHolder<Item, Item> COPPER_INGOT = ITEMS.register("copper_ingot",
-        () -> new Item(new Item.Properties().stacksTo(64).tab(CreativeModeTab.TAB_MISC)));
+        () -> new Item(new Item.Properties()));
 
-    // 无 @Mod 注解，使用静态初始化方法
-    public static void init(IEventBus modEventBus) {
-        ITEMS.register(modEventBus);
-        NeoForge.EVENT_BUS.register(ExampleMod.class);
+    // 创造模式标签：NeoForge 用 BuildCreativeModeTabContentsEvent，不要用 Item.Properties().tab(...)
+
+    public ExampleMod(IEventBus modBus) {
+        ITEMS.register(modBus);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -98,26 +102,26 @@ public class ExampleMod {
 ### NeoForge 版本
 
 ```java
+@Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
     public static final DeferredRegister<Block> BLOCKS =
-        DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+        DeferredRegister.create(Registries.BLOCK, MOD_ID);
 
     public static final DeferredHolder<Block, Block> MY_BLOCK = BLOCKS.register("my_block",
-        () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
+        () -> new Block(BlockBehaviour.Properties.of().strength(1.5f)));
 
-    // 使用 NeoForgeRegistries.BLOCK_ENTITIES
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-        DeferredRegister.create(NeoForgeRegistries.BLOCK_ENTITIES, MOD_ID);
+        DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MOD_ID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MyBlockEntity>> MY_BLOCK_ENTITY =
         BLOCK_ENTITIES.register("my_block", () ->
             BlockEntityType.Builder.of(MyBlockEntity::new, MY_BLOCK.get()).build(null));
 
-    public static void init(IEventBus modEventBus) {
-        BLOCKS.register(modEventBus);
-        BLOCK_ENTITIES.register(modEventBus);
+    public ExampleMod(IEventBus modBus) {
+        BLOCKS.register(modBus);
+        BLOCK_ENTITIES.register(modBus);
     }
 }
 ```
@@ -178,18 +182,18 @@ public static final Capability<IEnergyStorage> ENERGY_CAPABILITY = CapabilityMan
 MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, AttachCapabilitiesEvent.class, ...);
 ```
 
-### NeoForge 版本
+### NeoForge 版本（1.20.4+ Data Attachments）
 
 ```java
-// API 完全相同，仅包名变更
-public interface IEnergyStorage { ... }
+public static final DeferredRegister<AttachmentType<EnergyStorage>> ENERGY =
+    DeferredRegister.create(Registries.ATTACHMENT_TYPE, MOD_ID);
 
-public static final Capability<IEnergyStorage> ENERGY_CAPABILITY = CapabilityManager.get(
-    new ResourceLocation(MOD_ID, "energy"),
-    () -> new EnergyStorage()
-);
+public static final Supplier<AttachmentType<EnergyStorage>> ENERGY_TYPE =
+    ENERGY.register("energy", () -> AttachmentType.serializable(EnergyStorage::new));
 
-NeoForge.EVENT_BUS.addGenericListener(Entity.class, AttachCapabilitiesEvent.class, ...);
+// 读写
+EnergyStorage storage = entity.getData(ENERGY_TYPE.get());
+entity.setData(ENERGY_TYPE.get(), new EnergyStorage());
 ```
 
 ---
@@ -230,20 +234,19 @@ public class DataGenerators {
 ### NeoForge 版本
 
 ```java
-// API 完全相同，仅包名变更
-public class ModRecipeProvider extends DataProvider {
-    public ModRecipeProvider(PackOutput output) {
-        super(output);
+public class ModRecipeProvider extends RecipeProvider {
+    public ModRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries, output);
     }
 
     @Override
-    protected void buildRecipes() {
+    protected void buildRecipes(RecipeOutput output) {
         ShapedRecipeBuilder.shaped(ExampleMod.COPPER_INGOT.get(), 1)
             .pattern("###")
             .pattern("#X#")
             .define('#', Items.COPPER_INGOT)
             .define('X', Items.DIAMOND)
-            .save(consumer);
+            .save(output);
     }
 }
 
@@ -253,7 +256,7 @@ public class DataGenerators {
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            new ModRecipeProvider(event.getGenerator().getPackOutput())
+            output -> new ModRecipeProvider(event.getLookupProvider(), output)
         );
     }
 }

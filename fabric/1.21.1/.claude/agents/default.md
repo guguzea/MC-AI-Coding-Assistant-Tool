@@ -46,8 +46,8 @@ Decision: 本规则集是否适用？
         → 检查 build.gradle 中 Loom 配置
         → 继续加载本规则集（Fabric 1.21.1）
     → ELSE → fabric.mod.json schema 版本不匹配，跳转根目录 AGENTS.md
-→ ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
-    → 这是 Forge 项目，跳转到 ../forge/1.20.1/AGENTS.md
+→ ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml 或 neoforge.mods.toml
+    → 回根目录 AGENTS.md 重判平台与精确版本。Forge 1.21.1 无规则树（PACK_NOT_FOUND）；NeoForge 读 neoforge/<精确版本>
 → ELSE → 无法判断，询问用户确认平台和版本
 ```
 

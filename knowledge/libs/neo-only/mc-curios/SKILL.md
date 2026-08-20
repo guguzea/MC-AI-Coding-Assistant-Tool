@@ -2,14 +2,14 @@
 name: mc-curios
 description: Curios 饰品槽（NeoForge）。触发词：Curios、饰品槽、accessory、slot、curio、装备槽
 platforms: [neoforge]
-mcVersions: ["1.13.2-26.2"]
+mcVersions: ["1.20.1-26.2"]
 communityDocId: authored/lib-curios
 mappings: hint
 ---
 
 # Curios 饰品槽（NeoForge）
 
-NeoForge 饰品槽事实标准（与 Forge 同生态，独立 `curios-neoforge-*` 构建，约 1.13.2-26.2）：tag 驱动扩展槽位、自带背包 GUI。Artifacts、Iron's Spells 'n Spellbooks、Apotheosis 等都在用。官方**没有** Fabric 构建（Fabric 见 `mc-trinkets`）。
+NeoForge 饰品槽事实标准（与 Forge 同生态，独立 `curios-neoforge-*` 构建，约 1.20.1-26.2）：tag 驱动扩展槽位、自带背包 GUI。Artifacts、Iron's Spells 'n Spellbooks、Apotheosis 等都在用。官方**没有** Fabric 构建（Fabric 见 `mc-trinkets`）。
 
 > 本稿位于 `knowledge/libs/neo-only/`，供 NeoForge 解析路径使用。Forge 工程请读 `forge-only/mc-curios`。
 
@@ -20,7 +20,7 @@ Decision: 饰品槽方案选择
 → platform = fabric / quilt → 本 skill 不适用：读 mc-trinkets（Trinkets），不要用 Curios；Trinkets 已停更于 1.21.1，1.21.4+ 评估自研或原版机制
 → platform = forge → 读 forge-only/mc-curios（本稿仅 Neo）
 → platform = neoforge：
-   ├─ 1.13.2-26.2 有对应 curios-neoforge 构建 → Curios（标准方案）
+   ├─ 1.20.1-26.2 有对应 curios-neoforge 构建 → Curios（标准方案）
    ├─ 1.21.5+ 且槽位需求简单 → 评估原版 Data Component 是否够
    └─ 已选 Curios：
         ├─ 依赖：硬依赖 or 软依赖门闩（ModList.isLoaded("curios")）

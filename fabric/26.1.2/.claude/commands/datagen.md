@@ -37,7 +37,7 @@ IF 语言 → FabricLanguageProvider
 
 ## 常见错误
 
-- ❌ Yarn 名字（`ShapedRecipeJsonBuilder` / `addDrop` / `Identifier`）
+- ❌ Yarn 名字（`ShapedRecipeJsonBuilder` / `addDrop`）
 - ❌ `ExistingFileHelper` / `init_data`
 
 ## 扩展点

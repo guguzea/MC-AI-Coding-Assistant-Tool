@@ -27,14 +27,14 @@
 
 ## 注册表
 
-### NeoForgeRegistries
-: NeoForge 所有内置注册表的静态持有类。通过 `NeoForgeRegistries.BLOCKS`、`NeoForgeRegistries.ITEMS` 等字段访问。
+### Registries / BuiltInRegistries
+: Vanilla 注册表键（`Registries.BLOCK`、`Registries.ITEM` 等）。NeoForge 的 `DeferredRegister.create(Registries.BLOCK, modId)` 注册方块/物品；扩展注册表用 `DeferredRegister.createBlocks(modId)` / `createItems(modId)`。
 
 ### ResourceKey
 : Vanilla 注册表的键（如 `Registries.BIOME`），用于 `DeferredRegister.create(ResourceKey, modId)`。
 
-### NeoForgeRegistries.Keys
-: NeoForge 注册表的键集合，通过 `NeoForgeRegistries.Keys.XXX` 访问 `ResourceKey`。
+### NeoForgeRegistries.Keys（历史）
+: 旧文档中的 `NeoForgeRegistries.Keys.XXX` 已弃用；方块/物品请用 `Registries.BLOCK` / `Registries.ITEM`，或 `DeferredRegister.createBlocks(modId)` / `createItems(modId)`。
 
 ---
 

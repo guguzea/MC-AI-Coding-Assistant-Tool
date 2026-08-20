@@ -11,7 +11,7 @@
 public static final RegistryObject<Item> MY_ITEM = ITEMS.register("my_item",
     () -> new Item(new Item.Properties()
         .tab(ItemGroup.TAB_MISC)
-        .maxStackSize(64)
+        .stacksTo(64)
     )
 );
 ```
@@ -113,7 +113,7 @@ public class MyUseItem extends Item {
     public MyUseItem() {
         super(new Item.Properties()
             .tab(ItemGroup.TAB_BREWING)
-            .maxStackSize(16)
+            .stacksTo(16)
         );
     }
 

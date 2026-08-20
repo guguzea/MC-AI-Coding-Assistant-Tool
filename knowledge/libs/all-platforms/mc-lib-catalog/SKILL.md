@@ -1,7 +1,7 @@
 ---
 name: mc-lib-catalog
 description: 库模组总目录与路由中枢。触发词：库模组、library、Cloth Config、YACL、GeckoLib、Architectury、Curios、Trinkets、JEI、EMI、REI、配置库、动画库、全家桶库、依赖树、选哪个库、knowledge/libs
-platforms: [fabric, forge, neoforge]
+platforms: [fabric, forge, neoforge, quilt, bedrock]
 mcVersions: ["1.20.1+"]
 communityDocId: authored/library-catalog-2026
 ---

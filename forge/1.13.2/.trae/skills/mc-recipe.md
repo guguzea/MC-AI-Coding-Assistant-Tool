@@ -12,44 +12,82 @@ mappings: mcp
 ## 快速总览
 
 ```
-注册 RecipeType（静态） → 实现 Recipe 类 → 注册 RecipeSerializer（静态） → JSON
+数据包 JSON + 实现 IRecipe → 注册 RecipeSerializer（DeferredRegister）
 ```
 
-## 1. 注册 RecipeType
+1.13.2 **没有** `RecipeType.register()`。自定义类型在 `IRecipe#getType()` 返回静态 `IRecipeType` 实例。
 
-```java
-public static final RecipeType<MyRecipe> MILLING =
-    RecipeType.register(MOD_ID + ":milling");
+## 1. 数据包 JSON
+
+```json
+{
+  "type": "mymod:my_recipe",
+  "ingredient": { "item": "minecraft:diamond" },
+  "result": { "item": "mymod:processed_diamond", "count": 2 }
+}
 ```
 
-## 2. 实现 Recipe 类
+## 2. 实现 IRecipe 类（stub）
 
 ```java
-public class MyRecipe extends RecipeSerializer<MyRecipe> implements IRecipe<IRecipeLayout> {
-    private Ingredient input;
-    private ItemStack output;
-    private int processingTime;
+public class MyRecipe implements IRecipe<IInventory> {
+  private Ingredient input;
+  private ItemStack output;
 
-    @Override
-    public void serialize(@Nonnull @WillNotReturn NBTCompoundNBT data) {
-        // 序列化
-    }
+  @Override
+  public boolean matches(IInventory inv, World world) {
+    return input.test(inv.getStackInSlot(0));
+  }
 
-    @Override
-    public void deserialize(@Nonnull NBTCompoundNBT data) {
-        // 反序列化
-    }
+  @Override
+  public ItemStack getCraftingResult(IInventory inv) {
+    return output.copy();
+  }
 
-    @Override
-    public IRecipeType<?> getType() {
-        return MILLING;
-    }
+  @Override
+  public boolean canFit(int width, int height) {
+    return width * height >= 1;
+  }
+
+  @Override
+  public ItemStack getRecipeOutput() {
+    return output.copy();
+  }
+
+  @Override
+  public IRecipeSerializer<?> getSerializer() {
+    return ModRecipeSerializers.MY_SERIALIZER.get();
+  }
+
+  @Override
+  public IRecipeType<?> getType() {
+    return ModRecipes.MY_TYPE;
+  }
+
+  @Override
+  public ResourceLocation getId() {
+    return new ResourceLocation(MOD_ID, "my_recipe");
+  }
+}
+```
+
+## 3. RecipeSerializer（NBTTagCompound）
+
+自定义 Serializer 的 NBT 读写用 `NBTTagCompound`，不是 `NBTCompoundNBT` / `CompoundNBT`。
+
+```java
+@Override
+public MyRecipe read(ResourceLocation id, PacketBuffer buf) {
+  NBTTagCompound tag = buf.readCompoundTag();
+  // 从 tag 反序列化 input / output
 }
 ```
 
 ## 常见错误
 
-- ❌ RecipeType 写在 RegistryEvent 中 → 不支持，必须用 `RecipeType.register()`
+- ❌ `RecipeType.register()` — 1.13.2 不支持
+- ❌ `NBTCompoundNBT` / `IRecipeLayout` — 假 API；按上文 stub 对照 javadoc
+- ❌ RecipeSerializer 继承 `Recipe` — Serializer 实现 `IRecipeSerializer<T>`
 
 ## 参考资料
 

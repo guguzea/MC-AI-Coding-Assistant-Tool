@@ -101,8 +101,8 @@ IF 需要在客户端渲染自定义模型
 
 IF 需要服务端数据同步到客户端
   → 使用 EntityDataManager（实体数据）
-  → 使用 TileEntity.syncable（TileEntity 数据）
-  → 使用 SimpleNetworkWrapper（自定义数据）
+  → 使用 TileEntity getUpdateTag / handleUpdateTag（TileEntity 数据）
+  → 使用 SimpleChannel（自定义数据）
 
 IF 需要客户端触发服务端逻辑
   → 使用 PlayerInteractEvent（在服务端自然处理）
@@ -118,11 +118,11 @@ IF 需要客户端触发服务端逻辑
 
 服务端推送 → 客户端更新：
   EntityDataManager（实体属性）
-  TileEntity.syncable()（TileEntity 数据）
-  SimpleNetworkWrapper 消息（自定义数据）
+  TileEntity getUpdateTag() / handleUpdateTag()（TileEntity 数据）
+  SimpleChannel 消息（自定义数据）
 
 客户端查询 → 服务端响应：
-  SimpleNetworkWrapper（Request-Reply 模式）
+  SimpleChannel（Request-Reply 模式）
 ```
 
 ---

@@ -1,5 +1,5 @@
 {
-  "built_at": "2026-08-14T23:32:52.319Z",
+  "built_at": "2026-08-20T04:00:32.852Z",
   "embedMode": "hybrid",
   "entries": [
     {
@@ -19,240 +19,276 @@
       "version": "1.14.4",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.14.4/fabric-docs/1.14.4/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:02:25.297Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:16.215Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "eb261206d43702e95b891c6a38011ceaebe45d325d6b1ac903ecebaa325651fb"
+      "sha256": "5267f2b34a3daab803aff681344d76165d450010c7c26bdcf125afa891e0d0eb"
     },
     {
       "platform": "fabric",
       "version": "1.14.4",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.14.4/fabric-wiki/1.14.4/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:02:31.160Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:16.655Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "1434dc02cbe9c44a76a14a966daf3ff9935f1905f70cef1672bed45320a33cbf"
+      "sha256": "a68d1b5423d06a2177c0c747049af7dd035aa0f04dbd42d76bb19dd486ad3a35"
     },
     {
       "platform": "fabric",
       "version": "1.16.5",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.16.5/fabric-docs/1.16.5/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:02:53.886Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:19.348Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "ff7c0ac5a736f0846594c3dd5660e9dc1d44eb25b0fec7f320e79e4235fbd7ba"
+      "sha256": "5b2b8de16eac47efab90350fd1b311affee7f987d1d35313003ac85af276dd64"
     },
     {
       "platform": "fabric",
       "version": "1.16.5",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.16.5/fabric-wiki/1.16.5/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:03:04.562Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:20.994Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "b7f6740d7421b20d16e78baf939e07f2172c6018a4a6fce0bec1c1cc72b4c01c"
+      "sha256": "801b1e6179d3062e6b24cf975c970608d952ddd13d118b536be995f2a0613d6e"
     },
     {
       "platform": "fabric",
       "version": "1.17.1",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.17.1/fabric-docs/1.17.1/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:03:20.289Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:21.379Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "61f33232519047c426b13b9c8e90d25ded82ed15e6d3a745d0f8a45322ec9c8a"
+      "sha256": "2d3d08a4e9ab6b5cbe5f30cafadd18400b58b53c3c540828149ffeef72283094"
     },
     {
       "platform": "fabric",
       "version": "1.17.1",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.17.1/fabric-wiki/1.17.1/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:03:28.397Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:21.971Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "04fca1c2f39d46cac6b936482eb480fcdb7fe73ba7a143d3db57780a5742bb8f"
+      "sha256": "567d3972c83b6c685f84f16f3d859d7a7bf1d0d895aca88dac4b6687ad5c596b"
     },
     {
       "platform": "fabric",
       "version": "1.18.2",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.18.2/fabric-docs/1.18.2/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:03:45.584Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:22.382Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "70b43ba148dd7b51b13401d5a21a54e2f0f6b83be085f5497e8c7cd3e0984c3a"
+      "sha256": "8c93655913cfcf0a353d94c6e4180c8a98f1176221aa7f54fa1dd9e3e9d711b9"
     },
     {
       "platform": "fabric",
       "version": "1.18.2",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.18.2/fabric-wiki/1.18.2/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:03:51.712Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:22.873Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "6666e7d6fb3a743a928e628978b4818eb084265fe66b92c0b8148101617f2611"
+      "sha256": "887ff78fb05511e7d628d85c2bf64250fedb32df761def40366f41ac861e70c1"
     },
     {
       "platform": "fabric",
       "version": "1.19.4",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.19.4/fabric-docs/1.19.4/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:04:09.439Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:23.255Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "8c07977ea232c6968bf7561af5a6473416f5b9a7f9bef3ccdafbf6fdcb2e9d25"
+      "sha256": "186bcd6941dea1666d3a50976563160f88fa47a462165f87f095c7c37c3ee69b"
     },
     {
       "platform": "fabric",
       "version": "1.19.4",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.19.4/fabric-wiki/1.19.4/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:04:16.530Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:23.901Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "694e43a4b3b31ad11e218e28af04d648227d767eba3156c72e2ea96ff5f2cbbe"
+      "sha256": "d53c3d7604c15660f5965815423dd769bf4d0cabb3c943bdd6687b0cdede6799"
     },
     {
       "platform": "fabric",
       "version": "1.20.1",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.20.1/fabric-docs/1.20.1/semantic/db.sqlite",
-      "chunks": 312,
-      "embedded": 312,
-      "built_at": "2026-08-11T13:02:06.177Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:15.488Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "bdf672724a1ce533edf94556668b8ce613da0fdd16362eef79b6ff5ae94fe51b"
+      "sha256": "34b17afc9eb099c2a88968fb8dbca1bd51a7fc306aba1ff70852c92d286c63d5"
     },
     {
       "platform": "fabric",
       "version": "1.20.1",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.20.1/fabric-wiki/1.20.1/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:10:05.769Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:15.909Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "7cae3c706a36cfe6e977cb9d98d474855de45fbc6adb8f749b10f38b0454ac59"
+      "sha256": "4ead21725439ce804c623a7f594ba87b4dc186c81e9b2d9699981863f8d0383a"
     },
     {
       "platform": "fabric",
       "version": "1.20.4",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.20.4/fabric-docs/1.20.4/semantic/db.sqlite",
-      "chunks": 315,
-      "embedded": 315,
-      "built_at": "2026-08-11T13:04:34.428Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:24.313Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "820b871709ed0dfccdf12c04ed697b133d06da19b6492a653fb17079de8be1ce"
+      "sha256": "802c1805ea64ad1b1f04e55976a47615714356b006828797470aa79215fd19f6"
     },
     {
       "platform": "fabric",
       "version": "1.20.4",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.20.4/fabric-wiki/1.20.4/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:04:39.719Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:24.835Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "62966e8a0bc9c52d673c5496be4eada3015429902fc0844a1692f888b4625f21"
+      "sha256": "ed6c1d8621b9e889a4ee1738da23d7920c56e651f525835357b0ae295618e9d0"
     },
     {
       "platform": "fabric",
       "version": "1.21.1",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.21.1/fabric-docs/1.21.1/semantic/db.sqlite",
-      "chunks": 294,
-      "embedded": 294,
-      "built_at": "2026-08-11T13:01:33.421Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:13.776Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "3d04837a03a947b1c9672c118cfa17bf788625135b5dea2b2e0fd31891ad5f35"
+      "sha256": "7201e4f101a4095129fffa95414e49540e12c00a1e9f2a3078290e76d5c4d1ca"
     },
     {
       "platform": "fabric",
       "version": "1.21.1",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.21.1/fabric-wiki/1.21.1/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:01:43.191Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:14.693Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "e47cfd78470ca07ebe6461a3e652daf5010b8fd6607878fdd8829d7f148786bb"
+      "sha256": "48f99584ce11ae8d507c7ea1319d0c3817ad7c33112d631b73cccb29e409e451"
+    },
+    {
+      "platform": "fabric",
+      "version": "1.21.10",
+      "source": "fabric-docs",
+      "path": "H:/MC_skill/data/fabric_1.21.10/fabric-docs/1.21.10/semantic/db.sqlite",
+      "chunks": 260,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:32.656Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "ac7c11ed5d305aad703ee3ffe0bc7c66c65d52aca5654b620cad5032a962ecfd"
     },
     {
       "platform": "fabric",
       "version": "1.21.11",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.21.11/fabric-docs/1.21.11/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:05:23.720Z",
+      "chunks": 287,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:26.322Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "8d993279c49c9f36d885dc656519e403a5f3607530bc39888728ab7f62ff038a"
+      "sha256": "da0f9211698f2f2bdf4435aa5d7e8a6994339b04a5e55945630fa93f6b7e6215"
     },
     {
       "platform": "fabric",
       "version": "1.21.11",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.21.11/fabric-wiki/1.21.11/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:05:28.665Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:26.852Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "127e436c5685c2e24fc36950f49f39843202efaf168661ed55e1c47a4fbd9895"
+      "sha256": "d7164c5f718ae4992525bc759c275b10830de3cb6c0ca81a7705a4faa0230cd4"
     },
     {
       "platform": "fabric",
       "version": "1.21.3",
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_1.21.3/fabric-docs/1.21.3/semantic/db.sqlite",
-      "chunks": 279,
-      "embedded": 279,
-      "built_at": "2026-08-11T13:04:58.888Z",
+      "chunks": 0,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:25.181Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "ffecb4138033654a5e060bde659f0cc34fe6a6822264291e63716e1ed8786171"
+      "sha256": "d5e367ff60b7c90236ebad15d17688a90ba9a5b9f9a05ba5411ec01d20ef60be"
     },
     {
       "platform": "fabric",
       "version": "1.21.3",
       "source": "fabric-wiki",
       "path": "H:/MC_skill/data/fabric_1.21.3/fabric-wiki/1.21.3/semantic/db.sqlite",
-      "chunks": 101,
-      "embedded": 101,
-      "built_at": "2026-08-11T13:05:03.850Z",
+      "chunks": 121,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:25.722Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "169c63d6e6b3fb237a6c1f21d356ec9c8b53d8713a4b59414fcf7d39ec18924a"
+      "sha256": "a79c9795c9d8063422a451405e6167127eadfb0486c5330c019cbf206ce9461d"
+    },
+    {
+      "platform": "fabric",
+      "version": "1.21.4",
+      "source": "fabric-docs",
+      "path": "H:/MC_skill/data/fabric_1.21.4/fabric-docs/1.21.4/semantic/db.sqlite",
+      "chunks": 183,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:28.074Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "d9e32672cd7aca52750fbb8f25fe3695833f2d0dd3b8a04d525f4619e2d38511"
+    },
+    {
+      "platform": "fabric",
+      "version": "1.21.8",
+      "source": "fabric-docs",
+      "path": "H:/MC_skill/data/fabric_1.21.8/fabric-docs/1.21.8/semantic/db.sqlite",
+      "chunks": 215,
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:30.664Z",
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "schemaVersion": "1",
+      "sha256": "a9eb3900443e2e529f099e67c7789b53e4391eede0e7d20b3396abd886702189"
     },
     {
       "platform": "fabric",
@@ -260,11 +296,11 @@
       "source": "fabric-docs",
       "path": "H:/MC_skill/data/fabric_26.1.2/fabric-docs/26.1.2/semantic/db.sqlite",
       "chunks": 281,
-      "embedded": 281,
-      "built_at": "2026-08-11T13:05:47.356Z",
+      "embedded": 0,
+      "built_at": "2026-08-20T04:00:27.549Z",
       "model": "Xenova/all-MiniLM-L6-v2",
       "schemaVersion": "1",
-      "sha256": "ad8cb23d74858f4337531a66db7423c7ffa140af53028efa53cc894a566f51c3"
+      "sha256": "8f8893bd4bd83338389f912445b192fdd3ca10d020c1b6382c5fa9f5190a8ad1"
     },
     {
       "platform": "forge",

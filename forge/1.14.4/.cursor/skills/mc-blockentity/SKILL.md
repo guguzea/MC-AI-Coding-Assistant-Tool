@@ -13,7 +13,7 @@ mappings: mcp
 
 ```java
 public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES =
-    DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
 
 public static final RegistryObject<TileEntityType<MyTE>> MY_TE =
     TILE_ENTITIES.register("myte",

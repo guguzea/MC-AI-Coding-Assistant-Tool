@@ -60,7 +60,7 @@ Decision: 动画方案
 
 ## 常见坑
 
-- 服务端引用客户端渲染类 → 专用服崩溃（渲染器放 `Dist.CLIENT` 侧）
+- 服务端引用客户端渲染类 → 专用服崩溃（Forge/Neo：渲染器放 `Dist.CLIENT` 侧；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 版本错配：用 1.20.1 的注解/基类写 26.x → `NoClassDefFoundError` 或方法不存在
 - 资源路径错误：geo/animation 文件没进 jar，或文件名与注册名不一致
 - 抄旧 Gist（注解名、入口类随版本变过多次）

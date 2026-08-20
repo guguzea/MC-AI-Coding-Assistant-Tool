@@ -1,6 +1,6 @@
 ---
 name: mc-script-api
-description: 基岩 Script API。触发词：@minecraft/server、world.afterEvents、Beta APIs、script_eval
+description: 基岩 Script API。触发词：@minecraft/server、world.afterEvents、Beta APIs
 platform: bedrock
 ---
 

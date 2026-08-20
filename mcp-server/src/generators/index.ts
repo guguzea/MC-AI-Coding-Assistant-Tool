@@ -1,5 +1,16 @@
 import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform } from "./common.js";
 
+function usesClientItemsModelPath(version: string): boolean {
+  const v = version.trim();
+  if (/^26\.1/.test(v)) return true;
+  if (v === "1.21.11") return true;
+  const m = v.match(/^1\.21(?:\.(\d+))?$/);
+  if (!m) return false;
+  const patch = m[1] ? Number(m[1]) : 0;
+  return patch >= 4;
+}
+
+
 export function generateModel(
   modId: string,
   blockName: string,
@@ -14,13 +25,25 @@ export function generateModel(
   if (!mod || !block) return { code: null, errors: ["无效 modId/blockName"] };
 
   if (kind === "item") {
-    const files: Record<string, string> = {
-      [`assets/${mod.value}/models/item/${block.value}.json`]: JSON.stringify(
+    const files: Record<string, string> = {};
+    if (usesClientItemsModelPath(version)) {
+      files[`assets/${mod.value}/items/${block.value}.json`] = JSON.stringify(
+        { model: { type: "minecraft:model", model: `${mod.value}:item/${block.value}` } },
+        null,
+        2,
+      );
+      files[`assets/${mod.value}/models/item/${block.value}.json`] = JSON.stringify(
         { parent: "minecraft:item/generated", textures: { layer0: `${mod.value}:item/${block.value}` } },
         null,
         2,
-      ),
-    };
+      );
+    } else {
+      files[`assets/${mod.value}/models/item/${block.value}.json`] = JSON.stringify(
+        { parent: "minecraft:item/generated", textures: { layer0: `${mod.value}:item/${block.value}` } },
+        null,
+        2,
+      );
+    }
     const warnings: string[] = ["骨架不随 pack_format 变"];
     if (mod.warned || block.warned) warnings.push("标识符已归一化");
     return {
@@ -41,14 +64,24 @@ export function generateModel(
       null,
       2,
     ),
-    [`assets/${mod.value}/models/item/${block.value}.json`]: JSON.stringify(
+  };
+  if (usesClientItemsModelPath(version)) {
+    files[`assets/${mod.value}/items/${block.value}.json`] = JSON.stringify(
+      { model: { type: "minecraft:model", model: `${mod.value}:block/${block.value}` } },
+      null,
+      2,
+    );
+  } else {
+    files[`assets/${mod.value}/models/item/${block.value}.json`] = JSON.stringify(
       { parent: `${mod.value}:block/${block.value}` },
       null,
       2,
-    ),
-  };
+    );
+  }
 
-  const warnings: string[] = ["骨架不随 pack_format 变"];
+  const warnings: string[] = usesClientItemsModelPath(version)
+    ? ["1.21.4+/1.21.11/26.1 物品走 assets/<mod>/items/（Client Items）；方块 models/block 不变"]
+    : ["骨架不随 pack_format 变"];
   if (mod.warned || block.warned) warnings.push("标识符已归一化");
   return {
     code: `// 见 files：blockstate + cube_all 模型\n// modId=${mod.value} block=${block.value}`,
@@ -100,6 +133,97 @@ export function generateLang(modId: string, entries: Record<string, string>, ver
   };
 }
 
+function neoforgeSplitPayloadSkeleton(
+  mod: string,
+  pkt: string,
+  pascal: string,
+  versionNote: string,
+  idStyle: "ResourceLocation" | "Identifier",
+): GeneratorResult {
+  const idImport =
+    idStyle === "Identifier" ? "net.minecraft.resources.Identifier" : "net.minecraft.resources.ResourceLocation";
+  const idExpr =
+    idStyle === "Identifier"
+      ? `Identifier.fromNamespaceAndPath("${mod}", "${pkt}")`
+      : `ResourceLocation.fromNamespaceAndPath("${mod}", "${pkt}")`;
+  const extraImports =
+    idStyle === "Identifier"
+      ? "import net.minecraft.network.RegistryFriendlyByteBuf;"
+      : `import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;`;
+  const streamCodecType =
+    idStyle === "Identifier"
+      ? `StreamCodec<RegistryFriendlyByteBuf, ${pascal}Payload>`
+      : `StreamCodec<ByteBuf, ${pascal}Payload>`;
+  const streamCodecInit =
+    idStyle === "Identifier"
+      ? `StreamCodec.of(
+            (buf, payload) -> buf.writeUtf(payload.message()),
+            buf -> new ${pascal}Payload(buf.readUtf()));`
+      : `StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8,
+        ${pascal}Payload::message,
+        ${pascal}Payload::new);`;
+
+  return {
+    code: `// NeoForge ${versionNote} — RegisterClientPayloadHandlersEvent + ClientPacketDistributor
+package com.example.${mod}.network;
+
+${extraImports}
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import ${idImport};
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterClientPayloadHandlersEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+
+public record ${pascal}Payload(String message) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
+        new CustomPacketPayload.Type<>(${idExpr});
+
+    public static final ${streamCodecType} STREAM_CODEC = ${streamCodecInit}
+
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    @SubscribeEvent
+    public static void register(RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.playBidirectional(TYPE, STREAM_CODEC, ${pascal}Payload::handleServer);
+    }
+
+    @SubscribeEvent
+    public static void registerClient(RegisterClientPayloadHandlersEvent event) {
+        event.register(TYPE, ${pascal}Payload::handleClient);
+    }
+
+    public static void sendToServer(${pascal}Payload payload) {
+        ClientPacketDistributor.sendToServer(payload);
+    }
+
+    private static void handleClient(final ${pascal}Payload data, final IPayloadContext context) {
+        /* physical client */
+    }
+
+    private static void handleServer(final ${pascal}Payload data, final IPayloadContext context) {
+        /* logical server */
+    }
+}
+`,
+    warnings: [
+      `${versionNote} 客户端处理走 RegisterClientPayloadHandlersEvent#register，服务端走 RegisterPayloadHandlersEvent。`,
+      "发往服务端用 ClientPacketDistributor.sendToServer，不要 DirectionalPayloadHandler / PacketDistributor.sendToServer。",
+      idStyle === "Identifier" ? "26.1/1.21.11 用 Identifier.fromNamespaceAndPath。" : "本档用 ResourceLocation.fromNamespaceAndPath。",
+      "反面：SimpleChannel。",
+    ],
+  };
+}
+
 export function generateNetworkPacket(
   modId: string,
   packetName: string,
@@ -110,7 +234,9 @@ export function generateNetworkPacket(
     "neoforge_1.20.4",
     "neoforge_1.21",
     "neoforge_1.21.5",
+    "neoforge_1.21.8",
     "neoforge_1.21.10",
+    "neoforge_1.21.11",
     "neoforge_26.1",
     "fabric_1.21",
     "fabric_26.1",
@@ -119,7 +245,7 @@ export function generateNetworkPacket(
     return {
       code: null,
       errors: [
-        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_1.21.5 | neoforge_1.21.10 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
+        "platform 必填，禁止默认 forge_1.20.1。可选：forge_1.20.1 | neoforge_1.20.4 | neoforge_1.21 | neoforge_1.21.5 | neoforge_1.21.8 | neoforge_1.21.10 | neoforge_1.21.11 | neoforge_26.1 | fabric_1.21 | fabric_26.1。" +
           noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
@@ -205,8 +331,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record ${pascal}Payload(String message) implements CustomPacketPayload {
-    public static final Type<${pascal}Payload> TYPE =
-        new Type<>(ResourceLocation.fromNamespaceAndPath("${mod.value}", "${pkt.value}"));
+    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
+        new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("${mod.value}", "${pkt.value}"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ${pascal}Payload> STREAM_CODEC =
         StreamCodec.of(
@@ -214,7 +340,7 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
             buf -> new ${pascal}Payload(buf.readUtf()));
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }
@@ -281,94 +407,20 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     };
   }
 
+  if (platform === "neoforge_1.21.8") {
+    return neoforgeSplitPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.8", "ResourceLocation");
+  }
+
   if (platform === "neoforge_1.21.10") {
-    return {
-      code: `// NeoForge 1.21.10 — networking/payload（search_neoforge_docs version=1.21.10）
-package com.example.${mod.value}.network;
+    return neoforgeSplitPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.10", "ResourceLocation");
+  }
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.network.event.RegisterClientPayloadHandlersEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-
-public record ${pascal}Payload(String message) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
-        new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("${mod.value}", "${pkt.value}"));
-
-    public static final StreamCodec<ByteBuf, ${pascal}Payload> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.STRING_UTF8,
-        ${pascal}Payload::message,
-        ${pascal}Payload::new);
-
-    @Override
-    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-
-    @SubscribeEvent
-    public static void register(RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1");
-        registrar.playBidirectional(TYPE, STREAM_CODEC, ${pascal}Payload::handleServer);
-    }
-
-    @SubscribeEvent
-    public static void registerClient(RegisterClientPayloadHandlersEvent event) {
-        event.register(TYPE, ${pascal}Payload::handleClient);
-    }
-
-    private static void handleClient(final ${pascal}Payload data, final IPayloadContext context) {
-        /* physical client */
-    }
-
-    private static void handleServer(final ${pascal}Payload data, final IPayloadContext context) {
-        /* logical server */
-    }
-}
-`,
-      warnings: [
-        "1.21.10 客户端处理走 RegisterClientPayloadHandlersEvent#register，不是 1.21.5 的 DirectionalPayloadHandler。",
-        "发往服务端用 ClientPacketDistributor.sendToServer（见 networking/payload Sending Payloads），不要抄 1.21.5 PacketDistributor.sendToServer。",
-        "反面：SimpleChannel。",
-      ],
-    };
+  if (platform === "neoforge_1.21.11") {
+    return neoforgeSplitPayloadSkeleton(mod.value, pkt.value, pascal, "1.21.11", "Identifier");
   }
 
   if (platform === "neoforge_26.1") {
-    return {
-      code: `// NeoForge 26.1 — Identifier + RegisterPayloadHandlersEvent
-package com.example.${mod.value}.network;
-
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
-
-public record ${pascal}Payload(String message) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<${pascal}Payload> TYPE =
-        new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("${mod.value}", "${pkt.value}"));
-
-    public static final StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, ${pascal}Payload> STREAM_CODEC =
-        StreamCodec.of(
-            (buf, payload) -> buf.writeUtf(payload.message()),
-            buf -> new ${pascal}Payload(buf.readUtf()));
-
-    @Override
-    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-}
-`,
-      warnings: [
-        "26.1 用 Identifier.fromNamespaceAndPath，不要 new ResourceLocation。",
-        "事件是 RegisterPayloadHandlersEvent（复数），不是 1.20.4 的单数 Handler。",
-        "反面：无 SimpleChannel / IMessage / NetworkRegistry.newSimpleChannel。",
-      ],
-    };
+    return neoforgeSplitPayloadSkeleton(mod.value, pkt.value, pascal, "26.1", "Identifier");
   }
 
   if (platform === "fabric_1.21") {

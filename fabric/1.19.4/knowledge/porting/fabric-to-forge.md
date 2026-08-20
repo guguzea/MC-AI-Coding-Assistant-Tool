@@ -73,8 +73,8 @@ public class ExampleMod {
     public static final String MOD_ID = "examplemod";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ITEMS.register(modEventBus);
     }
 }

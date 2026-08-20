@@ -27,7 +27,7 @@ IF 装了才多一块功能（JEI、Curios、GeckoLib…）
   → 软依赖：compileOnly（或开发用 runtimeOnly 自测）+ ModList 门闩 + optional / suggests 声明
   → 详见 authored/soft-deps-modlist、authored/cursemaven-optional-deps
 IF API 只在客户端存在（JEI/EMI、部分渲染库）
-  → 兼容代码放 client 包；订阅事件带 Dist.CLIENT；禁止服务端类路径直接引用
+  → 兼容代码放 client 包；Forge/Neo 订阅事件带 Dist.CLIENT；Fabric/Quilt 用 client 源集 + @Environment(EnvType.CLIENT) / Loom split sources；禁止服务端类路径直接引用
 ```
 
 ## Gradle 侧（顺序）
@@ -63,7 +63,7 @@ if (ModList.get().isLoaded("jei")) {
 `JeiCompat` 整类仅在 `isLoaded` 为真时才会被加载；构造里再 `enqueueWork` 注册插件。
 
 ## 客户端 / 服务端
-注册 JEI、EMI、REI、Screen、模型动画渲染等 → **仅客户端**（`Dist.CLIENT`、`@OnlyIn`、client 源集）；专用服崩溃且堆栈出现 JEI/Screen → 先查是否把客户端兼容类打进了共通代码路径。
+注册 JEI、EMI、REI、Screen、模型动画渲染等 → **仅客户端**（Forge/Neo：`Dist.CLIENT`、`@OnlyIn`；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources）；专用服崩溃且堆栈出现 JEI/Screen → 先查是否把客户端兼容类打进了共通代码路径。
 
 ## 版本与映射
 - 库版本必须匹配 **MC + 加载器**（Forge 47.x 对应 1.20.1 等）；你项目用 MCP/Parchment 时库 jar 已是开发映射，混用 Yarn 工程不要直接抄 Forge 片段。

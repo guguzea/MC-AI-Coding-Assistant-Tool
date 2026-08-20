@@ -211,9 +211,11 @@ export async function searchNeoForgeDocs(args: {
               ? `请求版本 ${version} 已映射到 ${detailed.resolvedVersion}`
               : undefined,
             primerHits.length ? "结果含 source=primer（迁移 Primer，不是 loader API 全文）" : undefined,
+            version === "26.1" ? "NeoForge 26.1 官方无 /docs/26.1/，抓的是未版本化现行 /docs/（unversionedCurrent）。26.2 成为现行后禁止 --force 覆盖本树，也不要克隆成 26.2。" : undefined,
             missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
           ),
           forgeCompatible: forgeCompatible || undefined,
+          unversionedCurrent: version === "26.1" || undefined,
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
             : undefined,

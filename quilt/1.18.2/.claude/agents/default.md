@@ -38,4 +38,4 @@
 | 05 | `05-events.mdc` | 仅 QSL 分叉；否则指向 fabric/1.18.2 的 05 |
 | 02–04, 06–10 | **不要本目录找** | 打开 `fabric/1.18.2/.cursor/rules/` |
 
-`query_api` 仅当 1.18.2 落在 Parchment 窗口（约 1.16.5–1.20.4）。平台 API 用 `search_docs({platform:"quilt"})`。QSL 专用查询禁止把 Fabric Registry 当命中。
+`query_api` 仅当 1.18.2 落在 Parchment 窗口（约 1.16.5–1.20.4）。平台 API 用 `search_docs({platform:"quilt", version:"1.18.2"})`。QSL 专用查询禁止把 Fabric Registry 当命中。

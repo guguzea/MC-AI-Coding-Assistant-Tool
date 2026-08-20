@@ -16,11 +16,11 @@ public static final DeferredRegister<Block> BLOCKS =
 public static final RegistryObject<Block> STONE_BLOCK = BLOCKS.register("stone_block",
     () -> new Block(Block.Properties.of(Material.STONE)
         .strength(1.5f, 6.0f)
-        .requiresTool()
+        .requiresCorrectToolForDrops()
     )
 );
 
-// ItemBlock
+// BlockItem
 public static final RegistryObject<Item> STONE_BLOCK_ITEM = ITEMS.register("stone_block",
     () -> new BlockItem(STONE_BLOCK.get(), new Item.Properties()
         .tab(ItemGroup.TAB_BUILDING_BLOCKS)
@@ -129,7 +129,7 @@ public class MachineTileEntity extends TileEntity {
 public static final RegistryObject<Block> MY_ORE = BLOCKS.register("my_ore",
     () -> new Block(Block.Properties.of(Material.STONE)
         .strength(3.0f, 3.0f)
-        .requiresTool()
+        .requiresCorrectToolForDrops()
     )
 );
 ```

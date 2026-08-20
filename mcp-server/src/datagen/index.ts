@@ -8,6 +8,7 @@ import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateFabric, type FabricProviderType } from "./fabric.js";
 import { generateNeoForge21, type NeoForge21ProviderType } from "./neoforge-1.21.js";
+import { generateNeoForge215, type NeoForge215ProviderType } from "./neoforge-1.21.5.js";
 import { generateNeoForge261, type NeoForge261ProviderType } from "./neoforge-26.1.js";
 
 export { normalizeModIdentifier, toJavaClassName } from "./common.js";
@@ -36,10 +37,48 @@ export interface DatagenResult {
   errors?: string[];
 }
 
+/** NeoForge 1.21.0–1.21.4：GatherDataEvent + addProvider（非 Client 分轨）。 */
+export function parseNeo21Patch(version: string): number | null {
+  const v = version.trim();
+  if (/^26\.1/.test(v)) return null;
+  if (v === "1.21" || v === "21" || /^21\./.test(v)) return 0;
+  const m = v.match(/^1\.21(?:\.(\d+))?$/);
+  if (!m) return null;
+  return m[1] ? Number(m[1]) : 0;
+}
+
+export function isNeoForge21LegacyDatagen(platform: string, version: string): boolean {
+  if (platform !== "neoforge") return false;
+  const patch = parseNeo21Patch(version);
+  return patch !== null && patch >= 0 && patch <= 4;
+}
+
+/** NeoForge 1.21.5–1.21.10：GatherDataEvent.Client + createProvider + RecipeProvider.Runner。 */
+export function isNeoForge21ClientDatagen(platform: string, version: string): boolean {
+  if (platform !== "neoforge") return false;
+  const patch = parseNeo21Patch(version);
+  return patch !== null && patch >= 5 && patch <= 10;
+}
+
+export function isNeoForge2111Datagen(platform: string, version: string): boolean {
+  if (platform !== "neoforge") return false;
+  return parseNeo21Patch(version) === 11;
+}
+
 export function isNeoForge21Platform(platform: string, version: string): boolean {
+  return (
+    isNeoForge21LegacyDatagen(platform, version) ||
+    isNeoForge21ClientDatagen(platform, version) ||
+    isNeoForge2111Datagen(platform, version)
+  );
+}
+
+function isUnsupportedNeoForge21(platform: string, version: string): boolean {
   if (platform !== "neoforge") return false;
   const v = version.trim();
-  return v.startsWith("1.21") || v === "21" || /^21\./.test(v);
+  if (/^26\.1/.test(v)) return false;
+  if (!v.startsWith("1.21") && v !== "21" && !/^21\./.test(v)) return false;
+  return !isNeoForge21Platform(platform, version);
 }
 
 export function isNeoForge261Platform(platform: string, version: string): boolean {
@@ -85,15 +124,27 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       };
     }
   }
-  const neo21 = isNeoForge21Platform(platform, ver);
+  const neoLegacy = isNeoForge21LegacyDatagen(platform, ver);
+  const neoClient = isNeoForge21ClientDatagen(platform, ver);
+  const neo2111 = isNeoForge2111Datagen(platform, ver);
   const neo261 = isNeoForge261Platform(platform, ver);
-  if (platform === "neoforge" && !neo21 && !neo261) {
+  if (platform === "neoforge" && isUnsupportedNeoForge21(platform, ver)) {
     return {
       code: null,
       usedModId: query.modId,
       usedTargetName: query.targetName,
       errors: [
-        "NeoForge Datagen 当前仅支持 1.21.x 与 26.1 模板。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_neoforge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。",
+        `NeoForge Datagen 无 version=${ver} 模板（1.21.0–1.21.4 为 GatherDataEvent+addProvider；1.21.5+ 为 GatherDataEvent.Client+createProvider；1.21.11/26.1 用 Identifier）。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_neoforge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。`,
+      ],
+    };
+  }
+  if (platform === "neoforge" && !neoLegacy && !neoClient && !neo2111 && !neo261) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: [
+        "NeoForge Datagen 当前支持 1.21.0–1.21.11 与 26.1 分档模板。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_neoforge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。",
       ],
     };
   }
@@ -144,7 +195,11 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     );
   } else if (platform === "neoforge" && neo261) {
     code = generateNeoForge261(providerType as NeoForge261ProviderType, modId, targetName, classBase);
-  } else if (platform === "neoforge") {
+  } else if (platform === "neoforge" && neo2111) {
+    code = generateNeoForge215(providerType as NeoForge215ProviderType, modId, targetName, classBase, "Identifier");
+  } else if (platform === "neoforge" && neoClient) {
+    code = generateNeoForge215(providerType as NeoForge215ProviderType, modId, targetName, classBase, "ResourceLocation");
+  } else if (platform === "neoforge" && neoLegacy) {
     code = generateNeoForge21(providerType as NeoForge21ProviderType, modId, targetName, classBase);
   } else {
     switch (providerType) {

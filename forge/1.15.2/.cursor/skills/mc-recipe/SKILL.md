@@ -12,35 +12,39 @@ mappings: mcp
 ## 快速总览
 
 ```
-注册 RecipeType（静态） → 实现 Recipe 类 → 注册 RecipeSerializer（静态） → DataGen（可选）
+IRecipeType.register(String) → 实现 IRecipe → 注册 RecipeSerializer → DataGen（可选）
 ```
 
 ## 1. 注册 RecipeType
 
-`RecipeType` 不支持 `DeferredRegister`，使用**静态注册**：
-
 ```java
-public static final RecipeType<MyRecipe> MILLING = RecipeType.register(MOD_ID + ":milling");
+public static final IRecipeType<MyRecipe> MILLING =
+    IRecipeType.register(MOD_ID + ":milling");
 ```
 
 ## 2. 实现 Recipe 类
 
 ```java
-public class MyRecipe implements IRecipe<ICraftingGrid> {
+public class MyRecipe implements IRecipe<IInventory> {
 
     @Override
-    public boolean matches(ICraftingGrid inv, World world) {
+    public boolean matches(IInventory inv, World world) {
         return input.test(inv.getStackInSlot(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(ICraftingGrid inv) {
+    public ItemStack getCraftingResult(IInventory inv) {
         return output.copy();  // 必须返回副本
     }
 
     @Override
     public boolean canFit(int width, int height) {
         return width * height >= 1;
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return output.copy();
     }
 
     @Override
@@ -60,75 +64,30 @@ public class MyRecipe implements IRecipe<ICraftingGrid> {
 }
 ```
 
+工作台网格可用 `CraftingInventory`（实现 `IInventory`），**没有** `ICraftingGrid`。
+
 ## 3. 注册 RecipeSerializer
 
-`RecipeSerializer` 同样使用**静态注册**：
-
 ```java
-public class MyRecipeSerializer extends RecipeSerializer<MyRecipe> {
+public class MyRecipeSerializer implements IRecipeSerializer<MyRecipe> {
     public static final MyRecipeSerializer INSTANCE = new MyRecipeSerializer();
 
     @Override
-    public MyRecipe read(ResourceLocation id, JsonObject json) {
-        // 读取 JSON
-    }
+    public MyRecipe read(ResourceLocation id, JsonObject json) { ... }
 
     @Override
-    public MyRecipe read(ResourceLocation id, PacketBuffer buf) {
-        // 读取网络包
-    }
+    public MyRecipe read(ResourceLocation id, PacketBuffer buf) { ... }
 
     @Override
-    public void write(PacketBuffer buf, MyRecipe recipe) {
-        // 写入网络包
-    }
+    public void write(PacketBuffer buf, MyRecipe recipe) { ... }
 }
-
-// 静态注册
-public static final RegistryObject<RecipeSerializer<MyRecipe>> MY_SERIALIZER =
-    RECIPE_SERIALIZERS.register("my_recipe", () -> MyRecipeSerializer.INSTANCE);
-```
-
-## 4. 在 mod 初始化时调用注册
-
-```java
-public class MyMod {
-    public MyMod() {
-        // 静态注册
-        ModRecipes.register();        // 注册 RecipeType
-        ModRecipeSerializers.register(); // 注册 RecipeSerializer
-    }
-}
-```
-
-## 5. 配方 JSON 格式
-
-```json
-{
-  "type": "mymod:my_recipe",
-  "ingredient": { "item": "minecraft:diamond" },
-  "result": { "item": "mymod:processed_diamond", "count": 2 }
-}
-```
-
-- `"type"` 必须与 `RecipeSerializer` 注册名一致
-
-## Decision: 选择配方方式
-
-```
-IF 配方逻辑简单（物品 → 物品）
-  → 继承 IRecipe + 注册 Serializer
-
-IF 用自定义工作台配方
-  → 需要实现 IRecipe 或扩展现有配方
-  → 需要自定义 Container 和 Screen
 ```
 
 ## 常见错误
 
-- ❌ `RecipeType` 写在 DeferredRegister 中 → 不支持，必须用 `RecipeType.register()`
-- ❌ `RecipeSerializer` 忘了在 mod 初始化时调用 → 配方无法被加载
-- ❌ `getCraftingResult` 返回原对象而非副本 → 多个配方实例共享同一 ItemStack
+- ❌ `ICraftingGrid` — 用 `IInventory` / `CraftingInventory`
+- ❌ `RecipeType` 写在 DeferredRegister 中 — 用 `IRecipeType.register(String)`
+- ❌ `getCraftingResult` 返回原对象而非副本
 
 ## 参考资料
 

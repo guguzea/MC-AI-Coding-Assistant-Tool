@@ -1,6 +1,6 @@
 ---
 name: mc-networking
-description: Minecraft Forge 网络通信。SimpleChannel、PacketDistributor、NetworkRegistry.newSimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、FriendlyByteBuf
+description: Minecraft Forge 网络通信。SimpleChannel、PacketDistributor、NetworkRegistry.newSimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、PacketBuffer
 platform: forge
 version: "1.16.5"
 dependencies: []
@@ -33,7 +33,7 @@ public static void register() {
 }
 ```
 
-`newSimpleChannel` 返回 **`SimpleChannel`**。不要 `SimpleNetworkWrapper`，不要 `IMessage`。decoder 必须是 `Function<FriendlyByteBuf, MSG>`（`MyMessage(FriendlyByteBuf)`）。
+`newSimpleChannel` 返回 **`SimpleChannel`**。不要 `SimpleNetworkWrapper`，不要 `IMessage`。decoder 必须是 `Function<PacketBuffer, MSG>`（`MyMessage(PacketBuffer)`）。
 
 ## Decision: 选择数据包类型
 
@@ -59,9 +59,9 @@ public class MyMessage {
 
     public MyMessage(int value) { this.value = value; }
 
-    public MyMessage(FriendlyByteBuf buf) { this.value = buf.readInt(); }
+    public MyMessage(PacketBuffer buf) { this.value = buf.readInt(); }
 
-    public void encode(FriendlyByteBuf buf) { buf.writeInt(value); }
+    public void encode(PacketBuffer buf) { buf.writeInt(value); }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {

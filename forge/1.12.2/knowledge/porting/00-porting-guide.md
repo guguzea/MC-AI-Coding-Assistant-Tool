@@ -53,8 +53,8 @@ public static final RegistryObject<Block> MY_BLOCK = BLOCKS.register("my_block",
 
 ### pack_format
 
-- 1.12.x = **4**
-- 1.18.x = **9**
+- 1.12.x 无 1.13 式数据包；资源包 pack_format = **3**（`pack.mcmeta` 键为 `description`）
+- 1.18.x 数据包 = **9**
 
 ---
 

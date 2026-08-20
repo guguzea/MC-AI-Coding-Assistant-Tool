@@ -36,7 +36,7 @@ Litematica 玩家装机量极大，MaLiLib 跟着海量安装。但 masa 的工�
 ```
 Decision: 要不要把 MaLiLib 作为依赖
 → 玩家/整合包侧 → 客户端自动传递，服务端不装
-→ 做 masa 式客户端工具 → 软依赖 + 门闩（Dist.CLIENT）
+→ 做 masa 式客户端工具 → 软依赖 + 客户端门闩（Forge：`Dist.CLIENT`；Fabric：client 源集 + `@Environment(EnvType.CLIENT)`）
 → 想要通用客户端 GUI/热键 API → 评估 owo-lib 等；MaLiLib 接口不稳定
 → 版本选择 → 严格跟随 masa 对应 MC 版本的发布，混用即崩
 ```
@@ -46,7 +46,7 @@ Decision: 要不要把 MaLiLib 作为依赖
 - 服务端装了 malilib → 无用甚至日志报错；它是客户端专用
 - 版本混用：masa 每个 MC 版本的构建独立，跨版本引 malilib 必崩
 - 把 MaLiLib 当通用 GUI 库 → 接口随版本大改，且只服务 masa 系工具
-- 端分离：引用 malilib 的类只能在 Dist.CLIENT 代码里，公共/服务端代码禁止触碰
+- 端分离：引用 malilib 的类只能在客户端代码里（Forge：`Dist.CLIENT` 门闩；Fabric：client 源集 + `@Environment(EnvType.CLIENT)`），公共/服务端代码禁止触碰
 - masa 系列工具模组都要求 malilib 精确匹配 → 让启动器自动处理依赖，手动混装易崩
 
 ## 交叉引用

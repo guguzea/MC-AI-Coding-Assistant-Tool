@@ -127,5 +127,5 @@ public class ExampleModClient implements ClientModInitializer {
 |-----------|---------|
 | `mc-registry` | 实体通过 Registry.register() 注册 |
 | `mc-item` | 实体可以掉落物品（EntityDrops 事件） |
-| `mc-gui` | 实体可以打开 GUI（使用 Holder<MenuType>） |
+| `mc-gui` | 实体可以打开 GUI（使用 Holder<ScreenHandlerType>，Yarn；非 Mojmap MenuType） |
 | `mc-datagen` | 实体可以生成 loot table JSON |

@@ -58,7 +58,7 @@ Decision: 要不要用 Balm
 // 按键：客户端按键绑定走 Balm 的按键 API，服务端不引用
 ```
 
-- 客户端专用逻辑（按键、模型加载）仍要守 `Dist.CLIENT` 门闩，Balm 只是帮你包一层
+- 客户端专用逻辑（按键、模型加载）仍要守客户端门闩（Forge/Neo：`Dist.CLIENT`；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`），Balm 只是帮你包一层
 - 公共代码里出现平台类 import（如 `net.minecraftforge...` / `net.fabricmc...`）就是抽象层漏了，自查
 
 ## 常见坑

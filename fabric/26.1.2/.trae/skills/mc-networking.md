@@ -11,7 +11,7 @@ mappings: official
 
 文档：`26.1.2/develop_networking`。
 
-1. Record 实现 `CustomPacketPayload`，带 `Identifier`、`CustomPayload.Type`、`StreamCodec`
+1. Record 实现 `CustomPacketPayload`，带 `Identifier`、`CustomPacketPayload.Type`、`StreamCodec`
 2. `PayloadTypeRegistry.clientboundPlay().register` / `serverboundPlay().register`
 3. `ServerPlayNetworking.send` / `ClientPlayNetworking.send`
 4. `ClientPlayNetworking.registerGlobalReceiver` / `ServerPlayNetworking.registerGlobalReceiver`

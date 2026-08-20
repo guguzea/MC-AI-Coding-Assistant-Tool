@@ -78,7 +78,7 @@ public static final RegistryObject<Item> MY_BUCKET =
     );
 ```
 
-1.16.5 Parchment 里 `Item.Properties` 若没有 `stacksTo` / `tab`，改用 `maxStackSize(1)` / `group(ItemGroup.TAB_MISC)`。
+1.16.5 Parchment 里 `Item.Properties` 若没有 `stacksTo` / `tab`，改用 `stacksTo(1)` / `group(ItemGroup.TAB_MISC)`。
 
 ## DeferredRegister 汇总
 

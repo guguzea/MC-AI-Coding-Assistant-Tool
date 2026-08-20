@@ -349,14 +349,26 @@ export function detectCrashKind(crashReport: string): CrashKind {
   return "unknown";
 }
 
-function rewriteFixesForLoader(fixes: string[], crashReport: string, crashKind: CrashKind): string[] {
+function rewriteFixesForLoader(
+  fixes: string[],
+  crashReport: string,
+  crashKind: CrashKind,
+  version?: string,
+): string[] {
   const neo = /net\.neoforged/i.test(crashReport);
   const forgeOnly = /net\.minecraftforge/i.test(crashReport) && !neo;
   const fabric = (/net\.fabricmc|fabric-loader/i.test(crashReport) && !/org\.quiltmc/i.test(crashReport)) || crashKind === "fabric";
   const quilt = /org\.quiltmc/i.test(crashReport) || crashKind === "quilt";
   const known = neo || forgeOnly || fabric || quilt || crashKind === "liteloader" || crashKind === "rift" || crashKind === "modloader";
+  const v = version?.trim() ?? "";
+  const neoNoDistExecutor = neo && (/^26\.1/.test(v) || v === "1.21.1");
 
   const mapFix = (s: string): string | null => {
+    if (/DistExecutor|@OnlyIn\(Dist\.CLIENT\)/.test(s)) {
+      if (neoNoDistExecutor) {
+        return "客户端专用代码放 @Mod(dist = Dist.CLIENT) 模组或 client 子包（@EventBusSubscriber(value = Dist.CLIENT)），不要用 DistExecutor";
+      }
+    }
     if (neo) {
       if (/FMLJavaModLoadingContext/i.test(s)) {
         return "NeoForge：CreativeModeTab / DeferredRegister 接到模组构造函数注入的 IEventBus，不要 FMLJavaModLoadingContext";
@@ -525,7 +537,7 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       return finishCrash(
         {
           probableCause: cause,
-          fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind),
+          fixSuggestions: rewriteFixesForLoader(fix, crashReport, crashKind, query.version),
           deobfuscated,
           relatedMistakes,
           crashKind,
@@ -562,6 +574,7 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
         ],
         crashReport,
         crashKind,
+        query.version,
       ),
       deobfuscated,
       relatedMistakes: [],

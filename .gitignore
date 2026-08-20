@@ -15,6 +15,7 @@ gradle-*.zip
 *.swo
 .DS_Store
 Thumbs.db
+
 # 只忽略仓库根 Cursor IDE 目录（prompts / 本地草稿）。
 # 禁止写成 `.cursor/`：那会排除 fabric/<ver>/.cursor 等平台包。
 # session 只从各档 `.cursor/rules` 注入 00–10，漏提交则 clone 后 rules[] 为空。

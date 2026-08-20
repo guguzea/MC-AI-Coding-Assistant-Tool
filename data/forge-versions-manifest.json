@@ -22,7 +22,7 @@
     "notes": "Forge 1.20.4 mkdocs route /en/1.20.x/ is the canonical Forge documentation source for the 1.20.4 Minecraft release; NeoForge uses a separate /docs/1.20.4/ route and must not be conflated."
   },
   "javadocBaseUrl": "https://skmedix.github.io/ForgeJavaDocs/javadoc/forge/",
-  "mkdocsBaseUrl": "https://docs.readthedocs.net/en/",
+  "mkdocsBaseUrl": "https://docs.minecraftforge.net/en/",
   "versions": {
     "1.7.10": {
       "docSource": "javadoc",
@@ -93,7 +93,7 @@
       "mappings": "mcp",
       "mkdocs": {
         "route": "1.12.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.12.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.12.x/",
         "available": true,
         "chapterCount": 43,
         "chapters": [
@@ -156,7 +156,7 @@
       "mappings": "mcp",
       "mkdocs": {
         "route": "1.13.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.13.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.13.x/",
         "available": true,
         "chapterCount": 43,
         "chapters": [
@@ -215,7 +215,7 @@
       "mappings": "mcp",
       "mkdocs": {
         "route": "1.14.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.14.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.14.x/",
         "available": true,
         "chapterCount": 44,
         "chapters": [
@@ -275,7 +275,7 @@
       "mappings": "mcp",
       "mkdocs": {
         "route": "1.15.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.15.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.15.x/",
         "available": true,
         "chapterCount": 39,
         "chapters": [
@@ -330,7 +330,7 @@
       "mappings": "mcp+mojmaps",
       "mkdocs": {
         "route": "1.16.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.16.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.16.x/",
         "available": true,
         "chapterCount": 40,
         "chapters": [
@@ -386,7 +386,7 @@
       "mappings": "mojmaps",
       "mkdocs": {
         "route": "1.17.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.17.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.17.x/",
         "available": true,
         "chapterCount": 40,
         "chapters": [
@@ -442,7 +442,7 @@
       "mappings": "mojmaps+parchment",
       "mkdocs": {
         "route": "1.18.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.18.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.18.x/",
         "available": true,
         "chapterCount": 34,
         "chapters": [
@@ -492,7 +492,7 @@
       "mappings": "mojmaps+parchment",
       "mkdocs": {
         "route": "1.19.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.19.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.19.x/",
         "available": true,
         "chapterCount": 39,
         "chapters": [
@@ -547,7 +547,7 @@
       "mappings": "mojmaps+parchment",
       "mkdocs": {
         "route": "1.20.1",
-        "baseUrl": "https://docs.readthedocs.net/en/1.20.1/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.20.1/",
         "available": true,
         "chapterCount": 39,
         "chapters": [
@@ -606,7 +606,7 @@
       "routeNoteVerified": "2026-07-11",
       "mkdocs": {
         "route": "1.20.x",
-        "baseUrl": "https://docs.readthedocs.net/en/1.20.x/",
+        "baseUrl": "https://docs.minecraftforge.net/en/1.20.x/",
         "available": true,
         "chapterCount": 39,
         "chapters": [

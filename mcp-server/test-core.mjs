@@ -236,10 +236,10 @@ async function testFabricClassPrefixSearch() {
     process.env.MC_SKILL_DATA ??
     resolve(fileURLToPath(new URL("..", import.meta.url)), "data");
   process.env.MC_SKILL_DATA = dataRoot;
-  const store = createFabricDocStore("1.20.4", "fabric-docs", dataRoot);
-  const byClass = store.searchIndex("class:item", "1.20.4");
+  const store = createFabricDocStore("26.1.2", "fabric-docs", dataRoot);
+  const byClass = store.searchIndex("class:item", "26.1.2");
   assert.ok(byClass.length > 0, "class:item should hit L0 index via prefix-only filter");
-  const byPlain = store.searchIndex("item", "1.20.4");
+  const byPlain = store.searchIndex("item", "26.1.2");
   assert.ok(byPlain.length > 0, "plain item search should still work");
 }
 
@@ -381,7 +381,7 @@ async function testSearchEnhancements() {
   assert.equal(fabricMiss.ok, false);
   assert.equal(fabricMiss.error?.code, "VERSION_NOT_FOUND");
 
-  const fabricHit = parseToolText(await searchFabricDocs({ query: "Identifier", version: "1.20.1" }));
+  const fabricHit = parseToolText(await searchFabricDocs({ query: "Identifier", version: "26.1.2" }));
   assert.ok(fabricHit.total >= 1 || fabricHit.results?.length >= 1, "Fabric Identifier should hit via L1 symbols");
 
   const nf = parseToolText(await searchNeoForgeDocs({ query: "registry", version: "1.20.4" }));
@@ -443,7 +443,7 @@ async function testSearchEnhancements() {
   );
 
   const fabricViaDocs = parseToolText(
-    await searchDocs({ query: "Identifier", version: "1.20.1", platform: "fabric", source: "fabric-docs" }),
+    await searchDocs({ query: "Identifier", version: "26.1.2", platform: "fabric", source: "fabric-docs" }),
   );
   assert.equal(fabricViaDocs.ok, true);
   assert.equal(fabricViaDocs.source, "fabric-docs");
@@ -464,7 +464,7 @@ async function testSearchEnhancements() {
   assert.match(String(docsFb.error?.hint ?? ""), /list_forge_versions/);
 
   // 数据层验收：Fabric label 可读；NeoForge 1.20.4 含 concepts/registries
-  const fabricL0Path = join(dataRoot, "fabric_1.20.1", "fabric-docs", "1.20.1", "index-l0.json");
+  const fabricL0Path = join(dataRoot, "fabric_26.1.2", "fabric-docs", "26.1.2", "index-l0.json");
   const fabricL0 = JSON.parse(readFileSync(fabricL0Path, "utf8"));
   const eventsEntry = fabricL0.find((e) => String(e.id).includes("develop_events"));
   assert.ok(eventsEntry, "fabric L0 must include develop_events");
@@ -1504,9 +1504,9 @@ async function testReviewFixes() {
       highlight_key: false,
     }),
   );
-  assert.equal(fabFb.fallback, "fabric", JSON.stringify(fabFb.error ?? { fallback: fabFb.fallback }).slice(0, 400));
-  assert.ok(fabFb.content || fabFb.meta, JSON.stringify(Object.keys(fabFb)));
-  assert.match(JSON.stringify(fabFb), /network/i);
+  assert.equal(fabFb.ok, false, JSON.stringify(fabFb.error ?? fabFb).slice(0, 400));
+  assert.equal(fabFb.error?.code, "DOC_NOT_FOUND");
+  assert.equal(fabFb.fallback, "fabric");
 
   const bed = parseToolText(await getBedrockDocFull({ id: "stable/pack-manifest", version: "stable" }));
   assert.notEqual(bed.ok, false, JSON.stringify(bed.error ?? bed).slice(0, 400));

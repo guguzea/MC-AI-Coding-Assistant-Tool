@@ -25,10 +25,11 @@ public class ExampleDataProvider implements ICapabilityProvider {
         @Override public int getValue() { return value; }
         @Override public void setValue(int v) { value = v; }
     };
+    private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
 
     @Override
-    public <T> T getCapability(Capability<T> cap, Direction side) {
-        return cap == ModCapabilities.EXAMPLE_DATA ? (T) instance : null;
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, EnumFacing side) {
+        return cap == ModCapabilities.EXAMPLE_DATA ? opt.cast() : LazyOptional.empty();
     }
 }
 ```
@@ -38,7 +39,7 @@ public class ExampleDataProvider implements ICapabilityProvider {
 ```java
 @SubscribeEvent
 public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof PlayerEntity) {
+    if (event.getObject() instanceof EntityPlayer) {
         event.addCapability(
             new ResourceLocation(MOD_ID, "example_data"),
             new ExampleDataProvider()
@@ -51,14 +52,14 @@ public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
 
 ```java
 // 读取
-player.getCapability(ModCapabilities.EXAMPLE_DATA).ifPresent(data -> {
+player.getCapability(ModCapabilities.EXAMPLE_DATA, null).ifPresent(data -> {
     data.setValue(10);
 });
 ```
 
 ## 常见错误
 
-- ❌ `getCapability()` 返回 null（永远返回 `LazyOptional`，用 `ifPresent`）
+- ❌ `getCapability()` 返回 `T` 或 null — 1.13 返回 `LazyOptional<T>`，第二参是 `EnumFacing`（不是 `Direction`）
 - ❌ 在 `AttachCapabilitiesEvent` 中修改数据（只注册 Provider）
 
 ## 参考资料

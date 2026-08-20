@@ -5,7 +5,7 @@
 ```java
 // 注册
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register("my_entity",
     () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
@@ -107,19 +107,4 @@ public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyE
 
 ## 实体属性注册
 
-```java
-public static final DeferredRegister<Attribute> ATTRIBUTES =
-    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
-
-public static final RegistryObject<Attribute> EXTRA_HEALTH = ATTRIBUTES.register("extra_health",
-    () -> new RangedAttribute("attribute.modid.extra_health", 0.0, 0.0, 1000.0).setShouldWatch(true)
-);
-
-// 在 mod 构造函数中
-ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
-
-// 实体中应用
-this.getAttribute(ATTRIBUTES.get("extra_health")).ifPresent(attr ->
-    this.getAttributeManager().registerAttribute(attr)
-);
-```
+本档没有 `ForgeRegistries.ATTRIBUTES`。在实体里重写 `registerAttributes()`，用 `SharedMonsterAttributes` 设基值。

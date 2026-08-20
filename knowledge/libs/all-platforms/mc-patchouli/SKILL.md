@@ -30,7 +30,7 @@ Decision: 指南书方案
 → 平台 = fabric → patchouli-fabric 构建
 → 仅少量提示文本 → tooltip / 进度，跳过
 → 已选：
-   ├─ book 布局：data/<modid>/patchouli_books/<book_id>/
+   ├─ book 布局：`use_resource_pack: true` 时 `book.json` 在 `data/<modid>/patchouli_books/<book_id>/`，正文（categories/entries）在 `assets/<modid>/patchouli_books/<book_id>/`；默认模式则全书在 `data/<modid>/patchouli_books/<book_id>/`
    ├─ 内容：JSON（categories / entries / pages），默认页面类型够用
    ├─ 解锁：条目解锁与 Advancement 联动（可选，配置以文档为准）
    └─ 自定义页面类型才写 Java（接口/基类以官方为准）
@@ -40,9 +40,9 @@ Decision: 指南书方案
 
 1. 依赖声明：`build.gradle` 配 maven（`https://maven.blamejared.com`）与坐标（NeoForge：`vazkii.patchouli:patchouli-neoforge:<version>` 的 `:api` + `runtimeOnly`；Fabric：`vazkii.patchouli:patchouli-fabric:<version>`；**以 README 当前文本为准**）
 2. 声明依赖：`mods.toml`（26.x 为 `neoforge.mods.toml`）/ `fabric.mod.json` 的 `depends` 写 `patchouli`；软依赖门闩见 `authored/soft-deps-modlist`
-3. 搭 book 结构：`data/<modid>/patchouli_books/<book_id>/book.json`（书名、作者、图标、语言映射，字段以官方 schema 为准）
+3. 搭 book 结构：`data/<modid>/patchouli_books/<book_id>/book.json`（书名、作者、图标、语言映射；`use_resource_pack: true` 时 book.json 仍在 data/，categories/entries 正文放 `assets/<modid>/patchouli_books/<book_id>/`，字段以官方 schema 为准）
 4. 写本地化：`en_us/en_us.json` + `categories/<cat_id>.json` + `entries/<entry_id>.json`（pages 数组，页面类型如 text / crafting / image 以官方为准）；多语言（zh_cn 等）按 en_us 同构复制
-5. 资源位置：book JSON 在 `data/`（Patchouli 书是数据包的一部分）；纹理/图标资源放 `assets/<modid>/`；book_id / 语言文件夹名 / en_us.json 内部键必须一致
+5. 资源位置：`use_resource_pack: true` → book.json 在 `data/`，正文 JSON 在 `assets/<modid>/patchouli_books/`；默认模式 → 全书在 `data/`；纹理/图标资源放 `assets/<modid>/`；book_id / 语言文件夹名 / en_us.json 内部键必须一致
 6. 解锁（可选）：条目解锁与 Advancement 联动，advancement id 写错会锁死条目
 7. 预检：条目 JSON 语法错误会导致整本书不加载，用 `validate_datapack_json` 先验
 

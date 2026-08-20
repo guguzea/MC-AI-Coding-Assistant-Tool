@@ -16,6 +16,9 @@ export const QUILT_EXCLUSIVE_WARNING =
 const QUILT_FABRIC_FALLBACK_WARNING =
   "Quilt 无此页，已回退 Fabric 全文。QSL 专用 API 不要用 Fabric Registry 页。";
 
+const QUILT_CURRENT_SITE_WARNING =
+  "Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。";
+
 type DocHit = { id?: string; label?: string; url?: string; tags?: string[] };
 
 function jsonOk(payload: unknown): CallToolResult {
@@ -118,6 +121,7 @@ export async function searchQuiltDocs(args: {
         warning: joinSearchWarnings(
           missingSemanticDbWarning(semanticHits === null),
           semanticStaleSearchWarning(dataRoot, "quilt", detailedRes.resolvedVersion, "quilt-docs"),
+          QUILT_CURRENT_SITE_WARNING,
         ),
         semantic: semanticHits !== null,
         total: results.length,
@@ -210,20 +214,35 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
       warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
     });
   }
-  const result = createFabricDocStore(args.version, "fabric-docs", dataRoot).loadSummary(args.id, args.version);
-  const refused = exclusiveRefusalResult({
-    id: result.id,
-    label: result.label,
-    url: result.url,
-    tags: result.tags,
-  });
-  if (refused) return refused;
-  return jsonOk({
-    ...result,
-    platform: "quilt",
-    fallback: "fabric",
-    warning: QUILT_FABRIC_FALLBACK_WARNING,
-  });
+  try {
+    const result = createFabricDocStore(args.version, "fabric-docs", dataRoot).loadSummary(args.id, args.version);
+    const refused = exclusiveRefusalResult({
+      id: result.id,
+      label: result.label,
+      url: result.url,
+      tags: result.tags,
+    });
+    if (refused) return refused;
+    return jsonOk({
+      ...result,
+      platform: "quilt",
+      fallback: "fabric",
+      warning: QUILT_FABRIC_FALLBACK_WARNING,
+    });
+  } catch (e) {
+    if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
+      return jsonOk({
+        ok: false,
+        error: {
+          code: "DOC_NOT_FOUND",
+          message: `Quilt 无此页，且 fabric-docs@${args.version} 无对应摘要（旧档污染树已清空）。禁止用邻版 Fabric 正文顶上。`,
+        },
+        fallback: "fabric",
+        warning: QUILT_FABRIC_FALLBACK_WARNING,
+      });
+    }
+    throw e;
+  }
 }
 
 export async function getQuiltDocFull(args: {
@@ -250,24 +269,39 @@ export async function getQuiltDocFull(args: {
       warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
     });
   }
-  const result = await createFabricDocStore(args.version, "fabric-docs", dataRoot).loadFullDoc(
-    args.id,
-    args.version,
-    highlight,
-  );
-  const refused = exclusiveRefusalResult({
-    id: result.meta.id,
-    label: result.meta.label,
-    url: result.meta.url,
-    tags: result.meta.tags,
-  });
-  if (refused) return refused;
-  return jsonOk({
-    ...result,
-    platform: "quilt",
-    fallback: "fabric",
-    warning: QUILT_FABRIC_FALLBACK_WARNING,
-  });
+  try {
+    const result = await createFabricDocStore(args.version, "fabric-docs", dataRoot).loadFullDoc(
+      args.id,
+      args.version,
+      highlight,
+    );
+    const refused = exclusiveRefusalResult({
+      id: result.meta.id,
+      label: result.meta.label,
+      url: result.meta.url,
+      tags: result.meta.tags,
+    });
+    if (refused) return refused;
+    return jsonOk({
+      ...result,
+      platform: "quilt",
+      fallback: "fabric",
+      warning: QUILT_FABRIC_FALLBACK_WARNING,
+    });
+  } catch (e) {
+    if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
+      return jsonOk({
+        ok: false,
+        error: {
+          code: "DOC_NOT_FOUND",
+          message: `Quilt 无此页，且 fabric-docs@${args.version} 无对应全文（旧档污染树已清空）。禁止用邻版 Fabric 正文顶上。`,
+        },
+        fallback: "fabric",
+        warning: QUILT_FABRIC_FALLBACK_WARNING,
+      });
+    }
+    throw e;
+  }
 }
 
 /** 与其它 platform 的 get_doc_related 一样：成功时 JSON 根是相关页数组。回退 Fabric 时条目带 sourcePlatform / warning。 */
@@ -308,17 +342,24 @@ export function getQuiltDocRelated(args: {
       warning: "无 Quilt 此页，且 Fabric 文档也不可用，无法回退。",
     });
   }
-  const related = createFabricDocStore(args.version, "fabric-docs", dataRoot).getRelatedDocs(
-    args.id,
-    args.version,
-    limit,
-  );
-  const filtered = filterFabricFallbackHits(related);
-  return jsonRelatedList(filtered.hits, {
-    fallback: "fabric",
-    warning: joinSearchWarnings(
-      QUILT_FABRIC_FALLBACK_WARNING,
-      filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属相关页` : undefined,
-    ),
-  });
+  try {
+    const related = createFabricDocStore(args.version, "fabric-docs", dataRoot).getRelatedDocs(
+      args.id,
+      args.version,
+      limit,
+    );
+    const filtered = filterFabricFallbackHits(related);
+    return jsonRelatedList(filtered.hits, {
+      fallback: "fabric",
+      warning: joinSearchWarnings(
+        QUILT_FABRIC_FALLBACK_WARNING,
+        filtered.dropped > 0 ? `已丢弃 ${filtered.dropped} 条 Fabric 专属相关页` : undefined,
+      ),
+    });
+  } catch (e) {
+    if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
+      return jsonOk([]);
+    }
+    throw e;
+  }
 }

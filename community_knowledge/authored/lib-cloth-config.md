@@ -50,7 +50,7 @@ Decision: 要不要用 Cloth Config
 ## 集成要点（伪代码级）
 
 ```java
-// 客户端专用：Screen 构建只在 Dist.CLIENT 触发
+// 客户端专用：Screen 构建只在客户端触发（Forge/Neo：`Dist.CLIENT`；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 // 类名以官方为准：me.shedaniel.clothconfig2.api.ConfigBuilder / ConfigEntryBuilder（包名长期稳定）
 // 典型流程：ConfigBuilder.create() → 分类/条目 → setSavingRunnable(保存到你的配置持有类) → build()
 // 返回的 Screen 塞给 Minecraft 的 setScreen(...) 或 Mod Menu 的配置入口回调
@@ -61,7 +61,7 @@ Decision: 要不要用 Cloth Config
 
 ## 常见坑
 
-- Screen 类被公共/服务端代码引用 → 专用服崩溃（应用 `Dist.CLIENT` 门闩）
+- Screen 类被公共/服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 期待 Cloth「加新特性」→ 已冷冻，需求不满足时换 YACL / Fzzy
 - 手写配置路径与 Cloth 冲突，或双份配置（ForgeConfigSpec + Cloth 各一份）
 - 只 `compileOnly` 却当硬依赖用，未装 Cloth 时 `NoClassDefFoundError`
@@ -78,7 +78,7 @@ Decision: 要不要用 Cloth Config
 - MCP：`generate_config`、`check_dependencies`、`search_community_docs`
 - Skill：`mc-config`；相关：`mc-gui`
 - 全览：§二.1 配置库、§五（Cloth 冷冻）；`authored/library-catalog-2026`、`authored/library-integration`
-- 官方：https://github.com/shedaniel/cloth-config ；YACL：https://github.com/isxander/yet-another-config-lib
+- 官方：https://github.com/shedaniel/cloth-config ；YACL：https://github.com/isXander/YetAnotherConfigLib
 - 不清楚时：打开 Cloth README + 示例 mod，或 `search_fabric_docs` / `search_forge_docs` 查配置相关页；AGENT_USAGE.md 规则先行
 ## 核对
 

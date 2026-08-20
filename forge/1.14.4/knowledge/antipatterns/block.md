@@ -15,7 +15,7 @@ public static final Block MY_BLOCK = new Block(Block.Properties.create(Material.
 
 ```java
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 
 public static final RegistryObject<Block> MY_BLOCK =
     BLOCKS.register("my_block", () -> new Block(Block.Properties.create(Material.STONE)));

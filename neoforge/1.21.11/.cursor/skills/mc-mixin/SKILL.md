@@ -9,7 +9,7 @@ mappings: mojmap
 
 # mc-mixin（NeoForge 1.21.11）
 
-Java 21。资源 id 类型：`ResourceLocation`。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
+Java 21。资源 id 类型：`Identifier`。禁止从扁平 neoforge/.agents/skills 或邻档复制旧 API。
 
 先 mixin_analyze；deep 需缓存 jar。
 

@@ -8,7 +8,7 @@
 
 **关键变化**：
 - Java 版本：Java 11 → Java 16
-- pack_format：6 → 7
+- pack_format：5 → 6
 - 方块属性 API 基本保持不变
 
 **需要修改的文件类型**：
@@ -22,7 +22,7 @@
 
 **关键变化**：
 - Java 版本：Java 16 → Java 17
-- pack_format：7 → 8
+- pack_format：6 → 7
 - 基本为增量更新
 
 ---
@@ -31,7 +31,7 @@
 
 **关键变化**：
 - Java 版本：Java 17（必须）
-- pack_format：8 → 9
+- pack_format：7 → 8
 - DeferredRegister 完全可用
 - 方块属性：`Properties.create()` → `Properties.of()`
 

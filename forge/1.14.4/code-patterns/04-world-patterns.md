@@ -5,7 +5,7 @@
 ```java
 // 注册（使用 DeferredRegister）
 public static final DeferredRegister<Biome> BIOMES =
-    DeferredRegister.create(ForgeRegistries.BIOMES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BIOMES, MOD_ID);
 
 public static final RegistryObject<Biome> MY_BIOME = BIOMES.register("my_biome",
     () -> new Biome.Builder()

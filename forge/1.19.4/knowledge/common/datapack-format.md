@@ -5,7 +5,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 9,
+    "pack_format": 12,
     "description": "My Datapack"
   }
 }
@@ -123,7 +123,7 @@ data/<namespace>/
 ## 常见错误
 
 - ❌ namespace 包含大写字母（`ExampleMod:stone` → 改为 `examplemod:stone`）
-- ❌ pack_format 版本错误（1.19.4 用 9，不是 12 或 15）
+- ❌ pack_format 版本错误（1.19.4 数据包用 12、资源包用 13，不是 9 或 15）
 - ❌ `functions/` 中 mcfunction 文件含有空行或多余空格
 - ❌ `tags/items/` 中的值使用了物品 ID 但格式错误（应为 `namespace:item_name`）
 - ❌ `loot_tables` 路径错误：应放在 `data/{namespace}/loot_tables/` 下，不是 `data/{namespace}/`

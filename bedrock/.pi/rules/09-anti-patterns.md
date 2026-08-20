@@ -21,5 +21,5 @@ description: 09 — 基岩反模式
 - 发明 `worldgen/experimental.json` 当世界实验开关
 - 把 `assets/<modid>/models`、DeferredRegister、`EntityType`、`BlockBehaviour`、`generate_datagen` 写进基岩包
 - 未点名 Beta 就生成 Beta 事件或 `@minecraft/server-beta`
-- 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI / `level.dat` 的 `experiments.gametest`）
+- 以为 pack JSON 能替玩家打开世界「Beta APIs」（须游戏 UI；`level.dat` 实验开关**未核实**）
 - `diagnose_gradle` 修 Loom/Forge 来「修」Add-On

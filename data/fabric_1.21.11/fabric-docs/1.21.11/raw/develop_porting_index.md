@@ -1,60 +1,50 @@
-# porting index
+# Porting to 1.21.11
 
-> 来源：https://docs.fabricmc.net/develop/porting
+> 来源：https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/porting/index.md
 > 版本：1.21.11
 > GitHub 路径：develop/porting/index.md
-> 抓取源：github_raw
+> 抓取源：github_raw_versioned
+> 抓取时间：2026-08-20T03:52:54.696Z
+> SHA256：4946e49a7f865d6a66a68e7833f9d2ab6e984d6607e76884aacc1f9e1361d7e6
+> 分支：main
 
 ---
-title: Porting to 26.1
-description: Guidelines for porting to Minecraft 26.1, the latest version of Minecraft.
+title: Porting to 1.21.11
+description: A guide for porting to Minecraft 1.21.11, the latest version of Minecraft.
 authors:
   - cassiancc
-  - ChampionAsh5357
 resources:
-  https://fabricmc.net/2026/03/14/261.html: Fabric for Minecraft 26.1
-  ./26.1/fabric-api: Fabric API 26.1 Porting Guide
-  https://minecraft.wiki/w/Java_Edition_26.1: Java Edition 26.1 - Minecraft Wiki
-  https://github.com/neoforged/.github/blob/main/primers/26.1/index.md: ChampionAsh5357's 1.21.11 -> 26.1 Migration Primers
+  https://fabricmc.net/2025/12/05/12111.html: Fabric API 1.21.11 Announcement
+  https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11: Java Edition 1.21.11 - Minecraft.net
+  https://minecraft.wiki/w/Java_Edition_1.21.11: Java Edition 1.21.11 - Minecraft Wiki
+  https://www.youtube.com/watch?v=5yY25GoWQhs&pp=0gcJCSkKAYcqIYzv: slicedlime's Data & Resource Pack News for 1.21.11
+  https://docs.neoforged.net/primer/docs/1.21.11/: 1.21.10 -> 1.21.11 Migration Primers - NeoForge
 ---
 
-The 26.1 version of Minecraft is unobfuscated, as were its snapshots. With this in mind, you'll need to make more changes to your build scripts than usual in order to port to it.
+Minecraft is a game that's constantly evolving, with new versions changing the game in ways that affect modders. This article covers the general steps one might follow to update their mod to the newest stable version of Minecraft.
 
 ::: info
 
-These docs discuss migrating from **1.21.11** to **26.1**. If you're looking for another migration, switch to the target version by using the dropdown in the top-right corner.
+These docs discuss migrating from **1.21.10** to **1.21.11**. If you're looking for another migration, switch to the target version by using the dropdown in the top-right corner.
 
 :::
 
-## Prerequisites {#prerequisites}
-
-If your mod is still using Fabric's Yarn Mappings, you'll first need to [migrate your mod to Mojang's official mappings](../../../develop/porting/mappings/) before porting to 26.1.
-
-If you are using IntelliJ IDEA, you will also need to update it to `2025.3` or higher for full Java 25 support.
-
 ## Updating the Build Script {#build-script}
 
-Start by updating your mod's `gradle/wrapper/gradle-wrapper.properties`, `gradle.properties`, and `build.gradle` to the latest versions, then follow the steps below. If you run into trouble, consider referencing the [Fabric Example Mod](https://github.com/FabricMC/fabric-example-mod/tree/26.1).
+Start by updating your mod's `gradle/wrapper/gradle-wrapper.properties`, `gradle.properties`, and `build.gradle` to the latest versions:
 
 1. Update Gradle to the latest version by running the following command: `./gradlew wrapper --gradle-version latest`
 2. Bump Minecraft, Fabric Loader, Fabric Loom and Fabric API, either in `gradle.properties` (recommended) or in `build.gradle`. Find the recommended versions of the Fabric components on the [Fabric Develop site](https://fabricmc.net/develop/).
-3. At the top of `build.gradle`, change the version of Loom you are using from `id "fabric-loom"` to `id "net.fabricmc.fabric-loom"`. If you specify Loom in `settings.gradle`, change it there as well.
-4. Remove the `mappings` line from the dependencies section of `build.gradle`.
-5. Replace any instances of `modImplementation`, `modCompileOnly` or `modApi` with `implementation`, `compileOnly` and `api`.
-6. Remove or replace any mods made for versions before 26.1 with versions compatible with this update.
-   - No existing mods for 1.21.11 or older versions of Minecraft will work on 26.1, even as a compile-only dependency.
-7. If needed, update the header of your [access widener or class tweaker](../class-tweakers/) to replace `named` with `official`.
-8. Set Java compatibility to 25 instead of 21.
-9. Replace any mentions of `remapJar` with `jar`.
-10. Refresh Gradle by using the refresh button in the top-right corner of IntelliJ IDEA. If this button is not visible, you can force caches to be cleared by running `./gradlew --refresh-dependencies`.
+3. Refresh Gradle by using the refresh button in the top-right corner of IntelliJ IDEA. If this button is not visible, you can force caches to be cleared by running `./gradlew --refresh-dependencies`.
 
 ## Updating the Code {#porting-guides}
 
-After the build script has been updated to 26.1, you can now go through your mod and update any code that has changed to make it compatible with the snapshot.
+After the build script has been updated to 1.21.11, you can now go through your mod and update any code that has changed to make it compatible with the new version.
 
-- [Fabric for Minecraft 26.1 on the Fabric blog](https://fabricmc.net/2026/03/14/261.html) contains a high-level explanation of the changes made to Fabric API in 26.1.
-- [Fabric API 26.1 Porting Guide](./fabric-api) lists the renames made to Fabric API in 26.1 snapshots to match Mojang's names.
-- [_Java Edition 26.1_ on the Minecraft Wiki](https://minecraft.wiki/w/Java_Edition_26.1) is an unofficial summary of the contents of the update.
-- [NeoForge's _Minecraft 1.21.11 -> 26.1 Mod Migration Primer_](https://github.com/neoforged/.github/blob/main/primers/26.1/index.md) covers migrating from 1.21.11 to 26.1, focusing only on vanilla code changes.
+To help you with updating, modders will document the changes they came across in articles, like the Fabric Blog, and NeoForge's porting primers.
 
-<!---->
+- [_Fabric for Minecraft 1.21.11_ on the Fabric blog](https://fabricmc.net/2025/12/05/12111.html) contains a high-level explanation of the changes made to Fabric API in 1.21.11.
+- [_Minecraft: Java Edition 1.21.11_ on the Minecraft blog](https://www.minecraft.net/en-us/article/minecraft-java-edition-1-21-11) is the official overview of the features introduced in 1.21.11.
+- [_Java Edition 1.21.11_ on the Minecraft Wiki](https://minecraft.wiki/w/Java_Edition_1.21.11) is an unofficial summary of the contents of the update.
+- [slicedlime's Data & Resource Pack News in Minecraft 1.21.11](https://www.youtube.com/watch?v=5yY25GoWQhs&pp=0gcJCSkKAYcqIYzv) covers information relevant to updating your mod's data and resource pack driven content.
+- [NeoForge's _Minecraft 1.21.10 -> 1.21.11 Mod Migration Primer_](https://docs.neoforged.net/primer/docs/1.21.11/) covers migrating from 1.21.10 to 1.21.11, focusing only on vanilla code changes.

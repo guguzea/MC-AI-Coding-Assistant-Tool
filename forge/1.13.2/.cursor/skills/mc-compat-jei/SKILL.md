@@ -12,7 +12,7 @@ IF 配方已通过 JSON 文件定义
   → JEI 自动读取，无需额外代码（推荐）
 
 IF 需要自定义配方 UI
-  → 使用 JEI 内置 API
+  → @JEIPlugin + IModPlugin
 ```
 
 ## JEI 自动读取
@@ -22,17 +22,18 @@ IF 需要自定义配方 UI
 ## JEI 插件
 
 ```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
-public class JEIPlugin {
-    @SubscribeEvent
-    public static void onJEIInit(RegistryEvent.NewRegistry event) {
-        // JEI 插件初始化
+@JEIPlugin
+public class MyJEIPlugin implements IModPlugin {
+    @Override
+    public void register(IModRegistry registry) {
+        // 自定义配方类别、处理器
     }
 }
 ```
 
 ## 常见错误
 
+- ❌ `RegistryEvent.NewRegistry` / `onJEIInit` — JEI 用 `@JEIPlugin` + `IModPlugin`
 - ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI
 - ❌ 配方 JSON 放在错误路径
 

@@ -9,15 +9,15 @@
  *   get_fabric_doc_related    — 相关文档
  *
  * 支持两个数据源：
- *   fabric-docs  — FabricMC/fabric-docs GitHub（版本无关，main 分支）
- *   fabric-wiki — fabricmc.net/wiki（DokuWiki 教程页）
+ *   fabric-docs  — 仅 github_raw_versioned / archive；无 versions/ 的旧档为空树
+ *   fabric-wiki — fabricmc.net/wiki（现行站，不是历史快照）
  */
 
 import * as z from "zod";
-import { existsSync, readdirSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { createFabricDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
+import { createFabricDocStore, DocNotFoundError, VersionNotFoundError, type SearchResult } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
   asPlatformDataMissingResult,
@@ -52,6 +52,41 @@ function getStore(version: string, source: string) {
     _stores.set(key, createFabricDocStore(version, source, root));
   }
   return _stores.get(key)!;
+}
+
+export const FABRIC_WIKI_CURRENT_SITE_WARNING =
+  "fabric-wiki 是现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5/1.18.2 等旧档 API。";
+
+function fabricDocsIndexEmpty(version: string): boolean {
+  const p = join(getDataRoot(), `fabric_${version}`, "fabric-docs", version, "index-l0.json");
+  if (!existsSync(p)) return true;
+  try {
+    const data = JSON.parse(readFileSync(p, "utf8")) as unknown;
+    return !Array.isArray(data) || data.length === 0;
+  } catch {
+    return true;
+  }
+}
+
+function searchSourceOrEmpty(
+  version: string,
+  source: "fabric-docs" | "fabric-wiki",
+  query: string,
+  tags?: string[],
+): { results: SearchResult[]; requestedVersion: string; resolvedVersion: string; versionFallback: boolean } {
+  try {
+    return getStore(version, source).searchIndexDetailed(query, version, tags);
+  } catch (e) {
+    if (e instanceof VersionNotFoundError) {
+      return {
+        results: [],
+        requestedVersion: version,
+        resolvedVersion: version,
+        versionFallback: false,
+      };
+    }
+    throw e;
+  }
 }
 
 // ── 统一错误处理 ──────────────────────────────────────────────────────────────────
@@ -192,14 +227,19 @@ export async function searchFabricDocs(
     const { query, tags, source } = args;
     const { requested, resolved: version } = fabricDocsVersion(args.version);
 
-    let results: ReturnType<typeof getStore.prototype.searchIndex>;
+    const available = getStore(version, "fabric-docs").getAvailableVersions();
+    if (!available.includes(version)) {
+      throw new VersionNotFoundError(version, available);
+    }
 
-    if (source === "all") {
-      // 合并两个数据源
-      const docsStore = getStore(version, "fabric-docs");
-      const wikiStore = getStore(version, "fabric-wiki");
-      const docs = docsStore.searchIndexDetailed(query, version, tags);
-      const wiki = wikiStore.searchIndexDetailed(query, version, tags);
+    let results: ReturnType<typeof getStore.prototype.searchIndex>;
+    const resolvedSource = source ?? "fabric-docs";
+    const docsEmpty = fabricDocsIndexEmpty(version);
+    let usedWikiFallback = false;
+
+    if (resolvedSource === "all") {
+      const docs = searchSourceOrEmpty(version, "fabric-docs", query, tags);
+      const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
       const merged = [
         ...docs.results.map((r) => ({ ...r, _source: "fabric-docs" as const })),
         ...wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })),
@@ -207,15 +247,20 @@ export async function searchFabricDocs(
       const order: Record<string, number> = { "⭐": 0, "🟡": 1, "🟢": 2 };
       merged.sort((a, b) => (order[a.priority] ?? 3) - (order[b.priority] ?? 3));
       results = merged.slice(0, 10) as typeof docs.results;
+    } else if (resolvedSource === "fabric-docs" && docsEmpty) {
+      const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
+      results = wiki.results.map((r) => ({ ...r, _source: "fabric-wiki" as const })) as typeof wiki.results;
+      usedWikiFallback = true;
     } else {
-      const detailed = getStore(version, source).searchIndexDetailed(query, version, tags);
+      const detailed = searchSourceOrEmpty(version, resolvedSource, query, tags);
       results = detailed.results;
     }
 
-    // 语义检索（按 source 查询对应语义库；all 时两源各自查询）；无语义库 → null，保持纯 L0
-    // 注意：source 未显式传入时为 undefined（直接函数调用绕过 zod default），需回退 "fabric-docs"
-    const resolvedSource = source ?? "fabric-docs";
-    const sources = resolvedSource === "all" ? ["fabric-docs", "fabric-wiki"] : [resolvedSource];
+    const sources = resolvedSource === "all"
+      ? (docsEmpty ? ["fabric-wiki"] : ["fabric-docs", "fabric-wiki"])
+      : usedWikiFallback
+        ? ["fabric-wiki"]
+        : [resolvedSource];
     let semanticRanked = false;
     let semanticMissing = false;
     const semanticList: NonNullable<Awaited<ReturnType<typeof semanticSearch>>> = [];
@@ -246,6 +291,10 @@ export async function searchFabricDocs(
       requested === "26.2" || requested.startsWith("26.2")
         ? "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。"
         : undefined;
+    const wikiInvolved = resolvedSource === "fabric-wiki" || resolvedSource === "all" || usedWikiFallback;
+    const emptyDocsNote = docsEmpty
+      ? "本档 fabric-docs 无版本化页（已清除现行站污染）。不要把 BuiltInRegistries 当旧档 API。"
+      : undefined;
 
     return {
       content: [
@@ -258,12 +307,18 @@ export async function searchFabricDocs(
               version: requested,
               resolvedVersion: version,
               versionFallback: requested !== version,
-              source,
+              platform: "fabric",
+              source: resolvedSource,
+              sourceUsed: usedWikiFallback ? "fabric-wiki" : resolvedSource,
+              fabricDocsEmpty: docsEmpty || undefined,
+              wikiIsCurrentSite: wikiInvolved || undefined,
               tags,
               semantic: semanticRanked,
               warning: joinSearchWarnings(
                 missingSemanticDbWarning(semanticMissing),
                 extraWarn,
+                emptyDocsNote,
+                wikiInvolved ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,
               ),
               total: (results as unknown as Array<unknown>).length,
               results,
@@ -345,7 +400,13 @@ export async function getFabricDocSummary(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ ...result, _source: resolvedSource }, null, 2),
+          text: JSON.stringify({
+            ...result,
+            _source: resolvedSource,
+            ...(resolvedSource === "fabric-wiki"
+              ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
+              : {}),
+          }, null, 2),
         },
       ],
     };
@@ -426,7 +487,13 @@ export async function getFabricDocFull(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ ...result, _source: resolvedSource }, null, 2),
+          text: JSON.stringify({
+            ...result,
+            _source: resolvedSource,
+            ...(resolvedSource === "fabric-wiki"
+              ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
+              : {}),
+          }, null, 2),
         },
       ],
     };

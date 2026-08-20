@@ -86,9 +86,9 @@ BLOCKS.register("example_block", () -> new Block(...));
 **正确方案：**
 
 ```java
-// ✅ DeferredRegister.create 的第二个参数是 modId，所有注册自动使用该 namespace
+// ✅ DeferredRegister 构造函数的第二个参数是 modId，所有注册自动使用该 namespace
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
 // MOD_ID = "examplemod" → 注册到 examplemod:example_block
 ```
 
@@ -120,7 +120,7 @@ public static final String MOD_ID = "mymod123";  // ❌ 不一致
 
 ```java
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID);
+    new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID);
 
 public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register(...);
 

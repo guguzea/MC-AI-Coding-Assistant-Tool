@@ -26,13 +26,13 @@
 
 ```java
 // 客户端执行（DistExecutor 自动处理类加载隔离）
-DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientMethod());
 
 // 服务端执行
-DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
+DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> serverMethod());
 ```
 
-> **注意**：`safe*` 变体在 Java 9+ 开发环境中有问题（抛出 `BootstrapMethodError`），**推荐始终使用 `unsafe*`**。
+> **注意**：本档 DistExecutor 只有 `runWhenOn` / `callWhenOn` / `runForDist`，没有 `unsafe*`。
 
 **次选方案：`FMLEnvironment#dist`**
 

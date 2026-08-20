@@ -80,6 +80,7 @@ function withStatus<T extends Record<string, unknown>>(body: T): T & { docsStatu
   const warning = joinSearchWarnings(
     typeof body.warning === "string" ? body.warning : undefined,
     docsStatus.warning,
+    "Microsoft Learn view=minecraft-bedrock-stable 是现行稳定版，不是某个历史快照。不要用 Java 资源包文档去修正 RP。",
   );
   return { ...body, docsStatus, warning };
 }

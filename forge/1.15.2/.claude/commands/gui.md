@@ -1,6 +1,6 @@
 ﻿---
 name: mc-gui
-description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、数据同步。触发词：Screen、Container、ContainerType、ContainerScreens、transferStackInSlot
+description: Minecraft Forge GUI/菜单开发。创建自定义 Container、Screen、数据同步。触发词：Screen、Container、ContainerType、ScreenManager、transferStackInSlot
 platform: forge
 version: "1.15.2"
 dependencies: []
@@ -104,7 +104,7 @@ public class MyBlock extends Block implements ITileEntityProvider {
                     (ServerPlayerEntity) player,
                     new SimpleNamedContainerProvider(
                         (id, inv, p) -> new MyContainer(id, inv, (IInteractionObject) tile),
-                        Component.translatable("block.my_mod.my_block")
+                        new TranslationTextComponent("block.my_mod.my_block")
                     )
                 );
             }
@@ -121,7 +121,7 @@ public class MyBlock extends Block implements ITileEntityProvider {
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ContainerScreens.register(MyContainers.MY_CONTAINER.get(), MyScreen::new);
+        ScreenManager.registerFactory(MyContainers.MY_CONTAINER.get(), MyScreen::new);
     }
 }
 ```
@@ -151,7 +151,7 @@ public class MyScreen extends ContainerScreen<MyContainer> {
 
 ## 常见错误
 
-- ❌ `ContainerScreens.register()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
+- ❌ `ScreenManager.registerFactory()` 放在服务端 → `FMLClientSetupEvent` 已经是客户端专用
 - ❌ `transferStackInSlot` 返回空导致物品丢失 → 始终实现完整的转移逻辑
 - ❌ `canInteractWith` 始终返回 true → 添加距离检查
 

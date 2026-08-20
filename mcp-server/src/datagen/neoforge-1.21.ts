@@ -302,6 +302,7 @@ package com.example.${modId}.datagen;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -309,24 +310,22 @@ import net.neoforged.neoforge.common.data.ParticleDescriptionProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class ${pascalName}ParticleDescriptionProvider extends ParticleDescriptionProvider {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =
-        DeferredRegister.create(NeoForgeRegistries.PARTICLE_TYPES, "${modId}");
+        DeferredRegister.create(Registries.PARTICLE_TYPE, "${modId}");
 
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ${upper} =
         PARTICLE_TYPES.register("${targetName}", () -> new SimpleParticleType(false));
 
-    public ${pascalName}ParticleDescriptionProvider(
-            PackOutput output, String modId, ExistingFileHelper existingFileHelper) {
-        super(output, modId, existingFileHelper);
+    public ${pascalName}ParticleDescriptionProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, existingFileHelper);
     }
 
     @Override
     protected void addDescriptions() {
         spriteSet(
-            ResourceLocation.fromNamespaceAndPath("${modId}", "${targetName}"),
+            ${upper}.get(),
             ResourceLocation.fromNamespaceAndPath("${modId}", "particle/${targetName}"));
     }
 
@@ -334,7 +333,7 @@ public class ${pascalName}ParticleDescriptionProvider extends ParticleDescriptio
         event.getGenerator().addProvider(
             event.includeClient(),
             (PackOutput output) -> new ${pascalName}ParticleDescriptionProvider(
-                output, "${modId}", event.getExistingFileHelper()));
+                output, event.getExistingFileHelper()));
     }
 }
 
@@ -348,6 +347,7 @@ export function generateSound(modId: string, targetName: string, classBase?: str
   return `// SoundEvent + SoundDefinitionsProvider — NeoForge 1.21.x
 package com.example.${modId}.datagen;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -356,11 +356,10 @@ import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class ${pascalName}SoundDefinitionsProvider extends SoundDefinitionsProvider {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-        DeferredRegister.create(NeoForgeRegistries.SOUND_EVENTS, "${modId}");
+        DeferredRegister.create(Registries.SOUND_EVENT, "${modId}");
 
     public static final DeferredHolder<SoundEvent, SoundEvent> ${upper} = SOUND_EVENTS.register(
         "${targetName}",

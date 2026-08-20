@@ -1,7 +1,7 @@
 ---
 name: mc-pehkui
 description: Pehkui 实体缩放 API。按 20+ 缩放类型分别控制实体尺寸（身高/宽度/视距/命中盒），平滑过渡动画。触发词：Pehkui、pehkui、缩放、scale、resize、实体尺寸
-platforms: [fabric, forge, neoforge]
+platforms: [fabric, forge, neoforge, quilt]
 mcVersions: ["1.14.4-1.21.1"]
 communityDocId: authored/lib-pehkui
 mappings: "库按各 loader 预重映射；Fabric ≤1.21.x 为 yarn、Forge 为 MCP，经依赖坐标自动匹配"

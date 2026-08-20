@@ -34,7 +34,7 @@ IF 注册方块/物品/实体/SoundEvents 等
   → 使用 DeferredRegister<T> + RegistryObject<T>
 
 IF 注册自定义 Registry（全新注册表）
-  → 使用 RegistryEvent.NewRegistry + DeferredRegister.create(ResourceKey)
+  → RegistryEvent.NewRegistry + RegistryBuilder + makeRegistry()
 
 IF 需要在 mod constructor 执行前引用已注册对象
   → ❌ 禁止：在静态字段初始化中引用另一个 DeferredRegister 的 RegistryObject

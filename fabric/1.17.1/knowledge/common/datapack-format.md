@@ -4,7 +4,7 @@
 
 ## ⚠️ 1.17.x 关键差异
 
-- **pack_format 是 `6`**（不是 `9`）
+- **pack_format 是 `7`**（不是 `9`）
 - **推荐手写 JSON**，DataGen API 在 1.17.x 仍处于实验阶段
 
 ## pack.mcmeta
@@ -12,7 +12,7 @@
 ```json
 {
     "pack": {
-        "pack_format": 6,
+        "pack_format": 7,
         "description": "My Fabric Mod Data"
     }
 }

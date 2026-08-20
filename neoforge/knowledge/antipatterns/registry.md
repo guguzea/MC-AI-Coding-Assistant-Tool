@@ -56,7 +56,7 @@ ITEMS.register("my_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), ...));
 ```java
 // ❌ 忘记
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(BuiltInRegistries.BLOCK, MOD_ID);
 public static final DeferredHolder<Block, Block> MY_BLOCK = BLOCKS.register("my_block", ...);
 // mod 构造函数中没有：BLOCKS.register(modEventBus)
 ```
@@ -85,7 +85,7 @@ BLOCKS.register("example_block", () -> new Block(...));
 ```java
 // ✅ DeferredRegister.create 的第二个参数是 modId，所有注册自动使用该 namespace
 public static final DeferredRegister<Block> BLOCKS =
-    DeferredRegister.create(NeoForgeRegistries.BLOCKS, MOD_ID);
+    DeferredRegister.create(BuiltInRegistries.BLOCK, MOD_ID);
 // MOD_ID = "examplemod" → 注册到 examplemod:example_block
 ```
 
@@ -139,7 +139,7 @@ EntityType.Builder.of(MyEntity::new, MobCategory.CREATURE)
 **正确方案：**
 ```java
 public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
-    DeferredRegister.create(NeoForgeRegistries.ENTITY_TYPES, MOD_ID);
+    DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, MOD_ID);
 
 public static final DeferredHolder<EntityType<?>, EntityType<MyEntity>> MY_ENTITY = ENTITY_TYPES.register(...);
 

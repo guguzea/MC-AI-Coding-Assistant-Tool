@@ -9,7 +9,7 @@ mappings: hint
 
 # Cardinal Components API（Fabric/Quilt）
 
-给实体/方块/区块/世界挂自定义数据的标准方案（1.18-26.2）。模块化（entity/block/chunk/world），ASM 生成扩展，Ladysnake 生态基石（Impersonate、PlayerAbilityLib 依赖它）。无 Forge 版。
+给实体/方块/区块/世界挂自定义数据的标准方案（1.18-26.2）。模块化（entity/block/chunk/world），ASM 生成扩展，Ladysnake 生态基石（Impersonate 等依赖它；PAL 仅 modImplementation，CCA 非硬依赖，见 `mc-player-ability-lib`）。无 Forge 版。
 
 ## Decision Flow
 
@@ -17,10 +17,11 @@ mappings: hint
 Decision: 挂数据用 CCA 还是原版机制
 → 物品数据（1.20.5+）→ 原版 Data Components，不要用 CCA
 → 实体/方块/区块/世界数据（< 1.20.5）→ CCA
-→ 同上（1.20.5+）→ 评估原版 Attachment：
-   ├─ 简单值、单模组自用 → 原版 Attachment 优先
-   ├─ 需自动同步/序列化约定/多模组扩展 → CCA（成熟约定）
-   └─ 要与其他 Ladysnake 库互操作 → CCA
+→ 同上（1.20.5+）→ 评估数据挂载（无「原版 Attachment」）：
+   ├─ 物品 → Data Components（见上行）
+   ├─ 实体/方块/区块/世界 → FAPI Attachment 或 NeoForge Attachment，不是原版机制
+   ├─ 需自动同步/序列化约定/多模组扩展 / Ladysnake 互操作 → CCA（成熟约定）
+   └─ platform = forge / neoforge → 本 skill 不适用，走 NeoForge Attachment 等
 → platform = forge / neoforge → 本 skill 不适用（无 Forge 构建）
 → 已选 CCA：
    ├─ 按挂载目标选模块（entity / block / chunk / world）

@@ -44,28 +44,39 @@ public class ExampleData implements IExampleData, ICapabilitySerializable<NBTTag
 ## 注册 Capability
 
 ```java
+@CapabilityInject(IExampleData.class)
+public static Capability<IExampleData> EXAMPLE_DATA = null;
+
+@Mod.EventHandler
+public void preInit(FMLPreInitializationEvent event) {
+    CapabilityManager.INSTANCE.register(
+        IExampleData.class,
+        new ExampleDataStorage(),
+        ExampleData::new
+    );
+}
+
 @Mod.EventBusSubscriber(modid = MOD_ID)
 public class CapabilityEvents {
-    private static final Capability<IExampleData> EXAMPLE_DATA =
-        CapabilityManager.get(new ResourceLocation(MOD_ID, "example_data"));
-
     @SubscribeEvent
     public static void attachToPlayer(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof EntityPlayer) {
             event.addCapability(
                 new ResourceLocation(MOD_ID, "example_data"),
-                new ICapabilityProvider<IExampleData>() {
+                new ICapabilityProvider() {
                     private final IExampleData instance = new ExampleData();
-                    private final LazyOptional<IExampleData> opt = LazyOptional.of(() -> instance);
 
                     @Override
-                    public boolean hasCapability(Capability<IExampleData> cap, EnumFacing face) {
-                        return cap == EXAMPLE_DATA;
+                    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                        return capability == EXAMPLE_DATA;
                     }
 
                     @Override
-                    public <T> LazyOptional<T> getCapability(Capability<T> cap, EnumFacing face) {
-                        return cap == EXAMPLE_DATA ? opt.cast() : LazyOptional.empty();
+                    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                        if (capability == EXAMPLE_DATA) {
+                            return EXAMPLE_DATA.cast(instance);
+                        }
+                        return null;
                     }
                 }
             );
@@ -78,30 +89,30 @@ public class CapabilityEvents {
 
 ```java
 // 读取
-player.getCapability(EXAMPLE_DATA).ifPresent(data -> {
-    data.setValue(10);
-});
-
-// 或使用 orElse
-IExampleData data = player.getCapability(EXAMPLE_DATA).orElse(null);
+if (player.hasCapability(EXAMPLE_DATA, null)) {
+  IExampleData data = player.getCapability(EXAMPLE_DATA, null);
+  data.setValue(10);
+}
 ```
 
 ## 内置 Capability
 
 ```java
 // 物品栏
-player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(...);
+if (player.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+  player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+}
 
 // 流体栏
-player.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(...);
+player.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
 // 能量
-player.getCapability(CapabilityEnergy.ENERGY).ifPresent(...);
+player.getCapability(CapabilityEnergy.ENERGY, null);
 ```
 
 ## 常见错误
 
-- ❌ `getCapability()` 返回 null → 永远返回 `LazyOptional`
+- ❌ `getCapability()` 返回 null 未检查 → 先 `hasCapability` 或判空
 - ❌ 在 `AttachCapabilitiesEvent` 中修改数据 → 只注册 Provider
 - ❌ 自定义 Capability 未存储到 NBT
 

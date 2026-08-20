@@ -16,8 +16,8 @@
 
 ```java
 Block.Properties.of(Material material)
-    .hardnessAndResistance(float hardness, float resistance)  // 硬度和抗爆性
-    .requiresTool()                                          // 需要正确工具才能掉落
+    .strength(float hardness, float resistance)  // 硬度和抗爆性
+    .requiresCorrectToolForDrops()                                          // 需要正确工具才能掉落
     .noOcclusion()                                          // 不阻挡光
     .isRedstoneConductor((state, reader, pos) -> true)     // 红石导体
     .sound(SoundType type)                                 // 放置/破坏音效
@@ -28,7 +28,7 @@ Block.Properties.of(Material material)
 - **禁止**通过 `new Block(...)` 构造后直接 `public static final` 使用
 - 必须通过 `DeferredRegister<Block>` 注册（参见 `01-registry.mdc`）
 - 注册名称必须全小写
-- ItemBlock 需要单独注册（与方块使用相同 registry name）
+- BlockItem 需要单独注册（与方块使用相同 registry name）
 
 ### 方块实体（BlockEntity）约束
 
@@ -52,7 +52,7 @@ Block.Properties.of(Material material)
 ```
 IF 需要可放置物品、不可交互的基础方块
   → 基础方块（extends Block）
-  → 注册后注册 ItemBlock
+  → 注册后注册 BlockItem
   → 创建 blockstates JSON 和 models JSON
 
 IF 需要存储数据（箱子、熔炉等）
@@ -80,7 +80,7 @@ IF 需要特殊渲染（多面材质、透明度、动画）
 ```
 IF 自然方块（石头、木头、草）
   → Material.STONE / Material.WOOD / Material.GRASS
-  → 需要 .requiresTool() 时用 STONE/WOOD
+  → 需要 .requiresCorrectToolForDrops() 时用 STONE/WOOD
 
 IF 泥土类
   → Material.DIRT / Material.SAND / Material.SNOW
@@ -116,15 +116,15 @@ IF 只需要静态方块（装饰、完整方块）
 
 ---
 
-## 示例：基础方块（带 ItemBlock）
+## 示例：基础方块（带 BlockItem）
 
 ```java
 // blocks/MyBlock.java
 public class MyBlock extends Block {
     public MyBlock() {
         super(Block.Properties.of(Material.STONE)
-            .hardnessAndResistance(1.5f, 6.0f)
-            .requiresTool()
+            .strength(1.5f, 6.0f)
+            .requiresCorrectToolForDrops()
             .sound(SoundType.STONE)
         );
     }

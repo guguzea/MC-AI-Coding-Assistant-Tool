@@ -17,4 +17,4 @@ version: "unversioned"
 | `neoforge/1.21.1` / `1.21.3` / `1.21.8` / `1.21.11` | `RegisterPayloadHandlersEvent` + `PayloadRegistrar` |
 | `neoforge/26.1` | 同上复数事件；去混淆，文档路径无版本前缀 |
 
-方块实体同步优先 `getUpdateTag` / `ClientboundBlockEntityDataPacket`。未建档版本（1.20.1 / 1.20.6 / 1.21.5 / 1.21.10）禁止读邻档 00–10，改口 `search_neoforge_docs`。
+方块实体同步优先 `getUpdateTag` / `ClientboundBlockEntityDataPacket`。未列入 `list_neoforge_versions` 的版本禁止读邻档 00–10，改口 `search_neoforge_docs`。

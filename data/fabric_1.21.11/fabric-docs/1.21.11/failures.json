@@ -1,0 +1,17 @@
+{
+  "version": "1.21.11",
+  "failures": [
+    {
+      "id": "fabric-mod-json",
+      "gitPath": "develop/loader/fabric-mod-json.md",
+      "tried": [
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/main/versions/1.21.11/develop/loader/fabric-mod-json.md",
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/1.21.11.x-archive/develop/loader/fabric-mod-json.md",
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/versions/1.21.11/develop/loader/fabric-mod-json.md",
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.11/develop/loader/fabric-mod-json.md",
+        "https://raw.githubusercontent.com/FabricMC/fabric-docs/archive/1.21.11.x/develop/loader/fabric-mod-json.md",
+        "vitepress-skipped-unversioned:https://docs.fabricmc.net/develop/loader/fabric-mod-json"
+      ]
+    }
+  ]
+}

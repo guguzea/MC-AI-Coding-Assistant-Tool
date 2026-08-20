@@ -102,7 +102,7 @@ public static final DeferredRegister<MenuType<?>> MENUS =
 
 public static final RegistryObject<MenuType<MyMenu>> MY_MENU =
     MENUS.register("my_menu",
-        () -> new MenuType<>(MyMenu::new)
+        () -> IForgeMenuType.create(MyMenu::new)
     );
 ```
 

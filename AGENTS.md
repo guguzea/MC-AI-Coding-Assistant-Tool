@@ -41,8 +41,8 @@ id 'fabric-loom'
 
 **例外（禁止读邻版 01–10）：**
 
-- 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `knowledgeVersion=26.1.2`，不要用 `minecraftVersion=26.1`）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
-- 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无 fabric-docs `versions/`** → `PACK_NOT_FOUND`。禁止拷 `1.21.11`。
+- 工程是 **Fabric 26.1.2**（或 `list_fabric_versions` 命中 26.1.2）→ 只读 `fabric/26.1.2/`。知识包目录是 `fabric/26.1.2/`；工程写 `26.1` / `26.1.1` 走 `knowledgeVersion` 折到该档，**禁止**打开 `fabric/1.21.11/.cursor/rules` 的 01–10，也禁止把 1.21 wiki 当本版全文。平台 API 只用 `search_fabric_docs`（先 `list_fabric_versions`；查文档请用 `version=26.1.2`，不要用工程 `minecraftVersion=26.1` 当工具参数名）。已入库 `develop_porting_index` 是 **1.21.11→26.1**；线上 26.1→26.2 移植页走计划 2 旁路，**不要**建 `data/fabric_26.2` 克隆树。
+- 磁盘没有对应 `fabric/<ver>/` 时：停，改口 `search_fabric_docs`，**不要**用邻版规则顶上。`1.21.4` / `1.21.8` / `1.21.10` 已有 versioned `data/fabric_<ver>` + 本档规则树；**`1.21.5` 无规则树** → session `PACK_NOT_FOUND`；无 fabric-docs `versions/` → 文档检索 `VERSION_NOT_FOUND` 且不 fallback。禁止拷 `1.21.11`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用。
 
 
@@ -230,6 +230,7 @@ Decision: 选择注册方式
 - 不确定用哪个事件 → 选更通用的事件
 - 不确定方法名 → 用 IDE 自动补全、官方文档工具或 `query_api`（仅 Vanilla/Parchment，约 1.16.5–1.20.4；**不含** Forge/Fabric 类。**1.12.2 可能 found:true 但 methods 为空**；**26.1+ 无索引**）。平台 API 用 `search_*_docs` / `query_loader_api`。Forge 1.12.2 教程用 `search_forge_docs`（`version=1.12.2`），不要用 `query_api` 核 `Block` 构造。
 - 不确定是否跨平台 → 明确标注 `// Forge only` 或 `// Fabric only`
+- `DOC_NOT_FOUND` / 无本档规则树：保持未核实骨架，**禁止**用邻版 API 补全。空 stub 不是漏写。
 
 ## MCP Server 工具（可选）
 

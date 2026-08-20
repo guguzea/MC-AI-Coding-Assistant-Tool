@@ -1,6 +1,6 @@
 ﻿---
 name: mc-capability
-description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、IStorageSerializable、getCapability 存储和查询模式。触发词：Capability、IStorage、IStorageSerializable、AttachCapabilitiesEvent、LazyOptional、getCapability
+description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、ICapabilitySerializable、getCapability 存储和查询模式。触发词：Capability、IStorage、ICapabilitySerializable、AttachCapabilitiesEvent、LazyOptional、getCapability
 platform: forge
 version: "1.18.2"
 dependencies: []
@@ -18,8 +18,8 @@ public interface IExampleData {
     void setValue(int value);
 }
 
-// 2. 实现 IStorageSerializable
-public class ExampleData implements IExampleData, IStorageSerializable<CompoundTag> {
+// 2. 实现 ICapabilitySerializable
+public class ExampleData implements IExampleData, ICapabilitySerializable<CompoundTag> {
     private int value = 0;
 
     @Override

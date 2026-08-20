@@ -10,7 +10,7 @@
 
 - 数据生成（DataGen）在 Gradle 任务 `./gradlew runData` 或 `build` 期间执行
 - **禁止**在运行时修改数据生成器输出
-- 生成的 JSON 文件放在 `src/main/data/`（数据包）或 `src/main/assets/`（资源包）
+- 生成的 JSON 放在 `src/generated/resources/`（ForgeGradle 配置的输出目录），不要手改
 
 ### 目录结构
 
@@ -39,8 +39,9 @@ public class DataGenerators {
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(output, lookup));
-            generator.addProvider(true, new ModItemTagsProvider(output, lookup, lookup));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(output, lookup);
+            generator.addProvider(true, blockTags);
+            generator.addProvider(true, new ModItemTagsProvider(output, lookup, blockTags.contentsGetter()));
             generator.addProvider(true, new ModRecipeProvider(output));
             generator.addProvider(true, new ModLootTableProvider(output,
                 Collections.emptySet(),
@@ -169,8 +170,9 @@ public class DataGenerators {
         CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider();
 
         if (event.includeServer()) {
-            generator.addProvider(true, new ModBlockTagsProvider(output, lookup));
-            generator.addProvider(true, new ModItemTagsProvider(output, lookup, lookup));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(output, lookup);
+            generator.addProvider(true, blockTags);
+            generator.addProvider(true, new ModItemTagsProvider(output, lookup, blockTags.contentsGetter()));
             generator.addProvider(true, new ModRecipeProvider(output));
             generator.addProvider(true, new ModLootTableProvider(output,
                 Collections.emptySet(),

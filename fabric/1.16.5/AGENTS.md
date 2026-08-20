@@ -74,15 +74,16 @@ Decision: 本规则集是否适用？
 
 ## Registry API（1.16.5 vs 1.17+）
 
-> **关键差异**：1.16.5 使用 `Registry` **静态字段**（如 `Registry.ITEM`），而非 1.17+ 的 `Registries` **枚举**。
+> **关键差异**：1.16.5 使用 `Registry` **静态字段**（如 `Registry.ITEM`）。`Registries.ITEM` / `BuiltInRegistries` 从 **1.19.3+** 才是 Fabric 主路径；1.17.1/1.18.2 仍是 `Registry.ITEM`。
 
 ```java
 // ✅ 1.16.5 正确写法
 Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "my_block"), myBlock);
 
-// ❌ 1.16.5 错误写法（这是 1.17+ 的 API）
-Registry.register(Registry.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+// ❌ 1.16.5 错误写法（1.19.3+ / 现行文档）
+Registry.register(Registries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
+Registry.register(BuiltInRegistries.ITEM, new Identifier(MOD_ID, "my_item"), myItem);
 ```
 
 ---

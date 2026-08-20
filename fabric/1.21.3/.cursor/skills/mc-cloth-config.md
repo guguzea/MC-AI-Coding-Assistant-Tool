@@ -74,13 +74,13 @@ public class MyConfigScreen extends ConfigScreen {
 
         builder.addLabel(Text.literal("My Configuration"));
         builder.addEntry(EntryBuilder.startBooleanToggle(
-                new TranslatableText("config.my_mod.enable_feature"))
+                Text.translatable("config.my_mod.enable_feature"))
             .setDefaultValue(true)
             .setSaveConsumer(v -> enableFeature = v)
             .build());
 
         builder.addEntry(EntryBuilder.startIntSlider(
-                new TranslatableText("config.my_mod.value"), 10, 100)
+                Text.translatable("config.my_mod.value"), 10, 100)
             .setDefaultValue(50)
             .setSaveConsumer(v -> value = v)
             .build());

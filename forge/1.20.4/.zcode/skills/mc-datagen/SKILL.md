@@ -26,10 +26,9 @@ public class DataGenerators {
         PackOutput output = generator.getPackOutput();
 
         if (event.includeServer()) {
-            generator.addProvider(true, output ->
-                new ModBlockTagsProvider(output, event.getLookupProvider()));
-            generator.addProvider(true, output ->
-                new ModItemTagsProvider(output, event.getLookupProvider(), event.getLookupProvider()));
+            ModBlockTagsProvider blockTags = new ModBlockTagsProvider(output, event.getLookupProvider());
+            generator.addProvider(true, blockTags);
+            generator.addProvider(true, new ModItemTagsProvider(output, event.getLookupProvider(), blockTags.contentsGetter()));
             generator.addProvider(true, new ModRecipeProvider(output, event.getLookupProvider()));
             generator.addProvider(true, output ->
                 new ModLootTableProvider(output, event.getLookupProvider()));

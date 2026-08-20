@@ -27,7 +27,7 @@ IF 新项目 / 长期维护需要 GUI 配置屏 → YACL 优先（或评估 Fzzy
 - 开发依赖：`compileOnly`，自测加 `runtimeOnly`（坐标以 README 为准）
 - `fabric.mod.json`：`depends`（硬）/ `suggests`（软）写 yacl；Mod Menu 入口单独软依赖（modId `modmenu`）
 - `mods.toml`（26.x 为 neoforge.mods.toml）：硬依赖写 depends，软依赖用 `ModList.get().isLoaded("yacl")` 门闩
-- Screen 构建只在 `Dist.CLIENT`；未装 YACL 时模组正常进游戏
+- Screen 构建只在客户端：Forge/Neo 用 `Dist.CLIENT` 门闩；Fabric/Quilt 用 client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources；未装 YACL 时模组正常进游戏
 
 ## 集成要点（伪代码级）
 
@@ -41,11 +41,11 @@ IF 新项目 / 长期维护需要 GUI 配置屏 → YACL 优先（或评估 Fzzy
 
 ## 官方文档
 
-- https://github.com/isxander/yet-another-config-lib （README + 示例 mod）
+- https://github.com/isXander/YetAnotherConfigLib （README + 示例 mod）
 
 ## 常见错误
 
-- Screen 类被公共 / 服务端代码引用 → 专用服崩溃（应用 Dist.CLIENT 门闩）
+- Screen 类被公共 / 服务端代码引用 → 专用服崩溃（Forge/Neo：`Dist.CLIENT` 门闩；Fabric/Quilt：client 源集 + `@Environment(EnvType.CLIENT)`）
 - 只 compileOnly 却当硬依赖用，未装时 NoClassDefFoundError
 - 版本低于 1.19 却期待 YACL 构建 → 无构建，换 Cloth
 - 手写配置路径与库冲突，或 ForgeConfigSpec + YACL 双份配置

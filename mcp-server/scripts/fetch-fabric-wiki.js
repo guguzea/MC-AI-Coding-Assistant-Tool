@@ -17,6 +17,7 @@
  *      tutorial:configuration
  * 2026-08-15 重试：上述 ❌ 页 HTML 仍含 “This topic does not exist”，**不要加入 PAGES**。
  * 26.1.2 **不建 wiki 树**。
+ * Wiki 始终是现行站，不是该 --version 的历史快照；raw 元数据含警告行，search 结果带 wikiIsCurrentSite。
  *
  * 用法：
  *   node scripts/fetch-fabric-wiki.js --version 1.20.1
@@ -117,6 +118,7 @@ function saveRaw(id, content, source, priority) {
     `> 页面 ID：${id}`,
     `> 优先级：${priority}`,
     `> 抓取源：${source}`,
+    `> 警告：现行 Wiki，不是该 Minecraft 版本的历史快照。禁止把 wiki 正文里的 Registries / BuiltInRegistries 当成 1.16.5 等旧档 API。`,
     "",
     content,
   ];

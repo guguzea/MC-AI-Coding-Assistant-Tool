@@ -102,8 +102,8 @@ IF 需要在客户端渲染自定义模型
 
 IF 需要服务端数据同步到客户端
   → 使用 EntityDataManager（实体数据）
-  → 使用 TileEntity.syncable（方块数据）
-  → 使用 SimpleNetworkWrapper（自定义数据）
+  → 使用 TileEntity getUpdateTag / handleUpdateTag（方块数据）
+  → 使用 SimpleChannel（自定义数据）
 
 IF 需要客户端触发服务端逻辑
   → 使用 PlayerInteractEvent（在服务端自然处理）
@@ -119,11 +119,11 @@ IF 需要客户端触发服务端逻辑
 
 服务端推送 → 客户端更新：
   EntityDataManager（实体属性）
-  TileEntity.syncable()（方块数据）
-  SimpleNetworkWrapper 消息（自定义数据）
+  TileEntity getUpdateTag() / handleUpdateTag()（方块数据）
+  SimpleChannel 消息（自定义数据）
 
 客户端查询 → 服务端响应：
-  SimpleNetworkWrapper（双向消息）
+  SimpleChannel（双向消息）
 ```
 
 ---
@@ -270,9 +270,9 @@ if (LogicalSide.CLIENT.equals(ctx.get().getDirection().getReceptionSide())) {
 }
 
 // 或者
-if (DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> this::clientOnlyMethod) != null) {
+if (DistExecutor.callWhenOn(Dist.CLIENT, () -> this::clientOnlyMethod) != null) {
     // ...
 }
 ```
 
-> 注意：`DistExecutor.unsafeRunForDist` 和类似方法用于在不同物理端运行不同代码。但**强烈建议**避免使用这些方法——更好的设计是让每端的代码完全分离，不在同一条执行路径上混合。
+> 注意：`DistExecutor.runForDist` 和类似方法用于在不同物理端运行不同代码。但**强烈建议**避免使用这些方法——更好的设计是让每端的代码完全分离，不在同一条执行路径上混合。

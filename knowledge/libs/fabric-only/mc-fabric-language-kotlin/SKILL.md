@@ -27,9 +27,8 @@ Decision: Fabric 用不用 Kotlin
 
 ## 软/硬依赖
 
-- `depends` 写 fabric-language-kotlin 为硬依赖；不写则玩家缺装时启动报错
+- `fabric.mod.json` 入口：`adapter: "kotlin"` + `value`（Kotlin 主类），不是 Java 字符串入口原样；`depends` 写 fabric-language-kotlin 为硬依赖
 - kotlin-stdlib / coroutines 不自引，以 FLK 打包版本为准
-- 入口点照常写主类（entrypoints 不变），加载器负责 Kotlin 运行时
 - 协程作用域自己管理，避免在渲染线程阻塞
 
 ## 官方文档

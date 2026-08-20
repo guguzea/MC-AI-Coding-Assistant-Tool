@@ -99,7 +99,7 @@ Block.Properties.of().mapColor(MapColor.STONE)
 **正确方案：**
 ```java
 Block.Properties.of()
-    .requiresTool()    // 需要正确工具才能掉落
+    .requiresCorrectToolForDrops()    // 需要正确工具才能掉落
     .hardnessAndResistance(3.0f, 3.0f)
 ```
 

@@ -2,7 +2,7 @@
 id: authored/library-integration-jei-emi
 title: JEI / EMI / REI 配方查看器软依赖接入要点
 tags: [jei, emi, rei, interop, optional, client, datagen, forge, fabric, neoforge]
-summary: DataGen 配方常零代码；三查看器软依赖 Gradle；Dist.CLIENT 注册；REI 可与 JEI 同装；1.21.2+ JEI 服务端同步与 EMI 活跃窗口；自定义分类再查官方。
+summary: DataGen 配方常零代码；三查看器软依赖 Gradle；Forge/Neo Dist.CLIENT / Fabric client 源集注册；REI 可与 JEI 同装；1.21.2+ JEI 服务端同步与 EMI 活跃窗口；自定义分类再查官方。
 mcHint: 1.20.1+ / 1.21+ / 26.x
 modIds: [jei, emi, roughlyenoughitems]
 loaders: [fabric, forge, neoforge]
@@ -59,10 +59,12 @@ sourceKind: authored
 ## 运行时门闩
 
 ```java
-// 示例：仅在 JEI 存在时注册客户端兼容
+// Forge/Neo 示例：DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...)
 if (ModList.get().isLoaded("jei")) {
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> JeiClientCompat.init());
 }
+// Fabric/Quilt：JeiClientCompat 放 client 源集；entrypoints client 或 @Environment(EnvType.CLIENT) 门闩内 init()
+// if (FabricLoader.getInstance().isModLoaded("jei")) { JeiClientCompat.init(); }
 ```
 
 `JeiClientCompat` 放 `client` 包，内部才 `import mezz.jei…`。EMI modId 常见为 `emi`、REI 为 `roughlyenoughitems`（以对方 mods.toml / fabric.mod.json 为准）；Fabric 用 `FabricLoader.getInstance().isModLoaded(...)`。
