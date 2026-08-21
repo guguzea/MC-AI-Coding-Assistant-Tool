@@ -1493,6 +1493,23 @@ async function testFivePlatformRouting() {
     JSON.stringify(q1211qsl).slice(0, 400),
   );
 
+  const qModJson = parseToolText(
+    await searchDocs({ platform: "quilt", version: "1.21.11", query: "quilt.mod.json schema_version" }),
+  );
+  assert.equal(qModJson.ok, true, JSON.stringify(qModJson.error ?? qModJson).slice(0, 400));
+  assert.ok(
+    (qModJson.results ?? []).some((r) => r.id === "1.21.11/quilt-mod-json"),
+    `expected 1.21.11/quilt-mod-json in results: ${JSON.stringify(qModJson.results ?? []).slice(0, 400)}`,
+  );
+  assert.notEqual(qModJson.fallback, "quilt", "1.21.11 有 quilt-mod-json，不得回退 1.21.1");
+
+  const qModFull = parseToolText(
+    await getDocFull({ platform: "quilt", version: "1.21.11", id: "1.21.11/quilt-mod-json", highlight_key: false }),
+  );
+  assert.notEqual(qModFull.ok, false, JSON.stringify(qModFull.error ?? qModFull).slice(0, 400));
+  assert.equal(qModFull.fallback, null);
+  assert.match(JSON.stringify(qModFull), /quilt_loader|schema_version/i);
+
   const man = generateAddonManifest({
     packName: "Demo",
     packType: "script",

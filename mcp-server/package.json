@@ -28,6 +28,8 @@
     "build:semantic-index": "npm run build && node scripts/_lib/build-semantic-index.mjs",
     "fetch:embedding-model": "node scripts/fetch-embedding-model.mjs",
     "fetch:quilt-docs": "node scripts/fetch-quilt-docs.js --version=all",
+    "repair:quilt-indexes": "node scripts/repair-quilt-indexes.js --version=all",
+    "audit:quilt-indexes": "node scripts/repair-quilt-indexes.js --audit --version=all",
     "fetch:bedrock-docs": "node scripts/fetch-bedrock-docs.js",
     "test:semantic": "npm run build && node test-semantic.mjs",
     "assert:no-yarn-slurp": "node scripts/assert-no-yarn-json-slurp.mjs",

@@ -20,6 +20,25 @@
     "sha256": "d6829c89dec86b1e2c1b5bbf08df9b0475f63de35327c9c2b11f7b9507e20ebd"
   },
   {
+    "id": "1.21.11/quilt-mod-json",
+    "version": "1.21.11",
+    "label": "quilt.mod.json",
+    "url": "https://raw.githubusercontent.com/QuiltMC/rfcs/main/specification/0002-quilt.mod.json.md",
+    "tags": [
+      "loader",
+      "metadata"
+    ],
+    "sections": [],
+    "hasCodeBlocks": true,
+    "codeBlockCount": 8,
+    "keySections": 0,
+    "file": "quilt-mod-json.md",
+    "processedFile": "processed/quilt-mod-json.md",
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-21T10:16:49.385Z",
+    "sha256": "b5059d79c46467e4ddf6a686875911f01b2e106bd91b9b794cdedd4e453be0c5"
+  },
+  {
     "id": "1.21.11/qsl-readme",
     "version": "1.21.11",
     "label": "Quilt Standard Libraries README",

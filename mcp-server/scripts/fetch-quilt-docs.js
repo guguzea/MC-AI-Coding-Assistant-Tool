@@ -110,6 +110,48 @@ function firstParagraph(md) {
   return (para ?? body.replace(/\s+/g, " ").trim()).slice(0, 200);
 }
 
+function fetchedAtFromMd(md) {
+  const m = String(md).match(/> 抓取时间：([^\n]+)/);
+  return m ? m[1].trim() : new Date().toISOString();
+}
+
+function entryFromProcessed(ver, page, processedPath) {
+  const content = readFileSync(processedPath, "utf8");
+  return {
+    id: `${ver}/${page.id}`,
+    version: ver,
+    label: page.label,
+    url: page.url,
+    tags: page.tags,
+    priority: "⭐",
+    sectionCount: 1,
+    source: "quilt-docs",
+    fetchedAt: fetchedAtFromMd(content),
+    sha256: sha(content),
+  };
+}
+
+const INDEX_ORDER = ["qsl-qfapi", "quilt-mod-json", "qsl-readme", "qsl-verified"];
+
+function sortIndex(index) {
+  return [...index].sort((a, b) => {
+    const ai = INDEX_ORDER.indexOf(a.id.split("/").pop());
+    const bi = INDEX_ORDER.indexOf(b.id.split("/").pop());
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+  });
+}
+
+function loadExistingIndex(outDir) {
+  const p = join(outDir, "index-l0.json");
+  if (!existsSync(p)) return [];
+  try {
+    const arr = JSON.parse(readFileSync(p, "utf8"));
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
+
 function writeIndexes(outDir, index) {
   const l1 = [];
   const l2 = [];
@@ -166,17 +208,22 @@ async function main() {
     const outDir = join(DATA, `quilt_${ver}`, "quilt-docs", ver);
     const processed = join(outDir, "processed");
     if (!dry) mkdirSync(processed, { recursive: true });
-    const index = [];
+
+    const indexByStem = new Map(
+      loadExistingIndex(outDir).map((e) => [String(e.id).split("/").pop(), e]),
+    );
+    const pageStems = new Set(pagesFor(ver).map((p) => p.id));
+
     for (const page of pagesFor(ver)) {
+      const processedPath = join(processed, `${page.id}.md`);
       try {
         const raw = await fetchText(page.url);
         const md = page.url.endsWith(".md")
           ? `> 来源：${page.url}\n> 抓取时间：${new Date().toISOString()}\n> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。\n\n${raw}`
           : toMd(raw, page.url);
-        const id = `${ver}/${page.id}`;
-        if (!dry) writeFileSync(join(processed, `${page.id}.md`), md, "utf8");
-        index.push({
-          id,
+        if (!dry) writeFileSync(processedPath, md, "utf8");
+        indexByStem.set(page.id, {
+          id: `${ver}/${page.id}`,
           version: ver,
           label: page.label,
           url: page.url,
@@ -189,9 +236,27 @@ async function main() {
         });
         console.log(`ok ${page.id} (${md.length} chars)`);
       } catch (e) {
-        console.warn(`skip ${page.id}: ${e.message ?? e}`);
+        if (existsSync(processedPath)) {
+          console.warn(`skip fetch ${page.id}: ${e.message ?? e} — retaining processed/${page.id}.md in index`);
+          if (!indexByStem.has(page.id)) {
+            indexByStem.set(page.id, entryFromProcessed(ver, page, processedPath));
+          }
+        } else {
+          console.warn(`skip ${page.id}: ${e.message ?? e}`);
+          indexByStem.delete(page.id);
+        }
       }
     }
+
+    const index = sortIndex(
+      [...indexByStem.entries()]
+        .filter(([stem, entry]) => {
+          if (pageStems.has(stem)) return existsSync(join(processed, `${stem}.md`));
+          return existsSync(join(processed, `${stem}.md`));
+        })
+        .map(([, entry]) => entry),
+    );
+
     if (!dry) {
       writeIndexes(outDir, index);
       console.log(`wrote ${outDir} (${index.length} pages, l0/l1/l2)`);

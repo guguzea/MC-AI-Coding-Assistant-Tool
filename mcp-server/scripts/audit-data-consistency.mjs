@@ -19,6 +19,8 @@
  *   H  empty-index detection (warn).
  *   I  cross-version pollution (raw filenames mentioning another MC version
  *      accidentally placed under a different version dir).
+ *   J  processed/*.md stem must appear in index-l0 (search_docs / thin-tree
+ *      get_doc_full 只认 L0；正文在盘但缺 L0 条目则不可检索).
  *
  * CLI:
  *   --platform=forge|fabric|neoforge|quilt|liteloader|rift|all        (default: all)
@@ -54,6 +56,57 @@ export function skipsRawProcessedSet(indexName, docSubdir) {
   return RAW_PROCESSED_SET_EXCEPTIONS.some(
     (e) => e.reason && name.startsWith(e.platformPrefix) && e.docSubdir === sub,
   );
+}
+
+/** 与 FabricDocStore.processedFileFor 一致：L0 id → processed/<stem>.md */
+export function l0ProcessedStem(id) {
+  const bare = String(id ?? "").replace(/^(?:\d+\.\d+(?:\.\d+)?|stable)\//, "");
+  return bare.replace(/\//g, "_");
+}
+
+function checkProcessedL0Stem(docRoot, doc, issues) {
+  const l0Path = path.join(docRoot, "index-l0.json");
+  if (!safeStat(l0Path)) return;
+  const text = safeReadFile(l0Path);
+  if (text === null) return;
+  let l0;
+  try {
+    l0 = JSON.parse(text);
+  } catch {
+    return;
+  }
+  if (!Array.isArray(l0)) return;
+
+  const stems = new Set(
+    l0.filter((item) => item && typeof item.id === "string").map((item) => l0ProcessedStem(item.id)),
+  );
+
+  for (const f of doc.processedFiles ?? []) {
+    if (!String(f).endsWith(".md")) continue;
+    const stem = basenameNoExt(f);
+    if (!stems.has(stem)) {
+      issues.push(rec(
+        "J-processed-l0-stem",
+        "ERROR",
+        path.join(docRoot, "processed", f),
+        "stem listed in index-l0",
+        "missing from L0 (search_docs / get_doc_full will miss)",
+      ));
+    }
+  }
+
+  for (const stem of stems) {
+    const target = path.join(docRoot, "processed", `${stem}.md`);
+    if (!safeStat(target)) {
+      issues.push(rec(
+        "J-processed-l0-stem",
+        "ERROR",
+        target,
+        "processed file on disk",
+        "missing (L0 entry orphaned)",
+      ));
+    }
+  }
 }
 
 function parseArgs(argv) {
@@ -343,6 +396,9 @@ function checkVersionedDocScope(platform, name, version, versionDir, doc, docRoo
       }
     }
   }
+
+  // J: processed stem ↔ index-l0（Quilt 1.21.11 quilt-mod-json 类问题）
+  checkProcessedL0Stem(docRoot, doc, issues);
 
   // S: semantic index（有 processed/*.md 时建议有 db；fts5-only 记 WARN 非硬失败；javadoc 不在 docSubDirs）
   checkSemanticIndex(docRoot, doc.processedFiles, issues);

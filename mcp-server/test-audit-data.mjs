@@ -24,6 +24,7 @@ import {
   parseIndexName,
   RAW_PROCESSED_SET_EXCEPTIONS,
   skipsRawProcessedSet,
+  l0ProcessedStem,
 } from "./scripts/audit-data-consistency.mjs";
 
 const REPO = path.dirname(new URL(import.meta.url).pathname.replace(/^\//, ""));
@@ -330,6 +331,33 @@ async function testFabricProcessedOnlyStillErrorsE() {
   assert.ok(issues.some((i) => i.check === "E-raw-processed-set" && i.level === "ERROR"), JSON.stringify(issues));
 }
 
+async function testL0ProcessedStemHelper() {
+  assert.equal(l0ProcessedStem("1.21.11/quilt-mod-json"), "quilt-mod-json");
+  assert.equal(l0ProcessedStem("gettingstarted/modfiles"), "gettingstarted_modfiles");
+  assert.equal(l0ProcessedStem("1.21.11/develop/items/first-item"), "develop_items_first-item");
+}
+
+async function testProcessedMissingFromL0StemErrorsJ() {
+  const root = tmpRoot("j-stem");
+  const ver = "1.21.11";
+  const docsRoot = path.join(root, `quilt_${ver}`, "quilt-docs", ver);
+  writeText(path.join(docsRoot, "processed", "quilt-mod-json.md"), "# RFC\n");
+  writeText(path.join(docsRoot, "processed", "qsl-qfapi.md"), "# qsl\n");
+  writeJSON(path.join(docsRoot, "index-l0.json"), [
+    { id: `${ver}/qsl-qfapi`, version: ver, label: "qsl-qfapi" },
+  ]);
+  const issues = auditIndex(root, { name: `quilt_${ver}`, platform: "quilt", version: ver });
+  assert.ok(
+    issues.some(
+      (i) =>
+        i.check === "J-processed-l0-stem" &&
+        i.level === "ERROR" &&
+        /quilt-mod-json/.test(String(i.path ?? "")),
+    ),
+    JSON.stringify(issues),
+  );
+}
+
 const tests = [
   ["read-only contract", testReadOnlyContract],
   ["planted errors surfaced", testPlantedErrors],
@@ -347,6 +375,8 @@ const tests = [
   ["liteloader processed-only skips E-raw-processed-set", testLiteLoaderProcessedOnlySkipsE],
   ["forge processed-only still E-raw-processed-set", testForgeProcessedOnlyStillErrorsE],
   ["fabric processed-only still E-raw-processed-set", testFabricProcessedOnlyStillErrorsE],
+  ["l0ProcessedStem helper", testL0ProcessedStemHelper],
+  ["processed missing from L0 stem errors J", testProcessedMissingFromL0StemErrorsJ],
 ];
 
 let failed = 0;
