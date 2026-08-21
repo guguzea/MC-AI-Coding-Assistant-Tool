@@ -1,0 +1,569 @@
+﻿{
+  "success": true,
+  "tool": "activate_platform_pack",
+  "result": {
+    "ok": true,
+    "dest": "session",
+    "platform": "neoforge",
+    "minecraftVersion": "1.20.1",
+    "knowledgeVersion": "1.20.1",
+    "packDir": "H:/MC_skill/neoforge/1.20.1",
+    "agents": "# NeoForge 1.20.1 鈥?Agent 鎬荤翰\n\n> 鍙€傜敤浜?**NeoForge 1.20.1**銆傛枃妗ｆ暟鎹负 Forge 1.20.1 鍏煎锛坰earch_neoforge_docs version=1.20.1锛宖orgeCompatible锛夈€俓n> **绂佹**璇诲彇 `neoforge/1.20.4/.cursor/rules` 鎴栧叾瀹冮偦妗?00鈥?0銆俓n\n| 椤?| 鍊?|\n|---|---|\n| 骞冲彴 | NeoForge 1.20.1 |\n| 鏂囨。 | search_neoforge_docs version=1.20.1 |\n| 娉ㄥ唽 | DeferredRegister 涓?RegisterEvent锛?.20.1/concepts_registries锛?|\n| 绂佹 | 鎶?1.20.4+ DeferredBlock / RegisterPayloadHandlersEvent / AttachmentType 褰撴湰妗ｅ凡鏍革紱鍖呭悕绂佹榛樺啓 |\n\n1.20.1 = Forge 鍏煎灞傦細`activate_platform_pack session` 娉ㄥ叆 Forge 1.20.1 鐨?02鈥?8/10锛圫impleChannel / Capability 褰㈡€侊級銆備粛绂佹璇?`neoforge/1.20.4` 閭绘。銆俓n\n鏍稿疄琛細knowledge/common/verified-api-1.20.1.md銆傛牳涓嶅埌绂佹榛樺啓銆俓n",
+    "rules": [
+      {
+        "id": "00",
+        "fileName": "00-project-setup.mdc",
+        "source": "H:/MC_skill/neoforge/1.20.1",
+        "text": "---\ndescription: 00-project-setup NeoForge 1.20.1\nglobs:\nalwaysApply: true\n---\n\n# 00 鈥?宸ョ▼锛圢eoForge 1.20.1锛塡n\n鏉ユ簮锛歴earch_neoforge_docs version=1.20.1銆侸ava 17銆備笉瑕佺敤 Yarn銆俤ownload_official_mdk 鑻ユ棤 Neo 1.20.1 pin 鍒?MDK_NOT_PINNED锛岀姝吉閫?SHA銆俓n"
+      },
+      {
+        "id": "01",
+        "fileName": "01-registry.mdc",
+        "source": "H:/MC_skill/neoforge/1.20.1",
+        "text": "---\ndescription: 01-registry NeoForge 1.20.1\nglobs:\nalwaysApply: true\n---\n\n# 01 鈥?娉ㄥ唽锛圢eoForge 1.20.1锛塡n\n鏉ユ簮锛?.20.1/concepts_registries銆侱eferredRegister 鎺ㄨ崘锛涘閫?RegisterEvent銆傜姝?RegistryObject 褰?1.20.4+ Neo 鏁欑▼绫诲瀷锛屼篃绂佹鎶?DeferredBlock 鎶勮嚜 1.20.4銆俓n"
+      },
+      {
+        "id": "02",
+        "fileName": "02-block.mdc",
+        "source": "forge/1.20.1",
+        "text": "---\n[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€俓n02鈥?8/10 鍙 forge/1.20.1/.cursor/rules锛團orge 鍏煎褰㈡€侊級\n---\n\n# 02 鈥?鏂瑰潡寮€鍙慭n\n> 閫傜敤鐗堟湰锛欶orge 1.20.1\n\n---\n\n## 绾︽潫\n\n### Block 瀛愮被瑙勮寖\n\n- 鏂瑰潡绫诲繀椤荤户鎵?`Block`锛坄net.minecraft.world.level.block.Block`锛塡n- 鎺ㄨ崘浣跨敤 `BlockBehaviour.Properties.of()`锛?.20+ **鏃?* `Material`锛夛紝鍐嶉摼寮?`.mapColor` / `.strength` / `.sound` 绛塡n- 绂佹閲嶅啓 `use`銆乣onDestroyedByPlayer` 绛変笌鐗╃悊浜や簰鐩稿叧鐨勬棫鐗堟柟娉曪紙Forge 1.20.x 宸插湪澶ч儴鍒嗘柟娉曚笂鏍囨敞 `@Deprecated`锛塡n\n### BlockBehaviour.Properties 甯哥敤閰嶇疆\n\n```java\nBlockBehaviour.Properties.of()\n    .mapColor(MapColor.STONE)                           // 鍦板浘棰滆壊锛堟浛浠ｆ棫 Material锛塡n    .strength(float breakTime)                          // 鐮村潖鏃堕棿鍜岀‖搴n    .strength(float breakTime, float explosionResistance)\n    .requiresCorrectToolForDrops()                      // 闇€瑕佹纭伐鍏锋墠鑳芥帀钀絓n    .noOcclusion()                                      // 涓嶉樆鎸″厜\n    .isRedstoneConductor((state, level, pos) -> true) // 绾㈢煶瀵间綋\n    .sound(SoundType type)                             // 鏀剧疆/鐮村潖闊虫晥\n```\n\n### 娉ㄥ唽绾︽潫\n\n- **绂佹**閫氳繃 `new Block(...)` 鏋勯€犲悗鐩存帴 `public static final` 浣跨敤\n- 蹇呴』閫氳繃 `DeferredRegister<Block>` 娉ㄥ唽锛堝弬瑙?`01-registry.mdc`锛塡n- 娉ㄥ唽鍚嶇О蹇呴』鍏ㄥ皬鍐橽n- BlockItem 闇€瑕佸崟鐙敞鍐岋紙涓庢柟鍧椾娇鐢ㄧ浉鍚?registry name锛塡n\n### 鏂瑰潡瀹炰綋锛圔lockEntity锛夌害鏉焅n\n- 鏈夌姸鎬佹垨闇€瑕佹寔涔呭寲鐨勬柟鍧楀繀椤讳娇鐢?BlockEntity锛堣€岄潪浠呴潬 Block锛塡n- 甯?BE 鐨勬柟鍧楀繀椤?`implements EntityBlock` 骞跺疄鐜?`newBlockEntity()`锛涙瘡 tick 鐢?`getTicker()`\n- BlockEntity 鐨?`saveAdditional`/`load` 鏂规硶澶勭悊 NBT 搴忓垪鍖栵紙浣跨敤 `CompoundTag`锛屼笉鏄?`CompoundNBT`锛塡n- **绂佹**鍦?`load()` 涓洿鎺ヨ鍙栦笘鐣屾暟鎹紙浼氬鑷?NPE锛塡n\n### BlockState 閰嶇疆\n\n- 浣跨敤 `stateDefinition` 瀹氫箟鎵€鏈夋柟鍧楃姸鎬佸睘鎬n- 浣跨敤 `defaultBlockState()` 璁剧疆榛樿鐘舵€乗n- `getStateForPlacement()` 澶勭悊鏀剧疆鏃剁殑鐘舵€佸彉鍖朶n\n---\n\n## Decision Flow\n\n### Decision: 闇€瑕佷粈涔堢被鍨嬬殑鏂瑰潡锛焅n\n```\nIF 闇€瑕佸彲鏀剧疆鐗╁搧銆佷笉鍙氦浜掔殑鍩虹鏂瑰潡\n  鈫?鍩虹鏂瑰潡锛坋xtends Block锛塡n  鈫?娉ㄥ唽鍚庢敞鍐?BlockItem\n  鈫?鍒涘缓 blockstates JSON 鍜?models JSON\n\nIF 闇€瑕佸瓨鍌ㄦ暟鎹紙绠卞瓙銆佺啍鐐夌瓑锛塡n  鈫?鏂瑰潡瀹炰綋鏂瑰潡锛圔lock + BlockEntity锛塡n  鈫?闇€瑕佸湪鏂瑰潡绫婚噸鍐?newBlockEntity()\n  鈫?闇€瑕佹敞鍐?BlockEntityType\n\nIF 闇€瑕佸彲浜や簰锛堝彸閿墦寮€ GUI銆佽Е鍙戜簨浠讹級\n  鈫?鏂瑰潡閲嶅啓 use()锛堣繑鍥?InteractionResult锛夛紝涓嶈 MCP onBlockActivated\n  鈫?鎴栦娇鐢?MenuProvider + EntityBlock#getTicker 瀹炵幇 GUI\n\nIF 闇€瑕佹祦浣揬n  鈫?浣跨敤 Forge 涓撶敤娴佷綋绯荤粺\n  鈫?娉ㄥ唽 Fluid + FluidType 涓や釜绫诲瀷\n  鈫?鍙傝€?05-events.mdc 涓殑娴佷綋鐩稿叧浜嬩欢\n\nIF 闇€瑕佺壒娈婃覆鏌擄紙澶氶潰鏉愯川銆侀€忔槑搴︺€佸姩鐢伙級\n  鈫?鎴栬嚜瀹氫箟 BlockState + BakedQuad\n  鈫?鍙傝€?08-client-server.mdc 涓殑娓叉煋瑙勫垯\n```\n\n### Decision: 鏂瑰潡灞炴€э紙mapColor / 寮哄害锛夐€夋嫨\n\n```\nIF 鑷劧鏂瑰潡锛堢煶澶淬€佹湪澶淬€佽崏锛塡n  鈫?MapColor.STONE / MapColor.WOOD / MapColor.GRASS\n  鈫?闇€瑕佹纭伐鍏锋帀钀芥椂鍔?.requiresCorrectToolForDrops()\n\nIF 娉ュ湡绫籠n  鈫?MapColor.DIRT / MapColor.SAND / MapColor.SNOW\n\nIF 鐜荤拑/鍐?閫忔槑\n  鈫?MapColor.NONE 鎴栫浉搴旇壊 + .noOcclusion()\n  鈫?.isSuffocating((s,l,p)->false)\n\nIF 妞嶇墿\n  鈫?杞婚噺 Properties + 鐗规畩鏀剧疆閫昏緫\n\nIF 娑蹭綋\n  鈫?涓嶅湪 Block 涓疄鐜帮紝浣跨敤 Fluid 绯荤粺\n```\n\n### Decision: BlockEntity vs 鏅€氭柟鍧梊n\n```\nIF 闇€瑕佸瓨鍌ㄧ帺瀹舵暟鎹紙瀹瑰櫒鍐呭銆佺啍鐐夌噧鏂?鐗╁搧锛塡n  鈫?蹇呴』浣跨敤 BlockEntity\n  鈫?鍦ㄦ柟鍧楃被閲嶅啓 newBlockEntity()\n  鈫?娉ㄥ唽鏃跺厛娉ㄥ唽鏂瑰潡鍐嶆敞鍐?BlockEntityType\n\nIF 闇€瑕佹瘡 tick 閫昏緫锛堣嚜鍔ㄦ満銆佽鏃跺櫒锛塡n  鈫?蹇呴』浣跨敤 BlockEntity + EntityBlock#getTicker\n  鈫?鍦?ModBlocks 涓敞鍐?BlockEntityType 鏃跺叧鑱?Block\n\nIF 鍙渶瑕侀潤鎬佹柟鍧楋紙瑁呴グ銆佸畬鏁存柟鍧楋級\n  鈫?鏅€?Block 鍗冲彲锛屼笉闇€瑕?BlockEntity\n  鈫?鍑忓皯鍐呭瓨鍗犵敤鍜屽鏉傚害\n```\n\n---\n\n## 绀轰緥锛氬熀纭€鏂瑰潡锛堝甫 BlockItem锛塡n\n```java\n// blocks/MyBlock.java\npublic class MyBlock extends Block {\n    public MyBlock() {\n        super(Properties.of()\n            .mapColor(MapColor.STONE)\n            .strength(1.5f, 6.0f)\n            .requiresCorrectToolForDrops()\n            .sound(SoundType.STONE)\n        );\n    }\n\n    @Override\n    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {\n        // 鏂瑰潡鏀剧疆鏃剁殑閫昏緫\n    }\n\n    @Override\n    public void wasExploded(BlockState state, Level level, BlockPos pos, Explosion explosion) {\n        // 鏂瑰潡琚垎鐐哥牬鍧忔椂鐨勯€昏緫\n        // 娉ㄦ剰锛?.20.1 鐢?wasExploded锛屼笉鏄棫鐨?onBlockExploded\n    }\n}\n```\n\n```java\n// Registration using DeferredRegister (recommended)\npublic static final DeferredRegister<Block> BLOCKS =\n    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);\n\npublic static final RegistryObject<Block> MY_BLOCK =\n    BLOCKS.register(\"my_block\", MyBlock::new);\n```\n\n```java\n// 鉂?閿欒绀轰緥锛歴etRegistryName + 鐩存帴 new锛堝凡杩囨椂锛塡nevent.getRegistry().register(\n    new MyBlock().setRegistryName(new ResourceLocation(MOD_ID, \"my_block\"))\n);\n```\n\n## 绀轰緥锛氬甫 BlockEntity 鐨勬柟鍧梊n\n```java\n// blocks/MyBlockEntityBlock.java\npublic class MyBlockEntityBlock extends Block implements EntityBlock {\n    public MyBlockEntityBlock() {\n        super(Properties.of().mapColor(MapColor.WOOD).noOcclusion());\n    }\n\n    @Override\n    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {\n        return ModBlockEntities.MY_BLOCK_ENTITY.get().create(pos, state);\n    }\n\n    @Override\n    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {\n        builder.add(FACING);  // 绀轰緥锛氭坊鍔犱竴涓?FACING 灞炴€n    }\n\n    @Override\n    public BlockState getStateForPlacement(BlockPlaceContext context) {\n        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());\n    }\n}\n```\n\n```java\n// entities/MyBlockEntity.java\npublic class MyBlockEntity extends BlockEntity {\n    private CompoundTag data = new CompoundTag();\n\n    public MyBlockEntity(BlockPos pos, BlockState state) {\n        super(ModBlockEntities.MY_BLOCK_ENTITY.get(), pos, state);\n    }\n\n    @Override\n    protected void saveAdditional(CompoundTag nbt) {\n        super.saveAdditional(nbt);\n        nbt.put(\"data\", data.copy());\n    }\n\n    @Override\n    public void load(CompoundTag nbt) {\n        super.load(nbt);\n        if (nbt.contains(\"data\", Tag.TAG_COMPOUND)) {\n            this.data = nbt.getCompound(\"data\");\n        }\n    }\n}\n```\n\n> 娉ㄦ剰锛歚load()` 涓鍙?NBT 鏄畨鍏ㄧ殑锛屼絾浣?*涓嶈兘**鍦?`load()` 涓鍙栦笘鐣屾暟鎹紙濡?`level.getBlockState(pos)`锛夈€傚闇€鍩轰簬涓栫晫鐨勯€昏緫锛屽湪 `onLoad()` 涓鐞嗐€俓n"
+      },
+      {
+        "id": "09",
+        "fileName": "09-anti-patterns.mdc",
+        "source": "H:/MC_skill/neoforge/1.20.1",
+        "text": "---\ndescription: 09-anti-patterns NeoForge 1.20.1\nglobs:\nalwaysApply: true\n---\n\n# 09 鈥?鍙嶆ā寮廫n\n绂佹璇?neoforge/1.20.4 00鈥?0銆傜姝?RegistryObject 鍐掑厖鍚庣画 Neo銆傜姝?SimpleChannel 鍐掑厖 1.21 Payload銆俓n"
+      }
+    ],
+    "ruleIndex": [
+      {
+        "id": "00",
+        "fileName": "00-project-setup.mdc"
+      },
+      {
+        "id": "01",
+        "fileName": "01-registry.mdc"
+      },
+      {
+        "id": "02",
+        "fileName": "02-block.mdc"
+      },
+      {
+        "id": "03",
+        "fileName": "03-item.mdc"
+      },
+      {
+        "id": "04",
+        "fileName": "04-entity.mdc"
+      },
+      {
+        "id": "05",
+        "fileName": "05-events.mdc"
+      },
+      {
+        "id": "06",
+        "fileName": "06-networking.mdc"
+      },
+      {
+        "id": "07",
+        "fileName": "07-datagen.mdc"
+      },
+      {
+        "id": "08",
+        "fileName": "08-client-server.mdc"
+      },
+      {
+        "id": "09",
+        "fileName": "09-anti-patterns.mdc"
+      },
+      {
+        "id": "10",
+        "fileName": "10-gui.mdc"
+      }
+    ],
+    "overlay": {
+      "wanted": "forge/1.20.1",
+      "status": "ok",
+      "note": "02鈥?8/10 鍙 forge/1.20.1/.cursor/rules锛團orge 鍏煎褰㈡€侊級",
+      "forgeDir": "H:\\MC_skill\\forge\\1.20.1",
+      "kind": "forge_compat"
+    },
+    "verifiedApi": [
+      {
+        "path": "H:/MC_skill/neoforge/1.20.1/knowledge/common/verified-api-1.20.1.md",
+        "excerpt": "# NeoForge 1.20.1 宸叉牳瀹?API\n\n鏉ユ簮锛歴earch_neoforge_docs version=1.20.1锛團orge 鍏煎鏁版嵁锛夈€傛瘡鏉¤拷婧〉闈?id銆俓n\n| 鍚嶇О | 鍑哄鏂囨。 id |\n|------|-------------|\n| DeferredRegister锛堟帹鑽愭敞鍐岋級 | 1.20.1/concepts_registries |\n| RegisterEvent | 1.20.1/concepts_registries |\n| Items | 1.20.1/items |\n| Blocks | 1.20.1/blocks |\n| Events | 1.20.1/concepts_events |\n| Mod Lifecycle | 1.20.1/concepts_lifecycle |\n| Sounds | 1.20.1/gameeffects_sounds |\n| Configuration | 1.20.1/misc_config |\n| Block States | 1.20.1/blocks_states |\n| BlockEntityWithoutLevelRenderer | 1.20.1/items_bewlr |\n\n绂佹鎶?Neo 1.20.4 Payload / Data Attachment 褰撴湰妗ｃ€傚厓鏁版嵁鏂囦欢鍚嶄互璇ョ増 gettingstarted 涓哄噯锛岀姝㈤粯鍐欍€俓n"
+      }
+    ],
+    "skills": [
+      {
+        "name": "mc-advancement",
+        "description": "mc-advancement",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-advancement/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-advancement/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-ai",
+        "description": "mc-ai",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-ai/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-ai/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-block",
+        "description": "鏂瑰潡寮€鍙戯紙Forge 1.20.1锛?,
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-block/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-block/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-blockentity",
+        "description": "Minecraft Forge 鏂瑰潡瀹炰綋寮€鍙戙€侭lockEntity 娉ㄥ唽銆乀icker銆丆ontainerData/Menu 鑱斿姩銆丅lockEntityRenderer銆傝Е鍙戣瘝锛欱lockEntity銆丅lockEntityType銆丒ntityBlock銆乬etTicker銆乻aveAdditional銆乴oad銆乬etUpdateTag銆乬etUpdatePacket",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-blockentity/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-blockentity/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-capability",
+        "description": "Minecraft Forge Capability 绯荤粺銆侫ttachCapabilitiesEvent銆両CapabilitySerializable銆乬etCapability 瀛樺偍鍜屾煡璇㈡ā寮忋€傝Е鍙戣瘝锛欳apability銆両Storage銆両CapabilitySerializable銆丄ttachCapabilitiesEvent銆丩azyOptional銆乬etCapability",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-capability/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-capability/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-command",
+        "description": "mc-command",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-command/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-command/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-compat-jei",
+        "description": "Minecraft Forge JEI/EMI 鍏煎灞傘€傝 JEI/EMI 鑷姩璇诲彇 DataGen 閰嶆柟锛屾垨浣跨敤鐜颁唬 API 娣诲姞鑷畾涔夋樉绀恒€傝Е鍙戣瘝锛欽EI銆丒MI銆丷ecipeCategory銆乯ei_plugins銆丒MI銆乪mi",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-compat-jei/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-compat-jei/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-datagen",
+        "description": "Minecraft Forge 鏁版嵁鐢熸垚鍣ㄣ€傜敓鎴愭柟鍧楃姸鎬併€佺墿鍝佹ā鍨嬨€侀厤鏂广€佹垬鍒╁搧琛ㄣ€佹爣绛俱€佽繘搴︺€佽瑷€鏂囦欢銆傝Е鍙戣瘝锛欴ataGen銆丏ataGenerator銆丩ootTables銆丷ecipes銆丅lockStates銆乀agProvider銆丄dvancementProvider銆丩anguageProvider",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-datagen/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-datagen/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-datapack",
+        "description": "mc-datapack",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-datapack/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-datapack/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-dimension",
+        "description": "鑷畾涔夌淮搴︺€丏imensionType銆佷紶閫佷笌璺ㄧ淮搴﹂€昏緫銆傝Е鍙戣瘝锛歞imension銆丏imensionType銆乼eleport",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-dimension/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-dimension/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-effect",
+        "description": "mc-effect",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-effect/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-effect/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-enchantment",
+        "description": "mc-enchantment",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-enchantment/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-enchantment/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-energy",
+        "description": "mc-energy",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-energy/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-energy/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-entity",
+        "description": "Minecraft Forge 瀹炰綋寮€鍙戙€傚垱寤虹敓鐗┿€佸疄浣撳睘鎬с€丄I 鐩爣銆佸疄浣撴覆鏌撳櫒銆傝Е鍙戣瘝锛氬疄浣撱€丒ntity銆丩ivingEntity銆丒ntityType銆丮obCategory銆丒ntityRenderer",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-entity/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-entity/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-fluid",
+        "description": "娴佷綋寮€鍙戯紙Forge 1.20.1锛?,
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-fluid/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-fluid/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-gametest",
+        "description": "mc-gametest",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-gametest/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-gametest/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-gui",
+        "description": "Minecraft Forge GUI/鑿滃崟寮€鍙戙€傚垱寤鸿嚜瀹氫箟 ContainerMenu銆丼creen銆丏ataSlot 鏁版嵁鍚屾銆傝Е鍙戣瘝锛歋creen銆丮enu銆丆ontainerMenu銆丮enuType銆丮enuScreens銆乹uickMoveStack銆両ContainerFactory銆丆ontainerData銆丏ataSlot",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-gui/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-gui/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-item",
+        "description": "鐗╁搧寮€鍙戯紙Forge 1.20.1锛?,
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-item/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-item/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-loottable",
+        "description": "mc-loottable",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-loottable/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-loottable/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-mixin",
+        "description": "Minecraft Forge Mixin 娉ㄥ叆銆傚畨鍏ㄤ娇鐢?@Mixin銆丂Inject銆丂At銆丂ModifyVariable銆傝Е鍙戣瘝锛歁ixin銆丂Inject銆丂At銆乵ixins.json銆丄ccessTransformer銆丄SM",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-mixin/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-mixin/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-model",
+        "description": "mc-model",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-model/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-model/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-multiblock",
+        "description": "mc-multiblock",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-multiblock/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-multiblock/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-networking",
+        "description": "Minecraft Forge 缃戠粶閫氫俊銆傛敞鍐岀綉缁滈€氶亾銆佸彂閫佹暟鎹寘銆丆2S/S2C 娑堟伅銆丼impleChannel銆傝Е鍙戣瘝锛氱綉缁溿€佹秷鎭€丯etwork銆丼impleChannel銆丳acketDistributor銆丗riendlyByteBuf",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-networking/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-networking/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-particle",
+        "description": "Minecraft Forge 绮掑瓙鏁堟灉寮€鍙戙€侾articleType 娉ㄥ唽銆丳articleProvider銆乸articles.json銆丼priteSet銆佹覆鏌撱€傝Е鍙戣瘝锛歅article銆丳articleType銆丳articleProvider銆丷egisterParticleProvidersEvent銆丳articleRenderType",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-particle/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-particle/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-potion",
+        "description": "mc-potion",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-potion/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-potion/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-recipe",
+        "description": "Minecraft Forge 鑷畾涔夐厤鏂瑰紑鍙戙€俁ecipeType銆丷ecipeSerializer銆佽嚜瀹氫箟閰嶆柟瀹炵幇銆丏atagen銆傝Е鍙戣瘝锛歊ecipe銆丷ecipeType銆丷ecipeSerializer銆丷ecipeProvider銆丳rocessingRecipe銆両ngredient",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-recipe/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-recipe/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-registry",
+        "description": "NeoForge 1.20.1 娉ㄥ唽銆侳orge 鍏煎 DeferredRegister銆?,
+        "relPosix": "neoforge/1.20.1/.cursor/skills/mc-registry/SKILL.md",
+        "absPath": "H:/MC_skill/neoforge/1.20.1/.cursor/skills/mc-registry/SKILL.md"
+      },
+      {
+        "name": "mc-renderer",
+        "description": "mc-renderer",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-renderer/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-renderer/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-resourcepack",
+        "description": "mc-resourcepack",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-resourcepack/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-resourcepack/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-sound",
+        "description": "澹伴煶寮€鍙戯紙Forge 1.20.1锛?,
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-sound/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-sound/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-structure",
+        "description": "mc-structure",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-structure/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-structure/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-villager",
+        "description": "mc-villager",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-villager/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-villager/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-weather",
+        "description": "澶╂皵銆侀浄鏆淬€侀檷闆ㄤ笌缁村害姘斿€欑浉鍏?API銆傝Е鍙戣瘝锛歸eather銆乼hunder銆乺ain銆乥iome climate",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-weather/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-weather/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      },
+      {
+        "name": "mc-worldgen",
+        "description": "mc-worldgen",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-worldgen/SKILL.md",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-worldgen/SKILL.md",
+        "source": "forge/1.20.1",
+        "mappingNote": "API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability銆傚寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€傜姝?1.20.4+ Payload / Attachment / DeferredBlock銆?,
+        "skillBanner": "[FORGE_COMPAT_1.20.1] API 褰㈡€佹寜 Forge 1.20.1锛氱綉缁?SimpleChannel銆佹暟鎹?Capability锛涚姝?1.20.4+ Payload / Attachment / DeferredBlock锛涘寘鍚嶄互宸ョ▼鐜版湁 import 涓?search_neoforge_docs(version=1.20.1) 涓哄噯锛岀姝㈤粯鍐欍€?
+      }
+    ],
+    "libSkills": [
+      {
+        "name": "mc-architectury",
+        "description": "Architectury 璺ㄥ姞杞藉櫒鎶借薄銆傝Е鍙戣瘝锛欰rchitectury銆佸鍔犺浇鍣ㄣ€乵ultiloader銆丂ExpectPlatform銆佷竴鐮佸绔€乧ommon 婧愰泦銆乤rchitectury-plugin銆乤rchitectury-loom",
+        "relPosix": "knowledge/libs/all-platforms/mc-architectury/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-architectury/SKILL.md"
+      },
+      {
+        "name": "mc-author-shared-libs",
+        "description": "浣滆€呭叏瀹舵《鍏变韩搴撲緷璧栨爲绾緥銆傝Е鍙戣瘝锛欳ollective銆丳uzzles Lib銆丅ookshelf銆丮aLiLib銆並iwi銆丼ophisticated Core銆丆orgiLib銆丯ecronomicon銆丩ibZ銆丮antle銆丩ibX銆丳lacebo銆両ceberg銆丟litchCore銆丆reativeCore銆佸叏瀹舵《銆佸叡浜簱銆佷緷璧栨爲銆佷负浠€涔堝浜嗕釜搴?,
+        "relPosix": "knowledge/libs/all-platforms/mc-author-shared-libs/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-author-shared-libs/SKILL.md"
+      },
+      {
+        "name": "mc-balm",
+        "description": "Balm 璺ㄥ姞杞藉櫒鎶借薄灞傦紙Blay锛夈€傛敞鍐?浜嬩欢/缃戠粶/閰嶇疆/鎸夐敭涓€鐮佸绔紝闆剁涓夋柟渚濊禆銆傝Е鍙戣瘝锛欱alm銆乥alm銆佽法骞冲彴鎶借薄銆乄aystones銆丅lay銆乧ross-platform",
+        "relPosix": "knowledge/libs/all-platforms/mc-balm/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-balm/SKILL.md"
+      },
+      {
+        "name": "mc-caelus",
+        "description": "Caelus API 闉樼繀椋炶鎶借薄搴擄紙TheIllusiveC4锛夛紝鎶婇灅缈呴琛屾娊璞′负瀹炰綋灞炴€с€傝Е鍙戣瘝锛欳aelus銆乧aelus銆侀灅缈呫€丒lytra銆侀琛屽睘鎬с€侀琛岃兘鍔涖€乀heIllusiveC4銆乪lytra flight",
+        "relPosix": "knowledge/libs/all-platforms/mc-caelus/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-caelus/SKILL.md"
+      },
+      {
+        "name": "mc-compat-jei",
+        "description": "JEI/EMI/REI 閰嶆柟鏌ョ湅鍣ㄦ彃浠堕泦鎴愩€傝Е鍙戣瘝锛欽EI銆丒MI銆丷EI銆侀厤鏂规樉绀恒€丷ecipeCategory銆乯ei_plugins銆丒miPlugin銆丷EIClientPlugin銆侀厤鏂规煡鐪嬪櫒銆佽蒋渚濊禆",
+        "relPosix": "knowledge/libs/all-platforms/mc-compat-jei/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-compat-jei/SKILL.md"
+      },
+      {
+        "name": "mc-config",
+        "description": "閰嶇疆搴撻€夊瀷鎬荤翰銆傝Е鍙戣瘝锛氶厤缃€乧onfig銆丆onfigScreen銆丗orgeConfigSpec銆丆loth銆乊ACL銆丗zzy銆乷wo-config銆侀厤缃晫闈€丆onfigBuilder銆丮od Menu",
+        "relPosix": "knowledge/libs/all-platforms/mc-config/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-config/SKILL.md"
+      },
+      {
+        "name": "mc-curios",
+        "description": "Curios 楗板搧妲斤紙NeoForge锛夈€傝Е鍙戣瘝锛欳urios銆侀グ鍝佹Ы銆乤ccessory銆乻lot銆乧urio銆佽澶囨Ы",
+        "relPosix": "knowledge/libs/neo-only/mc-curios/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/neo-only/mc-curios/SKILL.md"
+      },
+      {
+        "name": "mc-geckolib",
+        "description": "GeckoLib 3D 楠ㄩ鍔ㄧ敾銆傝Е鍙戣瘝锛欸eckoLib銆乬ecko銆佸姩鐢汇€丟eoModel銆丅lockbench銆侀楠煎姩鐢汇€佸疄浣撳姩鐢汇€乸layerAnimator",
+        "relPosix": "knowledge/libs/all-platforms/mc-geckolib/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-geckolib/SKILL.md"
+      },
+      {
+        "name": "mc-kotlin-for-forge",
+        "description": "Kotlin for Forge锛圞FF锛夎瑷€鍔犺浇鍣紙NeoForge锛夈€傝Е鍙戣瘝锛欿otlin銆並FF銆乲otlinforforge銆佸崗绋嬨€乧oroutines銆佽瑷€鍔犺浇鍣?,
+        "relPosix": "knowledge/libs/neo-only/mc-kotlin-for-forge/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/neo-only/mc-kotlin-for-forge/SKILL.md"
+      },
+      {
+        "name": "mc-kubejs",
+        "description": "KubeJS 鏁村悎鍖呰剼鏈紩鎿庛€侸S 鑴氭湰鏀归厤鏂?娉ㄥ唽鐗╁搧鏂瑰潡/鏀?tag/鐑噸杞斤紝寮€鍙戞湡閰?ProbeJS銆傝Е鍙戣瘝锛欿ubeJS銆乲ubejs銆佽剼鏈€乯avascript銆乺ecipe 鑴氭湰銆丳robeJS銆佹暣鍚堝寘",
+        "relPosix": "knowledge/libs/all-platforms/mc-kubejs/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-kubejs/SKILL.md"
+      },
+      {
+        "name": "mc-lib-catalog",
+        "description": "搴撴ā缁勬€荤洰褰曚笌璺敱涓灑銆傝Е鍙戣瘝锛氬簱妯＄粍銆乴ibrary銆丆loth Config銆乊ACL銆丟eckoLib銆丄rchitectury銆丆urios銆乀rinkets銆丣EI銆丒MI銆丷EI銆侀厤缃簱銆佸姩鐢诲簱銆佸叏瀹舵《搴撱€佷緷璧栨爲銆侀€夊摢涓簱銆乲nowledge/libs",
+        "relPosix": "knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md"
+      },
+      {
+        "name": "mc-modern-ui",
+        "description": "Modern UI 鐜颁唬鏂囨湰鎺掔増涓?GUI 搴撱€備腑鏂?Unicode/emoji 娓叉煋锛圫DF 鎶楅敮榻裤€佸瓧浣撳洖閫€銆丠arfBuzz锛? GUI 鎺т欢 API銆傝Е鍙戣瘝锛歁odern UI銆乵odernui銆乵odern-ui銆佹帓鐗堛€乁nicode銆佸瓧浣撴覆鏌撱€佷腑鏂囨覆鏌?,
+        "relPosix": "knowledge/libs/all-platforms/mc-modern-ui/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-modern-ui/SKILL.md"
+      },
+      {
+        "name": "mc-moonlight-lib",
+        "description": "Moonlight Lib锛堝師 Selene锛夊姩鎬佹敞鍐?璧勬簮搴擄紙MehVahdJukaar锛夛紝鍔ㄦ€佹敞鍐屻€丅lockSetAPI銆佹潙姘?AI銆佹祦浣撶郴缁熴€傝Е鍙戣瘝锛歁oonlight銆丮oonlight Lib銆丼elene銆丮ehVahdJukaar銆佸姩鎬佹敞鍐屻€丅lockSetAPI銆丅lock Set銆佹潙姘?AI銆丼upplementaries銆丼awmill",
+        "relPosix": "knowledge/libs/all-platforms/mc-moonlight-lib/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-moonlight-lib/SKILL.md"
+      },
+      {
+        "name": "mc-owo",
+        "description": "owo-lib 閰嶇疆涓?GUI锛坥wo-config銆乷wo-ui锛夈€傝Е鍙戣瘝锛歰wo銆乷wo-lib銆乷wo-config銆乷wo-ui銆亀ispforest銆佹敞瑙ｅ紡閰嶇疆銆佽嚜鍔ㄩ厤缃晫闈?,
+        "relPosix": "knowledge/libs/all-platforms/mc-owo/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-owo/SKILL.md"
+      },
+      {
+        "name": "mc-patchouli",
+        "description": "Patchouli 娓告垙鍐呮寚鍗椾功銆俠ook 璧勬簮鏀?data/<modid>/patchouli_books/锛孞SON 椹卞姩銆佽嚜瀹氫箟椤甸潰绫诲瀷鎵嶅啓 Java銆傝Е鍙戣瘝锛歅atchouli銆乸atchouli銆佹寚鍗椾功銆乬uidebook銆乥ook.json銆佹墜鍐?,
+        "relPosix": "knowledge/libs/all-platforms/mc-patchouli/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-patchouli/SKILL.md"
+      },
+      {
+        "name": "mc-pehkui",
+        "description": "Pehkui 瀹炰綋缂╂斁 API銆傛寜 20+ 缂╂斁绫诲瀷鍒嗗埆鎺у埗瀹炰綋灏哄锛堣韩楂?瀹藉害/瑙嗚窛/鍛戒腑鐩掞級锛屽钩婊戣繃娓″姩鐢汇€傝Е鍙戣瘝锛歅ehkui銆乸ehkui銆佺缉鏀俱€乻cale銆乺esize銆佸疄浣撳昂瀵?,
+        "relPosix": "knowledge/libs/all-platforms/mc-pehkui/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-pehkui/SKILL.md"
+      },
+      {
+        "name": "mc-playeranimator",
+        "description": "playerAnimator 鐜╁鍏抽敭甯у姩鐢汇€傜粰鐜╁鍔犳敾鍑?鏂芥硶/鎸佹彙濮挎€佸姩鐢伙紝bendy-lib 寮洸澧炲己銆傝Е鍙戣瘝锛歱layerAnimator銆乸layer-animator銆佸叧閿抚銆佺帺瀹跺姩鐢汇€乥endy銆乲eyframe銆乤nimation",
+        "relPosix": "knowledge/libs/all-platforms/mc-playeranimator/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-playeranimator/SKILL.md"
+      },
+      {
+        "name": "mc-resourceful-lib",
+        "description": "Resourceful Lib 璺ㄥ钩鍙板伐鍏峰簱锛圱eam Resourceful锛夛紝璺ㄥ钩鍙扮綉缁溿€乧odec 宸ュ叿銆佸唴瀛樿祫婧愬寘銆丠ighlight API銆傝Е鍙戣瘝锛歊esourceful Lib銆乺esourcefullib銆乀eam Resourceful銆丷esourceful Bees銆丄d Astra銆佸唴瀛樿祫婧愬寘銆丠ighlight",
+        "relPosix": "knowledge/libs/all-platforms/mc-resourceful-lib/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-resourceful-lib/SKILL.md"
+      },
+      {
+        "name": "mc-server-translations",
+        "description": "Server Translations API 鏈嶅姟绔炕璇戝簱锛圢ucleoidMC锛夛紝鏈嶅姟绔寜鐜╁璇█娓叉煋鍙炕璇戞枃鏈€傝Е鍙戣瘝锛歋erver Translations銆丼erver Translations API銆佹湇鍔＄缈昏瘧銆佹湇鍔＄ i18n銆丯ucleoid銆佸彲缈昏瘧鏂囨湰銆乼ranslatable銆丼erver I18n",
+        "relPosix": "knowledge/libs/all-platforms/mc-server-translations/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-server-translations/SKILL.md"
+      },
+      {
+        "name": "mc-spruceui",
+        "description": "SpruceUI / ObsidianUI GUI 鎶借薄搴擄紝璺ㄥ姞杞藉櫒鎺т欢涓庡竷灞€鎶借薄锛圓rchitectury 绉绘寤剁画锛夈€傝Е鍙戣瘝锛歋pruceUI銆丱bsidianUI銆丱bsidian UI銆丟UI 鎶借薄銆佹帶浠跺簱銆丄rchitectury銆丩ambdAurora",
+        "relPosix": "knowledge/libs/all-platforms/mc-spruceui/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-spruceui/SKILL.md"
+      },
+      {
+        "name": "mc-terrablender",
+        "description": "TerraBlender 缇ょ郴 region API銆傚線鐜版湁涓栫晫鐢熸垚閲屽姞鑷畾涔夌敓鐗╃兢绯汇€侀厤缃?Surface Rule銆佷笌 BOP/BYG 鍏卞瓨銆傝Е鍙戣瘝锛歍erraBlender銆乼errablender銆乺egion銆佺敓鐗╃兢绯汇€乥iome銆丼urfaceRule銆佺兢绯绘ā缁?,
+        "relPosix": "knowledge/libs/all-platforms/mc-terrablender/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-terrablender/SKILL.md"
+      },
+      {
+        "name": "mc-yacl",
+        "description": "YACL 閰嶇疆搴撻泦鎴愩€傝Е鍙戣瘝锛歒ACL銆乊etAnotherConfigLib銆侀厤缃睆銆丅uilder 閰嶇疆銆乮sxander",
+        "relPosix": "knowledge/libs/all-platforms/mc-yacl/SKILL.md",
+        "absPath": "H:/MC_skill/knowledge/libs/all-platforms/mc-yacl/SKILL.md"
+      }
+    ],
+    "skillBodies": [],
+    "nextReads": [
+      {
+        "name": "mc-block",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-block/SKILL.md",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-block/SKILL.md",
+        "description": "鏂瑰潡寮€鍙戯紙Forge 1.20.1锛?
+      },
+      {
+        "name": "mc-blockentity",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-blockentity/SKILL.md",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-blockentity/SKILL.md",
+        "description": "Minecraft Forge 鏂瑰潡瀹炰綋寮€鍙戙€侭lockEntity 娉ㄥ唽銆乀icker銆丆ontainerData/Menu 鑱斿姩銆丅lockEntityRenderer銆傝Е鍙戣瘝锛欱lockEntity銆丅lockEntityType銆丒ntityBlock銆乬etTicker銆乻aveAdditional銆乴oad銆乬etUpdateTag銆乬etUpdatePacket"
+      },
+      {
+        "name": "mc-fluid",
+        "absPath": "H:/MC_skill/forge/1.20.1/.cursor/skills/mc-fluid/SKILL.md",
+        "relPosix": "forge/1.20.1/.cursor/skills/mc-fluid/SKILL.md",
+        "description": "娴佷綋寮€鍙戯紙Forge 1.20.1锛?
+      }
+    ],
+    "baseRuleIds": [
+      "00",
+      "01",
+      "02",
+      "09"
+    ],
+    "rulesMode": "extended",
+    "warnings": [],
+    "libSkillsNote": "搴?Skill 鍙湪 libSkills[]锛屼笉杩涘叆 skills[] 涓?nextReads銆傞』璇?libSkills[]锛涘彧鏈夋樉寮?skillNames 鎵嶆敞鍏ュ簱姝ｆ枃锛堣鍏?skillBodies 涓婇檺 8锛夈€備笉纭畾鍏堣 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md銆?,
+    "includeAllRules": false,
+    "ideLoadNotes": "鍚?IDE 鎵笉鍒扮煡璇嗗簱閲屽祵濂楃殑 forge/<ver>/.cursor锛堟墦寮€鐨勬槸鐢ㄦ埛妯＄粍宸ョ▼锛夈€備細璇濆寘鍙湇鍔″綋鍓嶅璇濓紱瑕佸伐绋嬪唴甯搁┗璇?activate_platform_pack action=write锛坔osts 蹇呭～锛夈€備笉瑕佹妸瑙勫垯鎷疯繘 MC_skill 浠撳簱鏍广€?
+  }
+}
