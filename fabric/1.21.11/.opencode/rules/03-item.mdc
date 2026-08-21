@@ -1,0 +1,127 @@
+# 03 — 物品开发
+
+> 适用版本：Fabric 1.21.11
+
+---
+
+## 约束
+
+### 核心原则
+
+- 物品必须在 `Registry.register(Registries.ITEM, id, item)` 中注册
+- mod ID 使用 `Identifier.of(MOD_ID, "name")` 构造
+- **禁止**通过 `new Item()` 后不注册的方式使用
+- Yarn `Item.Settings` 默认 maxCount=64、maxDamage=0（不可损坏），不是 Integer.MAX_VALUE
+
+---
+
+## Decision Flow
+
+### Decision: 选择物品类型
+
+```
+IF 只是手持物品（无特殊行为）
+  → new Item(new Item.Settings())
+
+IF 是工具（剑/镐）
+  → new Item(ToolMaterial.IRON.applySwordSettings / applyToolSettings)
+  → 不要 DiggerItem、不要编造 DurableToolItem、不要抄已删除的 SwordItem 类
+
+IF 是盔甲
+  → 使用 ArmorItem + ArmorMaterial
+
+IF 是食物
+  → Item.Settings.food(FoodComponent)
+
+IF 是可耐久工具
+  → Settings.maxDamage(...) 或走 ToolMaterial 的耐久
+
+IF 需要自定义行为
+  → 继承 Item 并重写 use()、useOnBlock()、useOnEntity()、inventoryTick()
+```
+
+---
+
+## 基本物品
+
+```java
+private static final Item MY_ITEM = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "my_item"),
+    new Item(new Item.Settings().maxCount(64))
+);
+```
+
+## 食物
+
+`FoodComponent` 在 `net.minecraft.component.type`。Yarn 此档 Builder 有 `nutrition` / `saturationModifier` / `alwaysEdible` / `build`，**没有** `hunger`、`snack`、`statusEffect`。
+
+```java
+private static final Item MY_APPLE = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "golden_apple"),
+    new Item(new Item.Settings()
+        .food(new FoodComponent.Builder()
+            .nutrition(4)
+            .saturationModifier(1.2f)
+            .alwaysEdible()
+            .build())
+        .maxCount(64))
+);
+```
+
+## 工具
+
+Yarn 1.21.11 **没有** `SwordItem.mapping`。`ToolMaterial` 是 record（`ToolMaterial.IRON` / `COPPER` 等）。用 `applySwordSettings` / `applyToolSettings` 配 `new Item(...)`。
+
+```java
+private static final Item IRON_SWORD = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "example_sword"),
+    new Item(ToolMaterial.IRON.applySwordSettings(new Item.Settings(), 3.0f, -2.4f))
+);
+
+private static final Item IRON_PICKAXE = Registry.register(
+    Registries.ITEM,
+    Identifier.of(MOD_ID, "example_pickaxe"),
+    new Item(ToolMaterial.IRON.applyToolSettings(
+        new Item.Settings(), BlockTags.PICKAXE_MINEABLE, 1.0f, -2.8f, 0.0f))
+);
+```
+
+自定义材质：`new ToolMaterial(incorrectBlocksForDrops, durability, speed, attackDamageBonus, enchantmentValue, repairItems)`，其中 `repairItems` 是 `TagKey<Item>`，不是 `Ingredient`。
+
+## 自定义物品行为
+
+Yarn 1.21.11 `Item#use` 返回 `ActionResult`（不再是 `TypedActionResult`）。
+
+```java
+public class MySpecialItem extends Item {
+    public MySpecialItem(Settings settings) {
+        super(settings);
+    }
+
+    @Override
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        return ActionResult.SUCCESS;
+    }
+}
+```
+
+## 常见错误
+
+- ❌忘记注册 `Item` — 物品不会出现在游戏中
+- ❌ `BlockItem` 与 `Block` 使用不同的 registry name — 导致物品形态缺失
+- ❌ 耐久物品忘记设置 `maxDamage` — 物品无法消耗耐久
+- ❌ 在 `onInitialize()` 外注册 — 注册不会生效
+- ❌ 食物 Builder 用错 `hunger`/`nutrition`（按本档上方示例）
+- ❌ `DiggerItem` / `DurableToolItem` / `getItemStack` / `Ingredient.of`（Yarn 用 `ofItems`）
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-registry` | 物品通过 Registry.register() 注册 |
+| `mc-datagen` | 物品注册后可生成物品模型 JSON |
+| `mc-block` | BlockItem 需要先有注册的 Block |
+| `mc-capability` | 原版没有 Forge Capability；第三方库另见对应 Skill |

@@ -216,7 +216,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 1.20.1 同 Forge SimpleChannel 形态；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
-3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
+3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架，但 warnings 会列出精确 token。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
 4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
   },
   "mc-capability": {
@@ -232,7 +232,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
-3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 复用 Forge 1.20.1 模板；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 1.21.1/1.21.4/1.21.8 为 generate()，1.21.10/1.21.11 为 buildRecipes，26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 1.21.1/1.21.4/1.21.8 为 generate()，1.21.10/1.21.11 为 buildRecipes，26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
 4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
   },
   "mc-audio-vfx": {
@@ -303,9 +303,30 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-kotlin": {
     title: "Kotlin 模组清单",
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。
-1. Forge/Neo：Kotlin for Forge（库 Skill mc-kff，knowledge/libs）。Fabric：fabric-language-kotlin。
+1. Forge/Neo：Kotlin for Forge（库 Skill mc-kotlin-for-forge）。Fabric/Quilt：fabric-language-kotlin（库 Skill mc-fabric-language-kotlin）。
 2. 不要混用 gradle.kts 记忆与 Java 入口。session 仍用本档 Java 规则 + 库 Skill。
 3. 只出依赖与入口清单；Gradle 由用户确认后执行。`,
+  },
+  "mc-villager": {
+    title: "村民职业 / 交易清单",
+    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-villager；规则 04-entity。
+1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
+2. 先 activate_platform_pack action=session（task=mc-villager），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。
+3. 职业/交易 API 以本档 search_*_docs + Skill 为准，禁止抄邻档 VillagerProfession 签名。`,
+  },
+  "mc-multiblock": {
+    title: "多方块结构清单",
+    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-multiblock；规则 02-block / 07-datagen。
+1. 确认平台与精确 MC 版本。
+2. 先 activate_platform_pack action=session（task=mc-multiblock）。结构匹配与方块实体以本档文档为准。
+3. 无生成器模板时 search_*_docs 手动编写，不要理解为游戏里做不了。`,
+  },
+  "mc-ai": {
+    title: "实体 AI / Goal 清单",
+    body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-ai；规则 04-entity。
+1. 确认平台与精确 MC 版本。
+2. 先 activate_platform_pack action=session（task=mc-ai）。Goal / Brain 类名核 search_*_docs。
+3. 禁止把 1.12 AI 任务表抄进 1.20+。`,
   },
   "mc-jei": {
     title: "JEI/REI 兼容清单",

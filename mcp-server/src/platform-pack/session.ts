@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "fs";
 import { join } from "path";
-import { actionable } from "../utils/actionable.js";
-import { docsToolForPlatform } from "../loader-api/keys.js";
+import { actionable, ActionCodes } from "../utils/actionable.js";
+import { packNotFoundNextSteps, packNotFoundRelatedTools } from "./pack-not-found.js";
 import { ownGet } from "../utils/own-record.js";
 import { resolveRepoRoot } from "../utils/path.js";
 import {
@@ -36,7 +36,7 @@ const BASE_ONLY_WARNING =
   "已加载底座规则 00/01/09；写方块/物品请立刻再 session 传 task=mc-new-block / mc-new-item（或 topics）。如涉及 GUI/网络等主题，请传 task 或 topics，否则主题规则不在上下文中。";
 
 function missingBaseRulesWarning(missingIds: string[]): string {
-  return `本档 .cursor/rules 缺少底座 ${missingIds.join("/")}，rules[] 未注入这些正文。不要把 ok=true 当已加载 00/01/09。`;
+  return `平台包存在但底座规则文件缺失（${missingIds.join("/")}），rules[] 未注入这些正文。不要把 session 当已加载 00/01/09。`;
 }
 
 const NO_PLATFORM_SKILLS_WARNING =
@@ -113,6 +113,12 @@ const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-enchant-potion": { rules: ["03"], skills: ["mc-enchantment", "mc-potion", "mc-effect"], nextReads: [] },
   "mc-energy": { rules: ["05"], skills: ["mc-energy", "mc-capability"], nextReads: [] },
   "mc-creative-tags": { rules: ["03"], skills: [], nextReads: [] },
+  "mc-villager": { rules: ["04"], skills: ["mc-villager"], nextReads: [] },
+  villager: { rules: ["04"], skills: ["mc-villager"], nextReads: [] },
+  "mc-multiblock": { rules: ["02", "07"], skills: ["mc-multiblock"], nextReads: [] },
+  multiblock: { rules: ["02", "07"], skills: ["mc-multiblock"], nextReads: [] },
+  "mc-ai": { rules: ["04"], skills: ["mc-ai"], nextReads: [] },
+  ai: { rules: ["04"], skills: ["mc-ai"], nextReads: [] },
   "mc-kotlin": { rules: ["00"], skills: [], nextReads: [] },
   "mc-jei": { rules: [], skills: ["mc-compat-jei"], nextReads: [] },
   "mc-ci-publish-extra": { rules: ["00"], skills: [], nextReads: [] },
@@ -153,9 +159,19 @@ function uniqueIds(ids: string[]): string[] {
   return out.sort((a, b) => Number(a) - Number(b));
 }
 
-function lookupTask(raw?: string): { spec: TaskSpec | null; key: string; warning?: string } {
+function lookupTask(raw?: string, platform?: string): { spec: TaskSpec | null; key: string; warning?: string } {
   const key = String(raw ?? "").trim().toLowerCase();
   if (!key) return { spec: null, key: "" };
+  if (key === "mc-kotlin" || key === "kotlin") {
+    const p = String(platform ?? "").toLowerCase();
+    const skills =
+      p === "forge" || p === "neoforge"
+        ? ["mc-kotlin-for-forge"]
+        : p === "fabric" || p === "quilt"
+          ? ["mc-fabric-language-kotlin"]
+          : [];
+    return { spec: { rules: ["00"], skills, nextReads: [] }, key: "mc-kotlin" };
+  }
   const spec = ownGet(TASK_SPECS, key);
   if (!isTaskSpec(spec)) {
     return { spec: null, key, warning: `未知 task "${raw}"，已忽略（规则仍用底座 00/01/09）。` };
@@ -263,17 +279,6 @@ export function sessionPlatformPack(args: SessionArgs) {
       !draft && candidates.length
         ? `同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默折叠。`
         : undefined;
-    const extraHints =
-      platform === "fabric" && minecraftVersion === "1.21.5"
-        ? [
-            "禁止读 fabric/1.21.4 或 1.21.8 的 00–10 顶上。",
-            "可改口 search_fabric_docs（先 list_fabric_versions）；最近有文档树的是 1.21.4 / 1.21.8，不要 fallback 正文。ok≠已加载规则。",
-          ]
-        : platform === "forge" && minecraftVersion === "1.21.1"
-          ? [
-              "禁止用 NeoForge 1.21.1 规则顶上。Forge 文档止于 1.20.4；可 search_forge_docs version=1.20.4（须标明不是 1.21.1 规则树）。ok≠已加载规则。",
-            ]
-          : [];
     return {
       ok: false,
       candidates: candidates.length ? candidates : undefined,
@@ -282,8 +287,8 @@ export function sessionPlatformPack(args: SessionArgs) {
         draft
           ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
           : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。ok≠已加载规则。${ask ? ask : ""}`,
-        [`改用 ${docsToolForPlatform(platform)}`, ...(ask ? [ask] : []), ...extraHints],
-        [docsToolForPlatform(platform)],
+        packNotFoundNextSteps(platform, minecraftVersion, ask),
+        packNotFoundRelatedTools(platform),
       ),
     };
   }
@@ -300,7 +305,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     );
   }
   const includeAll = args.includeAllRules === true;
-  const taskLookup = lookupTask(args.task);
+  const taskLookup = lookupTask(args.task, platform);
   if (taskLookup.warning) warnings.push(taskLookup.warning);
   const taskSpec = taskLookup.spec;
   if (taskSpec?.warning) warnings.push(taskSpec.warning);
@@ -414,8 +419,29 @@ export function sessionPlatformPack(args: SessionArgs) {
   }
   const injectedIds = new Set(ruleBodies.map((r) => r.id));
   const missingBase = BASE_RULE_IDS.filter((id) => !injectedIds.has(id));
-  if (missingBase.length) warnings.push(missingBaseRulesWarning(missingBase));
-  else if (rulesMode === "base" && !includeAll) warnings.push(BASE_ONLY_WARNING);
+  if (missingBase.length) {
+    return {
+      ok: false,
+      dest: "session",
+      platform: pack.platform,
+      minecraftVersion,
+      knowledgeVersion: pack.minecraftVersion,
+      packDir: pack.packDir.replace(/\\/g, "/"),
+      rules: ruleBodies,
+      rulesMode,
+      warnings: [missingBaseRulesWarning(missingBase)],
+      action: actionable(
+        ActionCodes.PACK_INCOMPLETE,
+        `平台包存在但底座规则文件缺失（${missingBase.join("/")}）。不要当 session 成功，也不是 PACK_NOT_FOUND。`,
+        [
+          "补齐该档 .cursor/rules 的 00/01/09，或换 list_*_versions 已建档版本",
+          "禁止用邻档规则顶上",
+        ],
+        ["list_fabric_versions", "list_neoforge_versions", "list_forge_versions", "activate_platform_pack"],
+      ),
+    };
+  }
+  if (rulesMode === "base" && !includeAll) warnings.push(BASE_ONLY_WARNING);
 
   return {
     ok: true,
@@ -440,6 +466,18 @@ export function sessionPlatformPack(args: SessionArgs) {
       "库 Skill 只在 libSkills[]，不进入 skills[] 与 nextReads。须读 libSkills[]；只有显式 skillNames 才注入库正文（计入 skillBodies 上限 8）。不确定先读 knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md。",
     includeAllRules: includeAll,
     topicWarnings: topicWarnings.length ? topicWarnings : undefined,
+    next:
+      rulesMode === "base" && !includeAll
+        ? {
+            tool: "activate_platform_pack",
+            arguments: {
+              action: "session",
+              platform: pack.platform,
+              minecraftVersion,
+              task: "mc-new-block",
+            },
+          }
+        : undefined,
     contextWarning: includeAll
       ? "includeAllRules=true 会灌入 00–10 全文，上下文体积大；默认只要 00+01+09。"
       : undefined,

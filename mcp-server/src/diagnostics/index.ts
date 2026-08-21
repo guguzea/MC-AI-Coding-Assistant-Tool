@@ -78,7 +78,7 @@ function relatedToolsForLog(text: string, _version: string): string[] {
     return tools;
   }
   if (/net\.minecraftforge|minecraftforge|javafml/i.test(text)) {
-    tools.push("validate_project");
+    tools.push("validate_project", "search_forge_docs");
   }
   return tools;
 }
@@ -230,7 +230,7 @@ export function classifyJavaFmlToml(toml: string): "forge" | "neoforge" | "unkno
   return "skip";
 }
 
-/** loader 判定：Quilt → Fabric → NeoForge → LiteLoader → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
+/** loader 判定：Quilt → NeoForge → LiteLoader（相对残留 fabric JSON）→ Fabric → Rift（tweaker-client 先于 forge 子串）→ Forge → ModLoader → 基岩 */
 export function detectLoader(
   buildGradle: string,
   modsToml?: string,
@@ -243,11 +243,6 @@ export function detectLoader(
     return "quilt";
   }
 
-  if (fabricModJson && fabricModJson.trim().length > 0) return "fabric";
-  if (/fabric-loom|fabric-api/i.test(buildGradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(buildGradle)) {
-    return "fabric";
-  }
-
   if (neoModsToml && neoModsToml.trim().length > 0) return "neoforge";
   if (/neogradle|net\.neoforged|neoforge/i.test(buildGradle)) return "neoforge";
 
@@ -257,6 +252,14 @@ export function detectLoader(
     /modLoader\s*=\s*"javafml"/i.test(modsToml ?? "") ||
     /@Mod\b/.test(buildGradle);
   const hasLiteMeta = Boolean(litemod) || /LiteMod|litemod\.json/i.test(buildGradle);
+  const leftoverFabricJson = Boolean(fabricModJson?.trim());
+  const fabricLoom =
+    /fabric-loom|fabric-api/i.test(buildGradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(buildGradle);
+
+  // 残留 fabric.mod.json 不得压过 LiteLoader 插件 / litemod.json。
+  // fabric-loom 仍是强 Fabric 信号：Loom 工程里的残留 litemod.json 不得把工程判成 LiteLoader。
+  if (leftoverFabricJson && !hasLlPlugin && !hasLiteMeta) return "fabric";
+  if (fabricLoom && !hasLlPlugin) return "fabric";
 
   if (hasLlPlugin) {
     return "liteloader_forge";
@@ -565,6 +568,7 @@ export function checkDependencies(
   neoModsToml?: string,
   extras?: CheckDependenciesExtras,
 ): Record<string, unknown> {
+  let javaBlob = "";
   if (extras?.projectPath) {
     const resolved = resolveProjectDir(extras.projectPath);
     if (!resolved.ok) {
@@ -582,10 +586,19 @@ export function checkDependencies(
       riftmodJson: preferExplicit(extras.riftmodJson, loaded.riftmodJson),
       addonManifest: preferExplicit(extras.addonManifest, loaded.addonManifest),
     };
+    javaBlob = javaBlobFromFiles(loaded.javaFiles);
   }
   const issues: string[] = [];
   const suggestions: string[] = [];
-  const detectedLoader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml, extras);
+  const detection = detectProjectLoaders({
+    buildGradle,
+    modsToml,
+    fabricModJson,
+    neoModsToml,
+    extras,
+    javaBlob,
+  });
+  const detectedLoader = detection.primary;
   const text = [buildGradle, modsToml, fabricModJson, neoModsToml, extras?.quiltModJson, extras?.litemodJson, extras?.riftmodJson, extras?.addonManifest]
     .filter((s) => s)
     .join("\n");
@@ -638,6 +651,8 @@ export function checkDependencies(
   const result: Record<string, unknown> = {
     ok: issues.length === 0,
     detectedLoader,
+    loaders: detection.loaders,
+    multiLoader: detection.multiLoader,
     issues,
     suggestions,
     detectedLibraries,

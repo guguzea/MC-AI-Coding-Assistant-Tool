@@ -1,0 +1,146 @@
+# 08 — 客户端/服务端分离
+
+> 适用版本：Forge 1.13.2
+
+---
+
+## 约束
+
+### 物理端注解
+
+| 注解 | 含义 | 使用场景 |
+|------|------|----------|
+| `@OnlyIn(Dist.CLIENT)` | 仅在客户端运行 | 渲染器、粒子、输入处理 |
+| `@OnlyIn(Dist.DEDICATED_SERVER)` | 仅在服务端运行 | 服务端逻辑、AI、数据处理 |
+| 无注解 | 客户端和服务端都运行 | 通用逻辑 |
+
+### 线程约束
+
+- **服务端线程**：游戏逻辑处理、事件订阅（大多数）
+- **客户端线程**：渲染、输入（KeyBinding）、粒子效果
+- **禁止**在渲染线程中执行服务端逻辑（如修改世界数据）
+- **禁止**在服务端线程中直接调用客户端渲染方法
+
+### 分离架构
+
+```
+src/main/java/
+├── ExampleMod.java              # 两端都加载
+├── blocks/
+│   └── MyBlock.java           # 两端都加载
+├── client/                     # 仅客户端
+│   ├── ClientSetup.java
+│   └── rendering/
+│       └── MyBlockRenderer.java
+└── init/
+    └── ModEvents.java        # 两端都加载
+```
+
+- **禁止**将 `@OnlyIn(Dist.CLIENT)` 的类放在 `client` 包以外
+- **禁止**在非 `@OnlyIn(Dist.CLIENT)` 的类中调用任何客户端特有方法
+
+### FMLClientSetupEvent vs FMLCommonSetupEvent
+
+- `FMLCommonSetupEvent`：两端都会收到，用于通用初始化
+- `FMLClientSetupEvent`：**仅客户端**收到，用于客户端特有初始化
+
+---
+
+## Decision Flow
+
+### Decision: 代码应该放在哪一端
+
+```
+IF 代码涉及渲染（Model、Render）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及输入（KeyBinding）
+  → 客户端
+  → 放在 client/ 包下
+  → 使用 @OnlyIn(Dist.CLIENT)
+
+IF 代码涉及粒子效果
+  → 客户端
+  → 放在 client/ 包下
+
+IF 代码涉及 GUI（Screen）
+  → 客户端
+  → 放在 client/ 包下
+
+IF 代码涉及游戏逻辑（实体行为、方块交互、数据存储）
+  → 服务端
+  → 使用 @OnlyIn(Dist.DEDICATED_SERVER) 或不标注
+
+IF 代码既涉及渲染又涉及逻辑
+  → 分离处理
+  → 逻辑在服务端（数据包同步）
+  → 渲染在客户端（接收同步数据后渲染）
+
+IF 代码涉及网络消息处理
+  → 客户端消息 → 服务端处理
+  → 服务端消息 → 客户端处理
+  → 消息类两端的代码必须都能运行
+```
+
+---
+
+## 示例：客户端初始化
+
+```java
+// client/ClientSetup.java
+@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        // FMLClientSetupEvent 仅用于客户端特有初始化
+        // KeyBinding 注册
+        ClientRegistry.registerKeyBinding(...);
+    }
+}
+```
+
+> **KeyBinding 注册方式**：使用 `ClientRegistry.registerKeyBinding()`。
+
+## 示例：KeyBinding 处理
+
+```java
+// client/input/ModKeyBindings.java
+public class ModKeyBindings {
+    // KeyMapping 定义
+    public static final KeyBinding TEST_KEY = new KeyBinding(
+        "key.examplemod.test",
+        KeyConflictContext.IN_GAME,
+        InputMappings.Type.KEYSYM,
+        Keyboard.KEY_G,
+        "key.categories.examplemod"
+    );
+
+    @Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+    public static class ClientEvents {
+        @SubscribeEvent
+        public static void onKeyInput(KeyInputEvent event) {
+            if (TEST_KEY.isPressed()) {
+                // 按键按下时的逻辑
+            }
+        }
+    }
+}
+```
+
+## 示例：运行时物理端检测
+
+```java
+// 在代码中判断物理端
+if (FMLEnvironment.dist == Dist.CLIENT) {
+    // 客户端代码
+} else {
+    // 服务端代码
+}
+
+// 或者使用 DistExecutor
+DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> clientMethod());
+```
+
+> 注意：`DistExecutor.runForDist` 和类似方法用于在不同物理端运行不同代码。

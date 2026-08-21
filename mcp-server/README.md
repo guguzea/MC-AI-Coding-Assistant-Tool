@@ -312,7 +312,7 @@ node dist/cli.js activate_platform_pack --action=write --platform=neoforge --min
 node dist/cli.js ingest_loader_api --platform=liteloader --minecraftVersion=1.12.2 --jarPath=<abs> --mappingsVersion=mcp-1.12.2
 ```
 
-`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 8）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展。`write` 不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
+`session` 参数：`topics`（只追加规则号到底座，不注入 Skill 正文）、`task`（同样追加规则；建议名可进 skillBodies）、`skillNames`（与 task 建议名去重后注入正文，skillBodies 总条数上限 8）、`includeAllRules`（灌 00–10 规则全文）。库 Skill 不进 nextReads。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展（`rulesMode=base`，含 `next`）。包存在但缺 00/01/09 → `ok:false` + `PACK_INCOMPLETE`（与无规则树的 `PACK_NOT_FOUND` 区分）。`write` 不要再用 `includeSkills`，改用 `writeSkillStubs`（默认 true，只写 stub）；`includeSkillBodies` 才写知识库 Skill 全文。细节见仓库根 [README.md](../README.md)「规则包加载」。Quilt 本档磁盘 Skill 为 QSL 差异 3 个（`mc-registry` / `mc-events` / `mc-networking`）+ Fabric overlay。Neo 薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 与主档同名集合，不再是 6 个。
 
 Forge 官方文档：先 `list_forge_versions`，再 `search_forge_docs --version=1.12.2`（或 `search_docs --platform=forge --version=1.12.2`）。**不要**用 `query_api` 核 1.12.2 Vanilla 签名（空壳）。查询 `constructor` 等词已用 `ownGet` 避开 `Object.prototype`；改代码后须 **重载 MCP**，或用本 CLI 验证。
 

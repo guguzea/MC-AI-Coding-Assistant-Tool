@@ -16,5 +16,5 @@
 | DataMapType / RegisterDataMapTypesEvent | datamaps |
 | @SubscribeEvent / LivingJumpEvent | concepts/events |
 | DeferredRegister.Entities / createEntities | entities |
-| RegisterPayloadHandlersEvent + PayloadRegistrar | networking/payload |
+| RegisterPayloadHandlersEvent + PayloadRegistrar + DirectionalPayloadHandler（playBidirectional） | networking/payload |
 

@@ -3,7 +3,7 @@ import { isAbsolute, join, resolve } from "path";
 import { detectProjectLoaders, javaBlobFromFiles } from "../diagnostics/index.js";
 import { actionable, ActionCodes } from "../utils/actionable.js";
 import { loadModProject } from "../utils/project-files.js";
-import { docsToolForPlatform } from "../loader-api/keys.js";
+import { packNotFoundNextSteps, packNotFoundRelatedTools } from "./pack-not-found.js";
 import {
   findPack,
   isKnowledgePackScaffold,
@@ -198,17 +198,6 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
       candidates.length > 0
         ? `精确包不存在。同系列已建档：${candidates.join(", ")}。请询问用户选哪一档，禁止静默当成 ${candidates[0]}。`
         : "或 activate_platform_pack action=list 查看已建档版本";
-    const extraHints =
-      platform === "fabric" && minecraftVersion === "1.21.5"
-        ? [
-            "禁止读 fabric/1.21.4 或 1.21.8 的 00–10 顶上。",
-            "可改口 search_fabric_docs（先 list_fabric_versions）；最近有文档树的是 1.21.4 / 1.21.8，不要 fallback 正文。",
-          ]
-        : platform === "forge" && minecraftVersion === "1.21.1"
-          ? [
-              "禁止用 NeoForge 1.21.1 规则顶上。Forge 文档止于 1.20.4；可 search_forge_docs version=1.20.4（须标明不是 1.21.1 规则树）。",
-            ]
-          : [];
     return {
       ok: false,
       projectRoot: resolved.root,
@@ -232,12 +221,8 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
               "向用户询问 platform，禁止默认 Forge",
               "或 activate_platform_pack action=list 查看已建档版本",
             ]
-          : [
-              `改用 ${docsToolForPlatform(platform)}`,
-              candidates.length ? ask : "或 activate_platform_pack action=list 查看已建档版本",
-              ...extraHints,
-            ],
-        platform === "unknown" ? ["activate_platform_pack"] : [docsToolForPlatform(platform)],
+          : packNotFoundNextSteps(platform, minecraftVersion ?? "", ask),
+        platform === "unknown" ? ["activate_platform_pack"] : packNotFoundRelatedTools(platform),
       ),
     };
   }

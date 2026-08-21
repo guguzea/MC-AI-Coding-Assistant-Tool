@@ -397,7 +397,7 @@ export async function searchFabricDocs(
         : undefined;
     const wikiInvolved = resolvedSource === "fabric-wiki" || resolvedSource === "all" || usedWikiFallback;
     const emptyDocsNote = docsEmpty
-      ? "本档 fabric-docs 无版本化页（已清除现行站污染）。不要把 BuiltInRegistries 当旧档 API。"
+      ? "本档 fabric-docs 无版本化页（已清除现行站污染）。index 文件存在但 [] ≠ 可搜官方树；search_fabric_docs 默认改走 wiki。不要把 BuiltInRegistries 当旧档 API。"
       : undefined;
 
     return {

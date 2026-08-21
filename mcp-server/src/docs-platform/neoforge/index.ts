@@ -20,7 +20,6 @@ import {
   VersionNotFoundError,
 } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
-import type { IDocStore } from "../store.js";
 import {
   asPlatformDataMissingResult,
   platformDataMissingResult,
@@ -38,29 +37,27 @@ import {
 } from "./primers.js";
 import { missingMcVersion, versionRequiredAction } from "../../utils/actionable.js";
 
-const DATA_ROOT = resolveDataDir();
+function neoDataRoot(): string {
+  return resolveDataDir();
+}
+
+const _storeByRoot = new Map<string, NeoForgeDocStore>();
+
+function getNeoStore(): NeoForgeDocStore {
+  const root = neoDataRoot();
+  let s = _storeByRoot.get(root);
+  if (!s) {
+    s = new NeoForgeDocStore(root);
+    _storeByRoot.set(root, s);
+  }
+  return s;
+}
 
 function versionRequiredDocResult(): CallToolResult {
   return {
     content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
   };
 }
-
-const store = new NeoForgeDocStore(DATA_ROOT);
-
-// ── 通用工具 store 缓存 ─────────────────────────────────────────────────────
-
-const _genericStoreCache = new Map<string, IDocStore>();
-
-function getGenericStore(): IDocStore {
-  const cacheKey = `neoforge:${DATA_ROOT}`;
-  if (!_genericStoreCache.has(cacheKey)) {
-    _genericStoreCache.set(cacheKey, new NeoForgeDocStore(DATA_ROOT));
-  }
-  return _genericStoreCache.get(cacheKey)!;
-}
-
-// ── 错误处理 ──────────────────────────────────────────────────────────────
 
 function handleError(e: unknown): CallToolResult {
   const miss = asPlatformDataMissingResult(e);
@@ -115,10 +112,10 @@ export const listNeoForgeVersionsSchema = {
 
 export async function listNeoForgeVersions(): Promise<CallToolResult> {
   try {
-    if (!hasPlatformDocData("neoforge", DATA_ROOT)) {
+    if (!hasPlatformDocData("neoforge", neoDataRoot())) {
       return platformDataMissingResult("neoforge");
     }
-    const versions = store.getAvailableVersions();
+    const versions = getNeoStore().getAvailableVersions();
     if (versions.length === 0) return platformDataMissingResult("neoforge");
     return {
       content: [{
@@ -155,10 +152,10 @@ export async function searchNeoForgeDocs(args: {
   tags?: string[];
 }): Promise<CallToolResult> {
   try {
-    if (!hasPlatformDocData("neoforge", DATA_ROOT)) {
+    if (!hasPlatformDocData("neoforge", neoDataRoot())) {
       return platformDataMissingResult("neoforge");
     }
-    const s = getGenericStore() as NeoForgeDocStore;
+    const s = getNeoStore();
     if (missingMcVersion(args.version)) return versionRequiredDocResult();
     const version = args.version!.trim();
     const resolution = s.describeVersionResolution(version);
@@ -182,7 +179,7 @@ export async function searchNeoForgeDocs(args: {
           "neoforge",
           detailed.resolvedVersion,
           "neoforge-docs",
-          DATA_ROOT,
+          neoDataRoot(),
         );
     let results = semanticHits === null
       ? detailed.results
@@ -191,7 +188,7 @@ export async function searchNeoForgeDocs(args: {
           limit: 20,
           version: detailed.resolvedVersion,
         });
-    const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: DATA_ROOT });
+    const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {
       const seen = new Set(results.map((r) => r.id));
       results = [...primerHits.filter((p) => !seen.has(p.id)), ...results].slice(0, 20);
@@ -260,7 +257,7 @@ export async function getNeoForgeDocSummary(args: {
         content: [{ type: "text", text: JSON.stringify(primerSummaryPayload(primer), null, 2) }],
       };
     }
-    const s = getGenericStore() as NeoForgeDocStore;
+    const s = getNeoStore();
     const resolution = s.describeVersionResolution(version);
     const summary = s.loadSummary(args.id, version);
     return {
@@ -315,7 +312,7 @@ export async function getNeoForgeDocFull(args: {
         }],
       };
     }
-    const s = getGenericStore() as NeoForgeDocStore;
+    const s = getNeoStore();
     const resolution = s.describeVersionResolution(version);
     const result = await s.loadFullDoc(args.id, version, args.highlight_key ?? true);
     return {
@@ -379,7 +376,7 @@ export async function getNeoForgeDocRelated(args: {
         }],
       };
     }
-    const s = getGenericStore() as NeoForgeDocStore;
+    const s = getNeoStore();
     const resolution = s.describeVersionResolution(version);
     const results = s.getRelatedDocs(args.id, version, args.limit ?? 5);
     return {

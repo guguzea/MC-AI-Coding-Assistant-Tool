@@ -27,4 +27,4 @@
 | 05 | `05-events.mdc` | 仅 QSL 分叉 |
 | 02–04, 06–10 | overlay | `fabric/1.21.11/.cursor/rules/` |
 
-`query_api` 对 1.21.11 无 Vanilla 索引。QSL：先 `list_doc_versions`；**禁止** `search_docs version=1.21.11`（`VERSION_NOT_FOUND`）。QSL 可 `search_docs({platform:"quilt", version:"1.21.1"})` 并声明 fallback。Vanilla/FAPI 走 `search_fabric_docs version=1.21.11`。
+`query_api` 对 1.21.11 无 Vanilla 索引。QSL：`search_docs({platform:"quilt", version:"1.21.11"})`（本档 quilt-docs 已入库）。Vanilla/FAPI 走 `search_fabric_docs version=1.21.11`。QSL 专用查询禁止把 Fabric Registry 当命中。

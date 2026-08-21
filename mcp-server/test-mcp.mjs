@@ -321,6 +321,19 @@ async function runTests() {
   console.log(`  found=${content3.found}  suggestions: ${content3.suggestions?.join(" | ") ?? "n/a"}`);
   console.log();
 
+  console.log("[Test A3b] Handler ambiguous; Item unique simple name");
+  const rHandler = await callTool("query_api", { className: "Handler", version: "1.20.1" });
+  const cHandler = JSON.parse(rHandler.result.content[0].text);
+  assert.equal(cHandler.found, false, `Handler must not be a hit: ${JSON.stringify(cHandler)}`);
+  assert.ok(!cHandler.methods?.length, "Handler must not return methods");
+  const rItem = await callTool("query_api", { className: "Item", version: "1.20.1" });
+  const cItem = JSON.parse(rItem.result.content[0].text);
+  assert.equal(cItem.found, true, `Item simple name must hit: ${JSON.stringify(cItem.suggestions)}`);
+  assert.equal(cItem.className, "net.minecraft.world.item.Item");
+  assert.equal(cItem.autoCorrected, true);
+  console.log(`  Handler found=${cHandler.found}; Item autoCorrected=${cItem.autoCorrected}`);
+  console.log();
+
   // ── 通用 doc 工具（非 forge 平台测试）──────────────────────────────────────
 
   console.log("[Test D6] search_docs: platform=neoforge");

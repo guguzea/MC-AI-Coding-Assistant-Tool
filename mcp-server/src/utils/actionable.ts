@@ -43,7 +43,10 @@ export const ActionCodes = {
   FALLBACK_IDENTITY: "FALLBACK_IDENTITY",
   WRONG_TOOL: "WRONG_TOOL",
   VERSION_REQUIRED: "VERSION_REQUIRED",
+  PACK_INCOMPLETE: "PACK_INCOMPLETE",
+  PACK_NOT_FOUND: "PACK_NOT_FOUND",
   PICK_PLATFORM: "PICK_PLATFORM",
+  VERSION_FALLBACK: "VERSION_FALLBACK",
 } as const;
 
 export function missingMcVersion(version: string | undefined | null): boolean {

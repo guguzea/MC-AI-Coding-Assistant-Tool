@@ -24,7 +24,7 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
-import { detectLoader, classifyJavaFmlToml, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
+import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
@@ -804,6 +804,15 @@ async function testDatagenAndMappingGates() {
   assert.equal(blck.found, false, "edit-distance Blck must not be a hit");
   const joined = (blck.suggestions ?? []).join(" ");
   assert.ok(!/\bPack\b/.test(joined), `Blck must not suggest Pack: ${joined}`);
+  const handler = await queryApi({ className: "Handler", version: "1.20.1" });
+  assert.equal(handler.found, false, "ambiguous Handler must not hit MouseHandler");
+  assert.ok(!handler.methods?.length, "ambiguous Handler must not return methods");
+  assert.notEqual(handler.className, "net.minecraft.client.MouseHandler");
+  const itemSimple = await queryApi({ className: "Item", version: "1.20.1" });
+  assert.equal(itemSimple.found, true, "unique simple name Item must hit");
+  assert.equal(itemSimple.className, "net.minecraft.world.item.Item");
+  assert.equal(itemSimple.autoCorrected, true);
+  assert.equal(itemSimple.requestedClassName, "Item");
   const q1211 = await queryApi({
     className: "net.minecraft.world.entity.LivingEntity",
     version: "1.21.1",
@@ -811,6 +820,22 @@ async function testDatagenAndMappingGates() {
   assert.equal(q1211.found, false);
   assert.equal(q1211.action?.code, "DATA_UNAVAILABLE");
   assert.ok(q1211.warning && /无 Vanilla API 索引/.test(q1211.warning), JSON.stringify(q1211).slice(0, 500));
+  const { getMethodParams } = await import("./dist/mappings/convert.js");
+  const overloads = getMethodParams({
+    className: "net.minecraft.world.entity.LivingEntity",
+    methodName: "addEffect",
+    version: "1.20.1",
+  });
+  assert.equal(overloads.found, false, JSON.stringify(overloads).slice(0, 400));
+  assert.equal(overloads.ambiguous, true);
+  assert.ok(Array.isArray(overloads.candidates) && overloads.candidates.length > 1);
+  const noIdx = getMethodParams({
+    className: "net.minecraft.world.item.Item",
+    methodName: "use",
+    version: "26.1",
+  });
+  assert.equal(noIdx.found, false);
+  assert.equal(noIdx.action?.code, "DATA_UNAVAILABLE");
   disposeApiData();
 
   const gradle = diagnoseGradle({
@@ -864,6 +889,24 @@ task runClient {}
   assert.ok(!ll.errors.some((e) => /Java 17|toolchain|6\.0,6\.2|forge:1\.20|47/.test(e)));
   assert.ok(!ll.warnings.some((w) => /Java toolchain 应为 17|Minecraft 版本.*1\.20|不以 47/.test(w)));
   assert.ok(ll.warnings.some((w) => /LiteMod/.test(w)));
+
+  const llLeftoverFab = diagnoseGradle({
+    buildGradle: `
+apply plugin: 'net.minecraftforge.gradle.liteloader'
+minecraft {
+  version = '1.12.2-14.23.5.2847'
+  mappings = 'stable_39'
+  runDir = 'run'
+}
+task runClient {}
+`,
+    fabricModJson: '{"schemaVersion":1,"id":"leftover"}',
+    litemodJson: '{"name":"x"}',
+    modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
+  });
+  assert.equal(llLeftoverFab.errors.length, 0, JSON.stringify(llLeftoverFab.errors));
+  assert.ok(!llLeftoverFab.errors.some((e) => /Java 17|toolchain|6\.0,6\.2|forge:1\.20/.test(e)));
+  assert.ok(llLeftoverFab.warnings.some((w) => /LiteMod/.test(w)));
 
   const llHybridNoPlugin = diagnoseGradle({
     buildGradle: `
@@ -1363,6 +1406,38 @@ async function testFivePlatformRouting() {
     }),
     "liteloader_forge",
   );
+  const leftoverFab = '{"schemaVersion":1,"id":"leftover"}';
+  assert.equal(
+    detectLoader("apply plugin: 'net.minecraftforge.gradle.liteloader'", 'modLoader="javafml"', leftoverFab, undefined, {
+      litemodJson: '{"name":"x"}',
+    }),
+    "liteloader_forge",
+  );
+  assert.equal(
+    detectLoader("", undefined, leftoverFab, undefined, { litemodJson: '{"name":"legacy"}' }),
+    "liteloader",
+  );
+  assert.equal(
+    detectLoader("apply plugin: 'net.minecraftforge.gradle.forge'", 'modLoader="javafml"', leftoverFab, undefined, {
+      litemodJson: '{"name":"x"}',
+    }),
+    "unknown",
+  );
+  assert.equal(
+    detectLoader("id 'fabric-loom'", undefined, leftoverFab, undefined, { litemodJson: '{"name":"legacy"}' }),
+    "fabric",
+    "fabric-loom 工程里的残留 litemod.json 不得压过 Fabric",
+  );
+  const llFabLoaders = detectProjectLoaders({
+    buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
+    modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
+    fabricModJson: leftoverFab,
+    extras: { litemodJson: '{"name":"x"}' },
+  });
+  assert.equal(llFabLoaders.primary, "liteloader_forge");
+  assert.ok(llFabLoaders.loaders.includes("liteloader") || llFabLoaders.loaders.includes("liteloader_forge"));
+  assert.ok(llFabLoaders.loaders.includes("fabric"));
+  assert.equal(llFabLoaders.multiLoader, true);
   assert.ok(isQslSpecificQuery("QSL QuiltRegistry 注册"));
   const filtered = filterFabricFallbackHits([
     { id: "a", label: "net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder", url: "https://fabricmc.net/wiki" },
@@ -1463,6 +1538,76 @@ async function testFivePlatformRouting() {
   const deps = checkDependencies("", javafmlBare);
   assert.equal(deps.detectedLoader, "unknown");
   assert.equal(deps.action?.code, "PICK_PLATFORM");
+
+  const neoWithFabricJson =
+    'modLoader="javafml"\nloaderVersion="[21,)"\n[[mods]]\nmodId="demo"\n[[dependencies.demo]]\nmodId="neoforge"\n';
+  assert.equal(
+    detectLoader(
+      "plugins { id 'net.neoforged.gradle.userdev' }",
+      undefined,
+      '{"schemaVersion":1,"id":"leftover"}',
+      neoWithFabricJson,
+    ),
+    "neoforge",
+  );
+  const neoFabLoaders = detectProjectLoaders({
+    buildGradle: "plugins { id 'net.neoforged.gradle.userdev' }",
+    fabricModJson: '{"schemaVersion":1,"id":"leftover"}',
+    neoModsToml: neoWithFabricJson,
+  });
+  assert.equal(neoFabLoaders.primary, "neoforge");
+  assert.ok(neoFabLoaders.loaders.includes("neoforge"));
+  assert.ok(neoFabLoaders.loaders.includes("fabric"));
+  assert.equal(neoFabLoaders.multiLoader, true);
+  const quiltDualLoaders = detectProjectLoaders({
+    buildGradle: "id 'org.quiltmc.loom'",
+    fabricModJson: '{"schemaVersion":1,"id":"x"}',
+    extras: { quiltModJson: '{"schema_version":1}' },
+  });
+  assert.equal(quiltDualLoaders.primary, "quilt");
+  const archLoaders = detectProjectLoaders({
+    buildGradle: 'plugins { id "architectury-plugin" }',
+    fabricModJson: '{"schemaVersion":1,"id":"demo"}',
+    modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="demo"\n',
+  });
+  assert.equal(archLoaders.multiLoader, true);
+  assert.ok(archLoaders.loaders.includes("fabric"));
+  assert.ok(archLoaders.loaders.includes("forge"));
+
+  const neoFabRoot = mkdtempSync(join(tmpdir(), "mc-skill-neo-fab-"));
+  try {
+    mkdirSync(join(neoFabRoot, "src", "main", "java", "demo"), { recursive: true });
+    mkdirSync(join(neoFabRoot, "src", "main", "resources", "META-INF"), { recursive: true });
+    writeFileSync(
+      join(neoFabRoot, "build.gradle"),
+      "plugins { id 'net.neoforged.gradle.userdev' version '7.0.184' }\n",
+      "utf8",
+    );
+    writeFileSync(
+      join(neoFabRoot, "src", "main", "resources", "META-INF", "neoforge.mods.toml"),
+      neoWithFabricJson,
+      "utf8",
+    );
+    writeFileSync(
+      join(neoFabRoot, "src", "main", "resources", "fabric.mod.json"),
+      JSON.stringify({ schemaVersion: 1, id: "leftover" }),
+      "utf8",
+    );
+    writeFileSync(
+      join(neoFabRoot, "src", "main", "java", "demo", "Main.java"),
+      "package demo;\nimport net.neoforged.fml.common.Mod;\n@Mod(\"demo\") class Main {}\n",
+      "utf8",
+    );
+    const neoDeps = checkDependencies("", undefined, undefined, undefined, { projectPath: neoFabRoot });
+    assert.equal(neoDeps.detectedLoader, "neoforge", JSON.stringify(neoDeps));
+    assert.ok(Array.isArray(neoDeps.loaders) && neoDeps.loaders.includes("neoforge"));
+    const neoGradle = diagnoseGradle({ projectPath: neoFabRoot });
+    assert.ok(!neoGradle.errors?.some((e) => /fabric-loom|Yarn/i.test(e)), JSON.stringify(neoGradle).slice(0, 500));
+    const neoVal = validateProject({ projectPath: neoFabRoot });
+    assert.ok(!neoVal.errors.some((e) => /fabric\.mod\.json/.test(e)), JSON.stringify(neoVal).slice(0, 500));
+  } finally {
+    rmSync(neoFabRoot, { recursive: true, force: true });
+  }
 
   assert.equal(parseNeo21Patch("1.21"), 0);
   assert.equal(parseNeo21Patch("1.21.5"), 5);
@@ -1918,7 +2063,9 @@ async function testPlan2PrimerMdkFabricPorting() {
   assert.ok(!/net\.minecraftforge/.test(fabPkt.code || ""));
   assert.ok(!/net\.neoforged/.test(fabPkt.code || ""));
   assert.ok(
-    fabPkt.warnings?.[0]?.includes("模糊 token") && /禁止把本骨架当 1\.21\.1/.test(fabPkt.warnings.join("\n")),
+    fabPkt.warnings?.[0]?.includes("模糊 token") &&
+      /禁止把本骨架当 1\.21\.1/.test(fabPkt.warnings.join("\n")) &&
+      /fabric_26\.1\.2/.test(fabPkt.warnings.join("\n")),
     JSON.stringify(fabPkt.warnings),
   );
 
@@ -1959,6 +2106,13 @@ async function testPlan2PrimerMdkFabricPorting() {
   assert.equal(noNetNeo1206.code, null);
   const noNet1201 = genPkt("demo", "sync", "fabric_1.20.1");
   assert.equal(noNet1201.code, null);
+
+  const neoFuzzy = genPkt("demo", "sync", "neoforge_1.21");
+  assert.ok(neoFuzzy.code);
+  assert.ok(
+    (neoFuzzy.warnings ?? []).some((w) => /neoforge_1\.21\.1/.test(w) && /neoforge_26\.1/.test(w) && /模糊 token/.test(w)),
+    JSON.stringify(neoFuzzy.warnings),
+  );
 
   const { searchFabricDocs } = await import("./dist/docs-platform/fabric/index.js");
   const fa = parseToolText(await searchFabricDocs({ query: "porting 26.2 vulkan", version: "26.1.2" }));
@@ -2299,6 +2453,17 @@ public class ExampleMod { }
   });
   assert.equal(quiltDg.code, null);
   assert.ok(quiltDg.errors?.some((e) => /search_docs platform=quilt/.test(e)), JSON.stringify(quiltDg.errors));
+
+  const neo1201Dg = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "1.20.1",
+  });
+  assert.equal(neo1201Dg.code, null);
+  assert.ok(neo1201Dg.errors?.some((e) => /search_neoforge_docs/.test(e)), JSON.stringify(neo1201Dg.errors));
+  assert.ok(!/net\.minecraftforge\.data\.event\.GatherDataEvent/.test(neo1201Dg.code || ""));
 
   const forge194 = generateDatagen({
     providerType: "recipe",

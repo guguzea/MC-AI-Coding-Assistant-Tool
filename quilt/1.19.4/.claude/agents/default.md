@@ -1,8 +1,8 @@
 # Quilt 1.19.4 — Agent 总纲
 
 > 本规则集适用于 **Quilt 1.19.4**。检测 `quilt.mod.json` 或 `org.quiltmc.loom`（可同时有 `fabric.mod.json`）。
-> **必须再读** `fabric/1.19.4/.cursor/rules/` 的 **02–10**（方块/物品/实体/网络/datagen/客户端/反模式/GUI）。
-> 本目录只写 QSL / Quilt Loader **差异**（00 / 01 / 05）。禁止把整棵 Fabric 规则复制进来。
+> **必须再读** `fabric/1.19.4/.cursor/rules/` 的 **02–04、07–08、10**（及缺的 09）。05/06 用本目录，不要 overlay Fabric 网络。
+> 本目录只写 QSL / Quilt Loader **差异**（00 / 01 / 05 / 06）。禁止把整棵 Fabric 规则复制进来。
 
 ## 基本信息
 
@@ -35,7 +35,8 @@
 |------|--------|------|
 | 00 | `00-project-setup.mdc` | Quilt Loom / quilt.mod.json |
 | 01 | `01-registry.mdc` | QSL vs FAPI Registry（必读） |
-| 05 | `05-events.mdc` | 仅 QSL 分叉；否则指向 fabric/1.19.4 的 05 |
-| 02–04, 06–10 | **不要本目录找** | 打开 `fabric/1.19.4/.cursor/rules/` |
+| 05 | `05-events.mdc` | 仅 QSL 分叉 |
+| 06 | `06-networking.mdc` | QSL ≠ FAPI；QFAPI 才对照 FAPI 网络 |
+| 02–04, 07–08, 10 | overlay fabric | session 注入同版 Fabric（含缺的 09） |
 
 `query_api` 仅当 1.19.4 落在 Parchment 窗口（约 1.16.5–1.20.4）。平台 API 用 `search_docs({platform:"quilt", version:"1.19.4"})`。QSL 专用查询禁止把 Fabric Registry 当命中。

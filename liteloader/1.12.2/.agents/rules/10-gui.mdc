@@ -1,0 +1,20 @@
+# 10 — GUI / HUD（逐步）
+
+禁止 1.16+ `AbstractContainerScreen` / `Screen`。
+
+## HUD
+
+实现 `HUDRenderListener`：`onPreRenderHUD` / `onPostRenderHUD`（屏幕宽高 int）。
+
+## 帧回调
+
+`RenderListener.onRender()`；当前 GUI：`onRenderGui(GuiScreen)`。
+
+## 视口
+
+`ViewportListener.onViewportResized(ScaledResolution, int, int)`。
+
+## 自定义 GuiScreen
+
+1.12 `net.minecraft.client.gui.GuiScreen`。打开方式以 MCP 1.12.2 为准（常见 `Minecraft.displayGuiScreen`）；方法未进表则打开源码再写，禁止臆造。
+混合容器 GUI 读 Forge 1.12.2 的 10。

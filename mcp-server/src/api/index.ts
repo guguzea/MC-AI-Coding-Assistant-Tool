@@ -63,6 +63,10 @@ export interface ApiResult {
   notes?: string[];
   warning?: string;
   action?: ActionEnvelope;
+  /** 简名唯一命中时改写了 className */
+  autoCorrected?: boolean;
+  /** 调用方传入的原始类名（仅 autoCorrected 时） */
+  requestedClassName?: string;
 }
 
 export type ApiPreloadStatus =
@@ -533,8 +537,23 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
   return results.sort((a, b) => b.score - a.score).slice(0, 5);
 }
 
-function acceptFuzzyHit(hit: FuzzyHit): boolean {
-  return hit.kind !== "edit";
+function simpleNameOfSlash(slashPath: string): string {
+  const i = slashPath.lastIndexOf("/");
+  return i >= 0 ? slashPath.slice(i + 1) : slashPath;
+}
+
+/** 简单类名大小写不敏感唯一精确匹配（Item → net/minecraft/world/item/Item）。歧义 suffix/contains 不算命中。 */
+function uniqueExactSimpleNameHit(query: string, vData: VersionData): string | undefined {
+  if (!vData.classNames?.length) return undefined;
+  const simple = query.replace(/\./g, "/").split("/").pop()?.toLowerCase();
+  if (!simple) return undefined;
+  const hits = vData.classNames.filter((n) => simpleNameOfSlash(n).toLowerCase() === simple);
+  return hits.length === 1 ? hits[0] : undefined;
+}
+
+function withAutoCorrect(result: ApiResult, requestedClassName: string, resolvedDot: string): ApiResult {
+  if (requestedClassName === resolvedDot) return result;
+  return { ...result, autoCorrected: true, requestedClassName };
 }
 
 function editDistanceLimited(a: string, b: string, max: number): number | null {
@@ -734,28 +753,29 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     ));
   }
 
-  // 1. 精确类名查询
+  // 1. 精确 FQCN，或简单类名唯一精确匹配（歧义 suffix/contains/prefix 不得 found:true）
   const slashName = toSlash(className);
   let cls = vData.apiIndex[slashName];
+  let resolvedSlash = slashName;
+  if (!cls) {
+    const unique = uniqueExactSimpleNameHit(className, vData);
+    if (unique) {
+      cls = vData.apiIndex[unique];
+      resolvedSlash = unique;
+    }
+  }
 
-  // 2. 尝试模糊搜索
+  // 2. 未命中：只给 suggestions，不改写 className、不返回 methods
   if (!cls) {
     const fuzzy = fuzzyClassSearch(className, vData);
     if (fuzzy.length > 0) {
       const suggestions = fuzzy.map((h) => `你指的是 ${toDot(h.name)} 吗？`);
-      const best = fuzzy[0];
-      if (acceptFuzzyHit(best)) {
-        cls = vData.apiIndex[best.name];
-        if (cls) {
-          return withCoverage(buildClassResult(toDot(best.name), cls, suggestions.slice(1), version));
-        }
-      }
       return withCoverage({
         found: false,
         className,
         mappings: { mojang: slashName, parchment: slashName },
         suggestions: [`未找到 ${className}。类似类：`, ...suggestions],
-        notes: ["提示：类名区分大小写，使用完整包名效果更佳；纯拼写近似不会当作命中"],
+        notes: ["歧义简名 / 子串 / 拼写近似不会当作命中；请改用完整包名或从 suggestions 选一类再查"],
       });
     }
     const emptyIndex = !vData.classNames || vData.classNames.length === 0;
@@ -789,6 +809,10 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     });
   }
 
+  const resolvedDot = toDot(resolvedSlash);
+  const finish = (r: ApiResult): ApiResult =>
+    withCoverage(withAutoCorrect(r, className, resolvedDot));
+
   // 3. 类找到了，查找方法
   if (methodName) {
     const matched = cls.methods.filter(
@@ -808,16 +832,16 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         `你指的是 '${m.name}' 吗？`
       );
       const suggestions = [
-        `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
+        `未在 ${resolvedDot} 中找到方法 ${methodName}`,
         ...yarnSuggestions,
         ...similarSuggestions,
       ];
       if (yarnSuggestions.length > 0 || similarSuggestions.length > 0) {
-        return withCoverage({
+        return finish({
           found: false,
-          className: toDot(slashName),
+          className: resolvedDot,
           methodName,
-          mappings: { mojang: slashName, parchment: slashName },
+          mappings: { mojang: resolvedSlash, parchment: resolvedSlash },
           suggestions,
           notes: [
             `${version} 共收录 ${cls.methods.length} 个方法（含 Mojang supplement），方法名区分大小写`,
@@ -826,13 +850,13 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
           ],
         });
       }
-      return withCoverage({
+      return finish({
         found: false,
-        className: toDot(slashName),
+        className: resolvedDot,
         methodName,
-        mappings: { mojang: slashName, parchment: slashName },
+        mappings: { mojang: resolvedSlash, parchment: resolvedSlash },
         suggestions: [
-          `未在 ${toDot(slashName)} 中找到方法 ${methodName}`,
+          `未在 ${resolvedDot} 中找到方法 ${methodName}`,
           `可用方法（部分）：${cls.methods.slice(0, 8).map(m => m.name).join(", ")}${cls.methods.length > 8 ? "..." : ""}`,
         ],
         notes: [
@@ -841,10 +865,10 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
         ],
       });
     }
-    return withCoverage(buildMethodResult(toDot(slashName), cls, matched));
+    return finish(buildMethodResult(resolvedDot, cls, matched));
   }
 
-  return withCoverage(buildClassResult(toDot(slashName), cls, [], version));
+  return finish(buildClassResult(resolvedDot, cls, [], version));
 }
 
 // ── 导出 Trie 索引供外部使用（如 store.ts 的搜索）─────────────────────────

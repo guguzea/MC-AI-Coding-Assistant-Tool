@@ -1,4 +1,4 @@
----
+﻿---
 description: 06-networking NeoForge 1.20.1
 globs:
 alwaysApply: false

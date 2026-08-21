@@ -22,6 +22,8 @@ import {
   auditIndex,
   parseArgs,
   parseIndexName,
+  RAW_PROCESSED_SET_EXCEPTIONS,
+  skipsRawProcessedSet,
 } from "./scripts/audit-data-consistency.mjs";
 
 const REPO = path.dirname(new URL(import.meta.url).pathname.replace(/^\//, ""));
@@ -282,6 +284,52 @@ async function testHonestEmptyFabricMetaPassesHollow() {
   assert.equal(issues.filter((i) => i.check.startsWith("A-hollow") && i.level === "ERROR").length, 0, JSON.stringify(issues));
 }
 
+function processedOnlyFixture(root, indexName, platform, version, docSubdir) {
+  const docsRoot = path.join(root, indexName, docSubdir, version);
+  writeText(path.join(docsRoot, "processed", "only.md"), "# only\nbody\n");
+  writeJSON(path.join(docsRoot, "index-l0.json"), [
+    { id: `${version}/only`, version, label: "only", processedFile: "processed/only.md" },
+  ]);
+  return { idx: { name: indexName, platform, version }, root };
+}
+
+async function testRawProcessedExceptionTableGuard() {
+  for (const e of RAW_PROCESSED_SET_EXCEPTIONS) {
+    assert.ok(e.reason && String(e.reason).trim(), `exception missing reason: ${JSON.stringify(e)}`);
+    assert.equal(/^(forge_|fabric_|neoforge_)/.test(e.platformPrefix), false, `forbidden prefix ${e.platformPrefix}`);
+  }
+  assert.equal(skipsRawProcessedSet("quilt_1.21.1", "quilt-docs"), true);
+  assert.equal(skipsRawProcessedSet("forge_1.20.1", "forge-docs"), false);
+}
+
+async function testQuiltProcessedOnlySkipsE() {
+  const root = tmpRoot("quilt-e");
+  const fx = processedOnlyFixture(root, "quilt_1.21.1", "quilt", "1.21.1", "quilt-docs");
+  const issues = auditIndex(fx.root, fx.idx);
+  assert.equal(issues.filter((i) => i.check === "E-raw-processed-set").length, 0, JSON.stringify(issues));
+}
+
+async function testLiteLoaderProcessedOnlySkipsE() {
+  const root = tmpRoot("ll-e");
+  const fx = processedOnlyFixture(root, "liteloader_1.12.2", "liteloader", "1.12.2", "liteloader-docs");
+  const issues = auditIndex(fx.root, fx.idx);
+  assert.equal(issues.filter((i) => i.check === "E-raw-processed-set").length, 0, JSON.stringify(issues));
+}
+
+async function testForgeProcessedOnlyStillErrorsE() {
+  const root = tmpRoot("forge-e");
+  const fx = processedOnlyFixture(root, "forge_1.20.1", "forge", "1.20.1", "forge-docs");
+  const issues = auditIndex(fx.root, fx.idx);
+  assert.ok(issues.some((i) => i.check === "E-raw-processed-set" && i.level === "ERROR"), JSON.stringify(issues));
+}
+
+async function testFabricProcessedOnlyStillErrorsE() {
+  const root = tmpRoot("fab-e");
+  const fx = processedOnlyFixture(root, "fabric_1.21.1", "fabric", "1.21.1", "fabric-docs");
+  const issues = auditIndex(fx.root, fx.idx);
+  assert.ok(issues.some((i) => i.check === "E-raw-processed-set" && i.level === "ERROR"), JSON.stringify(issues));
+}
+
 const tests = [
   ["read-only contract", testReadOnlyContract],
   ["planted errors surfaced", testPlantedErrors],
@@ -294,6 +342,11 @@ const tests = [
   ["forge raw header accepts both frontmatter and `> 版本：` formats", testForgeRawHeaderForms],
   ["hollow fabric bundle meta pages ERROR", testHollowFabricBundleErrors],
   ["honest empty fabric meta no hollow ERROR", testHonestEmptyFabricMetaPassesHollow],
+  ["RAW_PROCESSED_SET_EXCEPTIONS guard", testRawProcessedExceptionTableGuard],
+  ["quilt processed-only skips E-raw-processed-set", testQuiltProcessedOnlySkipsE],
+  ["liteloader processed-only skips E-raw-processed-set", testLiteLoaderProcessedOnlySkipsE],
+  ["forge processed-only still E-raw-processed-set", testForgeProcessedOnlyStillErrorsE],
+  ["fabric processed-only still E-raw-processed-set", testFabricProcessedOnlyStillErrorsE],
 ];
 
 let failed = 0;

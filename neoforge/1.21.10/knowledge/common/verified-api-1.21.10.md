@@ -16,5 +16,6 @@
 | DataMapType / RegisterDataMapTypesEvent | datamaps |
 | @SubscribeEvent / LivingJumpEvent | concepts/events |
 | DeferredRegister.Entities / createEntities | entities |
-| RegisterPayloadHandlersEvent + PayloadRegistrar | networking/payload |
+| RegisterPayloadHandlersEvent + PayloadRegistrar（playBidirectional 只传服务端 handler） | networking/payload |
+| RegisterClientPayloadHandlersEvent（物理客户端 handler；禁止 DirectionalPayloadHandler） | networking/payload |
 

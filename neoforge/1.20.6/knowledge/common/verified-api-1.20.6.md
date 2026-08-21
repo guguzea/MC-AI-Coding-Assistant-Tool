@@ -7,7 +7,7 @@
 | DeferredRegister.Items / createItems | items |
 | DeferredRegister.Blocks / createBlocks / DeferredBlock | blocks |
 | @Mod + IEventBus | gettingstarted/modfiles |
-| Payload（networking 页；事件类名以该页为准） | networking |
+| Payload 类名未核实：search_neoforge_docs query=networking version=1.20.6；禁止抄 1.21 RegisterPayloadHandlersEvent / DirectionalPayloadHandler | networking |
 | ModConfigSpec | misc/config |
 | AttachmentType / Data Attachments | datastorage/attachments |
 | BlockEntity / BlockEntityType.Builder | blockentities |

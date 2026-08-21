@@ -1,0 +1,87 @@
+# 04 — 实体开发
+
+> 适用版本：Fabric 1.14.4
+
+---
+
+## 约束
+
+### 核心原则
+
+- 实体必须在 `Registry.register(Registry.ENTITY_TYPE, id, type)` 中注册（1.14.x 没有 `Registries`）
+- 属性在实体类里重写 `initAttributes()`。没有 `FabricDefaultAttributeRegistry`
+- Yarn 枚举是 `EntityCategory`，不是后来的 `SpawnGroup` / Mojmap `MobCategory`
+- 不要用 Forge `RegistryObject`
+- 渲染器只在 `ClientModInitializer` 注册
+
+---
+
+## Decision Flow
+
+```
+IF 静态实体
+  → EntityType.Builder.create(..., EntityCategory.MISC)
+
+IF 有行为实体
+  → EntityType.Builder.create(..., EntityCategory.CREATURE)
+  → 重写 initAttributes()
+```
+
+## 基本实体注册
+
+```java
+public class MyPigEntity extends PigEntity {
+    public MyPigEntity(EntityType<? extends MyPigEntity> type, World world) {
+        super(type, world);
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MAX_HEALTH).setBaseValue(20.0);
+    }
+}
+
+public static final EntityType<MyPigEntity> MY_PIG = Registry.register(
+    Registry.ENTITY_TYPE,
+    new Identifier(MOD_ID, "my_pig"),
+    EntityType.Builder.<MyPigEntity>create(MyPigEntity::new, EntityCategory.CREATURE)
+        .setDimensions(0.9f, 1.4f)
+        .build("my_pig")
+);
+```
+
+Yarn 1.14.4+build.18 tiny：Vanilla `EntityType.Builder` 尺寸方法是 `setDimensions(float,float)`，`build` 需要 String id。不要写 MCP 的 `.size()` 或 `.build(null)`。
+
+## 实体渲染器（客户端）
+
+```java
+public class ExampleModClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        // 包：net.fabricmc.fabric.api.client.render.EntityRendererRegistry
+        // register 是实例方法，第一参是 Class（不是 EntityType）
+        EntityRendererRegistry.INSTANCE.register(MyPigEntity.class, (dispatcher, context) ->
+            new PigEntityRenderer(dispatcher)
+        );
+    }
+}
+```
+
+## fabric.mod.json 配置
+
+```json
+{
+  "entrypoints": {
+    "main": ["com.example.examplemod.ExampleMod"],
+    "client": ["com.example.examplemod.ExampleModClient"]
+  }
+}
+```
+
+## 常见错误
+
+- 忘记 `client` entrypoint — 实体无渲染
+- 把 1.16+ 的 `FabricDefaultAttributeRegistry` / `SpawnGroup` / `Registries` 抄到 1.14.4
+- Vanilla Builder 写成 `.size()` 或 `.build(null)`（本档 Yarn 是 `setDimensions` + `build("id")`）
+- 用 Forge `RegistryObject` 包住 `Registry.register` 的返回值

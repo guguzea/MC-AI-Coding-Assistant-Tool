@@ -1,0 +1,265 @@
+# 09 — 反模式库
+
+|> 适用版本：Fabric 1.21.1
+
+---
+
+## 约束
+
+### 核心原则
+
+- 本文件列出 Fabric 开发中最常见的错误模式和正确方案
+- 遇到问题时，先查阅本文件
+- 错误通常源于 Forge 习惯迁移或对 Fabric 机制不熟悉
+
+---
+
+## 1. 注册系统反模式
+
+### ❌ 在 onInitialize() 外注册
+
+```java
+// ❌ 错误
+public class ExampleMod implements ModInitializer {
+    private static final Item MY_ITEM = new Item(new Item.Settings());
+
+    // 类加载时注册，但应在 onInitialize() 中
+    static {
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), MY_ITEM);
+    }
+}
+
+// ✅ 正确
+public class ExampleMod implements ModInitializer {
+    private static final Item MY_ITEM =
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), new Item(new Item.Settings()));
+
+    @Override
+    public void onInitialize() {
+        // 静态初始化已在类加载时完成，但最佳实践是在此处初始化
+    }
+}
+```
+
+### ❌ BlockItem 与 Block 注册名不一致
+
+```java
+// ❌ 错误
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block_item"),  // 不同名！
+    new BlockItem(myBlock, new Item.Settings()));
+
+// ✅ 正确：使用完全相同的 Identifier
+Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"), myBlock);
+Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // 同名！
+    new BlockItem(myBlock, new Item.Settings()));
+```
+
+---
+
+## 2. Mixin 反模式
+
+### ❌ 忘记在 fabric.mixins.json 中声明 mixin
+
+```java
+// ❌ 错误：Mixin 类已写好，但忘记在配置文件中声明
+// src/main/resources/examplemod.mixins.json
+{
+  "package": "com.example.examplemod.mixin",
+  "client": ["MyMixin"],  // MyMixin 类在 common 包？
+  "mixins": []
+}
+
+// ✅ 正确：确认包名和声明一致
+// mixin 在 client 包中
+{
+  "package": "com.example.examplemod.mixin",
+  "client": ["client.MyMixin"],
+  "mixins": []
+}
+```
+
+### ❌ 在 Mixin 中使用 @Shadow 引用不存在的成员
+
+```java
+// ❌ 错误：Minecraft 类没有 `session` 字段
+@Shadow private static Object session;
+
+// ✅ 正确：使用正确的字段名（参考 Yarn 映射）
+@Shadow private static MinecraftClient instance;
+```
+
+### ❌ 在 Mixin 中 new 实例
+
+```java
+// ❌ 错误：Mixin 是在运行时字节码注入，禁止直接实例化
+@Inject(at = @At("HEAD"), method = "tick")
+private void onTick(CallbackInfo ci) {
+    MyClass obj = new MyClass();  // 禁止！
+}
+
+// ✅ 正确：Mixin 仅修改现有逻辑，不创建新对象
+```
+
+---
+
+## 3. Yarn Mappings 反模式
+
+### ❌ 混用 Yarn 和 MCP 映射
+
+```java
+// ❌ 错误：Forge 项目迁移时使用 MCP 方法名
+EntityPlayerMP player;  // MCP 风格（Forge）
+player.sendChatMessage("hello");
+
+// ✅ 正确：使用 Yarn 映射
+ServerPlayerEntity player;  // Yarn 风格（Fabric）
+player.sendMessage(Text.literal("hello"));
+```
+
+### ❌ 误解 class_XXXXX 命名
+
+```java
+// ❌ 错误：class_XXXXX 是 Yarn 未解析的混淆类，不是有效 API
+MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
+
+// ✅ 正确：这是正常现象，不应主动使用未解析的类
+// 如果必须使用，通过 Mixin Access Widener 访问
+```
+
+---
+
+## 4. fabric.mod.json 反模式
+
+### ❌ schemaVersion 错误
+
+```json
+// ❌ 错误：schemaVersion 必须为 1
+{
+  "schemaVersion": 0,  // 错误！Fabric 不支持 schemaVersion 0
+  ...
+}
+
+// ✅ 正确
+{
+  "schemaVersion": 1,
+  ...
+}
+```
+
+### ❌ entrypoints 字段名错误
+
+```json
+// ❌ 错误：使用 Forge 的 entrypoint 格式
+{
+  "init": "com.example.ExampleMod"  // 错误！
+}
+
+// ✅ 正确
+{
+  "entrypoints": {
+    "main": ["com.example.ExampleMod"]
+  }
+}
+```
+
+### ❌ depends 中缺少必需依赖
+
+```json
+// ❌ 错误：缺少 fabricloader 依赖
+{
+  "depends": {
+    "minecraft": ">=1.20.1"
+  }
+}
+
+// ✅ 正确：必须包含 fabricloader
+{
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": ">=1.20.1",
+    "java": ">=17"
+  }
+}
+```
+
+---
+
+## 5. Loom / Gradle 反模式
+
+### ❌ 忘记运行 ./gradlew clean loom
+
+```bash
+# ❌ 错误：Mappings 变更后直接 build
+./gradlew build  # 可能不生效
+
+# ✅ 正确：Mappings 变更后先 clean 再 loom
+./gradlew clean loom
+```
+
+### ❌ 混用 modImplementation 和 modApi
+
+```groovy
+// ❌ 错误：依赖传递性混淆
+dependencies {
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.115.6+1.21.1")  // 不传递依赖
+}
+
+// ✅ 正确：API 需要传递，实现不需要
+dependencies {
+    modApi("net.fabricmc.fabric-api:fabric-api:0.115.6+1.21.1")  // 传递依赖
+    modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
+}
+```
+
+---
+
+## 6. 客户端/服务端反模式
+
+### ❌ 在 onInitialize() 中引用 MinecraftClient
+
+```java
+// ❌ 错误：MinecraftClient 仅存在于客户端
+public class ExampleMod implements ModInitializer {
+    @Override
+    public void onInitialize() {
+        MinecraftClient client = MinecraftClient.getInstance();  // 服务端崩溃！
+    }
+}
+
+// ✅ 正确：客户端逻辑放在 ClientModInitializer
+public class ExampleModClient implements ClientModInitializer {
+    @Override
+    public void onInitializeClient() {
+        MinecraftClient client = MinecraftClient.getInstance();  // 正确
+    }
+}
+```
+
+### ❌ 在 Mixin 中引用客户端类但配置为服务端
+
+```java
+// ❌ 错误：Mixin 配置错误
+// fabric.mixins.json
+{
+  "mixins": ["MyMixin"],  // 在 mixins（服务端）中
+  "client": []
+}
+
+// MyMixin.java 引用了仅客户端的类
+@Mixin(WorldRenderer.class)  // WorldRenderer 是仅客户端的类！
+public class MyMixin { ... }
+```
+
+---
+
+## 7. 常见崩溃诊断
+
+| 崩溃信息 | 原因 | 解决方案 |
+|---------|------|---------|
+| `NullPointerException` at `Registry.register` | 注册在 `onInitialize()` 外执行 | 将注册移入 `onInitialize()` |
+| `Mixin did not apply` | mixin 包名不匹配或 `fabric.mixins.json` 配置错误 | 检查 package 和配置 |
+| `Could not find net.fabricmc:yarn` | yarn 版本号格式错误 | 格式：`1.20.1+build.10` |
+| `FabricLoader not found` | 依赖缺失 | 检查 `fabricloader` 在 depends 中 |
+| `No such registry` | Registry 类型错误 | 确认 `Registries.XXX` 正确 |
+| `duplicate id` | 注册 ID 重复 | 检查 mod ID 是否冲突 |

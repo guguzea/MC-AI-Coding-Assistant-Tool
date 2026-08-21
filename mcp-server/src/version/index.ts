@@ -289,8 +289,9 @@ export async function getVersionInfo(query: VersionQuery): Promise<VersionInfo> 
           "传入 platform=forge 后再查 Forge 版本建议",
           "Fabric 用 search_fabric_docs",
           "NeoForge 用 search_neoforge_docs",
+          "Quilt / 基岩不要调本工具",
         ],
-        ["search_forge_docs", "search_fabric_docs", "search_neoforge_docs"],
+        ["search_forge_docs", "search_fabric_docs", "search_neoforge_docs", "list_neoforge_versions"],
       ),
     };
   }

@@ -18,7 +18,7 @@ export function generateModel(
   kind: "block" | "item" = "block",
 ): GeneratorResult {
   if (!version?.trim()) {
-    return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
+    return { code: null, errors: ["version is required。当前 generate_model 按传入 version 选物品模型路径（1.21.4+ / 1.21.11 / 26.1 走 items/），无独立精确档白名单。" + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
   }
   const mod = normalizeModIdentifier(modId);
   const block = normalizeModIdentifier(blockName);
@@ -92,7 +92,7 @@ export function generateModel(
 
 export function generateLang(modId: string, entries: Record<string, string>, version?: string): GeneratorResult {
   if (!version?.trim()) {
-    return { code: null, errors: ["version is required。" + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
+    return { code: null, errors: ["version is required。lang 骨架不随 pack_format 变。" + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
@@ -250,6 +250,12 @@ export const NETWORK_PACKET_PLATFORMS = [
 ] as const;
 
 export type NetworkPacketPlatform = (typeof NETWORK_PACKET_PLATFORMS)[number];
+
+/** 模糊 token 保留时必须列出的精确档（文档版本与 token 后缀一致）。 */
+const FABRIC_NETWORK_EXACT_TOKENS =
+  "fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1.2";
+const NEOFORGE_NETWORK_EXACT_TOKENS =
+  "neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1";
 
 function docsReviewHeader(tool: string, version: string): string {
   return `// 修改此骨架前必须用 ${tool}(version=${version}) 复核；禁止邻档 API。\n`;
@@ -579,6 +585,9 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 }
 `,
       experimental: true,
+      warnings: [
+        `模糊 token neoforge_1.21：请改用已核实的 ${NEOFORGE_NETWORK_EXACT_TOKENS}。本骨架仅作结构提示，禁止当精确档 API。`,
+      ],
     };
   }
 
@@ -666,7 +675,7 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 
   if (platform === "fabric_1.21") {
     return fabricYarnPayloadSkeleton(mod.value, pkt.value, pascal, "1.21", [
-      "模糊 token fabric_1.21：请改用已核实的 fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11。禁止把本骨架当 1.21.1（该档无 networking 页）。",
+      `模糊 token fabric_1.21：请改用已核实的 ${FABRIC_NETWORK_EXACT_TOKENS}。禁止把本骨架当 1.21.1（该档无 networking 页）。`,
       "Yarn 用 playC2S/playS2C、CustomPayload、net.minecraft.util.Identifier.of。",
       "不要抄 26.1 的 clientboundPlay / CustomPacketPayload / resources.Identifier。",
       "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",
@@ -1139,7 +1148,7 @@ export function generateWorldgen(
     return {
       code: null,
       errors: [
-        "version 必填。该版本无原生生成器时不要理解为游戏里做不了：改用 search_*_docs + 手动编写，参考规则 07-datagen / mc-worldgen Skill。",
+        "version 必填。当前成功路径：forge / neoforge feature JSON；fabric / quilt 仅 configured_feature / placed_feature。该版本无原生生成器时不要理解为游戏里做不了：改用 search_*_docs + 手动编写，参考规则 07-datagen / mc-worldgen Skill。",
       ],
     };
   }

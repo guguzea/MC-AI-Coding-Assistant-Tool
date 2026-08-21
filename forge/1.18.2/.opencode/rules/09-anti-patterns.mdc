@@ -1,0 +1,249 @@
+# 09 — 反模式库
+
+> 适用版本：Forge 1.18.2
+> 本文件收集 MC Mod 开发中的常见错误模式，每条含错误症状和正确方案。
+
+---
+
+## 注册相关
+
+### ❌ 在 Entity 构造函数中注册属性
+
+```java
+// 错误
+public MyEntity(EntityType<?> type, Level level) {
+    super(type, level);
+    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(100.0); // ❌ 太早，Attributes 系统未就绪
+}
+```
+
+**错误症状**：`NullPointerException` 或属性不生效
+
+**正确方案**：使用 `DeferredRegister<Attribute>` + modEventBus（在 mod 构造函数中完成）
+
+```java
+public static final DeferredRegister<Attribute> ATTRIBUTES =
+    DeferredRegister.create(ForgeRegistries.ATTRIBUTES, MOD_ID);
+
+public static void register(IEventBus eventBus) {
+    ATTRIBUTES.register(eventBus);
+}
+```
+
+---
+
+### ❌ 使用 `new` 构造函数直接注册方块/物品
+
+```java
+// 错误
+public static final Block MY_BLOCK = new Block(...);  // ❌ 不会被注册到游戏
+```
+
+**错误症状**：方块在世界中显示为缺失方块（紫色黑色格子）
+
+**正确方案**：通过 `DeferredRegister<Block>` 注册
+
+```java
+public static final DeferredRegister<Block> BLOCKS =
+    DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+
+public static final RegistryObject<Block> MY_BLOCK =
+    BLOCKS.register("my_block", () -> new Block(...));
+```
+
+---
+
+### ❌ mod ID 不一致
+
+```java
+// mods.toml 中
+modId = "examplemod"
+
+// 代码中
+private static final String MOD_ID = "ExampleMod"; // ❌ 大写，与 mods.toml 不一致
+```
+
+**错误症状**：`RuntimeException: Unable to load a minecraft component`
+
+**正确方案**：确保所有地方使用完全相同的 mod ID（全小写）
+
+---
+
+## 方块/BlockEntity 相关
+
+### ❌ 在 `BlockEntity.load()` 中读取世界数据
+
+```java
+// 错误
+@Override
+public void load(CompoundTag nbt) {
+    super.load(nbt);
+    BlockState state = level.getBlockState(pos); // ❌ level 可能为 null 或 world 未完全加载
+}
+```
+
+**错误症状**：`NullPointerException`，游戏崩溃在 `BlockEntity.load`
+
+**正确方案**：在 `onLoad()` 中处理需要世界数据的逻辑（`load()` 仅用于读写 NBT）
+
+```java
+// onLoad() 在 BlockEntity 进入 world 后调用，此时 level 已可用
+@Override
+public void onLoad() {
+    super.onLoad();
+    if (this.level != null && this.level.isClientSide) {
+        // 基于世界的初始化逻辑
+    }
+}
+```
+
+---
+
+### ❌ 忘记在 `BlockEntity.setRemoved()` 中清理监听器
+
+```java
+// 错误
+@Override
+public void setRemoved() {
+    // ❌ 没有取消订阅，导致内存泄漏
+    super.setRemoved();
+}
+```
+
+**错误症状**：内存泄漏，World 不释放，卸载区块后大量对象无法 GC
+
+**正确方案**：
+
+```java
+private final List<Runnable> listeners = new ArrayList<>();
+
+@Override
+public void setRemoved() {
+    for (Runnable listener : listeners) {
+        // 取消监听器订阅
+    }
+    listeners.clear();
+    super.setRemoved();
+}
+```
+
+---
+
+## 网络通信相关
+
+### ❌ 在消息处理器中直接修改世界（未用 enqueueWork）
+
+```java
+// 错误
+@SubscribeEvent
+public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ServerPlayer player = ctx.get().getSender();
+    player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState()); // ❌ 不安全
+}
+```
+
+**错误症状**：异步修改世界导致数据损坏或崩溃
+
+**正确方案**：
+
+```java
+@SubscribeEvent
+public static void onMessage(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ServerPlayer player = ctx.get().getSender();
+        if (player != null) {
+            player.getLevel().setBlock(player.blockPosition(), Blocks.AIR.defaultBlockState());
+        }
+    });
+    ctx.get().setPacketHandled(true);
+}
+```
+
+---
+
+## 事件相关
+
+### ❌ 在 TickEvent 中执行重操作
+
+```java
+// 错误
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        for (Entity entity : world.getAllEntities()) { // ❌ 每 tick 遍历所有实体
+            processHeavy(entity);
+        }
+    }
+}
+```
+
+**错误症状**：服务端严重卡顿，TPS 下降
+
+**正确方案**：使用计数器分散负载
+
+```java
+private int tickCounter = 0;
+
+@SubscribeEvent
+public void onServerTick(TickEvent.ServerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END) {
+        tickCounter++;
+        if (tickCounter % 20 == 0) {  // 每秒处理一次
+            scheduleProcessing();
+        }
+    }
+}
+```
+
+---
+
+### ❌ 在渲染线程中修改服务端数据
+
+```java
+// 错误（客户端代码）
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    world.setBlockState(pos, Blocks.DIRT.defaultBlockState()); // ❌ 禁止在渲染线程修改世界
+}
+```
+
+**错误症状**：`IllegalStateException: Do not modify the game from the render thread`
+
+**正确方案**：将操作发送到服务端主线程
+
+```java
+@SubscribeEvent
+public void onRender(RenderGameOverlayEvent.Post event) {
+    // 发送网络消息，让服务端执行
+    NetworkHandler.INSTANCE.sendToServer(new ModifyBlockMessage(pos));
+}
+```
+
+---
+
+## 资源文件相关
+
+### ❌ 资源路径大小写错误
+
+```json
+// 错误：文件名包含大写
+"textures/item/MyItem.png"  // ❌ 大写
+
+// 正确：全部小写
+"textures/item/my_item.png"
+```
+
+**错误症状**：材质不加载，显示紫色黑色格子
+
+---
+
+## 工具提示
+
+当遇到错误时，按以下顺序排查：
+
+1. `09-anti-patterns.mdc` — 是否是已知错误模式
+2. 检查 `mods.toml` 语法和 mod ID 是否一致
+3. 检查资源文件路径是否全小写
+4. 检查是否混用了服务端和客户端线程
+5. 检查 `enqueueWork` 是否正确使用
+6. 检查 Registry 注册是否通过事件系统

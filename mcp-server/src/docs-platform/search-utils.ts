@@ -6,6 +6,7 @@
  */
 
 import { ownGet } from "../utils/own-record.js";
+import { ActionCodes, actionable } from "../utils/actionable.js";
 
 export interface ScoredDocHit {
   id: string;
@@ -597,7 +598,15 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
   return {
     ...payload,
     fallback: true,
+    confidence: "fallback",
     source_version: resolved,
+    action: payload.action ?? actionable(
+      ActionCodes.VERSION_FALLBACK,
+      requested && resolved && requested !== resolved
+        ? `文档查询已从 ${requested} 映射到 ${resolved}（不是规则树可用）`
+        : "本次文档结果含版本/wiki fallback，不得当成本版规则树",
+      ["不要把 ok:true 当成已加载本版 00–10", "规则树仍可能 PACK_NOT_FOUND"],
+    ),
     warning: joinSearchWarnings(
       typeof payload.warning === "string" ? payload.warning : undefined,
       DOCS_FALLBACK_PACK_NOTE,

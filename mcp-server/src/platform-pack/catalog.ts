@@ -609,7 +609,7 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
 export const DONOR_SKILL_BANNER = "[DONOR_SKILL 禁止直接抄写]";
 
 export function wrapDonorSkillBody(mappingNote: string, body: string): string {
-  return `\n\n---\n${DONOR_SKILL_BANNER}\n${mappingNote}\n---\n\n${body}`;
+  return `${DONOR_SKILL_BANNER}\n${mappingNote}\n\n---\n\n${body}`;
 }
 
 export function wrapSkillBody(entry: Pick<SkillIndexEntry, "skillBanner" | "mappingNote">, body: string): string {
@@ -624,6 +624,21 @@ export function mappingNoteForFabricSkill(fabricVer: string): string {
   return (
     `本 Skill 正文来自 Fabric ${fabricVer} 规则包，映射以该 Fabric 档为准（多为 Yarn named；26.1.2 为官方名）。` +
     `请与当前 Quilt 工程的 mappings 对齐后再抄代码。禁止把 class_ / method_ / field_ 中间名当 API。`
+  );
+}
+
+/** 薄档本地 Skill 优先；此处仅补本档仍缺的名字。不要捐 26.1.2 mojmap。 */
+export const FABRIC_SKILL_DONORS: Record<string, string> = {
+  "1.21.4": "1.21.3",
+  "1.21.8": "1.21.11",
+  "1.21.10": "1.21.11",
+};
+
+export function mappingNoteForFabricDonor(thinVer: string, donorVer: string): string {
+  return (
+    `本 Skill 正文来自 fabric/${donorVer}，仅作结构/流程提示，不是 ${thinVer} 官方 API。` +
+    `不得直接使用 donor 正文里的类名/方法。先 search_fabric_docs(version=${thinVer}) 核对类名/方法签名（不要用 version=${donorVer}），` +
+    `对不上就改口官方文档、禁止照抄。Yarn 档互捐，禁止把 26.1.2 mojmap 当本档。`
   );
 }
 
@@ -700,14 +715,23 @@ export function listMergedPackSkills(
     );
     return { skills: merged };
   }
-  const donorVer = platform === "neoforge" ? NEO_SKILL_DONORS[packVersion] : undefined;
+  const donorVer =
+    platform === "neoforge"
+      ? NEO_SKILL_DONORS[packVersion]
+      : platform === "fabric"
+        ? FABRIC_SKILL_DONORS[packVersion]
+        : undefined;
   if (donorVer) {
-    const donorDir = join(repoRoot, "neoforge", donorVer);
+    const donorDir = join(repoRoot, platform, donorVer);
     if (existsSync(join(donorDir, "AGENTS.md"))) {
-      const note = mappingNoteForNeoDonor(packVersion, donorVer);
+      const note =
+        platform === "neoforge"
+          ? mappingNoteForNeoDonor(packVersion, donorVer)
+          : mappingNoteForFabricDonor(packVersion, donorVer);
+      const docsTool = platform === "neoforge" ? "search_neoforge_docs" : "search_fabric_docs";
       return {
-        skills: mergeDonorSkills(packDir, donorDir, `neoforge/${donorVer}`, note, repoRoot),
-        donorWarning: `Skill 索引含同系列主档 neoforge/${donorVer} 并入；类名/签名以本档 search_neoforge_docs(version=${packVersion}) 为准；00–10 仍只用本档。`,
+        skills: mergeDonorSkills(packDir, donorDir, `${platform}/${donorVer}`, note, repoRoot),
+        donorWarning: `Skill 索引含同系列主档 ${platform}/${donorVer} 并入；类名/签名以本档 ${docsTool}(version=${packVersion}) 为准；00–10 仍只用本档。`,
       };
     }
   }

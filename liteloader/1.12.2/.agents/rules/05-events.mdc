@@ -1,0 +1,15 @@
+# 05 — LiteMod 生命周期
+
+完整表：`knowledge/common/verified-api.md`。
+
+| 接口 | 方法 |
+|------|------|
+| LiteMod | getVersion(); init(File); upgradeSettings(...) |
+| Listener | getName() |
+| Tickable | onTick(Minecraft, float, boolean, boolean) |
+| ChatFilter / ChatListener | onChat(...) |
+| OutboundChatListener | onSendChatMessage(CPacketChatMessage, String) |
+| HUDRenderListener | onPreRenderHUD(int, int)；onPostRenderHUD(int, int) |
+| RenderListener | onRender()；onRenderGui(GuiScreen)；onSetupCameraTransform() |
+
+HUD/Render **extends LiteMod**。缺名则停。

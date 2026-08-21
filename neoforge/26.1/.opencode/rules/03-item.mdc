@@ -1,0 +1,13 @@
+# 03 — 物品（NeoForge 26.1）
+
+来源：https://docs.neoforged.net/docs/items/
+
+`DeferredRegister.Items` + `registerItem` / `registerSimpleItem` / `registerSimpleBlockItem`。文档示例返回 **`DeferredItem<Item>`**。`Item.Properties#setId` **必须设置**。第三参是 unary operator `props -> props`。另有 `ItemStackTemplate`（配方等不可变上下文）与 `ItemInstance`。修理禁用：`setNoCombineRepair`。
+
+创造页：`BuildCreativeModeTabContentsEvent#accept` 或自建 tab `displayItems`。
+
+
+26.1 MDK：`alwaysEdible()` + `saturationModifier()`，Properties 常用 unary operator。
+
+
+禁止：`RegistryObject<Item>` 当 NeoForge 26.1 持有类型；禁止 Fabric `Registry.register` 冒充。

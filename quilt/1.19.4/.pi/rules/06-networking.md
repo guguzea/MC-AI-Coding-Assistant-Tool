@@ -1,5 +1,7 @@
----
+﻿---
 description: 06-networking Quilt
+globs:
+alwaysApply: false
 ---
 
 # 06 — 网络

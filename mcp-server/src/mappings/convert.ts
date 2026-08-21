@@ -740,6 +740,8 @@ export interface ParamResult {
   javadoc?: string;
   note?: string;
   action?: ActionEnvelope;
+  ambiguous?: boolean;
+  candidates?: Array<{ descriptor: string; parameters: Array<{ index: number; name: string }> }>;
 }
 
 export function getMethodParams(query: ParamQuery): ParamResult {
@@ -756,12 +758,30 @@ export function getMethodParams(query: ParamQuery): ParamResult {
     };
   }
   const version = query.version!.trim();
+  if (isUnobfuscatedMcVersion(version) || /^1\.21(\.|$)/.test(version) || /^26\./.test(version)) {
+    return {
+      found: false,
+      className: query.className,
+      methodName: query.methodName,
+      parameters: [],
+      descriptor: "",
+      returnType: "void",
+      note: `当前版本无 Vanilla API 索引，无法执行 get_method_params（found:false / DATA_UNAVAILABLE 只表示本 Parchment 索引没有该类，不代表游戏里没有）。${UNOBFUSCATED_MAPPING_HINT}`,
+      action: actionable(
+        ActionCodes.DATA_UNAVAILABLE,
+        `API 索引未覆盖 version=${version}`,
+        ["改用 search_*_docs 或 get_minecraft_source", "query_api / get_method_params 覆盖约 1.16.5–1.20.4"],
+        ["search_forge_docs", "search_neoforge_docs", "search_fabric_docs", "get_minecraft_source"],
+      ),
+    };
+  }
   const { apiIndex, classNames } = loadParchment(version);
   const { className, methodName, descriptor } = query;
   const slash = toSlash(className);
   const cls = apiIndex[slash];
 
   if (!cls) {
+    const empty = classNames.length === 0;
     return {
       found: false,
       className,
@@ -769,12 +789,16 @@ export function getMethodParams(query: ParamQuery): ParamResult {
       parameters: [],
       descriptor: "",
       returnType: "void",
-      note: `类 ${className} 不在 ${version} 索引中（共 ${classNames.length} 个 Vanilla 类）`,
+      note: empty
+        ? `version=${version} 无 extracted 方法索引（共 0 类）。found:false / DATA_UNAVAILABLE 不代表游戏里没有该类。`
+        : `类 ${className} 不在 ${version} 索引中（共 ${classNames.length} 个 Vanilla 类）`,
       action: actionable(
-        ActionCodes.NOT_FOUND,
-        `类不在索引中: ${className}`,
-        ["检查完整包名", "换 version（Parchment 约 1.16.5–1.20.4）", "Forge 特有类请用 search_forge_docs"],
-        ["query_api", "search_forge_docs"],
+        empty ? ActionCodes.DATA_UNAVAILABLE : ActionCodes.NOT_FOUND,
+        empty ? `API 索引未覆盖 version=${version}` : `类不在索引中: ${className}`,
+        empty
+          ? ["改用 search_*_docs 或 get_minecraft_source"]
+          : ["检查完整包名", "换 version（Parchment 约 1.16.5–1.20.4）", "Forge 特有类请用 query_loader_api / search_forge_docs"],
+        ["query_api", "search_forge_docs", "search_neoforge_docs"],
       ),
     };
   }
@@ -799,6 +823,29 @@ export function getMethodParams(query: ParamQuery): ParamResult {
         `方法未找到: ${methodName}`,
         ["确认 Mojang/Parchment 方法名（非 Yarn）", "用 query_api 列出类方法"],
         ["query_api"],
+      ),
+    };
+  }
+
+  if (methods.length > 1 && !descriptor) {
+    return {
+      found: false,
+      className,
+      methodName,
+      parameters: [],
+      descriptor: "",
+      returnType: "void",
+      ambiguous: true,
+      candidates: methods.map((m) => ({
+        descriptor: m.descriptor,
+        parameters: m.parameters.map((p) => ({ index: p.index, name: p.name })),
+      })),
+      note: `方法 ${methodName} 有 ${methods.length} 个重载，请传 descriptor，不要静默取第一个`,
+      action: actionable(
+        ActionCodes.AMBIGUOUS,
+        `多重载未指定 descriptor: ${methodName}`,
+        ["从 candidates[] 选一个 descriptor 再调用 get_method_params", "或用 query_api 查看全部重载"],
+        ["query_api", "get_method_params"],
       ),
     };
   }

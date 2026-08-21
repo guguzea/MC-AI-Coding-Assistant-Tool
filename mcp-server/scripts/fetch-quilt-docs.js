@@ -6,7 +6,7 @@
  *   node scripts/fetch-quilt-docs.js [--version=1.20.1] [--dry-run]
  */
 import { createHash } from "crypto";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -69,10 +69,25 @@ async function fetchText(url) {
   throw last;
 }
 
+function extractMainHtml(html) {
+  const candidates = [];
+  const re = /<(article|main)\b[^>]*>([\s\S]*?)<\/\1>/gi;
+  let m;
+  while ((m = re.exec(html))) candidates.push(m[2]);
+  candidates.sort((a, b) => b.length - a.length);
+  if (candidates[0] && candidates[0].length > 800) return candidates[0];
+  const body = html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i);
+  return body ? body[1] : html;
+}
+
 function toMd(html, url) {
-  const text = html
+  const text = extractMainHtml(html)
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<nav\b[\s\S]*?<\/nav>/gi, "")
+    .replace(/<header\b[\s\S]*?<\/header>/gi, "")
+    .replace(/<footer\b[\s\S]*?<\/footer>/gi, "")
+    .replace(/<aside\b[\s\S]*?<\/aside>/gi, "")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
@@ -84,12 +99,68 @@ function toMd(html, url) {
   return `> 来源：${url}\n> 抓取时间：${new Date().toISOString()}\n> 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。\n\n${text.slice(0, 80_000)}\n`;
 }
 
+function firstParagraph(md) {
+  const body = String(md ?? "")
+    .replace(/^>.*$/gm, "")
+    .replace(/^#+ .*$/gm, "");
+  const para = body
+    .split(/\n\n+/)
+    .map((s) => s.replace(/\s+/g, " ").trim())
+    .find((s) => s.length > 40);
+  return (para ?? body.replace(/\s+/g, " ").trim()).slice(0, 200);
+}
+
+function writeIndexes(outDir, index) {
+  const l1 = [];
+  const l2 = [];
+  for (const e of index) {
+    const stem = String(e.id).split("/").pop();
+    const processedFile = `processed/${stem}.md`;
+    let content = "";
+    try {
+      content = readFileSync(join(outDir, processedFile), "utf8");
+    } catch {
+      /* processed 可能尚未写入 */
+    }
+    l1.push({
+      id: e.id,
+      version: e.version,
+      label: e.label,
+      url: e.url,
+      tags: e.tags,
+      firstParagraph: firstParagraph(content),
+      sections: [],
+      source: e.source,
+      ...(e.sha256 ? { sha256: e.sha256 } : {}),
+    });
+    l2.push({
+      id: e.id,
+      version: e.version,
+      label: e.label,
+      url: e.url,
+      tags: e.tags,
+      sections: [],
+      hasCodeBlocks: content.includes("```"),
+      codeBlockCount: Math.floor((content.match(/```/g) || []).length / 2),
+      keySections: 0,
+      file: `${stem}.md`,
+      processedFile,
+      source: e.source,
+      ...(e.fetchedAt ? { fetchedAt: e.fetchedAt } : {}),
+      ...(e.sha256 ? { sha256: e.sha256 } : {}),
+    });
+  }
+  writeFileSync(join(outDir, "index-l0.json"), JSON.stringify(index, null, 2), "utf8");
+  writeFileSync(join(outDir, "index-l1.json"), JSON.stringify(l1, null, 2), "utf8");
+  writeFileSync(join(outDir, "index-l2.json"), JSON.stringify(l2, null, 2), "utf8");
+}
+
 async function main() {
   const argv = process.argv.slice(2);
   const dry = argv.includes("--dry-run");
   const verArg = argv.find((a) => a.startsWith("--version"));
   const version = verArg ? verArg.split("=")[1] || argv[argv.indexOf(verArg) + 1] : "1.20.1";
-  const versions = version === "all" ? ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1"] : [version];
+  const versions = version === "all" ? ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.11"] : [version];
 
   for (const ver of versions) {
     const outDir = join(DATA, `quilt_${ver}`, "quilt-docs", ver);
@@ -122,8 +193,8 @@ async function main() {
       }
     }
     if (!dry) {
-      writeFileSync(join(outDir, "index-l0.json"), JSON.stringify(index, null, 2), "utf8");
-      console.log(`wrote ${outDir} (${index.length} pages)`);
+      writeIndexes(outDir, index);
+      console.log(`wrote ${outDir} (${index.length} pages, l0/l1/l2)`);
     }
   }
 }

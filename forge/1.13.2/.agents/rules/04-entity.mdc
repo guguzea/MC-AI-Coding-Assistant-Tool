@@ -1,0 +1,140 @@
+# 04 — 实体开发
+
+> 适用版本：Forge 1.13.2（javadoc 1.13.2-25.0.220）
+
+---
+
+## 约束
+
+### Entity 基础规范
+
+- 本档 MCP 名是 **`EntityLiving` / `EntityLivingBase` / `EntityCreature`**，**没有** `LivingEntity`（javadoc 404）。
+- 构造：`EntityLiving(EntityType<?> type, World worldIn)`。
+- 近战 AI `EntityAIAttackMelee` 仍要求 **`EntityCreature`**。
+- 注册：`RegistryEvent.Register<EntityType<?>>` + `setRegistryName`。官方 `mods.toml` **没有** `[[entities]]`。不要把 1.14+ `DeferredRegister` 当本档唯一写法。
+
+### EntityType.Builder（已核）
+
+```java
+EntityType.Builder.create(MyEntity.class, MyEntity::new)
+    .tracker(8, 3, true)   // range, updateFrequency, sendVelocityUpdates
+    .build("my_entity")
+```
+
+`create` 是 `(Class, Function<World, T>)`。**没有** `MobCategory` / `EntityClassification` 参数。不要抄 1.14+ 的 `create(factory, classification)`。
+
+### 属性与 AI
+
+- 属性：`registerAttributes()`（先 `super`，再 `getAttribute(SharedMonsterAttributes.*).setBaseValue(...)`）。不是 1.12 的 `applyEntityAttributes()`，也不是 1.16+ `createAttributes()`。
+- AI：仍是 `EntityAITasks` + `initEntityAI()` + `tasks.addTask` / `targetTasks.addTask`。**没有** `Goal` / `SwimGoal` / `registerGoals`（那些 1.14+）。
+
+### 渲染
+
+- `RenderingRegistry.registerEntityRenderingHandler(Class<T>, IRenderFactory)`，在 **`FMLClientSetupEvent`** 里调（javadoc）。参数是 **实体 Class**，不是 `EntityType`。
+- 贴图：`assets/{modid}/textures/entity/...`。`RenderLiving` + `ModelBase`，不是方块 JSON 模型。
+
+---
+
+## Decision Flow
+
+### Decision: 选择实体基类
+
+```
+IF 需要近战/目标 AI
+  → EntityCreature 或 EntityMob（EntityAIAttackMelee 要 EntityCreature）
+
+IF 需要生命/移动但不挂 Creature AI
+  → EntityLiving
+
+IF 掉落物、经验球等
+  → 用原版 EntityItem / EntityXPOrb，通常不必自写
+
+IF 完全自定义碰撞/渲染
+  → Entity（工作量大）
+```
+
+### Decision: 生成分类
+
+```
+1.13.2 Builder.create 没有分类参数。被动/敌对走基类，不要编造本档没有的 Builder 分类重载。
+```
+
+### Decision: 渲染器
+
+```
+IF 自定义模型
+  → RenderLiving + ModelBase 子类
+  → FMLClientSetupEvent 里 registerEntityRenderingHandler(MyEntity.class, factory)
+```
+
+---
+
+## 示例：实体类
+
+```java
+public class MyEntity extends EntityCreature {
+    protected MyEntity(EntityType<?> type, World world) {
+        super(type, world);
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
+    }
+
+    @Override
+    protected void initEntityAI() {
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(2, new EntityAIWanderAvoidWater(this, 1.0D));
+        this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(4, new EntityAILookIdle(this));
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
+    }
+}
+```
+
+## 示例：注册
+
+```java
+public class ModEntities {
+    public static EntityType<MyEntity> MY_ENTITY;
+
+    public static void register(RegistryEvent.Register<EntityType<?>> event) {
+        MY_ENTITY = EntityType.Builder.create(MyEntity.class, MyEntity::new)
+                .tracker(8, 3, true)
+                .build("my_entity");
+        MY_ENTITY.setRegistryName(new ResourceLocation(MOD_ID, "my_entity"));
+        event.getRegistry().register(MY_ENTITY);
+    }
+}
+```
+
+## 示例：客户端渲染
+
+```java
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(MyEntity.class, MyEntityRenderer::new);
+    }
+}
+```
+
+```java
+public class MyEntityRenderer extends RenderLiving<MyEntity> {
+    public MyEntityRenderer(RenderManager manager) {
+        super(manager, new ModelBiped(), 0.5F);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(MyEntity entity) {
+        return new ResourceLocation(MOD_ID, "textures/entity/my_entity.png");
+    }
+}
+```
+
+> 禁止：`LivingEntity` / `PlayerEntity` / `Goal` / `registerGoals` / 把 `EntityType` 传进 `registerEntityRenderingHandler`。

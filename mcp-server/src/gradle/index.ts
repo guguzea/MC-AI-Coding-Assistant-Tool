@@ -8,7 +8,7 @@
  * - 正确依赖声明
  */
 
-import { detectLoader } from "../diagnostics/index.js";
+import { detectProjectLoaders, javaBlobFromFiles } from "../diagnostics/index.js";
 import { actionable, ActionCodes, type ActionEnvelope } from "../utils/actionable.js";
 import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/project-files.js";
 import {
@@ -63,6 +63,7 @@ function skippedGradle(
 }
 
 export function diagnoseGradle(query: GradleQuery): GradleResult {
+  let javaBlob = "";
   if (query.projectPath) {
     const resolved = resolveProjectDir(query.projectPath);
     if (!resolved.ok) {
@@ -89,6 +90,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
       fabricModJson: preferExplicit(query.fabricModJson, loaded.fabricModJson),
       neoModsToml: preferExplicit(query.neoModsToml, loaded.neoModsToml),
     };
+    javaBlob = javaBlobFromFiles(loaded.javaFiles);
   }
   const buildGradle = query.buildGradle;
   if (!buildGradle?.trim()) {
@@ -99,11 +101,27 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   }
   const { gradleProperties, litemodJson, riftmodJson, addonManifest, quiltModJson, modsToml, fabricModJson, neoModsToml } = query;
   const extras = { litemodJson, riftmodJson, addonManifest, quiltModJson };
-  const loader = detectLoader(buildGradle, modsToml, fabricModJson, neoModsToml, extras);
+  const detection = detectProjectLoaders({
+    buildGradle,
+    modsToml,
+    fabricModJson,
+    neoModsToml,
+    extras,
+    javaBlob,
+  });
+  const loader = detection.primary;
 
-  if (/fabric-loom|org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || loader === "quilt" || quiltModJson?.trim()) {
-    const quilt = loader === "quilt" || /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle) || Boolean(quiltModJson?.trim());
-    return diagnoseLoomGradle(buildGradle, gradleProperties, quilt);
+  const quiltish =
+    loader === "quilt" || Boolean(quiltModJson?.trim()) || /org\.quiltmc\.loom|quilt-loom/i.test(buildGradle);
+  const fabricLoom =
+    loader === "fabric" ||
+    (/fabric-loom/i.test(buildGradle) &&
+      loader !== "neoforge" &&
+      loader !== "forge" &&
+      loader !== "liteloader" &&
+      loader !== "liteloader_forge");
+  if (quiltish || fabricLoom) {
+    return diagnoseLoomGradle(buildGradle, gradleProperties, quiltish);
   }
 
   if (loader === "bedrock" || addonManifest?.trim() || (/"format_version"/.test(buildGradle) && /"modules"/.test(buildGradle))) {

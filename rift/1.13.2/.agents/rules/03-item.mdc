@@ -1,0 +1,10 @@
+# 03 — 物品
+
+实现 `ItemAdder.registerItems()`。
+
+## 逐步
+
+1. 与方块同一 Listener 或单独 `ItemAdder`。
+2. `registerItems()` 内注册物品；方块物品在方块已存在后注册。
+3. 物品模型 JSON 手写 `resources/assets/<id>/models/item`。
+4. 禁止 1.20 `DeferredItem` / Fabric `ItemGroupEvents`。

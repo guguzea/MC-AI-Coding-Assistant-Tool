@@ -486,6 +486,7 @@ async function main() {
       if (!result.content) {
         console.log(`⚠️  无版本化/归档源（已拒绝未版本化 main 与现行 VitePress）`);
         deleteLocalDoc(filename);
+        // gitPath 必须来自 official-templates.json toFetch.gitPath（或版本树发现的同一路径），禁止手写旧路径。
         failures.push({ id, gitPath, tried: result.tried ?? [] });
         failed++;
         continue;

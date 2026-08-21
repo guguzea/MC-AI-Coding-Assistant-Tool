@@ -38,7 +38,17 @@ import {
 } from "../neoforge/primers.js";
 import { actionable, ActionCodes } from "../../utils/actionable.js";
 
-const store = new ForgeDocStore(resolvePlatformDataDir("forge"));
+const _forgeStoreByDir = new Map<string, ForgeDocStore>();
+
+function getForgeStore(): ForgeDocStore {
+  const dir = resolvePlatformDataDir("forge");
+  let s = _forgeStoreByDir.get(dir);
+  if (!s) {
+    s = new ForgeDocStore(dir);
+    _forgeStoreByDir.set(dir, s);
+  }
+  return s;
+}
 
 function platformRequiredResult(): CallToolResult {
   return {
@@ -113,7 +123,7 @@ export const listForgeVersionsSchema = {
 
 export async function listForgeVersions(): Promise<CallToolResult> {
   try {
-    const versions = store.getAvailableVersions();
+    const versions = getForgeStore().getAvailableVersions();
     if (versions.length === 0) return platformDataMissingResult("forge");
     return {
       content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "forge", versions }, null, 2) }],
@@ -170,7 +180,7 @@ export async function searchForgeDocs(
     if (!hasPlatformDocData("forge")) {
       return platformDataMissingResult("forge");
     }
-    const detailed = store.searchIndexDetailed(
+    const detailed = getForgeStore().searchIndexDetailed(
       args.query,
       args.version,
       args.tags,
@@ -279,7 +289,7 @@ export async function getForgeDocSummary(
   args: z.infer<typeof getForgeDocSummarySchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const result = store.loadSummary(
+    const result = getForgeStore().loadSummary(
       args.id,
       args.version,
     );
@@ -364,7 +374,7 @@ export async function getForgeDocFull(
   args: z.infer<typeof getForgeDocFullSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const result = await store.loadFullDoc(
+    const result = await getForgeStore().loadFullDoc(
       args.id,
       args.version,
       args.highlight_key ?? true,
@@ -446,7 +456,7 @@ export async function getForgeDocRelated(
   args: z.infer<typeof getForgeDocRelatedSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
-    const result = store.getRelatedDocs(
+    const result = getForgeStore().getRelatedDocs(
       args.id,
       args.version,
       args.limit ?? 5,

@@ -1,0 +1,11 @@
+# 07 — DataGen（NeoForge 1.20.4）
+
+来源：https://docs.neoforged.net/docs/1.20.4/resources/
+
+事件：`GatherDataEvent`。
+
+1.20.4：`GatherDataEvent`；`event.getGenerator().addProvider(event.includeServer(), ...)`。Advancement 文档仍出现 ForgeAdvancementProvider 旧名——以该页实际类型为准，不要发明。
+
+
+
+不要用 1.12 `LanguageRegistry`。语言文件走 `LanguageProvider`。

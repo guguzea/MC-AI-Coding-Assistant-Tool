@@ -41,6 +41,21 @@ const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
 const RAW_FRONTMATTER_VERSION_RX = /^version:\s*"([^"]+)"/m;
 const NEO_VERSION_RX = /^version:\s*"([^"]+)"/m;
 
+// 仅跳过 E-raw-processed-set。禁止把 forge_ / fabric_ / neoforge_ 写进此表。
+export const RAW_PROCESSED_SET_EXCEPTIONS = [
+  { platformPrefix: "modloader_", docSubdir: "modloader-docs", reason: "故意 L0-only，页少不建 raw 对" },
+  { platformPrefix: "liteloader_", docSubdir: "liteloader-docs", reason: "wiki 抓取只落 processed" },
+  { platformPrefix: "quilt_", docSubdir: "quilt-docs", reason: "wiki/RFC 页 processed-only" },
+];
+
+export function skipsRawProcessedSet(indexName, docSubdir) {
+  const name = String(indexName ?? "");
+  const sub = String(docSubdir ?? "");
+  return RAW_PROCESSED_SET_EXCEPTIONS.some(
+    (e) => e.reason && name.startsWith(e.platformPrefix) && e.docSubdir === sub,
+  );
+}
+
 function parseArgs(argv) {
   const out = {
     platform: "all",
@@ -254,7 +269,8 @@ function checkVersionedDocScope(platform, name, version, versionDir, doc, docRoo
   }
 
   // E: raw ↔ processed set
-  if (doc.rawFiles.length > 0 || doc.processedFiles.length > 0) {
+  const docSubdir = path.basename(path.dirname(docRoot));
+  if (!skipsRawProcessedSet(name, docSubdir) && (doc.rawFiles.length > 0 || doc.processedFiles.length > 0)) {
     let rawSet = new Set(doc.rawFiles);
     let processedSet = new Set(doc.processedFiles);
     if (subdirIsWiki(platform, docRoot)) {

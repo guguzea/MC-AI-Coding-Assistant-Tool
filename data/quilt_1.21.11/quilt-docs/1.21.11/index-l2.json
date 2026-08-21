@@ -1,0 +1,40 @@
+[
+  {
+    "id": "1.21.11/qsl-qfapi",
+    "version": "1.21.11",
+    "label": "QSL and Quilted Fabric API",
+    "url": "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
+    "tags": [
+      "qsl",
+      "qfapi",
+      "registry"
+    ],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "qsl-qfapi.md",
+    "processedFile": "processed/qsl-qfapi.md",
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-21T10:17:30.478Z",
+    "sha256": "d6829c89dec86b1e2c1b5bbf08df9b0475f63de35327c9c2b11f7b9507e20ebd"
+  },
+  {
+    "id": "1.21.11/qsl-readme",
+    "version": "1.21.11",
+    "label": "Quilt Standard Libraries README",
+    "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/1.21/README.md",
+    "tags": [
+      "qsl"
+    ],
+    "sections": [],
+    "hasCodeBlocks": false,
+    "codeBlockCount": 0,
+    "keySections": 0,
+    "file": "qsl-readme.md",
+    "processedFile": "processed/qsl-readme.md",
+    "source": "quilt-docs",
+    "fetchedAt": "2026-08-21T10:19:48.955Z",
+    "sha256": "2043cf5e67af0d516c09bccabff5d31131589b900ccd7b2c85c15e7db9e76754"
+  }
+]

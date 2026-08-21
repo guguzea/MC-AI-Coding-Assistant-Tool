@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1.21.11/qsl-qfapi",
+    "version": "1.21.11",
+    "label": "QSL and Quilted Fabric API",
+    "url": "https://wiki.quiltmc.org/en/concepts/qsl-qfapi",
+    "tags": [
+      "qsl",
+      "qfapi",
+      "registry"
+    ],
+    "firstParagraph": "QSL and QFAPI Overview This article explains the different standard libraries you might encounter when modding with Quilt. What is an API? An API (Application Programming Interface) provides an interf",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "d6829c89dec86b1e2c1b5bbf08df9b0475f63de35327c9c2b11f7b9507e20ebd"
+  },
+  {
+    "id": "1.21.11/qsl-readme",
+    "version": "1.21.11",
+    "label": "Quilt Standard Libraries README",
+    "url": "https://raw.githubusercontent.com/QuiltMC/quilt-standard-libraries/1.21/README.md",
+    "tags": [
+      "qsl"
+    ],
+    "firstParagraph": "![Java 17](https://img.shields.io/badge/language-Java%2017-9B599A.svg?style=flat-square) [![GitHub license](https://img.shields.io/github/license/QuiltMC/quilt-standard-libraries?style=flat-square)](h",
+    "sections": [],
+    "source": "quilt-docs",
+    "sha256": "2043cf5e67af0d516c09bccabff5d31131589b900ccd7b2c85c15e7db9e76754"
+  }
+]

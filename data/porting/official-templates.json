@@ -1,9 +1,9 @@
 {
   "meta": {
     "platform": "fabric",
-    "mcVersion": "1.21.1",
+    "mcVersion": "multi",
     "lastUpdated": "2026-05-27",
-    "note": "Fabric 文档抓取 URL 清单。来源：FabricMC/fabric-docs GitHub 仓库（main 分支）。fetch-fabric-docs.js 使用 GitHub Raw（main 分支）优先抓取 Markdown 源，fallback 到 VitePress HTML。",
+    "note": "多版本 URL 清单（不是 1.21.1 快照）。toFetch.gitPath 供 fetch-fabric-docs.js 拼 versions/<ver>/<gitPath>。来源：FabricMC/fabric-docs。GitHub Raw 优先，fallback VitePress HTML。",
     "githubRepo": "FabricMC/fabric-docs",
     "githubBranch": "main",
     "noteUrlFormat": "GitHub Raw URL 由脚本动态构建为 https://raw.githubusercontent.com/FabricMC/fabric-docs/main/<gitPath>。无需手动维护 commit hash。"

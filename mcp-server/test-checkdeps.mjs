@@ -129,6 +129,36 @@ dependencies {
   assert.equal(jei, undefined, `dev.emi:trinkets / curios 不应命中 emi，实际: ${JSON.stringify(r.detectedLibraries)}`);
 }
 
+function testNeoResidualFabricJson() {
+  const gradle = `plugins { id 'net.neoforged.gradle.userdev' version '7.0.184' }`;
+  const neoToml = `modLoader="javafml"
+loaderVersion="[21,)"
+[[mods]]
+modId="demo"`;
+  const fabricJson = JSON.stringify({ schemaVersion: 1, id: "leftover" });
+  const r = checkDependencies(gradle, undefined, fabricJson, neoToml);
+  assert.equal(r.detectedLoader, "neoforge", JSON.stringify(r));
+  assert.ok(r.loaders.includes("neoforge"));
+  assert.ok(r.loaders.includes("fabric"));
+  assert.equal(r.multiLoader, true);
+}
+
+function testLiteLoaderResidualFabricJson() {
+  const gradle = `apply plugin: 'net.minecraftforge.gradle.liteloader'`;
+  const toml = `modLoader="javafml"
+[[mods]]
+modId="demo"`;
+  const fabricJson = JSON.stringify({ schemaVersion: 1, id: "leftover" });
+  const r = checkDependencies(gradle, toml, fabricJson, undefined, { litemodJson: '{"name":"x"}' });
+  assert.equal(r.detectedLoader, "liteloader_forge", JSON.stringify(r));
+  assert.ok(r.loaders.includes("fabric"), JSON.stringify(r.loaders));
+  assert.ok(
+    r.loaders.includes("liteloader") || r.loaders.includes("liteloader_forge"),
+    JSON.stringify(r.loaders),
+  );
+  assert.equal(r.multiLoader, true);
+}
+
 function main() {
   testForgeOwoConflict();
   testFabricNoModsTomlFalsePositive();
@@ -138,6 +168,8 @@ function main() {
   testBookshelfAmbiguity();
   testUnknownLoader();
   testTrinketsAndCuriosDoNotMatchEmi();
+  testNeoResidualFabricJson();
+  testLiteLoaderResidualFabricJson();
   console.log("test-checkdeps: ok");
 }
 

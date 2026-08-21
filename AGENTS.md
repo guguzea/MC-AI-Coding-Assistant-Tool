@@ -16,7 +16,7 @@
 
 ## 第一步：判断项目使用的平台和版本
 
-打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt 在 Fabric 前；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：
+打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt → NeoForge → Fabric；残留 `fabric.mod.json` 不得压过 Neo 元数据，也不得压过 LiteLoader 插件 / `litemod.json`；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：
 
 ### 1. 检查 Quilt
 
@@ -36,6 +36,8 @@ id 'org.quiltmc.loom'
 库 Skill：Quilt 仍按 `fabric-only` + `all-platforms` 读 `knowledge/libs/` 源稿。
 
 ### 2. 检查 Fabric
+
+**须先排除 NeoForge**（`neoforge.mods.toml` / NeoGradle）；残留 `fabric.mod.json` 不得把 Neo 工程判成 Fabric。
 
 查找 `fabric.mod.json` 或 `fabric-loom`（且 **没有** `quilt.mod.json` / quilt-loom）：
 
@@ -75,7 +77,7 @@ id 'net.neoforged.gradle.userdev'
 
 ### 4. 检查 LiteLoader（含 Forge 混合）
 
-查找 `litemod.json`、`LiteMod` 实现、或 Gradle 插件 `net.minecraftforge.gradle.liteloader`。**必须在把任意 ForgeGradle 收成纯 Forge 之前做这一步。**
+查找 `litemod.json`、`LiteMod` 实现、或 Gradle 插件 `net.minecraftforge.gradle.liteloader`。**必须在把任意 ForgeGradle 收成纯 Forge 之前做这一步。**残留 `fabric.mod.json` 不得把 LiteLoader / 混合工程判成 Fabric。
 
 ```
 Decision:
@@ -183,7 +185,7 @@ private void doServerThing() { ... }
 ### Mod ID 约束
 
 - 必须全小写
-- 禁止包含 `-`（用 `_` 替代）
+- Forge / NeoForge / LiteLoader / Rift / ModLoader **禁止**包含 `-`（用 `_` 替代）；Fabric / Quilt **允许**连字符（官方 `example-mod`）；基岩按 manifest
 - 必须与 `mods.toml` / `fabric.mod.json` / `quilt.mod.json` / `litemod.json` / `riftmod.json` / 基岩 `manifest` 中的 id 一致
 
 ## 第四步：决策树使用方式
@@ -250,7 +252,7 @@ Decision: 选择注册方式
 
 | 工具 | 功能 |
 | --- | --- |
-| `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引） |
+| `query_api` | 按类名查询 Vanilla/Parchment API 签名（约 1.16.5–1.20.4；1.12.2 类名空壳；26.1+ 无索引）。精确 FQCN 或唯一简名才 `found:true`；`Handler` 等歧义子串 `found:false` + suggestions |
 | `get_method_params` | 查询方法参数名（可选 version） |
 | `convert_mapping` | mojang / mcp / yarn / parchment 互转（Yarn 走 SQLite；1.12.2 用 MCP SRG） |
 | `get_server_status` | 预热/数据路径与 descriptor 自检（含 updateHint） |
@@ -287,7 +289,7 @@ Decision: 选择注册方式
 
 完整对照表见根目录 `README.md`「工具边界」。调用前必须遵守：
 
-- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
+- **`found:false` ≠ 游戏里没有该类**：多半是索引覆盖范围外，或简名歧义（`Handler` 不会命中 `MouseHandler`）。1.12.2 **空壳**（`found:true` + 空 methods）与 26.1+ 零类不同；Forge 特有类改 `query_loader_api` / `search_*_docs` 或反编译。
 - **`search_*_docs` 查 `constructor` 崩溃**：旧 bug（`Object.prototype`）；已修。改完 `mcp-server` 后必须 `npm run build` **并重载 MCP**，或用 `node mcp-server/dist/cli.js` 验证。
 - **平台工具不要混用**：`get_version_info` 仍仅 Forge。`diagnose_gradle` 覆盖 ForgeGradle + Loom + Neo/MDG；liteloader 插件走轻量模式；Rift / BaseMod / 基岩仍早退。`validate_project` 对 Fabric/Quilt/NeoForge 做真检查，LiteLoader/Rift/ModLoader/基岩 skipped。基岩用 `validate_addon_manifest`。
 - **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。

@@ -43,5 +43,5 @@ public record MyData(String name, int age) implements CustomPacketPayload {
 ```
 
 **核实来源**：`1.20.4-neoforge.json`（单数 `RegisterPayloadHandlerEvent`）。禁止 SimpleChannel；禁止把 1.21 复数 Handlers 当本档。
-
+禁止：`SimpleChannel` / `IMessage`；把 1.21 的 RegisterPayloadHandlersEvent（复数）当本档；
 触发词：Payload、CustomPacketPayload、`query_loader_api`。

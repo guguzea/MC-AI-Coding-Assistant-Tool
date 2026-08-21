@@ -1,0 +1,14 @@
+# 05 — 事件（NeoForge 1.21.5）
+
+来源：https://docs.neoforged.net/docs/1.21.5/concepts/events/
+
+两条总线：
+
+- **游戏总线** `NeoForge.EVENT_BUS`。官方示例是 **`LivingEvent.LivingJumpEvent`**（嵌套名）。逻辑端 `entity.level().isClientSide()`。
+- **mod bus**：生命周期顺序与 1.20.6 同类（`FMLConstructModEvent` → 注册事件 → `FMLCommonSetupEvent` → 分端 Setup → IMC → `FMLLoadCompleteEvent`）。并行事件 `#enqueueWork`。
+
+`@EventBusSubscriber` 在本档会同时登记到游戏总线 **和** mod 总线（文档写等价于两边 `register`）。仍建议写 `modid`。客户端：`FMLEnvironment.dist` 或 `@EventBusSubscriber(value = Dist.CLIENT, modid = "...")`。
+
+取消用 `ICancellableEvent`。不要监听 abstract 超类事件。Name tag 示例是 `RenderNameTagEvent.CanRender`。
+
+禁止：`MinecraftForge.EVENT_BUS`；Payload 塞进 `FMLCommonSetupEvent`。

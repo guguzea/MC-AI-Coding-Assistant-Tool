@@ -1,5 +1,5 @@
 > 来源：https://raw.githubusercontent.com/QuiltMC/rfcs/main/specification/0002-quilt.mod.json.md
-> 抓取时间：2026-08-20T15:14:44.028Z
+> 抓取时间：2026-08-21T10:16:49.385Z
 > 警告：Quilt wiki / quilt.mod.json RFC 是未版本化现行页，不是该 MC 版本的历史快照。QSL README 才按 QuiltMC/quilt-standard-libraries/<maj.min> 抓取。
 
 # Summary

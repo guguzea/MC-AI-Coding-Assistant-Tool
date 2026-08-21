@@ -1,0 +1,144 @@
+﻿---
+name: mc-entity
+description: Minecraft Forge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、EntityClassification、EntityRenderer
+platform: forge
+version: "1.14.4"
+dependencies: []
+mappings: mcp
+---
+
+# 实体开发（Forge 1.14.4）
+
+## 快速开始
+
+```java
+public static final DeferredRegister<EntityType<?>> ENTITIES =
+    new DeferredRegister<>(ForgeRegistries.ENTITIES, MOD_ID);
+
+public static final RegistryObject<EntityType<MyEntity>> MY_ENTITY = ENTITIES.register("my_entity",
+    () -> EntityType.Builder.create(MyEntity::new, EntityClassification.CREATURE)
+        .size(0.6f, 1.8f)
+        .setTrackingRange(8)
+        .setUpdateInterval(3)
+        .immuneToFire()
+        .build("")
+);
+
+ENTITIES.register(modEventBus);
+```
+
+> **注意**：1.14.4 MCP 用 `EntityClassification`，不是 `MobCategory`。`Builder.create` 不是 `of`。`SpawnGroup` 是 Yarn 名，不要抄进本档。
+
+## 实体类基础结构
+
+```java
+public class MyEntity extends CreatureEntity {
+    protected MyEntity(EntityType<? extends MyEntity> type, World world) {
+        super(type, world);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+    }
+}
+```
+
+## Decision: 选择实体基类
+
+| 场景 | 基类 |
+|------|------|
+| 基础生物（动物/怪物） | `Animal`（支持繁殖） |
+| 站立型实体（村民） | `LivingEntity` |
+| 投掷物（雪球、末影珍珠） | `Projectile` |
+| 物品实体 | `ItemEntity` |
+| 矿车/船只 | `AbstractMinecart` / `Boat` |
+| 存储实体 | `StorageEntity`（或 TileEntity） |
+
+## EntityRenderer 注册（客户端）
+
+```java
+// 客户端 — FMLClientSetupEvent + RenderingRegistry（本档没有 EntityRenderersEvent）
+@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientSetup {
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(MyEntity.class, MyEntityRenderer::new);
+    }
+}
+
+// 渲染器
+public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyEntity>> {
+    public MyEntityRenderer(EntityRendererManager manager) {
+        super(manager, new MyEntityModel<>(), 0.5f);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(MyEntity entity) {
+        return new ResourceLocation(MOD_ID, "textures/entity/my_entity.png");
+    }
+}
+```
+
+## Decision: 渲染器类型选择
+
+```
+IF 基础渲染（无自定义模型）
+  → 直接使用空的 LivingRenderer 或已有渲染器
+
+IF 自定义 Biped 模型
+  → BipedModel + LivingRenderer / MobRenderer（构造吃 EntityRendererManager）
+
+IF 自定义任意模型
+  → EntityModel + LivingRenderer
+  → 本档没有 EntityRenderersEvent / bakeLayer / EntityRendererProvider
+```
+
+## 实体数据同步（服务端 ↔ 客户端）
+
+```java
+// 定义同步数据标识符
+private static final DataParameter<Integer> DATA_HEALTH =
+    EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
+
+this.getDataManager().get(DATA_HEALTH);
+this.getDataManager().set(DATA_HEALTH, 50);
+```
+
+## 常见错误
+
+- ❌ `EntityType.Builder.of()` — 本档是 `create`
+- ❌ `RenderingRegistry.registerEntityRenderingHandler` 传入 `EntityType` — 本档只有 `Class` 重载
+- ❌ `LivingEntityRenderer` / `EntityRendererProvider` / `getTextureLocation` / `bakeLayer` — 1.17+；本档是 `LivingRenderer` + `getEntityTexture`
+- ❌ `SynchedEntityData` / `defineSynchedData` — 本档是 `EntityDataManager` + `registerData`
+- ❌ `MeleeAttackGoal` 接到纯 `LivingEntity` — 要 `CreatureEntity`
+- ❌ `EntityRenderersEvent`
+
+## 参考资料
+
+- 详细示例：参见 `04-entity.mdc`
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-------------|-----------|
+| `mc-registry` | 实体类型通过 DeferredRegister 注册 |
+| `mc-capability` | 实体可附加 Capability（AttachCapabilitiesEvent） |
+| `mc-datagen` | 实体注册后可生成实体战利品表 JSON |

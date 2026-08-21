@@ -53,6 +53,9 @@ const NEW_WORKFLOWS = [
   "mc-kotlin",
   "mc-jei",
   "mc-ci-publish-extra",
+  "mc-villager",
+  "mc-multiblock",
+  "mc-ai",
 ];
 
 function skillPath(ver, name) {
@@ -631,7 +634,7 @@ description: |
   }
   console.log("plan4 neo thin mc-entity + sample skills: ok");
 
-  const quiltVers = ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.11"];
+  const quiltVers = ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1", "1.21.3", "1.21.4", "1.21.8", "1.21.10", "1.21.11"];
   for (const ver of quiltVers) {
     const disk = join(repo, "quilt", ver, ".cursor", "skills");
     const names = existsSync(disk) ? readdirSync(disk).filter((n) => n.startsWith("mc-")) : [];

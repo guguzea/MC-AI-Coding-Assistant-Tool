@@ -12,23 +12,8 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-20T15:14:41.377Z",
-    "sha256": "32f1ed42c4716333f1502705d62b28cf8e77a4bff013db6e1f3f3db03730665d"
-  },
-  {
-    "id": "1.21.11/quilt-mod-json",
-    "version": "1.21.11",
-    "label": "quilt.mod.json",
-    "url": "https://raw.githubusercontent.com/QuiltMC/rfcs/main/specification/0002-quilt.mod.json.md",
-    "tags": [
-      "loader",
-      "metadata"
-    ],
-    "priority": "⭐",
-    "sectionCount": 1,
-    "source": "quilt-docs",
-    "fetchedAt": "2026-08-20T15:14:44.221Z",
-    "sha256": "5ed4c0230075a02b91abb7861b2e024104e110812230e5651fa79562537fcad8"
+    "fetchedAt": "2026-08-21T10:17:30.478Z",
+    "sha256": "d6829c89dec86b1e2c1b5bbf08df9b0475f63de35327c9c2b11f7b9507e20ebd"
   },
   {
     "id": "1.21.11/qsl-readme",
@@ -41,7 +26,7 @@
     "priority": "⭐",
     "sectionCount": 1,
     "source": "quilt-docs",
-    "fetchedAt": "2026-08-20T15:14:47.568Z",
-    "sha256": "113e430c91468e67608795aff195ee074e3b7eafb4bb885ce473a23d8dba4736"
+    "fetchedAt": "2026-08-21T10:19:48.955Z",
+    "sha256": "2043cf5e67af0d516c09bccabff5d31131589b900ccd7b2c85c15e7db9e76754"
   }
 ]

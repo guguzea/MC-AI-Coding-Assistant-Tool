@@ -170,6 +170,16 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       ],
     };
   }
+  if (platform === "neoforge" && ver === "1.20.1") {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: [
+        "NeoForge 1.20.1 是 Forge 兼容层，Datagen 包名必须跟工程，禁止默写 net.minecraftforge.data.event.GatherDataEvent。请改用 search_neoforge_docs(version=1.20.1) 手写。该版本无原生生成器，不要理解为游戏里做不了。",
+      ],
+    };
+  }
   if (platform === "fabric") {
     if (!isFabricDatagenVersion(ver)) {
       return {
@@ -315,11 +325,6 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     code = neo1204.generateRecipe(modId, targetName, classBase);
     warnings.push("NeoForge 1.20.4 RecipeProvider 是一参 PackOutput，不要抄 1.21 两参构造。");
   } else {
-    if (platform === "neoforge" && ver === "1.20.1") {
-      warnings.push(
-        "NeoForge 1.20.1 Datagen 复用 Forge 1.20.1 模板骨架；import 跟工程包名与 search_neoforge_docs(version=1.20.1)，禁止默写。不要用 1.20.4+ DeferredBlock / Attachment。",
-      );
-    }
     if (forge1204) {
       warnings.push(
         "Forge 1.20.4 Datagen 文档路由为 1.20.x；RecipeProvider 为 FinishedRecipe + MyRecipeProvider::new（与 1.20.1 核实一致）。禁止抄 1.21 RecipeOutput。",

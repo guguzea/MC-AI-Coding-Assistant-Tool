@@ -1,0 +1,179 @@
+# 07 — 数据生成器
+
+> 适用版本：Fabric 1.17.1
+
+---
+
+## 约束
+
+### 核心原则
+
+- Fabric 1.17.1 **开始有** `DataGeneratorEntrypoint` + `fabric-datagen`，但 API 仍偏早期
+- **推荐**手写 JSON 到 `src/main/resources/`（稳定、好对照原版）
+- 若走 DataGen：入口是 `DataGeneratorEntrypoint.onInitializeDataGenerator`，**不是** `DataGeneratorInitializer` / `init_data`
+- 本档配方类是 `FabricRecipesProvider.generateRecipes`（注意复数 Recipes）；不要抄 1.20 的 `createPack()`
+- `FabricDataGenerator.addProvider(Function)` 直接挂 provider；**没有** `createPack()`
+- **禁止** `ExistingFileHelper`、`DataStreamOutputSupplier.Writer`、Forge 的 `ItemModelProvider`
+
+---
+
+## Decision Flow
+
+### Decision: 选择数据生成方式
+
+```
+IF 生成 配方 / 战利品表 / 进度 / 语言文件
+  → 推荐直接手写 JSON 到 src/main/resources/data/{modid}/ 与 assets/{modid}/
+
+IF 生成 物品/方块模型 JSON
+  → 手写 JSON 到 src/main/resources/assets/{modid}/
+
+IF 必须使用 DataGen（保持代码驱动）
+  → fabric-api + DataGeneratorEntrypoint
+  → generator.addProvider(MyRecipeProvider::new)
+```
+
+---
+
+## 手动资源文件（推荐方式）
+
+### 物品模型 JSON
+
+```json
+// src/main/resources/assets/examplemod/models/item/my_item.json
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "examplemod:item/my_item"
+  }
+}
+```
+
+### 语言文件
+
+```json
+// src/main/resources/assets/examplemod/lang/en_us.json
+{
+  "item.examplemod.my_item": "My Item",
+  "block.examplemod.my_block": "My Block",
+  "entity.examplemod.my_entity": "My Entity"
+}
+```
+
+### 方块状态 JSON
+
+```json
+// src/main/resources/assets/examplemod/blockstates/my_block.json
+{
+  "variants": {
+    "": { "model": "examplemod:block/my_block" }
+  }
+}
+```
+
+```json
+// src/main/resources/assets/examplemod/models/block/my_block.json
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "examplemod:block/my_block"
+  }
+}
+```
+
+### 配方 JSON
+
+```json
+// src/main/resources/data/examplemod/recipes/my_recipe.json
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "minecraft:diamond" }
+  },
+  "result": {
+    "item": "examplemod:my_item",
+    "count": 1
+  }
+}
+```
+
+
+---
+
+## DataGen（可选）
+
+### 添加 DataGen 依赖
+
+```groovy
+// build.gradle — 用完整 fabric-api，不要单独钉死 fabric-datagen-api-v0 的假版本号
+dependencies {
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+```
+
+### 创建 DataGeneratorEntrypoint
+
+```java
+public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator generator) {
+        generator.addProvider(MyRecipeProvider::new);
+    }
+}
+```
+
+### 注册 fabric-datagen
+
+```json
+// fabric.mod.json
+{
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.example.examplemod.ExampleModDataGenerator"
+    ]
+  }
+}
+```
+
+### 配方 provider（1.17.1）
+
+```java
+public class MyRecipeProvider extends FabricRecipesProvider {
+    public MyRecipeProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator);
+    }
+
+    @Override
+    protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+        ShapedRecipeJsonFactory.create(MY_ITEM)
+            .pattern("AAA")
+            .pattern("A A")
+            .pattern(" A ")
+            .input('A', Items.DIAMOND)
+            .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
+            .offerTo(exporter);
+    }
+}
+```
+
+> ⚠️ **1.17.1 DataGen 限制**：早期 API，provider 种类比 1.18+ 少。推荐手写 JSON 以确保稳定性。
+
+## 常见错误
+
+- ❌ 注册 `init_data` / `init` 当 datagen 入口 — 应用 `fabric-datagen`
+- ❌ 使用 `DataGeneratorInitializer` 或 `ExistingFileHelper` — 不是 Fabric 入口
+- ❌ 把 1.19.4+ 的 `generator.createPack()` 抄到 1.17.1
+- ❌ 引用未注册的资源 — 游戏找不到资源文件
+
+## 扩展点
+
+| 配合 Skill | 协作说明 |
+|-----------|---------|
+| `mc-item` | 手写物品模型 JSON |
+| `mc-block` | 手写方块模型和掉落表 JSON |
+| `mc-registry` | 配方引用已注册的物品 |

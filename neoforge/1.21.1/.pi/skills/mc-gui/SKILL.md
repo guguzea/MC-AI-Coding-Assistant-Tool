@@ -1,0 +1,27 @@
+﻿---
+name: mc-gui
+description: NeoForge 1.21.1 mc-gui。类名只来自本档核实表与 search_neoforge_docs。
+platform: neoforge
+version: "1.21.1"
+dependencies: []
+mappings: mojmap
+---
+
+# mc-gui（NeoForge 1.21.1）
+
+禁止从 Forge 或邻档复制。1.21.1 起事件名变成复数 Handlers。payload 用 CustomPacketPayload.Type + StreamCodec + playBidirectional/ToClient/ToServer。
+
+# 10 — GUI（NeoForge 1.21.1）
+
+来源（官方原文；本档 data 未入库 gui 页，以线上版为准）：
+- https://docs.neoforged.net/docs/1.21.1/gui/menus/
+- https://docs.neoforged.net/docs/1.21.1/gui/screens/
+
+- 注册 `MenuType`（`DeferredRegister`），菜单实例不是 registry object。
+- 无 extra data：官方示例 `new MenuType(MyMenu::new, FeatureFlags.DEFAULT_FLAGS)`（本档原文无 `<>`）。
+- extra data：`IMenuTypeExtension.create(...)` + 客户端构造读 extra buf。**不是** 1.20.4 文档名 `IForgeMenuType`。loader-api：`create(IContainerFactory)`，实例 `create(int, Inventory, RegistryFriendlyByteBuf)`。
+- 打开：逻辑服务端 `IPlayerExtension#openMenu`。官方示例 `serverPlayer.openMenu(new SimpleMenuProvider((id, inv, player) -> new MyMenu(id, inv), Component.translatable(...)))`。带 extra 的 `Consumer<RegistryFriendlyByteBuf>` 只给 `IContainerFactory` 菜单用。
+- Screen：物理客户端、mod bus 上 `RegisterMenuScreensEvent`：`event.register(MY_MENU.get(), MyContainerScreen::new)`。**不要**写 `MenuScreens.register`。
+- 槽位同步：`Slot` / `SlotItemHandler`、`DataSlot` / `ContainerData`；额外自定义走 06 Payload。**禁止 SimpleChannel。**
+- 方块：官方示例 `getMenuProvider` + `useWithoutItem` 里 `serverPlayer.openMenu(...)`，返回 `InteractionResult.sidedSuccess(level.isClientSide)`。
+- loader-api **未收录** `NetworkHooks`。不要抄 1.20.4 的 `NetworkHooks.openScreen`。

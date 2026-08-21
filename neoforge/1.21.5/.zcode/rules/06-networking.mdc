@@ -1,0 +1,35 @@
+# 06 — 网络（NeoForge 1.21.5）
+
+来源：https://docs.neoforged.net/docs/1.21.5/networking/payload/
+
+**本档不是 Forge SimpleChannel。** `RegisterPayloadHandlersEvent` + `PayloadRegistrar` + `CustomPacketPayload`。
+
+TYPE 用 **`ResourceLocation.fromNamespaceAndPath("mymod", "my_data")`**。默认 handler **在主线程**；要改到网络线程先 `registrar = event.registrar("1").executesOn(HandlerThread.NETWORK)`（`executesOn` 返回新 registrar，必须接住返回值）。
+
+```java
+@SubscribeEvent // mod event bus
+public static void register(final RegisterPayloadHandlersEvent event) {
+    final PayloadRegistrar registrar = event.registrar("1");
+    registrar.playBidirectional(
+        MyData.TYPE,
+        MyData.STREAM_CODEC,
+        new DirectionalPayloadHandler<>(
+            ClientPayloadHandler::handleDataOnMain,
+            ServerPayloadHandler::handleDataOnMain));
+}
+
+public record MyData(String name, int age) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<MyData> TYPE =
+        new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("mymod", "my_data"));
+    public static final StreamCodec<ByteBuf, MyData> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.STRING_UTF8, MyData::name,
+        ByteBufCodecs.VAR_INT, MyData::age,
+        MyData::new);
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() { return TYPE; }
+}
+```
+
+发送：`PacketDistributor.sendToServer` / `sendToPlayer` / `sendToPlayersTrackingChunk` / `sendToAllPlayers`。
+
+禁止：`SimpleChannel` / `IMessage`；`RegisterPayloadHandlerEvent`（单数）；把 1.20.6 的 `new ResourceLocation` 或「默认网络线程」抄进本档。

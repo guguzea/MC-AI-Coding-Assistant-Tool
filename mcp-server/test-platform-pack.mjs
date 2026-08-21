@@ -765,6 +765,9 @@ function assertHasRuleIds(s, want, label) {
     const s = sessionPlatformPack({ platform, minecraftVersion: ver });
     assert.equal(s.ok, true, `${platform} ${ver}: ${JSON.stringify(s.action)}`);
     assertHasRuleIds(s, ["00", "01", "09"], `${platform} ${ver} base`);
+    assert.equal(s.rulesMode, "base");
+    assert.equal(s.next?.tool, "activate_platform_pack");
+    assert.equal(s.next?.arguments?.task, "mc-new-block");
     assert.ok(
       !(s.warnings ?? []).some((w) => /缺少底座/.test(w)),
       `${platform} ${ver} warnings=${(s.warnings ?? []).join(" | ")}`,
@@ -779,9 +782,10 @@ function assertHasRuleIds(s, want, label) {
   mkdirSync(packDir, { recursive: true });
   writeFileSync(join(packDir, "AGENTS.md"), "# fabric 9.9.7\n", "utf8");
   const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: "9.9.7", repoRoot: tmp });
-  assert.equal(s.ok, true, JSON.stringify(s.action));
+  assert.equal(s.ok, false, JSON.stringify(s.action));
+  assert.equal(s.action?.code, "PACK_INCOMPLETE");
   assert.equal((s.rules ?? []).length, 0);
-  assert.ok((s.warnings ?? []).some((w) => /缺少底座 00\/01\/09/.test(w)), (s.warnings ?? []).join(" | "));
+  assert.ok((s.warnings ?? []).some((w) => /底座规则文件缺失/.test(w)), (s.warnings ?? []).join(" | "));
   assert.ok(!(s.warnings ?? []).some((w) => /已加载底座规则 00\/01\/09/.test(w)));
   rmSync(tmp, { recursive: true, force: true });
   console.log("session missing .cursor/rules does not claim base loaded: ok");
@@ -896,6 +900,42 @@ function assertHasRuleIds(s, want, label) {
   assert.ok(!(prio.planned ?? []).some((p) => /SKILL\.md$/.test(p.rel)), "writeSkillStubs false wins over includeSkills true");
   rmSync(tmp, { recursive: true, force: true });
   console.log("writeSkillStubs default/deprecated/priority: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.4", skillNames: ["mc-entity"] });
+  assert.equal(s.ok, true, JSON.stringify(s.action));
+  const entIdx = (s.skills ?? []).find((x) => x.name === "mc-entity");
+  assert.ok(entIdx?.source, JSON.stringify(entIdx));
+  assert.match(String(entIdx.source), /fabric\/1\.21\.3/);
+  assert.ok(entIdx.mappingNote);
+  assert.match(String(entIdx.mappingNote), /search_fabric_docs\(version=1\.21\.4\)/);
+  assert.match(String(entIdx.mappingNote), /不要用 version=1\.21\.3/);
+  const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
+  assert.ok(entity, "fabric 1.21.4 donor mc-entity");
+  assert.ok(String(entity.text).trimStart().startsWith("[DONOR_SKILL 禁止直接抄写]"));
+  const local = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.4", skillNames: ["mc-block"] });
+  const block = (local.skillBodies ?? []).find((b) => b.name === "mc-block");
+  assert.ok(block);
+  assert.doesNotMatch(String(block.text).trimStart(), /^\[DONOR_SKILL 禁止直接抄写\]/);
+}
+
+{
+  const kForge = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", task: "mc-kotlin" });
+  assert.ok((kForge.skillBodies ?? []).some((b) => b.name === "mc-kotlin-for-forge") ||
+    (kForge.libSkills ?? []).some((b) => b.name === "mc-kotlin-for-forge"), JSON.stringify((kForge.warnings ?? []).slice(0, 5)));
+  const kFab = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.11", task: "mc-kotlin" });
+  assert.ok(
+    (kFab.skillBodies ?? []).some((b) => b.name === "mc-fabric-language-kotlin") ||
+      (kFab.warnings ?? []).some((w) => /mc-fabric-language-kotlin/.test(w)),
+    (kFab.warnings ?? []).join(" | "),
+  );
+}
+
+{
+  const q = sessionPlatformPack({ platform: "quilt", minecraftVersion: "1.21.4" });
+  assert.equal(q.ok, true, JSON.stringify(q.action));
+  assertHasRuleIds(q, ["00", "01", "09"], "quilt 1.21.4 base");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

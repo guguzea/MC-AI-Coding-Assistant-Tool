@@ -97,6 +97,7 @@ export function exclusiveFabricFallbackRefusal(hit: DocHit): Record<string, unkn
     ok: false,
     platform: "quilt",
     fallback: "fabric",
+    sourcePlatform: "fabric",
     warning: QUILT_EXCLUSIVE_WARNING,
     error: {
       code: "FABRIC_EXCLUSIVE",
@@ -239,6 +240,7 @@ export async function searchQuiltDocs(args: {
       versionFallback: false,
       platform: "quilt",
       fallback: "fabric",
+      sourcePlatform: "fabric",
       warning: joinSearchWarnings(
         versionMissingQuilt
           ? QUILT_VERSION_FABRIC_FALLBACK_WARNING
@@ -291,6 +293,7 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
       ...result,
       platform: "quilt",
       fallback: "fabric",
+      sourcePlatform: "fabric",
       warning: QUILT_FABRIC_FALLBACK_WARNING,
     });
   } catch (e) {
@@ -350,6 +353,7 @@ export async function getQuiltDocFull(args: {
       ...result,
       platform: "quilt",
       fallback: "fabric",
+      sourcePlatform: "fabric",
       warning: QUILT_FABRIC_FALLBACK_WARNING,
     });
   } catch (e) {
