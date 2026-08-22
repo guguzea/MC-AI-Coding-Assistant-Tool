@@ -755,7 +755,8 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
 
   // 1. 精确 FQCN，或简单类名唯一精确匹配（歧义 suffix/contains/prefix 不得 found:true）
   const slashName = toSlash(className);
-  let cls = vData.apiIndex[slashName];
+  // ownGet：className='constructor'/'__proto__' 等不得命中 Object.prototype 继承键
+  let cls = ownGet(vData.apiIndex, slashName);
   let resolvedSlash = slashName;
   if (!cls) {
     const unique = uniqueExactSimpleNameHit(className, vData);

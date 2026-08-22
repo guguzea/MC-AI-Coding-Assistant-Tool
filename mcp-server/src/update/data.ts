@@ -6,6 +6,7 @@ import { createHash } from "crypto";
 import {
   copyFileSync,
   existsSync,
+  lstatSync,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -88,6 +89,22 @@ function walkFiles(root: string, base = root): string[] {
     else out.push(relative(base, p).split(sep).join("/"));
   }
   return out;
+}
+
+/** 解压后重扫 staging：zip 成员不得以 symlink/junction 形式落盘（防把外部文件拷进 dataDir）。 */
+function findSymlinkInTree(root: string): string | null {
+  if (!existsSync(root)) return null;
+  const stack: string[] = [root];
+  while (stack.length > 0) {
+    const dir = stack.pop()!;
+    for (const name of readdirSync(dir)) {
+      const p = join(dir, name);
+      const st = lstatSync(p);
+      if (st.isSymbolicLink()) return relative(root, p).split(sep).join("/");
+      if (st.isDirectory()) stack.push(p);
+    }
+  }
+  return null;
 }
 
 function copyTree(srcRoot: string, destRoot: string, allowRoot: string): string[] {
@@ -193,8 +210,9 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
 
   const tmpBase = join(tmpdir(), `mc-skill-update-${process.pid}-${Date.now()}`);
   mkdirSync(tmpBase, { recursive: true });
-  const zipPath = opts.localZipPath ?? join(tmpBase, opts.zip.name);
-  const sumsPath = opts.localSumsPath ?? (opts.sums ? join(tmpBase, opts.sums.name) : undefined);
+  // 落盘名固定常量：远端 asset name 只用于 URL/校验条目匹配，不进本地路径（防 ../ 注入）
+  const zipPath = opts.localZipPath ?? join(tmpBase, "mc-skill-data.zip");
+  const sumsPath = opts.localSumsPath ?? (opts.sums ? join(tmpBase, "SHA256SUMS.txt") : undefined);
   const staging = join(tmpBase, "staging");
 
   try {
@@ -282,6 +300,21 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
 
     const ex = extractZip(zipPath, staging);
     if (!ex.ok) return { ok: false, steps, filesToOverwrite, diskSpace, action: ex.action };
+    const symlink = findSymlinkInTree(staging);
+    if (symlink) {
+      return {
+        ok: false,
+        steps,
+        filesToOverwrite,
+        diskSpace,
+        action: actionable(
+          "DATA_ZIP_LAYOUT_INVALID",
+          `解压产物含符号链接: ${symlink}`,
+          ["Release zip 不得含 symlink/hardlink 成员", "校验 Release 资产来源与 SHA256SUMS"],
+          ["mc_skill_update"],
+        ),
+      };
+    }
     const contentRoot = resolveStagingContentRoot(staging);
     const written = copyTree(contentRoot, dataDir, allowRoot!);
     writeUpdateState(

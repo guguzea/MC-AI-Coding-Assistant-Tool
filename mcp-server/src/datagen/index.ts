@@ -6,11 +6,12 @@
 
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
-import { generateFabric, type FabricProviderType } from "./fabric.js";
+import { generateFabric, type FabricProviderType, type FabricIdStyle } from "./fabric.js";
 import { generateNeoForge21, type NeoForge21ProviderType } from "./neoforge-1.21.js";
 import { generateNeoForge215, type NeoForge215ProviderType } from "./neoforge-1.21.5.js";
 import { generateNeoForge261, type NeoForge261ProviderType } from "./neoforge-26.1.js";
 import * as neo1204 from "./neoforge-1.20.4.js";
+import * as forge1204Dg from "./forge-1.20.4.js";
 
 export { normalizeModIdentifier, toJavaClassName } from "./common.js";
 
@@ -234,7 +235,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       usedModId: query.modId,
       usedTargetName: query.targetName,
       errors: [
-        `Forge Datagen 模板仅覆盖 1.20.1 与 1.20.4（FinishedRecipe；当前 version=${ver}）。1.19.4 / 1.18.2 未核到 RecipeProvider 构造签名故不写；1.12.2 无 DataGen。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_forge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。不要套用 1.21 ResourceLocation.fromNamespaceAndPath / RecipeOutput。`,
+        `Forge Datagen 模板仅覆盖 1.20.1（Consumer<FinishedRecipe>）与 1.20.4（仅 recipe，buildRecipes(RecipeOutput)）；当前 version=${ver}。1.19.4 / 1.18.2 未核到 RecipeProvider 构造签名故不写；1.12.2 无 DataGen。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_forge_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。`,
       ],
     };
   }
@@ -267,6 +268,8 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   let code: string;
   if (platform === "fabric") {
     const recipeMethod = fabricDatagenRecipeMethod(ver) ?? "buildRecipes";
+    // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
+    const idStyle: FabricIdStyle = ver === "1.21.11" ? "Identifier" : "ResourceLocation";
     code = generateFabric(
       providerType as FabricProviderType,
       modId,
@@ -274,10 +277,16 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       classBase,
       /^26\.1/.test(ver),
       recipeMethod,
+      idStyle,
     );
     if (ver !== "1.21.11" && !/^26\.1/.test(ver)) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
       warnings.push(`Fabric ${ver} Datagen：recipe 方法为 ${recipeMethod}（search_fabric_docs version=${ver}）。`);
+    }
+    if (idStyle === "Identifier") {
+      warnings.push(
+        `Fabric ${ver} Mojmap 已改名：TagKey 用 net.minecraft.resources.Identifier.fromNamespaceAndPath（1.21.11 起，非 Yarn 的 net.minecraft.util.Identifier/of）。`,
+      );
     }
     if (providerType === "recipe" && !/^26\.1/.test(ver)) {
       warnings.push(
@@ -324,12 +333,23 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     }
     code = neo1204.generateRecipe(modId, targetName, classBase);
     warnings.push("NeoForge 1.20.4 RecipeProvider 是一参 PackOutput，不要抄 1.21 两参构造。");
-  } else {
-    if (forge1204) {
-      warnings.push(
-        "Forge 1.20.4 Datagen 文档路由为 1.20.x；RecipeProvider 为 FinishedRecipe + MyRecipeProvider::new（与 1.20.1 核实一致）。禁止抄 1.21 RecipeOutput。",
-      );
+  } else if (platform === "forge" && forge1204) {
+    if (providerType !== "recipe") {
+      return {
+        code: null,
+        usedModId: modId,
+        usedTargetName: targetName,
+        errors: [
+          `Forge 1.20.4 Datagen 本波仅核实 RecipeProvider（一参 PackOutput + buildRecipes(RecipeOutput)，依据 data/forge_1.20.4/extracted 索引）。providerType=${providerType} 请 search_forge_docs(version=1.20.4) 手写。`,
+        ],
+        warnings: warnings.length ? warnings : undefined,
+      };
     }
+    code = forge1204Dg.generateRecipe(modId, targetName, classBase);
+    warnings.push(
+      "Forge 1.20.4（vanilla 1.20.2+）：buildRecipes(RecipeOutput)，FinishedRecipe 类已不存在；不要抄 1.20.1 的 Consumer<FinishedRecipe>。",
+    );
+  } else {
     switch (providerType) {
       case "recipe":
         code = forge.generateRecipe(modId, targetName, classBase);
@@ -363,9 +383,6 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
           errors: [`Unknown provider type: ${providerType}`],
           warnings: warnings.length ? warnings : undefined,
         };
-    }
-    if (forge1204) {
-      code = prependDocsReview(code, "search_forge_docs", "1.20.4");
     }
   }
 

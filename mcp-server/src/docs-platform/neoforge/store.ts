@@ -249,12 +249,21 @@ export class NeoForgeDocStore {
     resolved: string;
     versionFallback: boolean;
     mainDocsMissing: boolean;
+    /** resolved 数据实际来自哪个平台（Forge 兼容层时为 "forge"） */
+    sourcePlatform: "neoforge" | "forge";
+    /** sourcePlatform 为 forge 时的实际数据版本（如 "1.20.1"） */
+    sourceVersion?: string;
     warning?: string;
   } {
     const resolved = this.resolveEffectiveVersion(version);
     const own = this.hasOwnDocTree(version);
     const versionFallback = !own && resolved !== version && this.hasOwnDocTree(resolved);
     const mainDocsMissing = !own && !this.hasOwnDocTree(resolved);
+    // 1.20.1 的"本版树"是 forge_1.20.1 兼容数据：正文来自 Forge，必须对调用方可见（F-D104）
+    const forgeCompatible = FORGE_COMPATIBLE_VERSIONS.has(version) || FORGE_COMPATIBLE_VERSIONS.has(resolved);
+    const sourcePlatform: "neoforge" | "forge" =
+      forgeCompatible && !existsSync(join(this.versionDataDir(version), "index-l0.json")) ? "forge" : "neoforge";
+    const sourceVersion = sourcePlatform === "forge" ? "1.20.1" : resolved;
     let warning: string | undefined;
     if (versionFallback) {
       warning = `请求版本 ${version} 无独立主文档树，已降级到 ${resolved}。不要把 ${resolved} 规则/全文当成 ${version}。`;
@@ -264,7 +273,15 @@ export class NeoForgeDocStore {
           ? "NeoForge 无独立 1.20.5 主文档树（不要建空树，也不要读 1.20.4/1.20.6 的 00–10）。Primer 仍可按 to 命中；请用 get_migration_guide 或 search 的 source=primer。"
           : `NeoForge 无独立 ${version} 主文档树。未建档版本禁止读邻档 00–10，请改口 search_neoforge_docs / get_migration_guide。`;
     }
-    return { requested: version, resolved, versionFallback, mainDocsMissing, warning };
+    return {
+      requested: version,
+      resolved,
+      versionFallback,
+      mainDocsMissing,
+      sourcePlatform,
+      ...(sourceVersion !== undefined ? { sourceVersion } : {}),
+      warning,
+    };
   }
 
   private isCacheValid<T>(entry: CacheEntry<T> | undefined): boolean {

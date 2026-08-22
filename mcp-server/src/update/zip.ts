@@ -2,9 +2,18 @@
  * Minimal ZIP helpers: list entries (central directory) + extract via system tar.
  */
 
-import { execFileSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync, openSync, readSync, closeSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  openSync,
+  readSync,
+  closeSync,
+} from "fs";
 import { join } from "path";
+import { extractZip as mdkExtractZip, probeUnzipTool } from "../mdk/index.js";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export interface ZipListResult {
@@ -37,10 +46,31 @@ export function listZipEntries(zipPath: string): ZipListResult {
       }
       const cdOffset = st.readUInt32LE(eocd + 16);
       const cdCount = st.readUInt16LE(eocd + 10);
+      // zip64（EOCD 计数/偏移为 0xFFFF/0xFFFFFFFF）不支持：显式失败，禁止静默截断校验视图
+      if (cdCount === 0xffff || cdOffset === 0xffffffff) {
+        return {
+          ok: false,
+          action: actionable("DATA_ZIP_LAYOUT_INVALID", "zip64 布局不受支持", [
+            "Release 资产应为普通 zip（<65535 条目）",
+            "校验 Release 资产来源",
+          ], ["mc_skill_update"]),
+        };
+      }
       const entries: string[] = [];
       let pos = cdOffset;
       for (let i = 0; i < cdCount; i++) {
-        if (st.readUInt32LE(pos) !== 0x02014b50) break;
+        // 中央目录必须在声明条目数内完整可读；签名不符 = 截断/伪造，fail-closed 而非静默少读
+        if (pos + 46 > st.length || st.readUInt32LE(pos) !== 0x02014b50) {
+          return {
+            ok: false,
+            action: actionable(
+              "DATA_ZIP_LAYOUT_INVALID",
+              `中央目录在第 ${i}/${cdCount} 条中断（截断或伪造）`,
+              ["重新下载 Release 资产", "校验 SHA256SUMS"],
+              ["mc_skill_update"],
+            ),
+          };
+        }
         const nameLen = st.readUInt16LE(pos + 28);
         const extraLen = st.readUInt16LE(pos + 30);
         const commentLen = st.readUInt16LE(pos + 32);
@@ -119,22 +149,30 @@ export function normalizeZipLayout(entries: string[]): {
 }
 
 export function extractZip(zipPath: string, destDir: string): { ok: boolean; action?: ActionEnvelope } {
+  // GNU tar 不能解 zip；必须探测 unzip / 7z / bsdtar（与 mdk 同一套探测）
+  const tool = probeUnzipTool();
+  if (!tool) {
+    return {
+      ok: false,
+      action: actionable(
+        "UNZIP_TOOL_MISSING",
+        "未找到可解 zip 的工具（unzip / 7z / bsdtar）",
+        ["安装 unzip 或 7-Zip", "Windows 10+ 自带 System32 bsdtar", "不要假定 GNU tar 能解 zip"],
+        ["mc_skill_update"],
+      ),
+    };
+  }
   mkdirSync(destDir, { recursive: true });
   try {
-    // Windows 10+ and Unix tar can extract zip
-    execFileSync("tar", ["-xf", zipPath, "-C", destDir], {
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-    });
+    mdkExtractZip(zipPath, destDir, tool);
     return { ok: true };
   } catch (err) {
-    const msg = (err as Error & { stderr?: Buffer }).stderr?.toString?.() || (err as Error).message;
     return {
       ok: false,
       action: actionable(
         "DATA_EXTRACT_FAILED",
-        `解压失败: ${msg}`,
-        ["确认系统 tar 可用", "检查 zip 完整性"],
+        `解压失败（${tool.kind}）: ${(err as Error).message}`,
+        [`解压工具：${tool.executable}`, "检查 zip 完整性"],
         ["mc_skill_update"],
       ),
     };
@@ -146,14 +184,9 @@ export function resolveStagingContentRoot(stagingDir: string): string {
   const dataSub = join(stagingDir, "data");
   if (existsSync(dataSub)) {
     // If staging only has data/, use it
-    try {
-      const { readdirSync, statSync } = require("fs") as typeof import("fs");
-      const kids = readdirSync(stagingDir).filter((n) => n !== "." && n !== "..");
-      if (kids.length === 1 && kids[0] === "data" && statSync(dataSub).isDirectory()) {
-        return dataSub;
-      }
-    } catch {
-      /* fallthrough */
+    const kids = readdirSync(stagingDir).filter((n) => n !== "." && n !== "..");
+    if (kids.length === 1 && kids[0] === "data" && statSync(dataSub).isDirectory()) {
+      return dataSub;
     }
   }
   return stagingDir;

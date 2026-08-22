@@ -10,7 +10,7 @@ import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, type SearchResultLike } from "./search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "./semantic/status.js";
-import { filterFabricFallbackHits, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
+import { filterFabricFallbackHits, isFabricExclusiveContent, isFabricExclusiveHit, isQslSpecificQuery } from "./quilt-fallback-filter.js";
 
 export const QUILT_EXCLUSIVE_WARNING =
   "QSL 禁止使用该 Fabric Registry/ItemGroup 页。请查阅 QSL / QuiltRegistry，不要用 net.fabricmc.fabric.api.event.registry / FabricItemGroup。";
@@ -349,6 +349,21 @@ export async function getQuiltDocFull(args: {
       tags: result.meta.tags,
     });
     if (refused) return refused;
+    // 元数据干净但正文是 FAPI 专属教程（注册/网络等）时同样拒绝（F-D105）
+    if (isFabricExclusiveContent(result.content)) {
+      return jsonOk({
+        ok: false,
+        platform: "quilt",
+        fallback: "fabric",
+        sourcePlatform: "fabric",
+        warning: QUILT_EXCLUSIVE_WARNING,
+        error: {
+          code: "FABRIC_EXCLUSIVE",
+          message: QUILT_EXCLUSIVE_WARNING,
+        },
+        contentFiltered: true,
+      });
+    }
     return jsonOk({
       ...result,
       platform: "quilt",

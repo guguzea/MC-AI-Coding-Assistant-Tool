@@ -213,6 +213,72 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
 }
 
 {
+  // MC_SKILL_PROJECT_ROOT 为硬边界（AND 口径）：env root 外的 projectPath 真写必须拒绝并带 breakingChange 标识（F-B01）
+  const envRoot = mkdtempSync(join(tmpdir(), "mc-pack-env-"));
+  const outside = mkdtempSync(join(tmpdir(), "mc-pack-out-"));
+  const inside = join(envRoot, "proj");
+  mkdirSync(inside, { recursive: true });
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  process.env.MC_SKILL_PROJECT_ROOT = envRoot;
+  try {
+    const blocked = activatePlatformPack({
+      action: "write",
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      hosts: ["cursor"],
+      projectPath: outside,
+      dryRun: false,
+      confirmed: true,
+    });
+    assert.equal(blocked.ok, false, JSON.stringify(blocked).slice(0, 400));
+    assert.equal(blocked.breakingChange, true);
+    assert.equal(blocked.action.code, "PATH_OUTSIDE_ALLOWLIST");
+    assert.ok(!existsSync(join(outside, ".mc-skill", "pack-manifest.json")), "outside root must stay untouched");
+
+    const written = activatePlatformPack({
+      action: "write",
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      hosts: ["cursor"],
+      projectPath: inside,
+      dryRun: false,
+      confirmed: true,
+    });
+    assert.equal(written.ok, true, JSON.stringify(written).slice(0, 400));
+    assert.equal(
+      String(written.allowRoot ?? "").toLowerCase(),
+      envRoot.toLowerCase(),
+      "allowRoot must be the env root",
+    );
+    assert.ok(existsSync(join(inside, ".mc-skill", "pack-manifest.json")));
+  } finally {
+    rmSync(envRoot, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+    rmSync(inside, { recursive: true, force: true });
+    delete process.env.MC_SKILL_PROJECT_ROOT;
+    delete process.env.MC_SKILL_ALLOW_WRITE;
+  }
+  console.log("write env-root AND boundary (breakingChange on outside): ok");
+}
+
+{
+  // 知识库整树禁写（F-B05）：版本子目录无根特征也必须拒绝，防止规则源自我污染
+  const knowledgeSubdir = join(repo, "forge", "1.20.1");
+  const refused = activatePlatformPack({
+    action: "write",
+    platform: "forge",
+    minecraftVersion: "1.20.1",
+    hosts: ["cursor"],
+    projectPath: knowledgeSubdir,
+    dryRun: false,
+    confirmed: true,
+  });
+  assert.equal(refused.ok, false, JSON.stringify(refused).slice(0, 400));
+  assert.equal(refused.action.code, "REFUSE_KNOWLEDGE_REPO");
+  console.log("write into knowledge repo subtree refused: ok");
+}
+
+{
   const tmp = mkdtempSync(join(tmpdir(), "mc-pack-sk-"));
   process.env.MC_SKILL_ALLOW_WRITE = "1";
   const written = activatePlatformPack({
@@ -241,7 +307,7 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
 }
 
 {
-  const { findPack, listPacks, inspectPack } = await import("./dist/platform-pack/catalog.js");
+  const { findPack, listPacks, inspectPack, listSameSeriesCandidates } = await import("./dist/platform-pack/catalog.js");
   const tmpRepo = mkdtempSync(join(tmpdir(), "mc-pack-draft-"));
   const packDir = join(tmpRepo, "neoforge", "9.9.9");
   mkdirSync(join(packDir, ".cursor", "rules"), { recursive: true });
@@ -258,6 +324,15 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   const listed = listPacks(tmpRepo);
   assert.ok(listed.drafts.some((d) => d.minecraftVersion === "9.9.9"));
   assert.ok(!listed.packs.some((p) => p.minecraftVersion === "9.9.9"));
+
+  // F-BV01：完整版本落空时按家族前缀给同系列候选（'1.21.5' → 1.21.x 家族），不再恒空
+  const c1211 = listSameSeriesCandidates("fabric", "1.21", repo);
+  assert.ok(c1211.length > 0, `fabric 1.21 partial should list series, got ${c1211}`);
+  const c1215 = listSameSeriesCandidates("fabric", "1.21.5", repo);
+  assert.ok(c1215.length > 0, `fabric 1.21.5 full-version miss should list family, got ${c1215}`);
+  assert.ok(c1215.includes("1.21.4") && c1215.includes("1.21.8"), `expected 1.21.4/1.21.8 in ${c1215}`);
+  // 两段版本不启用家族回退（不得误收 1.12.x）
+  assert.ok(!c1211.some((v) => v.startsWith("1.12.")), `1.21 must not match 1.12.x: ${c1211}`);
   rmSync(tmpRepo, { recursive: true, force: true });
   console.log("draft pack: findPack PACK_NOT_FOUND, listPacks drafts[]");
 }

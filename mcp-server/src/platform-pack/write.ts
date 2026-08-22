@@ -12,6 +12,8 @@ import { resolveRepoRoot } from "../utils/path.js";
 import {
   assertCreatableDir,
   assertWritablePath,
+  isInsideReal,
+  nativeReal,
   ProjectPathError,
   resolveWriteAllowRoot,
 } from "../utils/project-sandbox.js";
@@ -73,7 +75,16 @@ function posixRel(rel: string): string {
 }
 
 function isKnowledgeRepo(root: string): boolean {
-  return isMcSkillKnowledgeRepo(root);
+  if (isMcSkillKnowledgeRepo(root)) return true;
+  // 整个知识库树禁写：版本子目录（如 <repo>/forge/1.20.1）不含根特征，
+  // 但向其写入 stub/marker 会污染后续所有 agent 读取的规则源（F-B05）
+  try {
+    const repoReal = nativeReal(resolveRepoRoot());
+    const rootReal = nativeReal(root);
+    return isInsideReal(rootReal, repoReal);
+  } catch {
+    return false;
+  }
 }
 
 function resolveUserProject(projectPath?: string): {
@@ -433,7 +444,7 @@ export function writePlatformPack(args: WriteArgs) {
       resolvedFrom: proj.from,
       envProjectRootDiffers: proj.envDiffers === true,
       note: proj.envDiffers
-        ? "projectPath 与 MC_SKILL_PROJECT_ROOT 不同，以 projectPath 为准。"
+        ? "projectPath 与 MC_SKILL_PROJECT_ROOT 不同：确认写入时 MC_SKILL_PROJECT_ROOT 是硬边界，projectPath 必须落在其内，否则拒绝（PATH_OUTSIDE_ALLOWLIST）。"
         : undefined,
       platform: pack.platform,
       minecraftVersion: pack.minecraftVersion,
@@ -449,7 +460,21 @@ export function writePlatformPack(args: WriteArgs) {
     allowRoot = resolveWriteAllowRoot(proj.root);
   } catch (err) {
     if (err instanceof ProjectPathError) {
-      return { ok: false, action: actionable(err.code, err.message, ["设置 MC_SKILL_ALLOW_WRITE=1", "确认 --project 绝对路径"]) };
+      return {
+        ok: false,
+        resolvedProjectRoot: proj.root,
+        ...(err.breakingChange ? { breakingChange: true } : {}),
+        action: actionable(err.code, err.message, [
+          "设置 MC_SKILL_ALLOW_WRITE=1",
+          ...(err.breakingChange
+            ? [
+                "破坏性变更：已设置 MC_SKILL_PROJECT_ROOT 时它是硬边界，projectPath 必须落在其内",
+                "把 MC_SKILL_PROJECT_ROOT 改为包含目标工程的目录，或改用其内的 projectPath",
+              ]
+            : []),
+          "确认 --project 绝对路径",
+        ]),
+      };
     }
     throw err;
   }
@@ -531,6 +556,7 @@ export function writePlatformPack(args: WriteArgs) {
       dryRun: false,
       dest: "project",
       resolvedProjectRoot: proj.root,
+      allowRoot,
       platform: pack.platform,
       minecraftVersion: pack.minecraftVersion,
       hosts,
@@ -599,7 +625,20 @@ export function deactivatePlatformPack(args: WriteArgs) {
     allowRoot = resolveWriteAllowRoot(proj.root);
   } catch (err) {
     if (err instanceof ProjectPathError) {
-      return { ok: false, action: actionable(err.code, err.message, ["设置 MC_SKILL_ALLOW_WRITE=1"]) };
+      return {
+        ok: false,
+        resolvedProjectRoot: proj.root,
+        ...(err.breakingChange ? { breakingChange: true } : {}),
+        action: actionable(err.code, err.message, [
+          "设置 MC_SKILL_ALLOW_WRITE=1",
+          ...(err.breakingChange
+            ? [
+                "破坏性变更：已设置 MC_SKILL_PROJECT_ROOT 时它是硬边界，projectPath 必须落在其内",
+                "把 MC_SKILL_PROJECT_ROOT 改为包含目标工程的目录，或改用其内的 projectPath",
+              ]
+            : []),
+        ]),
+      };
     }
     throw err;
   }
@@ -662,6 +701,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
     ok: true,
     dryRun: false,
     resolvedProjectRoot: proj.root,
+    allowRoot,
     deleted,
     unpatched,
     hosts,

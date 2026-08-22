@@ -1,6 +1,8 @@
 /**
  * Fabric Datagen。Quilt 无足够 QSL 类名，不走本模板。
  * 1.21.1 / 1.21.4 / 1.21.8：FabricRecipeProvider#generate；1.21.10 / 1.21.11：#buildRecipes。
+ * Mojmap 骨架：1.21.1–1.21.10 用 net.minecraft.resources.ResourceLocation；1.21.11 起改名为
+ * net.minecraft.resources.Identifier（fromNamespaceAndPath）。禁止混入 Yarn 的 net.minecraft.util.Identifier/of。
  * 26.1.x：FabricPackOutput + FabricBlockLootSubProvider + Identifier（fabric-docs 26.1.2）。
  */
 import { toPascalCase } from "./common.js";
@@ -28,6 +30,19 @@ public class ${pascalName}DataGenerator implements DataGeneratorEntrypoint {
 `;
 }
 
+export type FabricIdStyle = "ResourceLocation" | "Identifier";
+
+function fabricIdImport(idStyle: FabricIdStyle): string {
+  return idStyle === "Identifier"
+    ? "import net.minecraft.resources.Identifier;"
+    : "import net.minecraft.resources.ResourceLocation;";
+}
+
+function fabricIdFactory(idStyle: FabricIdStyle, modId: string, target: string): string {
+  const cls = idStyle === "Identifier" ? "Identifier" : "ResourceLocation";
+  return `${cls}.fromNamespaceAndPath("${modId}", "${target}")`;
+}
+
 export function generateFabric(
   providerType: FabricProviderType,
   modId: string,
@@ -35,10 +50,11 @@ export function generateFabric(
   classBase: string,
   version26: boolean,
   recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
+  idStyle: FabricIdStyle = "ResourceLocation",
 ): string {
   const pascalName = classBase || toPascalCase(modId);
   if (version26) return generateFabric261(providerType, modId, targetName, pascalName);
-  return generateFabric21(providerType, modId, targetName, pascalName, recipeMethod);
+  return generateFabric21(providerType, modId, targetName, pascalName, recipeMethod, idStyle);
 }
 
 function generateFabric21(
@@ -47,6 +63,7 @@ function generateFabric21(
   targetName: string,
   pascalName: string,
   recipeMethod: "generate" | "buildRecipes" = "buildRecipes",
+  idStyle: FabricIdStyle = "ResourceLocation",
 ): string {
   const header = `// Fabric Datagen 1.21.x — DataGeneratorEntrypoint + fabric-datagen（${modId}:${targetName}）
 package com.example.${modId}.datagen;
@@ -107,13 +124,13 @@ ${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.Identifier;
+${fabricIdImport(idStyle)}
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     public static final TagKey<Item> EXAMPLE =
-        TagKey.create(Registries.ITEM, Identifier.of("${modId}", "${targetName}"));
+        TagKey.create(Registries.ITEM, ${fabricIdFactory(idStyle, modId, targetName)});
 
     public ${pascalName}ItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);

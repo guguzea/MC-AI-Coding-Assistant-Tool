@@ -16,6 +16,8 @@ import { existsSync, realpathSync, statSync } from "fs";
 import { dirname, isAbsolute, join, resolve, sep } from "path";
 
 export class ProjectPathError extends Error {
+  /** true = 该拒绝来自 2026-08 引入的「MC_SKILL_PROJECT_ROOT 为硬边界」破坏性变更（此前 explicitRoot 可覆盖 env）。 */
+  public readonly breakingChange: boolean;
   constructor(
     message: string,
     public readonly code:
@@ -24,9 +26,11 @@ export class ProjectPathError extends Error {
       | "PATH_OUTSIDE_ALLOWLIST"
       | "PATH_NOT_FOUND"
       | "PARENT_DIR_MISSING",
+    breakingChange = false,
   ) {
     super(message);
     this.name = "ProjectPathError";
+    this.breakingChange = breakingChange;
   }
 }
 
@@ -53,8 +57,10 @@ export function isInsideReal(childReal: string, parentReal: string): boolean {
 }
 
 /**
- * 写盘 allowlist 根：explicitRoot（如 CLI --project / projectPath）优先于 MC_SKILL_PROJECT_ROOT。
- * 仍要求 MC_SKILL_ALLOW_WRITE=1。供平台包写入用户模组工程。
+ * 写盘 allowlist 根：MC_SKILL_PROJECT_ROOT 为硬边界（AND 口径，与 port_project/resolveAllowRoot 一致）。
+ * - 设置了 MC_SKILL_PROJECT_ROOT：explicitRoot（projectPath）必须落在 env root 内，否则拒绝（破坏性变更）。
+ * - 未设置 env：保持 explicitRoot 自身作为根（供平台包写入用户模组工程）。
+ * 仍要求 MC_SKILL_ALLOW_WRITE=1。
  */
 export function resolveWriteAllowRoot(explicitRoot?: string): string {
   if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
@@ -64,7 +70,52 @@ export function resolveWriteAllowRoot(explicitRoot?: string): string {
     );
   }
 
-  const allowRoot = (explicitRoot?.trim() || process.env.MC_SKILL_PROJECT_ROOT || "").trim();
+  const envRoot = (process.env.MC_SKILL_PROJECT_ROOT || "").trim();
+  if (envRoot) {
+    if (!isAbsolute(envRoot)) {
+      throw new ProjectPathError(
+        "MC_SKILL_PROJECT_ROOT 必须是绝对路径（不允许相对路径，以免随进程 cwd 漂移）。",
+        "PROJECT_ROOT_REQUIRED",
+      );
+    }
+    const envReal = resolve(envRoot);
+    if (!existsSync(envReal)) {
+      throw new ProjectPathError(`MC_SKILL_PROJECT_ROOT 不存在：${envReal}`, "PATH_NOT_FOUND");
+    }
+    const root = nativeReal(envReal);
+
+    const arg = explicitRoot?.trim();
+    if (arg) {
+      if (!isAbsolute(arg)) {
+        throw new ProjectPathError(
+          "项目根必须是绝对路径（不允许相对路径，以免随进程 cwd 漂移）。",
+          "PROJECT_ROOT_REQUIRED",
+        );
+      }
+      const proj = resolve(arg);
+      if (!existsSync(proj)) {
+        throw new ProjectPathError(`项目根不存在：${proj}`, "PATH_NOT_FOUND");
+      }
+      let projReal: string;
+      try {
+        projReal = nativeReal(proj);
+      } catch (err) {
+        throw new ProjectPathError(`无法解析项目根真实路径：${(err as Error).message}`, "PATH_NOT_FOUND");
+      }
+      if (!isInsideReal(projReal, root)) {
+        throw new ProjectPathError(
+          `projectPath ${proj} 不在 MC_SKILL_PROJECT_ROOT=${root} 内。` +
+            "已设置 MC_SKILL_PROJECT_ROOT 时它是硬边界，projectPath 不能覆盖（破坏性变更）。" +
+            "请把 MC_SKILL_PROJECT_ROOT 改为包含目标工程的目录，或改用其内的 projectPath。",
+          "PATH_OUTSIDE_ALLOWLIST",
+          true,
+        );
+      }
+    }
+    return root;
+  }
+
+  const allowRoot = (explicitRoot?.trim() || "").trim();
   if (!allowRoot) {
     throw new ProjectPathError(
       "写操作需要绝对路径项目根：传入 projectPath（CLI --project）或设置 MC_SKILL_PROJECT_ROOT。",
@@ -151,6 +202,26 @@ export function assertWritablePath(target: string, allowRootReal?: string): void
       `写入路径超出允许范围：${absTarget}（父目录 ${realDir} 不在 MC_SKILL_PROJECT_ROOT=${realRoot} 内）`,
       "PATH_OUTSIDE_ALLOWLIST",
     );
+  }
+
+  // 目标自身已存在时（upsert/marker/manifest 类写法）复核其真实路径：
+  // 目标若是指向沙箱外的 symlink/junction，writeFileSync 会穿透写出（F-B02）
+  if (existsSync(absTarget)) {
+    let realTarget: string;
+    try {
+      realTarget = nativeReal(absTarget);
+    } catch (err) {
+      throw new ProjectPathError(
+        `无法解析目标真实路径：${(err as Error).message}`,
+        "PATH_NOT_FOUND",
+      );
+    }
+    if (!isInsideReal(realTarget, realRoot)) {
+      throw new ProjectPathError(
+        `写入目标是指向沙箱外的链接：${absTarget} → ${realTarget}（不在 ${realRoot} 内）`,
+        "PATH_OUTSIDE_ALLOWLIST",
+      );
+    }
   }
 }
 

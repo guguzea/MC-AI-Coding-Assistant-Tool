@@ -3,7 +3,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import * as z from "zod";
 import { missingMcVersion, versionRequiredAction } from "./utils/actionable.js";
 import { getBuildStatus } from "./utils/build-status.js";
-import { patchToolCollection } from "./tool-handlers.js";
+import { assertToolRegistrationComplete, patchToolCollection } from "./tool-handlers.js";
 import { queryApi, warmupApi, listApiPreloadStatuses, getApiPreloadStatus } from "./api/index.js";
 import { convertMapping, getMethodParams } from "./mappings/index.js";
 import { readableSignature, returnType, parameterTypes } from "./utils/descriptor.js";
@@ -242,6 +242,95 @@ function communityDocError(e: unknown): CallToolResult {
   };
 }
 
+// ── 工具描述常量（registerTool 与 indexToolSchemas 共用；F-C01..C09）─────────
+// 两处必须引用同一常量，禁止再各写一份字面量（test-cli.mjs 有逐工具一致性断言）。
+
+const QUERY_API_DESC =
+  "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。" +
+  "适用于：需要确认某个 Minecraft API 的正确用法时。" +
+  "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。" +
+  "【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳），不是完整 javadoc。" +
+  "1.14.4/1.15.2 与 1.21+/26.1+ 无可用方法索引。found:false 表示本索引没有该类。" +
+  "精确 FQCN 或唯一精确简名（如 Item）才 found:true（简名改写时带 autoCorrected+requestedClassName）；" +
+  "Handler 等歧义子串 found:false 且 suggestions，不返回 methods。平台 API 请用 query_loader_api 或 search_*_docs。";
+
+const GET_METHOD_PARAMS_DESC =
+  "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。" +
+  "适用于：当知道方法名但不确定参数顺序和名称时。" +
+  "需提供 className + methodName；重载未传 descriptor 时 found:false + ambiguous + candidates，不静默取第一个。" +
+  "返回参数索引、名称和 JNI 描述符。" +
+  "【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ / 无索引为 DATA_UNAVAILABLE，改口 search_*_docs。" +
+  "found:false 表示索引没有该方法，不代表运行时不存在。";
+
+const CONVERT_MAPPING_DESC =
+  "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\n" +
+  "obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议改用 to=obfuscated；可读名请用 to=yarn / query_api。\n" +
+  "无 ownerClass 时 obfuscated/intermediary→yarn/mcp 走 method→field→class 全局反查（崩溃日志单 token）。26.1+ 无混淆层 → UNOBFUSCATED_NO_YARN。\n" +
+  "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
+  "yarn-tiny 数据（fabric 1.14.4–1.21.x）无 MCP/Parchment 可读层：to=mcp/parchment 直接拒绝（YARN_TINY_NO_MCP_LAYER），改用 query_api / get_method_params 或 to=yarn。\n" +
+  "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
+  "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
+  "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
+  "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
+  "@example obfuscated：from=intermediary to=obfuscated memberName=method_6032 → er；崩溃日志可用 lookup_obfuscated\n" +
+  "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
+  "@example 1.12.2：getHealth + EntityLivingBase → obf（如 cd）；无 owner 的 getHealth → ambiguous\n" +
+  "@example CSV：1.14.4 memberName=func_110143_aJ → getHealth；传 ownerClass → csv-no-owner（全量数据下带 owner 未命中时附 CSV 指引）\n" +
+  "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true";
+
+const GET_VERSION_INFO_DESC =
+  "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
+  "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
+  "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。" +
+  "【边界】仅 Forge。platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。" +
+  "不要用于 Fabric / NeoForge / Quilt / 基岩工程，请改用 search_*_docs。1.12.2 及以下版本注册是 RegistryEvent，不要套 DeferredRegister。" +
+  "未知 version（含 constructor 等原型键）返回 forgeVersion=unknown，不是把 Object.prototype 当版本。";
+
+const GENERATE_DATAGEN_DESC =
+  "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。" +
+  "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
+  "注意：platform 与 version 均必填。Forge 1.20.1（Consumer<FinishedRecipe>）与 1.20.4（仅 recipe，buildRecipes(RecipeOutput)）；" +
+  "NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；" +
+  "Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
+  "其它 Forge 版本（含 1.12.2）返回 error。" +
+  "返回完整的 Java 代码模板。" +
+  "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。";
+
+const VALIDATE_PROJECT_DESC =
+  "校验模组项目结构。Forge：mods.toml / DeferredRegister / @Mod。" +
+  "Fabric/Quilt：fabric.mod.json / quilt.mod.json 的 id 与 entrypoint 类；出现 Forge DeferredRegister 仅 WARN。" +
+  "NeoForge：neoforge.mods.toml、@Mod + IEventBus 构造；RegistryObject 不推荐；禁止 SimpleChannel。" +
+  "LiteLoader/Rift/ModLoader/基岩仍 skipped（基岩请用 validate_addon_manifest）。" +
+  "坏 recipe 只 warning，不把整项目判 failed。Java 扫描上限默认 300，可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高。";
+
+const LIST_DOC_VERSIONS_DESC =
+  "返回指定平台的可用文档版本列表。" +
+  "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。";
+
+const SEARCH_DOCS_DESC =
+  "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。" +
+  "platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader，必填，禁止默认 forge。" +
+  "适用于：需要了解平台特有功能的官方说明时。" +
+  "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。" +
+  "Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。";
+
+const ANALYZE_PORTING_PATH_DESC =
+  "分析 Minecraft Mod 项目，生成跨平台/跨版本移植路线图。" +
+  "扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、" +
+  "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
+  "参考链接和建议的 query_api 调用。" +
+  "targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。" +
+  "适用于：用户询问如何将 Mod 移植到其他平台或版本时。";
+
+const PORT_PROJECT_DESC =
+  "执行移植步骤（init_architectury / extract_common / apply_version_migration）。" +
+  "所有写文件操作默认 dryRun=true，仅输出 diff 预览。" +
+  "实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，" +
+  "且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。" +
+  "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
+  "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
+  "apply_version_migration 在确认写入时会真实执行包名替换（两阶段提交，失败自动回滚）；冲突文件在 confirmed 写入时会被拒绝。";
+
 export const server = new McpServer({
   version: "0.1.0",
   name: "MC-AI-Coding-Assistant-Tool",
@@ -255,11 +344,7 @@ server.registerTool(
   "query_api",
   {
     title: "Query Vanilla/Parchment API",
-    description:
-      "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。" +
-      "适用于：需要确认某个 Minecraft API 的正确用法时。" +
-      "注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。" +
-      "【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳）。1.14.4/1.15.2 与 1.21+/26.1+ 无可用方法索引。found:false 表示本索引没有该类。精确 FQCN 或唯一精确简名（如 Item）才 found:true（简名改写时带 autoCorrected+requestedClassName）；Handler 等歧义子串 found:false 且 suggestions，不返回 methods。平台 API 请用 query_loader_api 或 search_*_docs。",
+    description: QUERY_API_DESC,
     inputSchema: queryApiSchema,
   },
   async ({ className, methodName, version }): Promise<CallToolResult> => {
@@ -273,11 +358,7 @@ server.registerTool(
   "get_method_params",
   {
     title: "Get Method Parameter Names",
-    description:
-      "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。" +
-      "适用于：当知道方法名但不确定参数顺序和名称时。" +
-      "需提供 className + methodName；重载未传 descriptor 时 found:false + ambiguous + candidates，不静默取第一个。" +
-      "【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ / 无索引为 DATA_UNAVAILABLE，改口 search_*_docs。found:false 表示索引没有该方法，不代表运行时不存在。",
+    description: GET_METHOD_PARAMS_DESC,
     inputSchema: getMethodParamsSchema,
   },
   async ({ className, methodName, descriptor, version }): Promise<CallToolResult> => {
@@ -291,20 +372,7 @@ server.registerTool(
   "convert_mapping",
   {
     title: "Convert Between Mapping Systems",
-    description:
-      "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\n" +
-      "obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议改用 to=obfuscated；可读名请用 to=yarn / query_api。\n" +
-      "无 ownerClass 时 obfuscated/intermediary→yarn/mcp 走 method→field→class 全局反查（崩溃日志单 token）。26.1+ 无混淆层 → UNOBFUSCATED_NO_YARN。\n" +
-      "mcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n" +
-      "方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n" +
-      "1.12–1.13 SRG/TSRG+CSV：可带 ownerClass（MCP named→searge→obf）；1.14–1.15 纯 CSV 仅全局 searge↔named（勿传 owner）。\n" +
-      "失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n" +
-      "@example 成功：from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity version=1.20.1 → converted=er\n" +
-      "@example obfuscated：from=intermediary to=obfuscated memberName=method_6032 → er；崩溃日志可用 lookup_obfuscated\n" +
-      "@example 歧义：同名多重载且不传 descriptor → found=false ambiguous=true candidates=[...]\n" +
-      "@example 1.12.2：getHealth + EntityLivingBase → obf（如 cd）；无 owner 的 getHealth → ambiguous\n" +
-      "@example CSV：1.14.4 memberName=func_110143_aJ → getHealth；传 ownerClass → csv-no-owner\n" +
-      "@example allow_fallback=true 且无表 → found=false converted=原名 fallbackUsed=true",
+    description: CONVERT_MAPPING_DESC,
     inputSchema: convertMappingSchema,
   },
   async ({ from, to, memberName, ownerClass, descriptor, version, memberKind, allow_fallback }): Promise<CallToolResult> => {
@@ -369,12 +437,7 @@ server.registerTool(
   "get_version_info",
   {
     title: "Get Version-Specific Guidance",
-    description:
-      "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。" +
-      "适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。" +
-      "返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。" +
-      "【边界】仅 Forge。platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。" +
-      "不要用于 Fabric / NeoForge / Quilt / 基岩工程，请改用 search_*_docs。1.12.2 及以下版本注册是 RegistryEvent，不要套 DeferredRegister。",
+    description: GET_VERSION_INFO_DESC,
     inputSchema: getVersionInfoSchema,
   },
   async ({ version, action, platform }): Promise<CallToolResult> => {
@@ -406,13 +469,7 @@ server.registerTool(
   "generate_datagen",
   {
     title: "Generate DataGen Provider Code",
-    description:
-      "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。" +
-      "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
-      "注意：platform 与 version 均必填。Forge 1.20.1 与 1.20.4；NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
-      "其它 Forge 版本（含 1.12.2）返回 error。" +
-      "返回完整的 Java 代码模板。" +
-      "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。",
+    description: GENERATE_DATAGEN_DESC,
     inputSchema: generateDatagenSchema,
   },
   async ({ providerType, modId, targetName, version, platform }): Promise<CallToolResult> => {
@@ -452,12 +509,7 @@ server.registerTool(
   "validate_project",
   {
     title: "Validate Mod Project Structure",
-    description:
-      "校验模组项目结构。Forge：mods.toml / DeferredRegister / @Mod。" +
-      "Fabric/Quilt：fabric.mod.json / quilt.mod.json 的 id 与 entrypoint 类；出现 Forge DeferredRegister 仅 WARN。" +
-      "NeoForge：neoforge.mods.toml、@Mod + IEventBus 构造；RegistryObject 不推荐；禁止 SimpleChannel。" +
-      "LiteLoader/Rift/ModLoader/基岩仍 skipped（基岩请用 validate_addon_manifest）。" +
-      "坏 recipe 只 warning，不把整项目判 failed。Java 扫描上限默认 300，可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高。",
+    description: VALIDATE_PROJECT_DESC,
     inputSchema: validateProjectSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -797,9 +849,7 @@ server.registerTool(
   listVersionsSchema.name,
   {
     title: "List Available Doc Versions (Multi-Platform)",
-    description:
-      "返回指定平台的可用文档版本列表。" +
-      "platform 参数指定平台（forge/neoforge/fabric/quilt/liteloader/rift/modloader），必填。基岩请用 search_bedrock_docs。",
+    description: LIST_DOC_VERSIONS_DESC,
     inputSchema: listVersionsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -812,11 +862,7 @@ server.registerTool(
   searchDocsSchema.name,
   {
     title: "Search Documentation (Multi-Platform)",
-    description:
-      "通用文档搜索（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0），支持多平台（Forge/NeoForge/Fabric）。" +
-      "platform 参数指定平台，必填，禁止默认 forge。" +
-      "适用于：需要了解平台特有功能的官方说明时。" +
-      "增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。",
+    description: SEARCH_DOCS_DESC,
     inputSchema: searchDocsSchema.inputSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -897,13 +943,7 @@ server.registerTool(
   "analyze_porting_path",
   {
     title: "Analyze Mod Porting Path",
-    description:
-      "分析 Minecraft Mod 项目，生成跨平台/跨版本移植路线图。" +
-      "扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、" +
-      "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
-      "参考链接和建议的 query_api 调用。" +
-      "targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。" +
-      "适用于：用户询问如何将 Mod 移植到其他平台或版本时。",
+    description: ANALYZE_PORTING_PATH_DESC,
     inputSchema: analyzePortingPathSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -916,14 +956,7 @@ server.registerTool(
   "port_project",
   {
     title: "Execute Porting Step",
-    description:
-      "执行移植步骤（init_architectury / extract_common / apply_version_migration）。" +
-      "所有写文件操作默认 dryRun=true，仅输出 diff 预览。" +
-      "实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，" +
-      "且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。" +
-      "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
-      "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
-      "apply_version_migration 在确认写入时会真实执行包名替换；冲突文件在 confirmed 写入时会被拒绝。",
+    description: PORT_PROJECT_DESC,
     inputSchema: portProjectSchema,
   },
   async (args): Promise<CallToolResult> => {
@@ -1025,15 +1058,15 @@ export type ToolSchemaEntry = {
 };
 
 export const indexToolSchemas: ToolSchemaEntry[] = [
-  { name: "query_api", description: "查询 Minecraft/Vanilla 类的完整方法签名、参数名、返回值类型。数据来源：按 version 加载的 Parchment extracted 索引（version 必填，禁止默认 1.20.1）。适用于：需要确认某个 Minecraft API 的正确用法时。注意：不包含 Forge 特有类（如 DeferredRegister、Capability）。返回 found=true 时包含完整 javadoc。【边界】覆盖约 1.16.5–1.20.4。1.7.10–1.12.2 可能 found:true 但 methods 为空（类名空壳），不是完整 javadoc。1.14.4/1.15.2 索引为空；1.21+ / 26.1+ 无索引。found:false 表示本索引没有该类。精确 FQCN 或唯一精确简名（如 Item）才 found:true（简名改写时带 autoCorrected+requestedClassName）；Handler 等歧义子串 found:false 且 suggestions，不返回 methods。平台 API 请用 query_loader_api 或 search_*_docs。", inputSchema: queryApiSchema },
-  { name: "get_method_params", description: "查询指定方法的完整参数名列表（来源：Parchment extracted，按 version 加载）。适用于：当知道方法名但不确定参数顺序和名称时。需提供 className + methodName；重载未传 descriptor 时 found:false + ambiguous + candidates，不静默取第一个。返回参数索引、名称和 JNI 描述符。【边界】与 query_api 同一索引，覆盖约 1.16.5–1.20.4；26.1+ / 无索引为 DATA_UNAVAILABLE，改口 search_*_docs。found:false 表示索引没有该方法，不代表运行时不存在。", inputSchema: getMethodParamsSchema },
-  { name: "convert_mapping", description: "在 mojang / mcp / yarn / parchment / obfuscated / intermediary 间互转类或方法名（预建 yarn-mappings.sqlite）。\nobfuscated = Tiny official 混淆短名；intermediary = method_6032 类。to=mojang 仍返回混淆短名（兼容），建议 to=obfuscated；可读名用 to=yarn / query_api。\n无 ownerClass 时 obfuscated/intermediary 走 method→field→class 全局反查。26.1+ → UNOBFUSCATED_NO_YARN。\nmcp↔parchment 为同名层（identity）；参数名请用 get_method_params。\n方法重载请传 descriptor；无 descriptor 且多重载时 found=false 且 ambiguous=true，返回 candidates。\n失败默认 converted=null；allow_fallback=true 时可回传原名并设 fallbackUsed（过渡期）。\n@example from=mcp to=mojang memberName=getHealth ownerClass=net.minecraft.world.entity.LivingEntity → er\n@example from=intermediary to=obfuscated memberName=method_6032 → er", inputSchema: convertMappingSchema },
+  { name: "query_api", description: QUERY_API_DESC, inputSchema: queryApiSchema },
+  { name: "get_method_params", description: GET_METHOD_PARAMS_DESC, inputSchema: getMethodParamsSchema },
+  { name: "convert_mapping", description: CONVERT_MAPPING_DESC, inputSchema: convertMappingSchema },
   { name: "get_server_status", description: "查看 API 索引预热状态、数据路径诊断与 descriptor 自检。适用于：调用失败排查、确认 schema/映射数据是否就绪。", inputSchema: getServerStatusSchema },
-  { name: "get_version_info", description: "【Forge only】获取指定 Minecraft/Forge 版本的推荐做法、关键变更点和官方 Changelog 链接。适用于：开始新版本开发、遇到版本兼容性问题、或不确定某个 API 在特定版本中的用法时。返回该版本的 Forge 版本号、推荐注册方式、关键 gotchas 和官方链接。【边界】platform 必须为 forge，缺省或非 forge 返回 WRONG_TOOL。不要用于 Fabric / NeoForge / Quilt / 基岩工程，请改用 search_*_docs。1.12.2 注册是 RegistryEvent，不要套 DeferredRegister。未知 version（含 constructor 等原型键）返回 forgeVersion=unknown，不是把 Object.prototype 当版本。", inputSchema: getVersionInfoSchema },
+  { name: "get_version_info", description: GET_VERSION_INFO_DESC, inputSchema: getVersionInfoSchema },
   { name: "diagnose_gradle", description: "校验 ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。Loom：插件 id（26.1 必须 net.fabricmc.fabric-loom）、Java toolchain（1.21=21，26.1=25）、Yarn vs 去混淆、26.1 禁止 modImplementation。Neo/MDG：插件 id、minecraft_version/neo_version、26.1 须能看出 buildPlugin、Java 21 vs 25。含 net.minecraftforge.gradle.liteloader 时走轻量模式。Rift / BaseMod / 基岩仍早退。", inputSchema: diagnoseGradleSchema },
-  { name: "generate_datagen", description: "生成 DataGen Provider 类代码模板（RecipeProvider、BlockStateProvider、ItemModelProvider、LootTableProvider、BlockTagsProvider）。适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。注意：platform 与 version 均必填。Forge 1.20.1 与 1.20.4；NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。其它 Forge 版本（含 1.12.2）返回 error。返回完整的 Java 代码模板。【边界】只返回 Java 模板文本，不写盘。", inputSchema: generateDatagenSchema },
+  { name: "generate_datagen", description: GENERATE_DATAGEN_DESC, inputSchema: generateDatagenSchema },
   { name: "crash_analyze", description: "解析崩溃报告全文，通过内置模式库识别可能成因并返回修复建议。适用于：模组运行崩溃、收到玩家的崩溃日志时。支持识别常见崩溃原因（Mixin、Capability、BlockEntity、DeferredRegister、BlockItem、CreativeModeTab、网络包、SpawnPlacement、方块属性、声音、loot、注册名重复等），并推断 crashKind（fml/client/server/fabric/quilt/liteloader/rift/modloader/…）、缺前置/版本不兼容，以及 logHints。**优先于搜索引擎使用此工具**；实务分类可配合 search_community_docs。", inputSchema: crashAnalyzeSchema },
-  { name: "validate_project", description: "校验模组项目结构。Forge：mods.toml / DeferredRegister / @Mod。Fabric/Quilt：fabric.mod.json / quilt.mod.json 的 id 与 entrypoint 类；出现 Forge DeferredRegister 仅 WARN。NeoForge：neoforge.mods.toml、@Mod + IEventBus 构造；RegistryObject 不推荐；禁止 SimpleChannel。LiteLoader/Rift/ModLoader/基岩仍 skipped（基岩请用 validate_addon_manifest）。坏 recipe 只 warning。Java 扫描上限默认 300，可用 MC_SKILL_JAVA_SCAN_MAX_FILES 提高。", inputSchema: validateProjectSchema },
+  { name: "validate_project", description: VALIDATE_PROJECT_DESC, inputSchema: validateProjectSchema },
   { name: "search_forge_docs", description: "搜索 Forge 官方文档（hybrid：L0 关键词 + 语义检索，RRF 融合；无语义库时回退纯 L0）。适用于：需要了解 Forge 特有功能（如 Capability、DeferredRegister、网络通信、DataGen）的官方说明时。返回相关页面 ID 列表，每个结果包含标题、摘要和标签。建议配合 get_forge_doc_summary 使用：先搜索，再对相关页面取摘要判断是否深入。增强功能：支持 class:/event:/method: 前缀精确路由；支持 | OR 分组；自动去除 the/and/of 等停用词。另外另有 query_api 工具，可直接查询 Vanilla/Parchment 类的参数名和 javadoc，适合在已知类名后精确查询某个方法的签名。", inputSchema: searchForgeDocsSchema.inputSchema },
   { name: "get_forge_doc_summary", description: "获取 Forge 文档页面的章节骨架与摘要。适用于：判断某篇文档是否包含所需内容时。返回每个 <h2> 章节的标题、150-200 字摘要和首段概述。建议：先 search_forge_docs 搜索关键词，再对相关页面取摘要，最后仅当摘要显示内容相关时才调用 get_forge_doc_full 获取全文。", inputSchema: getForgeDocSummarySchema.inputSchema },
   { name: "get_forge_doc_full", description: "获取 Forge 文档页面全文。适用于：需要查看 API 完整步骤、事件列表、配置项清单时。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）会突出显示在开头。**永远不要一次性加载超过 2 个 full page**，避免上下文溢出。", inputSchema: getForgeDocFullSchema.inputSchema },
@@ -1053,14 +1086,14 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "get_neoforge_doc_full", description: "获取 NeoForge 文档页面全文（L2/L2+）。highlight_key=true（默认）时，关键段落（🔴新手必读、🟠常见错误、🟢示例代码）突出显示。**永远不要一次性加载超过 2 个 full page**。", inputSchema: getNeoForgeDocFullSchema.inputSchema },
   { name: "get_neoforge_doc_related", description: "返回与目标 NeoForge 文档共享最多标签关键词的其他页面，按相关性降序排列。", inputSchema: getNeoForgeDocRelatedSchema.inputSchema },
   { name: "list_neoforge_versions", description: "返回 data 目录下所有已加载的 NeoForge 文档版本列表（如 [\"26.1\", \"1.21.11\", \"1.20.4\", ...]）。注意：1.20.1 版本使用 Forge 1.20.1 数据（100% API 兼容）。", inputSchema: listNeoForgeVersionsSchema.inputSchema },
-  { name: "list_doc_versions", description: "返回指定平台的可用文档版本列表。platform：forge/neoforge/fabric/quilt/liteloader/rift/modloader，必填。基岩请用 search_bedrock_docs。", inputSchema: listVersionsSchema.inputSchema },
-  { name: "search_docs", description: "通用文档搜索（hybrid：L0 关键词 + 语义检索）。platform 含 forge/neoforge/fabric/quilt/liteloader/rift/modloader。Quilt 问 QSL 时禁止把 Fabric Registry 当命中。基岩请用 search_bedrock_docs。语义索引过期时 warning 含 stale。", inputSchema: searchDocsSchema.inputSchema },
+  { name: "list_doc_versions", description: LIST_DOC_VERSIONS_DESC, inputSchema: listVersionsSchema.inputSchema },
+  { name: "search_docs", description: SEARCH_DOCS_DESC, inputSchema: searchDocsSchema.inputSchema },
   { name: "get_doc_summary", description: getDocSummarySchema.description, inputSchema: getDocSummarySchema.inputSchema },
   { name: "get_doc_full", description: getDocFullSchema.description, inputSchema: getDocFullSchema.inputSchema },
   { name: "get_doc_related", description: getDocRelatedSchema.description, inputSchema: getDocRelatedSchema.inputSchema },
   { name: "diagnose_data_paths", description: "诊断数据目录配置（高级排障用）。返回各平台数据目录的可用性状态。诊断 MC_SKILL_DATA / MC_SKILL_COMMUNITY 解析结果，以及 forge/fabric/neoforge/quilt/liteloader/rift/modloader/bedrock/community 是 found / empty / not_found。", inputSchema: diagnoseDataPathsSchema },
-  { name: "analyze_porting_path", description: "分析 Minecraft Mod 项目移植路线。targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。", inputSchema: analyzePortingPathSchema },
-  { name: "port_project", description: "执行移植步骤。基岩/三老加载器目标返回 UNSUPPORTED_PORT。写盘默认 dryRun。", inputSchema: portProjectSchema },
+  { name: "analyze_porting_path", description: ANALYZE_PORTING_PATH_DESC, inputSchema: analyzePortingPathSchema },
+  { name: "port_project", description: PORT_PROJECT_DESC, inputSchema: portProjectSchema },
   { name: "search_bedrock_docs", description: "搜索基岩版 Microsoft Learn Creator 文档（hybrid L0+语义）。每次返回 docsStatus 滞后标记。不是 search_forge_docs。", inputSchema: searchBedrockDocsSchema },
   { name: "get_bedrock_doc_summary", description: "基岩文档 L1 摘要。带 docsStatus。不是 get_forge_doc_summary。", inputSchema: getBedrockDocSummarySchema },
   { name: "get_bedrock_doc_full", description: "基岩文档全文。一次 ≤ 2 页。带 docsStatus。", inputSchema: getBedrockDocFullSchema },
@@ -1075,4 +1108,8 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
 export function listAllToolSchemas(): ToolSchemaEntry[] {
   return [...indexToolSchemas, ...waveToolSchemas];
 }
+
+// 注册完成断言（F-C17）：全部注册（含 wave）后校验收集表与合并 schema 清单一致；
+// 不一致立即抛错，防止重构后 CLI 全部报「未知命令」而 MCP 正常的静默劣化。
+assertToolRegistrationComplete(listAllToolSchemas().map((t) => t.name));
 

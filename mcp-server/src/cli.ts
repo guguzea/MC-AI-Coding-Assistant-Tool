@@ -8,6 +8,7 @@
  *
  * 旧位置参数形式仍兼容（stderr 迁移提示）。descriptor 为本地子命令，不经 MCP registry。
  */
+import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
 import { existsSync, readFileSync, realpathSync, statSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

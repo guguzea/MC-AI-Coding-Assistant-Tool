@@ -39,6 +39,15 @@ export function isFabricExclusiveHit(hit: {
   return false;
 }
 
+/**
+ * 正文探测（F-D105）：元数据干净的 FAPI 专属页（正文通篇教 FabricRegistryBuilder /
+ * net.fabricmc.fabric.api.event.registry 用法）同样不得以 fallback=fabric 放行给 Quilt。
+ */
+export function isFabricExclusiveContent(content: string | undefined | null): boolean {
+  if (!content) return false;
+  return FABRIC_EXCLUSIVE_CLASS.some((re) => re.test(content));
+}
+
 export function isSharedOrVanillaHit(hit: {
   id?: string;
   label?: string;

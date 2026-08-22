@@ -845,7 +845,12 @@ export function lookupMethod(
     }
   }
 
-  // Explicit reject ownerClass against pure csv-only DB
+  // Explicit reject ownerClass against csv-only MCP layer（F-D203）：
+  // 无 fabric yarn 库（era 即 mcp-csv）时维持原拒绝；
+  // 全量数据（yarn-tiny 在场）时不抢断 yarn owner 路径，只在最终 miss 时附加 CSV 指引。
+  const csvEra = csvDb ? readMeta(csvDb, "mappingEra") : null;
+  const csvOwnerHint =
+    "此版本 MCP 可读层仅有全局 searge↔name（无类路径）；带 owner 未命中时，可去掉 owner 用 searge（func_/field_）或 MCP named 全局查询";
   if (era === "mcp-csv" && opts.ownerClass) {
     return {
       found: false,
@@ -897,7 +902,13 @@ export function lookupMethod(
          FROM methods WHERE owner_named = ? AND ${col} = ? AND ${colDesc} = ? LIMIT 1`,
       )
       .get(ownerNamed, memberName, descriptor) as unknown as MethodRow | undefined;
-    if (!row) return { found: false, mappingEra: era };
+    if (!row) {
+      return {
+        found: false,
+        mappingEra: era,
+        ...(csvEra === "mcp-csv" ? { notes: [csvOwnerHint] } : {}),
+      };
+    }
     return { found: true, row, mappingEra: era };
   }
 
@@ -908,7 +919,13 @@ export function lookupMethod(
     )
     .all(ownerNamed, memberName) as unknown as MethodRow[];
 
-  if (rows.length === 0) return { found: false, mappingEra: era };
+  if (rows.length === 0) {
+    return {
+      found: false,
+      mappingEra: era,
+      ...(csvEra === "mcp-csv" ? { notes: [csvOwnerHint] } : {}),
+    };
+  }
   if (rows.length === 1) {
     return {
       found: true,
@@ -964,6 +981,20 @@ export function convertYarnMember(
       converted: null,
       mappingType: "class",
       notes: [`已在 mapping SQLite（${version}）中查询，未找到类: ${memberName}`],
+    };
+  }
+
+  // yarn-tiny 库的 named 列是 Yarn 名：跨层到 mcp/parchment 若返回 yarn 名即假成功，拒绝。
+  const era = getMappingEra(version);
+  if (era === "yarn-tiny" && (to === "mcp" || to === "parchment")) {
+    return {
+      found: false,
+      converted: null,
+      mappingType: "class",
+      notes: [
+        `version=${version} 为 yarn-tiny 数据（named 列为 Yarn 名），无 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${to} 名。`,
+        "Mojang/Parchment 可读名请用 query_api / get_method_params；或改 to=yarn。",
+      ],
     };
   }
 

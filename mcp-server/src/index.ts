@@ -1,3 +1,4 @@
+import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–22.12 未带 --experimental-sqlite 时先给出指引再退出
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { realpathSync } from "fs";
 import { fileURLToPath } from "url";

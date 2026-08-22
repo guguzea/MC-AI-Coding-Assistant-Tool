@@ -1,0 +1,39 @@
+/**
+ * Node 22.5–22.12 的 node:sqlite 需要 --experimental-sqlite（22.13 起默认开启）。
+ * 该区间的 Node 若未带标志，`import "node:sqlite"` 会直接抛
+ * `No such built-in module` 裸堆栈。本模块必须作为入口（index.ts / cli.ts）的
+ * **第一个 import**（ESM 按导入顺序求值依赖），在任何 sqlite import 之前给出
+ * 醒目指引并以非零码退出（F-Z01 运行时兜底）。
+ */
+const parts = process.versions.node.split(".").map(Number);
+const major = parts[0] ?? 0;
+const minor = parts[1] ?? 0;
+const inSqliteFlagWindow = major === 22 && minor >= 5 && minor <= 12;
+const hasSqliteFlag =
+  process.execArgv.includes("--experimental-sqlite") ||
+  /(^|\s)--experimental-sqlite(\s|=|$)/.test(process.env.NODE_OPTIONS ?? "");
+
+if (inSqliteFlagWindow && !hasSqliteFlag) {
+  // eslint-disable-next-line no-console
+  console.error(
+    [
+      "",
+      "==================================================================",
+      "  当前 Node.js " + process.versions.node + " 的 node:sqlite 需要 --experimental-sqlite 标志",
+      "  （该标志自 Node 22.13 起默认开启，无需手动添加）",
+      "",
+      "  两种解法（任选其一）：",
+      "  1. 升级 Node 到 22.13+ / 24 LTS（推荐）",
+      "  2. 启动时加标志，例如：",
+      "     node --experimental-sqlite dist/index.js",
+      "     或设置环境变量 NODE_OPTIONS=--experimental-sqlite 后再启动 MCP/CLI",
+      "",
+      "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
+      "==================================================================",
+      "",
+    ].join("\n"),
+  );
+  process.exit(1);
+}
+
+export {};

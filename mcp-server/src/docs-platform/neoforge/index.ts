@@ -172,6 +172,7 @@ export async function searchNeoForgeDocs(args: {
       };
     }
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
+    const resolutionSource = resolution.sourcePlatform === "forge" ? resolution.sourceVersion : undefined;
     const semanticHits = resolution.mainDocsMissing
       ? null
       : await semanticSearch(
@@ -212,6 +213,7 @@ export async function searchNeoForgeDocs(args: {
             missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
           ),
           forgeCompatible: forgeCompatible || undefined,
+          source_version: resolutionSource,
           unversionedCurrent: version === "26.1" || undefined,
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
@@ -268,6 +270,13 @@ export async function getNeoForgeDocSummary(args: {
           ...summary,
           versionFallback: resolution.versionFallback,
           warning: resolution.warning,
+          ...(resolution.sourcePlatform === "forge"
+            ? {
+                forgeCompatible: true,
+                source_version: resolution.sourceVersion,
+                sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+              }
+            : {}),
         }, null, 2),
       }],
     };
@@ -323,6 +332,12 @@ export async function getNeoForgeDocFull(args: {
           ...result,
           versionFallback: resolution.versionFallback,
           warning: resolution.warning,
+          ...(resolution.sourcePlatform === "forge"
+            ? {
+                forgeCompatible: true,
+                source_version: resolution.sourceVersion,
+              }
+            : {}),
         }, null, 2),
       }],
     };
@@ -388,6 +403,12 @@ export async function getNeoForgeDocRelated(args: {
           version,
           versionFallback: resolution.versionFallback,
           warning: resolution.warning,
+          ...(resolution.sourcePlatform === "forge"
+            ? {
+                forgeCompatible: true,
+                source_version: resolution.sourceVersion,
+              }
+            : {}),
           results,
         }, null, 2),
       }],

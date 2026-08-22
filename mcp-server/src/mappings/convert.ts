@@ -20,6 +20,7 @@ import {
 import { resolveObfuscatedThreeWay } from "./lookup-obfuscated.js";
 import { suggestSimilarMethods } from "./suggest.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscated.js";
+import { ownGet } from "../utils/own-record.js";
 
 const DEFAULT_VERSION = "1.20.1";
 
@@ -322,6 +323,39 @@ export function convertMapping(query: MappingQuery): MappingResult {
         "Parchment = MCP 层 + 人类可读参数名，类名/方法名完全一致",
         "参数名请使用 get_method_params",
       ],
+    };
+  }
+
+  // yarn-tiny 库（fabric 1.14.4–1.21.x）的 named 层是 Yarn 名，不存在 MCP/Parchment 可读层。
+  // 把 Yarn 名当 MCP/Parchment 名返回属于假成功（禁止假成功），直接拒绝并指路。
+  // 例外：1.14.4 / 1.15.2 存在 mcp-csv searge 层，成员级 SRG↔named 走 CSV 路径照常可答。
+  if (era === "yarn-tiny" && (to === "mcp" || to === "parchment") && !resolveCsvMappingDbPath(version)) {
+    return {
+      found: false,
+      original: memberName,
+      converted: null,
+      direction,
+      confidence: "low",
+      mappingType: kind,
+      memberKind: kind,
+      resultKind: "YARN_TINY_NO_MCP_LAYER",
+      fallbackUsed: false,
+      mappingEra: era,
+      schemaVersion,
+      notes: [
+        `version=${version} 只有 yarn-tiny 数据（named 列为 Yarn 名），没有 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${to} 名返回。`,
+        "需要 Mojang/Parchment 可读名请用 query_api / get_method_params（Parchment 索引约 1.16.5–1.20.4）。",
+        "或改 to=yarn 获取 Yarn 名。",
+      ],
+      action: actionable(
+        ActionCodes.DATA_UNAVAILABLE,
+        `yarn-tiny 数据无 ${to} 可读层（version=${version}）`,
+        [
+          "Mojang/Parchment 可读名改用 query_api / get_method_params",
+          "或改 to=yarn",
+        ],
+        ["query_api", "get_method_params"],
+      ),
     };
   }
 
@@ -657,7 +691,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
 
     if (ownerClass) {
       const { apiIndex } = loadParchment(version);
-      const cls = apiIndex[toSlash(ownerClass)];
+      const cls = ownGet(apiIndex, toSlash(ownerClass));
       if (cls) {
         const suggestions = suggestSimilarMethods(
           memberName,
@@ -778,7 +812,7 @@ export function getMethodParams(query: ParamQuery): ParamResult {
   const { apiIndex, classNames } = loadParchment(version);
   const { className, methodName, descriptor } = query;
   const slash = toSlash(className);
-  const cls = apiIndex[slash];
+  const cls = ownGet(apiIndex, slash);
 
   if (!cls) {
     const empty = classNames.length === 0;

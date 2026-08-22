@@ -269,7 +269,7 @@ node dist/cli.js list-tools
 
 | 入口 | 说明 |
 |------|------|
-| MCP Prompt | `mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod` |
+| MCP Prompt | 与 `WORKFLOW_TEMPLATES` 等量注册（当前 **36 个**：`mc-new-block` / `mc-new-entity` / `mc-new-gui` / `mc-crash-triage` / `mc-port-mod` / `mc-build-mod` / `mc-ingame-iterate` / `mc-localize-mod` / `mc-decompile-mod` / `mc-villager` / `mc-multiblock` / `mc-ai` 等；完整清单以 `get_workflow_template` 列表为准） |
 | 工具兜底 | `get_workflow_template`（同名正文） |
 | MCP Resource | `mcskill://…`（见 `listKnowledgeResources`） |
 | 工具兜底 | `list_knowledge_resources` → `read_knowledge_resource` |
@@ -285,7 +285,7 @@ node dist/cli.js list-tools
 | `mcskill://version-changes/1.21` | 1.21 变更专章（知识库） |
 | `mcskill://antipatterns/registry` | 注册反模式短文 |
 | `mcskill://patterns/README` | 代码模式库索引（community_knowledge/patterns/） |
-| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（9 个；含构建、真机循环、模组汉化与反编译） |
+| `mcskill://workflow/<模板名>` | 与 Prompt 同名的工作流正文（与 `WORKFLOW_TEMPLATES` 等量，当前 36 个；含构建、真机循环、模组汉化、反编译、村民/多方块/实体 AI 等） |
 
 **客户端兼容结论**：Cursor 等仅 tools 客户端主走 `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` 兜底；Claude Desktop 等支持 prompts/resources 的客户端可直接使用注册的 Prompt 与 Resource。
 

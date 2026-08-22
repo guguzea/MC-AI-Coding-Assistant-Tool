@@ -267,6 +267,20 @@ async function testYarnShortNameAndMojangHeuristic() {
     );
     assert.equal(fqn.found, true);
     assert.equal(fqn.converted, "net/minecraft/block/Block");
+
+    // yarn-tiny 库无 MCP/Parchment 可读层：拒绝把 Yarn 名冒充 mcp/parchment 名（F-D202）
+    const refuse = convertYarnMember("1.20.1", "yarn", "parchment", "Block");
+    assert.equal(refuse.found, false, JSON.stringify(refuse));
+    assert.ok(refuse.notes.some((n) => /yarn-tiny|MCP\/Parchment/.test(n)), JSON.stringify(refuse.notes));
+
+    const gate = convertMapping({
+      from: "yarn",
+      to: "parchment",
+      memberName: "net.minecraft.entity.LivingEntity",
+      version: "1.20.1",
+    });
+    assert.equal(gate.found, false, JSON.stringify(gate));
+    assert.equal(gate.resultKind, "YARN_TINY_NO_MCP_LAYER");
   } finally {
     closeAllYarnDbs();
   }
@@ -282,6 +296,18 @@ async function testFabricClassPrefixSearch() {
   assert.ok(byClass.length > 0, "class:item should hit L0 index via prefix-only filter");
   const byPlain = store.searchIndex("item", "26.1.2");
   assert.ok(byPlain.length > 0, "plain item search should still work");
+
+  // F-D103：search 同系列命中后，summary/full(1.16.8) 也应同系列解析而非 VERSION_NOT_FOUND
+  const forgeStore = new ForgeDocStore(dataRoot);
+  if (forgeStore.getAvailableVersions().includes("1.16.5")) {
+    const search = forgeStore.searchIndexDetailed("registries", "1.16.8");
+    assert.ok(search.results.length > 0, "series-resolved search should hit");
+    const hitId = search.results[0].id;
+    const summary = forgeStore.loadSummary(hitId, "1.16.8");
+    assert.equal(summary.id, hitId);
+    const full = await forgeStore.loadFullDoc(hitId, "1.16.8");
+    assert.ok(full.content.length > 0);
+  }
 }
 
 async function testSandboxAssertWritablePath() {
@@ -330,6 +356,25 @@ async function testSandboxAssertWritablePath() {
       assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
     }
     assert.equal(threw, true, "symlink/junction escape must be rejected");
+
+    // 目标自身是已存在 symlink 时也必须拒绝（F-B02：upsert/marker 类读旧写新会穿透链接）
+    const targetFile = join(secret, "outside.txt");
+    writeFileSync(targetFile, "x", "utf8");
+    const fileLink = join(root, "leak-file.txt");
+    try {
+      symlinkSync(targetFile, fileLink, "file");
+      let threw2 = false;
+      try {
+        assertWritablePath(fileLink, nativeReal(root));
+      } catch (e) {
+        threw2 = true;
+        assert.ok(e instanceof ProjectPathError);
+        assert.equal(e.code, "PATH_OUTSIDE_ALLOWLIST");
+      }
+      assert.equal(threw2, true, "existing symlink target must be rejected");
+    } catch (e) {
+      console.log("skip file-symlink target test:", e.message);
+    }
 
     // Windows case-insensitive prefix
     if (process.platform === "win32") {
@@ -698,6 +743,21 @@ async function testDatagenAndMappingGates() {
     "candidates should include LivingEntity getHealth searge",
   );
   assert.ok(csvRev.action?.code === "AMBIGUOUS" || csvRev.action?.code === "NOT_FOUND");
+
+  // F-D203：1.14.4 全量数据（fabric yarn-tiny + forge mcp-csv 并存）下，带 owner 的 MCP 可读名
+  // 未命中时应附带 CSV 指引 note（yarn 命中路径见下方 csvOwner 用例），而非无提示通用 miss
+  const csvOwnerGuided = convertMapping({
+    from: "mcp",
+    to: "mojang",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.entity.EntityLivingBase",
+    version: "1.14.4",
+  });
+  assert.equal(csvOwnerGuided.found, false, JSON.stringify(csvOwnerGuided));
+  assert.ok(
+    (csvOwnerGuided.notes ?? []).some((n) => /searge|owner/.test(n)),
+    JSON.stringify(csvOwnerGuided.notes),
+  );
 
   // schema v3 field: CSV searge field
   const fieldCsv = convertMapping({
@@ -1092,6 +1152,21 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.equal(fabricNoVer.analysisComplete, false);
   assert.equal(fabricNoVer.ok, true);
   assert.equal(fabricNoVer.action?.code, "VERSION_REQUIRED");
+
+  // Forgified Fabric API 保留 net.fabricmc.* 栈帧：NeoForge/Forge 报告不得误判 fabric（F-E201）
+  const neoWithFabricApi =
+    "---- Minecraft Crash Report ----\n" +
+    "net.neoforged.neoforge.network.registration.PayloadRegistry\n" +
+    "at net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.endServerTick(ServerTickEvents.java:50)\n";
+  assert.equal(detectCrashKind(neoWithFabricApi), "fml");
+  const neoResult = analyzeCrash({ crashReport: neoWithFabricApi, version: "1.20.1" });
+  assert.notEqual(neoResult.crashKind, "fabric");
+
+  const fileNameFabricWithNeo =
+    "---- Minecraft Crash Report ----\n" +
+    "File: crash-2024-01-01_12.00.00-fabric.txt\n" +
+    "cpw.mods.modlauncher.TransformingClassLoader\n";
+  assert.notEqual(detectCrashKind(fileNameFabricWithNeo), "fabric");
 }
 
 async function testPlatformDataMissing() {
@@ -2326,6 +2401,26 @@ function testProjectPathFill() {
 
 async function testPrototypeOwnKeys() {
   const protoKeys = ["constructor", "toString", "__proto__", "hasOwnProperty", "valueOf"];
+  const { queryApi } = await import("./dist/api/index.js");
+  const { getMethodParams } = await import("./dist/mappings/convert.js");
+  for (const k of protoKeys.slice(0, 3)) {
+    // query_api / get_method_params 裸索引已改 ownGet：原型键必须返回结构化 found:false 而非抛错（F-D201）
+    const qa = await queryApi({ className: k, version: "1.20.1" });
+    assert.equal(qa.found, false, `queryApi(${k}) must not hit Object.prototype`);
+    assert.ok(Array.isArray(qa.suggestions), `queryApi(${k}) must return structured envelope`);
+
+    const mp = getMethodParams({ className: k, methodName: "toString", version: "1.20.1" });
+    assert.equal(mp.found, false, `getMethodParams(${k}) must not hit Object.prototype`);
+
+    const cm = convertMapping({
+      from: "mojang",
+      to: "yarn",
+      memberName: "m_91003_",
+      ownerClass: k,
+      version: "1.20.1",
+    });
+    assert.equal(cm.found, false, `convertMapping ownerClass=${k} must not hit Object.prototype`);
+  }
   for (const k of protoKeys) {
     const vi = await getVersionInfo({ version: k, action: "register", platform: "forge" });
     assert.equal(vi.forgeVersion, "unknown", `get_version_info(${k}) must not hit Object.prototype`);
@@ -2585,8 +2680,27 @@ public class ExampleMod { }
     platform: "forge",
     version: "1.20.4",
   });
-  assert.ok(forge1204.code?.includes("FinishedRecipe"), forge1204.code?.slice(0, 400));
-  assert.ok(!forge1204.code?.includes("RecipeOutput"), forge1204.code?.slice(0, 300));
+  // F-E101：vanilla 1.20.2+ 为 buildRecipes(RecipeOutput)；FinishedRecipe 类在 1.20.4 已不存在
+  assert.ok(forge1204.code?.includes("RecipeOutput"), forge1204.code?.slice(0, 400));
+  assert.ok(!forge1204.code?.includes("Consumer<FinishedRecipe>"), forge1204.code?.slice(0, 400));
+  assert.ok(!/import net\.minecraft\.data\.recipes\.FinishedRecipe;/.test(forge1204.code || ""));
+  assert.ok(
+    forge1204.warnings?.some((w) => /buildRecipes\(RecipeOutput\)/.test(w)),
+    JSON.stringify(forge1204.warnings),
+  );
+
+  const forge1204NonRecipe = generateDatagen({
+    providerType: "blockstate",
+    modId: "demo",
+    targetName: "x",
+    platform: "forge",
+    version: "1.20.4",
+  });
+  assert.equal(forge1204NonRecipe.code, null);
+  assert.ok(
+    forge1204NonRecipe.errors?.some((e) => /仅核实 RecipeProvider/.test(e)),
+    JSON.stringify(forge1204NonRecipe.errors),
+  );
 
   const neo1204 = generateDatagen({
     providerType: "recipe",

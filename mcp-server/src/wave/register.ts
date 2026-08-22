@@ -140,6 +140,42 @@ export const GENERATE_MODEL_DESCRIPTION =
 export const DETECT_MOD_PROJECT_DESCRIPTION =
   "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。" +
   "知识库根 / 某版 scaffold → KNOWLEDGE_REPO_NOT_MOD。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。";
+
+// ── 工具描述常量（registerTool 与 waveToolSchemas 共用；F-C11..C13/C16）────────
+export const GET_MIGRATION_GUIDE_DESCRIPTION =
+  "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。" +
+  "route 如 1.21.11->26.1 / 26.2 / forge->neoforge。platform 写入返回 JSON。同轮最多 1–2 hop，不要把 26.2 四千行复述给用户。";
+export const DOWNLOAD_OFFICIAL_MDK_DESCRIPTION =
+  "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
+  "GitHub 必须 pin commit SHA（见 data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
+  "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
+  "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
+  "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。";
+export const VALIDATE_AT_DESCRIPTION =
+  "校验 `*_at.cfg`：目标类/成员必须存在于 remapped 客户端 jar（含继承成员、record 组件、Outer$Inner 内部类）；" +
+  "SRG/混淆名与 jar 映射层不匹配时给出 convert_mapping 建议；多文件冲突告警。\n" +
+  "jar 来源：jarPath 参数 > $MC_SKILL_CACHE 缓存扫描；未缓存返回 CACHE_MISS 引导（先调 get_minecraft_source，不自动下载）。";
+export const VALIDATE_AW_DESCRIPTION =
+  "校验 `.accesswidener`：header/namespace、accessible/extendable/mutable/transitive 条目（含 transitive-xxx 连字形式）、目标类/成员存在性" +
+  "（含继承成员、record 组件、内部类）、跨文件冲突告警。\n" +
+  "jar 来源：jarPath 参数 > $MC_SKILL_CACHE 缓存扫描；未缓存返回 CACHE_MISS 引导（先调 get_minecraft_source，不自动下载）。";
+export const ANALYZE_MOD_JAR_DESCRIPTION =
+  "解析本地 mod jar 元数据：quilt.mod.json / fabric.mod.json / mods.toml / litemod.json / riftmod.json / 基岩 manifest.json、mixins、依赖、AT/AW。\n" +
+  "同时有 Forge 与 litemod.json 时 loaders 含 forge+liteloader。纯 Node 解析（zip），无需 Java、零下载、不写盘。仅本地绝对路径。\n" +
+  "⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n" +
+  "⚠️ 只解析元数据，不反编译、不给方法体。要源码用 decompile_mod_jar。";
+export const MIXIN_ANALYZE_DESCRIPTION =
+  "解析 mixins.json 与 @Mixin 源码，校验 @Inject/@Redirect 等方法目标（多映射层）。高风险工具，见 supportMatrix。\n" +
+  "deep:true 时基于已缓存 remapped 客户端 jar 做字节码级校验（目标类/方法选择器/@At 调用点）；jar 未缓存返回 CACHE_MISS 引导，不自动下载。";
+export const ACTIVATE_PLATFORM_PACK_DESCRIPTION =
+  "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。" +
+  "topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 8）；topics 永不注入正文。" +
+  "库 Skill 不进 nextReads；显式 skillNames 或 task 建议名命中库 Skill 时注入库正文（计入上限 8）。" +
+  "includeSkills 已 deprecated，仅在未传 writeSkillStubs 时映射为 stub 开关。write 默认写 Skill stub（未传 writeSkillStubs 且未传 includeSkills 时）。includeSkillBodies 才写全文。" +
+  "ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（rulesMode=base，带 next 对象；不要当失败，也不要当已灌 02–10）。" +
+  "包存在但缺 00/01/09 文件 → ok:false + PACK_INCOMPLETE（与 PACK_NOT_FOUND 区分）。" +
+  "rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。" +
+  "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库整树）。不能开关 IDE 扫描器。";
 export const generateModelSchema = z.object({
   modId: z.string(),
   blockName: z.string(),
@@ -393,9 +429,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "mixin_analyze",
     {
       title: "Deep Mixin injection analysis",
-      description:
-        "解析 mixins.json 与 @Mixin 源码，校验 @Inject/@Redirect 等方法目标（多映射层）。高风险工具，见 supportMatrix。\n" +
-        "deep:true 时基于已缓存 remapped 客户端 jar 做字节码级校验（目标类/方法选择器/@At 调用点）；jar 未缓存返回 CACHE_MISS 引导，不自动下载。",
+      description: MIXIN_ANALYZE_DESCRIPTION,
       inputSchema: mixinAnalyzeSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(await mixinAnalyze(args)),
@@ -526,9 +560,7 @@ export function registerWaveExtensions(server: McpServer): void {
 
   server.registerTool("get_migration_guide", {
     title: "Get built-in migration guide summary",
-    description:
-      "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。" +
-      "route 如 1.21.11->26.1 / 26.2 / forge->neoforge。platform 写入返回 JSON。同轮最多 1–2 hop，不要把 26.2 四千行复述给用户。",
+    description: GET_MIGRATION_GUIDE_DESCRIPTION,
     inputSchema: getMigrationGuideSchema,
   }, async (a) => jsonResult(getMigrationGuide(a.route, { full: a.full, platform: a.platform, section: a.section })));
 
@@ -564,12 +596,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "download_official_mdk",
     {
       title: "Download official MDK (pinned commit, cache only)",
-      description:
-        "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
-        "GitHub 必须 pin commit SHA（见 data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
-        "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
-        "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
-        "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。",
+      description: DOWNLOAD_OFFICIAL_MDK_DESCRIPTION,
       inputSchema: downloadOfficialMdkSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(await downloadOfficialMdk(args)),
@@ -607,12 +634,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "analyze_mod_jar",
     {
       title: "Analyze mod jar metadata (fabric/forge/neoforge)",
-      description:
-        "解析本地 mod jar 元数据：quilt.mod.json / fabric.mod.json / mods.toml / litemod.json / riftmod.json / 基岩 manifest.json、mixins、依赖、AT/AW。\n" +
-        "同时有 Forge 与 litemod.json 时 loaders 含 forge+liteloader。纯 Node zip 解析，不写盘。\n" +
-        "纯 Node 解析（zip），无需 Java、零下载、不写盘。仅本地绝对路径。\n" +
-        "⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n" +
-        "⚠️ 只解析元数据，不反编译、不给方法体。要源码用 decompile_mod_jar。",
+      description: ANALYZE_MOD_JAR_DESCRIPTION,
       inputSchema: analyzeModJarSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(analyzeModJarHandler(args)),
@@ -651,10 +673,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "validate_at",
     {
       title: "Validate Forge Access Transformer against client jar bytecode",
-      description:
-        "校验 `*_at.cfg`：目标类/成员必须存在于 remapped 客户端 jar（含继承成员、record 组件、Outer$Inner 内部类）；" +
-        "SRG/混淆名与 jar 映射层不匹配时给出 convert_mapping 建议；多文件冲突告警。\n" +
-        "jar 来源：jarPath 参数 > $MC_SKILL_CACHE 缓存扫描；未缓存返回 CACHE_MISS 引导（先调 get_minecraft_source，不自动下载）。",
+      description: VALIDATE_AT_DESCRIPTION,
       inputSchema: validateAtSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(validateAtHandler(args)),
@@ -664,10 +683,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "validate_aw",
     {
       title: "Validate Fabric Access Widener against client jar bytecode",
-      description:
-        "校验 `.accesswidener`：header/namespace、accessible/extendable/mutable/transitive 条目、目标类/成员存在性" +
-        "（含继承成员、record 组件、内部类）、跨文件冲突告警。\n" +
-        "jar 来源：jarPath 参数 > $MC_SKILL_CACHE 缓存扫描；未缓存返回 CACHE_MISS 引导（先调 get_minecraft_source，不自动下载）。",
+      description: VALIDATE_AW_DESCRIPTION,
       inputSchema: validateAwSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(validateAwHandler(args)),
@@ -718,15 +734,7 @@ export function registerWaveExtensions(server: McpServer): void {
     "activate_platform_pack",
     {
       title: "Activate platform rules for session or write into a mod project",
-      description:
-        "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。" +
-        "topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 8）；topics 永不注入正文。" +
-        "库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。" +
-        "includeSkills 已 deprecated，仅在未传 writeSkillStubs 时映射为 stub 开关。write 默认写 Skill stub（未传 writeSkillStubs 且未传 includeSkills 时）。includeSkillBodies 才写全文。" +
-        "ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（rulesMode=base，带 next 对象；不要当失败，也不要当已灌 02–10）。" +
-        "包存在但缺 00/01/09 文件 → ok:false + PACK_INCOMPLETE（与 PACK_NOT_FOUND 区分）。" +
-        "rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。" +
-        "write 默认 dryRun；hosts 必填；目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。",
+      description: ACTIVATE_PLATFORM_PACK_DESCRIPTION,
       inputSchema: activatePlatformPackSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(activatePlatformPack(args)),
@@ -796,7 +804,7 @@ export function registerWaveExtensions(server: McpServer): void {
 /** Wave 工具 schema 清单（供 CLI list-tools / schema 驱动解析；与上方注册共用同一 schema 常量）。description 需与上方 registerTool 保持一致。 */
 export const waveToolSchemas: Array<{ name: string; description: string; inputSchema: z.ZodTypeAny }> = [
   { name: "query_registry", description: "查询 Vanilla 注册表资源 ID（minecraft:stone）。nameLayer=registry_id；类/方法映射请用 convert_mapping。【边界】不是模组 DeferredRegister / Fabric Registry。", inputSchema: queryRegistrySchema },
-  { name: "mixin_analyze", description: "解析 mixins.json 与 @Mixin 源码，校验 @Inject/@Redirect 等方法目标（多映射层）。高风险工具，见 supportMatrix。deep:true 时基于已缓存 remapped 客户端 jar 做字节码级校验；jar 未缓存返回 CACHE_MISS 引导。", inputSchema: mixinAnalyzeSchema },
+  { name: "mixin_analyze", description: MIXIN_ANALYZE_DESCRIPTION, inputSchema: mixinAnalyzeSchema },
   { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。", inputSchema: auditResourcesSchema },
   { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验。minecraft:crafting_special_* 与 smithing_trim 等无 result 不报错；普通 crafting_shaped 缺 result 仍报。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
   { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。模板是人在环步骤清单：创意/兼容/API/性能/调试由用户拍板；写盘、Gradle、拷 jar、上传须确认，不是无人值守编排器。", inputSchema: getWorkflowTemplateSchema },
@@ -811,22 +819,22 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.20.1 / forge 1.20.4 / neoforge 26.1。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
   { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架文本，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: ANALYZE_LOG_DESCRIPTION, inputSchema: analyzeLogSchema },
-  { name: "get_migration_guide", description: "迁移路线摘要。默认返回 Primer 章节目录（toc）；section 只返回该章；full=true 才全文。route 如 1.21.11->26.1 / 26.2 / forge->neoforge。", inputSchema: getMigrationGuideSchema },
-  { name: "download_official_mdk", description: "下载官方 MDK 到 $MC_SKILL_CACHE。GitHub pin commit SHA；26.1.x/26.2 须选 ModDevGradle 或 NeoGradle。默认 dryRun。", inputSchema: downloadOfficialMdkSchema },
+  { name: "get_migration_guide", description: GET_MIGRATION_GUIDE_DESCRIPTION, inputSchema: getMigrationGuideSchema },
+  { name: "download_official_mdk", description: DOWNLOAD_OFFICIAL_MDK_DESCRIPTION, inputSchema: downloadOfficialMdkSchema },
   { name: "check_dependencies", description: "根据 build.gradle / mods.toml / fabric.mod.json / quilt.mod.json / litemod.json / riftmod.json / 基岩 manifest 提示依赖问题：loader 判定、库模组识别（library-catalog 接线）、跨加载器冲突（owo/CCA/Polymer/Trinkets 等）与陷阱。Quilt 在 Fabric 前；LiteLoader 混合只认 net.minecraftforge.gradle.liteloader。【边界】启发式 + catalog，不是 Gradle 依赖解析器；未收录库可能漏报。", inputSchema: checkDependenciesSchema },
   { name: "mc_skill_update", description: "检查 GitHub Release 是否有新版本；确认后可更新 tooling（git ff-only + npm build）与 data（zip+SHA256）。默认 channel=stable（忽略预发布）。apply 默认 dryRun；真写需 confirmed=true + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT=仓库根。", inputSchema: mcSkillUpdateSchema },
   { name: "lookup_obfuscated", description: "崩溃日志反混淆：单 token 反查混淆短名（er）/ intermediary（method_6032）/ SRG（func_110143_aJ）→ yarn 可读名 + ownerClass + descriptor。\n方法优先 → 字段 → 类；多命中返回 AMBIGUOUS。26.1+ 无混淆层，返回 UNOBFUSCATED_NO_YARN。", inputSchema: lookupObfuscatedSchema },
   { name: "get_minecraft_source", description: "按需下载/重映射/反编译真实 MC 源码并返回类源码片段（支持行区间）。默认零下载：仅显式调用才下载到 $MC_SKILL_CACHE。\n支持矩阵：1.14–1.21.11 → yarn（两步 remap official→intermediary→named）或 mojmap；26.1+ → mojmap-only（免 remap）。\n首次约 3–10 分钟，同版本缓存命中 <1s。需 Java 17+；缺失时返回 TOOLCHAIN_MISSING 安装指引。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 下载量大。1.16.5–1.20.4 Vanilla 签名用 query_api；平台 API 用 search_*_docs；26.1+ 无 query_api 索引。", inputSchema: getMinecraftSourceSchema },
-  { name: "analyze_mod_jar", description: "解析本地 mod jar 元数据：quilt.mod.json / fabric.mod.json / mods.toml / litemod.json / riftmod.json / 基岩 manifest.json、mixins、依赖、AT/AW。\n同时有 Forge 与 litemod.json 时 loaders 含 forge+liteloader。纯 Node zip 解析，不写盘。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 只解析元数据，不反编译、不给方法体。要源码用 decompile_mod_jar。", inputSchema: analyzeModJarSchema },
+  { name: "analyze_mod_jar", description: ANALYZE_MOD_JAR_DESCRIPTION, inputSchema: analyzeModJarSchema },
   { name: "decompile_mod_jar", description: "按需反编译本地 mod jar → $MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/，返回源码树摘要。\n可选 remap（需匹配 MC 版本；26.1+ 免 remap）。需 Java 17+（VineFlower）；默认零下载（仅显式调用时下载工具 jar）。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 下载量大。不给 jar 元数据（用 analyze_mod_jar）；26.1+ Vanilla 签名不要指望 query_api。", inputSchema: decompileModJarSchema },
   { name: "search_mod_code", description: "对已反编译的模组源码做行级检索（子串或正则），返回 file:line 命中。\n入口二选一：decompiledDir（反编译目录）或 jarPath（须先 decompile_mod_jar 并缓存）。纯 Node，无 Java 需求。\n⚠️ 仅当需要完整源码/反编译时才用本工具；仅查方法签名请用 query_api / get_method_params\n⚠️ 源码未反编译时返回 NOT_FOUND，不会自动 decompile。", inputSchema: searchModCodeSchema },
-  { name: "validate_at", description: "校验 Forge/NeoForge `*_at.cfg`：目标类/成员存在性（继承成员/record/内部类）、映射层不匹配建议、跨文件冲突告警。jar 来源：jarPath > $MC_SKILL_CACHE 缓存；未缓存返回 CACHE_MISS 引导。", inputSchema: validateAtSchema },
-  { name: "validate_aw", description: "校验 Fabric `.accesswidener`：header/namespace、条目类型、目标存在性、transitive、跨文件冲突告警。jar 来源：jarPath > $MC_SKILL_CACHE 缓存；未缓存返回 CACHE_MISS 引导。", inputSchema: validateAwSchema },
+  { name: "validate_at", description: VALIDATE_AT_DESCRIPTION, inputSchema: validateAtSchema },
+  { name: "validate_aw", description: VALIDATE_AW_DESCRIPTION, inputSchema: validateAwSchema },
   { name: "query_loader_api", description: "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。", inputSchema: queryLoaderApiSchema },
   { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。", inputSchema: searchLoaderApiSchema },
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
-  { name: "activate_platform_pack", description: "list / session / write / deactivate。session 不写盘、不依赖项目根：默认规则 00/01/09 + Skill 索引。topics/task 只追加规则到底座（并集），永不替换。skillNames 与 task 建议名去重后注入 skillBodies（总条数上限 8）；topics 永不注入正文。库 Skill 不进 nextReads，只有显式 skillNames 才注入库正文。write：writeSkillStubs 优先于 includeSkills（deprecated）；二者都未传时默认写 stub；includeSkillBodies 才写全文。ok=true 且带「已加载底座规则 00/01/09」warning = 平台包可用但规则未按任务扩展（rulesMode=base，带 next；不要当失败，也不要当已灌 02–10）。包存在但缺 00/01/09 → ok:false + PACK_INCOMPLETE（与 PACK_NOT_FOUND 区分）。rulesMode：includeAllRules=true→all；否则有效 task/topics 且规则集大于底座→extended；否则 base。write 默认 dryRun；hosts 必填。目标只能是用户模组工程（拒绝知识库根）。不能开关 IDE 扫描器。", inputSchema: activatePlatformPackSchema },
+  { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
   { name: "check_publish_ready", description: "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];

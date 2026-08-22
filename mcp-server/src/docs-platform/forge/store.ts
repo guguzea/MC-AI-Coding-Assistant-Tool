@@ -492,6 +492,8 @@ export class ForgeDocStore {
    */
   loadSummary(id: string, version: string): SummaryResult {
     this.ensureValidated();
+    // 与 searchIndexDetailed 同口径：同系列回退（1.16.8 → 1.16.5），fetch 端不咬死精确版本（F-D103）
+    version = this.resolveVersion(version);
     const index = this.loadIndexL1(version);
     // id 可能是 "resources/server/recipes/ingredients" 或 "1.20.1/resources_server_recipes_ingredients"
     const normalized = id.match(/^\d+\.\d+\.\d+\//)
@@ -516,6 +518,8 @@ export class ForgeDocStore {
     highlightKey?: boolean,
   ): Promise<FullDocResult> {
     this.ensureValidated();
+    // 与 searchIndexDetailed 同口径：同系列回退（1.16.8 → 1.16.5），fetch 端不咬死精确版本（F-D103）
+    version = this.resolveVersion(version);
     const l2 = this.loadIndexL2(version);
     // id 可能是 "resources/server/recipes/ingredients" 或 "1.20.1/resources_server_recipes_ingredients"
     const normalized = id.match(/^\d+\.\d+\.\d+\//)

@@ -640,7 +640,15 @@ function detectValidateProject(query: ValidateQuery): ProjectLoaderDetection {
     extras.addonManifest = javaBlob;
   }
   if (/quilt_loader/.test(javaBlob)) {
-    extras.quiltModJson = extras.quiltModJson ?? javaBlob;
+    // F-E204：Java 源里的 "quilt_loader" 字符串（跨平台兼容探测、注释）不得劫持 loader 判定——
+    // 仅当内容像 quilt.mod.json 元数据（JSON + schema_version）或文件路径就是 quilt.mod.json 时才采信
+    const looksLikeQuiltJson = /^\s*\{/.test(javaBlob.trim()) && /"schema_version"/.test(javaBlob);
+    const fromQuiltModJsonFile = (query.javaFiles ?? []).some((f) =>
+      String(f.path ?? "").replace(/\\/g, "/").endsWith("quilt.mod.json"),
+    );
+    if (looksLikeQuiltJson || fromQuiltModJsonFile) {
+      extras.quiltModJson = extras.quiltModJson ?? javaBlob;
+    }
   }
   if (/\bLiteMod\b|litemod\.json/i.test(javaBlob)) {
     extras.litemodJson = javaBlob;
@@ -805,6 +813,14 @@ export function validateProject(query: ValidateQuery): ValidationResult {
 
   // 1. mods.toml 基础检查，提取 modId
   const modsTomlModId = checkModsToml(modsToml, errors, warnings);
+  // F-E203：Forge 工程缺 META-INF/mods.toml 是必然加载失败的坏工程，不得静默 passed。
+  // 仅在 projectPath 加载路径（真工程）下报 error；纯内联 javaFiles 查询（无 projectPath 且未传 modsToml）
+  // 保持无告警以兼容片段校验。
+  if (!modsToml && loader === "forge" && query.projectPath) {
+    errors.push(
+      "Forge 工程缺少 src/main/resources/META-INF/mods.toml（游戏加载必然失败；@Mod 一致性等检查已跳过）",
+    );
+  }
 
   // 2. gradle.properties modId 提取（优先级低于 mods.toml）
   let gradleModId: string | null = null;

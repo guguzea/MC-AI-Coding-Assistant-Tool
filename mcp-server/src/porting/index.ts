@@ -773,9 +773,20 @@ function generateArchitecturyCommonJson(modId: string): string {
   return JSON.stringify({ common: [] }, null, 2);
 }
 
+/** 与 buildArchitecturySkeleton 的全部键保持一致（顶层三件 + 子模块五件），缺一即冲突。 */
+const ARCHITECTURY_SKELETON_FILES = [
+  "build.gradle",
+  "settings.gradle",
+  "gradle.properties",
+  "common/build.gradle",
+  "fabric/build.gradle",
+  "neoforge/build.gradle",
+  join("common/src/main/resources", "architectury.common.json"),
+  join("fabric/src/main/resources", "fabric.mod.json"),
+];
+
 function checkConflicts(root: string): string[] {
-  const files = ["build.gradle", "settings.gradle", "gradle.properties"];
-  return files.filter((f) => existsSync(join(root, f)));
+  return ARCHITECTURY_SKELETON_FILES.filter((f) => existsSync(join(root, f)));
 }
 
 function buildArchitecturySkeleton(root: string, modId: string, mcVersion: string) {
@@ -862,6 +873,8 @@ const PACKAGE_RENAMES: [string, string][] = [
 function applyPackageRenames(root: string, dryRun: boolean): {
   renames: { from: string; to: string; affectedFiles: number }[];
   unreviewed: { file: string; reason: string }[];
+  modified?: string[];
+  rollbackError?: string;
 } {
   const srcDir = join(root, "src");
   const files = walkDir(srcDir, [".java", ".kt"]);
@@ -870,16 +883,16 @@ function applyPackageRenames(root: string, dryRun: boolean): {
   const renames: { from: string; to: string; affectedFiles: number }[] = [];
   const unreviewed: { file: string; reason: string }[] = [];
 
+  // 两阶段提交：先在内存中暂存全部替换结果，再统一写盘；
+  // 写盘中途失败逆序还原已写文件（镜像 platform-pack/write.ts 的 backups+rollback 模式，F-B04）
+  const staged: { file: string; prev: string; next: string }[] = [];
   for (const [from, to] of PACKAGE_RENAMES) {
     let count = 0;
     for (const file of files) {
       const content = readContent(file);
-      if (content.includes(from)) {
+      if (content && content.includes(from)) {
         count++;
-        if (!dryRun && allowRoot) {
-          assertWritablePath(file, allowRoot);
-          writeFileSync(file, content.replaceAll(from, to), "utf-8");
-        }
+        staged.push({ file, prev: content, next: content.replaceAll(from, to) });
       }
     }
     if (count > 0) {
@@ -887,12 +900,46 @@ function applyPackageRenames(root: string, dryRun: boolean): {
     }
   }
 
-  const unreviewedCandidates: { file: string; reason: string }[] = [
+  if (dryRun || !allowRoot) {
+    return { renames, unreviewed: unreviewedCandidates(), modified: [] };
+  }
+
+  const written: typeof staged = [];
+  for (const item of staged) {
+    try {
+      assertWritablePath(item.file, allowRoot);
+      writeFileSync(item.file, item.next, "utf-8");
+      written.push(item);
+    } catch (err) {
+      let rollbackError: string | undefined;
+      for (const w of [...written].reverse()) {
+        try {
+          writeFileSync(w.file, w.prev, "utf-8");
+        } catch (rbErr) {
+          rollbackError = `回滚 ${w.file} 失败: ${(rbErr as Error).message}`;
+          break;
+        }
+      }
+      return {
+        renames,
+        unreviewed: unreviewedCandidates(),
+        modified: [],
+        rollbackError:
+          `包名替换在第 ${written.length + 1}/${staged.length} 个文件失败（${(err as Error).message}），` +
+          `已回滚全部 ${written.length} 个已写文件。` +
+          (rollbackError ? `注意：${rollbackError}，请人工 git diff 核对。` : ""),
+      };
+    }
+  }
+
+  return { renames, unreviewed: unreviewedCandidates(), modified: written.map((w) => w.file) };
+}
+
+function unreviewedCandidates(): { file: string; reason: string }[] {
+  return [
     { file: "需要人工 review", reason: "RegistryObject → DeferredHolder 变更（见 data/porting 知识库 / 平台 porting 文档）" },
     { file: "需要人工 review", reason: "NeoForge 1.20.2+ 事件总线订阅方式（mod bus / forge bus）" },
   ];
-
-  return { renames, unreviewed: unreviewedCandidates };
 }
 
 // ── 主入口 ─────────────────────────────────────────────────────────────────
@@ -1072,7 +1119,19 @@ export async function portProject(args: unknown) {
       });
     }
     const targetVersion = parsed.data.targetVersion;
-    const { renames, unreviewed } = applyPackageRenames(root, !doWrite);
+    const renameResult = applyPackageRenames(root, !doWrite);
+    const { renames, unreviewed } = renameResult;
+
+    if (renameResult.rollbackError) {
+      return JSON.stringify({
+        ok: false,
+        dryRun: false,
+        error: {
+          code: "MIGRATION_WRITE_FAILED",
+          message: renameResult.rollbackError,
+        },
+      });
+    }
 
     // Notes only — this action does NOT rewrite build.gradle / gradle.properties
     const manualNotes: string[] = [];
@@ -1095,6 +1154,7 @@ export async function portProject(args: unknown) {
         unreviewedCandidates: unreviewed,
         manualFollowUps: manualNotes,
       },
+      ...(renameResult.modified?.length ? { modifiedFiles: renameResult.modified } : {}),
     };
     return JSON.stringify(output, null, 2);
   }

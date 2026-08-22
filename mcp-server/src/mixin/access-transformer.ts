@@ -82,7 +82,7 @@ export function normalizeOwnerCandidates(name: string): string[] {
   return out;
 }
 
-/** 在类及其父类继承链（含 record 组件）中查找成员。 */
+/** 在类及其父类继承链 + 接口闭包（含 record 组件）中查找成员（接口 default/静态成员是合法 AT/AW 目标，F-E108）。 */
 export function lookupMemberInHierarchy(
   index: JarIndex,
   ownerInternal: string,
@@ -91,32 +91,60 @@ export function lookupMemberInHierarchy(
 ): MemberLookupResult {
   const seen = new Set<string>();
   const matches: MemberMatch[] = [];
-  let current = ownerInternal;
   let declaredIn: string | undefined;
-  while (current && current !== "java/lang/Object" && !seen.has(current)) {
-    seen.add(current);
-    const info = index.getClass(current);
-    if (!info) break;
+
+  const scanClass = (internal: string): void => {
+    const info = index.getClass(internal);
+    if (!info) return;
     for (const m of info.methods) {
       if (m.name !== member) continue;
       if (descriptor && m.descriptor !== descriptor) continue;
-      if (!declaredIn) declaredIn = current;
-      matches.push({ name: m.name, descriptor: m.descriptor, owner: current, kind: "method" });
+      if (!declaredIn) declaredIn = internal;
+      matches.push({ name: m.name, descriptor: m.descriptor, owner: internal, kind: "method" });
     }
     for (const f of info.fields) {
       if (f.name !== member) continue;
       if (descriptor && f.descriptor !== descriptor) continue;
-      if (!declaredIn) declaredIn = current;
-      matches.push({ name: f.name, descriptor: f.descriptor, owner: current, kind: "field" });
+      if (!declaredIn) declaredIn = internal;
+      matches.push({ name: f.name, descriptor: f.descriptor, owner: internal, kind: "field" });
     }
     for (const r of info.recordComponents) {
       if (r.name !== member) continue;
       if (descriptor && r.descriptor !== descriptor) continue;
-      if (!declaredIn) declaredIn = current;
-      matches.push({ name: r.name, descriptor: r.descriptor, owner: current, kind: "record" });
+      if (!declaredIn) declaredIn = internal;
+      matches.push({ name: r.name, descriptor: r.descriptor, owner: internal, kind: "record" });
     }
+  };
+
+  // 先沿父类链上溯
+  let current = ownerInternal;
+  while (current && current !== "java/lang/Object" && !seen.has(current)) {
+    seen.add(current);
+    scanClass(current);
     if (matches.length) break;
-    current = info.superName ?? "";
+    const info = index.getClass(current);
+    current = info?.superName ?? "";
+  }
+  // 父类链未命中 → BFS 接口闭包（default 方法 / 接口静态成员/常量）
+  if (matches.length === 0) {
+    const queue: string[] = [];
+    const seed = index.getClass(ownerInternal);
+    if (seed) queue.push(...(seed.interfaces ?? []));
+    while (queue.length > 0 && matches.length === 0) {
+      const iface = queue.shift()!;
+      if (!iface || seen.has(iface)) continue;
+      seen.add(iface);
+      scanClass(iface);
+      const ifaceInfo = index.getClass(iface);
+      if (ifaceInfo) {
+        for (const parent of ifaceInfo.interfaces ?? []) {
+          if (!seen.has(parent)) queue.push(parent);
+        }
+        if (ifaceInfo.superName && ifaceInfo.superName !== "java/lang/Object" && !seen.has(ifaceInfo.superName)) {
+          queue.push(ifaceInfo.superName);
+        }
+      }
+    }
   }
   return { found: matches.length > 0, declaredIn, matches };
 }

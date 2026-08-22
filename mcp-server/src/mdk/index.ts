@@ -114,6 +114,8 @@ async function fetchZipBuffer(
         const res = await fetch(u, {
           headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool" },
           redirect: "follow",
+          // TCP 半开/代理挂起时防无限悬挂（stdio MCP 调用不返回）
+          signal: AbortSignal.timeout(120_000),
         });
         if (!res.ok) {
           last = `HTTP ${res.status} ${u}`;
@@ -209,7 +211,12 @@ export function probeUnzipTool(): UnzipTool | null {
   if (tar) {
     const help = spawnSync(tar, ["--help"], { encoding: "utf8", windowsHide: true });
     const text = `${help.stdout || ""}\n${help.stderr || ""}`;
-    if (/bsdtar|libarchive/i.test(text) || process.platform === "win32") {
+    // Windows 不整体短路接受任意 PATH tar（MSYS/GnuWin32 的 GNU tar 解不了 zip）；
+    // 仅 help 文本证明是 bsdtar/libarchive，或解析到 System32 自带的 bsdtar 时才接受。
+    const isSystemBsdtar =
+      process.platform === "win32" &&
+      resolve(tar).toLowerCase() === "c:\\windows\\system32\\tar.exe";
+    if (/bsdtar|libarchive/i.test(text) || isSystemBsdtar) {
       return { kind: "bsdtar", executable: tar };
     }
   }
@@ -783,6 +790,8 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     const parsed = parseExampleEntry(cached.unpackedRoot!);
     if (args.destPath) {
       mkdirSync(args.destPath, { recursive: true });
+      // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
+      assertWritablePath(args.destPath);
       cpSync(cached.unpackedRoot!, args.destPath, { recursive: true });
     }
     return {
@@ -854,6 +863,8 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
 
   if (args.destPath) {
     mkdirSync(args.destPath, { recursive: true });
+    // mkdir 后复核：destPath 若是预置 junction/symlink，cpSync 会整树穿出沙箱（F-B02）
+    assertWritablePath(args.destPath);
     cpSync(unpacked.unpackedRoot!, args.destPath, { recursive: true });
   }
 

@@ -93,6 +93,36 @@ function testZipLayout() {
   assert.equal(trav.ok, false);
 }
 
+function testStagingContentRoot() {
+  // 唯一顶层 data/ 布局的 staging 必须解析到 staging/data（F-A01：ESM 下 require("fs") 曾抛错被空 catch 吞掉）
+  const staging = mkdtempSync(join(tmpdir(), "mc-upd-stage-"));
+  try {
+    mkdirSync(join(staging, "data", "forge_1.20.1"), { recursive: true });
+    writeFileSync(join(staging, "data", "forge_1.20.1", "a.json"), "{}", "utf8");
+    assert.equal(zip.resolveStagingContentRoot(staging), join(staging, "data"));
+
+    const flat = mkdtempSync(join(tmpdir(), "mc-upd-flat-"));
+    try {
+      mkdirSync(join(flat, "forge_1.20.1"), { recursive: true });
+      writeFileSync(join(flat, "forge_1.20.1", "a.json"), "{}", "utf8");
+      assert.equal(zip.resolveStagingContentRoot(flat), flat);
+    } finally {
+      rmSync(flat, { recursive: true, force: true });
+    }
+
+    const ambiguous = mkdtempSync(join(tmpdir(), "mc-upd-amb-"));
+    try {
+      mkdirSync(join(ambiguous, "data"), { recursive: true });
+      mkdirSync(join(ambiguous, "other"), { recursive: true });
+      assert.equal(zip.resolveStagingContentRoot(ambiguous), ambiguous);
+    } finally {
+      rmSync(ambiguous, { recursive: true, force: true });
+    }
+  } finally {
+    rmSync(staging, { recursive: true, force: true });
+  }
+}
+
 async function testRateLimit429() {
   const fetchImpl = makeFetch(() => jsonRes({}, 429, { "retry-after": "42" }));
   const r = await github.resolveRelease({ channel: "stable", fetchImpl });
@@ -347,6 +377,7 @@ async function testPendingRestartHint() {
 async function main() {
   testSemver();
   testZipLayout();
+  testStagingContentRoot();
   await testRateLimit429();
   await testStableSkipsPrerelease();
   await testCheckUpdateAvailable();

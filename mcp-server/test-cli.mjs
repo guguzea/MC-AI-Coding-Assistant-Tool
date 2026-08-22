@@ -80,6 +80,24 @@ function parseJson(r, label) {
   if ([...names].sort().join("\0") !== schemaNames.join("\0")) {
     throw new Error("list-tools names !== listAllToolSchemas()");
   }
+  // F-C19：registerTool 侧（toolHandlers）描述与静态表（listAllToolSchemas）描述逐工具一致，
+  // 防止 CLI --help 与 MCP tools/list 再次漂移（描述应引用共享常量）。
+  {
+    const norm = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
+    const drifted = [];
+    for (const t of listAllToolSchemas()) {
+      const h = toolHandlers.get(t.name);
+      if (!h) continue; // 名字集一致性已由上一断言覆盖
+      if (norm(h.description) !== norm(t.description)) {
+        drifted.push(
+          `${t.name}:\n  [registerTool] ${norm(h.description).slice(0, 120)}\n  [静态表]    ${norm(t.description).slice(0, 120)}`,
+        );
+      }
+    }
+    if (drifted.length > 0) {
+      throw new Error(`description drift (registerTool vs 静态表):\n${drifted.join("\n")}`);
+    }
+  }
   for (const required of ["lookup_obfuscated", "convert_mapping", "validate_at", "validate_aw", "download_official_mdk"]) {
     if (!names.includes(required)) throw new Error(`list-tools missing ${required}`);
   }

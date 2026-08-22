@@ -187,6 +187,8 @@ export interface InitArchitecturyError {
 export interface ApplyMigrationOutput {
   ok: true;
   dryRun: boolean;
+  /** 真写模式下实际改写成功的源文件（dryRun 为空） */
+  modifiedFiles?: string[];
   changes: {
     buildGradleUpdates: string[];
     gradlePropertiesUpdates: string[];

@@ -259,6 +259,31 @@ section("cache");
     release2();
   });
 
+  test("acquireCacheLock: stale lock taken over via rename; live heartbeat lock is not", async () => {
+    const { touchCacheLock } = await import("./dist/decompile/cache.js");
+    // 人工构造陈旧锁（owner.at 远超 timeout，模拟持锁进程死亡）→ 应被 rename 抢占
+    const staleDir = join(tmpRoot, "locks", "stale-key");
+    mkdirSync(staleDir, { recursive: true });
+    writeFileSync(
+      join(staleDir, "owner.json"),
+      JSON.stringify({ pid: 999999, at: Date.now() - 60_000 }),
+    );
+    const release = await acquireCacheLock(tmpRoot, "stale-key", 1000);
+    release();
+
+    // 活锁（owner.at 新鲜）即使 mtime 旧也不得被抢；touchCacheLock 续租
+    const liveDir = join(tmpRoot, "locks", "live-key");
+    mkdirSync(liveDir, { recursive: true });
+    writeFileSync(join(liveDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
+    touchCacheLock("live-key", tmpRoot);
+    await assert.rejects(
+      () => acquireCacheLock(tmpRoot, "live-key", 30_000),
+      (err) => err && err.code === "CACHE_LOCK_BUSY",
+      "live lock with fresh owner.at must not be taken over",
+    );
+    rmSync(liveDir, { recursive: true, force: true });
+  });
+
   rmSync(tmpRoot, { recursive: true, force: true });
 }
 

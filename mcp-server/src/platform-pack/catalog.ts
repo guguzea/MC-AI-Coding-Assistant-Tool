@@ -366,7 +366,7 @@ export function findPack(
   return inspected.pack;
 }
 
-/** 精确包不存在时列出同系列已建档版本（1.21 → 1.21.1/1.21.3/…）。禁止静默折叠。 */
+/** 精确包不存在时列出同系列已建档版本（1.21 → 1.21.1/1.21.3/…；1.21.5 → 1.21.x 家族）。禁止静默折叠。 */
 export function listSameSeriesCandidates(
   platform: string,
   minecraftVersion: string,
@@ -376,11 +376,15 @@ export function listSameSeriesCandidates(
   const v = minecraftVersion.trim();
   if (!p || !v || p === "unknown") return [];
   const { packs } = listPacks(repoRoot);
+  // 部分版本（1.21 → '1.21.' 前缀）与完整版本（1.21.5 → 去 patch 段后的 '1.21.' 家族前缀）都取；
+  // x.y 两段版本不启用家族回退（'1.' 前缀会误收 1.12.x）
+  const segments = v.split(".");
+  const familyPrefix = segments.length >= 3 ? `${segments.slice(0, -1).join(".")}.` : null;
   const prefix = v.endsWith(".") ? v : `${v}.`;
   return packs
     .filter((x) => x.platform === p)
     .map((x) => x.minecraftVersion)
-    .filter((pv) => pv === v || pv.startsWith(prefix))
+    .filter((pv) => pv === v || pv.startsWith(prefix) || (familyPrefix !== null && pv.startsWith(familyPrefix)))
     .sort();
 }
 

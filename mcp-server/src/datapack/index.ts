@@ -71,8 +71,14 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       }
       break;
     case "loot_table":
-      requireKeys(data, ["type", "pools"], errors);
+      // vanilla loot table 顶层 type 是可选字段（手写表普遍省略，空表也合法，F-E205）
+      requireKeys(data, ["pools"], errors);
       if (!Array.isArray(data.pools)) errors.push("pools 必须为数组");
+      if ("type" in data && typeof data.type === "string" && !/^[a-z0-9_.:-]+$/i.test(data.type)) {
+        errors.push(`type 看起来不是合法资源 id: ${String(data.type)}`);
+      } else if (!("type" in data)) {
+        warnings.push("loot table 未声明顶层 type（可选；如需 random_sequence 语义请显式声明）");
+      }
       break;
     case "advancement":
       requireKeys(data, ["criteria"], errors);

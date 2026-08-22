@@ -70,8 +70,11 @@ IF 注册 方块实体类型
 IF 注册 Mixin
   → 在 fabric.mixins.json 中声明，不需要在 onInitialize() 中注册
 
-IF 平台 = Forge
-  → 跳转 ../forge/1.21.3/AGENTS.md（Forge 使用 DeferredRegister）
+IF 用户要对照 Forge / NeoForge（非 Fabric）
+  → 回仓库根 AGENTS.md 重判平台与精确 MC 版本
+  → Forge 1.21.1 仅为 draft（PACK_NOT_FOUND）；Forge 1.21.3 无规则树
+  → 同版 NeoForge → neoforge/<精确版本> + search_neoforge_docs
+  → 禁止跳转 ../forge/1.21.3；禁止把 forge/1.21.1 draft 当教程
 ```
 
 ### Decision: 注册顺序（依赖关系）

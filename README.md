@@ -198,7 +198,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，78 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**（**22.5–22.12 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，78 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 ## 社区知识与库模组
 
@@ -248,7 +248,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**78** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**78** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
 
@@ -310,7 +310,7 @@ MC_skill/
 | `get_migration_guide({route:"constructor"})` `found:true` | 自由字符串查 `MIGRATION_GUIDES[key]`，命中 Function | 已 `ownGet`，必须 `found:false` |
 | `get_workflow_template({name:"constructor"})` | MCP schema 是工作流名 **enum**（Zod 直接拒）；函数层仍要 `ownGet` | 不要把校验失败理解成「没有工作流系统」 |
 | `query_api` 1.12.2 `Block` `found:true` | 约 3313 个类名、几乎全是 `methods:[]` | 看 `warning` / `notes`；改 `search_forge_docs` / `query_loader_api` |
-| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | 仅 **Forge 1.20.1**（以及 Neo 1.21.x / 26.1、**Fabric** 1.21.x / 26.1）出代码；**Quilt 无** generate_datagen（改口 `search_docs platform=quilt` + Fabric overlay 手写）；其它 version 返回 error |
+| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | Forge **1.20.1**（`Consumer<FinishedRecipe>`）与 **1.20.4**（仅 recipe，`buildRecipes(RecipeOutput)`）；NeoForge 1.20.1 改口 `search_neoforge_docs`、1.20.4/1.20.6 仅 recipe、1.21.x 与 26.1；**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（**无 1.21.5**）；**Quilt 无** generate_datagen（改口 `search_docs platform=quilt` + Fabric overlay 手写）；其它 version 返回 error |
 | `get_version_info` 1.12.2 action=register 仍教 DeferredRegister | gotchas 写「不支持」，recommendation 被强行追加 1.20 流程 | 1.12.2 注册是 `RegistryEvent.Register<T>` |
 | `search_loader_api` 对 Fabric 1.14.4 等返回空 | 文档曾写 maven 404 / `LOADER_API_NOT_INDEXED` | 以 `mode=list` 为准；`skipped-ingest.json` 的 `mavenNotIndexed` 现为空数组 |
 | 文档 `semantic: false` 或 warning 含 `stale` | 故意 L0-only（**仅 ModLoader** 三档），或 sqlite 落后于 processed/ | 看该次 JSON，不要只看 `get_server_status.semanticIndex.modeHint` |
@@ -325,7 +325,7 @@ MC_skill/
 |----------|------|
 | `list` | 已建档平台 / 版本 |
 | `session` | **不写盘**、不依赖项目根。返回该档 `AGENTS.md`、规则正文、Skill **索引**（`name` / `description` / `relPosix` / `absPath`）。默认只注入规则 **00 / 01 / 09**；`topics` 与 `task` **追加**到底座（并集，永不替换）；`skillNames` 与 `task` 建议名去重后注入 `skillBodies`（总条数上限 8）。`topics` 永不注入 Skill 正文。库 Skill 不进 `nextReads`，只有显式 `skillNames` 才注入库正文。`includeAllRules=true` 才灌 00–10 规则全文。ok=true 且带「仅底座」warning = 包可用但规则未按任务扩展（`rulesMode=base`，含 `next` 对象）。包存在但缺 00/01/09 文件 → `ok:false` + `PACK_INCOMPLETE`（不是 `PACK_NOT_FOUND`）。库 Skill 仍读 `knowledge/libs/`。 |
-| `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `all`）。默认 `dryRun`。不要再用 `includeSkills`，改用 `writeSkillStubs`（二者都未传时默认 **true**，写入 stub，提示去读知识库路径，不是 Skill 全文）。`includeSkillBodies` 才写全文。目标不能是本知识库根。 |
+| `write` | 写入**用户模组工程**的 IDE 目录。`hosts` 必填（`cursor` / `claude` / … / `all`）。默认 `dryRun`。不要再用 `includeSkills`，改用 `writeSkillStubs`（二者都未传时默认 **true**，写入 stub，提示去读知识库路径，不是 Skill 全文）。`includeSkillBodies` 才写全文。目标不能是本知识库（**整棵仓库树**均拒绝，含版本子目录）。**破坏性变更（2026-08）**：设置 `MC_SKILL_PROJECT_ROOT` 时它是**硬边界**——`projectPath` 必须落在其内，否则拒绝（`PATH_OUTSIDE_ALLOWLIST`，响应带 `breakingChange: true` 与 `allowRoot`）；此前 `projectPath` 可覆盖 env。迁移：把 env 指向包含目标工程的目录，或改用其内的 projectPath。 |
 | `deactivate` | 按清单撤写 |
 
 **不能**开关 Cursor/Claude 等 Skill 扫描器。重载 MCP 不会让设置页出现条目。
@@ -365,7 +365,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
 | 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、兼容取舍、API、性能、调试由人决定；高风险操作须确认后再执行 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
-| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 仅 1.20.1**、NeoForge 1.21.x 与 26.1、**Fabric** 1.21.x 与 26.1；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
+| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
 | `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
 | `mixin_analyze deep:true` 会下载 MC jar | **不会**。未缓存 → `CACHE_MISS`，先 `get_minecraft_source` |
@@ -543,7 +543,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                 | 作用                                                                                                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `diagnose_gradle`  | 检查 `build.gradle` / `gradle.properties`：ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。26.1 Loom 必须 `net.fabricmc.fabric-loom`、Java 25、禁止 `modImplementation`。liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。    |
-| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 仅 1.20.1**、NeoForge 1.21.x、NeoForge 26.1、**Fabric** 1.21.x 与 26.1。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
+| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe，`buildRecipes(RecipeOutput)`）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
 | `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
 | `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |
@@ -785,6 +785,9 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-kotlin` | Kotlin 模组 | 00；核该档文档 |
 | `mc-jei` | JEI 兼容 | mc-compat-jei |
 | `mc-ci-publish-extra` | CI 发布附加 | 00；只出步骤名，不代跑 CI、不上传（人在环） |
+| `mc-villager` | 村民职业 / 交易 | session task=mc-villager → 04-entity；职业/交易签名核本档文档，禁抄邻档 |
+| `mc-multiblock` | 多方块结构 | session task=mc-multiblock → 02-block / 07-datagen；无模板时文档手写 |
+| `mc-ai` | 实体 AI / Goal | session task=mc-ai → 04-entity；Goal/Brain 类名核本档文档，禁把 1.12 AI 任务表抄进 1.20+ |
 
 
 ### 知识暴露（MCP Resources）

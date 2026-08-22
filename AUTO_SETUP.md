@@ -66,6 +66,7 @@ MCP 负责运行时查询；规则集负责写代码约束。完整注意项见�
 ## 前置条件
 
 - **Node.js >= 22.5**（`mcp-server/package.json` → `engines`；Yarn 映射用内置 `node:sqlite`，不是 18+）
+  - **注意标志**：`node:sqlite` 在 **22.5–22.12 需要 `--experimental-sqlite`**（22.13 LTS 起默认开启）。落在该区间的 Node 须把 `--experimental-sqlite` 写进启动参数或 `NODE_OPTIONS`，否则 MCP/CLI 入口会打印醒目警告并以非零码退出。**建议直接安装 Node 22.13+ / 24 LTS 省心。**
 - 本机已有完整仓库（`mcp-server/` + `data/`）
 - GitHub Release / git clone **不含** `node_modules`，必须本地 `npm ci`
 - JSON/YAML/TOML 里的路径一律用**正斜杠**绝对路径（`H:/MC_skill/...`），不要用 Windows 反斜杠，不要用 `~`（部分宿主不展开）

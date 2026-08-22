@@ -114,7 +114,10 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-client-server: 在服务端调用客户端代码"],
   },
   {
-    pattern: /Mixin|@Inject|@Shadow.*error|inject.*failed/i,
+    // F-E202：裸 "Mixin" 会命中 Mod List 里的 MixinExtras 字样，抢答无关崩溃；
+    // 收紧为失败语义锚定（应用失败/目标缺失/非法注入等）
+    pattern:
+      /MixinApplyError|MixinTargetNotFound|InvalidInjectionException|InjectionError|CriticalInjectionFailure|MixinApplyError|mixin.*(apply|failed|error)|(apply|failed|error).*mixin|@Shadow.*error|inject.*(failed|error)/i,
     cause: "Mixin 注入失败",
     fix: [
       "检查 @At 注解是否正确（HEAD/RETURN/INVOKE）",
@@ -330,10 +333,18 @@ export function detectCrashKind(crashReport: string): CrashKind {
     return "modloader";
   }
 
-  if (kindFromName === "fabric") return "fabric";
-  if (kindFromName && ownGet(map, kindFromName) && hasLoaderFingerprint) return ownGet(map, kindFromName)!;
+  // Forgified Fabric API（NeoForge/Forge 上跑 Fabric 模组的事实标准）保留 net.fabricmc.fabric.api.* 包名：
+  // fabric 判定必须排除 Forge/FML 强指纹，否则 NeoForge/Forge 报告会被误判为 fabric（镜像 modloader 分支的负排除写法）
+  const forgeLike =
+    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge|net\.neoforged/i.test(crashReport);
 
-  if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport)) return "fabric";
+  if (kindFromName === "fabric") {
+    if (!forgeLike) return "fabric";
+  } else if (kindFromName && ownGet(map, kindFromName) && hasLoaderFingerprint) {
+    return ownGet(map, kindFromName)!;
+  }
+
+  if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport) && !forgeLike) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
   if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
   if (
@@ -357,7 +368,10 @@ function rewriteFixesForLoader(
 ): string[] {
   const neo = /net\.neoforged/i.test(crashReport);
   const forgeOnly = /net\.minecraftforge/i.test(crashReport) && !neo;
-  const fabric = (/net\.fabricmc|fabric-loader/i.test(crashReport) && !/org\.quiltmc/i.test(crashReport)) || crashKind === "fabric";
+  // Forgified Fabric API 保留 net.fabricmc.* 栈帧：NeoForge/Forge 报告不得按 fabric 丢弃 FML/SimpleChannel 建议
+  const fabric =
+    (/net\.fabricmc|fabric-loader/i.test(crashReport) && !/org\.quiltmc/i.test(crashReport) && !neo && !forgeOnly) ||
+    crashKind === "fabric";
   const quilt = /org\.quiltmc/i.test(crashReport) || crashKind === "quilt";
   const known = neo || forgeOnly || fabric || quilt || crashKind === "liteloader" || crashKind === "rift" || crashKind === "modloader";
   const v = version?.trim() ?? "";

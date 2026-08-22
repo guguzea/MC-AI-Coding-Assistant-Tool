@@ -13,7 +13,7 @@
  * 锁：<root>/locks/<sanitized>.lock 目录 + 超时陈旧回收；同版本并发反编译互斥。
  */
 
-import { existsSync, mkdirSync, rmSync, statSync, writeFileSync, readdirSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, readdirSync, renameSync } from "fs";
 import { join } from "path";
 import os from "os";
 import { DatabaseSync } from "node:sqlite";
@@ -153,10 +153,95 @@ function sanitizeLockName(name: string): string {
   return name.replace(/[^a-zA-Z0-9._-]/g, "_");
 }
 
+function lockDirOf(root: string, name: string): string {
+  return join(root, "locks", sanitizeLockName(name));
+}
+
+function writeOwner(lockDir: string): void {
+  writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
+}
+
+/** 持锁方心跳：续租 owner.at（同时刷新目录 mtime），防止长任务（VineFlower 可超时窗）被误抢占。 */
+const lockHeartbeats = new Map<string, NodeJS.Timeout>();
+
+function startLockHeartbeat(root: string, name: string, lockDir: string, timeoutMs: number): void {
+  stopLockHeartbeat(name);
+  const interval = Math.max(1_000, Math.min(Math.floor(timeoutMs / 3), 30_000));
+  const timer = setInterval(() => {
+    try {
+      writeOwner(lockDir);
+    } catch {
+      /* 锁目录被异常移除时停止续租 */
+      stopLockHeartbeat(name);
+    }
+  }, interval);
+  timer.unref?.();
+  lockHeartbeats.set(name, timer);
+}
+
+function stopLockHeartbeat(name: string): void {
+  const timer = lockHeartbeats.get(name);
+  if (timer) {
+    clearInterval(timer);
+    lockHeartbeats.delete(name);
+  }
+}
+
+/** 持锁期间手动续租（长任务分段时调用）。 */
+export function touchCacheLock(name: string, root: string = resolveCacheRoot()): void {
+  const lockDir = lockDirOf(root, name);
+  if (!existsSync(lockDir)) return;
+  try {
+    writeOwner(lockDir);
+  } catch {
+    /* ignore */
+  }
+}
+
+function lockAgeMs(lockDir: string): number | null {
+  try {
+    const raw = JSON.parse(readFileSync(join(lockDir, "owner.json"), "utf8")) as { at?: number };
+    if (typeof raw.at === "number") return Date.now() - raw.at;
+  } catch {
+    /* fall through to mtime */
+  }
+  try {
+    return Date.now() - statSync(lockDir).mtimeMs;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * 获取缓存锁（mkdir 原子性）。返回释放函数。
- * - busy 且未超过 timeout → CACHE_LOCK_BUSY
- * - busy 且已陈旧（超过 timeout）→ 抢占（删除后重试一次）
+ * rename 原子抢占陈旧锁（proper-lockfile 式 CAS）：
+ * renameSync 只有一个赢家；赢家再复核 owner.at 确认确实陈旧，仍存活的锁原位还回。
+ */
+function takeOverStaleLock(locksDir: string, lockDir: string, timeoutMs: number): boolean {
+  const tmp = join(locksDir, `.${Date.now()}-${process.pid}.taken`);
+  try {
+    renameSync(lockDir, tmp);
+  } catch {
+    return false; // 他人已抢先 rename / 锁已被释放
+  }
+  const age = lockAgeMs(tmp);
+  if (age !== null && age <= timeoutMs) {
+    // 锁其实仍存活（可能刚被并发持有者续租）：原位恢复，放弃本次抢占
+    try {
+      renameSync(tmp, lockDir);
+    } catch {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+    return false;
+  }
+  rmSync(tmp, { recursive: true, force: true });
+  return true;
+}
+
+/**
+ * 获取缓存锁（mkdir 原子性 + rename 原子抢占 + 持锁心跳）。返回释放函数。
+ * - 空闲 → 直接获取，启动心跳续租
+ * - busy 且未超时 → CACHE_LOCK_BUSY
+ * - busy 且陈旧（owner.at 超时，持锁进程死亡/失联）→ rename 原子抢占后获取
  */
 export async function acquireCacheLock(
   root: string = resolveCacheRoot(),
@@ -165,34 +250,34 @@ export async function acquireCacheLock(
 ): Promise<() => void> {
   const locksDir = join(root, "locks");
   mkdirSync(locksDir, { recursive: true });
-  const lockDir = join(locksDir, sanitizeLockName(name));
+  const lockDir = lockDirOf(root, name);
 
   const tryAcquire = (): boolean => {
     try {
       mkdirSync(lockDir);
-      writeFileSync(join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
+      writeOwner(lockDir);
       return true;
     } catch {
       return false;
     }
   };
 
-  if (tryAcquire()) {
-    return () => rmSync(lockDir, { recursive: true, force: true });
-  }
+  const acquire = (): (() => void) | null => {
+    if (!tryAcquire()) return null;
+    startLockHeartbeat(root, name, lockDir, timeoutMs);
+    return () => {
+      stopLockHeartbeat(name);
+      rmSync(lockDir, { recursive: true, force: true });
+    };
+  };
 
-  // busy：陈旧回收
-  let stale = false;
-  try {
-    stale = Date.now() - statSync(lockDir).mtimeMs > timeoutMs;
-  } catch {
-    stale = false;
-  }
-  if (stale) {
-    rmSync(lockDir, { recursive: true, force: true });
-    if (tryAcquire()) {
-      return () => rmSync(lockDir, { recursive: true, force: true });
-    }
+  const acquired = acquire();
+  if (acquired) return acquired;
+
+  const age = lockAgeMs(lockDir);
+  if (age !== null && age > timeoutMs && takeOverStaleLock(locksDir, lockDir, timeoutMs)) {
+    const retried = acquire();
+    if (retried) return retried;
   }
 
   throw new CacheLockBusyError(name, timeoutMs);

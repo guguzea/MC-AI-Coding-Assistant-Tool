@@ -321,35 +321,42 @@ export async function semanticSearch(
     ? [...docBest.entries()].sort((a, b) => b[1] - a[1]).slice(0, 30).map(([id]) => id)
     : [];
 
-  const fused = rrfFuse([ftsDocs, semanticDocs], 60).slice(0, limit);
-  if (fused.length === 0) return [];
+  // 融合与取回段：部分损坏库（有 chunks_fts 但缺 docs/chunk_embeddings 表）在此抛错，
+  // 按模块契约「永不该抛异常」吞掉并返回 null → 调用方保持纯 L0 行为（F-D102）
+  try {
+    const fused = rrfFuse([ftsDocs, semanticDocs], 60).slice(0, limit);
+    if (fused.length === 0) return [];
 
-  const stmt = db.prepare(
-    "SELECT label, url, tags_json, priority, section_count FROM docs WHERE doc_id = ?",
-  );
-  const hits: SemanticHit[] = [];
-  for (const docId of fused) {
-    const row = stmt.get(docId) as
-      | { label: string; url: string | null; tags_json: string; priority: string; section_count: number }
-      | undefined;
-    if (!row) continue;
-    let tags: string[] = [];
-    try {
-      tags = JSON.parse(row.tags_json ?? "[]");
-    } catch {
-      tags = [];
+    const stmt = db.prepare(
+      "SELECT label, url, tags_json, priority, section_count FROM docs WHERE doc_id = ?",
+    );
+    const hits: SemanticHit[] = [];
+    for (const docId of fused) {
+      const row = stmt.get(docId) as
+        | { label: string; url: string | null; tags_json: string; priority: string; section_count: number }
+        | undefined;
+      if (!row) continue;
+      let tags: string[] = [];
+      try {
+        tags = JSON.parse(row.tags_json ?? "[]");
+      } catch {
+        tags = [];
+      }
+      const matches = topChunkMatches(db, docId, ftsExpr, chunkEmbScores, MATCHES_PER_DOC);
+      hits.push({
+        docId,
+        score: Number((docBest.get(docId) ?? 0).toFixed(4)),
+        label: row.label,
+        url: row.url ?? undefined,
+        tags,
+        priority: row.priority,
+        sectionCount: row.section_count,
+        ...(matches.length > 0 ? { matches } : {}),
+      });
     }
-    const matches = topChunkMatches(db, docId, ftsExpr, chunkEmbScores, MATCHES_PER_DOC);
-    hits.push({
-      docId,
-      score: Number((docBest.get(docId) ?? 0).toFixed(4)),
-      label: row.label,
-      url: row.url ?? undefined,
-      tags,
-      priority: row.priority,
-      sectionCount: row.section_count,
-      ...(matches.length > 0 ? { matches } : {}),
-    });
+    return hits;
+  } catch {
+    // 语义库结构异常 → 视同不可用，纯 L0
+    return null;
   }
-  return hits;
 }

@@ -933,6 +933,16 @@ function isNeoForgeAttachmentVersion(version: string): boolean {
   return false;
 }
 
+/** ForgeConfigSpec 可用版本（1.13+ 重构时代；锚定正则防 "1.21beta"/"1.2100" 类垃圾输入混入）。 */
+function isForgeConfigSpecVersion(version: string): boolean {
+  const t = version.trim();
+  if (/^26\./.test(t)) return false; // 26.x 无 Forge
+  const m = t.match(/^1\.(\d{1,2})(?:\.(\d+))?$/);
+  if (!m) return false;
+  const minor = Number(m[1]);
+  return minor >= 13 && minor <= 21;
+}
+
 export function generateConfig(
   modId: string,
   loader?: "forge" | "neoforge" | "fabric" | "quilt",
@@ -1032,6 +1042,35 @@ public class ${toPascalCase(mod.value)}Config {
       errors: [
         `NeoForge config 当前支持 1.20.1（ForgeConfigSpec）与 1.20.4+/1.21+/26.1（ModConfigSpec）。收到 version=${version}。` +
           noNativeGeneratorError("search_neoforge_docs", "规则 00 / mc-config Skill"),
+      ],
+    };
+  }
+
+  // ForgeConfigSpec 是 1.13+（重注册/重新加载时代的 Forge）API；更早版本（1.12.2 Configuration 等）禁止套用
+  if (loader === "forge" && !isForgeConfigSpecVersion(version.trim())) {
+    return {
+      code: null,
+      errors: [
+        `Forge config 骨架仅覆盖 ForgeConfigSpec 可用版本（1.13+，已核实 1.20.1）；version=${version} 属更早时代（如 1.12.2 用 net.minecraftforge.common.config.Configuration）。` +
+          noNativeGeneratorError("search_forge_docs", "规则 00 / mc-config Skill"),
+      ],
+    };
+  }
+
+  if (loader === "forge") {
+    const body = `package com.example.${mod.value}.config;
+
+import net.minecraftforge.common.ForgeConfigSpec;
+
+public class ${toPascalCase(mod.value)}Config {
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
+}
+`;
+    return {
+      code: withDocsReviewHeader(body, "search_forge_docs", version.trim()),
+      warnings: [
+        `Forge ${version.trim()} 配置 API 为 ForgeConfigSpec；修改前用 search_forge_docs(version=${version.trim()}) 复核。`,
       ],
     };
   }

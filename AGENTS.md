@@ -248,7 +248,7 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**，`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**（**22.5–22.12 还需 `--experimental-sqlite`**，22.13+ 免），`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |

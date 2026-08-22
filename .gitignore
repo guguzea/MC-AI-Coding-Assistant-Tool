@@ -15,7 +15,7 @@ gradle-*.zip
 *.swo
 .DS_Store
 Thumbs.db
-
+.zcode/
 # 只忽略仓库根 Cursor IDE 目录（prompts / 本地草稿）。
 # 禁止写成 `.cursor/`：那会排除 fabric/<ver>/.cursor 等平台包。
 # session 只从各档 `.cursor/rules` 注入 00–10，漏提交则 clone 后 rules[] 为空。
@@ -74,4 +74,14 @@ ralphy-spec/
 # SQLite journals (never commit)
 data/**/*.sqlite-journal
 data/**/*-journal
+
+# 测试残留（MCP 解包产物，勿入库；已跟踪的需 git rm -r --cached data/test_mcp_check）
+data/test_mcp_check/
+
+# 会话缓存 / 提交信息草稿（本地工作文件）
+_tmp_session.json
+.gitcommitmsg.txt
+
+# 本地代码索引
+.codegraph/
 

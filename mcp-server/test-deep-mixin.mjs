@@ -239,6 +239,10 @@ const AW_VALID = [
   "accessible method com/example/Fixture getValue ()I",
   "accessible field com/example/Fixture value I",
   "transitive accessible class com/example/Fixture",
+  // Fabric 官方 v2 连字形式（fabric-loader AccessWidenerReader 语法，F-E103）
+  "transitive-accessible class com/example/Fixture",
+  "transitive-extendable class com/example/SubFixture",
+  "transitive-mutable field com/example/Fixture value I",
 ].join("\n");
 const AW_BAD = "accessWidener v2 named\naccessible method com/example/Fixture nope ()V";
 const AW_BAD_NS = "accessWidener v2 bogus\naccessible class com/example/Fixture";

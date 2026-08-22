@@ -241,8 +241,13 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
     for (const [i, m] of modules.entries()) {
       const mod = m as Record<string, unknown>;
       const t = mod.type;
-      if (t !== "resources" && t !== "data" && t !== "script" && t !== "world_template") {
-        errors.push(`modules[${i}].type 无效（允许 resources/data/script/world_template）`);
+      // F-E206："skin"（皮肤包）与 legacy "client_data" 是合法/遗留 type，不按 invalid 报错
+      if (t === "skin") {
+        // 皮肤包合法类型
+      } else if (t === "client_data") {
+        warnings.push(`modules[${i}].type 为 legacy "client_data"，建议迁移到 "data"`);
+      } else if (t !== "resources" && t !== "data" && t !== "script" && t !== "world_template") {
+        errors.push(`modules[${i}].type 无效（允许 resources/data/script/world_template/skin）`);
       }
       if (typeof mod.uuid === "string" && !UUID_RE.test(mod.uuid)) {
         errors.push(`modules[${i}].uuid 不是标准 UUID`);

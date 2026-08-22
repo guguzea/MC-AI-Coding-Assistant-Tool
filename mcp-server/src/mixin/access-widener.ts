@@ -74,9 +74,17 @@ export function parseAccessWidener(
 
     let tokens = line.split(/\s+/);
     let transitive = false;
+    // Fabric 官方 v2 连字形式：transitive-accessible / transitive-extendable / transitive-mutable
+    // （fabric-loader AccessWidenerReader 按 startsWith("transitive-") 解析，F-E103）
     if (tokens[0] === "transitive") {
       transitive = true;
       tokens = tokens.slice(1);
+      if (version === 1) {
+        warnings.push(`第 ${lineNo} 行：transitive 仅在 accessWidener v2 支持（当前 v1）`);
+      }
+    } else if (tokens[0]?.startsWith("transitive-")) {
+      transitive = true;
+      tokens = [tokens[0].slice("transitive-".length), ...tokens.slice(1)];
       if (version === 1) {
         warnings.push(`第 ${lineNo} 行：transitive 仅在 accessWidener v2 支持（当前 v1）`);
       }

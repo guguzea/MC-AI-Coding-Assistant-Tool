@@ -71,6 +71,19 @@ export function inferMappingFromName(jarPath: string): ResolvedValidationJar["ma
   return "unknown";
 }
 
+/** 版本按路径段精确匹配："1.21.1" 命中 minecraft-1.21.1-yarn.jar 但不命中 1.21.11（F-E107）。 */
+function versionSegmentMatch(fileName: string, version: string): boolean {
+  const escaped = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[\\/.\\-_])${escaped}([\\/.\\-_]|$)`).test(fileName);
+}
+
+/** 多命中时优先"版本即整段"的 jar（minecraft-1.21.1-yarn 优先于 minecraft-1.21.11-yarn）。 */
+function versionIsExactSegment(jarPath: string, version: string): boolean {
+  const name = basename(jarPath);
+  const escaped = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`^${escaped}([\\/.\\-_]|$)|([\\/.\\-_])${escaped}$`).test(name);
+}
+
 /** 扫描 $MC_SKILL_CACHE 找版本对应的重映射客户端 jar（不自动下载）。 */
 export function findCachedClientJar(version: string): ResolvedValidationJar | null {
   const root = resolveCacheRoot();
@@ -79,7 +92,7 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   const remappedFlat = join(root, "remapped");
   if (existsSync(remappedFlat)) {
     for (const f of readdirSync(remappedFlat)) {
-      if (f.endsWith(".jar") && f.includes(version)) {
+      if (f.endsWith(".jar") && versionSegmentMatch(f, version)) {
         jars.push({ jarPath: join(remappedFlat, f), mapping: inferMappingFromName(f) });
       }
     }
@@ -93,15 +106,19 @@ export function findCachedClientJar(version: string): ResolvedValidationJar | nu
   const jarsDir = join(root, "jars");
   if (existsSync(jarsDir)) {
     for (const f of readdirSync(jarsDir)) {
-      if (f.endsWith(".jar") && f.includes(version)) {
+      if (f.endsWith(".jar") && versionSegmentMatch(f, version)) {
         jars.push({ jarPath: join(jarsDir, f), mapping: inferMappingFromName(f) });
       }
     }
   }
   if (jars.length === 0) return null;
-  // 优先命名层（yarn > mojmap > official > 其他）
+  // 优先命名层（yarn > mojmap > official > 其他）；同层优先版本整段精确的 jar
   const rank: Record<string, number> = { yarn: 0, mojmap: 1, official: 2, unknown: 3 };
-  jars.sort((a, b) => rank[a.mapping ?? "unknown"] - rank[b.mapping ?? "unknown"]);
+  jars.sort((a, b) => {
+    const rankDiff = rank[a.mapping ?? "unknown"] - rank[b.mapping ?? "unknown"];
+    if (rankDiff !== 0) return rankDiff;
+    return Number(versionIsExactSegment(b.jarPath, version)) - Number(versionIsExactSegment(a.jarPath, version));
+  });
   return { jarPath: jars[0].jarPath, mapping: jars[0].mapping };
 }
 
@@ -160,7 +177,17 @@ function extractAnnotationBlocks(source: string, name: string): string[] {
   return blocks;
 }
 
-const INJECTION_KINDS = ["Inject", "Redirect", "ModifyVariable", "Overwrite", "Accessor", "Invoker"] as const;
+const INJECTION_KINDS = [
+  "Inject",
+  "Redirect",
+  "ModifyVariable",
+  "ModifyArg",
+  "ModifyArgs",
+  "ModifyConstant",
+  "Overwrite",
+  "Accessor",
+  "Invoker",
+] as const;
 
 function parseAtTarget(target: string): { owner?: string; name: string; desc?: string; isField: boolean } {
   if (target.startsWith("L")) {
@@ -273,16 +300,20 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
       warnings.push(`目标 ${ownerHit} 是 final 类：mixin 可注入 final 类，但其中 final 方法无法被 @Overwrite 覆盖`);
     }
 
-    // 注入块（与 parseMixinJavaSource 同序，用于补全 @At 信息）
+    // 注入块（按 kind 配对：parser 的 injections 含 9 种 kind + MixinExtras 追加项，
+    // 全局下标配对会在 @ModifyArg*/MixinExtras 出现时错位，F-E106）
     const blocks: Array<{ kind: string; block: string }> = [];
     for (const kind of INJECTION_KINDS) {
       for (const block of extractAnnotationBlocks(f.content, kind)) blocks.push({ kind, block });
     }
     const injections = parsed.injections;
+    const usedPerKind = new Map<string, number>();
 
-    injections.forEach((inj, idx) => {
+    injections.forEach((inj) => {
       checkedTargets += 1;
-      const blockText = blocks[idx]?.block ?? "";
+      const nth = usedPerKind.get(inj.kind) ?? 0;
+      usedPerKind.set(inj.kind, nth + 1);
+      const blockText = blocks.find((b) => b.kind === inj.kind) ? (blocks.filter((b) => b.kind === inj.kind)[nth]?.block ?? "") : "";
       const atInfo = parseAtDeep(blockText);
       const selectorMatches: Array<{ name: string; descriptor: string; owner: string; kind: "method" | "field" | "record" }> = [];
 
