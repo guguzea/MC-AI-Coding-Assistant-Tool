@@ -123,6 +123,11 @@ function skillPath(ver, name) {
   assert.ok(!keys.some((k) => /forge\/biome_modifier/.test(k)), keys.join(","));
   const neo = generateWorldgen("demo", "ore_blob", "neoforge", "1.21.1");
   assert.ok(Object.keys(neo.files ?? {}).some((k) => k.includes("neoforge/biome_modifier")));
+  const old = generateWorldgen("demo", "ore_blob", "forge", "1.12.2");
+  assert.equal(old.code, null);
+  assert.ok((old.errors ?? []).some((e) => /1\.18\.2/.test(e)), JSON.stringify(old.errors));
+  const junk = generateWorldgen("demo", "ore_blob", "forge", "1.20.4beta");
+  assert.equal(junk.code, null);
   console.log("generate_worldgen fabric: ok");
 }
 

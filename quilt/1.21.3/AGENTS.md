@@ -3,6 +3,7 @@
 > 本规则集适用于 **Quilt 1.21.3**。检测 `quilt.mod.json` 或 `org.quiltmc.loom`（可同时有 `fabric.mod.json`）。
 > **必须再读** `fabric/1.21.3/.cursor/rules/` 的 **02–04、07–08、10**（及缺的 09）。05/06 用本目录，不要 overlay Fabric 网络。
 > 本目录只写 QSL / Quilt Loader **差异**（00 / 01 / 05 / 06）。禁止把整棵 Fabric 规则复制进来。禁止用邻版 Fabric overlay。
+> 从零建工程用本档 scaffold/（基于 quilt/1.21.1 口径：quilt-loader + yarn；yarn build 号与 loom 版本对照官方模板再改，禁止臆造）。
 
 ## 基本信息
 

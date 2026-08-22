@@ -28,6 +28,7 @@ import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
+import { ownGet } from "../../utils/own-record.js";
 import { searchQuiltDocs, getQuiltDocSummary, getQuiltDocFull, getQuiltDocRelated } from "../quilt-search.js";
 import {
   findPrimer,
@@ -756,20 +757,40 @@ export async function searchDocs(
         : null;
     const resolvedVersion = meta?.resolvedVersion ?? args.version;
     const versionFallback = meta?.versionFallback ?? false;
-    // 语义检索（forge/neoforge 各自语义库）；无语义库 → null，保持纯 L0
+    const neoResolution =
+      platform === "neoforge" &&
+      typeof (store as { describeVersionResolution?: (v: string) => {
+        sourcePlatform?: string;
+        sourceVersion?: string;
+        mainDocsMissing?: boolean;
+      } }).describeVersionResolution === "function"
+        ? (store as unknown as { describeVersionResolution: (v: string) => {
+            sourcePlatform?: string;
+            sourceVersion?: string;
+            mainDocsMissing?: boolean;
+          } }).describeVersionResolution(args.version)
+        : undefined;
     const docSource =
-      platform === "neoforge"
-        ? "neoforge-docs"
-        : PLATFORM_DOC_SUBDIR[platform] ?? "forge-docs";
-    const semanticHits = threwMissing
-      ? null
-      : await semanticSearch(
-          args.query,
-          platform,
-          resolvedVersion,
-          docSource,
-          resolveDataDir(),
-        );
+      neoResolution?.sourcePlatform === "forge"
+        ? "forge-docs"
+        : platform === "neoforge"
+          ? "neoforge-docs"
+          : ownGet(PLATFORM_DOC_SUBDIR, platform) ?? "forge-docs";
+    const semPlatform = neoResolution?.sourcePlatform === "forge" ? "forge" : platform;
+    const semVersion =
+      neoResolution?.sourcePlatform === "forge"
+        ? (neoResolution.sourceVersion ?? "1.20.1")
+        : resolvedVersion;
+    const semanticHits =
+      threwMissing || (neoResolution?.mainDocsMissing && neoResolution.sourcePlatform !== "forge")
+        ? null
+        : await semanticSearch(
+            args.query,
+            semPlatform,
+            semVersion,
+            docSource,
+            resolveDataDir(),
+          );
     const finalResultsBase = semanticHits === null
       ? result
       : mergeSemanticResults(result, semanticHits, {

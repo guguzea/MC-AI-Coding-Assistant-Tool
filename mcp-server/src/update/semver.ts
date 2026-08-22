@@ -15,9 +15,10 @@ export function stripV(tag: string): string {
 }
 
 export function looksLikePrereleaseTag(tag: string): boolean {
-  const t = stripV(tag).toLowerCase();
-  if (t.includes("-")) return true;
-  return /\b(alpha|beta|rc|pre|preview|snapshot)\b/.test(t);
+  const t = stripV(tag);
+  if (/-data-refresh$/i.test(t)) return false;
+  if (/-\d*[a-zA-Z]/.test(t)) return true;
+  return /\b(alpha|beta|rc|pre|preview|snapshot)\b/i.test(t);
 }
 
 /** Parse 1.2.3, 1.2.3-alpha.1, etc. Returns null if not semver-like. */
@@ -71,7 +72,7 @@ export function compareSemver(a: string, b: string): number | null {
 export function isNewer(remoteTag: string, localVersion: string): boolean {
   const cmp = compareSemver(remoteTag, localVersion);
   if (cmp !== null) return cmp > 0;
-  return stripV(remoteTag) !== stripV(localVersion);
+  return false;
 }
 
 export type GitDescribeVsRemote = "ahead" | "equal" | "behind" | "unknown";

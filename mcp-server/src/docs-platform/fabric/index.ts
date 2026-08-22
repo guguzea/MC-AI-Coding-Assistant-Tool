@@ -372,13 +372,12 @@ export async function searchFabricDocs(
       if (onTopic.length === 0) {
         const wiki = searchSourceOrEmpty(version, "fabric-wiki", query, tags);
         const wikiOnTopic = wiki.results.filter((h) => hitMatchesFabricTopic(h, topic));
-        usedWikiFallback = true;
-        wikiTopicFallback = true;
-        results = (
-          wikiOnTopic.length
-            ? wikiOnTopic.map((r) => ({ ...r, _source: "fabric-wiki" as const }))
-            : []
-        ) as typeof results;
+        if (wikiOnTopic.length) {
+          usedWikiFallback = true;
+          wikiTopicFallback = true;
+          results = wikiOnTopic.map((r) => ({ ...r, _source: "fabric-wiki" as const })) as typeof results;
+        }
+        // wiki 为空时保留原 fabric-docs 命中
       }
     }
 

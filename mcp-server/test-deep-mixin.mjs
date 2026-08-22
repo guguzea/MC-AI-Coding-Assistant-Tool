@@ -19,7 +19,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
 
-import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex } from "./dist/mixin/bytecode.js";
+import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex, ClassFormatError } from "./dist/mixin/bytecode.js";
 import { validateAccessTransformer, validateAccessTransformerFiles } from "./dist/mixin/access-transformer.js";
 import { validateAccessWidener, validateAccessWidenerFiles } from "./dist/mixin/access-widener.js";
 import { deepValidateMixins, validateAtHandler, validateAwHandler } from "./dist/mixin/deep-validate.js";
@@ -215,6 +215,29 @@ function makeFixtureClass(className, superName, withMembers, accessFlags = 0x002
   ]);
 }
 
+/** 仅含 <init> 且 Code 为给定字节（供 lookupswitch/tableswitch 非法 fixture） */
+function makeClassWithCode(code) {
+  const p = new CpPool();
+  const self = p.cls("com/example/Hang");
+  const sup = p.cls("java/lang/Object");
+  const codeName = p.utf8("Code");
+  const inner = Buffer.concat([
+    u2(1), u2(1), u4(code.length), code, u2(0), u2(0),
+  ]);
+  const codeAttr = Buffer.concat([u2(codeName), u4(inner.length), inner]);
+  const method = Buffer.concat([
+    u2(0x0001), u2(p.utf8("<init>")), u2(p.utf8("()V")), u2(1), codeAttr,
+  ]);
+  return Buffer.concat([
+    Buffer.from([0xca, 0xfe, 0xba, 0xbe]), u2(0), u2(52),
+    u2(p.entries.length + 1), p.build(),
+    u2(0x0021), u2(self), u2(sup),
+    u2(0), u2(0),
+    u2(1), method,
+    u2(0),
+  ]);
+}
+
 // ── fixture 内容 ───────────────────────────────────────────────────────────────
 const FIXTURE_BYTES = makeFixtureClass("com/example/Fixture", "java/lang/Object", true);
 const SUBFIXTURE_BYTES = makeFixtureClass("com/example/SubFixture", "com/example/Fixture", false);
@@ -325,6 +348,21 @@ function testBytecodeParser() {
   assert.equal(initCalls[0].opcode, 0xb7); // invokespecial
   assert.equal(initCalls[0].target.owner, "java/lang/Object");
   console.log("  [ok] parseClassFile: 类名/父类/方法/字段/record/指令/调用点");
+
+  const hangLookup = Buffer.alloc(16);
+  hangLookup[0] = 0xab; // lookupswitch
+  hangLookup.writeInt32BE(-1, 8); // npairs 在 align4(1)=4 后的 +4
+  const t0 = Date.now();
+  assert.throws(() => parseClassFile(makeClassWithCode(hangLookup)), (e) => e instanceof ClassFormatError);
+  assert.ok(Date.now() - t0 < 1000, "lookupswitch 负 npairs 不得挂死");
+  const hangTable = Buffer.alloc(20);
+  hangTable[0] = 0xaa; // tableswitch
+  hangTable.writeInt32BE(5, 8); // low at align4(1)+4 = 8
+  hangTable.writeInt32BE(1, 12); // high < low
+  const t1 = Date.now();
+  assert.throws(() => parseClassFile(makeClassWithCode(hangTable)), (e) => e instanceof ClassFormatError);
+  assert.ok(Date.now() - t1 < 1000, "tableswitch high<low 不得挂死");
+  console.log("  [ok] lookupswitch/tableswitch 非法立即 ClassFormatError");
 }
 
 function testJarLoading() {

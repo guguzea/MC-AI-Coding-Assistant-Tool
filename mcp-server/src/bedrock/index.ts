@@ -3,6 +3,7 @@
  * search_bedrock_docs 每次带 docsStatus；滞后 Warning 不是拒绝令。
  */
 import { existsSync, readFileSync } from "fs";
+import { randomUUID } from "crypto";
 import { join } from "path";
 import { z } from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
@@ -220,13 +221,16 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
     return { ok: false, errors: [`JSON 解析失败: ${(e as Error).message}`], warnings };
   }
   if (parsed.format_version == null) errors.push("缺少 format_version");
+  else if (typeof parsed.format_version !== "number" || !Number.isInteger(parsed.format_version) || parsed.format_version < 1) {
+    errors.push("format_version 必须是正整数");
+  }
   const header = parsed.header as Record<string, unknown> | undefined;
   if (!header) errors.push("缺少 header");
   else {
     if (typeof header.uuid !== "string" || !UUID_RE.test(header.uuid)) {
       errors.push("header.uuid 必须是标准 UUID");
     }
-    if (!Array.isArray(header.version) || header.version.length < 3) {
+    if (!Array.isArray(header.version) || header.version.length !== 3 || !header.version.every((n) => typeof n === "number" && Number.isFinite(n))) {
       errors.push("header.version 应为长度为 3 的数字数组");
     }
     if (typeof header.name !== "string") errors.push("缺少 header.name");
@@ -249,8 +253,11 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       } else if (t !== "resources" && t !== "data" && t !== "script" && t !== "world_template") {
         errors.push(`modules[${i}].type 无效（允许 resources/data/script/world_template/skin）`);
       }
-      if (typeof mod.uuid === "string" && !UUID_RE.test(mod.uuid)) {
-        errors.push(`modules[${i}].uuid 不是标准 UUID`);
+      if (typeof mod.uuid !== "string" || !UUID_RE.test(mod.uuid)) {
+        errors.push(`modules[${i}].uuid 必须是标准 UUID`);
+      }
+      if (!Array.isArray(mod.version) || mod.version.length !== 3 || !mod.version.every((n) => typeof n === "number" && Number.isFinite(n))) {
+        errors.push(`modules[${i}].version 应为长度为 3 的数字数组`);
       }
     }
   }
@@ -323,9 +330,8 @@ export const generateAddonManifestSchema = z.object({
   moduleUuid: z.string().optional(),
 });
 
-function fakeUuid(seed: string): string {
-  const hex = Buffer.from(seed.padEnd(16, "0")).toString("hex").slice(0, 32);
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+function fakeUuid(_seed: string): string {
+  return randomUUID();
 }
 
 export function generateAddonManifest(args: z.infer<typeof generateAddonManifestSchema>): Record<string, unknown> {
@@ -409,14 +415,16 @@ export const generateBpEntitySchema = z.object({
 
 export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): Record<string, unknown> {
   const warnings: string[] = [];
-  if (!args.identifier.includes(":")) {
+  const ident = args.identifier.replace(/\\/g, "/").split("/").pop() ?? args.identifier;
+  const cleaned = ident.replace(/\.\./g, "").replace(/[^a-z0-9_:-]/gi, "");
+  if (!cleaned.includes(":")) {
     return { ok: false, errors: ["identifier 必须是 namespace:name"], files: {} };
   }
   const entity = {
     format_version: "1.21.0",
     "minecraft:entity": {
       description: {
-        identifier: args.identifier,
+        identifier: cleaned,
         is_spawnable: true,
         is_summonable: true,
       },
@@ -427,13 +435,13 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
     },
   };
   const files: Record<string, unknown> = {
-    [`BP/entities/${args.identifier.replace(":", "_")}.json`]: entity,
+    [`BP/entities/${cleaned.replace(":", "_")}.json`]: entity,
   };
   if (args.betaExplodeEvent) {
     files["script-snippet.js"] =
       `import { world } from "@minecraft/server";\n// Beta：BlockExplodeAfterEvent 等需 pack 侧 dependencies 声明 @minecraft/server version=beta，并在世界打开 Beta APIs。\nworld.afterEvents.blockExplode?.subscribe((ev) => {\n  console.warn("block exploded", ev.block);\n});\n`;
     const man = generateAddonManifest({
-      packName: `${args.identifier} scripts`,
+      packName: `${cleaned} scripts`,
       packType: "script",
       beta: true,
       minEngineVersion: [1, 21, 0],

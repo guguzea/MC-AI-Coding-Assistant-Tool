@@ -1,5 +1,11 @@
 export { normalizeModIdentifier } from "../datagen/index.js";
 
+/** 精确 MC 版本 token（禁止 1.20.4beta / 1.2100 无锚混入）。 */
+export function exactMcVersion(s: string): boolean {
+  const t = s.trim();
+  return /^1\.\d+(\.\d+)?$/.test(t) || /^26\.\d+(\.\d+)?$/.test(t);
+}
+
 export function toPascalCase(modId: string): string {
   return modId.split(/[_-]/).map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join("");
 }

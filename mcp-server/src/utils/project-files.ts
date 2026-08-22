@@ -2,7 +2,7 @@
  * 只读扫描模组工程目录（不走写沙箱，不要求 MC_SKILL_ALLOW_WRITE）。
  * 供 validate_project / diagnose_gradle / check_dependencies / mixin_analyze 填缺失正文。
  */
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
 import { actionable, type ActionEnvelope } from "./actionable.js";
 
@@ -85,6 +85,58 @@ export function walkProjectFiles(
   };
   if (existsSync(root) && statSync(root).isDirectory()) walk(root, 0);
   return out.sort();
+}
+
+/**
+ * 有界目录遍历：maxDepth + realpath 环检测。供 porting / audit / fingerprint，
+ * 不要把业务过滤逻辑搬进 walkProjectFiles。
+ */
+export function walkDirBounded(
+  dir: string,
+  opts?: {
+    maxDepth?: number;
+    extensions?: string[];
+    allFiles?: boolean;
+  },
+): string[] {
+  const maxDepth = opts?.maxDepth ?? 16;
+  const results: string[] = [];
+  const seen = new Set<string>();
+  const walk = (current: string, depth: number) => {
+    if (depth > maxDepth) return;
+    let real: string;
+    try {
+      real = realpathSync(current);
+    } catch {
+      return;
+    }
+    if (seen.has(real)) return;
+    seen.add(real);
+    let entries;
+    try {
+      entries = readdirSync(current, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const full = join(current, e.name);
+      if (e.isDirectory()) {
+        walk(full, depth + 1);
+        continue;
+      }
+      if (!e.isFile()) continue;
+      if (opts?.allFiles) {
+        results.push(full);
+        continue;
+      }
+      const exts = opts?.extensions;
+      if (!exts?.length || exts.some((ext) => e.name.endsWith(ext))) {
+        results.push(full);
+      }
+    }
+  };
+  walk(dir, 0);
+  return results;
 }
 
 export function readOptionalRel(root: string, rel: string): string | undefined {

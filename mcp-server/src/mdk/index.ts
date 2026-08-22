@@ -877,6 +877,9 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     sha256: unpacked.sha256,
     sha256Pinned: Boolean(entry.sha256) || wroteSha,
     sha256WroteBack: wroteSha,
+    warnings: wroteSha
+      ? ["已写仓库 mcp-server/data/mdk-checksums.json（唯一绕过写门禁的点）"]
+      : undefined,
     entryClass: unpacked.entryClass,
     loaderVersion: unpacked.loaderVersion,
     mappings: unpacked.mappings ?? entry.mappings,

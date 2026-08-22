@@ -59,7 +59,7 @@ export function draftZh(source: LangMap, existingZh: LangMap): DraftResult {
   const preservedFromExisting: string[] = [];
 
   for (const [k, v] of Object.entries(existingZh)) {
-    if (Object.prototype.hasOwnProperty.call(source, k)) {
+    if (Object.prototype.hasOwnProperty.call(source, k) && String(v ?? "").length > 0) {
       preservedFromExisting.push(k);
     }
     // Keep extras too (do not delete); caller sees them via diff.extraInZh

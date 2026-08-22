@@ -7,6 +7,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deflateRawSync } from "node:zlib";
 import { localizeMod } from "./dist/localize/index.js";
+import { placeholdersMatch } from "./dist/localize/placeholders.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { getWorkflowTemplate } from "./dist/prompts/index.js";
 
@@ -118,6 +119,23 @@ function testOwnDiffMissing() {
   });
   assert.deepEqual(r.missingInZh, ["b"]);
   assert.deepEqual(r.extraInZh, []);
+}
+
+function testOwnEmptyPreserved() {
+  const r = localizeMod({
+    mode: "own",
+    action: "draft_zh",
+    enUsJson: { a: "Hello" },
+    zhCnJson: { a: "" },
+  });
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.needsTranslation, ["a"]);
+  assert.ok(!(r.preservedFromExisting ?? []).includes("a"), JSON.stringify(r.preservedFromExisting));
+}
+
+function testPlaceholderNormalize() {
+  assert.equal(placeholdersMatch("Hello %s", "你好 %1$s"), true);
+  assert.equal(placeholdersMatch("val %f done", "值 %f 完"), true);
 }
 
 function testOwnDraft() {
@@ -365,6 +383,8 @@ function main() {
     testOwnDiff,
     testOwnDiffMissing,
     testOwnDraft,
+    testOwnEmptyPreserved,
+    testPlaceholderNormalize,
     testOwnEmptySource,
     testOwnBadZh,
     testOwnBadSource,

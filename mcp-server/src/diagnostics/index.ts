@@ -44,6 +44,9 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
     ]);
     return { ok: false, action, error: action.message };
   }
+  const LOG_MAX = 2 * 1024 * 1024;
+  const truncated = Buffer.byteLength(text, "utf8") > LOG_MAX;
+  if (truncated) text = text.slice(0, LOG_MAX);
   const lines = text.split(/\r?\n/);
   const errors = lines.filter((l) => /ERROR|Exception|Caused by:/i.test(l)).slice(0, 30);
   const warnings = lines.filter((l) => /WARN/i.test(l)).slice(0, 20);
@@ -60,6 +63,7 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
     warnLines: warnings,
     crashAnalysis: crash,
     relatedTools: relatedToolsForLog(text, version),
+    ...(truncated ? { warning: "日志超过 2MB，已截断后再分析" } : {}),
   };
 }
 
@@ -244,7 +248,7 @@ export function detectLoader(
   }
 
   if (neoModsToml && neoModsToml.trim().length > 0) return "neoforge";
-  if (/neogradle|net\.neoforged|neoforge/i.test(buildGradle)) return "neoforge";
+  if (/neogradle|net\.neoforged\.gradle|net\.neoforged\.moddev|id\s*\(?\s*['"]net\.neoforged/i.test(buildGradle)) return "neoforge";
 
   const litemod = extras?.litemodJson?.trim();
   const hasLlPlugin = /net\.minecraftforge\.gradle\.liteloader/.test(buildGradle);
@@ -378,7 +382,7 @@ export function detectProjectLoaders(input: {
   const anyNeo =
     Boolean(input.neoModsToml?.trim()) ||
     (input.neoModsTomls ?? []).some((s) => s.trim()) ||
-    /neogradle|net\.neoforged/i.test(gradle) ||
+    /neogradle|net\.neoforged\.gradle|net\.neoforged\.moddev|id\s*\(?\s*['"]net\.neoforged/i.test(gradle) ||
     (/net\.neoforged/.test(javaBlob) && !/net\.minecraftforge/.test(javaBlob));
   const anyForgeMeta = [input.modsToml, ...(input.modsTomls ?? [])].some(
     (t) => t && /modLoader\s*=\s*"javafml"/i.test(t) && !/neoforge/i.test(t),
@@ -561,6 +565,23 @@ function detectTraps(loader: DetectedLoader, text: string): DependencyTrap[] {
   return traps;
 }
 
+/** 按花括号深度取出第一个 `dependencies { ... }` 块（避免嵌套 `}` 截断）。 */
+export function extractGradleDependenciesBlock(src: string): string | null {
+  const m = /dependencies\s*\{/.exec(src);
+  if (!m) return null;
+  const openAt = m.index + m[0].lastIndexOf("{");
+  let depth = 0;
+  for (let i = openAt; i < src.length; i++) {
+    const c = src[i];
+    if (c === "{") depth++;
+    else if (c === "}") {
+      depth--;
+      if (depth === 0) return src.slice(openAt, i + 1);
+    }
+  }
+  return src.slice(openAt);
+}
+
 export function checkDependencies(
   buildGradle: string,
   modsToml?: string,
@@ -629,7 +650,8 @@ export function checkDependencies(
   if (detectedLoader === "forge" && !modsToml) {
     suggestions.push("检测到 Forge 但未提供 mods.toml；传入以启用 modLoader 一致性校验");
   }
-  if (/dependencies\s*\{[^}]*\}/s.test(buildGradle) && !/implementation|modImplementation/i.test(buildGradle)) {
+  const depBlock = extractGradleDependenciesBlock(buildGradle);
+  if (depBlock && !/implementation|modImplementation/i.test(depBlock)) {
     suggestions.push("确认使用 implementation / modImplementation 声明依赖");
   }
 

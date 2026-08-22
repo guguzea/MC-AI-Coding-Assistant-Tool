@@ -8,8 +8,13 @@ import {
   existsSync,
   lstatSync,
   mkdirSync,
+  openSync,
+  readSync,
+  closeSync,
   readFileSync,
   readdirSync,
+  renameSync,
+  rmSync,
   statfsSync,
   statSync,
   writeFileSync,
@@ -29,6 +34,7 @@ import { cleanupPath, downloadToFile } from "./download.js";
 import type { GhAsset } from "./github.js";
 import { extractZip, listZipEntries, normalizeZipLayout, resolveStagingContentRoot } from "./zip.js";
 import { writeUpdateState } from "./state.js";
+import { closeSemanticDbs } from "../docs-platform/semantic/search.js";
 
 export interface DiskSpaceInfo {
   neededBytes: number;
@@ -75,17 +81,36 @@ function parseSha256Sums(text: string, assetName: string): string | null {
 
 export function sha256File(path: string): string {
   const h = createHash("sha256");
-  h.update(readFileSync(path));
-  return h.digest("hex");
+  const fd = openSync(path, "r");
+  try {
+    const buf = Buffer.allocUnsafe(64 * 1024);
+    let n: number;
+    while ((n = readSync(fd, buf, 0, buf.length, null)) > 0) {
+      h.update(buf.subarray(0, n));
+    }
+    return h.digest("hex");
+  } finally {
+    closeSync(fd);
+  }
 }
 
-function walkFiles(root: string, base = root): string[] {
+function walkFiles(root: string, base = root, depth = 0, seen?: Set<string>): string[] {
   const out: string[] = [];
-  if (!existsSync(root)) return out;
+  if (!existsSync(root) || depth > 32) return out;
+  let real: string;
+  try {
+    real = nativeReal(root);
+  } catch {
+    return out;
+  }
+  const seenSet = seen ?? new Set();
+  if (seenSet.has(real)) return out;
+  seenSet.add(real);
   for (const name of readdirSync(root)) {
     const p = join(root, name);
-    const st = statSync(p);
-    if (st.isDirectory()) out.push(...walkFiles(p, base));
+    const st = lstatSync(p);
+    if (st.isSymbolicLink()) continue;
+    if (st.isDirectory()) out.push(...walkFiles(p, base, depth + 1, seenSet));
     else out.push(relative(base, p).split(sep).join("/"));
   }
   return out;
@@ -119,6 +144,57 @@ function copyTree(srcRoot: string, destRoot: string, allowRoot: string): string[
     written.push(rel);
   }
   return written;
+}
+
+function siblingName(dataDir: string, suffix: string): string {
+  return `${dataDir}${suffix}`;
+}
+
+function recoverPartialSwap(dataDir: string): void {
+  const prevDir = siblingName(dataDir, ".prev");
+  const nextDir = siblingName(dataDir, ".next");
+  if (!existsSync(dataDir) && existsSync(prevDir)) {
+    renameSync(prevDir, dataDir);
+  }
+  if (existsSync(dataDir) && existsSync(prevDir)) {
+    rmSync(prevDir, { recursive: true, force: true });
+  }
+  if (existsSync(nextDir)) {
+    rmSync(nextDir, { recursive: true, force: true });
+  }
+}
+
+/** 把 nextDir rename 成活 dataDir；失败则尽量把 prev 换回。 */
+function swapInDataDir(nextDir: string, dataDir: string): void {
+  const prevDir = siblingName(dataDir, ".prev");
+  try {
+    closeSemanticDbs();
+  } catch {
+    /* 无打开句柄时忽略 */
+  }
+  if (existsSync(prevDir)) {
+    rmSync(prevDir, { recursive: true, force: true });
+  }
+  try {
+    if (existsSync(dataDir)) {
+      renameSync(dataDir, prevDir);
+    }
+    renameSync(nextDir, dataDir);
+  } catch (err) {
+    if (existsSync(prevDir) && !existsSync(dataDir)) {
+      try {
+        renameSync(prevDir, dataDir);
+      } catch {
+        /* 换回失败时活树可能在 prev */
+      }
+    }
+    const wrapped = new Error((err as Error).message) as Error & { code?: string };
+    wrapped.code = "DATA_SWAP_FAILED";
+    throw wrapped;
+  }
+  if (existsSync(prevDir)) {
+    rmSync(prevDir, { recursive: true, force: true });
+  }
 }
 
 export interface DataApplyOpts {
@@ -316,24 +392,54 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       };
     }
     const contentRoot = resolveStagingContentRoot(staging);
-    const written = copyTree(contentRoot, dataDir, allowRoot!);
-    writeUpdateState(
-      {
-        dataReleaseTag: opts.releaseTag,
-        dataAssetName: opts.zip.name,
-        updatedAt: new Date().toISOString(),
-      },
-      dataDir,
-    );
+    recoverPartialSwap(dataDir);
+    const nextDir = siblingName(dataDir, ".next");
+    mkdirSync(nextDir, { recursive: true });
+    try {
+      if (existsSync(dataDir)) {
+        copyTree(dataDir, nextDir, allowRoot!);
+      }
+      const written = copyTree(contentRoot, nextDir, allowRoot!);
+      swapInDataDir(nextDir, dataDir);
+      writeUpdateState(
+        {
+          dataReleaseTag: opts.releaseTag,
+          dataAssetName: opts.zip.name,
+          updatedAt: new Date().toISOString(),
+        },
+        dataDir,
+      );
 
-    return {
-      ok: true,
-      steps,
-      filesToOverwrite,
-      diskSpace,
-      strippedDataPrefix: layout.strippedDataPrefix,
-      writtenCount: written.length,
-    };
+      return {
+        ok: true,
+        steps,
+        filesToOverwrite,
+        diskSpace,
+        strippedDataPrefix: layout.strippedDataPrefix,
+        writtenCount: written.length,
+      };
+    } catch (err) {
+      if (existsSync(nextDir)) {
+        try {
+          rmSync(nextDir, { recursive: true, force: true });
+        } catch {
+          /* ignore */
+        }
+      }
+      const code = (err as { code?: string }).code === "DATA_SWAP_FAILED" ? "DATA_SWAP_FAILED" : "DATA_APPLY_FAILED";
+      return {
+        ok: false,
+        steps,
+        filesToOverwrite,
+        diskSpace,
+        action: actionable(
+          code,
+          `数据换入失败: ${(err as Error).message}`,
+          ["活动 dataDir 应保持旧内容", "关闭占用 dataDir 的进程后重试"],
+          ["mc_skill_update"],
+        ),
+      };
+    }
   } finally {
     cleanupPath(tmpBase);
   }

@@ -518,9 +518,18 @@ export function writePlatformPack(args: WriteArgs) {
       if (op.kind === "create") {
         mkdirForFile(abs, allowRoot);
         assertWritablePath(abs, allowRoot);
+        const existed = existsSync(abs);
+        if (existed) {
+          backups.set(op.rel, readFileSync(abs, "utf8"));
+        }
         writeFileSync(abs, op.content, "utf8");
-        created.push(op.rel);
-        hostFiles[op.host].created.push(op.rel);
+        if (existed) {
+          patched.push(op.rel);
+          hostFiles[op.host].patched.push(op.rel);
+        } else {
+          created.push(op.rel);
+          hostFiles[op.host].created.push(op.rel);
+        }
         partial.push(op.rel);
       } else {
         const existed = existsSync(abs);

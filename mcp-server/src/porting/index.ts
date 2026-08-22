@@ -1,10 +1,11 @@
-import { readFileSync, readdirSync, statSync, existsSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, existsSync, writeFileSync, mkdirSync, unlinkSync } from "fs";
 import { join, relative, basename } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
 import { parseGradleProperties } from "../gradle/index.js";
 import { detectLoader } from "../diagnostics/index.js";
+import { walkDirBounded } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -48,21 +49,7 @@ function loadArchitecturyPatterns(): Record<string, unknown> {
 // ── 文件系统工具 ────────────────────────────────────────────────────────────
 
 function walkDir(dir: string, extensions: string[]): string[] {
-  const results: string[] = [];
-  try {
-    for (const entry of readdirSync(dir)) {
-      const full = join(dir, entry);
-      const st = statSync(full);
-      if (st.isDirectory()) {
-        results.push(...walkDir(full, extensions));
-      } else if (extensions.some((ext) => entry.endsWith(ext))) {
-        results.push(full);
-      }
-    }
-  } catch {
-    // ignore permission errors
-  }
-  return results;
+  return walkDirBounded(dir, { maxDepth: 16, extensions });
 }
 
 function readContent(filePath: string): string {
@@ -294,12 +281,18 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
     return suggestions;
   }
 
-  if (targetVersion === "26.1") {
+  if (targetVersion === "26.1" || targetVersion.startsWith("26.")) {
     suggestions.push({
-      action: "query_api" as const,
-      targetClass: "net.minecraft.world.item.ItemStack",
-      targetVersion,
-      reason: "26.1 中 ItemStack 构造方式有重大变更，请确认数据文件中的构造调用",
+      action: "search_neoforge_docs",
+      query: "ItemStack",
+      version: targetVersion,
+      reason: "26.1+ 无 Parchment api-index，请用 search_neoforge_docs，不要 query_api",
+    });
+    suggestions.push({
+      action: "search_fabric_docs",
+      query: "ItemStack",
+      version: targetVersion === "26.1" ? "26.1.2" : targetVersion,
+      reason: "26.1+ Vanilla 签名请 search_fabric_docs（先 list_fabric_versions），不要 query_api",
     });
   }
 
@@ -336,8 +329,6 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
   }
   return links;
 }
-
-const REFERENCE_LINKS = buildReferenceLinks("neoforge", "26.1"); // 兼容旧引用；实际输出用 buildReferenceLinks
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TOOL 1: analyze_porting_path
@@ -845,8 +836,11 @@ function scanForLoaderCalls(file: string): { calls: string[]; patterns: { patter
     re.lastIndex = 0;
     if (re.test(content)) {
       calls.push(label);
-      // find line range
-      const firstLine = lines.findIndex((l) => re.test(l));
+      re.lastIndex = 0;
+      const firstLine = lines.findIndex((l) => {
+        re.lastIndex = 0;
+        return re.test(l);
+      });
       if (firstLine >= 0) {
         patterns.push({ pattern: label, lineRange: [firstLine + 1, firstLine + 1] });
       }
@@ -1037,13 +1031,33 @@ export async function portProject(args: unknown) {
 
     if (doWrite) {
       const allowRoot = getAllowRootReal();
-      for (const [filePath, content] of Object.entries(files)) {
-        const full = join(root, filePath);
-        const parent = join(full, "..");
-        assertCreatableDir(parent, allowRoot);
-        mkdirSync(parent, { recursive: true });
-        assertWritablePath(full, allowRoot);
-        writeFileSync(full, content, "utf-8");
+      const written: string[] = [];
+      try {
+        for (const [filePath, content] of Object.entries(files)) {
+          const full = join(root, filePath);
+          const parent = join(full, "..");
+          assertCreatableDir(parent, allowRoot);
+          mkdirSync(parent, { recursive: true });
+          assertWritablePath(full, allowRoot);
+          writeFileSync(full, content, "utf-8");
+          written.push(full);
+        }
+      } catch (err) {
+        for (const p of [...written].reverse()) {
+          try {
+            if (existsSync(p)) unlinkSync(p);
+          } catch {
+            /* ignore */
+          }
+        }
+        return JSON.stringify({
+          ok: false,
+          error: {
+            code: "WRITE_FAILED",
+            message: `init_architectury 写入失败，已回滚已写文件：${(err as Error).message}`,
+            hint: "半套已删除；冲突预检通过后的失败请重试，或把半套列入 conflicts 后再 overlay",
+          },
+        });
       }
     }
 

@@ -27,7 +27,7 @@ function hasLicense(text: string): boolean {
 }
 
 function hasVersion(text: string): boolean {
-  return /\bversion\s*=/i.test(text) || /"version"\s*:/i.test(text);
+  return /^\s*version\s*=/im.test(text) || /"version"\s*:/i.test(text);
 }
 
 function listReleaseJars(projectRoot: string): string[] {

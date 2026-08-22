@@ -339,7 +339,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     title: "CI 发布额外清单",
     body: `清单（人在环：不代跑 CI、不代上传）。
 1. check_publish_ready：license/version、build/libs 像正式 jar。
-2. 列出建议的 GitHub Actions 步骤名（setup-java、gradle build、upload 工件）——只出清单。
+2. 列出建议的 GitHub Actions 步骤名（setup-java、gradle build、upload 工件）——只出清单；可复制的 YAML 模板在 community_knowledge/patterns/examples/mod-ci-github-actions.md。
 3. 对照 community_knowledge/authored/publishing.md。不要调 Curse/Modrinth API。`,
   },
   "mc-setup-env": {

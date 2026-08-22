@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { realpathSync } from "fs";
 import { fileURLToPath } from "url";
 import { warmupApi } from "./api/index.js";
-import { diagnoseDataPaths, hasAnyPlatformData } from "./utils/path.js";
+import { diagnoseDataPaths, hasAnyPlatformData, assertDataUsable } from "./utils/path.js";
 import { server } from "./tool-registry.js";
 
 export * from "./tool-registry.js";
@@ -35,15 +35,17 @@ if (isMainModule()) {
     console.error("[mc-mcp-server] Data paths:", JSON.stringify(diagnoseDataPaths(), null, 2));
   }
 
-  if (!hasAnyPlatformData()) {
+  if (process.env.MC_SKILL_STRICT === "1") {
+    const usable = assertDataUsable();
+    if (!usable.ok) {
+      console.error(`[mc-mcp-server] MC_SKILL_STRICT=1：数据不可用（${usable.reason}），退出。`);
+      process.exit(1);
+    }
+  } else if (!hasAnyPlatformData()) {
     const msg =
       "[mc-mcp-server] WARN: 未在数据目录中找到 forge_*/fabric_*/neoforge_*。" +
       "请设置 MC_SKILL_DATA 为 data 目录绝对路径并确认已解压数据。";
     console.error(msg);
-    if (process.env.MC_SKILL_STRICT === "1") {
-      console.error("[mc-mcp-server] MC_SKILL_STRICT=1：数据缺失，退出。");
-      process.exit(1);
-    }
   }
 
   try {

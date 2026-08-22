@@ -4,7 +4,7 @@
  */
 
 export function isQslSpecificQuery(query: string): boolean {
-  return /quiltregistry|org\.quiltmc|\bqsl\b|qsl\b|registryentryattachment|quilted\s*fabric|quilt\.mod\.json|quilt_loader/i.test(
+  return /quiltregistry|org\.quiltmc|\bqsl\b|registryentryattachment|quilted\s*fabric|quilt\.mod\.json|quilt_loader/i.test(
     query,
   );
 }

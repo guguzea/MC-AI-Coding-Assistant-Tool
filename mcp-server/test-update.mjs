@@ -68,6 +68,8 @@ function testSemver() {
   assert.ok(semver.compareSemver("1.2.3", "1.2.3-beta") > 0);
   assert.equal(semver.isNewer("v0.2.0", "0.1.0"), true);
   assert.equal(semver.looksLikePrereleaseTag("v1.0.0-rc.1"), true);
+  assert.equal(semver.looksLikePrereleaseTag("v1.0.4-data-refresh"), false);
+  assert.equal(semver.isNewer("not-a-version", "also-not"), false);
   assert.equal(semver.gitDescribeVsRemote("V1.0.4", "V1.0.4"), "equal");
   assert.equal(semver.gitDescribeVsRemote("V1.0.4-12-gabcdef1", "V1.0.4"), "ahead");
   assert.equal(semver.gitDescribeVsRemote("V1.0.4", "V1.0.5"), "behind");
@@ -258,6 +260,7 @@ async function testDataApplyWritesAndChecksumFail() {
   // Put data inside project root
   const nestedData = join(dataDir, "data");
   mkdirSync(nestedData, { recursive: true });
+  writeFileSync(join(nestedData, "user-extra.txt"), "keep-me");
 
   const zipPath = join(dataDir, "pkg.zip");
   dataMod.writeStoreZip(zipPath, {
@@ -300,6 +303,9 @@ async function testDataApplyWritesAndChecksumFail() {
   });
   assert.equal(ok.applied, true, JSON.stringify(ok));
   assert.ok(existsSync(join(nestedData, "forge_1.20.1", "a.json")));
+  assert.ok(existsSync(join(nestedData, "user-extra.txt")), "换入后应保留 zip 外的旧文件");
+  assert.ok(!existsSync(`${nestedData}.next`));
+  assert.ok(!existsSync(`${nestedData}.prev`));
   const st = state.readUpdateState(nestedData);
   assert.equal(st.dataReleaseTag, "v9.9.9");
 

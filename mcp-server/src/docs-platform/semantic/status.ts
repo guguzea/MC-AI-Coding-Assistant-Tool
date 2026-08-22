@@ -70,6 +70,13 @@ function modelsDirReady(dataRoot: string): boolean {
   );
 }
 
+export function inspectSemanticDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> & {
+  builtAt?: string;
+  fingerprint?: string;
+} {
+  return inspectDb(dbPath);
+}
+
 function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> & {
   builtAt?: string;
   fingerprint?: string;

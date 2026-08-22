@@ -1,7 +1,7 @@
 /**
  * 数据生成辅助模块
  *
- * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric/Quilt Loom。
+ * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric Loom。
  */
 
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
@@ -84,7 +84,7 @@ function isUnsupportedNeoForge21(platform: string, version: string): boolean {
   if (platform !== "neoforge") return false;
   const v = version.trim();
   if (/^26\.1/.test(v)) return false;
-  if (!v.startsWith("1.21")) return false;
+  if (!/^1\.21(\.|$)/.test(v)) return false;
   return !isNeoForge21Platform(platform, version);
 }
 

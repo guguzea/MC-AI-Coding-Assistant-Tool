@@ -211,6 +211,8 @@ MC_SKILL_PROJECT_ROOT=<目标模组项目绝对路径>
 | Codex CLI | `~/.codex/config.toml` | `[mcp_servers.<名>]` | 不是 JSON |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` | `mcpServers` | 路径含 `codeium` |
 | Cline / Roo | 扩展 `globalStorage` 下的 MCP json | 多为 `mcpServers` | 以扩展设置页为准 |
+| ZCode | **无独立 MCP 配置文件** | Skill 走 `.zcode/skills` | 不要伪造 Cursor `mcp.json`；工具用文末 CLI |
+| Pi | **无独立 MCP 配置文件** | Skill 走 `.pi/skills` | 不要伪造 Cursor `mcp.json`；工具用文末 CLI |
 | 未列出 / 无 MCP | 见 4.11 或文末 CLI | — | 不要伪造 Cursor `mcp.json` |
 
 **向用户确认时必须列出：**

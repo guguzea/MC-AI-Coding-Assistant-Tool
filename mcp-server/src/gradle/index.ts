@@ -18,6 +18,14 @@ import {
 
 export { detectMinecraftVersion } from "../utils/minecraft-version.js";
 
+function hasJavaLanguageVersionDecl(src: string): boolean {
+  return /JavaLanguageVersion\.of\s*\(/.test(src);
+}
+
+function hasJavaLanguageVersionOf(src: string, n: number): boolean {
+  return new RegExp(`JavaLanguageVersion\\.of\\(\\s*${n}\\s*\\)`).test(src);
+}
+
 export interface GradleQuery {
   buildGradle?: string;
   gradleProperties?: string;
@@ -224,9 +232,9 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
   if (band === "unknown") {
     warnings.push("无法判定 MC 版本，跳过版本专用检查");
   } else if (band === "1.20.1") {
-    if (!buildGradle.includes("JavaLanguageVersion.of")) {
+    if (!hasJavaLanguageVersionDecl(buildGradle)) {
       warnings.push("未找到 Java toolchain 配置，建议添加 java.toolchain.languageVersion");
-    } else if (!buildGradle.includes("JavaLanguageVersion.of(17)") && !buildGradle.includes("JavaLanguageVersion.of(21)")) {
+    } else if (!hasJavaLanguageVersionOf(buildGradle, 17) && !hasJavaLanguageVersionOf(buildGradle, 21)) {
       warnings.push("Java toolchain 应为 17 或 21");
     }
     if (!buildGradle.includes("net.minecraftforge:forge")) {
@@ -275,7 +283,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     if (props.forge_version?.startsWith("47.")) {
       warnings.push(`Forge 版本 ${props.forge_version} 像 1.20.1 的 47.x，不要按 1.20.1 FG6 矩阵套用到 1.20.4`);
     }
-    if (!buildGradle.includes("JavaLanguageVersion.of")) {
+    if (!hasJavaLanguageVersionDecl(buildGradle)) {
       warnings.push("未找到 Java toolchain 配置");
     }
   } else if (band === "1.20.x") {
@@ -284,11 +292,11 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
       warnings.push("未找到 ForgeGradle 插件声明");
     }
   } else if (band === "1.18-1.19") {
-    if (buildGradle.includes("JavaLanguageVersion.of") && !buildGradle.includes("JavaLanguageVersion.of(17)")) {
+    if (hasJavaLanguageVersionDecl(buildGradle) && !hasJavaLanguageVersionOf(buildGradle, 17)) {
       warnings.push("1.18–1.19 建议 Java 17，不要强制 Forge 47.");
     }
   } else if (band === "1.16.5") {
-    if (buildGradle.includes("JavaLanguageVersion.of(17)") || buildGradle.includes("JavaLanguageVersion.of(21)")) {
+    if (hasJavaLanguageVersionOf(buildGradle, 17) || hasJavaLanguageVersionOf(buildGradle, 21)) {
       warnings.push("1.16.5 通常使用 Java 8/11 与 FG5，不要按 FG6/Java 17 打分");
     }
   } else if (band === "1.12.2") {

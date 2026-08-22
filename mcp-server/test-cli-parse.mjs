@@ -35,8 +35,14 @@ import {
 }
 
 {
-  const { flags } = parseFlags(["--tag", "a", "--tag", "b"]);
+  const { flags, positional } = parseFlags(["--tag", "a", "--tag", "b"]);
   assert.deepEqual(flags.tag, ["a", "b"]);
+}
+
+{
+  const { flags, positional } = parseFlags(["--limit", "-1", "search_docs"]);
+  assert.equal(flags.limit, "-1");
+  assert.deepEqual(positional, ["search_docs"]);
 }
 
 {

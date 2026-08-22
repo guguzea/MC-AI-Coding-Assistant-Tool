@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { existsSync, readFileSync } from "fs";
+import { closeSync, existsSync, openSync, readFileSync, readSync } from "fs";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export type SidecarInfo = {
@@ -14,7 +14,18 @@ export function sha256Buffer(buf: Buffer): string {
 }
 
 export function sha256File(filePath: string): string {
-  return sha256Buffer(readFileSync(filePath));
+  const h = createHash("sha256");
+  const fd = openSync(filePath, "r");
+  try {
+    const buf = Buffer.allocUnsafe(64 * 1024);
+    let n: number;
+    while ((n = readSync(fd, buf, 0, buf.length, null)) > 0) {
+      h.update(buf.subarray(0, n));
+    }
+    return h.digest("hex");
+  } finally {
+    closeSync(fd);
+  }
 }
 
 /** 优先 `<jar>.sidecar` JSON，其次 `<jar>.mappings.json`，再次旁边 gradle.properties。 */

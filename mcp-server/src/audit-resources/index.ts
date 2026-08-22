@@ -1,5 +1,6 @@
-import { existsSync, readdirSync, readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join, relative } from "path";
+import { walkDirBounded } from "../utils/project-files.js";
 
 export interface AuditResourcesInput {
   resourceRoot: string;
@@ -17,14 +18,9 @@ export interface AuditResourcesResult {
 const TEX_EXT = /\.(png|mcmeta)$/i;
 const MODEL_EXT = /\.json$/i;
 
-function walkFiles(root: string, acc: string[] = []): string[] {
-  if (!existsSync(root)) return acc;
-  for (const e of readdirSync(root, { withFileTypes: true })) {
-    const p = join(root, e.name);
-    if (e.isDirectory()) walkFiles(p, acc);
-    else acc.push(p);
-  }
-  return acc;
+function walkFiles(root: string): string[] {
+  if (!existsSync(root)) return [];
+  return walkDirBounded(root, { maxDepth: 16, allFiles: true });
 }
 
 function collectModelTextures(obj: unknown, out: Set<string>): void {

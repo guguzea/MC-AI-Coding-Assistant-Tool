@@ -220,6 +220,7 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
 
   const run = opts.runGit ?? ((args: string[]) => git(repoRoot, args));
   let stashed = false;
+  let merged = false;
   try {
     run(["fetch", "--tags", remote]);
     if (dirty && opts.allowDirty && opts.stashDirty) {
@@ -229,6 +230,7 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
     }
     try {
       run(["merge", "--ff-only", opts.tag]);
+      merged = true;
     } catch (err) {
       return {
         ok: false,
@@ -266,16 +268,31 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
 
     if (!opts.skipBuild) {
       steps.push(`cd mcp-server && npm ci && npm run build`);
-      execFileSync(
-        process.platform === "win32" ? "npm.cmd" : "npm",
-        ["ci"],
-        { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
-      );
-      execFileSync(
-        process.platform === "win32" ? "npm.cmd" : "npm",
-        ["run", "build"],
-        { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
-      );
+      try {
+        execFileSync(
+          process.platform === "win32" ? "npm.cmd" : "npm",
+          ["ci"],
+          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
+        );
+        execFileSync(
+          process.platform === "win32" ? "npm.cmd" : "npm",
+          ["run", "build"],
+          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
+        );
+      } catch (err) {
+        return {
+          ok: false,
+          steps,
+          remote,
+          restartRequired: true,
+          action: actionable(
+            "TOOLING_MERGED_BUILD_FAILED",
+            `merge 已完成但 npm build 失败: ${(err as Error).message}`,
+            ["源码已在新 tag，dist 可能仍旧；重载 MCP 前先修好 build", "手动 npm ci && npm run build"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
     }
 
     return { ok: true, steps, remote, restartRequired: true };
@@ -284,8 +301,9 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
       ok: false,
       steps,
       remote,
+      restartRequired: merged,
       action: actionable(
-        "TOOLING_UPDATE_FAILED",
+        merged ? "TOOLING_MERGED_BUILD_FAILED" : "TOOLING_UPDATE_FAILED",
         (err as Error).message,
         ["查看 git/npm 输出", "手动 pull 后 npm ci && npm run build"],
         ["mc_skill_update"],

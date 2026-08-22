@@ -520,6 +520,10 @@ export class FabricDocStore {
       if (this.indexFileExists(version, "index-l0.json")) {
         const thin = this.getRelatedDocsFromL0(id, version, limit);
         this.relatedCache.set(cacheKey, thin);
+        if (this.relatedCache.size > 64) {
+          const first = this.relatedCache.keys().next().value;
+          if (first !== undefined) this.relatedCache.delete(first);
+        }
         return thin;
       }
       throw new VersionNotFoundError(version, this.getAvailableVersions());
@@ -569,6 +573,10 @@ export class FabricDocStore {
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
     this.relatedCache.set(cacheKey, results);
+    if (this.relatedCache.size > 64) {
+      const first = this.relatedCache.keys().next().value;
+      if (first !== undefined) this.relatedCache.delete(first);
+    }
     return results;
   }
 

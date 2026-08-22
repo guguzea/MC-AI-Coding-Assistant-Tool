@@ -482,6 +482,10 @@ export class ForgeDocStore {
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
     this.relatedCache.set(cacheKey, results);
+    if (this.relatedCache.size > 64) {
+      const first = this.relatedCache.keys().next().value;
+      if (first !== undefined) this.relatedCache.delete(first);
+    }
     return results;
   }
 

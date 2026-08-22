@@ -1,4 +1,4 @@
-import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform } from "./common.js";
+import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion } from "./common.js";
 
 function usesClientItemsModelPath(version: string): boolean {
   const v = version.trim();
@@ -801,6 +801,7 @@ public class ${pascal}Packet implements IMessage {
     return forgeSimpleChannelSkeleton(mod.value, pascal, "1.18.2", true);
   }
 
+  // 未知 platform token 目前落入 Forge 1.20.1 SimpleChannel；新增枚举必须在此之前接分支，禁止默默吃掉。
   return forgeSimpleChannelSkeleton(mod.value, pascal, "1.20.1", false);
 }
 
@@ -927,8 +928,9 @@ function isForgeCapabilityVersion(version: string): boolean {
 
 function isNeoForgeAttachmentVersion(version: string): boolean {
   const t = version.trim();
-  if (t.startsWith("26.1") || t.startsWith("1.21")) return true;
-  const m = t.match(/^1\.20\.(\d+)/);
+  if (!exactMcVersion(t)) return false;
+  if (/^26\.\d/.test(t) || /^1\.21(\.|$)/.test(t)) return true;
+  const m = t.match(/^1\.20\.(\d+)$/);
   if (m) return Number(m[1]) >= 4;
   return false;
 }
@@ -936,6 +938,7 @@ function isNeoForgeAttachmentVersion(version: string): boolean {
 /** ForgeConfigSpec 可用版本（1.13+ 重构时代；锚定正则防 "1.21beta"/"1.2100" 类垃圾输入混入）。 */
 function isForgeConfigSpecVersion(version: string): boolean {
   const t = version.trim();
+  if (!exactMcVersion(t)) return false;
   if (/^26\./.test(t)) return false; // 26.x 无 Forge
   const m = t.match(/^1\.(\d{1,2})(?:\.(\d+))?$/);
   if (!m) return false;
@@ -953,6 +956,9 @@ export function generateConfig(
   }
   if (!version?.trim()) {
     return { code: null, errors: ["version is required，禁止猜测 1.20.4 或 1.21。" + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
+  }
+  if (!exactMcVersion(version)) {
+    return { code: null, errors: [`version 必须是精确 MC 版本（1.x / 26.x），收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
@@ -999,9 +1005,9 @@ public final class ${toPascalCase(mod.value)}Config {
 
   if (loader === "neoforge") {
     const v = version.trim();
-    const useModConfig = v.startsWith("1.21") || v.startsWith("26.1") || /^1\.20\.(4|6)/.test(v);
+    const useModConfig = /^1\.21(\.|$)/.test(v) || /^26\.1(\.|$)/.test(v) || /^1\.20\.(4|6)$/.test(v);
     if (useModConfig) {
-      const reviewed = /^1\.20\.(4|6)/.test(v);
+      const reviewed = /^1\.20\.(4|6)$/.test(v);
       const body = `package com.example.${mod.value}.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -1012,15 +1018,15 @@ public class ${toPascalCase(mod.value)}Config {
 }
 `;
       return {
-        code: reviewed ? withDocsReviewHeader(body, "search_neoforge_docs", v.startsWith("1.20.4") ? "1.20.4" : "1.20.6") : body,
+        code: reviewed ? withDocsReviewHeader(body, "search_neoforge_docs", /^1\.20\.4$/.test(v) ? "1.20.4" : "1.20.6") : body,
         warnings: reviewed
           ? [
-              `NeoForge ${v.startsWith("1.20.4") ? "1.20.4" : "1.20.6"} 官方配置 API 是 ModConfigSpec，不是 ForgeConfigSpec。`,
+              `NeoForge ${/^1\.20\.4$/.test(v) ? "1.20.4" : "1.20.6"} 官方配置 API 是 ModConfigSpec，不是 ForgeConfigSpec。`,
             ]
           : undefined,
       };
     }
-    if (v.startsWith("1.20.1")) {
+    if (v === "1.20.1") {
       const body = `package com.example.${mod.value}.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -1076,15 +1082,10 @@ public class ${toPascalCase(mod.value)}Config {
   }
 
   return {
-    code: `package com.example.${mod.value}.config;
-
-import net.minecraftforge.common.ForgeConfigSpec;
-
-public class ${toPascalCase(mod.value)}Config {
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec SPEC = BUILDER.build();
-}
-`,
+    code: null,
+    errors: [
+      `未知 loader=${String(loader)}。` + noNativeGeneratorError("search_*_docs", "规则 00 / mc-config Skill"),
+    ],
   };
 }
 
@@ -1190,6 +1191,30 @@ export function generateWorldgen(
         "version 必填。当前成功路径：forge / neoforge feature JSON；fabric / quilt 仅 configured_feature / placed_feature。该版本无原生生成器时不要理解为游戏里做不了：改用 search_*_docs + 手动编写，参考规则 07-datagen / mc-worldgen Skill。",
       ],
     };
+  }
+  const ver = version.trim();
+  if (!exactMcVersion(ver)) {
+    return {
+      code: null,
+      errors: [
+        `version 必须是精确 MC 版本（1.x / 26.x），收到 ${version}。无白名单时不要生成 worldgen JSON。` +
+          noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
+      ],
+    };
+  }
+  if (/^1\./.test(ver)) {
+    const mm = ver.match(/^1\.(\d+)(?:\.(\d+))?$/);
+    const minor = mm ? Number(mm[1]) : 0;
+    const patch = mm && mm[2] !== undefined ? Number(mm[2]) : 0;
+    if (minor < 18 || (minor === 18 && patch < 2)) {
+      return {
+        code: null,
+        errors: [
+          `generate_worldgen 仅覆盖 1.18.2+ 数据包 feature JSON，收到 ${version}。` +
+            noNativeGeneratorError("search_*_docs", "规则 07 / mc-worldgen Skill"),
+        ],
+      };
+    }
   }
   const p = platform.trim().toLowerCase();
   const allowed = ["forge", "neoforge", "fabric", "quilt"];

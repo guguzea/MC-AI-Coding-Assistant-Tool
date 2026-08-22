@@ -73,6 +73,12 @@ export type QueryApiSuggestion =
       query: string;
       version: string;
       reason: string;
+    }
+  | {
+      action: "search_fabric_docs";
+      query: string;
+      version: string;
+      reason: string;
     };
 
 export interface ReferenceLink {

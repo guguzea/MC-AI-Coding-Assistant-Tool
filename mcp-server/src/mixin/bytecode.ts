@@ -12,7 +12,7 @@
  * 用途：mixin_analyze deep 模式 / validate_at / validate_aw 的字节码索引层。
  */
 
-import { readFileSync } from "fs";
+import { readFileSync, statSync } from "fs";
 import { readZip } from "../decompile/zip-util.js";
 
 export interface ClassMethod {
@@ -201,7 +201,12 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
   const calls: CallSite[] = [];
   let pos = 0;
   const len = code.length;
+  const insnLimit = len + 1;
+  let insnCount = 0;
   while (pos < len) {
+    const start = pos;
+    insnCount += 1;
+    if (insnCount > insnLimit) throw new ClassFormatError("指令数超过上限");
     const op = code[pos];
     opcodes.push(op);
     pos += 1;
@@ -224,11 +229,15 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
       if (pos + 12 > len) throw new ClassFormatError("tableswitch 越界");
       const low = code.readInt32BE(pos + 4);
       const high = code.readInt32BE(pos + 8);
-      pos += 12 + (high - low + 1) * 4;
+      if (high < low) throw new ClassFormatError("tableswitch high<low");
+      const n = high - low + 1;
+      if (n < 0 || pos + 12 + n * 4 > len) throw new ClassFormatError("tableswitch 越界");
+      pos += 12 + n * 4;
     } else if (op === 0xab) {
       pos = align4(pos);
       if (pos + 8 > len) throw new ClassFormatError("lookupswitch 越界");
       const npairs = code.readInt32BE(pos + 4);
+      if (npairs < 0 || pos + 8 + npairs * 8 > len) throw new ClassFormatError("lookupswitch npairs 非法");
       pos += 8 + npairs * 8;
     } else if (op === 0xc4) {
       // wide：紧跟一个操作码；iinc 5 字节，其余 3 字节
@@ -238,6 +247,7 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
     } else {
       pos += OP_SIZES[op];
     }
+    if (!(pos > start) || pos > len) throw new ClassFormatError("指令未前进或越界");
   }
   return { opcodes, calls };
 }
@@ -369,14 +379,23 @@ export function parseClassFile(buf: Buffer): ClassInfo {
 const JAR_CACHE = new Map<string, Map<string, Buffer>>();
 const JAR_CACHE_MAX = 4;
 
+function jarCacheKey(jarPath: string): string {
+  const st = statSync(jarPath);
+  return `${jarPath}\0${st.mtimeMs}\0${st.size}`;
+}
+
 function loadJarMap(jarPath: string): Map<string, Buffer> {
-  const hit = JAR_CACHE.get(jarPath);
+  const key = jarCacheKey(jarPath);
+  const hit = JAR_CACHE.get(key);
   if (hit) return hit;
+  for (const k of [...JAR_CACHE.keys()]) {
+    if (k === jarPath || k.startsWith(`${jarPath}\0`)) JAR_CACHE.delete(k);
+  }
   const data = readZip(readFileSync(jarPath));
   if (JAR_CACHE.size >= JAR_CACHE_MAX) {
     JAR_CACHE.delete(JAR_CACHE.keys().next().value as string);
   }
-  JAR_CACHE.set(jarPath, data);
+  JAR_CACHE.set(key, data);
   return data;
 }
 

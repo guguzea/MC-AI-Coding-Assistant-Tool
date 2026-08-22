@@ -8,15 +8,17 @@
  * 3. process.cwd() 回退
  */
 
-import { existsSync, readdirSync } from "fs";
-import { join, dirname } from "path";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import {
   getSemanticIndexStatus,
   listSemanticDbPresence,
   buildSemanticWarnings,
   isIntentionalL0Only,
+  inspectSemanticDb,
 } from "../docs-platform/semantic/status.js";
+import { semanticDbPath } from "../docs-platform/semantic/search.js";
 
 function getSelfDir(): string {
   try {
@@ -33,16 +35,22 @@ function getDataDirFromSelf(): string {
   return join(selfDir, "..", "..", "..", "data");
 }
 
+let warnedMissingDataEnv = false;
+
 function getDataDirFromEnv(): string | null {
   const envPath = process.env.MC_SKILL_DATA;
   if (!envPath) {
-    console.error(
-      "[mc-mcp-server] WARN: 未设置 MC_SKILL_DATA，将尝试从安装路径或 cwd 推导 data/。" +
-        "推荐设置 MC_SKILL_DATA 为 data 目录的绝对路径。",
-    );
+    if (!warnedMissingDataEnv) {
+      warnedMissingDataEnv = true;
+      console.error(
+        "[mc-mcp-server] WARN: 未设置 MC_SKILL_DATA，将尝试从安装路径或 cwd 推导 data/。" +
+          "推荐设置 MC_SKILL_DATA 为 data 目录的绝对路径。",
+      );
+    }
     return null;
   }
-  if (existsSync(envPath)) return envPath;
+  const abs = resolve(envPath);
+  if (existsSync(abs)) return abs;
   console.error(
     `[mc-mcp-server] WARN: MC_SKILL_DATA=${envPath} 不存在，已回退到推导/cwd 路径。` +
       `请检查路径是否为 data 目录的绝对路径（例如 H:/MC_skill/data）。`,
@@ -252,4 +260,61 @@ export function hasAnyPlatformData(dataDir = resolveDataDir()): boolean {
   } catch {
     return false;
   }
+}
+
+function findIndexL0Shallow(dir: string, depth: number): string | null {
+  if (depth > 4 || !existsSync(dir)) return null;
+  const direct = join(dir, "index-l0.json");
+  if (existsSync(direct)) return direct;
+  let names: string[] = [];
+  try {
+    names = readdirSync(dir);
+  } catch {
+    return null;
+  }
+  for (const n of names) {
+    const p = join(dir, n);
+    try {
+      if (statSync(p).isDirectory()) {
+        const hit = findIndexL0Shallow(p, depth + 1);
+        if (hit) return hit;
+      }
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
+
+/** STRICT 启动：有平台目录 + 至少一份能 parse 的 index-l0 + 已存在的 semantic db 必须可用 */
+export function assertDataUsable(dataDir = resolveDataDir()): { ok: boolean; reason?: string } {
+  if (!hasAnyPlatformData(dataDir)) return { ok: false, reason: "未找到平台数据目录" };
+  let l0: string | null = null;
+  try {
+    for (const name of readdirSync(dataDir)) {
+      if (!/^(forge_|fabric_|neoforge_|quilt_|liteloader_|rift_|modloader_|bedrock_)/.test(name)) continue;
+      l0 = findIndexL0Shallow(join(dataDir, name), 0);
+      if (l0) break;
+    }
+  } catch {
+    l0 = null;
+  }
+  if (!l0) return { ok: false, reason: "未找到可解析的 index-l0.json" };
+  try {
+    JSON.parse(readFileSync(l0, "utf8"));
+  } catch {
+    return { ok: false, reason: `index-l0.json 无法 JSON.parse: ${l0}` };
+  }
+  const samples = [
+    semanticDbPath(dataDir, "forge", "1.20.1", "forge-docs"),
+    semanticDbPath(dataDir, "fabric", "1.20.1", "fabric-docs"),
+    semanticDbPath(dataDir, "neoforge", "1.21.1", "neoforge-docs"),
+  ];
+  for (const dbPath of samples) {
+    if (!existsSync(dbPath)) continue;
+    if (inspectSemanticDb(dbPath).mode === "missing") {
+      return { ok: false, reason: `语义库文件存在但不可用: ${dbPath}` };
+    }
+  }
+  return { ok: true };
 }

@@ -170,7 +170,31 @@ function main() {
   testTrinketsAndCuriosDoNotMatchEmi();
   testNeoResidualFabricJson();
   testLiteLoaderResidualFabricJson();
+  testNestedDependenciesImplementation();
   console.log("test-checkdeps: ok");
+}
+
+function testNestedDependenciesImplementation() {
+  const gradle = `
+plugins { id 'net.minecraftforge.gradle' }
+minecraft { mappings channel: 'official', version: '1.20.1' }
+dependencies {
+  foo {
+    bar { }
+  }
+  implementation 'net.minecraftforge:forge:1.20.1-47.2.0'
+}`;
+  const toml = `
+modLoader="javafml"
+loaderVersion="[47,)"
+[[mods]]
+modId="example"
+version="1.0.0"`;
+  const r = checkDependencies(gradle, toml);
+  assert.ok(
+    !r.suggestions.some((s) => /implementation \/ modImplementation/.test(s)),
+    JSON.stringify(r.suggestions),
+  );
 }
 
 main();

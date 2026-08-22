@@ -2,22 +2,13 @@
  * processed/ + index-l0.json 内容指纹，用于判断 semantic sqlite 是否过期。
  */
 import { createHash } from "crypto";
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { existsSync, readFileSync, statSync } from "fs";
 import { join } from "path";
+import { walkDirBounded } from "../../utils/project-files.js";
 
-function walkFiles(dir: string, acc: string[] = []): string[] {
-  if (!existsSync(dir)) return acc;
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name);
-    try {
-      const st = statSync(p);
-      if (st.isDirectory()) walkFiles(p, acc);
-      else acc.push(p);
-    } catch {
-      /* skip */
-    }
-  }
-  return acc;
+function walkFiles(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+  return walkDirBounded(dir, { maxDepth: 16, allFiles: true });
 }
 
 /** 对 versionDir（含 processed/ 与 index-l0.json）做稳定 sha256 */

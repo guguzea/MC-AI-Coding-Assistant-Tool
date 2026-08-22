@@ -50,6 +50,28 @@ export interface CommunityFullResult {
   path: string;
   linkOnly: boolean;
   disclaimer?: string;
+  truncated?: boolean;
+  warning?: string;
+}
+
+const FRONTMATTER_MAX_BYTES = 2048;
+const FRONTMATTER_MAX_LINES = 40;
+const GET_FULL_MAX_BYTES = 256 * 1024;
+
+/** 只剥文件头第一对 YAML frontmatter，避免吃掉正文里的 `---`。 */
+export function stripLeadingFrontmatter(content: string): string {
+  if (!content.startsWith("---")) return content;
+  const nl = content.includes("\r\n") ? "\r\n" : "\n";
+  const lines = content.split(/\r?\n/);
+  if (lines[0].trim() !== "---") return content;
+  let consumed = lines[0].length + nl.length;
+  for (let i = 1; i < lines.length && i <= FRONTMATTER_MAX_LINES && consumed <= FRONTMATTER_MAX_BYTES + 16; i++) {
+    if (lines[i].trim() === "---") {
+      return lines.slice(i + 1).join(nl).replace(/^[\r\n]+/, "");
+    }
+    consumed += lines[i].length + nl.length;
+  }
+  return content;
 }
 
 interface IndexFile {
@@ -86,6 +108,7 @@ export function tokenizeCommunityQuery(q: string): string[] {
 export class CommunityDocStore {
   private root: string;
   private entries: CommunityIndexEntry[] | null = null;
+  private indexWarning: string | null = null;
 
   constructor(root?: string) {
     this.root = root ?? resolveCommunityDir();
@@ -95,16 +118,35 @@ export class CommunityDocStore {
     return this.root;
   }
 
+  getIndexWarning(): string | null {
+    this.loadIndex();
+    return this.indexWarning;
+  }
+
+  private emptyIndexWarning(): string {
+    return `MC_SKILL_COMMUNITY（或默认根）指向空/缺索引目录：${this.root}`;
+  }
+
   private loadIndex(): CommunityIndexEntry[] {
     if (this.entries) return this.entries;
     const indexPath = join(this.root, "indexes", "index-l0.json");
     if (!existsSync(indexPath)) {
       this.entries = [];
+      this.indexWarning = this.emptyIndexWarning();
       return this.entries;
     }
-    const raw = JSON.parse(readFileSync(indexPath, "utf8")) as IndexFile;
-    this.entries = raw.entries ?? [];
-    return this.entries;
+    try {
+      const raw = JSON.parse(readFileSync(indexPath, "utf8")) as IndexFile;
+      this.entries = raw.entries ?? [];
+      if (this.entries.length === 0) this.indexWarning = this.emptyIndexWarning();
+      return this.entries;
+    } catch {
+      // eslint-disable-next-line no-console
+      console.error(`[mc-mcp-server] WARN: 无法解析 community index-l0.json：${indexPath}`);
+      this.entries = [];
+      this.indexWarning = this.emptyIndexWarning();
+      return this.entries;
+    }
   }
 
   listReadableEntries(): CommunityIndexEntry[] {
@@ -116,6 +158,7 @@ export class CommunityDocStore {
     total: number;
     byKind: Record<string, number>;
     tags: string[];
+    warning?: string;
   } {
     const entries = this.loadIndex();
     const byKind: Record<string, number> = {};
@@ -129,6 +172,7 @@ export class CommunityDocStore {
       total: entries.length,
       byKind,
       tags: [...tagSet].sort(),
+      ...(this.indexWarning ? { warning: this.indexWarning } : {}),
     };
   }
 
@@ -139,10 +183,7 @@ export class CommunityDocStore {
     if (!existsSync(filePath)) return "";
     try {
       let content = readFileSync(filePath, "utf8");
-      if (content.startsWith("---")) {
-        const end = content.indexOf("\n---", 3);
-        if (end >= 0) content = content.slice(end + 4);
-      }
+      content = stripLeadingFrontmatter(content);
       return content.slice(0, 12_000).toLowerCase();
     } catch {
       return "";
@@ -230,10 +271,11 @@ export class CommunityDocStore {
     if (!existsSync(filePath)) {
       throw new Error(`Community doc file missing: ${e.path}`);
     }
-    let content = readFileSync(filePath, "utf8");
-    if (content.startsWith("---")) {
-      const end = content.indexOf("\n---", 3);
-      if (end >= 0) content = content.slice(end + 4).replace(/^[\r\n]+/, "");
+    let content = stripLeadingFrontmatter(readFileSync(filePath, "utf8"));
+    let truncated = false;
+    if (Buffer.byteLength(content, "utf8") > GET_FULL_MAX_BYTES) {
+      truncated = true;
+      content = content.slice(0, GET_FULL_MAX_BYTES);
     }
     return {
       id: e.id,
@@ -244,6 +286,9 @@ export class CommunityDocStore {
       tags: e.tags,
       path: e.path,
       linkOnly: false,
+      ...(truncated
+        ? { truncated: true, warning: `正文超过 ${GET_FULL_MAX_BYTES} 字节，已截断` }
+        : {}),
     };
   }
 }

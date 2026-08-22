@@ -147,7 +147,7 @@ export const GET_MIGRATION_GUIDE_DESCRIPTION =
   "route 如 1.21.11->26.1 / 26.2 / forge->neoforge。platform 写入返回 JSON。同轮最多 1–2 hop，不要把 26.2 四千行复述给用户。";
 export const DOWNLOAD_OFFICIAL_MDK_DESCRIPTION =
   "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
-  "GitHub 必须 pin commit SHA（见 data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
+  "GitHub 必须 pin commit SHA（见 mcp-server/data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
   "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
   "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
   "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。";

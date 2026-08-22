@@ -6,7 +6,7 @@
  * - FTS5 是同步可独立使用的兜底（fts5TopDocsSync）：嵌入层失败时仍有全文召回
  * - 无嵌入的库（embeddings 表为空）直接跳过模型加载，走纯 FTS5
  */
-import { existsSync } from "fs";
+import { existsSync, statSync } from "fs";
 import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
 import { cosine, EMBEDDING_DIM, getEmbedder } from "./embeddings.js";
@@ -91,6 +91,16 @@ export function buildFtsQuery(query: string): string | null {
 
 const _dbCache = new Map<string, DatabaseSync | null>();
 
+type EmbMatrixCache = {
+  mtime: number;
+  size: number;
+  chunkIds: string[];
+  docIds: string[];
+  matrix: Float32Array;
+};
+const _embMatrixCache = new Map<string, EmbMatrixCache>();
+export let embeddingMatrixCacheHits = 0;
+
 /** 关闭并清空所有缓存的语义库句柄（测试清理 / 数据重建时使用） */
 export function closeSemanticDbs(): void {
   for (const db of _dbCache.values()) {
@@ -101,6 +111,39 @@ export function closeSemanticDbs(): void {
     }
   }
   _dbCache.clear();
+  _embMatrixCache.clear();
+  embeddingMatrixCacheHits = 0;
+}
+
+function loadEmbeddingMatrix(db: DatabaseSync, dbPath: string): EmbMatrixCache | null {
+  let st: { mtimeMs: number; size: number };
+  try {
+    st = statSync(dbPath);
+  } catch {
+    return null;
+  }
+  const hit = _embMatrixCache.get(dbPath);
+  if (hit && hit.mtime === st.mtimeMs && hit.size === st.size) {
+    embeddingMatrixCacheHits += 1;
+    return hit;
+  }
+  const rows = db
+    .prepare("SELECT chunk_id, doc_id, embedding FROM chunk_embeddings")
+    .all() as Array<{ chunk_id: string; doc_id: string; embedding: Uint8Array }>;
+  const chunkIds: string[] = [];
+  const docIds: string[] = [];
+  const kept: Float32Array[] = [];
+  for (const r of rows) {
+    if (r.embedding.byteLength < EMBEDDING_DIM * 4) continue;
+    kept.push(new Float32Array(r.embedding.buffer, r.embedding.byteOffset, EMBEDDING_DIM));
+    chunkIds.push(r.chunk_id);
+    docIds.push(r.doc_id);
+  }
+  const matrix = new Float32Array(kept.length * EMBEDDING_DIM);
+  kept.forEach((v, i) => matrix.set(v, i * EMBEDDING_DIM));
+  const packed: EmbMatrixCache = { mtime: st.mtimeMs, size: st.size, chunkIds, docIds, matrix };
+  _embMatrixCache.set(dbPath, packed);
+  return packed;
 }
 
 /** 只读打开语义库（缓存）；缺失/损坏 → null */
@@ -286,6 +329,13 @@ export async function semanticSearch(
   const dbPath = semanticDbPath(dataRoot, platform, version, source);
   const db = openSemanticDb(dbPath);
   if (!db) return null;
+  try {
+    const docsN = (db.prepare("SELECT COUNT(*) AS n FROM docs").get() as { n: number } | undefined)?.n ?? 0;
+    const chunksN = (db.prepare("SELECT COUNT(*) AS n FROM chunks").get() as { n: number } | undefined)?.n ?? 0;
+    if (docsN === 0 && chunksN === 0) return null;
+  } catch {
+    return null;
+  }
 
   const ftsExpr = buildFtsQuery(query);
   const ftsDocs = fts5TopDocsSync(query, dbPath, 30);
@@ -299,18 +349,17 @@ export async function semanticSearch(
       const embedder = await getEmbedder(dataRoot);
       const [qVec] = await embedder.embed([query]);
       if (qVec) {
-        const rows = db
-          .prepare("SELECT chunk_id, doc_id, embedding FROM chunk_embeddings")
-          .all() as Array<{ chunk_id: string; doc_id: string; embedding: Uint8Array }>;
-        for (const r of rows) {
-          if (r.embedding.byteLength < EMBEDDING_DIM * 4) continue;
-          const vec = new Float32Array(r.embedding.buffer, r.embedding.byteOffset, EMBEDDING_DIM);
-          const s = cosine(qVec, vec);
-          chunkEmbScores.set(r.chunk_id, s);
-          const prev = docBest.get(r.doc_id) ?? -1;
-          if (s > prev) docBest.set(r.doc_id, s);
+        const packed = loadEmbeddingMatrix(db, dbPath);
+        if (packed) {
+          for (let i = 0; i < packed.chunkIds.length; i++) {
+            const vec = packed.matrix.subarray(i * EMBEDDING_DIM, (i + 1) * EMBEDDING_DIM);
+            const s = cosine(qVec, vec);
+            chunkEmbScores.set(packed.chunkIds[i], s);
+            const prev = docBest.get(packed.docIds[i]) ?? -1;
+            if (s > prev) docBest.set(packed.docIds[i], s);
+          }
+          semanticAvailable = packed.chunkIds.length > 0;
         }
-        semanticAvailable = true;
       }
     }
   } catch {

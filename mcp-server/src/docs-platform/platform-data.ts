@@ -7,6 +7,7 @@ import { existsSync, readdirSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { resolveDataDir } from "../utils/path.js";
+import { ownGet } from "../utils/own-record.js";
 import { ALL_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR, type Platform } from "./platforms.js";
 
 export type DocPlatform = Platform;
@@ -45,7 +46,7 @@ export function platformDataMissingPayload(platform: DocPlatform) {
       code: "PLATFORM_DATA_MISSING" as const,
       platform,
       message: `${platform} 文档数据未下载或不在当前 MC_SKILL_DATA 目录中`,
-      hint: HINTS[platform],
+      hint: ownGet(HINTS, platform) ?? "",
     },
   };
 }
@@ -133,7 +134,7 @@ export function hasPlatformDocData(
       modloader: ["modloader-docs"],
       bedrock: ["bedrock-docs"],
     };
-    const sources = extraSources[platform] ?? [PLATFORM_DOC_SUBDIR[platform]];
+    const sources = ownGet(extraSources, platform) ?? [ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`];
     return hasPrefixedIndex(dataDir, platform, sources);
   } catch {
     return false;

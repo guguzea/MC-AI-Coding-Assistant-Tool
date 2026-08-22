@@ -24,15 +24,18 @@ export const searchCommunityDocsSchema = z.object({
 });
 
 export async function searchCommunityDocs(args: z.infer<typeof searchCommunityDocsSchema>) {
-  const results = getCommunityDocStore().search(args.query, {
+  const store = getCommunityDocStore();
+  const results = store.search(args.query, {
     sourceKind: args.sourceKind,
     tags: args.tags,
     limit: args.limit,
   });
+  const warning = store.getIndexWarning();
   return {
     note: "社区库偏实务与中文教程要点；API/注册细节请用 search_forge_docs / search_fabric_docs / search_neoforge_docs。",
     total: results.length,
     results,
+    ...(warning ? { warning } : {}),
   };
 }
 

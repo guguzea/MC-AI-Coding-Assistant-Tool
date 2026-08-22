@@ -128,6 +128,12 @@ function expandStringValue(value: string, tool: string, stdin: StdinState): stri
     if (stdin.used) {
       throw new CliUsageError(tool, "stdin 只能用一次（不要同时对多个字段使用 @- 或 =-）");
     }
+    if (process.stdin.isTTY === true) {
+      throw new CliUsageError(
+        tool,
+        "TTY 下不能用 @- / - 读 stdin（会挂起等待输入）。请改 --file field=path 或管道输入。",
+      );
+    }
     stdin.used = true;
     return readFileSync(0, "utf8");
   }

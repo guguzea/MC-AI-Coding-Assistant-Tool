@@ -101,7 +101,7 @@ export function parseFlags(argv: string[]): { flags: RawFlags; positional: strin
         const next = argv[i + 1];
         if (BOOLEAN_GLOBAL_KEYS.has(key) || BOOLEAN_GLOBAL_KEYS.has(kebabToCamel(key))) {
           appendFlag(flags, key, true);
-        } else if (next !== undefined && !next.startsWith("-")) {
+        } else if (next !== undefined && (!next.startsWith("-") || /^-?\d+(\.\d+)?$/.test(next))) {
           appendFlag(flags, key, next);
           i++;
         } else {

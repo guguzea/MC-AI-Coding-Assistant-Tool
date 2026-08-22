@@ -1,0 +1,16 @@
+plugins {
+    // 版本号对照 https://docs.quiltmc.org/ 官方模板，不要抄过期 snapshot
+    id 'org.quiltmc.loom' version '1.7.4'
+    id 'maven-publish'
+}
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+version = '1.0.0'
+group = 'com.example'
+base { archivesName = 'examplemod' }
+repositories { maven { url = 'https://maven.quiltmc.org/repository/release' } }
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.minecraft_version}+build.1:v2"
+    modImplementation "org.quiltmc:quilt-loader:0.26.0"
+    // QSL：按模块引入 org.quiltmc.qsl.*，不要把 fabric-api 整包当 QSL
+}

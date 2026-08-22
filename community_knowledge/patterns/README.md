@@ -10,7 +10,7 @@
 - `examples/<name>.md`：单模式，建议 **<80 行**
 - 每篇含：适用平台/版本、前置 Skill / MCP 工具、最小片段、常见坑
 
-## 示范索引（5）
+## 示范索引（6）
 
 | 模式 | 文件 |
 |------|------|
@@ -19,6 +19,7 @@
 | Data Component（1.20.5+/1.21） | `examples/data-component.md` |
 | cube_all 资源三元组 | `examples/cube-all-resources.md` |
 | ForgeConfigSpec 最小配置 | `examples/config-spec.md` |
+| 模组 CI（GitHub Actions 模板） | `examples/mod-ci-github-actions.md` |
 
 ## 不清楚时
 

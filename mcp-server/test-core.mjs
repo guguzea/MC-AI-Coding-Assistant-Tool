@@ -24,7 +24,7 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
-import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies } from "./dist/diagnostics/index.js";
+import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
@@ -47,6 +47,7 @@ import {
   searchCommunityDocs,
   getCommunityDocFull,
 } from "./dist/docs-platform/community/index.js";
+import { CommunityDocStore, stripLeadingFrontmatter } from "./dist/docs-platform/community/store.js";
 import { analyzeCrash } from "./dist/crash/index.js";
 import { validateProject } from "./dist/validate/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
@@ -434,6 +435,37 @@ async function testCommunityDocsSearchAndLinks() {
   assert.match(machine.content, /^#\s/);
 }
 
+function testAuditMinorFixes() {
+  const nested = `
+dependencies {
+  foo {
+    bar { }
+  }
+  implementation 'x:y:1'
+}`;
+  const block = extractGradleDependenciesBlock(nested);
+  assert.ok(block && /implementation/.test(block), block);
+  const r = checkDependencies(nested, 'modLoader="javafml"\n[[mods]]\nmodId="x"\nversion="1"');
+  assert.ok(!r.suggestions.some((s) => /implementation \/ modImplementation/.test(s)), JSON.stringify(r.suggestions));
+
+  const body = "---\ntitle: x\n---\n# Hello\ntext ---\nmore";
+  assert.match(stripLeadingFrontmatter(body), /^# Hello/);
+  const innerDash = "---\na: 1\n---\nkeep ---\nthis";
+  assert.match(stripLeadingFrontmatter(innerDash), /keep ---/);
+
+  const badRoot = mkdtempSync(join(tmpdir(), "mc-comm-"));
+  try {
+    mkdirSync(join(badRoot, "indexes"), { recursive: true });
+    writeFileSync(join(badRoot, "indexes", "index-l0.json"), "{not json", "utf8");
+    const store = new CommunityDocStore(badRoot);
+    const listed = store.listSources();
+    assert.equal(listed.total, 0);
+    assert.ok(listed.warning && /MC_SKILL_COMMUNITY/.test(listed.warning), listed.warning);
+  } finally {
+    rmSync(badRoot, { recursive: true, force: true });
+  }
+}
+
 async function testSearchEnhancements() {
   const deferred = parseToolText(await searchForgeDocs({ query: "DeferredRegister", version: "1.20.1" }));
   assert.ok(deferred.total >= 1, "DeferredRegister should hit");
@@ -491,13 +523,13 @@ async function testSearchEnhancements() {
   const net1204 = parseToolText(await searchFabricDocs({ query: "networking", version: "1.20.4" }));
   const netIds = (net1204.results ?? []).map((r) => r.id);
   assert.ok(!netIds.includes("1.20.4/develop_networking"), netIds.join(","));
-  assert.ok(
-    net1204.fallback === true || /wiki/i.test(String(net1204.sourceUsed ?? "")),
-    JSON.stringify({ fallback: net1204.fallback, sourceUsed: net1204.sourceUsed, warning: net1204.warning }).slice(0, 500),
-  );
-  assert.match(String(net1204.warning ?? ""), /不是 1\.20\.4/);
-  if (/wiki/i.test(String(net1204.sourceUsed ?? net1204.warning ?? ""))) {
-    assert.match(String(net1204.warning ?? ""), /现行|1\.20\.5|Payload/);
+  if (net1204.fallback === true || /wiki/i.test(String(net1204.sourceUsed ?? ""))) {
+    assert.match(String(net1204.warning ?? ""), /不是 1\.20\.4/);
+    if (/wiki/i.test(String(net1204.sourceUsed ?? net1204.warning ?? ""))) {
+      assert.match(String(net1204.warning ?? ""), /现行|1\.20\.5|Payload/);
+    }
+  } else {
+    assert.equal(net1204.sourceUsed ?? net1204.source, "fabric-docs");
   }
 
   const armor1204 = parseToolText(await searchFabricDocs({ query: "armor", version: "1.20.4" }));
@@ -1121,6 +1153,16 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.match(beResult.probableCause, /BlockEntity 引用为 null|未取到 BE/);
   assert.doesNotMatch(beResult.probableCause, /world 为 null/);
 
+  const inner = analyzeCrash({
+    crashReport:
+      "---- Minecraft Crash Report ----\nDescription: Ticking screen\n\tat net.minecraft.client.Minecraft$Inner.run(Minecraft.java:1)\n",
+    version: "1.20.1",
+  });
+  assert.ok(
+    (inner.deobfuscated ?? []).some((s) => /Minecraft\$Inner/i.test(s)),
+    JSON.stringify(inner.deobfuscated),
+  );
+
   const unknown = analyzeCrash({ crashReport: "not a crash report at all", version: "1.20.1" });
   assert.equal(unknown.crashKind, "unknown");
   assert.match(unknown.probableCause, /minecraft\.wiki\/w\/Crash_report/);
@@ -1645,6 +1687,20 @@ async function testFivePlatformRouting() {
   const bad = validateAddonManifest(JSON.stringify({ format_version: 2, experimentalGameplay: true, header: {}, modules: [] }));
   assert.equal(bad.ok, false);
   assert.ok(bad.errors.some((e) => /experimentalGameplay/.test(e)));
+  const noModUuid = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [{ type: "data", version: [1, 0, 0] }],
+  }));
+  assert.equal(noModUuid.ok, false);
+  assert.ok(noModUuid.errors.some((e) => /modules\[0\]\.uuid/.test(e)), JSON.stringify(noModUuid.errors));
+  const strVer = validateAddonManifest(JSON.stringify({
+    format_version: 2,
+    header: { name: "x", uuid: "00000000-0000-0000-0000-000000000000", version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: "11111111-1111-1111-1111-111111111111", version: ["1", "0", "0"] }],
+  }));
+  assert.equal(strVer.ok, false);
+  assert.ok(strVer.errors.some((e) => /modules\[0\]\.version/.test(e)));
 
   assert.equal(detectLoader("apply plugin: 'net.minecraftforge.gradle.tweaker-client'"), "rift");
   assert.equal(
@@ -1689,6 +1745,29 @@ async function testFivePlatformRouting() {
     ),
     "neoforge",
   );
+  assert.equal(
+    detectLoader("plugins { id 'net.neoforged.gradle.userdev' }"),
+    "neoforge",
+  );
+  assert.equal(
+    detectLoader("plugins { id 'net.neoforged.moddev' }"),
+    "neoforge",
+  );
+  assert.equal(
+    detectLoader('plugins { id("net.neoforged.moddev") }'),
+    "neoforge",
+  );
+  const forgeCommentNeo =
+    "plugins { id 'net.minecraftforge.gradle' }\n// TODO: neoforge port\njava.toolchain.languageVersion = JavaLanguageVersion.of(17)\n";
+  assert.equal(detectLoader(forgeCommentNeo, 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n'), "forge");
+  const forgeCompatDep =
+    "plugins { id 'net.minecraftforge.gradle' }\nimplementation '...neoforge-compat'\n";
+  assert.equal(detectLoader(forgeCompatDep, 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n'), "forge");
+  const commentNeoGradle = diagnoseGradle({
+    buildGradle: forgeCommentNeo,
+    gradleProperties: "minecraft_version=1.20.1\nforge_version=47.2.0\n",
+  });
+  assert.ok(!(commentNeoGradle.errors ?? []).some((e) => /NeoGradle userdev|ModDevGradle/i.test(String(e))), JSON.stringify(commentNeoGradle.errors));
   const neoFabLoaders = detectProjectLoaders({
     buildGradle: "plugins { id 'net.neoforged.gradle.userdev' }",
     fabricModJson: '{"schemaVersion":1,"id":"leftover"}',
@@ -2831,6 +2910,12 @@ public class ExampleMod { }
     rmSync(scanRoot, { recursive: true, force: true });
   }
 
+  const pubLoaderOnly = checkPublishReady({
+    modsToml: `modLoader="javafml"\nloaderVersion="[47,)"\n`,
+  });
+  assert.equal(pubLoaderOnly.ready, false, JSON.stringify(pubLoaderOnly));
+  assert.ok(pubLoaderOnly.errors.some((e) => /version/i.test(e)), JSON.stringify(pubLoaderOnly.errors));
+
   const pub = checkPublishReady({
     fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
   });
@@ -2871,6 +2956,7 @@ await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
 await testPortingTargetVersionRequired();
 await testCommunityDocsSearchAndLinks();
+testAuditMinorFixes();
 await testCrashAnalyzeKindAndMissingDep();
 await testPlatformDataMissing();
 await testNeoForgeResolveDirForgeCompat();

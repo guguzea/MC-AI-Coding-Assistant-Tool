@@ -23,6 +23,7 @@ MC_skill/
 ├── AUTO_SETUP.md                # 任意 MCP 宿主：编译 + 按宿主格式生成配置草稿
 ├── THIRD_PARTY_NOTICES.md       # 第三方文档 / 映射数据许可说明
 ├── LICENSE                      # 本仓库代码：MIT
+├── Minecraft 社区常用库模组全览（2026 版）.md  # 跳转指针；正文在 community_knowledge/authored/library-catalog-2026
 │
 ├── forge/                       # Forge 规则 / skills / scaffold / knowledge（多版本）
 ├── fabric/                      # Fabric 规则与知识（多版本）
@@ -55,7 +56,7 @@ MC_skill/
 ├── scripts/                     # 维护脚本（库数据链 + skill 同步 + 规则校验）
 │   ├── sync-skills.ps1          # 多 IDE skill 镜像（-All / -TargetDir）
 │   ├── resolve-lib-skills.mjs   # knowledge/libs §3.6 解析校验
-│   ├── build-library-catalog-from-authored.mjs  # → library-catalog.ts（50 条）
+│   ├── （库 catalog 脚本在 mcp-server/scripts/，见下）
 │   ├── build-lib-manifest.mjs   # → mcp-server/data/lib-manifests/
 │   ├── build-api-summaries.mjs  # → mcp-server/data/lib-api-summaries/
 │   ├── batch-decompile.mjs      # 分批反编译（源码 → $MC_SKILL_CACHE，不入库）
@@ -63,7 +64,7 @@ MC_skill/
 │
 ├── mcp-server/                  # 本地 stdio MCP Server（78 个工具）
 │   ├── src/                     # 工具实现（api / docs / diagnostics / wave…）
-│   ├── scripts/                 # 文档抓取、语义索引、数据审计
+│   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
 │       ├── lib-manifests/       # Modrinth 版本矩阵（45 slug / 2867 条目）
 │       ├── lib-api-summaries/   # 44 库 public API 摘要
@@ -71,7 +72,7 @@ MC_skill/
 │
 └── data/                        # 离线官方数据（MC_SKILL_DATA 指向此处根）
     ├── forge_* / fabric_* / neoforge_* / …  # 各平台文档 L0/L1/L2 + semantic/
-    └── mappings/                # Yarn SQLite、MCP CSV 等映射索引
+    └── mappings/                # 分平台版本目录（Yarn SQLite、MCP CSV 等），不是单一扁平文件
 ```
 
 平台版本目录内另有 `.cursor/rules/`（00–10）、`.agents/skills/`、scaffold、`knowledge/antipatterns` 等；库 Skill **只**在根 `knowledge/libs/`，经 `activate_platform_pack` 或按路径 Read，不写进各平台 skills 目录。
@@ -86,7 +87,7 @@ MC_skill/
 | Forge    | ✅ 完成 | 多版本规则（主推 **1.20.1**）；数据目录 `data/forge_`*                 |
 | Fabric   | ✅ 完成 | 多版本规则（主推 **1.20.1 / 1.21.x / 26.x**）；数据目录 `data/fabric_*`；**26.1+ 仅 mojmap** |
 | NeoForge | ✅ 完成 | 规则集在 `neoforge/`（主推 **1.20.4+ / 26.x**）；文档数据见 `data/neoforge_*`（主文档默认 **26.1**；primer 可有 26.2） |
-| Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05）+ **本档 QSL Skill 3**（registry/events/networking），02–10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
+| Quilt    | ✅ 混合 | `quilt/<ver>/` 只写 QSL 差异（00/01/05/06）+ **本档 QSL Skill 3**（registry/events/networking），02–04/07–08/10 读 `fabric/<ver>`；`search_docs(platform=quilt)` 问 QSL 不回退 Fabric Registry |
 | 基岩版   | ✅ 完成 | 扁平 `bedrock/`；`search_bedrock_docs` + 滞后 `docsStatus`；实验开关按 `min_engine_version` 分层 |
 | LiteLoader | ✅ 完成 | `liteloader/1.12.2/` 纯客户端 + `HYBRID.md`；`diagnose_gradle` 对 liteloader 插件走轻量模式 |
 | Rift     | ✅ 完成 | `rift/1.13.2/`；元数据 `riftmod.json`；方法名只来自已抓 wiki/源码 |
@@ -102,7 +103,7 @@ MC_skill/
 | **Forge** | `1.7.10` · `1.12.2` · `1.13.2` · `1.14.4` · `1.15.2` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` | `1.7.10`–`1.20.4`（含 `1.8.9` / `1.9.4` / `1.10.2` / `1.11.2` 等 javadoc 档） | **1.20.1** | `1.12.2` 有 forge-docs 教程；`1.7.10` 为 javadoc 核实表 + 短规则（**ready**）。`forge/1.21.1` 为 **draft**（无完整规则树，`PACK_NOT_FOUND`；仅改口文档搜索） |
 | **Fabric** | `1.14.4` · `1.16.5` · `1.17.1` · `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1.2` | `list_fabric_versions` 含上述档（**无 1.21.5**） | **1.20.1** / **1.21.x** / **26.1.2** | `26.1.2` 仅 `fabric-docs`、无 wiki；**26.1+ 仅 mojmap**。`1.21.4`/`1.21.8`/`1.21.10` 有 versioned fabric-docs **和** 现行 `fabric-wiki`（wiki 不是该档历史快照）。**`1.21.5` 无 versions/ 源** → `PACK_NOT_FOUND`。禁止拷 `1.21.11` |
 | **NeoForge** | `1.20.1` · `1.20.4` · `1.20.6` · `1.21.1` · `1.21.3` · `1.21.5` · `1.21.8` · `1.21.10` · `1.21.11` · `26.1` | `1.20.1`（回退 Forge）· `1.20.4` · `1.20.6` · `1.21.1`–`1.21.11` · `26.1` | **1.20.4+** / **26.1** | 主文档默认 **26.1**；primer 可有 26.2 旁路。`1.20.1` 本档核实表 + 短规则（Forge 兼容数据） |
-| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.11` | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05 为 QSL 差异，02–10 读 `fabric/<ver>` |
+| **Quilt** | `1.18.2` · `1.19.4` · `1.20.1` · `1.20.4` · `1.21.1` · `1.21.3` · `1.21.4` · `1.21.8` · `1.21.10` · `1.21.11`（**10** 档） | `search_docs({platform:"quilt"})` | 随 Fabric 同版 | **本档 QSL Skill 3** + Fabric overlay；00/01/05/06 为 QSL 差异（有 `06-networking.mdc` 的档不要 overlay Fabric 网络），02–04/07–08/10 读 `fabric/<ver>` |
 | **LiteLoader** | `1.8.9` · `1.10.2` · `1.12.2` | `search_docs({platform:"liteloader"})`（官方 wiki + hybrid 语义库；API 以核实表为准） | **1.12.2** | 纯客户端；与 Forge 混合见 `HYBRID.md` |
 | **Rift** | `1.13.2` | `search_docs({platform:"rift"})`（官方 wiki + hybrid；方法名以核实表为准） | **1.13.2** | 方法名只来自已抓 wiki/源码 |
 | **ModLoader** | `1.2.5` · `1.5.2` · `1.6.4` | 无 Java 文档树 | **1.6.4** | 只用 safe-api 表；禁止 Forge Javadoc |
@@ -224,7 +225,7 @@ MC_skill/
 
 1. **社区短文** — `authored/lib-*.md`，经 `search_community_docs` 检索；含反编译验证小节（`verifiedApi` 来源）。
 2. **库 Skill 源稿** — `knowledge/libs/<group>/mc-<name>/SKILL.md`，**不落盘**到平台 `.cursor/skills`；按 `AGENTS.md`「库模组 Skill」解析：platform → 组映射（`forge-only`+`all-platforms` / `fabric-only`+`all-platforms` / `neo-only`+`all-platforms` / `bedrock-only`）+ frontmatter 二次过滤。不确定选哪个库 → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。
-3. **数据链** — 短文 frontmatter → `scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1880** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**44** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。
+3. **数据链** — 短文 frontmatter → `mcp-server/scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1880** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**44** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。
 
 **Agent 推荐路径（库相关）**：`check_dependencies`（看 `detectedLibraries`）→ `search_community_docs`（`lib-<name>` 或 `library-catalog-2026`）→ 按 `skillId` 或名称 Read `knowledge/libs/.../SKILL.md` → 仍缺签名再走 `search_*_docs` / `query_loader_api`。
 
@@ -268,7 +269,7 @@ MC_skill/
 
 构建期缺模型：警告并降级 FTS5-only（不 exit 1）。`diagnose_data_paths.semantic` 报告各文档树旁 db 是否存在。
 
-**数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前约 **40** 个；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
+**数据与模型位置**：语义库在 `data/{platform}_{ver}/{source}/{ver}/semantic/db.sqlite`（跳过 `forge_javadoc`），当前约 **57** 个；嵌入模型在 `data/_models/Xenova/all-MiniLM-L6-v2`（transformers.js，**唯一允许远程拉模型的入口**）。构建：`npm run fetch:embedding-model`；`npm run build:semantic-index -- --all`（可 `--platform` / `--version` / `--source` / `--no-embed` / `--force`；可中断续跑）。产物清单：`data/semantic-index-manifest.json`。
 
 ### 文档查询（Forge / Fabric / NeoForge）
 
@@ -477,8 +478,9 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 |-----------|------|------|------|
 | `forge/1.20.1` 及多数 Forge 版本 | **34** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D |
 | `forge/1.15.2` | **35** | 目录 | 上表 + `mc-events` |
-| `fabric/*`（11 个版本，含 26.1.2） | **37** | `.md` 文件 | 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D |
-| `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档与薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 同名集合（entity/datagen 等），不再是 6 个 |
+| `forge/1.17.1` | **34** | 目录 | 有 `mc-events`、无 `mc-capability`（与 1.20.1 集合不同） |
+| `fabric/*` 主档（11 个版本，含 26.1.2；规则树另有 **14** 档） | **37** | `.md` 文件 | 主档 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D；薄档 `1.21.4`/`1.21.8`/`1.21.10` 技能数以该目录为准，不要按 37 套用 |
+| `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档与薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 同名集合（entity/datagen 等），不再是 6 个。**`neoforge/1.20.1` 本档仅 `mc-registry`**，其余走 Forge 1.20.1 overlay |
 | `quilt/<ver>` 本档磁盘 Skill | **3** | 目录 | 仅 QSL 差异 `mc-registry` / `mc-events` / `mc-networking`；entity/gui 等继续 Fabric overlay，不计入本档磁盘数 |
 
 | 分类           | Skills                                                                                                                           |
@@ -596,7 +598,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 ### 6. 跨平台通用文档（5）
 
-与专用工具能力对应，通过 `platform`（`forge` / `fabric` / `neoforge` / `quilt` / `liteloader` / `rift` / `modloader`，**必填**）统一入口。基岩请用 `search_bedrock_docs`。
+与专用工具能力对应，通过 `platform`（`forge` / `fabric` / `neoforge` / `quilt` / `liteloader` / `rift` / `modloader`，**必填**）统一入口。基岩请用 `search_bedrock_docs`（见 §6b）。
 
 
 | 工具                  | 作用                                                         |
@@ -608,6 +610,22 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | `get_doc_related`   | 多平台相关页，返回共享最多关键词的其他页面。成功时 JSON 根是数组。Quilt 回退 Fabric 时仍为数组（条目带 `sourcePlatform:"fabric"` / `warning`），并丢掉 FAPI 专属页；FAPI 专属 id 拒绝（ok=false）。                                                    |
 
 
+
+
+### 6b. 基岩 Add-On（8）
+
+与 Java `search_*_docs` / `validate_project` 分开。基岩用 Learn 文档与 pack JSON，不要用 Yarn / Mixin / `query_api`。
+
+| 工具 | 作用 |
+|------|------|
+| `search_bedrock_docs` | 检索 Microsoft Learn 基岩文档（带滞后 `docsStatus`）。 |
+| `get_bedrock_doc_summary` | 基岩页 L1 摘要。 |
+| `get_bedrock_doc_full` | 基岩页全文。 |
+| `get_bedrock_doc_related` | 基岩相关页。 |
+| `validate_addon_manifest` | 校验 Add-On `manifest.json`（header/modules uuid 与 version）。不是 `validate_project`。 |
+| `validate_bp_json` | 校验行为包实体等 JSON。 |
+| `generate_addon_manifest` | 只吐 manifest JSON 文本，不写盘。 |
+| `generate_bp_entity` | 只吐行为包实体 JSON 文本，不写盘。 |
 
 
 ### 7. 社区知识库（4）
@@ -642,7 +660,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 
 ```
 authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-emi 导航专篇）
-  → build-library-catalog-from-authored.mjs → library-catalog.ts（50 条 catalog / 1880 verifiedApi 键 / supportedVersions / officialUrls）
+  → mcp-server/scripts/build-library-catalog-from-authored.mjs → library-catalog.ts（50 条 catalog / 1880 verifiedApi 键 / supportedVersions / officialUrls）
   → build-lib-manifest.mjs（Modrinth API）→ lib-manifests/all.json（45 slug / 2867 版本条目）
   → batch-decompile.mjs（分批反编译，源码按需生成到 $MC_SKILL_CACHE，不入库）
   → merge-verified-api.mjs → 回填 verifiedApi
@@ -650,7 +668,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
   → check_dependencies 消费 catalog + manifest（库识别 / supportedVersions / 版本摘要）
 ```
 
-相关脚本均在 `scripts/`；数据位置见「反编译数据产物」一节。
+相关脚本均在 `mcp-server/scripts/`；数据位置见「反编译数据产物」一节。
 
 
 
@@ -721,7 +739,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `analyze_mod_jar` | 纯 Node 解析本地 mod jar：fabric.mod.json / mods.toml / neoforge.mods.toml、mixins.json 引用、entrypoints、依赖、AW/AT。无 Java、零下载。 |
 | `decompile_mod_jar` | VineFlower 按需反编译本地 jar → `$MC_SKILL_CACHE/decompiled-mods/<modId>/<version>/`，返回源码树摘要；可选 remap（需匹配 MC 版本）。 |
 | `search_mod_code` | 对已反编译源码做行级 grep（子串/正则），返回 file:line 命中；入口：`decompiledDir` 或已反编译过的 `jarPath`。 |
-| `download_official_mdk` | 下载官方 MDK zip 到 `$MC_SKILL_CACHE`。GitHub pin commit；默认 `dryRun`。解压依赖 unzip / 7z / bsdtar。 |
+| `download_official_mdk` | 下载官方 MDK zip 到 `$MC_SKILL_CACHE`。GitHub pin commit（校验和在 `mcp-server/data/mdk-checksums.json`）；默认 `dryRun`。解压依赖 unzip / 7z / bsdtar。 |
 
 **版本支持矩阵**（与 26.x 现状对齐）：
 
@@ -784,7 +802,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mc-creative-tags` | 创造栏与标签 | 03 |
 | `mc-kotlin` | Kotlin 模组 | 00；核该档文档 |
 | `mc-jei` | JEI 兼容 | mc-compat-jei |
-| `mc-ci-publish-extra` | CI 发布附加 | 00；只出步骤名，不代跑 CI、不上传（人在环） |
+| `mc-ci-publish-extra` | CI 发布附加 | 00；只出步骤名（可复制 YAML 见 `community_knowledge/patterns/examples/mod-ci-github-actions.md`），不代跑 CI、不上传（人在环） |
 | `mc-villager` | 村民职业 / 交易 | session task=mc-villager → 04-entity；职业/交易签名核本档文档，禁抄邻档 |
 | `mc-multiblock` | 多方块结构 | session task=mc-multiblock → 02-block / 07-datagen；无模板时文档手写 |
 | `mc-ai` | 实体 AI / Goal | session task=mc-ai → 04-entity；Goal/Brain 类名核本档文档，禁把 1.12 AI 任务表抄进 1.20+ |

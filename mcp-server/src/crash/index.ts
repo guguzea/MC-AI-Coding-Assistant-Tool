@@ -51,7 +51,7 @@ const KNOWN_PATTERNS: Array<{
   relatedMistakes: string[];
 }> = [
   {
-    pattern: /CapabilityProvider|CapabilityNotPresent|capability.*null/i,
+    pattern: /CapabilityProvider|CapabilityNotPresent|capability.{0,80}null/i,
     cause: "Capability 未正确注册或查询方式错误",
     fix: [
       "检查是否在 AttachCapabilitiesEvent 中正确注册了 Capability Provider",
@@ -147,7 +147,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: [],
   },
   {
-    pattern: /mods\.toml|ModFileLocator|mod.*loading.*failed/i,
+    pattern: /mods\.toml|ModFileLocator|mod.{0,40}loading.{0,40}failed/i,
     cause: "mods.toml 配置错误导致 mod 加载失败",
     fix: [
       "检查 modId 是否全小写",
@@ -543,7 +543,7 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
   const crashKind = detectCrashKind(crashReport);
 
   for (const line of crashReport.split("\n")) {
-    const m = line.match(/([a-z][a-z0-9_]*(\\\$[a-z0-9_]+)+)/gi);
+    const m = line.match(/([a-z][a-z0-9_]*(\$[a-z0-9_]+)+)/gi);
     if (m) {
       deobfuscated.push(...m);
     }

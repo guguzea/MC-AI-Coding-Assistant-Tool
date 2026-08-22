@@ -377,7 +377,17 @@ export class NeoForgeDocStore {
       return cached;
     }
 
-    const l0 = this.loadIndex(version, "index-l0") as SearchResult[];
+    let l0: SearchResult[];
+    try {
+      l0 = this.loadIndex(version, "index-l0") as SearchResult[];
+    } catch (e) {
+      this._lastSearchMeta = {
+        requestedVersion: version,
+        resolvedVersion: version,
+        versionFallback: false,
+      };
+      throw e;
+    }
     if (!Array.isArray(l0) || l0.length === 0) {
       const empty: SearchIndexDetailed = {
         results: [],
@@ -581,6 +591,10 @@ export class NeoForgeDocStore {
       .map(({ _score, ...rest }) => rest);
 
     this.relatedCache.set(cacheKey, scored);
+    if (this.relatedCache.size > 64) {
+      const first = this.relatedCache.keys().next().value;
+      if (first !== undefined) this.relatedCache.delete(first);
+    }
     return scored;
   }
 }

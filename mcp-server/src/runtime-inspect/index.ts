@@ -2,7 +2,7 @@
  * 日志型 runtime inspector：只读 latest.log / crash-report 尾部。
  * 禁止 JDWP attach、禁止改游戏、禁止全盘 / 向上走到盘符根。
  */
-import { existsSync, readdirSync, readFileSync, statSync } from "fs";
+import { closeSync, existsSync, fstatSync, openSync, readFileSync, readSync, readdirSync, statSync } from "fs";
 import { join, resolve } from "path";
 import { analyzeCrash } from "../crash/index.js";
 import { analyzeLog } from "../diagnostics/index.js";
@@ -90,20 +90,25 @@ function newestMatching(dir: string, re: RegExp, deadline: number): string | und
 }
 
 function readTail(abs: string, maxBytes: number, maxLines: number): { text: string; truncated: boolean; bytes: number } {
-  const st = statSync(abs);
-  const size = st.size;
-  const start = size > maxBytes ? size - maxBytes : 0;
-  const buf = readFileSync(abs);
-  const slice = start > 0 ? buf.subarray(start) : buf;
-  let text = slice.toString("utf8");
-  if (start > 0 && text.charCodeAt(0) === 0xfffd) {
-    const nl = text.indexOf("\n");
-    if (nl >= 0) text = text.slice(nl + 1);
+  const fd = openSync(abs, "r");
+  try {
+    const size = fstatSync(fd).size;
+    const start = size > maxBytes ? size - maxBytes : 0;
+    const len = Math.max(0, size - start);
+    const buf = Buffer.alloc(len);
+    if (len > 0) readSync(fd, buf, 0, len, start);
+    let text = buf.toString("utf8");
+    if (start > 0 && text.charCodeAt(0) === 0xfffd) {
+      const nl = text.indexOf("\n");
+      if (nl >= 0) text = text.slice(nl + 1);
+    }
+    const lines = text.split(/\r?\n/);
+    const truncated = start > 0 || lines.length > maxLines;
+    const kept = lines.length > maxLines ? lines.slice(-maxLines) : lines;
+    return { text: kept.join("\n"), truncated, bytes: buf.length };
+  } finally {
+    closeSync(fd);
   }
-  const lines = text.split(/\r?\n/);
-  const truncated = start > 0 || lines.length > maxLines;
-  const kept = lines.length > maxLines ? lines.slice(-maxLines) : lines;
-  return { text: kept.join("\n"), truncated, bytes: slice.length };
 }
 
 function boundedLogsDir(projectRoot: string, deadline: number): string | undefined {

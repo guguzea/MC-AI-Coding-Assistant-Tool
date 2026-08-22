@@ -8,6 +8,25 @@
 const parts = process.versions.node.split(".").map(Number);
 const major = parts[0] ?? 0;
 const minor = parts[1] ?? 0;
+
+if (major < 22 || (major === 22 && minor < 5)) {
+  // eslint-disable-next-line no-console
+  console.error(
+    [
+      "",
+      "==================================================================",
+      "  当前 Node.js " + process.versions.node + " 低于本项目要求（需要 >= 22.5）",
+      "  内置 node:sqlite 从 22.5 起可用；22.5–22.12 还需 --experimental-sqlite。",
+      "",
+      "  请升级到 Node 22.13+ / 24 LTS 后再启动 MCP/CLI。",
+      "  详见仓库 README「快速开始」与 AUTO_SETUP.md 前置条件。",
+      "==================================================================",
+      "",
+    ].join("\n"),
+  );
+  process.exit(1);
+}
+
 const inSqliteFlagWindow = major === 22 && minor >= 5 && minor <= 12;
 const hasSqliteFlag =
   process.execArgv.includes("--experimental-sqlite") ||

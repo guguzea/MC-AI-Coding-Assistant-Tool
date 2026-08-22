@@ -289,6 +289,21 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
       tags: result.tags,
     });
     if (refused) return refused;
+    const blob = JSON.stringify(result);
+    if (isFabricExclusiveContent(blob)) {
+      return jsonOk({
+        ok: false,
+        platform: "quilt",
+        fallback: "fabric",
+        sourcePlatform: "fabric",
+        warning: QUILT_EXCLUSIVE_WARNING,
+        error: {
+          code: "FABRIC_EXCLUSIVE",
+          message: QUILT_EXCLUSIVE_WARNING,
+        },
+        contentFiltered: true,
+      });
+    }
     return jsonOk({
       ...result,
       platform: "quilt",

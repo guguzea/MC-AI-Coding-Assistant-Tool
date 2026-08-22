@@ -367,16 +367,6 @@ export function enhancedSearch(
     }
 
     const haystack = `${e.label} ${e.id} ${e.url ?? ""} ${e.tags.join(" ")}`.toLowerCase();
-    if (classMatch && !haystack.includes(classMatch[1].toLowerCase()) && !(scores.get(e.id) ?? 0)) {
-      // allow if symbol index already scored
-    }
-    if (classMatch) {
-      const cls = classMatch[1].toLowerCase();
-      const fromSymbol = (scores.get(e.id) ?? 0) > 0;
-      if (!haystack.includes(cls) && !fromSymbol) {
-        // still allow L0 term expansion below to score; prefix acts as soft filter only when no other score
-      }
-    }
 
     let groupHits = 0;
     let termScore = 0;

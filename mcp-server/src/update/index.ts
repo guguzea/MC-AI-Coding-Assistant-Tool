@@ -268,7 +268,16 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       diskSpace = dr.diskSpace;
       if (!dr.ok) {
         return withAction(
-          { ...base, dryRun, steps, filesToOverwrite, diskSpace, applied: false },
+          {
+            ...base,
+            dryRun,
+            steps,
+            filesToOverwrite,
+            diskSpace,
+            applied: false,
+            appliedTooling,
+            appliedData: false,
+          },
           dr.action,
         );
       }

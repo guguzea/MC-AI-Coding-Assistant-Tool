@@ -173,15 +173,23 @@ export async function searchNeoForgeDocs(args: {
     }
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
     const resolutionSource = resolution.sourcePlatform === "forge" ? resolution.sourceVersion : undefined;
-    const semanticHits = resolution.mainDocsMissing
-      ? null
-      : await semanticSearch(
+    const semanticHits = resolution.sourcePlatform === "forge"
+      ? await semanticSearch(
           args.query,
-          "neoforge",
-          detailed.resolvedVersion,
-          "neoforge-docs",
+          "forge",
+          resolution.sourceVersion ?? "1.20.1",
+          "forge-docs",
           neoDataRoot(),
-        );
+        )
+      : resolution.mainDocsMissing
+        ? null
+        : await semanticSearch(
+            args.query,
+            "neoforge",
+            detailed.resolvedVersion,
+            "neoforge-docs",
+            neoDataRoot(),
+          );
     let results = semanticHits === null
       ? detailed.results
       : mergeSemanticResults(detailed.results, semanticHits, {

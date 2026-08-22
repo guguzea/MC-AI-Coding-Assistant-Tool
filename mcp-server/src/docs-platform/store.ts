@@ -24,6 +24,7 @@ import { join } from "path";
 import { existsSync, readdirSync, readFileSync } from "fs";
 
 import { resolveDataDir } from "../utils/path.js";
+import { ownGet } from "../utils/own-record.js";
 import { PlatformDataMissingError } from "./platform-data.js";
 import {
   KNOWN_VERSIONS,
@@ -85,7 +86,7 @@ function resolvePlatformDataDir(platform: Platform): string {
   const dataRoot = resolveDataDir();
 
   // 1. 按已知版本顺序扫描
-  for (const v of KNOWN_VERSIONS[platform]) {
+  for (const v of ownGet(KNOWN_VERSIONS, platform) ?? []) {
     const subDir = `${platform}_${v}`;
     // Forge 1.7.10–1.12.2 使用 forge_javadoc 而非 forge-docs
     if (platform === "forge" && JAVADOC_VERSIONS.has(v)) {
@@ -94,7 +95,7 @@ function resolvePlatformDataDir(platform: Platform): string {
         return dataRoot;
       }
     } else {
-      const docsDir = join(dataRoot, subDir, PLATFORM_DOC_SUBDIR[platform]);
+      const docsDir = join(dataRoot, subDir, ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`);
       if (existsSync(join(docsDir, v, "index-l0.json"))) {
         return dataRoot;
       }
@@ -109,7 +110,7 @@ function resolvePlatformDataDir(platform: Platform): string {
     for (const entry of readdirSync(dataRoot, { withFileTypes: true })) {
       if (!entry.isDirectory() || !entry.name.startsWith(`${platform}_`)) continue;
       const versionFromDir = entry.name.replace(`${platform}_`, "");
-      const indexPath = join(dataRoot, entry.name, PLATFORM_DOC_SUBDIR[platform], versionFromDir, "index-l0.json");
+      const indexPath = join(dataRoot, entry.name, ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`, versionFromDir, "index-l0.json");
       if (!existsSync(indexPath)) continue;
       let count = 0;
       try {
@@ -120,7 +121,7 @@ function resolvePlatformDataDir(platform: Platform): string {
       const isJavadoc = entry.name === `${platform}_javadoc`;
       if (!bestDirByPattern[isJavadoc ? "javadoc" : "standard"] || count > bestDirByPattern[isJavadoc ? "javadoc" : "standard"].count) {
         bestDirByPattern[isJavadoc ? "javadoc" : "standard"] = {
-          dir: join(dataRoot, entry.name, PLATFORM_DOC_SUBDIR[platform]),
+          dir: join(dataRoot, entry.name, ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`),
           count,
         };
       }
@@ -195,8 +196,8 @@ export function createDocStore(platform: Platform, dataDir: string): IDocStore {
   if (platform === "liteloader" || platform === "rift" || platform === "modloader") {
     return new FabricDocStore(
       dataDir,
-      KNOWN_VERSIONS[platform][0],
-      PLATFORM_DOC_SUBDIR[platform],
+      (ownGet(KNOWN_VERSIONS, platform) ?? [])[0],
+      ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`,
       platform,
     );
   }

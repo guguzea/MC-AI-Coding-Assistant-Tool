@@ -129,7 +129,18 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
     };
   }
   const json = (await res.json()) as GhRelease | GhRelease[];
-  return { ok: true, release: Array.isArray(json) ? undefined : json };
+  if (Array.isArray(json) || !json || typeof json !== "object" || typeof (json as GhRelease).tag_name !== "string") {
+    return {
+      ok: false,
+      action: actionable(
+        "UPDATE_CHECK_FAILED",
+        "GitHub 响应无法解析为单个 release（数组或缺少 tag_name）",
+        ["改用 releases 列表接口", "检查代理/镜像是否改写了 JSON"],
+        ["mc_skill_update"],
+      ),
+    };
+  }
+  return { ok: true, release: json as GhRelease };
 }
 
 export async function fetchReleasesList(
