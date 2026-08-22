@@ -630,8 +630,8 @@ export function mappingNoteForFabricSkill(fabricVer: string): string {
 /** 薄档本地 Skill 优先；此处仅补本档仍缺的名字。不要捐 26.1.2 mojmap。 */
 export const FABRIC_SKILL_DONORS: Record<string, string> = {
   "1.21.4": "1.21.3",
-  "1.21.8": "1.21.11",
-  "1.21.10": "1.21.11",
+  "1.21.8": "1.21.4",
+  "1.21.10": "1.21.4",
 };
 
 export function mappingNoteForFabricDonor(thinVer: string, donorVer: string): string {

@@ -1,5 +1,5 @@
 /**
- * 语义索引可用性探测（轻量 existsSync / 只读 sqlite meta，不加载嵌入模型）。
+ * 语义索引可用性探测（inspectDb.mode !== "missing" / 只读 sqlite meta，不加载嵌入模型）。
  */
 import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
@@ -75,10 +75,11 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
   fingerprint?: string;
 } {
   if (!existsSync(dbPath)) return { mode: "missing" };
+  let db: DatabaseSync | undefined;
   try {
-    const db = new DatabaseSync(dbPath, { readOnly: true });
+    db = new DatabaseSync(dbPath, { readOnly: true });
     const meta = (key: string) => {
-      const row = db.prepare("SELECT value FROM meta WHERE key = ?").get(key) as
+      const row = db!.prepare("SELECT value FROM meta WHERE key = ?").get(key) as
         | { value: string }
         | undefined;
       return row?.value;
@@ -96,7 +97,6 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
     }
     const builtAt = meta("built_at");
     const fingerprint = meta("source_fingerprint");
-    db.close();
     return {
       docs,
       chunks,
@@ -107,6 +107,12 @@ function inspectDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "em
     };
   } catch {
     return { mode: "missing" };
+  } finally {
+    try {
+      db?.close();
+    } catch {
+      /* already closed or never opened */
+    }
   }
 }
 
@@ -158,7 +164,7 @@ export function listSemanticDbPresence(dataRoot: string): Array<{
           version,
           source,
           path: dbPath,
-          exists: existsSync(dbPath),
+          exists: inspectDb(dbPath).mode !== "missing",
         });
       }
     }

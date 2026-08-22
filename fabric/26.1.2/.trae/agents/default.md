@@ -5,7 +5,7 @@
 > **禁止**读取 `fabric/1.21.11/.cursor/rules` 或任何邻版 01–10。
 > **禁止**把 `fabric-wiki` / 1.21.x wiki 当本版全文。
 > 先 `list_fabric_versions`，再用 `search_fabric_docs`（version=26.1.2）。
-> `query_api` 对 26.1+ **无索引**。Yarn convert 拒绝。
+> **查 API 分工**：`query_api` / `get_method_params` 对 26.1+ **无 Parchment 索引**（游戏已去混淆，直接用 **Mojang 官方名**）。`convert_mapping` **拒绝 Yarn**。Vanilla / Fabric API → `search_fabric_docs`（version=26.1.2）+ `query_loader_api` + IDE `genSources`；**勿**把 `query_api` 当 Yarn 或 Parchment 签名工具。
 
 ## 硬约束（来自入库文档，不是邻版记忆）
 

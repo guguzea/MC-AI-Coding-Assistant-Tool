@@ -51,5 +51,5 @@
 | 编号 | 对照 URL | 抓取日 | 结论 |
 | 03 | https://docs.neoforged.net/docs/1.21.11/items/ | 2026-08-16 | 已按该版文档改写（unary operator + DeferredItem） |
 | 04 | https://docs.neoforged.net/docs/1.21.11/entities/ | 2026-08-16 | 已按该版文档改写 |
-| 08 | https://docs.neoforged.net/docs/1.21.11/concepts/sides/ | 2026-08-16 | 已按该版文档改写（FMLEnvironment.dist + @Mod dist） |
+| 08 | https://docs.neoforged.net/docs/1.21.11/concepts/sides/ | 2026-08-22 | 已按该版文档改写（FMLEnvironment#getDist() + @Mod dist） |
 

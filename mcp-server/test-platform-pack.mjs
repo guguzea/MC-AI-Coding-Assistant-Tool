@@ -13,7 +13,7 @@ const { sessionPlatformPack } = await import("./dist/platform-pack/session.js");
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { activatePlatformPack } = await import("./dist/platform-pack/index.js");
 const { packWriteTestHooks } = await import("./dist/platform-pack/write.js");
-const { fabricRulesOverlay, inspectPack, coversMcVersion } = await import("./dist/platform-pack/catalog.js");
+const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS } = await import("./dist/platform-pack/catalog.js");
 const { upsertHostMarker, beginMarker } = await import("./dist/platform-pack/hosts.js");
 
 const savedRoot = process.env.MC_SKILL_PROJECT_ROOT;
@@ -936,6 +936,48 @@ function assertHasRuleIds(s, want, label) {
   const q = sessionPlatformPack({ platform: "quilt", minecraftVersion: "1.21.4" });
   assert.equal(q.ok, true, JSON.stringify(q.action));
   assertHasRuleIds(q, ["00", "01", "09"], "quilt 1.21.4 base");
+}
+
+{
+  assert.equal(FABRIC_SKILL_DONORS["1.21.8"], "1.21.4");
+  assert.equal(FABRIC_SKILL_DONORS["1.21.10"], "1.21.4");
+  const localNames = [
+    "mc-block", "mc-blockentity", "mc-command", "mc-datagen", "mc-events", "mc-gui",
+    "mc-item", "mc-loottable", "mc-mixin", "mc-model", "mc-networking", "mc-recipe",
+    "mc-registry", "mc-renderer",
+  ];
+  for (const ver of ["1.21.8", "1.21.10"]) {
+    const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: ver });
+    assert.equal(s.ok, true, `${ver}: ${JSON.stringify(s.action)}`);
+    const joined = (s.warnings ?? []).join(" | ");
+    assert.ok(
+      (s.warnings ?? []).some((w) => /同系列主档 fabric\/1\.21\.4/.test(w)),
+      `${ver} donorWarning: ${joined}`,
+    );
+    assert.ok(
+      !(s.warnings ?? []).some((w) => /同系列主档 fabric\/1\.21\.11/.test(w)),
+      `${ver} must not cite 1.21.11 donor: ${joined}`,
+    );
+    for (const name of localNames) {
+      const sk = (s.skills ?? []).find((x) => x.name === name);
+      assert.ok(sk, `${ver} missing local skill ${name}`);
+      assert.match(
+        String(sk.relPosix),
+        new RegExp(`fabric/${ver.replaceAll(".", "\\.")}/`),
+        `${ver} ${name} relPosix=${sk.relPosix}`,
+      );
+    }
+    for (const sk of s.skills ?? []) {
+      if (!sk.mappingNote) continue;
+      assert.match(
+        sk.mappingNote,
+        new RegExp(`search_fabric_docs\\(version=${ver.replaceAll(".", "\\.")}\\)`),
+        `${ver} donated ${sk.name} mappingNote=${sk.mappingNote}`,
+      );
+      assert.doesNotMatch(String(sk.relPosix), /fabric\/1\.21\.11\//);
+    }
+  }
+  console.log("fabric 1.21.8/1.21.10 donor is 1.21.4: ok");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

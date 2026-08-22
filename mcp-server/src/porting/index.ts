@@ -595,7 +595,18 @@ export async function analyzePortingPath(args: unknown) {
   const needCrossPlatform = currentPlatform !== targetPlatform;
 
   // 6. 知识库查询
-  const targetVer = userTargetVersion ?? mcVersion ?? "1.20.4";
+  const targetVer = userTargetVersion ?? mcVersion;
+  if (!targetVer) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: {
+        code: "TARGET_VERSION_REQUIRED",
+        message: "未指定 targetVersion，且未能从工程探测到 mcVersion，禁止静默默认 1.20.4。",
+        hint: "请传入 targetVersion（如 1.20.4 / 1.21.1）。",
+      },
+    };
+    return JSON.stringify(e, null, 2);
+  }
   const currentVer = mcVersion ?? "unknown";
   const { knowledgeGaps } = queryBreakingChanges(currentVer, targetVer);
 
@@ -939,7 +950,11 @@ export async function portProject(args: unknown) {
         .replace(/[^a-z0-9_]/g, "_")
         .replace(/^[^a-z]+/, "") || "mymod";
     const modId = (parsed.data.modId ?? derived).slice(0, 64);
+    const usedDefaultTarget = !parsed.data.targetVersion;
     const mcVersion = parsed.data.targetVersion ?? "1.20.4";
+    const defaultVersionWarning = usedDefaultTarget
+      ? ["未传 targetVersion，Architectury 模板默认 1.20.4"]
+      : undefined;
 
     const conflicts = checkConflicts(root);
     if (conflicts.length > 0) {
@@ -966,6 +981,7 @@ export async function portProject(args: unknown) {
           "common/src/main/resources/architectury.common.json",
           "fabric/src/main/resources/fabric.mod.json",
         ],
+        warnings: defaultVersionWarning,
       };
       return JSON.stringify(output, null, 2);
     }
@@ -990,6 +1006,7 @@ export async function portProject(args: unknown) {
       conflicts: null,
       filesToWrite: Object.keys(files),
       diffPreview: doWrite ? undefined : files,
+      warnings: defaultVersionWarning,
     };
     return JSON.stringify(output, null, 2);
   }
@@ -1045,7 +1062,16 @@ export async function portProject(args: unknown) {
   }
 
   if (action === "apply_version_migration") {
-    const targetVersion = parsed.data.targetVersion ?? "1.20.4";
+    if (!parsed.data.targetVersion) {
+      return JSON.stringify({
+        ok: false,
+        error: {
+          code: "TARGET_VERSION_REQUIRED",
+          message: "apply_version_migration 必须传入 targetVersion，禁止静默默认 1.20.4。",
+        },
+      });
+    }
+    const targetVersion = parsed.data.targetVersion;
     const { renames, unreviewed } = applyPackageRenames(root, !doWrite);
 
     // Notes only — this action does NOT rewrite build.gradle / gradle.properties
@@ -1056,6 +1082,7 @@ export async function portProject(args: unknown) {
     }
 
     const todoBlocks: { file: string; lines: number }[] = [];
+    manualNotes.push("todoBlocksAdded 尚未实现（reserved, always []），请人工核对 unreviewedCandidates。");
 
     const output: ApplyMigrationOutput = {
       ok: true,

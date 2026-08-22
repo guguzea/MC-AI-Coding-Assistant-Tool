@@ -186,13 +186,16 @@ fabric-mod/
 
 当 mcp-server/ 存在时，可使用以下工具：
 
+> **查 API 分工**：本档 **1.14.4 无 Parchment extracted 索引**（`query_api` → `DATA_UNAVAILABLE`）。**不是 Yarn 索引**。Vanilla 签名 → IDE `genSources` + [Yarn Javadoc](https://maven.fabricmc.net/docs/yarn-1.14.4+build.7/)；Fabric API → query_loader_api；教程 → search_fabric_docs。
+
 | 工具 | 功能 |
 |------|------|
 | search_fabric_docs | 搜索 Fabric Docs + Wiki |
 | get_fabric_doc_summary | 获取文档摘要 |
 | get_fabric_doc_full | 获取文档全文 |
-| query_api | 按类名查询 Yarn API 签名 |
-| get_method_params | 查询方法参数名 |
+| query_api | Vanilla Parchment 索引工具；**本档 1.14.4 无数据**，勿当 Yarn 签名用 |
+| get_method_params | 同上；本档不可用 |
+| query_loader_api | Fabric API 类摘要（platform=fabric + minecraftVersion=1.14.4） |
 | convert_mapping | Yarn <-> Parchment <-> Mojang 映射互转 |
 | diagnose_gradle | 诊断 Gradle/Loom 构建问题 |
 

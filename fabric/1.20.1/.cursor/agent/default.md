@@ -178,14 +178,17 @@ fabric-mod/
 
 当 `mcp-server/` 存在时，可使用以下工具：
 
+> **查 API 分工（勿混用）**：`query_api` / `get_method_params` 查 **Vanilla 游戏类**（Parchment/Mojang 名 + Javadoc），**不是 Yarn 索引**，**不含** `net.fabricmc.fabric.api.*`。本档 **1.20.1** 在 Parchment 索引内（约 1.16.5–1.20.4）。多数 Vanilla 类名与 Yarn 相同，但请以工程 Yarn 为准；不一致时用 `convert_mapping`。Fabric API → `query_loader_api`；教程 → `search_fabric_docs`。
+
 | 工具 | 功能 |
 |------|------|
-| `search_fabric_docs` | 搜索 Fabric Docs + Wiki |
+| `search_fabric_docs` | 搜索 Fabric Docs + Wiki（先 `list_fabric_versions`） |
 | `get_fabric_doc_summary` | 获取文档摘要 |
 | `get_fabric_doc_full` | 获取文档全文 |
-| `query_api` | 按类名查询 Yarn API 签名 |
-| `get_method_params` | 查询方法参数名 |
-| `convert_mapping` | Yarn ↔ Parchment ↔ Mojang 映射互转 |
+| `query_api` | Vanilla **Parchment** 类/方法签名（`version` 须与本档 MC 一致）；不含 Fabric API |
+| `get_method_params` | 同上 Parchment 索引；查指定方法参数名 |
+| `query_loader_api` | **Fabric API** 类摘要（必填 `platform=fabric` + `minecraftVersion`）；不是 `query_api` |
+| `convert_mapping` | Yarn ↔ Mojang/Parchment/Intermediary 互转（工程用 Yarn 时核对名） |
 | `diagnose_gradle` | 诊断 Gradle/Loom 构建问题 |
 
 ---

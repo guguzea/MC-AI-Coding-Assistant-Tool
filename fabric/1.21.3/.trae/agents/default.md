@@ -221,14 +221,18 @@ Integer n = entity.getAttached(CLICKS);
 
 当 `mcp-server/` 存在时，可使用以下工具：
 
+> **查 API 分工（勿混用）**：本档 **1.21.3 无 `query_api` Parchment 索引**（`query_api --version=1.21.3` → `DATA_UNAVAILABLE`；**勿当 Yarn 签名工具**）。Vanilla 源码/签名 → `get_minecraft_source` 或 IDE `genSources`；Yarn 名互转 → `convert_mapping`；Fabric API → `query_loader_api`；教程/用法 → `search_fabric_docs`（version=1.21.3）。
+
 | 工具 | 功能 |
 |------|------|
-| `search_fabric_docs` | 搜索 Fabric Docs + Wiki |
+| `search_fabric_docs` | 搜索 Fabric Docs + Wiki（先 `list_fabric_versions`） |
 | `get_fabric_doc_summary` | 获取文档摘要 |
 | `get_fabric_doc_full` | 获取文档全文 |
-| `query_api` | 按类名查询 Yarn API 签名 |
-| `get_method_params` | 查询方法参数名 |
-| `convert_mapping` | Yarn ↔ Parchment ↔ Mojang 映射互转 |
+| `query_api` | **本档无索引**（1.21+ 不支持）；勿传本档 version 期待 Yarn/Parchment 签名 |
+| `get_method_params` | 同上；1.21+ 不可用 |
+| `query_loader_api` | **Fabric API** 类摘要（`platform=fabric` + `minecraftVersion=1.21.3`） |
+| `convert_mapping` | Yarn ↔ Mojang/Parchment/Intermediary（本档仍用 Yarn 映射） |
+| `get_minecraft_source` | 按需拉取/remap Vanilla 源码（Yarn 名） |
 | `diagnose_gradle` | 诊断 Gradle/Loom 构建问题 |
 
 ---

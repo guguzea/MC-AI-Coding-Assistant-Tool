@@ -310,7 +310,7 @@ MC_skill/
 | `get_migration_guide({route:"constructor"})` `found:true` | 自由字符串查 `MIGRATION_GUIDES[key]`，命中 Function | 已 `ownGet`，必须 `found:false` |
 | `get_workflow_template({name:"constructor"})` | MCP schema 是工作流名 **enum**（Zod 直接拒）；函数层仍要 `ownGet` | 不要把校验失败理解成「没有工作流系统」 |
 | `query_api` 1.12.2 `Block` `found:true` | 约 3313 个类名、几乎全是 `methods:[]` | 看 `warning` / `notes`；改 `search_forge_docs` / `query_loader_api` |
-| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | 仅 **Forge 1.20.1**（以及 Neo 1.21.x / 26.1、Fabric/Quilt 1.21 与 26.1）出代码；其它 version 返回 error |
+| `generate_datagen` platform=forge version=1.12.2 吐出 Java | 1.12.2 **无 DataGen**；旧模板还曾发出 1.21 的 `ResourceLocation.fromNamespaceAndPath` | 仅 **Forge 1.20.1**（以及 Neo 1.21.x / 26.1、**Fabric** 1.21.x / 26.1）出代码；**Quilt 无** generate_datagen（改口 `search_docs platform=quilt` + Fabric overlay 手写）；其它 version 返回 error |
 | `get_version_info` 1.12.2 action=register 仍教 DeferredRegister | gotchas 写「不支持」，recommendation 被强行追加 1.20 流程 | 1.12.2 注册是 `RegistryEvent.Register<T>` |
 | `search_loader_api` 对 Fabric 1.14.4 等返回空 | 文档曾写 maven 404 / `LOADER_API_NOT_INDEXED` | 以 `mode=list` 为准；`skipped-ingest.json` 的 `mavenNotIndexed` 现为空数组 |
 | 文档 `semantic: false` 或 warning 含 `stale` | 故意 L0-only（**仅 ModLoader** 三档），或 sqlite 落后于 processed/ | 看该次 JSON，不要只看 `get_server_status.semanticIndex.modeHint` |
@@ -365,7 +365,7 @@ Agent **不得**把「工具返回空 / found:false / warning」解释成「游�
 | `port_project` 会改用户工程 | 默认 **dryRun**；真写需 `confirmed` + `MC_SKILL_ALLOW_WRITE` + 路径在 `MC_SKILL_PROJECT_ROOT` 内 |
 | 工作流 / MCP 不跑 Gradle、不拷 jar、不上传 = 漏做无人值守 | **人在环设计**。创意、兼容取舍、API、性能、调试由人决定；高风险操作须确认后再执行 |
 | `analyze_porting_path` 对任意文件夹都有移植路径 | 非模组目录 → `NOT_A_MOD_PROJECT`；LiteLoader / Rift / ModLoader / 基岩 → `UNSUPPORTED_PORT` |
-| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 仅 1.20.1**、NeoForge 1.21.x 与 26.1、Fabric/Quilt 1.21 与 26.1；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
+| `generate_*` / `generate_datagen` 会写文件 | **只返回文本骨架**。`platform`/`loader` 与（datagen/config/capability/renderer 的）`version` 必填，禁止默认 forge。datagen：**Forge 仅 1.20.1**、NeoForge 1.21.x 与 26.1、**Fabric** 1.21.x 与 26.1；Quilt 无 generate_datagen（改口 `search_docs platform=quilt`）；其它 Forge 版本（含 1.12.2）error。`generate_capability`：forge=Capability；neoforge 仅 1.20.4+ Attachment；fabric/quilt 改口 CCA |
 | `localize_mod` 会自动译成中文 | **无机器翻译**，只标 `needsTranslation` |
 | `check_dependencies` = 完整 Gradle 解析 | 启发式 + library-catalog，会漏未收录库 |
 | `mixin_analyze deep:true` 会下载 MC jar | **不会**。未缓存 → `CACHE_MISS`，先 `get_minecraft_source` |
@@ -543,7 +543,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | 工具                 | 作用                                                                                                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `diagnose_gradle`  | 检查 `build.gradle` / `gradle.properties`：ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。26.1 Loom 必须 `net.fabricmc.fabric-loom`、Java 25、禁止 `modImplementation`。liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。    |
-| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 仅 1.20.1**、NeoForge 1.21.x、NeoForge 26.1、Fabric/Quilt 1.21 与 26.1。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
+| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 仅 1.20.1**、NeoForge 1.21.x、NeoForge 26.1、**Fabric** 1.21.x 与 26.1。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
 | `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
 | `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |

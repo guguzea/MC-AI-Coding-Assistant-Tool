@@ -36,10 +36,10 @@ import {
   validateAddonManifest,
   getBedrockDocFull,
 } from "./dist/bedrock/index.js";
-import { listSemanticDbPresence, semanticStaleSearchWarning } from "./dist/docs-platform/semantic/status.js";
+import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
 import { SEMANTIC_DDL, semanticDbPath } from "./dist/docs-platform/semantic/search.js";
-import { resolveDataDir } from "./dist/utils/path.js";
+import { resolveDataDir, diagnoseDataPaths } from "./dist/utils/path.js";
 import { symlinkSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -55,6 +55,7 @@ import { checkPublishReady } from "./dist/publish/index.js";
 import { inspectRuntime } from "./dist/runtime-inspect/index.js";
 import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-search.js";
 import { getWorkflowTemplate, WORKFLOW_TEMPLATES } from "./dist/prompts/index.js";
+import { KNOWN_VERSIONS } from "./dist/docs-platform/platforms.js";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -186,6 +187,7 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
     await portProject({
       projectPath: root,
       action: "apply_version_migration",
+      targetVersion: "1.20.4",
       dryRun: false,
       confirmed: false,
     });
@@ -194,6 +196,7 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
     await portProject({
       projectPath: root,
       action: "apply_version_migration",
+      targetVersion: "1.20.4",
       dryRun: false,
       confirmed: true,
     });
@@ -204,6 +207,44 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
     else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
     if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
     else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function testPortingTargetVersionRequired() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-no-ver-"));
+  try {
+    mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+    writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+    writeFileSync(
+      join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+      'modLoader="javafml"\n[[mods]]\nmodId="nover"\n',
+      "utf8",
+    );
+    const analyzed = JSON.parse(await analyzePortingPath({ projectPath: root, targetPlatform: "neoforge" }));
+    assert.equal(analyzed.ok, false);
+    assert.equal(analyzed.error.code, "TARGET_VERSION_REQUIRED");
+
+    const missingMigrate = JSON.parse(await portProject({
+      projectPath: root,
+      action: "apply_version_migration",
+      dryRun: true,
+    }));
+    assert.equal(missingMigrate.ok, false);
+    assert.equal(missingMigrate.error.code, "TARGET_VERSION_REQUIRED");
+
+    const initDefault = JSON.parse(await portProject({
+      projectPath: root,
+      action: "init_architectury",
+      modId: "examplemod",
+      dryRun: true,
+    }));
+    assert.equal(initDefault.ok, true);
+    assert.ok(
+      (initDefault.warnings ?? []).some((w) => /未传 targetVersion/.test(w) && /1\.20\.4/.test(w)),
+      JSON.stringify(initDefault.warnings),
+    );
+  } finally {
     rmSync(root, { recursive: true, force: true });
   }
 }
@@ -1395,6 +1436,12 @@ async function testThinLoaderAndFabricWiki() {
 }
 
 async function testFivePlatformRouting() {
+  for (const v of ["1.21.4", "1.21.8", "1.21.10"]) {
+    assert.ok(KNOWN_VERSIONS.fabric.includes(v), `KNOWN_VERSIONS.fabric missing ${v}`);
+  }
+  for (const v of ["1.21.3", "1.21.4", "1.21.8", "1.21.10"]) {
+    assert.ok(KNOWN_VERSIONS.quilt.includes(v), `KNOWN_VERSIONS.quilt missing ${v}`);
+  }
   assert.equal(
     detectLoader("id 'fabric-loom'", undefined, '{"id":"x"}', undefined, { quiltModJson: '{"schema_version":1}' }),
     "quilt",
@@ -1741,6 +1788,41 @@ async function testFivePlatformRouting() {
   } finally {
     rmSync(tmpData, { recursive: true, force: true });
   }
+
+  const tmpBad = mkdtempSync(join(tmpdir(), "mc-skill-sem-bad-"));
+  const prevData = process.env.MC_SKILL_DATA;
+  try {
+    const versionDir = join(tmpBad, "quilt_1.20.1", "quilt-docs", "1.20.1");
+    mkdirSync(join(versionDir, "semantic"), { recursive: true });
+    const dbPath = semanticDbPath(tmpBad, "quilt", "1.20.1", "quilt-docs");
+
+    writeFileSync(dbPath, "");
+    const emptyRow = listSemanticDbPresence(tmpBad).find((p) => p.platform === "quilt" && p.version === "1.20.1");
+    assert.equal(emptyRow?.exists, false, "empty sqlite must not count as exists");
+
+    writeFileSync(dbPath, "not a sqlite database");
+    const garbageRow = listSemanticDbPresence(tmpBad).find((p) => p.platform === "quilt" && p.version === "1.20.1");
+    assert.equal(garbageRow?.exists, false, "garbage sqlite must not count as exists");
+
+    rmSync(dbPath, { force: true });
+    const broken = new DatabaseSync(dbPath);
+    broken.exec("CREATE TABLE foo (id INTEGER)");
+    broken.close();
+    const noMeta = listSemanticDbPresence(tmpBad).find((p) => p.platform === "quilt" && p.version === "1.20.1");
+    assert.equal(noMeta?.exists, false, "sqlite without meta must not count as exists");
+
+    process.env.MC_SKILL_DATA = tmpBad;
+    const paths = diagnoseDataPaths();
+    const idx = getSemanticIndexStatus(tmpBad);
+    assert.equal(paths.semantic.present, idx.presentCount);
+    assert.equal(paths.semantic.present, 0);
+    const sample = idx.samples.find((s) => s.platform === "quilt" && s.version === "1.20.1");
+    assert.equal(sample?.exists, false);
+  } finally {
+    if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prevData;
+    rmSync(tmpBad, { recursive: true, force: true });
+  }
 }
 
 async function testReviewFixes() {
@@ -1774,7 +1856,7 @@ async function testReviewFixes() {
       JSON.stringify({ schemaVersion: 1, id: "fabricname", version: "9.9.9" }),
       "utf8",
     );
-    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltDual, targetPlatform: "quilt" }));
+    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltDual, targetPlatform: "quilt", targetVersion: "1.21.1" }));
     assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
     assert.equal(q.analysis.current.platform, "quilt");
     assert.equal(q.analysis.current.modId, "quiltmod");
@@ -1795,7 +1877,7 @@ async function testReviewFixes() {
       JSON.stringify({ schemaVersion: 1, id: "fabricname" }),
       "utf8",
     );
-    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltLoomOnly, targetPlatform: "quilt" }));
+    const q = JSON.parse(await analyzePortingPath({ projectPath: quiltLoomOnly, targetPlatform: "quilt", targetVersion: "1.21.1" }));
     assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
     assert.equal(q.analysis.current.platform, "quilt");
   } finally {
@@ -2119,6 +2201,10 @@ async function testPlan2PrimerMdkFabricPorting() {
   assert.equal(noNet1204.code, null);
   const noNet1211 = genPkt("demo", "sync", "fabric_1.21.1");
   assert.equal(noNet1211.code, null);
+  assert.ok(
+    (noNet1211.errors ?? []).some((e) => /failures\.json/.test(e) && /search_fabric_docs version=1\.21\.4/.test(e)),
+    JSON.stringify(noNet1211.errors),
+  );
   const noNetNeo1206 = genPkt("demo", "sync", "neoforge_1.20.6");
   assert.equal(noNetNeo1206.code, null);
   const noNet1201 = genPkt("demo", "sync", "fabric_1.20.1");
@@ -2669,6 +2755,7 @@ await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();
 await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
+await testPortingTargetVersionRequired();
 await testCommunityDocsSearchAndLinks();
 await testCrashAnalyzeKindAndMissingDep();
 await testPlatformDataMissing();

@@ -490,7 +490,7 @@ export function generateNetworkPacket(
           (platform === "neoforge_1.20.6"
             ? " NeoForge 1.20.6 仅有 networking 概述（RegisterPayloadHandlersEvent），无 payload 页故不写骨架。"
             : platform === "fabric_1.21.1"
-              ? " Fabric 1.21.1 无 networking 页，禁止把 fabric_1.21 当 1.21.1。"
+              ? " Fabric 1.21.1 无入库 networking 专页（failures.json）。请 search_fabric_docs version=1.21.4 + 本档 mc-networking Skill；可选 fabric_1.21.4 骨架仅作结构参考，禁止当 1.21.1 官方 API。禁止把 fabric_1.21 当 1.21.1。"
               : platform === "fabric_1.20.4" || platform === "fabric_1.20.1"
                 ? " 该档无官方 networking 页。"
                 : "") +
@@ -675,7 +675,7 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 
   if (platform === "fabric_1.21") {
     return fabricYarnPayloadSkeleton(mod.value, pkt.value, pascal, "1.21", [
-      `模糊 token fabric_1.21：请改用已核实的 ${FABRIC_NETWORK_EXACT_TOKENS}。禁止把本骨架当 1.21.1（该档无 networking 页）。`,
+      `模糊 token fabric_1.21：请改用已核实的 ${FABRIC_NETWORK_EXACT_TOKENS}。禁止把本骨架当 1.21.1（该档无入库 networking 专页，见 failures.json）。`,
       "Yarn 用 playC2S/playS2C、CustomPayload、net.minecraft.util.Identifier.of。",
       "不要抄 26.1 的 clientboundPlay / CustomPacketPayload / resources.Identifier。",
       "客户端接收用 ClientPlayNetworking.registerGlobalReceiver。",

@@ -170,6 +170,8 @@ export interface InitArchitecturyOutput {
   } | null;
   filesToWrite: string[];
   diffPreview?: Record<string, string>;
+  /** 未传 targetVersion 时提示 Architectury 模板默认 1.20.4 */
+  warnings?: string[];
 }
 
 export interface InitArchitecturyError {
@@ -189,6 +191,7 @@ export interface ApplyMigrationOutput {
     buildGradleUpdates: string[];
     gradlePropertiesUpdates: string[];
     packageRenames: { from: string; to: string; affectedFiles: number }[];
+    /** reserved, always [] until implemented */
     todoBlocksAdded: { file: string; lines: number }[];
     unreviewedCandidates: { file: string; reason: string }[];
     /** Notes for humans — gradle files are NOT modified by this tool */
