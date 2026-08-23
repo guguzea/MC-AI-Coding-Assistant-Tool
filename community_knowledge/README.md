@@ -14,7 +14,7 @@
 | `links/` | 无全文许可：仅标题、摘要、外链 URL |
 | `authored/` | 本仓库自写短文（可自由修改） |
 
-索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前约 **79** 条：authored 71 / links 4 / permitted 4）。
+索引：`indexes/index-l0.json`（可由 `mcp-server/scripts/build-community-index.mjs` 重建；当前约 **81** 条：authored 73 / links 4 / permitted 4）。
 
 ## `authored/` 主题速查
 
@@ -22,6 +22,8 @@
 |------|-----|
 | 发布 | `authored/publishing` |
 | 崩溃日志 | `authored/crash-reports` |
+| 测试（JUnit / GameTest 选型） | `authored/testing-automation` |
+| 性能 / profiler（spark、/debug tick、内存） | `authored/profiling-performance` |
 | 软依赖 / CurseMaven | `authored/soft-deps-modlist`、`authored/cursemaven-optional-deps` |
 | 主类 / 注册 helper / 创造页签 | `authored/mod-entry-init-structure`、`authored/register-helpers`、`authored/creative-tabs-1.20` |
 | 机器 / Menu / BE / Capability | `authored/machine-be-gui-working`、`authored/menu-screen-sync`、`authored/blockentity-persist-ticker`、`authored/itemhandler-capability` |

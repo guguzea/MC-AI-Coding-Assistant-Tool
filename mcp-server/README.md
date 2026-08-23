@@ -130,7 +130,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
-| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 79 条；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
+| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 81 条；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`（1.21+ recipe `result` 可为对象）、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
 | Wave C 生成 | `generate_model`（kind 默认 block）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 为 Cloth 骨架）、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |

@@ -51,7 +51,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
    STATUS_GATE: failed → 按 errors 修
    - Forge / Fabric / Quilt / NeoForge：validate_project 与 diagnose_gradle 已做真检查；看 status
    - 仍 skipped 的 loader 换 search_*_docs / validate_addon_manifest
-4. mixin_analyze；diagnose_gradle 若构建失败（同样先看 status/skipped）`,
+4. mixin_analyze；diagnose_gradle 若构建失败（同样先看 status/skipped）
+5. 性能 / 卡顿类：先读 community authored/profiling-performance（spark、/debug tick、内存诊断），再改代码前先测量`,
   },
   "mc-port-mod": {
     title: "移植模组",
@@ -69,7 +70,8 @@ export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }>
 4. 构建（用户确认后执行，Agent 不代跑）：Forge/NeoForge 用 ./gradlew build；Fabric 用 Loom 等价任务；需要资源时先跑 DataGen
 5. 确认产出 jar：build/libs/（排除 -sources、-javadoc 等）
 6. 构建失败：对 Gradle/编译日志用 analyze_log / crash_analyze，修好后重跑构建
-7. 完成后可接工作流 mc-ingame-iterate（真机测试与修复循环）`,
+7. 卡顿 / 性能问题：读 community authored/profiling-performance（先测量后优化），不是直接改代码
+8. 完成后可接工作流 mc-ingame-iterate（真机测试与修复循环）`,
   },
   "mc-ingame-iterate": {
     title: "真机测试与修复循环",

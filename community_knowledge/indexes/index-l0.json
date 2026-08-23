@@ -1137,7 +1137,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "DataGen 配方常零代码；三查看器软依赖 Gradle；Dist.CLIENT 注册；REI 可与 JEI 同装；1.21.2+ JEI 服务端同步与 EMI 活跃窗口；自定义分类再查官方。",
+      "summary": "DataGen 配方常零代码；三查看器软依赖 Gradle；Forge/Neo Dist.CLIENT / Fabric client 源集注册；REI 可与 JEI 同装；1.21.2+ JEI 服务端同步与 EMI 活跃窗口；自定义分类再查官方。",
       "mcHint": "1.20.1+ / 1.21+ / 26.x"
     },
     {
@@ -1312,6 +1312,23 @@
       "mcHint": "1.20.1+（示例偏 Forge）"
     },
     {
+      "id": "authored/profiling-performance",
+      "label": "性能分析与 profiler 实务",
+      "path": "authored/profiling-performance.md",
+      "url": "",
+      "tags": [
+        "performance",
+        "profiler",
+        "spark",
+        "lag",
+        "memory"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "模组性能排查实务：spark 集成与读数、/debug tick、内存诊断与常见泄漏面、「先测量后优化」清单。",
+      "mcHint": ""
+    },
+    {
       "id": "authored/publishing",
       "label": "模组发布要点（CurseForge / Modrinth / GitHub / Maven）",
       "path": "authored/publishing.md",
@@ -1361,6 +1378,23 @@
       "sourceKind": "authored",
       "priority": "⭐",
       "summary": "硬/软依赖区分；ModList 探测；类加载隔离；mods.toml optional；与 compileOnly/Mixin 条件注册配合。",
+      "mcHint": ""
+    },
+    {
+      "id": "authored/testing-automation",
+      "label": "模组自动化测试（JUnit / GameTest 选型）",
+      "path": "authored/testing-automation.md",
+      "url": "",
+      "tags": [
+        "testing",
+        "junit",
+        "gametest",
+        "ci",
+        "client"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "非 GameTest 的自动化测试实务：JUnit 单测何时可行、三 loader 的 test 配置要点、客户端渲染类的现实测试路径与可测性设计清单。",
       "mcHint": ""
     },
     {

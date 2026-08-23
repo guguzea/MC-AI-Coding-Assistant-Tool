@@ -163,3 +163,36 @@ IF 客户端触发、仅本地玩家听到
 | `mc-blockentity` | 机器方块工作时播放音效 |
 | `mc-networking` | 触发远程玩家的声音 |
 | `mc-entity` | 生物死亡/攻击时播放音效 |
+
+## 高级音频流（流式 / 自定义声道 / 广播）
+
+> 本节是机制路线：vanilla（含 1.19.4 Forge 基础）**没有**开箱即用的流式音频 API、自定义声道或混音广播接口。具体类与方法签名一律以 `search_forge_docs`（`gameeffects_sounds` 页核实数据）为准，不要凭记忆补签名。
+
+**先澄清事实**：sounds.json 的 `"stream": true` 只决定**加载方式**（流式读盘 vs 整文件进内存），它不是流式播放 API，也不提供声道/混音控制。声音最终由客户端声音引擎播放；服务端只负责「告诉客户端放什么」——广播性声音仍走 `Level#playSound`（服务端，向附近玩家同步），客户端触发的走 `Level#playLocalSound` / `ClientLevel#playLocalSound`（仅客户端）。
+
+### 路线 1：SoundInstance 级细粒度控制（以 search_forge_docs 为准）
+
+- 机制：向客户端声音系统提供自定义 `SoundInstance` 实例，自行掌控播放、循环、停止与衰减；它消费的仍是 sounds.json 里已注册的 sound 条目。
+- 适用：持续型/可打断的环境音、循环音。
+- 启动点在客户端：服务端触发需经 mc-networking 发包。
+
+### 路线 2：外界音频库集成（以 search_forge_docs 为准）
+
+- 机制：接入 OpenAL 之外的音频库，与客户端物理层交互，绕过游戏声音引擎。
+- 适用：低延迟、自定义混音/效果链、非 .ogg 源。
+- 代价：失去 SoundSource 滑条归属、字幕与衰减整合；仍需服务端发包分发触发。
+
+### 路线 3：分块 SoundEvent 序列
+
+- 机制：长音频按段切多个 `.ogg`，注册多个 `SoundEvent`（sounds.json 各自条目，长段用 `"stream": true`），客户端按时序依次播放。
+- 适用：不引外部库的「近似流式」长音频。
+- 注意：分段衔接、网络延迟下的乱序/重叠、SoundSource 类别保持一致。
+
+### 坑清单
+
+- ❌ 把 `"stream": true` 当流式 API → 只是加载策略，不改变播放模型
+- ❌ 服务端 `for` 循环逐块 `Level#playSound` → 客户端延迟致错位；应客户端本地节奏 + 网络包触发
+- ❌ 单条音乐文件巨大且未开 `"stream": true` → 整文件进内存（见上节 sounds.json）
+- ❌ 自定义声道/混音找不到 API 就硬编码音量 → 先 `search_forge_docs`
+- ❌ 客户端逻辑依赖「驻留的 SoundEvent 引用」判断条目可用 → 只要 sounds.json 里有条目，客户端可直接引用，不必驻留 SoundEvent（官方注）
+- ✅ 能用普通 `sounds.json` + `Level#playSound` / `Level#playLocalSound` 表达的，先走常规路径，再考虑高级方案
