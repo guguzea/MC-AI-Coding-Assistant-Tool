@@ -265,7 +265,7 @@ Decision: 选择注册方式
 | `check_publish_ready` | 发布前清单（license/version/`build/libs`）。不上传、不调外网发布 API。 |
 | `inspect_runtime` | 日志型 inspector。优先 `logsDir`；否则有界探测 `run/logs`。禁止全盘 / JVM attach。 |
 | `detect_mod_project` / `activate_platform_pack` | 探测工程；`session` 加载规则/Skill 索引（默认 00/01/09），`write` 写入用户工程（见根 README「规则包加载」） |
-| `query_loader_api` / `search_loader_api` | 加载器/模组 API 摘要（必填 platform+minecraftVersion）。**不是** `query_api` |
+| `query_loader_api` / `search_loader_api` / `ingest_loader_api` | 加载器/模组 API 摘要（必填 platform+minecraftVersion）。**不是** `query_api`。ingest 把用户自备 jar 抽成摘要，只写 `$MC_SKILL_CACHE/loader-api-summaries` overlay，禁止写仓库 `data/` |
 | `search_forge_docs` / `get_forge_doc_*` | Forge 文档。先 `list_forge_versions`；**1.12.2 用这套**，不要用 `query_api`。与 `search_docs({platform:"forge"})` 等价 |
 | `search_fabric_docs` / `get_fabric_doc_*` | Fabric 文档 |
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |

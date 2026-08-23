@@ -28,6 +28,24 @@
 | 主类 / 注册 helper / 创造页签 | `authored/mod-entry-init-structure`、`authored/register-helpers`、`authored/creative-tabs-1.20` |
 | 机器 / Menu / BE / Capability | `authored/machine-be-gui-working`、`authored/menu-screen-sync`、`authored/blockentity-persist-ticker`、`authored/itemhandler-capability` |
 | 模型 / 本地化 / 开发环境 | `authored/multi-face-block-models`、`authored/localization-lang`、`authored/forge-dev-env-pitfalls` |
+| 自定义命令（Brigadier） | `authored/custom-commands-brigadier` |
+| 矿物生成（worldgen 三层） | `authored/ore-generation-worldgen` |
+| 世界数据持久化（SavedData） | `authored/saveddata-world-persistence`、`authored/fabric-saveddata-persistent-state`（Fabric 侧） |
+| NeoForge 网络包（Payload，1.20.5+/26.x） | `authored/neoforge-payload-networking` |
+| 数据附件与持久化选型（1.20.5+） | `authored/data-attachments-vs-alternatives` |
+| Fabric 命令 + 矿物生成差异 | `authored/fabric-commands-and-oregen` |
+| 基岩 Script API 入门 | `authored/bedrock-script-api-primer` |
+| Mixin 实务与兼容性 | `authored/mixin-practices-crossplatform` |
+| 老版本 Forge 实务（1.7.10/1.12.2） | `authored/legacy-forge-1.7.10-1.12.2-practices` |
+
+## `links/` 教程站索引
+
+| 内容 | id |
+|------|-----|
+| Kaupenjoe 全平台课程总目录（NeoForge/Fabric/Forge × 1.16–26.X，MIT） | `links/kaupenjoe-courses-index` |
+| Fabric Wiki / fabric 文档教程目录（Mixin 系列、发布等） | `links/fabric-wiki-tutorial-index` |
+| McJty 模组指南（工程化视角） | `links/mcjty-modding-guide` |
+| 基岩版官方文档与官方样例仓库 | `links/bedrock-script-api-official-samples` |
 | 映射字段 schema v3 | `authored/mapping-fields-v3` |
 | 历史加载器 | `authored/modloader-1.6.4`（1.6.4 只许用仓库 safe-api 表） |
 | 代码模式库 | `patterns/`（DeferredRegister / SimpleChannel / DataComponent / cube_all / ConfigSpec） |

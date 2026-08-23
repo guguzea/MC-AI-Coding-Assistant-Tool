@@ -2,6 +2,26 @@
   "version": 1,
   "entries": [
     {
+      "id": "authored/bedrock-script-api-primer",
+      "label": "基岩版 Script API 入门要点（@minecraft/server）",
+      "path": "authored/bedrock-script-api-primer.md",
+      "url": "",
+      "tags": [
+        "bedrock",
+        "script-api",
+        "javascript",
+        "typescript",
+        "manifest",
+        "system-run",
+        "world",
+        "addon"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "manifest 加 script 模块与 @minecraft/server 依赖；world/system 核心类；tick 循环与 % 200 调度；spawnEntity/dimension.id；热重载 /reload；版本锁定陷阱（依赖 version 决定可用 API）；TypeScript 工具链价值。",
+      "mcHint": "stable 线（示例 @minecraft/server 1.5.0 / min_engine 1.20.30；模块版本随游戏更新）"
+    },
+    {
       "id": "authored/blockentity-persist-ticker",
       "label": "BlockEntity 持久化与 Ticker 接入",
       "path": "authored/blockentity-persist-ticker.md",
@@ -70,6 +90,45 @@
       "mcHint": ""
     },
     {
+      "id": "authored/custom-commands-brigadier",
+      "label": "自定义命令（Brigadier）注册与参数树",
+      "path": "authored/custom-commands-brigadier.md",
+      "url": "",
+      "tags": [
+        "commands",
+        "brigadier",
+        "RegisterCommandsEvent",
+        "literal",
+        "argument",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "RegisterCommandsEvent 注册；literal/argument 树、executes 与返回码；常用 ArgumentType 与 suggestion；权限 requires；服务端执行与 sendSuccess lambda；PlayerEvent.Clone 持久化配合。",
+      "mcHint": "1.20.1+（NeoForge 同构，事件类换 net.neoforged 包）"
+    },
+    {
+      "id": "authored/data-attachments-vs-alternatives",
+      "label": "数据附件（Data Attachment）与持久化选型（NeoForge 1.20.5+）",
+      "path": "authored/data-attachments-vs-alternatives.md",
+      "url": "",
+      "tags": [
+        "attachment",
+        "dataattachment",
+        "codec",
+        "serialize",
+        "sync",
+        "neoforge",
+        "persistence",
+        "entity-data"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "AttachmentType 注册（builder + 默认值 + Codec.serialize + 可选 sync）；挂在 Entity/BlockEntity/Chunk/Level/ItemStack；getData/hasData/setData/removeData；与 SavedData、persistentData、Data Components 的选型边界。",
+      "mcHint": "NeoForge 1.20.5+/1.21（26.X 课程源码核实）"
+    },
+    {
       "id": "authored/fabric-26.2-overview",
       "label": "Fabric 26.2 概述（官方博客摘录）",
       "path": "authored/fabric-26.2-overview.md",
@@ -85,6 +144,43 @@
       "priority": "⭐",
       "summary": "Loom 1.17 / Gradle 9.5.1；Vulkan 实验后端；BlockIds DataGen；gui.setScreen。短文不是 API 规范。",
       "mcHint": ""
+    },
+    {
+      "id": "authored/fabric-commands-and-oregen",
+      "label": "Fabric 命令注册与矿物生成（FAPI 写法）",
+      "path": "authored/fabric-commands-and-oregen.md",
+      "url": "",
+      "tags": [
+        "fabric",
+        "commands",
+        "CommandRegistrationCallback",
+        "BiomeModifications",
+        "worldgen",
+        "oregen",
+        "datagen"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric 侧与 Forge 系的差异点：CommandRegistrationCallback.EVENT 三参数注册；BiomeModifications.addFeature + BiomeSelectors 挂矿/树；ConfiguredFeature/PlacedFeature bootstrap 与 datagen（FabricDynamicRegistryProvider / DataGeneratorEntrypoint）。",
+      "mcHint": "Fabric API 0.9x+/1.20+；文档核对于当前版"
+    },
+    {
+      "id": "authored/fabric-saveddata-persistent-state",
+      "label": "Fabric 世界数据持久化（SavedData / 旧 PersistentState）",
+      "path": "authored/fabric-saveddata-persistent-state.md",
+      "url": "",
+      "tags": [
+        "fabric",
+        "saveddata",
+        "persistent-state",
+        "codec",
+        "DimensionDataStorage",
+        "world-data"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric 侧世界级持久化：新 API SavedData+SavedDataType+Codec+computeIfAbsent（与 NeoForge 同构）；旧教程 PersistentState/Yarn 名对照；setDirty 落盘；Global World Data 概念；Yarn 与 Mojmap 命名差异提醒。",
+      "mcHint": "新 API：1.21.x/26.x docs；旧 PersistentState 见 Yarn ≤1.21 教程"
     },
     {
       "id": "authored/forge-dev-env-pitfalls",
@@ -123,6 +219,27 @@
       "priority": "⭐",
       "summary": "Menu 用 getItemHandler 不够；漏斗/管道需 ForgeCapabilities.ITEM_HANDLER + LazyOptional；分面输入输出；invalidateCaps。",
       "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/legacy-forge-1.7.10-1.12.2-practices",
+      "label": "老版本 Forge（1.7.10 / 1.12.2）实务差异",
+      "path": "authored/legacy-forge-1.7.10-1.12.2-practices.md",
+      "url": "",
+      "tags": [
+        "legacy",
+        "forge",
+        "1.7.10",
+        "1.12.2",
+        "RegistryEvent",
+        "GameRegistry",
+        "MCP",
+        "SRG",
+        "tutorial"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "与现代版的关键差异：GameRegistry/RegistryEvent 注册、无 DeferredRegister 时代写法；MCP/SRG 映射环境；资源目录 assets 结构不变但模型系统 1.8/1.13 分水岭；教程资源推荐与「别拿新文档补老工程」警告。",
+      "mcHint": "1.7.10 / 1.12.2"
     },
     {
       "id": "authored/lib-architectury",
@@ -1224,6 +1341,27 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/mixin-practices-crossplatform",
+      "label": "Mixin 实务与兼容性（跨加载器）",
+      "path": "authored/mixin-practices-crossplatform.md",
+      "url": "",
+      "tags": [
+        "mixin",
+        "inject",
+        "redirect",
+        "mixinextras",
+        "wrapoperation",
+        "accessor",
+        "mixins-json",
+        "fabric",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "@Mixin 合并语义；@Inject/@Redirect/@Overwrite 兼容性排序；MixinExtras（WrapOperation 等，Fabric Loader 0.15+ 自带）优先；mixins.json 注册要点；唯一命中描述符、私有成员 Accessor；调试与冲突排查。",
+      "mcHint": "概念全版本通用；MixinExtras 随 Fabric Loader 0.15+ / NeoForge 自带"
+    },
+    {
       "id": "authored/mod-entry-init-structure",
       "label": "主类瘦身与 init 注册拆分",
       "path": "authored/mod-entry-init-structure.md",
@@ -1292,6 +1430,44 @@
       "priority": "⭐",
       "summary": "Mojang 在 26.1 去掉混淆；NeoForm 版本号改为 `<mc>-<build>`；可删 Parchment 配置。短文不是 API 规范。",
       "mcHint": ""
+    },
+    {
+      "id": "authored/neoforge-payload-networking",
+      "label": "NeoForge 自定义网络包（CustomPacketPayload / PayloadRegistrar）",
+      "path": "authored/neoforge-payload-networking.md",
+      "url": "",
+      "tags": [
+        "networking",
+        "payload",
+        "streamcodec",
+        "custompacketworkpayload",
+        "RegisterPayloadHandlersEvent",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "1.20.5+/26.x 包写法：record 实现 CustomPacketPayload + TYPE + StreamCodec.composite；RegisterPayloadHandlersEvent 注册 playToServer/playToClient 与版本号；IPayloadContext 处理端与 enqueueWork；与旧 SimpleChannel 的关系。",
+      "mcHint": "NeoForge 1.20.5+（26.X 课程源码核实）"
+    },
+    {
+      "id": "authored/ore-generation-worldgen",
+      "label": "矿物生成三层链路（ConfiguredFeature → PlacedFeature → BiomeModifier）",
+      "path": "authored/ore-generation-worldgen.md",
+      "url": "",
+      "tags": [
+        "worldgen",
+        "oregen",
+        "configured-feature",
+        "placed-feature",
+        "biome-modifier",
+        "datagen",
+        "neoforge",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "ConfiguredFeature 定义矿脉与替换目标；PlacedFeature 摆放修饰器（count/in_square/height_range/biome）；datagen BootstrapContext 写法；BiomeModifier JSON 挂到群系；三角分布与高度选择；1.18+ 高度语义。",
+      "mcHint": "1.19+/1.20+/1.21（NeoForge 示例核实于 1.21.x）"
     },
     {
       "id": "authored/patterns-framework",
@@ -1364,6 +1540,26 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/saveddata-world-persistence",
+      "label": "世界数据持久化（SavedData）与选型",
+      "path": "authored/saveddata-world-persistence.md",
+      "url": "",
+      "tags": [
+        "saveddata",
+        "DimensionDataStorage",
+        "SavedDataType",
+        "codec",
+        "persistence",
+        "world-data",
+        "neoforge",
+        "forge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "SavedData 存世界级数据；1.20.4- 的 DimensionDataStorage+Factory+save(NBT) 与 1.21.5+ 的 SavedDataType+Codec 两条 API；computeIfAbsent 挂载；setDirty 才落盘；Overworld 存跨维度数据；与 persistentData / attachment 的选型边界。",
+      "mcHint": "API 分版本：≤1.20.6 Factory/NBT；≥1.21.5 SavedDataType/Codec（1.21.1–1.21.8 过渡期两套并存，以当档文档为准）"
+    },
+    {
       "id": "authored/soft-deps-modlist",
       "label": "软依赖：ModList.isLoaded 与可选联动",
       "path": "authored/soft-deps-modlist.md",
@@ -1398,6 +1594,24 @@
       "mcHint": ""
     },
     {
+      "id": "links/bedrock-script-api-official-samples",
+      "label": "基岩版官方文档与示例仓库索引（外链）",
+      "path": "links/bedrock-script-api-official-samples.md",
+      "url": "https://learn.microsoft.com/minecraft/creator/",
+      "tags": [
+        "index",
+        "bedrock",
+        "script-api",
+        "addon",
+        "microsoft-learn",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "Microsoft Learn 基岩创作者文档主页 + 官方示例仓库（behavior pack samples、script API samples、starter kits）；本地 search_bedrock_docs 的线上补充。",
+      "mcHint": "stable / preview 双线"
+    },
+    {
       "id": "links/fabric-26.2-blog",
       "label": "Fabric for Minecraft 26.2（官方博客，外链）",
       "path": "links/fabric-26.2-blog.md",
@@ -1413,6 +1627,26 @@
       "mcHint": ""
     },
     {
+      "id": "links/fabric-wiki-tutorial-index",
+      "label": "Fabric Wiki / Fabric 文档教程总索引（外链）",
+      "path": "links/fabric-wiki-tutorial-index.md",
+      "url": "https://wiki.fabricmc.net/tutorial:start",
+      "tags": [
+        "index",
+        "fabric",
+        "wiki",
+        "mixin",
+        "commands",
+        "worldgen",
+        "publishing",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "Fabric 社区 Wiki 教程目录 + 新版 docs.fabricmc.net；Mixin 十二篇系列、命令、worldgen、SavedData、发布（Modrinth/CurseForge/GitHub Actions）等全主题指针。",
+      "mcHint": "1.14+（新版教程迁移 docs.fabricmc.net；旧页保留）"
+    },
+    {
       "id": "links/forge-docs-official",
       "label": "Forge 官方文档（外链）",
       "path": "links/forge-docs-official.md",
@@ -1426,6 +1660,44 @@
       "priority": "🟢",
       "summary": "官方 Getting Started / Concepts；API 与注册请以此为准，勿用社区教程替代。",
       "mcHint": ""
+    },
+    {
+      "id": "links/kaupenjoe-courses-index",
+      "label": "Kaupenjoe 教程课程总索引（外链）",
+      "path": "links/kaupenjoe-courses-index.md",
+      "url": "https://github.com/Tutorials-By-Kaupenjoe",
+      "tags": [
+        "index",
+        "kaupenjoe",
+        "neoforge",
+        "fabric",
+        "forge",
+        "course",
+        "link-only",
+        "all-versions"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "Kaupenjoe（Nico Kaupenjoe）全部模组开发课程仓库总目录；NeoForge/Fabric/Forge × 1.16–1.21.x 与 26.X，分支即章节，MIT 许可。",
+      "mcHint": "1.16.5–1.21.x, 26.X"
+    },
+    {
+      "id": "links/mcjty-modding-guide",
+      "label": "McJty 模组开发指南（外链）",
+      "path": "links/mcjty-modding-guide.md",
+      "url": "https://mcjty.eu/",
+      "tags": [
+        "index",
+        "mcjty",
+        "forge",
+        "neoforge",
+        "guide",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "McJty（RFTools/NeoTech 作者）的模组开发教程站；工程化视角讲解，覆盖较新 NeoForge/Forge 版本；本库未逐页核实，使用时须打开原文。",
+      "mcHint": "版本随站点更新（曾覆盖 1.19–1.21）"
     },
     {
       "id": "links/mcmod-6071-forge-engineering",

@@ -546,7 +546,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；NeoForge / For
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `diagnose_gradle`  | 检查 `build.gradle` / `gradle.properties`：ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。26.1 Loom 必须 `net.fabricmc.fabric-loom`、Java 25、禁止 `modImplementation`。liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。    |
 | `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe，`buildRecipes(RecipeOutput)`）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
-| `crash_analyze`    | 解析崩溃报告全文，推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
+| `crash_analyze`    | 解析崩溃报告全文（或传 `crashReportPath` 直接读文件），推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
 | `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |
 | `inspect_runtime` | 日志型 inspector：优先 `logsDir`/`crashReportsDir`；否则有界探测 `run/logs` 等。禁止全盘 / JVM attach。默认读文件尾部。 |
@@ -825,7 +825,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 ### 独立 CLI（`mc-skill`，78 工具全可用）
 
-flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误：
+flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。完整语义见 `[mcp-server/README.md](./mcp-server/README.md)` §独立 CLI：
 
 ```bash
 node dist/cli.js status --version 1.20.1            # 服务器状态（含 buildStatus）
