@@ -17,7 +17,7 @@ export function parseDotLang(text: string): { ok: true; value: LangMap } | { ok:
     if (!trimmed || trimmed.startsWith("#")) continue;
     const eq = trimmed.indexOf("=");
     if (eq <= 0) {
-      // 无 = 的非注释行：容错跳过并提示行号（.lang 方言差异大，不硬失败）
+      // 无 = 的非注释行：返回错误——宁可报错也不静默吞行（.lang 方言差异大，损坏行不该被跳过）
       return { ok: false, error: `.lang 第 ${i + 1} 行不是 key=value：${trimmed.slice(0, 40)}` };
     }
     const key = trimmed.slice(0, eq).trim();

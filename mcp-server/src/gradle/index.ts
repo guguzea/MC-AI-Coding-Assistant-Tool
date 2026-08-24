@@ -19,11 +19,11 @@ import {
 export { detectMinecraftVersion } from "../utils/minecraft-version.js";
 
 function hasJavaLanguageVersionDecl(src: string): boolean {
-  return /JavaLanguageVersion\.of\s*\(/.test(src);
+  return /JavaLanguageVersion\.of\s*\(|JavaVersion\.VERSION_\d+\b/.test(src);
 }
 
 function hasJavaLanguageVersionOf(src: string, n: number): boolean {
-  return new RegExp(`JavaLanguageVersion\\.of\\(\\s*${n}\\s*\\)`).test(src);
+  return new RegExp(`(?:JavaLanguageVersion\\.of\\(\\s*${n}\\s*\\)|JavaVersion\\.VERSION_${n}\\b)`).test(src);
 }
 
 export interface GradleQuery {

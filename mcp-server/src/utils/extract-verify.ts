@@ -15,7 +15,11 @@ export interface ExtractVerifyResult {
 }
 
 function walkRelTree(root: string, base: string, depth: number, seenReal: Set<string>, files: string[], dirs: string[]): void {
-  if (depth > 32) return;
+  if (depth > 32) {
+    // C35：深层多余文件不得静默漏检——塞入哨兵条目让清单比对失败
+    files.push("__MAX_DEPTH_EXCEEDED__");
+    return;
+  }
   for (const name of readdirSync(root)) {
     const p = join(root, name);
     let st;

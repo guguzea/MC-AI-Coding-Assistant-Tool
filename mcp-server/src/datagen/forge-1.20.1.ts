@@ -63,6 +63,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -104,6 +105,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -151,6 +153,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.data.event.GatherDataEvent;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -214,6 +217,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -316,6 +320,7 @@ package com.example.${modId}.init;
 
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -346,6 +351,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.SoundDefinitionsProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
+// 注：DeferredRegister 需在 @Mod 主类构造中挂 modEventBus（register(modEventBus)），否则运行期 get() 会失败（registry demo 通用提醒）
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;

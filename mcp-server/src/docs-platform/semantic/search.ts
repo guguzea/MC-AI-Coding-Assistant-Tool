@@ -357,6 +357,7 @@ export async function semanticSearch(
   dataRoot: string,
   limit = 10,
 ): Promise<SemanticHit[] | null> {
+  if (!String(query ?? "").trim()) return null; // C19：空查询在 hybrid 下不得直达 embedder
   const dbPath = semanticDbPath(dataRoot, platform, version, source);
   const db = openSemanticDb(dbPath);
   if (!db) return null;

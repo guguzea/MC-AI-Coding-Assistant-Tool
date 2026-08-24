@@ -49,7 +49,7 @@ export function analyzeLog(input: AnalyzeLogInput): Record<string, unknown> {
   const truncated = Buffer.byteLength(text, "utf8") > LOG_MAX;
   if (truncated) text = text.slice(0, LOG_MAX);
   const lines = text.split(/\r?\n/);
-  const errors = lines.filter((l) => /ERROR|Exception|Caused by:/i.test(l)).slice(0, 30);
+  const errors = lines.filter((l) => /\b(?:ERROR|Exception|Caused by:)\b/i.test(l)).slice(0, 30);
   const warnings = lines.filter((l) => /WARN/i.test(l)).slice(0, 20);
 
   let crash = null;
@@ -537,7 +537,7 @@ function hasMinecraftVersionHint(text: string): boolean {
 function detectTraps(loader: DetectedLoader, text: string): DependencyTrap[] {
   const traps: DependencyTrap[] = [];
   if ((loader === "fabric" || loader === "quilt") && hasKeyword(text, "trinkets")) {
-    if (hintAtLeastMinecraft(text, [1, 21, 4])) {
+    if (/trinkets[\s\S]{0,160}1\.21\.4|1\.21\.4[\s\S]{0,160}trinkets/i.test(text)) {
       traps.push({
         code: "trinkets_stale",
         message: "Trinkets 已停在 ~1.21.1；1.21.4+ 多自研/原版机制（如 Data Component），建议核对支持窗口或改原版机制",
@@ -662,8 +662,9 @@ export function checkDependencies(
   if ((detectedLoader === "fabric" || detectedLoader === "quilt") && hasKeyword(text, "curios") && !hasKeyword(text, "trinkets")) {
     suggestions.push("curios_on_fabric：Fabric/Quilt 上检测到 Curios 依赖——Curios 无 Fabric 版，饰品标准是 Trinkets");
   }
-  // cloth_frozen：Cloth Config 已冷冻，新模组语境 → 建议 YACL/Fzzy
-  if (hasKeyword(text, "cloth-config") || hasKeyword(text, "cloth_config")) {
+  // cloth_frozen：Cloth Config 已冷冻，新模组语境 → 建议 YACL/Fzzy（Forge/Neo 项目不弹，避免噪音）
+  if ((hasKeyword(text, "cloth-config") || hasKeyword(text, "cloth_config")) &&
+      (detectedLoader === "fabric" || detectedLoader === "quilt" || !/net\.minecraftforge|net\.neoforged/.test(text))) {
     suggestions.push("cloth_frozen：Cloth Config 已冷冻（维护停滞），新模组可考虑 YACL / Fzzy Config");
   }
 

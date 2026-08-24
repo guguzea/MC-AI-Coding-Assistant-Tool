@@ -168,6 +168,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     `${cacheJar}.sidecar`,
     JSON.stringify(
       {
+        schemaVersion: "1",
         mappingsVersion,
         mappingsSource: summary.mappingsSource,
         sourceJarSha256: jarSha,

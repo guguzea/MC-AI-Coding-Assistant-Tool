@@ -95,6 +95,15 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
 
   let re: RegExp | null = null;
   if (args.pattern) {
+    if ((args.query ?? "").length > 512) {
+      return fail(
+        actionable(
+          "INVALID_INPUT",
+          "pattern 超长（>512 字符）可能引发灾难回溯，建议去掉 pattern 用子串匹配或缩短表达式",
+          ["不带 pattern 的子串匹配", "拆分多次查询"],
+        ),
+      );
+    }
     try {
       re = new RegExp(query, "i");
     } catch (err) {

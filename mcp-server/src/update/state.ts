@@ -2,7 +2,7 @@
  * Persist update check / apply state under data/.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { resolveDataDir } from "../utils/path.js";
 
@@ -41,7 +41,16 @@ export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string):
   mkdirSync(dirname(p), { recursive: true });
   const cur = readUpdateState(dataDir);
   const next: UpdateState = { ...cur, ...patch };
-  writeFileSync(p, JSON.stringify(next, null, 2) + "\n", "utf8");
+  const payload = JSON.stringify(next, null, 2) + "\n";
+  if (existsSync(p) && readFileSync(p, "utf8") === payload) return next; // 无变化不写（C74）
+  const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
+  try {
+    writeFileSync(tmp, payload, "utf8");
+    renameSync(tmp, p);
+  } catch (err) {
+    rmSync(tmp, { force: true });
+    throw err;
+  }
   return next;
 }
 

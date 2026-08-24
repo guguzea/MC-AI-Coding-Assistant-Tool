@@ -3,6 +3,7 @@ import { closeSync, existsSync, openSync, readFileSync, readSync } from "fs";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export type SidecarInfo = {
+  schemaVersion?: string;
   mappingsVersion?: string;
   mappingsSource?: string;
   sourceJarSha256?: string;
@@ -36,6 +37,7 @@ export function readSidecar(jarPath: string): SidecarInfo {
       const j = JSON.parse(readFileSync(jsonSide, "utf8")) as SidecarInfo;
       if (j.mappingsVersion) {
         return {
+          schemaVersion: j.schemaVersion ? String(j.schemaVersion) : undefined,
           mappingsVersion: String(j.mappingsVersion),
           mappingsSource: j.mappingsSource ? String(j.mappingsSource) : "json-sidecar",
           sourceJarSha256: j.sourceJarSha256 ? String(j.sourceJarSha256) : undefined,

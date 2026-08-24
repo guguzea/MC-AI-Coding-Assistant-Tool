@@ -76,8 +76,8 @@ export function parseMinecraftVersion(input: string): VersionInfo {
   const minor = Number(m[2]);
   const patch = m[3] !== undefined ? Number(m[3]) : null;
 
-  // 26.1+ 去混淆时代（版本号已改到 major>=2）
-  if (major >= 2) {
+  // 26.1+ 去混淆时代（版本号已改到 major>=2）；27+ 视为非法（guard，防止 "999.999" 放行）
+  if (major >= 2 && major <= 27) {
     return {
       version,
       valid: true,

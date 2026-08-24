@@ -34,18 +34,37 @@ export async function downloadFile(
   const timeoutMs = opts.timeoutMs ?? 600_000;
   const partPath = dest + ".part";
 
-  let res: Response;
-  try {
-    res = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(timeoutMs) });
-  } catch (err) {
-    throw new DownloadError("DOWNLOAD_FAILED", `${label}: 请求失败 ${(err as Error).message}`);
+  // C34：网络错误 / 5xx / 429 做两次退避重试（哈希不匹配与 4xx 不重试）
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let res: Response | null = null;
+  let lastErr = "";
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      res = await fetch(url, { redirect: "follow", signal: AbortSignal.timeout(timeoutMs) });
+    } catch (err) {
+      lastErr = `${label}: 请求失败 ${(err as Error).message}`;
+      res = null;
+    }
+    if (!res) {
+      if (attempt < 2) {
+        await sleep(500 * (attempt + 1));
+        continue;
+      }
+      throw new DownloadError("DOWNLOAD_FAILED", lastErr);
+    }
+    if (!res.ok || !res.body) {
+      if ((res.status >= 500 || res.status === 429) && attempt < 2) {
+        await sleep(1200 * (attempt + 1));
+        continue;
+      }
+      throw new DownloadError(
+        "DOWNLOAD_FAILED",
+        `${label}: HTTP ${res.status} ${res.statusText}`,
+      );
+    }
+    break;
   }
-  if (!res.ok || !res.body) {
-    throw new DownloadError(
-      "DOWNLOAD_FAILED",
-      `${label}: HTTP ${res.status} ${res.statusText}`,
-    );
-  }
+  if (!res) throw new DownloadError("DOWNLOAD_FAILED", lastErr);
 
   const sha256 = createHash("sha256");
   const sha1 = createHash("sha1");

@@ -135,7 +135,7 @@ export const VERSION_FALLBACK: Record<string, string | null> = {
   const FORGE_COMPATIBLE_VERSIONS = new Set(["1.20.1"]);
 
   /** neoforge 数据子目录名（位于 neoforge_<version>/ 内） */
-  const NEOPORGE_DIR_NAME = "neoforge-docs";
+  const NEOFORGE_DIR_NAME = "neoforge-docs";
 
 // ── Store 实现 ──────────────────────────────────────────────────────────
 
@@ -164,7 +164,7 @@ export class NeoForgeDocStore {
   /**
    * @param dataDir 数据根目录（包含所有 neoforge_<version> 子目录的根）。
    *                通常是 `resolveDataDir()` 返回的 `data/` 路径。
-   *                内部路径拼接：`<dataDir>/neoforge_<version>/${NEOPORGE_DIR_NAME}/<version>/`
+   *                内部路径拼接：`<dataDir>/neoforge_<version>/${NEOFORGE_DIR_NAME}/<version>/`
    */
   constructor(private readonly dataDir: string) {}
 
@@ -191,9 +191,9 @@ export class NeoForgeDocStore {
     }
   }
 
-  /** 给定 version，返回 `<dataDir>/neoforge_<version>/${NEOPORGE_DIR_NAME}/<version>/` */
+  /** 给定 version，返回 `<dataDir>/neoforge_<version>/${NEOFORGE_DIR_NAME}/<version>/` */
   private versionDataDir(version: string): string {
-    return join(this.dataDir, `neoforge_${version}`, NEOPORGE_DIR_NAME, version);
+    return join(this.dataDir, `neoforge_${version}`, NEOFORGE_DIR_NAME, version);
   }
 
   // ── 工具方法 ────────────────────────────────────────────────────────────
