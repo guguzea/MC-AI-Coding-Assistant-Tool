@@ -62,7 +62,7 @@ MC_skill/
 │   ├── batch-decompile.mjs      # 分批反编译（源码 → $MC_SKILL_CACHE，不入库）
 │   └── merge-verified-api.mjs   # 回填 catalog verifiedApi
 │
-├── mcp-server/                  # 本地 stdio MCP Server（78 个工具）
+├── mcp-server/                  # 本地 stdio MCP Server（79 个工具）
 │   ├── src/                     # 工具实现（api / docs / diagnostics / wave…）
 │   ├── scripts/                 # 文档抓取、语义索引、数据审计；含 build-library-catalog-from-authored.mjs
 │   └── data/                    # 随仓分发的 MCP 侧数据（非 MC_SKILL_DATA）
@@ -199,7 +199,7 @@ MC_skill/
 **配置本地 MCP Server：**
 
 > 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，78 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 要求 **Node.js >= 22.5**（**22.5–22.12 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，79 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 ## 社区知识与库模组
 
