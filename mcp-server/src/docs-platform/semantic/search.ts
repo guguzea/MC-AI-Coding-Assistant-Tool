@@ -208,7 +208,7 @@ export function cjkBigrams(query: string): string[] {
   return out.slice(0, 6);
 }
 
-/** unicode61 索引把连续 CJK 当一个 token，FTS MATCH 无法拆词——CJK-only 查询走 LIKE 逐 bigram 兜底 */
+/** unicode61 索引把连续 CJK 当一个 token，FTS MATCH 无法拆词——CJK-only 查询走 LIKE bigram（OR 召回优先，命中数排序） */
 function cjkLikeDocIdsSync(query: string, db: DatabaseSync, limit: number): string[] {
   const bigrams = cjkBigrams(query);
   if (bigrams.length === 0) return [];
@@ -218,7 +218,7 @@ function cjkLikeDocIdsSync(query: string, db: DatabaseSync, limit: number): stri
       .prepare(
         `SELECT c.doc_id AS doc_id, COUNT(*) AS hits
          FROM chunks c
-         WHERE ${conds.join(" AND ")}
+         WHERE ${conds.join(" OR ")}
          GROUP BY c.doc_id ORDER BY hits DESC, MIN(c.chunk_order) LIMIT ?`,
       )
       .all(...bigrams.map((b) => `%${b}%`), Math.max(1, Math.min(100, limit))) as Array<{ doc_id: string }>;
