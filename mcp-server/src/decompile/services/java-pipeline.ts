@@ -16,7 +16,7 @@ import {
 } from "../cache.js";
 import { runJava } from "../java/java-process.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
-import { resolveYarnMappings } from "../downloaders/yarn.js";
+import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import {
   ensureResourceJar,
   VINEFLOWER_DEF,
@@ -85,7 +85,7 @@ export async function prepareInputs(
       tinyRemapper = await ensureResourceJar(TINY_REMAPPER_DEF, { cacheRoot: cache.root });
       if (yarn) {
         const yarnJarPath = join(cache.mappings, `yarn-${version}.jar`);
-        if (!existsSync(yarnJarPath)) {
+        if (!mappingCacheViable(cache.root, yarnJarPath, `mc-mappings:${version}:yarn`)) {
           const info = await resolveYarnMappings(version);
           const result = await downloadFile(info.jarUrl, yarnJarPath, {
             label: `yarn mappings ${info.build}`,
@@ -98,7 +98,7 @@ export async function prepareInputs(
         mappings = yarnJarPath;
       } else {
         const mojmapPath = join(cache.mappings, `mojmap-${version}.txt`);
-        if (!existsSync(mojmapPath)) {
+        if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${version}:mojmap`)) {
           const entry = await resolveMojangVersion(version);
           if (!entry.clientMappingsUrl) {
             throw new DownloadError("MAPPINGS_NOT_FOUND", `版本 ${version} 的 manifest 无 client_mappings 下载项`);

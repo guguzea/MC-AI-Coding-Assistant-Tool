@@ -10,6 +10,7 @@ import {
   mkdirSync,
   readFileSync,
   writeFileSync,
+  renameSync,
   readdirSync,
   statSync,
   cpSync,
@@ -700,11 +701,23 @@ export function unpackMdkArchive(opts: {
 export function writebackSha256IfNull(id: string, hash: string): boolean {
   const p = checksumsPath();
   if (!existsSync(p)) return false;
-  const raw = JSON.parse(readFileSync(p, "utf8")) as { note?: string; entries: MdkChecksumEntry[] };
+  let raw: { note?: string; entries: MdkChecksumEntry[] };
+  try {
+    raw = JSON.parse(readFileSync(p, "utf8")) as { note?: string; entries: MdkChecksumEntry[] };
+  } catch {
+    return false; // checksum 文件损坏：失败关闭，不覆盖
+  }
   const e = raw.entries?.find((x) => x.id === id);
   if (!e || e.sha256) return false;
   e.sha256 = hash;
-  writeFileSync(p, JSON.stringify(raw, null, 2) + "\n", "utf8");
+  const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
+  try {
+    writeFileSync(tmp, JSON.stringify(raw, null, 2) + "\n", "utf8");
+    renameSync(tmp, p);
+  } catch {
+    rmSync(tmp, { force: true });
+    return false;
+  }
   return true;
 }
 

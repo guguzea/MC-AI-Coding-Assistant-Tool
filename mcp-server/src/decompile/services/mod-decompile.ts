@@ -16,7 +16,7 @@ import { ensureCachePaths, openCacheDb, setArtifact, getArtifact } from "../cach
 import { probeJava, runJava, toolchainActionable, skipDownloadsEnabled, downloadDisabledActionable } from "../java/java-process.js";
 import { ensureResourceJar, VINEFLOWER_DEF, TINY_REMAPPER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
-import { resolveYarnMappings } from "../downloaders/yarn.js";
+import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
 import { analyzeModJar } from "./mod-analyzer.js";
 
@@ -190,7 +190,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
           if (mapping === "yarn") {
             const info = await resolveYarnMappings(args.version);
             const yarnPath = join(cache.mappings, `yarn-${args.version}.jar`);
-            if (!existsSync(yarnPath)) {
+            if (!mappingCacheViable(cache.root, yarnPath, `mc-mappings:${args.version}:yarn`)) {
               const dl = await downloadFile(info.jarUrl, yarnPath, { label: `yarn mappings ${info.build}` });
               const db = openCacheDb(cache.root);
               try {
@@ -209,8 +209,17 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
               throw new DownloadError("MAPPINGS_NOT_FOUND", `版本 ${args.version} 无 client_mappings`);
             }
             const mojmapPath = join(cache.mappings, `mojmap-${args.version}.txt`);
-            if (!existsSync(mojmapPath)) {
-              await downloadFile(entry.clientMappingsUrl, mojmapPath, { label: `mojmap ${args.version}` });
+            if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${args.version}:mojmap`)) {
+              const dl = await downloadFile(entry.clientMappingsUrl, mojmapPath, { label: `mojmap ${args.version}` });
+              const db = openCacheDb(cache.root);
+              try {
+                setArtifact(db, `mc-mappings:${args.version}:mojmap`, "mappings", mojmapPath, {
+                  version: args.version,
+                  sha256: dl.sha256,
+                });
+              } finally {
+                db.close();
+              }
             }
             mappings = mojmapPath;
           }
