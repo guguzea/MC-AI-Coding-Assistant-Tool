@@ -20,6 +20,7 @@ import { dirname, join, resolve, sep, isAbsolute } from "path";
 import { fileURLToPath } from "url";
 import { crc32 } from "zlib";
 import { resolveCacheRoot } from "../decompile/cache.js";
+import { escapeRegExp } from "../utils/regex.js";
 import { assertWritablePath, ProjectPathError } from "../utils/project-sandbox.js";
 import { verifyExtractedTree } from "../utils/extract-verify.js";
 import * as zipPathGuard from "../utils/zip-path-guard.js";
@@ -219,7 +220,7 @@ export function sha256Buf(buf: Buffer): string {
 
 function whichCmd(cmd: string): string | null {
   const bin = process.platform === "win32" ? "where" : "which";
-  const r = spawnSync(bin, [cmd], { encoding: "utf8", windowsHide: true });
+  const r = spawnSync(bin, [cmd], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
   if (r.status !== 0) return null;
   const line = (r.stdout || "")
     .split(/\r?\n/)
@@ -246,7 +247,7 @@ export function probeUnzipTool(): UnzipTool | null {
     ? "C:\\Windows\\System32\\tar.exe"
     : null);
   if (tar) {
-    const help = spawnSync(tar, ["--help"], { encoding: "utf8", windowsHide: true });
+    const help = spawnSync(tar, ["--help"], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
     const text = `${help.stdout || ""}\n${help.stderr || ""}`;
     // Windows 不整体短路接受任意 PATH tar（MSYS/GnuWin32 的 GNU tar 解不了 zip）；
     // 仅 help 文本证明是 bsdtar/libarchive，或解析到 System32 自带的 bsdtar 时才接受。
@@ -283,11 +284,11 @@ export function assertNoZipSlip(names: string[], destRoot: string): { ok: true }
 
 export function listZipEntries(zipPath: string, tool: UnzipTool): string[] {
   if (tool.kind === "unzip") {
-    const r = spawnSync(tool.executable, ["-Z", "-1", zipPath], { encoding: "utf8", windowsHide: true });
+    const r = spawnSync(tool.executable, ["-Z", "-1", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
     if (r.status === 0 && r.stdout) {
       return r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
     }
-    const l = spawnSync(tool.executable, ["-l", zipPath], { encoding: "utf8", windowsHide: true });
+    const l = spawnSync(tool.executable, ["-l", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
     const lines = (l.stdout || "").split(/\r?\n/);
     const names: string[] = [];
     let started = false;
@@ -303,7 +304,7 @@ export function listZipEntries(zipPath: string, tool: UnzipTool): string[] {
     return names;
   }
   if (tool.kind === "7z") {
-    const r = spawnSync(tool.executable, ["l", "-slt", zipPath], { encoding: "utf8", windowsHide: true });
+    const r = spawnSync(tool.executable, ["l", "-slt", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
     const names: string[] = [];
     for (const line of (r.stdout || "").split(/\r?\n/)) {
       const m = line.match(/^Path = (.+)$/);
@@ -311,7 +312,7 @@ export function listZipEntries(zipPath: string, tool: UnzipTool): string[] {
     }
     return names.filter((n) => n !== zipPath);
   }
-  const r = spawnSync(tool.executable, ["-tf", zipPath], { encoding: "utf8", windowsHide: true });
+  const r = spawnSync(tool.executable, ["-tf", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
   if (r.status !== 0) {
     throw new Error(`tar -tf 失败：${r.stderr || r.stdout || r.status}`);
   }
@@ -324,14 +325,52 @@ export function listZipEntries(zipPath: string, tool: UnzipTool): string[] {
 export function extractZip(zipPath: string, destDir: string, tool: UnzipTool): void {
   mkdirSync(destDir, { recursive: true });
   if (tool.kind === "unzip") {
-    execFileSync(tool.executable, ["-q", "-o", zipPath, "-d", destDir], { windowsHide: true });
+    execFileSync(tool.executable, ["-q", "-o", zipPath, "-d", destDir], { windowsHide: true, timeout: 120_000 });
     return;
   }
   if (tool.kind === "7z") {
-    execFileSync(tool.executable, ["x", zipPath, `-o${destDir}`, "-y"], { windowsHide: true });
+    execFileSync(tool.executable, ["x", zipPath, `-o${destDir}`, "-y"], { windowsHide: true, timeout: 120_000 });
     return;
   }
-  execFileSync(tool.executable, ["-xf", zipPath, "-C", destDir], { windowsHide: true });
+  execFileSync(tool.executable, ["-xf", zipPath, "-C", destDir], { windowsHide: true, timeout: 120_000 });
+}
+
+export const MAX_UNPACK_BYTES = 2 * 1024 * 1024 * 1024;
+
+/** 估算 zip 解压总体积（字节）；无法读取体积时返回 null（调用方按其策略处理） */
+export function zipUncompressedBytes(zipPath: string, tool: UnzipTool): number | null {
+  try {
+    if (tool.kind === "unzip") {
+      const r = spawnSync(tool.executable, ["-l", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
+      if (r.status !== 0) return null;
+      let total = 0;
+      for (const line of (r.stdout ?? "").split(/\r?\n/)) {
+        const m = line.match(/^\s*\d+\s+(\d+)\s/);
+        if (m) total += Number(m[1]);
+      }
+      return total;
+    }
+    if (tool.kind === "7z") {
+      const r = spawnSync(tool.executable, ["l", "-slt", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
+      if (r.status !== 0) return null;
+      let total = 0;
+      for (const line of (r.stdout ?? "").split(/\r?\n/)) {
+        const m = line.match(/^Size = (\d+)/);
+        if (m) total += Number(m[1]);
+      }
+      return total;
+    }
+    const r = spawnSync(tool.executable, ["-tvf", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
+    if (r.status !== 0) return null;
+    let total = 0;
+    for (const line of (r.stdout ?? "").split(/\r?\n/)) {
+      const m = line.match(/^[^\s]+\s+[^\s]+\s+[^\s]+\s+(\d+)\s/);
+      if (m) total += Number(m[1]);
+    }
+    return total;
+  } catch {
+    return null;
+  }
 }
 
 /** 解压后若根下只有一个目录则进入该目录，否则解压根本身即为 unpackedRoot */
@@ -468,7 +507,7 @@ export function parseExampleEntry(root: string): {
           }
           if (st.isFile() && n.endsWith(".java")) {
             const src = readFileSync(full, "utf8");
-            if (new RegExp(`@Mod\\s*\\(\\s*"${modId}"`).test(src) || new RegExp(`@Mod\\([^)]*${modId}`).test(src)) {
+            if (new RegExp(`@Mod\\s*\\(\\s*"${escapeRegExp(modId)}"`).test(src) || new RegExp(`@Mod\\([^)]*${escapeRegExp(modId)}`).test(src)) {
               const pkg = src.match(/package\s+([a-zA-Z0-9_.]+)\s*;/)?.[1];
               const cls = src.match(/\bclass\s+([A-Za-z0-9_]+)/)?.[1];
               if (pkg && cls) {
@@ -639,6 +678,20 @@ export function unpackMdkArchive(opts: {
   }
 
   const unpackedDir = join(opts.destCache, "unpacked");
+  const unpackBytes = zipUncompressedBytes(archivePath, tool);
+  if (unpackBytes !== null && unpackBytes > MAX_UNPACK_BYTES) {
+    return {
+      ok: false,
+      sha256: hash,
+      archivePath,
+      error: {
+        code: "ZIP_BUDGET",
+        message:
+          `解压体积预算 ${(unpackBytes / 1048576).toFixed(0)}MB 超过上限 ` +
+          `${(MAX_UNPACK_BYTES / 1048576).toFixed(0)}MB（疑似解压炸弹或损坏包），拒绝解压`,
+      },
+    };
+  }
   try {
     if (existsSync(unpackedDir)) rmSync(unpackedDir, { recursive: true, force: true });
     mkdirSync(unpackedDir, { recursive: true });

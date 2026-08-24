@@ -8,11 +8,11 @@
  * 仅本地绝对路径 jar；缓存只写 $MC_SKILL_CACHE；不触碰项目目录。
  */
 
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { basename, join, relative, sep } from "path";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
-import { ensureCachePaths, openCacheDb, setArtifact, getArtifact } from "../cache.js";
+import { ensureCachePaths, openCacheDb, setArtifact, getArtifact, acquireCacheLock, CacheLockBusyError } from "../cache.js";
 import { probeJava, runJava, toolchainActionable, skipDownloadsEnabled, downloadDisabledActionable } from "../java/java-process.js";
 import { ensureResourceJar, VINEFLOWER_DEF, TINY_REMAPPER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
@@ -155,7 +155,25 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   const cache = ensureCachePaths();
   const outDir = join(cache.decompiledMods, modId, modVersion);
 
-  if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0) {
+  // 并发防护：同一 jar 的反编译/重映射只允许一个任务持有缓存锁（B13）
+  let release: (() => void) | undefined;
+  try {
+    release = await acquireCacheLock(
+      cache.root,
+      `mod-decompile:${modId}:${modVersion}:${args.jarPath}`,
+      10 * 60_000,
+    );
+  } catch (err) {
+    if (err instanceof CacheLockBusyError) {
+      return withAction(
+        { found: false, error: "LOCK_BUSY", jarPath: args.jarPath },
+        actionable("LOCK_BUSY", "另一并发反编译任务持有该模组的缓存锁。", ["稍后重试（或确认无并发后清除过期锁）"]),
+      );
+    }
+    throw err;
+  }
+  try {
+  if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0 && readDecompiledMeta(outDir).found) {
     return {
       found: true,
       modId,
@@ -297,6 +315,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
 
   recordDecompiledDir(args.jarPath, outDir, modId, cache.root);
+  writeDecompiledMeta(outDir, args.jarPath);
   return {
     found: true,
     modId,
@@ -312,9 +331,22 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         ? `重映射失败已跳过（${remapError}），按原始字节码反编译（名称可能为混淆/中间名）。可用 search_mod_code 检索。`
         : "未重映射（26.1+ 免 remap，或未提供匹配版本）。可用 search_mod_code 检索。",
   };
+  } finally {
+    release?.();
+  }
 }
 
-/** 可选项：读取反编译目录信息（供 search_mod_code 使用） */
+/** 记录本次反编译完成标记（search_mod_code / readDecompiledMeta 以此为缓存完成判据） */
+export function writeDecompiledMeta(dir: string, jarPath: string): void {
+  const metaFile = join(dir, ".mc-skill-decompiled.json");
+  writeFileSync(
+    metaFile,
+    JSON.stringify({ jarPath, completedAt: new Date().toISOString() }, null, 2) + "\n",
+    "utf8",
+  );
+}
+
+/** 读取反编译目录信息（search_mod_code / 缓存命中判据） */
 export function readDecompiledMeta(dir: string): { found: boolean; jarPath?: string; note?: string } {
   const metaFile = join(dir, ".mc-skill-decompiled.json");
   if (!existsSync(metaFile)) return { found: false };

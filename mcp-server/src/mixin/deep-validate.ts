@@ -407,7 +407,8 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
               }
               for (const c of codes) {
                 if (c.target.name === atInfo.targetName &&
-                    (!atInfo.targetDesc || c.target.desc === atInfo.targetDesc)) {
+                    (!atInfo.targetDesc || c.target.desc === atInfo.targetDesc) &&
+                    (!atInfo.targetOwner || c.target.owner === atInfo.targetOwner)) {
                   callFound = true;
                   if (atInfo.targetOwner && c.target.owner !== atOwnerHit) {
                     warnings.push(`@At target 调用点 owner 不同（字节码实际为 ${c.target.owner}，期望 ${atOwnerHit}）——若为继承调用可忽略`);
