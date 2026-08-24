@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **78** 个 MCP 工具：`src/tool-registry.ts` **44** + `src/wave/register.ts` **34**
+- 共 **79** 个 MCP 工具：`src/tool-registry.ts` **44** + `src/wave/register.ts` **35**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -78,7 +78,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **78**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **79**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
