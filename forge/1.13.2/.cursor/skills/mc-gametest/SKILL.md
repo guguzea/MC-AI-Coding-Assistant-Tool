@@ -1,6 +1,6 @@
 ---
 name: mc-gametest
-description: GameTest 结构测试。触发词：GameTest、@GameTest
+description: GameTest 结构测试（本版本不可用）。触发词：GameTest、@GameTest
 platform: forge
 version: "1.13.2"
 dependencies: []
@@ -9,14 +9,5 @@ mappings: mcp
 
 # mc-gametest
 
-> Wave D 技能骨架（forge 1.13.2）。详细规则见对应 `.cursor/rules/` 与 MCP `search_forge_docs` / 专题工具。
-
-## 快速入口
-
-- 注册与生命周期：`mc-registry`、`01-registry.mdc`
-- 数据与资源：`mc-datagen`、`mc-datapack`、`generate_*` MCP 工具
-- 反模式：`forge/1.13.2/knowledge/antipatterns/`
-
-## 下一步
-
-根据任务打开官方文档全文（`get_doc_full`）或社区短文（遵守 `community_knowledge/AGENT_USAGE.md`）。
+> ⛔ **本版本（Forge 1.13.2）的官方文档/API 索引中不存在 `@GameTest` / GameTest API**（GameTest 为后续 MC 版本线的特性）——不要为本版本生成任何 GameTest 代码。
+> 需要结构测试时，请查看目标 MC 版本线（1.16+）的 gametest 文档与对应版本包的 mc-gametest 技能。

@@ -62,7 +62,7 @@
 | 注册 API | DeferredRegister.create(...) | Registry.register(Registry.ITEM, id, item) |
 | Mod 入口 | @Mod 注解 + FMLJavaModLoadingContext | ModInitializer 接口 + Fabric.mod.json entrypoints |
 | Mixin | 需配置 org.spongepowered.mixin 插件 | **需要显式 Mixin 插件配置** |
-| Mappings | MCP（方法名如 func_12345_a） | **Yarn**（方法名如 method_12345）|
+| Mappings | MCP（方法名如 func_12345_a） | **Yarn**（可读名如 `readNbt`；`method_12345` 是 Intermediary 混淆名，不是 Yarn）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
 | 事件系统 | Forge 事件总线（@SubscribeEvent） | **Fabric 事件回调**（Event 回调接口）|
 

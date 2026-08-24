@@ -9,6 +9,7 @@
 | 文档 | search_neoforge_docs version=1.20.1 |
 | 注册 | DeferredRegister 与 RegisterEvent（1.20.1/concepts_registries） |
 | 禁止 | 把 1.20.4+ DeferredBlock / RegisterPayloadHandlersEvent / AttachmentType 当本档已核；包名禁止默写 |
+| 技能 | 本档无内置技能；所需技能走 Forge 1.20.1 overlay（02–08/10）与知识库 libs（见根 README） |
 
 1.20.1 = Forge 兼容层：`activate_platform_pack session` 注入 Forge 1.20.1 的 02–08/10（SimpleChannel / Capability 形态）。仍禁止读 `neoforge/1.20.4` 邻档。
 

@@ -12,7 +12,7 @@
 - **禁止**通过 `new` 构造函数直接创建并注册方块/物品/实体
 - 所有注册必须通过 **Forge 事件系统**（最终由 `RegistryEvent.Register` 触发）
 - mod ID 必须与 `mods.toml` 中的 `modId` 完全一致
-- **推荐使用 `DeferredRegister`**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.18 起即可用于所有注册表，1.15.2 完全支持
+- **推荐使用 `DeferredRegister`**：`DeferredRegister` 是 Forge 官方推荐的注册方式，自 Forge 1.14 起引入（1.14.4 起可用），1.15.2 完全支持
 - `RegistryEvent.Register` 仍可用，但不推荐（`DeferredRegister` 封装了它，更安全）
 
 ### 注册时机
