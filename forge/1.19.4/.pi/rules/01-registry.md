@@ -111,7 +111,7 @@ IF 注册 方块实体（BlockEntity）
 IF 注册 实体（Entity）
   → 使用 DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, MOD_ID)
   → 在 ENTITY_TYPES.register() 中注册 EntityType
-  → 必须在 mods.toml 中声明 entity 字段
+  → mods.toml 没有 entity 字段；实体走注册 API（见本包 01-registry）
 
 IF 注册 流体
   → Fluid 注册 + FluidType 注册（两个 DeferredRegister）

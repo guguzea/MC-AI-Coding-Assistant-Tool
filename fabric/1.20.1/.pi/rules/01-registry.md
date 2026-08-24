@@ -87,7 +87,7 @@ IF 一个方块有 BlockEntity
   → 方块的 BlockEntityProvider 接口提供 BlockEntity 实例
 
 IF 一个物品有 Fabric API Capability
-  → Capability 注册应在 onInitialize() 中通过 Fabric API 处理
+  → 能力/API 查找统一走 Fabric API 提供的 lookup 机制，在 onInitialize() 中注册（具体入口以 fabric-api 源码为准）
 ```
 
 ---

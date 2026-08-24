@@ -72,6 +72,7 @@ id 'net.neoforged.gradle.userdev'
 ```
 
 如果匹配 → 先 `list_neoforge_versions` + 工程元数据锁定**精确**版本，再调用 `activate_platform_pack action=session`（`platform=neoforge` + 精确版本；`1.20.1` / `1.20.4` / `1.20.6` / `1.21.1` / `1.21.3` / `1.21.5` / `1.21.8` / `1.21.10` / `1.21.11` / `26.1`）。**禁止跨目录读邻档 00–10，禁止把 `neoforge/<ver>/.cursor` 当加载器 Read。** `1.20.1` 本档核实表 + 短规则（Forge 兼容数据），禁止用 1.20.4 00–10 顶上。不为 26.1.1 单造规则树；26.1 ≠ 1.21.1。
+> 注记（D9）：NeoForge 1.20.1（20.1.x，Forge 47 兼容层）使用 `mods.toml` + `net.minecraftforge.*` 包，根决策树与 `detect_mod_project` 会将其归为 Forge——功能等价；该版本规则树在 neoforge/1.20.1。
 
 工作流提醒（**不是硬门**）：仅当用户要走完整新方块 / 新物品 / 方块实体 / 新实体 / GUI / Mixin / 世界生成 / 配置 / GameTest / 崩溃分诊 / 移植 / 从零构建 / 环境搭建 / 真机循环 / 发布清单 / 汉化 / 反编译研究时才调用 `get_workflow_template`（`mc-new-item` / `mc-new-blockentity` / `mc-mixin` / `mc-worldgen` / `mc-config` / `mc-gametest` / `mc-publish` / `mc-setup-env` 等）。改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。从零工程才 `download_official_mdk`。
 

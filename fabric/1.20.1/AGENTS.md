@@ -14,7 +14,7 @@
 |------|-----|
 | 平台 | Fabric |
 | Minecraft 版本 | 1.20.1 |
-| 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
+| 注册方式 | `onInitialize()` 内直接调用，或静态字段 + `onInitialize()` 引用触发加载 |
 | Java 版本 | **Java 17**（Fabric 1.20.1 最低要求） |
 | Gradle | Gradle 8.x + Loom |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.20.1+build.10:v2`）|
@@ -148,7 +148,7 @@ fabric-mod/
 - ❌ 不要在 Fabric 项目中使用 Forge 的 `DeferredRegister`
 - ❌ 不要在 Fabric 项目中使用 `@Mod` 或 `mods.toml`
 - ❌ 不要混用 Yarn 和 MCP 映射
-- ❌ 不要在 `onInitialize()` 之外注册内容（Mixin 初始化除外）
+- ⚠️ 注册必须在 `onInitialize()` 执行期间完成：要么在 `onInitialize()` 内直接 `Registry.register()`，要么用静态字段注册并在 `onInitialize()` 中引用该类触发加载（官方文档两种写法均正）；禁止依赖与 `onInitialize()` 无关联的类加载时机
 
 ### 命名规范
 

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -234,6 +234,9 @@ tasks.named('jar').configure {
 生成或修改 `mods.toml` 时，关注以下字段：
 
 ```toml
+modLoader = "javafml"             # 必需：mod 加载器（mandatory）
+loaderVersion = "[36,)"           # 必需：加载器版本范围（mandatory）
+license = "MIT"               # 必需：许可证（mandatory）
 [[mods]]
 modId = "examplemod"          # 必需：必须小写，无横杠
 version = "${mod_version}"    # 必需：建议使用 gradle 占位符
@@ -242,7 +245,7 @@ description = '''多行描述'''  # 必需
 
 # 可选字段
 authors = "YourNameHere"      # 可选，作者列表
-license = "MIT"               # 可选，许可证
+license = "MIT"               # 必需：顶层 license（mandatory）
 
 # dependencies 块（可选但推荐）
 [[dependencies.examplemod]]
