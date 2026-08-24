@@ -50,6 +50,7 @@
 
 - AI 按 AGENTS 指引经上述解析**直接读源稿**（`knowledge/libs/<group>/mc-<name>/SKILL.md`），正文与源稿一致，禁止改写正文
 - 不确定读哪个 → 用 `mc-lib-catalog` 路由；依赖检查走 MCP `check_dependencies`
+- catalog 显式路由未列出的 10 个 id 走组级路由（按组直接读源稿）：mc-curios / kotlin-for-forge / fabric-language-kotlin / cca / impersonate / libgui / player-ability-lib / polymer / satin / text-placeholder
 - 每个 SKILL.md 均含 `communityDocId`（`authored/lib-*`），细节经 MCP `search_community_docs` 读取
 - 未核对签名不写死：API 以官方文档 + 反编译核对为准
 

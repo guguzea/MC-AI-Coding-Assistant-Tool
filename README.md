@@ -39,7 +39,7 @@ MC_skill/
 │   ├── permitted/               # 许可入库的社区帖提炼（如 mcmod 3993）
 │   ├── links/                   # 仅标题 / 摘要 / 外链（如 mcmod 6071）
 │   ├── patterns/                # 代码模式示范（mcskill://patterns/README）
-│   ├── indexes/index-l0.json    # L0 索引（约 104 条：authored 91 / links 9 / permitted 4；含 generatedAt 构建时间戳）
+│   ├── indexes/index-l0.json    # L0 索引（实测 109 条：authored 94 / links 11 / permitted 4；含 generatedAt 构建时间戳）
 │   ├── AGENT_USAGE.md           # Agent 用法规则（短文不能当 API 规范）
 │   └── README.md                # 主题 id 速查
 │
@@ -658,7 +658,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 **② 库 Skill 源稿**（`knowledge/libs/`，按 AGENTS.md「库模组 Skill」解析使用，**不落盘**平台目录）
 
 - 五组：`all-platforms` 20 / `fabric-only` 9 / `forge-only` 2 / `neo-only` 2（Curios、KFF 与 forge-only 镜像）/ `bedrock-only` 2 = **35 份** `mc-*/SKILL.md`（**33** 唯一 skillId）
-- 解析规则：platform → 组映射（forge→forge-only+all-platforms；fabric/quilt→fabric-only+all-platforms；neoforge→neo-only+all-platforms；bedrock→bedrock-only）+ frontmatter `platforms`/`minecraftVersions` 二次过滤。路由中枢：`mc-lib-catalog`
+- 解析规则：platform → 组映射（forge→forge-only+all-platforms；fabric/quilt→fabric-only+all-platforms；neoforge→neo-only+all-platforms；bedrock→bedrock-only）+ frontmatter `platforms`/`mcVersions` 二次过滤。路由中枢：`mc-lib-catalog`
 
 **③ 数据链**（短文 frontmatter → 脚本生成 → MCP 消费）
 
