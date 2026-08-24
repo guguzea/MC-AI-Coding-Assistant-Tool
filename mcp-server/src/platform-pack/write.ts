@@ -3,6 +3,7 @@ import {
   mkdirSync,
   readFileSync,
   renameSync,
+  rmSync,
   unlinkSync,
   writeFileSync,
 } from "fs";
@@ -75,7 +76,7 @@ function posixRel(rel: string): string {
   return rel.replace(/\\/g, "/");
 }
 
-function isKnowledgeRepo(root: string): boolean {
+export function isKnowledgeRepo(root: string): boolean {
   if (isMcSkillKnowledgeRepo(root)) return true;
   // 整个知识库树禁写：版本子目录（如 <repo>/forge/1.20.1）不含根特征，
   // 但向其写入 stub/marker 会污染后续所有 agent 读取的规则源（F-B05）
@@ -368,13 +369,13 @@ function writeManifestAtomic(projectRoot: string, manifest: Manifest, allowRoot:
   const dest = join(dir, "pack-manifest.json");
   const tmp = `${dest}.tmp`;
   assertWritablePath(tmp, allowRoot);
-  writeFileSync(tmp, JSON.stringify(manifest, null, 2), "utf8");
   try {
-    if (existsSync(dest)) unlinkSync(dest);
-  } catch {
-    /* ignore */
+    writeFileSync(tmp, JSON.stringify(manifest, null, 2), "utf8");
+    renameSync(tmp, dest); // Windows 下 rename 可覆盖目标（MoveFileEx REPLACE），避免先 unlink 的崩溃窗口
+  } catch (err) {
+    rmSync(tmp, { force: true });
+    throw err;
   }
-  renameSync(tmp, dest);
 }
 
 export function writePlatformPack(args: WriteArgs) {
@@ -671,57 +672,78 @@ export function deactivatePlatformPack(args: WriteArgs) {
   }
 
   const unpatched: string[] = [];
+  const deleted: string[] = [];
+  const undo: Array<() => void> = [];
   const entryRels = new Set(
     hosts.flatMap((h) => {
       const f = hostLayout(h).entryFile;
       return f ? [posixRel(f)] : [];
     }),
   );
-  for (const rel of new Set([...toUnpatch, ...[...toDelete].filter((r) => entryRels.has(r))])) {
-    const abs = join(proj.root, rel.split("/").join(sep));
-    if (!existsSync(abs)) continue;
-    assertWritablePath(abs, allowRoot);
-    let text = readFileSync(abs, "utf8");
-    for (const h of hosts) text = removeHostMarker(text, h);
-    writeFileSync(abs, text, "utf8");
-    unpatched.push(rel);
-  }
-  const remainHosts = man.hosts.filter((h) => !hosts.includes(h as PackHost));
-  const deleted: string[] = [];
-  for (const rel of toDelete) {
-    const stillUsed = remainHosts.some((h) => {
-      const hf = man.hostFiles?.[h];
-      if (!hf) return false;
-      return hf.created.map(posixRel).includes(rel) || hf.patched.map(posixRel).includes(rel);
-    });
-    if (stillUsed) continue;
-    const abs = join(proj.root, rel.split("/").join(sep));
-    if (!existsSync(abs)) continue;
-    if (entryRels.has(rel)) {
-      const left = readFileSync(abs, "utf8").trim();
-      if (left.length > 0) continue;
+  try {
+    for (const rel of new Set([...toUnpatch, ...[...toDelete].filter((r) => entryRels.has(r))])) {
+      const abs = join(proj.root, rel.split("/").join(sep));
+      if (!existsSync(abs)) continue;
+      assertWritablePath(abs, allowRoot);
+      const original = readFileSync(abs, "utf8");
+      let text = original;
+      for (const h of hosts) text = removeHostMarker(text, h);
+      writeFileSync(abs, text, "utf8");
+      undo.push(() => writeFileSync(abs, original, "utf8"));
+      unpatched.push(rel);
     }
-    assertWritablePath(abs, allowRoot);
-    unlinkSync(abs);
-    deleted.push(rel);
-  }
+    const remainHosts = man.hosts.filter((h) => !hosts.includes(h as PackHost));
+    for (const rel of toDelete) {
+      const stillUsed = remainHosts.some((h) => {
+        const hf = man.hostFiles?.[h];
+        if (!hf) return false;
+        return hf.created.map(posixRel).includes(rel) || hf.patched.map(posixRel).includes(rel);
+      });
+      if (stillUsed) continue;
+      const abs = join(proj.root, rel.split("/").join(sep));
+      if (!existsSync(abs)) continue;
+      if (entryRels.has(rel)) {
+        const left = readFileSync(abs, "utf8").trim();
+        if (left.length > 0) continue;
+      }
+      assertWritablePath(abs, allowRoot);
+      const original = readFileSync(abs, "utf8");
+      unlinkSync(abs);
+      undo.push(() => writeFileSync(abs, original, "utf8"));
+      deleted.push(rel);
+    }
 
-  if (remainHosts.length === 0) {
-    const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
-    if (existsSync(manPath)) {
-      assertWritablePath(manPath, allowRoot);
-      unlinkSync(manPath);
+    if (remainHosts.length === 0) {
+      const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
+      if (existsSync(manPath)) {
+        assertWritablePath(manPath, allowRoot);
+        const originalManifest = readFileSync(manPath, "utf8");
+        unlinkSync(manPath);
+        undo.push(() => writeFileSync(manPath, originalManifest, "utf8"));
+      }
+    } else {
+      const next: Manifest = {
+        ...man,
+        hosts: remainHosts,
+        createdFiles: man.createdFiles.filter((f) => !toDelete.has(posixRel(f))),
+        patchedFiles: man.patchedFiles.filter((f) => !toUnpatch.has(posixRel(f))),
+        hostFiles: { ...man.hostFiles },
+      };
+      for (const h of hosts) delete next.hostFiles[h];
+      const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
+      const originalManifest = existsSync(manPath) ? readFileSync(manPath, "utf8") : null;
+      writeManifestAtomic(proj.root, next, allowRoot);
+      if (originalManifest !== null) undo.push(() => writeFileSync(manPath, originalManifest, "utf8"));
     }
-  } else {
-    const next: Manifest = {
-      ...man,
-      hosts: remainHosts,
-      createdFiles: man.createdFiles.filter((f) => !toDelete.has(posixRel(f))),
-      patchedFiles: man.patchedFiles.filter((f) => !toUnpatch.has(posixRel(f))),
-      hostFiles: { ...man.hostFiles },
-    };
-    for (const h of hosts) delete next.hostFiles[h];
-    writeManifestAtomic(proj.root, next, allowRoot);
+  } catch (err) {
+    for (const fn of undo.reverse()) {
+      try {
+        fn();
+      } catch {
+        /* 回滚失败不再追加错误 */
+      }
+    }
+    throw err;
   }
 
   return {

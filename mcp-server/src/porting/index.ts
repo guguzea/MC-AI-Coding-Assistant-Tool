@@ -5,6 +5,7 @@ import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
 import { parseGradleProperties } from "../gradle/index.js";
 import { detectLoader } from "../diagnostics/index.js";
+import { isKnowledgeRepo } from "../platform-pack/write.js";
 import { walkDirBounded } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
@@ -1016,6 +1017,17 @@ export async function portProject(args: unknown) {
       });
     }
     throw err;
+  }
+
+  if (isKnowledgeRepo(root)) {
+    return JSON.stringify({
+      ok: false,
+      error: {
+        code: "REFUSE_KNOWLEDGE_REPO",
+        message: "拒绝写入 MC Skill 知识库根。目标必须是用户模组工程。",
+        next: ["port_project 仅用于用户模组工程；知识库规则改动按知识库编辑流程进行"],
+      },
+    });
   }
 
   if (action === "init_architectury") {
