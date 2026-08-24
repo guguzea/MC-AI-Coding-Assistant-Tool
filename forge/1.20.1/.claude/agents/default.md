@@ -16,7 +16,7 @@
 | Minecraft 版本 | 1.20.1 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
 | Java 版本 | **Java 17**（Forge 1.20.1 最低要求） |
-| Gradle | Gradle 8.x + ForgeGradle 14.x |
+| Gradle | Gradle 8.x + ForgeGradle `[6.0,6.2)`（官方 MDK 47.4.23 实证；不存在 FG 14.x） |
 | Mappings | **MCP**（`minecraft "1.20.1"` 下默认） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 

@@ -20,6 +20,8 @@ import { fileURLToPath } from "url";
 import { crc32 } from "zlib";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { assertWritablePath, ProjectPathError } from "../utils/project-sandbox.js";
+import { verifyExtractedTree } from "../utils/extract-verify.js";
+import * as zipPathGuard from "../utils/zip-path-guard.js";
 
 export type MdkPlatform = "forge" | "neoforge" | "fabric" | "quilt" | "liteloader" | "rift";
 export type BuildPlugin =
@@ -56,6 +58,8 @@ export interface DownloadOfficialMdkArgs {
   confirmed?: boolean;
   destPath?: string;
   allowCacheFallback?: boolean;
+  /** pin 表 sha256 为空时，显式接受未校验下载（唯一绕过方式；旧流程由此保持可用） */
+  allowUnpinned?: boolean;
 }
 
 export type UnzipKind = "unzip" | "7z" | "bsdtar";
@@ -103,6 +107,9 @@ function archiveUrlCandidates(url: string): string[] {
   return out;
 }
 
+/** MDK zip 下载体积上限（Content-Length 预检 + 分块累计双保险）。 */
+const FETCH_ZIP_MAX_BYTES = 512 * 1024 * 1024;
+
 async function fetchZipBuffer(
   url: string,
 ): Promise<{ ok: true; zip: Buffer } | { ok: false; status?: number; message: string }> {
@@ -122,7 +129,36 @@ async function fetchZipBuffer(
           if (res.status === 404) break;
           continue;
         }
-        return { ok: true, zip: Buffer.from(await res.arrayBuffer()) };
+        // 响应体积上限：声明超限直接拒；无 Content-Length 时流式累计防堆耗尽
+        const declared = Number(res.headers.get("content-length") ?? "");
+        if (Number.isFinite(declared) && declared > FETCH_ZIP_MAX_BYTES) {
+          return {
+            ok: false,
+            status: res.status,
+            message: `响应 ${declared} 字节超过上限 ${FETCH_ZIP_MAX_BYTES}（MDK zip 不应这么大）：${u}`,
+          };
+        }
+        const reader = res.body?.getReader();
+        if (!reader) {
+          return { ok: false, status: res.status, message: `响应无 body：${u}` };
+        }
+        const chunks: Buffer[] = [];
+        let total = 0;
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          total += value.byteLength;
+          if (total > FETCH_ZIP_MAX_BYTES) {
+            await reader.cancel();
+            return {
+              ok: false,
+              status: res.status,
+              message: `响应流超过上限 ${FETCH_ZIP_MAX_BYTES} 字节，已中止：${u}`,
+            };
+          }
+          chunks.push(Buffer.from(value));
+        }
+        return { ok: true, zip: Buffer.concat(chunks) };
       } catch (e) {
         last = `${String(e)} ${u} attempt=${attempt}`;
         await new Promise((r) => setTimeout(r, 400 * attempt));
@@ -223,16 +259,11 @@ export function probeUnzipTool(): UnzipTool | null {
   return null;
 }
 
-export function isUnsafeZipEntry(name: string): boolean {
-  const n = name.replace(/\\/g, "/");
-  if (!n || n === ".") return true;
-  if (n.startsWith("/") || n.startsWith("\\")) return true;
-  if (/^[a-zA-Z]:/.test(n)) return true;
-  if (n.split("/").some((p) => p === "..")) return true;
-  return false;
-}
+// A-5：segment 级 `..` + Windows 保留名判定提升到 utils/zip-path-guard.ts（mdk 与 update 共用）
+export { isUnsafeZipEntry } from "../utils/zip-path-guard.js";
 
 export function assertNoZipSlip(names: string[], destRoot: string): { ok: true } | { ok: false; message: string } {
+  const { isUnsafeZipEntry } = zipPathGuard;
   const root = resolve(destRoot) + sep;
   for (const name of names) {
     if (isUnsafeZipEntry(name)) {
@@ -533,6 +564,7 @@ export function unpackMdkArchive(opts: {
   destCache: string;
   expectedSha256?: string | null;
   refHint?: string;
+  allowUnpinned?: boolean;
 }): UnpackMdkResult {
   const hash = sha256Buf(opts.zip);
   const sha12 = hash.slice(0, 12);
@@ -548,6 +580,22 @@ export function unpackMdkArchive(opts: {
       error: {
         code: "SHA256_MISMATCH",
         message: `期望 ${opts.expectedSha256}，实际 ${hash}。拒绝解压。zip=${archivePath}`,
+      },
+    };
+  }
+
+  // A-2：pin 表 sha256 为空（首下载未回写）时 fail-closed，除非显式 allowUnpinned
+  if (!opts.expectedSha256 && !opts.allowUnpinned) {
+    return {
+      ok: false,
+      sha256: hash,
+      archivePath,
+      error: {
+        code: "MDK_NOT_PINNED",
+        message:
+          "该 pin 表条目无 sha256（首下载未回写）。拒绝解压（fail-closed）。" +
+          "两条路：① 先核实官方 zip 的 sha256 并补进 mdk-checksums.json；② 显式传 allowUnpinned:true 接受未校验下载（会回写 hash）。" +
+          `zip=${archivePath}`,
       },
     };
   }
@@ -601,6 +649,24 @@ export function unpackMdkArchive(opts: {
       archivePath,
       unpackedDir,
       error: { code: "UNPACK_FAILED", message: `解压失败：${String(e)} zip=${archivePath}` },
+    };
+  }
+
+  // A-2 双视图复核：外部解压器按 LFH 落盘，可能与 CD 清单（names）不一致
+  const verify = verifyExtractedTree(
+    unpackedDir,
+    names.filter((n) => !n.endsWith("/")),
+  );
+  if (!verify.ok) {
+    return {
+      ok: false,
+      sha256: hash,
+      archivePath,
+      unpackedDir,
+      error: {
+        code: "ZIP_SLIP",
+        message: `解压产物与中央目录清单不一致: ${verify.problem} zip=${archivePath}`,
+      },
     };
   }
 
@@ -664,9 +730,21 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   const dryRun = args.dryRun !== false;
   const resolved = resolveMdkEntry(args);
   if (!resolved.entry) {
+    // D-7：LL/Rift 无白名单下载源（LiteLoader 禁止再分发），给静态骨架指引而非裸报错
+    let message = resolved.error;
+    let nextSteps: string[] | undefined;
+    if (args.platform === "liteloader") {
+      message +=
+        " LiteLoader 禁止再分发、无官方 MDK 源：环境搭建用 liteloader/<ver>/scaffold 静态骨架（litemod.json 字段以 HMCL 解析实证集为准）。";
+      nextSteps = ["读 liteloader/<ver>/scaffold 与 AGENTS.md", "不要把 Fabric/Forge 模板当 LiteLoader 环境"];
+    } else if (args.platform === "rift") {
+      message += " Rift 无官方维护的模板仓库：环境搭建用 rift/1.13.2/scaffold 静态骨架。";
+      nextSteps = ["读 rift/1.13.2/scaffold 与 AGENTS.md", "riftmod.json 字段以该档核实表为准"];
+    }
     return {
       ok: false,
-      error: { code: "MDK_NOT_PINNED", message: resolved.error },
+      error: { code: "MDK_NOT_PINNED", message },
+      ...(nextSteps ? { nextSteps } : {}),
       candidates: resolved.candidates.map((c) => ({
         id: c.id,
         buildPlugin: c.buildPlugin,
@@ -835,6 +913,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
     destCache,
     expectedSha256: entry.sha256,
     refHint: entry.ref,
+    allowUnpinned: args.allowUnpinned === true,
   });
   if (!unpacked.ok) {
     return {
@@ -857,7 +936,8 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   );
 
   let wroteSha = false;
-  if (!entry.sha256) {
+  // A-2：仅显式 allowUnpinned 的未校验下载才回写 hash（与解压门同一开关）
+  if (!entry.sha256 && args.allowUnpinned === true) {
     wroteSha = writebackSha256IfNull(entry.id, unpacked.sha256);
   }
 

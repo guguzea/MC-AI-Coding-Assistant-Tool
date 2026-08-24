@@ -53,3 +53,4 @@ sourceKind: authored
 
 - `mc-crash-triage` / `mc-build-mod` 工作流的性能分支；各档 `knowledge/antipatterns/`（注册/方块/实体反模式常伴随性能症状）。
 - spark：<https://spark.lucko.me/docs/>；Minecraft Wiki 命令页（/debug）：<https://minecraft.wiki/w/Commands/debug>。
+- JVM 参数调优（运行/运维侧，非代码优化）：mcmod 教程 [1499 Java8 优化 JVM 参数](https://www.mcmod.cn/post/1499.html)（⚠️ CMS 时代参数，仅适用老版本整合包）、[4609 整合包 JVM 参数修改](https://www.mcmod.cn/post/4609.html)、[5298 服务端 GC 选择测试](https://www.mcmod.cn/post/5298.html)——现代版本默认 G1/ZGC，旧参数照抄会启动失败。

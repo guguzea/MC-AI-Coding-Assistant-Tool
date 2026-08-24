@@ -2,18 +2,10 @@
  * Minimal ZIP helpers: list entries (central directory) + extract via system tar.
  */
 
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-  openSync,
-  readSync,
-  closeSync,
-} from "fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 import { extractZip as mdkExtractZip, probeUnzipTool } from "../mdk/index.js";
+import { isUnsafeZipEntry, isWindowsReservedName } from "../utils/zip-path-guard.js";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
 
 export interface ZipListResult {
@@ -25,63 +17,58 @@ export interface ZipListResult {
 /** Read file names from ZIP central directory (stored/deflated). */
 export function listZipEntries(zipPath: string): ZipListResult {
   try {
-    const fd = openSync(zipPath, "r");
-    try {
-      const st = readFileSync(zipPath);
-      // Find EOCD
-      let eocd = -1;
-      for (let i = st.length - 22; i >= Math.max(0, st.length - 65557); i--) {
-        if (st[i] === 0x50 && st[i + 1] === 0x4b && st[i + 2] === 0x05 && st[i + 3] === 0x06) {
-          eocd = i;
-          break;
-        }
+    const st = readFileSync(zipPath);
+    // Find EOCD
+    let eocd = -1;
+    for (let i = st.length - 22; i >= Math.max(0, st.length - 65557); i--) {
+      if (st[i] === 0x50 && st[i + 1] === 0x4b && st[i + 2] === 0x05 && st[i + 3] === 0x06) {
+        eocd = i;
+        break;
       }
-      if (eocd < 0) {
-        return {
-          ok: false,
-          action: actionable("DATA_ZIP_LAYOUT_INVALID", "无法解析 ZIP EOCD", ["确认文件为有效 zip"], [
-            "mc_skill_update",
-          ]),
-        };
-      }
-      const cdOffset = st.readUInt32LE(eocd + 16);
-      const cdCount = st.readUInt16LE(eocd + 10);
-      // zip64（EOCD 计数/偏移为 0xFFFF/0xFFFFFFFF）不支持：显式失败，禁止静默截断校验视图
-      if (cdCount === 0xffff || cdOffset === 0xffffffff) {
-        return {
-          ok: false,
-          action: actionable("DATA_ZIP_LAYOUT_INVALID", "zip64 布局不受支持", [
-            "Release 资产应为普通 zip（<65535 条目）",
-            "校验 Release 资产来源",
-          ], ["mc_skill_update"]),
-        };
-      }
-      const entries: string[] = [];
-      let pos = cdOffset;
-      for (let i = 0; i < cdCount; i++) {
-        // 中央目录必须在声明条目数内完整可读；签名不符 = 截断/伪造，fail-closed 而非静默少读
-        if (pos + 46 > st.length || st.readUInt32LE(pos) !== 0x02014b50) {
-          return {
-            ok: false,
-            action: actionable(
-              "DATA_ZIP_LAYOUT_INVALID",
-              `中央目录在第 ${i}/${cdCount} 条中断（截断或伪造）`,
-              ["重新下载 Release 资产", "校验 SHA256SUMS"],
-              ["mc_skill_update"],
-            ),
-          };
-        }
-        const nameLen = st.readUInt16LE(pos + 28);
-        const extraLen = st.readUInt16LE(pos + 30);
-        const commentLen = st.readUInt16LE(pos + 32);
-        const name = st.subarray(pos + 46, pos + 46 + nameLen).toString("utf8");
-        if (name && !name.endsWith("/")) entries.push(name.replace(/\\/g, "/"));
-        pos += 46 + nameLen + extraLen + commentLen;
-      }
-      return { ok: true, entries };
-    } finally {
-      closeSync(fd);
     }
+    if (eocd < 0) {
+      return {
+        ok: false,
+        action: actionable("DATA_ZIP_LAYOUT_INVALID", "无法解析 ZIP EOCD", ["确认文件为有效 zip"], [
+          "mc_skill_update",
+        ]),
+      };
+    }
+    const cdOffset = st.readUInt32LE(eocd + 16);
+    const cdCount = st.readUInt16LE(eocd + 10);
+    // zip64（EOCD 计数/偏移为 0xFFFF/0xFFFFFFFF）不支持：显式失败，禁止静默截断校验视图
+    if (cdCount === 0xffff || cdOffset === 0xffffffff) {
+      return {
+        ok: false,
+        action: actionable("DATA_ZIP_LAYOUT_INVALID", "zip64 布局不受支持", [
+          "Release 资产应为普通 zip（<65535 条目）",
+          "校验 Release 资产来源",
+        ], ["mc_skill_update"]),
+      };
+    }
+    const entries: string[] = [];
+    let pos = cdOffset;
+    for (let i = 0; i < cdCount; i++) {
+      // 中央目录必须在声明条目数内完整可读；签名不符 = 截断/伪造，fail-closed 而非静默少读
+      if (pos + 46 > st.length || st.readUInt32LE(pos) !== 0x02014b50) {
+        return {
+          ok: false,
+          action: actionable(
+            "DATA_ZIP_LAYOUT_INVALID",
+            `中央目录在第 ${i}/${cdCount} 条中断（截断或伪造）`,
+            ["重新下载 Release 资产", "校验 SHA256SUMS"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
+      const nameLen = st.readUInt16LE(pos + 28);
+      const extraLen = st.readUInt16LE(pos + 30);
+      const commentLen = st.readUInt16LE(pos + 32);
+      const name = st.subarray(pos + 46, pos + 46 + nameLen).toString("utf8");
+      if (name && !name.endsWith("/")) entries.push(name.replace(/\\/g, "/"));
+      pos += 46 + nameLen + extraLen + commentLen;
+    }
+    return { ok: true, entries };
   } catch (err) {
     return {
       ok: false,
@@ -98,7 +85,7 @@ export function listZipEntries(zipPath: string): ZipListResult {
 /**
  * Normalize zip entry paths to data-root-relative paths.
  * - Strip unique top-level `data/` prefix
- * - Reject `..`, absolute, drive letters
+ * - Reject `..`（segment 级）、绝对路径、盘符、Windows 保留名
  */
 export function normalizeZipLayout(entries: string[]): {
   ok: boolean;
@@ -111,13 +98,13 @@ export function normalizeZipLayout(entries: string[]): {
     .filter((e) => e && !e.endsWith("/"));
 
   for (const e of cleaned) {
-    if (e.includes("..") || e.startsWith("/") || /^[A-Za-z]:/.test(e)) {
+    if (isUnsafeZipEntry(e)) {
       return {
         ok: false,
         action: actionable(
           "DATA_ZIP_LAYOUT_INVALID",
-          `不安全路径: ${e}`,
-          ["Release zip 不得含 .. 或绝对路径"],
+          `不安全路径${isWindowsReservedName(e) ? "（Windows 保留设备名）" : ""}: ${e}`,
+          ["Release zip 不得含 .. / 绝对路径 / Windows 保留名"],
           ["mc_skill_update"],
         ),
       };

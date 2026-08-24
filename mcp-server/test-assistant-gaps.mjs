@@ -18,6 +18,7 @@ const { resolveTopicIds, sessionPlatformPack } = await import("./dist/platform-p
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { listSameSeriesCandidates } = await import("./dist/platform-pack/catalog.js");
 const { generateWorldgen, generateNetworkPacket } = await import("./dist/generators/index.js");
+const { generateEntityRenderer } = await import("./dist/generators/index.js");
 const { generateDatagen } = await import("./dist/datagen/index.js");
 const { getWorkflowTemplate, readKnowledgeResource, WORKFLOW_TEMPLATES } = await import(
   "./dist/prompts/index.js"
@@ -87,6 +88,26 @@ function skillPath(ver, name) {
   assert.equal(crash.action?.code, "VERSION_REQUIRED");
   assert.notEqual(crash.crashKind, "fml");
   console.log("VERSION_REQUIRED: ok");
+}
+
+{
+  // A-4：多项式 ReDoS 回归——旧正则对这类输入要分钟级，新正则必须毫秒~秒级完成。
+  // 工具输入硬上限 512KB，fixture 各自贴近上限以覆盖最坏回溯面。
+  const cases = [
+    ["mixin-pattern", "error failed apply ".repeat(26_000)], // ≈494KB
+    ["version-pattern", "requires [".repeat(50_000)], // ≈500KB
+  ];
+  for (const [name, chunk] of cases) {
+    const report =
+      "---- Minecraft Crash Report ----\n" + chunk + "\njava.lang.IllegalStateException\n";
+    assert.ok(report.length <= 512_000, `${name} fixture too large: ${report.length}`);
+    const t0 = Date.now();
+    const r = analyzeCrash({ crashReport: report, version: "1.20.1" });
+    const elapsed = Date.now() - t0;
+    assert.ok(r && typeof r === "object", "analyzeCrash must return");
+    assert.ok(elapsed < 5_000, `ReDoS guard (${name}): took ${elapsed}ms (must be < 5000ms)`);
+    console.log(`crash ReDoS guard ${name}: ok (${elapsed}ms for ${report.length}B)`);
+  }
 }
 
 {
@@ -751,6 +772,31 @@ description: |
   assert.match(String(pkt12110.code), /RegisterClientPayloadHandlersEvent/);
   assert.doesNotMatch(String(pkt12110.code), /DirectionalPayloadHandler/);
   console.log("plan4 generate_network_packet 1.21.5/1.21.10: ok");
+
+  // D-2/D-3：Quilt 走 FAPI donor（有 donor 的档给骨架 + QSL 停更横幅；无 donor 的 actionable 拒绝）
+  const pktQuilt = generateNetworkPacket("demo", "sync", "quilt_1.21.4");
+  assert.match(String(pktQuilt.code), /PayloadTypeRegistry/);
+  assert.match(String(pktQuilt.warnings?.join("|") ?? ""), /QSL 无网络模块|2025-12 停更/);
+  const pktQuiltOld = generateNetworkPacket("demo", "sync", "quilt_1.20.4");
+  assert.equal(pktQuiltOld.code, null);
+  assert.match(String(pktQuiltOld.errors?.[0]), /无任何已发布构件|历史构件/);
+  // D-3：MCP 时代 SimpleChannel（1.14–1.16 用 PacketBuffer；1.17.1 官方映射用 FriendlyByteBuf——两代不共用骨架）
+  const pktMcp = generateNetworkPacket("demo", "sync", "forge_1.16.5");
+  assert.match(String(pktMcp.code), /SimpleChannel/);
+  assert.match(String(pktMcp.code), /PacketBuffer/);
+  assert.doesNotMatch(String(pktMcp.code), /FriendlyByteBuf|SimpleNetworkWrapper/);
+  const pkt171 = generateNetworkPacket("demo", "sync", "forge_1.17.1");
+  assert.match(String(pkt171.code), /FriendlyByteBuf/);
+  assert.match(String(pkt171.code), /net\.minecraft\.resources\.ResourceLocation/);
+  assert.doesNotMatch(String(pkt171.code), /PacketBuffer|net\.minecraft\.util\.ResourceLocation/);
+  console.log("D2/D3 generate_network_packet quilt_1.21.4/quilt_1.20.4/forge_1.16.5/forge_1.17.1: ok");
+
+  // D-3：entity_renderer 扩档（1.18.2/1.19.4 过门；neoforge 1.21.x 未核保持拒绝）
+  const er118 = generateEntityRenderer("demo", "beast", "forge", "1.18.2");
+  assert.ok(String(er118.code).includes("EntityRendererProvider"), JSON.stringify(er118).slice(0, 200));
+  const erNeo211 = generateEntityRenderer("demo", "beast", "neoforge", "1.21.11");
+  assert.equal(erNeo211.code, null);
+  console.log("D3 generate_entity_renderer forge_1.18.2 过门 / neoforge_1.21.11 拒绝: ok");
 }
 
 console.log("test-assistant-gaps: all passed");

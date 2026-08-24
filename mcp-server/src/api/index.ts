@@ -28,7 +28,7 @@ import { ActionCodes, actionable, withAction, versionRequiredAction, missingMcVe
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_VERSION = "1.20.1";
+export const DEFAULT_VERSION = "1.20.1";
 
 // ── 类型定义 ───────────────────────────────────────────────────────────────
 
@@ -872,15 +872,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   return finish(buildClassResult(resolvedDot, cls, [], version));
 }
 
-// ── 导出 Trie 索引供外部使用（如 store.ts 的搜索）─────────────────────────
-
-export function getTrieIndex(): TrieIndex | null {
-  return getVersionData(DEFAULT_VERSION).trieIndex;
-}
-
-export function setTrieIndex(trie: TrieIndex): void {
-  getVersionData(DEFAULT_VERSION).trieIndex = trie;
-}
+// ── Trie 索引导出已删除（getTrieIndex/setTrieIndex 全仓零调用且钉死 DEFAULT_VERSION）──
 
 /** Terminate preload Workers and drop caches so Node can exit (tests / CLI). */
 export function disposeApiData(): void {
@@ -899,13 +891,13 @@ export function disposeApiData(): void {
   _versionData.clear();
 }
 
-/** Warm up one or more versions (default 1.20.1). */
-export async function warmupApi(versions: string[] = [DEFAULT_VERSION]): Promise<VersionPreloadStatus[]> {
+/** Warm up one or more versions（版本必填，禁止默认 1.20.1——调用方显式传参）。 */
+export async function warmupApi(versions: string[]): Promise<VersionPreloadStatus[]> {
   await Promise.all(versions.map((v) => startPreloader(v)));
   return versions.map((v) => getApiPreloadStatus(v));
 }
 
-export function getApiPreloadStatus(version: string = DEFAULT_VERSION): VersionPreloadStatus {
+export function getApiPreloadStatus(version: string): VersionPreloadStatus {
   const vData = _versionData.get(version);
   if (!vData) {
     return {

@@ -11,7 +11,7 @@
 | `forge/1.20.1/knowledge/antipatterns/` 等 | 排错、症状对号入座（在对应平台/版本下） |
 | `community_knowledge/authored/patterns-framework` | Agent 使用规则与维护约定 |
 
-MCP：`read_knowledge_resource` → `mcskill://patterns/README`（本文件）。
+MCP：`read_knowledge_resource` → `mcskill://patterns/README`（实际服务的是 `community_knowledge/patterns/README.md` 索引；本文件是模式正文与验收权威，两套 `examples/` 文件名并行、互为独立文，不互为镜像）。
 
 ## 单文件格式
 

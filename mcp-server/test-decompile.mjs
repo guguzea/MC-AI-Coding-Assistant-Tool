@@ -549,5 +549,55 @@ section("SKIP_DOWNLOAD handlers");
   }
 }
 
+// ── 7. zip-inflate A-1 解压炸弹防护 ───────────────────────────────────────────
+section("zip-inflate (A-1)");
+{
+  const { readZip } = await import("./dist/decompile/zip-util.js");
+
+  // 把 zip 里唯一条目的声明解压尺寸（LFH+CD）改成 forgedUsize，其余字节不动
+  function forgeUsize(zipBuf, forgedUsize) {
+    const b = Buffer.from(zipBuf);
+    const eocd = b.length - 22;
+    const cdOffset = b.readUInt32LE(eocd + 16);
+    b.writeUInt32LE(forgedUsize, cdOffset + 24); // CD usize
+    const localOffset = b.readUInt32LE(cdOffset + 42);
+    b.writeUInt32LE(forgedUsize, localOffset + 22); // LFH usize
+    return b;
+  }
+
+  const legit = makeZip([{ name: "bomb.bin", data: Buffer.alloc(65536, 0), deflate: true }]);
+
+  test("legit deflate entry still inflates (no regression)", () => {
+    const m = readZip(legit);
+    assert.equal(m.get("bomb.bin").length, 65536);
+  });
+
+  test("declared usize over hard cap → ZIP_ENTRY_TOO_LARGE（不进 zlib）", () => {
+    const forged = forgeUsize(legit, 0x40000000); // 1GB 声明，实际仅 64KB
+    assert.throws(() => readZip(forged), (err) => err.code === "ZIP_ENTRY_TOO_LARGE");
+  });
+
+  test("declared usize under cap but real output exceeds it → ZIP_ENTRY_BOMB_SUSPECTED", () => {
+    const forged = forgeUsize(legit, 100);
+    assert.throws(() => readZip(forged), (err) => err.code === "ZIP_ENTRY_BOMB_SUSPECTED");
+  });
+
+  test("inflated size ≠ declared size → ZIP_ENTRY_SIZE_MISMATCH", () => {
+    const forged = forgeUsize(legit, 70000); // 实际 65536 ≠ 声明 70000
+    assert.throws(() => readZip(forged), (err) => err.code === "ZIP_ENTRY_SIZE_MISMATCH");
+  });
+
+  test("MC_SKILL_MAX_ENTRY_BYTES lowers cap", () => {
+    const prev = process.env.MC_SKILL_MAX_ENTRY_BYTES;
+    process.env.MC_SKILL_MAX_ENTRY_BYTES = "1000";
+    try {
+      assert.throws(() => readZip(legit), (err) => err.code === "ZIP_ENTRY_TOO_LARGE");
+    } finally {
+      if (prev === undefined) delete process.env.MC_SKILL_MAX_ENTRY_BYTES;
+      else process.env.MC_SKILL_MAX_ENTRY_BYTES = prev;
+    }
+  });
+}
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

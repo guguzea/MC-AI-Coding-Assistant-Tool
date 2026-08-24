@@ -115,9 +115,11 @@ const KNOWN_PATTERNS: Array<{
   },
   {
     // F-E202：裸 "Mixin" 会命中 Mod List 里的 MixinExtras 字样，抢答无关崩溃；
-    // 收紧为失败语义锚定（应用失败/目标缺失/非法注入等）
+    // 收紧为失败语义锚定（应用失败/目标缺失/非法注入等）。
+    // A-4：不设反向通配段（(apply|failed|error).*mixin 会让每个 error 词触发全文回扫），
+    // 正向通配全部换成行内有界量词，保证线性。
     pattern:
-      /MixinApplyError|MixinTargetNotFound|InvalidInjectionException|InjectionError|CriticalInjectionFailure|MixinApplyError|mixin.*(apply|failed|error)|(apply|failed|error).*mixin|@Shadow.*error|inject.*(failed|error)/i,
+      /MixinApplyError|MixinTargetNotFound|InvalidInjectionException|InjectionError|CriticalInjectionFailure|mixin[^\n]{0,200}(?:apply|failed|error)|@Shadow[^\n]{0,120}error|inject[^\n]{0,120}(?:failed|error)/i,
     cause: "Mixin 注入失败",
     fix: [
       "检查 @At 注解是否正确（HEAD/RETURN/INVOKE）",
@@ -251,8 +253,10 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-project-setup: 强制依赖未声明或未安装"],
   },
   {
+    // A-4：`requires.*\[.*\].*but` 的顺序 .* 量化在 [ 密集输入下是多项式回溯，
+    // 收紧为行内否定字符类 + 有界量词。
     pattern:
-      /ModResolutionException|Incompatible mods found|version range|VersionConstraint|ModLoadingException.*version|requires.*\[.*\].*but/i,
+      /ModResolutionException|Incompatible mods found|version range|VersionConstraint|ModLoadingException[^\n]{0,200}version|requires[^\n]{0,400}\[[^\]\n]{0,300}\][^\n]{0,200}\bbut\b/i,
     cause: "模组或 loader 版本范围不兼容",
     fix: [
       "核对 Minecraft / Forge|Fabric|NeoForge 版本是否在依赖声明范围内",

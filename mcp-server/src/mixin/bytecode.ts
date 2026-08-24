@@ -64,6 +64,13 @@ export class ClassFormatError extends Error {
   }
 }
 
+/** 边界预检：读之前确认 [pos, pos+n) 在缓冲区内；截断/畸形文件抛 ClassFormatError 而非裸 RangeError。 */
+function needBuf(buf: Buffer, pos: number, n: number, what: string): void {
+  if (pos < 0 || pos + n > buf.length) {
+    throw new ClassFormatError(`${what}越界（@${pos}+${n} > ${buf.length}）——文件被截断或构造`);
+  }
+}
+
 // ── 常量池 ─────────────────────────────────────────────────────────────────────
 
 interface CpEntry {
@@ -81,24 +88,29 @@ class Cp {
   constructor(buf: Buffer, start: number, count: number) {
     let pos = start;
     for (let i = 1; i < count; i++) {
+      needBuf(buf, pos, 1, `常量池 #${i} tag`);
       const tag = buf[pos];
       pos += 1;
       switch (tag) {
         case 1: {
+          needBuf(buf, pos, 2, `常量池 #${i} Utf8 长度`);
           const len = buf.readUInt16BE(pos);
           pos += 2;
+          needBuf(buf, pos, len, `常量池 #${i} Utf8 内容`);
           this.entries.push({ tag, str: buf.toString("utf8", pos, pos + len) });
           pos += len;
           break;
         }
         case 3:
         case 4:
+          needBuf(buf, pos, 4, `常量池 #${i}`);
           this.entries.push({ tag });
           pos += 4;
           break;
         case 5:
         case 6:
           // long/double 占两个槽位
+          needBuf(buf, pos, 8, `常量池 #${i}`);
           this.entries.push({ tag });
           pos += 8;
           i += 1;
@@ -108,6 +120,7 @@ class Cp {
         case 16:
         case 19:
         case 20:
+          needBuf(buf, pos, 2, `常量池 #${i}`);
           this.entries.push({ tag, idx1: buf.readUInt16BE(pos) });
           pos += 2;
           break;
@@ -117,10 +130,12 @@ class Cp {
         case 12:
         case 17:
         case 18:
+          needBuf(buf, pos, 4, `常量池 #${i}`);
           this.entries.push({ tag, idx1: buf.readUInt16BE(pos), idx2: buf.readUInt16BE(pos + 2) });
           pos += 4;
           break;
         case 15:
+          needBuf(buf, pos, 3, `常量池 #${i}`);
           this.entries.push({ tag, idx1: buf[pos], idx2: buf.readUInt16BE(pos + 1) });
           pos += 3;
           break;
@@ -211,16 +226,26 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
     opcodes.push(op);
     pos += 1;
 
-    // 字段/方法引用 → 调用点
+    // 字段/方法引用 → 调用点（操作数 2 字节，先预检再读，防贴边 RangeError）
     if (op === 0xb2 || op === 0xb3 || op === 0xb4 || op === 0xb5) {
+      needBuf(code, pos, 2, "字段引用操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 9) });
     } else if (op === 0xb6 || op === 0xb7 || op === 0xb8) {
+      needBuf(code, pos, 2, "方法引用操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 10) });
     } else if (op === 0xb9) {
+      needBuf(code, pos, 2, "invokeinterface 操作数");
       calls.push({ opcode: op, target: cp.memberRef(code.readUInt16BE(pos), 11) });
     } else if (op === 0xba) {
-      // invokedynamic：目标取 NameAndType（无静态 owner）
-      const nt = cp.nameType(code.readUInt16BE(pos));
+      // invokedynamic：操作数索引的是 CONSTANT_InvokeDynamic（tag 18），
+      // 其结构为 {bootstrapMethodAttrIndex, nameAndTypeIndex}——先取 tag-18 条目再读 NameAndType
+      needBuf(code, pos, 2, "invokedynamic 操作数");
+      const indyIdx = code.readUInt16BE(pos);
+      const indy = cp.at(indyIdx);
+      if (!indy || indy.tag !== 18 || indy.idx1 === undefined || indy.idx2 === undefined) {
+        throw new ClassFormatError(`invokedynamic 常量池 #${indyIdx} 非 InvokeDynamic（tag 18）`);
+      }
+      const nt = cp.nameType(indy.idx2);
       calls.push({ opcode: op, target: { owner: "", name: nt.name, desc: nt.desc } });
     }
 
@@ -256,9 +281,11 @@ function disassemble(code: Buffer, cp: Cp): { opcodes: number[]; calls: CallSite
 
 /** 读取 attributes_count 后的属性序列；对每个属性回调 (name, bodyStart, bodyLen, buf)。 */
 function forEachAttribute(buf: Buffer, pos: number, cp: Cp, cb: (name: string, start: number, len: number) => void): number {
+  needBuf(buf, pos, 2, "attributes_count");
   const count = buf.readUInt16BE(pos);
   let p = pos + 2;
   for (let i = 0; i < count; i++) {
+    needBuf(buf, p, 6, `属性 #${i} 头部`);
     const name = cp.utf8(buf.readUInt16BE(p));
     const len = buf.readUInt32BE(p + 2);
     cb(name, p + 6, len);
@@ -276,6 +303,7 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   const cpCount = buf.readUInt16BE(8);
   const cp = new Cp(buf, 10, cpCount);
   let pos = cp.end;
+  needBuf(buf, pos, 8, "access_flags/this/super/interfaces_count");
   const accessFlags = buf.readUInt16BE(pos);
   const thisClass = cp.className(buf.readUInt16BE(pos + 2));
   const superIdx = buf.readUInt16BE(pos + 4);
@@ -286,6 +314,7 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   const ifaceCount = buf.readUInt16BE(pos);
   pos += 2;
   for (let i = 0; i < ifaceCount; i++) {
+    needBuf(buf, pos, 2, `interface #${i}`);
     interfaces.push(cp.className(buf.readUInt16BE(pos)));
     pos += 2;
   }
@@ -294,6 +323,7 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   const fieldCount = buf.readUInt16BE(pos);
   pos += 2;
   for (let i = 0; i < fieldCount; i++) {
+    needBuf(buf, pos, 6, `field #${i}`);
     const fAccess = buf.readUInt16BE(pos);
     const fName = cp.utf8(buf.readUInt16BE(pos + 2));
     const fDesc = cp.utf8(buf.readUInt16BE(pos + 4));
@@ -307,6 +337,7 @@ export function parseClassFile(buf: Buffer): ClassInfo {
   const methodCount = buf.readUInt16BE(pos);
   pos += 2;
   for (let i = 0; i < methodCount; i++) {
+    needBuf(buf, pos, 8, `method #${i}`);
     const mAccess = buf.readUInt16BE(pos);
     const mName = cp.utf8(buf.readUInt16BE(pos + 2));
     const mDesc = cp.utf8(buf.readUInt16BE(pos + 4));
@@ -314,9 +345,11 @@ export function parseClassFile(buf: Buffer): ClassInfo {
     const key = `${mName}${mDesc}`;
     const attrStart = pos + 6;
     let attrPos = attrStart;
+    needBuf(buf, attrPos, 2, `method #${i} attributes_count`);
     const attrCount = buf.readUInt16BE(attrPos);
     attrPos += 2;
     for (let a = 0; a < attrCount; a++) {
+      needBuf(buf, attrPos, 6, `method #${i} 属性 #${a} 头部`);
       const attrName = cp.utf8(buf.readUInt16BE(attrPos));
       const attrLen = buf.readUInt32BE(attrPos + 2);
       const body = attrPos + 6;
@@ -335,16 +368,20 @@ export function parseClassFile(buf: Buffer): ClassInfo {
 
   const recordComponents: RecordComponent[] = [];
   let classAttrPos = pos;
+  needBuf(buf, classAttrPos, 2, "class attributes_count");
   const classAttrCount = buf.readUInt16BE(classAttrPos);
   classAttrPos += 2;
   for (let a = 0; a < classAttrCount; a++) {
+    needBuf(buf, classAttrPos, 6, `class 属性 #${a} 头部`);
     const attrName = cp.utf8(buf.readUInt16BE(classAttrPos));
     const attrLen = buf.readUInt32BE(classAttrPos + 2);
     const body = classAttrPos + 6;
     if (attrName === "Record" && attrLen >= 2) {
+      needBuf(buf, body, 2, "record 组件数");
       const compCount = buf.readUInt16BE(body);
       let p = body + 2;
       for (let c = 0; c < compCount; c++) {
+        needBuf(buf, p, 6, `record 组件 #${c}`);
         const cName = cp.utf8(buf.readUInt16BE(p));
         const cDesc = cp.utf8(buf.readUInt16BE(p + 2));
         recordComponents.push({ name: cName, descriptor: cDesc });
@@ -352,6 +389,7 @@ export function parseClassFile(buf: Buffer): ClassInfo {
         const innerCount = buf.readUInt16BE(p + 4);
         let q = p + 6;
         for (let ic = 0; ic < innerCount; ic++) {
+          needBuf(buf, q, 6, `record 组件 #${c} 内层属性 #${ic}`);
           const il = buf.readUInt32BE(q + 2);
           q += 6 + il;
         }
@@ -392,10 +430,15 @@ function loadJarMap(jarPath: string): Map<string, Buffer> {
     if (k === jarPath || k.startsWith(`${jarPath}\0`)) JAR_CACHE.delete(k);
   }
   const data = readZip(readFileSync(jarPath));
-  if (JAR_CACHE.size >= JAR_CACHE_MAX) {
-    JAR_CACHE.delete(JAR_CACHE.keys().next().value as string);
+  // A-1 放大器防护：单 jar 解压总量超上限不进缓存（读本身已被 zip-inflate 逐条目限制）
+  let total = 0;
+  for (const buf of data.values()) total += buf.length;
+  if (total <= 256 * 1024 * 1024) {
+    if (JAR_CACHE.size >= JAR_CACHE_MAX) {
+      JAR_CACHE.delete(JAR_CACHE.keys().next().value as string);
+    }
+    JAR_CACHE.set(key, data);
   }
-  JAR_CACHE.set(key, data);
   return data;
 }
 

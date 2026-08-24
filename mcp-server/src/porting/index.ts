@@ -334,6 +334,31 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
 // TOOL 1: analyze_porting_path
 // ─────────────────────────────────────────────────────────────────────────────
 
+/** D-4：LL/Rift/ModLoader/Bedrock 无脚手架，但给出人工升级路径分析笔记。 */
+function buildUpgradeNotes(currentPlatform: string, targetPlatform: string) {
+  const notes: Record<string, string[]> = {
+    liteloader: [
+      "LiteLoader 1.12.2 → Forge 1.12.2：LiteMod/BaseMod 事件改为 Forge @SubscribeEvent；litemod.json 元数据改写为 mods.toml（modLoader=\"javafml\"）。",
+      "混合工程（liteloader_forge）先拆分：Forge 侧保留 mods.toml，LiteLoader 功能逐个迁到 Forge 事件后移除 litemod.json。",
+    ],
+    rift: [
+      "Rift 1.13.2 → Forge 1.13.2：riftmod.json 的 listeners 入口改写为 Forge @Mod + @EventHandler 生命周期；Rift 生命周期钩子无 1:1 对应，逐个对照 forge/1.13.2 档核实。",
+      "Rift 已停更且仅支持 1.13.2；如需新版本特性，直接评估重写为 Fabric/NeoForge 而非原地移植。",
+    ],
+    modloader: [
+      "Risugami's ModLoader 1.6.4 → Forge 1.7.10：BaseMod 钩子改为 @Mod 类 + @EventHandler；ModLoader.addRecipe 改为 GameRegistry.addRecipe；无自动路线，逐 API 对照 modloader/1.6.4 safe-api.md 与 forge/1.7.10 档。",
+    ],
+    bedrock: [
+      "基岩 Add-On 升级路径：manifest.json format_version 1→2（module 结构不变）；script 模块从 legacy ClientServerModule 迁到 Script API（@minecraft/server）；实验性 API 用 validate_addon_manifest 校验后再上商店。",
+    ],
+  };
+  const out: { platform: string; notes: string[]; scope: string }[] = [];
+  for (const p of [currentPlatform, targetPlatform]) {
+    if (notes[p]) out.push({ platform: p, notes: notes[p], scope: "仅分析笔记；port_project 不提供这两个平台的脚手架" });
+  }
+  return out;
+}
+
 export async function analyzePortingPath(args: unknown) {
   const parsed = analyzePortingPathSchema.safeParse(args);
   if (!parsed.success) {
@@ -567,7 +592,7 @@ export async function analyzePortingPath(args: unknown) {
       ok: false,
       error: {
         code: "UNSUPPORTED_PORT",
-        message: `不支持自动移植 ${currentPlatform} → ${targetPlatform}。基岩 / LiteLoader / Rift / ModLoader 交叉移植只提供笔记，不改工程。`,
+        message: `不支持自动移植 ${currentPlatform} → ${targetPlatform}。基岩 / LiteLoader / Rift / ModLoader 只提供升级路径分析笔记，不改工程（port_project 无脚手架）。`,
         hint:
           currentPlatform === "rift" && targetPlatform === "fabric"
             ? "Rift→Fabric 可手写移植笔记；port_project 保持 dryRun，无现成模板则只输出路线。"
@@ -581,6 +606,10 @@ export async function analyzePortingPath(args: unknown) {
         ],
       },
     };
+    (e as AnalyzePortingError & { upgradePath?: unknown }).upgradePath = buildUpgradeNotes(
+      currentPlatform,
+      targetPlatform,
+    );
     return JSON.stringify(e, null, 2);
   }
   const needCrossPlatform = currentPlatform !== targetPlatform;
@@ -906,14 +935,19 @@ function applyPackageRenames(root: string, dryRun: boolean): {
       written.push(item);
     } catch (err) {
       let rollbackError: string | undefined;
+      const rollbackFailures: string[] = [];
       for (const w of [...written].reverse()) {
         try {
           writeFileSync(w.file, w.prev, "utf-8");
+          // 逐文件复验回写结果；失败不中断其余文件的还原，最后聚合报告
+          if (readFileSync(w.file, "utf-8") !== w.prev) {
+            rollbackFailures.push(`回滚后内容不符: ${w.file}`);
+          }
         } catch (rbErr) {
-          rollbackError = `回滚 ${w.file} 失败: ${(rbErr as Error).message}`;
-          break;
+          rollbackFailures.push(`回滚 ${w.file} 失败: ${(rbErr as Error).message}`);
         }
       }
+      if (rollbackFailures.length > 0) rollbackError = rollbackFailures.join("; ");
       return {
         renames,
         unreviewed: unreviewedCandidates(),

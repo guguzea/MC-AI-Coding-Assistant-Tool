@@ -162,12 +162,19 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     };
   }
   if (platform === "quilt") {
+    // D-2/D-3 门闩：quilt 各档均无 07-datagen 规则、无可核 QFAPI datagen 签名 → 不给成功路径。
+    const qslNote = ["1.18.2", "1.19.4", "1.20.1", "1.20.4"].includes(ver)
+      ? `QFAPI ${ver} 线的历史构件不含可核 datagen 教程（本档也无 07 规则）。`
+      : `QSL/QFAPI 在 ${ver} 无任何已发布构件（QSL 已于 2025-12 停更）`;
     return {
       code: null,
       usedModId: query.modId,
       usedTargetName: query.targetName,
       errors: [
-        `Quilt Datagen 无足够 QSL/QFAPI 类名可写专用骨架（当前 version=${ver}）。不要吐 Fabric API / Forge DataGen。请改用 search_docs platform=quilt 手写。该版本无原生生成器，不要理解为游戏里做不了。`,
+        `Quilt Datagen 无已核实签名，不生成骨架：${qslNote} 不要吐 Fabric API / Forge DataGen 冒充。` +
+          "两条路：① 工程声明 fabric-api 时按同版 Fabric DataGen 手写（search_fabric_docs version=" +
+          ver +
+          "）；② 纯手写 data/ JSON。参考规则 07-datagen / mc-datagen Skill。该版本无原生生成器，不要理解为游戏里做不了。",
       ],
     };
   }

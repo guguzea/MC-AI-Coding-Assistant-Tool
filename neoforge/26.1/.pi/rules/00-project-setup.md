@@ -10,6 +10,10 @@ description: 00 — 项目结构（NeoForge 26.1）
 
 官方模组生成器对多个 MC 版本**同时**提供 ModDevGradle（`net.neoforged.moddev`）与 NeoGradle（`net.neoforged.gradle.userdev`）。**禁止按版本硬绑**。从零工程调用 `download_official_mdk` 时必须传 `buildPlugin`。
 
+版本锚点（26.1 线实测，2026-08-23 复核）：Gradle **≥ 9.1**；ModDevGradle **2.0.144** / NeoGradle **7.1.38**（maven.neoforged.net 一手 latest；早前 2.0.141/7.1.21 亦为有效引用）；`neo_version` 参考 `26.1.0.19-beta`。写 build.gradle 时以 `download_official_mdk` 实际产物的 `gradle.properties` 为准，不要凭记忆改这些数字。
+
+**Parchment：本版无需配置。** 26.1 的 MDG 与 NeoGradle 双 MDK 均无 parchment 键——游戏 jar 已去混淆（Mojang 名），不要自行添加 parchment 依赖或 mappings 块。
+
 ## Java / mappings
 
 - Java **25**

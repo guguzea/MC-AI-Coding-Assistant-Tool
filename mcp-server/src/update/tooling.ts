@@ -194,6 +194,21 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
   steps.push(`git fetch --tags ${remote}`);
   steps.push(`git merge --ff-only ${opts.tag}`);
 
+  // tag 来自 GitHub release.tag_name 或用户输入；拒绝 `-` 开头与非法字符，防被 git 当选项
+  if (!/^v?\d[\w.\-]*$/.test(opts.tag)) {
+    return {
+      ok: false,
+      steps,
+      remote,
+      action: actionable(
+        "UPDATE_INVALID_TAG",
+        `tag 形如选项或含非法字符，已拒绝对它执行 git 操作: ${opts.tag}`,
+        ["tag 应形如 V1.0.4 / v1.0.4-data-refresh", "核对 Release 的 tag_name"],
+        ["mc_skill_update"],
+      ),
+    };
+  }
+
   const dirty = isGitDirty(repoRoot);
   if (dirty && !opts.allowDirty) {
     return {

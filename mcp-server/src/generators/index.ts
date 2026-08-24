@@ -229,6 +229,10 @@ export const NETWORK_PACKET_PLATFORMS = [
   "forge_1.20.4",
   "forge_1.19.4",
   "forge_1.18.2",
+  "forge_1.17.1",
+  "forge_1.16.5",
+  "forge_1.15.2",
+  "forge_1.14.4",
   "forge_1.12.2",
   "neoforge_1.20.1",
   "neoforge_1.20.4",
@@ -247,6 +251,13 @@ export const NETWORK_PACKET_PLATFORMS = [
   "fabric_1.21.11",
   "fabric_26.1",
   "fabric_26.1.2",
+  // D-2：Quilt 走 FAPI 通道（QSL 无网络模块）。仅同版本存在已核 Fabric donor 的档给骨架；
+  // ≤1.20.4 / 1.21.1 无 donor，保持 error + actionable 改口（见 generateNetworkPacket 的 quilt 分支说明）。
+  "quilt_1.21.3",
+  "quilt_1.21.4",
+  "quilt_1.21.8",
+  "quilt_1.21.10",
+  "quilt_1.21.11",
 ] as const;
 
 export type NetworkPacketPlatform = (typeof NETWORK_PACKET_PLATFORMS)[number];
@@ -256,6 +267,17 @@ const FABRIC_NETWORK_EXACT_TOKENS =
   "fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1.2";
 const NEOFORGE_NETWORK_EXACT_TOKENS =
   "neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1";
+
+/** D-2：无已核 Fabric donor 的 quilt 档不给成功路径，给 actionable 改口。 */
+function quiltNetworkNoDonorHint(ver: string): string {
+  const qslEra = ["1.18.2", "1.19.4", "1.20.1"].includes(ver)
+    ? `QFAPI ${ver} 线有历史构件（终版 QFAPI 7.7.0/QSL 6.3.0 仅 1.20.1），但其网络 API 形态与现行 FAPI 不同，本工具未核实该代签名，不生成骨架。`
+    : `QSL/QFAPI 在 ${ver} 无任何已发布构件（QSL 已于 2025-12 停更）。`;
+  return (
+    ` Quilt ${ver} 无同版本已核 donor：${qslEra}` +
+    ` 改口 search_fabric_docs version=${ver} + 本档 mc-networking Skill；工程声明 fabric-api 时可参考 quilt_1.21.4 骨架仅作结构参考，禁止当 ${ver} 官方 API。`
+  );
+}
 
 function docsReviewHeader(tool: string, version: string): string {
   return `// 修改此骨架前必须用 ${tool}(version=${version}) 复核；禁止邻档 API。\n`;
@@ -306,6 +328,148 @@ public class ${pascal}Packet {
           "反面：PayloadTypeRegistry / RegisterPayloadHandlersEvent / RecipeOutput。",
         ]
       : undefined,
+  };
+}
+
+/** D-3：1.13–1.16 MCP 时代 SimpleChannel（PacketBuffer + net.minecraft.util.ResourceLocation）。
+ * 内容对照各档 06-networking.mdc 的已核示例（如 forge/1.16.5 L95–160、forge/1.14.4 L96–120 用 PacketBuffer/EntityPlayerMP）。 */
+function forgeSimpleChannelMcpSkeleton(
+  mod: string,
+  pascal: string,
+  mcVersion: string,
+): GeneratorResult {
+  const body = `// Forge ${mcVersion} — SimpleChannel（MCP 名：PacketBuffer；注册放 FMLCommonSetupEvent）
+package com.example.${mod}.network;
+
+import java.util.function.Supplier;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+
+public class NetworkHandler {
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation("${mod}", "main"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals);
+    private static int id = 0;
+
+    // 在 FMLCommonSetupEvent 里调用 register()
+    public static void register() {
+        INSTANCE.registerMessage(
+                id++,
+                ${pascal}Packet.class,
+                ${pascal}Packet::encode,
+                ${pascal}Packet::new,
+                (msg, ctx) -> msg.handle(ctx));
+    }
+
+    public static void sendToServer(${pascal}Packet msg) {
+        INSTANCE.sendToServer(msg);
+    }
+}
+
+public class ${pascal}Packet {
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public ${pascal}Packet(PacketBuffer buf) {
+        this(buf.readUtf());
+    }
+
+    public void encode(PacketBuffer buf) {
+        buf.writeUtf(message);
+    }
+
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> { /* server/client logic */ });
+        ctx.get().setPacketHandled(true);
+    }
+}
+`;
+  return {
+    code: withDocsReviewHeader(body, "search_forge_docs", mcVersion),
+    warnings: [
+      `Forge ${mcVersion} MCP 名：PacketBuffer / ResourceLocation / SimpleChannel（NetworkRegistry.newSimpleChannel），registerMessage 放 FMLCommonSetupEvent。`,
+      "反面：SimpleNetworkWrapper / IMessage / IMessageHandler（那是 1.12）；发送用 PacketDistributor，不要 sendTo(player,msg)/sendToAll(msg)。",
+      `${mcVersion} 是 MCP 映射时代；不要抄 1.17+ 的 FriendlyByteBuf 写法。`,
+      "import 包路径以工程现有 import 与 search_forge_docs(version=" + mcVersion + ") 为准，禁止默写全限定名。",
+    ],
+  };
+}
+
+/** D-3：1.17 SimpleChannel（官方 Mojang 映射：FriendlyByteBuf + net.minecraft.resources.ResourceLocation）。
+ * 对照 forge/1.17.1 06-networking.mdc L113–160 已核示例。 */
+function forgeSimpleChannelOfficialSkeleton(
+  mod: string,
+  pascal: string,
+  mcVersion: string,
+): GeneratorResult {
+  const body = `// Forge ${mcVersion} — SimpleChannel（官方映射：FriendlyByteBuf；注册放 FMLCommonSetupEvent）
+package com.example.${mod}.network;
+
+import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+
+public class NetworkHandler {
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+            new ResourceLocation("${mod}", "main"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals);
+    private static int id = 0;
+
+    // 在 FMLCommonSetupEvent 里调用 register()
+    public static void register() {
+        INSTANCE.registerMessage(
+                id++,
+                ${pascal}Packet.class,
+                ${pascal}Packet::toBytes,
+                ${pascal}Packet::new,
+                (msg, ctx) -> msg.handle(ctx));
+    }
+
+    public static void sendToServer(${pascal}Packet msg) {
+        INSTANCE.sendToServer(msg);
+    }
+}
+
+public class ${pascal}Packet {
+    private final String message;
+
+    public ${pascal}Packet(String message) { this.message = message; }
+
+    public ${pascal}Packet(FriendlyByteBuf buf) {
+        this(buf.readUtf());
+    }
+
+    public void toBytes(FriendlyByteBuf buf) {
+        buf.writeUtf(message);
+    }
+
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> { /* server/client logic */ });
+        ctx.get().setPacketHandled(true);
+    }
+}
+`;
+  return {
+    code: withDocsReviewHeader(body, "search_forge_docs", mcVersion),
+    warnings: [
+      `Forge ${mcVersion} 用官方映射名：FriendlyByteBuf / net.minecraft.resources.ResourceLocation / SimpleChannel（NetworkRegistry.newSimpleChannel），registerMessage 放 FMLCommonSetupEvent。`,
+      "反面：SimpleNetworkWrapper / IMessage（那是 1.12）、PacketBuffer（那是 ≤1.16 的 MCP 名）。",
+      "发送用 PacketDistributor，不要 sendTo(player,msg)/sendToAll(msg)。",
+      "import 包路径以工程现有 import 与 search_forge_docs(version=" + mcVersion + ") 为准，禁止默写全限定名。",
+    ],
   };
 }
 
@@ -493,7 +657,9 @@ export function generateNetworkPacket(
               ? " Fabric 1.21.1 无入库 networking 专页（failures.json）。请 search_fabric_docs version=1.21.4 + 本档 mc-networking Skill；可选 fabric_1.21.4 骨架仅作结构参考，禁止当 1.21.1 官方 API。禁止把 fabric_1.21 当 1.21.1。"
               : platform === "fabric_1.20.4" || platform === "fabric_1.20.1"
                 ? " 该档无官方 networking 页。"
-                : "") +
+                : platform.startsWith("quilt_")
+                  ? quiltNetworkNoDonorHint(platform.slice("quilt_".length))
+                  : "") +
           noNativeGeneratorError("search_*_docs", "规则 06 / mc-networking Skill"),
       ],
     };
@@ -704,6 +870,17 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
     return fabricMojmap26PayloadSkeleton(mod.value, pkt.value, pascal, "26.1.2", true);
   }
 
+  // D-2：Quilt 网络 = 同版本已核 Fabric donor 骨架 + QSL 无网络模块横幅（QSL 2025-12 停更）
+  if (platform.startsWith("quilt_")) {
+    const ver = platform.slice("quilt_".length);
+    const donorWarnings = [
+      `Quilt ${ver}：QSL 无网络模块；本骨架为同版本 Fabric API donor（FAPI 通道）。工程须声明 fabric-api 或 QFAPI 依赖。`,
+      "QSL 已于 2025-12 停更；不要把本骨架改写成 org.quiltmc.qsl.* 网络类名（不存在该模块）。",
+      "客户端接收用 ClientPlayNetworking.registerGlobalReceiver；签名核 search_fabric_docs version=" + ver + "。",
+    ];
+    return fabricYarnPayloadSkeleton(mod.value, pkt.value, pascal, ver, donorWarnings);
+  }
+
   if (platform === "neoforge_1.20.1") {
     return {
       code: `// NeoForge 1.20.1 — SimpleChannel 形态（与 Forge 1.20.1 API 兼容）
@@ -799,6 +976,15 @@ public class ${pascal}Packet implements IMessage {
   }
   if (platform === "forge_1.18.2") {
     return forgeSimpleChannelSkeleton(mod.value, pascal, "1.18.2", true);
+  }
+  // D-3：1.14.4–1.16.5 为 MCP 映射时代（PacketBuffer）；1.17 起默认官方映射（FriendlyByteBuf）——
+  // 两个时代不共用骨架（各档 06 规则已核示例派生）
+  if (platform === "forge_1.14.4" || platform === "forge_1.15.2" || platform === "forge_1.16.5") {
+    const ver = platform.slice("forge_".length);
+    return forgeSimpleChannelMcpSkeleton(mod.value, pascal, ver);
+  }
+  if (platform === "forge_1.17.1") {
+    return forgeSimpleChannelOfficialSkeleton(mod.value, pascal, "1.17.1");
   }
 
   // 未知 platform token 目前落入 Forge 1.20.1 SimpleChannel；新增枚举必须在此之前接分支，禁止默默吃掉。
@@ -1089,7 +1275,8 @@ public class ${toPascalCase(mod.value)}Config {
   };
 }
 
-const ENTITY_RENDERER_SUPPORTED = "forge 1.20.1 / forge 1.20.4 / neoforge 26.1";
+const ENTITY_RENDERER_SUPPORTED =
+  "forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1";
 
 export function generateEntityRenderer(
   modId: string,
@@ -1105,7 +1292,9 @@ export function generateEntityRenderer(
   }
   const p = platform.trim().toLowerCase();
   const v = version.trim();
-  const forgeOk = p === "forge" && (v === "1.20.1" || v === "1.20.4");
+  // D-3 门闩：forge 1.18.2/1.19.4 的 04 规则已核 EntityRenderersEvent.RegisterRenderers +
+  // EntityRendererProvider.Context（与 1.20.x 同族）→ 过门；neoforge 1.21.x / fabric 未核 → 保持拒绝。
+  const forgeOk = p === "forge" && ["1.18.2", "1.19.4", "1.20.1", "1.20.4"].includes(v);
   const neo261 = p === "neoforge" && /^26\.1/.test(v);
   if (p === "fabric" || p === "quilt") {
     return {

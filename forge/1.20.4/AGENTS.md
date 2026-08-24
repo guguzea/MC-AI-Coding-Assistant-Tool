@@ -16,7 +16,7 @@
 | Minecraft 版本 | 1.20.4 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
 | Java 版本 | **Java 17**（Forge 1.20.4 最低要求） |
-| Gradle | Gradle 8.x + ForgeGradle 14.x |
+| Gradle | Gradle 8.x + ForgeGradle `[6.0,6.2)`（官方 MDK 49.2.8 实证；不存在 FG 14.x） |
 | Mappings | **Parchment**（`minecraft "1.20.4"` 下推荐） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 

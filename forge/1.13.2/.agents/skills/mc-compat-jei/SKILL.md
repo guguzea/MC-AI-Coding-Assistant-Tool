@@ -1,41 +1,46 @@
 ﻿---
 name: mc-compat-jei
-description: Minecraft Forge JEI 兼容层。让 JEI 自动读取配方。触发词：JEI、RecipeCategory、jei_plugins
+description: Minecraft Forge JEI 1.13.2 兼容层（JEI 5.x 构件核验）。触发词：JEI、IModPlugin、RecipeCategory、jei_plugins
+platform: forge
+version: "1.13.2"
+dependencies: []
+mappings: mcp
 ---
 
 # JEI 兼容（Forge 1.13.2）
 
+> 核验声明（2026-08）：以下接口名全部来自对应 MC 版本的官方构件（Modrinth JEI/EMI/REI jar），用 mcp-server 自家 zip 读取 + 字节码解析逐类核对；签名细节以官方 wiki（github.com/mezz/JustEnoughItems/wiki、github.com/emilyploszaj/emi）与工程实际依赖为准，禁止默写。
+
 ## Decision: 选择兼容方案
 
 ```
-IF 配方已通过 JSON 文件定义
-  → JEI 自动读取，无需额外代码（推荐）
+IF 配方已通过 DataGen / 数据包 JSON 定义
+  → 查看器自动读取，无需额外代码（推荐）
 
-IF 需要自定义配方 UI
-  → @JEIPlugin + IModPlugin
+IF 需要自定义配方 UI / 类别
+  → @JeiPlugin + IModPlugin（registerCategories / registerRecipes）
+
+IF 需要显示子类
+  → registerCategories 内定义 IRecipeCategory
 ```
 
-## JEI 自动读取
+## 方案 A：自动读取（无代码，推荐）
 
-只要配方放在 `data/{modid}/recipes/`，JEI 会在游戏加载时自动发现并显示。
+配方 JSON 位于 `data/{modid}/recipes/`（或 DataGen 输出目录）→ 加载时自动发现。
 
-## JEI 插件
+## 方案 B：查看器插件（构件核验签名）
 
-```java
-@JEIPlugin
-public class MyJEIPlugin implements IModPlugin {
-    @Override
-    public void register(IModRegistry registry) {
-        // 自定义配方类别、处理器
-    }
-}
-```
+- 注解：`@JeiPlugin`（`mezz/jei/api/JeiPlugin`）。
+- 接口：`IModPlugin`（`mezz/jei/api/IModPlugin`）；方法族：`registerCategories(IRecipeCategoryRegistration)` / `registerRecipes(IRecipeRegistration)` / `registerRecipeCatalysts(IRecipeCatalystRegistration)` / `registerGuiHandlers(IGuiHandlerRegistration)` 等（版本间方法族主体一致，个别年代有增删——以工程实际依赖为准）。
+- 类别：`IRecipeCategory`（`mezz/jei/api/recipe/category/`）、`IGuiHelper`（`mezz/jei/api/IGuiHelper`）。
+
 
 ## 常见错误
 
-- ❌ `RegistryEvent.NewRegistry` / `onJEIInit` — JEI 用 `@JEIPlugin` + `IModPlugin`
-- ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI
-- ❌ 配方 JSON 放在错误路径
+- ❌ 把 1.13.2+（JEI 5.x+）写成 `@JEIPlugin` + `IModRegistry`（该组合仅 JEI 4.x 真实存在）
+- ❌ 在服务端注册查看器类（必须客户端）
+- ❌ 配方 JSON 放在错误路径（应在 `data/{modid}/recipes/`）
+
 
 ## 参考资料
 

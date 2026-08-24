@@ -33,6 +33,7 @@ import {
 import { cleanupPath, downloadToFile } from "./download.js";
 import type { GhAsset } from "./github.js";
 import { extractZip, listZipEntries, normalizeZipLayout, resolveStagingContentRoot } from "./zip.js";
+import { verifyExtractedTree } from "../utils/extract-verify.js";
 import { writeUpdateState } from "./state.js";
 import { closeSemanticDbs } from "../docs-platform/semantic/search.js";
 
@@ -119,17 +120,30 @@ function walkFiles(root: string, base = root, depth = 0, seen?: Set<string>): st
 /** 解压后重扫 staging：zip 成员不得以 symlink/junction 形式落盘（防把外部文件拷进 dataDir）。 */
 function findSymlinkInTree(root: string): string | null {
   if (!existsSync(root)) return null;
-  const stack: string[] = [root];
-  while (stack.length > 0) {
-    const dir = stack.pop()!;
+  // 与 walkFiles 同款防护：深度上限 + realpath 已访问集，防 junction 环导致死循环
+  const seen = new Set<string>();
+  const walk = (dir: string, depth: number): string | null => {
+    if (depth > 32) return null;
+    let real: string;
+    try {
+      real = nativeReal(dir);
+    } catch {
+      return null;
+    }
+    if (seen.has(real)) return null;
+    seen.add(real);
     for (const name of readdirSync(dir)) {
       const p = join(dir, name);
       const st = lstatSync(p);
       if (st.isSymbolicLink()) return relative(root, p).split(sep).join("/");
-      if (st.isDirectory()) stack.push(p);
+      if (st.isDirectory()) {
+        const hit = walk(p, depth + 1);
+        if (hit) return hit;
+      }
     }
-  }
-  return null;
+    return null;
+  };
+  return walk(root, 0);
 }
 
 function copyTree(srcRoot: string, destRoot: string, allowRoot: string): string[] {
@@ -392,6 +406,22 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       };
     }
     const contentRoot = resolveStagingContentRoot(staging);
+    // A-2 双视图复核：解压器按 LFH 落盘，可能与 CD 清单不一致；集合不符或 realpath 逃逸即拒绝
+    const verify = verifyExtractedTree(contentRoot, layout.mapped);
+    if (!verify.ok) {
+      return {
+        ok: false,
+        steps,
+        filesToOverwrite,
+        diskSpace,
+        action: actionable(
+          "DATA_ZIP_LAYOUT_INVALID",
+          `解压产物与中央目录清单不一致: ${verify.problem}`,
+          ["Release zip 可能被构造（CD 与 LFH 视图分裂）", "校验 Release 资产来源与 SHA256SUMS"],
+          ["mc_skill_update"],
+        ),
+      };
+    }
     recoverPartialSwap(dataDir);
     const nextDir = siblingName(dataDir, ".next");
     mkdirSync(nextDir, { recursive: true });

@@ -207,7 +207,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   "mc-publish": {
     title: "发布清单（人在环：不代上传）",
     body: `对照 community_knowledge/authored/publishing.md。禁止调用 CurseForge / Modrinth 上传 API。
-1. 元数据：mods.toml / neoforge.mods.toml / fabric.mod.json 的 id、version、license
+1. 元数据（按平台）：Java 版 mods.toml / neoforge.mods.toml / fabric.mod.json / quilt.mod.json；LiteLoader litemod.json；Rift riftmod.json；基岩 manifest.json——核对 id、version、license
 2. 产物：build/libs 正式 jar（排除 -sources、-javadoc、dev）
 3. changelog 与支持的 MC/loader 版本
 4. 可选 check_publish_ready（若已注册）做机器检查；默认不写盘、不调外网

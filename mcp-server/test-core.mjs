@@ -2125,6 +2125,31 @@ async function testReviewFixes() {
   assert.equal(fabricPass.status, "passed", JSON.stringify(fabricPass));
   assert.equal(fabricPass.deprecated_legacy_passed, undefined);
 
+  // A-3：entrypoint 含正则元字符时不得让 validate_project 崩溃（结构化失败而非 SyntaxError）
+  let a3val;
+  try {
+    a3val = validateProject({
+      fabricModJson: JSON.stringify({
+        schemaVersion: 1,
+        id: "examplemod",
+        entrypoints: { main: ["net.foo.Class[a(", "com.example.ExampleMod"] },
+      }),
+      javaFiles: [{
+        path: "src/main/java/com/example/ExampleMod.java",
+        content:
+          "package com.example;\nimport net.fabricmc.api.ModInitializer;\npublic class ExampleMod implements ModInitializer {\n  public void onInitialize() {}\n}\n",
+      }],
+    });
+  } catch (err) {
+    a3val = { crashed: String(err) };
+  }
+  assert.ok(!a3val.crashed, `malicious entrypoint crashed validator: ${a3val.crashed}`);
+  assert.equal(a3val.status, "failed", JSON.stringify(a3val));
+  assert.ok(
+    a3val.errors.some((e) => /net\.foo\.Class|entrypoint/i.test(e)),
+    JSON.stringify(a3val.errors),
+  );
+
   const bedrockVal = validateProject({
     javaFiles: [{
       path: "BP/manifest.json",
@@ -2414,19 +2439,20 @@ public class ExampleMod {}
 
     const slipZip = createStoreZip([{ name: "../evil.txt", data: "x" }]);
     const slipDest = join(dest, "slip");
-    const slipRes = unpackMdkArchive({ zip: slipZip, destCache: slipDest });
+    // 本用例专测 zip-slip 识别，与 pin 门无关 → 显式 allowUnpinned 绕开 A-2 fail-closed
+    const slipRes = unpackMdkArchive({ zip: slipZip, destCache: slipDest, allowUnpinned: true });
     assert.equal(slipRes.ok, false);
     assert.equal(slipRes.error?.code, "ZIP_SLIP");
     assert.ok(existsSync(slipRes.archivePath));
 
     const tool = probeUnzipTool();
     if (!tool) {
-      const missing = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "notool") });
+      const missing = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "notool"), allowUnpinned: true });
       assert.equal(missing.ok, false);
       assert.equal(missing.error?.code, "UNZIP_TOOL_MISSING");
       return;
     }
-    const ok = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "ok") });
+    const ok = unpackMdkArchive({ zip: goodZip, destCache: join(dest, "ok"), allowUnpinned: true });
     assert.equal(ok.ok, true, JSON.stringify(ok.error));
     assert.equal(ok.entryClass, "com.example.examplemod.ExampleMod");
     assert.ok(ok.unpackedRoot?.includes("MDK-sha") || ok.unpackedRoot, ok.unpackedRoot);
@@ -2729,7 +2755,7 @@ public class ExampleMod { }
     version: "1.21.11",
   });
   assert.equal(quiltDg.code, null);
-  assert.ok(quiltDg.errors?.some((e) => /search_docs platform=quilt/.test(e)), JSON.stringify(quiltDg.errors));
+  assert.ok(quiltDg.errors?.some((e) => /search_fabric_docs version=1\.21\.11|手写 data\/ JSON/.test(e)), JSON.stringify(quiltDg.errors));
 
   const neo1201Dg = generateDatagen({
     providerType: "recipe",

@@ -119,5 +119,10 @@ for (const file of walkMd(ROOT)) {
 
 entries.sort((a, b) => a.id.localeCompare(b.id));
 const outDir = join(ROOT, "indexes");
-writeFileSync(join(outDir, "index-l0.json"), JSON.stringify({ version: 1, entries }, null, 2), "utf8");
+// E-2：记录构建时间，便于发现索引陈旧（消费方读不到该键时行为不变）
+writeFileSync(
+  join(outDir, "index-l0.json"),
+  JSON.stringify({ version: 1, generatedAt: new Date().toISOString(), entries }, null, 2),
+  "utf8",
+);
 console.log(`[build-community-index] wrote ${entries.length} entries → indexes/index-l0.json`);

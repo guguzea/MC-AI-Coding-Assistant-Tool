@@ -65,6 +65,13 @@ public class ModItems {
 3. 不要把 1.20 的能力（Capability/DataComponent）当成 1.12 已有：1.12 只有 Capability 雏形且用法不同。
 4. 移植目标版本选型（留 1.12.2 还是升 1.20.1/1.21）是人在环决策：工作量差一个数量级，先给清单让用户拍板。
 
+## 老系统的「现代版对照」指针
+
+- **附魔（1.7–1.20.x）**：`extends Enchantment` 子类 + 注册进 `ForgeRegistries.ENCHANTMENTS`（1.16+ 走 RegistryEvent/DeferredRegister）。1.21 起换成数据驱动，见 `authored/enchantments-datadriven-121`；老写法细节用 `search_forge_docs --version=<对应版本>` 核对。
+- **网络（1.8–1.12）**：`SimpleNetworkWrapper`；1.13+ 才是 `SimpleChannel`（见 `authored/forge-simplechannel-networking`）。
+- **流体（1.19.3 前 Forge）**：没有 FluidType 层，`FlowingFluid` 子类直连注册；与 `authored/custom-fluid-neoforge` 的三层结构不同。
+- **实体渲染器**：`render(...)`/`getTextureLocation(...)` 签名在 1.16/1.17/1.19 各有微调；以当档规则树与 `search_forge_docs` 为准，不要拿 26.x 的 RenderState 写法倒推。
+
 ## 自检
 
 - 开发环境 `runClient` 过了映射重映射这一关（ForgeGradle 版本要配老版兼容）。

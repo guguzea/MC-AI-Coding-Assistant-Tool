@@ -6,6 +6,7 @@
  */
 
 import { ownGet } from "../utils/own-record.js";
+import { escapeRegExp } from "../utils/regex.js";
 import { ActionCodes, actionable } from "../utils/actionable.js";
 
 export interface ScoredDocHit {
@@ -192,10 +193,6 @@ export function buildSymbolIndex(
 
 function normalizeTag(t: string): string {
   return t.toLowerCase().replace(/-/g, "");
-}
-
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function priorityRank(p: string): number {

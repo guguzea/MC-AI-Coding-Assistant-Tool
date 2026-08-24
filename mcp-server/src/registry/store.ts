@@ -48,7 +48,8 @@ export function searchRegistryEntries(
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  const like = `%${q.replace(/%/g, "")}%`;
+  // 剥掉 % 与 _ 两种 LIKE 通配符，防用户输入改变匹配语义（参数化 SQL 本身无注入）
+  const like = `%${q.replace(/[%_]/g, "")}%`;
   const exactNs = q.includes(":") ? q : `minecraft:${q}`;
   const exactSql = registry
     ? `SELECT registry, id, translation_key AS translationKey FROM entries

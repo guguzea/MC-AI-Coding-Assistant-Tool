@@ -1,6 +1,7 @@
 plugins {
     // Loom 版本以 https://fabricmc.net/develop/ 与 search_fabric_docs version=1.21.10 为准，禁止默写
-    id "net.fabricmc.fabric-loom"
+    // remap 线专用 id（≤1.21.x 混淆时代）；去混淆的 26.x 用 net.fabricmc.fabric-loom
+    id "net.fabricmc.fabric-loom-remap"
 }
 
 version = project.mod_version

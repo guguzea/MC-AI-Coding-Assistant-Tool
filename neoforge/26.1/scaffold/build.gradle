@@ -1,0 +1,33 @@
+// NeoForge 26.1 scaffold — ModDevGradle 参考骨架（C-5）。
+// ⚠️ 版本锚点仅为参考（Gradle ≥9.1 / MDG 2.0.144（2026-08-23 maven latest）/ neo_version 26.1.0.19-beta）；
+// 从零工程请以 download_official_mdk 实际产物的 gradle.properties 为准，禁止凭记忆改数字。
+// 本档去混淆：无 mappings / parchment 配置；依赖用 implementation 而非 modImplementation。
+
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.144'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+neoForge {
+    version = '26.1.0.19-beta'
+
+    runs {
+        client { client() }
+        server { server() }
+    }
+
+    mods {
+        examplemod {
+            sourceSet sourceSets.main
+        }
+    }
+}

@@ -7,7 +7,7 @@
     "methodCount": 41282,
     "classCount": 8262,
     "ok": true,
-    "durationMs": 30153
+    "durationMs": 2324
   },
   {
     "version": "1.20.1",
@@ -17,7 +17,7 @@
     "methodCount": 40911,
     "classCount": 7431,
     "ok": true,
-    "durationMs": 26788
+    "durationMs": 9025
   },
   {
     "version": "1.14.4",
@@ -27,7 +27,7 @@
     "methodCount": 21982,
     "classCount": 4976,
     "ok": true,
-    "durationMs": 24877
+    "durationMs": 5052
   },
   {
     "version": "1.16.5",
@@ -37,7 +37,7 @@
     "methodCount": 27094,
     "classCount": 5445,
     "ok": true,
-    "durationMs": 20308
+    "durationMs": 7119
   },
   {
     "version": "1.17.1",
@@ -47,7 +47,7 @@
     "methodCount": 28016,
     "classCount": 6107,
     "ok": true,
-    "durationMs": 22200
+    "durationMs": 12037
   },
   {
     "version": "1.18.2",
@@ -57,7 +57,7 @@
     "methodCount": 29716,
     "classCount": 6391,
     "ok": true,
-    "durationMs": 21968
+    "durationMs": 7578
   },
   {
     "version": "1.19.4",
@@ -67,7 +67,7 @@
     "methodCount": 39820,
     "classCount": 7326,
     "ok": true,
-    "durationMs": 38104
+    "durationMs": 27651
   },
   {
     "version": "1.20.4",
@@ -77,7 +77,7 @@
     "methodCount": 43440,
     "classCount": 7782,
     "ok": true,
-    "durationMs": 67708
+    "durationMs": 37639
   },
   {
     "version": "1.21.3",
@@ -87,7 +87,7 @@
     "methodCount": 43811,
     "classCount": 8719,
     "ok": true,
-    "durationMs": 2539
+    "durationMs": 38367
   },
   {
     "version": "1.21.11",
@@ -97,7 +97,7 @@
     "methodCount": 49730,
     "classCount": 10274,
     "ok": true,
-    "durationMs": 7808
+    "durationMs": 16759
   },
   {
     "version": "1.14.4",
@@ -107,7 +107,7 @@
     "methodCount": 11445,
     "classCount": 0,
     "ok": true,
-    "durationMs": 2010
+    "durationMs": 4896
   },
   {
     "version": "1.15.2",
@@ -117,7 +117,7 @@
     "methodCount": 10598,
     "classCount": 0,
     "ok": true,
-    "durationMs": 1880
+    "durationMs": 3166
   },
   {
     "version": "1.12.2",
@@ -127,7 +127,7 @@
     "methodCount": 20817,
     "classCount": 3313,
     "ok": true,
-    "durationMs": 1064
+    "durationMs": 1783
   },
   {
     "version": "1.13.2",
@@ -137,7 +137,7 @@
     "methodCount": 26093,
     "classCount": 3993,
     "ok": true,
-    "durationMs": 4731
+    "durationMs": 2377
   },
   {
     "version": "1.7.10",
@@ -147,7 +147,7 @@
     "methodCount": 13263,
     "classCount": 1815,
     "ok": true,
-    "durationMs": 708
+    "durationMs": 4042
   },
   {
     "version": "1.8.9",
@@ -157,7 +157,7 @@
     "methodCount": 16426,
     "classCount": 2507,
     "ok": true,
-    "durationMs": 561
+    "durationMs": 4134
   },
   {
     "version": "1.9.4",
@@ -167,7 +167,7 @@
     "methodCount": 18228,
     "classCount": 2908,
     "ok": true,
-    "durationMs": 1207
+    "durationMs": 2543
   },
   {
     "version": "1.10.2",
@@ -177,7 +177,7 @@
     "methodCount": 18571,
     "classCount": 2949,
     "ok": true,
-    "durationMs": 4097
+    "durationMs": 1473
   },
   {
     "version": "1.11.2",
@@ -187,6 +187,36 @@
     "methodCount": 19334,
     "classCount": 3091,
     "ok": true,
-    "durationMs": 7257
+    "durationMs": 4186
+  },
+  {
+    "version": "1.21.4",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.4\\mappings\\yarn-1.21.4+build.8-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 44336,
+    "classCount": 8850,
+    "ok": true,
+    "durationMs": 12118
+  },
+  {
+    "version": "1.21.8",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.8\\mappings\\yarn-1.21.8+build.1-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 46592,
+    "classCount": 9469,
+    "ok": true,
+    "durationMs": 48134
+  },
+  {
+    "version": "1.21.10",
+    "platform": "fabric",
+    "source": "H:\\MC_skill\\data\\fabric_1.21.10\\mappings\\yarn-1.21.10+build.3-tiny.gz",
+    "era": "yarn-tiny",
+    "methodCount": 48591,
+    "classCount": 9953,
+    "ok": true,
+    "durationMs": 90358
   }
 ]

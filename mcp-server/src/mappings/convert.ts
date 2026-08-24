@@ -98,11 +98,20 @@ function loadParchment(version: string): {
   const classNamesPath = join(dataDir, "class-names.json");
   let apiIndex: Record<string, ParchmentClass> = {};
   let classNames: string[] = [];
+  // 数据文件损坏/截断（如 Release 包半截）时降级为空索引 + 警告，不让工具以未结构化异常崩溃
   if (existsSync(apiIndexPath)) {
-    apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8"));
+    try {
+      apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8")) as Record<string, ParchmentClass>;
+    } catch (err) {
+      console.error(`[convert_mapping] api-index.json 解析失败（${version}），按空索引进度: ${(err as Error).message}`);
+    }
   }
   if (existsSync(classNamesPath)) {
-    classNames = JSON.parse(readFileSync(classNamesPath, "utf-8"));
+    try {
+      classNames = JSON.parse(readFileSync(classNamesPath, "utf-8")) as string[];
+    } catch (err) {
+      console.error(`[convert_mapping] class-names.json 解析失败（${version}），按空表处理: ${(err as Error).message}`);
+    }
   }
   const data = { apiIndex, classNames };
   _dataCache.set(version, data);

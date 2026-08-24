@@ -32,6 +32,7 @@ import {
 } from "./catalog.js";
 import { ALL_RULE_IDS } from "./session.js";
 import { detectModProject } from "./detect.js";
+import { packNotFoundRelatedTools } from "./pack-not-found.js";
 import {
   entryBody,
   expandHosts,
@@ -262,9 +263,26 @@ function buildWritePlan(opts: {
   hosts: PackHost[];
   includeSkills: boolean;
   includeSkillBodies: boolean;
-}): { ops: PlannedFile[]; skipped: Array<{ rel: string; reason: string }>; overlayNote?: string } {
+}): {
+  ops: PlannedFile[];
+  skipped: Array<{ rel: string; reason: string; nextSteps?: string[]; relatedTools?: string[] }>;
+  overlayNote?: string;
+} {
   const pack = findPack(opts.platform, opts.version);
-  if (!pack) return { ops: [], skipped: [{ rel: "", reason: "PACK_NOT_FOUND" }] };
+  if (!pack) {
+    // 防御路径（入口已兜底）：与 session 侧同口径，带指引而非裸 reason
+    return {
+      ops: [],
+      skipped: [
+        {
+          rel: "",
+          reason: "PACK_NOT_FOUND",
+          nextSteps: ["改用文档工具（search_*_docs），禁止读邻档规则树"],
+          relatedTools: packNotFoundRelatedTools(opts.platform),
+        },
+      ],
+    };
+  }
   const resolved = resolvePackRules({
     platform: opts.platform,
     packDir: pack.packDir,

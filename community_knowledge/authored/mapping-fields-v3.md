@@ -1,3 +1,12 @@
+---
+id: authored/mapping-fields-v3
+title: convert_mapping 字段映射（schema v3）
+tags: [mapping, convert_mapping, field, searge, yarn, csv]
+summary: mojang/mcp/yarn/parchment 字段名互转；memberKind=field；ownerClass 时机；SCHEMA_FIELDS_UNAVAILABLE 时重建 yarn-sqlite。
+mcHint: 1.14+
+sourceKind: authored
+---
+
 # convert_mapping 字段映射（schema v3）
 
 ## 何时用

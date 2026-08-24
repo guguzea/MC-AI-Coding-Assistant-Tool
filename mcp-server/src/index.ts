@@ -2,7 +2,7 @@ import "./utils/node-sqlite-guard.js"; // 必须保持第一个 import：22.5–
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { realpathSync } from "fs";
 import { fileURLToPath } from "url";
-import { warmupApi } from "./api/index.js";
+import { warmupApi, DEFAULT_VERSION } from "./api/index.js";
 import { diagnoseDataPaths, hasAnyPlatformData, assertDataUsable } from "./utils/path.js";
 import { server } from "./tool-registry.js";
 
@@ -49,7 +49,7 @@ if (isMainModule()) {
   }
 
   try {
-    void warmupApi(["1.20.1"]).catch((err) => {
+    void warmupApi([DEFAULT_VERSION]).catch((err) => {
       console.error("[mc-mcp-server] warmup failed:", err);
     });
     const transport = new StdioServerTransport();

@@ -1,9 +1,16 @@
 ﻿---
 name: mc-compat-jei
-description: Minecraft NeoForge JEI/EMI 兼容层。让 JEI/EMI 自动读取 DataGen 配方，或使用现代 API 添加自定义显示。触发词：JEI、EMI、RecipeCategory、jei_plugins、EMI、emi
+description: JEI/EMI 兼容层（构件核验白名单）。触发词：JEI、EMI、RecipeCategory、jei_plugins、EmiPlugin、IModPlugin
+platform: neoforge
+version: "1.20.4"
+dependencies: []
 ---
 
-# JEI/EMI 兼容（NeoForge 1.20.4）
+> ⚠️ 本档内容经对应版本官方构件逐类核验（2026-08，用 mcp-server 自家 zip 读取 + 字节码解析）：只列构件中真实存在的接口名；签名以官方 wiki（github.com/mezz/JustEnoughItems/wiki）与工程实际依赖为准，禁止默写。
+> 已移除的过时写法（请勿重新引入）：JEI ≤4.x 时代的 `@JEIPlugin` / `IModRegistry` / `registry.addRecipeCategories(...)` 组合在 1.13.2+ 不存在；EMI 侧勿使用未经构件核验的类名。
+
+> EMI 白名单（EMI 构件核验存在，具体用法以 github.com/emilyploszaj/emi 为准）：`EmiPlugin`、`EmiRegistry`、`EmiRecipe`、`BasicEmiRecipe`（均在 `dev/emi/emi/api/...`）。
+> 注意 `EmiStackProvider` 类真实存在，但旧版本文档中的用法（作为 addRecipes 参数）未核验，不引用。
 
 ## Decision: 选择兼容方案
 
@@ -12,96 +19,35 @@ IF 配方已通过 DataGen 生成
   → JEI/EMI 自动读取 DataPack JSON，无需额外代码（推荐）
 
 IF 需要自定义配方 UI（如 2x2 合成网格、多输入槽）
-  → 使用 EMI（EMI 1.0+ 是 JEI 12.x 的现代替代，API 简洁）
-  → 或使用 JEI 内置的 CategoryExtension
-
-IF 需要显示子类（sub-categories）
-  → EMI.recipeTree() / JEI hideOf() 等插件 API
+  → EMI：EmiPlugin + EmiRegistry（以官方 wiki 为准）
+  → 或 JEI：@JeiPlugin + IModPlugin（registerCategories / registerRecipes）
 ```
 
-## 方案 A：JEI/EMI 自动读取（DataGen，无代码，最佳）
+## 方案 A：JEI/EMI 自动读取（无代码）
 
-只要配方通过 `RecipeProvider` 生成到 `src/generated/resources/data/{modid}/recipes/`，JEI 和 EMI 都会在游戏加载时自动发现并显示，**无需任何 JEI/EMI 代码**。
+RecipeProvider 输出 `src/generated/resources/data/{modid}/recipes/` → 自动展示。
 
-```java
-// 在 GatherDataEvent 中注册 RecipeProvider
-generator.addProvider(true, new ModRecipeProvider(output, registries));
-// 生成的 JSON 文件：src/generated/resources/data/{modid}/recipes/*.json
-// JEI/EMI 会自动读取
-```
+## 方案 B：JEI 插件（构件核验签名）
 
-## 方案 B：使用 EMI（现代推荐）
+- 注解：`@JeiPlugin`（`mezz/jei/api/JeiPlugin`）。
+- 接口：`IModPlugin`（`mezz/jei/api/IModPlugin`）；方法族：`registerCategories(IRecipeCategoryRegistration)` / `registerRecipes(IRecipeRegistration)` / `registerRecipeCatalysts(IRecipeCatalystRegistration)` / `registerGuiHandlers(IGuiHandlerRegistration)` 等（同代方法族主体一致，个别年代新增方法——签名以工程实际依赖为准）。
+- 类别：`IRecipeCategory`（`mezz/jei/api/recipe/category/`）、`IGuiHelper`（`mezz/jei/api/IGuiHelper`）。
 
-EMI 是 JEI 12.x 的现代替代品，API 简洁，在 NeoForge 社区更流行。
+## 方案 C：EMI（仅列构件核验接口名）
 
-### 添加 EMI 依赖
-
-在 `build.gradle` 中：
-```groovy
-dependencies {
-    minecraft "net.neoforged:neoforge:${neoform_version}"
-    // NeoForge 使用 fg.deobf 或直接引用
-    implementation "dev.emi:EMI:1.0+1.20.4"
-}
-```
-
-### EMI 自定义配方类
-
-```java
-public class MyEMIRecipe {
-    public final ItemStack output;
-    public final NonNullList<Ingredient> inputs;
-
-    public MyEMIRecipe(ItemStack output, NonNullList<Ingredient> inputs) {
-        this.output = output;
-        this.inputs = inputs;
-    }
-}
-
-public class MyEMIRecipeCategory implements EMIRecipeProvider<MyEMIRecipe> {
-    public static final EMIResourceLocation CATEGORY =
-        EMIResourceLocation.of(MOD_ID, "my_recipe");
-
-    @Override
-    public EMIResourceLocation getId() { return CATEGORY; }
-
-    @Override
-    public Component getName() { return Component.literal("My Recipe"); }
-
-    @Override
-    public void addRecipes(EMIStackProvider builder) {
-        // 添加配方
-    }
-
-    @Override
-    public int getDisplayHeight() { return 100; }
-}
-```
-
-## FluidIngredient（流体配方）
-
-```java
-// 流体配方示例（适用于 JEI 和 EMI）
-FluidIngredient.of(Fluids.WATER, 1000)  // 1000 mb = 1 桶
-// 或标签形式
-FluidIngredient.of(FluidTags.WATER, 1000)
-```
+- `EmiPlugin` / `EmiRegistry`（`dev/emi/emi/api/`）
+- `EmiRecipe` / `BasicEmiRecipe`（`dev/emi/emi/api/recipe/`）
+- 注册入口（fabric.mod.json 的 `emi:plugins` 等）与具体方法以官方 README / wiki 为准，本 Skill 不确定时不默写。
 
 ## 常见错误
 
-- ❌ 手动实现 `IRecipeCategory`/`IRecipeWrapper`（JEI 12.x 已废弃）
-- ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI/EMI（必须 `Dist.CLIENT`）
-- ❌ 配方 JSON 放在错误路径（应在 `data/{modid}/recipes/`）
-- ❌ DataGen 运行后未刷新 IDE 资源（`./gradlew runData` 后刷新项目）
-
-## 参考资料
-
-- EMI GitHub：https://github.com/emilyploszaj/emi
-- EMI 文档：https://emi.pau101.com/
+- ❌ JEI/EMI 侧未经构件核验的类名（含旧稿中出现的若干拼写变体）
+- ❌ 在服务端注册 JEI/EMI（必须客户端）
+（EMI 无官方文档站，以 GitHub 仓库为准）
 
 ## 扩展点
 
 | 配合 Skill | 协作说明 |
 |-----------|---------|
-| `mc-datagen` | DataGen 生成的配方 JSON 自动被 JEI/EMI 读取，无需额外代码 |
+| `mc-datagen` | DataGen 生成的配方 JSON 自动被 JEI/EMI 读取 |
 | `mc-registry` | 自定义配方类需要注册表引用配方物品/方块 |

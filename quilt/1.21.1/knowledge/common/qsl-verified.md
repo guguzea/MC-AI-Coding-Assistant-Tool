@@ -1,5 +1,7 @@
 # Quilt / QSL 已核实表（差异层）
 
+> ⚠️ **整体降级声明（2026-08 二轮审计）**：QSL 已于 **2025-12 停更**（quiltmc.org FAQ 实证）；1.21 线仅 4 个 QSL 11.0.0-alpha 构建（最新 11.0.0-alpha.3+0.102.0-1.21） 构件（止 2024-08-12，只含 qsl_base + crash_info 模块），**1.21.1 无任何可用 QSL/QFAPI 发布物**。本表全部 QSL 条目为 **QSL 源码仓库考据（main 分支 `871ca7abf109`），非可编译 API**——禁止据此生成代码；注册/事件走 Vanilla Registry.register 与同版 Fabric API。
+
 - **抓取日**：2026-08-15
 - **源**：`data/quilt_<ver>/quilt-docs/<ver>/processed/qsl-readme.md`（QSL README）+ wiki 概念页 `qsl-qfapi`（该 wiki 为 SPA，入库正文可能只有导航壳，**方法名以 README 图表为准**）
 - **禁止**编 `QuiltRegistry.register()`。

@@ -47,25 +47,23 @@ interface PreloadError {
 
 type WorkerOutMessage = PreloadResult | PreloadError;
 
-// ── 数据目录解析（4 策略，按可靠性从高到低）──────────────────────────────
+// ── 数据目录解析（3 策略，按可靠性从高到低）──────────────────────────────
 
 function resolveDataDir(): string {
-  // 策略 1：workerData.dataDir（主线程通过 new Worker(path, { workerData: { dataDir } }) 传入）
+  // 策略 1：workerData.dataDir（主线程通过 new Worker(path, { workerData: { dataDir } }) 必传，
+  // 与主线程 utils/path.ts 的 resolveDataDir 同源——禁止在本文件再猜具体版本目录）
   const wdMsg = (workerData as { dataDir?: string } | null)?.dataDir;
   if (wdMsg && existsSync(wdMsg)) return wdMsg;
 
-  // 策略 2：MC_SKILL_DATA（与主进程 path.ts 一致：指向 data/ 根）
+  // 策略 2/3：env 或 cwd/data 仅在根下直接有 api-index.json 时才可信；
+  // 不再写死 forge_1.20.1 之类的版本回退（版本目录改名会静默指向错误布局）
   const env = process.env.MC_SKILL_DATA;
-  if (env && existsSync(env)) {
-    const extracted = join(env, "forge_1.20.1", "extracted");
-    if (existsSync(extracted)) return extracted;
-    return env;
-  }
+  if (env && existsSync(join(env, "api-index.json"))) return env;
+  const cwdData = join(process.cwd(), "data");
+  if (existsSync(join(cwdData, "api-index.json"))) return cwdData;
 
-  // 策略 3：cwd/data/forge_1.20.1/extracted
-  const cwdExtracted = join(process.cwd(), "data", "forge_1.20.1", "extracted");
-  if (existsSync(cwdExtracted)) return cwdExtracted;
-  return join(process.cwd(), "data", "forge_1.20.1");
+  // 都未命中：返回最可能的候选，让读取阶段失败并走显式 error 通道（懒加载兜底）
+  return wdMsg ?? env ?? cwdData;
 }
 
 let dataDir: string = resolveDataDir();
@@ -133,15 +131,14 @@ async function preload(timeoutMs = 15000): Promise<void> {
   );
 
   if (!results.apiIndex || !results.classNames) {
-    // 即使文件缺失也不阻塞，在 postMessage 前检查 deadline
-    const skipTrie = true;
-    sendResult(
-      null,
-      results.classNames as string[] | null,
-      skipTrie,
-      null,
-      Date.now()
-    );
+    // 数据缺失走显式 error 通道（主线程会降级 lazyLoad 并记录 lastError），
+    // 禁止把 null 归一成 {}/[] 冒充「空索引成功」
+    parentPort?.postMessage({
+      type: "error",
+      errors: [
+        `预加载失败：${dataDir} 下缺少 api-index.json / class-names.json（该版本数据不完整或目录布局不符）`,
+      ],
+    } satisfies WorkerOutMessage);
     return;
   }
 
@@ -167,8 +164,8 @@ async function preload(timeoutMs = 15000): Promise<void> {
 }
 
 function sendResult(
-  apiIndex: Record<string, unknown> | null,
-  classNames: string[] | null,
+  apiIndex: Record<string, unknown>,
+  classNames: string[],
   trieSkipped: boolean,
   trieFlat: TrieNodeFlat[] | null,
   _sentAt: number
@@ -177,13 +174,13 @@ function sendResult(
   parentPort?.postMessage({
     type: "ready",
     // 直接传解析后的对象，由 v8 序列化（比 JSON.stringify → JSON.parse 快一个数量级）
-    apiIndex: apiIndex ?? {},
-    classNames: classNames ?? [],
+    apiIndex,
+    classNames,
     l0Index: undefined, // 兼容旧 WorkerOutMessage 消费者（外部搜索预加载仍可用）
     trieFlat: trieSkipped ? null : trieFlat,
     trieSkipped,
     elapsed: now,
-    classCount: classNames?.length ?? 0,
+    classCount: classNames.length,
   } satisfies WorkerOutMessage);
 }
 

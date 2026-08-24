@@ -1,139 +1,58 @@
 ---
 name: mc-compat-jei
-description: Minecraft Forge JEI/EMI 兼容层。让 JEI/EMI 自动读取 DataGen 配方，或使用现代 API 添加自定义显示。触发词：JEI、EMI、RecipeCategory、jei_plugins、EMI、emi
+description: JEI/EMI/REI 配方查看器插件集成。触发词：JEI、EMI、REI、配方显示、RecipeCategory、jei_plugins、EmiPlugin、REIClientPlugin、配方查看器、软依赖
+platforms: [fabric, forge, neoforge]
+mcVersions: ["1.20.1+"]
+communityDocId: authored/library-integration-jei-emi
+mappings: hint
 ---
 
-# JEI/EMI 兼容（Forge 1.20.1）
+# JEI / EMI / REI 配方查看器集成
 
-## Decision: 选择兼容方案
+三库都是软依赖（装了才显示配方界面），Fabric / Forge / NeoForge 均有构建。版本与注册 API 以各自官方仓库为准，不写死签名。
+
+## Decision: 集成方案
 
 ```
-IF 配方已通过 DataGen 生成
-  → JEI/EMI 自动读取 DataPack JSON，无需额外代码（推荐）
-
-IF 需要自定义配方 UI（如 2x2 合成网格、多输入槽）
-  → 使用 EMI（EMI 1.0+ 是 JEI 12.x 的现代替代，API 简洁）
-  → 或使用 JEI 内置的 CategoryExtension
-
-IF 需要显示子类（sub-categories）
-  → EMI.recipeTree() / JEI hideOf() 等插件 API
+IF 配方已通过 DataGen 生成到 data/<modid>/recipes/*.json
+  → 零插件代码，三查看器自动显示（首选路径）
+IF 需要自定义分类 / 隐藏条目 / 特殊展示
+  → 新模组优先 JEI + EMI 双插件
+  → 1.20.x 及更老以 JEI 为主；NeoForge 1.21+ 生态 EMI 渗透率上升，EMI 与 JEI 平级
+IF 用户问要不要写 REI 插件
+  → 通常不需要：REI 的 JEI 插件兼容层可直接跑 JEI 插件
+  → 若 REI 与 JEI 同装，注意插件别被两边重复注册
 ```
 
-## 方案 A：JEI/EMI 自动读取（DataGen，无代码，最佳）
+## 每加载器声明（软依赖）
 
-只要配方通过 `RecipeProvider` 生成到 `src/generated/resources/data/{modid}/recipes/`，JEI 和 EMI 都会在游戏加载时自动发现并显示，**无需任何 JEI/EMI 代码**。
+- Fabric：`fabric.mod.json` 用 `suggests`（写进 `depends` 会让玩家缺库进不了游戏），modId：JEI=`jei`、EMI=`emi`、REI=`roughlyenoughitems`；开发依赖 `compileOnly` + `runtimeOnly` 自测
+- Forge / NeoForge：`mods.toml` / `neoforge.mods.toml` 写 optional 依赖；Gradle 坐标按官方 README 分 artifact（Forge/Neo 与 Fabric 不同），以官方为准
+- 兼容入口只在客户端：Forge/Neo 用 `Dist.CLIENT` 门闩 + client 包；Fabric/Quilt 用 client 源集 + `@Environment(EnvType.CLIENT)` / Loom split sources；服务端禁止引用查看器类
 
-```java
-// 在 GatherDataEvent 中注册 RecipeProvider
-generator.addProvider(true, new ModRecipeProvider(output, registries));
-// 生成的 JSON 文件：src/generated/resources/data/{modid}/recipes/*.json
-// JEI/EMI 会自动读取
-```
+## 集成要点
 
-## 方案 B：使用 EMI（现代推荐）
+- 自定义展示：JEI 实现 `IModPlugin`（@JeiPlugin 注解），EMI 实现 `EmiPlugin` 在 register 回调加分类，REI 实现 `REIClientPlugin`；接口名以官方文档为准
+- 1.21.2+ / 26.x：JEI 服务端也需安装以同步配方，只装客户端会出现配方缺失
+- DataGen 已覆盖的配方不要重复注册，避免条目重复
 
-EMI 是 JEI 12.x 的现代替代品，API 简洁，在 Fabric/NeoForge 社区更流行。
+## 官方文档
 
-### 添加 EMI 依赖
-
-在 `build.gradle` 中：
-```groovy
-loom {
-    // Fabric/NeoForge: modImplementation "dev.emi:EMI:1.0+1.20.1"
-    // Forge: fg.deobf "dev.emi:EMI:1.0+1.20.1"
-}
-```
-
-### 注册 EMI 配方
-
-```java
-@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class EMIPlugin {
-    @SubscribeEvent
-    public static void onSetup(EMIModPluginInitEvent event) {
-        // EMI 自动读取 DataGen 配方
-        // 如需自定义子类：
-        event.addCategory(MyEMIRecipeCategory.CATEGORY);
-    }
-}
-```
-
-### EMI 自定义配方类
-
-```java
-public class MyEMIRecipe {
-    public final ItemStack output;
-    public final NonNullList<Ingredient> inputs;
-
-    public MyEMIRecipe(ItemStack output, NonNullList<Ingredient> inputs) {
-        this.output = output;
-        this.inputs = inputs;
-    }
-}
-
-public class MyEMIRecipeCategory implements EMIRecipeProvider<MyEMIRecipe> {
-    public static final EMIResourceLocation CATEGORY =
-        EMIResourceLocation.of(MOD_ID, "my_recipe");
-
-    @Override
-    public EMIResourceLocation getId() { return CATEGORY; }
-
-    @Override
-    public Component getName() { return Component.literal("My Recipe"); }
-
-    @Override
-    public void addRecipes(EMIStackProvider builder) {
-        // 添加配方
-    }
-
-    @Override
-    public int getDisplayHeight() { return 100; }
-}
-```
-
-## 方案 C：JEI 12.x 插件（传统方式）
-
-JEI 12.x 废弃了 `IRecipeCategory`/`IRecipeWrapper`。现代 JEI 主要通过 DataPack 机制工作，如需自定义显示推荐使用 EMI。
-
-### JEI 插件注册
-
-```java
-@Mod.EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
-public class JEIPlugin {
-    // JEI 12.x 不需要 IRecipeCategory
-    // 如需在 JEI 中隐藏/分类配方，使用-jei 的 HideableRecipeCategory 事件
-    @SubscribeEvent
-    public static void onJEIInit(JeiInitializedEvent event) {
-        // JEI 自动读取 DataGen 生成的配方 JSON
-    }
-}
-```
-
-## FluidIngredient（流体配方）
-
-```java
-// 流体配方示例（适用于 JEI 和 EMI）
-FluidIngredient.of(Fluids.WATER, 1000)  // 1000 mb = 1 桶
-// 或标签形式
-FluidIngredient.of(FluidTags.WATER, 1000)
-```
+- JEI：https://github.com/mezz/JustEnoughItems
+- EMI：https://github.com/emilyploszaj/emi 
+- REI：https://github.com/shedaniel/RoughlyEnoughItems
 
 ## 常见错误
 
-- ❌ 手动实现 `IRecipeCategory`/`IRecipeWrapper`（JEI 12.x 已废弃）
-- ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI/EMI（必须 `Dist.CLIENT`）
-- ❌ 配方 JSON 放在错误路径（应在 `data/{modid}/recipes/`）
-- ❌ DataGen 运行后未刷新 IDE 资源（`./gradlew runData` 后刷新项目）
+- 服务端注册查看器类 → 专用服崩溃
+- 配方 JSON 在 src/main/resources 但从未 runData，IDE 有文件、游戏里没有
+- 主类 static 字段直接引用查看器类型 → 未装时 NoClassDefFoundError
+- 只 compileOnly 却当硬依赖用，从不 isLoaded 门闩
+- 1.21.2+ 只在客户端装 JEI（服务端配方同步缺失）
+- REI 与 JEI 同装时插件重复注册，出现条目重复
 
-## 参考资料
+## 相关
 
-- EMI GitHub：https://github.com/emilyploszaj/emi
-- EMI 文档：https://emi.pau101.com/
-- JEI Wiki（已过时，仅作参考）：https://github.com/mezz/JustEnoughItems/wiki
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-datagen` | DataGen 生成的配方 JSON 自动被 JEI/EMI 读取，无需额外代码 |
-| `mc-registry` | 自定义配方类需要注册表引用配方物品/方块 |
+- 短文：`authored/library-integration-jei-emi`、`authored/library-integration`
+- MCP：`search_community_docs`、`check_dependencies`、`generate_datagen`
+- 联动 skill：`mc-datagen`（配方 JSON 生成）、`mc-recipe`

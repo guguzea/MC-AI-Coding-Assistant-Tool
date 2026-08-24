@@ -1,52 +1,47 @@
 ---
 name: mc-compat-jei
-description: Minecraft Forge JEI/EMI 兼容层，让 JEI/EMI 自动读取 DataGen 配方，或使用现代 API 添加自定义显示。触发词：JEI、EMI、RecipeCategory、jei_plugins、emi
+description: Minecraft Forge JEI/EMI 1.18.2 兼容层（JEI 10.x 构件核验；EMI 类名以官方仓库为准）。触发词：JEI、EMI、IModPlugin、RecipeCategory
+platform: forge
+version: "1.18.2"
+dependencies: []
+mappings: mcp
 ---
 
 # JEI/EMI 兼容（Forge 1.18.2）
 
+> 核验声明（2026-08）：以下接口名全部来自对应 MC 版本的官方构件（Modrinth JEI/EMI/REI jar），用 mcp-server 自家 zip 读取 + 字节码解析逐类核对；签名细节以官方 wiki（github.com/mezz/JustEnoughItems/wiki、github.com/emilyploszaj/emi）与工程实际依赖为准，禁止默写。
+
 ## Decision: 选择兼容方案
 
 ```
-IF 配方已通过 DataGen 生成
-  → JEI/EMI 自动读取 DataPack JSON，无需额外代码（推荐）
+IF 配方已通过 DataGen / 数据包 JSON 定义
+  → 查看器自动读取，无需额外代码（推荐）
 
-IF 需要自定义配方 UI（如 2x2 合成网格、多输入槽）
-  → 使用 EMI 或 JEI 内置的 CategoryExtension
+IF 需要自定义配方 UI / 类别
+  → @JeiPlugin + IModPlugin（registerCategories / registerRecipes）
 
-IF 需要显示子类（sub-categories）
-  → EMI.recipeTree() / JEI hideOf() 等插件 API
+IF 需要显示子类
+  → registerCategories 内定义 IRecipeCategory
 ```
 
-## 方案 A：JEI/EMI 自动读取（DataGen，无代码，最佳）
+## 方案 A：自动读取（无代码，推荐）
 
-只要配方通过 `RecipeProvider` 生成到 `src/generated/resources/data/{modid}/recipes/`，JEI 和 EMI 都会在游戏加载时自动发现并显示，**无需任何 JEI/EMI 代码**。
+配方 JSON 位于 `data/{modid}/recipes/`（或 DataGen 输出目录）→ 加载时自动发现。
 
-## 方案 B：使用 EMI（现代推荐）
+## 方案 B：查看器插件（构件核验签名）
 
-### 添加 EMI 依赖
-
-在 `build.gradle` 中：
-```groovy
-dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    deobf "dev.emi:EMI:0.9.3+1.18.2"
-}
-```
+- 注解：`@JeiPlugin`（`mezz/jei/api/JeiPlugin`）。
+- 接口：`IModPlugin`（`mezz/jei/api/IModPlugin`）；方法族：`registerCategories(IRecipeCategoryRegistration)` / `registerRecipes(IRecipeRegistration)` / `registerRecipeCatalysts(IRecipeCatalystRegistration)` / `registerGuiHandlers(IGuiHandlerRegistration)` 等（版本间方法族主体一致，个别年代有增删——以工程实际依赖为准）。
+- 类别：`IRecipeCategory`（`mezz/jei/api/recipe/category/`）、`IGuiHelper`（`mezz/jei/api/IGuiHelper`）。
+- EMI：本档未核验 0.9.x 构件内的类名，具体 API 以 github.com/emilyploszaj/emi 为准（依赖坐标参考 `dev.emi:EMI:0.9.3+1.18.2` 属真实发布，但类名不默写）。
 
 ## 常见错误
 
-- ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI/EMI（必须 `Dist.CLIENT`）
+- ❌ 把 1.13.2+（JEI 5.x+）写成 `@JEIPlugin` + `IModRegistry`（该组合仅 JEI 4.x 真实存在）
+- ❌ 在服务端注册查看器类（必须客户端）
 - ❌ 配方 JSON 放在错误路径（应在 `data/{modid}/recipes/`）
-- ❌ DataGen 运行后未刷新 IDE 资源（`./gradlew runData` 后刷新项目）
+
 
 ## 参考资料
 
-- EMI 文档：https://emi.pau101.com/
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-datagen` | DataGen 生成的配方 JSON 自动被 JEI/EMI 读取，无需额外代码 |
-| `mc-registry` | 自定义配方类需要注册表引用配方物品/方块 |
+- EMI GitHub：https://github.com/emilyploszaj/emi（EMI 作者为 emilyploszaj；EMI 文档以 GitHub 仓库 wiki 为准）

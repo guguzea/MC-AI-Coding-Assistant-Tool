@@ -9,6 +9,9 @@ docsTool: search_docs
 
 # mc-registry（Quilt 1.21.10）
 
+> ⚠️ **QSL 已于 2025-12 停更（quiltmc.org FAQ 实证），本版本无任何可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
+
+
 核实表：knowledge/common/qsl-verified.md。
 必须 search_docs({platform:"quilt"}) 且 version=1.21.10。02–10 仍读 fabric/1.21.10 overlay。
 

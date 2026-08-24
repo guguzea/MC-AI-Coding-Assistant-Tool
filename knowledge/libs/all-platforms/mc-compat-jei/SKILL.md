@@ -39,7 +39,7 @@ IF 用户问要不要写 REI 插件
 ## 官方文档
 
 - JEI：https://github.com/mezz/JustEnoughItems
-- EMI：https://github.com/emilyploszaj/emi （文档站 https://emi.pau101.com/）
+- EMI：https://github.com/emilyploszaj/emi 
 - REI：https://github.com/shedaniel/RoughlyEnoughItems
 
 ## 常见错误

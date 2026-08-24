@@ -359,6 +359,59 @@ function testTlsCertErrorDetect() {
   });
 }
 
+async function testMdkUnpackPinGate() {
+  const mdk = await import(pathToFileURL(join(root, "mdk/index.js")).href);
+  const verifyMod = await import(pathToFileURL(join(root, "utils/extract-verify.js")).href);
+
+  // verifyExtractedTree 单元：集合一致/多余/缺失
+  const vRoot = mkdtempSync(join(tmpdir(), "mc-verify-"));
+  mkdirSync(join(vRoot, "sub"), { recursive: true });
+  writeFileSync(join(vRoot, "a.txt"), "a");
+  writeFileSync(join(vRoot, "sub", "b.txt"), "b");
+  assert.equal(verifyMod.verifyExtractedTree(vRoot, ["a.txt", "sub/b.txt"]).ok, true);
+  const extra = verifyMod.verifyExtractedTree(vRoot, ["a.txt"]);
+  assert.equal(extra.ok, false);
+  assert.ok(/LFH|中央目录之外/.test(extra.problem), extra.problem);
+  const missing = verifyMod.verifyExtractedTree(vRoot, ["a.txt", "sub/b.txt", "ghost.txt"]);
+  assert.equal(missing.ok, false);
+  assert.ok(/未落盘/.test(missing.problem), missing.problem);
+  rmSync(vRoot, { recursive: true, force: true });
+
+  const zipBuf = mdk.createStoreZip([
+    {
+      name: "ExampleMod.java",
+      data: "package com.example;\n@Mod(\"examplemod\")\npublic class ExampleMod {}\n",
+    },
+  ]);
+  const destCache = mkdtempSync(join(tmpdir(), "mc-mdk-unpack-"));
+  try {
+    // 路径 1：有 pin 且匹配 → ok
+    const pinned = mdk.unpackMdkArchive({ zip: zipBuf, destCache: join(destCache, "p1"), expectedSha256: sha256(zipBuf) });
+    assert.equal(pinned.ok, true, JSON.stringify(pinned.error ?? pinned));
+
+    // 路径 2：无 pin 且未显式 allowUnpinned → fail-closed MDK_NOT_PINNED
+    const unpinned = mdk.unpackMdkArchive({ zip: zipBuf, destCache: join(destCache, "p2"), expectedSha256: null });
+    assert.equal(unpinned.ok, false);
+    assert.equal(unpinned.error?.code, "MDK_NOT_PINNED", JSON.stringify(unpinned.error ?? {}));
+
+    // 路径 3：无 pin + allowUnpinned:true → 旧流程可用
+    const allowed = mdk.unpackMdkArchive({
+      zip: zipBuf,
+      destCache: join(destCache, "p3"),
+      expectedSha256: null,
+      allowUnpinned: true,
+    });
+    assert.equal(allowed.ok, true, JSON.stringify(allowed.error ?? allowed));
+
+    // pin 不匹配仍拒绝（原有行为保持）
+    const mismatch = mdk.unpackMdkArchive({ zip: zipBuf, destCache: join(destCache, "p4"), expectedSha256: "0".repeat(64) });
+    assert.equal(mismatch.ok, false);
+    assert.equal(mismatch.error?.code, "SHA256_MISMATCH");
+  } finally {
+    rmSync(destCache, { recursive: true, force: true });
+  }
+}
+
 async function testPendingRestartHint() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   state.writeUpdateState(
@@ -394,6 +447,7 @@ async function main() {
   await testChecksumMissingAsset();
   await testDataZipAndGithubDigest();
   await testTlsCertErrorDetect();
+  await testMdkUnpackPinGate();
   await testPendingRestartHint();
   console.log("test-update: ok");
 }

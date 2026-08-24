@@ -15,7 +15,7 @@ import {
   getSemanticIndexStatus,
   listSemanticDbPresence,
   buildSemanticWarnings,
-  isIntentionalL0Only,
+  isIntentionallyClearedTree,
   inspectSemanticDb,
 } from "../docs-platform/semantic/status.js";
 import { semanticDbPath } from "../docs-platform/semantic/search.js";
@@ -158,7 +158,17 @@ export function diagnoseDataPaths(): {
     try {
       if (existsSync(dataDir)) {
         const entries = readdirSync(dataDir, { withFileTypes: true });
-        const matching = entries.filter(e => e.isDirectory() && e.name.startsWith(prefix));
+        // B-6：版本门——剥掉平台前缀后必须以数字开头（或 stable），
+        // 排除 forge_javadoc / fabric_porting / neoforge_primers 这类特殊目录
+        const matching = entries.filter(
+          (e) =>
+            e.isDirectory() &&
+            e.name.startsWith(prefix) &&
+            (() => {
+              const rest = e.name.slice(prefix.length);
+              return /^\d/.test(rest) || rest === "stable";
+            })(),
+        );
         if (matching.length > 0) {
           status = "found";
           path = join(dataDir, matching[0].name);
@@ -203,17 +213,22 @@ export function diagnoseDataPaths(): {
   const semanticPresence = listSemanticDbPresence(dataDir);
   const semanticStatus = getSemanticIndexStatus(dataDir);
   const present = semanticPresence.filter((s) => s.exists).length;
-  const l0Only = semanticPresence.filter((s) => !s.exists && isIntentionalL0Only(s.platform, s.version, s.source));
-  const missingReal = semanticPresence.filter((s) => !s.exists && !isIntentionalL0Only(s.platform, s.version, s.source));
+  // B-5：刻意置空（L0 白名单 / index-l0=[] / failures.json）与真缺库分开计数与提示
+  const cleared = semanticPresence.filter(
+    (s) => !s.exists && isIntentionallyClearedTree(dataDir, s.platform, s.version, s.source),
+  );
+  const missingReal = semanticPresence.filter(
+    (s) => !s.exists && !isIntentionallyClearedTree(dataDir, s.platform, s.version, s.source),
+  );
   const semanticWarnings = buildSemanticWarnings({
     present,
-    total: Math.max(semanticPresence.length - l0Only.length, present),
+    total: Math.max(semanticPresence.length - cleared.length, present),
     modelsReady: semanticStatus.modelsReady,
     missingSamples: missingReal,
   });
-  if (l0Only.length) {
+  if (cleared.length) {
     semanticWarnings.push(
-      `下列 ${l0Only.length} 棵文档树为故意 L0-only（页少，不建空向量库）：${l0Only
+      `下列 ${cleared.length} 棵文档树为刻意置空（index-l0 为 [] 或有 failures.json 凭据；search 已回落 wiki/带警示，不是缺库）：${cleared
         .map((s) => `${s.platform}_${s.version}/${s.source}`)
         .join(", ")}。`,
     );

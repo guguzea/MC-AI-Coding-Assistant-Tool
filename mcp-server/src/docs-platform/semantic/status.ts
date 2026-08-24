@@ -1,7 +1,7 @@
 /**
  * 语义索引可用性探测（inspectDb.mode !== "missing" / 只读 sqlite meta，不加载嵌入模型）。
  */
-import { existsSync, readdirSync, statSync } from "fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
 import { EMBEDDING_MODEL } from "./embeddings.js";
@@ -58,6 +58,34 @@ const L0_ONLY_TREES = new Set([
 
 export function isIntentionalL0Only(platform: string, version: string, source: string): boolean {
   return L0_ONLY_TREES.has(`${platform}_${version}/${source}`);
+}
+
+/**
+ * B-5：动态判定「刻意置空」树——index-l0.json 存在且为 []，或树内有 failures.json 凭据。
+ * 这类树 search 已回落 wiki 并带响亮警示，不是缺库；与静态 L0_ONLY 白名单分开报告。
+ */
+export function isIntentionallyClearedTree(
+  dataRoot: string,
+  platform: string,
+  version: string,
+  source: string,
+): boolean {
+  if (isIntentionalL0Only(platform, version, source)) return true;
+  const base = join(dataRoot, `${platform}_${version}`, source);
+  if (!existsSync(base)) return false;
+  if (existsSync(join(base, "failures.json"))) return true;
+  if (version && version !== "stable") {
+    const l0Path = join(base, version, "index-l0.json");
+    if (existsSync(l0Path)) {
+      try {
+        const parsed: unknown = JSON.parse(readFileSync(l0Path, "utf8"));
+        if (Array.isArray(parsed) && parsed.length === 0) return true;
+      } catch {
+        /* 解析失败按非置空处理（真坏文件会走缺库路径） */
+      }
+    }
+  }
+  return false;
 }
 
 function modelsDirReady(dataRoot: string): boolean {
@@ -276,18 +304,25 @@ export function getSemanticIndexStatus(dataRoot: string): SemanticIndexStatus {
   else modeHint = "l0-only";
   const presence = listSemanticDbPresence(dataRoot);
   const presentAll = presence.filter((s) => s.exists).length;
-  const missingSamples = presence.filter((s) => !s.exists && !isIntentionalL0Only(s.platform, s.version, s.source));
-  const l0Only = presence.filter((s) => !s.exists && isIntentionalL0Only(s.platform, s.version, s.source));
-  const totalCounted = presence.length > 0 ? presence.length - l0Only.length : samples.length;
+  // B-5：「刻意置空」（index-l0=[] / failures.json / L0 白名单）不算缺库，单独提示；
+  // 只有真缺库才进缺库警告
+  const cleared = presence.filter(
+    (s) => !s.exists && isIntentionallyClearedTree(dataRoot, s.platform, s.version, s.source),
+  );
+  const missingSamples = presence.filter(
+    (s) => !s.exists && !isIntentionallyClearedTree(dataRoot, s.platform, s.version, s.source),
+  );
+  const l0Only = cleared.filter((s) => isIntentionalL0Only(s.platform, s.version, s.source));
+  const totalCounted = presence.length > 0 ? presence.length - cleared.length : samples.length;
   const warnings = buildSemanticWarnings({
     present: presence.length > 0 ? presentAll : presentCount,
     total: presence.length > 0 ? Math.max(totalCounted, presentAll) : samples.length,
     modelsReady,
     missingSamples: presence.length > 0 ? missingSamples : samples.filter((s) => !s.exists),
   });
-  if (l0Only.length) {
+  if (cleared.length) {
     warnings.push(
-      `下列 ${l0Only.length} 棵文档树为故意 L0-only（页少，不建空向量库）：${l0Only
+      `下列 ${cleared.length} 棵文档树为刻意置空（index-l0 为 [] 或有 failures.json 凭据；search 已回落 wiki/带警示，不是缺库）：${cleared
         .slice(0, 8)
         .map((s) => `${s.platform}_${s.version}/${s.source}`)
         .join(", ")}。`,

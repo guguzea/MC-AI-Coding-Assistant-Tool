@@ -9,7 +9,7 @@
  * 不做路径穿越/解压到盘，仅内存读取。
  */
 
-import { inflateRawSync } from "zlib";
+import { inflateZipEntry } from "../utils/zip-inflate.js";
 
 export class ZipParseError extends Error {
   constructor(message: string) {
@@ -81,7 +81,8 @@ function readEntryData(buf: Buffer, entry: CentralEntry): Buffer {
     return Buffer.from(compressed);
   }
   if (entry.method === 8) {
-    return inflateRawSync(compressed);
+    // A-1：受控解压——硬上限 + maxOutputLength + 输出长度必须等于声明 usize
+    return inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.usize });
   }
   throw new ZipParseError(`条目 ${entry.name} 使用不支持的压缩方法 ${entry.method}（仅 store/deflate）`);
 }

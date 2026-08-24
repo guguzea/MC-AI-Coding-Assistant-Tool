@@ -22,11 +22,16 @@ export function normalizeMcVersion(input: string): string {
   return v;
 }
 
-function fabricSqlitePath(version: string): string {
+/** 版本段白名单：只允许数字与点，防 `../..` 借 resolveDataDir 拼出 data 目录外路径。 */
+const VERSION_SEGMENT_RE = /^\d+(\.\d+)*$/;
+
+function fabricSqlitePath(version: string): string | null {
+  if (!VERSION_SEGMENT_RE.test(version)) return null;
   return resolveDataDir(`fabric_${version}`, "mappings", "yarn-mappings.sqlite");
 }
 
-function forgeSqlitePath(version: string): string {
+function forgeSqlitePath(version: string): string | null {
+  if (!VERSION_SEGMENT_RE.test(version)) return null;
   return resolveDataDir(`forge_${version}`, "mappings", "yarn-mappings.sqlite");
 }
 
@@ -67,8 +72,11 @@ export function resolveMappingDbPath(version: string): string | null {
   const v = normalizeMcVersion(version);
   if (_pathCache.has(v)) return _pathCache.get(v) ?? null;
 
+  // 版本段非法（含路径穿越）→ 直接无库可解析，走上层 NOT_FOUND 降级
+  if (!VERSION_SEGMENT_RE.test(v)) return null;
   const fabric = fabricSqlitePath(v);
   const forge = forgeSqlitePath(v);
+  if (!fabric || !forge) return null;
 
   let chosen: string | null = null;
   if (existsSync(fabric)) {
@@ -109,7 +117,7 @@ export function resolveCsvMappingDbPath(version: string): string | null {
   if (_csvPathCache.has(v)) return _csvPathCache.get(v) ?? null;
   const forge = forgeSqlitePath(v);
   let chosen: string | null = null;
-  if (existsSync(forge)) {
+  if (forge && existsSync(forge)) {
     try {
       const db = new DatabaseSync(forge, { readOnly: true });
       const era = readMeta(db, "mappingEra");
@@ -173,6 +181,11 @@ function simpleClassName(name: string): string {
   const slash = toSlash(name);
   const parts = slash.split("/").filter(Boolean);
   return parts[parts.length - 1] ?? name;
+}
+
+/** SQLite GLOB 元字符转义（GLOB 无 ESCAPE 子句，用 [...] 包住字面量）。 */
+function globLiteral(s: string): string {
+  return s.replace(/[*?\[\]]/g, (c) => `[${c}]`);
 }
 
 /** 映射层名：obfuscated = Tiny official 混淆短名（er）；intermediary = method_6032 类。 */
@@ -557,7 +570,7 @@ export function lookupYarnClass(
       .prepare(
         "SELECT named, intermediary, official FROM classes WHERE named = ? OR named GLOB ? LIMIT 40",
       )
-      .all(simple, `*/${simple}`) as unknown as YarnClassRow[];
+      .all(simple, `*/${globLiteral(simple)}`) as unknown as YarnClassRow[];
     const picked = pickBestCandidate(memberName, candidates);
     if (picked) return picked;
   }
@@ -1022,7 +1035,7 @@ export function convertYarnMember(
 }
 
 export function yarnSqlitePath(version: string): string {
-  return resolveMappingDbPath(version) ?? fabricSqlitePath(normalizeMcVersion(version));
+  return resolveMappingDbPath(version) ?? fabricSqlitePath(normalizeMcVersion(version)) ?? "";
 }
 
 export interface ObfuscatedHitRow {

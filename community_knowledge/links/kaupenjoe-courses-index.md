@@ -2,10 +2,10 @@
 id: links/kaupenjoe-courses-index
 title: Kaupenjoe 教程课程总索引（外链）
 url: https://github.com/Tutorials-By-Kaupenjoe
-summary: Kaupenjoe（Nico Kaupenjoe）全部模组开发课程仓库总目录；NeoForge/Fabric/Forge × 1.16–1.21.x 与 26.X，分支即章节，MIT 许可。
+summary: Kaupenjoe（Nico Kaupenjoe）全部模组开发课程仓库总目录；NeoForge/Fabric/Forge × 1.16.5–1.21.x 与 26.X，分支即章节，MIT 许可。
 tags: [index, kaupenjoe, neoforge, fabric, forge, course, link-only, all-versions]
 sourceKind: links
-mcHint: 1.16.5–1.21.x, 26.X
+mcHint: 1.16.5–1.21.x, 26.X（已全量核对 73 仓库；无 1.15 及更早）
 ---
 
 # Kaupenjoe 教程课程总索引（外链）
@@ -23,10 +23,14 @@ mcHint: 1.16.5–1.21.x, 26.X
 | NeoForge 1.21.X | [NeoForge-Tutorial-1.21.X](https://github.com/Tutorials-By-Kaupenjoe/NeoForge-Tutorial-1.21.X)（66 分支至 Update1.21.11） |
 | Fabric 1.21.X | [Fabric-Tutorial-1.21.X](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.21.X) |
 | Forge 1.21.X | [Forge-Tutorial-1.21.X](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.21.X) |
-| NeoForge 1.21 模块课 | NeoForge-Course-121-Module-1 … Module-9（每模块一仓库） |
+| NeoForge 1.21 模块课 | [NeoForge-Course-121-Module-1](https://github.com/Tutorials-By-Kaupenjoe/NeoForge-Course-121-Module-1) … Module-9（同模式换 Module-N；Fabric/Forge 同名仓库） |
 | Fabric 1.20 | [Fabric-Course-1.20.X](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Course-1.20.X)（92 分支含 mixin/commands/structures/dimension） |
 | Forge 1.20 | [Forge-Course-1.20.X](https://github.com/kaupenjoe/Forge-Course-1.20.X)（93 分支含 commands/BE/fluids/biomes/dimension/structures） |
-| Forge/Fabric 1.19–1.16.5 | Forge-Tutorial-1.19(.3)、Fabric-Tutorial-1.19(.3)、Forge/Fabric-Tutorial-1.18.1、Forge/Fabric-Tutorial-1.17.1、Minecraft-1.16.5、Forge-1.16.5-Livestreaming |
+| 1.20 Udemy 课程版 | [Forge-Course-118](https://github.com/Tutorials-By-Kaupenjoe/Forge-Course-118)、[Fabric-Course-118](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Course-118)（1.18 成体系课程） |
+| Forge/Fabric 1.19–1.19.3 | [Forge-Tutorial-1.19](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.19)、[Fabric-Tutorial-1.19](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.19)、[Forge-Tutorial-1.19.3](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.19.3)、[Fabric-Tutorial-1.19.3](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.19.3) |
+| Forge/Fabric 1.18.1 | [Forge-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.18.1)、[Fabric-Tutorial-1.18.1](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.18.1) |
+| Forge/Fabric 1.17.1 | [Forge-Tutorial-1.17.1](https://github.com/Tutorials-By-Kaupenjoe/Forge-Tutorial-1.17.1)、[Fabric-Tutorial-1.17.1](https://github.com/Tutorials-By-Kaupenjoe/Fabric-Tutorial-1.17.1) |
+| **1.16.5（版本下限）** | [Minecraft-1.16.5](https://github.com/Tutorials-By-Kaupenjoe/Minecraft-1.16.5)（主系列）、[Forge-1.16.5-Livestreaming](https://github.com/Tutorials-By-Kaupenjoe/Forge-1.16.5-Livestreaming)；博客九篇：kaupenjoe.net/category/minecraft-forge-modding-116/ |
 
 ## 用法
 

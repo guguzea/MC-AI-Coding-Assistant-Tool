@@ -1,6 +1,7 @@
 import { analyzeCrash } from "../crash/index.js";
 import { actionable, ActionCodes, versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { ownGet } from "../utils/own-record.js";
+import { escapeRegExp } from "../utils/regex.js";
 import { LIBRARY_CATALOG } from "./library-catalog.js";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -174,10 +175,6 @@ export interface DependencyTrap {
   code: string;
   message: string;
   communityDocId?: string;
-}
-
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 /** 词边界匹配（case-insensitive），避免 "owo" 误中 "power" 之类子串 */

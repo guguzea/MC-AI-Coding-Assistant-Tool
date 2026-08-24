@@ -1,48 +1,47 @@
 ﻿---
 name: mc-compat-jei
-description: Minecraft Forge JEI 兼容层，让 JEI 自动读取配方。触发词：JEI、RecipeCategory、jei_plugins
+description: Minecraft Forge JEI 1.15.2 兼容层（JEI 6.x 构件核验）。触发词：JEI、IModPlugin、RecipeCategory、jei_plugins
+platform: forge
+version: "1.15.2"
+dependencies: []
+mappings: mcp
 ---
 
 # JEI 兼容（Forge 1.15.2）
 
+> 核验声明（2026-08）：以下接口名全部来自对应 MC 版本的官方构件（Modrinth JEI/EMI/REI jar），用 mcp-server 自家 zip 读取 + 字节码解析逐类核对；签名细节以官方 wiki（github.com/mezz/JustEnoughItems/wiki、github.com/emilyploszaj/emi）与工程实际依赖为准，禁止默写。
+
 ## Decision: 选择兼容方案
 
 ```
-IF 配方已通过 DataGen 生成
-  → JEI 自动读取 DataPack JSON，无需额外代码（推荐）
+IF 配方已通过 DataGen / 数据包 JSON 定义
+  → 查看器自动读取，无需额外代码（推荐）
 
-IF 需要自定义配方 UI
-  → @JEIPlugin + IModPlugin
+IF 需要自定义配方 UI / 类别
+  → @JeiPlugin + IModPlugin（registerCategories / registerRecipes）
 
-IF 需要显示子类（sub-categories）
-  → IModPlugin.register() 内插件 API
+IF 需要显示子类
+  → registerCategories 内定义 IRecipeCategory
 ```
 
-## JEI 插件注册
+## 方案 A：自动读取（无代码，推荐）
 
-```java
-@JEIPlugin
-public class MyJEIPlugin implements IModPlugin {
-    @Override
-    public void register(IModRegistry registry) {
-        // 注册自定义配方类别
-    }
-}
-```
+配方 JSON 位于 `data/{modid}/recipes/`（或 DataGen 输出目录）→ 加载时自动发现。
+
+## 方案 B：查看器插件（构件核验签名）
+
+- 注解：`@JeiPlugin`（`mezz/jei/api/JeiPlugin`）。
+- 接口：`IModPlugin`（`mezz/jei/api/IModPlugin`）；方法族：`registerCategories(IRecipeCategoryRegistration)` / `registerRecipes(IRecipeRegistration)` / `registerRecipeCatalysts(IRecipeCatalystRegistration)` / `registerGuiHandlers(IGuiHandlerRegistration)` 等（版本间方法族主体一致，个别年代有增删——以工程实际依赖为准）。
+- 类别：`IRecipeCategory`（`mezz/jei/api/recipe/category/`）、`IGuiHelper`（`mezz/jei/api/IGuiHelper`）。
+
 
 ## 常见错误
 
-- ❌ `RegistryEvent.Register<IRecipeCategory>` / `IRecipeWrapper` — 用 `@JEIPlugin` + `IModPlugin`
-- ❌ 在服务端（`Dist.DEDICATED_SERVER`）注册 JEI（必须 `Dist.CLIENT`）
+- ❌ 把 1.13.2+（JEI 5.x+）写成 `@JEIPlugin` + `IModRegistry`（该组合仅 JEI 4.x 真实存在）
+- ❌ 在服务端注册查看器类（必须客户端）
 - ❌ 配方 JSON 放在错误路径（应在 `data/{modid}/recipes/`）
+
 
 ## 参考资料
 
 - JEI Wiki：https://github.com/mezz/JustEnoughItems/wiki
-
-## 扩展点
-
-| 配合 Skill | 协作说明 |
-|-----------|---------|
-| `mc-datagen` | DataGen 生成的配方 JSON 自动被 JEI 读取 |
-| `mc-registry` | 自定义配方类需要注册表引用配方物品/方块 |

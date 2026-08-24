@@ -2,6 +2,8 @@
 
 来源：Risugami's ModLoader 公开 API + MCP 1.6.4 named（写规则时核对）。**表外禁止输出。**
 
+> ⚠️ **历史背景**：Risugami 自 **MC 1.6.2（2013 年）起停止更新 ModLoader**（FML FAQ 原文 "Risugami retired from updating ModLoader with the 1.6.2 minecraft release, in 2013"），**不存在官方 ModLoader 1.6.4 发布物**。本档基于公开 API 源码与 MCP 1.6.4 named 映射整理，仅供维护既有 1.6.4 整合/魔改包；新工程请用 Forge。
+
 ## BaseMod（`mod_<Name> extends BaseMod`）
 
 | 方法 | 说明 |

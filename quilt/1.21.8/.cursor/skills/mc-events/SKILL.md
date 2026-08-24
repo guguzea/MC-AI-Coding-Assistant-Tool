@@ -9,6 +9,9 @@ docsTool: search_docs
 
 # mc-events（Quilt 1.21.8）
 
+> ⚠️ **QSL 已于 2025-12 停更（quiltmc.org FAQ 实证），本版本无任何可用 QSL/QFAPI 构件**；本档内容仅为考据/stub，禁止当可编译 API。注册/事件走 Vanilla Registry.register 或同版 Fabric API。
+
+
 QSL Event API / Lifecycle 以该档 qsl-verified.md 为准。search_docs({platform:"quilt"}) version=1.21.8。
 
 无方法签名则只作方向，禁止默写 FAPI AttackBlockCallback 当 QSL。

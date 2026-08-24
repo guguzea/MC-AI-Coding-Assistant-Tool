@@ -5,6 +5,7 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { validateDatapackJson } from "../datapack/index.js";
 import { walkProjectFiles } from "../utils/project-files.js";
+import { escapeRegExp } from "../utils/regex.js";
 import type { ValidateQuery, ValidationResult } from "./index.js";
 
 function finish(
@@ -39,11 +40,16 @@ function classLooksPresent(
   fqcn: string,
 ): boolean {
   const simple = fqcn.split(".").pop() ?? fqcn;
-  const needle = simple.replace(/\$/g, "");
+  const needle = escapeRegExp(simple.replace(/\$/g, ""));
   return javaFiles.some((f) => {
     const p = f.path.replace(/\\/g, "/");
     if (p.endsWith(`/${needle}.java`) || p.endsWith(`${needle}.java`)) return true;
-    return new RegExp(`\\bclass\\s+${needle}\\b`).test(f.content);
+    try {
+      return new RegExp(`\\bclass\\s+${needle}\\b`).test(f.content);
+    } catch {
+      // 转义后仍非法（理论上不可达）：按「类不存在」处理而非让整个校验崩溃
+      return false;
+    }
   });
 }
 

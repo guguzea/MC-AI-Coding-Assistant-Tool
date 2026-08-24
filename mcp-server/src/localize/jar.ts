@@ -4,15 +4,17 @@
  */
 
 import { existsSync, readFileSync, statSync } from "fs";
-import { inflateRawSync } from "zlib";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
+import { inflateZipEntry } from "../utils/zip-inflate.js";
 
-const LANG_ENTRY_RE = /^assets\/([^/]+)\/lang\/([^/]+)\.json$/i;
+const LANG_ENTRY_RE = /^assets\/([^/]+)\/lang\/([^/]+)\.(json|lang)$/i;
 
 export interface LangFileRef {
   namespace: string;
   locale: string;
   entryPath: string;
+  /** json = 现代扁平化格式；lang = pre-flattening（<1.13）/基岩行式格式 */
+  format: "json" | "lang";
 }
 
 export interface JarScan {
@@ -91,7 +93,8 @@ function extractEntry(buf: Buffer, entry: CdEntry): Buffer {
     return Buffer.from(compressed);
   }
   if (entry.compression === 8) {
-    return inflateRawSync(compressed);
+    // A-1：受控解压——硬上限 + maxOutputLength + 输出长度必须等于声明尺寸
+    return inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.uncompressedSize });
   }
   throw new Error(`不支持的压缩方式 ${entry.compression}: ${entry.name}`);
 }
@@ -176,7 +179,7 @@ export function scanJarLangFiles(buf: Buffer): JarScanResult {
     const namespace = m[1];
     const locale = m[2].toLowerCase();
     if (namespace === "minecraft") continue;
-    const ref: LangFileRef = { namespace, locale, entryPath: e.name };
+    const ref: LangFileRef = { namespace, locale, entryPath: e.name, format: m[3].toLowerCase() === "lang" ? "lang" : "json" };
     (byNamespace[namespace] ??= []).push(ref);
   }
 
@@ -233,7 +236,7 @@ export function normalizeLocaleToken(raw: string): string {
 export function pickSourceLocale(
   files: LangFileRef[],
   explicit?: string,
-): { locale: string; entryPath: string; fallback: boolean } | null {
+): { locale: string; entryPath: string; format: "json" | "lang"; fallback: boolean } | null {
   const usable = files.filter((f) => canBeSourceLocale(f.locale));
   if (usable.length === 0) return null;
 
@@ -241,19 +244,19 @@ export function pickSourceLocale(
     const want = normalizeLocaleToken(explicit);
     const hit = usable.find((f) => f.locale === want);
     if (!hit) return null;
-    return { locale: hit.locale, entryPath: hit.entryPath, fallback: hit.locale !== "en_us" };
+    return { locale: hit.locale, entryPath: hit.entryPath, format: hit.format, fallback: hit.locale !== "en_us" };
   }
 
   const enUs = usable.find((f) => f.locale === "en_us");
-  if (enUs) return { locale: enUs.locale, entryPath: enUs.entryPath, fallback: false };
+  if (enUs) return { locale: enUs.locale, entryPath: enUs.entryPath, format: enUs.format, fallback: false };
 
   const enOthers = usable.filter((f) => f.locale.startsWith("en_")).sort((a, b) => a.locale.localeCompare(b.locale));
   if (enOthers.length) {
-    return { locale: enOthers[0].locale, entryPath: enOthers[0].entryPath, fallback: true };
+    return { locale: enOthers[0].locale, entryPath: enOthers[0].entryPath, format: enOthers[0].format, fallback: true };
   }
 
   const rest = usable.slice().sort((a, b) => a.locale.localeCompare(b.locale));
-  return { locale: rest[0].locale, entryPath: rest[0].entryPath, fallback: true };
+  return { locale: rest[0].locale, entryPath: rest[0].entryPath, format: rest[0].format, fallback: true };
 }
 
 export function findZhCn(files: LangFileRef[]): LangFileRef | undefined {

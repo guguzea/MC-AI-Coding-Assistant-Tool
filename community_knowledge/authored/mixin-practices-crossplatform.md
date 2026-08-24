@@ -46,7 +46,15 @@ sourceKind: authored
 
 - 每个 mixin 类都要登记进对应数组；`client` 数组里的类只进客户端 jar 环境（服务端不加载）。
 - `defaultRequire: 1` 表示注入失败即崩——开发期保留（早暴露），发布可权衡降级为 soft。
-- Forge 1.16–1.20.x 还要在 `mods.toml` 之外确认 FML 载入 mixin config 的路径（`MixinBootstrap` 时代已过，1.18+ 原生支持）；NeoForge/Fabric 都在 `fabric.mod.json`/`neoforge.mods.toml` 声明引用该 json 文件。
+
+## 各平台启用 Mixin 的方式
+
+| 平台/时代 | 启用途径 | 备注 |
+|-----------|----------|------|
+| Fabric（全版本） | Loader 原生：mixins.json 在 `fabric.mod.json` 的 `"mixins"` 数组登记 | 无需额外依赖 |
+| Forge **1.8–1.12.2** | **MixinBooter**（CleanroomMC，单构建覆盖全区间）：路线一 = 依赖 `zone.rong:mixinbooter` + 实现 `ILateMixinLoader`/`IEarlyMixinLoader` 声明 config；路线二 = MixinGradle 插件生成 refmap。内置 MixinExtras。上游：https://github.com/CleanroomMC/MixinBooter | 中文教程见 `links/mcmod-dev-tutorials`（3340） |
+| Forge 1.16–1.20.x / NeoForge | dev 期用 MixinGradle 类插件出 refmap、运行时由 loader 装载 mixin config；**具体声明方式随版本演进** | 写码前以当档 `search_forge_docs` / `search_neoforge_docs`（关键词 mixin）核实 |
+
 
 ## 高频坑
 
@@ -71,5 +79,6 @@ sourceKind: authored
 ## 不清楚时
 
 - Fabric Wiki 系列：https://wiki.fabricmc.net/tutorial:mixin_introduction （glossary/first-mixin/registration/@Inject/accessors/redirectors/tips/examples 各分页）
+- MixinExtras 中文详解+Wiki 翻译：https://www.mcmod.cn/post/6498.html
 - Mixin 官方 javadoc 与 SpongePowered wiki；MixinExtras: https://github.com/LlamaLad7/MixinExtras
 - 本仓库：skill `mc-mixin`、`permitted/mcmod-3993/mixin-basics`

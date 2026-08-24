@@ -1,6 +1,28 @@
 {
   "version": 1,
+  "generatedAt": "2026-08-24T08:17:36.699Z",
   "entries": [
+    {
+      "id": "authored/addon-dev-workflow",
+      "label": "附属模组（Addon）开发工作流",
+      "path": "authored/addon-dev-workflow.md",
+      "url": "",
+      "tags": [
+        "addon",
+        "附属",
+        "dependency",
+        "fg-deobf",
+        "mods-toml",
+        "ordering",
+        "api",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "给既有模组写附属的端到端套路：先决策「硬前置附属 vs 可选集成」；构建期挂宿主（FG fg.deobf / MDG·NG 自动重映射 / 26.1+ 免 deobf 三种记法）；mods.toml 声明 ordering=AFTER 与版本区间策略；只用宿主公开 API；多宿主版本测试矩阵。",
+      "mcHint": "思路全版本通用；构建记法按 FG≤1.20.4 / 1.20.5+MDG·NG / 26.1+ 三段区分"
+    },
     {
       "id": "authored/bedrock-script-api-primer",
       "label": "基岩版 Script API 入门要点（@minecraft/server）",
@@ -109,6 +131,68 @@
       "mcHint": "1.20.1+（NeoForge 同构，事件类换 net.neoforged 包）"
     },
     {
+      "id": "authored/custom-dimension-and-biomes",
+      "label": "自定义维度与生物群系（DimensionType / LevelStem / TerraBlender）",
+      "path": "authored/custom-dimension-and-biomes.md",
+      "url": "",
+      "tags": [
+        "worldgen",
+        "dimension",
+        "dimension-type",
+        "level-stem",
+        "biome",
+        "terrablender",
+        "multi-noise",
+        "datagen",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "维度两层：dimension_type（天空/光照/怪物刷怪规则，26.x 起环境属性+timelines）+ LevelStem（噪声生成器 + Fixed/MultiNoise 生物源）；datagen bootstrap 写法；主世界/下界加群系用 TerraBlender Region 气候参数叠加；末地用 EndBiomeRegistry；传送门需自写 teleporter。",
+      "mcHint": "26.X 课程分支 75/76 核对；1.20.x 同构但 dimension_type 无 attributes/timelines 新字段"
+    },
+    {
+      "id": "authored/custom-fluid-neoforge",
+      "label": "自定义流体（FluidType + BaseFlowingFluid + 桶/方块）",
+      "path": "authored/custom-fluid-neoforge.md",
+      "url": "",
+      "tags": [
+        "fluid",
+        "FluidType",
+        "BaseFlowingFluid",
+        "bucket",
+        "LiquidBlock",
+        "neoforge",
+        "client-extension"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "NeoForge 流体三层：FluidType 注册（NeoForgeRegistries.FLUID_TYPES）；BaseFlowingFluid.Source/Flowing 共享 Properties（挂 block/bucket）；流体方块与桶物品；IClientFluidTypeExtensions 客户端贴图/雾色；still/flowing 双注册与 JSON 贴图。",
+      "mcHint": "NeoForge 1.20.5+/26.X（26.X 分支 62-fluids 核对）；Forge 同构"
+    },
+    {
+      "id": "authored/custom-mob-entity-pipeline",
+      "label": "自定义生物全链路（EntityType → 属性/AI → 渲染器）",
+      "path": "authored/custom-mob-entity-pipeline.md",
+      "url": "",
+      "tags": [
+        "entity",
+        "mob",
+        "EntityType",
+        "PathfinderMob",
+        "attributes",
+        "goals",
+        "renderer",
+        "renderstate",
+        "spawn-egg",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "EntityType 注册与 sized 碰撞箱；PathfinderMob 子类 registerGoals AI 优先级、createAttributes 静态工厂；EntityAttributeCreationEvent 绑定属性；渲染器两代模式（1.21.x render() vs 26.x RenderState/submit）；AnimationState 动画；刷怪蛋与生成。",
+      "mcHint": "NeoForge（1.21.x 与 26.X 两套渲染器均已核对）；Forge 同构"
+    },
+    {
       "id": "authored/data-attachments-vs-alternatives",
       "label": "数据附件（Data Attachment）与持久化选型（NeoForge 1.20.5+）",
       "path": "authored/data-attachments-vs-alternatives.md",
@@ -127,6 +211,26 @@
       "priority": "⭐",
       "summary": "AttachmentType 注册（builder + 默认值 + Codec.serialize + 可选 sync）；挂在 Entity/BlockEntity/Chunk/Level/ItemStack；getData/hasData/setData/removeData；与 SavedData、persistentData、Data Components 的选型边界。",
       "mcHint": "NeoForge 1.20.5+/1.21（26.X 课程源码核实）"
+    },
+    {
+      "id": "authored/enchantments-datadriven-121",
+      "label": "1.21+ 数据驱动附魔（Enchantment 效果组件 + 自定义 Effect）",
+      "path": "authored/enchantments-datadriven-121.md",
+      "url": "",
+      "tags": [
+        "enchantment",
+        "data-driven",
+        "datagen",
+        "EnchantmentEffectComponents",
+        "POST_ATTACK",
+        "codec",
+        "neoforge",
+        "1.21"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "1.21 起附魔没有 Java 类：ResourceKey+BootstrapContext datagen 定义；definition（支持物品/权重/费用/槽位）；withEffect 挂效果组件；自定义效果=实现 EnchantmentEntityEffect 的 record 注册 MapCodec；生成 JSON 结构解读。",
+      "mcHint": "1.21+/26.x（26.X 分支 59-enchantments 核对）"
     },
     {
       "id": "authored/fabric-26.2-overview",
@@ -163,6 +267,25 @@
       "priority": "⭐",
       "summary": "Fabric 侧与 Forge 系的差异点：CommandRegistrationCallback.EVENT 三参数注册；BiomeModifications.addFeature + BiomeSelectors 挂矿/树；ConfiguredFeature/PlacedFeature bootstrap 与 datagen（FabricDynamicRegistryProvider / DataGeneratorEntrypoint）。",
       "mcHint": "Fabric API 0.9x+/1.20+；文档核对于当前版"
+    },
+    {
+      "id": "authored/fabric-networking-payloads",
+      "label": "Fabric 网络包（CustomPacketPayload / PayloadTypeRegistry）",
+      "path": "authored/fabric-networking-payloads.md",
+      "url": "",
+      "tags": [
+        "fabric",
+        "networking",
+        "payload",
+        "ServerPlayNetworking",
+        "ClientPlayNetworking",
+        "PacketCodec",
+        "PlayerLookup"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Fabric 侧网络：record 实现 CustomPacketPayload（与 NeoForge 同构）；PayloadTypeRegistry 注册编解码；ServerPlayNetworking/ClientPlayNetworking 收发；PlayPayloadHandler 的 context.player().server 判端；PlayerLookup 按追踪发 S2C；服务端校验惯例。",
+      "mcHint": "Fabric API ≥0.92 / MC 1.20.5+（官方文档当前版核对）；旧 ChannelBuf 风格见存档版文档"
     },
     {
       "id": "authored/fabric-saveddata-persistent-state",
@@ -202,6 +325,65 @@
       "mcHint": "1.20.1+"
     },
     {
+      "id": "authored/forge-event-system-practices",
+      "label": "Forge 事件系统实务（双总线、订阅方式与常见坑）",
+      "path": "authored/forge-event-system-practices.md",
+      "url": "",
+      "tags": [
+        "events",
+        "SubscribeEvent",
+        "EventBus",
+        "EventBusSubscriber",
+        "lifecycle",
+        "enqueueWork",
+        "IMC",
+        "forge",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "Forge 事件系统实务：双总线分工（Mod 总线管初始化/Forge 总线管运行期）；订阅三式（实例手动注册、@Mod.EventBusSubscriber 自动、bus 参数选总线）；生命周期事件并行与 enqueueWork 回主线程；IMC 跨模组；泛型事件监听父类收全部子类；Event 基类 cancel/phase。",
+      "mcHint": "锚定 Forge 1.18–1.20.x 双总线形态（社区教程 2571 全文核实）；NeoForge 新版形态有差异，以当档文档为准"
+    },
+    {
+      "id": "authored/forge-simplechannel-networking",
+      "label": "Forge SimpleChannel 网络（≤1.20.4 主流写法）",
+      "path": "authored/forge-simplechannel-networking.md",
+      "url": "",
+      "tags": [
+        "networking",
+        "simplechannel",
+        "NetworkRegistry",
+        "registerMessage",
+        "enqueueWork",
+        "forge",
+        "1.20.1"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "1.8–1.20.4 的 SimpleChannel 全套路：NetworkRegistry.newSimpleChannel 与协议版本握手（ABSENT/ACCEPTVANILLA）；registerMessage 五参数与自增 discriminator；handler 里 enqueueWork 回主线程、setPacketHandled；S2C 用 DistExecutor 隔离客户端类。",
+      "mcHint": "Forge 1.13–1.20.4（官方文档 1.20.1 版原文核对）；1.12 及以前是 SimpleNetworkWrapper"
+    },
+    {
+      "id": "authored/global-loot-modifiers",
+      "label": "全局战利品修改器（Global Loot Modifiers）",
+      "path": "authored/global-loot-modifiers.md",
+      "url": "",
+      "tags": [
+        "loot",
+        "glm",
+        "global-loot-modifier",
+        "LootModifier",
+        "codec",
+        "datagen",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "GLM 用途与两层结构：serializer 注册（MapCodec<? extends IGlobalLootModifier>）+ JSON 条目；继承 LootModifier（codecStart + conditions）；order 文件 global_loot_modifiers.json 的 entries/replace；典型场景（怪物掉落追加、结构箱注入、掉落替换）。",
+      "mcHint": "NeoForge（26.X 分支 35-global-loot-modifiers 核对）；Forge 1.18+ 同构"
+    },
+    {
       "id": "authored/itemhandler-capability",
       "label": "机器对外暴露 IItemHandler（Capability）",
       "path": "authored/itemhandler-capability.md",
@@ -219,6 +401,26 @@
       "priority": "⭐",
       "summary": "Menu 用 getItemHandler 不够；漏斗/管道需 ForgeCapabilities.ITEM_HANDLER + LazyOptional；分面输入输出；invalidateCaps。",
       "mcHint": "1.20.1+"
+    },
+    {
+      "id": "authored/jigsaw-structure-generation",
+      "label": "Jigsaw 结构生成（structure / structure_set / template_pool 三件套）",
+      "path": "authored/jigsaw-structure-generation.md",
+      "url": "",
+      "tags": [
+        "worldgen",
+        "structure",
+        "jigsaw",
+        "template-pool",
+        "structure-set",
+        "nbt",
+        "datapack",
+        "neoforge"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "纯数据包做法：结构 NBT 模板 + worldgen/structure（jigsaw 入口）+ structure_set（random_spread 分布 salt/spacing/separation）+ template_pool（元素池与 fallback）；has_structure 生物群系标签；spawn_overrides；terrain_adaptation；processors 与 projection。",
+      "mcHint": "1.19+/1.20+/1.21+/26.x（26.X 课程分支 73/74 核对，纯 JSON 无需 Java）"
     },
     {
       "id": "authored/legacy-forge-1.7.10-1.12.2-practices",
@@ -240,6 +442,27 @@
       "priority": "⭐",
       "summary": "与现代版的关键差异：GameRegistry/RegistryEvent 注册、无 DeferredRegister 时代写法；MCP/SRG 映射环境；资源目录 assets 结构不变但模型系统 1.8/1.13 分水岭；教程资源推荐与「别拿新文档补老工程」警告。",
       "mcHint": "1.7.10 / 1.12.2"
+    },
+    {
+      "id": "authored/legacy-mod-patching",
+      "label": "停更模组修补工作流（数据层 → Mixin 侧载 → Recaf 字节码）",
+      "path": "authored/legacy-mod-patching.md",
+      "url": "",
+      "tags": [
+        "patching",
+        "recaf",
+        "bytecode",
+        "decompile",
+        "abandoned-mod",
+        "legacy",
+        "maintenance",
+        "forge",
+        "fabric"
+      ],
+      "sourceKind": "authored",
+      "priority": "⭐",
+      "summary": "模组作者停更后的自救路线：先查他改配置/数据包的可行性；再 KubeJS/CrT/Mixin 侧载；最后才对 jar 动字节码（Recaf/创可贴流）。判断停更、反编译定位、补丁边界、许可红线（MIT 可 fork 再发布；自用补丁 vs 再分发）、宿主版本升级的成本。",
+      "mcHint": "全版本通用；Recaf 系通用字节码工具（MIT），配 Minecraft 模组时代无关"
     },
     {
       "id": "authored/lib-architectury",
@@ -1295,14 +1518,21 @@
     },
     {
       "id": "authored/mapping-fields-v3",
-      "label": "authored/mapping-fields-v3",
+      "label": "convert_mapping 字段映射（schema v3）",
       "path": "authored/mapping-fields-v3.md",
       "url": "",
-      "tags": [],
+      "tags": [
+        "mapping",
+        "convert_mapping",
+        "field",
+        "searge",
+        "yarn",
+        "csv"
+      ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "需要在 **mojang / mcp / yarn / parchment** 之间互转**字段名**时（如 `field_110151_bq` ↔ `absorptionAmount`）。",
-      "mcHint": ""
+      "summary": "mojang/mcp/yarn/parchment 字段名互转；memberKind=field；ownerClass 时机；SCHEMA_FIELDS_UNAVAILABLE 时重建 yarn-sqlite。",
+      "mcHint": "1.14+"
     },
     {
       "id": "authored/mc-26-no-obfuscation",
@@ -1678,8 +1908,51 @@
       ],
       "sourceKind": "links",
       "priority": "🟢",
-      "summary": "Kaupenjoe（Nico Kaupenjoe）全部模组开发课程仓库总目录；NeoForge/Fabric/Forge × 1.16–1.21.x 与 26.X，分支即章节，MIT 许可。",
-      "mcHint": "1.16.5–1.21.x, 26.X"
+      "summary": "Kaupenjoe（Nico Kaupenjoe）全部模组开发课程仓库总目录；NeoForge/Fabric/Forge × 1.16.5–1.21.x 与 26.X，分支即章节，MIT 许可。",
+      "mcHint": "1.16.5–1.21.x, 26.X（已全量核对 73 仓库；无 1.15 及更早）"
+    },
+    {
+      "id": "links/legacy-loader-upstreams",
+      "label": "老加载器上游指针（LiteLoader / Rift / ModLoader / MCP）",
+      "path": "links/legacy-loader-upstreams.md",
+      "url": "https://www.liteloader.com/",
+      "tags": [
+        "index",
+        "liteloader",
+        "rift",
+        "modloader",
+        "mcp",
+        "legacy",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "三个历史加载器的可核实上游：liteloader.com 官方 wiki（教程全文已入库本地版本档）、DimensionalDevelopment/Rift、ModCoderPack 映射档案；标注存活状态。第三方老加载器教程稀少，API 一律以本地版本档核实表为准。",
+      "mcHint": "LiteLoader 1.8.9/1.10.2/1.12.2；Rift 1.13.2；ModLoader 1.2.5/1.5.2/1.6.4"
+    },
+    {
+      "id": "links/major-mod-tutorial-indexes",
+      "label": "高影响力模组教程索引（Create/AE2/MEK/GT/TiC/帕秋莉等）",
+      "path": "links/major-mod-tutorial-indexes.md",
+      "url": "https://www.mcmod.cn/post/2373.html",
+      "tags": [
+        "index",
+        "mcmod",
+        "chinese",
+        "create",
+        "ae2",
+        "mekanism",
+        "gregtech",
+        "tinkers",
+        "patchouli",
+        "botania",
+        "immersive-engineering",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "生态型大模组（附属多、机制深、使用量大）的站内教程地图：机械动力目录大纲、帕秋莉手册入门、AE2/MEK/GT/TiC/植物魔法/沉浸工程 导航与全进度指南。给这些模组写附属或做兼容前，先从这里建立宿主全貌。",
+      "mcHint": "各条随模组版本；引用前先对版本"
     },
     {
       "id": "links/mcjty-modding-guide",
@@ -1717,6 +1990,33 @@
       "priority": "🟢",
       "summary": "作者 Kadar_Visico；Forge 1.20.1 工程骨架与工业机器全链路。文首禁止转载，本库仅外链；实务要点见 authored 自写短文。",
       "mcHint": "1.20.1"
+    },
+    {
+      "id": "links/mcmod-dev-tutorials",
+      "label": "MC百科开发类教程指针（社区+个人双区全量扫描精选）",
+      "path": "links/mcmod-dev-tutorials.md",
+      "url": "https://www.mcmod.cn/post/3282.html",
+      "tags": [
+        "index",
+        "mcmod",
+        "chinese",
+        "forge",
+        "neoforge",
+        "fabric",
+        "kubejs",
+        "crafttweaker",
+        "mixin",
+        "datapack",
+        "obj",
+        "ctm",
+        "addon",
+        "loaders",
+        "link-only"
+      ],
+      "sourceKind": "links",
+      "priority": "🟢",
+      "summary": "mcmod.cn 教程区开发类中文教程全集（社区53页+个人271页全量扫描，约6500标题）：Java模组/附属开发、Mixin/AT/Coremod/Cleanroom、Fabric系列、帕秋莉手册、数据组件与资产、KubeJS·CrT·GroovyScript脚本生态、加载器名录。许可逐篇核实，禁转载仅外链。",
+      "mcHint": "见各条；跨度 1.7.10–26.x，引用前先对版本"
     },
     {
       "id": "links/neoforge-26.1-release",

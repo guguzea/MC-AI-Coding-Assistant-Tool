@@ -59,10 +59,12 @@ export function walkProjectFiles(
   root: string,
   match: (relPosix: string, name: string) => boolean,
   maxDepth = 10,
+  /** 命中数上限：防巨型工程枚举内存膨胀；超限即截断（调用方可按需放宽） */
+  maxFiles = 5000,
 ): string[] {
   const out: string[] = [];
   const walk = (dir: string, depth: number) => {
-    if (depth > maxDepth) return;
+    if (depth > maxDepth || out.length >= maxFiles) return;
     let entries;
     try {
       entries = readdirSync(dir, { withFileTypes: true });
@@ -70,6 +72,7 @@ export function walkProjectFiles(
       return;
     }
     for (const e of entries) {
+      if (out.length >= maxFiles) return;
       const name = String(e.name);
       if (name === "." || name === "..") continue;
       const abs = join(dir, name);

@@ -234,7 +234,7 @@ Decision: 选择注册方式
    - `bedrock` → `bedrock-only`（Script API 等；禁止把 CCA/Trinkets/GeckoLib 当基岩教程）
    - LiteLoader / Rift / ModLoader：暂无独立 Java 库组；不要把 Fabric/Forge 库 Skill 当这些加载器的 API
 2. 在组内按名称找 `knowledge/libs/<group>/mc-<name>/SKILL.md`，**直接读源稿**，不要查平台 `.cursor/skills` 的库项（那里已清理，不存在库项）
-3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`minecraftVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本）
+3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`mcVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本；与 knowledge/libs/README.md §3.6 及解析代码一致）
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
 

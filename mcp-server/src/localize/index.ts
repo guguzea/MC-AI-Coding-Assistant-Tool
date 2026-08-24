@@ -17,6 +17,7 @@ import {
   type LangFileRef,
 } from "./jar.js";
 import { resolvePackFormat } from "./pack-format.js";
+import { parseDotLang, serializeDotLang } from "./lang-file.js";
 
 export type LocalizeMode = "own" | "third_party";
 export type LocalizeAction = "diff" | "draft_zh" | "extract" | "pack_draft";
@@ -54,6 +55,18 @@ function softParseZh(raw: unknown): { value: LangMap; warning?: string } {
     return { value: {}, warning: "ZH_PARSE_FAILED_TREATED_AS_EMPTY" };
   }
   return { value: parsed.value };
+}
+
+/** D-5：按条目格式软解析（.lang 解析失败也按空表 + warning，不硬失败）。 */
+function softParseByFormat(raw: string, format: "json" | "lang"): { value: LangMap; warning?: string } {
+  if (format === "lang") {
+    const parsed = parseDotLang(raw);
+    if (!parsed.ok) {
+      return { value: {}, warning: "ZH_LANG_PARSE_FAILED_TREATED_AS_EMPTY" };
+    }
+    return { value: parsed.value };
+  }
+  return softParseZh(raw);
 }
 
 function resolveNamespace(
@@ -146,6 +159,22 @@ function parseLangText(text: string, hardFailCode: string):
   }
 }
 
+/** D-5：按条目格式解析（.json 走 JSON；.lang 行式走 parseDotLang）。 */
+function parseByFormat(
+  text: string,
+  format: "json" | "lang",
+  hardFailCode: string,
+): { ok: true; value: LangMap } | { ok: false; result: Record<string, unknown> } {
+  if (format === "lang") {
+    const parsed = parseDotLang(text);
+    if (!parsed.ok) {
+      return { ok: false, result: fail(hardFailCode, parsed.error, ["修复 .lang 行式文件（key=value，# 注释）后再试"]) };
+    }
+    return { ok: true, value: parsed.value };
+  }
+  return parseLangText(text, hardFailCode);
+}
+
 function loadNamespaceSource(
   buf: Buffer,
   files: LangFileRef[],
@@ -160,6 +189,9 @@ function loadNamespaceSource(
       zhExisting: LangMap;
       zhWarning?: string;
       chineseReadyOnly: false;
+      /** D-5：源条目格式（json|lang），决定产物文件扩展名与序列化 */
+      sourceFormat: "json" | "lang";
+      zhFormat: "json" | "lang";
     }
   | {
       ok: true;
@@ -171,6 +203,8 @@ function loadNamespaceSource(
       zhWarning?: string;
       chineseReadyOnly: true;
       code: "Chinese_ready_in";
+      sourceFormat: "json" | "lang";
+      zhFormat: "json" | "lang";
     }
   | { ok: false; result: Record<string, unknown> } {
   const availableLocales = files.map((f) => f.locale).sort();
@@ -195,7 +229,7 @@ function loadNamespaceSource(
     if (zhRef) {
       try {
         const text = readJarEntryText(buf, zhRef.entryPath);
-        const soft = softParseZh(text);
+        const soft = softParseByFormat(text, zhRef.format);
         zhExisting = soft.value;
         zhWarning = soft.warning;
       } catch (e) {
@@ -212,6 +246,8 @@ function loadNamespaceSource(
       availableLocales,
       zhExisting,
       zhWarning,
+      sourceFormat: "json" as const,
+      zhFormat: zhRef?.format ?? ("json" as const),
     };
   }
 
@@ -227,7 +263,7 @@ function loadNamespaceSource(
     };
   }
 
-  const sourceParsed = parseLangText(sourceText, "LANG_PARSE_ERROR");
+  const sourceParsed = parseByFormat(sourceText, picked.format, "LANG_PARSE_ERROR");
   if (!sourceParsed.ok) {
     return {
       ok: false,
@@ -245,7 +281,7 @@ function loadNamespaceSource(
   if (zhRef) {
     try {
       const zhText = readJarEntryText(buf, zhRef.entryPath);
-      const soft = softParseZh(zhText);
+      const soft = softParseByFormat(zhText, zhRef.format);
       zhExisting = soft.value;
       zhWarning = soft.warning;
     } catch (e) {
@@ -263,6 +299,8 @@ function loadNamespaceSource(
     availableLocales,
     zhExisting,
     zhWarning,
+    sourceFormat: picked.format,
+    zhFormat: zhRef?.format ?? picked.format,
   };
 }
 
@@ -421,7 +459,10 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
         ...base,
         action: "extract",
         files: {
-          "zh_cn.json": JSON.stringify(existingZh, null, 2) + "\n",
+          [loadedNs.zhFormat === "lang" ? "zh_cn.lang" : "zh_cn.json"]:
+            loadedNs.zhFormat === "lang"
+              ? serializeDotLang(existingZh)
+              : JSON.stringify(existingZh, null, 2) + "\n",
         },
       };
     }
@@ -447,8 +488,10 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
           null,
           2,
         ) + "\n",
-        [`assets/${nsRes.namespace}/lang/zh_cn.json`]:
-          JSON.stringify(existingZh, null, 2) + "\n",
+        [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.zhFormat}`]:
+          loadedNs.zhFormat === "lang"
+            ? serializeDotLang(existingZh)
+            : JSON.stringify(existingZh, null, 2) + "\n",
       },
     };
   }
@@ -456,6 +499,12 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
   if (loadedNs.sourceLocaleFallback) {
     notes.push(
       `源语言回退：使用 ${loadedNs.sourceLocaleUsed}（非 en_us），译文请对照语境；条目已列入 needsTranslation。`,
+    );
+  }
+
+  if (loadedNs.sourceFormat === "lang") {
+    notes.push(
+      "源为 .lang 行式格式（pre-flattening <1.13 / 基岩同族）；产物按同格式输出 zh_cn.lang，值内换行以 \\n 字面量表示。",
     );
   }
 
@@ -475,9 +524,17 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
       zhCn: existingZh,
       ...d,
       files: {
-        [`${loadedNs.sourceLocaleUsed}.json`]: JSON.stringify(loadedNs.source, null, 2) + "\n",
+        [`${loadedNs.sourceLocaleUsed}.${loadedNs.sourceFormat}`]:
+          loadedNs.sourceFormat === "lang"
+            ? serializeDotLang(loadedNs.source)
+            : JSON.stringify(loadedNs.source, null, 2) + "\n",
         ...(Object.keys(existingZh).length
-          ? { "zh_cn.json": JSON.stringify(existingZh, null, 2) + "\n" }
+          ? {
+              [`zh_cn.${loadedNs.zhFormat}`]:
+                loadedNs.zhFormat === "lang"
+                  ? serializeDotLang(existingZh)
+                  : JSON.stringify(existingZh, null, 2) + "\n",
+            }
           : {}),
       },
       notes,
@@ -519,8 +576,10 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
           null,
           2,
         ) + "\n",
-      [`assets/${nsRes.namespace}/lang/zh_cn.json`]:
-        JSON.stringify(drafted.zhCn, null, 2) + "\n",
+      [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.sourceFormat}`]:
+        loadedNs.sourceFormat === "lang"
+          ? serializeDotLang(drafted.zhCn)
+          : JSON.stringify(drafted.zhCn, null, 2) + "\n",
     },
     notes,
     warnings: warnings.length ? warnings : undefined,

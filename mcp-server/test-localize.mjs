@@ -242,6 +242,39 @@ function testJarFallbackDe() {
   assert.equal(r.source.hello, "Hallo");
 }
 
+function testJarDotLang() {
+  // D-5：pre-flattening .lang 行式格式（<1.13 / 基岩同族）
+  const langContent = [
+    "# comment line",
+    "item.demo.x=X",
+    "item.demo.y=Y with \\n newline",
+    "",
+    "item.demo.z=Z",
+  ].join("\n");
+  const jar = writeMockJar("dotlang.jar", [
+    { name: "assets/demo/lang/en_us.lang", content: langContent },
+    { name: "assets/demo/lang/zh_cn.lang", content: "item.demo.x=叉\n" },
+  ]);
+  const ex = localizeMod({ mode: "third_party", action: "extract", jarPath: jar });
+  assert.equal(ex.ok, true, JSON.stringify(ex).slice(0, 300));
+  assert.equal(ex.namespace, "demo");
+  assert.equal(ex.sourceLocaleUsed, "en_us");
+  assert.equal(ex.source["item.demo.x"], "X");
+  assert.equal(ex.source["item.demo.y"], "Y with \\n newline");
+  assert.ok(ex.files["en_us.lang"], "extract 应输出 .lang 源文件");
+  assert.ok(ex.files["zh_cn.lang"], "已有 zh 应按 .lang 输出");
+  assert.ok(ex.notes.some((n) => /\.lang 行式格式/.test(n)), ex.notes.join("|"));
+
+  const draft = localizeMod({ mode: "third_party", action: "pack_draft", jarPath: jar, mcVersion: "1.12.2" });
+  assert.equal(draft.ok, true);
+  const zhKey = "assets/demo/lang/zh_cn.lang";
+  assert.ok(draft.files[zhKey], `pack_draft 应产出 ${zhKey}：${Object.keys(draft.files).join(",")}`);
+  const body = draft.files[zhKey];
+  assert.match(body, /^item\.demo\.x=叉$/m);
+  assert.match(body, /^item\.demo\.y=Y with \\n newline$/m, "值内 \\n 字面量必须原样保留");
+  assert.equal(draft.needsTranslation.includes("item.demo.y"), true);
+}
+
 function testJarChineseOnly() {
   const jar = writeMockJar("zh-only.jar", [
     {
@@ -392,6 +425,7 @@ function main() {
     testJarExtractEn,
     testJarPackDraft,
     testJarFallbackDe,
+    testJarDotLang,
     testJarChineseOnly,
     testJarAmbiguousNs,
     testJarNotFound,

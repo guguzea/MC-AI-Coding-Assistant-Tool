@@ -2,7 +2,7 @@
 
 本目录是 **Wave D 完成定义** 中的 patterns 框架：可复用的小片段模式（非完整模组）。
 
-与 `knowledge/patterns/` 内容对齐时可互相引用；**验收以本目录为准**。
+与 `knowledge/patterns/` 的分工（2026-08 审计澄清）：**模式正文与验收以 `knowledge/patterns/` 为准**；本目录管 community 索引收录与 Wave D 框架约定。两套 `examples/` 文件名并行、互为独立文（如本目录 `mod-ci-github-actions.md` ≠ knowledge 侧 `ci-github-actions.md`），不互为镜像、禁止双向覆盖。
 
 ## 文件约定
 

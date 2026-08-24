@@ -2,7 +2,7 @@
 
 本地 **stdio** MCP Server，供各 MCP 宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode 等）查询 Minecraft 模组开发资料（Forge / Fabric / NeoForge）。配置格式对照见仓库根 [AUTO_SETUP.md](../AUTO_SETUP.md)，不要默认写成 Cursor 的 `mcp.json`。
 
-**要求：Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`）。
+**要求：Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 需加 `--experimental-sqlite` 启动参数或 NODE_OPTIONS，22.13+ 无需**）。
 
 仓库与 GitHub Release **均不含 `node_modules`**，需本地编译：
 
@@ -105,6 +105,12 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 `dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `mcp-server/data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `forge_1.20.4` / `forge_1.19.4` / `forge_1.18.2` / `forge_1.12.2` / `neoforge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.1` / `neoforge_1.21.3` / `neoforge_1.21.5` / `neoforge_1.21.10` / `neoforge_26.1` / `fabric_1.21` / `fabric_1.21.4` / `fabric_1.21.8` / `fabric_1.21.10` / `fabric_1.21.11` / `fabric_26.1` / `fabric_26.1.2`），省略返回 error。
 
+### 安全边界说明（2026-08 审计 A-2/A-5 残余面，接受现状）
+
+- **解压双视图防护**：解压交给外部工具（unzip/7z/bsdtar）按本地文件头落盘；工具已在解压后复核「落盘集合 == 中央目录清单 + realpath 在根内」（CD/LFH 分裂即拒绝）。但检查与写入之间无原子原语（TOCTOU 窗口为同用户本机竞态残余，F-B02 复检已缓解）。
+- **写盘 tmp 残留**：Windows 锁文件场景下 `write.ts` 的 unlinkSync 失败被忽略后 rename 由外层回滚兜住，`.tmp` 文件可能残留（可手工删）。
+- **磁盘启发式**：data 更新前要求 2.5×zip 大小空闲是保守估计；极端 deflate 膨胀受 SHA256 强制门保护（需 GitHub Release 被攻破才可利用）。
+
 ### 5. 开发
 
 ```bash
@@ -130,7 +136,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
 | 跨平台文档 | `list_doc_versions`、`search_docs`、`get_doc_*` |
-| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 81 条；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
+| 社区 | `list_community_sources`、`search_community_docs`、`get_community_doc_*`（索引约 104 条（authored 91/links 9/permitted 4，带 generatedAt）；含 48 篇 `lib-*` 库集成短文；规则见仓库根 `community_knowledge/AGENT_USAGE.md`） |
 | 移植 / 数据 | `analyze_porting_path`、`port_project`、`diagnose_data_paths` |
 | Wave B | `query_registry`、`mixin_analyze`、`audit_resources`、`validate_datapack_json`（1.21+ recipe `result` 可为对象）、`get_workflow_template`、`list_knowledge_resources`、`read_knowledge_resource` |
 | Wave C 生成 | `generate_model`（kind 默认 block）、`generate_lang`、`generate_network_packet`、`generate_capability`、`generate_config`（Fabric/Quilt 为 Cloth 骨架）、`generate_entity_renderer`、`generate_worldgen`、`localize_mod` |

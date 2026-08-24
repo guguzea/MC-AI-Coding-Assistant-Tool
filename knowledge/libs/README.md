@@ -39,6 +39,8 @@
 
 校验脚本：`node scripts/resolve-lib-skills.mjs --validate`
 
+> 注（2026-08 审计补充）：① Quilt 用户按 `fabric → fabric-only + all-platforms` 同组解析（QSL 生态已停更，Fabric-first 库是现实替代）；17/20 all-platforms 库的 platforms 白名单不含 quilt 属既有口径，未覆盖时以 catalog 提示改口，不视为缺陷。② `mc-server-translations`（Nucleoid 出品，Fabric-first）platforms 声明含 forge/neoforge 为其官方跨端支持面，保留。③ 平台 `.cursor/skills` 下的 `mc-compat-jei`（forge/1.20.1、neoforge/26.1）是**平台自有项**：forge/1.20.1 副本已对齐 knowledge/libs 源稿；neoforge/26.1 副本为独立维护的守卫 stub（文内已声明），均非镜像。
+
 ## 禁止 propagate
 
 - `scripts/propagate-wave-d-skills.mjs` 的 WAVE_D **不含库项**（已移除 mc-config / mc-geckolib / mc-curios / mc-patchouli），文件头注释指向本目录
