@@ -826,7 +826,7 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "generate_network_packet", description: GENERATE_NETWORK_PACKET_DESCRIPTION, inputSchema: generateNetworkPacketSchema },
   { name: "generate_capability", description: GENERATE_CAPABILITY_DESCRIPTION, inputSchema: generateCapabilitySchema },
   { name: "generate_config", description: GENERATE_CONFIG_DESCRIPTION, inputSchema: generateConfigSchema },
-  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.20.1 / forge 1.20.4 / neoforge 26.1。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
+  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
   { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架文本，不写盘。", inputSchema: generateWorldgenSchema },
   { name: "analyze_log", description: ANALYZE_LOG_DESCRIPTION, inputSchema: analyzeLogSchema },
   { name: "get_migration_guide", description: GET_MIGRATION_GUIDE_DESCRIPTION, inputSchema: getMigrationGuideSchema },
