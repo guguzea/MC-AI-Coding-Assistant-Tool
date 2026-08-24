@@ -459,3 +459,5 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
   }
   return { ok: true, files, warnings, docsStatus: loadBedrockDocsStatus() };
 }
+
+export * from "./content-log.js";

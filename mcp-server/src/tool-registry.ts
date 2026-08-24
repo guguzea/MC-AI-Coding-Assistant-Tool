@@ -86,6 +86,8 @@ import {
   validateAddonManifestSchema,
   validateBpJson,
   validateBpJsonSchema,
+  analyzeBedrockContentLog,
+  analyzeBedrockContentLogSchema,
   generateAddonManifest,
   generateAddonManifestSchema,
   generateBpEntity,
@@ -1025,6 +1027,20 @@ server.registerTool(
   }),
 );
 server.registerTool(
+  "analyze_bedrock_log",
+  {
+    title: "Analyze Bedrock content log",
+    description:
+      "基岩版内容日志分析器（只读）。路径：logPath（content_log.txt 绝对路径）或 logsDir / projectPath（自动找最近的 content_log*.txt，有界读取）。" +
+      "按 Bedrock content-log 行格式独立解析（[时间][级别][标签] 消息），给出级别统计、Top 标签、错误/警告样本与问题归类。" +
+      "不是 Java 崩溃日志拆解。不写盘、不联网。",
+    inputSchema: analyzeBedrockContentLogSchema,
+  },
+  async (args): Promise<CallToolResult> => ({
+    content: [{ type: "text", text: JSON.stringify(analyzeBedrockContentLog(args), null, 2) }],
+  }),
+);
+server.registerTool(
   "generate_addon_manifest",
   {
     title: "Generate Bedrock manifest JSON",
@@ -1098,6 +1114,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "get_bedrock_doc_summary", description: "基岩文档 L1 摘要。带 docsStatus。不是 get_forge_doc_summary。", inputSchema: getBedrockDocSummarySchema },
   { name: "get_bedrock_doc_full", description: "基岩文档全文。一次 ≤ 2 页。带 docsStatus。", inputSchema: getBedrockDocFullSchema },
   { name: "get_bedrock_doc_related", description: "基岩文档相关页。带 docsStatus。", inputSchema: getBedrockDocRelatedSchema },
+  { name: "analyze_bedrock_log", description: "基岩版内容日志分析器（只读，Bedrock content-log 独立解析）。", inputSchema: analyzeBedrockContentLogSchema },
   { name: "validate_addon_manifest", description: "校验基岩 manifest.json（header/modules/UUID/capabilities）。不是 validate_project。禁止 experimentalGameplay。", inputSchema: validateAddonManifestSchema },
   { name: "validate_bp_json", description: "精简校验 entity/block/item/recipe JSON。不是 validate_datapack_json（Java pack_format）。", inputSchema: validateBpJsonSchema },
   { name: "generate_addon_manifest", description: "只吐 manifest JSON 文本，不写盘。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。", inputSchema: generateAddonManifestSchema },
