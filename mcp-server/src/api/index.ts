@@ -219,6 +219,28 @@ interface VersionData {
 }
 
 const _versionData = new Map<string, VersionData>();
+/** 版本数据缓存上限：超限驱逐最旧项（含其 worker），防长驻内存爬升（审计 B17） */
+const _MAX_VERSION_CACHE = 64;
+
+function setVersionDataEntry(version: string, data: VersionData): void {
+  if (!_versionData.has(version) && _versionData.size >= _MAX_VERSION_CACHE) {
+    const oldest = _versionData.keys().next().value;
+    const old = oldest !== undefined ? _versionData.get(oldest) : undefined;
+    if (old) {
+      if (old.worker) {
+        try {
+          old.worker.terminate();
+        } catch {
+          /* 驱逐时 worker 可能已退出 */
+        }
+        old.worker = null;
+      }
+      old.preloadPromise = null;
+    }
+    if (oldest !== undefined) _versionData.delete(oldest);
+  }
+  _versionData.set(version, data);
+}
 /** 兜底：未匹配任何 version 时使用的默认版本 */
 const _defaultData: VersionData = {
   apiIndex: {},
@@ -305,7 +327,7 @@ function startPreloader(version: string): Promise<void> {
     worker: null,
     preloadPromise: null,
   };
-  _versionData.set(version, vData);
+  setVersionDataEntry(version, vData);
 
   vData.preloadPromise = new Promise<void>((resolve) => {
     let settled = false;
@@ -364,6 +386,10 @@ function startPreloader(version: string): Promise<void> {
           vData.loaded = true;
           vData.preloading = false;
           vData.lazyMode = false;
+          if (vData.worker) {
+            vData.worker.terminate(); // ready 即回收 worker（B17：避免长驻线程）
+            vData.worker = null;
+          }
           resolve();
         } else if (msg.type === "error") {
           if (settled) return;

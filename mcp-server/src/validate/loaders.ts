@@ -41,9 +41,14 @@ function classLooksPresent(
 ): boolean {
   const simple = fqcn.split(".").pop() ?? fqcn;
   const needle = escapeRegExp(simple.replace(/\$/g, ""));
+  // 嵌套类（Outer$Inner）文件名为 Outer$Inner.java，按包路径 + $ 名精确匹配（审计 B22：剥 $ 会永远找不到）
+  const nestedFile = fqcn.includes("$")
+    ? `${fqcn.includes(".") ? fqcn.split(".").slice(0, -1).join("/") + "/" : ""}${simple}`
+    : null;
   return javaFiles.some((f) => {
     const p = f.path.replace(/\\/g, "/");
     if (p.endsWith(`/${needle}.java`) || p.endsWith(`${needle}.java`)) return true;
+    if (nestedFile && p.endsWith(`/${nestedFile}.java`)) return true;
     try {
       return new RegExp(`\\bclass\\s+${needle}\\b`).test(f.content);
     } catch {
@@ -204,7 +209,13 @@ export function validateNeoForge(query: ValidateQuery): ValidationResult {
     warnings.push("检测到 RegistryObject：1.20.4+ NeoForge 不要把它当本档推荐（用 DeferredHolder / DeferredItem / DeferredBlock）");
   }
   if (/\bSimpleChannel\b/.test(blob) || /net\.minecraftforge\.network/.test(blob)) {
-    errors.push("禁止 SimpleChannel / Forge network 包名；改用该档 Payload 文档（RegisterPayloadHandlersEvent 等）");
+    if (/net\.minecraftforge\.network/.test(blob) && !/net\.neoforged/.test(blob)) {
+      warnings.push(
+        "SimpleChannel / net.minecraftforge.network 在 NeoForge 1.20.1（Forge 47 兼容层）是正确形态；1.20.2+ 才用 Payload（RegisterPayloadHandlersEvent），勿照本档改写",
+      );
+    } else {
+      errors.push("禁止 SimpleChannel / Forge network 包名；改用该档 Payload 文档（RegisterPayloadHandlersEvent 等）");
+    }
   }
 
   return finish(errors, warnings, checks);

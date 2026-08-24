@@ -327,9 +327,13 @@ export function detectCrashKind(crashReport: string): CrashKind {
     return ownGet(map, kindFromName) ?? "unknown";
   }
 
-  if (/org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
-  if (/com\.mumfrey\.liteloader/i.test(crashReport)) return "liteloader";
-  if (/org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(crashReport)) return "rift";
+  // 先取 forgeLike：Quilt/LiteLoader/Rift 正文指纹必须先过 Forge/FML 强指纹排除（混合报告防误判，审计 B18）
+  const forgeLike =
+    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge|net\.neoforged/i.test(crashReport);
+
+  if (!forgeLike && /org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
+  if (!forgeLike && /com\.mumfrey\.liteloader/i.test(crashReport)) return "liteloader";
+  if (!forgeLike && /org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(crashReport)) return "rift";
   if (
     /net\.minecraft\.src\.ModLoader|\bat ModLoader\.|class\s+mod_[A-Za-z0-9_]+\s+extends\s+BaseMod/i.test(crashReport) &&
     !/cpw\.mods\.fml|net\.minecraftforge|FMLModContainer/i.test(crashReport)
@@ -339,8 +343,6 @@ export function detectCrashKind(crashReport: string): CrashKind {
 
   // Forgified Fabric API（NeoForge/Forge 上跑 Fabric 模组的事实标准）保留 net.fabricmc.fabric.api.* 包名：
   // fabric 判定必须排除 Forge/FML 强指纹，否则 NeoForge/Forge 报告会被误判为 fabric（镜像 modloader 分支的负排除写法）
-  const forgeLike =
-    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge|net\.neoforged/i.test(crashReport);
 
   if (kindFromName === "fabric") {
     if (!forgeLike) return "fabric";

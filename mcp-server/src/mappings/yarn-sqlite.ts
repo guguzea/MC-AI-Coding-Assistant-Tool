@@ -59,12 +59,16 @@ function methodCountOf(db: MappingDb): number {
   }
 }
 
-function openDbCached(dbPath: string): MappingDb {
+function openDbCached(dbPath: string): MappingDb | null {
   const cached = _dbs.get(dbPath);
   if (cached) return cached;
-  const db = new DatabaseSync(dbPath, { readOnly: true });
-  _dbs.set(dbPath, db);
-  return db;
+  try {
+    const db = new DatabaseSync(dbPath, { readOnly: true });
+    _dbs.set(dbPath, db);
+    return db;
+  } catch {
+    return null;
+  }
 }
 
 /** Resolve best sqlite path for version (fabric preferred when useful). */
@@ -87,7 +91,7 @@ export function resolveMappingDbPath(version: string): string | null {
       db.close();
       if (mc > 0 || era === "yarn-tiny") chosen = fabric;
     } catch {
-      chosen = fabric;
+      chosen = null; // 打开失败不乐观缓存（B19），转 forge 兜底
     }
   }
   if (!chosen && existsSync(forge)) {
@@ -107,7 +111,7 @@ export function resolveMappingDbPath(version: string): string | null {
     }
   }
 
-  _pathCache.set(v, chosen);
+  if (chosen) _pathCache.set(v, chosen);
   return chosen;
 }
 
@@ -135,7 +139,7 @@ export function resolveCsvMappingDbPath(version: string): string | null {
       /* ignore */
     }
   }
-  _csvPathCache.set(v, chosen);
+  if (chosen) _csvPathCache.set(v, chosen);
   return chosen;
 }
 

@@ -864,7 +864,9 @@ export function validateProject(query: ValidateQuery): ValidationResult {
     const roDeclPattern =
       /((?:private|public|protected)\s+)?((?:static|final)\s+)*(RegistryObject\s*<[^<>]+(?:<[^<>]+>)*>\s+([A-Z_][A-Z0-9_]*))/gm;
     let rm;
+    let roCount = 0;
     while ((rm = roDeclPattern.exec(content)) !== null) {
+      if (++roCount > 5000) break; // 防呆上限（审计 B21 二次复杂度在超大输入下的停顿缓解）
       const [full, visibility, modifiers, , name] = rm;
       const hasStatic = /\bstatic\b/.test(modifiers ?? "");
       const hasFinal = /\bfinal\b/.test(modifiers ?? "");
