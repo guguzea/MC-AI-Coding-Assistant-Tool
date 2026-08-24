@@ -85,3 +85,9 @@ _tmp_session.json
 # 本地代码索引
 .codegraph/
 
+# 一次性扫描/草稿文件（曾入库的已随 sweep31 删除，防复发）
+scripts/_scan-*.mjs
+scripts/_temp/*.log.err
+临时文件-*.md
+HTTP
+
