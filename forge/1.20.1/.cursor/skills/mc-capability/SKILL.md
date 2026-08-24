@@ -92,7 +92,7 @@ int val = player.getCapability(CAP).get().getValue(); // NPE!
 |------|------|
 | 玩家 / 所有实体 | `AttachCapabilitiesEvent<Entity>` + 检查 `instanceof Player` |
 | 方块实体 | `AttachCapabilitiesEvent<BlockEntity>` |
-| 物品 | `ItemStack.initCapabilities()`（无需事件） |
+| 物品 | `AttachCapabilitiesEvent<ItemStack>`（官方文档列出的合法泛型之一） |
 | 世界 / 区块 | `AttachCapabilitiesEvent<Level>` / `AttachCapabilitiesEvent<LevelChunk>` |
 
 ## 内置 Capability（无需注册）

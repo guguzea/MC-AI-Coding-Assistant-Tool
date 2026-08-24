@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05 — 事件系统
 ---
 
@@ -65,7 +65,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件仅在服务端触发
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isClientSide 守卫
 
 IF 监听生物死亡
   → LivingDeathEvent
@@ -104,7 +104,7 @@ IF 监听 Tick（每帧逻辑）
   → 注意：不要在 Tick 中做重操作，会导致卡顿
 
 IF 监听 Capability 附加
-  → AttachCapabilitiesEvent<Entity / Block / Item / Chunk>
+  → AttachCapabilitiesEvent<Entity / TileEntity / ItemStack / World / Chunk>
 
 IF 监听服务端/客户端启动
   → FMLCommonSetupEvent
@@ -240,4 +240,4 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
 }
 ```
 
-> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、Block、Item、Chunk 上附加 Capability，每个只能附加一次（ID 唯一）。
+> 关键点：`AttachCapabilitiesEvent` 可以在 Entity、TileEntity、ItemStack、World、Chunk 上附加 Capability，每个只能附加一次（ID 唯一）。
