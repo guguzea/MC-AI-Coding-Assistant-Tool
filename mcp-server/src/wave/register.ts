@@ -549,7 +549,7 @@ export function registerWaveExtensions(server: McpServer): void {
   server.registerTool("generate_entity_renderer", {
     title: "Generate entity renderer skeleton",
     description:
-      "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.20.1 / forge 1.20.4 / neoforge 26.1。" +
+      "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1。" +
       "fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。",
     inputSchema: generateEntityRendererSchema,
   }, async (a) => jsonResult(generateEntityRenderer(a.modId, a.entityName, a.platform, a.version)));
