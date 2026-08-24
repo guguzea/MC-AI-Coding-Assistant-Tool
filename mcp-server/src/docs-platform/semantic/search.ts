@@ -174,7 +174,7 @@ export function fts5TopDocsSync(query: string, dbPath: string, limit = 20): stri
   const db = openSemanticDb(dbPath);
   if (!db) return [];
   const fts = buildFtsQuery(query);
-  if (!fts) return [];
+  if (!fts) return cjkLikeDocIdsSync(query, db, limit);
   try {
     const rows = db
       .prepare(
@@ -192,6 +192,37 @@ export function fts5TopDocsSync(query: string, dbPath: string, limit = 20): stri
       }
     }
     return out;
+  } catch {
+    return [];
+  }
+}
+
+/** CJK bigram 分词（连续中日韩字符逐对组合；无配对时用单字符） */
+export function cjkBigrams(query: string): string[] {
+  const chars = (String(query ?? "").match(/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]+/g) ?? [])
+    .join("")
+    .split("");
+  const out: string[] = [];
+  for (let i = 0; i + 1 < chars.length; i++) out.push(chars[i] + chars[i + 1]);
+  if (chars.length === 1) out.push(chars[0]);
+  return out.slice(0, 6);
+}
+
+/** unicode61 索引把连续 CJK 当一个 token，FTS MATCH 无法拆词——CJK-only 查询走 LIKE 逐 bigram 兜底 */
+function cjkLikeDocIdsSync(query: string, db: DatabaseSync, limit: number): string[] {
+  const bigrams = cjkBigrams(query);
+  if (bigrams.length === 0) return [];
+  try {
+    const conds = bigrams.map(() => "c.text LIKE ?");
+    const rows = db
+      .prepare(
+        `SELECT c.doc_id AS doc_id, COUNT(*) AS hits
+         FROM chunks c
+         WHERE ${conds.join(" AND ")}
+         GROUP BY c.doc_id ORDER BY hits DESC, MIN(c.chunk_order) LIMIT ?`,
+      )
+      .all(...bigrams.map((b) => `%${b}%`), Math.max(1, Math.min(100, limit))) as Array<{ doc_id: string }>;
+    return rows.map((r) => r.doc_id);
   } catch {
     return [];
   }

@@ -842,12 +842,22 @@ export async function searchDocs(
                 missingSemanticDbWarning(semanticHits === null),
                 semanticStaleSearchWarning(resolveDataDir(), platform, resolvedVersion, docSource),
                 loaderWikiWarn,
+                finalResults.length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
+                  ? "中文查询命中为空：可改英文关键词（如 register block）或先 list_doc_versions 确认档位。"
+                  : undefined,
               ),
               platform,
               tags: args.tags,
               semantic: semanticHits !== null,
               total: finalResults.length,
               results: finalResults,
+              ...(platform === "neoforge" && (args.version === "1.20.1" || resolvedVersion === "1.20.1")
+                ? {
+                  forgeCompatible: true,
+                  source_version: resolvedVersion !== "1.20.1" ? resolvedVersion : undefined,
+                  sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+                }
+                : {}),
             }),
             null,
             2,
@@ -906,6 +916,13 @@ export async function getDocSummary(
           warning: joinSearchWarnings(extra?.warning, wikiWarn),
           ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
           ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+          ...(platform === "neoforge" && args.version === "1.20.1"
+            ? {
+              forgeCompatible: true,
+              source_version: "1.20.1",
+              sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+            }
+            : {}),
         }, null, 2),
       }],
     };
@@ -976,6 +993,13 @@ export async function getDocFull(
           warning: joinSearchWarnings(extra?.warning, wikiWarn),
           ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
           ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+          ...(platform === "neoforge" && args.version === "1.20.1"
+            ? {
+              forgeCompatible: true,
+              source_version: "1.20.1",
+              sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+            }
+            : {}),
         }, null, 2),
       }],
     };

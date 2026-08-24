@@ -27,6 +27,7 @@ import {
   semanticDbPath,
   buildFtsQuery,
   rrfFuse,
+  cjkBigrams,
   SEMANTIC_DDL,
   closeSemanticDbs,
 } from "./dist/docs-platform/semantic/search.js";
@@ -257,6 +258,19 @@ testAsync("semanticSearch: 无命中查询 → []（非 null、不抛错）", as
     closeSemanticDbs();
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+// ── 5b. CJK bigram（B9 中文查询兜底） ────────────────────────────────────────
+
+test("cjkBigrams: 双字组合", () => {
+  assert.deepEqual(cjkBigrams("注册方块"), ["注册", "方块"]);
+});
+
+test("cjkBigrams: 单字与混合输入", () => {
+  assert.deepEqual(cjkBigrams("方块 register 注册"), ["注册"]);
+  assert.deepEqual(cjkBigrams("块"), ["块"]);
+  assert.deepEqual(cjkBigrams(""), []);
+  assert.deepEqual(cjkBigrams("abc123"), []);
 });
 
 // ── 6. mergeSemanticResults ───────────────────────────────────────────────────

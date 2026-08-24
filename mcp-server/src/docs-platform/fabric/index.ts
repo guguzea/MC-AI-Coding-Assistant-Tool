@@ -427,6 +427,9 @@ export async function searchFabricDocs(
                 wikiTopicFallback && topic === "networking"
                   ? FABRIC_WIKI_NETWORKING_PAYLOAD_WARNING
                   : undefined,
+                (results as unknown as Array<unknown>).length === 0 && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
+                  ? "中文查询命中为空：文档正文为英文，改用英文关键词（如 register item）或按 id 直接取 get_fabric_doc_full。"
+                  : undefined,
               ),
               total: (results as unknown as Array<unknown>).length,
               results,

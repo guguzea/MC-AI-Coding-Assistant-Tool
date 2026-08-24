@@ -342,7 +342,11 @@ export class FabricDocStore {
 
   /** Resolve on-disk directory for a MC version under this store. */
   private versionDataDir(version: string): string {
-    const canonical = join(this.dataDir, `${this.dirPrefix}_${version}`, this.source, version);
+    const ver = String(version ?? "").trim();
+    if (!ver || /[\\/]/.test(ver) || ver.includes("..")) {
+      throw new Error(`非法 Minecraft 版本字符串：${JSON.stringify(version)}`);
+    }
+    const canonical = join(this.dataDir, `${this.dirPrefix}_${ver}`, this.source, ver);
     if (existsSync(join(canonical, "index-l0.json"))) return canonical;
 
     // Legacy: dataDir already points at .../fabric-docs (or .../fabric-wiki)
