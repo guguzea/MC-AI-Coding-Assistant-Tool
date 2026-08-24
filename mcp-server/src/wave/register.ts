@@ -148,6 +148,7 @@ export const GET_MIGRATION_GUIDE_DESCRIPTION =
 export const DOWNLOAD_OFFICIAL_MDK_DESCRIPTION =
   "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
   "GitHub 必须 pin commit SHA（见 mcp-server/data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
+  "pin 条目 sha256 为空时 fail-closed（MDK_NOT_PINNED）；显式 allowUnpinned:true 才接受未校验下载并回写 hash。" +
   "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
   "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
   "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。";
@@ -261,6 +262,10 @@ export const downloadOfficialMdkSchema = z.object({
   confirmed: z.boolean().optional().describe("写入用户工程时必须 true"),
   destPath: z.string().optional().describe("可选：解压到用户工程（需 ALLOW_WRITE）"),
   allowCacheFallback: z.boolean().optional().describe("官方 URL 404 时仅允许同一 platform+version 的 cache"),
+  allowUnpinned: z
+    .boolean()
+    .optional()
+    .describe("pin 表该条目 sha256 为空时，显式接受未校验下载并回写 hash；不传则 fail-closed 返回 MDK_NOT_PINNED"),
 });
 export const lookupObfuscatedSchema = z.object({
   name: z.string().describe("混淆/中间名 token，如 method_6032、er、func_110143_aJ、field_100013_f"),
@@ -342,9 +347,14 @@ export const searchLoaderApiSchema = z.object({
   limit: z.number().optional().describe("默认 20，封顶 50"),
   offset: z.number().optional(),
 });
+const loaderApiKeyPattern = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_.-]+$/;
 export const ingestLoaderApiSchema = z.object({
-  platform: z.string(),
-  minecraftVersion: z.string(),
+  platform: z
+    .string()
+    .regex(loaderApiKeyPattern, "platform 仅允许字母数字 . _ -，禁止路径分隔符/DOTDOT 穿越"),
+  minecraftVersion: z
+    .string()
+    .regex(loaderApiKeyPattern, "minecraftVersion 仅允许字母数字 . _ -，禁止路径分隔符/DOTDOT 穿越"),
   jarPath: z.string().describe("自备 jar 绝对路径（不要用 --file）"),
   mappingsVersion: z.string().describe("必填，禁止猜 Yarn/MCP"),
   mappingsSource: z.string().optional(),

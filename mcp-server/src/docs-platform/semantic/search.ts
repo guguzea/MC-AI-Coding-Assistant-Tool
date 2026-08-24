@@ -152,7 +152,7 @@ export function openSemanticDb(dbPath: string): DatabaseSync | null {
   let db: DatabaseSync | null = null;
   if (existsSync(dbPath)) {
     try {
-      const candidate = new DatabaseSync(dbPath);
+      const candidate = new DatabaseSync(dbPath, { readOnly: true });
       const row = candidate
         .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='chunks_fts'")
         .get() as { name: string } | undefined;

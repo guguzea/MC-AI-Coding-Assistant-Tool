@@ -28,9 +28,17 @@ export function officialSummariesDir(): string {
   return join(mcpServerRoot(), "data", "loader-api-summaries");
 }
 
+// 平台/版本名会拼进缓存路径（${v}-${p}），字符白名单用于阻断路径分隔符与 DOTDOT 穿越
+const KEY_CHAR_PATTERN = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_.-]+$/;
+
 export function candidateKeys(platform: string, minecraftVersion: string): string[] {
   const p = platform.trim().toLowerCase();
   const v = minecraftVersion.trim();
+  if (!KEY_CHAR_PATTERN.test(p) || !KEY_CHAR_PATTERN.test(v)) {
+    throw new Error(
+      `非法 platform/minecraftVersion 字符：${JSON.stringify({ platform, minecraftVersion })}`
+    );
+  }
   if (p === "quilt") return [`${v}-qsl`, `${v}-quilt`];
   if (p === "fabric") return [`${v}-fabric-api`, `${v}-fabric`];
   if (p === "neoforge") {
