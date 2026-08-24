@@ -981,14 +981,14 @@ function assertHasRuleIds(s, want, label) {
   const s = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.4", skillNames: ["mc-entity"] });
   assert.equal(s.ok, true, JSON.stringify(s.action));
   const entIdx = (s.skills ?? []).find((x) => x.name === "mc-entity");
-  assert.ok(entIdx?.source, JSON.stringify(entIdx));
-  assert.match(String(entIdx.source), /fabric\/1\.21\.3/);
-  assert.ok(entIdx.mappingNote);
-  assert.match(String(entIdx.mappingNote), /search_fabric_docs\(version=1\.21\.4\)/);
-  assert.match(String(entIdx.mappingNote), /不要用 version=1\.21\.3/);
+  assert.ok(entIdx, JSON.stringify(entIdx));
+  assert.match(String(entIdx.relPosix), /fabric\/1\.21\.4\//);
   const entity = (s.skillBodies ?? []).find((b) => b.name === "mc-entity");
-  assert.ok(entity, "fabric 1.21.4 donor mc-entity");
-  assert.ok(String(entity.text).trimStart().startsWith("[DONOR_SKILL 禁止直接抄写]"));
+  assert.ok(entity, "fabric 1.21.4 local donor-noted mc-entity");
+  // B24 后薄档技能实体落盘：DONOR 注记在正文里（来源 fabric/1.21.3 + 本档版本核验指引）
+  assert.match(String(entity.text).trimStart(), /^\[DONOR_SKILL 禁止直接抄写\]/);
+  assert.match(String(entity.text), /search_fabric_docs\(version=1\.21\.4\)/);
+  assert.match(String(entity.text), /不要用 version=1\.21\.3/);
   const local = sessionPlatformPack({ platform: "fabric", minecraftVersion: "1.21.4", skillNames: ["mc-block"] });
   const block = (local.skillBodies ?? []).find((b) => b.name === "mc-block");
   assert.ok(block);
