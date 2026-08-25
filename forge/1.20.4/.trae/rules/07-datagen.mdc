@@ -64,7 +64,7 @@ public class DataGenerators {
 - 熔炉配方使用 `SimpleCookingRecipeBuilder.smelting()`（在 `buildRecipes()` 内）
 - 配方结果自动注册，**不需要**手动调用注册方法
 - 配方 ID 格式：`minecraft:...`（原版）或 `{modid}:...`（mod）
-- 必须调用 `.save(Consumer<FinishedRecipe>)` 保存
+- 必须调用 `.save(RecipeOutput)` 保存（Forge 1.20.4 / 1.20.2+ vanilla；不要写 `Consumer<FinishedRecipe>`）
 
 ### LootTableProvider 使用规范
 
@@ -199,7 +199,7 @@ public class ModRecipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(RecipeOutput output) {
         // 有形状配方
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.MY_ITEM.get(), 1)
             .pattern(" X ")
@@ -208,14 +208,14 @@ public class ModRecipes extends RecipeProvider {
             .define('X', Items.DIAMOND)
             .define('Y', Items.STICK)
             .unlockedBy("has_diamond", has(Items.DIAMOND))
-            .save(consumer);
+            .save(output);
 
         // 无形状配方
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.OTHER_ITEM.get(), 1)
             .requires(Items.GOLD_INGOT, 3)
             .requires(Items.DIAMOND)
             .unlockedBy("has_gold", has(Items.GOLD_INGOT))
-            .save(consumer);
+            .save(output);
 
         // 熔炉配方
         SimpleCookingRecipeBuilder.smelting(
@@ -223,7 +223,7 @@ public class ModRecipes extends RecipeProvider {
                 RecipeCategory.MISC,
                 Items.DIAMOND, 0.1f, 200)
             .unlockedBy("has_dirt", has(Items.DIRT))
-            .save(consumer);
+            .save(output);
     }
 }
 ```

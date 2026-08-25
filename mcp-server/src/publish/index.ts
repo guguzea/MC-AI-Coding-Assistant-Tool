@@ -23,7 +23,8 @@ export interface PublishReadyResult {
 }
 
 function hasLicense(text: string): boolean {
-  return /license\s*=/i.test(text) || /"license"\s*:/i.test(text);
+  const lines = text.split(/\r?\n/).filter((l) => !/^\s*[#;]/.test(l) && !/^\s*\/\//.test(l));
+  return lines.some((l) => /license\s*=/i.test(l) || /"license"\s*:/i.test(l));
 }
 
 function hasVersion(text: string): boolean {
@@ -46,7 +47,7 @@ function listReleaseJars(projectRoot: string): string[] {
   }
   return names
     .filter((n) => n.endsWith(".jar"))
-    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-javadoc)\.jar$/i.test(n))
+    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-changelog|-obf|-all)\.jar$/i.test(n))
     .map((n) => `build/libs/${n}`);
 }
 

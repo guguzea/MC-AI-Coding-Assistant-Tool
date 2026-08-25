@@ -6,7 +6,7 @@ import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatab
 import { parseGradleProperties } from "../gradle/index.js";
 import { detectLoader } from "../diagnostics/index.js";
 import { isKnowledgeRepo } from "../platform-pack/write.js";
-import { walkDirBounded } from "../utils/project-files.js";
+import { walkDirBounded, javaSourceRoots } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import type {
   AnalyzePortingOutput,
@@ -49,8 +49,65 @@ function loadArchitecturyPatterns(): Record<string, unknown> {
 
 // ── 文件系统工具 ────────────────────────────────────────────────────────────
 
-function walkDir(dir: string, extensions: string[]): string[] {
-  return walkDirBounded(dir, { maxDepth: 16, extensions });
+function walkDir(dir: string, patterns: string[]): string[] {
+  const all = walkDirBounded(dir, { maxDepth: 16, allFiles: true });
+  return all.filter((full) => {
+    const name = basename(full);
+    return patterns.some((pat) => globNameMatch(name, pat));
+  });
+}
+
+function globNameMatch(name: string, pat: string): boolean {
+  if (!pat.includes("*") && !pat.includes("?")) return name.endsWith(pat) || name === pat;
+  const re = new RegExp(
+    "^" +
+      pat
+        .replace(/[.+^${}()|[\]\\]/g, "\\$&")
+        .replace(/\*/g, ".*")
+        .replace(/\?/g, ".") +
+      "$",
+    "i",
+  );
+  return re.test(name);
+}
+
+function javaForMcVersion(ver: string): number {
+  if (/^26\./.test(ver) || /^1\.21\.11/.test(ver)) return 25;
+  const m = ver.match(/^1\.(\d+)/);
+  if (!m) return 21;
+  const minor = Number(m[1]);
+  if (minor <= 16) return 8;
+  if (minor <= 20) return 17;
+  if (minor <= 21) return 21;
+  return 25;
+}
+
+function collectJavaKtSources(root: string): string[] {
+  const files: string[] = [];
+  for (const srcRoot of javaSourceRoots(root)) {
+    files.push(...walkDir(srcRoot, [".java", ".kt"]));
+  }
+  return [...new Set(files)];
+}
+
+function inferCurrentPlatform(root: string): string {
+  const gradle =
+    readContent(join(root, "build.gradle")) + "\n" + readContent(join(root, "build.gradle.kts"));
+  const modsToml =
+    readContent(join(root, "src/main/resources/META-INF/mods.toml")) ||
+    readContent(join(root, "common/src/main/resources/META-INF/mods.toml"));
+  const neoToml =
+    readContent(join(root, "src/main/resources/META-INF/neoforge.mods.toml")) ||
+    readContent(join(root, "neoforge/src/main/resources/META-INF/neoforge.mods.toml"));
+  const fabricJson =
+    readContent(join(root, "src/main/resources/fabric.mod.json")) ||
+    readContent(join(root, "fabric/src/main/resources/fabric.mod.json"));
+  const detected = detectLoader(gradle, modsToml, fabricJson, neoToml);
+  if (detected === "liteloader_forge") return "liteloader";
+  if (detected === "unknown" && /net\.minecraftforge/i.test(gradle) && !/net\.neoforged/i.test(gradle)) {
+    return "forge";
+  }
+  return detected;
 }
 
 function readContent(filePath: string): string {
@@ -221,7 +278,7 @@ function assessRisk(stats: PortingStats, currentPlatform: string, targetPlatform
 function generateRouteSteps(
   isArchitectury: boolean,
   ambiguous: boolean,
-  _currentPlatform: string,
+  currentPlatform: string,
   targetPlatform: string | undefined,
   needCrossPlatform: boolean,
   userSpecifiedTarget: boolean,
@@ -235,8 +292,14 @@ function generateRouteSteps(
       ? [`当前平台证据不足，已按 targetPlatform=${targetPlatform} 规划`]
       : [];
 
+  const forgeToNeo =
+    currentPlatform === "forge" && targetPlatform === "neoforge";
+  const migrateHint = forgeToNeo
+    ? "执行 forge→neoforge 包名迁移（port_project action=apply_version_migration，先 dryRun）"
+    : "按本档 search_*_docs 做 MC 版本 API 迁移（apply_version_migration 仅用于 forge→neoforge 包名，同平台升级不要调用）";
+
   if (isArchitectury && !needCrossPlatform) {
-    return [...prefix, "执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
+    return [...prefix, migrateHint];
   }
 
   if (!isArchitectury && needCrossPlatform) {
@@ -248,12 +311,12 @@ function generateRouteSteps(
       "拆分 Mixin 配置到 fabric/ 和 neoforge/ 子工程（Agent 手动处理）",
       "验证 fabric/ 模块编译通过",
       "验证 neoforge/ 模块编译通过",
-      "执行 MC 版本升级（调用 port_project action=apply_version_migration）",
+      migrateHint,
     ];
   }
 
   if (!isArchitectury && !needCrossPlatform) {
-    return [...prefix, "执行 MC 版本升级（调用 port_project action=apply_version_migration）"];
+    return [...prefix, migrateHint];
   }
 
   return [...prefix, "分析完成，请根据上述报告人工决定下一步"];
@@ -668,9 +731,9 @@ export async function analyzePortingPath(args: unknown) {
     mcVersion: targetVer,
     mappings:
       targetPlatform === "fabric" || targetPlatform === "quilt"
-        ? "yarn"
+        ? (/^26\./.test(targetVer) ? "mojmap" : "yarn")
         : (targetVersionInfo?.mappings?.[0] ?? mappings ?? null),
-    java: targetVersionInfo?.java ?? (targetVer === "26.1" ? 25 : 21),
+    java: targetVersionInfo?.java ?? javaForMcVersion(targetVer),
   };
 
   const output: AnalyzePortingOutput = {
@@ -785,7 +848,7 @@ function generateNeoForgeBuildGradle(): string {
     "",
     "dependencies {",
     "    modApi project(':common')",
-    "    neoform \"20240404.143922\"",
+    "    neoForge \"net.neoforged:neoforge:${rootProject.neoforge_version}\"",
     "}",
   ].join("\n");
 }
@@ -815,7 +878,7 @@ function buildArchitecturySkeleton(root: string, modId: string, mcVersion: strin
 
   files["settings.gradle"] = generateSettingsGradleContent(modId);
   files["build.gradle"] = generateRootBuildGradleContent(mcVersion);
-  files["gradle.properties"] = `minecraft_version=${mcVersion}\nloom.platform=fabric\n`;
+  files["gradle.properties"] = `minecraft_version=${mcVersion}\nneoforge_version=\nloom.platform=fabric\n`;
 
   files["common/build.gradle"] = generateCommonBuildGradle(modId);
   files["fabric/build.gradle"] = generateFabricBuildGradle();
@@ -828,8 +891,10 @@ function buildArchitecturySkeleton(root: string, modId: string, mcVersion: strin
     id: modId,
     version: "1.0.0",
     name: `${modId} (Fabric)`,
-    description: "Fabric platform for ${modId}",
-    entrypoints: [{ adapter: "java", value: `${modId}.${modId}Client` }],
+    description: `Fabric platform for ${modId}`,
+    entrypoints: {
+      main: [`com.example.${modId}.${modId}`],
+    },
     depends: { minecraft: `*` },
   };
   files[join("fabric/src/main/resources", "fabric.mod.json")] = JSON.stringify(fabricModJson, null, 2);
@@ -899,9 +964,12 @@ function applyPackageRenames(root: string, dryRun: boolean): {
   unreviewed: { file: string; reason: string }[];
   modified?: string[];
   rollbackError?: string;
+  srcNotFound?: boolean;
 } {
-  const srcDir = join(root, "src");
-  const files = walkDir(srcDir, [".java", ".kt"]);
+  const files = collectJavaKtSources(root);
+  if (files.length === 0) {
+    return { renames: [], unreviewed: [], modified: [], srcNotFound: true };
+  }
   const allowRoot = dryRun ? null : getAllowRootReal();
 
   const renames: { from: string; to: string; affectedFiles: number }[] = [];
@@ -1051,7 +1119,7 @@ export async function portProject(args: unknown) {
           error: {
             code: "CONFLICTING_FILES",
             message: `拒绝覆盖已存在文件: ${conflicts.join(", ")}`,
-            hint: "请换空目录，或先备份/移除冲突文件后再以 confirmed=true 写入",
+            hint: "已有工程请改用 extract_common / apply_version_migration；init_architectury 仅适用于空目录。请换空目录，或先备份/移除冲突文件后再以 confirmed=true 写入",
           },
         });
       }
@@ -1119,10 +1187,21 @@ export async function portProject(args: unknown) {
   }
 
   if (action === "extract_common") {
-    const srcDir = join(root, "src");
-    const javaFiles = walkDir(join(srcDir, "main/java"), [".java"]);
-    const kotlinFiles = walkDir(join(srcDir, "main/kotlin"), [".kt"]);
-    const allFiles = [...javaFiles, ...kotlinFiles];
+    const roots = javaSourceRoots(root);
+    const allFiles: string[] = [];
+    for (const srcRoot of roots) {
+      allFiles.push(...walkDir(join(srcRoot, "main/java"), [".java"]));
+      allFiles.push(...walkDir(join(srcRoot, "main/kotlin"), [".kt"]));
+    }
+    if (allFiles.length === 0) {
+      return JSON.stringify({
+        ok: false,
+        error: {
+          code: "SRC_NOT_FOUND",
+          message: "未找到 Java/Kotlin 源码（已扫 src、common/src、fabric/src、forge/src、neoforge/src、quilt/src）",
+        },
+      });
+    }
 
     const candidates: FileCandidate[] = allFiles.map((file) => {
       const relPath = pathRel(root, file);
@@ -1179,7 +1258,35 @@ export async function portProject(args: unknown) {
       });
     }
     const targetVersion = parsed.data.targetVersion;
+    const currentPlatform = inferCurrentPlatform(root);
+    const destPlatform = parsed.data.targetPlatform ?? currentPlatform;
+    const forgeToNeo = currentPlatform === "forge" && destPlatform === "neoforge";
+    if (!forgeToNeo) {
+      return JSON.stringify({
+        ok: true,
+        dryRun,
+        skippedReason:
+          `apply_version_migration 的包名改写仅用于 forge→neoforge（当前 ${currentPlatform} → ${destPlatform}）。同平台 MC 升级请查本档 search_*_docs，不要改 net.minecraftforge import。`,
+        changes: {
+          buildGradleUpdates: [],
+          gradlePropertiesUpdates: [],
+          packageRenames: [],
+          todoBlocksAdded: [],
+          unreviewedCandidates: [],
+          manualFollowUps: [],
+        },
+      });
+    }
     const renameResult = applyPackageRenames(root, !doWrite);
+    if (renameResult.srcNotFound) {
+      return JSON.stringify({
+        ok: false,
+        error: {
+          code: "SRC_NOT_FOUND",
+          message: "未找到 Java/Kotlin 源码目录，无法执行包名迁移",
+        },
+      });
+    }
     const { renames, unreviewed } = renameResult;
 
     if (renameResult.rollbackError) {

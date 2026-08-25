@@ -41,6 +41,8 @@ export interface DiskSpaceInfo {
   neededBytes: number;
   freeBytes: number | null;
   ok: boolean;
+  volumes?: Array<{ role: "dataDir" | "staging"; path: string; freeBytes: number | null; ok: boolean }>;
+  insufficientVolume?: string;
 }
 
 export function estimateNeededBytes(zipSize: number): number {
@@ -56,13 +58,32 @@ export function getFreeBytes(dirPath: string): number | null {
   }
 }
 
+function volumeOk(freeBytes: number | null, neededBytes: number): boolean {
+  return freeBytes === null || freeBytes >= neededBytes;
+}
+
+/** 分别测 dataDir 与 os.tmpdir()（staging）；任一卷不足都阻断。 */
 export function checkDiskSpace(dirPath: string, zipSize: number): DiskSpaceInfo {
   const neededBytes = estimateNeededBytes(zipSize);
-  const freeBytes = getFreeBytes(existsSync(dirPath) ? dirPath : dirname(dirPath));
+  const dataPath = existsSync(dirPath) ? dirPath : dirname(dirPath);
+  const stagingPath = tmpdir();
+  const dataFree = getFreeBytes(dataPath);
+  const stagingFree = getFreeBytes(stagingPath);
+  const dataOk = volumeOk(dataFree, neededBytes);
+  const stagingOk = volumeOk(stagingFree, neededBytes);
+  const volumes: NonNullable<DiskSpaceInfo["volumes"]> = [
+    { role: "dataDir", path: dataPath, freeBytes: dataFree, ok: dataOk },
+    { role: "staging", path: stagingPath, freeBytes: stagingFree, ok: stagingOk },
+  ];
+  let insufficientVolume: string | undefined;
+  if (!dataOk) insufficientVolume = `dataDir (${dataPath})`;
+  else if (!stagingOk) insufficientVolume = `staging (${stagingPath})`;
   return {
     neededBytes,
-    freeBytes,
-    ok: freeBytes === null || freeBytes >= neededBytes,
+    freeBytes: dataFree,
+    ok: dataOk && stagingOk,
+    volumes,
+    insufficientVolume,
   };
 }
 
@@ -95,9 +116,15 @@ export function sha256File(path: string): string {
   }
 }
 
-function walkFiles(root: string, base = root, depth = 0, seen?: Set<string>): string[] {
+const WALK_MAX_DEPTH = 64;
+
+function walkFiles(root: string, base = root, depth = 0, seen?: Set<string>, warnings?: string[]): string[] {
   const out: string[] = [];
-  if (!existsSync(root) || depth > 32) return out;
+  if (!existsSync(root)) return out;
+  if (depth > WALK_MAX_DEPTH) {
+    warnings?.push(`walkFiles 深度超过 ${WALK_MAX_DEPTH}，已截断: ${relative(base, root).split(sep).join("/")}`);
+    return out;
+  }
   let real: string;
   try {
     real = nativeReal(root);
@@ -110,8 +137,11 @@ function walkFiles(root: string, base = root, depth = 0, seen?: Set<string>): st
   for (const name of readdirSync(root)) {
     const p = join(root, name);
     const st = lstatSync(p);
-    if (st.isSymbolicLink()) continue;
-    if (st.isDirectory()) out.push(...walkFiles(p, base, depth + 1, seenSet));
+    if (st.isSymbolicLink()) {
+      warnings?.push(`跳过符号链接: ${relative(base, p).split(sep).join("/")}`);
+      continue;
+    }
+    if (st.isDirectory()) out.push(...walkFiles(p, base, depth + 1, seenSet, warnings));
     else out.push(relative(base, p).split(sep).join("/"));
   }
   return out;
@@ -245,7 +275,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       ? `verify SHA256 via GitHub asset digest`
       : `verify SHA256 via ${opts.sums?.name ?? opts.localSumsPath ?? "checksum"}`,
   );
-  steps.push(`extract into ${dataDir} (layout: zip root = data contents)`);
+  steps.push(`extract into ${dataDir} (layout: zip root = data contents; full snapshot replaces withdrawn trees)`);
 
   if (!diskSpace.ok) {
     return {
@@ -255,7 +285,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
       diskSpace,
       action: actionable(
         "DISK_SPACE_INSUFFICIENT",
-        `磁盘空间不足：需要约 ${diskSpace.neededBytes} 字节，可用 ${diskSpace.freeBytes}`,
+        `磁盘空间不足（${diskSpace.insufficientVolume ?? "未知卷"}）：需要约 ${diskSpace.neededBytes} 字节，dataDir 可用 ${diskSpace.freeBytes}`,
         ["清理磁盘后重试"],
         ["mc_skill_update"],
       ),
@@ -426,9 +456,7 @@ export async function applyDataUpdate(opts: DataApplyOpts): Promise<DataApplyRes
     const nextDir = siblingName(dataDir, ".next");
     mkdirSync(nextDir, { recursive: true });
     try {
-      if (existsSync(dataDir)) {
-        copyTree(dataDir, nextDir, allowRoot!);
-      }
+      // 全量快照：nextDir 仅含本 Release zip，撤档树/非 zip 文件不会残留
       const written = copyTree(contentRoot, nextDir, allowRoot!);
       swapInDataDir(nextDir, dataDir);
       writeUpdateState(

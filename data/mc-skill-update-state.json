@@ -1,8 +1,10 @@
 {
   "lastCheck": {
-    "at": "2026-08-24T14:58:42.113Z",
+    "at": "2026-08-25T15:00:42.494Z",
     "updateAvailable": false,
     "remoteTag": "V1.0.4",
     "scopes": []
-  }
+  },
+  "pendingRestart": false,
+  "pendingRestartSince": null
 }

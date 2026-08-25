@@ -11,9 +11,24 @@ function walkFiles(dir: string): string[] {
   return walkDirBounded(dir, { maxDepth: 16, allFiles: true });
 }
 
+type FpCache = { fp: string | null; mtimeMax: number; fileCount: number; expiresAt: number };
+const _fpCache = new Map<string, FpCache>();
+const FP_TTL_MS = 5 * 60 * 1000;
+
+function processedFileCount(versionDir: string): number {
+  return walkFiles(join(versionDir, "processed")).length;
+}
+
 /** 对 versionDir（含 processed/ 与 index-l0.json）做稳定 sha256 */
 export function computeSourceFingerprint(versionDir: string): string | null {
   if (!existsSync(versionDir)) return null;
+  const mtimeMax = maxProcessedMtimeMs(versionDir);
+  const fileCount = processedFileCount(versionDir);
+  const now = Date.now();
+  const cached = _fpCache.get(versionDir);
+  if (cached && cached.expiresAt > now && cached.mtimeMax === mtimeMax && cached.fileCount === fileCount) {
+    return cached.fp;
+  }
   const files: string[] = [];
   const l0 = join(versionDir, "index-l0.json");
   if (existsSync(l0)) files.push(l0);
@@ -21,8 +36,11 @@ export function computeSourceFingerprint(versionDir: string): string | null {
   for (const f of walkFiles(processed)) {
     if (/\.(md|markdown|txt)$/i.test(f)) files.push(f);
   }
-  files.sort((a, b) => a.replace(/\\/g, "/").localeCompare(b.replace(/\\/g, "/")));
-  if (files.length === 0) return null;
+  files.sort((a, b) => a.replace(/\\/g, "/").localeCompare(b.replace(/\\/g, "/"), "en"));
+  if (files.length === 0) {
+    _fpCache.set(versionDir, { fp: null, mtimeMax, fileCount, expiresAt: now + FP_TTL_MS });
+    return null;
+  }
   const h = createHash("sha256");
   for (const f of files) {
     const rel = f.slice(versionDir.length).replace(/\\/g, "/");
@@ -31,7 +49,9 @@ export function computeSourceFingerprint(versionDir: string): string | null {
     h.update(readFileSync(f));
     h.update("\0");
   }
-  return h.digest("hex");
+  const fp = h.digest("hex");
+  _fpCache.set(versionDir, { fp, mtimeMax, fileCount, expiresAt: now + FP_TTL_MS });
+  return fp;
 }
 
 export function maxProcessedMtimeMs(versionDir: string): number {

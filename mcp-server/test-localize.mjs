@@ -136,6 +136,11 @@ function testOwnEmptyPreserved() {
 function testPlaceholderNormalize() {
   assert.equal(placeholdersMatch("Hello %s", "你好 %1$s"), true);
   assert.equal(placeholdersMatch("val %f done", "值 %f 完"), true);
+  assert.equal(placeholdersMatch("%s and %d", "%d ge, %s"), true, "顺序式按类型多重集");
+  assert.equal(placeholdersMatch("%s and %s", "%s and %d"), false, "类型多重集不一致");
+  assert.equal(placeholdersMatch("%2$s", "%1$s"), false, "位置式按编号");
+  assert.equal(placeholdersMatch("%S %D", "%s %d"), true);
+  assert.equal(placeholdersMatch("%.2f done", "完 %f"), true);
 }
 
 function testOwnDraft() {

@@ -12,6 +12,7 @@ import { resolveDataDir } from "../utils/path.js";
 type MappingDb = DatabaseSync;
 
 const _dbs = new Map<string, MappingDb>();
+const MAPPING_DB_CAP = 8;
 const _pathCache = new Map<string, string | null>();
 const _csvPathCache = new Map<string, string | null>();
 
@@ -61,10 +62,25 @@ function methodCountOf(db: MappingDb): number {
 
 function openDbCached(dbPath: string): MappingDb | null {
   const cached = _dbs.get(dbPath);
-  if (cached) return cached;
+  if (cached) {
+    _dbs.delete(dbPath);
+    _dbs.set(dbPath, cached);
+    return cached;
+  }
   try {
     const db = new DatabaseSync(dbPath, { readOnly: true });
     _dbs.set(dbPath, db);
+    while (_dbs.size > MAPPING_DB_CAP) {
+      const oldest = _dbs.keys().next().value;
+      if (oldest === undefined) break;
+      const old = _dbs.get(oldest);
+      try {
+        old?.close();
+      } catch {
+        /* ignore */
+      }
+      _dbs.delete(oldest);
+    }
     return db;
   } catch {
     return null;

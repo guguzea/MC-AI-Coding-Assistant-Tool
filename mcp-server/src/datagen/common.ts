@@ -31,12 +31,19 @@ export function toUpperSnake(name: string): string {
   return name.toUpperCase().replace(/-/g, "_");
 }
 
-/** Java 简单类名：保留 PascalCase；勿对 resource id 先 toLowerCase 再用于类名。 */
+/**
+ * Java 简单类名：保留 PascalCase/camelCase；含 ./- 或数字开头才走 normalize。
+ * 禁止 `class 123modRecipeProvider`（→ M123mod…）。勿对已是合法标识的 RAW 先 toLowerCase。
+ */
 export function toJavaClassName(raw: string): string {
-  const cleaned = raw.trim().replace(/[^a-zA-Z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
-  if (!cleaned) return "";
-  if (/[_-]/.test(cleaned)) {
-    return toPascalCase(cleaned.replace(/-/g, "_"));
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
+  if (/^[0-9]/.test(trimmed) || /[^a-zA-Z0-9_-]/.test(trimmed)) {
+    const ident = normalizeModIdentifier(trimmed);
+    if (!ident) return "";
+    return toPascalCase(ident.value);
   }
+  const cleaned = trimmed.replace(/-/g, "_");
+  if (/_/.test(cleaned)) return toPascalCase(cleaned);
   return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }

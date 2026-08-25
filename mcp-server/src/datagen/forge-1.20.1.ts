@@ -159,11 +159,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ${pascalName}LootTableProvider extends LootTableProvider {
-    public static final DeferredRegister<Block> BLOCKS =
+    public static final DeferredRegister<Block> LOOT_DEMO_BLOCKS =
         DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
 
     public static final RegistryObject<Block> ${upperName}_BLOCK =
-        BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
+        LOOT_DEMO_BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
 
     public ${pascalName}LootTableProvider(PackOutput output) {
         super(
@@ -194,7 +194,7 @@ class ${pascalName}BlockLoot extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return ${pascalName}LootTableProvider.BLOCKS.getEntries().stream()
+        return ${pascalName}LootTableProvider.LOOT_DEMO_BLOCKS.getEntries().stream()
             .map(RegistryObject::get)
             .collect(Collectors.toList());
     }
@@ -224,11 +224,11 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
-    public static final DeferredRegister<Block> BLOCKS =
+    public static final DeferredRegister<Block> TAG_DEMO_BLOCKS =
         DeferredRegister.create(ForgeRegistries.BLOCKS, "${modId}");
 
     public static final RegistryObject<Block> ${upperName}_BLOCK =
-        BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
+        TAG_DEMO_BLOCKS.register("${targetName}", () -> new Block(BlockBehaviour.Properties.of()));
 
     public ${pascalName}BlockTagsProvider(
             PackOutput output,

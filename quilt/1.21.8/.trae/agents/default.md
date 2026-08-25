@@ -32,3 +32,8 @@
 | 02–04, 07–08, 10 | overlay fabric | session 注入同版 Fabric（含缺的 09） |
 
 `query_api` 对 1.21.8 无 Vanilla 索引。平台 API：`search_docs({platform:"quilt", version:"1.21.8"})`；无本档 quilt-docs 时改口 `list_doc_versions` 已入库档或 `search_fabric_docs version=1.21.8`。QSL 专用查询禁止把 Fabric Registry 当命中。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

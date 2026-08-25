@@ -154,11 +154,12 @@ export interface AtInfo {
 
 function extractAnnotationBlocks(source: string, name: string): string[] {
   const blocks: string[] = [];
-  const needle = `@${name}`;
-  let i = 0;
-  while ((i = source.indexOf(needle, i)) >= 0) {
-    const open = source.indexOf("(", i + needle.length);
-    if (open < 0) break;
+  const re = new RegExp(`@${name}\\b`, "g");
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(source)) !== null) {
+    const i = m.index;
+    const open = source.indexOf("(", i + m[0].length);
+    if (open < 0 || open > i + m[0].length + 8) continue;
     let depth = 0;
     let j = open;
     for (; j < source.length; j++) {
@@ -168,11 +169,11 @@ function extractAnnotationBlocks(source: string, name: string): string[] {
         depth--;
         if (depth === 0) {
           blocks.push(source.slice(open + 1, j));
+          re.lastIndex = j + 1;
           break;
         }
       }
     }
-    i = j + 1;
   }
   return blocks;
 }
@@ -378,7 +379,7 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
             issue: `@At target 的 owner 类不存在：${atOwner}`,
             suggestion: "确认 @At target 的 owner 类名（可省略 owner 直接写 方法名(desc)）",
           });
-        } else if (atInfo.value === "NEW") {
+        } else if (atValueUpper === "NEW") {
           // target 是类名
           // owner 已确认存在，无需进一步校验
         } else {

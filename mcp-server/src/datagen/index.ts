@@ -4,6 +4,7 @@
  * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric Loom。
  */
 
+import { isExactMcVersionToken } from "../utils/minecraft-version.js";
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateFabric, type FabricProviderType, type FabricIdStyle } from "./fabric.js";
@@ -24,7 +25,8 @@ export interface DatagenQuery {
     | "tag"
     | "advancement"
     | "particle"
-    | "sound";
+    | "sound"
+    | "language";
   modId: string;
   targetName: string;
   version?: string;
@@ -104,7 +106,7 @@ function isForge1204Datagen(platform: string, version: string): boolean {
   return platform === "forge" && /^1\.20\.4/.test(version.trim());
 }
 
-const FABRIC_DATAGEN_GENERATE = new Set(["1.21.1", "1.21.4", "1.21.8"]);
+const FABRIC_DATAGEN_GENERATE = new Set(["1.21.1", "1.21.3", "1.21.4", "1.21.8"]);
 const FABRIC_DATAGEN_BUILD_RECIPES = new Set(["1.21.10", "1.21.11"]);
 
 function fabricDatagenRecipeMethod(version: string): "generate" | "buildRecipes" | null {
@@ -161,6 +163,16 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
       ],
     };
   }
+  if (!isExactMcVersionToken(ver)) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: [
+        `version 必须是精确 MC 版本（如 1.21.3 / 26.1），收到 ${ver}。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_*_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。`,
+      ],
+    };
+  }
   if (platform === "quilt") {
     // D-2/D-3 门闩：quilt 各档均无 07-datagen 规则、无可核 QFAPI datagen 签名 → 不给成功路径。
     const qslNote = ["1.18.2", "1.19.4", "1.20.1", "1.20.4"].includes(ver)
@@ -195,7 +207,7 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
         usedModId: query.modId,
         usedTargetName: query.targetName,
         errors: [
-          `尚无 Fabric Datagen 模板覆盖 version=${ver}（已核实：1.21.1 / 1.21.4 / 1.21.8 为 generate()；1.21.10 / 1.21.11 为 buildRecipes；26.1*）。1.20.1 / 1.20.4 / 1.21.5 无官方页或核不到签名。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_fabric_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。不要生成 Forge DataGen。`,
+          `尚无 Fabric Datagen 模板覆盖 version=${ver}（已核实：1.21.1 / 1.21.3 / 1.21.4 / 1.21.8 为 generate()；1.21.10 / 1.21.11 为 buildRecipes；26.1*）。1.20.1 / 1.20.4 / 1.21.5 无官方页或核不到签名。该版本无原生生成器，不要理解为游戏里做不了。请改用 search_fabric_docs 手动编写，参考规则 07-datagen / mc-datagen Skill。不要生成 Forge DataGen。`,
         ],
       };
     }
@@ -204,6 +216,14 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   const neoClient = isNeoForge21ClientDatagen(platform, ver);
   const neo2111 = isNeoForge2111Datagen(platform, ver);
   const neo261 = isNeoForge261Platform(platform, ver);
+  if (providerType === "language" && !(platform === "neoforge" && neo261)) {
+    return {
+      code: null,
+      usedModId: query.modId,
+      usedTargetName: query.targetName,
+      errors: ["language provider 仅 NeoForge 26.1 接线；其它档请用 search_*_docs 手写 LanguageProvider。"],
+    };
+  }
   const neo1204Dg = isNeoForge1204Datagen(platform, ver);
   const neo1206 = isNeoForge1206Datagen(platform, ver);
   const forge1204 = isForge1204Datagen(platform, ver);
@@ -270,13 +290,13 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
 
   const modId = mod.value;
   const targetName = target.value;
-  const classBase = toJavaClassName(query.modId) || toJavaClassName(modId);
+  const classBase = toJavaClassName(query.modId);
 
   let code: string;
   if (platform === "fabric") {
     const recipeMethod = fabricDatagenRecipeMethod(ver) ?? "buildRecipes";
     // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
-    const idStyle: FabricIdStyle = ver === "1.21.11" ? "Identifier" : "ResourceLocation";
+    const idStyle: FabricIdStyle = ver === "1.21.11" || /^26\.1/.test(ver) ? "Identifier" : "ResourceLocation";
     code = generateFabric(
       providerType as FabricProviderType,
       modId,

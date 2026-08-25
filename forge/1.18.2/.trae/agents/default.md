@@ -159,3 +159,8 @@ Forge 1.18.2 引入 Caves & Cliffs 大更新，世界高度发生变化：
 | pack_format | 8 | 15 | 1.18.2 使用 pack_format 8 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

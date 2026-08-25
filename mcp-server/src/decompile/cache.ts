@@ -16,6 +16,7 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, readdirSync, renameSync } from "fs";
 import { join } from "path";
 import os from "os";
+import { createHash } from "crypto";
 import { DatabaseSync } from "node:sqlite";
 
 export interface CachePaths {
@@ -73,10 +74,29 @@ export function ensureCachePaths(root: string = resolveCacheRoot()): CachePaths 
 
 // ── cache.db ──────────────────────────────────────────────────────────────────
 
+const CACHE_DB_SCHEMA = 1;
+
 export function openCacheDb(root: string = resolveCacheRoot()): DatabaseSync {
   const dbPath = join(root, "cache.db");
   if (!existsSync(root)) mkdirSync(root, { recursive: true });
-  const db = new DatabaseSync(dbPath);
+  let db: DatabaseSync;
+  try {
+    db = new DatabaseSync(dbPath);
+    const row = db.prepare("PRAGMA user_version").get() as { user_version?: number } | undefined;
+    const ver = Number(row?.user_version ?? 0);
+    if (ver !== 0 && ver !== CACHE_DB_SCHEMA) {
+      db.close();
+      rmSync(dbPath, { force: true });
+      db = new DatabaseSync(dbPath);
+    }
+  } catch {
+    try {
+      rmSync(dbPath, { force: true });
+    } catch {
+      /* ignore */
+    }
+    db = new DatabaseSync(dbPath);
+  }
   db.exec(`
     CREATE TABLE IF NOT EXISTS meta (
       key TEXT PRIMARY KEY,
@@ -91,6 +111,7 @@ export function openCacheDb(root: string = resolveCacheRoot()): DatabaseSync {
       state TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
+    PRAGMA user_version = ${CACHE_DB_SCHEMA};
   `);
   return db;
 }
@@ -150,7 +171,10 @@ export class CacheLockBusyError extends Error {
 }
 
 function sanitizeLockName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const lower = name.toLowerCase();
+  const cleaned = lower.replace(/[^a-z0-9._-]/g, "_");
+  const hash = createHash("sha1").update(name).digest("hex").slice(0, 8);
+  return `${cleaned.slice(0, 80)}_${hash}`;
 }
 
 function lockDirOf(root: string, name: string): string {

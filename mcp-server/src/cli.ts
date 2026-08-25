@@ -31,6 +31,7 @@ import {
   type RawFlags,
 } from "./cli-parse.js";
 import { parameterTypes, readableSignature, returnType } from "./utils/descriptor.js";
+import { clearPendingRestart } from "./update/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FILE_MAX_BYTES = 8 * 1024 * 1024;
@@ -248,6 +249,11 @@ async function runDescriptor(params: Record<string, unknown>, positional: string
 }
 
 async function main(): Promise<void> {
+  try {
+    clearPendingRestart();
+  } catch {
+    /* 无待重启状态文件时忽略 */
+  }
   const argv = process.argv.slice(2);
   if (argv[0] === "--version" || argv[0] === "-V") {
     process.stdout.write(cliVersion() + "\n");

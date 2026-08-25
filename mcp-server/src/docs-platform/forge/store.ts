@@ -19,7 +19,10 @@ import {
   buildSymbolIndex,
   enhancedSearch,
   stripScores,
+  ttlCacheGet,
+  ttlCacheSet,
   type SymbolIndex,
+  type TtlCacheEntry,
 } from "../search-utils.js";
 import { PlatformDataMissingError } from "../platform-data.js";
 
@@ -174,8 +177,8 @@ export class ForgeDocStore {
   /** L1 符号倒排（按 resolved version） */
   private symbolIndexCache = new Map<string, SymbolIndex>();
 
-  /** 相关文档缓存（以 id|version|limit 为 key） */
-  private relatedCache = new Map<string, SearchResult[]>();
+  /** 相关文档缓存（以 id|version|limit 为 key，TTL 5min） */
+  private relatedCache = new Map<string, TtlCacheEntry<SearchResult[]>>();
 
   /** 搜索日志（最多 500 条） */
   private searchLog: SearchLogEntry[] = [];
@@ -397,13 +400,14 @@ export class ForgeDocStore {
    */
   getRelatedDocs(id: string, version: string, limit = 5): SearchResult[] {
     this.ensureValidated();
-    const cacheKey = `${id}|${version}|${limit}`;
-    const cached = this.relatedCache.get(cacheKey);
+    const resolved = this.resolveVersion(version);
+    const cacheKey = `${id}|${resolved}|${limit}`;
+    const cached = ttlCacheGet(this.relatedCache, cacheKey);
     if (cached) return cached;
 
     let l2: import("./types.js").L2Entry[];
     try {
-      l2 = this.loadIndexL2(version);
+      l2 = this.loadIndexL2(resolved);
     } catch {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
@@ -481,11 +485,7 @@ export class ForgeDocStore {
       .slice(0, limit)
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
-    this.relatedCache.set(cacheKey, results);
-    if (this.relatedCache.size > 64) {
-      const first = this.relatedCache.keys().next().value;
-      if (first !== undefined) this.relatedCache.delete(first);
-    }
+    ttlCacheSet(this.relatedCache, cacheKey, results);
     return results;
   }
 

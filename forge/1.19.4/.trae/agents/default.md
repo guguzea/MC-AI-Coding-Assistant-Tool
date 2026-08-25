@@ -150,3 +150,8 @@ src/main/java/
 | 生物分类 | `MobCategory` | `MobCategory` | Forge / Mojmap 用 `MobCategory`；`SpawnGroup` 是 Yarn 名 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

@@ -202,9 +202,19 @@ export function parseTopicTokens(topics?: string[]): {
       }
       continue;
     }
-    const num = raw.match(/(^|\D)(\d{2})(\D|$)/);
-    const alias = ownGet(TOPIC_ALIASES, lower);
-    const id = num ? num[2] : alias;
+    let id: string | undefined;
+    if (/^\d{1,2}$/.test(raw)) {
+      const n = Number(raw);
+      if (n < 0 || n > 10) {
+        warnings.push(`伪规则 "${raw}" 已拒绝（仅 00–10）`);
+        continue;
+      }
+      id = String(n).padStart(2, "0");
+    } else {
+      const num = raw.match(/(^|\D)(0\d|10)(\D|$)/);
+      const alias = ownGet(TOPIC_ALIASES, lower);
+      id = num ? num[2] : alias;
+    }
     if (!id) {
       warnings.push(`无法解析 topics 项 "${raw}"，已跳过（不会截成两字符）`);
       continue;
@@ -328,6 +338,11 @@ export function sessionPlatformPack(args: SessionArgs) {
     source,
     text,
   }));
+  for (const id of ids) {
+    if (ruleBodies.some((r) => r.id === id)) continue;
+    if ((BASE_RULE_IDS as readonly string[]).includes(id)) continue;
+    warnings.push(`请求的规则 ${id} 在本档不存在，已跳过（不会静默丢）`);
+  }
 
   const { skills, donorWarning } = listMergedPackSkills(
     pack.platform,

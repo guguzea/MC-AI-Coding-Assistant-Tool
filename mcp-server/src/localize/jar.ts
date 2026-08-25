@@ -21,6 +21,7 @@ export interface JarScan {
   ok: true;
   byNamespace: Record<string, LangFileRef[]>;
   availableNamespaces: string[];
+  skippedMinecraftLang?: number;
 }
 
 export type JarScanResult =
@@ -29,7 +30,8 @@ export type JarScanResult =
 
 function isUnsafePath(name: string): boolean {
   const n = name.replace(/\\/g, "/");
-  return n.includes("..") || n.startsWith("/") || /^[A-Za-z]:/.test(n);
+  if (n.startsWith("/") || /^[A-Za-z]:/.test(n)) return true;
+  return n.split("/").some((seg) => seg === "..");
 }
 
 function findEocd(buf: Buffer): number {
@@ -49,15 +51,23 @@ interface CdEntry {
   localHeaderOffset: number;
 }
 
-function readCentralDirectory(buf: Buffer): CdEntry[] | null {
+function readCentralDirectory(buf: Buffer): CdEntry[] | { error: string } {
   const eocd = findEocd(buf);
-  if (eocd < 0) return null;
+  if (eocd < 0) return { error: "NO_EOCD" };
+  const cdSize = buf.readUInt32LE(eocd + 12);
   const cdOffset = buf.readUInt32LE(eocd + 16);
   const cdCount = buf.readUInt16LE(eocd + 10);
+  if (cdOffset === 0xffffffff || cdSize === 0xffffffff || cdCount === 0xffff) {
+    return { error: "UNSUPPORTED_ZIP64" };
+  }
+  if (cdOffset + cdSize > buf.length) {
+    return { error: "CD_OUT_OF_BOUNDS" };
+  }
   const entries: CdEntry[] = [];
   let pos = cdOffset;
   for (let i = 0; i < cdCount; i++) {
-    if (buf.readUInt32LE(pos) !== 0x02014b50) break;
+    if (pos + 46 > buf.length) return { error: "CD_OUT_OF_BOUNDS" };
+    if (buf.readUInt32LE(pos) !== 0x02014b50) return { error: "BAD_CD_SIGNATURE" };
     const compression = buf.readUInt16LE(pos + 10);
     const compressedSize = buf.readUInt32LE(pos + 20);
     const uncompressedSize = buf.readUInt32LE(pos + 24);
@@ -65,6 +75,7 @@ function readCentralDirectory(buf: Buffer): CdEntry[] | null {
     const extraLen = buf.readUInt16LE(pos + 30);
     const commentLen = buf.readUInt16LE(pos + 32);
     const localHeaderOffset = buf.readUInt32LE(pos + 42);
+    if (pos + 46 + nameLen > buf.length) return { error: "CD_OUT_OF_BOUNDS" };
     const name = buf.subarray(pos + 46, pos + 46 + nameLen).toString("utf8");
     if (name && !name.endsWith("/")) {
       entries.push({
@@ -153,32 +164,30 @@ export function loadJarBuffer(jarPath: string):
 
 export function scanJarLangFiles(buf: Buffer): JarScanResult {
   const cd = readCentralDirectory(buf);
-  if (!cd) {
+  if (!Array.isArray(cd)) {
+    const code = cd.error === "UNSUPPORTED_ZIP64" ? "UNSUPPORTED" : "JAR_UNREADABLE";
     return {
       ok: false,
-      code: "JAR_UNREADABLE",
+      code,
       availableNamespaces: [],
-      action: actionable("JAR_UNREADABLE", "无法读取 ZIP 中央目录", ["确认 jar 完整"], ["localize_mod"]),
+      action: actionable(code, `无法读取 ZIP 中央目录（${cd.error}）`, ["确认 jar 完整", "本工具不支持 ZIP64"], ["localize_mod"]),
     };
   }
 
   const byNamespace: Record<string, LangFileRef[]> = {};
+  let skippedMinecraft = 0;
   for (const e of cd) {
     if (isUnsafePath(e.name)) {
-      return {
-        ok: false,
-        code: "JAR_UNREADABLE",
-        availableNamespaces: [],
-        action: actionable("JAR_UNREADABLE", `拒绝不安全路径: ${e.name}`, ["使用官方/可信模组 jar"], [
-          "localize_mod",
-        ]),
-      };
+      continue;
     }
     const m = e.name.match(LANG_ENTRY_RE);
     if (!m) continue;
     const namespace = m[1];
     const locale = m[2].toLowerCase();
-    if (namespace === "minecraft") continue;
+    if (namespace === "minecraft") {
+      skippedMinecraft += 1;
+      continue;
+    }
     const ref: LangFileRef = { namespace, locale, entryPath: e.name, format: m[3].toLowerCase() === "lang" ? "lang" : "json" };
     (byNamespace[namespace] ??= []).push(ref);
   }
@@ -188,12 +197,17 @@ export function scanJarLangFiles(buf: Buffer): JarScanResult {
   }
 
   const availableNamespaces = Object.keys(byNamespace).sort();
-  return { ok: true, byNamespace, availableNamespaces };
+  return {
+    ok: true,
+    byNamespace,
+    availableNamespaces,
+    ...(skippedMinecraft ? { skippedMinecraftLang: skippedMinecraft } : {}),
+  };
 }
 
 export function readJarEntryText(buf: Buffer, entryPath: string): string {
   const cd = readCentralDirectory(buf);
-  if (!cd) throw new Error("无法读取中央目录");
+  if (!Array.isArray(cd)) throw new Error(`无法读取中央目录: ${cd.error}`);
   const entry = cd.find((e) => e.name === entryPath || e.name.replace(/\\/g, "/") === entryPath);
   if (!entry) throw new Error(`条目不存在: ${entryPath}`);
   return extractEntry(buf, entry).toString("utf8");

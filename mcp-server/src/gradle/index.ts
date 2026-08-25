@@ -183,7 +183,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     );
   }
 
-  if (loader === "modloader" || /extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle)) {
+  if (loader === "modloader" || (/extends\s+BaseMod\b|class\s+mod_[A-Za-z0-9_]+/.test(buildGradle) && !/cpw\.mods\.fml|net\.minecraftforge/.test(buildGradle) && !modsToml)) {
     return skippedGradle(
       [
         "diagnose_gradle 仅覆盖 Forge（ForgeGradle）。当前内容像 Risugami's ModLoader（BaseMod），通常无 Gradle。",
@@ -195,7 +195,7 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
     );
   }
 
-  if (/neogradle|net\.neoforged\.gradle|id\s+['"]net\.neoforged/i.test(buildGradle)) {
+  if (/neogradle|net\.neoforged\.gradle|net\.neoforged\.moddev|id\s*\(?\s*['"]net\.neoforged/i.test(buildGradle)) {
     return diagnoseNeoGradle(buildGradle, gradleProperties);
   }
 
@@ -304,6 +304,14 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
         !/id\s+['"]net\.minecraftforge\.gradle['"]/.test(buildGradle)) {
       warnings.push("1.12.2 常见写法是 apply plugin: 'net.minecraftforge.gradle.forge'");
     }
+  } else if (band === "other") {
+    warnings.push(`Minecraft ${mcVersion} 走 pin 表 era 检查（1.21+/26.x），禁止空转通过`);
+    if (!hasJavaLanguageVersionDecl(buildGradle)) {
+      errors.push("未找到 Java toolchain 配置（1.21+ / 26.x 必须声明）");
+    }
+    if (!buildGradle.includes("net.minecraftforge.gradle") && !/apply\s+plugin:\s*['"]net\.minecraftforge\.gradle/.test(buildGradle)) {
+      warnings.push("未找到 ForgeGradle 插件声明");
+    }
   }
 
   if (errors.length === 0 && band !== "unknown") {
@@ -369,16 +377,16 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
     if (/modImplementation/.test(buildGradle)) {
       errors.push("26.1 禁止 modImplementation，改用 implementation / compileOnly / api");
     }
-    if (!/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle)) {
-      errors.push("26.1 需要 Java toolchain 25（JavaLanguageVersion.of(25)）");
+    if (!/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle) && !/JavaVersion\.VERSION_25\b/.test(buildGradle)) {
+      errors.push("26.1 需要 Java toolchain 25（JavaLanguageVersion.of(25) 或 JavaVersion.VERSION_25）");
     }
     if (/yarn/i.test(buildGradle) && /mappings/.test(buildGradle)) {
       warnings.push("26.1 游戏已去混淆，不要再声明 Yarn mappings");
     }
   } else {
-    if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle)) {
-      errors.push("未找到 Java toolchain 配置（1.21 建议 JavaLanguageVersion.of(21)）");
-    } else if (/^1\.21/.test(mcVersion) && !/JavaLanguageVersion\.of\(\s*21\s*\)/.test(buildGradle) && !/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle)) {
+    if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle) && !/JavaVersion\.VERSION_\d+\b/.test(buildGradle)) {
+      errors.push("未找到 Java toolchain 配置（1.21 建议 JavaLanguageVersion.of(21) 或 JavaVersion.VERSION_21）");
+    } else if (/^1\.21/.test(mcVersion) && !hasJavaLanguageVersionOf(buildGradle, 21) && !hasJavaLanguageVersionOf(buildGradle, 25)) {
       warnings.push("1.21.x 建议 Java toolchain 21");
     }
   }
@@ -394,7 +402,7 @@ function diagnoseNeoGradle(buildGradle: string, gradleProperties: string | undef
   const mcVersion = detectMinecraftVersion({ buildGradle, gradleProperties });
   const is261 = /^26\.1/.test(mcVersion);
   const hasUserdev = /net\.neoforged\.gradle\.userdev/.test(buildGradle);
-  const hasModdev = /net\.neoforged\.moddev|moddevgradle|net\.neoforged\.gradle\.common/i.test(buildGradle);
+  const hasModdev = /net\.neoforged\.moddev|id\s*\(?\s*['"]net\.neoforged\.moddev|moddevgradle|net\.neoforged\.gradle\.common/i.test(buildGradle);
 
   if (!hasUserdev && !hasModdev) {
     errors.push("缺少 NeoGradle userdev 或 ModDevGradle 插件 id");
@@ -409,7 +417,7 @@ function diagnoseNeoGradle(buildGradle: string, gradleProperties: string | undef
     if (!hasUserdev && !hasModdev) {
       errors.push("26.1 必须能看出 buildPlugin（ModDevGradle 或 NeoGradle）");
     }
-    if (!/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle)) {
+    if (!/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle) && !/JavaVersion\.VERSION_25\b/.test(buildGradle)) {
       errors.push("26.1 需要 Java toolchain 25");
     }
   } else if (/^1\.21/.test(mcVersion) || mcVersion.startsWith("1.20")) {

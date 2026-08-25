@@ -284,7 +284,8 @@ export function detectLoader(
   const toml = modsToml?.trim();
   if (toml && toml.length > 0) {
     const javaFml = classifyJavaFmlToml(toml);
-    if (javaFml !== "skip") return javaFml;
+    // forge/neoforge 明确命中才早退；unknown（仅 javafml、无 loaderVersion）继续看 gradle 插件
+    if (javaFml === "forge" || javaFml === "neoforge") return javaFml;
   }
   if (/forge|minecraftforge/i.test(buildGradle) && !hasLiteMeta) return "forge";
 

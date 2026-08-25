@@ -189,7 +189,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
     );
   }
 
-  // apply
+  // apply：data 阻断须在 tooling 合并之前，避免 HEAD 已动却报 data 失败
   const dryRun = query.dryRun !== false;
   if (!dryRun && query.confirmed !== true) {
     return withAction(
@@ -209,6 +209,10 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   let appliedTooling = false;
   let appliedData = false;
   let restartRequired = Boolean(state.pendingRestart);
+
+  if ((scope === "data" || scope === "all") && dataBlocked) {
+    return withAction({ ...base, dryRun, steps, applied: false, appliedTooling: false }, assets.action);
+  }
 
   if (scope === "tooling" || scope === "all") {
     if (!toolingUpdate && !dryRun) {
@@ -233,9 +237,6 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   }
 
   if (scope === "data" || scope === "all") {
-    if (dataBlocked) {
-      return withAction({ ...base, dryRun, steps, applied: false }, assets.action);
-    }
     if (!assets.zip) {
       return withAction(
         { ...base, dryRun, steps, applied: false },

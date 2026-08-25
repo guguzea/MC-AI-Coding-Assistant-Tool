@@ -5,11 +5,57 @@
  * 注入的根证书只在系统库里 → Node 报 UNABLE_TO_VERIFY_LEAF_SIGNATURE，表现为 UPDATE_CHECK_FAILED。
  */
 
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { execFile, type ExecFileException } from "node:child_process";
 import { existsSync, statSync } from "node:fs";
 
-const execFileAsync = promisify(execFile);
+function execFileStdin(
+  file: string,
+  args: string[],
+  opts: {
+    encoding: "buffer";
+    maxBuffer?: number;
+    windowsHide?: boolean;
+    input?: Buffer;
+  },
+): Promise<{ stdout: Buffer }>;
+function execFileStdin(
+  file: string,
+  args: string[],
+  opts: {
+    encoding: "utf8";
+    maxBuffer?: number;
+    windowsHide?: boolean;
+    input?: string;
+  },
+): Promise<{ stdout: string }>;
+function execFileStdin(
+  file: string,
+  args: string[],
+  opts: {
+    encoding: "buffer" | "utf8";
+    maxBuffer?: number;
+    windowsHide?: boolean;
+    input?: Buffer | string;
+  },
+): Promise<{ stdout: Buffer | string }> {
+  return new Promise((resolve, reject) => {
+    const child = execFile(
+      file,
+      args,
+      {
+        encoding: opts.encoding === "buffer" ? "buffer" : "utf8",
+        maxBuffer: opts.maxBuffer,
+        windowsHide: opts.windowsHide,
+      } as Parameters<typeof execFile>[2],
+      (err: ExecFileException | null, stdout: string | Buffer) => {
+        if (err) reject(err);
+        else resolve({ stdout });
+      },
+    );
+    if (opts.input != null) child.stdin?.end(opts.input);
+    else child.stdin?.end();
+  });
+}
 
 export type FetchFn = (url: string, init?: RequestInit) => Promise<Response>;
 
@@ -75,9 +121,17 @@ async function nodeFetch(url: string, init?: RequestInit): Promise<Response> {
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), timeoutMs);
   try {
+    let signal: AbortSignal = ac.signal;
+    if (init?.signal) {
+      if (typeof AbortSignal.any === "function") {
+        signal = AbortSignal.any([ac.signal, init.signal]);
+      } else {
+        init.signal.addEventListener("abort", () => ac.abort(), { once: true });
+      }
+    }
     const opts: RequestInit = {
       ...init,
-      signal: init?.signal ?? ac.signal,
+      signal,
       redirect: init?.redirect ?? "follow",
     };
     return await fetch(url, opts);
@@ -94,14 +148,21 @@ export async function curlGetToBuffer(
   const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-w", "\n__MC_SKILL_HTTP_STATUS__:%{http_code}"];
   const proxy = proxyUrl();
   if (proxy) args.push("-x", proxy);
+  const configLines: string[] = [];
   for (const [k, v] of headersToPairs(init)) {
+    if (k.toLowerCase() === "authorization") {
+      configLines.push(`header = "Authorization: ${v.replace(/"/g, '\\"')}"`);
+      continue;
+    }
     args.push("-H", `${k}: ${v}`);
   }
+  if (configLines.length) args.push("-K", "-");
   args.push(url);
-  const { stdout } = await execFileAsync("curl.exe", args, {
+  const { stdout } = await execFileStdin("curl.exe", args, {
     encoding: "buffer",
     maxBuffer: 32 * 1024 * 1024,
     windowsHide: true,
+    input: configLines.length ? Buffer.from(configLines.join("\n") + "\n") : undefined,
   });
   const text = stdout.toString("utf8");
   const m = text.match(/\n__MC_SKILL_HTTP_STATUS__:(\d+)\s*$/);
@@ -120,14 +181,21 @@ export async function curlGetToFile(
   const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-o", destPath, "-w", "%{http_code}"];
   const proxy = proxyUrl();
   if (proxy) args.push("-x", proxy);
+  const configLines: string[] = [];
   for (const [k, v] of headersToPairs(init)) {
+    if (k.toLowerCase() === "authorization") {
+      configLines.push(`header = "Authorization: ${v.replace(/"/g, '\\"')}"`);
+      continue;
+    }
     args.push("-H", `${k}: ${v}`);
   }
+  if (configLines.length) args.push("-K", "-");
   args.push(url);
-  const { stdout } = await execFileAsync("curl.exe", args, {
+  const { stdout } = await execFileStdin("curl.exe", args, {
     encoding: "utf8",
     maxBuffer: 1024,
     windowsHide: true,
+    input: configLines.length ? configLines.join("\n") + "\n" : undefined,
   });
   return { status: Number(stdout.trim()) || 0 };
 }

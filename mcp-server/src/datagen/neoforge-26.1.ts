@@ -248,7 +248,8 @@ export type NeoForge261ProviderType =
   | "tag"
   | "advancement"
   | "particle"
-  | "sound";
+  | "sound"
+  | "language";
 
 export function generateNeoForge261(
   providerType: NeoForge261ProviderType,
@@ -272,6 +273,8 @@ export function generateNeoForge261(
       return generateParticle(modId, targetName, classBase);
     case "sound":
       return generateSound(modId, targetName, classBase);
+    case "language":
+      return generateLanguage(modId, targetName, classBase);
     default:
       throw new Error(`Unknown NeoForge 26.1 provider: ${providerType}`);
   }

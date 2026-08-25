@@ -25,6 +25,14 @@ npm run build
 
 **人在环**：模组开发不是确定性流水线（创意、兼容取舍、API、性能、调试由人决定）。写盘 / Gradle / 拷 jar / 上传默认不代跑，须用户确认；不要把 dryRun 与「只吐文本」当成漏做的无人值守编排。
 
+## 近期变更（2026-08 审查修复）
+
+**破坏性 CLI**：`--fail-on-error=false` / `--json=false` / `--compact=false` 现为**关闭**该旗标。旧行为是「只要写出 `--fail-on-error=…` 即开启」，脚本里写 `--fail-on-error=false` 会静默升 exit 1。裸 `--fail-on-error` 仍为开启。
+
+- `mc_skill_update`：进程启动成功后调用 `clearPendingRestart()`，`action=check` 不再永久返回 `PENDING_RESTART`。
+- `mc_skill_update apply`：`dataBlocked` 在 tooling 合并**之前**检查；数据阻断时不会先改 tooling HEAD。
+- 数据 Release 交换改为**全量快照**（zip 即新树，撤档文件会删除）。
+
 ---
 
 ## 快速配置
@@ -103,7 +111,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### MDK 解压依赖（`download_official_mdk`）
 
-`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `mcp-server/data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（`forge_1.20.1` / `forge_1.20.4` / `forge_1.19.4` / `forge_1.18.2` / `forge_1.12.2` / `neoforge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.1` / `neoforge_1.21.3` / `neoforge_1.21.5` / `neoforge_1.21.10` / `neoforge_26.1` / `fabric_1.21` / `fabric_1.21.4` / `fabric_1.21.8` / `fabric_1.21.10` / `fabric_1.21.11` / `fabric_26.1` / `fabric_26.1.2`），省略返回 error。
+`dryRun=false` 时把官方 MDK zip 解压到 `$MC_SKILL_CACHE/mdk/…/unpacked/`。解压器探测顺序：**unzip → 7z → bsdtar**（`tar --help` 含 libarchive/bsdtar，或 Windows 自带 tar）。**不要**假定 GNU tar 能解 zip；Linux CI 若只有 GNU tar，工具返回 `UNZIP_TOOL_MISSING`，请安装 `unzip`。禁止整仓 `MinecraftForge/MinecraftForge` 引擎 zip；Forge 用 `files.minecraftforge.net` / `maven.minecraftforge.net` 的 **MDK zip**。成功解析 `entryClass` 后才把 sha256 写回 `mcp-server/data/mdk-checksums.json`。`generate_network_packet` 的 `platform` **必填**（与 `NETWORK_PACKET_PLATFORMS` 同步：`forge_1.20.1` / `forge_1.20.4` / `forge_1.19.4` / `forge_1.18.2` / `forge_1.17.1` / `forge_1.16.5` / `forge_1.15.2` / `forge_1.14.4` / `forge_1.12.2` / `neoforge_1.20.1` / `neoforge_1.20.4` / `neoforge_1.21` / `neoforge_1.21.1` / `neoforge_1.21.3` / `neoforge_1.21.5` / `neoforge_1.21.8` / `neoforge_1.21.10` / `neoforge_1.21.11` / `neoforge_26.1` / `fabric_1.21` / `fabric_1.21.3` / `fabric_1.21.4` / `fabric_1.21.8` / `fabric_1.21.10` / `fabric_1.21.11` / `fabric_26.1` / `fabric_26.1.2` / `quilt_1.21.3` / `quilt_1.21.4` / `quilt_1.21.8` / `quilt_1.21.10` / `quilt_1.21.11`）。**无** `neoforge_1.20.6`（有规则、无已核实 payload 页）。省略返回 error。
 
 ### 安全边界说明（2026-08 审计 A-2/A-5 残余面，接受现状）
 
@@ -131,7 +139,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | 模块 | 工具 |
 |------|------|
 | API / 映射 / 状态 | `query_api`、`get_method_params`、`convert_mapping`、`lookup_obfuscated`、`get_server_status`、`get_version_info` |
-| 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project` |
+| 工程 | `diagnose_gradle`、`generate_datagen`、`crash_analyze`、`validate_project`、`check_publish_ready`、`inspect_runtime` |
 | Forge 文档 | `list_forge_versions`、`search_forge_docs`、`get_forge_doc_*` |
 | Fabric 文档 | `list_fabric_versions`、`search_fabric_docs`、`get_fabric_doc_*` |
 | NeoForge 文档 | `list_neoforge_versions`、`search_neoforge_docs`、`get_neoforge_doc_*`（默认 **26.1**；请求 26.2 可 fallback 到 26.1，不克隆假树；`1.20.1` 可回退 Forge） |
@@ -145,7 +153,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 | MDK | `download_official_mdk` |
 | T4 字节码校验（Wave D） | `validate_at`、`validate_aw`（+ `mixin_analyze` 的 `deep:true` 深度模式） |
 | Loader API / 平台包 | `query_loader_api`、`search_loader_api`、`ingest_loader_api`、`detect_mod_project`（知识库根 → `KNOWLEDGE_REPO_NOT_MOD`）、`activate_platform_pack` |
-| 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity` |
+| 基岩 Add-On | `search_bedrock_docs`、`get_bedrock_doc_*`、`validate_addon_manifest`、`validate_bp_json`、`generate_addon_manifest`、`generate_bp_entity`、`analyze_bedrock_log` |
 | 自我更新 | `mc_skill_update` |
 
 补充文档：`docs/vanilla-registries.md`、`docs/registry-data-source.md`、`docs/prompts-client-compat.md`、`docs/mc-skill-update.md`。
@@ -188,7 +196,7 @@ kebab-case 会转到 camelCase（`--dry-run`→`dryRun`）；另有 `--name`→`
 | 1 | 抛错、`isError`、`ok===false`、`passed===false`、`error.code` 存在 |
 | 2 | 用法 / 未知命令 / 未知 flag / 缺参 / 读文件失败 |
 
-`--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。
+`--fail-on-error` 再把 `found===false` 以及 `errors[]` 非空升为 1。`--fail-on-error=false` **关闭**（旧：写出即开启）。
 
 ```bash
 node dist/cli.js query --className net.minecraft.world.entity.LivingEntity --methodName getMaxHealth --version 1.20.1

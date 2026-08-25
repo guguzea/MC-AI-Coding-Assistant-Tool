@@ -11,11 +11,11 @@ export interface AuditResourcesResult {
   ok: boolean;
   scannedFiles: number;
   issues: Array<{ severity: "error" | "warn"; path: string; message: string }>;
-  referencedTextures: string[];
+  referencedTextures: string[] ;
   orphanTextures: string[];
 }
 
-const TEX_EXT = /\.(png|mcmeta)$/i;
+const PNG_EXT = /\.png$/i;
 const MODEL_EXT = /\.json$/i;
 
 function walkFiles(root: string): string[] {
@@ -39,6 +39,24 @@ function collectModelTextures(obj: unknown, out: Set<string>): void {
   for (const v of Object.values(rec)) collectModelTextures(v, out);
 }
 
+/** Strip `#layer0` fragments and `namespace:` prefix; empty after `#` is not a path. */
+export function normalizeTextureRef(ref: string): string | null {
+  const noHash = ref.split("#")[0]?.trim() ?? "";
+  if (!noHash) return null;
+  const withoutNs = noHash.includes(":") ? noHash.slice(noHash.indexOf(":") + 1) : noHash;
+  return withoutNs.replace(/^\/+/, "").replace(/\\/g, "/");
+}
+
+/** `assets/<mod>/textures/block/foo.png` or `textures/block/foo.png` → `block/foo` */
+export function textureKeyFromRel(rel: string): string | null {
+  const n = rel.replace(/\\/g, "/");
+  if (/\.png\.mcmeta$/i.test(n)) return null;
+  if (!PNG_EXT.test(n)) return null;
+  const m = n.match(/(?:^|\/)textures\/(.+)\.png$/i);
+  if (m) return m[1];
+  return n.replace(/\.png$/i, "");
+}
+
 export function auditResources(input: AuditResourcesInput): AuditResourcesResult {
   const root = input.resourceRoot;
   const issues: AuditResourcesResult["issues"] = [];
@@ -54,8 +72,14 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
 
   const all = walkFiles(root);
   const rel = (p: string) => relative(root, p).replace(/\\/g, "/");
-  const textures = new Set(all.filter((p) => TEX_EXT.test(p)).map(rel));
+  const textureByKey = new Map<string, string>();
+  for (const p of all) {
+    const r = rel(p);
+    const key = textureKeyFromRel(r);
+    if (key) textureByKey.set(key, r);
+  }
   const referenced = new Set<string>();
+  const referencedKeys = new Set<string>();
 
   for (const file of all) {
     const r = rel(file);
@@ -69,27 +93,23 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
   }
 
   for (const tex of referenced) {
-    const candidates = [
-      `textures/${tex}.png`,
-      `textures/${tex.replace(/^minecraft:/, "")}.png`,
-      `${tex}.png`,
-    ];
-    const found = candidates.some((c) => textures.has(c) || [...textures].some((t) => t.endsWith(c)));
-    if (!found) {
+    const key = normalizeTextureRef(tex);
+    if (!key) continue;
+    referencedKeys.add(key);
+    if (!textureByKey.has(key) && ![...textureByKey.keys()].some((k) => k === key || k.endsWith("/" + key) || key.endsWith(k))) {
       issues.push({ severity: "warn", path: tex, message: "模型引用的纹理未在资源树中找到对应 .png" });
     }
   }
 
-  const orphanTextures = [...textures].filter((t) => {
-    const key = t.replace(/^textures\//, "").replace(/\.png$/i, "");
-    return ![...referenced].some((ref) => ref === key || ref.endsWith(key));
-  });
+  const orphanTextures = [...textureByKey.entries()]
+    .filter(([key]) => !referencedKeys.has(key) && ![...referencedKeys].some((ref) => ref === key || ref.endsWith(key) || key.endsWith(ref)))
+    .map(([, path]) => path);
 
-  if (input.modId && /[A-Z-]/.test(input.modId)) {
+  if (input.modId && /[A-Z]/.test(input.modId)) {
     issues.push({
       severity: "warn",
       path: input.modId,
-      message: "modId 含大写或连字符，资源路径应全小写并使用下划线",
+      message: "modId 含大写，资源路径应全小写并使用下划线（Fabric/Quilt 允许连字符）",
     });
   }
 

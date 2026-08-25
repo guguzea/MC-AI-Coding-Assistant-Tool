@@ -1,9 +1,13 @@
 # =============================================================================
-# MC Skill Sync — 8 IDE（版本无关）
+# MC Skill Sync — 规则/技能镜像（版本无关）
 #
-# 将 .cursor/skills/ 与 .cursor/rules/ 同步到：
-#   .claude/ .continue/ .trae/ .opencode/ .agents/ .zcode/ .pi/
-#   skills 另写 .pi/skills；rules 另写 .opencode/rules、.agents/rules、.zcode/rules
+# 权威源稿只在 .cursor/skills/ 与 .cursor/rules/。本脚本同步到：
+#   rules : .claude/ .continue/ .trae/ .opencode/ .agents/ .zcode/ .pi/
+#   skills: 上述 + .pi/skills（.claude 走 commands/ 扁平 md）
+#
+# Codex：本脚本**不写** `.codex/rules`。Codex 只读该档 `AGENTS.md`
+# （platform-pack write 可写入 AGENTS）；规则正文以 `.cursor/rules` 源稿为准，
+# 不要默默加第八套 rules 树。
 #
 # 用法：
 #   .\scripts\sync-skills.ps1 -TargetDir H:\MC_skill\forge\1.19.4
@@ -107,7 +111,7 @@ function Sync-VersionDir {
     $meta = Resolve-PlatformVersion $Base
     $rel = $meta.Rel
 
-    Write-Host "`n=== MC Skill Sync (8 IDE) ===" -ForegroundColor Cyan
+    Write-Host "`n=== MC Skill Sync (cursor → claude/continue/trae/opencode/agents/zcode/pi) ===" -ForegroundColor Cyan
     Write-Host "Base: $Base"
     if ($rel) { Write-Host "Rel : $rel" }
     Write-Host ""

@@ -6,6 +6,7 @@
 import { ownGet } from "../utils/own-record.js";
 
 const PACK_FORMAT_BY_MC: Record<string, number> = {
+  "1.19.4": 13,
   "1.20.1": 15,
   "1.20.2": 18,
   "1.20.3": 22,
@@ -41,6 +42,7 @@ export function resolvePackFormat(mcVersion?: string): {
   packFormat: number;
   mcVersionUsed: string | null;
   packFormatNeedsReview: true;
+  unknownVersion?: boolean;
   notes: string[];
 } {
   const notes: string[] = ["请按目标游戏版本核对 pack_format（packFormatNeedsReview=true）。"];
@@ -66,11 +68,12 @@ export function resolvePackFormat(mcVersion?: string): {
       notes,
     };
   }
-  notes.push(`未知 mcVersion=${v}，使用保守默认 pack_format=${DEFAULT_PACK_FORMAT}。`);
+  notes.push(`未知 mcVersion=${v}，不猜测 pack_format（禁止一律回退 15）`);
   return {
     packFormat: DEFAULT_PACK_FORMAT,
     mcVersionUsed: v,
     packFormatNeedsReview: true,
+    unknownVersion: true,
     notes,
   };
 }

@@ -11,3 +11,8 @@
 | 网络 | PayloadTypeRegistry + CustomPayload |
 
 核实表：knowledge/common/verified-api-1.21.4.md。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

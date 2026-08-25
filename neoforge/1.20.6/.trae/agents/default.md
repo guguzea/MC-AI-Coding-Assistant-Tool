@@ -19,3 +19,9 @@
 类名必须能在 `knowledge/common/verified-api-1.20.6.md` 或 `search_neoforge_docs` 该版页面找到。
 
 pack-status: ready
+
+`generate_network_packet` **没有** `neoforge_1.20.6` 模板（本档无已核实 payload 页）。网络代码改口 `search_neoforge_docs` version=1.20.6 + 规则 06，禁止抄 1.21.1 复数 `RegisterPayloadHandlersEvent` 除非该页写明。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`。

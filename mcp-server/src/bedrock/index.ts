@@ -234,8 +234,11 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
       errors.push("header.version 应为长度为 3 的数字数组");
     }
     if (typeof header.name !== "string") errors.push("缺少 header.name");
-    if (header.min_engine_version && !Array.isArray(header.min_engine_version)) {
-      errors.push("min_engine_version 应为 [major, minor, patch] 数组");
+    if (header.min_engine_version) {
+      const mev = header.min_engine_version;
+      if (!Array.isArray(mev) || mev.length !== 3 || !mev.every((n) => typeof n === "number" && Number.isInteger(n))) {
+        errors.push("min_engine_version 应为三维整数数组 [major, minor, patch]");
+      }
     }
   }
   const modules = parsed.modules;
@@ -357,11 +360,11 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   const headerUuid = args.headerUuid && UUID_RE.test(args.headerUuid) ? args.headerUuid : fakeUuid(`hdr-${args.packName}`);
   const moduleUuid = args.moduleUuid && UUID_RE.test(args.moduleUuid) ? args.moduleUuid : fakeUuid(`mod-${args.packName}`);
 
-  function one(type: "resources" | "data" | "script"): Record<string, unknown> {
+  function one(type: "resources" | "data" | "script", hdr: string, mod: string): Record<string, unknown> {
     const modules: Record<string, unknown>[] = [
       {
         type: type === "script" ? "script" : type,
-        uuid: moduleUuid,
+        uuid: mod,
         version: [1, 0, 0],
         ...(type === "script" ? { language: "javascript", entry: "scripts/main.js" } : {}),
       },
@@ -371,7 +374,7 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
       header: {
         name: args.packName,
         description: args.description ?? args.packName,
-        uuid: headerUuid,
+        uuid: hdr,
         version: [1, 0, 0],
         min_engine_version: min,
       },
@@ -391,12 +394,16 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   }
 
   const files: Record<string, unknown> = {};
-  if (args.packType === "resources") files["RP/manifest.json"] = one("resources");
-  else if (args.packType === "data") files["BP/manifest.json"] = one("data");
-  else if (args.packType === "script") files["BP/manifest.json"] = one("script");
+  if (args.packType === "resources") files["RP/manifest.json"] = one("resources", headerUuid, moduleUuid);
+  else if (args.packType === "data") files["BP/manifest.json"] = one("data", headerUuid, moduleUuid);
+  else if (args.packType === "script") files["BP/manifest.json"] = one("script", headerUuid, moduleUuid);
   else {
-    files["RP/manifest.json"] = one("resources");
-    files["BP/manifest.json"] = one("data");
+    const rpHeader = fakeUuid(`hdr-rp-${args.packName}`);
+    const rpModule = fakeUuid(`mod-rp-${args.packName}`);
+    const bpHeader = fakeUuid(`hdr-bp-${args.packName}`);
+    const bpModule = fakeUuid(`mod-bp-${args.packName}`);
+    files["RP/manifest.json"] = one("resources", rpHeader, rpModule);
+    files["BP/manifest.json"] = one("data", bpHeader, bpModule);
   }
 
   return {

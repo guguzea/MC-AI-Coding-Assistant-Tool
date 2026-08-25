@@ -275,7 +275,10 @@ export class CommunityDocStore {
     let truncated = false;
     if (Buffer.byteLength(content, "utf8") > GET_FULL_MAX_BYTES) {
       truncated = true;
-      content = content.slice(0, GET_FULL_MAX_BYTES);
+      let end = GET_FULL_MAX_BYTES;
+      const buf = Buffer.from(content, "utf8");
+      while (end > 0 && (buf[end] & 0xc0) === 0x80) end--;
+      content = buf.subarray(0, end).toString("utf8");
     }
     return {
       id: e.id,

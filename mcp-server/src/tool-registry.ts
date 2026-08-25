@@ -166,6 +166,7 @@ export const generateDatagenSchema = z.object({
       "advancement",
       "particle",
       "sound",
+      "language",
     ])
     .describe("Provider 类型"),
   modId: z.string().describe("Mod ID（全小写），如 mymod"),

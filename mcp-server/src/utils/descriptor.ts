@@ -16,7 +16,7 @@ const PRIMITIVES: Record<string, string> = {
 
 /** Parse one field/type descriptor starting at `i`; returns [javaType, nextIndex]. */
 export function parseTypeAt(desc: string, i: number, depth = 0): [string, number] {
-  if (depth > 32) return ["?", i]; // 防嵌套数组递归爆栈（审计 B20）
+  if (depth > 32) return ["?", desc.length]; // 防嵌套数组爆栈；消费剩余描述符，禁止拆成多个参数
   if (i >= desc.length) return ["?", i];
   const c = desc[i];
   if (PRIMITIVES[c]) return [PRIMITIVES[c], i + 1];

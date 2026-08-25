@@ -1,23 +1,16 @@
-export { normalizeModIdentifier } from "../datagen/index.js";
+export { normalizeModIdentifier, toJavaClassName } from "../datagen/common.js";
+
+import { isExactMcVersionToken, matchesExactMcVersion } from "../utils/minecraft-version.js";
 
 /** 精确 MC 版本 token（禁止 1.20.4beta / 1.2100 无锚混入）。 */
 export function exactMcVersion(s: string): boolean {
-  const t = s.trim();
-  return /^1\.\d+(\.\d+)?$/.test(t) || /^26\.\d+(\.\d+)?$/.test(t);
+  return isExactMcVersionToken(s);
 }
+
+export { matchesExactMcVersion };
 
 export function toPascalCase(modId: string): string {
   return modId.split(/[_-]/).map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join("");
-}
-
-/** Java 简单类名：保留 PascalCase/camelCase；含分隔符时按段 PascalCase。勿对 resource id 先 toLowerCase 再用于类名。 */
-export function toJavaClassName(raw: string): string {
-  const cleaned = raw.trim().replace(/[^a-zA-Z0-9_-]+/g, "_").replace(/^_+|_+$/g, "");
-  if (!cleaned) return "";
-  if (/[_-]/.test(cleaned)) {
-    return toPascalCase(cleaned.replace(/-/g, "_"));
-  }
-  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
 }
 
 export function withJavaTypeSuffix(className: string, suffix: string): string {

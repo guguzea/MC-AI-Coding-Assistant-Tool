@@ -143,38 +143,49 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
   return { ok: true, release: json as GhRelease };
 }
 
+const RELEASE_LIST_MAX_PAGES = 5;
+
 export async function fetchReleasesList(
   repo: string,
   fetchImpl: FetchFn = githubFetch,
   perPage = 30,
 ): Promise<{ ok: boolean; releases?: GhRelease[]; action?: ActionEnvelope }> {
-  const url = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}`;
+  const all: GhRelease[] = [];
+  let lastUrl = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}&page=1`;
   try {
-    const res = await fetchImpl(url, { headers: apiHeaders() });
-    if (res.status === 429) {
-      const retryAfter = Number(res.headers.get("retry-after") || "60");
-      return {
-        ok: false,
-        action: actionable(
-          "UPDATE_RATE_LIMITED",
-          "GitHub API 限速 (429)",
-          [`等待约 ${retryAfter}s 后重试`, "可设置 MC_SKILL_GITHUB_TOKEN"],
-          ["mc_skill_update"],
-        ),
-      };
+    for (let page = 1; page <= RELEASE_LIST_MAX_PAGES; page++) {
+      const url = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}&page=${page}`;
+      lastUrl = url;
+      const res = await fetchImpl(url, { headers: apiHeaders() });
+      if (res.status === 429) {
+        const retryAfter = Number(res.headers.get("retry-after") || "60");
+        return {
+          ok: false,
+          action: actionable(
+            "UPDATE_RATE_LIMITED",
+            "GitHub API 限速 (429)",
+            [`等待约 ${retryAfter}s 后重试`, "可设置 MC_SKILL_GITHUB_TOKEN"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
+      if (!res.ok) {
+        return {
+          ok: false,
+          action: httpStatusAction(res.status),
+        };
+      }
+      const batch = (await res.json()) as GhRelease[];
+      if (!Array.isArray(batch) || batch.length === 0) break;
+      all.push(...batch.filter((r) => !r.draft));
+      if (batch.length < perPage) break;
+      if (all.length >= 150) break;
     }
-    if (!res.ok) {
-      return {
-        ok: false,
-        action: httpStatusAction(res.status),
-      };
-    }
-    const releases = (await res.json()) as GhRelease[];
-    return { ok: true, releases: releases.filter((r) => !r.draft) };
+    return { ok: true, releases: all };
   } catch (err) {
     return {
       ok: false,
-      action: networkFailureAction(err, url),
+      action: networkFailureAction(err, lastUrl),
     };
   }
 }

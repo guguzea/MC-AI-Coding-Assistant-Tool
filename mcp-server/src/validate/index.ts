@@ -73,7 +73,7 @@ export interface ValidationResult {
 // ── 辅助函数 ────────────────────────────────────────────────────────────────
 
 function extractModIdFromModsToml(modsToml: string): string | null {
-  const match = modsToml.match(/modId\s*=\s*"([^"]+)"/);
+  const match = modsToml.match(/modId\s*=\s*["']([^"']+)["']/);
   return match ? match[1] : null;
 }
 

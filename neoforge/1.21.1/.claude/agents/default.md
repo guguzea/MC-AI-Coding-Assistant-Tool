@@ -24,3 +24,8 @@
 ## 加载顺序
 
 00-project-setup → 01-registry → 主题文件 02–10。类名必须能在 `knowledge/common/verified-api-1.21.1.md` 或 `search_neoforge_docs` 该版页面找到。反编译摘要缺少 `mappingsVersion` 不得写进规则。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

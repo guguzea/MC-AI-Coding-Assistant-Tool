@@ -6,6 +6,7 @@ import { existsSync, readFileSync, statSync } from "fs";
 import { validateDatapackJson } from "../datapack/index.js";
 import { walkProjectFiles } from "../utils/project-files.js";
 import { escapeRegExp } from "../utils/regex.js";
+import { detectMinecraftVersion } from "../utils/minecraft-version.js";
 import type { ValidateQuery, ValidationResult } from "./index.js";
 
 function finish(
@@ -149,8 +150,8 @@ export function validateFabricOrQuilt(query: ValidateQuery, loader: "fabric" | "
 
   if (!id) {
     errors.push(loader === "quilt" ? "quilt_loader.id 缺失" : "fabric.mod.json id 缺失");
-  } else if (!/^[a-z][a-z0-9_]*$/.test(id)) {
-    errors.push(`mod id='${id}' 必须全小写、只能含字母/数字/下划线`);
+  } else if (!/^[a-z][a-z0-9_-]*$/.test(id)) {
+    errors.push(`mod id='${id}' 必须全小写、可含字母/数字/下划线/连字符`);
   }
 
   const names = Object.values(entrypoints).flatMap(entrypointNames);
@@ -192,7 +193,7 @@ export function validateNeoForge(query: ValidateQuery): ValidationResult {
     if (!toml.includes("[[mods]]")) {
       errors.push("neoforge.mods.toml / mods.toml 必须包含 [[mods]]");
     }
-    const id = toml.match(/modId\s*=\s*"([^"]+)"/)?.[1];
+    const id = toml.match(/modId\s*=\s*["']([^"']+)["']/)?.[1];
     if (id && !/^[a-z][a-z0-9_]*$/.test(id)) {
       errors.push(`modId='${id}' 必须全小写、只能含字母/数字/下划线`);
     }
@@ -202,14 +203,19 @@ export function validateNeoForge(query: ValidateQuery): ValidationResult {
   if (!/@Mod\s*\(/.test(blob)) {
     errors.push("未找到 @Mod 入口注解");
   }
-  if (!/\(\s*IEventBus\b/.test(blob) && !/\(\s*[\w.]*IEventBus\b/.test(blob)) {
-    errors.push("未找到接受 IEventBus 的模组构造（NeoForge 入口应把 mod bus 传入构造）");
+  if (!/\(.*IEventBus\b/.test(blob)) {
+    errors.push("未找到接受 IEventBus 的模组构造（NeoForge 入口应把 mod bus 传入构造；认 (IEventBus) 与 (ModContainer, IEventBus)）");
   }
   if (/\bRegistryObject\b/.test(blob)) {
     warnings.push("检测到 RegistryObject：1.20.4+ NeoForge 不要把它当本档推荐（用 DeferredHolder / DeferredItem / DeferredBlock）");
   }
   if (/\bSimpleChannel\b/.test(blob) || /net\.minecraftforge\.network/.test(blob)) {
-    if (/net\.minecraftforge\.network/.test(blob) && !/net\.neoforged/.test(blob)) {
+    const mc = detectMinecraftVersion({
+      buildGradle: query.buildGradle ?? "",
+      gradleProperties: query.gradleProperties ?? "",
+    });
+    const is1201 = /^1\.20\.1/.test(mc) || /loaderVersion\s*=\s*"\[47/.test(toml);
+    if (is1201) {
       warnings.push(
         "SimpleChannel / net.minecraftforge.network 在 NeoForge 1.20.1（Forge 47 兼容层）是正确形态；1.20.2+ 才用 Payload（RegisterPayloadHandlersEvent），勿照本档改写",
       );

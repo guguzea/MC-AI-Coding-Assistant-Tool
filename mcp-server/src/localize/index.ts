@@ -336,9 +336,9 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
         mode: "own",
         action: "diff",
         ...emptyDiff,
-        warnings: ["ZH_PARSE_FAILED_TREATED_AS_EMPTY"],
+    warnings: ["ZH_PARSE_FAILED_TREATED_AS_EMPTY"],
         notes,
-        sourceLocaleUsed: "en_us",
+        sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
         sourceLocaleFallback: false,
       };
     }
@@ -349,7 +349,7 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
       action: "diff",
       ...d,
       notes,
-      sourceLocaleUsed: "en_us",
+      sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
       sourceLocaleFallback: false,
     };
   }
@@ -371,7 +371,7 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
     zhCn: drafted.zhCn,
     warnings: warnings.length ? warnings : undefined,
     notes,
-    sourceLocaleUsed: "en_us",
+    sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
     sourceLocaleFallback: false,
   };
 }

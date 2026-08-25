@@ -14,7 +14,7 @@ let cachedManifest: { versions: Array<{ id: string; url: string }> } | null = nu
 interface VersionJson {
   downloads: {
     client?: { url: string; sha1: string; size: number };
-    client_mappings?: { url: string; size: number };
+    client_mappings?: { url: string; sha1?: string; size: number };
   };
 }
 
@@ -25,6 +25,7 @@ export interface MojangVersionEntry {
   clientJarUrl: string;
   clientJarSha1: string;
   clientMappingsUrl?: string;
+  clientMappingsSha1?: string;
 }
 
 export async function fetchVersionManifest(force = false): Promise<{ versions: Array<{ id: string; url: string }> }> {
@@ -68,8 +69,10 @@ export async function resolveMojangVersion(version: string): Promise<MojangVersi
     clientJarUrl: client.url,
     clientJarSha1: client.sha1,
   };
-  if (versionJson.downloads.client_mappings?.url) {
-    entry.clientMappingsUrl = versionJson.downloads.client_mappings.url;
+  const maps = versionJson.downloads.client_mappings;
+  if (maps?.url) {
+    entry.clientMappingsUrl = maps.url;
+    if (maps.sha1) entry.clientMappingsSha1 = maps.sha1;
   }
   return entry;
 }

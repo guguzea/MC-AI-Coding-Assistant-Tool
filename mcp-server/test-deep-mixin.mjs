@@ -19,7 +19,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
 
-import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex, ClassFormatError } from "./dist/mixin/bytecode.js";
+import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex, ClassFormatError, Cp } from "./dist/mixin/bytecode.js";
 import { validateAccessTransformer, validateAccessTransformerFiles } from "./dist/mixin/access-transformer.js";
 import { validateAccessWidener, validateAccessWidenerFiles } from "./dist/mixin/access-widener.js";
 import { deepValidateMixins, validateAtHandler, validateAwHandler } from "./dist/mixin/deep-validate.js";
@@ -308,6 +308,12 @@ public class FixtureMixin {
   @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lcom/example/Fixture;nope()V"))
   private void aroundNope(CallbackInfo ci) {}
 }`;
+const MIXIN_AT_NEW = `
+@Mixin(com.example.Fixture.class)
+public class FixtureMixin {
+  @Inject(method = "apply", at = @At(value = "new", target = "Lcom/example/Fixture;"))
+  private void afterNew(CallbackInfo ci) {}
+}`;
 
 const MIXINS_JSON = JSON.stringify({
   package: "com.example.mixin",
@@ -348,6 +354,24 @@ function testBytecodeParser() {
   assert.equal(initCalls[0].opcode, 0xb7); // invokespecial
   assert.equal(initCalls[0].target.owner, "java/lang/Object");
   console.log("  [ok] parseClassFile: 类名/父类/方法/字段/record/指令/调用点");
+
+  // P1-1：long/double 幽灵槽
+  {
+    const utf = Buffer.from("java/lang/Object", "utf8");
+    const header = Buffer.concat([Buffer.from([0xca, 0xfe, 0xba, 0xbe]), u2(0), u2(52), u2(5)]);
+    const pool = Buffer.concat([
+      Buffer.concat([Buffer.from([1]), u2(utf.length), utf]), // #1 Utf8
+      Buffer.concat([Buffer.from([6]), Buffer.alloc(8)]), // #2 Double
+      Buffer.concat([Buffer.from([7]), u2(1)]), // #4 Class
+    ]);
+    const buf = Buffer.concat([header, pool]);
+    const cp = new Cp(buf, 10, 5);
+    assert.equal(cp.at(2)?.tag, 6);
+    assert.equal(cp.at(3), undefined, "幽灵槽 at(#3) 必须 undefined");
+    assert.equal(cp.at(4)?.tag, 7);
+    assert.equal(cp.className(4), "java/lang/Object");
+    assert.throws(() => cp.utf8(4), /非 Utf8/);
+  }
 
   const hangLookup = Buffer.alloc(16);
   hangLookup[0] = 0xab; // lookupswitch
@@ -465,6 +489,13 @@ async function testDeepValidate() {
     jarPath: JAR_PATH,
   });
   assert.equal(atInvokeBad.verified, false);
+
+  const atNew = await deepValidateMixins({
+    javaFiles: [{ path: "FixtureMixin.java", content: MIXIN_AT_NEW }],
+    version: "1.20.1",
+    jarPath: JAR_PATH,
+  });
+  assert.equal(atNew.verified, true, `@At(value="new") 应大小写不敏感: ${JSON.stringify(atNew.errors)}`);
   console.log("  [ok] deep-validate: 目标类/选择器/@At 调用点");
 
   // validate_at / validate_aw 工具 handler

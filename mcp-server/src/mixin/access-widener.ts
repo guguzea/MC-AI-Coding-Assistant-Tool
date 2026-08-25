@@ -196,10 +196,6 @@ function validateWidenerEntries(
       });
       continue;
     }
-    const info = index.getClass(ownerHit);
-    if (e.type === "extendable" && info && (info.accessFlags & 0x0010) !== 0) {
-      warnings.push(`extendable 目标 ${ownerHit} 是 final 类，无法被继承扩展`);
-    }
     if (e.type === "mutable" && e.kind === "member" && e.member?.includes("(")) {
       warnings.push(`mutable 通常用于字段；${e.member} 看起来是方法`);
     }

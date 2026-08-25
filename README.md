@@ -423,7 +423,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 ### 移植分析（`analyze_porting_path`）
 
-平台识别综合源码与构建/元数据（`build.gradle`、`mods.toml`、`fabric.mod.json` 等）。空目录仍为 `platform: unknown`。
+平台识别综合源码与构建/元数据（`build.gradle`、`mods.toml`、`fabric.mod.json` 等）。空目录 / 无构建也无元数据 → `ok:false` + `NOT_A_MOD_PROJECT`（不是 `platform: unknown`）。
 
 ### 写操作（`port_project`）
 
@@ -479,7 +479,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | `forge/1.12.2`–`1.20.4` 主档 | **35** | 目录（每 skill 一目录） | 15 核心 + 19 Wave D + `mc-events`（2026-08 D-1 补齐；1.7.10 为诚实 stub） |
 | `forge/1.15.2` / `forge/1.17.1` | **35** / **34** | 目录 | 1.17.1 有 `mc-events`、无 `mc-capability`（与 1.20.1 集合不同） |
 | `forge/1.7.10` | **3 规则 + 3 技能** | 目录 | 仅 00/01/09 + `mc-item` / `mc-registry` / `mc-events`（stub：无 05 规则，事件 API 未核实禁止生成） |
-| `fabric/*` 主档（11 个版本，含 26.1.2；规则树另有 **14** 档） | **38** | `.md` 文件 | 主档 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D + `mc-events`（2026-08 D-1 补齐）；薄档 `1.21.4`/`1.21.8`/`1.21.10` 技能数以该目录为准，不要按 38 套用 |
+| `fabric/*` 主档（11 个版本，含 26.1.2；规则树另有 **14** 档） | **38** | `.md` 文件（薄档/26.1.2 为目录 layout） | 主档 18 基础（含 `mc-fabric-api` / `mc-kotlin` / `mc-cloth-config`）+ 19 Wave D + `mc-events`（含 **1.21.3** 与 **26.1.2**，2026-08 审查补齐；26.1.2 为 Mojmap，禁止 Yarn）。薄档 `1.21.4`/`1.21.8`/`1.21.10` 技能数以该目录为准，不要按 38 套用 |
 | `neoforge/<ver>` session 索引 | **以版本目录为准** | 目录 | 根 `neoforge/.agents/skills` **不是** session 源；主档与薄档（1.20.6 / 1.21.5 / 1.21.10）本档 Skill 同名集合（entity/datagen 等），不再是 6 个。**`neoforge/1.20.1` 本档仅 `mc-registry`**，其余走 Forge 1.20.1 overlay |
 | `quilt/<ver>` 本档磁盘 Skill | **3** | 目录 | 仅 QSL 差异 `mc-registry` / `mc-events` / `mc-networking`；entity/gui 等继续 Fabric overlay，不计入本档磁盘数 |
 | `liteloader/<ver>`（1.8.9 / 1.10.2 / 1.12.2） | **3** | 目录 | `mc-events` / `mc-gui` / `mc-networking`（LiteLoader 专用口径，非 Forge API） |
@@ -498,7 +498,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2–1.20.4 与 Fabric 主档均含 `mc-events`（2026-08 D-1 补齐，经 `FABRIC_SKILL_DONORS` 回填的薄档带 DONOR_SKILL 横幅）。代码模式示范见 `community_knowledge/patterns/`（也可经 `mcskill://patterns/README` 读取）。
 
-## MCP Server 工具（78 个）
+## MCP Server 工具（79 个）
 
 服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
 
@@ -549,7 +549,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | 工具                 | 作用                                                                                                                                                                     |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `diagnose_gradle`  | 检查 `build.gradle` / `gradle.properties`：ForgeGradle + Fabric/Quilt Loom + NeoGradle/ModDevGradle。26.1 Loom 必须 `net.fabricmc.fabric-loom`、Java 25、禁止 `modImplementation`。liteloader 插件走轻量模式。Rift / BaseMod / 基岩仍早退。    |
-| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe，`buildRecipes(RecipeOutput)`）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
+| `generate_datagen` | 生成 DataGen Provider 模板。**platform 与 version 必填**。**Forge 1.20.1 与 1.20.4**（1.20.4 仅 recipe，`buildRecipes(RecipeOutput)`）、NeoForge 1.20.4/1.20.6（仅 recipe）/1.21.x/26.1、**Fabric** 1.21.1/**1.21.3**/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1（无 1.21.5）。Quilt 无 generate_datagen，改口 `search_docs platform=quilt`。其它 Forge 版本返回 error。需 `modId`、`targetName`。 |
 | `crash_analyze`    | 解析崩溃报告全文（或传 `crashReportPath` 直接读文件），推断 `crashKind`（含 `fml` / `client` / `server` / `fabric` / `quilt` / `liteloader` / `rift` / `modloader`）、可能成因、缺前置/版本不兼容与 `logHints`。优先于盲目网页搜索；实务分类可配合社区工具。                                                                                              |
 | `validate_project` | Forge：mods.toml / DeferredRegister。Fabric/Quilt：`fabric.mod.json` / `quilt.mod.json` + entrypoint。NeoForge：`neoforge.mods.toml`、`@Mod` + `IEventBus`。LiteLoader/Rift/ModLoader/基岩 `skipped`。坏 recipe 只 warning。Java 扫描上限默认 300（`MC_SKILL_JAVA_SCAN_MAX_FILES`）。 |
 | `check_publish_ready` | 发布前清单：license/version、`build/libs` 是否像正式 jar。**不上传**、不调 Curse/Modrinth API。 |
@@ -616,7 +616,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 
 
-### 6b. 基岩 Add-On（8）
+### 6b. 基岩 Add-On（9）
 
 与 Java `search_*_docs` / `validate_project` 分开。基岩用 Learn 文档与 pack JSON，不要用 Yarn / Mixin / `query_api`。
 
@@ -630,11 +630,12 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 | `validate_bp_json` | 校验行为包实体等 JSON。 |
 | `generate_addon_manifest` | 只吐 manifest JSON 文本，不写盘。 |
 | `generate_bp_entity` | 只吐行为包实体 JSON 文本，不写盘。 |
+| `analyze_bedrock_log` | 基岩 content-log（`content_log.txt`）分诊。**不是** Java `crash_analyze`。 |
 
 
 ### 7. 社区知识库（4）
 
-与官方文档分离；**不替代** `search_*_docs`。适合发布、崩溃分类、软依赖、机器 GUI、库选型等实务。索引约 **81** 条（`authored` 73 / `links` 4 / `permitted` 4）；库集成占其中 **48** 篇 `lib-*.md`。用法规则见 [`community_knowledge/AGENT_USAGE.md`](./community_knowledge/AGENT_USAGE.md)；主题 id 速查见 [`community_knowledge/README.md`](./community_knowledge/README.md)。
+与官方文档分离；**不替代** `search_*_docs`。适合发布、崩溃分类、软依赖、机器 GUI、库选型等实务。索引约 **109** 条（`authored` 94 / `links` 11 / `permitted` 4）；库集成占其中 **48** 篇 `lib-*.md`。用法规则见 [`community_knowledge/AGENT_USAGE.md`](./community_knowledge/AGENT_USAGE.md)；主题 id 速查见 [`community_knowledge/README.md`](./community_knowledge/README.md)。
 
 
 | 工具                          | 作用                                                              |
@@ -827,9 +828,9 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 | `mcskill://workflow/mc-new-block` 等 | 与 Prompt 同名的工作流正文（以 `get_workflow_template` 列表为准） |
 
 
-### 独立 CLI（`mc-skill`，78 工具全可用）
+### 独立 CLI（`mc-skill`，79 工具全可用）
 
-flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。完整语义见 `[mcp-server/README.md](./mcp-server/README.md)` §独立 CLI：
+flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。完整语义见 `[mcp-server/README.md](./mcp-server/README.md)` §独立 CLI：
 
 > ⚠️ **Windows PowerShell 5.1 控制台坑（E-7）**：PS 5.1 在 GBK 代码页下用管道捕获本 CLI 的 UTF-8 JSON 会引入坏控制字符导致 `JSON.parse` 失败；纯 Node `spawnSync` 管道解析同一输出完全正常。脚本化消费请用 Node 子进程，或先 `chcp 65001`。
 

@@ -40,3 +40,8 @@
 | 02–04, 07–08, 10 | overlay fabric | session 注入同版 Fabric（含缺的 09） |
 
 `query_api` 仅当 1.18.2 落在 Parchment 窗口（约 1.16.5–1.20.4）。平台 API 用 `search_docs({platform:"quilt", version:"1.18.2"})`。QSL 专用查询禁止把 Fabric Registry 当命中。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

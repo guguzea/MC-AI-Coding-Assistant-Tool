@@ -272,3 +272,8 @@ fabric-mod/
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
 - [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
 - [Fabric 1.16.5 Wiki](https://fabricmc.net/wiki/documentation:fabric_mod_json_spec) — fabric.mod.json 规范
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

@@ -27,7 +27,14 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
     const line = rawLine.trim();
     if (!line || line.startsWith("#")) continue;
     if (line.startsWith("[[")) {
-      current = line.slice(2, line.length - 2).trim();
+      const base = line.slice(2, line.length - 2).trim();
+      let key = base;
+      let n = 0;
+      while (sections.has(key)) {
+        n += 1;
+        key = `${base}#${n}`;
+      }
+      current = key;
       sections.set(current, []);
       continue;
     }
@@ -36,10 +43,18 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
       sections.set(current, []);
       continue;
     }
+    if (line.includes('"""') || line.includes("'''")) {
+      throw new Error("TOML_MULTILINE_UNSUPPORTED");
+    }
     const eq = line.indexOf("=");
     if (eq === -1) continue;
-    const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value: parseTomlValue(line.slice(eq + 1)) };
-    if (current && sections.has(current)) sections.get(current)!.push(row);
+    const rawVal = line.slice(eq + 1);
+    const hash = rawVal.indexOf("#");
+    const valueSrc = hash >= 0 ? rawVal.slice(0, hash) : rawVal;
+    const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value: parseTomlValue(valueSrc) };
+    const tableKey = current ?? "";
+    if (!sections.has(tableKey)) sections.set(tableKey, []);
+    sections.get(tableKey)!.push(row);
   }
   return { sections };
 }
@@ -83,7 +98,7 @@ export function parseModsToml(text: string): ParsedModsToml {
 
   for (const [tableName, tableRows] of sections) {
     if (!tableName.startsWith("dependencies.")) continue;
-    const owner = tableName.slice("dependencies.".length);
+    const owner = tableName.replace(/#\d+$/, "").slice("dependencies.".length);
     const dep: ParsedModsToml["dependencies"][number] = { id: owner, owner };
     for (const row of tableRows) {
       if (row.key === "modId") dep.id = row.value; // 依赖 id 在块内 modId 字段

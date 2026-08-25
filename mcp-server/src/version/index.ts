@@ -340,6 +340,21 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
     };
   }
   if (lower.includes("方块实体") || lower.includes("blockentity")) {
+    const v = info.version;
+    if (/^1\.(7|8|9|10|11|12)(\.|$)/.test(v)) {
+      return {
+        ...info,
+        recommendation:
+          "方块实体需实现 ITileEntityProvider 或继承 BlockContainer；不要使用 EntityBlock / getTicker（那是 1.17+ API）",
+      };
+    }
+    const mode = ownGet(REGISTER_MODE, v);
+    if (mode === "docsOnly") {
+      return {
+        ...info,
+        recommendation: "请用 search_forge_docs 查本版方块实体 API，不要套用邻版 EntityBlock/getTicker 或具体注册键",
+      };
+    }
     return {
       ...info,
       recommendation: "方块实体需实现 EntityBlock 接口，重写 newBlockEntity() 和可选的 getTicker()",

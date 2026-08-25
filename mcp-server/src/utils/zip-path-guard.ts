@@ -11,12 +11,16 @@ const WINDOWS_RESERVED = new Set([
 
 /** Windows 保留设备名（含结尾点/空格变体，如 "CON."、"NUL "）。 */
 export function isWindowsReservedName(name: string): boolean {
-  const base = name.replace(/\\/g, "/").split("/").pop() ?? "";
-  const stem = base.replace(/[.\s]+$/, "").toUpperCase();
-  if (!stem) return false;
-  if (WINDOWS_RESERVED.has(stem)) return true;
-  const m = stem.match(/^(COM|LPT)[1-9]$/);
-  return m !== null;
+  const parts = name.replace(/\\/g, "/").split("/");
+  for (const part of parts) {
+    if (!part) continue;
+    const stem = part.replace(/[.\s]+$/, "").toUpperCase();
+    if (!stem) continue;
+    if (WINDOWS_RESERVED.has(stem)) return true;
+    const noExt = stem.replace(/\.[^.]+$/, "");
+    if (WINDOWS_RESERVED.has(noExt)) return true;
+  }
+  return false;
 }
 
 /**

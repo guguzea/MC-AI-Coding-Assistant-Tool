@@ -238,6 +238,7 @@ Decision: 选择注册方式
 3. 用 frontmatter 二次过滤：`platforms`（组是主依据，白名单防组内误放）、`mcVersions`（留空/未写 = 不限版本；非空则必须包含目标 MC 版本；与 knowledge/libs/README.md §3.6 及解析代码一致）
 4. 不确定该用哪个库 Skill → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`；完整清单见 `knowledge/libs/README.md`
 5. **禁止**把 Fabric 专属库（Trinkets / CCA / Polymer / Text Placeholder 等）当 Forge 教程；Forge/NeoForge 饰品用 `mc-curios`（`forge-only`），Fabric 用 `mc-trinkets`（`fabric-only`）
+6. **配置不要新写树级 `mc-config` Skill**：一律读 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
 
 ## 不确定时
 
@@ -272,6 +273,7 @@ Decision: 选择注册方式
 | `search_neoforge_docs` / `get_neoforge_doc_*` | NeoForge 文档（1.20.1 回退 Forge） |
 | `search_docs` / `get_doc_*` | 跨平台通用文档入口（`platform` 含 forge/fabric/neoforge/**quilt**/liteloader/rift/modloader）。Quilt 问 QSL 时禁止把 Fabric Registry 当命中 |
 | `search_bedrock_docs` / `get_bedrock_doc_*` | 基岩版 Microsoft Learn；带滞后 `docsStatus`。不是 `search_forge_docs` |
+| `analyze_bedrock_log` | 基岩 content-log 分诊（`content_log.txt`）。**不是** `crash_analyze` |
 | `validate_addon_manifest` / `validate_bp_json` | 基岩 pack 校验；不是 `validate_project` / `validate_datapack_json` |
 | `generate_addon_manifest` / `generate_bp_entity` | 只吐 JSON 文本，不写盘 |
 | `list_community_sources` / `search_community_docs` / `get_community_doc_*` | 社区实务知识库（发布/崩溃/软依赖；不替代官方文档） |
@@ -306,7 +308,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，78 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，79 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。

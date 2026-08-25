@@ -658,6 +658,47 @@ export function thinLoaderWikiWarning(
 export const DOCS_FALLBACK_PACK_NOTE =
   "仅作 API 参考，不得据此推断规则树适用；本版无树则 PACK_NOT_FOUND。";
 
+export const RELATED_CACHE_TTL_MS = 5 * 60_000;
+
+export type TtlCacheEntry<T> = { value: T; expiresAt: number };
+
+export function ttlCacheGet<T>(map: Map<string, TtlCacheEntry<T>>, key: string): T | undefined {
+  const e = map.get(key);
+  if (!e) return undefined;
+  if (e.expiresAt <= Date.now()) {
+    map.delete(key);
+    return undefined;
+  }
+  return e.value;
+}
+
+export function ttlCacheSet<T>(
+  map: Map<string, TtlCacheEntry<T>>,
+  key: string,
+  value: T,
+  max = 64,
+  ttlMs = RELATED_CACHE_TTL_MS,
+): void {
+  map.set(key, { value, expiresAt: Date.now() + ttlMs });
+  while (map.size > max) {
+    const first = map.keys().next().value;
+    if (first === undefined) break;
+    map.delete(first);
+  }
+}
+
+function docsPlatformLabel(payload: Record<string, unknown>): string {
+  const p = String(payload.platform ?? payload.sourcePlatform ?? "").toLowerCase();
+  if (p === "forge") return "Forge";
+  if (p === "neoforge") return "NeoForge";
+  if (p === "quilt") return "Quilt";
+  if (p === "liteloader") return "LiteLoader";
+  if (p === "rift") return "Rift";
+  if (p === "bedrock") return "Bedrock";
+  if (p === "fabric") return "Fabric";
+  return p || "docs";
+}
+
 export function withDocsFallbackFields<T extends Record<string, unknown>>(payload: T): T {
   const versionFallback = Boolean(payload.versionFallback);
   const wikiFallback = Boolean(payload.wikiFallback);
@@ -665,15 +706,16 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
   if (!versionFallback && !wikiFallback && !explicit) return payload;
   const requested = String(payload.requestedVersion ?? payload.version ?? "");
   const resolved = wikiFallback
-    ? String(payload.sourceUsed ?? payload.source_version ?? "fabric-wiki")
+    ? String(payload.sourceUsed ?? payload.source_version ?? `${docsPlatformLabel(payload).toLowerCase()}-wiki`)
     : String(payload.resolvedVersion ?? payload.source_version ?? "");
   const neighbor =
     Boolean(requested && resolved && requested !== resolved) &&
     !/^26\.1/.test(requested) &&
     resolved !== "porting-extra";
+  const plat = docsPlatformLabel(payload);
   const cn =
     (wikiFallback || neighbor) && requested
-      ? `不是 ${requested} 官方 fabric-docs；正文来自 Fabric ${resolved} / 现行 Wiki。禁止当成本版官方页抄写。`
+      ? `不是 ${requested} 官方 ${plat} 文档；正文来自 ${plat} ${resolved}。禁止当成本版官方页抄写。`
       : undefined;
   return {
     ...payload,

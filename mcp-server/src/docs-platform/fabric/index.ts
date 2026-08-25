@@ -31,6 +31,7 @@ import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
   findFabricPorting,
   isFabricPortingId,
+  loadFabricPortingPages,
   searchFabricPortingPages,
 } from "./extra-porting.js";
 
@@ -113,14 +114,18 @@ function annotateFabricGetResult(
 }
 
 function fabricDocsIndexEmpty(version: string): boolean {
-  const p = join(getDataRoot(), `fabric_${version}`, "fabric-docs", version, "index-l0.json");
-  if (!existsSync(p)) return true;
-  try {
-    const data = JSON.parse(readFileSync(p, "utf8")) as unknown;
-    return !Array.isArray(data) || data.length === 0;
-  } catch {
-    return true;
+  const canonical = join(getDataRoot(), `fabric_${version}`, "fabric-docs", version, "index-l0.json");
+  const flat = join(getDataRoot(), `fabric_${version}`, "index-l0.json");
+  for (const p of [canonical, flat]) {
+    if (!existsSync(p)) continue;
+    try {
+      const data = JSON.parse(readFileSync(p, "utf8")) as unknown;
+      if (Array.isArray(data) && data.length > 0) return false;
+    } catch {
+      continue;
+    }
   }
+  return true;
 }
 
 function searchSourceOrEmpty(
@@ -352,7 +357,9 @@ export async function searchFabricDocs(
     const semanticList: NonNullable<Awaited<ReturnType<typeof semanticSearch>>> = [];
     for (const src of sources) {
       const hits = await semanticSearch(query, "fabric", version, src, getDataRoot());
-      if (hits === null) semanticMissing = true;
+      if (hits === null) {
+        if (resolvedSource !== "all" || src === "fabric-docs") semanticMissing = true;
+      }
       else semanticRanked = true;
       if (hits) semanticList.push(...hits);
     }
@@ -383,11 +390,11 @@ export async function searchFabricDocs(
 
     const portingHits = searchFabricPortingPages(query, version);
     if (portingHits.length) {
-      const seen = new Set((results as Array<{ id: string }>).map((r) => r.id));
-      results = [...portingHits.filter((p) => !seen.has(p.id)), ...(results as object[])].slice(
-        0,
-        12,
-      ) as typeof results;
+      const asHits = results as Array<{ id: string }>;
+      const seen = new Set(asHits.map((r) => r.id));
+      const extras = portingHits.filter((p) => !seen.has(p.id));
+      // porting/26.2 不得抢首位：仅追加在树内命中之后（含 develop_porting_index）
+      results = [...asHits, ...extras].slice(0, 12) as typeof results;
     }
 
     const extraWarn =
@@ -655,6 +662,27 @@ export async function getFabricDocRelated(
   args: z.infer<typeof getFabricDocRelatedSchema.inputSchema>,
 ): Promise<CallToolResult> {
   try {
+    if (isFabricPortingId(args.id)) {
+      const page = findFabricPorting(args.id);
+      if (!page) {
+        return handleError(new DocNotFoundError(args.id, args.version));
+      }
+      const others = loadFabricPortingPages()
+        .filter((p) => p.id !== page.id)
+        .slice(0, args.limit ?? 5)
+        .map((p) => ({
+          id: p.id,
+          label: p.title,
+          url: p.url,
+          score: 1,
+        }));
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify({ results: others, _source: "fabric-porting", id: args.id }, null, 2),
+        }],
+      };
+    }
     const resolvedSource = args.source ?? "fabric-docs";
     const version = fabricDocsVersion(args.version).resolved;
     const result = getStore(version, resolvedSource).getRelatedDocs(

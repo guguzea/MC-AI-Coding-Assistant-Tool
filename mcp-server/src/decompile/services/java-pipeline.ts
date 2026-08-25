@@ -105,6 +105,7 @@ export async function prepareInputs(
           }
           const result = await downloadFile(entry.clientMappingsUrl, mojmapPath, {
             label: `mojmap mappings ${version}`,
+            expectedSha1: entry.clientMappingsSha1 ?? null,
           });
           setArtifact(db, `mc-mappings:${version}:mojmap`, "mappings", mojmapPath, {
             version,

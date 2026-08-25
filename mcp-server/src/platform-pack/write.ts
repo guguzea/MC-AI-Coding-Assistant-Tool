@@ -538,7 +538,7 @@ export function writePlatformPack(args: WriteArgs) {
         mkdirForFile(abs, allowRoot);
         assertWritablePath(abs, allowRoot);
         const existed = existsSync(abs);
-        if (existed) {
+        if (existed && !backups.has(op.rel)) {
           backups.set(op.rel, readFileSync(abs, "utf8"));
         }
         writeFileSync(abs, op.content, "utf8");
@@ -553,7 +553,7 @@ export function writePlatformPack(args: WriteArgs) {
       } else {
         const existed = existsSync(abs);
         const prev = existed ? readFileSync(abs, "utf8") : "";
-        backups.set(op.rel, existed ? prev : null);
+        if (!backups.has(op.rel)) backups.set(op.rel, existed ? prev : null);
         mkdirForFile(abs, allowRoot);
         assertWritablePath(abs, allowRoot);
         const next = upsertHostMarker(existed ? prev : "", op.host, op.platform, op.version, op.body);
@@ -570,13 +570,22 @@ export function writePlatformPack(args: WriteArgs) {
     }
 
     const prevMan = loadManifest(proj.root);
+    const mergedHostFiles: Manifest["hostFiles"] = { ...(prevMan?.hostFiles ?? {}) };
+    for (const h of hosts) {
+      const prev = mergedHostFiles[h] ?? { created: [], patched: [] };
+      const cur = hostFiles[h] ?? { created: [], patched: [] };
+      mergedHostFiles[h] = {
+        created: [...new Set([...prev.created, ...cur.created])],
+        patched: [...new Set([...prev.patched, ...cur.patched])],
+      };
+    }
     const manifest: Manifest = {
       platform: pack.platform,
       minecraftVersion: pack.minecraftVersion,
       hosts: [...new Set([...(prevMan?.hosts ?? []), ...hosts])],
       createdFiles: [...new Set([...(prevMan?.createdFiles ?? []), ...created])],
       patchedFiles: [...new Set([...(prevMan?.patchedFiles ?? []), ...patched])],
-      hostFiles: { ...(prevMan?.hostFiles ?? {}), ...hostFiles },
+      hostFiles: mergedHostFiles,
     };
     writeManifestAtomic(proj.root, manifest, allowRoot);
     return {

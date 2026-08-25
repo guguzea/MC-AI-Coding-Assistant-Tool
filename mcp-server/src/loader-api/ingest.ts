@@ -17,6 +17,7 @@ export type IngestLoaderApiArgs = {
   mappingsSource?: string;
   dryRun?: boolean;
   confirmed?: boolean;
+  force?: boolean;
 };
 
 export function ingestLoaderApi(args: IngestLoaderApiArgs) {
@@ -26,6 +27,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
   const mappingsVersion = String(args.mappingsVersion ?? "").trim();
   const dryRun = args.dryRun !== false;
   const confirmed = args.confirmed === true;
+  const force = args.force === true;
 
   if (!platform || !minecraftVersion) {
     return {
@@ -92,7 +94,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     sidecarMappings: sidecar.mappingsVersion,
     targetMappings: mappingsVersion,
   });
-  if (!fresh.ok) {
+  if (!fresh.ok && !force) {
     return { ok: false, code: "CACHE_STALE" as const, action: fresh.action };
   }
 

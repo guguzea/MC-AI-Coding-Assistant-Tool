@@ -84,7 +84,7 @@ export function draftZh(source: LangMap, existingZh: LangMap): DraftResult {
   return { zhCn, needsTranslation, preservedFromExisting };
 }
 
-export function parseLangInput(raw: unknown): { ok: true; value: LangMap } | { ok: false; error: string } {
+export function parseLangInput(raw: unknown): { ok: true; value: LangMap; nonStringKeys?: string[] } | { ok: false; error: string } {
   if (raw == null) return { ok: true, value: {} };
   let obj: unknown = raw;
   if (typeof raw === "string") {
@@ -100,10 +100,10 @@ export function parseLangInput(raw: unknown): { ok: true; value: LangMap } | { o
     return { ok: false, error: "语言文件必须是 JSON 对象" };
   }
   const out: LangMap = {};
+  const nonStringKeys: string[] = [];
   for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
     if (typeof v === "string") out[k] = v;
-    else if (v == null) out[k] = "";
-    else out[k] = String(v);
+    else nonStringKeys.push(k);
   }
-  return { ok: true, value: out };
+  return { ok: true, value: out, nonStringKeys: nonStringKeys.length ? nonStringKeys : undefined };
 }

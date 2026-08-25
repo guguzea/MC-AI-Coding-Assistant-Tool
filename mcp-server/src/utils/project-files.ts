@@ -41,6 +41,32 @@ export function invalidProjectAction(projectPath: string): ActionEnvelope {
   ]);
 }
 
+/** Architectury / 单模块工程的 Java/Kotlin 源码根（存在才返回）。 */
+export function javaSourceRoots(projectRoot: string): string[] {
+  const candidates = [
+    join(projectRoot, "src"),
+    join(projectRoot, "common", "src"),
+    join(projectRoot, "fabric", "src"),
+    join(projectRoot, "forge", "src"),
+    join(projectRoot, "neoforge", "src"),
+    join(projectRoot, "quilt", "src"),
+  ];
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const p of candidates) {
+    try {
+      if (!existsSync(p) || !statSync(p).isDirectory()) continue;
+      const key = resolve(p);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(p);
+    } catch {
+      continue;
+    }
+  }
+  return out;
+}
+
 export function resolveProjectDir(
   projectPath: string,
 ): { ok: true; root: string } | { ok: false; action: ActionEnvelope } {
@@ -177,7 +203,17 @@ export function collectJavaSources(root: string): JavaScanResult {
   let bytes = 0;
   let truncated = false;
   for (const abs of absFiles) {
+    let st;
+    try {
+      st = statSync(abs);
+    } catch {
+      continue;
+    }
     if (files.length >= fileLimit || bytes >= JAVA_SCAN_MAX_BYTES) {
+      truncated = true;
+      break;
+    }
+    if (bytes + st.size > JAVA_SCAN_MAX_BYTES) {
       truncated = true;
       break;
     }
@@ -188,10 +224,6 @@ export function collectJavaSources(root: string): JavaScanResult {
       continue;
     }
     const size = Buffer.byteLength(content, "utf8");
-    if (files.length > 0 && bytes + size > JAVA_SCAN_MAX_BYTES) {
-      truncated = true;
-      break;
-    }
     bytes += size;
     files.push({ path: relative(root, abs).replace(/\\/g, "/"), content });
   }
@@ -222,6 +254,8 @@ export function collectCrashReports(root: string): Array<{ path: string; content
     if (!/\.(txt|log)$/i.test(name)) continue;
     const abs = join(dir, name);
     try {
+      const st = statSync(abs);
+      if (!st.isFile() || st.size > JAVA_SCAN_MAX_BYTES) continue;
       out.push({
         path: `crash-reports/${name}`,
         content: readFileSync(abs, "utf8"),

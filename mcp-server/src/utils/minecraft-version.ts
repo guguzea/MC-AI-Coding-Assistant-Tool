@@ -34,7 +34,7 @@ export function detectMinecraftVersion(opts: {
   const neoVerRaw = props.match(/^\s*neo_version\s*=\s*(\S+)/m)?.[1];
   // neo_version 在 MDK 里常是加载器版本（21.1.x），只有写成 1.x / 26.x 才当 MC 版本
   const neoAsMc =
-    neoVerRaw && /^(1|26)\.\d/.test(stripQuotes(neoVerRaw)) ? neoVerRaw : undefined;
+    neoVerRaw && /^(1|26|27)\.\d/.test(stripQuotes(neoVerRaw)) ? neoVerRaw : undefined;
   const propsHit = fromProps ?? neoAsMc;
   if (propsHit) {
     const v = extractDottedVersion(propsHit);
@@ -86,6 +86,20 @@ export function detectMinecraftVersionFromIncludedSubprojects(opts: {
     if (v !== "unknown") return v;
   }
   return "unknown";
+}
+
+/** 精确 MC 版本 token（禁止 1.20.4-beta / 26.1beta / 前缀误匹配 26.12）。 */
+export function isExactMcVersionToken(s: string): boolean {
+  const t = s.trim();
+  return /^1\.\d+(\.\d+)?$/.test(t) || /^26\.\d+(\.\d+)?$/.test(t);
+}
+
+/** input 必须与 pinned 整段相等；前缀匹配一律 false。 */
+export function matchesExactMcVersion(input: string, pinned: string): boolean {
+  const a = input.trim();
+  const b = pinned.trim();
+  if (!isExactMcVersionToken(a) || !isExactMcVersionToken(b)) return false;
+  return a === b;
 }
 
 export type McVersionBand =

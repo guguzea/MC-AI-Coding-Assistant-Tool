@@ -82,7 +82,7 @@ export function assertCacheFresh(opts: {
       action: actionable(
         "CACHE_STALE",
         "cache 中 jar 的 sha256 与摘要/sidecar 不一致，禁止用旧源码树写新 mappings 标签。",
-        ["重新 fetch/decompile 或重新 ingest_loader_api", "不要静默覆盖 JSON"],
+        ["传入 force=true 覆盖 overlay 摘要", "或删除 overlay JSON 后再 ingest（不要无 force 循环调用）"],
       ),
     };
   }

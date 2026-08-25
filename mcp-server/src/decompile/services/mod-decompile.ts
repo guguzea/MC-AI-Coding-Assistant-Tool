@@ -82,13 +82,17 @@ function summarizeTree(outDir: string): { fileCount: number; javaFileCount: numb
 
 /** 为 search_mod_code 定位：jarPath → 已反编译目录（cache.db 索引） */
 export function findDecompiledDirForJar(jarPath: string, cacheRoot = ensureCachePaths().root): string | null {
-  const db = openCacheDb(cacheRoot);
   try {
-    const rec = getArtifact(db, `decompiled-mod:${jarPath}`);
-    if (!rec || !existsSync(rec.path)) return null;
-    return rec.path;
-  } finally {
-    db.close();
+    const db = openCacheDb(cacheRoot);
+    try {
+      const rec = getArtifact(db, `decompiled-mod:${jarPath}`);
+      if (!rec || !existsSync(rec.path)) return null;
+      return rec.path;
+    } finally {
+      db.close();
+    }
+  } catch {
+    return null;
   }
 }
 
@@ -174,17 +178,22 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   }
   try {
   if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0 && readDecompiledMeta(outDir).found) {
-    return {
-      found: true,
-      modId,
-      modVersion,
-      loaders: meta.loaders,
-      version: args.version,
-      outputDir: outDir,
-      ...summarizeTree(outDir),
-      remapped: false,
-      note: "缓存命中（decompiled-mods）。",
-    };
+    const metaHit = readDecompiledMeta(outDir);
+    const cachedJar = (metaHit.jarPath ?? "").replace(/\\/g, "/");
+    const wantJar = args.jarPath.replace(/\\/g, "/");
+    if (!cachedJar || cachedJar === wantJar) {
+      return {
+        found: true,
+        modId,
+        modVersion,
+        loaders: meta.loaders,
+        version: args.version,
+        outputDir: outDir,
+        ...summarizeTree(outDir),
+        remapped: false,
+        note: "缓存命中（decompiled-mods）。",
+      };
+    }
   }
 
   // 4. 可选 remap（仅 1.14–1.21.11 + yarn/mojmap 有意义；26.1+ 免 remap）
@@ -228,7 +237,10 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             }
             const mojmapPath = join(cache.mappings, `mojmap-${args.version}.txt`);
             if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${args.version}:mojmap`)) {
-              const dl = await downloadFile(entry.clientMappingsUrl, mojmapPath, { label: `mojmap ${args.version}` });
+              const dl = await downloadFile(entry.clientMappingsUrl, mojmapPath, {
+                label: `mojmap ${args.version}`,
+                expectedSha1: entry.clientMappingsSha1 ?? null,
+              });
               const db = openCacheDb(cache.root);
               try {
                 setArtifact(db, `mc-mappings:${args.version}:mojmap`, "mappings", mojmapPath, {

@@ -177,7 +177,14 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
   const root = mkdtempSync(join(tmpdir(), "mc-skill-migrate-"));
   const source = join(root, "src", "main", "java", "Example.java");
   mkdirSync(join(root, "src", "main", "java"), { recursive: true });
+  mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
   writeFileSync(source, "import net.minecraftforge.eventbus.api.Event;\n", "utf8");
+  writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+  writeFileSync(
+    join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+    'modLoader="javafml"\n[[mods]]\nmodId="example"\n',
+    "utf8",
+  );
 
   const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
   const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
@@ -189,6 +196,7 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
       projectPath: root,
       action: "apply_version_migration",
       targetVersion: "1.20.4",
+      targetPlatform: "neoforge",
       dryRun: false,
       confirmed: false,
     });
@@ -198,6 +206,7 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
       projectPath: root,
       action: "apply_version_migration",
       targetVersion: "1.20.4",
+      targetPlatform: "neoforge",
       dryRun: false,
       confirmed: true,
     });
@@ -208,6 +217,63 @@ async function testMigrationRequiresConfirmationAndWritesWhenConfirmed() {
     else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
     if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
     else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function testMigrationSamePlatformDoesNotRenameForgePackages() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-migrate-same-"));
+  const source = join(root, "src", "main", "java", "Example.java");
+  mkdirSync(join(root, "src", "main", "java"), { recursive: true });
+  mkdirSync(join(root, "src", "main", "resources", "META-INF"), { recursive: true });
+  writeFileSync(source, "import net.minecraftforge.eventbus.api.Event;\n", "utf8");
+  writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+  writeFileSync(
+    join(root, "src", "main", "resources", "META-INF", "mods.toml"),
+    'modLoader="javafml"\n[[mods]]\nmodId="example"\n',
+    "utf8",
+  );
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  process.env.MC_SKILL_PROJECT_ROOT = root;
+  try {
+    const out = JSON.parse(await portProject({
+      projectPath: root,
+      action: "apply_version_migration",
+      targetVersion: "1.20.1",
+      targetPlatform: "forge",
+      dryRun: false,
+      confirmed: true,
+    }));
+    assert.equal(out.ok, true);
+    assert.ok(out.skippedReason);
+    assert.equal((out.changes?.packageRenames ?? []).length, 0);
+    assert.match(readFileSync(source, "utf8"), /net\.minecraftforge/);
+    assert.doesNotMatch(readFileSync(source, "utf8"), /net\.neoforged/);
+  } finally {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function testExtractCommonArchitecturyLayout() {
+  const root = mkdtempSync(join(tmpdir(), "mc-skill-arch-src-"));
+  const source = join(root, "common", "src", "main", "java", "a", "A.java");
+  mkdirSync(join(root, "common", "src", "main", "java", "a"), { recursive: true });
+  writeFileSync(source, "import net.minecraftforge.registries.DeferredRegister;\nclass A {}\n", "utf8");
+  try {
+    const out = JSON.parse(await portProject({
+      projectPath: root,
+      action: "extract_common",
+      dryRun: true,
+    }));
+    assert.equal(out.ok, true);
+    assert.ok(out.candidates?.some((c) => /A\.java/.test(c.relPath)), JSON.stringify(out));
+  } finally {
     rmSync(root, { recursive: true, force: true });
   }
 }
@@ -1209,6 +1275,24 @@ async function testCrashAnalyzeKindAndMissingDep() {
     "File: crash-2024-01-01_12.00.00-fabric.txt\n" +
     "cpw.mods.modlauncher.TransformingClassLoader\n";
   assert.notEqual(detectCrashKind(fileNameFabricWithNeo), "fabric");
+
+  assert.equal(
+    detectCrashKind("---- Minecraft Crash Report ----\nnet.minecraft.server.dedicated.DedicatedServer\n"),
+    "vanilla",
+  );
+  const vanillaSrv = analyzeCrash({
+    crashReport: "---- Minecraft Crash Report ----\nnet.minecraft.server.dedicated.DedicatedServer\n",
+    version: "1.20.1",
+  });
+  assert.equal(vanillaSrv.crashKind, "vanilla");
+
+  const lambdaCrash = analyzeCrash({
+    crashReport:
+      "---- Minecraft Crash Report ----\nat net.minecraft.world.item.Item$Properties.<init>\nat com.example.Mod.lambda$onTick$0(Mod.java:1)\n",
+    version: "1.20.1",
+  });
+  assert.ok(!(lambdaCrash.deobfuscated ?? []).some((s) => /lambda\$/i.test(s)), JSON.stringify(lambdaCrash.deobfuscated));
+  assert.ok(!(lambdaCrash.deobfuscated ?? []).some((s) => /\$Properties/i.test(s)), JSON.stringify(lambdaCrash.deobfuscated));
 }
 
 async function testPlatformDataMissing() {
@@ -1455,6 +1539,11 @@ async function testObfuscatedLayerAndLookup() {
   assert.equal(loSrgCsv.kind, "method");
   assert.equal(loSrgCsv.yarn, "getHealth");
 
+  const loSrgField = lookupObfuscated({ name: "field_100013_f", version: "1.14.4" });
+  assert.equal(loSrgField.found, true, `默认路径 SRG field 应命中，实际 ${JSON.stringify(loSrgField)}`);
+  assert.equal(loSrgField.kind, "field");
+  assert.ok(loSrgField.yarn, JSON.stringify(loSrgField));
+
   // convert 无 owner：裸 er 三路回退（方法优先 → getHealth，不得假 NOT_FOUND）
   const convEr = convertMapping({
     from: "obfuscated",
@@ -1684,6 +1773,14 @@ async function testFivePlatformRouting() {
   assert.ok(!/experimentalGameplay/.test(bp));
   assert.ok(!/worldgen\/experimental/.test(bp));
   assert.ok(man.warnings.some((w) => /Beta APIs/.test(w)));
+  const both = generateAddonManifest({ packName: "BothPack", packType: "both" });
+  const rpH = both.files["RP/manifest.json"].header.uuid;
+  const bpH = both.files["BP/manifest.json"].header.uuid;
+  const rpM = both.files["RP/manifest.json"].modules[0].uuid;
+  const bpM = both.files["BP/manifest.json"].modules[0].uuid;
+  assert.notEqual(rpH, bpH, "packType=both RP/BP header UUID 必须不同");
+  assert.notEqual(rpM, bpM, "packType=both RP/BP module UUID 必须不同");
+  assert.notEqual(rpH, rpM);
   const bad = validateAddonManifest(JSON.stringify({ format_version: 2, experimentalGameplay: true, header: {}, modules: [] }));
   assert.equal(bad.ok, false);
   assert.ok(bad.errors.some((e) => /experimentalGameplay/.test(e)));
@@ -1730,6 +1827,10 @@ async function testFivePlatformRouting() {
   );
   const javafmlBare = 'modLoader="javafml"\n[[mods]]\nmodId="demo"\n';
   assert.equal(detectLoader("", javafmlBare), "unknown");
+  assert.equal(
+    detectLoader("plugins { id 'net.minecraftforge.gradle' }", javafmlBare),
+    "forge",
+  );
   const deps = checkDependencies("", javafmlBare);
   assert.equal(deps.detectedLoader, "unknown");
   assert.equal(deps.action?.code, "PICK_PLATFORM");
@@ -2356,6 +2457,7 @@ async function testPlan2PrimerMdkFabricPorting() {
   const networkCases = [
     { token: "neoforge_1.21.1", mustInclude: ["RegisterPayloadHandlersEvent", "DirectionalPayloadHandler"], mustNotInclude: ["SimpleChannel", "RegisterPayloadHandlerEvent"] },
     { token: "neoforge_1.21.3", mustInclude: ["RegisterPayloadHandlersEvent", "playBidirectional"], mustNotInclude: ["SimpleChannel"] },
+    { token: "fabric_1.21.3", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay"] },
     { token: "fabric_1.21.4", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay", "RegisterPayloadHandlersEvent"] },
     { token: "fabric_1.21.8", mustInclude: ["playC2S", "CustomPayload"], mustNotInclude: ["serverboundPlay"] },
     { token: "fabric_1.21.10", mustInclude: ["PayloadTypeRegistry", "playC2S"], mustNotInclude: ["serverboundPlay"] },
@@ -2564,6 +2666,16 @@ async function testPrototypeOwnKeys() {
   const v1211 = await getVersionInfo({ version: "1.21.1", action: "register", platform: "forge" });
   assert.ok(/search_forge_docs/.test(v1211.recommendation), v1211.recommendation);
   assert.ok(!/创建 DeferredRegister/.test(v1211.recommendation), v1211.recommendation);
+
+  const v112be = await getVersionInfo({ version: "1.12.2", action: "blockentity", platform: "forge" });
+  assert.ok(v112be.recommendation.includes("ITileEntityProvider"), v112be.recommendation);
+  assert.ok(v112be.recommendation.includes("BlockContainer"), v112be.recommendation);
+  assert.ok(v112be.recommendation.includes("不要使用"), v112be.recommendation);
+
+  const v1211be = await getVersionInfo({ version: "1.21.1", action: "blockentity", platform: "forge" });
+  assert.ok(/search_forge_docs/.test(v1211be.recommendation), v1211be.recommendation);
+  assert.ok(/不要套用/.test(v1211be.recommendation), v1211be.recommendation);
+  assert.ok(!/需实现 EntityBlock/.test(v1211be.recommendation), v1211be.recommendation);
 }
 
 function testPlan1Fixes() {
@@ -2719,6 +2831,16 @@ public class ExampleMod { }
     JSON.stringify(fabGen.warnings),
   );
   assert.ok(fabGen.code?.includes("Yarn 工程改为 RecipeExporter"), fabGen.code?.slice(0, 800));
+
+  const fab213 = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.3",
+  });
+  assert.ok(fab213.code?.includes("void generate("), fab213.errors?.join(";") ?? fab213.code?.slice(0, 400));
+  assert.ok(!fab213.code?.includes("void buildRecipes("));
 
   const fabBuild = generateDatagen({
     providerType: "recipe",
@@ -2980,6 +3102,8 @@ await testNeoForge1201ForgeCompat();
 await testArchitecturyDryRunDoesNotWrite();
 await testWriteBlockedWithoutAllowEnv();
 await testMigrationRequiresConfirmationAndWritesWhenConfirmed();
+await testMigrationSamePlatformDoesNotRenameForgePackages();
+await testExtractCommonArchitecturyLayout();
 await testPortingTargetVersionRequired();
 await testCommunityDocsSearchAndLinks();
 testAuditMinorFixes();

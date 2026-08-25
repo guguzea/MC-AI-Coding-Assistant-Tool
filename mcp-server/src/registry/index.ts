@@ -124,7 +124,7 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
           action: actionable(
             ActionCodes.NOT_FOUND,
             `未找到匹配「${query}」的注册表条目`,
-            ["检查 namespace:path 拼写", "用 listRegistryNames 或省略 registry 做模糊搜索"],
+            ["检查 namespace:path 拼写", "query_registry 仅含 vanilla 索引，模组物品不会出现", "用 listRegistryNames 或省略 registry 做模糊搜索"],
             relatedTools,
           ),
         }

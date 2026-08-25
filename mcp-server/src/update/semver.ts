@@ -24,12 +24,12 @@ export function looksLikePrereleaseTag(tag: string): boolean {
 /** Parse 1.2.3, 1.2.3-alpha.1, etc. Returns null if not semver-like. */
 export function parseSemver(tag: string): ParsedSemver | null {
   const raw = stripV(tag);
-  const m = raw.match(/^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/);
+  const m = raw.match(/^(\d+)\.(\d+)(?:\.(\d+))?(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/);
   if (!m) return null;
   return {
     major: Number(m[1]),
     minor: Number(m[2]),
-    patch: Number(m[3]),
+    patch: m[3] !== undefined ? Number(m[3]) : 0,
     prerelease: m[4] ? m[4].split(".") : [],
     raw,
   };
@@ -67,7 +67,7 @@ export function compareSemver(a: string, b: string): number | null {
 
 /**
  * True if remote is newer than local.
- * Unparsable: string inequality (and remote not filtered as prerelease elsewhere).
+ * Unparsable tags are not treated as newer (avoid false-positive updates).
  */
 export function isNewer(remoteTag: string, localVersion: string): boolean {
   const cmp = compareSemver(remoteTag, localVersion);

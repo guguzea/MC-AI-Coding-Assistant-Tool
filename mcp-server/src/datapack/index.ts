@@ -72,6 +72,10 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       break;
     case "loot_table":
       // vanilla loot table 顶层 type 是可选字段（手写表普遍省略，空表也合法，F-E205）
+      if (Object.keys(data).length === 0) {
+        warnings.push("空 loot_table {} 视为合法（F-E205）");
+        break;
+      }
       requireKeys(data, ["pools"], errors);
       if (!Array.isArray(data.pools)) errors.push("pools 必须为数组");
       if ("type" in data && typeof data.type === "string" && !/^[a-z0-9_.:-]+$/i.test(data.type)) {

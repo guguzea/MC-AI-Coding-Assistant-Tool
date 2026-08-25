@@ -19,3 +19,8 @@
 类名必须能在 `knowledge/common/verified-api-1.21.10.md` 或 `search_neoforge_docs` 该版页面找到。
 
 pack-status: ready
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

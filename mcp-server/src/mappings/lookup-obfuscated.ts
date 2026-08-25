@@ -40,6 +40,7 @@ export interface LookupObfuscatedResult {
   resultKind?: string;
   notes?: string[];
   action?: ActionEnvelope;
+  candidates?: Array<{ ownerClass?: string; yarn?: string; descriptor?: string }>;
 }
 
 /** 三路回退命中行（method/field） */
@@ -98,12 +99,12 @@ function singleHit(
  */
 export function resolveObfuscatedThreeWay(version: string, token: string): ObfuscatedThreeWayHit {
   const style = detectNamingStyle(token);
-  const isFieldToken = /^field_/.test(token);
+  const isFieldToken = /^field_\d+_[a-zA-Z]+$/.test(token) || /^field_/.test(token);
   const isMethodToken =
     style === "yarn_intermediary" ||
     style === "mojang_hashed" ||
-    style === "srg" ||
-    /^func_/.test(token);
+    /^func_\d+_[a-zA-Z]+$/.test(token) ||
+    /^method_/.test(token);
 
   const methodHits = isFieldToken ? null : lookupByObfuscated(version, token, "method");
   const fieldHits = isMethodToken ? null : lookupByObfuscated(version, token, "field");
@@ -277,11 +278,17 @@ export function lookupObfuscated(query: LookupObfuscatedQuery): LookupObfuscated
       kind: hit.kind,
       mappingEra: hit.mappingEra,
       schemaVersion,
+      resultKind: "AMBIGUOUS",
       notes: [`多个${hit.kind === "method" ? "方法" : "字段"}命中，请用 convert_mapping + ownerClass 精确定位`],
+      candidates: hit.rows.slice(0, 8).map((r) => ({
+        ownerClass: toDot(r.ownerClass),
+        yarn: r.yarn,
+        descriptor: r.descriptor,
+      })),
       action: actionable(
         ActionCodes.AMBIGUOUS,
         `多个${hit.kind === "method" ? "方法" : "字段"}命中`,
-        ["用 convert_mapping 传 ownerClass/descriptor 消歧"],
+        ["用 convert_mapping 传 ownerClass/descriptor 消歧", "查看 candidates"],
         ["convert_mapping"],
       ),
     };

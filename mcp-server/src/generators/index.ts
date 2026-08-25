@@ -20,6 +20,9 @@ export function generateModel(
   if (!version?.trim()) {
     return { code: null, errors: ["version is required。当前 generate_model 按传入 version 选物品模型路径（1.21.4+ / 1.21.11 / 26.1 走 items/），无独立精确档白名单。" + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
   }
+  if (!exactMcVersion(version)) {
+    return { code: null, errors: [`version 必须是精确 MC 版本，收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 02 / generate_model")] };
+  }
   const mod = normalizeModIdentifier(modId);
   const block = normalizeModIdentifier(blockName);
   if (!mod || !block) return { code: null, errors: ["无效 modId/blockName"] };
@@ -225,6 +228,9 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
 }
 
 export const NETWORK_PACKET_PLATFORMS = [
+  // B23 证据：fabric_1.21.3 → fabric/1.21.3/.cursor/rules/06-networking.mdc + 07-datagen.mdc
+  // 已核实 CustomPayload / PayloadTypeRegistry.playC2S / FabricRecipeProvider.generate。
+  // neoforge_1.20.6 有规则无 verified payload 页 → 不加模板。
   "forge_1.20.1",
   "forge_1.20.4",
   "forge_1.19.4",
@@ -245,6 +251,7 @@ export const NETWORK_PACKET_PLATFORMS = [
   "neoforge_1.21.11",
   "neoforge_26.1",
   "fabric_1.21",
+  "fabric_1.21.3",
   "fabric_1.21.4",
   "fabric_1.21.8",
   "fabric_1.21.10",
@@ -264,7 +271,7 @@ export type NetworkPacketPlatform = (typeof NETWORK_PACKET_PLATFORMS)[number];
 
 /** 模糊 token 保留时必须列出的精确档（文档版本与 token 后缀一致）。 */
 const FABRIC_NETWORK_EXACT_TOKENS =
-  "fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1.2";
+  "fabric_1.21.3 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1.2";
 const NEOFORGE_NETWORK_EXACT_TOKENS =
   "neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1";
 
@@ -849,6 +856,7 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
   }
 
   if (
+    platform === "fabric_1.21.3" ||
     platform === "fabric_1.21.4" ||
     platform === "fabric_1.21.8" ||
     platform === "fabric_1.21.10" ||
@@ -1085,7 +1093,8 @@ public class ModAttachments {
   }
 
   return {
-    code: `// Forge Capability 骨架
+    code: withDocsReviewHeader(
+      `// Forge Capability 骨架
 package com.example.${mod.value}.capability;
 
 import net.minecraftforge.common.capabilities.Capability;
@@ -1097,6 +1106,9 @@ public class ${pascal}Capability {
         CapabilityManager.get(new CapabilityToken<>() {});
 }
 `,
+      "search_forge_docs",
+      version.trim(),
+    ),
   };
 }
 
@@ -1232,7 +1244,7 @@ public class ${toPascalCase(mod.value)}Config {
     return {
       code: null,
       errors: [
-        `NeoForge config 当前支持 1.20.1（ForgeConfigSpec）与 1.20.4+/1.21+/26.1（ModConfigSpec）。收到 version=${version}。` +
+        `NeoForge config 当前支持 1.20.1（ForgeConfigSpec）与 1.20.4 / 1.20.6 / 1.21.x / 26.1（ModConfigSpec）。收到 version=${version}。` +
           noNativeGeneratorError("search_neoforge_docs", "规则 00 / mc-config Skill"),
       ],
     };
@@ -1292,6 +1304,9 @@ export function generateEntityRenderer(
   }
   const p = platform.trim().toLowerCase();
   const v = version.trim();
+  if (!exactMcVersion(v)) {
+    return { code: null, errors: [`version 必须是精确 MC 版本，收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 04 / mc-entity Skill")] };
+  }
   // D-3 门闩：forge 1.18.2/1.19.4 的 04 规则已核 EntityRenderersEvent.RegisterRenderers +
   // EntityRendererProvider.Context（与 1.20.x 同族）→ 过门；neoforge 1.21.x / fabric 未核 → 保持拒绝。
   const forgeOk = p === "forge" && ["1.18.2", "1.19.4", "1.20.1", "1.20.4"].includes(v);

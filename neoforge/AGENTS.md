@@ -16,3 +16,7 @@ Decision:
 26.1 与 1.21.1 是两档。官方 `/docs/26.2/` 未发布前不要建克隆树。
 
 工作流：完整流程才 `get_workflow_template`；改已有代码不要调。
+
+## 配置（不落盘树级 mc-config）
+
+各 `neoforge/<ver>` 不要新写 `mc-config` Skill。读仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`。

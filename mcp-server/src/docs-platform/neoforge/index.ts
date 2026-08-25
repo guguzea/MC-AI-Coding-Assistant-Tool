@@ -171,7 +171,7 @@ export async function searchNeoForgeDocs(args: {
         versionFallback: false,
       };
     }
-    const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
+    const forgeCompatible = resolution.sourcePlatform === "forge";
     const resolutionSource = resolution.sourcePlatform === "forge" ? resolution.sourceVersion : undefined;
     const semanticHits = resolution.sourcePlatform === "forge"
       ? await semanticSearch(

@@ -96,6 +96,7 @@ function skillPath(ver, name) {
   const cases = [
     ["mixin-pattern", "error failed apply ".repeat(26_000)], // ≈494KB
     ["version-pattern", "requires [".repeat(50_000)], // ≈500KB
+    ["missing-mod-pattern", "ModLoadingException " + "x".repeat(12_000) + " missing"],
   ];
   for (const [name, chunk] of cases) {
     const report =
@@ -108,6 +109,28 @@ function skillPath(ver, name) {
     assert.ok(elapsed < 5_000, `ReDoS guard (${name}): took ${elapsed}ms (must be < 5000ms)`);
     console.log(`crash ReDoS guard ${name}: ok (${elapsed}ms for ${report.length}B)`);
   }
+}
+
+{
+  const communityTxt = join(repo, "temp", "社区错误报告", "crash-2026-07-22_22.35.48-client.txt");
+  let seed =
+    "---- Minecraft Crash Report ----\nDescription: Initializing game\njava.lang.NoClassDefFoundError: com/mojang/text2speech/Narrator\n";
+  if (existsSync(communityTxt)) {
+    seed = readFileSync(communityTxt, "utf8");
+  }
+  const chunk = (seed.match(/FML:[\s\S]{0,2000}/) ?? [seed.slice(0, 2000)])[0];
+  let report = seed;
+  while (Buffer.byteLength(report, "utf8") < 500_000) {
+    report += "\n" + chunk;
+  }
+  assert.ok(Buffer.byteLength(report, "utf8") < 512_000);
+  const t0 = Date.now();
+  const r = analyzeCrash({ crashReport: report, version: "1.12.2" });
+  const elapsed = Date.now() - t0;
+  assert.equal(r.ok, true);
+  assert.ok(elapsed < 5_000, `合法大日志耗时 ${elapsed}ms`);
+  assert.notEqual(r.probableCause, "缺少强制依赖（前置模组未安装或不在 mods 目录）");
+  console.log(`crash legitimate 500KB: ok (${elapsed}ms, ${Buffer.byteLength(report)}B)`);
 }
 
 {

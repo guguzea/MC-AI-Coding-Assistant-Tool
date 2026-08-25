@@ -1,6 +1,6 @@
 /**
  * Fabric Datagen。Quilt 无足够 QSL 类名，不走本模板。
- * 1.21.1 / 1.21.4 / 1.21.8：FabricRecipeProvider#generate；1.21.10 / 1.21.11：#buildRecipes。
+ * 1.21.1 / 1.21.3 / 1.21.4 / 1.21.8：FabricRecipeProvider#generate；1.21.10 / 1.21.11：#buildRecipes。
  * Mojmap 骨架：1.21.1–1.21.10 用 net.minecraft.resources.ResourceLocation；1.21.11 起改名为
  * net.minecraft.resources.Identifier（fromNamespaceAndPath）。禁止混入 Yarn 的 net.minecraft.util.Identifier/of。
  * 26.1.x：FabricPackOutput + FabricBlockLootSubProvider + Identifier（fabric-docs 26.1.2）。

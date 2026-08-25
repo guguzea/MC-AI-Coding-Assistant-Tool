@@ -157,3 +157,8 @@ src/main/java/
 | DataGen | 手写 JSON | `generate_datagen`（仅覆盖 Forge 1.20.1） |
 
 查询用类名或短词（如 `Block`、`RegistryEvent`）。数据在 `data/forge_1.12.2/forge-docs/`。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

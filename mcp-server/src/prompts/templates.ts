@@ -4,6 +4,10 @@ import { ownGet } from "../utils/own-record.js";
 export const WORKFLOW_HITL =
   "【人在环】模组开发不是确定性流水线。创意设计、版本兼容取舍、API 选择、性能权衡、调试策略由用户决定。写盘、运行 Gradle、拷贝 jar、上传发布须用户确认后执行；Agent 给步骤与草稿，不代跑这些高风险操作。";
 
+/** LiteLoader / Rift / ModLoader / 基岩：禁止把现代 Forge/Fabric API 当骨架。 */
+export const WORKFLOW_ERA_GUARD =
+  "N-A / era：LiteLoader / Rift / ModLoader 只用该档核实表，禁止 DeferredRegister、Forge biome_modifier、ForgeConfigSpec、Cloth Config、现代 GameTest、generate_datagen。基岩走 Script/JSON，不是 Java Mixin/GameTest。核不到则 stub + search_docs，禁止编造邻档类名。";
+
 export const WORKFLOW_TEMPLATES: Record<string, { title: string; body: string }> = {
   "mc-new-block": {
     title: "新方块工作流",
@@ -172,7 +176,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-mixin": {
     title: "Mixin 工作流",
-    body: `1. 确认平台与 MC 版本；先 mixin_analyze（静态）。deep:true 需已缓存 remapped 客户端 jar，未缓存会 CACHE_MISS，不要自动下载。
+    body: `${WORKFLOW_ERA_GUARD}
+1. 确认平台与 MC 版本；先 mixin_analyze（静态）。deep:true 需已缓存 remapped 客户端 jar，未缓存会 CACHE_MISS，不要自动下载。LiteLoader/Rift/ModLoader 若核实表无 Mixin，停止，不要吐 @Inject 现代骨架。
 2. mixins.json：common 进 mixins[]，client/server 分桶，不要把 common 写进 client。
 3. 注入点用该档 mappings（Yarn named / Mojmap / MCP）；禁止 class_ / method_ 中间名当 API。
 4. 高风险 @Overwrite / MixinExtras 先 warning；改字节码目标用 validate_at / validate_aw。
@@ -180,7 +185,8 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-worldgen": {
     title: "世界生成工作流",
-    body: `1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。禁止默认 Forge biome_modifier。
+    body: `${WORKFLOW_ERA_GUARD}
+1. 确认平台与精确 MC 版本。先 activate_platform_pack action=session（可 task=mc-worldgen），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。禁止默认 Forge biome_modifier。LiteLoader/Rift/ModLoader 无 biome_modifier / placed_feature 时代 API 时改口核实表，不要吐 1.18+ JSON 骨架冒充已核。
 2. 配置：configured_feature / placed_feature JSON 或该档 Datagen。
 3. 注入生物群系：
    - Forge 1.20.1：forge:add_features biome_modifier
@@ -190,16 +196,19 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
   },
   "mc-config": {
     title: "配置工作流",
-    body: `1. 确认平台与版本。generate_config 的 loader 与 version 必填。
+    body: `${WORKFLOW_ERA_GUARD}
+1. 确认平台与版本。generate_config 的 loader 与 version 必填。树级不要新写 mc-config Skill：读 knowledge/libs/all-platforms/mc-config/SKILL.md。
 2. 分支：
    - Forge：ForgeConfigSpec
    - NeoForge 1.20.1：ForgeConfigSpec（forgeCompatible）；1.20.4 / 1.20.6 / 1.21+ / 26.1：ModConfigSpec（禁止把 1.20.4 写成 ForgeConfigSpec）
    - Fabric/Quilt：Cloth Config（mc-config Skill）；不要生成 ForgeConfigSpec
+   - LiteLoader / Rift / ModLoader / 基岩：不要生成 ForgeConfigSpec / Cloth / YACL
 3. 注册到 ModConfig / Cloth 屏幕按该档；缺依赖要在 fabric.mod.json / mods.toml 声明。`,
   },
   "mc-gametest": {
     title: "GameTest 工作流",
-    body: `1. 确认平台与 MC 版本。GameTest 不是所有加载器都有同一套 API。
+    body: `${WORKFLOW_ERA_GUARD}
+1. 确认平台与 MC 版本。GameTest 不是所有加载器都有同一套 API。LiteLoader / Rift / ModLoader / 基岩无现代 GameTest：停止，不要吐 @GameTest / generate_datagen 测试骨架。
 2. Forge/NeoForge：先 activate_platform_pack action=session（可 task=mc-gametest），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。再用 search_*_docs 核类名，禁止默记 1.20.1。
 3. Fabric：Fabric GameTest / 该版 wiki；核不到则 stub，不要编 Forge GameTest。
 4. 结构文件放 data/<modid>/gametest 或该版路径；用户确认后跑 ./gradlew 对应 test 任务，不要假设 runGameTestServer 通用，也不要无人值守代跑。`,
@@ -218,7 +227,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 1.20.1 同 Forge SimpleChannel 形态；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
-3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架，但 warnings 会列出精确 token。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
+3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.3 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架，但 warnings 会列出精确 token。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
 4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
   },
   "mc-capability": {

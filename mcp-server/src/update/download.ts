@@ -85,15 +85,35 @@ export async function downloadToFile(
           headers: { "User-Agent": "MC-AI-Coding-Assistant-Tool-updater" },
           redirect: "follow",
         });
+        if (res.status === 404 || res.status === 403) {
+          return {
+            ok: false,
+            attempts: attempt,
+            action: actionable(
+              "DOWNLOAD_FAILED",
+              `下载失败 HTTP ${res.status}（不重试）`,
+              ["确认 Release 资产 URL 可访问"],
+              ["mc_skill_update"],
+            ),
+          };
+        }
         if (res.status === 429) {
-          const retryAfter = Number(res.headers.get("retry-after") || "60");
+          lastErr = "HTTP 429";
+          if (attempt < maxAttempts) {
+            const retryAfter = Number(res.headers.get("retry-after") || "2");
+            const waitMs = Number.isFinite(retryAfter)
+              ? Math.min(Math.max(retryAfter, 0) * 1000, 60_000)
+              : 1000 * 2 ** (attempt - 1);
+            await sleep(waitMs);
+            continue;
+          }
           return {
             ok: false,
             attempts: attempt,
             action: actionable(
               "UPDATE_RATE_LIMITED",
               "下载限速 (429)",
-              [`等待约 ${retryAfter}s 后重试`],
+              ["等待后重试", "可设置 MC_SKILL_GITHUB_TOKEN"],
               ["mc_skill_update"],
             ),
           };

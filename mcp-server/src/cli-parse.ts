@@ -3,6 +3,7 @@
  * 不含 IO（@file / stdin / --project 在 cli.ts 适配层）。
  */
 import * as z from "zod";
+import { parseFlagTruthy } from "./utils/flags.js";
 import { ownGet } from "./utils/own-record.js";
 
 export type FlagScalar = string | boolean;
@@ -55,6 +56,8 @@ export const SHORT_COMMANDS: Record<string, { tool: string; inject?: Record<stri
   status: { tool: "get_server_status" },
   warmup: { tool: "get_server_status", inject: { warmup: true } },
 };
+
+export { parseFlagTruthy } from "./utils/flags.js";
 
 export function kebabToCamel(key: string): string {
   return key.replace(/-([a-zA-Z0-9])/g, (_, c: string) => c.toUpperCase());
@@ -279,19 +282,19 @@ export function extractGlobalFlags(raw: RawFlags): {
   for (const [k, v] of Object.entries(raw)) {
     const camel = kebabToCamel(k);
     if (k === "help" || k === "h") {
-      help = true;
+      help = parseFlagTruthy(v);
       continue;
     }
     if (k === "json") {
-      json = true;
+      json = parseFlagTruthy(v);
       continue;
     }
     if (k === "compact") {
-      compact = true;
+      compact = parseFlagTruthy(v);
       continue;
     }
     if (k === "fail-on-error" || camel === "failOnError") {
-      failOnError = true;
+      failOnError = parseFlagTruthy(v);
       continue;
     }
     if (k === "project") {

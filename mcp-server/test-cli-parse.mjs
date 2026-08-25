@@ -129,6 +129,15 @@ import {
 }
 
 {
+  const { globals } = extractGlobalFlags(
+    parseFlags(["--json=false", "--compact=false", "--fail-on-error=false"]).flags,
+  );
+  assert.equal(globals.json, false);
+  assert.equal(globals.compact, false);
+  assert.equal(globals.failOnError, false);
+}
+
+{
   const pos = applyPositionalCompat("query", {}, ["net.minecraft.world.item.Item", "getName"]);
   assert.equal(pos.className, "net.minecraft.world.item.Item");
   assert.equal(pos.methodName, "getName");

@@ -38,10 +38,19 @@ export interface SearchModSourceResult {
 const DEFAULT_EXTENSIONS = [".java", ".txt", ".json", ".toml", ".cfg"];
 
 const MAX_LINE_LEN = 400;
+const MAX_WALK_FILES = 8000;
 
-function walk(dir: string): string[] {
+function isDangerousRegex(src: string): boolean {
+  if (/\([^)]*[+*][^)]*\)[+*]/.test(src)) return true;
+  if (/\(\.\*\)[+*]|(\.\*){2}/.test(src)) return true;
+  if (/\([^?][^)]*\{[^)]*\}[^)]*\)[+*{]/.test(src)) return true;
+  return false;
+}
+
+function walkFiltered(dir: string, extensions: string[]): { files: string[]; truncated: boolean } {
   const out: string[] = [];
-  let stack = [dir];
+  let truncated = false;
+  const stack = [dir];
   while (stack.length > 0) {
     const cur = stack.pop()!;
     let entries;
@@ -56,11 +65,18 @@ function walk(dir: string): string[] {
         if (e.name === ".git" || e.name === "node_modules") continue;
         stack.push(full);
       } else if (e.isFile()) {
+        const dot = e.name.lastIndexOf(".");
+        const ext = dot >= 0 ? e.name.slice(dot).toLowerCase() : "";
+        if (!extensions.includes(ext)) continue;
+        if (out.length >= MAX_WALK_FILES) {
+          truncated = true;
+          return { files: out, truncated };
+        }
         out.push(full);
       }
     }
   }
-  return out;
+  return { files: out, truncated };
 }
 
 export function searchModSource(args: SearchModSourceArgs): SearchModSourceResult {
@@ -104,6 +120,15 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
         ),
       );
     }
+    if (isDangerousRegex(query)) {
+      return fail(
+        actionable(
+          "INVALID_INPUT",
+          "拒绝嵌套量词 / 未转义 .*.* 类正则（灾难回溯风险）",
+          ["去掉 pattern 用子串匹配", "改写为无嵌套量词的表达式"],
+        ),
+      );
+    }
     try {
       re = new RegExp(query, "i");
     } catch (err) {
@@ -115,18 +140,23 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
 
   const hits: SearchHit[] = [];
   let truncated = false;
-  const files = walk(root);
-  for (const file of files) {
+  const walked = walkFiltered(root, extensions);
+  if (walked.truncated) truncated = true;
+  const started = Date.now();
+  const deadline = started + 1500;
+  for (const file of walked.files) {
     if (hits.length >= maxResults) {
       truncated = true;
       break;
     }
-    const ext = file.slice(file.lastIndexOf(".")).toLowerCase();
-    if (!extensions.includes(ext)) continue;
+    if (Date.now() > deadline) {
+      truncated = true;
+      break;
+    }
     let content: string;
     try {
       const size = statSync(file).size;
-      if (size > 8 * 1024 * 1024) continue; // 大文件跳过（防异常 jar 资源）
+      if (size > 8 * 1024 * 1024) continue;
       content = readFileSync(file, "utf8");
     } catch {
       continue;
@@ -134,6 +164,8 @@ export function searchModSource(args: SearchModSourceArgs): SearchModSourceResul
     const lines = content.split(/\r?\n/);
     for (let i = 0; i < lines.length; i++) {
       const lineText = lines[i];
+      if (lineText.length > MAX_LINE_LEN && re) continue;
+      if (re) re.lastIndex = 0;
       const matched = re ? re.test(lineText) : lineText.toLowerCase().includes(query.toLowerCase());
       if (matched) {
         hits.push({

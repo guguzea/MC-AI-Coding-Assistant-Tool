@@ -116,6 +116,7 @@ src/main/java/
 
 1. **使用 `@EventBusSubscriber` + `RegistryEvent.Register<T>`**：Forge 1.12.2 没有 `DeferredRegister`，必须使用事件订阅方式
 2. **使用 `@Init` 方法**：在 `@Mod` 类中定义 `@Init` 方法处理初始化
+> 兼容说明：`@Init` 与 `@EventHandler(FMLPreInitializationEvent)` 均为合法初始化入口；事件订阅仍用 `@SubscribeEvent`（见 05-events），两者混用时勿重复执行一次性注册。
 3. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 4. **不要在 `proxy` 包里放客户端代码**：代理类设计是 1.12.2 的标准模式
 5. **资源文件路径**：`assets/{modid}/textures/` 等路径必须全小写
@@ -156,3 +157,8 @@ src/main/java/
 | DataGen | 手写 JSON | `generate_datagen`（仅覆盖 Forge 1.20.1） |
 
 查询用类名或短词（如 `Block`、`RegistryEvent`）。数据在 `data/forge_1.12.2/forge-docs/`。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

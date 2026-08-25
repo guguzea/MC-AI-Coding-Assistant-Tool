@@ -4,6 +4,7 @@ import { realpathSync } from "fs";
 import { fileURLToPath } from "url";
 import { warmupApi, DEFAULT_VERSION } from "./api/index.js";
 import { diagnoseDataPaths, hasAnyPlatformData, assertDataUsable } from "./utils/path.js";
+import { clearPendingRestart } from "./update/index.js";
 import { server } from "./tool-registry.js";
 
 export * from "./tool-registry.js";
@@ -54,6 +55,7 @@ if (isMainModule()) {
     });
     const transport = new StdioServerTransport();
     await server.connect(transport);
+    clearPendingRestart();
   } catch (err) {
     console.error("[mc-mcp-server] failed to start:", err);
     process.exit(1);

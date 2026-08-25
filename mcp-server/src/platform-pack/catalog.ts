@@ -134,7 +134,14 @@ export const QSL_OVERLAY_BANNER =
   "[QSL_OVERLAY] 本规则正文来自同版 Fabric。注册/物品组用 QSL（org.quiltmc）。网络须工程有 QFAPI（Quilted Fabric API）才对照 FAPI；无 QFAPI 则 search_docs(platform=quilt)，禁止把 Fabric 网络教程当 QSL。";
 
 export function wrapBanneredBody(banner: string, note: string, body: string): string {
-  return `---\n${banner}\n${note}\n---\n\n${body}`;
+  const prefix = `---\n${banner}\n${note}\n---\n\n`;
+  return prependKeepingFrontmatter(prefix, body);
+}
+
+function prependKeepingFrontmatter(prefix: string, body: string): string {
+  const m = body.match(/^(---\r?\n[\s\S]*?\r?\n---\r?\n)/);
+  if (m) return m[1] + prefix + body.slice(m[1].length);
+  return prefix + body;
 }
 
 export function fabricRulesOverlay(
@@ -613,7 +620,7 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
 export const DONOR_SKILL_BANNER = "[DONOR_SKILL 禁止直接抄写]";
 
 export function wrapDonorSkillBody(mappingNote: string, body: string): string {
-  return `${DONOR_SKILL_BANNER}\n${mappingNote}\n\n---\n\n${body}`;
+  return prependKeepingFrontmatter(`${DONOR_SKILL_BANNER}\n${mappingNote}\n\n---\n\n`, body);
 }
 
 export function wrapSkillBody(entry: Pick<SkillIndexEntry, "skillBanner" | "mappingNote">, body: string): string {

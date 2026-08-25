@@ -80,11 +80,16 @@ export function semanticDbPath(
 }
 
 /** 构造 FTS5 MATCH 表达式：`"tok"* AND "tok"*`；无有效 token → null */
+const FTS_KEEP_SHORT = new Set(["ui", "ai", "id", "at"]);
+
 export function buildFtsQuery(query: string): string | null {
   const tokens = query
     .toLowerCase()
     .split(/[^a-z0-9_]+/)
-    .filter((t) => t.length >= 2 && !FTS_STOP_WORDS.has(t));
+    .filter((t) => {
+      if (FTS_KEEP_SHORT.has(t)) return true;
+      return t.length >= 2 && !FTS_STOP_WORDS.has(t);
+    });
   if (tokens.length === 0) return null;
   return tokens.map((t) => `"${t.replace(/"/g, '""')}"*`).join(" AND ");
 }

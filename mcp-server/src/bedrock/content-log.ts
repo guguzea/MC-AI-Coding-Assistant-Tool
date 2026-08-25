@@ -69,8 +69,7 @@ function newestMatching(dir: string, re: RegExp, deadline: number): string | und
   } catch {
     return undefined;
   }
-  if (names.length > MAX_DIR_ENTRIES) names = names.slice(0, MAX_DIR_ENTRIES);
-  let best: { path: string; mtime: number } | undefined;
+  const candidates: { path: string; mtime: number }[] = [];
   for (const name of names) {
     if (Date.now() > deadline) break;
     if (!re.test(name)) continue;
@@ -78,12 +77,13 @@ function newestMatching(dir: string, re: RegExp, deadline: number): string | und
     try {
       const st = statSync(abs);
       if (!st.isFile()) continue;
-      if (!best || st.mtimeMs > best.mtime) best = { path: abs, mtime: st.mtimeMs };
+      candidates.push({ path: abs, mtime: st.mtimeMs });
     } catch {
       /* skip */
     }
   }
-  return best?.path;
+  candidates.sort((a, b) => b.mtime - a.mtime);
+  return candidates.slice(0, 80)[0]?.path;
 }
 
 export function analyzeBedrockContentLog(

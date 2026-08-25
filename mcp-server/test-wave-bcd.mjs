@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { existsSync, unlinkSync } from "node:fs";
+import { existsSync, unlinkSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   parseMethodReference,
   detectNamingStyle,
@@ -17,6 +18,7 @@ import {
 import { getWorkflowTemplate, readKnowledgeResource } from "./dist/prompts/index.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
 import { resolveDataDir } from "./dist/utils/path.js";
+import { parameterTypes } from "./dist/utils/descriptor.js";
 
 function testMethodStringForms() {
   assert.equal(detectNamingStyle("func_12345_a"), "srg");
@@ -87,6 +89,13 @@ function testDatapack() {
     version: "1.21.1",
   });
   assert.equal(ok.valid, true);
+
+  const emptyLoot = validateDatapackJson({
+    kind: "loot_table",
+    jsonContent: "{}",
+    version: "1.20.1",
+  });
+  assert.equal(emptyLoot.valid, true, JSON.stringify(emptyLoot));
 }
 
 function testGenerators() {
@@ -216,6 +225,21 @@ public class FooMixin {
   assert.ok(arg?.injections.some((i) => i.kind === "ModifyArg"), JSON.stringify(arg));
 }
 
+function testWorkersAndDescriptor() {
+  const nested = "(" + "[".repeat(40) + "I)V";
+  const params = parameterTypes(nested);
+  assert.equal(params.length, 1, `depth 帽不得把剩余描述符拆成多参数: ${JSON.stringify(params)}`);
+
+  const srcDir = dirname(fileURLToPath(import.meta.url));
+  const preloader = readFileSync(join(srcDir, "src/workers/preloader.ts"), "utf8");
+  assert.ok(/Date\.now\(\)\s*-\s*startedAt/.test(preloader), "preloader elapsed 须为时长");
+  assert.ok(/if \(preloadRunning\) return/.test(preloader), "preloader start 须有重入守卫");
+  assert.ok(!/elapsed:\s*Date\.now\(\)/.test(preloader.replace(/\s/g, "")));
+
+  const sqlite = readFileSync(join(srcDir, "src/utils/node-sqlite-guard.ts"), "utf8");
+  assert.ok(/major === 23 && minor <= 3/.test(sqlite), "sqlite 旗标窗口须含 23.0–23.3");
+}
+
 async function main() {
   process.env.MC_SKILL_DATA = resolveDataDir();
   testMethodStringForms();
@@ -226,6 +250,7 @@ async function main() {
   testPatternsResource();
   testMixinsJson();
   await testMixinAnalyzeMissing();
+  testWorkersAndDescriptor();
   console.log("test-wave-bcd: ok");
 }
 

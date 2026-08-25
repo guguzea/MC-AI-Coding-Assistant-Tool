@@ -10,7 +10,7 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 
 # MC百科开发类教程指针
 
-> 2026-08-23/24 经浏览器逐篇核实（**社区教程 53 页 + 个人教程 271 页全量扫描，约 6500 个标题通读**；入表者均打开正文核对范围与声明协议）。找开发教程别翻列表页，直接查这里。
+> 2026-08-23/24 经浏览器逐篇核实（**社区教程 53 页 + 个人教程 271 页正文级全量读取完成**：社区 1056/1056、个人 5411 篇全部打开正文；入表者另核声明协议）。找开发教程别翻列表页，直接查这里。
 
 ## Java 模组 / 附属开发
 
@@ -37,6 +37,10 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 | [如何在 NeoForge 开发中接入 PlayerAnimator 前置](https://www.mcmod.cn/post/4987.html) | build.gradle 加 KosmX maven + 依赖（NeoForge 1.21.4/1.21.5 实测版本表） | 默认（未声明） | 动画库前置接入示例 |
 | [匠魂2、3主要差异参考](https://www.mcmod.cn/post/2012.html) | TiC2→TiC3 迁移：工具类型增删/材料体系变化（配 6123） | 默认（未声明） | 版本迁移知识 |
 | [1.12.2 一些可用的 WorldProvider](https://www.mcmod.cn/post/1347.html) | 老版自定义维度 provider 清单：原版/JED/BOP 各世界提供者 | 默认（未声明） | 配 `authored/custom-dimension-and-biomes` 老版侧 |
+| [GT魔改入门作者必读（两期）](https://www.mcmod.cn/post/2427.html)＋[第二期](https://www.mcmod.cn/post/2430.html) | GTCE/CEu 的 CrT 魔改：RecipeMap 写法与原版写法差异（源自 CrT 官方 wiki） | 显式 BY-NC-ND | GT 生态脚本化魔改入门 |
+| [如何使用 YACL 为 Fabric 模组添加配置](https://www.mcmod.cn/post/3836.html) | YACL（YetAnotherConfigLib）开发向接入 ★个人区全量扫描找回的真身（此前误记 4386，实为 CFB 任务帖） | ❌ 禁转载 | 配 `lib-catalog` Fabric 配置库 |
+| [简单易懂的 AccessTransformer 使用方法](https://www.mcmod.cn/post/4679.html) | AT 声明与使用（配 3921 同作者系列） | 默认（未声明） | 进阶：字段/方法访问放宽 |
+| [!MixinBooter 使用方法（面向开发者）](https://www.mcmod.cn/post/3142.html) | 老 Forge(1.8–1.12.2) Mixin 开发启用（配 3340 玩家向） | 默认（未声明） | 配 `authored/mixin-practices-crossplatform` 启用方式表 |
 
 ## 数据驱动 / 资产开发
 
@@ -59,7 +63,7 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 
 ### 仅外链（禁转载，但内容值得知道存在）
 
-[1.21x 数据组件改堆叠数](https://www.mcmod.cn/post/4654.html) · [数据包改原版矿物生成高度/数量](https://www.mcmod.cn/post/5498.html) · [矿物词典已经"死"了（oredict→tags 迁移）](https://www.mcmod.cn/post/1793.html) · [匠魂3 数据包添加自定义材料](https://www.mcmod.cn/post/1776.html)（仅适用旧版 TiC3）· [批量创建护甲/工具并改属性](https://www.mcmod.cn/post/5636.html) · [反射注册 MEK 物品/流体](https://www.mcmod.cn/post/4565.html) · [NeoForge1.21.4 详细教程](https://www.mcmod.cn/post/4971.html) · [自定义配方类型的 JEI 兼容（持续更新）](https://www.mcmod.cn/post/5531.html) · [带mixin的1.12.2环境+匠魂2](https://www.mcmod.cn/post/3313.html) · [GeckoLib geo 模型导入及偏移排障](https://www.mcmod.cn/post/2622.html)（Blockbench 导出 .geo/贴图/动画与渲染偏移）
+[1.21x 数据组件改堆叠数](https://www.mcmod.cn/post/4654.html) · [数据包改原版矿物生成高度/数量](https://www.mcmod.cn/post/5498.html) · [矿物词典已经"死"了（oredict→tags 迁移）](https://www.mcmod.cn/post/1793.html) · [匠魂3 数据包添加自定义材料](https://www.mcmod.cn/post/1776.html)（仅适用旧版 TiC3）· [批量创建护甲/工具并改属性](https://www.mcmod.cn/post/5636.html) · [反射注册 MEK 物品/流体](https://www.mcmod.cn/post/4565.html) · [NeoForge1.21.4 详细教程](https://www.mcmod.cn/post/4971.html) · [自定义配方类型的 JEI 兼容（持续更新）](https://www.mcmod.cn/post/5531.html) · [带mixin的1.12.2环境+匠魂2](https://www.mcmod.cn/post/3313.html) · [GeckoLib geo 模型导入及偏移排障](https://www.mcmod.cn/post/2622.html)（Blockbench 导出 .geo/贴图/动画与渲染偏移） · [资源包制作教程#1 方块与物品篇](https://www.mcmod.cn/post/4511.html)（1.20.1，纹理/模型/翻译上手） · [仔细搜刮资源包制作指南](https://www.mcmod.cn/post/5987.html) · [匠魂纹理生成器指南](https://www.mcmod.cn/post/4934.html)
 
 ## 整合包脚本（KubeJS / CraftTweaker / GroovyScript）
 
@@ -76,8 +80,8 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 ### 脚本速查（标题定位明确，未逐篇核正文）
 
 **CrT 系**：3023 1.18+入门 · 3391 最全基础合集 · 503 CT-HELP基础合成 · 532/536/843 CT-HELP扩展/矿辞/高级魔改 · 3924 新版CrT基础(1.20.1) · 3191/4774 从入门到精通(1)(2)-CoT篇 · 3181 事件教学 · 1708 配方函数 · 1701 改几乎所有模组特性 · 3792 跨版本原版配方 · 1956 游戏阶段控制 · 1957 JEI描述 · 2018 游戏事件操作 · 2025 禁用作弊 · 2165 Zen术语解析 · 3307 ZenTraits · 4967 ZU ZenClass继承原生类型★ · 4494 ZU魔改EIO · 4746 zu为无CrT支持的mod增删配方 · 1888 合成表修改基础 · 6093 铁砧配方增删 · 4736 世界合成 · 5103 LootTweaker入门 · 1327 RecipeStages wiki译 · 1015/2257 GameStages介绍/附属 · 1938 GameStages使用 · 3272 [1.7.10]backport模组(Et Futurum Requiem等)CrT魔改
-**KubeJS 系**：2294 综合魔改(1.16.5) · 4077 TypeScript写KubeJS · 3418 JS快速入门 · 5939 ProbeJS(已升正式行) · 2023 游戏事件 · 3719 注册按键 · 2773 PAINTER API · 4898 NBT介绍 · 3350 批量物品标签 · 4321 LootJS难度掉落 · 4695 三种通知 · 5427 使用他人代码 · 5500 JSdoc与作用域 · 3458 TYPES参数类型 · 5368 EnumExtenderJS拓展枚举 · 5618 DataComponent实例(1.21.1) · 6574/6575 带保质期方块注册 · 6102 CM多块结构自动生成 · 2089 FTB任务可重复 · 5218 Rhino反射实现类Mixin效果★ · 3110 PktTweaker自定义网络包★ · 6086 纯KubeJS6热编译加载Java类★ · 5395 MantleJS基本书本创建 · 5398 MantleJS Transformer批量书页 · 5080 合成输出直接附魔(Item.of().enchant,1.20.1) · 6566 KubeJS Cuisine菜品注册完整链路
-**单模组脚本实例**：2289 Create · 5139 机械动力kubejs6 · 3822 PonderJS · 5339 Ponder场景 · 6031 KubeJS×GTM · 5463 GTM矿脉/基岩流体 · 3820 GTM自定义 · 4715 匠魂3材料轮子 · 3487 匠魂材料(1.18.2) · 1776(见上禁转载) · 1233 Pewter官方范例译 · 1231 Infini-Tic · 3843 MaterialTweaker · 2298/2605 CoT匠魂/JAOPCA · 3372 CoT新特性 · 1516/1836/1767/3955/2838 CoT方块/物品/特性系列 · 5391 tetra魔改 · 5195 tetra effects数据包 · 4641 Goety仪式 · 4434 自定义法术 · 5351 IronsSpell js · 2484 Interactio配方 · 4665 Thermal机器(TS) · 4108 恶意KubejsAPI · 3606 可开采矿脉 · 4620 无中生有(1.20.1) · 4475 CrT仿机械动力使用配方 · 5449 Forge事件改伤害类型 · 2974 @功能 · 2811 Mekatweaker · 6099 /ct hand等价 · 2353 模组作者教程汉化 · 2659 EpicFight数据包适配 · 2709 数据包适配EFM · 1863 IC2C(已升正式行)
+**KubeJS 系**：2294 综合魔改(1.16.5) · 4077 TypeScript写KubeJS · 3418 JS快速入门 · 5939 ProbeJS(已升正式行) · 2023 游戏事件 · 3719 注册按键 · 2773 PAINTER API · 4898 NBT介绍 · 3350 批量物品标签 · 4321 LootJS难度掉落 · 4695 三种通知 · 5427 使用他人代码 · 5500 JSdoc与作用域 · 3458 TYPES参数类型 · 5368 EnumExtenderJS拓展枚举 · 5618 DataComponent实例(1.21.1) · 6574/6575 带保质期方块注册 · 6102 CM多块结构自动生成 · 2089 FTB任务可重复 · 5218 Rhino反射实现类Mixin效果★ · 3110 PktTweaker自定义网络包★ · 6086 纯KubeJS6热编译加载Java类★ · 5395 MantleJS基本书本创建 · 5398 MantleJS Transformer批量书页 · 5080 合成输出直接附魔(Item.of().enchant,1.20.1) · 6566 KubeJS Cuisine菜品注册完整链路 · 2129/3144 KubeJS Mekanism/ArsNouveau相关编译
+**单模组脚本实例**：2289 Create · 5139 机械动力kubejs6 · 3822 PonderJS · 5339 Ponder场景 · 6031 KubeJS×GTM · 5463 GTM矿脉/基岩流体 · 3820 GTM自定义 · 4715 匠魂3材料轮子 · 3487 匠魂材料(1.18.2) · 1776(见上禁转载) · 1233 Pewter官方范例译 · 1231 Infini-Tic · 3843 MaterialTweaker · 2298/2605 CoT匠魂/JAOPCA · 3372 CoT新特性 · 1516/1836/1767/3955/2838 CoT方块/物品/特性系列 · 5391 tetra魔改 · 5195 tetra effects数据包 · 4641 Goety仪式 · 4434 自定义法术 · 5351 IronsSpell js · 2484 Interactio配方 · 4665 Thermal机器(TS) · 4105/6298 恶意KubeJS魔改API · 3606 可开采矿脉 · 4620 无中生有(1.20.1) · 4475 CrT仿机械动力使用配方 · 5449 Forge事件改伤害类型 · 2974 @功能 · 2811 Mekatweaker · 6099 /ct hand等价 · 2353 模组作者教程汉化 · 2659 EpicFight数据包适配 · 2709 数据包适配EFM · 1863 IC2C(已升正式行)
 **框架课程（Custom Machinery「模块化机械」系列）**：3421 机器基础 · 3422 机器外观 · 2963 Part1机械创建 · 2967 Part2配方创建 · 2994 Part3.1高级配方 · 3140 Part3.3机械事件系统 · 3687 Part4.1并行配方 · 3555 Extra GeckoLib模型动画 · 2300 Multiblocked入门 · 2572/2722 自定义机器事件/快速入门 · 3902 单方块机器 · 4182 多方块结构 · 4629 MBD2+KubeJS · 5540 curios注册饰品栏 · 5760 MBD2支持KubeJS · 6501 MBD2配方流体标签 · 1944 模块化控制器官方文档
 **其他工具**：4004 OreTweaker json(1.16矿生成) · 4972 1.7.10自然建筑生成 · 2748/2589 CoFH World自定义矿脉(1.12.2) · 2174 triumph进度 · 6499 TC6可视化研究编辑器 · 6564 SFM可视化编程工具 · 2379 MCreator做匠魂材料 · 5701 IDEA接管MCreator工作区 · 1807 MCreator简易饰品 · 1047/1053 逻辑编程基础/高级篇 · [2875 QωQ Library 国产开发库](https://www.mcmod.cn/post/2875.html)（build.gradle 依赖与配置，抽样审计发现的宝石）· 635 最全kether教程（TabooLib国产脚本语言，❌禁转载）
 
@@ -95,6 +99,8 @@ mcHint: 见各条；跨度 1.7.10–26.x，引用前先对版本
 | [Meddle 手动安装教程](https://www.mcmod.cn/post/4315.html) ＋ [原生打包 Cleanroom 整合包](https://www.mcmod.cn/post/6258.html) | 冷门加载器/1.7.10 生态运维 | 待核（默认 BY-NC-SA） |
 | [(译) makamys《List of "Essential" 1.7.10 Mods》](https://www.mcmod.cn/post/3881.html) | 1.7.10 必备优化/修复/移植类模组全清单（含 Mixin 依赖说明），老版开发生态索引 ★回填扫描发现 | 默认（未声明，译作） |
 | [Retromod 官方兼容评级](https://www.mcmod.cn/post/6659.html) | 五级评级评估旧模组字节码转换后在目标版本的实际可用度（Diamond≈原生移植…），配 `authored/legacy-mod-patching` | 默认（未声明） |
+| [如何让 1.12.2 等于高版本？](https://www.mcmod.cn/post/4392.html) ＋ [我是如何用1.12.2以假乱真高版本的](https://www.mcmod.cn/post/1458.html) | 1.12.2 回搬高版本内容的 backport 模组生态清单对（Et Futurum 系等），配 `links/legacy-loader-upstreams` | ❌ 禁转载 |
+| [如何用 spark 找到卡顿的源头](https://www.mcmod.cn/post/2523.html) | spark profiler 实操排查 tick 卡顿，配 `authored/profiling-performance` | 默认（未声明） |
 
 ## 已在库内的 mcmod 开发帖（不重复入库）
 

@@ -107,8 +107,8 @@ function buildTrieIndex(classNames: string[]): TrieNodeFlat[] {
 // ── 主预加载函数 ─────────────────────────────────────────────────────────
 
 async function preload(timeoutMs = 15000): Promise<void> {
-  // 用绝对截止时间（deadline）而非相对 elapsed，覆盖 read + build + send 全部阶段
-  const deadline = Date.now() + timeoutMs;
+  const startedAt = Date.now();
+  const deadline = startedAt + timeoutMs;
 
   const files = [
     { key: "apiIndex", path: "api-index.json", critical: true },
@@ -159,7 +159,7 @@ async function preload(timeoutMs = 15000): Promise<void> {
     classNames,
     skipTrie,
     skipTrie ? null : trieFlat,
-    Date.now()
+    Date.now() - startedAt,
   );
 }
 
@@ -168,34 +168,39 @@ function sendResult(
   classNames: string[],
   trieSkipped: boolean,
   trieFlat: TrieNodeFlat[] | null,
-  _sentAt: number
+  elapsedMs: number,
 ): void {
-  const now = Date.now();
   parentPort?.postMessage({
     type: "ready",
-    // 直接传解析后的对象，由 v8 序列化（比 JSON.stringify → JSON.parse 快一个数量级）
     apiIndex,
     classNames,
-    l0Index: undefined, // 兼容旧 WorkerOutMessage 消费者（外部搜索预加载仍可用）
+    l0Index: undefined,
     trieFlat: trieSkipped ? null : trieFlat,
     trieSkipped,
-    elapsed: now,
+    elapsed: elapsedMs,
     classCount: classNames.length,
   } satisfies WorkerOutMessage);
 }
 
+let preloadRunning = false;
 parentPort?.on("message", (e: MessageEvent<PreloadConfig | PreloadMessage> | PreloadConfig | PreloadMessage) => {
   const data = "data" in e ? e.data : e;
   if (data.type === "start") {
+    if (preloadRunning) return;
+    preloadRunning = true;
     const timeoutMs = typeof data === "object" && "timeout" in data ? (data as PreloadConfig).timeout ?? 15000 : 15000;
     if (typeof data === "object" && "dataDir" in data) {
       setDataDir((data as PreloadMessage).dataDir);
     }
-    preload(timeoutMs).catch((err) => {
-      parentPort?.postMessage({
-        type: "error",
-        errors: [(err as Error).message],
-      } satisfies WorkerOutMessage);
-    });
+    preload(timeoutMs)
+      .catch((err) => {
+        parentPort?.postMessage({
+          type: "error",
+          errors: [(err as Error).message],
+        } satisfies WorkerOutMessage);
+      })
+      .finally(() => {
+        preloadRunning = false;
+      });
   }
 });

@@ -92,40 +92,6 @@ interface CacheEntry<T> {
   expiry: number;
 }
 
-class LRUCache {
-  private cache = new Map<string, unknown>();
-  private expiry = new Map<string, number>();
-  private readonly maxSize: number;
-  private readonly ttl: number;
-
-  constructor(maxSize = 100, ttl = 5 * 60 * 1000) {
-    this.maxSize = maxSize;
-    this.ttl = ttl;
-  }
-
-  get(key: string): unknown | undefined {
-    const exp = this.expiry.get(key);
-    if (exp !== undefined && exp < Date.now()) {
-      this.cache.delete(key);
-      this.expiry.delete(key);
-      return undefined;
-    }
-    return this.cache.get(key);
-  }
-
-  set(key: string, value: unknown): void {
-    if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value;
-      if (firstKey !== undefined) {
-        this.cache.delete(firstKey);
-        this.expiry.delete(firstKey);
-      }
-    }
-    this.cache.set(key, value);
-    this.expiry.set(key, Date.now() + this.ttl);
-  }
-}
-
 // ── Trie 索引（Worker 中构建，通过消息传递）────────────────────────────────
 
 /**
@@ -148,27 +114,6 @@ class TrieIndex {
     const t = new TrieIndex();
     t.flat = flatArr;
     return t;
-  }
-
-  /**
-   * 插入一个类名（仅用于在主线程重建后的追加插入）
-   */
-  insert(name: string, score = 0): void {
-    const parts = name.toLowerCase().split("/");
-    let nodeIdx = 0;
-    for (const part of parts) {
-      const childEntry = this.flat[nodeIdx].children.find(([k]) => k === part);
-      if (childEntry) {
-        nodeIdx = childEntry[1];
-      } else {
-        const newIdx = this.flat.length;
-        this.flat[nodeIdx].children.push([part, newIdx]);
-        this.flat.push({ children: [], isEnd: false, score: 0 });
-        nodeIdx = newIdx;
-      }
-    }
-    this.flat[nodeIdx].isEnd = true;
-    this.flat[nodeIdx].score = score;
   }
 
   /**
@@ -259,29 +204,11 @@ function getVersionData(version: string): VersionData {
   return _versionData.get(version) ?? _defaultData;
 }
 
-/** 解析某版本对应的 extracted 数据目录。
- *  - 1.7.10–1.12.2 走 forge_javadoc（与 docs 路由一致）
- *  - 其它走 forge_<version>/extracted
- *  - 找不到对应目录时返回 null（调用方应降级）
- */
+/** 解析某版本对应的 extracted 数据目录。找不到则返回 null。 */
 function resolveVersionDataDir(version: string): string | null {
-  const dataRoot = resolveDataDir();
-  // javadoc 版本的映射数据与文档数据共用 extracted/（实际不存在时也无所谓）
-  // 直接尝试 forge_<version>/extracted；不存在返回 null
-  const candidates: string[] = [];
-  if (/^1\.(7|8|9|1\d|12)/.test(version)) {
-    // 较老版本的映射 extract 也放在 forge_<version>/extracted
-    candidates.push(join(dataRoot, `forge_${version}`, "extracted"));
-  }
-  candidates.push(join(dataRoot, `forge_${version}`, "extracted"));
-  for (const p of candidates) {
-    if (existsSync(p)) return p;
-  }
-  return null;
+  const p = join(resolveDataDir(), `forge_${version}`, "extracted");
+  return existsSync(p) ? p : null;
 }
-
-// LRU 缓存：搜索结果缓存（key = "query|version|tags"）
-const _searchCache = new LRUCache(100, 5 * 60 * 1000);
 
 // ── Worker 预加载触发 ────────────────────────────────────────────────────
 
@@ -309,7 +236,7 @@ function startPreloader(version: string): Promise<void> {
       worker: null,
       preloadPromise: Promise.resolve(),
     };
-    _versionData.set(version, empty);
+    setVersionDataEntry(version, empty);
     return empty.preloadPromise!;
   }
 
@@ -542,7 +469,7 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
     const lower = name.toLowerCase();
     const simpleName = lower.includes("/") ? lower.slice(lower.lastIndexOf("/") + 1) : lower;
     if (lower === normalized) { results.push({ score: 100, name, kind: "exact" }); continue; }
-    if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replace("/", "."))) {
+    if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replaceAll("/", "."))) {
       results.push({ score: 90, name, kind: "suffix" }); continue;
     }
     if (simple.length >= 3 && (lower.includes(normalized) || simpleName.includes(simple))) {
@@ -787,7 +714,7 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
   if (!cls) {
     const unique = uniqueExactSimpleNameHit(className, vData);
     if (unique) {
-      cls = vData.apiIndex[unique];
+      cls = ownGet(vData.apiIndex, unique);
       resolvedSlash = unique;
     }
   }

@@ -87,12 +87,21 @@ function resolveVersionDataDir(version: string): string {
   return resolveDataDir(`forge_${version}`, "extracted");
 }
 
+const MAPPING_CACHE_CAP = 8;
+
 function loadParchment(version: string): {
   apiIndex: Record<string, ParchmentClass>;
   classNames: string[];
 } {
+  if (!/^\d+(\.\d+)*$/.test(version)) {
+    return { apiIndex: {}, classNames: [] };
+  }
   const cached = _dataCache.get(version);
-  if (cached) return cached;
+  if (cached) {
+    _dataCache.delete(version);
+    _dataCache.set(version, cached);
+    return cached;
+  }
   const dataDir = resolveVersionDataDir(version);
   const apiIndexPath = join(dataDir, "api-index.json");
   const classNamesPath = join(dataDir, "class-names.json");
@@ -115,7 +124,16 @@ function loadParchment(version: string): {
   }
   const data = { apiIndex, classNames };
   _dataCache.set(version, data);
+  while (_dataCache.size > MAPPING_CACHE_CAP) {
+    const oldest = _dataCache.keys().next().value;
+    if (oldest === undefined) break;
+    _dataCache.delete(oldest);
+  }
   return data;
+}
+
+export function clearMappingCaches(): void {
+  _dataCache.clear();
 }
 
 function toSlash(name: string): string {
@@ -146,11 +164,11 @@ function inferMemberKind(query: MappingQuery, era: string | null): "class" | "me
 
 function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): MappingResult {
   const allow = query.allow_fallback === true;
-  const { notes, action, ...rest } = extras;
+  const { notes, action, resultKind: extrasKind, ...rest } = extras;
   const kind = extras.mappingType ?? (query.ownerClass ? "method" : "class");
   let resolvedAction = action;
   if (!resolvedAction) {
-    if (extras.resultKind === "csv-no-owner") {
+    if (extrasKind === "csv-no-owner") {
       resolvedAction = actionable(
         ActionCodes.CSV_NO_OWNER,
         "纯 CSV 版本不支持 ownerClass",
@@ -164,7 +182,7 @@ function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): Mapping
         ["传入 descriptor 消歧", "确认 ownerClass 完整包名", "查看 candidates"],
         ["convert_mapping", "query_api"],
       );
-    } else if (extras.resultKind === "SCHEMA_FIELDS_UNAVAILABLE") {
+    } else if (extrasKind === "SCHEMA_FIELDS_UNAVAILABLE") {
       resolvedAction = actionable(
         ActionCodes.SCHEMA_FIELDS_UNAVAILABLE,
         "当前 sqlite 为 schema v2，无 fields 表",
@@ -194,10 +212,10 @@ function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): Mapping
     mappingType: kind,
     memberKind: kind === "parameter" ? "method" : kind,
     fallbackUsed: allow,
-    resultKind: allow ? "fallback-identity" : extras.resultKind,
     deprecation: allow ? "allow_fallback will be removed" : undefined,
     schemaVersion: getSchemaVersion(query.version ?? DEFAULT_VERSION),
     ...rest,
+    resultKind: allow ? "fallback-identity" : extrasKind,
     notes,
     action: resolvedAction,
   };

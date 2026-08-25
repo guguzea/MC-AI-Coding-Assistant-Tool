@@ -21,7 +21,10 @@ import { join, dirname, basename } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
+  ttlCacheGet,
+  ttlCacheSet,
   type SymbolIndex,
+  type TtlCacheEntry,
 } from "../search-utils.js";
 import { PlatformDataMissingError } from "../platform-data.js";
 import { ownGet } from "../../utils/own-record.js";
@@ -155,7 +158,7 @@ export class NeoForgeDocStore {
   private fileCache = new Map<string, CacheEntry<string>>();
   private searchCache = new Map<string, CacheEntry<unknown>>();
   private symbolIndexCache = new Map<string, SymbolIndex>();
-  private relatedCache = new Map<string, SearchResult[]>();
+  private relatedCache = new Map<string, TtlCacheEntry<SearchResult[]>>();
   private searchLog: Array<{ query: string; version: string; resolvedVersion: string; results: number; timestamp: number }> = [];
 
   private _validated = false;
@@ -574,7 +577,8 @@ export class NeoForgeDocStore {
 
   getRelatedDocs(pageId: string, version: string, limit = 5): SearchResult[] {
     const cacheKey = `${pageId}|${version}|${limit}`;
-    if (this.relatedCache.has(cacheKey)) return this.relatedCache.get(cacheKey)!;
+    const hit = ttlCacheGet(this.relatedCache, cacheKey);
+    if (hit) return hit;
 
     const l0 = this.loadIndex(version, "index-l0") as SearchResult[];
     if (!Array.isArray(l0)) return [];
@@ -590,11 +594,7 @@ export class NeoForgeDocStore {
       .slice(0, limit)
       .map(({ _score, ...rest }) => rest);
 
-    this.relatedCache.set(cacheKey, scored);
-    if (this.relatedCache.size > 64) {
-      const first = this.relatedCache.keys().next().value;
-      if (first !== undefined) this.relatedCache.delete(first);
-    }
+    ttlCacheSet(this.relatedCache, cacheKey, scored);
     return scored;
   }
 }

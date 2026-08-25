@@ -337,17 +337,27 @@ export function extractZip(zipPath: string, destDir: string, tool: UnzipTool): v
 
 export const MAX_UNPACK_BYTES = 2 * 1024 * 1024 * 1024;
 
+/** unzip -l 解析失败时按压缩包体积 ×4 作保守预算，禁止把文件数当字节 */
+function zipSizeFallback(zipPath: string): number | null {
+  try {
+    return statSync(zipPath).size * 4;
+  } catch {
+    return null;
+  }
+}
+
 /** 估算 zip 解压总体积（字节）；无法读取体积时返回 null（调用方按其策略处理） */
 export function zipUncompressedBytes(zipPath: string, tool: UnzipTool): number | null {
   try {
     if (tool.kind === "unzip") {
       const r = spawnSync(tool.executable, ["-l", zipPath], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
-      if (r.status !== 0) return null;
+      if (r.status !== 0) return zipSizeFallback(zipPath);
       let total = 0;
       for (const line of (r.stdout ?? "").split(/\r?\n/)) {
         const m = line.match(/^\s*\d+\s+(\d+)\s/);
         if (m) total += Number(m[1]);
       }
+      if (total <= 0) return zipSizeFallback(zipPath);
       return total;
     }
     if (tool.kind === "7z") {
@@ -787,7 +797,8 @@ function cacheLooksReady(destCache: string, entry: MdkChecksumEntry): { ready: b
   if (entry.sha256) {
     const sha12 = entry.sha256.slice(0, 12);
     const zipPath = join(destCache, `_archive-${sha12}.zip`);
-    if (existsSync(zipPath) && sha256Buf(readFileSync(zipPath)) !== entry.sha256) return { ready: false };
+    if (!existsSync(zipPath)) return { ready: false };
+    if (sha256Buf(readFileSync(zipPath)) !== entry.sha256) return { ready: false };
   }
   return { ready: true, unpackedRoot: root };
 }
@@ -843,6 +854,15 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   }
 
   if (source === "github" && entry.ref && entry.ref !== "forbidden") {
+    if (!/^[0-9a-f]{40}$/i.test(entry.ref)) {
+      return {
+        ok: false,
+        error: {
+          code: "SHA_NOT_IN_URL",
+          message: `github 源 ref 必须是 40 位 hex commit SHA，不能用 branch 名（${entry.ref}）`,
+        },
+      };
+    }
     if (!entry.archiveUrl.includes(entry.ref)) {
       return {
         ok: false,

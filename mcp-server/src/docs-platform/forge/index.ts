@@ -310,6 +310,7 @@ export async function getForgeDocSummary(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
@@ -327,6 +328,7 @@ export async function getForgeDocSummary(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: `请使用 search_forge_docs 查询正确的页面 ID，格式为 "1.20.1/文件名"`,
               },
@@ -396,6 +398,7 @@ export async function getForgeDocFull(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
@@ -413,6 +416,7 @@ export async function getForgeDocFull(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: `请使用 search_forge_docs 查询正确的页面 ID，格式为 "1.20.1/文件名"`,
               },
@@ -471,6 +475,7 @@ export async function getForgeDocRelated(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: "请使用 search_forge_docs 查询正确的页面 ID",
               },
@@ -488,6 +493,7 @@ export async function getForgeDocRelated(
             type: "text",
             text: JSON.stringify(
               {
+                ok: false,
                 error: e.message,
                 hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
               },
@@ -744,7 +750,9 @@ export async function searchDocs(
       }
     }
     const meta =
-      typeof (store as unknown as { getLastSearchMeta?: () => {
+      threwMissing
+        ? null
+        : typeof (store as unknown as { getLastSearchMeta?: () => {
         resolvedVersion: string;
         versionFallback: boolean;
         requestedVersion: string;
@@ -824,8 +832,8 @@ export async function searchDocs(
               version: args.version,
               resolvedVersion,
               versionFallback,
-              ...(platform === "forge" && args.version === "1.20.4"
-                ? { fallback: true, source_route: "1.20.x" }
+              ...(platform === "forge" && resolvedVersion.startsWith("1.20.")
+                ? { fallback: true, source_route: "1.20.x", resolvedVersion }
                 : {}),
               ...(loaderWikiWarn ? { wikiIsCurrentSite: true } : {}),
               warning: joinSearchWarnings(

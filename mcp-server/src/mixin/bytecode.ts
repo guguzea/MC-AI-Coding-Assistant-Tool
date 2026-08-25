@@ -81,7 +81,7 @@ interface CpEntry {
   idx2?: number;
 }
 
-class Cp {
+export class Cp {
   entries: CpEntry[] = [];
   /** 常量池结束位置（池后的第一个字节） */
   end: number;
@@ -109,9 +109,10 @@ class Cp {
           break;
         case 5:
         case 6:
-          // long/double 占两个槽位
+          // long/double 占两个槽位：再 push 幽灵占位，使 entries[index-1] 与 JVM 1-based CP 对齐
           needBuf(buf, pos, 8, `常量池 #${i}`);
           this.entries.push({ tag });
+          this.entries.push({ tag: 0 });
           pos += 8;
           i += 1;
           break;
@@ -145,9 +146,12 @@ class Cp {
     }
     this.end = pos;
   }
-  /** 1-based 索引 → 条目（越界/空槽返回 undefined） */
+  /** 1-based 索引 → 条目（越界 / long·double 幽灵槽返回 undefined） */
   at(index: number): CpEntry | undefined {
-    return this.entries[index - 1];
+    if (!Number.isInteger(index) || index < 1) return undefined;
+    const e = this.entries[index - 1];
+    if (!e || e.tag === 0) return undefined;
+    return e;
   }
   utf8(index: number): string {
     const e = this.at(index);

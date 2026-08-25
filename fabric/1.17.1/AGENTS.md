@@ -212,3 +212,8 @@ fabric-mod/
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
 - [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+

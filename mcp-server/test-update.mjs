@@ -7,6 +7,7 @@ import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { Readable } from "node:stream";
 
 const root = join(import.meta.dirname, "dist");
 const update = await import(pathToFileURL(join(root, "update/index.js")).href);
@@ -15,6 +16,7 @@ const semver = await import(pathToFileURL(join(root, "update/semver.js")).href);
 const github = await import(pathToFileURL(join(root, "update/github.js")).href);
 const zip = await import(pathToFileURL(join(root, "update/zip.js")).href);
 const state = await import(pathToFileURL(join(root, "update/state.js")).href);
+const download = await import(pathToFileURL(join(root, "update/download.js")).href);
 
 function sha256(buf) {
   return createHash("sha256").update(buf).digest("hex");
@@ -261,6 +263,8 @@ async function testDataApplyWritesAndChecksumFail() {
   const nestedData = join(dataDir, "data");
   mkdirSync(nestedData, { recursive: true });
   writeFileSync(join(nestedData, "user-extra.txt"), "keep-me");
+  mkdirSync(join(nestedData, "forge_1.7.10"), { recursive: true });
+  writeFileSync(join(nestedData, "forge_1.7.10", "old.json"), "{}");
 
   const zipPath = join(dataDir, "pkg.zip");
   dataMod.writeStoreZip(zipPath, {
@@ -303,7 +307,8 @@ async function testDataApplyWritesAndChecksumFail() {
   });
   assert.equal(ok.applied, true, JSON.stringify(ok));
   assert.ok(existsSync(join(nestedData, "forge_1.20.1", "a.json")));
-  assert.ok(existsSync(join(nestedData, "user-extra.txt")), "换入后应保留 zip 外的旧文件");
+  assert.ok(!existsSync(join(nestedData, "user-extra.txt")), "全量快照换入后非 zip 文件应删除（撤档）");
+  assert.ok(!existsSync(join(nestedData, "forge_1.7.10", "old.json")), "撤档版本树应删除");
   assert.ok(!existsSync(`${nestedData}.next`));
   assert.ok(!existsSync(`${nestedData}.prev`));
   const st = state.readUpdateState(nestedData);
@@ -433,12 +438,77 @@ async function testPendingRestartHint() {
   rmSync(dataDir, { recursive: true, force: true });
 }
 
+async function testStablePaginatesPastFirstPage() {
+  const fetchImpl = makeFetch((url) => {
+    const u = new URL(url);
+    const page = Number(u.searchParams.get("page") || "1");
+    if (page === 1) {
+      return jsonRes(
+        Array.from({ length: 30 }, (_, i) =>
+          mockRelease({ tag: `v0.9.${i}-beta`, prerelease: true, withData: false, withSums: false }),
+        ),
+      );
+    }
+    if (page === 2) {
+      return jsonRes([mockRelease({ tag: "v0.2.0", prerelease: false, withData: false, withSums: false })]);
+    }
+    return jsonRes([]);
+  });
+  const r = await github.resolveRelease({ channel: "stable", fetchImpl });
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.equal(r.release.tag_name, "v0.2.0");
+}
+
+async function testDownload404NoRetry() {
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    return jsonRes({}, 404);
+  };
+  const dest = join(mkdtempSync(join(tmpdir(), "mc-dl-")), "x.bin");
+  const r = await download.downloadToFile(
+    "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/a.zip",
+    dest,
+    { fetchImpl, maxAttempts: 3 },
+  );
+  assert.equal(r.ok, false);
+  assert.equal(calls, 1, "404 不得重试");
+  assert.match(String(r.action?.message ?? ""), /不重试/);
+}
+
+async function testDownload429RetriesThenOk() {
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    if (calls === 1) return jsonRes({}, 429, { "retry-after": "0" });
+    const body = Readable.toWeb(Readable.from([Buffer.from("abc")]));
+    return {
+      ok: true,
+      status: 200,
+      headers: { get: () => null },
+      body,
+    };
+  };
+  const dest = join(mkdtempSync(join(tmpdir(), "mc-dl-ok-")), "x.bin");
+  const r = await download.downloadToFile(
+    "https://github.com/guguzea/MC-AI-Coding-Assistant-Tool/releases/download/v0.2.0/a.zip",
+    dest,
+    { fetchImpl, maxAttempts: 3 },
+  );
+  assert.equal(r.ok, true, JSON.stringify(r));
+  assert.equal(calls, 2);
+  assert.equal(readFileSync(dest, "utf8"), "abc");
+}
+
 async function main() {
   testSemver();
   testZipLayout();
   testStagingContentRoot();
   await testRateLimit429();
   await testStableSkipsPrerelease();
+  await testStablePaginatesPastFirstPage();
+  await testDownload404NoRetry();
+  await testDownload429RetriesThenOk();
   await testCheckUpdateAvailable();
   await testGitDescribeAheadNoUpdate();
   await testApplyRequiresConfirm();

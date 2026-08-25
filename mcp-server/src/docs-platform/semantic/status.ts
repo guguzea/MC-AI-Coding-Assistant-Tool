@@ -94,7 +94,8 @@ function modelsDirReady(dataRoot: string): boolean {
   // tokenizer + config 存在即视为可加载（onnx 权重可能较大，存在即可）
   return (
     existsSync(join(root, "config.json")) &&
-    existsSync(join(root, "tokenizer.json"))
+    existsSync(join(root, "tokenizer.json")) &&
+    (existsSync(join(root, "onnx", "model.onnx")) || existsSync(join(root, "model.onnx")))
   );
 }
 

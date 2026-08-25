@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { actionable, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { lookupObfuscated } from "../mappings/lookup-obfuscated.js";
+import { lineBounded } from "../utils/regex.js";
 import { ownGet } from "../utils/own-record.js";
 
 export type CrashKind =
@@ -16,6 +17,7 @@ export type CrashKind =
   | "rift"
   | "modloader"
   | "java"
+  | "vanilla"
   | "unknown";
 
 /** 认不出典型 loader 指纹时引导对照的 Wiki */
@@ -96,7 +98,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-blockentity: NPE 排查"],
   },
   {
-    pattern: /ClassCastException.*LivingEntity|LivingEntity.*cast/i,
+    pattern: new RegExp(lineBounded("ClassCastException.*LivingEntity|LivingEntity.*cast", 200), "i"),
     cause: "实体类型强制转换错误",
     fix: [
       "使用 instanceof 检查实体类型再强制转换",
@@ -105,7 +107,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: [],
   },
   {
-    pattern: /OnlyIn.*CLIENT|Dist.*CLIENT.*server/i,
+    pattern: new RegExp(lineBounded("OnlyIn.*CLIENT|Dist.*CLIENT.*server", 80), "i"),
     cause: "在错误的物理端执行了代码",
     fix: [
       "使用 DistExecutor 或 @OnlyIn(Dist.CLIENT) 限定客户端代码",
@@ -130,7 +132,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-mixin: @Inject 参数错误"],
   },
   {
-    pattern: /DeferredRegister|RegistryObject.*null|register.*before/i,
+    pattern: new RegExp(lineBounded("DeferredRegister|RegistryObject.*null|register.*before", 200), "i"),
     cause: "DeferredRegister 使用时机错误",
     fix: [
       "不要在 lambda 表达式外部引用 RegistryObject",
@@ -159,7 +161,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: [],
   },
   {
-    pattern: /BlockItem.*null|BlockItem.*NPE|BlockItem.*NullPointer/i,
+    pattern: new RegExp(lineBounded("BlockItem.*null|BlockItem.*NPE|BlockItem.*NullPointer", 120), "i"),
     cause: "Block 未注册对应的 BlockItem",
     fix: [
       "检查是否用 ITEMS.register() 注册了同名物品",
@@ -169,7 +171,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-block: 方块注册了但 BlockItem 未注册"],
   },
   {
-    pattern: /BuildCreativeModeTabContentsEvent|CreativeModeTab.*null/i,
+    pattern: new RegExp(lineBounded("BuildCreativeModeTabContentsEvent|CreativeModeTab.*null", 120), "i"),
     cause: "CreativeModeTab 未正确注册，或物品未添加到 Tab",
     fix: [
       "使用 DeferredRegister<CreativeModeTab> 注册 CreativeModeTab",
@@ -180,7 +182,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-item: CreativeModeTab 未注册导致物品无法显示"],
   },
   {
-    pattern: /Packet.*discId|IMessage.*id|messageType.*conflict/i,
+    pattern: new RegExp(lineBounded("Packet.*discId|IMessage.*id|messageType.*conflict", 120), "i"),
     cause: "网络包 ID 冲突或序列化错误",
     fix: [
       "按加载器选择网络 API：NeoForge 1.20.1 用 SimpleChannel 形态（与 Forge 1.20.1 兼容）；1.20.4+ 用 Payload + PayloadRegistrar",
@@ -190,7 +192,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-networking: 消息 ID 重复"],
   },
   {
-    pattern: /SpawnPlacement.*null|SpawnPlacements.*register/i,
+    pattern: new RegExp(lineBounded("SpawnPlacement.*null|SpawnPlacements.*register", 120), "i"),
     cause: "实体放置逻辑未正确实现",
     fix: [
       "检查是否调用了 SpawnPlacements.register()",
@@ -200,7 +202,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-entity: 实体无法在世界中生成"],
   },
   {
-    pattern: /BlockState.*getValue.*null|getProperty.*null.*BlockState|properties.*empty.*block/i,
+    pattern: new RegExp(lineBounded("BlockState.*getValue.*null|getProperty.*null.*BlockState|properties.*empty.*block", 200), "i"),
     cause: "访问了不存在的 BlockState 属性",
     fix: [
       "检查方块类中 properties {} 块是否定义了该属性",
@@ -210,7 +212,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-block: 访问了方块未定义的属性"],
   },
   {
-    pattern: /SoundEvent.*null|SoundType.*null|missing.*sound.*registry/i,
+    pattern: new RegExp(lineBounded("SoundEvent.*null|SoundType.*null|missing.*sound.*registry", 120), "i"),
     cause: "声音事件未注册或 SoundType 引用了未注册的声音",
     fix: [
       "检查 SOUND_EVENTS.register() 是否在 mod 构造函数中调用",
@@ -220,7 +222,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-sound: 声音事件未注册"],
   },
   {
-    pattern: /LootTable.*null|loot_table.*missing|getLootTable.*null/i,
+    pattern: new RegExp(lineBounded("LootTable.*null|loot_table.*missing|getLootTable.*null", 120), "i"),
     cause: "loot table JSON 缺失或路径不正确",
     fix: [
       "检查 src/data/{modId}/loot_tables/ 目录下是否存在对应的 JSON 文件",
@@ -230,7 +232,7 @@ const KNOWN_PATTERNS: Array<{
     relatedMistakes: ["mc-loot: loot table 文件缺失"],
   },
   {
-    pattern: /setRegistryName.*duplicate|duplicate.*registry.*name|ResourceLocation.*already.*registered/i,
+    pattern: new RegExp(lineBounded("setRegistryName.*duplicate|duplicate.*registry.*name|ResourceLocation.*already.*registered", 200), "i"),
     cause: "同一注册表中注册名重复",
     fix: [
       "检查所有 setRegistryName() 调用，确保没有同名注册",
@@ -241,8 +243,13 @@ const KNOWN_PATTERNS: Array<{
   },
   // ── 加载期：缺前置 / 版本不兼容 ──────────────────────────────────────────
   {
-    pattern:
-      /Missing or unsupported mandatory dependencies|MissingModException|ModLoadingException.*missing|required.*mod.*not.*found|ModNotFoundException/i,
+    pattern: new RegExp(
+      lineBounded(
+        "Missing or unsupported mandatory dependencies|MissingModException|ModLoadingException.*missing|required.*mod.*not.*found|ModNotFoundException",
+        200,
+      ),
+      "i",
+    ),
     cause: "缺少强制依赖（前置模组未安装或不在 mods 目录）",
     fix: [
       "对照 mods.toml / fabric.mod.json 的 mandatory 依赖安装对应 jar",
@@ -321,8 +328,10 @@ export function detectCrashKind(crashReport: string): CrashKind {
       crashReport,
     );
 
-  // 文件名里的 fml/opengl/memory/java 可信；fabric 须先排除 Quilt 正文指纹
   if (kindFromName === "fml") return ownGet(map, kindFromName) ?? "unknown";
+  if (kindFromName === "server" || kindFromName === "client" || kindFromName === "integrated-server") {
+    return ownGet(map, kindFromName) ?? "unknown";
+  }
   if (kindFromName === "opengl" || kindFromName === "rendering" || kindFromName === "memory" || kindFromName === "java") {
     return ownGet(map, kindFromName) ?? "unknown";
   }
@@ -352,7 +361,8 @@ export function detectCrashKind(crashReport: string): CrashKind {
 
   if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport) && !forgeLike) return "fabric";
   if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
-  if (/OpenGL|GLError|GLFW|RenderSystem/i.test(crashReport)) return "openGL";
+  if (/OpenGL|GLError|GLFW error|LWJGL/i.test(crashReport)) return "openGL";
+  if (/\bRenderSystem\b/i.test(crashReport) && /GLError|GLFW|OpenGL|lwjgl/i.test(crashReport)) return "openGL";
   if (
     /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|net\.neoforged|Missing or unsupported mandatory/i.test(
       crashReport,
@@ -361,6 +371,9 @@ export function detectCrashKind(crashReport: string): CrashKind {
     return "fml";
   }
   if (hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated/i.test(crashReport)) return "server";
+  if (!hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated|-server\.(txt|log)/i.test(crashReport)) {
+    return "vanilla";
+  }
   if (hasLoaderFingerprint && /IntegratedServer/i.test(crashReport)) return "integrated-server";
   if (hasLoaderFingerprint && /Minecraft\.getInstance|net\.minecraft\.client/i.test(crashReport)) return "client";
   return "unknown";
@@ -448,7 +461,9 @@ function lookupCrashTokens(crashReport: string, version: string): string[] {
     if (tokens.size >= 16) break;
   }
   const shortRe = /\.([a-z]{1,3})\(/g;
+  const skipShort = new Set(["get", "of", "run", "set", "is", "to", "as", "eq", "add", "put"]);
   while (tokens.size < 20 && (m = shortRe.exec(crashReport))) {
+    if (skipShort.has(m[1])) continue;
     tokens.add(m[1]);
   }
   const lines: string[] = [];
@@ -503,6 +518,22 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
           action,
         };
       }
+      const st = statSync(p);
+      if (st.size > 512_000) {
+        const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP", [
+          "请裁剪为相关堆栈段落后再试",
+        ]);
+        return {
+          ok: false,
+          probableCause: action.message,
+          fixSuggestions: action.nextSteps,
+          deobfuscated: [],
+          relatedMistakes: [],
+          crashKind: "unknown",
+          logHints: ["logs/latest.log"],
+          action,
+        };
+      }
       crashReport = readFileSync(p, "utf8");
     } catch (err) {
       const action = actionable("INVALID_INPUT", `读取 crashReportPath 失败：${(err as Error).message}`, [
@@ -536,13 +567,18 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     };
   }
   if (typeof crashReport === "string" && crashReport.length > 512_000) {
+    const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP", [
+      "请裁剪为相关堆栈段落后再试",
+    ]);
     return {
-      probableCause: "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP",
-      fixSuggestions: ["请裁剪为相关堆栈段落后再试"],
+      ok: false,
+      probableCause: action.message,
+      fixSuggestions: action.nextSteps,
       deobfuscated: [],
       relatedMistakes: [],
       crashKind: "unknown",
       logHints: ["logs/latest.log"],
+      action,
     };
   }
   const deobfuscated: string[] = [];
@@ -551,7 +587,11 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
   for (const line of crashReport.split("\n")) {
     const m = line.match(/([a-z][a-z0-9_]*(\$[a-z0-9_]+)+)/gi);
     if (m) {
-      deobfuscated.push(...m);
+      for (const name of m) {
+        if (/^lambda\$/i.test(name)) continue;
+        if (/\$Properties$/i.test(name)) continue;
+        deobfuscated.push(name);
+      }
     }
   }
 

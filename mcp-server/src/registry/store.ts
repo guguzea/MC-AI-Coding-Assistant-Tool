@@ -48,8 +48,8 @@ export function searchRegistryEntries(
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
-  // 剥掉 % 与 _ 两种 LIKE 通配符，防用户输入改变匹配语义（参数化 SQL 本身无注入）
-  const like = `%${q.replace(/[%_]/g, "")}%`;
+  // 剥掉 % LIKE 通配符；保留 `_` 并转义为字面量（P3-094）
+  const like = `%${q.replace(/%/g, "").replace(/_/g, "\\_")}%`;
   const exactNs = q.includes(":") ? q : `minecraft:${q}`;
   const exactSql = registry
     ? `SELECT registry, id, translation_key AS translationKey FROM entries
@@ -67,14 +67,16 @@ export function searchRegistryEntries(
     ? (db
         .prepare(
           `SELECT registry, id, translation_key AS translationKey FROM entries
-         WHERE registry = ? AND (LOWER(id) LIKE ? OR LOWER(COALESCE(translation_key,'')) LIKE ?)
+         WHERE registry = ? AND (LOWER(id) LIKE ? ESCAPE '\\' OR LOWER(COALESCE(translation_key,'')) LIKE ? ESCAPE '\\')
+         ORDER BY registry, id
          LIMIT ?`,
         )
         .all(registry, like, like, fetchLimit) as unknown as RegistryMatch[])
     : (db
         .prepare(
           `SELECT registry, id, translation_key AS translationKey FROM entries
-         WHERE LOWER(id) LIKE ? OR LOWER(COALESCE(translation_key,'')) LIKE ?
+         WHERE LOWER(id) LIKE ? ESCAPE '\\' OR LOWER(COALESCE(translation_key,'')) LIKE ? ESCAPE '\\'
+         ORDER BY registry, id
          LIMIT ?`,
         )
         .all(like, like, fetchLimit) as unknown as RegistryMatch[]);

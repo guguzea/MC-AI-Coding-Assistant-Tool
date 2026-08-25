@@ -31,6 +31,16 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
 }
 
 {
+  const s20 = sessionPlatformPack({ platform: "neoforge", minecraftVersion: "1.21.1", topics: ["20"] });
+  assert.equal(s20.ok, true, JSON.stringify(s20).slice(0, 300));
+  const w20 = (s20.warnings ?? []).join(" | ");
+  assert.ok(/伪规则/.test(w20) && /20/.test(w20), w20);
+  const ids20 = (s20.rules ?? []).map((r) => r.id);
+  assert.ok(!ids20.includes("20"), ids20.join(","));
+  console.log("topics 20 rejected: ok");
+}
+
+{
   const q = sessionPlatformPack({ platform: "quilt", minecraftVersion: "1.21.1" });
   assert.equal(q.ok, true);
   assert.ok(q.overlay, "quilt overlay field");
@@ -169,6 +179,48 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
 }
 
 {
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-addhost-"));
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  writeFileSync(join(tmp, "AGENTS.md"), "USER PREAMBLE\n", "utf8");
+  const first = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["opencode"],
+    projectPath: tmp,
+    dryRun: false,
+    confirmed: true,
+  });
+  assert.equal(first.ok, true, JSON.stringify(first).slice(0, 400));
+  const second = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["codex"],
+    projectPath: tmp,
+    dryRun: false,
+    confirmed: true,
+  });
+  assert.equal(second.ok, true, JSON.stringify(second).slice(0, 400));
+  const both = readFileSync(join(tmp, "AGENTS.md"), "utf8");
+  assert.ok(both.includes("host=opencode") && both.includes("host=codex"), both.slice(0, 400));
+  const deact = activatePlatformPack({
+    action: "deactivate",
+    hosts: ["opencode", "codex"],
+    projectPath: tmp,
+    dryRun: false,
+    confirmed: true,
+  });
+  assert.equal(deact.ok, true, JSON.stringify(deact).slice(0, 400));
+  const leftover = existsSync(join(tmp, "AGENTS.md")) ? readFileSync(join(tmp, "AGENTS.md"), "utf8") : "";
+  assert.ok(!leftover.includes("BEGIN MC_SKILL_PACK"), leftover.slice(0, 300));
+  assert.ok(leftover.includes("USER PREAMBLE"), leftover.slice(0, 300));
+  rmSync(tmp, { recursive: true, force: true });
+  delete process.env.MC_SKILL_ALLOW_WRITE;
+  console.log("write then add host then deactivate: ok");
+}
+
+{
   const tmp = mkdtempSync(join(tmpdir(), "mc-pack-rb-"));
   process.env.MC_SKILL_ALLOW_WRITE = "1";
   packWriteTestHooks.failBeforeRel = ".cursor/rules/mc-skill-01-registry.mdc";
@@ -184,6 +236,8 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   packWriteTestHooks.failBeforeRel = undefined;
   assert.equal(fail.ok, false);
   assert.equal(fail.rolledBack, true);
+  assert.ok(fail.action, JSON.stringify(fail).slice(0, 400));
+  assert.ok(fail.partial, "中途失败应带 partial");
   const rulesDir = join(tmp, ".cursor", "rules");
   const leftover = existsSync(rulesDir)
     ? (await import("node:fs")).readdirSync(rulesDir).filter((n) => n.startsWith("mc-skill-"))

@@ -58,8 +58,10 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
     };
   }
 
-  if (uri === "mcskill://schema/sqlite") {
-    const p = join(resolveDataDir("forge_1.20.1", "mappings"), "yarn-mappings.sqlite");
+  if (uri === "mcskill://schema/sqlite" || uri.startsWith("mcskill://schema/sqlite?")) {
+    const q = uri.includes("?") ? Object.fromEntries(new URLSearchParams(uri.split("?")[1] ?? "")) : {};
+    const ver = (q.version ?? "1.20.1").replace(/[^0-9.]/g, "") || "1.20.1";
+    const p = join(resolveDataDir(`forge_${ver}`, "mappings"), "yarn-mappings.sqlite");
     return {
       found: true,
       uri,
@@ -74,8 +76,6 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
       join(resolveRepoRoot(), "fabric", "1.21.11", "knowledge", "version-changes", "1.21.md"),
     ];
     for (const p of candidates) {
-      const norm = p.replace(/\\/g, "/");
-      if (/\/1\.20\.x\.md$/i.test(norm)) continue;
       if (existsSync(p)) {
         return { found: true, uri, mimeType: "text/markdown", text: readFileSync(p, "utf8") };
       }

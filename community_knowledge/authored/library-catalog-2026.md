@@ -38,9 +38,9 @@ skillId: mc-lib-catalog
 | 7 | Puzzles Lib（[lib-puzzles-lib.md](lib-puzzles-lib.md)） | 5630 万 | Fuzs 全家桶共享库 |
 | 8 | Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 5670 万 | 占位符解析 |
 | 9 | Balm（[lib-balm.md](lib-balm.md)） | 5420 万 | Blay 跨平台抽象 |
-| 10 | owo-lib（[lib-owo-lib.md](lib-owo-lib.md)） | 4380 万 | GUI/配置/网络全能库 |
+| 10 | owo-lib（[lib-owo.md](lib-owo.md)） | 4380 万 | GUI/配置/网络全能库 |
 | 11 | Bookshelf (Darkhax)（[lib-bookshelf.md](lib-bookshelf.md)） | 4230 万 | Darkhax 通用工具库 |
-| 12 | TerraBlender（[lib-terra-blender.md](lib-terra-blender.md)） | 3610 万 | 生物群系 API |
+| 12 | TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3610 万 | 生物群系 API |
 
 ## 二、按功能分类导航
 
@@ -51,7 +51,7 @@ skillId: mc-lib-catalog
 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿 | F/Forge/Neo，1.14–26.2 | 老牌配置 GUI，ConfigBuilder 生成界面 |
 | YACL（[lib-yacl.md](lib-yacl.md)） | 1.11 亿（官网全平台 1.77 亿） | F/Forge/Neo/Quilt，1.19–26.3 | Builder 式、GUI 契合原版风格，因 Cloth 停更而生 |
 | Fzzy Config（[lib-fzzy-config.md](lib-fzzy-config.md)） | 3420 万（2024-04 发布，增速极快） | F/Forge/Neo/Quilt，1.20.1–26.2 | 自动 GUI、强校验、服务端-客户端同步 |
-| owo-config（owo-lib 内）（[lib-owo-lib.md](lib-owo-lib.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
+| owo-config（owo-lib 内）（[lib-owo.md](lib-owo.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
 | MidnightLib（[lib-midnightlib.md](lib-midnightlib.md)） | 2510 万 | F/Forge/Neo/Quilt，1.17–26.2 | 轻量配置，鼓励 Jar-in-Jar 打包 |
 | Forge Config API Port（[lib-forge-config-api-port.md](lib-forge-config-api-port.md)） | — | Fabric 为主 | 把 Forge 配置系统搬到 Fabric |
 
@@ -62,8 +62,8 @@ skillId: mc-lib-catalog
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
 | GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6270 万（CF 3.87 亿） | F/Forge/Neo/Quilt，1.12.2–26.2 | 3D 骨骼动画引擎，30+ 缓动、并发动画、声音/粒子/事件关键帧，配合 Blockbench；客户端必需、服务端可选 |
-| playerAnimator（[lib-player-animator.md](lib-player-animator.md)） | 2480 万 | F/Forge/Neo/Quilt，1.16.4–1.21.7 | 第一人称/第三人称玩家关键帧动画，配套 bendy-lib 弯曲增强 |
-| Satin API（[lib-satin-api.md](lib-satin-api.md)） | 170 万 | Fabric，1.18–1.21.4 | 后期处理着色器包装 |
+| playerAnimator（[lib-playeranimator.md](lib-playeranimator.md)） | 2480 万 | F/Forge/Neo/Quilt，1.16.4–1.21.7 | 第一人称/第三人称玩家关键帧动画，配套 bendy-lib 弯曲增强 |
+| Satin API（[lib-satin.md](lib-satin.md)） | 170 万 | Fabric，1.18–1.21.4 | 后期处理着色器包装 |
 
 ### 3. 跨加载器抽象层（Multi-loader）
 
@@ -71,8 +71,8 @@ skillId: mc-lib-catalog
 |---|---|---|---|
 | Architectury API（[lib-architectury.md](lib-architectury.md)） | 9170 万 | F/Forge/Neo/Quilt，1.16.5–26.2 | 90+ 事件钩子、网络/注册抽象、@ExpectPlatform，配合 Architectury Loom/Plugin 一码多端 |
 | Balm（[lib-balm.md](lib-balm.md)） | 5420 万 | F/Forge/Neo，1.18–26.2 | Blay 的抽象层，零第三方依赖 |
-| Resourceful Lib（[lib-resourceful-lib.md](lib-resourceful-lib.md)） | 3220 万 | F/Forge/Neo，1.19.2–26.2 | 跨平台网络、codec 工具、内存资源包、Highlight API |
-| Moonlight Lib（原 Selene）（[lib-moonlight-lib.md](lib-moonlight-lib.md)） | 3690 万（CF 2.33 亿） | F/Forge/Neo，1.16.5–1.21.1 | 动态资源/注册、BlockSetAPI、村民 AI、流体系统 |
+| Resourceful Lib（[lib-resourceful.md](lib-resourceful.md)） | 3220 万 | F/Forge/Neo，1.19.2–26.2 | 跨平台网络、codec 工具、内存资源包、Highlight API |
+| Moonlight Lib（原 Selene）（[lib-moonlight.md](lib-moonlight.md)） | 3690 万（CF 2.33 亿） | F/Forge/Neo，1.16.5–1.21.1 | 动态资源/注册、BlockSetAPI、村民 AI、流体系统 |
 
 ### 4. 饰品 / 装备槽
 
@@ -80,28 +80,28 @@ skillId: mc-lib-catalog
 |---|---|---|---|
 | Curios API（[lib-curios.md](lib-curios.md)） | 2850 万 | F/Forge/Neo，1.13.2–26.2 | Forge 系饰品槽标准，tag 驱动扩展槽位，自带 GUI |
 | Trinkets（[lib-trinkets.md](lib-trinkets.md)） | 2260 万 | F/Quilt，1.17–1.21.1（已停更） | Fabric 系饰品槽（6 组槽位），数据驱动 |
-| Caelus API（[lib-caelus-api.md](lib-caelus-api.md)） | 690 万 | F/Forge/Neo，1.13.2–1.21.5 | 将鞘翅飞行抽象为实体属性，自定义飞行能力 |
+| Caelus API（[lib-caelus.md](lib-caelus.md)） | 690 万 | F/Forge/Neo，1.13.2–1.21.5 | 将鞘翅飞行抽象为实体属性，自定义飞行能力 |
 
 ### 5. 世界生成
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| TerraBlender（[lib-terra-blender.md](lib-terra-blender.md)） | 3610 万 | F/Forge/Neo/Quilt，1.18.1–26.2 | region 机制兼容式添加生物群系，1.18+ 地形系统的标准方案 |
+| TerraBlender（[lib-terrablender.md](lib-terrablender.md)） | 3610 万 | F/Forge/Neo/Quilt，1.18.1–26.2 | region 机制兼容式添加生物群系，1.18+ 地形系统的标准方案 |
 
 ### 6. GUI / UI 库
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| owo-lib（[lib-owo-lib.md](lib-owo-lib.md)） | 4380 万 | F/Neo/Quilt，1.17–26.1.2 | owo-ui 声明式 GUI、owo-config、网络层、自动注册（⚠️ 不支持 Forge） |
+| owo-lib（[lib-owo.md](lib-owo.md)） | 4380 万 | F/Neo/Quilt，1.17–26.1.2 | owo-ui 声明式 GUI、owo-config、网络层、自动注册（⚠️ 不支持 Forge） |
 | LibGui（[lib-libgui.md](lib-libgui.md)） | — | Fabric（GitHub 活跃至 26.2） | 老牌声明式 GUI 库；Modrinth 已下架(404)，走 Cotton maven + Jar-in-Jar 分发 |
-| SpruceUI / ObsidianUI（[lib-spruceui.md](lib-spruceui.md)） | 245 万 | 1.16.4–1.21.5 | GUI 抽象库；原版已下架，ObsidianUI 是 Architectury 移植 |
+| SpruceUI / ObsidianUI（[lib-spruceui-obsidianui.md](lib-spruceui-obsidianui.md)） | 245 万 | 1.16.4–1.21.5 | GUI 抽象库；原版已下架，ObsidianUI 是 Architectury 移植 |
 | Modern UI（[lib-modern-ui.md](lib-modern-ui.md)） | — | F/Forge/Neo | 现代文本排版引擎（中文/Unicode 渲染友好）+ GUI API，中文模组圈使用率高 |
 
 ### 7. 数据附加（Data Attachment）
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| Cardinal Components API (CCA)（[lib-cardinal-components.md](lib-cardinal-components.md)） | 1420 万 | F/Quilt，1.18–26.2 | 给实体/方块/区块/世界挂数据的标准方案，ASM 生成扩展 |
+| Cardinal Components API (CCA)（[lib-cca.md](lib-cca.md)） | 1420 万 | F/Quilt，1.18–26.2 | 给实体/方块/区块/世界挂数据的标准方案，ASM 生成扩展 |
 | PlayerAbilityLib (PAL)（[lib-player-ability-lib.md](lib-player-ability-lib.md)） | 42 万 | F/Quilt 服务端，1.20–26.1 | 玩家能力（飞行/缩放）兼容性修正 |
 
 生态位变化：1.20.5+ 原版自带 Data Component/Attachment 后，部分新模组直接用原版机制，不再依赖 CCA。
@@ -112,7 +112,7 @@ skillId: mc-lib-catalog
 |---|---|---|---|
 | Polymer（[lib-polymer.md](lib-polymer.md)） | 356 万 | F/Quilt，1.18–26.2 | 纯服务端生成内容，原版客户端免装模组可见，含 AutoHost |
 | Text Placeholder API（[lib-text-placeholder-api.md](lib-text-placeholder-api.md)） | 5670 万 | F/Quilt，1.17–26.2 | 占位符解析 %modid:type% + Simplified Text Format |
-| Server Translations API（[lib-server-translations-api.md](lib-server-translations-api.md)） | — | F/Forge/Neo | 服务端按玩家语言渲染可翻译文本；原 Modrinth 已下架，走 maven.nucleoid.xyz；替代品 Server I18n API |
+| Server Translations API（[lib-server-translations.md](lib-server-translations.md)） | — | F/Forge/Neo | 服务端按玩家语言渲染可翻译文本；原 Modrinth 已下架，走 maven.nucleoid.xyz；替代品 Server I18n API |
 | Impersonate（[lib-impersonate.md](lib-impersonate.md)） | 5.1 万 | F/Quilt 服务端，1.16.3–1.21.11 | 玩家伪装 API（换皮肤/名牌/身份），基于 CCA |
 | Pehkui（[lib-pehkui.md](lib-pehkui.md)） | 920 万 | F/Forge/Neo/Quilt，1.14.4–1.21.1 | 实体缩放 API，20+ 缩放类型带平滑过渡 |
 
@@ -120,9 +120,9 @@ skillId: mc-lib-catalog
 
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
-| JEI（[lib-jei.md](lib-jei.md)） | 6900 万 | F/Forge/Neo，1.8–26.2 | 最老牌，作为"配方显示 API"被最多模组集成（匠魂、Thermal、Create 等无数 JEI 插件）；1.21.2+ 服务端需装以同步配方 |
-| EMI（[lib-emi.md](lib-emi.md)） | 2600 万 | F/Forge/Neo/Quilt，1.18.2–1.21.1 | 零依赖、API 现代、支持运行时 JEI 兼容；1.21+ 才活跃，1.20.4 以下冻结 |
-| REI（[lib-rei.md](lib-rei.md)） | 2420 万 | F/Forge/Neo/Rift，1.13–26.2 | 支持 JEI 插件，可与 JEI 同装 |
+| JEI（未建 `lib-jei.md`；见 [library-integration-jei-emi.md](library-integration-jei-emi.md)） | 6900 万 | F/Forge/Neo，1.8–26.2 | 最老牌，作为"配方显示 API"被最多模组集成（匠魂、Thermal、Create 等无数 JEI 插件）；1.21.2+ 服务端需装以同步配方 |
+| EMI（未建 `lib-emi.md`；见 [library-integration-jei-emi.md](library-integration-jei-emi.md)） | 2600 万 | F/Forge/Neo/Quilt，1.18.2–1.21.1 | 零依赖、API 现代、支持运行时 JEI 兼容；1.21+ 才活跃，1.20.4 以下冻结 |
+| REI（未建 `lib-rei.md`；见 [library-integration-jei-emi.md](library-integration-jei-emi.md)） | 2420 万 | F/Forge/Neo/Rift，1.13–26.2 | 支持 JEI 插件，可与 JEI 同装 |
 
 建议：新模组集成配方显示优先同时做 JEI + EMI 插件，NeoForge 1.21+ 生态 EMI 渗透率持续上升。
 

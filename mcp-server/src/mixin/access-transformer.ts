@@ -111,6 +111,7 @@ export function lookupMemberInHierarchy(
     for (const r of info.recordComponents) {
       if (r.name !== member) continue;
       if (descriptor && r.descriptor !== descriptor) continue;
+      if (matches.some((m) => m.name === r.name && m.descriptor === r.descriptor)) continue;
       if (!declaredIn) declaredIn = internal;
       matches.push({ name: r.name, descriptor: r.descriptor, owner: internal, kind: "record" });
     }
@@ -319,9 +320,10 @@ function validateEntries(
 function detectCrossFileConflicts(entries: AccessTransformerEntry[]): { conflicts: AccessConflict[]; warnings: string[] } {
   const byKey = new Map<string, AccessTransformerEntry[]>();
   for (const e of entries) {
+    const ownerKey = (normalizeOwnerCandidates(e.owner)[0] ?? e.owner).replace(/\./g, "/");
     const key = e.kind === "class"
-      ? `class:${e.owner}`
-      : `member:${e.owner}#${e.member}${e.descriptor ?? ""}`;
+      ? `class:${ownerKey}`
+      : `member:${ownerKey}#${e.member}${e.descriptor ?? ""}`;
     const list = byKey.get(key) ?? [];
     list.push(e);
     byKey.set(key, list);
@@ -330,11 +332,10 @@ function detectCrossFileConflicts(entries: AccessTransformerEntry[]): { conflict
   const warnings: string[] = [];
   for (const [key, list] of byKey) {
     if (list.length < 2) continue;
-    const base = (a: string) => a.split("-")[0]; // 忽略 -f/-static 后缀比较权限级
     const target = key.replace(/^(class|member):/, "");
     const first = list[0];
     for (const e of list.slice(1)) {
-      if (base(e.access) !== base(first.access) || e.access !== first.access) {
+      if (e.access !== first.access) {
         conflicts.push({ target, accessA: first.access, accessB: e.access });
       } else {
         warnings.push(`重复声明（相同 access）：${target}（第 ${e.lineNo} 行）`);
