@@ -30,6 +30,11 @@ const PACK_FORMAT_BY_MC: Record<string, number> = {
   "26.1.2": 84,
 };
 
+// C57 核实记录（2026-08-25 网络核对）：1.21.9/1.21.10=69、1.21.11=75、26.1–26.1.2=84
+// 均与 Minecraft Wiki Pack format 表一致（另见 PrismLauncher issue #4237 与 CurseForge VRF 交叉佐证）。
+// 1.21.9+ 官方 pack_format 是「主版本+次版本」对（如 [69, 0]）——本表用整数主版本，整数写法仍合法；
+// 注意写成浮点 69.0 会被判 "Broken or incompatible"，数组写法 `[69, 0]` 亦可。
+
 const DEFAULT_PACK_FORMAT = 15;
 
 export function resolvePackFormat(mcVersion?: string): {
