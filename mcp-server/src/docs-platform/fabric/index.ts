@@ -25,7 +25,7 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, expandZhQuery, buildExpandedFtsExpr } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
@@ -279,13 +279,7 @@ export async function searchFabricDocs(
     if (!hasPlatformDocData("fabric", getDataRoot())) {
       return platformDataMissingResult("fabric");
     }
-    const { tags, source } = args;
-    // 检索提升 v3：中文查询经领域中英词典扩展（L0/FTS/向量共用改写文本；主题检测仍用原查询）
-    const zhExp = expandZhQuery(String(args.query ?? ""), getDataRoot());
-    const query = zhExp.expanded ? zhExp.text : String(args.query ?? "");
-    const zhFtsExpr = zhExp.expanded && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
-      ? buildExpandedFtsExpr(zhExp.terms)
-      : undefined;
+    const { query, tags, source } = args;
     const { requested, resolved: version } = fabricDocsVersion(args.version);
 
     const available = getStore(version, "fabric-docs").getAvailableVersions();
@@ -357,7 +351,7 @@ export async function searchFabricDocs(
     let semanticMissing = false;
     const semanticList: NonNullable<Awaited<ReturnType<typeof semanticSearch>>> = [];
     for (const src of sources) {
-      const hits = await semanticSearch(query, "fabric", version, src, getDataRoot(), 10, zhFtsExpr ? { ftsExpr: zhFtsExpr } : undefined);
+      const hits = await semanticSearch(query, "fabric", version, src, getDataRoot());
       if (hits === null) semanticMissing = true;
       else semanticRanked = true;
       if (hits) semanticList.push(...hits);
@@ -423,7 +417,6 @@ export async function searchFabricDocs(
               sourceUsed: usedWikiFallback ? "fabric-wiki" : resolvedSource,
               fabricDocsEmpty: docsEmpty || undefined,
               wikiIsCurrentSite: wikiInvolved || undefined,
-              ...(zhExp.expanded ? { queryExpanded: true, expandedTerms: zhExp.terms } : {}),
               tags,
               semantic: semanticRanked,
               warning: joinSearchWarnings(
