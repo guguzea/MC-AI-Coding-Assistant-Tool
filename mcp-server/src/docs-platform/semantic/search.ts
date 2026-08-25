@@ -175,6 +175,11 @@ export function fts5TopDocsSync(query: string, dbPath: string, limit = 20): stri
   if (!db) return [];
   const fts = buildFtsQuery(query);
   if (!fts) return cjkLikeDocIdsSync(query, db, limit);
+  return ftsMatchExec(db, fts, limit);
+}
+
+/** 对给定 MATCH 表达式执行检索（供查询扩展的 OR 组复用） */
+function ftsMatchExec(db: DatabaseSync, fts: string, limit: number): string[] {
   try {
     const rows = db
       .prepare(
@@ -356,6 +361,7 @@ export async function semanticSearch(
   source: string,
   dataRoot: string,
   limit = 10,
+  opts?: { ftsExpr?: string },
 ): Promise<SemanticHit[] | null> {
   if (!String(query ?? "").trim()) return null; // C19：空查询在 hybrid 下不得直达 embedder
   const dbPath = semanticDbPath(dataRoot, platform, version, source);
@@ -369,8 +375,10 @@ export async function semanticSearch(
     return null;
   }
 
-  const ftsExpr = buildFtsQuery(query);
-  const ftsDocs = fts5TopDocsSync(query, dbPath, 30);
+  const ftsExpr = opts?.ftsExpr ?? buildFtsQuery(query);
+  const ftsDocs = ftsExpr
+    ? ftsMatchExec(db, ftsExpr, 30)
+    : cjkLikeDocIdsSync(query, db, 30);
 
   const docBest = new Map<string, number>();
   const chunkEmbScores = new Map<string, number>();

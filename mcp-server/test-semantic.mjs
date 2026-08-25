@@ -11,7 +11,7 @@
  *  - semanticSearch：有 chunk 时 matches 非空
  */
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -31,6 +31,12 @@ import {
   SEMANTIC_DDL,
   closeSemanticDbs,
 } from "./dist/docs-platform/semantic/search.js";
+import {
+  expandZhQuery,
+  buildExpandedFtsExpr,
+  mergeSemanticResults as mergeForTieBreak,
+} from "./dist/docs-platform/search-utils.js";
+
 import { mergeSemanticResults } from "./dist/docs-platform/search-utils.js";
 
 let failures = 0;
@@ -339,6 +345,63 @@ test("mergeSemanticResults: limit 截断", () => {
     }
   });
 }
+
+// ── 4b. 中英词典查询扩展（检索提升 v3）──────────────────────────────────────
+
+test("expandZhQuery: 词典缺失 → 静默无扩展", () => {
+  const r = expandZhQuery("注册自定义方块", join(tmpdir(), "no-such-glossary-root"));
+  assert.equal(r.expanded, false);
+  assert.equal(r.text, "注册自定义方块");
+  assert.deepEqual(r.terms, []);
+});
+
+test("expandZhQuery: 最长匹配优先（数据组件 整体命中；物品栏 不被 物品 误扩展）", () => {
+  const root = mkdtempSync(join(tmpdir(), "glossary-"));
+  mkdirSync(join(root, "_glossary"), { recursive: true });
+  writeFileSync(
+    join(root, "_glossary", "mc-zh-en.json"),
+    JSON.stringify({ version: 1, entries: { 数据组件: ["data component"], 数据: ["data"], 组件: ["component"], 物品: ["item"], 物品栏: ["inventory"] } }),
+    "utf8",
+  );
+  const r1 = expandZhQuery("注册数据组件", root);
+  assert.ok(r1.expanded);
+  assert.ok(r1.terms.includes("data component"), JSON.stringify(r1));
+  assert.ok(!r1.terms.includes("data") && !r1.terms.includes("component"));
+  const r2 = expandZhQuery("打开物品栏", root);
+  assert.ok(r2.terms.includes("inventory"), JSON.stringify(r2));
+  assert.ok(!r2.terms.includes("item"), JSON.stringify(r2));
+});
+
+test("expandZhQuery: 损坏 JSON → 静默回退", () => {
+  const root = mkdtempSync(join(tmpdir(), "glossary-bad-"));
+  mkdirSync(join(root, "_glossary"), { recursive: true });
+  writeFileSync(join(root, "_glossary", "mc-zh-en.json"), "{not json", "utf8");
+  const r = expandZhQuery("注册方块", root);
+  assert.equal(r.expanded, false);
+});
+
+test("buildExpandedFtsExpr: OR 组形状 + 白名单净化", () => {
+  assert.equal(buildExpandedFtsExpr(["register", "block"]), '("register"* OR "block"*)');
+  // 非白名单词条（含冒号/引号）在构造器内被丢弃——双保险中的第二道
+  assert.equal(buildExpandedFtsExpr(["register", 'bad:term"']), '("register"*)');
+  assert.equal(buildExpandedFtsExpr([]), null);
+});
+
+test("mergeSemanticResults: priority 仅作排序副键，不改 score 数值", () => {
+  const l0 = [
+    { id: "star", version: "1.20.1", label: "S", url: "", tags: [], priority: "⭐", sectionCount: 0 },
+    { id: "green", version: "1.20.1", label: "G", url: "", tags: [], priority: "🟢", sectionCount: 0 },
+  ];
+  const hits = [
+    { docId: "green", score: 0.9, label: "G", url: "", tags: [], priority: "🟢", sectionCount: 0 },
+    { docId: "star", score: 0.9, label: "S", url: "", tags: [], priority: "⭐", sectionCount: 0 },
+  ];
+  const merged = mergeForTieBreak(l0, hits, { limit: 10, version: "1.20.1" });
+  assert.equal(merged[0].id, "star"); // RRF 同分时 ⭐ 排前
+  for (const row of merged) {
+    assert.equal(row.score, row.rrfScore); // score 契约不变
+  }
+});
 
 // ── 汇总 ──────────────────────────────────────────────────────────────────────
 

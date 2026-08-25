@@ -26,7 +26,7 @@ import {
   hasPlatformDocData,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, expandZhQuery, buildExpandedFtsExpr } from "../search-utils.js";
 import { missingSemanticDbWarning } from "../semantic/status.js";
 import {
   findPrimer,
@@ -158,10 +158,16 @@ export async function searchNeoForgeDocs(args: {
     const s = getNeoStore();
     if (missingMcVersion(args.version)) return versionRequiredDocResult();
     const version = args.version!.trim();
+    // 检索提升 v3：中文查询经领域中英词典扩展
+    const zhExp = expandZhQuery(String(args.query ?? ""), neoDataRoot());
+    const effQuery = zhExp.expanded ? zhExp.text : args.query;
+    const zhFtsExpr = zhExp.expanded && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
+      ? buildExpandedFtsExpr(zhExp.terms)
+      : undefined;
     const resolution = s.describeVersionResolution(version);
     let detailed: ReturnType<NeoForgeDocStore["searchIndexDetailed"]>;
     try {
-      detailed = s.searchIndexDetailed(args.query, version, args.tags);
+      detailed = s.searchIndexDetailed(effQuery, version, args.tags);
     } catch (e) {
       if (!(e instanceof VersionNotFoundError) || !resolution.mainDocsMissing) throw e;
       detailed = {
@@ -173,22 +179,27 @@ export async function searchNeoForgeDocs(args: {
     }
     const forgeCompatible = version === "1.20.1" || detailed.resolvedVersion === "1.20.1";
     const resolutionSource = resolution.sourcePlatform === "forge" ? resolution.sourceVersion : undefined;
+    const semanticOpts = zhFtsExpr ? { ftsExpr: zhFtsExpr } : undefined;
     const semanticHits = resolution.sourcePlatform === "forge"
       ? await semanticSearch(
-          args.query,
+          effQuery,
           "forge",
           resolution.sourceVersion ?? "1.20.1",
           "forge-docs",
           neoDataRoot(),
+          10,
+          semanticOpts,
         )
       : resolution.mainDocsMissing
         ? null
         : await semanticSearch(
-            args.query,
+            effQuery,
             "neoforge",
             detailed.resolvedVersion,
             "neoforge-docs",
             neoDataRoot(),
+            10,
+            semanticOpts,
           );
     let results = semanticHits === null
       ? detailed.results
@@ -226,6 +237,7 @@ export async function searchNeoForgeDocs(args: {
           sourceNote: forgeCompatible
             ? "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）"
             : undefined,
+          ...(zhExp.expanded ? { queryExpanded: true, expandedTerms: zhExp.terms } : {}),
           semantic: semanticHits !== null,
           total: results.length,
           results,

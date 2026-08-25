@@ -25,7 +25,7 @@ import {
   type DocPlatform,
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
-import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, type SearchResultLike } from "../search-utils.js";
+import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields, thinLoaderWikiWarning, expandZhQuery, buildExpandedFtsExpr, type SearchResultLike } from "../search-utils.js";
 import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { SEARCH_DOC_PLATFORMS, PLATFORM_DOC_SUBDIR } from "../platforms.js";
 import { ownGet } from "../../utils/own-record.js";
@@ -181,18 +181,26 @@ export async function searchForgeDocs(
     if (!hasPlatformDocData("forge")) {
       return platformDataMissingResult("forge");
     }
+    // 检索提升 v3：中文查询经领域中英词典扩展（L0/FTS/向量三通道共用改写文本）
+    const zhExp = expandZhQuery(String(args.query ?? ""), resolveDataDir());
+    const effQuery = zhExp.expanded ? zhExp.text : args.query;
+    const zhFtsExpr = zhExp.expanded && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
+      ? buildExpandedFtsExpr(zhExp.terms)
+      : undefined;
     const detailed = getForgeStore().searchIndexDetailed(
-      args.query,
+      effQuery,
       args.version,
       args.tags,
     );
     // 语义检索（FTS5 全文 + 本地向量，RRF 融合）；无语义库/失败 → null，保持纯 L0
     const semanticHits = await semanticSearch(
-      args.query,
+      effQuery,
       "forge",
       detailed.resolvedVersion,
       "forge-docs",
       resolveDataDir(),
+      10,
+      zhFtsExpr ? { ftsExpr: zhFtsExpr } : undefined,
     );
     const results = semanticHits === null
       ? detailed.results
@@ -726,11 +734,17 @@ export async function searchDocs(
     }
 
     const store = getGenericStore(platform);
+    // 检索提升 v3：中文查询经领域中英词典扩展（通用 search_docs 入口同样接线）
+    const zhExp = expandZhQuery(String(args.query ?? ""), resolveDataDir());
+    const effQuery = zhExp.expanded ? zhExp.text : args.query;
+    const zhFtsExpr = zhExp.expanded && /[\u4e00-\u9fff]/.test(String(args.query ?? ""))
+      ? buildExpandedFtsExpr(zhExp.terms)
+      : undefined;
     let result: ReturnType<IDocStore["searchIndex"]> = [];
     let threwMissing = false;
     try {
       result = store.searchIndex(
-        args.query,
+        effQuery,
         args.version,
         args.tags,
       );
@@ -785,11 +799,13 @@ export async function searchDocs(
       threwMissing || (neoResolution?.mainDocsMissing && neoResolution.sourcePlatform !== "forge")
         ? null
         : await semanticSearch(
-            args.query,
+            effQuery,
             semPlatform,
             semVersion,
             docSource,
             resolveDataDir(),
+            10,
+            zhFtsExpr ? { ftsExpr: zhFtsExpr } : undefined,
           );
     const finalResultsBase = semanticHits === null
       ? result
@@ -851,6 +867,7 @@ export async function searchDocs(
               semantic: semanticHits !== null,
               total: finalResults.length,
               results: finalResults,
+              ...(zhExp.expanded ? { queryExpanded: true, expandedTerms: zhExp.terms } : {}),
               ...(platform === "neoforge" && (args.version === "1.20.1" || resolvedVersion === "1.20.1")
                 ? {
                   forgeCompatible: true,

@@ -5,6 +5,8 @@
  * - relevance 打分（含 concepts/registry boost）
  */
 
+import { readFileSync, statSync } from "fs";
+import { join } from "path";
 import { ownGet } from "../utils/own-record.js";
 import { escapeRegExp } from "../utils/regex.js";
 import { ActionCodes, actionable } from "../utils/actionable.js";
@@ -132,6 +134,97 @@ export function expandQueryTerms(raw: string): string[] {
     for (const w of abbr) out.add(w);
   }
   return [...out];
+}
+
+// ── 中英领域词典查询扩展（检索提升 v3）────────────────────────────────────
+// 词典为运行时数据：data/_glossary/mc-zh-en.json（不入 dist）。懒加载 + mtime 热更新：
+// 长驻进程内改词条即时生效。缺失/损坏 → 静默空扩展 = 无扩展的现状行为。
+
+interface GlossaryState {
+  mtimeMs: number;
+  entries: Map<string, string[]>;
+}
+
+let _glossaryCache: GlossaryState | null = null;
+
+/** 英文术语白名单：只放行安全 token（引号/冒号/*等 FTS 特殊字符从源头拒绝） */
+const GLOSSARY_TERM_RE = /^[a-z0-9][a-z0-9 _-]*$/;
+
+function loadGlossary(dataRoot: string): Map<string, string[]> {
+  const p = join(dataRoot, "_glossary", "mc-zh-en.json");
+  try {
+    const st = statSync(p);
+    if (_glossaryCache && st.mtimeMs === _glossaryCache.mtimeMs) return _glossaryCache.entries;
+    const raw = JSON.parse(readFileSync(p, "utf8")) as { entries?: Record<string, unknown> };
+    const entries = new Map<string, string[]>();
+    for (const [zh, vals] of Object.entries(raw.entries ?? {})) {
+      if (typeof zh !== "string" || zh.length < 2 || !Array.isArray(vals)) continue;
+      const cleaned: string[] = [];
+      for (const v of vals) {
+        if (typeof v !== "string") continue;
+        const t = v.trim().toLowerCase();
+        if (!GLOSSARY_TERM_RE.test(t)) {
+          console.error(`[mc-mcp-server] WARN: glossary term dropped (unsafe): ${JSON.stringify(v)}`);
+          continue;
+        }
+        if (t.length > 0) cleaned.push(t);
+      }
+      if (cleaned.length > 0) entries.set(zh, cleaned);
+    }
+    _glossaryCache = { mtimeMs: st.mtimeMs, entries };
+    return entries;
+  } catch {
+    return new Map();
+  }
+}
+
+export interface ZhQueryExpansion {
+  /** 原查询 + 空格 + 英文术语串（L0 与向量通道直接使用该文本） */
+  text: string;
+  terms: string[];
+  expanded: boolean;
+}
+
+/**
+ * 中文查询的领域术语扩展：最长匹配优先分段扫描——
+ * 命中即消费区间，保证「数据组件」整体命中而不被拆成「数据」+「组件」，
+ * 「物品栏」先尝试更长键、不被「物品」误出无关扩展。
+ * 扩展只追加不替换原查询；无命中 / 词典缺失 → 原样返回。
+ */
+export function expandZhQuery(query: string, dataRoot: string): ZhQueryExpansion {
+  const q = String(query ?? "");
+  const entries = loadGlossary(dataRoot);
+  if (q.length === 0 || entries.size === 0 || !/[\u3000-\u9fff]/.test(q)) {
+    return { text: q, terms: [], expanded: false };
+  }
+  const keys = [...entries.keys()].sort((a, b) => b.length - a.length);
+  const terms: string[] = [];
+  let i = 0;
+  while (i < q.length) {
+    let matched = false;
+    for (const k of keys) {
+      if (q.startsWith(k, i)) {
+        terms.push(...(entries.get(k) ?? []));
+        i += k.length;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) i += 1;
+  }
+  const uniq = [...new Set(terms)];
+  if (uniq.length === 0) return { text: q, terms: [], expanded: false };
+  return { text: `${q} ${uniq.join(" ")}`, terms: uniq, expanded: true };
+}
+
+/**
+ * 扩展术语的 FTS5 OR 组（召回优先，bm25 自然按命中数排序）。
+ * 术语已经加载期白名单净化，此处再做引号转义双保险；无有效术语 → null。
+ */
+export function buildExpandedFtsExpr(terms: string[]): string | null {
+  const safe = terms.filter((t) => GLOSSARY_TERM_RE.test(t));
+  if (safe.length === 0) return null;
+  return `(${safe.map((t) => `"${t.replace(/"/g, '""')}"*`).join(" OR ")})`;
 }
 
 export function extractSymbols(text: string): string[] {
@@ -661,7 +754,15 @@ export function mergeSemanticResults(
   const l0Ids = results.map((r) => r.id);
   const semIds = filteredHits.map((h) => h.docId);
   const rrfMap = rrfFuseScores([l0Ids, semIds], 60);
-  const fused = [...rrfMap.entries()].sort((a, b) => b[1] - a[1]).map(([id]) => id).slice(0, limit);
+  // priority 副键（检索提升 v3 改动 2）：RRF 近分时 ⭐>🟡>🟢 排前；score 数值不变
+  const prioRank = (id: string): number => {
+    const pr = String(byId.get(id)?.priority ?? "🟢");
+    return pr === "⭐" ? 0 : pr === "🟡" ? 1 : 2;
+  };
+  const fused = [...rrfMap.entries()]
+    .sort((a, b) => b[1] - a[1] || prioRank(a[0]) - prioRank(b[0]))
+    .map(([id]) => id)
+    .slice(0, limit);
   const out: SearchResultLike[] = [];
   for (const id of fused) {
     const row = byId.get(id);
