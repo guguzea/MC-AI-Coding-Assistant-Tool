@@ -55,20 +55,35 @@ export function buildRegistryIndex(
   }
   const sqlitePath = options?.sqlitePath ?? vanillaRegistrySqlitePath(version);
   if (existsSync(sqlitePath) && !options?.force) {
-    const db = new DatabaseSync(sqlitePath, { readOnly: true });
-    const rows = db.prepare("SELECT registry, COUNT(*) AS c FROM entries GROUP BY registry").all() as Array<{
-      registry: string;
-      c: number;
-    }>;
-    db.close();
-    const registries = rows.map((r) => ({ name: r.registry, count: r.c }));
-    return {
-      version,
-      sourceDir,
-      sqlitePath,
-      registries,
-      totalEntries: registries.reduce((s, r) => s + r.count, 0),
-    };
+    try {
+      const db = new DatabaseSync(sqlitePath, { readOnly: true });
+      try {
+        const metaRow = db.prepare("SELECT value FROM meta WHERE key = 'mcVersion'").get() as { value?: string } | undefined;
+        if (metaRow?.value && metaRow.value !== version) {
+          db.close();
+        } else if (metaRow?.value === version) {
+          const rows = db.prepare("SELECT registry, COUNT(*) AS c FROM entries GROUP BY registry").all() as Array<{
+            registry: string;
+            c: number;
+          }>;
+          db.close();
+          const registries = rows.map((r) => ({ name: r.registry, count: r.c }));
+          return {
+            version,
+            sourceDir,
+            sqlitePath,
+            registries,
+            totalEntries: registries.reduce((s, r) => s + r.count, 0),
+          };
+        } else {
+          db.close();
+        }
+      } catch {
+        try { db.close(); } catch { /* ignore */ }
+      }
+    } catch {
+      /* rebuild */
+    }
   }
 
   const db = new DatabaseSync(sqlitePath);

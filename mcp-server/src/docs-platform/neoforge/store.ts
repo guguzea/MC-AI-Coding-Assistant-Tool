@@ -17,7 +17,7 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync, type Dirent } from "fs";
-import { join, dirname, basename } from "path";
+import { join, basename } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
@@ -227,6 +227,16 @@ export class NeoForgeDocStore {
     return nested;
   }
 
+  /** 扁平布局（data / *-docs）时不要把目录名当 MC 版本。 */
+  private effectiveVersionLabel(resolvedVersionDir: string, version: string): string {
+    const base = basename(resolvedVersionDir);
+    const FLAT = new Set(["data", "neoforge-docs", "forge-docs", "fabric-docs", "docs"]);
+    if (!base || FLAT.has(base) || /-docs$/i.test(base)) {
+      return this.resolveEffectiveVersion(version);
+    }
+    return base;
+  }
+
   /** 本版是否有独立主文档树（含 NeoForge 1.20.1 的 Forge 兼容数据） */
   hasOwnDocTree(version: string): boolean {
     if (existsSync(join(this.versionDataDir(version), "index-l0.json"))) return true;
@@ -403,7 +413,7 @@ export class NeoForgeDocStore {
     }
 
     const resolvedVersionDir = this.resolveVersionDir(version);
-    const effectiveVersion = basename(resolvedVersionDir) || this.resolveEffectiveVersion(version);
+    const effectiveVersion = this.effectiveVersionLabel(resolvedVersionDir, version);
     const versionFallback = effectiveVersion !== version;
 
     const symbolIndex = this.getOrBuildSymbolIndex(version, effectiveVersion);
@@ -512,7 +522,7 @@ export class NeoForgeDocStore {
     if (!raw) throw new DocNotFoundError(pageId, version);
 
     const resolvedVersionDir = this.resolveVersionDir(version);
-    const effectiveVersion = basename(resolvedVersionDir) || version;
+    const effectiveVersion = this.effectiveVersionLabel(resolvedVersionDir, version);
     const isForgeCompatible = FORGE_COMPATIBLE_VERSIONS.has(version);
 
     let content = raw.processedFile

@@ -105,14 +105,15 @@ export function extractPrimerSection(
   };
 }
 
-let cache: PrimerEntry[] | null = null;
+let cacheByRoot = new Map<string, PrimerEntry[]>();
 
 export function loadNeoForgePrimers(dataRoot = resolveDataDir()): PrimerEntry[] {
-  if (cache) return cache;
+  const hit = cacheByRoot.get(dataRoot);
+  if (hit) return hit;
   const dir = join(dataRoot, "neoforge_primers");
   if (!existsSync(dir)) {
-    cache = [];
-    return cache;
+    cacheByRoot.set(dataRoot, []);
+    return [];
   }
   const entries: PrimerEntry[] = [];
   for (const name of readdirSync(dir)) {
@@ -142,13 +143,13 @@ export function loadNeoForgePrimers(dataRoot = resolveDataDir()): PrimerEntry[] 
       headings: extractHeadings(body),
     });
   }
-  cache = entries;
-  return cache;
+  cacheByRoot.set(dataRoot, entries);
+  return entries;
 }
 
 /** 测试用 */
 export function resetPrimerCache(): void {
-  cache = null;
+  cacheByRoot = new Map();
 }
 
 export function primerMatchesVersion(primer: PrimerEntry, version: string): boolean {

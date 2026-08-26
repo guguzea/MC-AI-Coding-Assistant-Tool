@@ -142,22 +142,31 @@ function howToWriteCli(args: {
   );
 }
 
-function ensureFrontmatter(text: string, description: string, extra: Record<string, string>): string {
+/** YAML double-quoted scalar (colon/hash-safe). */
+export function yamlQuotedScalar(s: string): string {
+  return `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
+function looksLikeBannerFence(fm: string): boolean {
+  return /\[FORGE_COMPAT|\[QSL_OVERLAY|\[BANNER\]/.test(fm);
+}
+
+export function ensureFrontmatter(text: string, description: string, extra: Record<string, string>): string {
   const extraLines = Object.entries(extra)
     .map(([k, v]) => `${k}: ${v}`)
     .join("\n");
   if (text.startsWith("---")) {
     const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-    if (m) {
+    if (m && !looksLikeBannerFence(m[1])) {
       let fm = m[1];
-      if (!/^description:/m.test(fm)) fm = `description: ${description}\n${fm}`;
+      if (!/^description:/m.test(fm)) fm = `description: ${yamlQuotedScalar(description)}\n${fm}`;
       for (const [k, v] of Object.entries(extra)) {
         if (!new RegExp(`^${k}:`, "m").test(fm)) fm = `${fm}\n${k}: ${v}`;
       }
       return `---\n${fm}\n---\n${text.slice(m[0].length)}`;
     }
   }
-  const head = [`---`, `description: ${description}`, extraLines, `---`, ""].filter(Boolean).join("\n");
+  const head = [`---`, `description: ${yamlQuotedScalar(description)}`, extraLines, `---`, ""].filter(Boolean).join("\n");
   return `${head}\n${text}`;
 }
 
@@ -195,14 +204,14 @@ function skillStub(
   ].join("\n");
 }
 
-function quiltCopiedSkill(abs: string, name: string, description: string, fabricVer: string): string {
+export function quiltCopiedSkill(abs: string, name: string, description: string, fabricVer: string): string {
   const raw = readFileSync(abs, "utf8");
   const note = mappingNoteForFabricSkill(fabricVer);
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!m) {
     return wrapDonorSkillBody(
       note,
-      `---\nname: ${name}\ndescription: ${description}\nsource: fabric/${fabricVer}\n---\n\n${raw}`,
+      `---\nname: ${name}\ndescription: ${yamlQuotedScalar(description)}\nsource: fabric/${fabricVer}\n---\n\n${raw}`,
     );
   }
   let fm = m[1];

@@ -361,6 +361,13 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
     };
   }
   if (lower.includes("属性") || lower.includes("attribute")) {
+    const mode = ownGet(REGISTER_MODE, info.version);
+    if (mode === "docsOnly") {
+      return {
+        ...info,
+        recommendation: "请用 search_forge_docs 查本版属性注册 API，不要套用邻版属性注册键与具体类名",
+      };
+    }
     const usesDeferred = /DeferredRegister/i.test(info.recommendation);
     const is117plus = (() => {
       const m = info.version.match(/^(\d+)\.(\d+)/);

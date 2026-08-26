@@ -47,6 +47,16 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
 
   const repoRoot = query.repoRoot ?? resolveRepoRoot();
   const dataDir = query.dataDir ?? resolveDataDir();
+
+  if (!query.action || (query.action !== "check" && query.action !== "apply")) {
+    return withAction(
+      { ok: false },
+      actionable("INVALID_INPUT", "action 必须是 check 或 apply", ["传入 action=check 或 apply"], [
+        "mc_skill_update",
+      ]),
+    );
+  }
+
   const localVersion = readLocalToolingVersion(repoRoot);
   const describe = gitDescribe(repoRoot);
   const state = readUpdateState(dataDir);
@@ -58,15 +68,6 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
     repo,
     fetchImpl: query.fetchImpl,
   });
-
-  if (!query.action || (query.action !== "check" && query.action !== "apply")) {
-    return withAction(
-      { ok: false },
-      actionable("INVALID_INPUT", "action 必须是 check 或 apply", ["传入 action=check 或 apply"], [
-        "mc_skill_update",
-      ]),
-    );
-  }
 
   if (!resolved.ok || !resolved.release) {
     return withAction(
@@ -229,7 +230,10 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       });
       steps.push(...tr.steps.map((s) => `tooling: ${s}`));
       if (!tr.ok) {
-        return withAction({ ...base, dryRun, steps, applied: false }, tr.action);
+        return withAction(
+          { ...base, dryRun, steps, applied: false, appliedTooling: false, restartRequired },
+          tr.action,
+        );
       }
       appliedTooling = !dryRun;
       if (tr.restartRequired) restartRequired = true;
@@ -268,6 +272,15 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       filesToOverwrite = dr.filesToOverwrite;
       diskSpace = dr.diskSpace;
       if (!dr.ok) {
+        if (appliedTooling) {
+          writeUpdateState(
+            {
+              pendingRestart: true,
+              pendingRestartSince: new Date().toISOString(),
+            },
+            dataDir,
+          );
+        }
         return withAction(
           {
             ...base,
@@ -278,6 +291,8 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
             applied: false,
             appliedTooling,
             appliedData: false,
+            restartRequired: restartRequired || appliedTooling,
+            pendingRestart: appliedTooling || Boolean(state.pendingRestart),
           },
           dr.action,
         );

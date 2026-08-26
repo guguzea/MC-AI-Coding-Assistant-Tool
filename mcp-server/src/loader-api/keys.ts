@@ -31,14 +31,30 @@ export function officialSummariesDir(): string {
 // 平台/版本名会拼进缓存路径（${v}-${p}），字符白名单用于阻断路径分隔符与 DOTDOT 穿越
 const KEY_CHAR_PATTERN = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_.-]+$/;
 
-export function candidateKeys(platform: string, minecraftVersion: string): string[] {
+export function candidateKeysSafe(
+  platform: string,
+  minecraftVersion: string,
+): { ok: true; keys: string[] } | { ok: false; action: ActionEnvelope } {
   const p = platform.trim().toLowerCase();
   const v = minecraftVersion.trim();
   if (!KEY_CHAR_PATTERN.test(p) || !KEY_CHAR_PATTERN.test(v)) {
-    throw new Error(
-      `非法 platform/minecraftVersion 字符：${JSON.stringify({ platform, minecraftVersion })}`
-    );
+    return {
+      ok: false,
+      action: actionable("INVALID_INPUT", `非法 platform/minecraftVersion 字符：${JSON.stringify({ platform, minecraftVersion })}`, [
+        "只用字母、数字、点、下划线、连字符",
+        "不要含路径分隔符或 ..",
+      ]),
+    };
   }
+  return { ok: true, keys: keysFor(p, v) };
+}
+
+export function candidateKeys(platform: string, minecraftVersion: string): string[] {
+  const r = candidateKeysSafe(platform, minecraftVersion);
+  return r.ok ? r.keys : [];
+}
+
+function keysFor(p: string, v: string): string[] {
   if (p === "quilt") return [`${v}-qsl`, `${v}-quilt`];
   if (p === "fabric") return [`${v}-fabric-api`, `${v}-fabric`];
   if (p === "neoforge") {

@@ -24,6 +24,8 @@ import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
+import { isExactMcVersionToken, matchesExactMcVersion } from "./dist/utils/minecraft-version.js";
+import { withDocsFallbackFields, matchDocIndexId } from "./dist/docs-platform/search-utils.js";
 import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
@@ -35,6 +37,7 @@ import {
   loadBedrockDocsStatus,
   validateAddonManifest,
   getBedrockDocFull,
+  analyzeBedrockContentLog,
 } from "./dist/bedrock/index.js";
 import { listSemanticDbPresence, semanticStaleSearchWarning, getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
 import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
@@ -51,7 +54,7 @@ import { CommunityDocStore, stripLeadingFrontmatter } from "./dist/docs-platform
 import { analyzeCrash } from "./dist/crash/index.js";
 import { validateProject } from "./dist/validate/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
-import { collectJavaSources } from "./dist/utils/project-files.js";
+import { collectJavaSources, collectCrashReports } from "./dist/utils/project-files.js";
 import { checkPublishReady } from "./dist/publish/index.js";
 import { inspectRuntime } from "./dist/runtime-inspect/index.js";
 import { exclusiveFabricFallbackRefusal } from "./dist/docs-platform/quilt-search.js";
@@ -273,6 +276,17 @@ async function testExtractCommonArchitecturyLayout() {
     }));
     assert.equal(out.ok, true);
     assert.ok(out.candidates?.some((c) => /A\.java/.test(c.relPath)), JSON.stringify(out));
+    writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
+    const analyzed = JSON.parse(await analyzePortingPath({
+      projectPath: root,
+      targetPlatform: "neoforge",
+      targetVersion: "1.20.1",
+    }));
+    assert.notEqual(analyzed.error?.code, "SRC_NOT_FOUND", JSON.stringify(analyzed.error ?? analyzed.analysis?.current));
+    assert.ok(
+      (analyzed.analysis?.current?.stats?.javaFiles ?? 0) >= 1,
+      `Architectury common/src 应被 analyze 扫到: ${JSON.stringify(analyzed.analysis?.current?.stats)}`,
+    );
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -800,6 +814,24 @@ async function testDatagenAndMappingGates() {
     }
   }
 
+  const unknownNf = generateDatagen({
+    providerType: /** @type {any} */ ("nope"),
+    modId: "demo",
+    targetName: "spark",
+    platform: "neoforge",
+    version: "1.21.1",
+  });
+  assert.equal(unknownNf.code, null, JSON.stringify(unknownNf));
+  assert.ok(unknownNf.errors?.some((e) => /Unknown NeoForge 1\.21 provider/.test(e)), JSON.stringify(unknownNf));
+  const knownNf = generateDatagen({
+    providerType: "recipe",
+    modId: "demo",
+    targetName: "spark",
+    platform: "neoforge",
+    version: "1.21.1",
+  });
+  assert.ok(knownNf.code?.includes("net.neoforged"), JSON.stringify(knownNf));
+
   const sugg = suggestSimilarMethods("getHealth", ["getMaxHealth", "getHunger", "hurt"]);
   assert.ok(sugg.includes("getMaxHealth"));
   const short = suggestSimilarMethods("getH", ["getHunger", "getMaxHealth", "getHealth"]);
@@ -1228,6 +1260,17 @@ async function testCrashAnalyzeKindAndMissingDep() {
     (inner.deobfuscated ?? []).some((s) => /Minecraft\$Inner/i.test(s)),
     JSON.stringify(inner.deobfuscated),
   );
+  const anon = analyzeCrash({
+    crashReport:
+      "---- Minecraft Crash Report ----\nDescription: Ticking\n\tat net.minecraft.client.Minecraft$1.run(Minecraft.java:1)\n\tat net.foo.Bar$$Lambda$12/0x1.run(Unknown)\n",
+    version: "1.20.1",
+  });
+  assert.ok(!(anon.deobfuscated ?? []).some((s) => /Minecraft\$1$/.test(s) || /\$\$Lambda/.test(s)), JSON.stringify(anon.deobfuscated));
+
+  const lateQuilt = `${"x".repeat(70 * 1024)}\norg.quiltmc.loader.impl.QuiltLoader crashed`;
+  assert.notEqual(detectCrashKind(lateQuilt), "quilt");
+  const earlyQuilt = `org.quiltmc.loader.impl.QuiltLoader crashed\n${"x".repeat(70 * 1024)}`;
+  assert.equal(detectCrashKind(earlyQuilt), "quilt");
 
   const unknown = analyzeCrash({ crashReport: "not a crash report at all", version: "1.20.1" });
   assert.equal(unknown.crashKind, "unknown");
@@ -2097,6 +2140,23 @@ async function testReviewFixes() {
     rmSync(riftRoot, { recursive: true, force: true });
   }
 
+  const dualRoot = mkdtempSync(join(tmpdir(), "mc-skill-dual-unsup-"));
+  try {
+    mkdirSync(join(dualRoot, "src", "main", "resources"), { recursive: true });
+    writeFileSync(join(dualRoot, "src", "main", "resources", "litemod.json"), '{"name":"lite","version":"1.0"}\n', "utf8");
+    const dual = JSON.parse(await analyzePortingPath({ projectPath: dualRoot, targetPlatform: "bedrock" }));
+    assert.equal(dual.ok, false, JSON.stringify(dual));
+    assert.equal(dual.error.code, "UNSUPPORTED_PORT");
+    assert.match(String(dual.error.hint), /liteloader/);
+    assert.match(String(dual.error.hint), /bedrock/);
+    assert.ok(
+      (dual.error.next ?? []).some((n) => /liteloader/.test(n) && /bedrock/.test(n)),
+      JSON.stringify(dual.error.next),
+    );
+  } finally {
+    rmSync(dualRoot, { recursive: true, force: true });
+  }
+
   const quiltDual = mkdtempSync(join(tmpdir(), "mc-skill-quilt-dual-"));
   try {
     mkdirSync(join(quiltDual, "src", "main", "resources"), { recursive: true });
@@ -2226,6 +2286,36 @@ async function testReviewFixes() {
   assert.equal(fabricPass.status, "passed", JSON.stringify(fabricPass));
   assert.equal(fabricPass.deprecated_legacy_passed, undefined);
 
+  const fooMainTrap = validateProject({
+    fabricModJson: JSON.stringify({
+      schemaVersion: 1,
+      id: "examplemod",
+      entrypoints: { main: ["com.example.Main"] },
+    }),
+    javaFiles: [{
+      path: "src/main/java/com/example/FooMain.java",
+      content: "package com.example;\npublic class FooMain {}\n",
+    }],
+  });
+  assert.equal(fooMainTrap.status, "failed", JSON.stringify(fooMainTrap));
+  assert.ok(
+    fooMainTrap.errors.some((e) => /entrypoint 类未在提供的 Java 源中找到：com\.example\.Main/.test(e)),
+    JSON.stringify(fooMainTrap.errors),
+  );
+
+  const nestedOk = validateProject({
+    fabricModJson: JSON.stringify({
+      schemaVersion: 1,
+      id: "examplemod",
+      entrypoints: { main: ["com.example.Outer$Inner"] },
+    }),
+    javaFiles: [{
+      path: "src/main/java/com/example/Outer$Inner.java",
+      content: "package com.example;\npublic class Inner {}\n",
+    }],
+  });
+  assert.equal(nestedOk.status, "passed", JSON.stringify(nestedOk));
+
   // A-3：entrypoint 含正则元字符时不得让 validate_project 崩溃（结构化失败而非 SyntaxError）
   let a3val;
   try {
@@ -2300,6 +2390,29 @@ async function testReviewFixes() {
     }],
   });
   assert.equal(neoPass.status, "passed", JSON.stringify(neoPass));
+
+  const forgeSingleQuote = validateProject({
+    modsToml: "modLoader='javafml'\nloaderVersion='[47,)'\n[[mods]]\nmodId='examplemod'\nversion='1.0.0'\n",
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content: '@Mod("examplemod")\npublic class ExampleMod {}\n',
+    }],
+  });
+  assert.ok(
+    !forgeSingleQuote.errors.some((e) => /modLoader/.test(e)),
+    `单引号 modLoader 应通过: ${JSON.stringify(forgeSingleQuote.errors)}`,
+  );
+
+  const neoCommentBus = validateProject({
+    neoModsToml: 'modLoader="javafml"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
+    javaFiles: [{
+      path: "src/main/java/com/example/ExampleMod.java",
+      content:
+        "package com.example;\nimport net.neoforged.fml.common.Mod;\n@Mod(\"examplemod\")\npublic class ExampleMod {\n  public ExampleMod() {}\n  // leftover IEventBus mention\n}\n",
+    }],
+  });
+  assert.equal(neoCommentBus.status, "failed", JSON.stringify(neoCommentBus));
+  assert.ok(neoCommentBus.errors.some((e) => /IEventBus/.test(e)), JSON.stringify(neoCommentBus.errors));
 
   const exclusiveHit = exclusiveFabricFallbackRefusal({
     id: "wiki/FabricRegistryBuilder",
@@ -2676,10 +2789,39 @@ async function testPrototypeOwnKeys() {
   assert.ok(/search_forge_docs/.test(v1211be.recommendation), v1211be.recommendation);
   assert.ok(/不要套用/.test(v1211be.recommendation), v1211be.recommendation);
   assert.ok(!/需实现 EntityBlock/.test(v1211be.recommendation), v1211be.recommendation);
+
+  const v1211attr = await getVersionInfo({ version: "1.21.1", action: "attribute", platform: "forge" });
+  assert.ok(/search_forge_docs/.test(v1211attr.recommendation), v1211attr.recommendation);
+  assert.ok(!/ForgeRegistries\.Keys\.ATTRIBUTES/.test(v1211attr.recommendation), v1211attr.recommendation);
+  const v1201attr = await getVersionInfo({ version: "1.20.1", action: "attribute", platform: "forge" });
+  assert.ok(/ForgeRegistries\.Keys\.ATTRIBUTES/.test(v1201attr.recommendation), v1201attr.recommendation);
 }
 
 function testPlan1Fixes() {
   assert.equal(detectMinecraftVersion({ gradleProperties: "minecraft_version=1.20.1\n" }), "1.20.1");
+  assert.equal(detectMinecraftVersion({ gradleProperties: "neo_version=27.0.1\n" }), "27.0.1");
+  assert.equal(isExactMcVersionToken("27.0"), true);
+  assert.equal(isExactMcVersionToken("27.0-beta"), false);
+  assert.equal(matchesExactMcVersion("27.0", "27.0"), true);
+  assert.equal(matchesExactMcVersion("27.0", "26.1"), false);
+
+  const forgeFb = withDocsFallbackFields({
+    fallback: true,
+    platform: "forge",
+    requestedVersion: "1.20.4",
+    resolvedVersion: "1.20.1",
+  });
+  assert.match(String(forgeFb.warning), /官方 Forge 文档/);
+  assert.doesNotMatch(String(forgeFb.warning), /官方 docs 文档/);
+  assert.equal(matchDocIndexId("1.20.1/concepts_registries", "concepts/registries", "1.20.1"), true);
+  assert.equal(matchDocIndexId("1.20.1/concepts_registries", "1.20.1/concepts_registries", "1.20.1"), true);
+  assert.equal(matchDocIndexId("other/page", "concepts/registries", "1.20.1"), false);
+  const genericFb = withDocsFallbackFields({
+    fallback: true,
+    requestedVersion: "1.20.4",
+    resolvedVersion: "1.20.1",
+  });
+  assert.match(String(genericFb.warning), /官方 docs 文档/);
   assert.equal(detectMinecraftVersion({ gradleProperties: "mc_version=1.16.5\n" }), "1.16.5");
   assert.equal(detectMinecraftVersion({ buildGradle: "minecraft '1.20.1'\n" }), "1.20.1");
   assert.equal(detectMinecraftVersion({ buildGradle: "minecraft_version = '1.20.1'\n" }), "1.20.1");
@@ -3070,6 +3212,21 @@ public class ExampleMod { }
   assert.equal(pub.ready, true, JSON.stringify(pub));
   assert.ok(pub.warnings.some((w) => /不上传/.test(w)));
 
+  const fatRoot = mkdtempSync(join(tmpdir(), "mc-pub-all-"));
+  try {
+    mkdirSync(join(fatRoot, "build", "libs"), { recursive: true });
+    writeFileSync(join(fatRoot, "build", "libs", "mod-all.jar"), "fat");
+    writeFileSync(join(fatRoot, "build", "libs", "mod-sources.jar"), "src");
+    const pubFat = checkPublishReady({
+      projectPath: fatRoot,
+      fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
+    });
+    assert.ok((pubFat.jars ?? []).some((j) => /mod-all\.jar$/.test(j)), JSON.stringify(pubFat));
+    assert.ok(!(pubFat.jars ?? []).some((j) => /mod-sources\.jar$/.test(j)), JSON.stringify(pubFat));
+  } finally {
+    rmSync(fatRoot, { recursive: true, force: true });
+  }
+
   const logRoot = mkdtempSync(join(tmpdir(), "mc-inspect-"));
   try {
     mkdirSync(join(logRoot, "run", "logs"), { recursive: true });
@@ -3079,6 +3236,45 @@ public class ExampleMod { }
     assert.ok(insp.logAnalysis, JSON.stringify(insp));
   } finally {
     rmSync(logRoot, { recursive: true, force: true });
+  }
+
+  const crashCapRoot = mkdtempSync(join(tmpdir(), "mc-crash-cap-"));
+  try {
+    mkdirSync(join(crashCapRoot, "crash-reports"), { recursive: true });
+    for (let i = 0; i < 22; i++) {
+      const n = String(i).padStart(2, "0");
+      writeFileSync(join(crashCapRoot, "crash-reports", `crash-${n}.txt`), `report ${n}\n`);
+    }
+    const capped = collectCrashReports(crashCapRoot);
+    assert.equal(capped.reports.length, 20, JSON.stringify(capped.reports.map((r) => r.path)));
+    assert.match(String(capped.warning), /截断/);
+    const small = collectCrashReports(crashCapRoot);
+    assert.ok(small.reports.every((r) => r.path.startsWith("crash-reports/")), JSON.stringify(small.reports));
+  } finally {
+    rmSync(crashCapRoot, { recursive: true, force: true });
+  }
+
+  const contentLogRoot = mkdtempSync(join(tmpdir(), "mc-clog-"));
+  try {
+    const logPath = join(contentLogRoot, "content_log.txt");
+    writeFileSync(
+      logPath,
+      [
+        "[12:00:00][WARN][Actor] missing texture",
+        "this line is garbage not a content log",
+        "[12:00:01][ERROR][Script] boom",
+      ].join("\n"),
+      "utf8",
+    );
+    const clog = analyzeBedrockContentLog({ logPath });
+    assert.equal(clog.ok, true, JSON.stringify(clog));
+    assert.equal(clog.warnings.length, 1, JSON.stringify(clog.warnings));
+    assert.ok(clog.warnings[0].includes("missing texture"), JSON.stringify(clog.warnings));
+    assert.equal(clog.unparsedLines.length, 1, JSON.stringify(clog.unparsedLines));
+    assert.match(clog.unparsedLines[0], /garbage/);
+    assert.ok(!clog.warnings.some((w) => /garbage/.test(w)), JSON.stringify(clog.warnings));
+  } finally {
+    rmSync(contentLogRoot, { recursive: true, force: true });
   }
 
   const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");

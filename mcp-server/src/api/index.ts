@@ -85,13 +85,6 @@ export interface VersionPreloadStatus {
   preloading: boolean;
 }
 
-// ── LRU 缓存（搜索结果）──────────────────────────────────────────────────
-
-interface CacheEntry<T> {
-  data: T;
-  expiry: number;
-}
-
 // ── Trie 索引（Worker 中构建，通过消息传递）────────────────────────────────
 
 /**

@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, writeFileSync, mkdirSync, unlinkSync } from "fs";
+import { readFileSync, existsSync, writeFileSync, mkdirSync, unlinkSync, renameSync } from "fs";
 import { join, relative, basename } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
@@ -115,6 +115,21 @@ function readContent(filePath: string): string {
     return readFileSync(filePath, "utf-8");
   } catch {
     return "";
+  }
+}
+
+function atomicWriteUtf8(file: string, content: string): void {
+  const tmp = `${file}.${process.pid}.tmp`;
+  writeFileSync(tmp, content, "utf-8");
+  try {
+    renameSync(tmp, file);
+  } catch (err) {
+    try {
+      if (existsSync(tmp)) unlinkSync(tmp);
+    } catch {
+      /* ignore */
+    }
+    throw err;
   }
 }
 
@@ -566,12 +581,13 @@ export async function analyzePortingPath(args: unknown) {
     return JSON.stringify(e);
   }
 
-  // 3. 扫描源码
-  const srcJava = join(root, "src/main/java");
-  const srcKotlin = join(root, "src/main/kotlin");
-
-  const javaFiles = walkDir(srcJava, [".java"]);
-  const kotlinFiles = walkDir(srcKotlin, [".kt"]);
+  // 3. 扫描源码（与 extract_common 同一套 Architectury 多根）
+  const javaFiles: string[] = [];
+  const kotlinFiles: string[] = [];
+  for (const srcRoot of javaSourceRoots(root)) {
+    javaFiles.push(...walkDir(join(srcRoot, "main/java"), [".java"]));
+    kotlinFiles.push(...walkDir(join(srcRoot, "main/kotlin"), [".kt"]));
+  }
   const allSourceFiles = [...javaFiles, ...kotlinFiles];
 
   let registryCalls = 0;
@@ -660,10 +676,20 @@ export async function analyzePortingPath(args: unknown) {
         hint:
           currentPlatform === "rift" && targetPlatform === "fabric"
             ? "Rift→Fabric 可手写移植笔记；port_project 保持 dryRun，无现成模板则只输出路线。"
-            : "请改用对应平台规则树；Quilt↔Fabric 才视为低风险自动路线。",
+            : UNSUPPORTED_PORT.has(currentPlatform) && UNSUPPORTED_PORT.has(targetPlatform)
+              ? `不支持自动移植 ${currentPlatform} → ${targetPlatform}。请同时查阅当前端 ${currentPlatform} 与目标端 ${targetPlatform} 规则树；Quilt↔Fabric 才视为低风险自动路线。`
+              : "请改用对应平台规则树；Quilt↔Fabric 才视为低风险自动路线。",
         next: [
-          `读 ${portPlat} 档 AGENTS.md；activate_platform_pack action=session --platform=${portPlat}`,
-          `search_docs({platform:"${portPlat}"})`,
+          UNSUPPORTED_PORT.has(currentPlatform) &&
+          UNSUPPORTED_PORT.has(targetPlatform) &&
+          currentPlatform !== targetPlatform
+            ? `读 ${currentPlatform} 与 ${targetPlatform} 档 AGENTS.md；activate_platform_pack action=session --platform=${currentPlatform} 以及 --platform=${targetPlatform}`
+            : `读 ${portPlat} 档 AGENTS.md；activate_platform_pack action=session --platform=${portPlat}`,
+          UNSUPPORTED_PORT.has(currentPlatform) &&
+          UNSUPPORTED_PORT.has(targetPlatform) &&
+          currentPlatform !== targetPlatform
+            ? `search_docs({platform:"${currentPlatform}"}) 与 search_docs({platform:"${targetPlatform}"})`
+            : `search_docs({platform:"${portPlat}"})`,
           portPlat === "rift" || currentPlatform === "rift"
             ? "Rift→Fabric 只出笔记，port_project 保持 dryRun"
             : "不要对基岩 / LiteLoader / Rift / ModLoader 自动改工程",
@@ -1000,7 +1026,7 @@ function applyPackageRenames(root: string, dryRun: boolean): {
   for (const item of staged) {
     try {
       assertWritablePath(item.file, allowRoot);
-      writeFileSync(item.file, item.next, "utf-8");
+      atomicWriteUtf8(item.file, item.next);
       written.push(item);
     } catch (err) {
       let rollbackError: string | undefined;
@@ -1029,7 +1055,7 @@ function applyPackageRenames(root: string, dryRun: boolean): {
     }
   }
 
-  return { renames, unreviewed: unreviewedCandidates(), modified: written.map((w) => w.file) };
+  return { renames, unreviewed: unreviewedCandidates(), modified: written.map((w) => pathRel(root, w.file)) };
 }
 
 function unreviewedCandidates(): { file: string; reason: string }[] {
@@ -1153,7 +1179,7 @@ export async function portProject(args: unknown) {
           assertCreatableDir(parent, allowRoot);
           mkdirSync(parent, { recursive: true });
           assertWritablePath(full, allowRoot);
-          writeFileSync(full, content, "utf-8");
+          atomicWriteUtf8(full, content);
           written.push(full);
         }
       } catch (err) {

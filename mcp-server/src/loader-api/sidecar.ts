@@ -69,6 +69,23 @@ export function readSidecar(jarPath: string): SidecarInfo {
   return {};
 }
 
+export const SIDECAR_SCHEMA_VERSION = "1";
+
+export function sidecarSchemaCompatible(
+  schemaVersion?: string,
+): { ok: true } | { ok: false; action: ActionEnvelope } {
+  if (!schemaVersion) return { ok: true };
+  if (schemaVersion === SIDECAR_SCHEMA_VERSION) return { ok: true };
+  return {
+    ok: false,
+    action: actionable(
+      "INVALID_INPUT",
+      `sidecar schemaVersion=${schemaVersion} 不兼容（需要 ${SIDECAR_SCHEMA_VERSION}）`,
+      ["更新 sidecar 或重新 ingest"],
+    ),
+  };
+}
+
 export function assertCacheFresh(opts: {
   jarSha256: string;
   summarySha?: string;

@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, readFileSync } from "fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import {
@@ -7,6 +7,42 @@ import {
   parseKey,
 } from "./keys.js";
 import type { LoaderApiKeyMeta, LoaderApiSummary, LoaderClassRecord, MethodInfo } from "./types.js";
+
+type MergedCache = {
+  stamp: string;
+  map: Map<string, { summary: LoaderApiSummary; overlay: boolean }>;
+};
+let _mergedCache: MergedCache | null = null;
+
+function dirStamp(dir: string): string {
+  try {
+    if (!existsSync(dir)) return "missing";
+    let names: string[] = [];
+    try {
+      names = readdirSync(dir);
+    } catch {
+      return "err";
+    }
+    const parts = names
+      .filter((n) => isSummaryFile(n))
+      .sort()
+      .map((n) => {
+        try {
+          const st = statSync(join(dir, n));
+          return `${n}:${st.mtimeMs}:${st.size}`;
+        } catch {
+          return `${n}:err`;
+        }
+      });
+    return parts.join(",") || `empty:${statSync(dir).mtimeMs}`;
+  } catch {
+    return "err";
+  }
+}
+
+export function invalidateMergedSummariesCache(): void {
+  _mergedCache = null;
+}
 
 const SKIP_SUMMARY_FILES = new Set([
   "index.json",
@@ -54,7 +90,7 @@ function scanDir(dir: string, source: "official" | "user_jar"): Map<string, { su
     if (!isSummaryFile(name)) continue;
     const key = name.replace(/\.json$/i, "");
     const summary = loadJsonFile(join(dir, name));
-    if (!summary) continue;
+    if (!summary || summary.invalid === true) continue;
     summary.key = key;
     if (!summary.source) summary.source = source;
     out.set(key, { summary, overlay: source === "user_jar" });
@@ -64,12 +100,17 @@ function scanDir(dir: string, source: "official" | "user_jar"): Map<string, { su
 
 /** 官方先，cache overlay 后覆盖同 key。 */
 export function loadMergedSummaries(): Map<string, { summary: LoaderApiSummary; overlay: boolean }> {
-  const merged = scanDir(officialSummariesDir(), "official");
-  const overlay = scanDir(overlaySummariesDir(), "user_jar");
+  const officialDir = officialSummariesDir();
+  const overlayDir = overlaySummariesDir();
+  const stamp = `${dirStamp(officialDir)}|${dirStamp(overlayDir)}`;
+  if (_mergedCache && _mergedCache.stamp === stamp) return _mergedCache.map;
+  const merged = scanDir(officialDir, "official");
+  const overlay = scanDir(overlayDir, "user_jar");
   for (const [key, val] of overlay) {
     val.summary.source = "user_jar";
     merged.set(key, { summary: val.summary, overlay: true });
   }
+  _mergedCache = { stamp, map: merged };
   return merged;
 }
 

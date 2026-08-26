@@ -36,7 +36,11 @@ export function computeSourceFingerprint(versionDir: string): string | null {
   for (const f of walkFiles(processed)) {
     if (/\.(md|markdown|txt)$/i.test(f)) files.push(f);
   }
-  files.sort((a, b) => a.replace(/\\/g, "/").localeCompare(b.replace(/\\/g, "/"), "en"));
+  files.sort((a, b) => {
+    const x = a.replace(/\\/g, "/");
+    const y = b.replace(/\\/g, "/");
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
   if (files.length === 0) {
     _fpCache.set(versionDir, { fp: null, mtimeMax, fileCount, expiresAt: now + FP_TTL_MS });
     return null;

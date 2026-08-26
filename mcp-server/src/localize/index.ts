@@ -43,18 +43,18 @@ function fail(code: string, message: string, nextSteps: string[], extra: Record<
 }
 
 function parseSourceJson(args: LocalizeModArgs):
-  | { ok: true; value: LangMap }
+  | { ok: true; value: LangMap; nonStringKeys?: string[] }
   | { ok: false; error: string } {
   const raw = args.sourceJson !== undefined ? args.sourceJson : args.enUsJson;
   return parseLangInput(raw);
 }
 
-function softParseZh(raw: unknown): { value: LangMap; warning?: string } {
+function softParseZh(raw: unknown): { value: LangMap; warning?: string; nonStringKeys?: string[] } {
   const parsed = parseLangInput(raw);
   if (!parsed.ok) {
     return { value: {}, warning: "ZH_PARSE_FAILED_TREATED_AS_EMPTY" };
   }
-  return { value: parsed.value };
+  return { value: parsed.value, nonStringKeys: parsed.nonStringKeys };
 }
 
 /** D-5：按条目格式软解析（.lang 解析失败也按空表 + warning，不硬失败）。 */
@@ -324,32 +324,42 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
 
   const notes: string[] = [];
   if (args.modId) notes.push(`modId=${args.modId}（请确认键前缀与代码一致）`);
+  const nonStringWarnings: string[] = [];
+  if (sourceParsed.nonStringKeys?.length) {
+    nonStringWarnings.push(`源语言含非字符串值已跳过: ${sourceParsed.nonStringKeys.join(", ")}`);
+  }
+  const sourceLocaleUsed = normalizeLocaleToken(args.sourceLocale || "en_us");
 
   if (args.action === "diff") {
     const zhParsed = parseLangInput(args.zhCnJson);
     if (!zhParsed.ok) {
-      // zh bad → treat as empty with warning for draft; for diff also soft?
-      // Plan: zh_cn JSON 损坏 → 视作无已有翻译 + warning
       const emptyDiff = diffLang(sourceParsed.value, {});
       return {
         ok: true,
         mode: "own",
         action: "diff",
         ...emptyDiff,
-    warnings: ["ZH_PARSE_FAILED_TREATED_AS_EMPTY"],
+        warnings: ["ZH_PARSE_FAILED_TREATED_AS_EMPTY", ...nonStringWarnings],
         notes,
-        sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
+        sourceLocaleUsed,
         sourceLocaleFallback: false,
       };
     }
     const d = diffLang(sourceParsed.value, zhParsed.value);
+    const warnings = [
+      ...nonStringWarnings,
+      ...(zhParsed.nonStringKeys?.length
+        ? [`已有译文含非字符串值已跳过: ${zhParsed.nonStringKeys.join(", ")}`]
+        : []),
+    ];
     return {
       ok: true,
       mode: "own",
       action: "diff",
       ...d,
       notes,
-      sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
+      warnings: warnings.length ? warnings : undefined,
+      sourceLocaleUsed,
       sourceLocaleFallback: false,
     };
   }
@@ -357,7 +367,13 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
   // draft_zh
   const soft = softParseZh(args.zhCnJson ?? args.existingZhJson);
   const drafted = draftZh(sourceParsed.value, soft.value);
-  const warnings = soft.warning ? [soft.warning] : [];
+  const warnings = [
+    ...(soft.warning ? [soft.warning] : []),
+    ...nonStringWarnings,
+    ...(soft.nonStringKeys?.length
+      ? [`已有译文含非字符串值已跳过: ${soft.nonStringKeys.join(", ")}`]
+      : []),
+  ];
   return {
     ok: true,
     mode: "own",
@@ -371,7 +387,7 @@ function handleOwn(args: LocalizeModArgs): Record<string, unknown> {
     zhCn: drafted.zhCn,
     warnings: warnings.length ? warnings : undefined,
     notes,
-    sourceLocaleUsed: args.sourceLocale?.trim() || "en_us",
+    sourceLocaleUsed,
     sourceLocaleFallback: false,
   };
 }
@@ -403,7 +419,10 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
     return fail("LANG_NOT_IN_JAR", "jar 内无 assets/*/lang/*.json", [
       "确认模组含语言文件",
       "纯库模组可能无可译文案",
-    ], { availableNamespaces: [] });
+    ], {
+      availableNamespaces: [],
+      ...(scanned.skippedMinecraftLang ? { skippedMinecraftLang: scanned.skippedMinecraftLang } : {}),
+    });
   }
 
   const nsRes = resolveNamespace(withSource, chineseOnly, args.namespace);
@@ -539,6 +558,8 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
       },
       notes,
       warnings: warnings.length ? warnings : undefined,
+      sourceFormat: loadedNs.sourceFormat,
+      zhFormat: loadedNs.zhFormat,
     };
   }
 
@@ -576,13 +597,15 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
           null,
           2,
         ) + "\n",
-      [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.sourceFormat}`]:
-        loadedNs.sourceFormat === "lang"
+      [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.zhFormat}`]:
+        loadedNs.zhFormat === "lang"
           ? serializeDotLang(drafted.zhCn)
           : JSON.stringify(drafted.zhCn, null, 2) + "\n",
     },
     notes,
     warnings: warnings.length ? warnings : undefined,
+    sourceFormat: loadedNs.sourceFormat,
+    zhFormat: loadedNs.zhFormat,
   };
 }
 

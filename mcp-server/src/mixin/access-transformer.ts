@@ -82,6 +82,31 @@ export function normalizeOwnerCandidates(name: string): string[] {
   return out;
 }
 
+/** 类名是否指向同一 owner（点号/斜杠/`Outer$Inner`）。 */
+export function ownersMatch(a: string, b: string): boolean {
+  if (!a || !b) return a === b;
+  const left = new Set(normalizeOwnerCandidates(a));
+  return normalizeOwnerCandidates(b).some((x) => left.has(x));
+}
+
+function accessTargetGroups<T extends { owner: string; kind: string; member?: string; descriptor?: string }>(
+  entries: T[],
+): T[][] {
+  const groups: T[][] = [];
+  for (const e of entries) {
+    const hit = groups.find((g) => {
+      const s = g[0];
+      if (s.kind !== e.kind) return false;
+      if ((s.member ?? "") !== (e.member ?? "")) return false;
+      if ((s.descriptor ?? "") !== (e.descriptor ?? "")) return false;
+      return ownersMatch(s.owner, e.owner);
+    });
+    if (hit) hit.push(e);
+    else groups.push([e]);
+  }
+  return groups;
+}
+
 /** 在类及其父类继承链 + 接口闭包（含 record 组件）中查找成员（接口 default/静态成员是合法 AT/AW 目标，F-E108）。 */
 export function lookupMemberInHierarchy(
   index: JarIndex,
@@ -318,27 +343,23 @@ function validateEntries(
 }
 
 function detectCrossFileConflicts(entries: AccessTransformerEntry[]): { conflicts: AccessConflict[]; warnings: string[] } {
-  const byKey = new Map<string, AccessTransformerEntry[]>();
-  for (const e of entries) {
-    const ownerKey = (normalizeOwnerCandidates(e.owner)[0] ?? e.owner).replace(/\./g, "/");
-    const key = e.kind === "class"
-      ? `class:${ownerKey}`
-      : `member:${ownerKey}#${e.member}${e.descriptor ?? ""}`;
-    const list = byKey.get(key) ?? [];
-    list.push(e);
-    byKey.set(key, list);
-  }
   const conflicts: AccessConflict[] = [];
   const warnings: string[] = [];
-  for (const [key, list] of byKey) {
+  for (const list of accessTargetGroups(entries)) {
     if (list.length < 2) continue;
-    const target = key.replace(/^(class|member):/, "");
     const first = list[0];
+    const target = first.kind === "class"
+      ? first.owner
+      : `${first.owner}#${first.member}${first.descriptor ?? ""}`;
     for (const e of list.slice(1)) {
-      if (e.access !== first.access) {
-        conflicts.push({ target, accessA: first.access, accessB: e.access });
-      } else {
+      if (e.access === first.access) {
         warnings.push(`重复声明（相同 access）：${target}（第 ${e.lineNo} 行）`);
+      } else if (e.access.replace(/-f$/, "") === first.access.replace(/-f$/, "")) {
+        warnings.push(
+          `同一目标 ${target} 可见性相同、仅 -f（去 final）不同：${first.access} vs ${e.access}（不视为冲突）`,
+        );
+      } else {
+        conflicts.push({ target, accessA: first.access, accessB: e.access });
       }
     }
   }

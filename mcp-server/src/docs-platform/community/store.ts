@@ -106,8 +106,10 @@ export function tokenizeCommunityQuery(q: string): string[] {
 }
 
 export class CommunityDocStore {
+  private static readonly INDEX_TTL_MS = 5 * 60 * 1000;
   private root: string;
   private entries: CommunityIndexEntry[] | null = null;
+  private entriesLoadedAt = 0;
   private indexWarning: string | null = null;
 
   constructor(root?: string) {
@@ -128,22 +130,28 @@ export class CommunityDocStore {
   }
 
   private loadIndex(): CommunityIndexEntry[] {
-    if (this.entries) return this.entries;
+    if (this.entries && Date.now() - this.entriesLoadedAt < CommunityDocStore.INDEX_TTL_MS) {
+      return this.entries;
+    }
     const indexPath = join(this.root, "indexes", "index-l0.json");
     if (!existsSync(indexPath)) {
       this.entries = [];
+      this.entriesLoadedAt = Date.now();
       this.indexWarning = this.emptyIndexWarning();
       return this.entries;
     }
     try {
       const raw = JSON.parse(readFileSync(indexPath, "utf8")) as IndexFile;
       this.entries = raw.entries ?? [];
+      this.entriesLoadedAt = Date.now();
       if (this.entries.length === 0) this.indexWarning = this.emptyIndexWarning();
+      else this.indexWarning = null;
       return this.entries;
     } catch {
       // eslint-disable-next-line no-console
       console.error(`[mc-mcp-server] WARN: 无法解析 community index-l0.json：${indexPath}`);
       this.entries = [];
+      this.entriesLoadedAt = Date.now();
       this.indexWarning = this.emptyIndexWarning();
       return this.entries;
     }

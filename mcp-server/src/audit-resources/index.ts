@@ -47,6 +47,12 @@ export function normalizeTextureRef(ref: string): string | null {
   return withoutNs.replace(/^\/+/, "").replace(/\\/g, "/");
 }
 
+/** Path-segment aligned: `block/foo` matches `foo` only as `.../foo`, never substring `foo` in `food`. */
+export function textureKeysAlign(a: string, b: string): boolean {
+  if (a === b) return true;
+  return a.endsWith("/" + b) || b.endsWith("/" + a);
+}
+
 /** `assets/<mod>/textures/block/foo.png` or `textures/block/foo.png` → `block/foo` */
 export function textureKeyFromRel(rel: string): string | null {
   const n = rel.replace(/\\/g, "/");
@@ -96,13 +102,13 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     const key = normalizeTextureRef(tex);
     if (!key) continue;
     referencedKeys.add(key);
-    if (!textureByKey.has(key) && ![...textureByKey.keys()].some((k) => k === key || k.endsWith("/" + key) || key.endsWith(k))) {
+    if (!textureByKey.has(key) && ![...textureByKey.keys()].some((k) => textureKeysAlign(k, key))) {
       issues.push({ severity: "warn", path: tex, message: "模型引用的纹理未在资源树中找到对应 .png" });
     }
   }
 
   const orphanTextures = [...textureByKey.entries()]
-    .filter(([key]) => !referencedKeys.has(key) && ![...referencedKeys].some((ref) => ref === key || ref.endsWith(key) || key.endsWith(ref)))
+    .filter(([key]) => !referencedKeys.has(key) && ![...referencedKeys].some((ref) => textureKeysAlign(key, ref)))
     .map(([, path]) => path);
 
   if (input.modId && /[A-Z]/.test(input.modId)) {

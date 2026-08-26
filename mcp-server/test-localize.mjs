@@ -121,6 +121,19 @@ function testOwnDiffMissing() {
   assert.deepEqual(r.extraInZh, []);
 }
 
+function testOwnNonStringKeysAndLocale() {
+  const r = localizeMod({
+    mode: "own",
+    action: "diff",
+    sourceJson: { a: "1", b: 2 },
+    zhCnJson: { a: "一" },
+    sourceLocale: "EN_GB",
+  });
+  assert.equal(r.ok, true);
+  assert.equal(r.sourceLocaleUsed, "en_gb");
+  assert.ok(r.warnings?.some((w) => /非字符串/.test(w) && /\bb\b/.test(w)), JSON.stringify(r.warnings));
+}
+
 function testOwnEmptyPreserved() {
   const r = localizeMod({
     mode: "own",
@@ -359,6 +372,40 @@ function testJarNoLang() {
   assert.equal(r.code, "LANG_NOT_IN_JAR");
 }
 
+function testJarSkippedMinecraftLang() {
+  const jar = writeMockJar("mc-lang.jar", [
+    { name: "assets/minecraft/lang/en_us.json", content: "{}" },
+  ]);
+  const r = localizeMod({ mode: "third_party", action: "extract", jarPath: jar });
+  assert.equal(r.ok, false);
+  assert.equal(r.code, "LANG_NOT_IN_JAR");
+  assert.equal(r.skippedMinecraftLang, 1);
+}
+
+function testJarZhSibling() {
+  const jar = writeMockJar("zh-hk.jar", [
+    { name: "assets/demo/lang/en_us.json", content: JSON.stringify({ a: "A", b: "B" }) },
+    { name: "assets/demo/lang/zh_hk.json", content: JSON.stringify({ a: "甲" }) },
+  ]);
+  const r = localizeMod({ mode: "third_party", action: "extract", jarPath: jar });
+  assert.equal(r.ok, true, JSON.stringify(r).slice(0, 300));
+  assert.deepEqual(r.missingInZh, ["b"]);
+  assert.equal(r.zhCn.a, "甲");
+}
+
+function testJarPackDraftZhFormat() {
+  const jar = writeMockJar("mix-fmt.jar", [
+    { name: "assets/demo/lang/en_us.lang", content: "a=A\nb=B\n" },
+    { name: "assets/demo/lang/zh_cn.json", content: JSON.stringify({ a: "甲" }) },
+  ]);
+  const draft = localizeMod({ mode: "third_party", action: "pack_draft", jarPath: jar, mcVersion: "1.12.2" });
+  assert.equal(draft.ok, true, JSON.stringify(draft).slice(0, 300));
+  assert.equal(draft.zhFormat, "json");
+  assert.equal(draft.sourceFormat, "lang");
+  assert.ok(draft.files["assets/demo/lang/zh_cn.json"], Object.keys(draft.files ?? {}).join(","));
+  assert.equal(draft.files["assets/demo/lang/zh_cn.lang"], undefined);
+}
+
 function testJarBadZhContinues() {
   const jar = writeMockJar("bad-zh.jar", [
     { name: "assets/demo/lang/en_us.json", content: JSON.stringify({ a: "A" }) },
@@ -420,6 +467,7 @@ function main() {
   const tests = [
     testOwnDiff,
     testOwnDiffMissing,
+    testOwnNonStringKeysAndLocale,
     testOwnDraft,
     testOwnEmptyPreserved,
     testPlaceholderNormalize,
@@ -437,6 +485,9 @@ function main() {
     testJarBadSourceJson,
     testJarBadNs,
     testJarNoLang,
+    testJarSkippedMinecraftLang,
+    testJarZhSibling,
+    testJarPackDraftZhFormat,
     testJarBadZhContinues,
     testDeflatedJar,
     testPackFormatMap,

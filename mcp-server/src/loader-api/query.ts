@@ -1,5 +1,6 @@
 import { actionable } from "../utils/actionable.js";
 import {
+  candidateKeysSafe,
   isNoJavaIngest,
   notIndexedAction,
   platformSkippedAction,
@@ -111,6 +112,10 @@ export function queryLoaderApi(args: QueryLoaderApiArgs) {
       action: actionable("INVALID_INPUT", "className 必填（FQCN 或 simpleName）。", ["传入类名"]),
     };
   }
+  const keys = candidateKeysSafe(platform, minecraftVersion);
+  if (!keys.ok) {
+    return { ok: false, found: false, code: "INVALID_INPUT" as const, action: keys.action };
+  }
   const hit = findSummary(platform, minecraftVersion);
   if (!hit) return missingIndexPayload(platform, minecraftVersion);
 
@@ -180,6 +185,10 @@ export function searchLoaderApi(args: SearchLoaderApiArgs) {
     const minecraftVersion = String(args.minecraftVersion ?? "").trim();
     let indexed = listIndexed();
     if (platform && minecraftVersion) {
+      const keys = candidateKeysSafe(platform, minecraftVersion);
+      if (!keys.ok) {
+        return { ok: false, found: false, code: "INVALID_INPUT" as const, action: keys.action };
+      }
       const hit = findSummary(platform, minecraftVersion);
       indexed = hit
         ? indexed.filter((x) => x.key === hit.key)
@@ -207,6 +216,10 @@ export function searchLoaderApi(args: SearchLoaderApiArgs) {
       found: false,
       action: actionable("INVALID_INPUT", "search 模式需要 query 子串。", ["传入 query，或改用 mode=list"]),
     };
+  }
+  const keys = candidateKeysSafe(platform, minecraftVersion);
+  if (!keys.ok) {
+    return { ok: false, found: false, code: "INVALID_INPUT" as const, action: keys.action };
   }
   const hit = findSummary(platform, minecraftVersion);
   if (!hit) return missingIndexPayload(platform, minecraftVersion);

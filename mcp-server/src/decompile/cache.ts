@@ -14,7 +14,7 @@
  */
 
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, readdirSync, renameSync } from "fs";
-import { join } from "path";
+import { join, resolve } from "path";
 import os from "os";
 import { createHash } from "crypto";
 import { DatabaseSync } from "node:sqlite";
@@ -151,6 +151,12 @@ export function setArtifact(
        kind = excluded.kind, version = excluded.version, path = excluded.path,
        sha256 = excluded.sha256, state = excluded.state, updated_at = excluded.updated_at`,
   ).run(key, kind, opts.version ?? null, path, opts.sha256 ?? null, opts.state ?? "ready", new Date().toISOString());
+}
+
+/** Windows 下大小写/斜杠归一，避免同一 jar 多套 cache key。 */
+export function normalizeArtifactPath(p: string): string {
+  const n = resolve(p).replace(/\\/g, "/");
+  return process.platform === "win32" ? n.toLowerCase() : n;
 }
 
 export function getArtifact(db: DatabaseSync, key: string): ArtifactRecord | null {

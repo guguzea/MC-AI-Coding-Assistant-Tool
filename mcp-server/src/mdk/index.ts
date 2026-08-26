@@ -974,6 +974,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   const fetched = await fetchZipBuffer(entry.archiveUrl);
   if (!fetched.ok) {
     if (args.allowCacheFallback && cached.ready) {
+      const parsed = parseExampleEntry(cached.unpackedRoot!);
       return {
         ...base,
         downloaded: false,
@@ -981,6 +982,7 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
         dest: destCache,
         unpackedRoot: cached.unpackedRoot,
         warning: `官方 URL 失败 ${fetched.message}，已用同一 platform+version 的 cache（禁止邻版）。`,
+        ...parsed,
       };
     }
     return {

@@ -1,12 +1,12 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import { isAbsolute, join } from "path";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "fs";
+import { isAbsolute, join, resolve } from "path";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { listZipEntries, readZip } from "../decompile/zip-util.js";
 import { actionable } from "../utils/actionable.js";
 import { extractCompilationUnit } from "./extract.js";
-import { candidateKeys, howToIngestCli, mcpServerRoot } from "./keys.js";
-import { assertCacheFresh, readSidecar, sha256File } from "./sidecar.js";
-import { overlaySummariesDir, dedupeLoaderClasses } from "./store.js";
+import { candidateKeysSafe, howToIngestCli, mcpServerRoot } from "./keys.js";
+import { assertCacheFresh, readSidecar, sha256File, sidecarSchemaCompatible } from "./sidecar.js";
+import { overlaySummariesDir, dedupeLoaderClasses, invalidateMergedSummariesCache } from "./store.js";
 import type { LoaderApiSummary, LoaderClassRecord } from "./types.js";
 
 export type IngestLoaderApiArgs = {
@@ -49,6 +49,10 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
       action: actionable("INVALID_INPUT", "mappingsVersion 必填，禁止猜 Yarn/MCP。", ["传入 mappingsVersion"]),
     };
   }
+  const keys = candidateKeysSafe(platform, minecraftVersion);
+  if (!keys.ok) {
+    return { ok: false, code: "INVALID_INPUT" as const, action: keys.action };
+  }
   if (!existsSync(jarPath)) {
     return {
       ok: false,
@@ -56,7 +60,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     };
   }
 
-  const key = candidateKeys(platform, minecraftVersion)[0];
+  const key = keys.keys[0];
   const overlayDir = overlaySummariesDir();
   const destJson = join(overlayDir, `${key}.json`);
   const cacheJar = join(resolveCacheRoot(), "loader-jars", `${key}.jar`);
@@ -78,6 +82,10 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
   const classNames = entryNames.filter((n) => n.replace(/\\/g, "/").endsWith(".class"));
   const jarSha = sha256File(jarPath);
   const sidecar = readSidecar(jarPath);
+  const schema = sidecarSchemaCompatible(sidecar.schemaVersion);
+  if (!schema.ok) {
+    return { ok: false, code: "INVALID_INPUT" as const, action: schema.action };
+  }
 
   let existingSha: string | undefined;
   if (existsSync(destJson)) {
@@ -142,8 +150,9 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     rawClasses.push(...extractCompilationUnit(data.toString("utf8"), posix));
   }
   const classes = dedupeLoaderClasses(rawClasses);
+  const parseErrorCount = classes.filter((c) => Boolean(c.parseError)).length;
 
-  const fqcnIndex = [...new Set(classes.map((c) => c.fqcn).filter((fq) => fq && !/\$[0-9]/.test(fq)))];
+  const fqcnIndex = [...new Set(classes.map((c) => c.fqcn).filter((fq) => fq && !fq.startsWith("__parse_error__") && !/\$[0-9]/.test(fq)))];
 
   const summary: LoaderApiSummary = {
     file: `${key}.jar`,
@@ -155,6 +164,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     sourceJarSha256: jarSha,
     source: "user_jar",
     classCount: classes.length,
+    parseErrorCount,
     fqcnIndex,
     classes,
     note: "user ingest overlay；禁止提交进仓库",
@@ -163,7 +173,7 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
   mkdirSync(overlayDir, { recursive: true });
   mkdirSync(join(resolveCacheRoot(), "loader-jars"), { recursive: true });
   writeFileSync(destJson, JSON.stringify(summary, null, 2), "utf8");
-  if (jarPath !== cacheJar) {
+  if (!sameJarPath(jarPath, cacheJar)) {
     copyFileSync(jarPath, cacheJar);
   }
   writeFileSync(
@@ -181,6 +191,8 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     "utf8",
   );
 
+  invalidateMergedSummariesCache();
+
   return {
     ok: true,
     dryRun: false,
@@ -192,5 +204,20 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     sourceJarSha256: jarSha,
     mappingsVersion,
     wroteOfficialData: false,
+    parseErrorCount,
   };
+}
+
+function canonicalPath(p: string): string {
+  try {
+    return realpathSync(p);
+  } catch {
+    return resolve(p);
+  }
+}
+
+function sameJarPath(a: string, b: string): boolean {
+  const x = canonicalPath(a);
+  const y = canonicalPath(b);
+  return process.platform === "win32" ? x.toLowerCase() === y.toLowerCase() : x === y;
 }

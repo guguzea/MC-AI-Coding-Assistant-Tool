@@ -163,6 +163,11 @@ test("buildFtsQuery: 无有效 token → null", () => {
   assert.equal(buildFtsQuery("the and of"), null);
 });
 
+test("buildFtsQuery: 短词 be 保留", () => {
+  assert.equal(buildFtsQuery("be"), '"be"*');
+  assert.equal(buildFtsQuery("the be"), '"be"*');
+});
+
 // ── 3. RRF 融合 ───────────────────────────────────────────────────────────────
 
 test("rrfFuse: k=60 融合两个排行", () => {

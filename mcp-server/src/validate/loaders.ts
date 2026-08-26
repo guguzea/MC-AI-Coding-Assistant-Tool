@@ -40,20 +40,19 @@ function classLooksPresent(
   javaFiles: Array<{ path: string; content: string }>,
   fqcn: string,
 ): boolean {
+  const posixFqcn = fqcn.replace(/\./g, "/");
   const simple = fqcn.split(".").pop() ?? fqcn;
-  const needle = escapeRegExp(simple.replace(/\$/g, ""));
-  // 嵌套类（Outer$Inner）文件名为 Outer$Inner.java，按包路径 + $ 名精确匹配（审计 B22：剥 $ 会永远找不到）
-  const nestedFile = fqcn.includes("$")
-    ? `${fqcn.includes(".") ? fqcn.split(".").slice(0, -1).join("/") + "/" : ""}${simple}`
-    : null;
+  const leaf = simple.includes("$") ? simple.slice(simple.lastIndexOf("$") + 1) : simple;
+  const fqcnFile = `/${posixFqcn}.java`;
+  const simpleFile = `/${simple}.java`;
   return javaFiles.some((f) => {
     const p = f.path.replace(/\\/g, "/");
-    if (p.endsWith(`/${needle}.java`) || p.endsWith(`${needle}.java`)) return true;
-    if (nestedFile && p.endsWith(`/${nestedFile}.java`)) return true;
+    const withSlash = p.startsWith("/") ? p : `/${p}`;
+    if (withSlash.endsWith(fqcnFile) || p === `${posixFqcn}.java`) return true;
+    if (withSlash.endsWith(simpleFile) || p === `${simple}.java`) return true;
     try {
-      return new RegExp(`\\bclass\\s+${needle}\\b`).test(f.content);
+      return new RegExp(`\\bclass\\s+${escapeRegExp(leaf)}\\b`).test(f.content);
     } catch {
-      // 转义后仍非法（理论上不可达）：按「类不存在」处理而非让整个校验崩溃
       return false;
     }
   });
@@ -203,7 +202,7 @@ export function validateNeoForge(query: ValidateQuery): ValidationResult {
   if (!/@Mod\s*\(/.test(blob)) {
     errors.push("未找到 @Mod 入口注解");
   }
-  if (!/\(.*IEventBus\b/.test(blob)) {
+  if (!/\(\s*IEventBus\b|\(\s*(?:final\s+)?ModContainer(?:\s+\w+)?\s*,\s*(?:final\s+)?IEventBus\b/.test(blob)) {
     errors.push("未找到接受 IEventBus 的模组构造（NeoForge 入口应把 mod bus 传入构造；认 (IEventBus) 与 (ModContainer, IEventBus)）");
   }
   if (/\bRegistryObject\b/.test(blob)) {

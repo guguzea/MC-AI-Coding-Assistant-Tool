@@ -105,7 +105,7 @@ function resolvePlatformDataDir(platform: Platform): string {
   // 2. Fallback：扫描所有匹配目录
   //    优先级：A. 命名规范目录（forge_X.Y.Z/PLATFORM_SUBDIR/） > B. forge_javadoc/
   //    在同类中选 index-l0.json 条目数最多的
-  let bestDirByPattern: Record<string, { dir: string; count: number }> = {};
+  let bestCountByPattern: Record<string, number> = {};
   try {
     for (const entry of readdirSync(dataRoot, { withFileTypes: true })) {
       if (!entry.isDirectory() || !entry.name.startsWith(`${platform}_`)) continue;
@@ -119,18 +119,14 @@ function resolvePlatformDataDir(platform: Platform): string {
       } catch { /* ignore */ }
 
       const isJavadoc = entry.name === `${platform}_javadoc`;
-      if (!bestDirByPattern[isJavadoc ? "javadoc" : "standard"] || count > bestDirByPattern[isJavadoc ? "javadoc" : "standard"].count) {
-        bestDirByPattern[isJavadoc ? "javadoc" : "standard"] = {
-          dir: join(dataRoot, entry.name, ownGet(PLATFORM_DOC_SUBDIR, platform) ?? `${platform}-docs`),
-          count,
-        };
+      const key = isJavadoc ? "javadoc" : "standard";
+      if (!bestCountByPattern[key] || count > bestCountByPattern[key]) {
+        bestCountByPattern[key] = count;
       }
     }
   } catch { /* ignore */ }
 
-  // Prefer standard naming; fallback to javadoc only if no standard dirs found
-  const bestDir = bestDirByPattern["standard"]?.dir ?? bestDirByPattern["javadoc"]?.dir ?? "";
-  if (bestDir) return dataRoot;
+  if (bestCountByPattern["standard"] || bestCountByPattern["javadoc"]) return dataRoot;
 
   // 3. NeoForge 1.20.1：与 hasPlatformDocData / NeoForgeDocStore 一致，认可 Forge 文档
   if (
@@ -152,9 +148,14 @@ import { ForgeDocStore } from "./forge/store.js";
 import { FabricDocStore } from "./fabric/store.js";
 import { NeoForgeDocStore } from "./neoforge/store.js";
 
+export const UNSUPPORTED_PLATFORM_MSG =
+  "平台不支持；Java 文档用 search_docs（forge/neoforge/fabric/quilt/liteloader/rift/modloader），基岩用 search_bedrock_docs";
+export const UNSUPPORTED_PLATFORM_HINT =
+  "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs";
+
 class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = "平台不支持；Java 文档用 search_docs（forge/neoforge/fabric/quilt/liteloader/rift/modloader），基岩用 search_bedrock_docs";
-  private static readonly HINT = "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader；基岩请用 search_bedrock_docs";
+  private static readonly MSG = UNSUPPORTED_PLATFORM_MSG;
+  private static readonly HINT = UNSUPPORTED_PLATFORM_HINT;
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");

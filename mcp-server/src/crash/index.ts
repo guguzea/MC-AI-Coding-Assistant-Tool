@@ -302,11 +302,15 @@ const KNOWN_PATTERNS: Array<{
   },
 ];
 
-/** 从报告正文 / 路径推断 crashKind */
+/** 从报告正文 / 路径推断 crashKind（指纹只扫前 64KB，避免对整份无界跑正则） */
 export function detectCrashKind(crashReport: string): CrashKind {
+  const CRASH_KIND_SCAN_BYTES = 64 * 1024;
+  const blob = crashReport.length > CRASH_KIND_SCAN_BYTES
+    ? crashReport.slice(0, CRASH_KIND_SCAN_BYTES)
+    : crashReport;
   const name =
-    crashReport.match(/crash-\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
-    crashReport.match(/File:\s*.*crash-.*-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
+    blob.match(/crash-\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
+    blob.match(/File:\s*.*crash-.*-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
     "";
   const kindFromName = name.toLowerCase();
   const map: Record<string, CrashKind> = {
@@ -325,7 +329,7 @@ export function detectCrashKind(crashReport: string): CrashKind {
   };
   const hasLoaderFingerprint =
     /Minecraft Forge|Forge Mod Loader|Fabric Loader|fabric-loader|NeoForge|net\.minecraftforge|net\.fabricmc|net\.neoforged|cpw\.mods\.modlauncher|FMLModContainer|org\.quiltmc|com\.mumfrey\.liteloader|org\.dimdev\.riftloader/i.test(
-      crashReport,
+      blob,
     );
 
   if (kindFromName === "fml") return ownGet(map, kindFromName) ?? "unknown";
@@ -336,22 +340,18 @@ export function detectCrashKind(crashReport: string): CrashKind {
     return ownGet(map, kindFromName) ?? "unknown";
   }
 
-  // 先取 forgeLike：Quilt/LiteLoader/Rift 正文指纹必须先过 Forge/FML 强指纹排除（混合报告防误判，审计 B18）
   const forgeLike =
-    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge|net\.neoforged/i.test(crashReport);
+    /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge|net\.neoforged/i.test(blob);
 
-  if (!forgeLike && /org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(crashReport)) return "quilt";
-  if (!forgeLike && /com\.mumfrey\.liteloader/i.test(crashReport)) return "liteloader";
-  if (!forgeLike && /org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(crashReport)) return "rift";
+  if (!forgeLike && /org\.quiltmc|QuiltLoader|quilt\.mod\.json/i.test(blob)) return "quilt";
+  if (!forgeLike && /com\.mumfrey\.liteloader/i.test(blob)) return "liteloader";
+  if (!forgeLike && /org\.dimdev\.riftloader|RiftLoaderClientTweaker/i.test(blob)) return "rift";
   if (
-    /net\.minecraft\.src\.ModLoader|\bat ModLoader\.|class\s+mod_[A-Za-z0-9_]+\s+extends\s+BaseMod/i.test(crashReport) &&
-    !/cpw\.mods\.fml|net\.minecraftforge|FMLModContainer/i.test(crashReport)
+    /net\.minecraft\.src\.ModLoader|\bat ModLoader\.|class\s+mod_[A-Za-z0-9_]+\s+extends\s+BaseMod/i.test(blob) &&
+    !/cpw\.mods\.fml|net\.minecraftforge|FMLModContainer/i.test(blob)
   ) {
     return "modloader";
   }
-
-  // Forgified Fabric API（NeoForge/Forge 上跑 Fabric 模组的事实标准）保留 net.fabricmc.fabric.api.* 包名：
-  // fabric 判定必须排除 Forge/FML 强指纹，否则 NeoForge/Forge 报告会被误判为 fabric（镜像 modloader 分支的负排除写法）
 
   if (kindFromName === "fabric") {
     if (!forgeLike) return "fabric";
@@ -359,23 +359,23 @@ export function detectCrashKind(crashReport: string): CrashKind {
     return ownGet(map, kindFromName)!;
   }
 
-  if (/net\.fabricmc|fabric loader|fabric-loader/i.test(crashReport) && !forgeLike) return "fabric";
-  if (/OutOfMemoryError|Java heap space|GC overhead/i.test(crashReport)) return "memory";
-  if (/OpenGL|GLError|GLFW error|LWJGL/i.test(crashReport)) return "openGL";
-  if (/\bRenderSystem\b/i.test(crashReport) && /GLError|GLFW|OpenGL|lwjgl/i.test(crashReport)) return "openGL";
+  if (/net\.fabricmc|fabric loader|fabric-loader/i.test(blob) && !forgeLike) return "fabric";
+  if (/OutOfMemoryError|Java heap space|GC overhead/i.test(blob)) return "memory";
+  if (/OpenGL|GLError|GLFW error|LWJGL/i.test(blob)) return "openGL";
+  if (/\bRenderSystem\b/i.test(blob) && /GLError|GLFW|OpenGL|lwjgl/i.test(blob)) return "openGL";
   if (
     /FMLModContainer|cpw\.mods\.modlauncher|net\.minecraftforge\.fml|net\.neoforged|Missing or unsupported mandatory/i.test(
-      crashReport,
+      blob,
     )
   ) {
     return "fml";
   }
-  if (hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated/i.test(crashReport)) return "server";
-  if (!hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated|-server\.(txt|log)/i.test(crashReport)) {
+  if (hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated/i.test(blob)) return "server";
+  if (!hasLoaderFingerprint && /DedicatedServer|net\.minecraft\.server\.dedicated|-server\.(txt|log)/i.test(blob)) {
     return "vanilla";
   }
-  if (hasLoaderFingerprint && /IntegratedServer/i.test(crashReport)) return "integrated-server";
-  if (hasLoaderFingerprint && /Minecraft\.getInstance|net\.minecraft\.client/i.test(crashReport)) return "client";
+  if (hasLoaderFingerprint && /IntegratedServer/i.test(blob)) return "integrated-server";
+  if (hasLoaderFingerprint && /Minecraft\.getInstance|net\.minecraft\.client/i.test(blob)) return "client";
   return "unknown";
 }
 
@@ -590,6 +590,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       for (const name of m) {
         if (/^lambda\$/i.test(name)) continue;
         if (/\$Properties$/i.test(name)) continue;
+        if (/\$\$Lambda/i.test(name)) continue;
+        if (/\$\d+$/.test(name)) continue;
         deobfuscated.push(name);
       }
     }

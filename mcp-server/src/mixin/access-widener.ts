@@ -13,6 +13,7 @@
 import type { JarIndex } from "./bytecode.js";
 import {
   normalizeOwnerCandidates,
+  ownersMatch,
   lookupMemberInHierarchy,
   isObfuscatedName,
   mappingMismatchSuggestion,
@@ -225,21 +226,26 @@ function validateWidenerEntries(
 }
 
 function detectWidenerConflicts(entries: AccessWidenerEntry[]): { conflicts: AccessConflict[]; warnings: string[] } {
-  const byKey = new Map<string, AccessWidenerEntry[]>();
+  const groups: AccessWidenerEntry[][] = [];
   for (const e of entries) {
-    const key = e.kind === "class"
-      ? `class:${e.owner}`
-      : `member:${e.owner}#${e.member}${e.descriptor ?? ""}`;
-    const list = byKey.get(key) ?? [];
-    list.push(e);
-    byKey.set(key, list);
+    const hit = groups.find((g) => {
+      const s = g[0];
+      if (s.kind !== e.kind) return false;
+      if ((s.member ?? "") !== (e.member ?? "")) return false;
+      if ((s.descriptor ?? "") !== (e.descriptor ?? "")) return false;
+      return ownersMatch(s.owner, e.owner);
+    });
+    if (hit) hit.push(e);
+    else groups.push([e]);
   }
   const conflicts: AccessConflict[] = [];
   const warnings: string[] = [];
-  for (const [key, list] of byKey) {
+  for (const list of groups) {
     if (list.length < 2) continue;
-    const target = key.replace(/^(class|member):/, "");
     const first = list[0];
+    const target = first.kind === "class"
+      ? first.owner
+      : `${first.owner}#${first.member}${first.descriptor ?? ""}`;
     const firstTransitive = first.transitive;
     for (const e of list.slice(1)) {
       if (e.type !== first.type) {

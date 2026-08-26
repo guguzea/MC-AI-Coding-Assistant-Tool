@@ -67,6 +67,22 @@ export const SHORT_QUERY_WHITELIST = new Set([
   "at", "be", "nbt", "gui", "ui", "ai", "id", "mc", "mod",
 ]);
 
+/** L0/L1/L2 共用：精确 id、去版本前缀、或 `.../bare` 后缀。 */
+export function matchDocIndexId(entryId: string, requested: string, version: string): boolean {
+  const trimmed = requested.trim();
+  if (!trimmed || !entryId) return false;
+  const hasVerPrefix = /^(?:\d+\.\d+(?:\.\d+)?|stable)\//.test(trimmed);
+  const normalized = hasVerPrefix ? trimmed : `${version}/${trimmed.replace(/\//g, "_")}`;
+  const bare = normalized.replace(/^(?:\d+\.\d+(?:\.\d+)?|stable)\//, "");
+  if (!bare) return entryId === normalized || entryId === trimmed;
+  return (
+    entryId === normalized ||
+    entryId === trimmed ||
+    entryId === bare ||
+    entryId.endsWith(`/${bare}`)
+  );
+}
+
 /** 短缩写 → 文档路径/标题常用全称（边界匹配 alone 打不中 Access Transformers） */
 const ABBREV_EXPAND: Record<string, string[]> = {
   at: ["accesstransformer", "accesstransformers", "access", "transformer", "transformers"],
@@ -511,9 +527,11 @@ export function enhancedSearch(
     opts.symbolIndex.byteSize > 0 &&
     opts.symbolIndex.byteSize <= L1_PARAGRAPH_FALLBACK_MAX_BYTES
   ) {
-    const needles = [...new Set([...expanded, ...querySymbols])].filter(
-      (t) => t.length >= 2 && !QUERY_STOP_WORDS.has(t),
-    );
+  const needles = [...new Set([...expanded, ...querySymbols])].filter((t) => {
+    const lower = t.toLowerCase();
+    if (SHORT_QUERY_WHITELIST.has(lower)) return true;
+    return t.length >= 2 && !QUERY_STOP_WORDS.has(lower);
+  });
     for (const [id, entry] of opts.symbolIndex.byId) {
       if ((scores.get(id) ?? 0) > 0) continue;
       const blob = [
@@ -569,7 +587,7 @@ export function enhancedSearch(
           .includes(prefixNeedle);
       if (!hay.includes(prefixNeedle) && !symHit && !paraHit) continue;
     }
-    results.push({ ...entry, score: score + pathBoost(entry.id, registryQuery) });
+    results.push({ ...entry, score });
   }
 
   results.sort((a, b) => b.score - a.score || priorityRank(a.priority) - priorityRank(b.priority));

@@ -50,6 +50,10 @@ public class Inner {
 
   const bads = extractCompilationUnit("not java {{{", "Bad.java");
   assert.ok(bads[0]?.parseError, "parseError on bad unit");
+  const badA = extractCompilationUnit("not java {{{", "pkg/A.java");
+  const badB = extractCompilationUnit("not java {{{", "pkg/B.java");
+  assert.notEqual(badA[0]?.fqcn, badB[0]?.fqcn, "parse failures must not share fqcn unknown");
+  assert.match(badA[0]?.fqcn ?? "", /A\.java/);
   console.log("extract CompilationUnit: ok");
 }
 
@@ -388,4 +392,21 @@ void readFileSync;
   assert.equal(qslHit.found, true, `QSL RegistryEvents: ${qslHit.code || qslHit.notes?.[0]}`);
   console.log(`data quality neo classes=${neo.classes?.length} index=${neo.fqcnIndex?.length} qsl=${qsl.classCount}`);
 }
+
+{
+  const { candidateKeysSafe, sidecarSchemaCompatible } = await import("./dist/loader-api/index.js");
+  const bad = candidateKeysSafe("../x", "1.20.1");
+  assert.equal(bad.ok, false);
+  assert.equal(bad.action?.code, "INVALID_INPUT");
+  const q = queryLoaderApi({ platform: "forge/../etc", minecraftVersion: "1.20.1", className: "Item" });
+  assert.equal(q.found, false);
+  assert.equal(q.code, "INVALID_INPUT");
+  const good = candidateKeysSafe("forge", "1.20.1");
+  assert.equal(good.ok, true);
+  assert.ok(sidecarSchemaCompatible().ok);
+  assert.ok(sidecarSchemaCompatible("1").ok);
+  assert.equal(sidecarSchemaCompatible("99").ok, false);
+  console.log("loader-api INVALID_INPUT + sidecar schema: ok");
+}
+
 console.log("test-loader-api: all passed");

@@ -214,8 +214,8 @@ export function readJarEntryText(buf: Buffer, entryPath: string): string {
 }
 
 export function isChineseLocale(locale: string): boolean {
-  const l = locale.toLowerCase().replace(/\.json$/, "");
-  return l === "zh_cn" || l === "zh_tw";
+  const l = locale.toLowerCase().replace(/\.json$/, "").replace(/-/g, "_");
+  return l === "zh" || l.startsWith("zh_");
 }
 
 export function canBeSourceLocale(locale: string): boolean {
@@ -274,5 +274,6 @@ export function pickSourceLocale(
 }
 
 export function findZhCn(files: LangFileRef[]): LangFileRef | undefined {
-  return files.find((f) => f.locale === "zh_cn");
+  return files.find((f) => f.locale.replace(/-/g, "_") === "zh_cn")
+    ?? files.find((f) => isChineseLocale(f.locale));
 }

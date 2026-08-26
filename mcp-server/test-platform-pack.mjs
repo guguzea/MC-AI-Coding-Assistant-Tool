@@ -1109,6 +1109,39 @@ function assertHasRuleIds(s, want, label) {
   console.log("fabric 1.21.8/1.21.10 donor is 1.21.4: ok");
 }
 
+{
+  const { ensureFrontmatter, quiltCopiedSkill, yamlQuotedScalar } = await import("./dist/platform-pack/write.js");
+  const { FORGE_COMPAT_BANNER } = await import("./dist/platform-pack/catalog.js");
+  const bannered = `---\n${FORGE_COMPAT_BANNER}\noverlay note\n---\n\n# body\n`;
+  const withDesc = ensureFrontmatter(bannered, "MC Skill neoforge 1.20.1 02: block", { alwaysApply: "true" });
+  const firstFm = withDesc.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  assert.ok(firstFm, "bannered overlay must get a real YAML fence");
+  assert.match(firstFm[1], /^description: "/m);
+  assert.doesNotMatch(firstFm[1], /\[FORGE_COMPAT/);
+  assert.match(firstFm[1], /alwaysApply: true/);
+  assert.match(withDesc, /\[FORGE_COMPAT/);
+
+  const realFm = ensureFrontmatter("---\nglobs: \"*.mdc\"\n---\n\n# r\n", "plain desc", {});
+  assert.match(realFm, /^---\ndescription: "plain desc"\nglobs:/);
+
+  const quoted = yamlQuotedScalar("a: b");
+  assert.equal(quoted, '"a: b"');
+
+  const skillDir = mkdtempSync(join(tmpdir(), "mc-quilt-skill-"));
+  try {
+    const abs = join(skillDir, "SKILL.md");
+    writeFileSync(abs, "# donated\n", "utf8");
+    const copied = quiltCopiedSkill(abs, "mc-foo", "Register: items", "1.21.1");
+    const fm = copied.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    assert.ok(fm, copied.slice(0, 200));
+    assert.match(fm[1], /^description: "Register: items"$/m);
+    assert.doesNotMatch(fm[1], /^description: Register: items$/m);
+  } finally {
+    rmSync(skillDir, { recursive: true, force: true });
+  }
+  console.log("ensureFrontmatter banner + quiltCopiedSkill quotes: ok");
+}
+
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;
 else delete process.env.MC_SKILL_PROJECT_ROOT;
 if (savedAllow) process.env.MC_SKILL_ALLOW_WRITE = savedAllow;

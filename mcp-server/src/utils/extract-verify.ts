@@ -14,7 +14,15 @@ export interface ExtractVerifyResult {
   missingFiles?: string[];
 }
 
-function walkRelTree(root: string, base: string, depth: number, seenReal: Set<string>, files: string[], dirs: string[]): void {
+function walkRelTree(
+  root: string,
+  base: string,
+  depth: number,
+  seenReal: Set<string>,
+  files: string[],
+  dirs: string[],
+  symlinks: string[],
+): void {
   if (depth > 32) {
     // C35：深层多余文件不得静默漏检——塞入哨兵条目让清单比对失败
     files.push("__MAX_DEPTH_EXCEEDED__");
@@ -28,12 +36,14 @@ function walkRelTree(root: string, base: string, depth: number, seenReal: Set<st
     } catch {
       continue;
     }
-    // symlink/junction 一律不计入集合（上层 symlink 扫描负责拒绝；这里防集合被撑爆/穿出）
-    if (st.isSymbolicLink()) continue;
     const rel = relative(base, p).split(sep).join("/");
+    if (st.isSymbolicLink()) {
+      symlinks.push(rel);
+      continue;
+    }
     if (st.isDirectory()) {
       dirs.push(rel);
-      walkRelTree(p, base, depth + 1, seenReal, files, dirs);
+      walkRelTree(p, base, depth + 1, seenReal, files, dirs, symlinks);
     } else if (st.isFile()) {
       files.push(rel);
     }
@@ -63,10 +73,18 @@ export function verifyExtractedTree(rootDir: string, expectedRelFiles: string[])
 
   const files: string[] = [];
   const dirs: string[] = [];
+  const symlinks: string[] = [];
   try {
-    walkRelTree(absRoot, absRoot, 0, new Set(), files, dirs);
+    walkRelTree(absRoot, absRoot, 0, new Set(), files, dirs, symlinks);
   } catch (err) {
     return { ok: false, problem: `扫描解压树失败: ${(err as Error).message}` };
+  }
+
+  if (symlinks.length > 0) {
+    return {
+      ok: false,
+      problem: `解压树含符号链接，已拒绝: ${symlinks.slice(0, 5).join(", ")}`,
+    };
   }
 
   const fileSet = new Set(files);

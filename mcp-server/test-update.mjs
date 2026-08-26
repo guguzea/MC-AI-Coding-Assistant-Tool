@@ -3,7 +3,7 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -382,6 +382,19 @@ async function testMdkUnpackPinGate() {
   assert.ok(/未落盘/.test(missing.problem), missing.problem);
   rmSync(vRoot, { recursive: true, force: true });
 
+  const linkRoot = mkdtempSync(join(tmpdir(), "mc-verify-link-"));
+  writeFileSync(join(linkRoot, "a.txt"), "a");
+  try {
+    symlinkSync(join(linkRoot, "a.txt"), join(linkRoot, "link.txt"));
+    const linked = verifyMod.verifyExtractedTree(linkRoot, ["a.txt"]);
+    assert.equal(linked.ok, false, JSON.stringify(linked));
+    assert.ok(/符号链接/.test(linked.problem), linked.problem);
+  } catch (err) {
+    if (!/EPERM|EACCES|privilege|not supported/i.test(String(err))) throw err;
+  } finally {
+    rmSync(linkRoot, { recursive: true, force: true });
+  }
+
   const zipBuf = mdk.createStoreZip([
     {
       name: "ExampleMod.java",
@@ -519,7 +532,21 @@ async function main() {
   await testTlsCertErrorDetect();
   await testMdkUnpackPinGate();
   await testPendingRestartHint();
+  await testInvalidActionSkipsNetwork();
   console.log("test-update: ok");
+}
+
+async function testInvalidActionSkipsNetwork() {
+  let fetched = false;
+  const r = await update.mcSkillUpdate({
+    action: "nope",
+    fetchImpl: async () => {
+      fetched = true;
+      throw new Error("should not fetch");
+    },
+  });
+  assert.equal(r.ok, false, JSON.stringify(r));
+  assert.equal(fetched, false, "invalid action must not hit GitHub");
 }
 
 main().catch((e) => {

@@ -15,7 +15,7 @@
 import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
-import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform } from "../store.js";
+import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform, UNSUPPORTED_PLATFORM_HINT, UNSUPPORTED_PLATFORM_MSG } from "../store.js";
 import { searchFabricDocs } from "../fabric/index.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
@@ -38,6 +38,22 @@ import {
   searchNeoForgePrimers,
 } from "../neoforge/primers.js";
 import { actionable, ActionCodes } from "../../utils/actionable.js";
+
+function forgeInternalError(e: unknown): CallToolResult {
+  const message = e instanceof Error ? e.message : String(e);
+  return {
+    content: [
+      {
+        type: "text",
+        text: JSON.stringify(
+          { ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message } },
+          null,
+          2,
+        ),
+      },
+    ],
+  };
+}
 
 const _forgeStoreByDir = new Map<string, ForgeDocStore>();
 
@@ -77,8 +93,8 @@ const _genericStoreCache = new Map<string, IDocStore>();
  * 这样行为统一，调用方收到一致的错误 envelope。
  */
 class UnsupportedPlatformStore implements IDocStore {
-  private static readonly MSG = "平台不支持；Java 文档用 forge/neoforge/fabric/quilt/liteloader/rift/modloader，基岩用 search_bedrock_docs";
-  private static readonly HINT = "请使用 platform: forge、neoforge、fabric、quilt、liteloader、rift 或 modloader";
+  private static readonly MSG = UNSUPPORTED_PLATFORM_MSG;
+  private static readonly HINT = UNSUPPORTED_PLATFORM_HINT;
 
   getAvailableVersions(): never {
     throw new DocNotFoundError(UnsupportedPlatformStore.HINT, UnsupportedPlatformStore.MSG, "UNSUPPORTED_PLATFORM");
@@ -132,9 +148,7 @@ export async function listForgeVersions(): Promise<CallToolResult> {
   } catch (e) {
     const miss = asPlatformDataMissingResult(e);
     if (miss) return miss;
-    return {
-      content: [{ type: "text", text: JSON.stringify({ ok: false, error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2) }],
-    };
+    return forgeInternalError(e);
   }
 }
 
@@ -208,6 +222,7 @@ export async function searchForgeDocs(
           text: JSON.stringify(
             withDocsFallbackFields({
               ok: true,
+              platform: "forge",
               query: args.query,
               version: args.version,
               resolvedVersion: detailed.resolvedVersion,
@@ -258,14 +273,7 @@ export async function searchForgeDocs(
         ],
       };
     }
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify({ ok: false, error: (e as Error).message }, null, 2),
-        },
-      ],
-    };
+    return forgeInternalError(e);
   }
 }
 
@@ -343,7 +351,7 @@ export async function getForgeDocSummary(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ error: (e as Error).message }, null, 2),
+          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
         },
       ],
     };
@@ -431,7 +439,7 @@ export async function getForgeDocFull(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ error: (e as Error).message }, null, 2),
+          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
         },
       ],
     };
@@ -508,7 +516,7 @@ export async function getForgeDocRelated(
       content: [
         {
           type: "text",
-          text: JSON.stringify({ error: (e as Error).message }, null, 2),
+          text: JSON.stringify({ ok: false, code: "INTERNAL_ERROR", error: { code: "INTERNAL_ERROR", message: (e as Error).message } }, null, 2),
         },
       ],
     };
@@ -645,6 +653,9 @@ export async function listVersions(
     };
   }
   try {
+    if (!hasPlatformDocData(platform)) {
+      return platformDataMissingResult(platform);
+    }
     const store = getGenericStore(platform);
     const versions = store.getAvailableVersions();
     if (versions.length === 0) return platformDataMissingResult(platform);
@@ -859,10 +870,10 @@ export async function searchDocs(
               semantic: semanticHits !== null,
               total: finalResults.length,
               results: finalResults,
-              ...(platform === "neoforge" && (args.version === "1.20.1" || resolvedVersion === "1.20.1")
+              ...(platform === "neoforge" && neoResolution?.sourcePlatform === "forge"
                 ? {
                   forgeCompatible: true,
-                  source_version: resolvedVersion !== "1.20.1" ? resolvedVersion : undefined,
+                  source_version: neoResolution.sourceVersion ?? "1.20.1",
                   sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
                 }
                 : {}),
@@ -913,7 +924,12 @@ export async function getDocSummary(
     const result = store.loadSummary(args.id, args.version);
     const extra =
       platform === "forge" || platform === "neoforge"
-        ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
+        ? (store as { describeVersionResolution?: (v: string) => {
+            warning?: string;
+            versionFallback?: boolean;
+            sourcePlatform?: string;
+            sourceVersion?: string;
+          } }).describeVersionResolution?.(args.version)
         : undefined;
     const wikiWarn = thinLoaderWikiWarning(platform, [result]);
     return {
@@ -924,10 +940,10 @@ export async function getDocSummary(
           warning: joinSearchWarnings(extra?.warning, wikiWarn),
           ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
           ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
-          ...(platform === "neoforge" && args.version === "1.20.1"
+          ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
             ? {
               forgeCompatible: true,
-              source_version: "1.20.1",
+              source_version: extra.sourceVersion ?? "1.20.1",
               sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
             }
             : {}),
@@ -988,7 +1004,12 @@ export async function getDocFull(
     );
     const extra =
       platform === "forge" || platform === "neoforge"
-        ? (store as { describeVersionResolution?: (v: string) => { warning?: string; versionFallback?: boolean } }).describeVersionResolution?.(args.version)
+        ? (store as { describeVersionResolution?: (v: string) => {
+            warning?: string;
+            versionFallback?: boolean;
+            sourcePlatform?: string;
+            sourceVersion?: string;
+          } }).describeVersionResolution?.(args.version)
         : undefined;
     const wikiWarn = thinLoaderWikiWarning(platform, [
       { id: args.id, url: result.meta?.url },
@@ -1001,10 +1022,10 @@ export async function getDocFull(
           warning: joinSearchWarnings(extra?.warning, wikiWarn),
           ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
           ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
-          ...(platform === "neoforge" && args.version === "1.20.1"
+          ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
             ? {
               forgeCompatible: true,
-              source_version: "1.20.1",
+              source_version: extra.sourceVersion ?? "1.20.1",
               sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
             }
             : {}),

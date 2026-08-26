@@ -149,12 +149,13 @@ export function analyzeBedrockContentLog(
   const tagCounts: Record<string, number> = {};
   const errors: string[] = [];
   const warnings: string[] = [];
+  const unparsedLines: string[] = [];
   const issues: Array<{ label: string; sample: string }> = [];
   for (const line of text.split(/\r?\n/)) {
     const m = CONTENT_LINE_RE.exec(line);
     if (!m) {
       if (line.trim() && line.trim() !== "=BEGIN=INFO=" && !line.trim().startsWith("Content log"))
-        warnings.push(line.slice(0, 200));
+        unparsedLines.push(line.slice(0, 200));
       continue;
     }
     const [, , , level, tag, msg] = m;
@@ -189,6 +190,7 @@ export function analyzeBedrockContentLog(
     topTags,
     errors,
     warnings: warnings.slice(0, 12),
+    unparsedLines: unparsedLines.slice(0, 12),
     issues,
     totalKnownEntries: Object.values(levelCounts).reduce((a, b) => a + b, 0),
   };

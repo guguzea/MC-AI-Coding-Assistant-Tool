@@ -80,7 +80,7 @@ export function semanticDbPath(
 }
 
 /** 构造 FTS5 MATCH 表达式：`"tok"* AND "tok"*`；无有效 token → null */
-const FTS_KEEP_SHORT = new Set(["ui", "ai", "id", "at"]);
+const FTS_KEEP_SHORT = new Set(["ui", "ai", "id", "at", "be"]);
 
 export function buildFtsQuery(query: string): string | null {
   const tokens = query

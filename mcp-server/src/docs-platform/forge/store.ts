@@ -21,6 +21,7 @@ import {
   stripScores,
   ttlCacheGet,
   ttlCacheSet,
+  matchDocIndexId,
   type SymbolIndex,
   type TtlCacheEntry,
 } from "../search-utils.js";
@@ -412,7 +413,7 @@ export class ForgeDocStore {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
 
-    const current = l2.find((e) => e.id === id);
+    const current = l2.find((e) => matchDocIndexId(e.id, id, resolved));
     if (!current) throw new DocNotFoundError(id, version);
 
     // 当前文档关键词：path 骨架（按 / 与 _ 切分）+ section 标题/摘要 + tags
@@ -499,11 +500,7 @@ export class ForgeDocStore {
     // 与 searchIndexDetailed 同口径：同系列回退（1.16.8 → 1.16.5），fetch 端不咬死精确版本（F-D103）
     version = this.resolveVersion(version);
     const index = this.loadIndexL1(version);
-    // id 可能是 "resources/server/recipes/ingredients" 或 "1.20.1/resources_server_recipes_ingredients"
-    const normalized = id.match(/^\d+\.\d+\.\d+\//)
-      ? id
-      : `${version}/${id.replace(/\//g, "_")}`;
-    const entry = index.find((e) => e.id === normalized);
+    const entry = index.find((e) => matchDocIndexId(e.id, id, version));
     if (!entry) {
       throw new DocNotFoundError(id, version);
     }
@@ -525,11 +522,7 @@ export class ForgeDocStore {
     // 与 searchIndexDetailed 同口径：同系列回退（1.16.8 → 1.16.5），fetch 端不咬死精确版本（F-D103）
     version = this.resolveVersion(version);
     const l2 = this.loadIndexL2(version);
-    // id 可能是 "resources/server/recipes/ingredients" 或 "1.20.1/resources_server_recipes_ingredients"
-    const normalized = id.match(/^\d+\.\d+\.\d+\//)
-      ? id
-      : `${version}/${id.replace(/\//g, "_")}`;
-    const meta = l2.find((e) => e.id === normalized);
+    const meta = l2.find((e) => matchDocIndexId(e.id, id, version));
     if (!meta) {
       throw new DocNotFoundError(id, version);
     }

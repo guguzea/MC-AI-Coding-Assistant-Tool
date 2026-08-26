@@ -599,5 +599,20 @@ section("zip-inflate (A-1)");
   });
 }
 
+{
+  section("toml-parse quoted hash");
+  const { parseModsToml, stripTomlCommentOutsideQuotes } = await import("./dist/decompile/services/toml-parse.js");
+  test("hash inside quotes kept (version 1.0#x)", () => {
+    const t = parseModsToml('modLoader="javafml"\n[[mods]]\nmodId="demo"\nversion="1.0#x"\n');
+    assert.equal(t.mods[0]?.version, "1.0#x");
+    assert.equal(stripTomlCommentOutsideQuotes(' "1.0#x" '), ' "1.0#x" ');
+  });
+  test("hash outside quotes still strips comment", () => {
+    const t = parseModsToml('modLoader="javafml"\n[[mods]]\nmodId="demo"\nversion="1.0" # c\n');
+    assert.equal(t.mods[0]?.version, "1.0");
+    assert.equal(stripTomlCommentOutsideQuotes(' "1.0" # c').trim(), '"1.0"');
+  });
+}
+
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

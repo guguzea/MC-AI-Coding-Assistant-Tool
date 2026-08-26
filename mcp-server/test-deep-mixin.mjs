@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
 
 import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex, ClassFormatError, Cp } from "./dist/mixin/bytecode.js";
-import { validateAccessTransformer, validateAccessTransformerFiles } from "./dist/mixin/access-transformer.js";
+import { validateAccessTransformer, validateAccessTransformerFiles, ownersMatch } from "./dist/mixin/access-transformer.js";
 import { validateAccessWidener, validateAccessWidenerFiles } from "./dist/mixin/access-widener.js";
 import { deepValidateMixins, validateAtHandler, validateAwHandler } from "./dist/mixin/deep-validate.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
@@ -430,6 +430,12 @@ function testAccessTransformer(index) {
 
   const dup = validateAccessTransformerFiles([AT_CONFLICT_A, AT_CONFLICT_A], index);
   assert.ok(dup.warnings.some((w) => w.includes("重复")), "重复 AT 应告警");
+  const pubF = validateAccessTransformerFiles([
+    "public com/example/Fixture getValue ()I",
+    "public-f com/example/Fixture getValue ()I",
+  ], index);
+  assert.equal(pubF.crossFileConflicts.length, 0, JSON.stringify(pubF.crossFileConflicts));
+  assert.ok(pubF.warnings.some((w) => /-f/.test(w)), JSON.stringify(pubF.warnings));
   console.log("  [ok] AT: 存在性/继承成员/跨文件冲突/重复告警");
 }
 
@@ -448,6 +454,12 @@ function testAccessWidener(index) {
 
   const conflicts = validateAccessWidenerFiles([AW_CONFLICT_A, AW_CONFLICT_B], index);
   assert.ok(conflicts.crossFileConflicts.length >= 1, "跨 AW 冲突应被检出");
+  const sameOwner = validateAccessWidenerFiles([
+    "accessWidener v2 named\naccessible class com/example/Fixture$Inner",
+    "accessWidener v2 named\naccessible class com.example.Fixture.Inner",
+  ], index);
+  assert.equal(sameOwner.crossFileConflicts.length, 0, JSON.stringify(sameOwner.crossFileConflicts));
+  assert.ok(sameOwner.warnings.some((w) => /重复/.test(w)), JSON.stringify(sameOwner.warnings));
   console.log("  [ok] AW: 存在性/transitive/namespace 告警/跨文件冲突");
 }
 
@@ -496,6 +508,9 @@ async function testDeepValidate() {
     jarPath: JAR_PATH,
   });
   assert.equal(atNew.verified, true, `@At(value="new") 应大小写不敏感: ${JSON.stringify(atNew.errors)}`);
+  assert.equal(ownersMatch("net.minecraft.world.item.Item", "net/minecraft/world/item/Item"), true);
+  assert.equal(ownersMatch("Outer.Inner", "Outer$Inner"), true);
+  assert.equal(ownersMatch("a/Foo", "a/Bar"), false);
   console.log("  [ok] deep-validate: 目标类/选择器/@At 调用点");
 
   // validate_at / validate_aw 工具 handler

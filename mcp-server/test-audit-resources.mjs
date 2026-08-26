@@ -76,7 +76,35 @@ function testPngMcmetaNotTextureSet() {
   }
 }
 
+function testShortRefDoesNotSwallowOrphan() {
+  const root = mkdtempSync(join(tmpdir(), "mc-audit-short-"));
+  try {
+    const texDir = join(root, "assets", "demo", "textures", "block");
+    const modelDir = join(root, "assets", "demo", "models", "block");
+    mkdirSync(texDir, { recursive: true });
+    mkdirSync(modelDir, { recursive: true });
+    writePng(join(texDir, "foo.png"));
+    writePng(join(texDir, "food.png"));
+    writeFileSync(
+      join(modelDir, "foo.json"),
+      JSON.stringify({ textures: { all: "demo:block/foo" } }),
+    );
+    const r = auditResources({ resourceRoot: root, modId: "demo" });
+    assert.ok(
+      r.orphanTextures.some((p) => /food\.png$/i.test(p)),
+      `短引用 foo 不得把 food 吞成已引用: ${JSON.stringify(r.orphanTextures)}`,
+    );
+    assert.ok(
+      !r.orphanTextures.some((p) => /foo\.png$/i.test(p)),
+      `精确引用 foo 仍不得标孤儿: ${JSON.stringify(r.orphanTextures)}`,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 testAssetsRootReferencedNotOrphan();
 testHashLayerNotPath();
 testPngMcmetaNotTextureSet();
+testShortRefDoesNotSwallowOrphan();
 console.log("test-audit-resources: ok");

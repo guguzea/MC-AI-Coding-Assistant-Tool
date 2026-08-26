@@ -233,21 +233,28 @@ export function collectJavaSources(root: string): JavaScanResult {
   return { files, truncated, warning };
 }
 
-export function collectCrashReports(root: string): Array<{ path: string; content: string }> {
+export function collectCrashReports(root: string): {
+  reports: Array<{ path: string; content: string }>;
+  warning?: string;
+} {
   const dir = join(root, "crash-reports");
-  if (!existsSync(dir)) return [];
+  if (!existsSync(dir)) return { reports: [] };
   try {
-    if (!statSync(dir).isDirectory()) return [];
+    if (!statSync(dir).isDirectory()) return { reports: [] };
   } catch {
-    return [];
+    return { reports: [] };
   }
   const out: Array<{ path: string; content: string }> = [];
   let entries;
   try {
     entries = readdirSync(dir, { withFileTypes: true });
   } catch {
-    return [];
+    return { reports: [] };
   }
+  const MAX_REPORTS = 20;
+  const MAX_TOTAL_BYTES = JAVA_SCAN_MAX_BYTES;
+  let totalBytes = 0;
+  let truncated = false;
   for (const e of entries) {
     if (!e.isFile()) continue;
     const name = String(e.name);
@@ -255,16 +262,28 @@ export function collectCrashReports(root: string): Array<{ path: string; content
     const abs = join(dir, name);
     try {
       const st = statSync(abs);
-      if (!st.isFile() || st.size > JAVA_SCAN_MAX_BYTES) continue;
+      if (!st.isFile()) continue;
+      if (st.size > JAVA_SCAN_MAX_BYTES) continue;
+      if (out.length >= MAX_REPORTS || totalBytes + st.size > MAX_TOTAL_BYTES) {
+        truncated = true;
+        break;
+      }
       out.push({
         path: `crash-reports/${name}`,
         content: readFileSync(abs, "utf8"),
       });
+      totalBytes += st.size;
     } catch {
       /* skip */
     }
   }
-  return out.sort((a, b) => a.path.localeCompare(b.path));
+  const reports = out.sort((a, b) => a.path.localeCompare(b.path));
+  return {
+    reports,
+    warning: truncated
+      ? `crash-reports 已截断：最多 ${MAX_REPORTS} 份、合计 ${MAX_TOTAL_BYTES} 字节（已读 ${reports.length} 份）`
+      : undefined,
+  };
 }
 
 export interface LoadedModProject {
@@ -287,6 +306,7 @@ export interface LoadedModProject {
   javaTruncated: boolean;
   javaWarning?: string;
   crashReports: Array<{ path: string; content: string }>;
+  crashReportsWarning?: string;
 }
 
 function readWalkBodies(root: string, match: (rel: string, name: string) => boolean): string[] {
@@ -368,6 +388,7 @@ export function loadModProject(root: string): LoadedModProject {
       (rel, name) => name === "neoforge.mods.toml" && rel.replace(/\\/g, "/").includes("META-INF/"),
     ),
   );
+  const crash = collectCrashReports(root);
   const gpRoot = readOptionalRel(root, "gradle.properties") ?? "";
   const gpNested = readWalkBodies(root, (rel, name) => name === "gradle.properties" && rel.replace(/\\/g, "/") !== "gradle.properties");
   const gradleProperties = [gpRoot, ...gpNested].filter((s) => s.trim()).join("\n") || undefined;
@@ -395,7 +416,8 @@ export function loadModProject(root: string): LoadedModProject {
     javaFiles: java.files,
     javaTruncated: java.truncated,
     javaWarning: java.warning,
-    crashReports: collectCrashReports(root),
+    crashReports: crash.reports,
+    crashReportsWarning: crash.warning,
   };
 }
 

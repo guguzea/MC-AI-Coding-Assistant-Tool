@@ -37,21 +37,25 @@ export function readUpdateState(dataDir?: string): UpdateState {
 }
 
 export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string): UpdateState {
-  const p = updateStatePath(dataDir);
-  mkdirSync(dirname(p), { recursive: true });
-  const cur = readUpdateState(dataDir);
-  const next: UpdateState = { ...cur, ...patch };
-  const payload = JSON.stringify(next, null, 2) + "\n";
-  if (existsSync(p) && readFileSync(p, "utf8") === payload) return next; // 无变化不写（C74）
-  const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
   try {
-    writeFileSync(tmp, payload, "utf8");
-    renameSync(tmp, p);
-  } catch (err) {
-    rmSync(tmp, { force: true });
-    throw err;
+    const p = updateStatePath(dataDir);
+    mkdirSync(dirname(p), { recursive: true });
+    const cur = readUpdateState(dataDir);
+    const next: UpdateState = { ...cur, ...patch };
+    const payload = JSON.stringify(next, null, 2) + "\n";
+    if (existsSync(p) && readFileSync(p, "utf8") === payload) return next;
+    const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
+    try {
+      writeFileSync(tmp, payload, "utf8");
+      renameSync(tmp, p);
+    } catch (err) {
+      rmSync(tmp, { force: true });
+      throw err;
+    }
+    return next;
+  } catch {
+    return readUpdateState(dataDir);
   }
-  return next;
 }
 
 export function cacheTtlSec(): number {

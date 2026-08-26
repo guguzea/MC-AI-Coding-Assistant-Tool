@@ -15,12 +15,13 @@ export interface BuildStatus {
 
 export function getBuildStatus(): BuildStatus {
   try {
-    const here = dirname(fileURLToPath(import.meta.url)); // dist/utils 目录
-    const distEntry = join(here, "..", "index.js");
+    const here = dirname(fileURLToPath(import.meta.url));
+    const mcpRoot = join(here, "..", "..");
+    const distEntry = join(mcpRoot, "dist", "index.js");
+    const srcRoot = join(mcpRoot, "src");
     if (!existsSync(distEntry)) {
       return { buildRequired: true, reason: "dist/index.js 不存在，请执行 cd mcp-server && npm ci && npm run build" };
     }
-    const srcRoot = join(here, "..", "..", "src");
     if (!existsSync(srcRoot)) return { buildRequired: false };
     let newest = 0;
     const walk = (dir: string) => {
@@ -44,7 +45,10 @@ export function getBuildStatus(): BuildStatus {
       };
     }
     return { buildRequired: false };
-  } catch {
-    return { buildRequired: false };
+  } catch (e) {
+    return {
+      buildRequired: true,
+      reason: `无法检测 build 状态：${e instanceof Error ? e.message : String(e)}`,
+    };
   }
 }

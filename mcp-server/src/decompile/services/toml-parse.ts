@@ -11,6 +11,34 @@ interface TomlRow {
   value: string;
 }
 
+/** Strip `#` comments; do not cut `#` inside quoted strings (`"1.0#x"`). */
+export function stripTomlCommentOutsideQuotes(raw: string): string {
+  let inSingle = false;
+  let inDouble = false;
+  let escaped = false;
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw[i];
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+    if (inDouble && c === "\\") {
+      escaped = true;
+      continue;
+    }
+    if (!inSingle && c === '"') {
+      inDouble = !inDouble;
+      continue;
+    }
+    if (!inDouble && c === "'") {
+      inSingle = !inSingle;
+      continue;
+    }
+    if (!inSingle && !inDouble && c === "#") return raw.slice(0, i);
+  }
+  return raw;
+}
+
 function parseTomlValue(raw: string): string {
   const v = raw.trim();
   if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
@@ -49,8 +77,7 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
     const eq = line.indexOf("=");
     if (eq === -1) continue;
     const rawVal = line.slice(eq + 1);
-    const hash = rawVal.indexOf("#");
-    const valueSrc = hash >= 0 ? rawVal.slice(0, hash) : rawVal;
+    const valueSrc = stripTomlCommentOutsideQuotes(rawVal);
     const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value: parseTomlValue(valueSrc) };
     const tableKey = current ?? "";
     if (!sections.has(tableKey)) sections.set(tableKey, []);

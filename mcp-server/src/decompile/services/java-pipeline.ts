@@ -6,8 +6,9 @@
  * Java 探测、skip-download 门控、锁与缓存命中。
  */
 
-import { existsSync, statSync, mkdirSync } from "fs";
+import { existsSync, readFileSync, statSync, mkdirSync } from "fs";
 import { join } from "path";
+import { createHash } from "crypto";
 import {
   ensureCachePaths,
   openCacheDb,
@@ -58,8 +59,16 @@ export async function prepareInputs(
   try {
     // 1. client jar（Mojang manifest，SHA1 校验）
     const clientJar = join(cache.jars, `minecraft-${version}-client.jar`);
-    if (!existsSync(clientJar)) {
-      const entry = await resolveMojangVersion(version);
+    const entry = await resolveMojangVersion(version);
+    const sha1Ok = () => {
+      try {
+        const got = createHash("sha1").update(readFileSync(clientJar)).digest("hex");
+        return got.toLowerCase() === String(entry.clientJarSha1).toLowerCase();
+      } catch {
+        return false;
+      }
+    };
+    if (!existsSync(clientJar) || !sha1Ok()) {
       const result = await downloadFile(entry.clientJarUrl, clientJar, {
         expectedSha1: entry.clientJarSha1,
         label: `client jar ${version}`,

@@ -12,7 +12,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { basename, join, relative, sep } from "path";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
-import { ensureCachePaths, openCacheDb, setArtifact, getArtifact, acquireCacheLock, CacheLockBusyError } from "../cache.js";
+import { ensureCachePaths, openCacheDb, setArtifact, getArtifact, acquireCacheLock, CacheLockBusyError, normalizeArtifactPath } from "../cache.js";
 import { probeJava, runJava, toolchainActionable, skipDownloadsEnabled, downloadDisabledActionable } from "../java/java-process.js";
 import { ensureResourceJar, VINEFLOWER_DEF, TINY_REMAPPER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
@@ -85,7 +85,7 @@ export function findDecompiledDirForJar(jarPath: string, cacheRoot = ensureCache
   try {
     const db = openCacheDb(cacheRoot);
     try {
-      const rec = getArtifact(db, `decompiled-mod:${jarPath}`);
+      const rec = getArtifact(db, `decompiled-mod:${normalizeArtifactPath(jarPath)}`);
       if (!rec || !existsSync(rec.path)) return null;
       return rec.path;
     } finally {
@@ -100,7 +100,7 @@ export function findDecompiledDirForJar(jarPath: string, cacheRoot = ensureCache
 function recordDecompiledDir(jarPath: string, outDir: string, modId: string, cacheRoot: string): void {
   const db = openCacheDb(cacheRoot);
   try {
-    setArtifact(db, `decompiled-mod:${jarPath}`, "decompiled-mod", outDir, { version: modId });
+    setArtifact(db, `decompiled-mod:${normalizeArtifactPath(jarPath)}`, "decompiled-mod", outDir, { version: modId });
   } finally {
     db.close();
   }
@@ -164,7 +164,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   try {
     release = await acquireCacheLock(
       cache.root,
-      `mod-decompile:${modId}:${modVersion}:${args.jarPath}`,
+      `mod-decompile:${modId}:${modVersion}:${normalizeArtifactPath(args.jarPath)}`,
       10 * 60_000,
     );
   } catch (err) {
@@ -179,9 +179,9 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   try {
   if (!args.force && existsSync(outDir) && readdirSync(outDir).length > 0 && readDecompiledMeta(outDir).found) {
     const metaHit = readDecompiledMeta(outDir);
-    const cachedJar = (metaHit.jarPath ?? "").replace(/\\/g, "/");
-    const wantJar = args.jarPath.replace(/\\/g, "/");
-    if (!cachedJar || cachedJar === wantJar) {
+    const cachedJar = normalizeArtifactPath(metaHit.jarPath ?? "");
+    const wantJar = normalizeArtifactPath(args.jarPath);
+    if (!metaHit.jarPath || cachedJar === wantJar) {
       return {
         found: true,
         modId,

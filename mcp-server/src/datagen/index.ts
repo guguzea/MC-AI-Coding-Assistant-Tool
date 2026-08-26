@@ -293,7 +293,8 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
   const classBase = toJavaClassName(query.modId);
 
   let code: string;
-  if (platform === "fabric") {
+  try {
+    if (platform === "fabric") {
     const recipeMethod = fabricDatagenRecipeMethod(ver) ?? "buildRecipes";
     // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
     const idStyle: FabricIdStyle = ver === "1.21.11" || /^26\.1/.test(ver) ? "Identifier" : "ResourceLocation";
@@ -411,6 +412,15 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
           warnings: warnings.length ? warnings : undefined,
         };
     }
+  }
+  } catch (e) {
+    return {
+      code: null,
+      usedModId: modId,
+      usedTargetName: targetName,
+      errors: [(e as Error).message],
+      warnings: warnings.length ? warnings : undefined,
+    };
   }
 
   return {

@@ -576,7 +576,7 @@ function checkModsToml(
 
   const checks: string[] = [];
 
-  if (!modsToml.includes('modLoader="javafml"')) {
+  if (!/modLoader\s*=\s*["']javafml["']/.test(modsToml)) {
     errors.push("mods.toml 必须声明 modLoader=\"javafml\"");
   }
   if (!modsToml.includes("loaderVersion=")) {
@@ -678,7 +678,7 @@ export function detectValidateLoader(query: ValidateQuery): DetectedLoader {
 
 function fillValidateQuery(
   query: ValidateQuery,
-): { query: ValidateQuery; javaWarning?: string; crashReports: Array<{ path: string; content: string }> } | { error: ValidationResult } {
+): { query: ValidateQuery; javaWarning?: string; crashReportsWarning?: string; crashReports: Array<{ path: string; content: string }> } | { error: ValidationResult } {
   if (!query.projectPath) return { query, crashReports: [] };
   const resolved = resolveProjectDir(query.projectPath);
   if (!resolved.ok) {
@@ -698,6 +698,9 @@ function fillValidateQuery(
   if (loaded.javaWarning) {
     process.stderr.write(`${loaded.javaWarning}\n`);
   }
+  if (loaded.crashReportsWarning) {
+    process.stderr.write(`${loaded.crashReportsWarning}\n`);
+  }
   return {
     query: {
       ...query,
@@ -711,6 +714,7 @@ function fillValidateQuery(
       javaFiles: mergeJavaFiles(query.javaFiles, loaded.javaFiles),
     },
     javaWarning: loaded.javaWarning,
+    crashReportsWarning: loaded.crashReportsWarning,
     crashReports: loaded.crashReports,
   };
 }
@@ -719,6 +723,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   const filled = fillValidateQuery(query);
   if ("error" in filled) return filled.error;
   const javaWarning = filled.javaWarning;
+  const crashReportsWarning = filled.crashReportsWarning;
   const crashReports = filled.crashReports;
   const {
     modsToml,
@@ -741,6 +746,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
       "同时存在 LiteLoader 与 Forge 元数据，但未检测到 apply plugin: 'net.minecraftforge.gradle.liteloader'。validate_project 未跑 Forge 检查；请向用户确认平台（PICK_PLATFORM）。",
     ];
     if (javaWarning) warnings.push(javaWarning);
+    if (crashReportsWarning) warnings.push(crashReportsWarning);
     return {
       status: "skipped",
       skipped: true,
@@ -762,12 +768,14 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   }
   if (loader === "fabric" || loader === "quilt") {
     const r = validateFabricOrQuilt(query, loader);
+    if (crashReportsWarning) r.warnings.unshift(crashReportsWarning);
     if (javaWarning) r.warnings.unshift(javaWarning);
     r.warnings.push(...recipeWarnings);
     return r;
   }
   if (loader === "neoforge") {
     const r = validateNeoForge(query);
+    if (crashReportsWarning) r.warnings.unshift(crashReportsWarning);
     if (javaWarning) r.warnings.unshift(javaWarning);
     r.warnings.push(...recipeWarnings);
     return r;
@@ -775,6 +783,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   if (SKIPPED_LOADERS.has(loader)) {
     const warnings = [warningForSkippedLoader(loader)];
     if (javaWarning) warnings.push(javaWarning);
+    if (crashReportsWarning) warnings.push(crashReportsWarning);
     return {
       status: "skipped",
       skipped: true,
@@ -798,6 +807,7 @@ export function validateProject(query: ValidateQuery): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
   if (javaWarning) warnings.push(javaWarning);
+  if (crashReportsWarning) warnings.push(crashReportsWarning);
   const checks: string[] = [
     "mods.toml 语法",
     "mod ID 一致性",

@@ -479,7 +479,7 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
     const msg = err instanceof Error ? err.message : String(err);
     return [
       {
-        fqcn: fqcnFromSourceHint(fileHint) ?? "unknown",
+        fqcn: `__parse_error__:${(fileHint ?? "unknown").replace(/\\/g, "/")}`,
         simpleName: "unknown",
         apiStatusInternal: false,
         environment: false,

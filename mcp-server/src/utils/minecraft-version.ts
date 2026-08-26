@@ -91,7 +91,7 @@ export function detectMinecraftVersionFromIncludedSubprojects(opts: {
 /** 精确 MC 版本 token（禁止 1.20.4-beta / 26.1beta / 前缀误匹配 26.12）。 */
 export function isExactMcVersionToken(s: string): boolean {
   const t = s.trim();
-  return /^1\.\d+(\.\d+)?$/.test(t) || /^26\.\d+(\.\d+)?$/.test(t);
+  return /^(1|26|27)\.\d+(\.\d+)?$/.test(t);
 }
 
 /** input 必须与 pinned 整段相等；前缀匹配一律 false。 */

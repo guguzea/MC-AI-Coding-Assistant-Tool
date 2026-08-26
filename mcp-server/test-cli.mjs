@@ -256,7 +256,9 @@ function parseJson(r, label) {
   if (j.result?.found !== false) throw new Error(`expected found:false: ${JSON.stringify(j.result).slice(0, 300)}`);
   const f = run(["query_api", "--className", "net.minecraft.DoesNotExist12345", "--version", "1.20.1", "--fail-on-error"]);
   if (f.status !== 1) throw new Error(`expected exit 1 with --fail-on-error, got ${f.status}`);
-  console.log("query_api found:false → 0；--fail-on-error → 1");
+  const loose = run(["query_api", "--className", "net.minecraft.DoesNotExist12345", "--version", "1.20.1", "--fail-on-error=false"]);
+  if (loose.status !== 0) throw new Error(`expected exit 0 with --fail-on-error=false, got ${loose.status}:\n${loose.stdout}`);
+  console.log("query_api found:false → 0；--fail-on-error → 1；--fail-on-error=false → 0");
 }
 
 // ── 14. {ok:false}/{passed:false} → exit 1 ───────────────────────────────────

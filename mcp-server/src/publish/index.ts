@@ -47,7 +47,7 @@ function listReleaseJars(projectRoot: string): string[] {
   }
   return names
     .filter((n) => n.endsWith(".jar"))
-    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-changelog|-obf|-all)\.jar$/i.test(n))
+    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-changelog|-obf)\.jar$/i.test(n))
     .map((n) => `build/libs/${n}`);
 }
 
