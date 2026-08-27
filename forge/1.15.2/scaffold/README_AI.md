@@ -230,3 +230,15 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 
 - 1.15.2：`net.minecraft.block.*`, `net.minecraft.item.*`, `net.minecraft.tileentity.*`
 - 1.20.x：`net.minecraft.world.level.block.*`, `net.minecraft.world.item.*`, `net.minecraft.world.level.block.entity.*`
+
+---
+
+## Gradle 进程 JDK（FG4 硬限制）
+
+`java.toolchain` 只约束**编译**目标字节码（本档 Java 8）。**运行 Gradle / 加载 ForgeGradle 插件的 JVM** 必须是 **JDK 8–15**。
+
+ForgeGradle 4 在插件 apply 时拒绝 Java 16+，原文：
+
+> Versions 16 and newer are not supported yet
+
+本机若默认是 JDK 17/21，`gradle properties` 会在插件阶段失败。请用 JDK 8–15 启动 Gradle（例如 `JAVA_HOME` 指向 11 或 15），不要为了「能在 JDK 17 上跑」去改 `id 'net.minecraftforge.gradle' version '[4.1,4.2)'`。
