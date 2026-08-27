@@ -543,7 +543,7 @@ npx @modelcontextprotocol/inspector node dist/index.js
 1. 读仓库根 `AGENTS.md`，判断平台与精确版本后调用 `activate_platform_pack action=session`（默认规则 00/01/09 + Skill 索引；不要直接打开邻版 `.cursor/rules`）。工程内常驻再 `write`（`hosts` 必填）。
 2. **文档**：先 `list_*_versions`，再 `search_*_docs` 或 `search_docs`（`version` 写死工程版本）→（可选）`get_*_doc_summary` → 确认相关后再 `get_*_doc_full`。  
    - Forge **1.12.2** 用 `search_forge_docs` / `search_docs({platform:"forge"})`，**不要**用 `query_api`。  
-   - 搜索默认 **hybrid**（L0 + 向量 RRF）；无语义库则纯 L0（`semantic: false`）。降级表见根目录 `README.md`「诚实降级」。  
+   - 搜索默认 **hybrid**（L0 + 向量 RRF）；无语义库则纯 L0（`semantic: false`）。降级表见根目录 `README.md`「向量 / 语义搜索」三档降级。  
    - **页面 `id` 必须用搜索结果里的 `id`**，不要用网站 URL 路径。  
    - 一次不要拉超过 2 个 full page。
 3. **API / 映射**：平台 API（DeferredRegister、Fabric Registry 等）用 `search_*_docs` / `query_loader_api`，**不要**用 `query_api`。`query_api` / `get_method_params` 只查 Vanilla Parchment（约 1.16.5–1.20.4）。**1.12.2 常见 found:true 但 methods 为空**（不是完整 javadoc）；**26.1+ 无索引**，`found:false` ≠ 类不存在。Yarn↔Mojang 用 `convert_mapping`；崩溃短名用 `lookup_obfuscated`。26.1+ 无混淆层，不要用 Yarn 工具硬查。

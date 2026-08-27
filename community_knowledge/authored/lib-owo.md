@@ -21,13 +21,14 @@ skillId: mc-owo
 
 用：Fabric / NeoForge / Quilt 项目（1.17-26.1.2），想要注解式配置 + 自动 GUI + 配置同步一体方案。owo-config 是 owo-lib（Modrinth 4380 万下载）的组件之一，同库还提供 owo-ui 声明式 GUI 与网络层，配置和界面风格统一。
 
-不用：**纯 Forge 项目不可用**（owo-lib 只支持 Fabric / NeoForge / Quilt，全览 §五 陷阱 2 明确标注）。Forge 用户请用 Cloth / YACL / ForgeConfigSpec。也不用于：只想要 Builder 式手工配置界面（选 YACL）、版本窗口外（低于 1.17 / 高于 26.1.2）。
+不用：**纯 Forge 项目不可用**（owo-lib 只支持 Fabric / NeoForge / Quilt，全览 §五 陷阱 2 明确标注）。Forge 用户请用 Cloth / YACL / ForgeConfigSpec；Neo ≥1.20.4 服务端配置用 ModConfigSpec。也不用于：只想要 Builder 式手工配置界面（选 YACL）、版本窗口外（低于 1.17 / 高于 26.1.2）。
 
 ## Decision Flow
 
 ```
 Decision: 要不要用 owo-config
 → Forge 用户 → 停止，用 Cloth / YACL / ForgeConfigSpec（owo 无 Forge 构建）
+→ NeoForge 仅服务端配置且不用 owo → ModConfigSpec（≥1.20.4）
 → 版本不在 1.17-26.1.2 → YACL（1.19+）/ Cloth（1.14+）
 → F/Neo/Quilt 且想要注解式 + 自动 GUI + 同步 → owo-config
 → 只想要手工 Builder 界面 → YACL / Cloth

@@ -25,6 +25,7 @@ export interface MojangVersionEntry {
   manifestId: string;
   clientJarUrl: string;
   clientJarSha1: string;
+  clientJarSize: number;
   clientMappingsUrl?: string;
   clientMappingsSha1?: string;
 }
@@ -71,6 +72,7 @@ export async function resolveMojangVersion(version: string, force = false): Prom
     manifestId: id,
     clientJarUrl: client.url,
     clientJarSha1: client.sha1,
+    clientJarSize: Number(client.size) || 0,
   };
   const maps = versionJson.downloads.client_mappings;
   if (maps?.url) {

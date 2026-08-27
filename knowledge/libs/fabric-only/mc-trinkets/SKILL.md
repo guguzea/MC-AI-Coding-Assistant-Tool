@@ -34,7 +34,7 @@ Decision: 饰品槽方案选择
 
 ## 官方文档
 
-- 仓库：https://github.com/emilyalexandra/trinkets （README 与 wiki 是当前格式唯一依据）
+- 仓库：https://github.com/emilyploszaj/trinkets （README 与 wiki 是当前格式唯一依据；`emilyalexandra` 仅为 301 旧名）
 
 ## communityDocId 引用
 

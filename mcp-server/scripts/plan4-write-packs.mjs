@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的规则树/Skill）。
  * Plan 4 one-shot writer: Neo thin Skills, Quilt QSL Skills, old-loader Skills,
  * Neo 1.20.1 tree, Forge 1.7.10 verified-api, fabric 26.1.2 scaffold, lint file list.
  */

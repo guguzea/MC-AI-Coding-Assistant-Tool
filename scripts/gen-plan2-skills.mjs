@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的 Skill）。
  * Plan 2 A3/A4：生成 Fabric 26.1.2 Skill stub/核实稿，以及 NeoForge 分档主题 Skill。
  * 禁止从 1.21.11 正文抄错 API。核不到的写成 stub。
  */

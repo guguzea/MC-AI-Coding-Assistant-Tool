@@ -4,6 +4,7 @@
  * 无 index-l0.json 则退出、不写规则树。禁止从邻版复制方法名。
  *
  * 用法：node scripts/scaffold-version.mjs --platform=neoforge --minecraftVersion=1.20.6
+ * 已有 pack.meta.json / AGENTS.md / 00–10 规则默认跳过；加 --force 才覆盖。
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -28,6 +29,16 @@ const RULES = [
 function arg(name) {
   const p = process.argv.find((a) => a.startsWith(`--${name}=`));
   return p ? p.slice(name.length + 3) : "";
+}
+
+const FORCE = process.argv.includes("--force");
+
+function writeUnlessExists(filePath, body) {
+  if (!FORCE && fs.existsSync(filePath)) {
+    console.log(`skip existing ${path.relative(ROOT, filePath)}（加 --force 才覆盖）`);
+    return;
+  }
+  fs.writeFileSync(filePath, body, "utf8");
 }
 
 function findIndexL0(platform, ver) {
@@ -105,17 +116,15 @@ function main() {
           ? "search_forge_docs"
           : "search_docs";
   const indexRel = path.relative(ROOT, indexPath).replace(/\\/g, "/");
-  fs.writeFileSync(
+  writeUnlessExists(
     path.join(packDir, "pack.meta.json"),
     `${JSON.stringify({ "pack-status": "draft", status: "draft", platform, minecraftVersion: ver, index: indexRel }, null, 2)}\n`,
-    "utf8",
   );
-  fs.writeFileSync(path.join(packDir, "AGENTS.md"), agentsBody(platform, ver, docsTool, indexRel), "utf8");
+  writeUnlessExists(path.join(packDir, "AGENTS.md"), agentsBody(platform, ver, docsTool, indexRel));
   for (const [num, slug, title] of RULES) {
-    fs.writeFileSync(
+    writeUnlessExists(
       path.join(rulesDir, `${num}-${slug}.mdc`),
       ruleBody(platform, ver, num, slug, title, docsTool),
-      "utf8",
     );
   }
   const commonDir = path.join(packDir, "knowledge", "common");

@@ -103,7 +103,7 @@ IF 自定义 Biped 模型
   → BipedModel + HumanoidMobRenderer
 
 IF 自定义任意模型
-  → EntityModel + LayerDefinition
+  → EntityModel + ModelPart
   → 本档没有 EntityRenderersEvent；用 RenderingRegistry.registerEntityRenderingHandler
 ```
 

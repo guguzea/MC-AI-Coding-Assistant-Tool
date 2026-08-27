@@ -31,7 +31,7 @@ skillId: mc-lib-catalog
 | 排名 | 库（链接） | 下载量 | 核心用途 |
 |---|---|---|---|
 | 1 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿 | 配置界面 API |
-| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 1.11 亿 | 新一代配置库 |
+| 2 | YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准 | 新一代配置库 |
 | 3 | Fabric Language Kotlin（[lib-fabric-language-kotlin.md](lib-fabric-language-kotlin.md)） | 1.07 亿 | Kotlin 语言支持 |
 | 4 | Architectury API（[lib-architectury.md](lib-architectury.md)） | 9170 万 | 跨加载器抽象 |
 | 5 | GeckoLib（[lib-geckolib.md](lib-geckolib.md)） | 6270 万 | 3D 实体动画引擎 |
@@ -50,7 +50,7 @@ skillId: mc-lib-catalog
 | 库（链接） | 下载 | 加载器 / 版本 | 特点 |
 |---|---|---|---|
 | Cloth Config API（[lib-cloth-config.md](lib-cloth-config.md)） | 1.53 亿 | F/Forge/Neo，1.14–26.2 | 老牌配置 GUI，ConfigBuilder 生成界面 |
-| YACL（[lib-yacl.md](lib-yacl.md)） | 1.11 亿（官网全平台 1.77 亿） | F/Forge/Neo/Quilt，1.19–26.3 | Builder 式、GUI 契合原版风格，因 Cloth 停更而生 |
+| YACL（[lib-yacl.md](lib-yacl.md)） | 以 Modrinth 页面为准 | F/Forge/Neo/Quilt，1.19–26.3 | Builder 式、GUI 契合原版风格，因 Cloth 停更而生 |
 | Fzzy Config（[lib-fzzy-config.md](lib-fzzy-config.md)） | 3420 万（2024-04 发布，增速极快） | F/Forge/Neo/Quilt，1.20.1–26.2 | 自动 GUI、强校验、服务端-客户端同步 |
 | owo-config（owo-lib 内）（[lib-owo.md](lib-owo.md)） | 见 owo-lib | F/Neo/Quilt，1.17–26.1.2 | 注解式配置 + 自动 GUI + 配置同步 |
 | MidnightLib（[lib-midnightlib.md](lib-midnightlib.md)） | 2510 万 | F/Forge/Neo/Quilt，1.17–26.2 | 轻量配置，鼓励 Jar-in-Jar 打包 |

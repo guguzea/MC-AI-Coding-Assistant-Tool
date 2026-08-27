@@ -176,7 +176,7 @@ MyClass.class_12345 obj = new MyClass.class_12345();  // 错误！
 // ✅ 正确：必须包含 fabricloader
 {
   "depends": {
-    "fabricloader": ">=0.3.2",
+    "fabricloader": ">=0.3.7.111",
     "minecraft": ">=1.14.4",
     "java": ">=8"
   }

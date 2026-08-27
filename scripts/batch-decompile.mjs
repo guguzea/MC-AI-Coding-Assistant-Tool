@@ -20,6 +20,7 @@ import { dirname, join, resolve } from "node:path";
 import { Readable, Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { execFileSync } from "node:child_process";
 
 // ── 常量 ─────────────────────────────────────────────────────────────────────
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -28,8 +29,7 @@ const MANIFEST_PATH = join(REPO_ROOT, "mcp-server", "data", "lib-manifests", "al
 const MOD_ANALYZER_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "services", "mod-analyzer.js")).href;
 const MOD_DECOMPILE_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "services", "mod-decompile.js")).href;
 const JAVA_PROCESS_URL = pathToFileURL(join(REPO_ROOT, "mcp-server", "dist", "decompile", "java", "java-process.js")).href;
-/** JAVA_HOME 未设时的回退路径（本机 JDK 17） */
-const JAVA17_FALLBACK = "G:/JAVA17/jdk-17.0.12_windows-x64_bin/jdk-17.0.12";
+/** JAVA_HOME 必须由环境提供；禁止本机路径兜底。 */
 const FETCH_TIMEOUT_MS = 120_000; // 单个 jar 下载超时
 const KNOWN_FLAGS = new Set([
   "filter", "limit", "resume", "concurrency-download", "concurrency-decompile",
@@ -245,9 +245,8 @@ async function ensureJar(jarDir, entry) {
 
 // ── 反编译（复用 MCP dist；Java 17 前置 + 全流程超时）────────────────────────
 function ensureJavaHome() {
-  if (!process.env.JAVA_HOME && existsSync(JAVA17_FALLBACK)) {
-    process.env.JAVA_HOME = JAVA17_FALLBACK;
-    console.log(`已设置 JAVA_HOME=${JAVA17_FALLBACK}`);
+  if (!process.env.JAVA_HOME) {
+    console.warn("JAVA_HOME 未设置；反编译需要 JDK 17+。请设置 JAVA_HOME 后重试。");
   }
 }
 
@@ -318,10 +317,9 @@ async function workJar(jar, opts, state) {
 async function decompileEmbedded(jarPath, jar, opts, state) {
   const tmpRoot = join(opts.jarDir, "embedded", jar.sha512.slice(0, 12));
   mkdirSync(tmpRoot, { recursive: true });
-  const { execSync } = await import("node:child_process");
   let innerJars = [];
   try {
-    execSync(`tar -xf "${jarPath}" -C "${tmpRoot}" META-INF/jars`, { stdio: "ignore", timeout: 60_000 });
+    execFileSync("tar", ["-xf", jarPath, "-C", tmpRoot, "META-INF/jars"], { stdio: "ignore", timeout: 60_000 });
     const jij = join(tmpRoot, "META-INF", "jars");
     if (existsSync(jij)) {
       innerJars = readdirSync(jij).filter((f) => f.endsWith(".jar")).map((f) => join(jij, f));

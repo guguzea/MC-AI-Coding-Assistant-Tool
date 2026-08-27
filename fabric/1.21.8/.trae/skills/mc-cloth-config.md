@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# Cloth Config（Fabric 1.21.3）
+# Cloth Config（Fabric 1.21.8）
 
 ## 概述
 

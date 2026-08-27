@@ -2,7 +2,7 @@
 id: authored/lib-yacl
 title: YACL 配置库集成要点
 tags: [yacl, yet-another-config-lib, config, gui, client, modmenu, fabric, forge, neoforge, quilt]
-summary: 新一代配置库（1.11 亿下载，官网全平台 1.77 亿；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。
+summary: 新一代配置库（下载量以 Modrinth 页面为准；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。
 mcHint: 1.19-26.3
 minecraftVersions: "1.19-26.3"
 sourceKind: authored
@@ -19,15 +19,16 @@ skillId: mc-yacl
 
 ## 何时用 / 何时不用
 
-用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt（1.19-26.3）。Builder 式 API 生成界面，风格贴近原版，Modrinth 1.11 亿下载（官网口径全平台 1.77 亿）。Cloth Config 已冷冻后，YACL 是新配置库的主流替代之一。
+用：新项目需要友好配置屏，且目标为 Fabric / Forge / NeoForge / Quilt（1.19-26.3）。Builder 式 API 生成界面，风格贴近原版，下载量以 Modrinth 页面为准。Cloth Config 已冷冻后，YACL 是新配置库的主流替代之一。
 
-不用：仅需服务端配置时，Forge/Neo 用 `ForgeConfigSpec`（patterns `config-spec`）就够；旧项目已用 Cloth 且无新特性需求，不必迁移；目标版本低于 1.19 时 YACL 无对应构建，回退 Cloth。
+不用：仅需服务端配置时，Forge 用 `ForgeConfigSpec`、Neo ≥1.20.4（含 26.x）用 `ModConfigSpec`（patterns `config-spec`）就够；旧项目已用 Cloth 且无新特性需求，不必迁移；目标版本低于 1.19 时 YACL 无对应构建，回退 Cloth。
 
 ## Decision Flow
 
 ```
 Decision: 要不要用 YACL
-→ 单平台 Forge/Neo 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 Forge 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec
 → MC 版本不在 1.19-26.3 内 → 回退 Cloth（1.14-26.2）
 → 新项目 / 长期维护 → YACL 优先，其次评估 Fzzy Config（自动 GUI/校验/同步）
 → 已选 YACL：

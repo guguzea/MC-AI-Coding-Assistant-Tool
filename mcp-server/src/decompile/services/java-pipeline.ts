@@ -72,6 +72,14 @@ export async function prepareInputs(
       }
     };
     if (!existsSync(clientJar) || !sha1Ok()) {
+      const disk = checkDiskSpace(cache.jars, entry.clientJarSize || 25 * 1024 * 1024);
+      if (!disk.ok) {
+        const err = new Error(
+          `DISK_INSUFFICIENT: 下载 client.jar 前空间不足（需要约 ${disk.neededBytes} 字节）`,
+        ) as Error & { code: string };
+        err.code = "DISK_INSUFFICIENT";
+        throw err;
+      }
       const result = await downloadFile(entry.clientJarUrl, clientJar, {
         expectedSha1: entry.clientJarSha1,
         label: `client jar ${version}`,

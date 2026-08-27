@@ -8,10 +8,11 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const MDK_ROOT = join(CACHE, "mdk");
 const JAR_DIR = join(CACHE, "loader-jars");
 const UA = { "User-Agent": "MC-AI-Coding-Assistant-Tool" };

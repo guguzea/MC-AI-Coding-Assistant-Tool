@@ -2,7 +2,7 @@
 name: mc-owo
 description: owo-lib 配置与 GUI（owo-config、owo-ui）。触发词：owo、owo-lib、owo-config、owo-ui、wispforest、注解式配置、自动配置界面
 platforms: [fabric, neoforge, quilt]
-mcVersions: ["1.20.1+"]
+mcVersions: ["1.17+"]
 communityDocId: authored/lib-owo
 ---
 
@@ -14,7 +14,7 @@ communityDocId: authored/lib-owo
 
 ```
 IF loader == forge → 停止。owo-lib 无 Forge 构建
-  → 改用 Cloth / YACL / ForgeConfigSpec（见 mc-config 选型）
+  → 改用 Cloth / YACL / ForgeConfigSpec（Forge）或 ModConfigSpec（Neo ≥1.20.4）（见 mc-config 选型）
 IF loader == fabric | quilt → 用 owo-lib：Fabric / Quilt 坐标
   → fabric.mod.json / quilt.mod.json 的 depends / suggests 写 owo-lib
 IF loader == neoforge → 用 owo-lib：NeoForge 坐标

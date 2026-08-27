@@ -19,11 +19,11 @@ skillId: mc-config
 
 ## 何时用 / 何时不用
 
-用：需要友好配置屏的 Fabric / Forge / NeoForge 模组（1.14-26.2）。ConfigBuilder 生成界面是老牌方案，REI、Kiwi 等海量模组依赖。Forge 侧若只要服务端配置，`ForgeConfigSpec`（见 patterns `config-spec`）通常就够，不必引 Cloth。
+用：需要友好配置屏的 Fabric / Forge / NeoForge 模组（1.14-26.2）。ConfigBuilder 生成界面是老牌方案，REI、Kiwi 等海量模组依赖。Forge 侧若只要服务端配置，`ForgeConfigSpec`（见 patterns `config-spec`）通常就够；Neo ≥1.20.4（含 26.x）对应 `ModConfigSpec`，不必引 Cloth。
 
 不用（重要）：Cloth 已**冷冻**，作者声明不再加新特性（全览报告 §五）。新项目或要长期维护的项目，优先评估：
 
-- YACL：1.19-26.3，F/Forge/Neo/Quilt，Builder 式、界面契合原版风格，因 Cloth 停更而生（1.11 亿下载）
+- YACL：1.19-26.3，F/Forge/Neo/Quilt，Builder 式、界面契合原版风格，因 Cloth 停更而生（下载量以 Modrinth 页面为准）
 - Fzzy Config：1.20.1-26.2，自动 GUI、强校验、服务端-客户端同步
 - owo-config（owo-lib 内）：F/Neo/Quilt，注解式 + 自动 GUI + 同步，⚠️ 不支持 Forge
 
@@ -32,6 +32,7 @@ skillId: mc-config
 ```
 Decision: 要不要用 Cloth Config
 → 单平台 Forge 且仅服务端配置 → ForgeConfigSpec（patterns config-spec），不引 Cloth
+→ 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec，不引 Cloth
 → 新项目 / 长期维护 → 评估 YACL / Fzzy / owo-config（分支见上表）
 → 已有 Cloth 依赖（REI/Kiwi 生态）或只需现成 API → Cloth，但别期待新特性
 → 已选 Cloth：

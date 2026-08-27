@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# 流体开发（Fabric 1.21.3）
+# 流体开发（Fabric 1.21.8）
 
 ## 快速开始
 

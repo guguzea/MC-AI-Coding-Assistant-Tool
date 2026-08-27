@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的规则树/Skill）。
  * B1：在脚手架 draft 上填已用 search_neoforge_docs 核对的 00/01/09 与核心 Skill，然后标 ready。
  */
 import fs from "node:fs";

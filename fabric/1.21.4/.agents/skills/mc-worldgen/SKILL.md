@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# 世界生成（Fabric 1.21.3）
+# 世界生成（Fabric 1.21.4）
 
 官方 develop 树多数没有独立 worldgen 页。签名来自本版 **loader-api**。Yarn：`GenerationStep.Feature`、`RegistryKey`、`SpawnGroup`。不要抄 26.1.2 Mojmap。
 

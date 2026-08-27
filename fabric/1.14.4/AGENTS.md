@@ -150,7 +150,7 @@ fabric-mod/
 ### Minecraft 版本兼容性
 
 - Fabric 1.14.4 支持 Minecraft 1.14.4
-- Fabric Loader 0.3.x（推荐 0.3.2）
+- Fabric Loader 0.3.x（推荐 `0.3.7.111`；meta 无无后缀的 `0.3.2`）
 - Fabric API 0.28.5+1.14
 - **Java 8**（重要：1.14.x 最低要求是 Java 8）
 

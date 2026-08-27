@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的规则树）。
  * 按官方文档 / MDK 核实表生成 NeoForge 六档规则树。
  * 禁止从 forge/1.20.4 或邻档复制。类名来自 docs.neoforged.net 与官方 MDK ExampleMod。
  */

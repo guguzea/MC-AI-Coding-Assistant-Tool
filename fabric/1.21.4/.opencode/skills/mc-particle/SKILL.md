@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# 粒子系统（Fabric 1.21.3）
+# 粒子系统（Fabric 1.21.4）
 
 ## 快速开始
 

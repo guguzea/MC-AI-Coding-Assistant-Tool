@@ -17,7 +17,7 @@
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.16.5+build.10:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
-| Mixin 支持 | **需要显式配置 Mixin Plugin**（1.16.x 特殊要求）|
+| Mixin 支持 | Loom 处理 Mixin；不要手写 Mixin Plugin / MixinBootstrap |
 | Fabric API | 0.16.x（`net.fabricmc.fabric-api:fabric-api:0.42.0+1.16`）|
 
 ---
@@ -65,7 +65,7 @@ Decision: 本规则集是否适用？
 | 注册时机 | modEventBus + `RegisterEvent` | `onInitialize()` 中直接调用 |
 | 注册 API | `Registry.ITEM`（VanillaRegistry 静态字段） | `Registry.register(Registry.ITEM, id, item)` |
 | Mod 入口 | `@Mod` 注解 + `FMLJavaModLoadingContext` | `ModInitializer` 接口 + `fabric.mod.json` entrypoints |
-| Mixin | 需配置 `org.spongepowered.mixin` 插件 | **需要显式配置 Mixin Plugin**（1.16.x）|
+| Mixin | 需配置 `org.spongepowered.mixin` 插件 | Loom 处理 Mixin；不要手写 Mixin Plugin |
 | Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（可读名如 `getHealth()`；`method_12345` 是 Intermediary）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
 | 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`net.fabricmc.fabric.api.event.Event`，如 `AttackBlockCallback`）|

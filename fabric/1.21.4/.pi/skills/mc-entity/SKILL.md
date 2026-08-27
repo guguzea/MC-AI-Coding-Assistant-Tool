@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# 实体开发（Fabric 1.21.3）
+# 实体开发（Fabric 1.21.4）
 
 > 入库 `develop_entities_first-entity` 常指向 **latest Mojmap**（`PathfinderMob` / `EntityRenderState` / `addAdditionalSaveData`）。本档 Yarn，不要抄那页类名。属性用 `FabricDefaultAttributeRegistry.register`（loader-api 已核）。
 > Yarn 1.21.3：`EntityAttributes.MAX_HEALTH`（无 GENERIC_）、`SpawnLocationTypes.ON_GROUND`、`FabricEntityTypeBuilder.build(RegistryKey)`。

@@ -55,7 +55,7 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.14.4
   yarn_mappings=1.14.4+build.18
-  loader_version=0.3.2
+  loader_version=0.3.7.111
   fabric_api_version=0.28.5+1.14
   mod_version=1.0.0
   mod_id=examplemod
@@ -192,7 +192,7 @@ jar {
   },
   "mixins": ["examplemod.mixins.json"],
   "depends": {
-    "fabricloader": ">=0.3.2",
+    "fabricloader": ">=0.3.7.111",
     "fabric-api": "*",
     "minecraft": ">=1.14.4",
     "java": ">=8"

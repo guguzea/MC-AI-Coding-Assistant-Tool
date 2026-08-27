@@ -14,7 +14,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 11**（Forge 1.16.5 推荐）/ Java 16 |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`1.16.5-2021.06.09-18`，带参数名） |
+| Mappings | **Parchment**（`2021.07.27-1.16.5`，maven.parchmentmc.org 首发） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---

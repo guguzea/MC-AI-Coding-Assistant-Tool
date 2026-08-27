@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 反编译加载器/API jar → mcp-server/data/loader-api-summaries/
- * 缓存只写 $MC_SKILL_CACHE（未设时脚本默认 D:\mc-skill-temp）。.java 不入库。
+ * 缓存只写 $MC_SKILL_CACHE（未设时用 os.tmpdir()/mc-skill-cache）。.java 不入库。
  *
  * 用法：
  *   node scripts/decompile-loader-apis.mjs
@@ -14,9 +14,10 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, cpSync
 import { join, dirname, basename } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { createHash } from "crypto";
+import os from "os";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const JAR_DIR = join(CACHE, "loader-jars");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
 const INDEX_ONLY = process.argv.includes("--index-only");

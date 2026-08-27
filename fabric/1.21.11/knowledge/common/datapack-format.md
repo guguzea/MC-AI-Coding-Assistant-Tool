@@ -2,7 +2,7 @@
 
 > Fabric 和 Forge 共享相同的数据包格式。本文件仅列出关键格式参考。
 >
-> **1.21.x Pack Format: `34`**
+> **资源包 pack_format: `75`**（wiki 1.21.11）。数据包数值勿写 34；未在本轮官方表给出 1.21.11 数据编号时，以 minecraft.wiki data pack 页为准。
 
 ## 目录结构
 

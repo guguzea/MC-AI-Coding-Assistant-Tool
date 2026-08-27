@@ -992,11 +992,9 @@ export function getMethodParams(query: ParamQuery): ParamResult {
     };
   }
 
-  const methods = cls.methods.filter((m) => {
-    const nameMatch = m.name === methodName;
-    const descMatch = descriptor ? m.descriptor === descriptor : true;
-    return nameMatch && (descriptor ? descMatch : true);
-  });
+  const methods = cls.methods.filter(
+    (m) => m.name === methodName && (!descriptor || m.descriptor === descriptor),
+  );
 
   if (methods.length === 0) {
     const looksJni = descriptor ? /^\(/.test(descriptor) : true;

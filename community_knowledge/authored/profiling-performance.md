@@ -20,7 +20,7 @@ sourceKind: authored
 ## spark（服务端 tick / 内存）
 
 - 官方文档与下载：<https://spark.lucko.me/>（支持 Forge / NeoForge / Fabric / Quilt，装为普通 mod）。
-- 常用入口：`/spark profiler`（tick 采样，产出网页报告链接）、`/spark tps`（快速看 TTS/TPS 曲线）、`/spark gcmonitor`（GC 压力观察）。子命令以游戏内补全与官方文档为准。
+- 常用入口：`/spark profiler`（tick 采样，产出网页报告链接）、`/spark tps`（快速看 MSPT/TPS 曲线）、`/spark gcmonitor`（GC 压力观察）。子命令以游戏内补全与官方文档为准。
 - 读报告：按 Self 时间排序找热点；mod 代码的包名一眼可辨；平台/原生平铺的大头先别动。
 
 ## vanilla 自带：/debug tick

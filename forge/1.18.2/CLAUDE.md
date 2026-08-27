@@ -91,7 +91,7 @@ src/main/java/com/example/mod/
 - Minecraft: 1.18.2
 - Forge: 40.1.x
 - Java: 17
-- Mappings: Parchment (1.18.2-2022.07.31)
+- Mappings: Parchment (1.18.2-2022.08.02)
 - pack_format: 8
 - World height: -64 to 320
 - Gradle: 7.x

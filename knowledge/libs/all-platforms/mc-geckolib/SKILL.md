@@ -2,7 +2,7 @@
 name: mc-geckolib
 description: GeckoLib 3D 骨骼动画。触发词：GeckoLib、gecko、动画、GeoModel、Blockbench、骨骼动画、实体动画、playerAnimator
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.20.1+"]
+mcVersions: ["1.12.2+"]
 communityDocId: authored/lib-geckolib
 mappings: hint
 ---

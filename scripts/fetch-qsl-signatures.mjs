@@ -10,11 +10,12 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { spawnSync } from "child_process";
+import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
-const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const UA = { "User-Agent": "MC-AI-Coding-Assistant-Tool" };
 const NOTE =
   "许可证允许引用签名；源码不入库。禁止编 QuiltRegistry.register()。quilt-template-mod 打开到的是 org.quiltmc:qsl 与 QFAPI bundle，不是 fat quilt-standard-libraries 坐标。";

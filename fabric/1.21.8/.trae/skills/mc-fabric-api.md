@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# Fabric API 模块（Fabric 1.21.3）
+# Fabric API 模块（Fabric 1.21.8）
 
 ## 概述
 

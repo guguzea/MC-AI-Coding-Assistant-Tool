@@ -92,6 +92,9 @@ scripts/_temp/*.log.err
 
 # Local debug scratch (mcp-server/scripts/_debug* 等)；不要无确认批量删除已跟踪文件
 **/_debug*
+**/_test_*
+**/_scan*
+**/_sample*
 
 # HH1: update state lives in $MC_SKILL_CACHE; keep any leftover out of git
 data/mc-skill-update-state.json

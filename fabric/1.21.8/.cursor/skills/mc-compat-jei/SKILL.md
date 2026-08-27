@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# JEI / REI 兼容（Fabric 1.21.3）
+# JEI / REI 兼容（Fabric 1.21.8）
 
 ## 概述
 

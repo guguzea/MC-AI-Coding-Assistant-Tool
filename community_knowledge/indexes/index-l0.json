@@ -1402,7 +1402,7 @@
       ],
       "sourceKind": "authored",
       "priority": "⭐",
-      "summary": "新一代配置库（1.11 亿下载，官网全平台 1.77 亿；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。",
+      "summary": "新一代配置库（下载量以 Modrinth 页面为准；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API、GUI 契合原版风格，因 Cloth Config 停更而生，新项目配置库首选之一。",
       "mcHint": "1.19-26.3"
     },
     {

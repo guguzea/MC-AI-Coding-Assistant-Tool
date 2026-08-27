@@ -13,6 +13,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -175,7 +176,9 @@ async function main() {
     }
   }
 
-  writeFileSync(CHECKSUMS, JSON.stringify(raw, null, 2) + "\n", "utf8");
+  if (apply) {
+    writeFileSync(CHECKSUMS, JSON.stringify(raw, null, 2) + "\n", "utf8");
+  }
   }
 
   const existing = raw.entries.filter((e) => e.gitPolicy !== "forbidden_redistribute");
@@ -188,7 +191,7 @@ async function main() {
   console.log(JSON.stringify({ dryRun: !apply && !downloadOnly, plannedNew: planned.map((e) => e.id), skipped, toDownload: toDownload.map((e) => ({ id: e.id, url: e.archiveUrl, source: e.source })) }, null, 2));
 
   if (!apply && !downloadOnly) {
-    console.log("dryRun：已把 probe 到的新条目写入 mdk-checksums.json（sha256 仍为 null）。确认后加 --apply 或 --download-only 下载解压。");
+    console.log("dryRun：未写盘。确认后加 --apply 或 --download-only 下载解压。");
     return;
   }
 
@@ -218,7 +221,7 @@ async function main() {
     });
     console.log(`${out.ok ? "OK" : "FAIL"} ${e.id} entryClass=${out.entryClass || "-"} ${out.error?.code || ""}`);
   }
-  const cache = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+  const cache = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
   const lastDir = join(cache, "loader-api-summaries");
   mkdirSync(lastDir, { recursive: true });
   writeFileSync(

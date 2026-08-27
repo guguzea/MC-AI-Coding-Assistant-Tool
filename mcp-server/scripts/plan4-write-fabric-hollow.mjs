@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-/** Write short Fabric 1.21.4 / 1.21.8 / 1.21.10 packs from versioned fabric-docs only. */
+/**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的 Fabric 1.21.4/8/10 包）。
+ * Write short Fabric 1.21.4 / 1.21.8 / 1.21.10 packs from versioned fabric-docs only.
+ */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";

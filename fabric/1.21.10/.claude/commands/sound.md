@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# 声音系统（Fabric 1.21.3）
+# 声音系统（Fabric 1.21.10）
 
 ## 快速开始
 

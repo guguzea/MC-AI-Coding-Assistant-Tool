@@ -15,7 +15,7 @@ skillId: mc-playeranimator
 
 # playerAnimator 玩家动画库集成要点
 
-自写短文。版本与 API 细节以 [playerAnimator](https://github.com/KosmX/playerAnimator) 当前 README 与示例 mod 为准。
+自写短文。版本与 API 细节以 [playerAnimator](https://github.com/KosmX/minecraftPlayerAnimator) 当前 README 与示例 mod 为准。
 
 ## 何时用 / 何时不用
 
@@ -75,7 +75,7 @@ Decision: 要不要用 playerAnimator
 - MCP：`generate_entity_renderer`、`check_dependencies`、`search_community_docs`
 - Skill：`mc-playeranimator`；相关：`mc-renderer`、`mc-geckolib`、`mc-networking`
 - 全览：§二.2 动画库、§四 平台推荐路线；`authored/library-catalog-2026`、`authored/lib-geckolib`、`authored/library-integration`、`authored/soft-deps-modlist`
-- 官方：https://github.com/KosmX/playerAnimator
+- 官方：https://github.com/KosmX/minecraftPlayerAnimator
 - 不清楚时：打开 playerAnimator README + 示例 mod，或 `search_fabric_docs` / `search_forge_docs`；AGENT_USAGE.md 规则先行
 
 ## 核对（2026-08 反编译验证）

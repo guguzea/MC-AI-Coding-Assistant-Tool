@@ -39,7 +39,7 @@ forge_version_range=[40,)
 
 # ---- Mappings（Parchment for 1.18.2）----
 mapping_channel=parchment
-mapping_version=1.18.2-2022.07.31
+mapping_version=1.18.2-2022.08.02
 
 # ---- Mod 元数据 ----
 mod_id=examplemod

@@ -33,7 +33,6 @@ interface PreloadResult {
   /** apiIndex: 直接传解析后的对象（v8 序列化，效率高）。主线程直接使用，无需 JSON.parse */
   apiIndex: Record<string, unknown>;
   classNames: string[];
-  l0Index: unknown;
   /** Trie 扁平数组，仅在剩余时间充足时构建；超时时为 null，改用线性扫描 */
   trieFlat: unknown;
   trieSkipped: boolean;
@@ -143,11 +142,9 @@ async function preload(timeoutMs = 15000): Promise<void> {
     return;
   }
 
-  // 阶段一检查（粗筛）：读取阶段已耗时间
+  // 阶段一检查（粗筛）：读取已耗超过一半超时 → 跳过 Trie
   const elapsedRead = Date.now() - (deadline - timeoutMs);
-  const remainingAfterRead = deadline - Date.now();
-  // 读取阶段已消耗超过一半超时时间 → 跳过 Trie（留给后续处理的时间不够）
-  const skipTrieStage1 = remainingAfterRead < timeoutMs * 0.5;
+  const skipTrieStage1 = elapsedRead > timeoutMs * 0.5;
 
   const classNames = results.classNames as string[];
   const trieFlat = skipTrieStage1 ? null : buildTrieIndex(classNames);
@@ -175,7 +172,6 @@ function sendResult(
     type: "ready",
     apiIndex,
     classNames,
-    l0Index: undefined,
     trieFlat: trieSkipped ? null : trieFlat,
     trieSkipped,
     elapsed: elapsedMs,

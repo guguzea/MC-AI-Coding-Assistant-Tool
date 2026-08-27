@@ -3,7 +3,7 @@ name: mc-script-server
 description: 基岩版 @minecraft/server Script API。触发词：Script API、@minecraft/server、world.afterEvents、system.run
 platforms: [bedrock]
 mcVersions: []
-communityDocId: ""
+communityDocId: authored/bedrock-script-api-primer
 ---
 
 # @minecraft/server（基岩 Script API）

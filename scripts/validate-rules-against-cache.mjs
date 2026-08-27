@@ -12,9 +12,10 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join, relative } from "path";
 import { fileURLToPath } from "url";
+import os from "os";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
 
 const platformArg = process.argv.find((a) => a.startsWith("--platform="))?.split("=")[1];

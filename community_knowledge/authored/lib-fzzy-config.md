@@ -21,13 +21,14 @@ skillId: mc-config
 
 用：新项目需要自动生成 GUI、带强校验、且要服务端-客户端配置同步的配置方案（1.20.1-26.2，F/Forge/Neo/Quilt）。2024-04 发布，Modrinth 3420 万下载，增速极快，是新配置库三强之一（与 YACL、owo-config 并列评估）。
 
-不用：版本窗口外（低于 1.20.1）无构建，回退 Cloth / YACL；仅需纯服务端配置时 Forge/Neo 的 `ForgeConfigSpec` 更轻；已选定 YACL 且不需要同步/校验能力时不必换。
+不用：版本窗口外（低于 1.20.1）无构建，回退 Cloth / YACL；仅需纯服务端配置时 Forge 用 `ForgeConfigSpec`、Neo ≥1.20.4（含 26.x）用 `ModConfigSpec` 更轻；已选定 YACL 且不需要同步/校验能力时不必换。
 
 ## Decision Flow
 
 ```
 Decision: 要不要用 Fzzy Config
-→ 单平台 Forge/Neo 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 Forge 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec
 → MC 版本低于 1.20.1 → YACL（1.19+）/ Cloth（1.14+）
 → 需要自动 GUI + 校验 + 配置同步 → Fzzy Config 优先
 → 只想要 Builder 式手工界面 → YACL

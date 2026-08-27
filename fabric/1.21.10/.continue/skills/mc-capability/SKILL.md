@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# Attachment（Fabric 1.21.3）
+# Attachment（Fabric 1.21.10）
 
 Fabric 没有 NeoForge `AttachmentType` 注册表或 `entity.getData`。用 `fabric-attachment-api-v1`（含在 `fabric-api`）：
 

@@ -10,6 +10,7 @@ import {
   mkdtempSync,
   rmSync,
   writeFileSync,
+  readFileSync,
   mkdirSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -113,7 +114,12 @@ try {
   assert.ok(names.includes("validate_at"));
   assert.ok(names.includes("validate_aw"));
   assert.ok(names.includes("analyze_mod_jar"));
-  assert.equal(names.length, 79);
+  const registrySrc = readFileSync(join(REPO, "src", "tool-registry.ts"), "utf8");
+  const waveSrc = readFileSync(join(REPO, "src", "wave", "register.ts"), "utf8");
+  const expectedToolCount =
+    [...registrySrc.matchAll(/\.registerTool\(/g)].length +
+    [...waveSrc.matchAll(/server\.registerTool\(/g)].length;
+  assert.equal(names.length, expectedToolCount);
   assert.ok(names.includes("download_official_mdk"));
 
   const convertSchema = tools.find((t) => t.name === "convert_mapping")?.inputSchema;

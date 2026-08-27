@@ -10,7 +10,18 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const VERSIONS = ["1.18.2", "1.19.4", "1.20.1", "1.20.4", "1.21.1"];
+const VERSIONS = [
+  "1.18.2",
+  "1.19.4",
+  "1.20.1",
+  "1.20.4",
+  "1.21.1",
+  "1.21.3",
+  "1.21.4",
+  "1.21.8",
+  "1.21.10",
+  "1.21.11",
+];
 
 for (const ver of VERSIONS) {
   const src = join(ROOT, "quilt", ver, "knowledge", "common", "qsl-verified.md");

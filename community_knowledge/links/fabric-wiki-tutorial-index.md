@@ -34,4 +34,4 @@ mcHint: 1.14+（新版教程迁移 docs.fabricmc.net；旧页保留）
 - 查 API 细节优先 `search_fabric_docs`（本地 versioned 树）；Wiki 页用于**实务讲解与完整示例**。
 - 引用某篇写代码但细节不确定时，必须打开原文核对（AGENT_USAGE.md 规则），禁止凭记忆复述。
 
-相关自写短文：`authored/fabric-saveddata-persistent-state`、`authored/fabric-ore-generation`。
+相关自写短文：`authored/fabric-saveddata-persistent-state`、`authored/fabric-commands-and-oregen`。

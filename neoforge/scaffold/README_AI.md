@@ -17,7 +17,7 @@ neoforge-1.20.4-mod/
 └── src/main/
     ├── java/
     │   └── com/example/examplemod/
-    │       └── ExampleMod.java   # BuildPlugin 入口类，所有注册的起点
+    │       └── ExampleMod.java   # @Mod 入口类（构造注入 IEventBus）
     │
     └── resources/
         ├── META-INF/
@@ -61,7 +61,7 @@ mod_description=Example mod description.\nAdd lines as needed.
 | 项目 | Forge 1.20.1 | NeoForge 1.20.4 |
 |------|---------------|------------------|
 | 元数据文件 | `mods.toml` | `neoforge.mods.toml` |
-| 入口模式 | `@Mod` 注解类 | `BuildPlugin` + `init(IEventBus)` |
+| 入口模式 | `@Mod` 注解类 | `@Mod` + 构造注入 `IEventBus`（禁止 `BuildPlugin` + `init(IEventBus)`） |
 | 包名空间 | `net.minecraftforge` | `net.neoforged` |
 | 事件总线 | `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` |
 | Gradle 插件 | `net.minecraftforge.gradle` | `neogradle` |

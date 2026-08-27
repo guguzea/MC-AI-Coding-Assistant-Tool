@@ -9,10 +9,11 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const CACHE = process.env.MC_SKILL_CACHE || "D:\\mc-skill-temp";
+const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const SRC = join(CACHE, "loader-api-src");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
 const FROM_CACHE = process.argv.includes("--from-cache");

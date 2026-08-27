@@ -46,7 +46,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 || Java | **16** |
 || Gradle | 7.x |
 || ForgeGradle | 4.x |
-|| Mappings | **Parchment** (1.17.1-2021.09.06) |
+|| Mappings | **official** (`20210624.103621`) |
 |  | pack_format | **8** |
 
 ---

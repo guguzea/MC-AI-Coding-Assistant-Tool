@@ -3,7 +3,7 @@ name: mc-script-ui
 description: 基岩版 @minecraft/server-ui 表单 UI。触发词：ActionFormData、ModalFormData、MessageFormData、server-ui
 platforms: [bedrock]
 mcVersions: []
-communityDocId: ""
+communityDocId: authored/bedrock-script-api-primer
 ---
 
 # @minecraft/server-ui（基岩表单）

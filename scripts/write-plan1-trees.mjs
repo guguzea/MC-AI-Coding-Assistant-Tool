@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+/**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖计划 1 规则树）。
+ */
 import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

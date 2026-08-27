@@ -2,7 +2,7 @@
 name: mc-architectury
 description: Architectury 跨加载器抽象。触发词：Architectury、多加载器、multiloader、@ExpectPlatform、一码多端、common 源集、architectury-plugin、architectury-loom
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.20.1+"]
+mcVersions: ["1.16.5+"]
 communityDocId: authored/lib-architectury
 mappings: hint
 ---

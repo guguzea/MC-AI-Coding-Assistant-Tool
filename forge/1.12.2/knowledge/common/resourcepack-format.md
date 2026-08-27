@@ -6,12 +6,12 @@
 {
   "pack": {
     "description": "My Resource Pack",
-    "pack_format": 4
+    "pack_format": 3
   }
 }
 ```
 
-> 1.12.2 的 pack_format = **4**。
+> 1.12.2 的 pack_format = **3**（资源包；数据包同为 3，见 datapack-format.md）。
 
 ## 目录结构
 
@@ -68,4 +68,4 @@ entity.examplemod.my_entity.name=My Entity
 - ❌ 语言文件使用 .json 格式（1.12.2 必须用 .lang）
 - ❌ 纹理路径包含大写字母
 - ❌ blockstates 引用不存在的模型路径
-- ❌ pack_format 版本错误（1.12.2 = 4）
+- ❌ pack_format 版本错误（1.12.2 资源包 = **3**，不是 4）

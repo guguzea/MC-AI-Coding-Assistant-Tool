@@ -45,7 +45,7 @@
   ```properties
   minecraft_version=1.16.5
   forge_version=36.2.34
-  mappings_version=1.16.5-2021.06.09-18
+  mappings_version=2021.07.27-1.16.5
   loader_version=36.2.34
   ```
   > 注意：
@@ -57,7 +57,7 @@
 
 - Forge 1.16.5 推荐使用 **Parchment**（社区映射，带参数名和 javadoc）
 - `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本
-- Parchment 映射：`1.16.5-2021.06.09-18`
+- Parchment 映射：`2021.07.27-1.16.5`（maven.parchmentmc.org 首发；无 `-NN` 后缀）
 - **禁止**在 `build.gradle` 中切换到 `yarn` 或 `official`（除非用户明确要求）
 - Parchment 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_225597_d_` → `getViewY`
 

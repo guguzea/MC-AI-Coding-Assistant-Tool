@@ -734,10 +734,21 @@ function assertHasRuleIds(s, want, label) {
     minecraftVersion: "1.12.2",
     skillNames: ["mc-geckolib"],
   });
+  assert.ok((s.libSkills ?? []).some((x) => x.name === "mc-geckolib"));
+  assert.equal((s.skillBodies ?? []).length, 1);
+  console.log("session forge 1.12.2 geckolib in window: ok");
+}
+
+{
+  const s = sessionPlatformPack({
+    platform: "forge",
+    minecraftVersion: "1.7.10",
+    skillNames: ["mc-geckolib"],
+  });
   assert.ok(!(s.libSkills ?? []).some((x) => x.name === "mc-geckolib"));
   assert.equal((s.skillBodies ?? []).length, 0);
   assert.ok((s.warnings ?? []).some((w) => /mc-geckolib/.test(w)));
-  console.log("session forge 1.12.2 geckolib filtered: ok");
+  console.log("session forge 1.7.10 geckolib filtered: ok");
 }
 
 {

@@ -21,14 +21,15 @@ skillId: mc-config
 
 用：想要轻量配置库、且接受把库以 Jar-in-Jar 方式打包进自己模组分发的小模组（1.17-26.2，F/Forge/Neo/Quilt）。API 简单，配置生成快，Modrinth 2510 万下载，多被中小型模组采用。
 
-不用：需要复杂校验、服务端-客户端同步、或 Builder 式精细界面时，选 Fzzy Config / YACL；仅服务端配置时 Forge/Neo 的 `ForgeConfigSpec` 更轻；不打算 Jar-in-Jar 打包、也不想让用户多装一个依赖时，评估是否自己写简单配置。
+不用：需要复杂校验、服务端-客户端同步、或 Builder 式精细界面时，选 Fzzy Config / YACL；仅服务端配置时 Forge 用 `ForgeConfigSpec`、Neo ≥1.20.4（含 26.x）用 `ModConfigSpec` 更轻；不打算 Jar-in-Jar 打包、也不想让用户多装一个依赖时，评估是否自己写简单配置。
 
 ## Decision Flow
 
 ```
 Decision: 要不要用 MidnightLib
 → 需要自动 GUI + 校验 + 同步 → Fzzy Config / YACL
-→ 单平台 Forge/Neo 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 Forge 且仅服务端配置 → ForgeConfigSpec（patterns config-spec）
+→ 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec
 → 轻量配置 + 接受 JiJ 打包 → MidnightLib
 → 已选 MidnightLib：
    ├─ 版本：在 1.17-26.2 内与 MC 对齐（Modrinth 文件页）

@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-/** 只写六档 mc-blockentity，不覆盖 00–10。 */
+/**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖已人工修订的 mc-blockentity）。
+ * 只写六档 mc-blockentity，不覆盖 00–10。
+ */
 import { mkdirSync, writeFileSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

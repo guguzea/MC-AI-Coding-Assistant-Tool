@@ -12,7 +12,7 @@ dependencies: []
 mappings: yarn
 ---
 
-# Kotlin 语言支持（Fabric 1.21.3）
+# Kotlin 语言支持（Fabric 1.21.10）
 
 ## 概述
 

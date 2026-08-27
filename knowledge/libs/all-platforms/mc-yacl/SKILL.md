@@ -2,7 +2,7 @@
 name: mc-yacl
 description: YACL 配置库集成。触发词：YACL、YetAnotherConfigLib、配置屏、Builder 配置、isxander
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.20.1+"]
+mcVersions: ["1.19+"]
 communityDocId: authored/lib-yacl
 ---
 
@@ -13,7 +13,8 @@ YACL（Yet Another Config Lib）是新项目配置库首选之一（下载量以
 ## Decision: 要不要用 YACL
 
 ```
-IF 单平台 Forge/Neo 且仅服务端配置 → ForgeConfigSpec，不引 YACL
+IF 单平台 Forge 且仅服务端配置 → ForgeConfigSpec，不引 YACL
+IF 单平台 NeoForge（≥1.20.4，含 26.x）且仅服务端配置 → ModConfigSpec，不引 YACL
 IF MC 版本不在 1.19-26.3 → 回退 Cloth（1.14-26.2）
 IF 新项目 / 长期维护需要 GUI 配置屏 → YACL 优先（或评估 Fzzy 的自动 GUI + 同步）
 → 已选 YACL：

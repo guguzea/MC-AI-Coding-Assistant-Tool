@@ -143,6 +143,8 @@ src/main/java/
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
 
+本档 **无** `knowledge/porting/`。移植问题改口根目录 `get_migration_guide` / 邻档 porting，**不要**从 1.14.4+ 规则树抄 DeferredRegister 当 1.13.2 教程。
+
 ## 配置（不落盘树级 mc-config）
 
 不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。

@@ -6,7 +6,7 @@
 
 | 编号 | 文件 | 主题 |
 |------|------|------|
-| 00 | 工程目录 RP/BP/SP、UUID、min_engine_version |
+| 00 | 工程目录 RP/BP/SP（SP = 脚本包，manifest `script` 模块）、UUID、min_engine_version |
 | 01 | manifest |
 | 02 | 资源包 |
 | 03 | 行为包 |

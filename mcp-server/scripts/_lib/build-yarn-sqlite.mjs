@@ -42,7 +42,8 @@ export function initYarnSchema(db) {
       official TEXT
     );
     CREATE INDEX IF NOT EXISTS idx_classes_intermediary ON classes(intermediary);
-    CREATE INDEX IF NOT EXISTS idx_classes_official ON classes(official);
+    DROP INDEX IF EXISTS idx_classes_official;
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_classes_official ON classes(official) WHERE official IS NOT NULL;
 
     CREATE TABLE IF NOT EXISTS methods (
       owner_named TEXT NOT NULL,

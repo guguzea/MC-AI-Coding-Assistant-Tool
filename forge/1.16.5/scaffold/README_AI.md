@@ -38,7 +38,7 @@ forge_version=36.2.34
 
 # ---- Mappings（Forge 1.16.5 推荐使用 Parchment）----
 mapping_channel=parchment
-mapping_version=1.16.5-2021.06.09-18
+mapping_version=2021.07.27-1.16.5
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`

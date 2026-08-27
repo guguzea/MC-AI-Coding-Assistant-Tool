@@ -98,7 +98,12 @@ function lintFile(rel) {
         if (!table.has(id)) errors.push(`${rel}: 表外类名 ${id}`);
       }
     }
-    methodCalls(block.text);
+    const JAVA_KW = new Set(["if", "for", "while", "switch", "catch", "synchronized", "return", "super"]);
+    const FABRIC_METHODS = new Set(["onInitialize", "onInitializeClient"]);
+    for (const meth of methodCalls(block.text)) {
+      if (JAVA_KW.has(meth)) continue;
+      if (old && FABRIC_METHODS.has(meth)) errors.push(`${rel}: blacklist method ${meth}()`);
+    }
   }
   if (old) {
     for (const bad of BLACKLIST) {
