@@ -14,7 +14,7 @@ description: 00 — 项目结构与构建
 
 - **必须使用 Java 17**（Fabric 1.19.x 要求；Java 21 仅在 Minecraft 1.21+ 才需要）
 - `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(17)` 或 `sourceCompatibility = JavaVersion.VERSION_17`
-- Gradle Wrapper 版本不低于 **Gradle 7.6**
+- Gradle Wrapper 使用 **Gradle 8.4**（Loom 1.0.18 配对 Gradle 8；禁止降到 7.5 / 7.6）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Loom / Gradle 约束

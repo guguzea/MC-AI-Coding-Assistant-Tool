@@ -240,7 +240,7 @@ MC_skill/
 | `MC_SKILL_PROJECT_ROOT` | 写盘允许的项目根（绝对路径）                         | `H:/mods/my-mod`                  |
 | `MC_SKILL_STRICT`       | `1` 时数据无效则 MCP 启动失败                    | `1`                               |
 | `MC_SKILL_DEBUG_PATHS`  | `1` 打印路径解析过程                           | `1`                               |
-| `MC_SKILL_CACHE`        | 反编译/MDK/loader-jar 缓存根。MCP 与脚本都读此变量；不设则 MCP 默认 APPDATA、脚本默认 `D:\mc-skill-temp`，会分家 | `D:/mc-skill-temp` |
+| `MC_SKILL_CACHE`        | 反编译/MDK/loader-jar 缓存根。MCP 与脚本都读此变量；不设则 MCP 默认 APPDATA、脚本默认 `os.tmpdir()/mc-skill-cache`，会分家 | `%APPDATA%/mc-skill-cache`（脚本回退 `os.tmpdir()/mc-skill-cache`） |
 | `MC_SKILL_SKIP_DOWNLOAD` | `1` 时反编译工具跳过一切下载并诚实失败（CI 语义）       | `1`                               |
 | `MCP_TIMEOUT_MS`        | 测试脚本超时毫秒数                              | `30000`                           |
 

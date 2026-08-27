@@ -579,16 +579,16 @@ function checkModsToml(
   if (!/modLoader\s*=\s*["']javafml["']/.test(modsToml)) {
     errors.push("mods.toml 必须声明 modLoader=\"javafml\"");
   }
-  if (!modsToml.includes("loaderVersion=")) {
+  if (!/loaderVersion\s*=/.test(modsToml)) {
     errors.push("mods.toml 必须包含 loaderVersion 声明");
   }
-  if (!modsToml.includes("[[mods]]")) {
+  if (!/\[\[\s*mods\s*\]\]/.test(modsToml)) {
     errors.push("mods.toml 必须包含 [[mods]] 表");
   }
-  if (!modsToml.includes("modId=")) {
+  if (!/\bmodId\s*=/.test(modsToml)) {
     errors.push("[[mods]] 表必须包含 modId 字段");
   }
-  if (!modsToml.includes("version=")) {
+  if (!/\bversion\s*=/.test(modsToml)) {
     errors.push("[[mods]] 表必须包含 version 字段");
   }
 

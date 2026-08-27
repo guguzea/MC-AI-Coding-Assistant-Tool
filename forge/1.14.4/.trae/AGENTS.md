@@ -148,3 +148,13 @@ src/main/java/
 | DataGen | 有限支持 | 完整支持 | 1.14.4 DataGen 非常有限 |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
+<!-- MC_SKILL_WORKFLOW_NOTE -->
+
+## 工作流提醒（人在环）
+
+完整流程（从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 发布 / 反编译研究）才调 `get_workflow_template`；改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。
+
+- 汉化：`localize_mod`（diff / draft_zh / jar extract / pack_draft；无机器翻译）。
+- 崩溃分诊：`crash_analyze`。
+- 发布：`mc-publish` 工作流 + `check_publish_ready`；不代跑 Gradle、不拷 jar、不上传。
+- 写盘 / Gradle / 拷 jar / 上传均须用户确认（人在环）。
