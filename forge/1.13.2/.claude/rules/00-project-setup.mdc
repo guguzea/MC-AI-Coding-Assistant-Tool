@@ -9,8 +9,8 @@
 ### Java 版本
 
 - **必须使用 Java 8**（Forge 1.13.2 要求；不支持 Java 17）
-- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(8)`
-- Gradle Wrapper 版本不低于 **Gradle 6.9.4**
+- 官方 1.13.2 MDK 用 `sourceCompatibility = '1.8'`（Gradle 4.9 无 `java.toolchain`）
+- Gradle Wrapper 必须是官方 MDK 的 **Gradle 4.9**（不要用系统 Gradle 8/9）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -128,43 +128,40 @@ IF 以上都不匹配
 
 ## 示例：正确的 build.gradle 结构（Forge 1.13.2）
 
-```java
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[3.2,3.3)'
+```groovy
+// 官方 1.13.2-25.0.223 MDK：plugins DSL 的 [3.2,3.3) 在 marker 上解析不到
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = mod_version
 group = mod_group_id
-
 archivesBaseName = mod_id
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+sourceCompatibility = targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'mcp', version: mapping_version
-    copyIdeResources = true
-
+    mappings channel: 'snapshot', version: '20180921-1.13'
     runs {
-        configureEach {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
-        }
         client {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            mods { examplemod { source sourceSets.main } }
         }
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            mods { examplemod { source sourceSets.main } }
         }
     }
 }

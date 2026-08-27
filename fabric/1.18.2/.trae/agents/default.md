@@ -13,7 +13,7 @@
 | Minecraft 版本 | 1.18.2 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 17**（Fabric 1.18.2 最低要求） |
-| Gradle | Gradle 7.6.1 + Loom 0.14.46 |
+| Gradle | Gradle 7.5 + Loom 1.0.18 |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.18.2+build.4:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |

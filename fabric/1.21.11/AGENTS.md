@@ -16,9 +16,9 @@
 | Minecraft 版本 | 1.21.11 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
-| Gradle | Gradle 8.x + Loom |
+| Gradle | Gradle 9.5.1 + Loom remap（官方 example-mod 1.21.11 @ 8cd77ea） |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.21.11+build.6:v2`）|
-| Build 工具 | Loom（`fabric-loom` 插件） |
+| Build 工具 | Loom（`net.fabricmc.fabric-loom-remap` `${loom_version}` = 1.17-SNAPSHOT） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
 
@@ -159,8 +159,8 @@ fabric-mod/
 ### Minecraft 版本兼容性
 
 - Fabric 1.21.11 支持 Minecraft 1.21.11
-- Fabric Loader 0.16.x（推荐 0.16.9）
-- Fabric API 0.141.3+1.21.11 for 1.21.11
+- Fabric Loader **0.19.3**
+- Fabric API **0.141.6+1.21.11**
 - Java 21+
 
 ---

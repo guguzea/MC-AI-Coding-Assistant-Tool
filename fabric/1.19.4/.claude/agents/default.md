@@ -16,7 +16,7 @@
 | Minecraft 版本 | 1.19.4 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 17**（Fabric 1.19.4 最低要求） |
-| Gradle | Gradle 8.x + Loom |
+| Gradle | Gradle 7.5 + Loom 1.0.18 |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.19.4+build.2:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |

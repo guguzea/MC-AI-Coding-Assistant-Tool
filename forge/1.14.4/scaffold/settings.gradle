@@ -1,13 +1,2 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-    }
-}
-
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
-}
+// Gradle 4.9 (official 1.14.4 MDK): pluginManagement / foojay-resolver are Gradle 6+/7+
+rootProject.name = 'examplemod'

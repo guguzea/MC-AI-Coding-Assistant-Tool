@@ -12,9 +12,8 @@ description: 00 — 项目结构与构建
 
 ### Java 版本
 
-- **必须使用 Java 11**（Forge 1.14.4 要求；Java 8 已被废弃，Java 17 在 1.18+ 才需要）
-- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_11` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(11)`
-- Gradle Wrapper 版本不低于 **Gradle 7.6**（Forge 1.14.4 使用 ForgeGradle 3.x）
+- **必须使用 Java 8**（官方 1.14.4-28.2.26 MDK：`sourceCompatibility = '1.8'`；Gradle 4.9 无 `java.toolchain`）
+- Gradle Wrapper 必须是官方 MDK 的 **Gradle 4.9** + `buildscript` `ForgeGradle:3.+`（不要用 plugins DSL `[3.0.0,3.2)` 或 Gradle 7.6）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -120,7 +119,7 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 11，不兼容 Java 8 或 Java 17（仅 1.18+ 才需要 17）
+  → 确认使用 Java 8（官方 MDK）；Gradle 4.9 无 toolchain API
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
@@ -137,25 +136,28 @@ IF 以上都不匹配
 
 ## 示例：正确的 build.gradle 结构（Forge 1.14.4）
 
-```java
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[3.0.0,3.2)'
+```groovy
+// 官方 1.14.4-28.2.26 MDK：plugins DSL [3.0.0,3.2) 不要用
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = mod_version
 group = mod_group_id
-
-base {
-    archivesBaseName = mod_id
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+archivesBaseName = mod_id
+sourceCompatibility = targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: mapping_version
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
     copyIdeResources = true
 
     runs {

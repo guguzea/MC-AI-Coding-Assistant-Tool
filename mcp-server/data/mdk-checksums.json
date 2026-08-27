@@ -132,6 +132,21 @@
       "source": "github"
     },
     {
+      "id": "fabric-1.21.11-loom",
+      "platform": "fabric",
+      "minecraftVersion": "1.21.11",
+      "buildPlugin": "loom",
+      "repo": "https://github.com/FabricMC/fabric-example-mod",
+      "ref": "8cd77ea6f826af4a2da7ebca2119ec7e986cf663",
+      "archiveUrl": "https://github.com/FabricMC/fabric-example-mod/archive/8cd77ea6f826af4a2da7ebca2119ec7e986cf663.zip",
+      "sha256": "53b1230d42ff42812304b79604820518dce88abcfe31ec34fcbf91c233f6bb48",
+      "license": "CC0-1.0",
+      "gitPolicy": "submodule_ok",
+      "mappings": "yarn",
+      "notes": "pin 该 commit（branch 1.21.11），不要跟 branch HEAD。知识库 scaffold 保留 Yarn 以匹配已有 mixin/entity。",
+      "source": "github"
+    },
+    {
       "id": "fabric-1.20.4-loom",
       "platform": "fabric",
       "minecraftVersion": "1.20.4",

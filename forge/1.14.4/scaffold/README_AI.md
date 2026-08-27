@@ -30,10 +30,11 @@
 ## 版本信息
 
 - Minecraft: 1.14.4
-- Forge: 28.2.0
-- Java: 11
-- Gradle: 7.6
-- Mappings: MCP snapshot
+- Forge: 28.2.26（官方 MDK 推荐号）
+- Java: 8
+- Gradle: 4.9
+- ForgeGradle: 3.+（buildscript classpath，与官方 MDK 一致）
+- Mappings: snapshot 20190719-1.14.3
 
 ## 目录结构
 

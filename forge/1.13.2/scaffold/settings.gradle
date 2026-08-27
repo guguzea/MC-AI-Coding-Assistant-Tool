@@ -1,11 +1,2 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        maven {
-            name = 'MinecraftForge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-    }
-}
-
+// Gradle 4.9 (official 1.13.2 MDK): pluginManagement is Gradle 6+
 rootProject.name = 'examplemod'

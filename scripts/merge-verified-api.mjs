@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会写 library-catalog.ts 的 verifiedApi）。
  * merge-verified-api.mjs
  *
  * 把反编译验证结果 JSONL 合并进 mcp-server/src/diagnostics/library-catalog.ts 的 verifiedApi。

@@ -1,6 +1,10 @@
-// enhance-catalog.mjs — ①⑤：给 library-catalog.ts 每条目加 supportedVersions（从 verifiedApi 键推导）
-// + officialUrls 填充（从对应短文提取官方链接）。保留 verifiedApi 与全部现有字段。
-// 行级处理（状态机定位条目闭合行），无坐标漂移风险。
+#!/usr/bin/env node
+/**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖 library-catalog.ts 的 supportedVersions / officialUrls）。
+ * enhance-catalog.mjs — ①⑤：给 library-catalog.ts 每条目加 supportedVersions（从 verifiedApi 键推导）
+ * + officialUrls 填充（从对应短文提取官方链接）。保留 verifiedApi 与全部现有字段。
+ * 行级处理（状态机定位条目闭合行），无坐标漂移风险。
+ */
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";

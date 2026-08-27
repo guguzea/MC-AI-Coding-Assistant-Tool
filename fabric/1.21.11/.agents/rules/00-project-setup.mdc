@@ -10,7 +10,7 @@
 
 - **必须使用 Java 21**（Fabric 1.21.11 要求）
 - `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(21)` 或 `sourceCompatibility = JavaVersion.VERSION_21`
-- Gradle Wrapper 版本不低于 **Gradle 8.4**
+- Gradle Wrapper 必须是官方 example-mod 的 **Gradle 9.5.1**（FabricMC/fabric-example-mod @ 8cd77ea）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Loom / Gradle 约束

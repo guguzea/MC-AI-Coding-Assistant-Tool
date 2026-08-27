@@ -1,112 +1,113 @@
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[4.1.5,4.2)'
+// Official MDK combo: Forge 1.17.1-37.1.1-mdk
+// buildscript classpath 'net.minecraftforge.gradle:ForgeGradle:5.1.+' + Gradle 7.2
+// Source: maven.minecraftforge.net forge-1.17.1-37.1.1-mdk.zip (sha256 in mcp-server/data/mdk-checksums.json)
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = mod_version
 group = mod_group_id
+archivesBaseName = mod_id
 
-base {
-    archivesName = mod_id
-}
-
-// Java 16 for Forge 1.17.1
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
-// Mappings channel and version
-mappings channel: mapping_channel, version: mapping_version
-
 minecraft {
-    copyIdeResources = true
+    mappings channel: mapping_channel, version: mapping_version
 
     runs {
-        configureEach {
+        client {
             workingDirectory project.file('run')
-
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-
             mods {
-                "${mod_id}" {
+                examplemod {
                     source sourceSets.main
                 }
             }
         }
 
-        client {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
         }
 
         data {
-            workingDirectory project.file('run-data')
-            args '--mod', mod_id, '--all',
-                '--output', file('src/generated/resources/'),
-                '--existing', file('src/main/resources/')
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
 
-// Data generators write to src/generated/resources; IDE reads from both
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    // ForgeGradle auto-adds the Forge maven and Maven Central
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 }
 
-tasks.named('processResources', ProcessResources).configure {
+processResources {
     def replaceProperties = [
         minecraft_version      : minecraft_version,
         minecraft_version_range: minecraft_version_range,
         forge_version          : forge_version,
         forge_version_range    : forge_version_range,
         loader_version_range   : loader_version_range,
-        mod_id                : mod_id,
-        mod_name              : mod_name,
-        mod_license           : mod_license,
-        mod_version           : mod_version,
-        mod_authors           : mod_authors,
-        mod_description       : mod_description,
+        mod_id                 : mod_id,
+        mod_name               : mod_name,
+        mod_license            : mod_license,
+        mod_version            : mod_version,
+        mod_authors            : mod_authors,
+        mod_description        : mod_description
     ]
     inputs.properties replaceProperties
-
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
+        expand replaceProperties
     }
 }
 
-tasks.named('jar', Jar).configure {
+jar {
     manifest {
-        attributes(
-            'Specification-Title'     : mod_id,
-            'Specification-Vendor'     : mod_authors,
-            'Specification-Version' : '1',
-            'Implementation-Title'   : project.name,
-            'Implementation-Version'  : project.jar.archiveVersion,
-            'Implementation-Vendor'  : mod_authors,
-            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        )
+        attributes([
+                "Specification-Title"     : "examplemod",
+                "Specification-Vendor"    : mod_authors,
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : mod_authors,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
-    finalizedBy 'reobfJar'
 }
+
+jar.finalizedBy('reobfJar')
 
 publishing {
     publications {
-        register('mavenJava', MavenPublication) {
+        mavenJava(MavenPublication) {
             artifact jar
         }
     }
@@ -115,8 +116,4 @@ publishing {
             url "file://${project.projectDir}/mcmodsrepo"
         }
     }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }

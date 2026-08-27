@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会整文件覆盖 library-catalog.ts）。
  * build-library-catalog-from-authored.mjs
  *
  * 扫描 community_knowledge/authored/ 下 lib-*.md 与 library-integration*.md 的 frontmatter，

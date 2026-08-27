@@ -88,6 +88,8 @@ export interface VersionPreloadStatus {
   classCount: number;
   loaded: boolean;
   preloading: boolean;
+  /** true when Worker skipped Trie build (timeout); queries use linear scan */
+  trieSkipped: boolean;
 }
 
 // ── Trie 索引（Worker 中构建，通过消息传递）────────────────────────────────
@@ -155,6 +157,8 @@ interface VersionData {
   /** 数据目录缺失 */
   missingData: boolean;
   lastError?: string;
+  /** Worker 因超时跳过 Trie 时为 true；此时 trieIndex 为 null，查询走线性扫描 */
+  trieSkipped: boolean;
   /** 该版本正在进行的 Worker（若已结束则为 null） */
   worker: Worker | null;
   /** 该版本的 Worker preload 完成 Promise */
@@ -203,6 +207,7 @@ const _defaultData: VersionData = {
   apiIndex: {},
   classNames: [],
   trieIndex: null,
+  trieSkipped: false,
   loaded: false,
   preloading: false,
   lazyMode: false,
@@ -242,6 +247,7 @@ function startPreloader(version: string): Promise<void> {
       apiIndex: {},
       classNames: [],
       trieIndex: null,
+      trieSkipped: false,
       loaded: true,
       preloading: false,
       lazyMode: false,
@@ -260,6 +266,7 @@ function startPreloader(version: string): Promise<void> {
     apiIndex: {},
     classNames: [],
     trieIndex: null,
+    trieSkipped: false,
     loaded: false,
     preloading: true,
     lazyMode: false,
@@ -345,6 +352,12 @@ function startPreloader(version: string): Promise<void> {
               );
             } else {
               vData.trieIndex = null;
+            }
+            vData.trieSkipped = msg.trieSkipped === true;
+            if (vData.trieSkipped) {
+              console.error(
+                `${logPrefix} Trie skipped after ${msg.elapsed}ms (${msg.classCount} classes); prefix search uses linear scan`,
+              );
             }
             vData.loaded = true;
             vData.preloading = false;
@@ -440,6 +453,7 @@ async function lazyLoadVersionData(version: string, vData: VersionData, dataDir:
     throw e;
   }
   vData.trieIndex = null;
+  vData.trieSkipped = true;
   vData.loaded = true;
   vData.lazyMode = true;
   vData.missingData = false;
@@ -940,6 +954,7 @@ export function getApiPreloadStatus(version: string): VersionPreloadStatus {
       classCount: 0,
       loaded: false,
       preloading: false,
+      trieSkipped: false,
     };
   }
   let status: ApiPreloadStatus = "idle";
@@ -954,6 +969,7 @@ export function getApiPreloadStatus(version: string): VersionPreloadStatus {
     classCount: vData.classNames.length,
     loaded: vData.loaded,
     preloading: vData.preloading,
+    trieSkipped: vData.trieSkipped,
   };
 }
 

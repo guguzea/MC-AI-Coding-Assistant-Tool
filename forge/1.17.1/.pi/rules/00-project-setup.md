@@ -14,7 +14,7 @@ description: 00 — 项目结构与构建
 
 - **必须使用 Java 16**（Forge 1.17.1 要求；Java 17 仅在 Minecraft 1.18+ 才需要）
 - `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_16` 或通过 toolchain `java.toolchain.languageVersion = JavaLanguageVersion.of(16)`
-- Gradle Wrapper 版本不低于 **Gradle 7.4**
+- Gradle Wrapper 必须是官方 MDK 的 **Gradle 7.2** + `buildscript` `ForgeGradle:5.1.+`（不要用 plugins DSL `[4.1.5,4.2)`）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
 ### Gradle 约束
@@ -48,8 +48,9 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.17.1
   forge_version=37.1.1
-  mappings_version=20210624.103621
-  loader_version=37.1.1
+  mapping_channel=official
+  mapping_version=1.17.1
+  loader_version_range=[37,)
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -58,8 +59,8 @@ description: 00 — 项目结构与构建
 
 ### Mappings 约束
 
-- Forge 1.17.1 使用 **official** 映射（`20210624.103621`）
-- `gradle.properties` 中的 `mapping_version` 对应 official 映射版本（`20210624.103621`）；不要使用不存在的 Parchment `2021.09.06`
+- Forge 1.17.1 官方 MDK 使用 **official** 映射（`version: '1.17.1'`，不是日期戳 `20210624.103621`）
+- `gradle.properties` 中的 `mapping_version` 必须是 `1.17.1`；不要使用不存在的 Parchment `2021.09.06`
 - **禁止**在 `build.gradle` 中切换到 `yarn`（Fabric 专属）
 - official 映射将混淆的 Minecraft 方法映射为 Mojang 可读名称
 
@@ -137,28 +138,29 @@ IF 以上都不匹配
 
 ## 示例：正确的 build.gradle 结构（Forge 1.17.1）
 
-```java
-plugins {
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[4.1,4.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+```groovy
+// 官方 1.17.1-37.1.1 MDK：FG5，不是 plugins [4.1.5,4.2)
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = mod_version
 group = mod_group_id
-
-base {
-    archivesName = mod_id
-}
+archivesBaseName = mod_id
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
-// Mappings channel and version — parchment is community-sourced with parameter names and javadocs
-mappings channel: 'parchment', version: mapping_version
-
 minecraft {
+    mappings channel: 'official', version: '1.17.1'
     copyIdeResources = true
 
     runs {

@@ -198,12 +198,5 @@ side="BOTH"
 
 `plugins { id 'net.minecraftforge.gradle' version '[3.2,3.3)' }` **永远解析不到**：Gradle plugin marker 线上只有 `3.0.196` / `3.0.197`（无 3.2.x）。
 
-在 `%TEMP%` 用 Java 8 实测：
-
-| Gradle | pin `3.0.197` 结果 |
-|--------|-------------------|
-| 6.9.4 | 插件能下载，apply 时 FG3 硬拒「Gradle 6.0.0 and newer are not supported in FG3」 |
-| 5.6.4 | 插件 apply 成功，随后 `JavaLanguageVersion` 不存在（toolchain 是 Gradle 6.7+ API）→ 本 scaffold 的 `java.toolchain` 行失败 |
-
-因此本轮 **不改** `build.gradle` 的 plugins 行（禁止用「能编译的假 FG 号」或把 toolchain 降回 FG3 年代 DSL 而不对照官方 1.13.2 MDK）。只把 `gradle-wrapper.properties` 的 `distributionUrl` 补上 `https://services.gradle.org/distributions/` 前缀。要跑通请对照当时官方 MDK 的 `buildscript { classpath 'net.minecraftforge.gradle:ForgeGradle:3.x' }` + 其指定的 Gradle 5.x，不要用系统 Gradle 8/9。
+本 scaffold 已按官方 **1.13.2-25.0.223 MDK** 落盘：`buildscript { classpath 'net.minecraftforge.gradle:ForgeGradle:3.+' }` + wrapper **Gradle 4.9** + `sourceCompatibility = 1.8` + forge `25.0.223` + mappings `snapshot 20180921-1.13`。需要 Java 8，不要用系统 Gradle 8/9。
 

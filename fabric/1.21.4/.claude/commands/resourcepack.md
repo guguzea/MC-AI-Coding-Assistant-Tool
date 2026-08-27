@@ -14,7 +14,7 @@ mappings: yarn
 
 # mc-resourcepack
 
-> Wave D 技能骨架（fabric 1.21.3）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
+> Wave D 技能骨架（fabric 1.21.4）。详细规则见对应 `.cursor/rules/` 与 MCP `search_fabric_docs` / 专题工具。
 
 ## 快速入口
 

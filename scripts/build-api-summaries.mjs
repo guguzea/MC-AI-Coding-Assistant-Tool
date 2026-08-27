@@ -14,6 +14,7 @@
  *   node scripts/build-api-summaries.mjs --out <dir> --cache s1,s2,s3
  */
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -21,11 +22,16 @@ const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, '..');
 const CATALOG_PATH = path.join(ROOT, 'mcp-server', 'src', 'diagnostics', 'library-catalog.ts');
 const DEFAULT_OUT = path.join(ROOT, 'mcp-server', 'data', 'lib-api-summaries');
+function defaultCacheRoot() {
+  if (process.env.MC_SKILL_CACHE) return process.env.MC_SKILL_CACHE;
+  if (process.env.APPDATA) return path.join(process.env.APPDATA, 'mc-skill-cache');
+  return path.join(os.tmpdir(), 'mc-skill-cache');
+}
+const CACHE_ROOT = defaultCacheRoot();
 const DEFAULT_CACHES = [
-  'D:/mc-skill-temp/cache-s1',
-  'D:/mc-skill-temp/cache-s2',
-  'D:/mc-skill-temp/cache-s3',
-  // 早期批次/验证批产物落在 C 盘默认缓存（architectury 等）
+  path.join(CACHE_ROOT, 'cache-s1'),
+  path.join(CACHE_ROOT, 'cache-s2'),
+  path.join(CACHE_ROOT, 'cache-s3'),
   process.env.APPDATA ? path.join(process.env.APPDATA, 'mc-skill-cache') : '',
 ].filter(Boolean);
 
@@ -115,7 +121,7 @@ function normalize(s) { return s.replace(/[-_]/g, ''); }
 let JSONL_DIRS = new Map();
 function loadJsonlDirs() {
   const candidates = [
-    'D:/mc-skill-temp/verified-api-all.jsonl',
+    path.join(CACHE_ROOT, 'verified-api-all.jsonl'),
     path.join(ROOT, 'temp', 'verified-api-results.jsonl'),
   ];
   for (const p of candidates) {

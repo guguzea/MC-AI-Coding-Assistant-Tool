@@ -34,13 +34,12 @@ forge-1.17.1-mod/
 ```properties
 # ---- Minecraft / Forge 版本（必须与 Forge 版本匹配）----
 minecraft_version=1.17.1
-forge_version=37.1.0
+forge_version=37.1.1
 
 # ---- Mappings ----
-# official: MCP（默认，无参数名）
-# parchment: 社区映射（有参数名和 javadoc，推荐用于开发）
+# official: 官方 1.17.1 MDK 用 version: '1.17.1'（不是日期戳）
 mapping_channel=official
-mapping_version=20210624.103621
+mapping_version=1.17.1
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`

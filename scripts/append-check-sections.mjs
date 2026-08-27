@@ -1,9 +1,15 @@
-// 补齐缺失的短文核对节（从 catalog.ts verifiedApi 生成）
+#!/usr/bin/env node
+/**
+ * ⚠ 一次性改写器：已执行过，勿再跑（会覆盖 community_knowledge/authored 核对节）。
+ * 补齐缺失的短文核对节（从 catalog.ts verifiedApi 生成）
+ */
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
-const CATALOG = "H:/MC_skill/mcp-server/src/diagnostics/library-catalog.ts";
-const AUTH = "H:/MC_skill/community_knowledge/authored";
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const CATALOG = join(ROOT, "mcp-server/src/diagnostics/library-catalog.ts");
+const AUTH = join(ROOT, "community_knowledge/authored");
 const text = readFileSync(CATALOG, "utf8");
 
 // 解析条目：id → { keys: ["1.20.1/fabric",...], packagesByKey, entrypointsByKey }

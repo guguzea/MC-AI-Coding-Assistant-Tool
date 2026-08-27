@@ -6,8 +6,11 @@
 
 - **Minecraft**: 1.21.11
 - **Java**: 21
-- **Fabric Loader**: 0.16.x
-- **Fabric API**: 0.200.x
+- **Fabric Loader**: 0.19.3
+- **Fabric API**: 0.141.6+1.21.11
+- **Loom**: 1.17-SNAPSHOT（`net.fabricmc.fabric-loom-remap`）
+- **Gradle**: 9.5.1
+- 来源：FabricMC/fabric-example-mod @ `8cd77ea`
 
 ## 项目结构
 
