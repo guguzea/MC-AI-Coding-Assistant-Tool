@@ -1,4 +1,4 @@
-﻿---
+---
 description: 07 — Script API 与实验开关
 ---
 

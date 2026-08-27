@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Quilt 1.18.2 mc-events（QSL 差异）。名字只来自本档 qsl-verified.md。
 platform: quilt

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 06-networking Quilt
 globs:
 alwaysApply: false

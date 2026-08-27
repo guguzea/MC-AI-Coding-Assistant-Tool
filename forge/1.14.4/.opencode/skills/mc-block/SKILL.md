@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-block
 description: Minecraft Forge 方块开发。创建方块、方块实体、方块状态属性、实体方块接口。触发词：方块、Block、TileEntity、hasTileEntity、Block.Properties、方块实体
 platform: forge

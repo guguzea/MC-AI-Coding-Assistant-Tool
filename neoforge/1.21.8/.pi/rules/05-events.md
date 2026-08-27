@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05 — 事件（NeoForge 1.21.8）
 ---
 

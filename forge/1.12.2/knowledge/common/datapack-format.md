@@ -5,15 +5,15 @@
 ```json
 {
   "pack": {
-    "pack_description": "My Datapack",
-    "pack_format": 4
+    "description": "My Resource Pack",
+    "pack_format": 3
   }
 }
 ```
 
 | MC 版本 | pack_format |
 |--------|-------------|
-| 1.12.2 | **4** |
+| 1.12.2 | **3**（资源包） |
 | 1.13.x | 6 |
 | 1.14.x | 7 |
 | 1.16.x | 8 |
@@ -62,20 +62,9 @@ assets/{modid}/
 }
 ```
 
-### 熔炉烧制
-
-```json
-{
-  "type": "smelting",
-  "ingredient": { "item": "minecraft:iron_ore" },
-  "result": "minecraft:iron_ingot",
-  "experience": 0.7,
-  "cookingtime": 200
-}
-```
 
 ## 常见错误
 
-- ❌ pack_format 版本错误（1.12.2 用 4，不是 6/7/8）
+- ❌ pack_format 版本错误（1.12.2 资源包用 3，不是 4/6/7/8）
 - ❌ `type` 字段缺少 `forge:` 前缀
 - ❌ namespace 包含大写字母

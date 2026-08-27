@@ -1,4 +1,4 @@
-﻿---
+---
 description: 04 — 实体开发
 ---
 
@@ -236,4 +236,4 @@ public class MyEntityRenderer extends LivingRenderer<MyEntity, MyEntityModel<MyE
 > 注意：
 > 1. `RenderingRegistry` 在 Forge 1.15.2 中用于注册实体渲染器
 > 2. 纹理文件路径：`textures/entity/my_entity.png`（对应 `assets/{modid}/textures/entity/my_entity.png`）
-> 3. 实体模型需要通过 `EntityModelLayer` 注册模型层
+> 3. 1.15.2 **没有** `EntityModelLayer`（那是 1.17+）；用本档 EntityModel / 渲染器注册

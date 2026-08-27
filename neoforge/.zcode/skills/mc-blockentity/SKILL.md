@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-blockentity
 description: 分发到 neoforge/<ver>。同步用 Payload，不是 SimpleChannel；禁止 RegistryObject。
 platform: neoforge

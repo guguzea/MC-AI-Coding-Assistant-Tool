@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05 — LiteMod 生命周期
 ---
 

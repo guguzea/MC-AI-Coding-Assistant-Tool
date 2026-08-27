@@ -304,11 +304,24 @@ export function diagnoseGradle(query: GradleQuery): GradleResult {
         !/id\s+['"]net\.minecraftforge\.gradle['"]/.test(buildGradle)) {
       warnings.push("1.12.2 常见写法是 apply plugin: 'net.minecraftforge.gradle.forge'");
     }
-  } else if (band === "other") {
-    warnings.push(`Minecraft ${mcVersion} 走 pin 表 era 检查（1.21+/26.x），禁止空转通过`);
+  } else if (band === "1.21.x") {
+    warnings.push(`Minecraft ${mcVersion} 走 1.21.x pin 表检查，禁止空转通过`);
     if (!hasJavaLanguageVersionDecl(buildGradle)) {
-      errors.push("未找到 Java toolchain 配置（1.21+ / 26.x 必须声明）");
+      errors.push("未找到 Java toolchain 配置（1.21.x 必须声明，建议 21）");
     }
+    if (!buildGradle.includes("net.minecraftforge.gradle") && !/apply\s+plugin:\s*['"]net\.minecraftforge\.gradle/.test(buildGradle)) {
+      warnings.push("未找到 ForgeGradle 插件声明");
+    }
+  } else if (band === "26.x") {
+    warnings.push(`Minecraft ${mcVersion} 走 26.x pin 表检查，禁止空转通过`);
+    if (!hasJavaLanguageVersionDecl(buildGradle)) {
+      errors.push("未找到 Java toolchain 配置（26.x 必须声明，建议 25）");
+    }
+    if (!buildGradle.includes("net.minecraftforge.gradle") && !/apply\s+plugin:\s*['"]net\.minecraftforge\.gradle/.test(buildGradle)) {
+      warnings.push("未找到 ForgeGradle 插件声明");
+    }
+  } else if (band === "other") {
+    warnings.push(`Minecraft ${mcVersion} 无专用波段，仅做通用 ForgeGradle 提示`);
     if (!buildGradle.includes("net.minecraftforge.gradle") && !/apply\s+plugin:\s*['"]net\.minecraftforge\.gradle/.test(buildGradle)) {
       warnings.push("未找到 ForgeGradle 插件声明");
     }

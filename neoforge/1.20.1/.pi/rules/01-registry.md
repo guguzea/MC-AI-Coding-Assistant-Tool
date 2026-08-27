@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01-registry NeoForge 1.20.1
 globs:
 alwaysApply: true

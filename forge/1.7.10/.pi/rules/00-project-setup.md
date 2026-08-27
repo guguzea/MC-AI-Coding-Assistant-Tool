@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00-project-setup Forge 1.7.10
 alwaysApply: true
 ---

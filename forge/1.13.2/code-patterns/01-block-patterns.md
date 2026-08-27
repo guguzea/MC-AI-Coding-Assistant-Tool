@@ -64,7 +64,7 @@ public class MyTileEntityBlock extends Block implements ITileEntityProvider {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(IBlockReader world) {
         return new MyTileEntity();
     }
 }

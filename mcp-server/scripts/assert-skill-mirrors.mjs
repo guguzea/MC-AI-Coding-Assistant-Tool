@@ -102,29 +102,95 @@ for (const pack of listVersionDirs()) {
     }
   }
 
+  // reverse-list extras in host rule mirrors
+  const cursorRuleSet = new Set(rules);
+  for (const [host, sub] of RULE_MIRRORS) {
+    const hostDir = join(pack.base, host, sub);
+    if (!existsSync(hostDir)) continue;
+    for (const n of readdirSync(hostDir).filter((x) => x.endsWith(".mdc"))) {
+      if (!cursorRuleSet.has(n)) {
+        failures.push(`extra ${relative(repoRoot, join(hostDir, n))}`);
+      }
+    }
+  }
+  const piRulesDir = join(pack.base, ".pi", "rules");
+  if (existsSync(piRulesDir)) {
+    for (const n of readdirSync(piRulesDir).filter((x) => x.endsWith(".md"))) {
+      const want = n.replace(/\.md$/, ".mdc");
+      if (!cursorRuleSet.has(want)) {
+        failures.push(`extra ${relative(repoRoot, join(piRulesDir, n))}`);
+      }
+    }
+  }
+
   const skillsDir = join(pack.base, ".cursor", "skills");
-  if (!existsSync(skillsDir)) continue;
-  for (const skillName of readdirSync(skillsDir)) {
-    const srcPath = join(skillsDir, skillName, "SKILL.md");
-    if (!existsSync(srcPath)) continue;
-    const normalized = normalizePathRefs(readFileSync(srcPath, "utf8"), pack.rel);
-    const want = sha(normalized);
-    const skillMirrors = [
-      join(pack.base, ".continue", "skills", skillName, "SKILL.md"),
-      join(pack.base, ".opencode", "skills", skillName, "SKILL.md"),
-      join(pack.base, ".agents", "skills", skillName, "SKILL.md"),
-      join(pack.base, ".zcode", "skills", skillName, "SKILL.md"),
-      join(pack.base, ".pi", "skills", skillName, "SKILL.md"),
-      join(pack.base, ".trae", "skills", `${skillName}.md`),
-      join(pack.base, ".claude", "commands", `${skillName.replace(/^mc-/, "")}.md`),
-    ];
-    for (const dest of skillMirrors) {
-      if (!existsSync(dest)) {
-        failures.push(`missing ${relative(repoRoot, dest)}`);
+  const cursorSkillNames = new Set();
+  if (existsSync(skillsDir)) {
+    for (const skillName of readdirSync(skillsDir)) {
+      const srcPath = join(skillsDir, skillName, "SKILL.md");
+      const flat = join(skillsDir, skillName);
+      if (existsSync(srcPath)) {
+        cursorSkillNames.add(skillName);
+      } else if (statSync(flat).isFile() && skillName.endsWith(".md")) {
+        cursorSkillNames.add(skillName.replace(/\.md$/, ""));
+        continue;
+      } else {
         continue;
       }
-      if (sha(readFileSync(dest, "utf8")) !== want) {
-        failures.push(`hash mismatch ${relative(repoRoot, dest)}`);
+      const normalized = normalizePathRefs(readFileSync(srcPath, "utf8"), pack.rel);
+      const want = sha(normalized);
+      const skillMirrors = [
+        join(pack.base, ".continue", "skills", skillName, "SKILL.md"),
+        join(pack.base, ".opencode", "skills", skillName, "SKILL.md"),
+        join(pack.base, ".agents", "skills", skillName, "SKILL.md"),
+        join(pack.base, ".zcode", "skills", skillName, "SKILL.md"),
+        join(pack.base, ".pi", "skills", skillName, "SKILL.md"),
+        join(pack.base, ".trae", "skills", `${skillName}.md`),
+        join(pack.base, ".claude", "commands", `${skillName.replace(/^mc-/, "")}.md`),
+      ];
+      for (const dest of skillMirrors) {
+        if (!existsSync(dest)) {
+          failures.push(`missing ${relative(repoRoot, dest)}`);
+          continue;
+        }
+        if (sha(readFileSync(dest, "utf8")) !== want) {
+          failures.push(`hash mismatch ${relative(repoRoot, dest)}`);
+        }
+      }
+    }
+  }
+
+  for (const [host, sub] of [
+    [".continue", "skills"],
+    [".opencode", "skills"],
+    [".agents", "skills"],
+    [".zcode", "skills"],
+    [".pi", "skills"],
+  ]) {
+    const d = join(pack.base, host, sub);
+    if (!existsSync(d)) continue;
+    for (const n of readdirSync(d)) {
+      if (!statSync(join(d, n)).isDirectory()) continue;
+      if (!cursorSkillNames.has(n)) {
+        failures.push(`extra ${relative(repoRoot, join(d, n))}`);
+      }
+    }
+  }
+  const traeDir = join(pack.base, ".trae", "skills");
+  if (existsSync(traeDir)) {
+    for (const n of readdirSync(traeDir).filter((x) => x.endsWith(".md"))) {
+      const stem = n.replace(/\.md$/, "");
+      if (!cursorSkillNames.has(stem)) {
+        failures.push(`extra ${relative(repoRoot, join(traeDir, n))}`);
+      }
+    }
+  }
+  const claudeDir = join(pack.base, ".claude", "commands");
+  if (existsSync(claudeDir)) {
+    for (const n of readdirSync(claudeDir).filter((x) => x.endsWith(".md"))) {
+      const stem = n.replace(/\.md$/, "");
+      if (!cursorSkillNames.has(stem) && !cursorSkillNames.has(`mc-${stem}`)) {
+        failures.push(`extra ${relative(repoRoot, join(claudeDir, n))}`);
       }
     }
   }

@@ -9,7 +9,8 @@
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
-import { join, dirname, resolve } from "path";
+import { homedir } from "os";
+import { join, dirname, resolve, relative, isAbsolute } from "path";
 import { fileURLToPath } from "url";
 import {
   getSemanticIndexStatus,
@@ -70,6 +71,40 @@ function getRepoRootFromSelf(): string {
 /** 仓库根目录（含 forge/、data/、community_knowledge/） */
 export function resolveRepoRoot(): string {
   return getRepoRootFromSelf();
+}
+
+/**
+ * Windows 长路径前缀（\\?\）。非 win32 原样返回。
+ * UNC 用 \\?\UNC\server\share。已带前缀的路径不重复添加。
+ */
+export function winLongPath(p: string): string {
+  if (process.platform !== "win32") return p;
+  if (p.startsWith("\\\\?\\")) return p;
+  const abs = resolve(p);
+  if (abs.startsWith("\\\\")) return `\\\\?\\UNC\\${abs.slice(2)}`;
+  return `\\\\?\\${abs}`;
+}
+
+/** candidate 必须落在 root 内：relative() 不得以 `..` 开头，也不得是绝对路径。 */
+export function isResolvedInside(root: string, candidate: string): boolean {
+  const rel = relative(resolve(root), resolve(candidate));
+  if (!rel) return true;
+  return !rel.startsWith("..") && !isAbsolute(rel);
+}
+
+/**
+ * 工具缓存根（更新状态、反编译产物）。不写仓库 data/。
+ * 优先级：MC_SKILL_CACHE → Win %APPDATA%/mc-skill-cache → ~/.config/mc-skill-cache
+ */
+export function resolveCacheRoot(): string {
+  const env = process.env.MC_SKILL_CACHE;
+  if (env) return env;
+  if (process.platform === "win32") {
+    const appData = process.env.APPDATA;
+    if (appData) return join(appData, "mc-skill-cache");
+    return join(homedir(), "mc-skill-cache");
+  }
+  return join(homedir(), ".config", "mc-skill-cache");
 }
 
 /**

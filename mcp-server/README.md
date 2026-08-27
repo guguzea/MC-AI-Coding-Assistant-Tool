@@ -27,7 +27,7 @@ npm run build
 
 ## 近期变更（2026-08 审查修复）
 
-**破坏性 CLI**：`--fail-on-error=false` / `--json=false` / `--compact=false` 现为**关闭**该旗标。旧行为是「只要写出 `--fail-on-error=…` 即开启」，脚本里写 `--fail-on-error=false` 会静默升 exit 1。裸 `--fail-on-error` 仍为开启。
+**破坏性 CLI**：`--fail-on-error=false` / `--json=false` / `--compact=false` 现为**关闭**该旗标。旧行为是「只要写出 `--fail-on-error=…` 即开启」，脚本里写 `--fail-on-error=false` 会静默升 exit 1。裸 `--fail-on-error` 仍为开启。非 `true/false/1/0/yes/no/on/off` 的 `--flag=junk` **拒绝**（exit 2），不会静默当 true。
 
 - `mc_skill_update`：进程启动成功后调用 `clearPendingRestart()`，`action=check` 不再永久返回 `PENDING_RESTART`。
 - `mc_skill_update apply`：`dataBlocked` 在 tooling 合并**之前**检查；数据阻断时不会先改 tooling HEAD。

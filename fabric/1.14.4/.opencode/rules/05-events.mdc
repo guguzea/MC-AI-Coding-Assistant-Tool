@@ -9,7 +9,7 @@
 ### 核心原则
 
 - Fabric 使用**事件回调**（Event Callback）而非 Forge 的 `@SubscribeEvent`
-- 每个事件类型有自己的回调接口（如 `ServerTickEvents.END_SERVER_TICK`、`UseItemCallback`）
+- 每个事件类型有自己的回调接口（如 `ServerTickCallback.EVENT`、`UseItemCallback`）
 - 在 `onInitialize()` / `onInitializeClient()` 里对静态 `Event` 调用 `.register(lambda)`
 - Fabric 事件是**静态 `Event` 字段**（单例），**没有** `@EventHandler` 注解
 
@@ -32,12 +32,12 @@
 
 ```
 IF 处理玩家每 tick 逻辑
-  → 客户端 ClientTickEvents.END_CLIENT_TICK
-  → 服务端 ServerTickEvents.END_SERVER_TICK（再遍历 playerManager）
+  → 客户端 ClientTickCallback.EVENT
+  → 服务端 ServerTickCallback.EVENT（再遍历 playerManager）
   → 不要 PlayerTickEvents（不是 Fabric API）
 
 IF 处理实体每 tick 逻辑
-  → 重写实体 tick()，或 ServerTickEvents 里遍历世界实体
+  → 重写实体 tick()，或 ServerTickCallback.EVENT 里遍历世界实体
   → 不要 EntityTickEvents
 
 IF 处理方块破坏
@@ -68,14 +68,14 @@ IF 处理数据包加载/重载
 
 ### 每 tick（客户端 / 服务端）
 
-没有 `PlayerTickEvents`。客户端用 `ClientTickEvents`，服务端用 `ServerTickEvents`，需要「每个玩家」时自己遍历。
+没有 `PlayerTickEvents`。客户端用 `ClientTickCallback.EVENT`，服务端用 `ServerTickCallback.EVENT`，需要「每个玩家」时自己遍历。
 
 ```java
 @Environment(EnvType.CLIENT)
 public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickCallback.EVENT.register(client -> {
             if (client.player == null) return;
             // 每客户端 tick 结束（可访问 client.player）
         });
@@ -85,13 +85,10 @@ public class ExampleModClient implements ClientModInitializer {
 public class ExampleMod implements ModInitializer {
     @Override
     public void onInitialize() {
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
+        ServerTickCallback.EVENT.register(server -> {
             for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 // 每 server tick、每个在线玩家
             }
-        });
-        ServerTickEvents.START_SERVER_TICK.register(server -> {
-            // 与 END 成对：逻辑要分清时序
         });
     }
 }
@@ -110,9 +107,6 @@ AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> 
     return ActionResult.PASS;
 });
 
-ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-    // 实体加载到世界
-});
 ```
 
 ### 方块破坏 / 右键方块
@@ -197,7 +191,7 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 
 - ❌ 使用 `@EventHandler` / `@SubscribeEvent` — Fabric 没有这些注解，回调不会被注册
 - ❌ 在 `onInitialize()` 外、或条件分支里「有时才 register」— 容易漏注册；应在初始化时注册，逻辑放进 lambda
-- ❌ 混淆 `ClientTickEvents` 的 START/END，或 `ServerTickEvents` 的 START_SERVER_TICK / END_SERVER_TICK — 时序错误
+- ❌ 把 1.16+ 的 `ClientTickEvents` / `ServerTickEvents` 抄到 1.14.4 — 本档是 `ClientTickCallback` / `ServerTickCallback`
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
 - ❌ 忘记处理返回值 — `ActionResult` / `TypedActionResult` / `boolean` 决定是否取消或消费
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`

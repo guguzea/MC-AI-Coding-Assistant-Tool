@@ -312,7 +312,13 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
       warning: QUILT_FABRIC_FALLBACK_WARNING,
     });
   } catch (e) {
-    if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
+    if (isVersionNotFoundLike(e)) {
+      return jsonOk({
+        ...versionNotFoundPayload(e, { query: args.id, version: args.version }),
+        id: args.id,
+      });
+    }
+    if (isDocNotFoundLike(e)) {
       return jsonOk({
         ok: false,
         error: {
@@ -387,7 +393,13 @@ export async function getQuiltDocFull(args: {
       warning: QUILT_FABRIC_FALLBACK_WARNING,
     });
   } catch (e) {
-    if (isVersionNotFoundLike(e) || isDocNotFoundLike(e)) {
+    if (isVersionNotFoundLike(e)) {
+      return jsonOk({
+        ...versionNotFoundPayload(e, { query: args.id, version: args.version }),
+        id: args.id,
+      });
+    }
+    if (isDocNotFoundLike(e)) {
       return jsonOk({
         ok: false,
         error: {

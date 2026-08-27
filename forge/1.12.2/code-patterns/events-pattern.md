@@ -101,7 +101,7 @@ public class CapabilityEvents {
 ## FMLInitializationEvent 中的事件注册
 
 ```java
-@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FML)
+@Mod.EventBusSubscriber(modid = ExampleMod.MOD_ID)
 public class FMLEvents {
 
     @SubscribeEvent

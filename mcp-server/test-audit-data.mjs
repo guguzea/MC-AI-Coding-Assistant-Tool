@@ -297,9 +297,10 @@ function processedOnlyFixture(root, indexName, platform, version, docSubdir) {
 async function testRawProcessedExceptionTableGuard() {
   for (const e of RAW_PROCESSED_SET_EXCEPTIONS) {
     assert.ok(e.reason && String(e.reason).trim(), `exception missing reason: ${JSON.stringify(e)}`);
-    assert.equal(/^(forge_|fabric_|neoforge_)/.test(e.platformPrefix), false, `forbidden prefix ${e.platformPrefix}`);
+    assert.equal(/^(forge_|fabric_|neoforge_|liteloader_)/.test(e.platformPrefix), false, `forbidden prefix ${e.platformPrefix}`);
   }
   assert.equal(skipsRawProcessedSet("quilt_1.21.1", "quilt-docs"), true);
+  assert.equal(skipsRawProcessedSet("liteloader_1.12.2", "liteloader-docs"), false);
   assert.equal(skipsRawProcessedSet("forge_1.20.1", "forge-docs"), false);
 }
 
@@ -310,10 +311,23 @@ async function testQuiltProcessedOnlySkipsE() {
   assert.equal(issues.filter((i) => i.check === "E-raw-processed-set").length, 0, JSON.stringify(issues));
 }
 
-async function testLiteLoaderProcessedOnlySkipsE() {
+async function testLiteLoaderProcessedOnlyReportsE() {
   const root = tmpRoot("ll-e");
   const fx = processedOnlyFixture(root, "liteloader_1.12.2", "liteloader", "1.12.2", "liteloader-docs");
   const issues = auditIndex(fx.root, fx.idx);
+  assert.ok(issues.some((i) => i.check === "E-raw-processed-set" && i.level === "ERROR"), JSON.stringify(issues));
+}
+
+async function testLiteLoaderRawProcessedStemParity() {
+  const root = tmpRoot("ll-parity");
+  const ver = "1.12.2";
+  const docsRoot = path.join(root, "liteloader_1.12.2", "liteloader-docs", ver);
+  writeText(path.join(docsRoot, "raw", "wiki_dev.txt"), "raw wiki\n");
+  writeText(path.join(docsRoot, "processed", "wiki_dev.md"), "# wiki\n");
+  writeJSON(path.join(docsRoot, "index-l0.json"), [
+    { id: `${ver}/wiki_dev`, version: ver, label: "wiki_dev", processedFile: "processed/wiki_dev.md" },
+  ]);
+  const issues = auditIndex(root, { name: "liteloader_1.12.2", platform: "liteloader", version: ver });
   assert.equal(issues.filter((i) => i.check === "E-raw-processed-set").length, 0, JSON.stringify(issues));
 }
 
@@ -372,7 +386,8 @@ const tests = [
   ["honest empty fabric meta no hollow ERROR", testHonestEmptyFabricMetaPassesHollow],
   ["RAW_PROCESSED_SET_EXCEPTIONS guard", testRawProcessedExceptionTableGuard],
   ["quilt processed-only skips E-raw-processed-set", testQuiltProcessedOnlySkipsE],
-  ["liteloader processed-only skips E-raw-processed-set", testLiteLoaderProcessedOnlySkipsE],
+  ["liteloader processed-only reports E-raw-processed-set", testLiteLoaderProcessedOnlyReportsE],
+  ["liteloader raw.txt vs processed.md stem parity", testLiteLoaderRawProcessedStemParity],
   ["forge processed-only still E-raw-processed-set", testForgeProcessedOnlyStillErrorsE],
   ["fabric processed-only still E-raw-processed-set", testFabricProcessedOnlyStillErrorsE],
   ["l0ProcessedStem helper", testL0ProcessedStemHelper],

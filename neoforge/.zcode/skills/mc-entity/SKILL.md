@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-entity
 description: Minecraft NeoForge 实体开发。创建生物、实体属性、AI 目标、实体渲染器。触发词：实体、Entity、LivingEntity、EntityType、MobCategory、EntityRenderer
 platform: neoforge

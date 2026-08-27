@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册系统
 ---
 
@@ -103,7 +103,7 @@ IF 注册 物品
 IF 注册 方块实体（BlockEntity）
   → 方块重写 hasTileEntity() + createTileEntity()（本档没有 EntityBlock）
   → 使用 DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID)
-  → 用 BlockEntityType.Builder.of(...).build(null) 注册
+  → 用 BlockEntityType.Builder.create(...).build(null) 注册
 
 IF 注册 实体（Entity）
   → 使用 DeferredRegister.create(ForgeRegistries.ENTITIES, MOD_ID)
@@ -161,7 +161,7 @@ IF 运行时物品/方块显示为紫色黑色方块（缺失模型）
 @Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     // 创建 DeferredRegister（持有某类对象的延迟注册器）
     public static final DeferredRegister<Block> BLOCKS =

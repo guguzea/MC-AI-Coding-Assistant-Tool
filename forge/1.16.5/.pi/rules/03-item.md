@@ -1,4 +1,4 @@
-﻿---
+---
 description: 03 — 物品开发
 ---
 
@@ -53,7 +53,7 @@ new Item.Properties()
         .saturationMod(float modifier)    // 饱和度修正
         .meat()                           // 狗可食用
         .alwaysEat()                      // 总是可食用（即使饱食）
-        .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 200), 1.0f)
+        .effect(() -> new EffectInstance(Effects.MOVEMENT_SPEED, 200), 1.0f)
         .build()
     )
 ```
@@ -230,7 +230,7 @@ public class MyFoodItem extends Item {
                 .nutrition(4)
                 .saturationMod(0.3f)
                 .meat()
-                .effect(() -> new MobEffectInstance(MobEffects.JUMP, 200, 1), 1.0f)
+                .effect(() -> new EffectInstance(Effects.JUMP, 200, 1), 1.0f)
                 .build())
         );
     }
@@ -238,4 +238,4 @@ public class MyFoodItem extends Item {
 // 创造模式标签通过 .tab(ItemGroup.TAB_FOOD) 注册
 ```
 
-> 注：`effect()` 中的 `MobEffectInstance` 第一个参数是 `MobEffect`（如 `MobEffects.JUMP`），不是 `int` ID。
+> 注：`effect()` 中的 `EffectInstance` 第一个参数是 `Effect`（如 `Effects.JUMP`），不是 `int` ID。

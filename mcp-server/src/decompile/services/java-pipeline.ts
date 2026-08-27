@@ -25,6 +25,7 @@ import {
 } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
+import { checkDiskSpace } from "../../update/data.js";
 
 export interface DownloadGate {
   cacheRoot: string;
@@ -48,6 +49,7 @@ export async function prepareInputs(
   version: string,
   mapping: MappingChoice,
   cacheRoot: string,
+  opts?: { force?: boolean },
 ): Promise<DownloadGate> {
   const cache = ensureCachePaths(cacheRoot);
   const db = openCacheDb(cache.root);
@@ -55,11 +57,12 @@ export async function prepareInputs(
   const unobfuscated = vi.unobfuscated;
   const yarn = mapping === "yarn";
   const remapNeeded = !unobfuscated;
+  const forceManifest = opts?.force === true;
 
   try {
     // 1. client jar（Mojang manifest，SHA1 校验）
     const clientJar = join(cache.jars, `minecraft-${version}-client.jar`);
-    const entry = await resolveMojangVersion(version);
+    const entry = await resolveMojangVersion(version, forceManifest);
     const sha1Ok = () => {
       try {
         const got = createHash("sha1").update(readFileSync(clientJar)).digest("hex");
@@ -108,7 +111,7 @@ export async function prepareInputs(
       } else {
         const mojmapPath = join(cache.mappings, `mojmap-${version}.txt`);
         if (!mappingCacheViable(cache.root, mojmapPath, `mc-mappings:${version}:mojmap`)) {
-          const entry = await resolveMojangVersion(version);
+          const entry = await resolveMojangVersion(version, forceManifest);
           if (!entry.clientMappingsUrl) {
             throw new DownloadError("MAPPINGS_NOT_FOUND", `版本 ${version} 的 manifest 无 client_mappings 下载项`);
           }
@@ -193,6 +196,18 @@ export interface DecompileOutcome {
   file: string;
 }
 
+export function assertVineflowerDiskSpace(outDir: string, jarPath: string): void {
+  const jarSize = existsSync(jarPath) ? statSync(jarPath).size : 0;
+  const disk = checkDiskSpace(outDir, jarSize);
+  if (!disk.ok) {
+    const err = new Error(
+      `DISK_INSUFFICIENT: 需要约 ${disk.neededBytes} 字节（jar×2.5），${disk.insufficientVolume ?? "磁盘"} 空间不足`,
+    ) as Error & { code: string };
+    err.code = "DISK_INSUFFICIENT";
+    throw err;
+  }
+}
+
 /**
  * VineFlower 反编译到 $CACHE/decompiled/<version>/<mapping>/。
  * 先 --only=前缀 定向反编译；未命中目标文件则全量反编译兜底。
@@ -212,6 +227,8 @@ export async function decompileJar(
   if (existsSync(targetFile) && statSync(targetFile).size > 0) {
     return { outDir, file: targetFile };
   }
+
+  assertVineflowerDiskSpace(outDir, jar);
 
   const r = await runJava([
     "-jar", gate.vineflower,

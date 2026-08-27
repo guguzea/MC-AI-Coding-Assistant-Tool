@@ -1,4 +1,4 @@
-﻿---
+---
 description: 06 — 网络通信
 ---
 
@@ -108,7 +108,7 @@ public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
         MyNetworking.registerClientReceivers();
 
-        KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        KeyBindingRegistry.INSTANCE.add(new KeyBinding(
             "key.examplemod.open_gui",
             InputUtil.Type.KEYSYM,
             80, // GLFW_KEY_P；Yarn KeyBinding(String, Type, int, String)

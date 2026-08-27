@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-fluid
 description: Fabric 流体开发。Fluid、FluidType、FlowableFluid。触发词：流体、Fluid、FluidType
 platform: fabric

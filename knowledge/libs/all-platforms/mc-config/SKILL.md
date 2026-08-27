@@ -13,8 +13,10 @@ communityDocId: authored/lib-cloth-config
 ## Decision: 选哪个配置方案
 
 ```
-IF 单平台 Forge / NeoForge 且只做服务端配置
+IF 单平台 Forge 1.20.1 / NeoForge 1.20.1 且只做服务端配置
   → ForgeConfigSpec（原版能力，零第三方依赖）
+IF 单平台 NeoForge ≥1.20.4 且只做服务端配置
+  → ModConfigSpec
 IF 需要客户端配置 GUI：
   → 新项目 / 长期维护 → YACL（1.19-26.3，F/Forge/Neo/Quilt）优先
      → 或 Fzzy Config（1.20.1-26.2，自动 GUI、强校验、服务端-客户端同步）

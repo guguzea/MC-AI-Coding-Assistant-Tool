@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-resourcepack
 description: NeoForge 1.21.5 mc-resourcepack。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

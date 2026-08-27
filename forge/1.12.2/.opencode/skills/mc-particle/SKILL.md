@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-particle
 description: Minecraft Forge 粒子效果开发。粒子注册、粒子渲染。触发词：Particle、ParticleType、EntityFX、RenderingRegistry
 platform: forge

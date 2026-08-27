@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Forge 1.16.5 事件系统。@SubscribeEvent、事件总线、物理端判断。触发词：事件、Event、@SubscribeEvent、EventBusSubscriber
 platform: forge

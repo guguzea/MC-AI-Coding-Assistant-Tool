@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-entity
 description: Fabric 实体开发。EntityType、EntityCategory、initAttributes。触发词：实体、Entity、EntityType
 platform: fabric

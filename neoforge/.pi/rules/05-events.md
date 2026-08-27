@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05-events.mdc
 ---
 

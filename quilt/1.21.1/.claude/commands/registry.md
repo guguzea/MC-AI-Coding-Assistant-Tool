@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: Quilt 1.21.1 mc-registry（QSL 已停更，本档无可用构件）。注册走 Vanilla Registry.register。
 platform: quilt

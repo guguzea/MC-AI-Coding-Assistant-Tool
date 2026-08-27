@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册（NeoForge 1.20.6）
 globs:
 alwaysApply: true

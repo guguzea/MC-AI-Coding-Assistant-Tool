@@ -150,6 +150,20 @@ function currentMonth() {
   return new Date().toISOString().slice(0, 7);
 }
 
+function packagesPlausible(entry, packages) {
+  const id = entry.id || "";
+  /** jei/emi 条目不得写入 bookshelf 包 */
+  if (id.includes("jei") || id.includes("emi")) {
+    if (packages.some((p) => String(p).startsWith("net.darkhax.bookshelf"))) return false;
+  }
+  if (id.includes("bookshelf")) {
+    if (packages.some((p) => !String(p).startsWith("net.darkhax.bookshelf") && !String(p).startsWith("net.darkhax"))) {
+      /* bookshelf 允许 darkhax；其它包不在此硬拒 */
+    }
+  }
+  return true;
+}
+
 function buildValue(r) {
   return {
     verifiedAt: r.verifiedAt ?? currentMonth(),
@@ -235,8 +249,19 @@ function main() {
       continue;
     }
     const rawVa = text.slice(entry.vaStart, entry.vaEnd + 1);
+    const pkgs = Array.isArray(r.packages) ? r.packages : [];
+    if (!packagesPlausible(entry, pkgs)) {
+      unmatched++;
+      continue;
+    }
     if (keyExists(entry, rawVa, key)) {
-      if (!opts.force) {
+      const existing = parseVa(rawVa);
+      const oldPkgs = existing?.[key]?.packages;
+      const wrongPrefix =
+        Array.isArray(oldPkgs) &&
+        oldPkgs.length > 0 &&
+        !packagesPlausible(entry, oldPkgs);
+      if (!opts.force && !wrongPrefix) {
         p.skipped++;
         continue;
       }

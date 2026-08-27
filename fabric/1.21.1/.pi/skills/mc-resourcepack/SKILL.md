@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-resourcepack
 description: 资源包格式、pack_format、纹理。触发词：resourcepack、assets
 platform: fabric

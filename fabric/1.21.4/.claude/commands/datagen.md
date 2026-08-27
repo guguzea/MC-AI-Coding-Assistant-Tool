@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Fabric 1.21.4 mc-datagen。类名只来自本档核实表与 search_fabric_docs。
 platform: fabric

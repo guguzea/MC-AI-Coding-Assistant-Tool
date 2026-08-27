@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-worldgen
 description: configured/placed feature、biome modifier。触发词：worldgen、placed_feature
 platform: neoforge

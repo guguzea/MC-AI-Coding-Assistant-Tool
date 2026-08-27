@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Fabric GUI/Screen 开发。Screen、HandledScreens、ScreenHandler。触发词：GUI、Screen、HandledScreens、ScreenHandler
 platform: fabric

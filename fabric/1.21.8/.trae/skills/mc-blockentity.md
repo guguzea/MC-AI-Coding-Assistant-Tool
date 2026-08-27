@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-blockentity
 description: Fabric 1.21.8 mc-blockentity。类名只来自本档核实表与 search_fabric_docs。
 platform: fabric

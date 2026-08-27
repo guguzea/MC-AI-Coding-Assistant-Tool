@@ -1,6 +1,7 @@
 package com.example.examplemod;
 
-import com.mojang.logging.LogUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,15 +25,14 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
-import org.slf4j.Logger;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Random;
 
 @Mod(ExampleMod.MOD_ID)
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     // DeferredRegister — 持有某类对象的延迟注册器
     // 所有注册通过 modEventBus 延迟到正确的 RegistryEvent 时机执行
@@ -67,7 +67,7 @@ public class ExampleMod {
     // ---- 服务端事件 ----
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("Server starting: {}", event.getServer().getWorld(World.field_234918_aw_).getWorldInfo().getWorldName());
+        LOGGER.info("Server starting: {}", event.getServer().getWorld(World.OVERWORLD).getWorldInfo().getWorldName());
     }
 
     // ---- 客户端事件 ----

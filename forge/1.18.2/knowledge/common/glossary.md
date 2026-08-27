@@ -104,4 +104,4 @@
 | **yarn** | Fabric 社区的映射，与 MCP 类似 |
 | **parchment** | 基于 mojang 的社区映射，补充了参数名和 javadoc |
 
-> 注：Forge 1.18.2 推荐使用 **Parchment** 映射（`parchment:1.18.2-2022.07.31`）。
+> 注：Forge 1.18.2 推荐使用 **Parchment** 映射（`parchment:1.18.2-2022.08.02`）。

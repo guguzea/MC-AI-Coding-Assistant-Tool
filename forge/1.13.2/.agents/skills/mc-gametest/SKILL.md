@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gametest
 description: GameTest 结构测试（本版本不可用）。触发词：GameTest、@GameTest
 platform: forge

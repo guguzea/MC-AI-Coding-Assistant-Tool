@@ -1,6 +1,9 @@
+import { createHash } from "crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "fs";
 import { basename, dirname, join, relative } from "path";
 import { resolveRepoRoot } from "../utils/path.js";
+import { isInsideReal, nativeReal } from "../utils/project-sandbox.js";
+import { nextRealYamlFence, stripUtf8Bom } from "../utils/text.js";
 
 export const PACK_PLATFORMS = [
   "forge",
@@ -31,18 +34,28 @@ export function isVersionDirName(name: string): boolean {
   return /^\d+(\.\d+)*$/.test(name);
 }
 
-export function readPackStatus(packDir: string): PackActivationStatus {
+export function readPackMetaState(packDir: string): {
+  status: PackActivationStatus;
+  metaUnreadable?: true;
+} {
   const metaPath = join(packDir, "pack.meta.json");
-  if (existsSync(metaPath)) {
-    try {
-      const j = JSON.parse(readFileSync(metaPath, "utf8")) as Record<string, unknown>;
-      const s = String(j.status ?? j["pack-status"] ?? "").toLowerCase();
-      if (s === "draft") return "draft";
-    } catch {
-      /* ignore */
+  if (!existsSync(metaPath)) return { status: "ready" };
+  try {
+    const parsed: unknown = JSON.parse(readFileSync(metaPath, "utf8"));
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { status: "draft", metaUnreadable: true };
     }
+    const j = parsed as Record<string, unknown>;
+    const s = String(j.status ?? j["pack-status"] ?? "").toLowerCase();
+    if (s === "draft") return { status: "draft" };
+  } catch {
+    return { status: "draft", metaUnreadable: true };
   }
-  return "ready";
+  return { status: "ready" };
+}
+
+export function readPackStatus(packDir: string): PackActivationStatus {
+  return readPackMetaState(packDir).status;
 }
 
 function is26_1Line(v: string): boolean {
@@ -139,9 +152,10 @@ export function wrapBanneredBody(banner: string, note: string, body: string): st
 }
 
 function prependKeepingFrontmatter(prefix: string, body: string): string {
-  const m = body.match(/^(---\r?\n[\s\S]*?\r?\n---\r?\n)/);
-  if (m) return m[1] + prefix + body.slice(m[1].length);
-  return prefix + body;
+  const s = stripUtf8Bom(body);
+  const { fence, rest } = nextRealYamlFence(s);
+  if (fence) return fence.full + prefix + rest;
+  return prefix + rest;
 }
 
 export function fabricRulesOverlay(
@@ -338,29 +352,39 @@ export function inspectPack(
   platform: string,
   minecraftVersion: string,
   repoRoot = resolveRepoRoot(),
-): { pack: PackInfo; status: PackActivationStatus } | null {
-  const p = platform.trim().toLowerCase() as PackPlatform;
+): { pack: PackInfo; status: PackActivationStatus; metaUnreadable?: true } | null {
+  const p = platform.trim().toLowerCase();
+  if (!(PACK_PLATFORMS as readonly string[]).includes(p)) return null;
+  const packPlatform = p as PackPlatform;
   const rawVer = String(minecraftVersion ?? "").trim();
-  if (p !== "bedrock") {
+  if (packPlatform !== "bedrock") {
     if (!rawVer || rawVer.includes("..") || /[\\/]/.test(rawVer) || !isVersionDirName(rawVer)) {
       return null;
     }
   }
-  if (p === "bedrock") {
+  if (packPlatform === "bedrock") {
     const packDir = join(repoRoot, "bedrock");
     const agentsPath = join(packDir, "AGENTS.md");
     if (existsSync(agentsPath)) {
-      const status = readPackStatus(packDir);
-      return { pack: { platform: "bedrock", minecraftVersion: "*", packDir, agentsPath, status }, status };
+      const meta = readPackMetaState(packDir);
+      return {
+        pack: { platform: "bedrock", minecraftVersion: "*", packDir, agentsPath, status: meta.status },
+        status: meta.status,
+        ...(meta.metaUnreadable ? { metaUnreadable: true as const } : {}),
+      };
     }
     return null;
   }
-  const ver = knowledgeVersion(p, minecraftVersion);
-  const packDir = join(repoRoot, p, ver);
+  const ver = knowledgeVersion(packPlatform, minecraftVersion);
+  const packDir = join(repoRoot, packPlatform, ver);
   const agentsPath = join(packDir, "AGENTS.md");
   if (!existsSync(agentsPath)) return null;
-  const status = readPackStatus(packDir);
-  return { pack: { platform: p, minecraftVersion: ver, packDir, agentsPath, status }, status };
+  const meta = readPackMetaState(packDir);
+  return {
+    pack: { platform: packPlatform, minecraftVersion: ver, packDir, agentsPath, status: meta.status },
+    status: meta.status,
+    ...(meta.metaUnreadable ? { metaUnreadable: true as const } : {}),
+  };
 }
 
 export function findPack(
@@ -392,7 +416,7 @@ export function listSameSeriesCandidates(
     .filter((x) => x.platform === p)
     .map((x) => x.minecraftVersion)
     .filter((pv) => pv === v || pv.startsWith(prefix) || (familyPrefix !== null && pv.startsWith(familyPrefix)))
-    .sort();
+    .sort(cmpMcVersions);
 }
 
 export function listRuleFiles(packDir: string): Array<{ id: string; fileName: string; abs: string }> {
@@ -404,14 +428,22 @@ export function listRuleFiles(packDir: string): Array<{ id: string; fileName: st
   } catch {
     return [];
   }
-  const out: Array<{ id: string; fileName: string; abs: string }> = [];
+  const byStem = new Map<string, { id: string; fileName: string; abs: string }>();
   for (const name of names.sort()) {
     const m = name.match(/^(\d{2})-/);
     if (!m) continue;
     if (!name.endsWith(".mdc") && !name.endsWith(".md")) continue;
-    out.push({ id: m[1], fileName: name, abs: join(dir, name) });
+    const stem = name.replace(/\.(mdc|md)$/i, "");
+    const prev = byStem.get(stem);
+    if (prev) {
+      if (name.endsWith(".mdc") && prev.fileName.endsWith(".md")) {
+        byStem.set(stem, { id: m[1], fileName: name, abs: join(dir, name) });
+      }
+      continue;
+    }
+    byStem.set(stem, { id: m[1], fileName: name, abs: join(dir, name) });
   }
-  return out;
+  return [...byStem.values()];
 }
 
 export type SkillIndexEntry = {
@@ -422,6 +454,12 @@ export type SkillIndexEntry = {
   source?: string;
   mappingNote?: string;
   skillBanner?: string;
+};
+
+export type DivergedSkill = {
+  name: string;
+  canonicalHash: string;
+  others: Array<{ rel: string; hash: string }>;
 };
 
 export function toPosixAbs(abs: string): string {
@@ -470,12 +508,13 @@ function parseYamlList(value: string): string[] {
   return bare === "" ? [] : [bare];
 }
 
-function parseFrontmatterMap(text: string): Record<string, string> {
+export function parseFrontmatterMap(text: string): Record<string, string> {
   const meta: Record<string, string> = {};
-  if (!text.startsWith("---")) return meta;
-  const end = text.indexOf("\n---", 3);
+  const s = stripUtf8Bom(text);
+  if (!s.startsWith("---")) return meta;
+  const end = s.indexOf("\n---", 3);
   if (end < 0) return meta;
-  for (const line of text.slice(3, end).split(/\r?\n/)) {
+  for (const line of s.slice(3, end).split(/\r?\n/)) {
     const m = line.match(/^([\w-]+):\s*(.*)$/);
     if (!m) continue;
     meta[m[1]] = m[2].trim();
@@ -571,21 +610,47 @@ function parseYamlDescription(fm: string): string {
 }
 
 export function frontmatterDescription(text: string): { name?: string; description: string } {
-  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  if (!m) return { description: text.split("\n").find((l) => l.startsWith("# "))?.replace(/^#\s+/, "") ?? "" };
+  const s = stripUtf8Bom(text);
+  const m = s.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!m) return { description: s.split("\n").find((l) => l.startsWith("# "))?.replace(/^#\s+/, "") ?? "" };
   const name = m[1].match(/^name:\s*(.+)$/m)?.[1]?.trim();
   const description = parseYamlDescription(m[1]);
   return { name, description };
 }
 
-export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): SkillIndexEntry[] {
+export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): {
+  skills: SkillIndexEntry[];
+  diverged: DivergedSkill[];
+} {
   const out: SkillIndexEntry[] = [];
   const seen = new Set<string>();
-  const roots = [
+  const byName = new Map<string, Array<{ rel: string; hash: string; canonical: boolean }>>();
+  const hostRoots = [
+    { rel: join(packDir, ".cursor", "skills"), canonical: true },
+    { rel: join(packDir, ".agents", "skills"), canonical: false },
+    { rel: join(packDir, ".claude", "skills"), canonical: false },
+    { rel: join(packDir, ".continue", "skills"), canonical: false },
+    { rel: join(packDir, ".trae", "skills"), canonical: false },
+    { rel: join(packDir, ".opencode", "skills"), canonical: false },
+    { rel: join(packDir, ".zcode", "skills"), canonical: false },
+    { rel: join(packDir, ".pi", "skills"), canonical: false },
+  ];
+  const fillRoots = [
     join(packDir, ".cursor", "skills"),
     join(packDir, ".agents", "skills"),
   ];
-  for (const root of roots) {
+
+  const hash8 = (body: string): string => createHash("sha256").update(body).digest("hex").slice(0, 8);
+
+  const skillFileOf = (root: string, name: string): string => {
+    const skillMd = join(root, name, "SKILL.md");
+    const flat = join(root, name);
+    if (existsSync(skillMd)) return skillMd;
+    if (name.endsWith(".md") && existsSync(flat) && statSync(flat).isFile()) return flat;
+    return "";
+  };
+
+  for (const { rel: root, canonical } of hostRoots) {
     if (!existsSync(root)) continue;
     let names: string[] = [];
     try {
@@ -594,11 +659,29 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
       continue;
     }
     for (const name of names) {
-      const skillMd = join(root, name, "SKILL.md");
-      const flat = join(root, name);
-      let abs = "";
-      if (existsSync(skillMd)) abs = skillMd;
-      else if (name.endsWith(".md") && existsSync(flat) && statSync(flat).isFile()) abs = flat;
+      const abs = skillFileOf(root, name);
+      if (!abs) continue;
+      const body = readFileSync(abs, "utf8");
+      const fm = frontmatterDescription(body);
+      const skillName = fm.name || name.replace(/\.md$/, "");
+      const hash = hash8(body);
+      const posix = relative(repoRoot, abs).replace(/\\/g, "/");
+      const arr = byName.get(skillName) ?? [];
+      arr.push({ rel: posix, hash, canonical });
+      byName.set(skillName, arr);
+    }
+  }
+
+  for (const root of fillRoots) {
+    if (!existsSync(root)) continue;
+    let names: string[] = [];
+    try {
+      names = readdirSync(root);
+    } catch {
+      continue;
+    }
+    for (const name of names) {
+      const abs = skillFileOf(root, name);
       if (!abs) continue;
       const rel = relative(repoRoot, abs).replace(/\\/g, "/");
       const body = readFileSync(abs, "utf8");
@@ -614,7 +697,22 @@ export function listSkillIndex(packDir: string, repoRoot = resolveRepoRoot()): S
       });
     }
   }
-  return out.sort((a, b) => a.name.localeCompare(b.name));
+
+  const diverged: DivergedSkill[] = [];
+  for (const [name, copies] of byName) {
+    const canonical = copies.find((c) => c.canonical) ?? copies[0];
+    if (!canonical) continue;
+    const others = copies.filter((c) => c.rel !== canonical.rel && c.hash !== canonical.hash);
+    if (others.length) {
+      diverged.push({
+        name,
+        canonicalHash: canonical.hash,
+        others: others.map((o) => ({ rel: o.rel, hash: o.hash })),
+      });
+    }
+  }
+
+  return { skills: out.sort((a, b) => a.name.localeCompare(b.name)), diverged };
 }
 
 export const DONOR_SKILL_BANNER = "[DONOR_SKILL 禁止直接抄写]";
@@ -683,8 +781,8 @@ export function mergeDonorSkills(
   mappingNote: string,
   repoRoot = resolveRepoRoot(),
 ): SkillIndexEntry[] {
-  const local = listSkillIndex(localDir, repoRoot);
-  const donor = listSkillIndex(donorDir, repoRoot);
+  const { skills: local } = listSkillIndex(localDir, repoRoot);
+  const { skills: donor } = listSkillIndex(donorDir, repoRoot);
   const byName = new Map<string, SkillIndexEntry>();
   for (const s of donor) {
     byName.set(s.name, { ...s, source, mappingNote });
@@ -712,10 +810,11 @@ export function listMergedPackSkills(
   packDir: string,
   overlay: { status: string; fabricDir?: string; forgeDir?: string; wanted?: string } | undefined,
   repoRoot = resolveRepoRoot(),
-): { skills: SkillIndexEntry[]; donorWarning?: string } {
+): { skills: SkillIndexEntry[]; donorWarning?: string; diverged: DivergedSkill[] } {
+  const { diverged } = listSkillIndex(packDir, repoRoot);
   if (platform === "quilt" && overlay?.status === "ok" && overlay.fabricDir) {
     const fabricVer = (overlay.wanted ?? `fabric/${packVersion}`).replace(/^fabric\//, "");
-    return { skills: mergeQuiltFabricSkills(packDir, overlay.fabricDir, fabricVer, repoRoot) };
+    return { skills: mergeQuiltFabricSkills(packDir, overlay.fabricDir, fabricVer, repoRoot), diverged };
   }
   if (platform === "neoforge" && packVersion === "1.20.1" && overlay?.status === "ok" && overlay.forgeDir) {
     const note = mappingNoteForForgeCompat();
@@ -724,7 +823,7 @@ export function listMergedPackSkills(
         ? { ...s, skillBanner: FORGE_COMPAT_BANNER, mappingNote: note }
         : s,
     );
-    return { skills: merged };
+    return { skills: merged, diverged };
   }
   const donorVer =
     platform === "neoforge"
@@ -743,10 +842,11 @@ export function listMergedPackSkills(
       return {
         skills: mergeDonorSkills(packDir, donorDir, `${platform}/${donorVer}`, note, repoRoot),
         donorWarning: `Skill 索引含同系列主档 ${platform}/${donorVer} 并入；类名/签名以本档 ${docsTool}(version=${packVersion}) 为准；00–10 仍只用本档。`,
+        diverged,
       };
     }
   }
-  return { skills: listSkillIndex(packDir, repoRoot) };
+  return { skills: listSkillIndex(packDir, repoRoot).skills, diverged };
 }
 
 export function readText(abs: string, maxChars = 120_000): string {
@@ -799,6 +899,15 @@ export function isMcSkillKnowledgeRepo(root: string): boolean {
 /** 知识库某版 scaffold/，不要当成用户工程。 */
 export function isKnowledgePackScaffold(root: string): boolean {
   if (basename(root).toLowerCase() !== "scaffold") return false;
+  try {
+    if (isInsideReal(nativeReal(root), nativeReal(resolveRepoRoot()))) return true;
+  } catch {
+    /* realpath 失败则走结构判定 */
+  }
   const parent = dirname(root);
-  return existsSync(join(parent, "AGENTS.md"));
+  const grand = dirname(parent);
+  return (
+    isVersionDirName(basename(parent)) &&
+    (PACK_PLATFORMS as readonly string[]).includes(basename(grand).toLowerCase())
+  );
 }

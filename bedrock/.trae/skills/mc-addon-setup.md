@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-addon-setup
 description: 基岩 Add-On 工程结构。触发词：com.mojang、development_behavior_packs、RP/BP、Add-On 从零
 platform: bedrock

@@ -9,7 +9,8 @@ import { DownloadError } from "./http.js";
 
 const VERSION_MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json";
 
-let cachedManifest: { versions: Array<{ id: string; url: string }> } | null = null;
+let cachedManifest: { data: { versions: Array<{ id: string; url: string }> }; loadedAt: number } | null = null;
+const MANIFEST_TTL_MS = 60 * 60 * 1000;
 
 interface VersionJson {
   downloads: {
@@ -29,19 +30,21 @@ export interface MojangVersionEntry {
 }
 
 export async function fetchVersionManifest(force = false): Promise<{ versions: Array<{ id: string; url: string }> }> {
-  if (cachedManifest && !force) return cachedManifest;
+  if (cachedManifest && !force && Date.now() - cachedManifest.loadedAt < MANIFEST_TTL_MS) {
+    return cachedManifest.data;
+  }
   const res = await fetch(VERSION_MANIFEST_URL, { signal: AbortSignal.timeout(60_000) });
   if (!res.ok) {
     throw new DownloadError("DOWNLOAD_FAILED", `Mojang version manifest: HTTP ${res.status}`);
   }
   const json = (await res.json()) as { versions: Array<{ id: string; url: string }> };
-  cachedManifest = json;
+  cachedManifest = { data: json, loadedAt: Date.now() };
   return json;
 }
 
 /** 解析版本 → client jar 下载信息（manifestId 归一化：manifest 中的精确 id 优先） */
-export async function resolveMojangVersion(version: string): Promise<MojangVersionEntry> {
-  const manifest = await fetchVersionManifest();
+export async function resolveMojangVersion(version: string, force = false): Promise<MojangVersionEntry> {
+  const manifest = await fetchVersionManifest(force);
   const exact = manifest.versions.find((v) => v.id === version);
   const id = exact?.id ?? version;
 

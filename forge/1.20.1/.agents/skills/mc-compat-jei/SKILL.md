@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-compat-jei
 description: JEI/EMI/REI 配方查看器插件集成。触发词：JEI、EMI、REI、配方显示、RecipeCategory、jei_plugins、EmiPlugin、REIClientPlugin、配方查看器、软依赖
 platforms: [fabric, forge, neoforge]

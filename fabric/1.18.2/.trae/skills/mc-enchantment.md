@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-enchantment
 description: 附魔注册与效果。触发词：Enchantment、Enchantments
 platform: fabric

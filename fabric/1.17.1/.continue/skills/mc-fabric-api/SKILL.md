@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-fabric-api
 description: Fabric API 模块系统。fabric-command-api-v1、内容注册表、networking。触发词：Fabric API、fabric-api、modImplementation、fabric-networking
 platform: fabric

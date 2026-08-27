@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-compat-jei
 description: Minecraft Forge JEI/EMI 1.18.2 兼容层（JEI 10.x 构件核验；EMI 类名以官方仓库为准）。触发词：JEI、EMI、IModPlugin、RecipeCategory
 platform: forge

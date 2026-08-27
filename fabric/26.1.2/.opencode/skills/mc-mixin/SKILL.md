@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: Fabric 26.1.2 Mixin。fabric.mod.json mixins 字段、mixins.json、Loom official AW。触发词：Mixin、@Inject、access widener
 platform: fabric

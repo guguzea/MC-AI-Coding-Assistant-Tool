@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-potion
 description: 药水与酿造。触发词：Potion、BrewingRecipe
 platform: fabric

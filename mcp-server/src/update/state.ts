@@ -1,10 +1,10 @@
 /**
- * Persist update check / apply state under data/.
+ * Persist update check / apply state under $MC_SKILL_CACHE (not git-tracked data/).
  */
 
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "fs";
-import { dirname, join } from "path";
-import { resolveDataDir } from "../utils/path.js";
+import { dirname, join, resolve } from "path";
+import { resolveCacheRoot, resolveDataDir } from "../utils/path.js";
 
 export interface LastCheckCache {
   at: string;
@@ -22,28 +22,59 @@ export interface UpdateState {
   pendingRestartSince?: string | null;
 }
 
-export function updateStatePath(dataDir?: string): string {
-  return join(dataDir ?? resolveDataDir(), "mc-skill-update-state.json");
+export interface WriteUpdateStateResult {
+  state: UpdateState;
+  writeFailed?: boolean;
+  warning?: string;
 }
 
-export function readUpdateState(dataDir?: string): UpdateState {
-  const p = updateStatePath(dataDir);
-  if (!existsSync(p)) return {};
+const STATE_FILE = "mc-skill-update-state.json";
+
+function isRepoDataDir(dataDir?: string): boolean {
+  if (!dataDir) return true;
   try {
-    return JSON.parse(readFileSync(p, "utf8")) as UpdateState;
+    return resolve(dataDir) === resolve(resolveDataDir());
   } catch {
-    return {};
+    return true;
   }
 }
 
-export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string): UpdateState {
+/** Canonical path: cache root (production). Isolated dataDir in tests is not the repo data/. */
+export function updateStatePath(dataDir?: string): string {
+  if (dataDir && !isRepoDataDir(dataDir)) return join(dataDir, STATE_FILE);
+  return join(resolveCacheRoot(), STATE_FILE);
+}
+
+export function updateStateLegacyPath(dataDir?: string): string {
+  return join(dataDir ?? resolveDataDir(), STATE_FILE);
+}
+
+export function readUpdateState(dataDir?: string): UpdateState {
+  const cachePath = join(resolveCacheRoot(), STATE_FILE);
+  const primary = updateStatePath(dataDir);
+  const legacyPath = updateStateLegacyPath(dataDir);
+  const candidates = isRepoDataDir(dataDir)
+    ? [cachePath, legacyPath]
+    : [primary];
+  for (const p of candidates) {
+    if (!existsSync(p)) continue;
+    try {
+      return JSON.parse(readFileSync(p, "utf8")) as UpdateState;
+    } catch {
+      continue;
+    }
+  }
+  return {};
+}
+
+export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string): WriteUpdateStateResult {
+  const cur = readUpdateState(dataDir);
+  const next: UpdateState = { ...cur, ...patch };
   try {
     const p = updateStatePath(dataDir);
     mkdirSync(dirname(p), { recursive: true });
-    const cur = readUpdateState(dataDir);
-    const next: UpdateState = { ...cur, ...patch };
     const payload = JSON.stringify(next, null, 2) + "\n";
-    if (existsSync(p) && readFileSync(p, "utf8") === payload) return next;
+    if (existsSync(p) && readFileSync(p, "utf8") === payload) return { state: next };
     const tmp = `${p}.tmp-${process.pid}-${Date.now()}`;
     try {
       writeFileSync(tmp, payload, "utf8");
@@ -52,9 +83,10 @@ export function writeUpdateState(patch: Partial<UpdateState>, dataDir?: string):
       rmSync(tmp, { force: true });
       throw err;
     }
-    return next;
-  } catch {
-    return readUpdateState(dataDir);
+    return { state: next };
+  } catch (err) {
+    const warning = `无法写入更新状态：${err instanceof Error ? err.message : String(err)}`;
+    return { state: next, writeFailed: true, warning };
   }
 }
 

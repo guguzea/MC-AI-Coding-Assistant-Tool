@@ -70,7 +70,7 @@ function Write-TextRetry {
     if ($dir) { Ensure-Dir $dir }
     for ($i = 1; $i -le $Retries; $i++) {
         try {
-            [System.IO.File]::WriteAllText($Path, $Content, [System.Text.Encoding]::UTF8)
+            [System.IO.File]::WriteAllText($Path, $Content, (New-Object System.Text.UTF8Encoding $false))
             return
         } catch {
             if ($i -eq $Retries) { throw }
@@ -156,6 +156,51 @@ function Sync-VersionDir {
     }
     Write-Host "[Skills] Done ($skillCount skills)`n" -ForegroundColor Green
 
+    $cursorSkillNames = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+    if (Test-Path $cursorSkillsDir) {
+        foreach ($skillDir in Get-ChildItem $cursorSkillsDir -Directory -ErrorAction SilentlyContinue) {
+            [void]$cursorSkillNames.Add($skillDir.Name)
+        }
+        foreach ($skillFile in Get-ChildItem $cursorSkillsDir -Filter "*.md" -File -ErrorAction SilentlyContinue) {
+            [void]$cursorSkillNames.Add([System.IO.Path]::GetFileNameWithoutExtension($skillFile.Name))
+        }
+    }
+    foreach ($hostSkills in @(
+        @{ Path = "$Base\.continue\skills"; Kind = "dir" },
+        @{ Path = "$Base\.opencode\skills"; Kind = "dir" },
+        @{ Path = "$Base\.agents\skills"; Kind = "dir" },
+        @{ Path = "$Base\.zcode\skills"; Kind = "dir" },
+        @{ Path = "$Base\.pi\skills"; Kind = "dir" }
+    )) {
+        if (-not (Test-Path $hostSkills.Path)) { continue }
+        foreach ($item in Get-ChildItem $hostSkills.Path -Directory -ErrorAction SilentlyContinue) {
+            if (-not $cursorSkillNames.Contains($item.Name)) {
+                Remove-Item $item.FullName -Recurse -Force
+                Write-Host "  Removed extra skill: $($item.FullName)" -ForegroundColor DarkYellow
+            }
+        }
+    }
+    $traeSkills = "$Base\.trae\skills"
+    if (Test-Path $traeSkills) {
+        foreach ($f in Get-ChildItem $traeSkills -Filter "*.md" -File -ErrorAction SilentlyContinue) {
+            $n = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
+            if (-not $cursorSkillNames.Contains($n)) {
+                Remove-Item $f.FullName -Force
+                Write-Host "  Removed extra skill: $($f.FullName)" -ForegroundColor DarkYellow
+            }
+        }
+    }
+    $claudeCmds = "$Base\.claude\commands"
+    if (Test-Path $claudeCmds) {
+        foreach ($f in Get-ChildItem $claudeCmds -Filter "*.md" -File -ErrorAction SilentlyContinue) {
+            $stem = [System.IO.Path]::GetFileNameWithoutExtension($f.Name)
+            if (-not ($cursorSkillNames.Contains($stem) -or $cursorSkillNames.Contains("mc-$stem"))) {
+                Remove-Item $f.FullName -Force
+                Write-Host "  Removed extra command: $($f.FullName)" -ForegroundColor DarkYellow
+            }
+        }
+    }
+
     # Rules
     Write-Host "[Rules] Syncing from .cursor/rules/..." -ForegroundColor Yellow
     $ruleCount = 0
@@ -178,11 +223,36 @@ function Sync-VersionDir {
                 $ruleText = "---`ndescription: $desc`n---`n`n" + $ruleText
             }
         }
-        [System.IO.File]::WriteAllText("$Base\.pi\rules\$piName", $ruleText, [System.Text.Encoding]::UTF8)
+        [System.IO.File]::WriteAllText("$Base\.pi\rules\$piName", $ruleText, (New-Object System.Text.UTF8Encoding $false))
         Write-Host "  Synced: $($rule.Name)" -ForegroundColor Green
         $ruleCount++
     }
     Write-Host "[Rules] Done ($ruleCount rules)`n" -ForegroundColor Green
+
+    $cursorRuleNames = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::OrdinalIgnoreCase)
+    foreach ($rule in Get-ChildItem "$Base\.cursor\rules" -Filter "*.mdc" -ErrorAction SilentlyContinue) {
+        [void]$cursorRuleNames.Add($rule.Name)
+    }
+    foreach ($hostDir in @(".claude", ".continue", ".trae", ".opencode", ".agents", ".zcode")) {
+        $p = "$Base\$hostDir\rules"
+        if (-not (Test-Path $p)) { continue }
+        foreach ($f in Get-ChildItem $p -Filter "*.mdc" -File -ErrorAction SilentlyContinue) {
+            if (-not $cursorRuleNames.Contains($f.Name)) {
+                Remove-Item $f.FullName -Force
+                Write-Host "  Removed extra rule: $($f.FullName)" -ForegroundColor DarkYellow
+            }
+        }
+    }
+    $piRules = "$Base\.pi\rules"
+    if (Test-Path $piRules) {
+        foreach ($f in Get-ChildItem $piRules -Filter "*.md" -File -ErrorAction SilentlyContinue) {
+            $want = [System.IO.Path]::GetFileNameWithoutExtension($f.Name) + ".mdc"
+            if (-not $cursorRuleNames.Contains($want)) {
+                Remove-Item $f.FullName -Force
+                Write-Host "  Removed extra rule: $($f.FullName)" -ForegroundColor DarkYellow
+            }
+        }
+    }
 
     # Agents
     Write-Host "[Agents] Syncing agents..." -ForegroundColor Yellow

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-compat-jei
 description: Minecraft Forge JEI 1.15.2 兼容层（JEI 6.x 构件核验）。触发词：JEI、IModPlugin、RecipeCategory、jei_plugins
 platform: forge

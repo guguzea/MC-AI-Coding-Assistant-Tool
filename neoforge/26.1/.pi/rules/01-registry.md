@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册（NeoForge 26.1）
 ---
 

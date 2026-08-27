@@ -45,7 +45,7 @@ public static void registerPayloads(RegisterPayloadHandlersEvent event) {
 }
 ```
 
-- 这是**游戏总线事件**（`@EventBusSubscriber` 默认总线即可），不是 mod 总线。
+- 这是 **mod 总线**事件。`@EventBusSubscriber` 默认挂游戏总线，必须显式 `bus = Mod.EventBusSubscriber.Bus.MOD`（或构造里 `modEventBus.addListener`）。
 - `registrar("1")` 的版本字符串参与握手兼容判断：字段增删必须 bump，否则旧客户端/服务端互连会被断开或告警。
 - 可选链式配置：`.optional()`（对端不认识该包时不炸，用于软依赖场景）、`executesOn(...)` 指定网络线程/主线程。
 
@@ -62,7 +62,7 @@ public static void handleTestPacket(TestPacketC2S pkt, IPayloadContext context) 
 ```
 
 - `context.player()` 在 C2S 返回 ServerPlayer、在 S2C 返回 LocalPlayer——**同一个类按物理端判型**，不要 instanceof 客户端类。
-- 改世界/开容器等**必须在主线程**：注册时用 `executesOn(NetworkHandler.Phase.MAIN)`，或 handler 里 `context.enqueueWork(() -> {...})`。直接在网络线程改 level 是经典崩溃源。
+- 改世界/开容器等**必须在主线程**：注册时用 `executesOn(HandlerThread.MAIN)`，或 handler 里 `context.enqueueWork(() -> {...})`。直接在网络线程改 level 是经典崩溃源。
 - `context.flow()` 判断包方向；`context.connection()` 拿连接做定向回包。
 
 ## 与旧版对照（1.20.1 SimpleChannel）
@@ -79,7 +79,7 @@ public static void handleTestPacket(TestPacketC2S pkt, IPayloadContext context) 
 
 ## 反模式
 
-- ❌ handler 里直接 new 客户端 Screen 类（S2C handler 必须隔离在 client-only 类，用 DistExecutor/单独类加载保护）。
+- ❌ handler 里直接 new 客户端 Screen 类（S2C handler 必须隔离在 client-only 类，用 client 源集 / `FMLLoader.getDist()` 隔离（DistExecutor 在 26.x 已弃用））。
 - ❌ 包字段塞大 NBT 整包库存同步；大数据走 Chunk/Batch 分帧或让原版容器同步机制处理。
 - ❌ 用网络包做「远程方法调用」无校验：服务端 handler 必须重新验证位置/权限/冷却，禁止信任客户端参数。
 

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Rift 1.13.2 MessageAdder。CustomPayloadHandler 已 Deprecated。
 platform: rift

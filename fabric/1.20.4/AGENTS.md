@@ -164,7 +164,7 @@ fabric-mod/
 - Java 17+
 - **注意**：Fabric API 0.91.x 相比 0.86.x（1.20.1）有如下改进：
   - `fabric-screen-api-v1` 改进
-  - `fabric-object-builder-api-v1` 新引入
+  - `fabric-object-builder-api-v1`（~1.16 已有，不是 0.91 新引入）
   - 其他模块版本也有小幅更新
 
 ---

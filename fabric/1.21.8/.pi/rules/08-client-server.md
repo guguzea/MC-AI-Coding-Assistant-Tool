@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08-client-server Fabric 1.21.8
 alwaysApply: true
 ---

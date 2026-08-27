@@ -1,4 +1,5 @@
 ---
+mcHint: 26.x（去混淆 / 仅 mojmap）
 id: authored/mc-26-no-obfuscation
 title: Minecraft 26.1+ 去混淆与仅 mojmap
 tags: [26.x, mappings, mojmap, yarn, neoforge, fabric]

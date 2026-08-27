@@ -13,6 +13,7 @@ import {
   generateLang,
   generateNetworkPacket,
   NETWORK_PACKET_PLATFORMS,
+  generateNetworkPacketDescription,
   generateCapability,
   generateConfig,
   generateEntityRenderer,
@@ -33,6 +34,7 @@ import {
   searchModCodeHandler,
 } from "../decompile/index.js";
 import { queryLoaderApi, searchLoaderApi, ingestLoaderApi } from "../loader-api/index.js";
+import { PACK_PLATFORMS } from "../platform-pack/catalog.js";
 import { detectModProject } from "../platform-pack/detect.js";
 import { activatePlatformPack } from "../platform-pack/index.js";
 import { checkPublishReady } from "../publish/index.js";
@@ -42,7 +44,7 @@ import { inspectRuntime } from "../runtime-inspect/index.js";
 export const queryRegistrySchema = z.object({
   query: z.string().describe("资源 ID 或子串，如 stone、minecraft:diamond"),
   registry: z.string().optional().describe("限定注册表名，如 blocks、items"),
-  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
+  version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
   limit: z.number().optional(),
 });
 export const mixinAnalyzeSchema = z.object({
@@ -50,7 +52,7 @@ export const mixinAnalyzeSchema = z.object({
     .array(z.object({ path: z.string(), content: z.string() }))
     .optional(),
   mixinsJson: z.string().optional(),
-  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
+  version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
   deep: z
     .boolean()
     .optional()
@@ -68,7 +70,7 @@ export const auditResourcesSchema = z.object({
 export const validateDatapackJsonSchema = z.object({
   jsonContent: z.string(),
   kind: z.enum(["recipe", "loot_table", "advancement", "tag"]),
-  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
+  version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
 });
 export const getWorkflowTemplateSchema = z.object({
   name: z.enum([
@@ -131,8 +133,7 @@ export const ANALYZE_LOG_DESCRIPTION = "Analyze game / crash log excerpt";
 export const READ_KNOWLEDGE_RESOURCE_DESCRIPTION = "Read knowledge resource by URI";
 export const GENERATE_CONFIG_DESCRIPTION =
   "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖（非官方 loader API）。不写盘。";
-export const GENERATE_NETWORK_PACKET_DESCRIPTION =
-  "Generate network packet skeleton。platform 必填且须带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架但 warnings 列出精确 token（fabric：1.21.4/1.21.8/1.21.10/1.21.11/26.1.2；neo：1.21.1/1.21.3/1.21.5/1.21.8/1.21.10/1.21.11/26.1）。未列出的 platform 拒绝（含 fabric_1.20.1 / fabric_1.21.1 / neoforge_1.20.6）；只传 fabric 会 error。返回 Java 骨架文本，不写盘。";
+export const GENERATE_NETWORK_PACKET_DESCRIPTION = generateNetworkPacketDescription();
 export const GENERATE_CAPABILITY_DESCRIPTION =
   "Generate Capability / DataAttachment skeleton。platform 与 version 必填。当前支持：forge 1.20.1（及 1.18.2–1.20.4）Capability；neoforge 1.20.1 同 Capability 形态，1.20.4+ Data Attachment。fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。";
 export const GENERATE_MODEL_DESCRIPTION =
@@ -221,7 +222,7 @@ export const generateWorldgenSchema = z.object({
 export const analyzeLogSchema = z.object({
   logText: z.string().optional().describe("日志全文（与 logPath 二选一）"),
   logPath: z.string().optional().describe("日志文件路径（与 logText 二选一）"),
-  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1"),
+  version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
 });
 export const getMigrationGuideSchema = z.object({
   route: z.string().describe("迁移路线，如 1.21.11->26.1 或 forge->neoforge"),
@@ -273,7 +274,7 @@ export const lookupObfuscatedSchema = z.object({
 });
 // ── T2 反编译工具族（wave 21–24）──────────────────────────────────────────────
 export const getMinecraftSourceSchema = z.object({
-  version: z.string().optional().describe("MC 版本，必填，禁止默认 1.20.1（支持 1.14–1.21.11 与 26.1+）"),
+  version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1（支持 1.14–1.21.11 与 26.1+）"),
   className: z.string().describe("完整类名，如 net.minecraft.world.item.Item"),
   mapping: z
     .enum(["yarn", "mojmap", "auto"])
@@ -369,8 +370,18 @@ export const detectModProjectSchema = z.object({
 });
 export const activatePlatformPackSchema = z.object({
   action: z.enum(["list", "session", "write", "deactivate"]),
-  platform: z.string().optional().describe("session/write 必填"),
-  minecraftVersion: z.string().optional(),
+  platform: z
+    .string()
+    .regex(loaderApiKeyPattern, "platform 仅允许字母数字 . _ -，禁止路径分隔符/DOTDOT 穿越")
+    .refine((s) => (PACK_PLATFORMS as readonly string[]).includes(s.toLowerCase()), {
+      message: `platform 必须是 ${PACK_PLATFORMS.join("|")}`,
+    })
+    .optional()
+    .describe("session/write 必填；枚举+regex 双重约束"),
+  minecraftVersion: z
+    .string()
+    .regex(loaderApiKeyPattern, "minecraftVersion 仅允许字母数字 . _ -，禁止路径分隔符/DOTDOT 穿越")
+    .optional(),
   hosts: z
     .array(z.string())
     .optional()

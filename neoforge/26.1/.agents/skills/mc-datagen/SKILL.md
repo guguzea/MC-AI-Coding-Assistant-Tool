@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: NeoForge 26.1 mc-datagen。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05 — 事件系统
 ---
 
@@ -65,7 +65,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isClientSide 守卫
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isRemote 守卫
 
 IF 监听生物死亡
   → LivingDeathEvent

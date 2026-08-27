@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册系统
 ---
 
@@ -195,7 +195,7 @@ public class ExampleMod {
         )
     );
 
-    // 在 mod 构造函数中将 DeferredRegister 注册到 modEventBus（Forge 47.x 仅支持无参构造）
+    // 在 mod 构造函数中将 DeferredRegister 注册到 modEventBus（47.x 也支持构造注入；无参+`.get()` 仍可用）
     public ExampleMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);

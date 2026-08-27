@@ -1,0 +1,7 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "quilt",
+  "minecraftVersion": "1.18.2",
+  "overlay": "fabric/1.18.2"
+}

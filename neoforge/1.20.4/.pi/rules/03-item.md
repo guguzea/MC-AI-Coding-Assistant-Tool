@@ -1,4 +1,4 @@
-﻿---
+---
 description: 03 — 物品（NeoForge 1.20.4）
 ---
 

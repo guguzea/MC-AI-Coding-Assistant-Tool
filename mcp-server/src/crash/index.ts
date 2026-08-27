@@ -23,6 +23,11 @@ export type CrashKind =
 /** 认不出典型 loader 指纹时引导对照的 Wiki */
 export const CRASH_REPORT_WIKI = "https://minecraft.wiki/w/Crash_report";
 
+/** analyzeCrash 分析窗口（与 inspect 送入前 slice 共用；不要提到 2MB） */
+export const CRASH_ANALYZE_MAX = 512_000;
+/** 超过此长度才硬拒绝整份报告 */
+export const CRASH_HARD_MAX = 8 * 1024 * 1024;
+
 export interface CrashQuery {
   crashReport?: string;
   crashReportPath?: string;
@@ -43,6 +48,8 @@ export interface CrashResult {
   /** 无 version 时为 false：IO/模式库成功，反混淆未跑 */
   analysisComplete?: boolean;
   relatedTools?: string[];
+  /** 超过分析上限后截断再分析 */
+  truncated?: boolean;
 }
 
 // 已知的常见崩溃原因模式（从 8 种扩展至 16 种 + 加载期）
@@ -302,12 +309,12 @@ const KNOWN_PATTERNS: Array<{
   },
 ];
 
-/** 从报告正文 / 路径推断 crashKind（指纹只扫前 64KB，避免对整份无界跑正则） */
+/** 从报告正文 / 路径推断 crashKind（头 64KB + 尾 64KB；过短则全文） */
 export function detectCrashKind(crashReport: string): CrashKind {
   const CRASH_KIND_SCAN_BYTES = 64 * 1024;
-  const blob = crashReport.length > CRASH_KIND_SCAN_BYTES
-    ? crashReport.slice(0, CRASH_KIND_SCAN_BYTES)
-    : crashReport;
+  const blob = crashReport.length <= CRASH_KIND_SCAN_BYTES * 2
+    ? crashReport
+    : crashReport.slice(0, CRASH_KIND_SCAN_BYTES) + crashReport.slice(-CRASH_KIND_SCAN_BYTES);
   const name =
     blob.match(/crash-\d{4}-\d{2}-\d{2}_\d{2}\.\d{2}\.\d{2}-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
     blob.match(/File:\s*.*crash-.*-([a-zA-Z0-9-]+)\.txt/i)?.[1] ??
@@ -498,6 +505,12 @@ function finishCrash(partial: CrashResult, version: string | undefined, crashRep
   };
 }
 
+function withTruncationHint(hints: string[] | undefined, truncated: boolean): string[] {
+  const base = hints ?? [];
+  if (!truncated) return base;
+  return [...base, `崩溃报告过长，已截断至 ${CRASH_ANALYZE_MAX} 字符后分析`];
+}
+
 export function analyzeCrash(query: CrashQuery): CrashResult {
   let crashReport = query.crashReport;
   if (!crashReport?.trim() && query.crashReportPath) {
@@ -519,8 +532,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
         };
       }
       const st = statSync(p);
-      if (st.size > 512_000) {
-        const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP", [
+      if (st.size > CRASH_HARD_MAX) {
+        const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 8MB），已拒绝分析以避免阻塞 MCP", [
           "请裁剪为相关堆栈段落后再试",
         ]);
         return {
@@ -566,8 +579,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       action,
     };
   }
-  if (typeof crashReport === "string" && crashReport.length > 512_000) {
-    const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 512KB），已拒绝分析以避免阻塞 MCP", [
+  if (typeof crashReport === "string" && crashReport.length > CRASH_HARD_MAX) {
+    const action = actionable("INVALID_INPUT", "崩溃报告过长（超过 8MB），已拒绝分析以避免阻塞 MCP", [
       "请裁剪为相关堆栈段落后再试",
     ]);
     return {
@@ -580,6 +593,11 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       logHints: ["logs/latest.log"],
       action,
     };
+  }
+  let truncated = false;
+  if (typeof crashReport === "string" && crashReport.length > CRASH_ANALYZE_MAX) {
+    crashReport = crashReport.slice(0, CRASH_ANALYZE_MAX);
+    truncated = true;
   }
   const deobfuscated: string[] = [];
   const crashKind = detectCrashKind(crashReport);
@@ -606,7 +624,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
           deobfuscated,
           relatedMistakes,
           crashKind,
-          logHints: buildLogHints(crashKind, true),
+          logHints: withTruncationHint(buildLogHints(crashKind, true), truncated),
+          truncated,
         },
         query.version,
         crashReport,
@@ -644,7 +663,8 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
       deobfuscated,
       relatedMistakes: [],
       crashKind,
-      logHints: buildLogHints(crashKind, false),
+      logHints: withTruncationHint(buildLogHints(crashKind, false), truncated),
+      truncated,
     },
     query.version,
     crashReport,

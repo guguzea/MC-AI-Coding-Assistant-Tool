@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 工程（NeoForge 1.20.6）
 globs:
 alwaysApply: true

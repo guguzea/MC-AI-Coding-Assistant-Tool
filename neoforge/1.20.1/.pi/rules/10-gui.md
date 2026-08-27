@@ -1,4 +1,4 @@
-﻿---
+---
 description: 10-gui NeoForge 1.20.1
 globs:
 alwaysApply: false

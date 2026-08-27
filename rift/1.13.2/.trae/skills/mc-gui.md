@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Rift 1.13.2 GameGuiAdder / OverlayRenderer。
 platform: rift

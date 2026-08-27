@@ -43,10 +43,10 @@ const RAW_VERSION_RX = />\s*版本：\s*(\S+)/;
 const RAW_FRONTMATTER_VERSION_RX = /^version:\s*"([^"]+)"/m;
 const NEO_VERSION_RX = /^version:\s*"([^"]+)"/m;
 
-// 仅跳过 E-raw-processed-set。禁止把 forge_ / fabric_ / neoforge_ 写进此表。
+// 仅跳过 E-raw-processed-set。禁止把 forge_ / fabric_ / neoforge_ / liteloader_ 写进此表。
+// liteloader 有 raw .txt ↔ processed .md，走 stem 等值检查（见 subdirIsWiki），禁止整树跳过。
 export const RAW_PROCESSED_SET_EXCEPTIONS = [
   { platformPrefix: "modloader_", docSubdir: "modloader-docs", reason: "故意 L0-only，页少不建 raw 对" },
-  { platformPrefix: "liteloader_", docSubdir: "liteloader-docs", reason: "wiki 抓取只落 processed" },
   { platformPrefix: "quilt_", docSubdir: "quilt-docs", reason: "wiki/RFC 页 processed-only" },
 ];
 
@@ -457,10 +457,12 @@ function checkSemanticIndex(docRoot, processedFiles, issues) {
 }
 
 function subdirIsWiki(platform, docRoot) {
-  // heuristic: a `raw` dir containing .txt files in fabric-wiki
-  // (forge-docs and neoforge-docs raw are .md / .html, fabric-wiki raw is .txt)
-  if (!docRoot.replace(/\\/g, "/").includes("/fabric-wiki/")) return false;
-  return true;
+  // heuristic: a `raw` dir containing .txt files in fabric-wiki / liteloader-docs
+  // (forge-docs and neoforge-docs raw are .md / .html, wiki raw is .txt)
+  const n = String(docRoot ?? "").replace(/\\/g, "/");
+  if (n.includes("/fabric-wiki/")) return true;
+  if (platform === "liteloader" || n.includes("/liteloader-docs/")) return true;
+  return false;
 }
 
 function checkMappingsArtifacts(platform, versionDir, version, issues) {

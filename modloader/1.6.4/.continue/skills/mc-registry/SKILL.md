@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: ModLoader 1.6.4 BaseMod / ModLoader.registerBlock。表外停。
 platform: modloader

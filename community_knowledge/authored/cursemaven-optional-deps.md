@@ -1,4 +1,5 @@
 ---
+mcHint: Forge 1.12.2–1.20.4（CurseMaven / fg.deobf）
 id: authored/cursemaven-optional-deps
 title: CurseMaven 与 compileOnly 可选依赖
 tags: [cursemaven, gradle, jei, interop, optional, maven]

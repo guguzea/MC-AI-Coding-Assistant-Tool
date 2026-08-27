@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-blockentity
 description: Minecraft Forge 方块实体开发。BlockEntity 注册、Ticker、ContainerData/Menu 联动、BlockEntityRenderer。触发词：BlockEntity、BlockEntityType、EntityBlock、getTicker、saveAdditional、load、getUpdateTag
 platform: forge

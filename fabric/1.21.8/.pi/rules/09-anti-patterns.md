@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09-anti-patterns Fabric 1.21.8
 alwaysApply: true
 ---

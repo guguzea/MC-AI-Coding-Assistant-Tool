@@ -14,9 +14,10 @@ Declared in `mcp-server/package.json` (install via `npm ci`; not vendored in git
 | `zod` | Schema validation | https://github.com/colinhacks/zod |
 | `@xenova/transformers` | 本地语义嵌入（feature-extraction） | https://github.com/xenova/transformers.js |
 | `onnxruntime-node` | Transformers.js ONNX 后端 | https://onnxruntime.ai |
+| `java-parser` | Java 源码 CST 抽取（loader-api） | https://github.com/jhipster/prettier-java |
 | `typescript` / `@types/node` / `tsx` (dev) | Build & types | respective upstreams |
 
-Follow each package’s license as published on npm（transformers / onnxruntime-node 为 Apache-2.0）。
+Follow each package’s license as published on npm（`@xenova/transformers` 为 Apache-2.0；`onnxruntime-node` 为 MIT；`java-parser` 为 Apache-2.0）。
 
 **嵌入模型缓存**（不进 npm；由 `npm run fetch:embedding-model` 写入）：
 

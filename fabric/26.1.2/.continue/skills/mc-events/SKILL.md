@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Fabric 26.1.2 事件。Mojmap Event.register，禁止 Yarn。触发词：事件、Event、Callback、SubscribeEvent
 platform: fabric

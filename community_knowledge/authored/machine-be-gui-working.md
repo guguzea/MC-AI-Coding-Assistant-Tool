@@ -3,7 +3,7 @@ id: authored/machine-be-gui-working
 title: 机器方块：BE、GUI、库存与 WORKING 状态
 tags: [blockentity, menu, screen, itemstackhandler, machine, forge, ticker, capability]
 summary: 机器全链路；进度必须用 ContainerData；WORKING 仅在 ticker 对比后 setBlock；对外物流需 ITEM_HANDLER Capability。
-mcHint: 1.20.1+
+mcHint: 1.20.1–1.21.x
 sourceKind: authored
 ---
 
@@ -68,6 +68,7 @@ private final ItemStackHandler itemHandler = new ItemStackHandler(2) {
 
 - `MenuProvider` + 服务端 `NetworkHooks.openScreen`。  
 - Screen 仅客户端注册（`Dist.CLIENT`）。
+- **26.x**：Screen 绘制入口是 `extractBackground` / `extractRenderState`，不要把 1.20.1 的 `renderBg` 当 26.x 可编译名。
 
 ### 进度条 / 烧炼时间（生产级必做）
 

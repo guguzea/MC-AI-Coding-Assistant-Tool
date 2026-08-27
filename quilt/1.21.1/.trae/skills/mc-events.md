@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Quilt 1.21.1 mc-events（QSL 已停更，本档无可用构件）。事件走同版 Fabric API。
 platform: quilt

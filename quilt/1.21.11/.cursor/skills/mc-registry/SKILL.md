@@ -13,7 +13,7 @@ docsTool: search_docs
 
 
 核实表：knowledge/common/qsl-verified.md。
-本档无独立 QSL 文档树，禁止编造 QSL 名。Vanilla/FAPI 用 `search_fabric_docs` version=1.21.11。02–10 仍读 fabric/1.21.11 overlay。
+`data/quilt_1.21.11` 已入库；禁止编造未核实的 QSL 名。Vanilla/FAPI 用 `search_fabric_docs` version=1.21.11。02–10 仍读 fabric/1.21.11 overlay。
 
 禁止把 1.21.1 RegistryEvents 冒充本档。Loader 入口仍是 ModInitializer#onInitialize(ModContainer)。
 

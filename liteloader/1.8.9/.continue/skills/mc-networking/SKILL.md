@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: LiteLoader 1.8.9 网络。本档未核实通道 API。
 platform: liteloader

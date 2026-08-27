@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09-anti-patterns Forge 1.7.10
 alwaysApply: true
 ---

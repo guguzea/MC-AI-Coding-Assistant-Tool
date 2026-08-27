@@ -1,4 +1,5 @@
 ---
+mcHint: 全版本通用；spark 命令以官方文档为准
 id: authored/profiling-performance
 title: 性能分析与 profiler 实务
 tags: [performance, profiler, spark, lag, memory]

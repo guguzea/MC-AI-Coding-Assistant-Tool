@@ -1,4 +1,4 @@
-﻿---
+---
 description: 04 — 实体（NeoForge 1.20.4）
 ---
 

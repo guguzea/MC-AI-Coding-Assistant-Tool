@@ -30,7 +30,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 ### Physical Side
 - `@OnlyIn(Dist.CLIENT)` for rendering/input code
 - `@OnlyIn(Dist.DEDICATED_SERVER)` for server logic
-- Prefer `DistExecutor.unsafeRunWhenOn()` over raw `@OnlyIn`
+- Prefer `DistExecutor.runWhenOn()` over raw `@OnlyIn`
 
 ### Mappings
 - Always use **MCP SRG names** for Forge 1.13.2
@@ -41,17 +41,17 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.md` | Java 11, Gradle 6.9, build.gradle structure |
-| `01-registry.md` | @EventBusSubscriber + RegistryEvent (most important) |
-| `02-block.md` | Block, Block.Properties, setRegistryName |
-| `03-item.md` | Item, Item.Properties, ItemGroup |
-| `04-entity.md` | EntityType, LivingEntity, EntityRenderer |
-| `05-events.md` | @SubscribeEvent, RegistryEvent, Dist checks |
-| `06-networking.md` | SimpleNetworkWrapper, IMessage, DistExecutor |
-| `07-datagen.md` | DataGen for 1.13.2 (limited) |
-| `08-client-server.md` | @OnlyIn, DistExecutor, KeyBinding |
-| `09-anti-patterns.md` | Common mistakes and fixes |
-| `10-gui.md` | Container, IGuiHandler, Slot |
+| `00-project-setup.mdc` | Java 11, Gradle 6.9, build.gradle structure |
+| `01-registry.mdc` | @EventBusSubscriber + RegistryEvent (most important) |
+| `02-block.mdc` | Block, Block.Properties, setRegistryName |
+| `03-item.mdc` | Item, Item.Properties, ItemGroup |
+| `04-entity.mdc` | EntityType, LivingEntity, EntityRenderer |
+| `05-events.mdc` | @SubscribeEvent, RegistryEvent, Dist checks |
+| `06-networking.mdc` | SimpleNetworkWrapper, IMessage, DistExecutor |
+| `07-datagen.mdc` | DataGen for 1.13.2 (limited) |
+| `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyBinding |
+| `09-anti-patterns.mdc` | Common mistakes and fixes |
+| `10-gui.mdc` | Container, IGuiHandler, Slot |
 
 ---
 

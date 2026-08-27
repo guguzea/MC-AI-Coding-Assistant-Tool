@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-capability
 description: Fabric Attachment API。AttachmentRegistry、AttachmentType、getAttached。触发词：Attachment、Capability、AttachmentRegistry
 platform: fabric

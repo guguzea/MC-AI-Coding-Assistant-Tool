@@ -88,6 +88,16 @@ export function detectMinecraftVersionFromIncludedSubprojects(opts: {
   return "unknown";
 }
 
+/** 版本段白名单：只允许数字与点。不作 MC 精确 token 判定（勿用 isExactMcVersionToken 当路径门）。 */
+export const VERSION_SEGMENT_RE = /^\d+(\.\d+)*$/;
+
+/** 路径安全的版本段：拒绝 `..` 与 `\/`，禁止借 forge_${version} 越出 data 根。 */
+export function isSafeVersionSegment(version: string): boolean {
+  if (!VERSION_SEGMENT_RE.test(version)) return false;
+  if (version.includes("..") || /[\\/]/.test(version)) return false;
+  return true;
+}
+
 /** 精确 MC 版本 token（禁止 1.20.4-beta / 26.1beta / 前缀误匹配 26.12）。 */
 export function isExactMcVersionToken(s: string): boolean {
   const t = s.trim();
@@ -106,6 +116,8 @@ export type McVersionBand =
   | "1.20.1"
   | "1.20.4"
   | "1.20.x"
+  | "1.21.x"
+  | "26.x"
   | "1.18-1.19"
   | "1.16.5"
   | "1.12.2"
@@ -118,6 +130,8 @@ export function classifyMinecraftVersion(version: string): McVersionBand {
   if (v === "1.20.1") return "1.20.1";
   if (v === "1.20.4") return "1.20.4";
   if (v.startsWith("1.20.")) return "1.20.x";
+  if (v === "1.21" || v.startsWith("1.21.")) return "1.21.x";
+  if (v === "26" || v.startsWith("26.")) return "26.x";
   if (v.startsWith("1.18.") || v.startsWith("1.19.") || v === "1.18" || v === "1.19") {
     return "1.18-1.19";
   }

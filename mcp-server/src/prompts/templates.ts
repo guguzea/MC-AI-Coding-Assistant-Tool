@@ -1,4 +1,5 @@
 import { ownGet } from "../utils/own-record.js";
+import { generateNetworkPacketDescription } from "../generators/index.js";
 
 /** 人在环：工作流是步骤清单，不是无人值守编排器。 */
 export const WORKFLOW_HITL =
@@ -227,7 +228,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-networking；规则 06-networking。
 1. 确认平台与精确 MC 版本。改已有代码不要调本工作流。
 2. 先 activate_platform_pack action=session（可 task=mc-networking），用返回的 rules / skillBodies；禁止 Read 平台/<ver>/.cursor。NeoForge 1.20.1 同 Forge SimpleChannel 形态；1.20.4 为 RegisterPayloadHandlerEvent（单数）；1.21.1–1.21.5 为 RegisterPayloadHandlersEvent + DirectionalPayloadHandler；1.21.8/1.21.11/26.1 为 RegisterClientPayloadHandlersEvent + ClientPacketDistributor.sendToServer。
-3. generate_network_packet：platform 必填且带版本后缀（forge_1.20.1 / forge_1.20.4 / forge_1.19.4 / forge_1.18.2 / forge_1.12.2 / neoforge_1.20.1 / neoforge_1.20.4 / neoforge_1.21 / neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1 / fabric_1.21 / fabric_1.21.3 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1 / fabric_26.1.2）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架，但 warnings 会列出精确 token。未列出的 platform 拒绝；无该档模板则 error，改口 search_*_docs。
+3. generate_network_packet：${generateNetworkPacketDescription()}
 4. 类名核 search_*_docs（本档版本）。无模板则手动编写，不要理解为游戏里做不了。`,
   },
   "mc-capability": {

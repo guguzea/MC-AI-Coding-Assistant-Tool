@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-blockentity
 description: Minecraft Forge TileEntity 开发。TileEntity 注册、ITickable、NBT 序列化。触发词：TileEntity、ITickable、writeToNBT、readFromNBT
 platform: forge

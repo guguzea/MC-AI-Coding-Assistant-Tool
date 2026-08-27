@@ -10,11 +10,8 @@ group = mod_group_id
 
 archivesBaseName = mod_id
 
-// Forge 1.15.2 requires Java 11
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
-
-// Mappings — Forge 1.15.2 uses MCP mappings
-mappings channel: mapping_channel, version: mapping_version
+// Forge 1.15.2 requires Java 8
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
     mappings channel: mapping_channel, version: mapping_version

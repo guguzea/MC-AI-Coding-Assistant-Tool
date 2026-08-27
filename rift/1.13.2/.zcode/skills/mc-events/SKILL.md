@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Rift 1.13.2 InitializationListener / tick。禁止把 Fabric 加载器入口当 Listener。
 platform: rift

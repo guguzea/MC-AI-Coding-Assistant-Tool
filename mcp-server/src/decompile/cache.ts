@@ -15,9 +15,9 @@
 
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, readdirSync, renameSync } from "fs";
 import { join, resolve } from "path";
-import os from "os";
 import { createHash } from "crypto";
 import { DatabaseSync } from "node:sqlite";
+import { resolveCacheRoot } from "../utils/path.js";
 
 export interface CachePaths {
   root: string;
@@ -31,17 +31,7 @@ export interface CachePaths {
   db: string;
 }
 
-/** 缓存根目录解析（纯函数，不建目录） */
-export function resolveCacheRoot(): string {
-  const env = process.env.MC_SKILL_CACHE;
-  if (env) return env;
-  if (process.platform === "win32") {
-    const appData = process.env.APPDATA;
-    if (appData) return join(appData, "mc-skill-cache");
-    return join(os.homedir(), "mc-skill-cache");
-  }
-  return join(os.homedir(), ".config", "mc-skill-cache");
-}
+export { resolveCacheRoot };
 
 const LAYOUT = [
   "jars",
@@ -89,7 +79,10 @@ export function openCacheDb(root: string = resolveCacheRoot()): DatabaseSync {
       rmSync(dbPath, { force: true });
       db = new DatabaseSync(dbPath);
     }
-  } catch {
+  } catch (err) {
+    const msg = String((err as Error)?.message ?? err);
+    const corrupt = /corrupt|malformed|not a database|SQLITE_CORRUPT|SQLITE_NOTADB/i.test(msg);
+    if (!corrupt) throw err;
     try {
       rmSync(dbPath, { force: true });
     } catch {
@@ -176,11 +169,33 @@ export class CacheLockBusyError extends Error {
   }
 }
 
+/**
+ * 缓存路径段清洗：保留点号（`1.20.1` 可读），但拒绝 `.` / `..` / 含 `..` 的穿越段。
+ * 返回 null 时调用方应 INVALID_INPUT，不要当目录名。
+ */
+export function sanitizeCacheSegment(name: string): string | null {
+  const cleaned = name.replace(/[^a-z0-9._-]/gi, "_");
+  if (!cleaned || cleaned === "." || cleaned === ".." || cleaned.includes("..")) return null;
+  return cleaned;
+}
+
+/** `child` 是否落在 `parent` 之下（含自身）。Windows 比较忽略大小写。 */
+export function isPathInside(parent: string, child: string): boolean {
+  const norm = (s: string) => {
+    const n = resolve(s).replace(/\\/g, "/");
+    return process.platform === "win32" ? n.toLowerCase() : n;
+  };
+  const a = norm(parent);
+  const b = norm(child);
+  if (b === a) return true;
+  const prefix = a.endsWith("/") ? a : `${a}/`;
+  return b.startsWith(prefix);
+}
+
 function sanitizeLockName(name: string): string {
-  const lower = name.toLowerCase();
-  const cleaned = lower.replace(/[^a-z0-9._-]/g, "_");
   const hash = createHash("sha1").update(name).digest("hex").slice(0, 8);
-  return `${cleaned.slice(0, 80)}_${hash}`;
+  const segment = sanitizeCacheSegment(name.toLowerCase()) ?? "invalid";
+  return `${segment.slice(0, 80)}_${hash}`;
 }
 
 function lockDirOf(root: string, name: string): string {

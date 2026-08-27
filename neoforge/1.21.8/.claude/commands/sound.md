@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-sound
 description: NeoForge 1.21.8 mc-sound。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

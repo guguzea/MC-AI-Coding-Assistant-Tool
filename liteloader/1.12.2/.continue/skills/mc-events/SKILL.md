@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: LiteLoader 1.12.2 生命周期 Listener。只使用核实表。
 platform: liteloader

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Minecraft Forge GUI/Container。IInteractionObject、NetworkHooks.openGui、GuiContainer、IGuiHandler。触发词：GuiContainer、IGuiHandler、NetworkHooks、ExtensionPoint.GUIFACTORY
 platform: forge

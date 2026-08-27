@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Minecraft Forge 网络通信。SimpleChannel、PacketDistributor、NetworkRegistry.newSimpleChannel。触发词：网络、消息、Network、SimpleChannel、PacketDistributor、PacketBuffer
 platform: forge

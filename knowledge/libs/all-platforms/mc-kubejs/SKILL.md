@@ -9,6 +9,8 @@ mappings: "脚本层 API 由 KubeJS 封装，与项目 mappings 无关；类名�
 
 # KubeJS 整合包脚本（操作指引）
 
+Forge 构建止于 **1.20.1**；1.21+ 只用 Fabric / NeoForge，不要给 Forge 1.21+ 找不存在的构件。
+
 给 AI 的操作指引：用 JS 脚本做整合包内容定制（配方/tag/简单注册/自定义逻辑），免编译免重启。详细信息用 `search_community_docs` 查 `authored/lib-kubejs`，API 细节以 [官方文档 docs.kubejs.com](https://docs.kubejs.com)（对应 MC 版本）与 [官方仓库](https://github.com/KubeJS-Mods/KubeJS) 为准。
 
 ## 何时用 / 何时不用

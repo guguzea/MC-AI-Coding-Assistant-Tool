@@ -1,4 +1,4 @@
-﻿---
+---
 description: 06 — 网络（NeoForge 1.21.5）
 ---
 

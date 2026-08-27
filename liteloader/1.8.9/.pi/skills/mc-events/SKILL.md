@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: LiteLoader 1.8.9 事件。表外停。
 platform: liteloader

@@ -8,18 +8,14 @@ plugins {
 version = mod_version
 group = mod_group_id
 
-base {
-    archivesName = mod_id
-}
+archivesBaseName = mod_id
 
 // Minecraft 1.14.4 requires Java 8 or 11
 java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 
-// Mappings channel and version — Forge 1.14.4 uses MCP snapshot
-// See: https://github.com/MinecraftForge/MCPConfig
-mappings channel: mapping_channel, version: mapping_version
-
 minecraft {
+    // Mappings belong inside minecraft{} for FG3 (not a top-level mappings line, not FG6)
+    mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
 
     runs {

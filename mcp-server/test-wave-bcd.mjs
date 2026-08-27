@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, unlinkSync, readFileSync } from "node:fs";
+import { existsSync, unlinkSync, readFileSync, mkdirSync, writeFileSync, rmSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -7,9 +7,10 @@ import {
   parseMethodReference,
   detectNamingStyle,
   mergeInjectMethodAndDesc,
+  splitMethodAndDescriptor,
 } from "./dist/mixin/method-string.js";
 import { parseMixinsJson, parseMixinJavaSource } from "./dist/mixin/parser.js";
-import { queryRegistry, buildRegistryIndex } from "./dist/registry/index.js";
+import { queryRegistry, buildRegistryIndex, closeRegistryDbs } from "./dist/registry/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
 import {
   generateModel,
@@ -18,7 +19,7 @@ import {
 import { getWorkflowTemplate, readKnowledgeResource } from "./dist/prompts/index.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
 import { resolveDataDir } from "./dist/utils/path.js";
-import { parameterTypes } from "./dist/utils/descriptor.js";
+import { parameterTypes, readableType, returnType, readableSignature } from "./dist/utils/descriptor.js";
 
 function testMethodStringForms() {
   assert.equal(detectNamingStyle("func_12345_a"), "srg");
@@ -30,7 +31,29 @@ function testMethodStringForms() {
 
   const combined = parseMethodReference("hurt(Lnet/minecraft/world/entity/Entity;F)V");
   assert.equal(combined.methodName, "hurt");
-  assert.ok(combined.descriptor?.startsWith("("));
+  assert.equal(combined.descriptor, "(Lnet/minecraft/world/entity/Entity;F)V");
+
+  const fh1 = [
+    ["go(I)V", "go", "(I)V"],
+    ["hurt(Lnet/minecraft/world/entity/Entity;F)V", "hurt", "(Lnet/minecraft/world/entity/Entity;F)V"],
+    ["noret(I)", "noret", "(I)"],
+    ["arr()[I", "arr", "()[I"],
+    ["str()Ljava/lang/String;", "str", "()Ljava/lang/String;"],
+    ["nested()[[Lfoo/Bar;", "nested", "()[[Lfoo/Bar;"],
+    ["inner()Lfoo$Inner;", "inner", "()Lfoo$Inner;"],
+    ["go(I)V;garbage", "go", "(I)V"],
+  ];
+  for (const [raw, name, desc] of fh1) {
+    const s = splitMethodAndDescriptor(raw);
+    assert.equal(s.methodName, name, raw);
+    assert.equal(s.descriptor, desc, raw);
+  }
+  assert.equal(splitMethodAndDescriptor("go(I)V").descriptor, "(I)V");
+  assert.notEqual(splitMethodAndDescriptor("go(I)V").descriptor, "(I)");
+  assert.equal(readableType("()V;garbage"), "void");
+  assert.notEqual(readableType("()V;garbage"), "?(");
+  assert.equal(returnType("()V;garbage"), "void");
+  assert.equal(readableSignature("go", "()V;garbage"), "go(): void");
 
   const split = mergeInjectMethodAndDesc("method_12345", "(F)V");
   assert.equal(split?.methodName, "method_12345");
@@ -73,6 +96,27 @@ function testRegistry() {
 
   const cls = queryRegistry({ query: "net.minecraft.world.entity.Entity", version: "1.20.1" });
   assert.ok(cls.action);
+
+  const tmpData = mkdtempSync(join(tmpdir(), "mc-skill-reg-nowrite-"));
+  const prevData = process.env.MC_SKILL_DATA;
+  try {
+    mkdirSync(join(tmpData, "vanilla_9.9.9", "registries"), { recursive: true });
+    writeFileSync(join(tmpData, "vanilla_9.9.9", "registries", "block.json"), JSON.stringify([{ id: "minecraft:air" }]));
+    process.env.MC_SKILL_DATA = tmpData;
+    closeRegistryDbs();
+    const missing = queryRegistry({ query: "air", version: "9.9.9" });
+    assert.equal(missing.action?.code, "DATA_UNAVAILABLE", JSON.stringify(missing));
+    assert.ok(
+      (missing.action?.nextSteps ?? []).some((s) => /build:vanilla-registries/.test(s)),
+      JSON.stringify(missing.action),
+    );
+    assert.equal(existsSync(join(tmpData, "vanilla_9.9.9", "registries", "registry-index.sqlite")), false);
+  } finally {
+    closeRegistryDbs();
+    if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+    else process.env.MC_SKILL_DATA = prevData;
+    rmSync(tmpData, { recursive: true, force: true });
+  }
 }
 
 function testDatapack() {
@@ -89,6 +133,13 @@ function testDatapack() {
     version: "1.21.1",
   });
   assert.equal(ok.valid, true);
+
+  const bom = validateDatapackJson({
+    kind: "tag",
+    jsonContent: `\uFEFF${JSON.stringify({ values: ["minecraft:stone"] })}`,
+    version: "1.21.1",
+  });
+  assert.equal(bom.valid, true, JSON.stringify(bom.errors));
 
   const emptyLoot = validateDatapackJson({
     kind: "loot_table",
@@ -223,6 +274,23 @@ public class FooMixin {
 }
 `);
   assert.ok(arg?.injections.some((i) => i.kind === "ModifyArg"), JSON.stringify(arg));
+
+  const ghost = parseMixinJavaSource(`
+/**
+ * docs @Inject must not count
+ */
+@Mixin(Foo.class)
+public class FooMixin {
+  // @Inject comment ghost
+  @Inject(method="realMethod")
+  private void real(CallbackInfo ci) {}
+}
+`);
+  assert.equal(ghost?.injections.length, 1, JSON.stringify(ghost?.injections));
+  assert.equal(ghost?.injections[0]?.methodRefs[0]?.methodName, "realMethod");
+
+  const bomJson = parseMixinsJson(`\uFEFF${JSON.stringify({ package: "p", mixins: ["A"] })}`);
+  assert.ok(bomJson.mixinClasses.includes("A"), JSON.stringify(bomJson));
 }
 
 function testWorkersAndDescriptor() {

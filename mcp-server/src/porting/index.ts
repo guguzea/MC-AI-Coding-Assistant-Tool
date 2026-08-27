@@ -8,6 +8,7 @@ import { detectLoader } from "../diagnostics/index.js";
 import { isKnowledgeRepo } from "../platform-pack/write.js";
 import { walkDirBounded, javaSourceRoots } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
+import { parseMinecraftVersion } from "../decompile/version-manager.js";
 import type {
   AnalyzePortingOutput,
   AnalyzePortingError,
@@ -71,15 +72,23 @@ function globNameMatch(name: string, pat: string): boolean {
   return re.test(name);
 }
 
-function javaForMcVersion(ver: string): number {
-  if (/^26\./.test(ver) || /^1\.21\.11/.test(ver)) return 25;
-  const m = ver.match(/^1\.(\d+)/);
-  if (!m) return 21;
-  const minor = Number(m[1]);
-  if (minor <= 16) return 8;
-  if (minor <= 20) return 17;
-  if (minor <= 21) return 21;
-  return 25;
+export function javaForMcVersion(ver: string): number {
+  const vi = parseMinecraftVersion(ver);
+  const major = vi.major;
+  const minor = vi.minor;
+  const patch = vi.patch ?? 0;
+  if (!vi.valid && major === 0 && minor === 0) return 21;
+  // 26.x / 27.x / 1.21.11+
+  if (major >= 26) return 25;
+  if (major === 1) {
+    if (minor > 21 || (minor === 21 && patch >= 11)) return 25;
+    if (minor === 21) return 21;
+    if (minor === 20 && patch >= 5) return 21;
+    if (minor >= 18 && minor <= 20) return 17;
+    if (minor === 17) return 16;
+    if (minor <= 16) return 8;
+  }
+  return 21;
 }
 
 function collectJavaKtSources(root: string): string[] {
@@ -702,7 +711,12 @@ export async function analyzePortingPath(args: unknown) {
     );
     return JSON.stringify(e, null, 2);
   }
-  const needCrossPlatform = currentPlatform !== targetPlatform;
+  const needCrossPlatform =
+    currentPlatform !== targetPlatform &&
+    !(
+      (currentPlatform === "quilt" && targetPlatform === "fabric") ||
+      (currentPlatform === "fabric" && targetPlatform === "quilt")
+    );
 
   // 6. 知识库查询
   const targetVer = userTargetVersion ?? mcVersion;
@@ -942,7 +956,7 @@ function scanForLoaderCalls(file: string): { calls: string[]; patterns: { patter
     { re: /DistExecutor\.runWhenOn/g, label: "DistExecutor.runWhenOn" },
     { re: /MinecraftForge\.EVENT_BUS/g, label: "MinecraftForge.EVENT_BUS" },
     { re: /net\/neoforged\//g, label: "net.neoforged import" },
-    { re: /net\/forge[s]?craft\//g, label: "net.minecraftforge import" },
+    { re: /net[./]minecraftforge[./]/g, label: "net.minecraftforge import" },
     { re: /net\/fabricmc\//g, label: "net.fabricmc import" },
     { re: /EnvType\.CLIENT/g, label: "EnvType.CLIENT" },
     { re: /EnvType\.SERVER/g, label: "EnvType.SERVER" },

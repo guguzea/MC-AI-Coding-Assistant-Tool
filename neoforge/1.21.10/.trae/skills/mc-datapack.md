@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datapack
 description: NeoForge 1.21.10 mc-datapack。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

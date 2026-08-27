@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: LiteLoader 1.12.2 PluginChannelListener。
 platform: liteloader

@@ -14,7 +14,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
 | Java 版本 | **Java 11**（Forge 1.16.5 推荐）/ Java 16 |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
-| Mappings | **Parchment**（`1.16.5-2021.06.09`，带参数名） |
+| Mappings | **Parchment**（`1.16.5-2021.06.09-18`，带参数名） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---
@@ -143,7 +143,7 @@ src/main/java/
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
 | Java 版本 | Java 11/16 | Java 17+ | 1.16.5 不支持 Java 17 |
 | Mappings | Parchment（推荐） | MCP / Parchment | 1.16.5 推荐 Parchment |
-| pack_format | **8** | 15+ | 资源包格式不同 |
+| pack_format | **6** | 15+ | 资源包格式不同 |
 | DataGen | 存在但 API 简化 | 完整 DataGen | 1.16.5 DataGen 有限 |
 | Fluid 注册 | `FluidAttributes` | `FluidType`（1.19+） | 本档无 FluidType |
 

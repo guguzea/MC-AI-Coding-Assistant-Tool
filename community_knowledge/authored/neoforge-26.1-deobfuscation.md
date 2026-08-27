@@ -1,4 +1,5 @@
 ---
+mcHint: NeoForge 26.1
 id: authored/neoforge-26.1-deobfuscation
 title: NeoForge 26.1 去混淆（官方博客摘录）
 tags: [26.1, neoforge, mappings, mojmap, parchment]

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: Quilt 1.21.3 mc-registry（QSL 差异）。名字只来自本档 qsl-verified.md。
 platform: quilt

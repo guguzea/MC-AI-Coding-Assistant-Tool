@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-compat-jei
 description: Fabric JEI/REI 兼容。REI（Roughly Enough Items）插件开发。触发词：JEI、REI、RoughlyEnoughItems、Plugin
 platform: fabric

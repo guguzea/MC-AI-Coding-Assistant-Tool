@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Quilt 1.21.8 mc-networking（QSL 差异）。名字只来自本档 qsl-verified.md。
 platform: quilt

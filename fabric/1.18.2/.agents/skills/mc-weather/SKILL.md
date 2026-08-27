@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-weather
 description: 天气、雷暴、降雨与维度气候相关 API。触发词：weather、thunder、rain、biome climate
 platform: fabric

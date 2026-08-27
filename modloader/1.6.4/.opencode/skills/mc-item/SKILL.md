@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-item
 description: ModLoader 1.6.4 ItemStack / addRecipe。表外停。
 platform: modloader

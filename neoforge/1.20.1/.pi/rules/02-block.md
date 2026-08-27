@@ -1,4 +1,4 @@
-﻿---
+---
 description: 02-block NeoForge 1.20.1
 globs:
 alwaysApply: false

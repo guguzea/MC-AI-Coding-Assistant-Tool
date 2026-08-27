@@ -1,4 +1,4 @@
-﻿---
+---
 description: 07 — DataGen（NeoForge 1.21.1）
 ---
 

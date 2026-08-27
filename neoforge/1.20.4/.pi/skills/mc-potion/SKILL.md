@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-potion
 description: NeoForge 1.20.4 mc-potion。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

@@ -190,7 +190,7 @@ mixin { add sourceSets.main, "${mod_id}.refmap.json" }
 
 ## 常见陷阱
 
-1. **Java 版本**：Fabric 1.17.1 需要 Java 17
+1. **Java 版本**：Fabric 1.17.1 需要 Java 16
 2. **Mixin 包名**：确保 `fabric.mixins.json` 的 `package` 与实际包名一致
 3. **客户端/服务端分离**：GUI 和渲染相关必须在 `ClientModInitializer` 中处理
 4. **依赖传递**：`fabric-api` 应使用 `modApi` 而非 `modImplementation`

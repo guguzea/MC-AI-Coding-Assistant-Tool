@@ -11,13 +11,14 @@
  * - Worker Thread 预加载 JSON（避免主线程阻塞）
  * - v8 内部序列化传输大对象（比 JSON.stringify → JSON.parse 快 10x）
  * - Trie 索引加速模糊搜索（O(k) vs O(n)，k=前缀长度）；超时时自动跳过，改用线性扫描
- * - LRU 缓存搜索结果（TTL 5 分钟）
+ * - FIFO 版本缓存：插入序驱逐最旧项（不是 LRU）
  * - 15s 硬超时保护：Worker 超时则降级到惰性加载，保证调用永不卡死
  * - Per-version 缓存：每个 Minecraft 版本独立 apiIndex / classNames / trie
  */
 
 import { Worker } from "worker_threads";
-import { existsSync, readFileSync } from "fs";
+import { existsSync } from "fs";
+import { readFile } from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import type { WorkerOutMessage } from "../workers/types.js";
@@ -26,6 +27,9 @@ import { ownGet } from "../utils/own-record.js";
 import { readableSignature, returnType as descriptorReturnType } from "../utils/descriptor.js";
 import { ActionCodes, actionable, withAction, versionRequiredAction, missingMcVersion, type ActionEnvelope } from "../utils/actionable.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "../mappings/unobfuscated.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
+import { isSafeVersionSegment } from "../utils/minecraft-version.js";
+import { editDistanceLimited } from "../utils/edit-distance.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_VERSION = "1.20.1";
@@ -67,6 +71,7 @@ export interface ApiResult {
   autoCorrected?: boolean;
   /** 调用方传入的原始类名（仅 autoCorrected 时） */
   requestedClassName?: string;
+  truncated?: boolean;
 }
 
 export type ApiPreloadStatus =
@@ -154,10 +159,14 @@ interface VersionData {
   worker: Worker | null;
   /** 该版本的 Worker preload 完成 Promise */
   preloadPromise: Promise<void> | null;
+  /** Worker 超时定时器（settle 后清除） */
+  preloadTimer?: ReturnType<typeof setTimeout> | null;
+  /** terminate / dispose 时结算 awaiters */
+  settlePreload?: (() => void) | null;
 }
 
 const _versionData = new Map<string, VersionData>();
-/** 版本数据缓存上限：超限驱逐最旧项（含其 worker），防长驻内存爬升（审计 B17） */
+/** 版本数据缓存上限：FIFO 驱逐最旧插入项（Map 插入序，不是 LRU 访问序） */
 const _MAX_VERSION_CACHE = 64;
 
 function setVersionDataEntry(version: string, data: VersionData): void {
@@ -165,6 +174,16 @@ function setVersionDataEntry(version: string, data: VersionData): void {
     const oldest = _versionData.keys().next().value;
     const old = oldest !== undefined ? _versionData.get(oldest) : undefined;
     if (old) {
+      if (old.preloadTimer) {
+        clearTimeout(old.preloadTimer);
+        old.preloadTimer = null;
+      }
+      try {
+        old.settlePreload?.();
+      } catch {
+        /* settle 可能已完成 */
+      }
+      old.settlePreload = null;
       if (old.worker) {
         try {
           old.worker.terminate();
@@ -199,6 +218,7 @@ function getVersionData(version: string): VersionData {
 
 /** 解析某版本对应的 extracted 数据目录。找不到则返回 null。 */
 function resolveVersionDataDir(version: string): string | null {
+  if (!isSafeVersionSegment(version)) return null;
   const p = join(resolveDataDir(), `forge_${version}`, "extracted");
   return existsSync(p) ? p : null;
 }
@@ -254,24 +274,52 @@ function startPreloader(version: string): Promise<void> {
     const timeoutMs = 15000;
     const logPrefix = `[MCP/Api:${version}]`;
 
-    const timer = setTimeout(() => {
+    const settle = (after?: () => void | Promise<void>): void => {
       if (settled) return;
       settled = true;
-      clearTimeout(timer);
-      console.error(`${logPrefix} Worker preload timeout after ${timeoutMs}ms — falling back to lazy-load mode`);
-      if (vData.worker) {
-        vData.worker.terminate();
-        vData.worker = null;
+      if (vData.preloadTimer) {
+        clearTimeout(vData.preloadTimer);
+        vData.preloadTimer = null;
       }
+      vData.settlePreload = null;
+      void Promise.resolve(after?.()).finally(() => resolve());
+    };
+
+    vData.settlePreload = () => {
+      settle(() => {
+        vData.preloading = false;
+        if (vData.worker) {
+          try {
+            vData.worker.terminate();
+          } catch {
+            /* ignore */
+          }
+          vData.worker = null;
+        }
+      });
+    };
+
+    vData.preloadTimer = setTimeout(() => {
+      console.error(`${logPrefix} Worker preload timeout after ${timeoutMs}ms — falling back to lazy-load mode`);
       vData.preloading = false;
       vData.lazyMode = true;
-      try {
-        lazyLoadVersionData(version, vData, dataDir);
-      } catch (e) {
-        vData.lastError = (e as Error).message;
-        vData.loaded = false;
+      const w = vData.worker;
+      settle(async () => {
+        try {
+          await lazyLoadVersionData(version, vData, dataDir);
+        } catch (e) {
+          vData.lastError = (e as Error).message;
+          vData.loaded = false;
+        }
+      });
+      vData.worker = null;
+      if (w) {
+        try {
+          w.terminate();
+        } catch {
+          /* ignore */
+        }
       }
-      resolve();
     }, timeoutMs);
 
     try {
@@ -281,93 +329,96 @@ function startPreloader(version: string): Promise<void> {
 
       vData.worker.on("message", (msg: WorkerOutMessage) => {
         if (msg.type === "ready") {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timer);
-
-          vData.apiIndex = msg.apiIndex as Record<
-            string,
-            { javadoc: string | null; methods: MethodInfo[]; fields: string[] }
-          >;
-          vData.classNames = msg.classNames;
-
-          if (msg.trieFlat) {
-            vData.trieIndex = TrieIndex.fromFlat(
-              msg.trieFlat as Array<{
-                children: [string, number][];
-                isEnd: boolean;
-                score: number;
-              }>,
-            );
-          } else {
-            vData.trieIndex = null;
-          }
-
-          vData.loaded = true;
-          vData.preloading = false;
-          vData.lazyMode = false;
-          if (vData.worker) {
-            vData.worker.terminate(); // ready 即回收 worker（B17：避免长驻线程）
-            vData.worker = null;
-          }
-          resolve();
+          settle(() => {
+            vData.apiIndex = msg.apiIndex as Record<
+              string,
+              { javadoc: string | null; methods: MethodInfo[]; fields: string[] }
+            >;
+            vData.classNames = msg.classNames;
+            if (msg.trieFlat) {
+              vData.trieIndex = TrieIndex.fromFlat(
+                msg.trieFlat as Array<{
+                  children: [string, number][];
+                  isEnd: boolean;
+                  score: number;
+                }>,
+              );
+            } else {
+              vData.trieIndex = null;
+            }
+            vData.loaded = true;
+            vData.preloading = false;
+            vData.lazyMode = false;
+            if (vData.worker) {
+              vData.worker.terminate();
+              vData.worker = null;
+            }
+          });
         } else if (msg.type === "error") {
-          if (settled) return;
-          settled = true;
-          clearTimeout(timer);
           console.error(`${logPrefix} Worker preload failed:`, msg.errors);
           vData.worker = null;
           vData.preloading = false;
           vData.lazyMode = true;
           vData.lastError = msg.errors?.join("; ");
-          try {
-            lazyLoadVersionData(version, vData, dataDir);
-          } catch (e) {
-            vData.lastError = (e as Error).message;
-          }
-          resolve();
+          settle(async () => {
+            try {
+              await lazyLoadVersionData(version, vData, dataDir);
+            } catch (e) {
+              vData.lastError = (e as Error).message;
+            }
+          });
         }
       });
 
       vData.worker.on("error", (e) => {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
         console.error(`${logPrefix} Worker error:`, e);
         vData.preloading = false;
         vData.lazyMode = true;
         vData.lastError = (e as Error).message;
-        try {
-          lazyLoadVersionData(version, vData, dataDir);
-        } catch (err) {
-          vData.lastError = (err as Error).message;
-        }
-        resolve();
+        settle(async () => {
+          try {
+            await lazyLoadVersionData(version, vData, dataDir);
+          } catch (err) {
+            vData.lastError = (err as Error).message;
+          }
+        });
+      });
+
+      vData.worker.on("exit", () => {
+        if (settled) return;
+        vData.preloading = false;
+        vData.lazyMode = true;
+        vData.worker = null;
+        settle(async () => {
+          try {
+            await lazyLoadVersionData(version, vData, dataDir);
+          } catch (err) {
+            vData.lastError = (err as Error).message;
+          }
+        });
       });
 
       vData.worker.postMessage({ type: "start", timeout: timeoutMs, dataDir });
     } catch (e) {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
       console.error(`${logPrefix} Failed to start preloader:`, e);
       vData.preloading = false;
       vData.lazyMode = true;
       vData.lastError = (e as Error).message;
-      try {
-        lazyLoadVersionData(version, vData, dataDir);
-      } catch (err) {
-        vData.lastError = (err as Error).message;
-      }
-      resolve();
+      settle(async () => {
+        try {
+          await lazyLoadVersionData(version, vData, dataDir);
+        } catch (err) {
+          vData.lastError = (err as Error).message;
+        }
+      });
     }
   });
 
   return vData.preloadPromise;
 }
 
-/** Synchronous main-thread load used after Worker timeout/failure. */
-function lazyLoadVersionData(version: string, vData: VersionData, dataDir: string): void {
+/** 主线程惰性读盘（Worker 超时/失败后）。parse 失败 → INDEX_CORRUPT，禁止伪装 NOT_FOUND。 */
+async function lazyLoadVersionData(version: string, vData: VersionData, dataDir: string): Promise<void> {
   const apiIndexPath = join(dataDir, "api-index.json");
   const classNamesPath = join(dataDir, "class-names.json");
   if (!existsSync(apiIndexPath) || !existsSync(classNamesPath)) {
@@ -377,8 +428,17 @@ function lazyLoadVersionData(version: string, vData: VersionData, dataDir: strin
     vData.classNames = [];
     return;
   }
-  vData.apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8"));
-  vData.classNames = JSON.parse(readFileSync(classNamesPath, "utf-8"));
+  try {
+    vData.apiIndex = parseJsonUtf8(await readFile(apiIndexPath, "utf-8")) as VersionData["apiIndex"];
+    vData.classNames = parseJsonUtf8(await readFile(classNamesPath, "utf-8")) as string[];
+  } catch (e) {
+    vData.lastError = "INDEX_CORRUPT";
+    vData.loaded = false;
+    vData.missingData = false;
+    vData.apiIndex = {};
+    vData.classNames = [];
+    throw e;
+  }
   vData.trieIndex = null;
   vData.loaded = true;
   vData.lazyMode = true;
@@ -462,7 +522,7 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
     const lower = name.toLowerCase();
     const simpleName = lower.includes("/") ? lower.slice(lower.lastIndexOf("/") + 1) : lower;
     if (lower === normalized) { results.push({ score: 100, name, kind: "exact" }); continue; }
-    if (lower.endsWith("/" + normalized) || lower.endsWith("." + normalized.replaceAll("/", "."))) {
+    if (lower.endsWith("/" + normalized)) {
       results.push({ score: 90, name, kind: "suffix" }); continue;
     }
     if (simple.length >= 3 && (lower.includes(normalized) || simpleName.includes(simple))) {
@@ -470,7 +530,7 @@ function fuzzyClassSearch(query: string, vData: VersionData): FuzzyHit[] {
       continue;
     }
     if (simple.length >= 3 && simpleName.length >= 3) {
-      const dist = editDistanceLimited(simple, simpleName, 3);
+      const dist = editDistanceLimited(simple, simpleName, 2);
       if (dist !== null && dist <= 2) {
         const firstOk = simple[0] === simpleName[0] || dist <= 1;
         if (firstOk) {
@@ -500,26 +560,6 @@ function uniqueExactSimpleNameHit(query: string, vData: VersionData): string | u
 function withAutoCorrect(result: ApiResult, requestedClassName: string, resolvedDot: string): ApiResult {
   if (requestedClassName === resolvedDot) return result;
   return { ...result, autoCorrected: true, requestedClassName };
-}
-
-function editDistanceLimited(a: string, b: string, max: number): number | null {
-  if (Math.abs(a.length - b.length) > max) return null;
-  const m = a.length;
-  const n = b.length;
-  let prev = Array.from({ length: n + 1 }, (_, j) => j);
-  for (let i = 1; i <= m; i++) {
-    const cur = new Array<number>(n + 1);
-    cur[0] = i;
-    let rowMin = cur[0];
-    for (let j = 1; j <= n; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
-      if (cur[j] < rowMin) rowMin = cur[j];
-    }
-    if (rowMin > max) return null;
-    prev = cur;
-  }
-  return prev[n] <= max ? prev[n] : null;
 }
 
 // ── 辅助：查找相关类 ─────────────────────────────────────────────────────
@@ -590,15 +630,21 @@ function buildClassResult(
       "本索引该类无方法条目（常见于 1.7.10–1.12.2 javadoc 空壳）。found:true 不是完整签名；请用 search_forge_docs / query_loader_api / convert_mapping。",
     );
   }
+  const METHODS_CAP = 80;
+  const JAVADOC_CAP = 8 * 1024;
+  const methods = cls.methods.slice(0, METHODS_CAP);
+  const javadoc = cls.javadoc ? cls.javadoc.slice(0, JAVADOC_CAP) : undefined;
+  const truncated = cls.methods.length > METHODS_CAP || Boolean(cls.javadoc && cls.javadoc.length > JAVADOC_CAP);
   return {
     found: true,
     className,
-    classJavadoc: cls.javadoc ?? undefined,
+    classJavadoc: javadoc,
     packagePath: className.substring(0, className.lastIndexOf(".")),
-    methods: cls.methods,
+    methods,
     mappings: { mojang: className.replace(/\./g, "/"), parchment: className.replace(/\./g, "/") },
     suggestions,
     notes: notes.length > 0 ? notes : undefined,
+    ...(truncated ? { truncated: true } : {}),
   };
 }
 
@@ -661,6 +707,22 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     );
   }
   const version = query.version!.trim();
+  if (!isSafeVersionSegment(version)) {
+    return withAction(
+      {
+        found: false,
+        className,
+        mappings: { mojang: toSlash(className), parchment: toSlash(className) },
+        suggestions: ["传入精确 Minecraft 版本（数字与点）", "禁止 .. 与 / \\ 路径穿越"],
+      },
+      actionable(
+        ActionCodes.INVALID_INPUT,
+        `version 非法：${version}`,
+        ["传入精确 Minecraft 版本，例如 1.20.1", "禁止使用 .. 或路径分隔符"],
+        ["query_api", "list_forge_versions"],
+      ),
+    );
+  }
 
   // 确保该版本的预加载已完成（或降级）
   await startPreloader(version);
@@ -671,6 +733,22 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     coverageWarning ? { ...r, warning: r.warning ?? coverageWarning } : r;
 
   // 数据不可用：无索引目录或 Worker 未就绪（同一 DATA_UNAVAILABLE 信封）
+  if (vData.lastError === "INDEX_CORRUPT") {
+    return withCoverage(withAction(
+      {
+        found: false,
+        className,
+        mappings: { mojang: toSlash(className), parchment: toSlash(className) },
+        suggestions: ["api-index.json 无法解析，不要把空结果当 NOT_FOUND"],
+      },
+      actionable(
+        ActionCodes.INDEX_CORRUPT,
+        `API 索引损坏（version=${version}）`,
+        ["检查 data/forge_<ver>/extracted/api-index.json 是否截断", "重新解压 Release data 包"],
+        ["get_server_status", "diagnose_data_paths"],
+      ),
+    ));
+  }
   if (vData.missingData || !vData.loaded) {
     const nextSteps = vData.missingData
       ? [
@@ -823,6 +901,16 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
 /** Terminate preload Workers and drop caches so Node can exit (tests / CLI). */
 export function disposeApiData(): void {
   for (const vData of _versionData.values()) {
+    if (vData.preloadTimer) {
+      clearTimeout(vData.preloadTimer);
+      vData.preloadTimer = null;
+    }
+    try {
+      vData.settlePreload?.();
+    } catch {
+      /* ignore */
+    }
+    vData.settlePreload = null;
     if (vData.worker) {
       try {
         vData.worker.terminate();
@@ -870,6 +958,5 @@ export function getApiPreloadStatus(version: string): VersionPreloadStatus {
 }
 
 export function listApiPreloadStatuses(): VersionPreloadStatus[] {
-  const versions = new Set<string>([DEFAULT_VERSION, ..._versionData.keys()]);
-  return [...versions].map((v) => getApiPreloadStatus(v));
+  return [..._versionData.keys()].map((v) => getApiPreloadStatus(v));
 }

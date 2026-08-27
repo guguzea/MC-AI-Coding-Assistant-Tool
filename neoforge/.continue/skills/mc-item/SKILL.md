@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-item
 description: Minecraft NeoForge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物、附魔。触发词：物品、Item、ItemStack、Item.Properties、Tier、SwordItem、DiggerItem、ArmorItem
 platform: neoforge

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-model
 description: Fabric 26.1.2 方块模型 JSON。触发词：block model、parent、textures、elements
 platform: fabric

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: NeoForge 1.20.4 mc-mixin。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

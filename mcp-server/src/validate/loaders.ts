@@ -7,6 +7,7 @@ import { validateDatapackJson } from "../datapack/index.js";
 import { walkProjectFiles } from "../utils/project-files.js";
 import { escapeRegExp } from "../utils/regex.js";
 import { detectMinecraftVersion } from "../utils/minecraft-version.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 import type { ValidateQuery, ValidationResult } from "./index.js";
 
 function finish(
@@ -28,7 +29,7 @@ function finish(
 function parseJsonObject(raw: string | undefined): Record<string, unknown> | null {
   if (!raw?.trim()) return null;
   try {
-    const v = JSON.parse(raw) as unknown;
+    const v = parseJsonUtf8(raw) as unknown;
     if (v && typeof v === "object" && !Array.isArray(v)) return v as Record<string, unknown>;
   } catch {
     return null;

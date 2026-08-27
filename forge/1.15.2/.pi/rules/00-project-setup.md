@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -12,8 +12,8 @@ description: 00 — 项目结构与构建
 
 ### Java 版本
 
-- **必须使用 Java 11**（Forge 1.15.2 要求）
-- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_11`
+- **必须使用 Java 8**（Forge 1.15.2 要求）
+- `build.gradle` 中声明 `sourceCompatibility = JavaVersion.VERSION_1_8`
 - Gradle Wrapper 版本不低于 **Gradle 7.x**
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
@@ -47,9 +47,9 @@ description: 00 — 项目结构与构建
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.15.2
-  forge_version=31.2.51
+  forge_version=31.2.50
   mappings_version=1.15.2
-  loader_version=31.2.51
+  loader_version=31.2.50
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -120,7 +120,7 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 11，不兼容 Java 8 或 Java 17（仅 1.18+ 才需要 17）
+  → 确认使用 Java 8，不兼容 Java 17（仅 1.18+ 才需要 17）
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
@@ -153,8 +153,8 @@ base {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 minecraft {

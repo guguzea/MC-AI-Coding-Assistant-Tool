@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-dimension
 description: 自定义维度、DimensionType、传送与跨维度逻辑。触发词：dimension、DimensionType、teleport
 platform: neoforge

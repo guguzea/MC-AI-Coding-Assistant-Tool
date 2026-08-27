@@ -1,4 +1,5 @@
 ---
+mcHint: Forge/NeoForge（ModList）；Fabric 用 FabricLoader.isModLoaded
 id: authored/soft-deps-modlist
 title: 软依赖：ModList.isLoaded 与可选联动
 tags: [soft-deps, modlist, interop, optional, mixin]

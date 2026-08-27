@@ -13,8 +13,9 @@ const { sessionPlatformPack } = await import("./dist/platform-pack/session.js");
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { activatePlatformPack } = await import("./dist/platform-pack/index.js");
 const { packWriteTestHooks } = await import("./dist/platform-pack/write.js");
-const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS } = await import("./dist/platform-pack/catalog.js");
-const { upsertHostMarker, beginMarker } = await import("./dist/platform-pack/hosts.js");
+const { fabricRulesOverlay, inspectPack, coversMcVersion, FABRIC_SKILL_DONORS, wrapBanneredBody, parseFrontmatterMap, frontmatterDescription } = await import("./dist/platform-pack/catalog.js");
+const { upsertHostMarker, beginMarker, entryBody, hostLayout } = await import("./dist/platform-pack/hosts.js");
+const { stripUtf8Bom } = await import("./dist/utils/text.js");
 
 const savedRoot = process.env.MC_SKILL_PROJECT_ROOT;
 const savedAllow = process.env.MC_SKILL_ALLOW_WRITE;
@@ -140,6 +141,60 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
 }
 
 {
+  const once = upsertHostMarker("", "claude", "neoforge", "1.21.1", "BODY");
+  const twice = upsertHostMarker(once, "claude", "neoforge", "1.21.1", "BODY");
+  assert.equal(twice, once, "second upsert with same body must not append");
+  const changed = upsertHostMarker(once, "claude", "neoforge", "1.21.1", "BODY2");
+  assert.equal((changed.match(/BEGIN MC_SKILL_PACK host=claude\b/g) || []).length, 1);
+  assert.ok(changed.includes("BODY2"));
+  const stacked = `${once}${once}`;
+  const cleaned = upsertHostMarker(stacked, "claude", "neoforge", "1.21.1", "BODY");
+  assert.equal((cleaned.match(/BEGIN MC_SKILL_PACK host=claude\b/g) || []).length, 1, cleaned);
+  assert.ok(cleaned.includes("BODY"));
+  console.log("upsertHostMarker idempotent + stacked collapse: ok");
+}
+
+{
+  assert.equal(hostLayout("opencode").rulesDir, undefined);
+  assert.equal(hostLayout("codex").rulesDir, undefined);
+  assert.equal(hostLayout("zcode").rulesDir, undefined);
+  const ocBody = entryBody("opencode", "neoforge", "1.21.1");
+  assert.doesNotMatch(ocBody, /规则见.*\.cursor\/rules/);
+  assert.match(ocBody, /本宿主不落盘规则/);
+  assert.match(ocBody, /不要假设 \.cursor\/rules/);
+  assert.match(ocBody, /\.opencode\/skills/);
+  const claudeBody = entryBody("claude", "neoforge", "1.21.1");
+  assert.match(claudeBody, /\.claude\/rules\/mc-skill-/);
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-oc-norules-"));
+  const preview = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["opencode"],
+    projectPath: tmp,
+    writeSkillStubs: false,
+    dryRun: true,
+  });
+  assert.equal(preview.ok, true, JSON.stringify(preview).slice(0, 400));
+  const rels = (preview.planned ?? []).map((p) => p.rel);
+  assert.ok(!rels.some((r) => /\/rules\//.test(r) || r.includes(".cursor/rules")), rels.join(","));
+  assert.ok(rels.includes("AGENTS.md"), rels.join(","));
+  const claudePrev = activatePlatformPack({
+    action: "write",
+    platform: "neoforge",
+    minecraftVersion: "1.21.1",
+    hosts: ["claude"],
+    projectPath: tmp,
+    writeSkillStubs: false,
+    dryRun: true,
+  });
+  const claudeRels = (claudePrev.planned ?? []).map((p) => p.rel);
+  assert.ok(claudeRels.some((r) => r.includes(".claude/rules/mc-skill-")), claudeRels.slice(0, 8).join(","));
+  rmSync(tmp, { recursive: true, force: true });
+  console.log("opencode no rulesDir / claude rules path: ok");
+}
+
+{
   const tmp = mkdtempSync(join(tmpdir(), "mc-pack-w-"));
   mkdirSync(join(tmp, ".cursor", "rules"), { recursive: true });
   writeFileSync(join(tmp, ".cursor", "rules", "user.mdc"), "# user rule\n", "utf8");
@@ -159,6 +214,7 @@ delete process.env.MC_SKILL_ALLOW_WRITE;
   const agents = readFileSync(join(tmp, "AGENTS.md"), "utf8");
   assert.ok(agents.includes("host=opencode"));
   assert.ok(agents.includes("host=codex"));
+  assert.doesNotMatch(agents, /规则见.*\.cursor\/rules/);
 
   packWriteTestHooks.failBeforeRel = undefined;
   const deact = activatePlatformPack({
@@ -1139,7 +1195,59 @@ function assertHasRuleIds(s, want, label) {
   } finally {
     rmSync(skillDir, { recursive: true, force: true });
   }
+  const emptyThenYaml = "---\n---\n---\nglobs: \"*.mdc\"\n---\n# r\n";
+  const skippedEmpty = ensureFrontmatter(emptyThenYaml, "plain desc", {});
+  assert.match(skippedEmpty, /^---\ndescription: "plain desc"\nglobs:/);
+
   console.log("ensureFrontmatter banner + quiltCopiedSkill quotes: ok");
+}
+
+{
+  const bom = "\uFEFF---\ndescription: hello\n---";
+  assert.equal(stripUtf8Bom(bom).startsWith("---"), true);
+  assert.equal(parseFrontmatterMap(bom).description, "hello");
+  assert.equal(frontmatterDescription(bom).description, "hello");
+  const wrapped = wrapBanneredBody("[BANNER] x", "note", "---\n---\n# body\n");
+  assert.match(wrapped, /^---\n\[BANNER\] x\nnote\n---/);
+  assert.doesNotMatch(wrapped, /^---\r?\n---/);
+  console.log("BOM + wrapBanneredBody skip empty fence: ok");
+}
+
+{
+  const tmp = mkdtempSync(join(tmpdir(), "mc-pack-upsert-skip-"));
+  process.env.MC_SKILL_ALLOW_WRITE = "1";
+  try {
+    const args = {
+      action: "write",
+      platform: "neoforge",
+      minecraftVersion: "1.21.1",
+      hosts: ["opencode"],
+      projectPath: tmp,
+      writeSkillStubs: false,
+      dryRun: false,
+      confirmed: true,
+    };
+    const first = activatePlatformPack(args);
+    assert.equal(first.ok, true, JSON.stringify(first).slice(0, 400));
+    const path = join(tmp, "AGENTS.md");
+    const prev = readFileSync(path, "utf8");
+    const second = activatePlatformPack(args);
+    assert.equal(second.ok, true, JSON.stringify(second).slice(0, 400));
+    assert.equal(readFileSync(path, "utf8"), prev);
+    assert.ok(!(second.patchedFiles ?? []).includes("AGENTS.md"), JSON.stringify(second.patchedFiles));
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+    delete process.env.MC_SKILL_ALLOW_WRITE;
+  }
+  console.log("write skip unchanged marker: ok");
+}
+
+{
+  const payload = readFileSync(join(repo, "community_knowledge", "authored", "neoforge-payload-networking.md"), "utf8");
+  assert.match(payload, /这是 \*\*mod 总线\*\*事件/);
+  assert.match(payload, /bus = Mod\.EventBusSubscriber\.Bus\.MOD/);
+  assert.doesNotMatch(payload, /默认总线即可/);
+  console.log("LH1 payload mod-bus wording: ok");
 }
 
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;

@@ -7,7 +7,7 @@
 ```java
 // 错误
 public static void onMessage(MyMessage msg, MessageContext ctx) {
-    ctx.getServerHandler().playerEntity.getEntityWorld().setBlockState(pos, Blocks.AIR.getDefaultState()); // ❌ 不安全
+    ctx.getServerHandler().player.getEntityWorld().setBlockState(pos, Blocks.AIR.getDefaultState()); // ❌ 不安全
 }
 ```
 
@@ -18,7 +18,7 @@ public static void onMessage(MyMessage msg, MessageContext ctx) {
 ```java
 public static void onMessage(MyMessage msg, MessageContext ctx) {
     if (ctx.side == Side.SERVER) {
-        ctx.getServerHandler().playerEntity.getServerWorld().addScheduledTask(() -> {
+        ctx.getServerHandler().player.getServerWorld().addScheduledTask(() -> {
             // 修改世界的操作
         });
     }

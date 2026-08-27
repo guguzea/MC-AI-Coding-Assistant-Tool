@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-recipe
 description: Fabric 26.1.2 配方。FabricRecipeProvider.createRecipeProvider、ShapedRecipeBuilder。触发词：配方、Recipe、ShapedRecipe
 platform: fabric

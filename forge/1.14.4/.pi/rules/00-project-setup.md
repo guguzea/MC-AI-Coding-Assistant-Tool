@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -149,7 +149,7 @@ version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesBaseName = mod_id
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(11)

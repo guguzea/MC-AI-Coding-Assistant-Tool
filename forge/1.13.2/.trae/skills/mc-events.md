@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Forge 1.13.2 事件系统。@SubscribeEvent、MinecraftForge.EVENT_BUS、过渡期 Bus 写法。触发词：事件、Event、@SubscribeEvent
 platform: forge

@@ -101,4 +101,4 @@
 | **yarn** | Fabric 社区的映射，与 MCP 类似 |
 | **parchment** | 基于 mojang 的社区映射，补充了参数名和 javadoc |
 
-> 注：Forge 1.19.4 推荐使用 **Parchment** 映射：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.04.04`
+> 注：Forge 1.19.4 推荐使用 **Parchment** 映射：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.06.26`

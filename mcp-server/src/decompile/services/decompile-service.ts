@@ -180,7 +180,7 @@ export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<Min
 
   try {
     // 5. 下载 + 重映射 + 反编译
-    const gate = await prepareInputs(version, mapping, cache.root);
+    const gate = await prepareInputs(version, mapping, cache.root, { force: args.force === true });
     const { jar, how } = await remapClientJar(gate, version, mapping);
     const { outDir, file } = await decompileJar(gate, jar, version, mapping, relPath);
     if (!existsSync(file)) {
@@ -217,6 +217,12 @@ export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<Min
       return toErrorResult(err.code, actionable(err.code, err.message, [
         "检查网络后重试",
         "或手动将文件放入 $MC_SKILL_CACHE 对应目录（哈希须匹配）",
+      ]), { version, mapping });
+    }
+    if ((err as { code?: string }).code === "DISK_INSUFFICIENT") {
+      return toErrorResult("DISK_INSUFFICIENT", actionable("DISK_INSUFFICIENT", (err as Error).message, [
+        "清理磁盘后重试",
+        "或缩小 MC_SKILL_CACHE 所在卷的占用",
       ]), { version, mapping });
     }
     return toErrorResult("DECOMPILE_FAILED", actionable("DECOMPILE_FAILED", (err as Error).message, [

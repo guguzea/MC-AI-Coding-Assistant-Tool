@@ -40,8 +40,9 @@ const DEFAULT_EXTENSIONS = [".java", ".txt", ".json", ".toml", ".cfg"];
 const MAX_LINE_LEN = 400;
 const MAX_WALK_FILES = 8000;
 
-function isDangerousRegex(src: string): boolean {
+export function isDangerousRegex(src: string): boolean {
   if (/\([^)]*[+*][^)]*\)[+*]/.test(src)) return true;
+  if (/\([^)]*[+*][^)]*\)\{\d/.test(src)) return true;
   if (/\(\.\*\)[+*]|(\.\*){2}/.test(src)) return true;
   if (/\([^?][^)]*\{[^)]*\}[^)]*\)[+*{]/.test(src)) return true;
   return false;

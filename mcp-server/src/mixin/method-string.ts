@@ -1,6 +1,7 @@
 /**
  * Parse Mixin @Inject / @Redirect method target strings (multi-layer naming).
  */
+import { parseTypeAt } from "../utils/descriptor.js";
 
 export type MethodNamingStyle =
   | "srg"
@@ -42,16 +43,19 @@ export function detectNamingStyle(name: string): MethodNamingStyle {
   return "unknown";
 }
 
-/** Split `hurt(Lnet/minecraft/...;F)V` into name + descriptor */
+/** Split `hurt(Lnet/minecraft/...;F)V` into name + descriptor（含返回类型，停在 parseTypeAt 消费完） */
 export function splitMethodAndDescriptor(combined: string): { methodName: string; descriptor: string } {
   const idx = combined.indexOf("(");
   if (idx < 0) {
     return { methodName: combined.trim(), descriptor: "" };
   }
   const methodName = combined.slice(0, idx).trim();
-  const end = combined.lastIndexOf(")");
-  const descriptor = end >= idx ? combined.slice(idx, end + 1) : combined.slice(idx);
-  return { methodName, descriptor };
+  const close = combined.indexOf(")", idx);
+  if (close < 0) {
+    return { methodName, descriptor: combined.slice(idx) };
+  }
+  const [, retEnd] = parseTypeAt(combined, close + 1);
+  return { methodName, descriptor: combined.slice(idx, retEnd) };
 }
 
 export function parseMethodReference(raw: string, separateDescriptor?: string): ParsedMethodRef {

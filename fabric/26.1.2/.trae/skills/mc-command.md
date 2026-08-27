@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-command
 description: Fabric 26.1.2 命令。CommandRegistrationCallback、Commands.literal、CommandSourceStack。触发词：命令、Brigadier、CommandRegistrationCallback
 platform: fabric

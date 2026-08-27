@@ -1,4 +1,4 @@
-﻿---
+---
 description: 04-entity Fabric 1.21.4
 alwaysApply: true
 ---

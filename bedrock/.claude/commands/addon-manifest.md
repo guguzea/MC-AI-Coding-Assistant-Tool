@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-addon-manifest
 description: 基岩 manifest.json。触发词：format_version、min_engine_version、modules、capabilities、uuid
 platform: bedrock

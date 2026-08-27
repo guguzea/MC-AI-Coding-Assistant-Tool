@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-advancement
 description: NeoForge 1.21.1 mc-advancement。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

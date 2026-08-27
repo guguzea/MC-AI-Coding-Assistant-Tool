@@ -31,7 +31,7 @@ public class MyMessageHandler implements IMessageHandler<MyMessage, IMessage> {
     @Override
     public IMessage onMessage(MyMessage message, MessageContext ctx) {
         if (ctx.side == Side.SERVER) {
-            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 // 处理消息
             });

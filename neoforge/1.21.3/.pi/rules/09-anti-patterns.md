@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09 — 反模式（NeoForge 1.21.3）
 ---
 
@@ -14,4 +14,4 @@ description: 09 — 反模式（NeoForge 1.21.3）
 | 无 `mappingsVersion` 的反编译摘要 | 视为无效 |
 | 把 26.1 Identifier 规则提前灌进本档（仅 1.21.11/26.1 用 Identifier） | 1.21.3 文档仍用 ResourceLocation.fromNamespaceAndPath。 |
 
-未建档版本 1.20.1/1.20.6/1.21.5/1.21.10：禁止用本档顶上，改口 `search_neoforge_docs`。
+1.20.1 / 1.20.6 / 1.21.5 / 1.21.10 已有薄包：读 `neoforge/<ver>/`，禁止用本档 00–10 顶上。

@@ -112,7 +112,7 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   if (scopeFlags.data) scopesHit.push("data");
 
   // Persist lastCheck on every successful resolve (check and apply)
-  writeUpdateState(
+  const lastCheckWrite = writeUpdateState(
     {
       lastCheck: {
         at: new Date().toISOString(),
@@ -151,6 +151,9 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
     scopes: scopesHit,
     pendingRestart: Boolean(state.pendingRestart),
     restartRequired: Boolean(state.pendingRestart),
+    ...(lastCheckWrite.writeFailed
+      ? { writeFailed: true, warning: lastCheckWrite.warning }
+      : {}),
   };
 
   if (query.action === "check") {
@@ -273,13 +276,32 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
       diskSpace = dr.diskSpace;
       if (!dr.ok) {
         if (appliedTooling) {
-          writeUpdateState(
+          const pr = writeUpdateState(
             {
               pendingRestart: true,
               pendingRestartSince: new Date().toISOString(),
             },
             dataDir,
           );
+          if (pr.writeFailed) {
+            return withAction(
+              {
+                ...base,
+                dryRun,
+                steps,
+                filesToOverwrite,
+                diskSpace,
+                applied: false,
+                appliedTooling,
+                appliedData: false,
+                restartRequired: restartRequired || appliedTooling,
+                pendingRestart: appliedTooling || Boolean(state.pendingRestart),
+                writeFailed: true,
+                warning: pr.warning,
+              },
+              dr.action,
+            );
+          }
         }
         return withAction(
           {
@@ -302,13 +324,29 @@ export async function mcSkillUpdate(query: McSkillUpdateQuery): Promise<Record<s
   }
 
   if (appliedTooling) {
-    writeUpdateState(
+    const pr = writeUpdateState(
       {
         pendingRestart: true,
         pendingRestartSince: new Date().toISOString(),
       },
       dataDir,
     );
+    if (pr.writeFailed) {
+      return {
+        ...base,
+        dryRun,
+        steps,
+        filesToOverwrite: filesToOverwrite.length ? filesToOverwrite : undefined,
+        diskSpace,
+        applied: !dryRun && (appliedTooling || appliedData),
+        appliedTooling,
+        appliedData,
+        restartRequired,
+        pendingRestart: appliedTooling || Boolean(readUpdateState(dataDir).pendingRestart),
+        writeFailed: true,
+        warning: pr.warning,
+      };
+    }
   }
 
   return {

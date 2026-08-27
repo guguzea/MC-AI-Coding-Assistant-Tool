@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Minecraft Forge 网络通信。注册网络通道、发送数据包、C2S/S2C 消息、SimpleNetworkWrapper、IMessage。触发词：网络、消息、Network、SimpleNetworkWrapper、IMessage、ByteBuf、PacketBuffer
 platform: forge
@@ -57,7 +57,7 @@ public class MyMessage implements IMessage {
     public static class Handler implements IMessageHandler<MyMessage, IMessage> {
         @Override
         public IMessage onMessage(MyMessage msg, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 // 主线程游戏逻辑
             });

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 02-block.mdc
 ---
 

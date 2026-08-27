@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-bedrock-worldgen
 description: 基岩世界生成 JSON。触发词：feature、biome、jigsaw、worldgen
 platform: bedrock

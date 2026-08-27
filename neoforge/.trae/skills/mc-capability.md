@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-capability
 description: Minecraft NeoForge Data Attachments。AttachmentType、DeferredRegister on ATTACHMENT_TYPES、getData/setData。触发词：AttachmentType、Data Attachment、ATTACHMENTS、getData、setData
 platform: neoforge

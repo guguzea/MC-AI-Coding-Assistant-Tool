@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-particle
 description: Fabric 26.1.2 mc-particle。核不到则 search_fabric_docs version=26.1.2，禁止输出。
 platform: fabric

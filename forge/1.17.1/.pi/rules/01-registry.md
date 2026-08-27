@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册系统
 ---
 
@@ -192,8 +192,8 @@ public class ExampleMod {
     );
 
     // 在 mod 构造函数中将 DeferredRegister 注册到 modEventBus
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
@@ -258,8 +258,8 @@ public class ModItems {
 public class ExampleMod {
     public static final String MOD_ID = "examplemod";
 
-    public ExampleMod(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public ExampleMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);

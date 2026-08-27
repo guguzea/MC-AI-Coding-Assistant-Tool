@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gametest
 description: NeoForge 1.20.6 mc-gametest。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

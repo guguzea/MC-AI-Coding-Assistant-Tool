@@ -1,4 +1,4 @@
-﻿---
+---
 description: 03-item Fabric 1.21.8
 alwaysApply: true
 ---

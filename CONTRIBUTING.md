@@ -175,7 +175,7 @@ data/
 
 ### 技术栈
 
-- TypeScript、Node.js **>= 22.5**
+- TypeScript、Node.js **>= 22.5**（**22.5–22.12 与 23.0–23.3 需 `--experimental-sqlite`**；22.13+ / 23.4+ 免）
 - `@modelcontextprotocol/sdk` + `zod`
 - 包名 / Cursor 服务名：`mc-ai-coding-assistant-tool` / **`MC-AI-Coding-Assistant-Tool`**
 
@@ -232,7 +232,7 @@ npm run smoke:release   # 可选
 ```
 feat(forge/1.20.1): 添加方块实体注册规则
 fix(mcp-server): 修正 Yarn sqlite 路径解析
-docs(AUTO_SETUP): 同步 78 工具与配置草稿流程
+docs(AUTO_SETUP): 同步 79 工具与配置草稿流程
 chore(data): 忽略临时 plan 文件
 docs(fabric/1.21.1): 补充 mixin 反模式
 ```

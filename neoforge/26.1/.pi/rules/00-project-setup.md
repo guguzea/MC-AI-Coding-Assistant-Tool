@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构（NeoForge 26.1）
 ---
 

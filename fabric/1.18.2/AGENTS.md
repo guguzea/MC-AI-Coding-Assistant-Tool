@@ -13,7 +13,7 @@
 | Minecraft 版本 | 1.18.2 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 17**（Fabric 1.18.2 最低要求） |
-| Gradle | Gradle 7.6.1 + Loom 0.14.x |
+| Gradle | Gradle 7.6.1 + Loom 0.14.46 |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.18.2+build.4:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
@@ -77,10 +77,10 @@ Decision: 本规则集是否适用？
 | 维度 | 1.18.x | 1.20.x |
 |------|--------|--------|
 | Registry | `Registry.BLOCK`（静态字段） | `Registries.ITEM` / `Registries.BLOCK` |
-| `fabric.mod.json` | **无** `environment` 字段 | 有 `environment` 字段 |
+| `fabric.mod.json` | 有 `environment` 字段（schemaVersion 1 一直支持） | 有 `environment` 字段 |
 | Block class | `Block` + `AbstractBlock.Settings` | `Block` + `AbstractBlock.Settings`（类名未改成「只有 AbstractBlock」） |
 | BlockItem | `BlockItem` | `BlockItem` |
-| Pack format（数据包） | **9** | **15**（1.20.1） |
+| Pack format（数据包） | **8** | **15**（1.20.1） |
 | FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder` |
 | EntityType | `EntityType.Builder.create()` | `EntityType.Builder.create()` |
 | 实体分类 | `SpawnGroup`（Yarn 1.18） | `SpawnGroup` |

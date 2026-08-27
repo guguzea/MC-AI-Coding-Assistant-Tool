@@ -2,14 +2,14 @@
 id: authored/forge-simplechannel-networking
 title: Forge SimpleChannel 网络（≤1.20.4 主流写法）
 tags: [networking, simplechannel, NetworkRegistry, registerMessage, enqueueWork, forge, 1.20.1]
-summary: 1.8–1.20.4 的 SimpleChannel 全套路：NetworkRegistry.newSimpleChannel 与协议版本握手（ABSENT/ACCEPTVANILLA）；registerMessage 五参数与自增 discriminator；handler 里 enqueueWork 回主线程、setPacketHandled；S2C 用 DistExecutor 隔离客户端类。
+summary: 1.8–1.20.4 的 SimpleChannel 全套路（**非 26.x**）：NetworkRegistry.newSimpleChannel；enqueueWork；S2C 用 DistExecutor.runWhenOn 隔离客户端类。26.x 改 FMLLoader.getDist() / client 源集，不要把 DistExecutor 当 26.x 首选。
 mcHint: Forge 1.13–1.20.4（官方文档 1.20.1 版原文核对）；1.12 及以前是 SimpleNetworkWrapper
 sourceKind: authored
 ---
 
 # Forge SimpleChannel 网络写法
 
-自写短文。依据本仓库已入库的 Forge 官方文档 `networking_simpleimpl`（**1.20.1** 档，`search_forge_docs` 可直接调取）。适用于当前装机量最大的 Forge 1.18–1.20.4 工程；1.20.5+ 请改用 Payload 写法（见 `authored/neoforge-payload-networking` 的对照表）。
+自写短文。依据本仓库已入库的 Forge 官方文档 `networking_simpleimpl`（**1.20.1** 档，`search_forge_docs` 可直接调取）。适用于 Forge **≤1.20.4**（**非 26.x**）。1.20.5+ / 26.x 请改用 Payload；物理端判断用 `FMLLoader.getDist()` 或 client 源集，不要把 DistExecutor 当 26.x 首选（见 `authored/neoforge-payload-networking` 的对照表）。
 
 ## 建 Channel：版本握手
 
@@ -59,7 +59,7 @@ public static void handle(MyServerboundMsg msg, Supplier<NetworkEvent.Context> c
 ```java
 // 公共 handler 里
 ctx.get().enqueueWork(() ->
-    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePacket(msg, ctx)));
+    DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePacket(msg, ctx))); // ≤1.20.4；26.x 用 FMLLoader.getDist() / client 源集
 ctx.get().setPacketHandled(true);
 ```
 

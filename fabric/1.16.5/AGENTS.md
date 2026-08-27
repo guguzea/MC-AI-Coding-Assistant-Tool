@@ -103,60 +103,32 @@ Yarn 使用清晰的命名风格：
 
 ---
 
-## Mixin 配置（1.16.x 特殊要求）
+## Mixin 配置
 
-**1.16.5 需要显式配置 Mixin Plugin**，与 1.17+ 不同：
+1.16.5 与其它 schemaVersion 1 档一样：Loom 处理 Mixin，**不要**手写 MixinBootstrap / MixinLauncher / `fabric.loom.new_mixin_engine`。
 
-### 1. 在 `fabric.mod.json` 中添加插件引用
+`fabric.mod.json` 只用 `mixins` 键（**没有**顶层 `"client"` 键）：
 
 ```json
 {
   "schemaVersion": 1,
   "id": "examplemod",
-  "version": "1.0.0",
-  "name": "Example Mod",
-  "entrypoints": { ... },
-  "mixins": ["examplemod.mixins.json"],
-  "client": ["examplemod.mixins.json"],
-  "injectors": {
-    "defaultRequire": 1
-  }
+  "mixins": ["examplemod.mixins.json"]
 }
 ```
 
-### 2. 创建 Mixin Plugin 类
+`examplemod.mixins.json` 的 `package` 之后写**相对类名**（客户端条目放 JSON 的 `client` 数组，不是 fmj 顶层）：
 
-```java
-package com.example.examplemod.mixin;
-
-import net.fabricmc.asm.Generator;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.connect.MixinBootstrap;
-import org.spongepowered.asm.mixin.launcher.MixinLauncher;
-
-public class ExampleMixinPlugin {
-    public static void init() {
-        MixinBootstrap.init();
-        MixinLauncher.addPrimaryMixin("com.example.examplemod.mixin.ExampleMixin");
-    }
+```json
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.example.examplemod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": ["ExampleMixin"],
+  "client": ["client.ExampleMixin"],
+  "injectors": { "defaultRequire": 1 }
 }
-```
-
-### 3. build.gradle 配置
-
-```groovy
-loom {
-    mixin {
-        add( sourceSets.main, "examplemod.refmap.json" )
-    }
-}
-```
-
-### 4. gradle.properties 配置
-
-```properties
-fabric.loom.platform=fabric
-fabric.loom.new_mixin_engine=true
 ```
 
 ---
@@ -174,7 +146,7 @@ fabric-mod/
     ├── java/
     │   └── com/example/examplemod/
     │       ├── ExampleMod.java    # implements ModInitializer 入口类
-    │       ├── mixin/             # Mixin 类（1.16.x 需要显式 Plugin）
+    │       ├── mixin/             # Mixin 类（mixins.json 相对 package 列出）
     │       └── ...
     │
     └── resources/
@@ -238,8 +210,8 @@ fabric-mod/
 
 - ❌ **不要**使用 1.17+ 引入的 `Registries` 类（使用 `Registry`）
 - ❌ **不要**使用 1.17+ 引入的 `Identifier` 简化 API
-- ❌ Mixin 需要显式插件配置，不能依赖 Loom 自动处理
-- ❌ **不要**在 `fabric.mod.json` 中使用 `environment` 字段（1.14-1.17.x 不支持）
+- Mixin 走 `mixins.json` + fmj 的 `mixins` 键；Loom 自动处理，不要手写 MixinBootstrap
+- `fabric.mod.json` **可以**写 `environment`（schemaVersion 1 一直有该字段）
 
 ---
 

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — 注册系统
 ---
 
@@ -180,7 +180,7 @@ public class ExampleMod {
 
 | 特性 | `@EventBusSubscriber` + `RegistryEvent`（推荐） | 在 @Mod 类中注册 |
 |------|---------------------------------------------------|----------------|
-| 代码风格 | 静态方法，集中在类中 | 分散在 @Init 方法中 |
+| 代码风格 | 静态方法，集中在类中 | 分散在 `@EventHandler` + `FMLPreInitializationEvent` 中 |
 | mod ID 前缀 | 需手动 `setRegistryName(MODID, "name")` | 需手动 |
 | IDE 补全 | 一般 | 一般 |
 | 适用场景 | 所有标准 Forge 注册 | 简单模组 |

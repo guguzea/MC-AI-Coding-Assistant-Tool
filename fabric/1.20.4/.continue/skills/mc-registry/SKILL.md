@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: Fabric 注册系统。Registry.register、Identifier、ModInitializer。触发词：注册、Registry、Identifier、onInitialize、fabric.mod.json
 platform: fabric

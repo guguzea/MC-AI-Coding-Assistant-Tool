@@ -119,8 +119,8 @@ public enum MyArmorMaterial implements IArmorMaterial {
     }
 
     @Override public String getName() { return name; }
-    @Override public int getDurability(EquipmentSlotType slot) { return durability; }
-    @Override public int getDamageReductionAmount(EquipmentSlotType slot) { return damageReduction[slot.getIndex()]; }
+    @Override public int getDurability(EntityEquipmentSlot slot) { return durability; }
+    @Override public int getDamageReductionAmount(EntityEquipmentSlot slot) { return damageReduction[slot.getIndex()]; }
     @Override public int getEnchantability() { return enchantability; }
     @Override public SoundEvent getSoundEvent() { return sound; }
     @Override public float getToughness() { return toughness; }
@@ -128,7 +128,7 @@ public enum MyArmorMaterial implements IArmorMaterial {
 }
 
 public static final Item MY_HELMET = new ItemArmor(MyArmorMaterial.MY_MATERIAL,
-    EquipmentSlotType.HEAD,
+    EntityEquipmentSlot.HEAD,
     new Item.Properties().group(ItemGroup.COMBAT));
 ```
 

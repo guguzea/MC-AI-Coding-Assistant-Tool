@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-energy
 description: FE/能量系统互通概念。触发词：ForgeEnergy、IFNFEnergyStorage
 platform: fabric

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: NeoForge 1.20.4 mc-events。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

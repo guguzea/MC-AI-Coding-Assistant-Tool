@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-multiblock
 description: 多方块结构模式。触发词：multiblock、master、slave
 platform: fabric

@@ -3,13 +3,15 @@ import {
   mkdirSync,
   readFileSync,
   renameSync,
+  rmdirSync,
   rmSync,
   unlinkSync,
   writeFileSync,
 } from "fs";
 import { dirname, isAbsolute, join, resolve, sep } from "path";
 import { actionable } from "../utils/actionable.js";
-import { resolveRepoRoot } from "../utils/path.js";
+import { resolveRepoRoot, winLongPath } from "../utils/path.js";
+import { looksLikeBannerFence, matchLeadingFence, nextRealYamlFence, stripUtf8Bom } from "../utils/text.js";
 import {
   assertCreatableDir,
   assertWritablePath,
@@ -147,27 +149,24 @@ export function yamlQuotedScalar(s: string): string {
   return `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
 
-function looksLikeBannerFence(fm: string): boolean {
-  return /\[FORGE_COMPAT|\[QSL_OVERLAY|\[BANNER\]/.test(fm);
-}
-
 export function ensureFrontmatter(text: string, description: string, extra: Record<string, string>): string {
   const extraLines = Object.entries(extra)
     .map(([k, v]) => `${k}: ${v}`)
     .join("\n");
-  if (text.startsWith("---")) {
-    const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-    if (m && !looksLikeBannerFence(m[1])) {
-      let fm = m[1];
-      if (!/^description:/m.test(fm)) fm = `description: ${yamlQuotedScalar(description)}\n${fm}`;
-      for (const [k, v] of Object.entries(extra)) {
-        if (!new RegExp(`^${k}:`, "m").test(fm)) fm = `${fm}\n${k}: ${v}`;
-      }
-      return `---\n${fm}\n---\n${text.slice(m[0].length)}`;
+  const s = stripUtf8Bom(text);
+  const { skipped, fence, rest } = nextRealYamlFence(s);
+  if (fence && !looksLikeBannerFence(fence.inner)) {
+    let fm = fence.inner;
+    if (!/^description:/m.test(fm)) fm = `description: ${yamlQuotedScalar(description)}\n${fm}`;
+    for (const [k, v] of Object.entries(extra)) {
+      if (!new RegExp(`^${k}:`, "m").test(fm)) fm = `${fm}\n${k}: ${v}`;
     }
+    return `---\n${fm}\n---\n${skipped}${rest}`;
   }
+  const leading = matchLeadingFence(s);
+  if (s.startsWith("---") && !leading) return s;
   const head = [`---`, `description: ${yamlQuotedScalar(description)}`, extraLines, `---`, ""].filter(Boolean).join("\n");
-  return `${head}\n${text}`;
+  return `${head}\n${s}`;
 }
 
 function destRuleName(fileName: string, ext: ".mdc" | ".md"): string {
@@ -364,22 +363,44 @@ function buildWritePlan(opts: {
   return { ops, skipped };
 }
 
-function mkdirForFile(abs: string, allowRoot: string | null) {
+function capWriteWarnings(warnings: string[]): { warnings: string[]; truncated?: number } {
+  if (warnings.length <= 20) return { warnings };
+  return { warnings: warnings.slice(0, 20), truncated: warnings.length - 20 };
+}
+
+function pruneEmptyParents(fileAbs: string, projectRoot: string): void {
+  let dir = dirname(fileAbs);
+  const stop = resolve(projectRoot);
+  while (dir && resolve(dir) !== stop) {
+    try {
+      rmdirSync(winLongPath(dir));
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException).code;
+      if (code === "ENOTEMPTY" || code === "ENOENT") break;
+      break;
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+}
+
+function mkdirForFile(abs: string, allowRoot?: string): void {
   const dir = dirname(abs);
   if (existsSync(dir)) return;
   if (allowRoot) assertCreatableDir(dir, allowRoot);
-  mkdirSync(dir, { recursive: true });
+  mkdirSync(winLongPath(dir), { recursive: true });
 }
 
 function writeManifestAtomic(projectRoot: string, manifest: Manifest, allowRoot: string) {
   const dir = join(projectRoot, ".mc-skill");
   assertCreatableDir(dir, allowRoot);
-  mkdirSync(dir, { recursive: true });
+  mkdirSync(winLongPath(dir), { recursive: true });
   const dest = join(dir, "pack-manifest.json");
   const tmp = `${dest}.tmp`;
   assertWritablePath(tmp, allowRoot);
   try {
-    writeFileSync(tmp, JSON.stringify(manifest, null, 2), "utf8");
+    writeFileSync(winLongPath(tmp), JSON.stringify(manifest, null, 2), "utf8");
     renameSync(tmp, dest); // Windows 下 rename 可覆盖目标（MoveFileEx REPLACE），避免先 unlink 的崩溃窗口
   } catch (err) {
     rmSync(tmp, { force: true });
@@ -429,14 +450,17 @@ export function writePlatformPack(args: WriteArgs) {
   const inspected = inspectPack(platform, version);
   if (!inspected || inspected.status === "draft") {
     const draft = inspected?.status === "draft";
+    const metaUnreadable = inspected?.metaUnreadable === true;
     return {
       ok: false,
       resolvedProjectRoot: proj.root,
       action: actionable(
         "PACK_NOT_FOUND",
-        draft
-          ? `${platform} ${version} 规则包 pack-status=draft，禁止 session/write。`
-          : `没有 ${platform} ${version} 规则树。`,
+        metaUnreadable
+          ? `pack.meta.json 无法解析`
+          : draft
+            ? `${platform} ${version} 规则包 pack-status=draft，禁止 session/write。`
+            : `没有 ${platform} ${version} 规则树。`,
         ["改用文档工具，禁止邻档"],
       ),
     };
@@ -451,6 +475,13 @@ export function writePlatformPack(args: WriteArgs) {
     includeSkills: resolveWriteSkillStubs(args),
     includeSkillBodies: args.includeSkillBodies === true,
   });
+  const { diverged } = listMergedPackSkills(pack.platform, pack.minecraftVersion, pack.packDir, undefined);
+  const writeWarningCap = capWriteWarnings(
+    diverged.map(
+      (d) =>
+        `Skill ${d.name} 多宿主内容不一致（canonical sha256 ${d.canonicalHash}；${d.others.map((o) => `${o.rel}:${o.hash}`).join(", ")}）`,
+    ),
+  );
 
   const howToWrite = {
     env: { MC_SKILL_ALLOW_WRITE: "1" },
@@ -479,6 +510,8 @@ export function writePlatformPack(args: WriteArgs) {
       hosts,
       planned: ops.map((o) => ({ kind: o.kind, rel: o.rel, host: o.host })),
       skipped,
+      warnings: writeWarningCap.warnings,
+      ...(writeWarningCap.truncated !== undefined ? { truncated: writeWarningCap.truncated } : {}),
       howToWrite,
     };
   }
@@ -518,7 +551,7 @@ export function writePlatformPack(args: WriteArgs) {
     for (const rel of [...created].reverse()) {
       const abs = join(proj.root, rel.split("/").join(sep));
       try {
-        if (existsSync(abs)) unlinkSync(abs);
+        if (existsSync(abs)) unlinkSync(winLongPath(abs));
       } catch {
         /* ignore */
       }
@@ -527,9 +560,9 @@ export function writePlatformPack(args: WriteArgs) {
       const abs = join(proj.root, rel.split("/").join(sep));
       try {
         if (prev === null) {
-          if (existsSync(abs)) unlinkSync(abs);
+          if (existsSync(abs)) unlinkSync(winLongPath(abs));
         } else {
-          writeFileSync(abs, prev, "utf8");
+          writeFileSync(winLongPath(abs), prev, "utf8");
         }
       } catch {
         /* ignore */
@@ -550,7 +583,7 @@ export function writePlatformPack(args: WriteArgs) {
         if (existed && !backups.has(op.rel)) {
           backups.set(op.rel, readFileSync(abs, "utf8"));
         }
-        writeFileSync(abs, op.content, "utf8");
+        writeFileSync(winLongPath(abs), op.content, "utf8");
         if (existed) {
           patched.push(op.rel);
           hostFiles[op.host].patched.push(op.rel);
@@ -562,11 +595,12 @@ export function writePlatformPack(args: WriteArgs) {
       } else {
         const existed = existsSync(abs);
         const prev = existed ? readFileSync(abs, "utf8") : "";
+        const next = upsertHostMarker(existed ? prev : "", op.host, op.platform, op.version, op.body);
+        if (existed && next === prev) continue;
         if (!backups.has(op.rel)) backups.set(op.rel, existed ? prev : null);
         mkdirForFile(abs, allowRoot);
         assertWritablePath(abs, allowRoot);
-        const next = upsertHostMarker(existed ? prev : "", op.host, op.platform, op.version, op.body);
-        writeFileSync(abs, next, "utf8");
+        writeFileSync(winLongPath(abs), next, "utf8");
         if (!existed) {
           created.push(op.rel);
           hostFiles[op.host].created.push(op.rel);
@@ -609,6 +643,8 @@ export function writePlatformPack(args: WriteArgs) {
       createdFiles: created,
       patchedFiles: patched,
       skipped,
+      warnings: writeWarningCap.warnings,
+      ...(writeWarningCap.truncated !== undefined ? { truncated: writeWarningCap.truncated } : {}),
       manifest: posixRel(".mc-skill/pack-manifest.json"),
     };
   } catch (err) {
@@ -706,8 +742,8 @@ export function deactivatePlatformPack(args: WriteArgs) {
       const original = readFileSync(abs, "utf8");
       let text = original;
       for (const h of hosts) text = removeHostMarker(text, h);
-      writeFileSync(abs, text, "utf8");
-      undo.push(() => writeFileSync(abs, original, "utf8"));
+      writeFileSync(winLongPath(abs), text, "utf8");
+      undo.push(() => writeFileSync(winLongPath(abs), original, "utf8"));
       unpatched.push(rel);
     }
     const remainHosts = man.hosts.filter((h) => !hosts.includes(h as PackHost));
@@ -726,8 +762,9 @@ export function deactivatePlatformPack(args: WriteArgs) {
       }
       assertWritablePath(abs, allowRoot);
       const original = readFileSync(abs, "utf8");
-      unlinkSync(abs);
-      undo.push(() => writeFileSync(abs, original, "utf8"));
+      unlinkSync(winLongPath(abs));
+      pruneEmptyParents(abs, proj.root);
+      undo.push(() => writeFileSync(winLongPath(abs), original, "utf8"));
       deleted.push(rel);
     }
 
@@ -736,8 +773,9 @@ export function deactivatePlatformPack(args: WriteArgs) {
       if (existsSync(manPath)) {
         assertWritablePath(manPath, allowRoot);
         const originalManifest = readFileSync(manPath, "utf8");
-        unlinkSync(manPath);
-        undo.push(() => writeFileSync(manPath, originalManifest, "utf8"));
+        unlinkSync(winLongPath(manPath));
+        pruneEmptyParents(manPath, proj.root);
+        undo.push(() => writeFileSync(winLongPath(manPath), originalManifest, "utf8"));
       }
     } else {
       const next: Manifest = {
@@ -751,7 +789,7 @@ export function deactivatePlatformPack(args: WriteArgs) {
       const manPath = join(proj.root, ".mc-skill", "pack-manifest.json");
       const originalManifest = existsSync(manPath) ? readFileSync(manPath, "utf8") : null;
       writeManifestAtomic(proj.root, next, allowRoot);
-      if (originalManifest !== null) undo.push(() => writeFileSync(manPath, originalManifest, "utf8"));
+      if (originalManifest !== null) undo.push(() => writeFileSync(winLongPath(manPath), originalManifest, "utf8"));
     }
   } catch (err) {
     for (const fn of undo.reverse()) {

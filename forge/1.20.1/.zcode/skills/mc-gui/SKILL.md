@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Minecraft Forge GUI/菜单开发。创建自定义 ContainerMenu、Screen、DataSlot 数据同步。触发词：Screen、Menu、ContainerMenu、MenuType、MenuScreens、quickMoveStack、IContainerFactory、ContainerData、DataSlot
 platform: forge

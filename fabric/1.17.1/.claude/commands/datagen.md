@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Fabric 1.17.1 数据生成。优先手写 JSON；可选 DataGeneratorEntrypoint + FabricRecipesProvider。触发词：DataGen、DataGenerator、RecipeProvider
 platform: fabric

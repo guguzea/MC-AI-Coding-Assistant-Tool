@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: 分发到 neoforge/<ver>。禁止 NeoForgeAddonPlugin / RegistryObject 冒充 NeoForge。
 platform: neoforge

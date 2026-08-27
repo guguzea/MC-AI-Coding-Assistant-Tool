@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-worldgen
 description: Fabric 26.1.2 生物群系修改。BiomeModifications、BiomeSelectors、PlacedFeature。触发词：worldgen、BiomeModifications、placed feature
 platform: fabric

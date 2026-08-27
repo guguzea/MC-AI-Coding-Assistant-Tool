@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-capability
 description: Fabric 实体事件。ServerEntityCombatEvents、ServerEntityEvents。触发词：实体事件、AFTER_KILLED_OTHER_ENTITY
 platform: fabric

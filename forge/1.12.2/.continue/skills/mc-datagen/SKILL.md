@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Minecraft Forge 数据生成。Forge 1.12.2 无 DataGen API，必须手动编写 JSON 数据包文件。触发词：数据包、recipes、loot_tables、lang、blockstates
 platform: forge
@@ -57,13 +57,13 @@ entity.examplemod.my_entity.name=My Entity
 ```json
 {
   "pack": {
-    "pack_description": "${mod_name}",
-    "pack_format": 4
+    "description": "${mod_name}",
+    "pack_format": 3
   }
 }
 ```
 
-> **pack_format = 4**（1.12.2 专用，不是 1.13+ 的更高值）
+> **pack_format = 3**（1.12.2 资源包，不是 1.13+ 的更高值）
 
 ## 常见错误
 

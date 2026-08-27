@@ -43,9 +43,9 @@
 - `gradle.properties` 必须包含：
   ```properties
   minecraft_version=1.17.1
-  forge_version=37.1.68
-  mappings_version=20210626.163703
-  loader_version=37.1.68
+  forge_version=37.1.1
+  mappings_version=20210624.103621
+  loader_version=37.1.1
   ```
   > 注意：
   > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
@@ -54,10 +54,10 @@
 
 ### Mappings 约束
 
-- Forge 1.17.1 推荐使用 **Parchment**
-- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本（`Parchment 1.17.1-2021.09.06`）
+- Forge 1.17.1 使用 **official** 映射（`20210624.103621`）
+- `gradle.properties` 中的 `mapping_version` 对应 official 映射版本（`20210624.103621`）；不要使用不存在的 Parchment `2021.09.06`
 - **禁止**在 `build.gradle` 中切换到 `yarn`（Fabric 专属）
-- Parchment 映射将混淆的 Minecraft 方法映射为可读名称，并附带参数名
+- official 映射将混淆的 Minecraft 方法映射为 Mojang 可读名称
 
 ### 项目目录结构（强制规范）
 

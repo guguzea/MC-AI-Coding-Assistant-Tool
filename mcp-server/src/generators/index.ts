@@ -269,11 +269,27 @@ export const NETWORK_PACKET_PLATFORMS = [
 
 export type NetworkPacketPlatform = (typeof NETWORK_PACKET_PLATFORMS)[number];
 
+export function networkPacketPlatformList(): string {
+  return NETWORK_PACKET_PLATFORMS.join(" / ");
+}
+
 /** 模糊 token 保留时必须列出的精确档（文档版本与 token 后缀一致）。 */
-const FABRIC_NETWORK_EXACT_TOKENS =
+export const FABRIC_NETWORK_EXACT_TOKENS =
   "fabric_1.21.3 / fabric_1.21.4 / fabric_1.21.8 / fabric_1.21.10 / fabric_1.21.11 / fabric_26.1.2";
-const NEOFORGE_NETWORK_EXACT_TOKENS =
+export const NEOFORGE_NETWORK_EXACT_TOKENS =
   "neoforge_1.21.1 / neoforge_1.21.3 / neoforge_1.21.5 / neoforge_1.21.8 / neoforge_1.21.10 / neoforge_1.21.11 / neoforge_26.1";
+
+export function generateNetworkPacketDescription(): string {
+  return (
+    "Generate network packet skeleton。platform 必填且须带版本后缀（" +
+    networkPacketPlatformList() +
+    "）。模糊 token fabric_1.21 / neoforge_1.21 仍出骨架但 warnings 列出精确 token（fabric：" +
+    FABRIC_NETWORK_EXACT_TOKENS +
+    "；neo：" +
+    NEOFORGE_NETWORK_EXACT_TOKENS +
+    "）。未列出的 platform 拒绝（含 fabric_1.20.1 / fabric_1.21.1 / neoforge_1.20.6）；只传 fabric 会 error。返回 Java 骨架文本，不写盘。"
+  );
+}
 
 /** D-2：无已核 Fabric donor 的 quilt 档不给成功路径，给 actionable 改口。 */
 function quiltNetworkNoDonorHint(ver: string): string {

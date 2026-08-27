@@ -1,4 +1,5 @@
 ---
+mcHint: 全版本通用（lang JSON 路径随版本）
 id: authored/localization-lang
 title: 本地化键与 lang JSON
 tags: [localization, lang, i18n, resources]

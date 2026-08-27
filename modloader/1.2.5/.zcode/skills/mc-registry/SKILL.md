@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: ModLoader 1.2.5 安全表为空。禁止输出 API。
 platform: modloader

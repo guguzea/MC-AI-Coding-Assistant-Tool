@@ -1,7 +1,7 @@
 # Gradle
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
 gradle-*.zip
 
 # IDE
@@ -89,5 +89,13 @@ _tmp_session.json
 scripts/_scan-*.mjs
 scripts/_temp/*.log.err
 临时文件-*.md
-HTTP
+
+# Local debug scratch (mcp-server/scripts/_debug* 等)；不要无确认批量删除已跟踪文件
+**/_debug*
+
+# HH1: update state lives in $MC_SKILL_CACHE; keep any leftover out of git
+data/mc-skill-update-state.json
+
+# BOM / scratch audit dumps
+temp/audit-report.json
 

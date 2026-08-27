@@ -39,10 +39,16 @@ export function stripTomlCommentOutsideQuotes(raw: string): string {
   return raw;
 }
 
-function parseTomlValue(raw: string): string {
+export function parseTomlValue(raw: string): string {
   const v = raw.trim();
-  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) {
-    return v.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+  if (v.startsWith("{") || v.startsWith("[")) {
+    throw new Error("TOML_INLINE_UNSUPPORTED");
+  }
+  if (v.startsWith("'") && v.endsWith("'") && v.length >= 2) {
+    return v.slice(1, -1);
+  }
+  if (v.startsWith('"') && v.endsWith('"') && v.length >= 2) {
+    return v.slice(1, -1).replace(/\\\\/g, "\\").replace(/\\"/g, '"');
   }
   return v;
 }
@@ -111,7 +117,10 @@ export function parseModsToml(text: string): ParsedModsToml {
     else if (row.key === "license") result.license = row.value;
   }
 
-  const modsRows = sections.get("mods") ?? [];
+  const modsRows: TomlRow[] = [];
+  for (const [tableName, tableRows] of sections) {
+    if (/^mods(#\d+)?$/.test(tableName)) modsRows.push(...tableRows);
+  }
   for (const row of modsRows) {
     if (row.key === "modId") {
       result.mods.push({ modId: row.value });

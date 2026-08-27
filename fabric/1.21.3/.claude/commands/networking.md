@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Fabric 网络通信。PayloadTypeRegistry、CustomPayload、ServerPlayNetworking。触发词：网络、Networking、CustomPayload、PayloadTypeRegistry
 platform: fabric

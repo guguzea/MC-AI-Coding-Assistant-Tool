@@ -14,7 +14,7 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync, type Dirent } from "fs";
-import { join } from "path";
+import { join, relative, resolve, isAbsolute } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
@@ -172,8 +172,8 @@ export class ForgeDocStore {
   /** 按 `${version}/${processedFile}` 缓存文件内容 */
   private fileCache = new Map<string, CacheEntry<string>>();
 
-  /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟） */
-  private searchCache = new Map<string, CacheEntry<unknown>>();
+  /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟，ttlCacheSet max=256） */
+  private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
 
   /** L1 符号倒排（按 resolved version） */
   private symbolIndexCache = new Map<string, SymbolIndex>();
@@ -314,9 +314,9 @@ export class ForgeDocStore {
   ): SearchIndexDetailed {
     this.ensureValidated();
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
-    const cached = this.searchCache.get(cacheKey);
-    if (cached && cached.expiry > Date.now()) {
-      const packed = cached.data as SearchIndexDetailed;
+    const cached = ttlCacheGet(this.searchCache, cacheKey);
+    if (cached) {
+      const packed = cached;
       this._lastSearchMeta = {
         requestedVersion: packed.requestedVersion,
         resolvedVersion: packed.resolvedVersion,
@@ -352,10 +352,7 @@ export class ForgeDocStore {
       versionFallback,
     };
 
-    this.searchCache.set(cacheKey, {
-      data: detailed,
-      expiry: Date.now() + ForgeDocStore.CACHE_TTL,
-    });
+    ttlCacheSet(this.searchCache, cacheKey, detailed, 256, ForgeDocStore.CACHE_TTL);
 
     const logEntry: SearchLogEntry = {
       query,
@@ -534,8 +531,10 @@ export class ForgeDocStore {
     if (cached && cached.expiry > Date.now()) {
       content = cached.data;
     } else {
-      const filepath = join(this.versionDataDir(version), meta.processedFile);
-      if (!existsSync(filepath)) {
+      const versionRoot = resolve(this.versionDataDir(version));
+      const filepath = resolve(versionRoot, meta.processedFile);
+      const rel = relative(versionRoot, filepath);
+      if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filepath)) {
         throw new DocNotFoundError(id, version);
       }
       content = readFileSync(filepath, "utf-8");

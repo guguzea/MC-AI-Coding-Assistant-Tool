@@ -244,7 +244,6 @@ export function collectCrashReports(root: string): {
   } catch {
     return { reports: [] };
   }
-  const out: Array<{ path: string; content: string }> = [];
   let entries;
   try {
     entries = readdirSync(dir, { withFileTypes: true });
@@ -253,8 +252,7 @@ export function collectCrashReports(root: string): {
   }
   const MAX_REPORTS = 20;
   const MAX_TOTAL_BYTES = JAVA_SCAN_MAX_BYTES;
-  let totalBytes = 0;
-  let truncated = false;
+  const collected: Array<{ path: string; content: string; mtime: number; size: number }> = [];
   for (const e of entries) {
     if (!e.isFile()) continue;
     const name = String(e.name);
@@ -264,20 +262,36 @@ export function collectCrashReports(root: string): {
       const st = statSync(abs);
       if (!st.isFile()) continue;
       if (st.size > JAVA_SCAN_MAX_BYTES) continue;
-      if (out.length >= MAX_REPORTS || totalBytes + st.size > MAX_TOTAL_BYTES) {
-        truncated = true;
-        break;
-      }
-      out.push({
+      collected.push({
         path: `crash-reports/${name}`,
-        content: readFileSync(abs, "utf8"),
+        content: "",
+        mtime: st.mtimeMs,
+        size: st.size,
       });
-      totalBytes += st.size;
     } catch {
       /* skip */
     }
   }
-  const reports = out.sort((a, b) => a.path.localeCompare(b.path));
+  collected.sort((a, b) => b.mtime - a.mtime);
+  const out: Array<{ path: string; content: string }> = [];
+  let totalBytes = 0;
+  let truncated = false;
+  for (const item of collected) {
+    if (out.length >= MAX_REPORTS || totalBytes + item.size > MAX_TOTAL_BYTES) {
+      truncated = true;
+      break;
+    }
+    try {
+      out.push({
+        path: item.path,
+        content: readFileSync(join(dir, item.path.slice("crash-reports/".length)), "utf8"),
+      });
+      totalBytes += item.size;
+    } catch {
+      /* skip */
+    }
+  }
+  const reports = out;
   return {
     reports,
     warning: truncated

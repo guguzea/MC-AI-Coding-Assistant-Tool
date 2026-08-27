@@ -24,11 +24,11 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 ### Registry (IMPORTANT: No DeferredRegister!)
 - **Always use @EventBusSubscriber + RegistryEvent.Register<T>** — Forge 1.12.2 does NOT have DeferredRegister
-- Use `@Mod.EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)` for registry events
+- Use `@Mod.EventBusSubscriber(modid=...)` for registry events
 - mod ID must match `mcmod.info` exactly, all lowercase `[a-z0-9_]`
 
 ### Initialization
-- Use `@Init` method in `@Mod` class for initialization
+- Use `@EventHandler` method with `FMLPreInitializationEvent` in `@Mod` class for initialization
 - Initialize phases: `LOADING`, `CONSTRUCTING`, `PREINITIALIZATION`, `INITIALIZATION`, `POSTINITIALIZATION`
 
 ### Physical Side
@@ -46,17 +46,17 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.md` | Java 8, Gradle 4.9, build.gradle structure |
-| `01-registry.md` | @EventBusSubscriber, RegistryEvent.Register (NO DeferredRegister!) |
-| `02-block.md` | Block, BlockContainer, IBlockState |
-| `03-item.md` | Item, ItemStack, ToolMaterial |
-| `04-entity.md` | Entity, EntityLiving, IEntityAdditionalSpawnData |
-| `05-events.md` | @SubscribeEvent, EventBusSubscriber, FML lifecycle events |
-| `06-networking.md` | SimpleNetworkWrapper, PacketBuffer, MessageHandler |
-| `07-datagen.md` | JSON manual writing (no DataGenerator in 1.12.2) |
-| `08-client-server.md` | Proxy pattern, SideOnly, ClientProxy |
-| `09-anti-patterns.md` | Common mistakes and fixes |
-| `10-gui.md` | Container, IGuiHandler, GuiScreen |
+| `00-project-setup.mdc` | Java 8, Gradle 4.9, build.gradle structure |
+| `01-registry.mdc` | @EventBusSubscriber, RegistryEvent.Register (NO DeferredRegister!) |
+| `02-block.mdc` | Block, BlockContainer, IBlockState |
+| `03-item.mdc` | Item, ItemStack, ToolMaterial |
+| `04-entity.mdc` | Entity, EntityLiving, IEntityAdditionalSpawnData |
+| `05-events.mdc` | @SubscribeEvent, EventBusSubscriber, FML lifecycle events |
+| `06-networking.mdc` | SimpleNetworkWrapper, PacketBuffer, MessageHandler |
+| `07-datagen.mdc` | JSON manual writing (no DataGenerator in 1.12.2) |
+| `08-client-server.mdc` | Proxy pattern, SideOnly, ClientProxy |
+| `09-anti-patterns.mdc` | Common mistakes and fixes |
+| `10-gui.mdc` | Container, IGuiHandler, GuiScreen |
 
 ---
 
@@ -74,7 +74,7 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 ```
 src/main/java/com/example/mod/
-├── ExampleMod.java         # @Mod entry point with @Init
+├── ExampleMod.java         # @Mod entry point with @EventHandler
 ├── CommonProxy.java        # Common proxy (both sides)
 ├── client/
 │   └── ClientProxy.java   # Client-only proxy (@SideOnly(Side.CLIENT))
@@ -92,7 +92,7 @@ src/main/java/com/example/mod/
 | 1.12.2 | 1.20.1 Equivalent |
 |--------|-------------------|
 | `RegistryEvent.Register<T>` | `DeferredRegister.register()` |
-| `@Init` method | Constructor with `FMLJavaModLoadingContext` |
+| `@EventHandler` + `FMLPreInitializationEvent` | Constructor with `FMLJavaModLoadingContext` |
 | `SimpleNetworkWrapper` | `SimpleChannel` |
 | `PacketBuffer` | `FriendlyByteBuf` |
 | `IBlockState` | `BlockState` |

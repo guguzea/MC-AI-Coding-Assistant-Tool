@@ -34,7 +34,7 @@
 | 项目 | 1.20.1 | 1.20.4 |
 |------|---------|---------|
 | Forge 版本 | 47.x | 49.x |
-| Parchment 映射 | 2023.09.03-1.20.1 | 2024.11.30-1.20.4 |
+| Parchment 映射 | 2023.09.03-1.20.1 | 2024.02.25-1.20.4 |
 | 数据包 pack_format | 15 | 26 |
 
 ### 需要修改的文件
@@ -44,12 +44,12 @@
    minecraft_version=1.20.4
    forge_version=49.0.0
    forge_version_range=[49,)
-   mapping_version=2024.11.30-1.20.4
+   mapping_version=2024.02.25-1.20.4
    ```
 
 2. `build.gradle`（如使用 Parchment）：
    ```groovy
-   mappings channel: 'parchment', version: '1.20.4-2024.11.30'
+   mappings channel: 'parchment', version: '1.20.4-2024.02.25'
    ```
 
 3. `mods.toml`（如更新元数据）：

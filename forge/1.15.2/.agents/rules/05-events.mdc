@@ -87,7 +87,7 @@ IF 监听方块放置/破坏
   → BlockEvent.PlaceEvent
 
 IF 监听配方解锁（合成/烧炼/烟熏等）
-  → FurnaceSmeltEvent（物品被烧炼时）
+  → 没有 FurnaceSmeltEvent（那是 Bukkit）；用熔炉配方 JSON
   → 优先使用数据生成器注册配方，而非监听事件
 
 IF 监听数据包加载
@@ -134,7 +134,7 @@ IF 不确定
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
-| 监听烧炼 | `FurnaceSmeltEvent` | 熔炉烧炼时触发 |
+| 监听烧炼 | 熔炉配方 JSON | Forge 无 FurnaceSmeltEvent |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `EntityJoinWorldEvent` | 注意不要做重操作 |
 | 修改物品 NBT | `AnvilUpdateEvent` | |

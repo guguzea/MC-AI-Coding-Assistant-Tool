@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-renderer
 description: Fabric 1.21.8 mc-renderer。类名只来自本档核实表与 search_fabric_docs。
 platform: fabric

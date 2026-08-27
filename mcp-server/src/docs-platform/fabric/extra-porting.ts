@@ -27,14 +27,15 @@ function parseFrontmatter(raw: string): { fm: Record<string, string>; body: stri
   return { fm, body: m[2] };
 }
 
-let cache: FabricPortingPage[] | null = null;
+let cache: { entries: FabricPortingPage[]; loadedAt: number } | null = null;
+const INDEX_TTL_MS = 5 * 60 * 1000;
 
 export function loadFabricPortingPages(dataRoot = resolveDataDir()): FabricPortingPage[] {
-  if (cache) return cache;
+  if (cache && Date.now() - cache.loadedAt < INDEX_TTL_MS) return cache.entries;
   const dir = join(dataRoot, "fabric_porting");
   if (!existsSync(dir)) {
-    cache = [];
-    return cache;
+    cache = { entries: [], loadedAt: Date.now() };
+    return cache.entries;
   }
   const out: FabricPortingPage[] = [];
   for (const name of readdirSync(dir)) {
@@ -53,8 +54,8 @@ export function loadFabricPortingPages(dataRoot = resolveDataDir()): FabricPorti
       filePath,
     });
   }
-  cache = out;
-  return cache;
+  cache = { entries: out, loadedAt: Date.now() };
+  return cache.entries;
 }
 
 export function resetFabricPortingCache(): void {
@@ -69,15 +70,28 @@ export function findFabricPorting(id: string): FabricPortingPage | undefined {
   return loadFabricPortingPages().find((p) => p.id === id || `porting/${p.to}` === id);
 }
 
+const PORTING_VERSION_ALIASES: Record<string, string[]> = {
+  "26.2": ["26.1"],
+};
+
+function versionMatchesPortingPage(version: string, p: FabricPortingPage): boolean {
+  if (version === p.to || version === p.from) return true;
+  const aliases = PORTING_VERSION_ALIASES[version] ?? [];
+  return aliases.includes(p.to);
+}
+
 export function searchFabricPortingPages(query: string, version: string) {
   const q = query.toLowerCase();
   const hits = [];
   for (const p of loadFabricPortingPages()) {
-    const verHit = version === p.to || version.startsWith(p.to) || version === "26.2";
-    const hay = `${p.title} ${p.from} ${p.to} ${p.body}`.toLowerCase();
-    const qHit = /porting|26\.2|migrat|移植/.test(q) || hay.includes(q.split(/\s+/)[0] ?? "");
+    const verHit = versionMatchesPortingPage(version, p);
+    const title = p.title.toLowerCase();
+    const meta = `${p.title} ${p.from} ${p.to}`.toLowerCase();
+    const topicHit = /porting|migrat|移植/.test(q);
+    const tokens = q.split(/\s+/).filter((t) => t.length >= 4);
+    const tokenHit = tokens.some((t) => title.includes(t) || meta.includes(t));
+    const qHit = topicHit || tokenHit;
     if (!verHit && !qHit) continue;
-    if (!/porting|26\.2|migrat|移植|vulkan|loom/.test(q) && !verHit) continue;
     hits.push({
       id: p.id,
       version: p.to,

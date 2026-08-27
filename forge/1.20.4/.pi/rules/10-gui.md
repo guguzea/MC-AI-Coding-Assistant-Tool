@@ -1,4 +1,4 @@
-﻿---
+---
 description: Client-Server separation and GUI (Forge 1.20.4)
 ---
 

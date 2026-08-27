@@ -1,4 +1,5 @@
 ---
+mcHint: Fabric 26.2
 id: authored/fabric-26.2-overview
 title: Fabric 26.2 概述（官方博客摘录）
 tags: [26.2, fabric, loom, vulkan, porting]

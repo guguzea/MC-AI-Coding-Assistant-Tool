@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-bedrock-block-item
 description: 基岩方块/物品 JSON。触发词：minecraft:block、minecraft:item、block-components、custom die
 platform: bedrock

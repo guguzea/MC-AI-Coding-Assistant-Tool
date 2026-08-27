@@ -15,7 +15,7 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.15.2 |
 | 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
-| Java 版本 | **Java 11**（Forge 1.15.2 最低要求） |
+| Java 版本 | **Java 8**（Forge 1.15.2 最低要求） |
 | Gradle | Gradle 7.x + ForgeGradle 4.x |
 | Mappings | **MCP**（`minecraft "1.15.2"` 下默认） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
@@ -144,7 +144,7 @@ src/main/java/
 | 功能 | 1.15.2 Forge | 1.18+ Forge | 备注 |
 |------|---------------|--------------|------|
 | 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
-| Java 版本 | Java 11 | Java 17+ | 1.15.2 使用 Java 11 |
+| Java 版本 | Java 8 | Java 17+ | 1.15.2 使用 Java 8 |
 | Gradle | Gradle 7.x | Gradle 8.x | 1.15.2 使用 FG4 |
 | pack_format | 6 | 15 (1.20.1) | 资源包格式差异 |
 

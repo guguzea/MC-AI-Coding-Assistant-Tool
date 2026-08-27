@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-structure
 description: NeoForge 1.21.10 mc-structure。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

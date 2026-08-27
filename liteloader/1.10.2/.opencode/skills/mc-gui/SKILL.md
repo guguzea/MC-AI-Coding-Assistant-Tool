@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: LiteLoader 1.10.2 仅 HUDRenderListener 已核实。
 platform: liteloader

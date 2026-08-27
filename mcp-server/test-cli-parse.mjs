@@ -15,8 +15,11 @@ import {
   resolveFlagKey,
   schemaPropertyType,
   UnknownFlagError,
+  InvalidBooleanFlagError,
   zodToJsonSchema,
   DATA_DIR_TOOLS,
+  unusedPositionals,
+  POSITIONAL_COMMANDS,
 } from "./dist/cli-parse.js";
 
 {
@@ -67,6 +70,11 @@ import {
   assert.equal(coerceFlagValue("false", "boolean"), false);
   assert.equal(coerceFlagValue("0", "boolean"), false);
   assert.equal(coerceFlagValue("yes", "boolean"), true);
+  assert.throws(() => coerceFlagValue("junk", "boolean"), (e) => e instanceof InvalidBooleanFlagError);
+  assert.throws(
+    () => extractGlobalFlags(parseFlags(["--json=junk"]).flags),
+    (e) => e instanceof InvalidBooleanFlagError,
+  );
   assert.equal(coerceFlagValue("", "number"), "");
   assert.equal(coerceFlagValue("12", "number"), 12);
   assert.equal(coerceFlagValue("123", "union"), "123");
@@ -153,6 +161,24 @@ import {
   assert.equal(isToolFailure({ hello: 1 }, true, false), true);
   assert.equal(isToolFailure({ error: { code: "UNZIP_TOOL_MISSING" } }, false, false), true);
   assert.equal(isToolFailure({ found: false, action: { code: "NOT_FOUND" } }, false, false), false);
+  assert.equal(isToolFailure({ found: false, error: { code: "INDEX_CORRUPT" } }, false, false), true);
+}
+
+{
+  const dash = parseFlags(["query", "--", "--className", "Item"]);
+  assert.deepEqual(dash.positional, ["query", "--className", "Item"]);
+}
+
+{
+  const w = applyPositionalCompat("warmup", {}, ["1.20.1"]);
+  assert.equal(w.version, "1.20.1");
+  const st = applyPositionalCompat("get_server_status", {}, ["1.21.1"]);
+  assert.equal(st.version, "1.21.1");
+  assert.ok(POSITIONAL_COMMANDS.has("warmup"));
+  assert.ok(POSITIONAL_COMMANDS.has("status"));
+  assert.ok(POSITIONAL_COMMANDS.has("get_server_status"));
+  assert.deepEqual(unusedPositionals("query", ["Item", "getName", "extra"]), ["extra"]);
+  assert.deepEqual(unusedPositionals("warmup", ["1.20.1", "nope"]), ["nope"]);
 }
 
 {

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08 — 客户端 / 服务端分离
 ---
 
@@ -58,8 +58,8 @@ public class ExampleModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         // 仅客户端执行的代码
-        EntityRendererRegistry.register(...);
-        KeyBindingHelper.registerKeyBinding(...);
+        EntityRendererRegistry.INSTANCE.register(...);
+        KeyBindingRegistry.INSTANCE.add(...);
         ClientSidePacketRegistry.INSTANCE.register(...);
     }
 }
@@ -121,7 +121,7 @@ public class ExampleMod implements ModInitializer {
 // ✅ 正确：客户端逻辑放在 ClientModInitializer
 public class ExampleModClient implements ClientModInitializer {
     public void onInitializeClient() {
-        EntityRendererRegistry.register(...);
+        EntityRendererRegistry.INSTANCE.register(...);
     }
 }
 ```

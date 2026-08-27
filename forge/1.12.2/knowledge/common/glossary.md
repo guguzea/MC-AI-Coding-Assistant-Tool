@@ -24,8 +24,8 @@
 ### IForgeRegistry
 : Forge 注册表的接口。通过 `event.getRegistry()` 获取。
 
-### TileEntity.register
-: 注册 TileEntity 的静态方法。必须在游戏初始化前调用。
+### GameRegistry.registerTileEntity
+: 注册 TileEntity。必须在初始化阶段调用；没有 `TileEntity.register` 静态方法。
 
 ---
 

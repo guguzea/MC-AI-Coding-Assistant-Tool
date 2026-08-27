@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Fabric 1.18.2 事件系统。Event 回调、onInitialize 注册、本档版本差异。触发词：事件、Event、Callback、TickEvents、onInitialize
 platform: fabric

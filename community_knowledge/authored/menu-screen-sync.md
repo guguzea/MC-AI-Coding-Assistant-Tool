@@ -3,7 +3,7 @@ id: authored/menu-screen-sync
 title: Menu / Screen 与 ContainerData 同步
 tags: [menu, screen, containerdata, gui, networkhooks, forge]
 summary: Menu 与 Screen 职责；双构造器与 FriendlyByteBuf；ContainerData；槽位分区与 quickMoveStack；stillValid；ClientSetup 注册。
-mcHint: 1.20.1+
+mcHint: 1.20.1–1.21.x
 sourceKind: authored
 ---
 
@@ -68,7 +68,7 @@ sourceKind: authored
 
 - 贴图：`textures/gui/container/….png`（路径按项目约定）。  
 - `imageWidth` / `imageHeight` 与贴图一致。  
-- `renderBg`：`GuiGraphics.blit`；`render`：背景遮罩 → `super` → `renderTooltip`。  
+- `renderBg`：`GuiGraphics.blit`；`render`：背景遮罩 → `super` → `renderTooltip`。 **26.x 已改名** `extractBackground` / `extractRenderState`，不要把 `renderBg` 当 26.x 可编译名。  
 - `init` 里可调 `titleLabelX/Y`、`inventoryLabelX/Y`。
 
 ## 自检

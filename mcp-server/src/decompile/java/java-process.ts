@@ -24,28 +24,103 @@ export interface JavaProbe {
 }
 
 const MIN_JAVA_MAJOR = 17;
+const NEGATIVE_PROBE_TTL_MS = 45_000;
+const STDOUT_CAP = 2 * 1024 * 1024;
 
 let cachedProbe: JavaProbe | null = null;
+let cachedProbeAt = 0;
 
-/** 解析 `java -version` 输出首行 → major。1.8.0_431 → 8；17.0.9 → 17 */
-export function parseJavaMajor(line: string): number | null {
-  const m = /version\s+"([^"]+)"/.exec(line);
-  if (!m) return null;
-  const ver = m[1];
-  const oldStyle = /^1\.(\d+)(?:[._]|$)/.exec(ver);
-  if (oldStyle) return Number(oldStyle[1]);
-  const newStyle = /^(\d+)\./.exec(ver);
-  if (newStyle) return Number(newStyle[1]);
+function javaHomeCandidate(): string | null {
+  const javaHome = process.env.JAVA_HOME;
+  if (!javaHome) return null;
+  const candidate = join(javaHome, "bin", process.platform === "win32" ? "java.exe" : "java");
+  return existsSync(candidate) ? candidate : null;
+}
+
+export function pickJavaProbe(home: JavaProbe | null, pathProbe: JavaProbe): JavaProbe {
+  const ready = [home, pathProbe].filter((p): p is JavaProbe => Boolean(p?.ready));
+  if (ready.length) return ready.sort((a, b) => (b.major ?? 0) - (a.major ?? 0))[0];
+  if (pathProbe.reason !== "NOT_FOUND") return pathProbe;
+  return home ?? pathProbe;
+}
+
+function capStdio(acc: string, chunk: string): { text: string; truncated: boolean } {
+  if (acc.length >= STDOUT_CAP) return { text: acc, truncated: true };
+  const next = acc + chunk;
+  if (next.length > STDOUT_CAP) return { text: next.slice(0, STDOUT_CAP), truncated: true };
+  return { text: next, truncated: false };
+}
+
+/** 解析 `java -version` 整段输出 → major。优先 openjdk/java version 行；认裸 "23"。 */
+export function parseJavaMajor(text: string): number | null {
+  return parseJavaVersionOutput(text)?.major ?? null;
+}
+
+export function parseJavaVersionOutput(text: string): { major: number; versionText: string } | null {
+  const lines = text.split(/\r?\n/);
+  const preferred = lines.filter((l) => /(?:openjdk|java)\s+version\s+"/i.test(l));
+  const search = preferred.length > 0 ? preferred : lines;
+  for (const line of search) {
+    const m = /version\s+"([^"]+)"/.exec(line);
+    if (!m) continue;
+    const ver = m[1];
+    const oldStyle = /^1\.(\d+)(?:[._-]|$)/.exec(ver);
+    if (oldStyle) return { major: Number(oldStyle[1]), versionText: line.trim() };
+    const newStyle = /^(\d+)(?:[.\-"]|$)/.exec(ver);
+    if (newStyle) return { major: Number(newStyle[1]), versionText: line.trim() };
+  }
+  const bare = /^\s*(\d+)\s*$/.exec(text.trim());
+  if (bare) return { major: Number(bare[1]), versionText: text.trim() };
   return null;
 }
 
 function resolveJavaPath(): string | null {
-  const javaHome = process.env.JAVA_HOME;
-  if (javaHome && existsSync(javaHome)) {
-    const candidate = join(javaHome, "bin", process.platform === "win32" ? "java.exe" : "java");
-    if (existsSync(candidate)) return candidate;
+  return javaHomeCandidate() ?? "java";
+}
+
+async function probeOne(javaPath: string): Promise<JavaProbe> {
+  try {
+    const { stdout, stderr } = await runJavaVersion(javaPath);
+    const all = `${stdout}\n${stderr}`;
+    const parsed = parseJavaVersionOutput(all);
+    if (parsed === null) {
+      return {
+        ready: false,
+        major: null,
+        versionText: all.split("\n").find((l) => l.trim())?.trim() || null,
+        javaPath,
+        reason: "NOT_FOUND",
+      };
+    }
+    if (parsed.major < MIN_JAVA_MAJOR) {
+      return {
+        ready: false,
+        major: parsed.major,
+        versionText: parsed.versionText,
+        javaPath,
+        reason: "TOO_OLD",
+      };
+    }
+    return { ready: true, major: parsed.major, versionText: parsed.versionText, javaPath, reason: "OK" };
+  } catch {
+    return { ready: false, major: null, versionText: null, javaPath, reason: "NOT_FOUND" };
   }
-  return "java"; // PATH
+}
+
+/** 惰性探测 Java（force=true 时重跑）。只缓存 ready:true；否定结果 TTL 45s。永不抛出。 */
+export async function probeJava(force = false): Promise<JavaProbe> {
+  const now = Date.now();
+  if (cachedProbe && !force) {
+    if (cachedProbe.ready) return cachedProbe;
+    if (now - cachedProbeAt < NEGATIVE_PROBE_TTL_MS) return cachedProbe;
+  }
+  const homePath = javaHomeCandidate();
+  const homeProbe = homePath ? await probeOne(homePath) : null;
+  const pathProbe = await probeOne("java");
+  const probe = pickJavaProbe(homeProbe, pathProbe);
+  cachedProbe = probe;
+  cachedProbeAt = now;
+  return probe;
 }
 
 async function runJavaVersion(javaPath: string, timeoutMs = 15_000): Promise<{ stdout: string; stderr: string }> {
@@ -73,45 +148,6 @@ async function runJavaVersion(javaPath: string, timeoutMs = 15_000): Promise<{ s
   });
 }
 
-/** 惰性探测 Java（force=true 时重跑）。永不抛出——所有失败折叠为 ready=false。 */
-export async function probeJava(force = false): Promise<JavaProbe> {
-  if (cachedProbe && !force) return cachedProbe;
-  const javaPath = resolveJavaPath();
-  let probe: JavaProbe;
-  if (javaPath === null) {
-    probe = { ready: false, major: null, versionText: null, javaPath: null, reason: "NOT_FOUND" };
-  } else {
-    try {
-      const { stdout, stderr } = await runJavaVersion(javaPath);
-      const all = (stdout + "\n" + stderr).trim();
-      const firstLine = all.split("\n")[0] ?? "";
-      const major = parseJavaMajor(firstLine);
-      if (major === null) {
-        probe = {
-          ready: false,
-          major: null,
-          versionText: firstLine || null,
-          javaPath,
-          reason: "NOT_FOUND",
-        };
-      } else if (major < MIN_JAVA_MAJOR) {
-        probe = {
-          ready: false,
-          major,
-          versionText: firstLine,
-          javaPath,
-          reason: "TOO_OLD",
-        };
-      } else {
-        probe = { ready: true, major, versionText: firstLine, javaPath, reason: "OK" };
-      }
-    } catch {
-      probe = { ready: false, major: null, versionText: null, javaPath, reason: "NOT_FOUND" };
-    }
-  }
-  if (!force) cachedProbe = probe;
-  return probe;
-}
 /** Java 工具链缺失的可操作指引（Adoptium 安装链接） */
 export function toolchainActionable(detail?: string): ActionEnvelope {
   return actionable(
@@ -148,6 +184,7 @@ export interface JavaRunResult {
   code: number | null;
   stdout: string;
   stderr: string;
+  truncated?: boolean;
 }
 
 /** 运行 Java 子进程（已探测过的 javaPath；超时/信号 → code=null + stderr 说明） */
@@ -166,19 +203,28 @@ export async function runJava(
     });
     let stdout = "";
     let stderr = "";
-    child.stdout.on("data", (d) => (stdout += d.toString()));
-    child.stderr.on("data", (d) => (stderr += d.toString()));
+    let truncated = false;
+    child.stdout.on("data", (d) => {
+      const next = capStdio(stdout, d.toString());
+      stdout = next.text;
+      if (next.truncated) truncated = true;
+    });
+    child.stderr.on("data", (d) => {
+      const next = capStdio(stderr, d.toString());
+      stderr = next.text;
+      if (next.truncated) truncated = true;
+    });
     const timer = setTimeout(() => {
       child.kill();
-      resolve({ code: null, stdout, stderr: (stderr + "\n[timed out]").trim() });
+      resolve({ code: null, stdout, stderr: (stderr + "\n[timed out]").trim(), truncated });
     }, timeoutMs);
     child.on("error", (err) => {
       clearTimeout(timer);
-      resolve({ code: null, stdout, stderr: `spawn 失败: ${err.message}` });
+      resolve({ code: null, stdout, stderr: `spawn 失败: ${err.message}`, truncated });
     });
     child.on("close", (code) => {
       clearTimeout(timer);
-      resolve({ code, stdout, stderr });
+      resolve({ code, stdout, stderr, truncated: truncated || undefined });
     });
   });
 }

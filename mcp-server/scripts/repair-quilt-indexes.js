@@ -6,7 +6,7 @@
  *   node scripts/repair-quilt-indexes.js [--version=1.21.11|all] [--dry-run]
  */
 import { createHash } from "crypto";
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
+import { closeSync, existsSync, fsyncSync, openSync, readdirSync, readFileSync, renameSync, unlinkSync, writeSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -70,6 +70,22 @@ function metaForStem(ver, stem) {
   return { ...base, url };
 }
 
+function atomicWriteJson(dest, data) {
+  const tmp = `${dest}.tmp`;
+  const payload = JSON.stringify(data, null, 2);
+  const fd = openSync(tmp, "w");
+  try {
+    writeSync(fd, payload, null, "utf8");
+    fsyncSync(fd);
+  } finally {
+    closeSync(fd);
+  }
+  if (process.platform === "win32" && existsSync(dest)) {
+    unlinkSync(dest);
+  }
+  renameSync(tmp, dest);
+}
+
 function writeIndexes(outDir, index) {
   const l1 = [];
   const l2 = [];
@@ -110,9 +126,9 @@ function writeIndexes(outDir, index) {
       ...(e.sha256 ? { sha256: e.sha256 } : {}),
     });
   }
-  writeFileSync(join(outDir, "index-l0.json"), JSON.stringify(index, null, 2), "utf8");
-  writeFileSync(join(outDir, "index-l1.json"), JSON.stringify(l1, null, 2), "utf8");
-  writeFileSync(join(outDir, "index-l2.json"), JSON.stringify(l2, null, 2), "utf8");
+  atomicWriteJson(join(outDir, "index-l0.json"), index);
+  atomicWriteJson(join(outDir, "index-l1.json"), l1);
+  atomicWriteJson(join(outDir, "index-l2.json"), l2);
 }
 
 function repairVersion(ver, dry) {

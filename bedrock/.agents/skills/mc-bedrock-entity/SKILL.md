@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-bedrock-entity
 description: 基岩实体 RP/BP 成对。触发词：client_entity、minecraft:entity、entity-components
 platform: bedrock

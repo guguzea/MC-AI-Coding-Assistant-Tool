@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-structure
 description: 结构集、模板、jigsaw。触发词：Structure、TemplateManager
 platform: neoforge

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Fabric 事件回调。ServerTickEvents、UseItemCallback、AttackBlockCallback、PlayerBlockBreakEvents。触发词：事件、Event、Callback、SubscribeEvent
 platform: fabric

@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -12,7 +12,7 @@ description: 00 — 项目结构与构建
 
 ### Java 版本
 
-- **必须使用 Java 17**（Fabric 1.17.1 要求；Java 21 仅在 Minecraft 1.21+ 才需要）
+- **必须使用 Java 16**（Minecraft 1.17.1 要求；Java 21 仅在 Minecraft 1.21+ 才需要）
 - `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(17)` 或 `sourceCompatibility = JavaVersion.VERSION_17`
 - Gradle Wrapper 版本不低于 **Gradle 7.3**（适配 Loom 0.11-SNAPSHOT）
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
@@ -88,7 +88,7 @@ IF 报错包含 "Could not resolve net.fabricmc"
   → 检查网络连接
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 17，不兼容 Java 8 或 Java 21
+  → 确认使用 Java 16，不兼容 Java 8 或 Java 21
 
 IF 报错包含 "Could not find net.fabricmc:yarn"
   → 确认 gradle.properties 中 yarn_mappings 版本格式正确（如 1.20.1+build.10）

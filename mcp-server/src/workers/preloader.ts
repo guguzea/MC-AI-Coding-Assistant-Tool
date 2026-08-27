@@ -15,6 +15,7 @@ import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { workerData, parentPort } from "worker_threads";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 interface PreloadConfig {
   type: "start";
@@ -122,7 +123,7 @@ async function preload(timeoutMs = 15000): Promise<void> {
     files.map(async (f) => {
       try {
         const raw = await readFile(join(dataDir, f.path), "utf-8");
-        const parsed = JSON.parse(raw);
+        const parsed = parseJsonUtf8(raw);
         results[f.key] = f.key === "classNames" ? (parsed as string[]) : parsed;
       } catch {
         results[f.key] = null;

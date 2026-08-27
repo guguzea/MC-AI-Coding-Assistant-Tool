@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -48,7 +48,7 @@ description: 00 — 项目结构与构建
   ```properties
   minecraft_version=1.18.2
   forge_version=40.1.80
-  mappings_version=1.18.2-2022.07.31-1.18.2
+  mappings_version=1.18.2-2022.08.02-1.18.2
   loader_version=40.1
   ```
   > 注意：
@@ -59,7 +59,7 @@ description: 00 — 项目结构与构建
 ### Mappings 约束
 
 - Forge 1.18.2 使用 **Parchment** 作为推荐映射层
-- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本（1.18.2-2022.07.31）
+- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本（1.18.2-2022.08.02）
 - Parchment 提供带参数名和 javadoc 的映射，比 MCP 更适合开发
 
 ### 世界高度（Caves & Cliffs）

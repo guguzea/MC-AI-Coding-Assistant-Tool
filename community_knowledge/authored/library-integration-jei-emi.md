@@ -59,9 +59,10 @@ sourceKind: authored
 ## 运行时门闩
 
 ```java
-// Forge/Neo 示例：DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...)
+// ≤1.20.4 Forge：DistExecutor.runWhenOn（非 26.x）
+// 26.x：JeiClientCompat 放 client 源集，或 FMLLoader.getDist() == Dist.CLIENT
 if (ModList.get().isLoaded("jei")) {
-    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> JeiClientCompat.init());
+    DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> JeiClientCompat.init());
 }
 // Fabric/Quilt：JeiClientCompat 放 client 源集；entrypoints client 或 @Environment(EnvType.CLIENT) 门闩内 init()
 // if (FabricLoader.getInstance().isModLoaded("jei")) { JeiClientCompat.init(); }

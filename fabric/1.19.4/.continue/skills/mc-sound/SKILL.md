@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-sound
 description: Fabric 声音系统。SoundEvent、SoundEvents、SoundCategory。触发词：声音、Sound、SoundEvent
 platform: fabric

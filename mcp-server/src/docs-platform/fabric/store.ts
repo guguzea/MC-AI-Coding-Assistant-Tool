@@ -21,7 +21,7 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "fs";
-import { join, resolve } from "path";
+import { join, resolve, relative, isAbsolute } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
@@ -178,8 +178,8 @@ export class FabricDocStore {
   /** 按 `${version}/${processedFile}` 缓存文件内容 */
   private fileCache = new Map<string, CacheEntry<string>>();
 
-  /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟） */
-  private searchCache = new Map<string, CacheEntry<unknown>>();
+  /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟，ttlCacheSet max=256） */
+  private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
 
   private symbolIndexCache = new Map<string, SymbolIndex>();
 
@@ -266,7 +266,8 @@ export class FabricDocStore {
     if (cached && cached.expiry > Date.now()) return cached.data;
     const versionRoot = resolve(this.versionDataDir(version));
     const resolved = resolve(versionRoot, processedFile);
-    if (!resolved.startsWith(versionRoot) || !existsSync(resolved)) {
+    const rel = relative(versionRoot, resolved);
+    if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(resolved)) {
       this.notFound(id, version);
     }
     const content = readFileSync(resolved, "utf-8");
@@ -442,9 +443,9 @@ export class FabricDocStore {
   ): SearchIndexDetailed {
     this.ensureValidated();
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
-    const cached = this.searchCache.get(cacheKey);
-    if (cached && cached.expiry > Date.now()) {
-      const packed = cached.data as SearchIndexDetailed;
+    const cached = ttlCacheGet(this.searchCache, cacheKey);
+    if (cached) {
+      const packed = cached;
       this._lastSearchMeta = {
         requestedVersion: packed.requestedVersion,
         resolvedVersion: packed.resolvedVersion,
@@ -479,10 +480,7 @@ export class FabricDocStore {
       versionFallback: false,
     };
 
-    this.searchCache.set(cacheKey, {
-      data: detailed,
-      expiry: Date.now() + FabricDocStore.CACHE_TTL,
-    });
+    ttlCacheSet(this.searchCache, cacheKey, detailed, 256, FabricDocStore.CACHE_TTL);
 
     this.searchLog.push({ query, version, results: results.length, timestamp: Date.now() });
     if (this.searchLog.length > 500) this.searchLog.splice(0, 100);
@@ -624,7 +622,8 @@ export class FabricDocStore {
     } else {
       const versionRoot = resolve(this.versionDataDir(version));
       const resolved = resolve(versionRoot, meta.processedFile);
-      if (!resolved.startsWith(versionRoot) || !existsSync(resolved)) {
+      const rel = relative(versionRoot, resolved);
+      if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(resolved)) {
         this.notFound(id, version);
       }
       content = readFileSync(resolved, "utf-8");

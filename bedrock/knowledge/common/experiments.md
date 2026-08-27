@@ -2,7 +2,7 @@
 
 | 层 | 写什么 | 哪里 |
 |----|--------|------|
-| Pack 能力 | capabilities（script_eval 等） | manifest.json |
+| Pack 能力 | capabilities（chemistry / editorExtension / experimental_custom_ui / raytraced / pbr；Learn **未列出** script_eval） | manifest.json |
 | Script 模块 | dependencies 里 @minecraft/server 的 beta | BP manifest |
 | 世界实验 | experiments.gametest=1 | level.dat / 游戏 UI「Beta APIs」 |
 

@@ -105,14 +105,15 @@ export function extractPrimerSection(
   };
 }
 
-let cacheByRoot = new Map<string, PrimerEntry[]>();
+let cacheByRoot = new Map<string, { entries: PrimerEntry[]; loadedAt: number }>();
+const INDEX_TTL_MS = 5 * 60 * 1000;
 
 export function loadNeoForgePrimers(dataRoot = resolveDataDir()): PrimerEntry[] {
   const hit = cacheByRoot.get(dataRoot);
-  if (hit) return hit;
+  if (hit && Date.now() - hit.loadedAt < INDEX_TTL_MS) return hit.entries;
   const dir = join(dataRoot, "neoforge_primers");
   if (!existsSync(dir)) {
-    cacheByRoot.set(dataRoot, []);
+    cacheByRoot.set(dataRoot, { entries: [], loadedAt: Date.now() });
     return [];
   }
   const entries: PrimerEntry[] = [];
@@ -143,7 +144,7 @@ export function loadNeoForgePrimers(dataRoot = resolveDataDir()): PrimerEntry[] 
       headings: extractHeadings(body),
     });
   }
-  cacheByRoot.set(dataRoot, entries);
+  cacheByRoot.set(dataRoot, { entries, loadedAt: Date.now() });
   return entries;
 }
 

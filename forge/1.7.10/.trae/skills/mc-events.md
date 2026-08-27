@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Forge 1.7.10 事件方向指引。本档无独立 events 规则树。触发词：事件、Event
 platform: forge

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-renderer
 description: 客户端实体/方块渲染、BER、层与纹理。触发词：Renderer、RenderType、BER
 platform: fabric

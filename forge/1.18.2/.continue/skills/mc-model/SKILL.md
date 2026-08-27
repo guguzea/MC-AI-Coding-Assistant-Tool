@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-model
 description: JSON 模型、blockstate、item model、generate_model。触发词：blockstates、models、cube_all
 platform: forge

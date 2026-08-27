@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Minecraft NeoForge GUI。按精确版本读 neoforge/<ver>/.cursor/rules/10-gui.mdc，不要把本扁平 Skill 当 1.20.4 全文。触发词：Screen、Menu、MenuType、RegisterMenuScreensEvent、quickMoveStack、IContainerFactory、ContainerData、DataSlot
 platform: neoforge

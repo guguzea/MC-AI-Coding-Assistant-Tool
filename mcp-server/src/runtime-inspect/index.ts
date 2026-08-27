@@ -4,7 +4,7 @@
  */
 import { closeSync, existsSync, fstatSync, openSync, readFileSync, readSync, readdirSync, statSync } from "fs";
 import { join, resolve } from "path";
-import { analyzeCrash } from "../crash/index.js";
+import { analyzeCrash, CRASH_ANALYZE_MAX } from "../crash/index.js";
 import { analyzeLog } from "../diagnostics/index.js";
 import { actionable, ActionCodes, missingMcVersion, versionRequiredAction } from "../utils/actionable.js";
 
@@ -233,7 +233,12 @@ export function inspectRuntime(query: InspectRuntimeQuery): Record<string, unkno
     try {
       const tail = readTail(crashFile, maxBytes, maxLines);
       if (tail.truncated) warnings.push(`crash-report 已截断（尾部 ${maxLines} 行 / ${maxBytes} 字节上限）`);
-      crashAnalysis = analyzeCrash({ crashReport: tail.text, version: query.version });
+      let crashText = tail.text;
+      if (crashText.length > CRASH_ANALYZE_MAX) {
+        crashText = crashText.slice(0, CRASH_ANALYZE_MAX);
+        warnings.push(`crash-report 已截断至 ${CRASH_ANALYZE_MAX} 字符后送 analyzeCrash（分析上限，未提高到 2MB）`);
+      }
+      crashAnalysis = analyzeCrash({ crashReport: crashText, version: query.version });
     } catch (e) {
       warnings.push(`读取 crash-report 失败：${(e as Error).message}`);
     }

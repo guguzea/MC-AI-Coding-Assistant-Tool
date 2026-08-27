@@ -1,4 +1,4 @@
-﻿---
+---
 description: 02-block Fabric 1.21.8
 alwaysApply: true
 ---

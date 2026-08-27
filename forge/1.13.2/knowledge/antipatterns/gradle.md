@@ -40,12 +40,12 @@ forge_version=25.0.219  // ✅ 1.13.2 对应 25.x.x
 
 ## ❌ 使用 Java 17
 
-Forge 1.13.2 需要 Java 11。
+Forge 1.13.2 需要 Java 8。
 
 ```groovy
 # 错误
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)  // ❌ 不兼容
 
 # 正确
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)  // ✅
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)  // ✅
 ```

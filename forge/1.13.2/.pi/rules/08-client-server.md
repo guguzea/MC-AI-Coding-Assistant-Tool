@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08 — 客户端/服务端分离
 ---
 
@@ -117,7 +117,7 @@ public class ModKeyBindings {
         "key.examplemod.test",
         KeyConflictContext.IN_GAME,
         InputMappings.Type.KEYSYM,
-        Keyboard.KEY_G,
+        GLFW.GLFW_KEY_G, // InputMappings.Type.KEYSYM；1.13+ 不要用 LWJGL2 Keyboard.KEY_G
         "key.categories.examplemod"
     );
 

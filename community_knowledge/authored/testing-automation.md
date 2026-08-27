@@ -1,4 +1,5 @@
 ---
+mcHint: 1.15+ GameTest；JUnit 侧各 loader 通用思路
 id: authored/testing-automation
 title: 模组自动化测试（JUnit / GameTest 选型）
 tags: [testing, junit, gametest, ci, client]

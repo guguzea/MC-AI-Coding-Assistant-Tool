@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00 — 项目结构与构建
 ---
 
@@ -12,8 +12,8 @@ description: 00 — 项目结构与构建
 
 ### Java 版本
 
-- **必须使用 Java 11**（Forge 1.13.2 要求；不支持 Java 17）
-- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(11)`
+- **必须使用 Java 8**（Forge 1.13.2 要求；不支持 Java 17）
+- `build.gradle` 中声明 `java.toolchain.languageVersion = JavaLanguageVersion.of(8)`
 - Gradle Wrapper 版本不低于 **Gradle 6.9.4**
 - IDE（IDEA / VSCode）需配置相同的 JDK 版本
 
@@ -118,7 +118,7 @@ IF 报错包含 "Could not resolve net.minecraftforge"
   → 检查 gradle.properties 中 forge_version 是否有效
 
 IF 报错包含 "Incompatible Java version"
-  → 确认使用 Java 11，不兼容 Java 17 或更高版本
+  → 确认使用 Java 8，不兼容 Java 17 或更高版本
 
 IF 报错包含 "Could not find net.minecraftforge:forge"
   → 确认 build.gradle 中 minecraft_version 和 forge_version 版本匹配
@@ -145,7 +145,7 @@ group = mod_group_id
 
 archivesBaseName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
     mappings channel: 'mcp', version: mapping_version

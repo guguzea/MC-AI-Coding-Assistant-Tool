@@ -1,13 +1,18 @@
 /**
- * Lazy, read-only mapping lookup via prebuilt SQLite (schema v2/v3).
+ * Lazy, read-only mapping lookup via prebuilt SQLite (schema v2/v3/v4).
  *
  * HARD RULE: never readFileSync / JSON.parse yarn-mappings.json in this module.
- * schema v3 adds fields / searge_fields; v2 remains readable for class/method.
+ * schema v3 adds fields / searge_fields; v4 adds single-column name_official /
+ * name_intermediary indexes. Runtime openDbCached is readOnly — never CREATE INDEX.
+ * v2 remains readable for class/method.
  */
 
 import { existsSync } from "fs";
 import { DatabaseSync } from "node:sqlite";
 import { resolveDataDir } from "../utils/path.js";
+import { isSafeVersionSegment } from "../utils/minecraft-version.js";
+
+export { VERSION_SEGMENT_RE } from "../utils/minecraft-version.js";
 
 type MappingDb = DatabaseSync;
 
@@ -23,16 +28,13 @@ export function normalizeMcVersion(input: string): string {
   return v;
 }
 
-/** 版本段白名单：只允许数字与点，防 `../..` 借 resolveDataDir 拼出 data 目录外路径。 */
-const VERSION_SEGMENT_RE = /^\d+(\.\d+)*$/;
-
 function fabricSqlitePath(version: string): string | null {
-  if (!VERSION_SEGMENT_RE.test(version)) return null;
+  if (!isSafeVersionSegment(version)) return null;
   return resolveDataDir(`fabric_${version}`, "mappings", "yarn-mappings.sqlite");
 }
 
 function forgeSqlitePath(version: string): string | null {
-  if (!VERSION_SEGMENT_RE.test(version)) return null;
+  if (!isSafeVersionSegment(version)) return null;
   return resolveDataDir(`forge_${version}`, "mappings", "yarn-mappings.sqlite");
 }
 
@@ -60,26 +62,43 @@ function methodCountOf(db: MappingDb): number {
   }
 }
 
+function dbCacheKey(dbPath: string): string {
+  return process.platform === "win32" ? dbPath.toLowerCase() : dbPath;
+}
+
 function openDbCached(dbPath: string): MappingDb | null {
-  const cached = _dbs.get(dbPath);
+  const key = dbCacheKey(dbPath);
+  const cached = _dbs.get(key);
   if (cached) {
-    _dbs.delete(dbPath);
-    _dbs.set(dbPath, cached);
+    _dbs.delete(key);
+    _dbs.set(key, cached);
     return cached;
   }
   try {
     const db = new DatabaseSync(dbPath, { readOnly: true });
-    _dbs.set(dbPath, db);
+    _dbs.set(key, db);
     while (_dbs.size > MAPPING_DB_CAP) {
       const oldest = _dbs.keys().next().value;
       if (oldest === undefined) break;
       const old = _dbs.get(oldest);
-      try {
-        old?.close();
-      } catch {
-        /* ignore */
+      if (!old) {
+        _dbs.delete(oldest);
+        continue;
       }
-      _dbs.delete(oldest);
+      let closed = false;
+      try {
+        old.close();
+        closed = true;
+      } catch {
+        try {
+          old.close();
+          closed = true;
+        } catch {
+          console.error(`[yarn-sqlite] close() 失败，保留旧句柄: ${oldest}`);
+        }
+      }
+      if (closed) _dbs.delete(oldest);
+      else break;
     }
     return db;
   } catch {
@@ -93,7 +112,7 @@ export function resolveMappingDbPath(version: string): string | null {
   if (_pathCache.has(v)) return _pathCache.get(v) ?? null;
 
   // 版本段非法（含路径穿越）→ 直接无库可解析，走上层 NOT_FOUND 降级
-  if (!VERSION_SEGMENT_RE.test(v)) return null;
+  if (!isSafeVersionSegment(v)) return null;
   const fabric = fabricSqlitePath(v);
   const forge = forgeSqlitePath(v);
   if (!fabric || !forge) return null;
@@ -249,6 +268,8 @@ export interface LookupMethodResult {
   mappingEra?: string | null;
   resultKind?: string;
   notes?: string[];
+  /** csv = MCP searge_methods 命中；yarn-tiny = fabric named 列（不得冒充 mcp/parchment） */
+  source?: "csv" | "yarn-tiny";
 }
 
 function scorePackageOverlap(inputSlash: string, candidateNamed: string): number {
@@ -335,6 +356,7 @@ export interface LookupFieldResult {
   mappingEra?: string | null;
   resultKind?: string;
   notes?: string[];
+  source?: "csv" | "yarn-tiny";
 }
 
 export function lookupField(
@@ -382,6 +404,7 @@ export function lookupField(
       if (row) {
         return {
           found: true,
+          source: "csv",
           mappingEra: era || "mcp-csv",
           row: {
             owner_named: "",
@@ -403,6 +426,7 @@ export function lookupField(
         const row = rows[0];
         return {
           found: true,
+          source: "csv",
           mappingEra: era || "mcp-csv",
           row: {
             owner_named: "",
@@ -490,7 +514,7 @@ export function lookupField(
         }
       }
       if (hits.length === 1) {
-        return { found: true, row: hits[0], mappingEra: era };
+        return { found: true, source: "csv", row: hits[0], mappingEra: era };
       }
       if (hits.length > 1) {
         return {
@@ -520,7 +544,7 @@ export function lookupField(
       )
       .get(ownerNamed, memberName, descriptor) as FieldRow | undefined;
     if (!row) return { found: false, mappingEra: era };
-    return { found: true, row, mappingEra: era };
+    return { found: true, source: "yarn-tiny", row, mappingEra: era };
   }
 
   const rows = db
@@ -531,7 +555,7 @@ export function lookupField(
     .all(ownerNamed, memberName) as unknown as FieldRow[];
 
   if (rows.length === 0) return { found: false, mappingEra: era };
-  if (rows.length === 1) return { found: true, row: rows[0], mappingEra: era };
+  if (rows.length === 1) return { found: true, source: "yarn-tiny", row: rows[0], mappingEra: era };
   return {
     found: false,
     ambiguous: true,
@@ -656,13 +680,14 @@ function methodRowFromCsv(
   };
 
   if (!methodsDb || !dbHasMethods(methodsDb)) {
-    return { found: true, mappingEra: "mcp-csv", row: fallback };
+    return { found: true, source: "csv", mappingEra: "mcp-csv", row: fallback };
   }
 
   const hits = methodsBySearge(methodsDb, csv.searge);
   if (hits.length === 0) {
     return {
       found: true,
+      source: "csv",
       mappingEra: "mcp-csv",
       row: fallback,
       notes: ["CSV 命中但 methods 无对应 searge，name_official 回退为 searge"],
@@ -689,6 +714,7 @@ function methodRowFromCsv(
   const hit = hits[0];
   return {
     found: true,
+    source: "csv",
     mappingEra: readMeta(methodsDb, "mappingEra") || "mcp-csv",
     row: {
       ...hit,
@@ -788,13 +814,58 @@ function lookupMethodViaCsvOwner(
   }
 
   const era = readMeta(methodsDb, "mappingEra");
-  // CSV 有同名但该类无对应 searge 行 → 回退普通 methods（避免打断 yarn-tiny）
+  // yarn-tiny methods.name_named 是 Yarn 名不是 searge：CSV 已确认 MCP named 后，用同名再查 methods。
+  if (hits.length === 0) {
+    let namedRow: MethodRow | undefined;
+    if (descriptor) {
+      namedRow = methodsDb
+        .prepare(
+          `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+           FROM methods WHERE owner_named = ? AND name_named = ? AND descriptor_named = ? LIMIT 1`,
+        )
+        .get(ownerNamed, memberName, descriptor) as unknown as MethodRow | undefined;
+    } else {
+      const namedRows = methodsDb
+        .prepare(
+          `SELECT owner_named, name_named, descriptor_named, name_official, descriptor_official, name_intermediary
+           FROM methods WHERE owner_named = ? AND name_named = ? LIMIT 20`,
+        )
+        .all(ownerNamed, memberName) as unknown as MethodRow[];
+      if (namedRows.length > 1) {
+        return {
+          found: false,
+          ambiguous: true,
+          source: "csv",
+          mappingEra: era,
+          candidates: namedRows.map((r) => ({
+            name: memberName,
+            descriptor: r.descriptor_named,
+            official: r.name_official,
+            intermediary: r.name_intermediary,
+            owner: r.owner_named,
+          })),
+          notes: ["存在多个重载，请传入 descriptor"],
+        };
+      }
+      namedRow = namedRows[0];
+    }
+    if (namedRow) {
+      hits.push({
+        ...namedRow,
+        name_named: memberName,
+        descriptor_named: namedRow.descriptor_named || csvRows[0]?.descriptor_named || "",
+      });
+    }
+  }
+
+  // CSV 有同名但该类无对应 searge/named 行 → 回退普通 methods（避免打断 yarn-tiny → mojang）
   if (hits.length === 0) {
     return null;
   }
   if (hits.length === 1) {
     return {
       found: true,
+      source: "csv",
       row: hits[0],
       mappingEra: era,
       notes: descriptor ? undefined : ["CSV+methods 联合命中（MCP named→searge→obf）"],
@@ -942,7 +1013,7 @@ export function lookupMethod(
         ...(csvEra === "mcp-csv" ? { notes: [csvOwnerHint] } : {}),
       };
     }
-    return { found: true, row, mappingEra: era };
+    return { found: true, source: "yarn-tiny", row, mappingEra: era };
   }
 
   const rows = db
@@ -962,6 +1033,7 @@ export function lookupMethod(
   if (rows.length === 1) {
     return {
       found: true,
+      source: "yarn-tiny",
       row: rows[0],
       mappingEra: era,
       notes: ["唯一重载，未提供 descriptor"],
@@ -993,6 +1065,7 @@ export function convertYarnMember(
   mappingType: "class";
   notes: string[];
   row?: YarnClassRow;
+  ambiguous?: boolean;
 } {
   const dbPath = resolveMappingDbPath(version);
   if (!dbPath) {
@@ -1005,6 +1078,24 @@ export function convertYarnMember(
         "请运行: node mcp-server/scripts/_lib/build-yarn-sqlite.mjs --all",
       ],
     };
+  }
+
+  if (from === "mojang" || from === "obfuscated") {
+    const db = getYarnDb(version);
+    if (db) {
+      const officialHits = db
+        .prepare("SELECT named, intermediary, official FROM classes WHERE official = ? LIMIT 2")
+        .all(memberName) as unknown as YarnClassRow[];
+      if (officialHits.length > 1) {
+        return {
+          found: false,
+          converted: null,
+          mappingType: "class",
+          ambiguous: true,
+          notes: [`classes.official 命中 ${officialHits.length} 条，拒绝静默取第一条`],
+        };
+      }
+    }
   }
 
   const row = lookupYarnClass(version, memberName, from === "parchment" ? "mcp" : from);
@@ -1036,9 +1127,9 @@ export function convertYarnMember(
   else if (to === "mojang" || to === "obfuscated") converted = row.official || memberName;
   else if (to === "intermediary") converted = row.intermediary || memberName;
   else if (to === "mcp" || to === "parchment") {
-    // Prefer named (readable) for mcp/parchment when available from yarn-tiny
-    converted = row.named.includes("/") ? toDot(row.named) : row.named;
+    converted = row.named;
   }
+  if (converted.includes("/")) converted = toDot(converted);
 
   return {
     found: true,
@@ -1136,7 +1227,11 @@ export function lookupByObfuscated(
     rows = db
       .prepare(
         `SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
-         FROM ${table} WHERE name_intermediary = ? OR name_official = ? LIMIT 20`,
+         FROM ${table} WHERE name_intermediary = ?
+         UNION
+         SELECT owner_named, name_named, descriptor_named, name_official, name_intermediary
+         FROM ${table} WHERE name_official = ?
+         LIMIT 20`,
       )
       .all(token, token) as unknown as Array<{
       owner_named: string;

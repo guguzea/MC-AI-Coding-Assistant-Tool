@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-block
 description: Fabric 方块开发。FabricBlockSettings、Block、BlockItem、BlockEntity。触发词：方块、Block、FabricBlockSettings、BlockEntity
 platform: fabric

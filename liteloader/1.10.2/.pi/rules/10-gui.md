@@ -1,4 +1,4 @@
-﻿---
+---
 description: 10-gui.mdc — HUD（仅已打开）
 ---
 

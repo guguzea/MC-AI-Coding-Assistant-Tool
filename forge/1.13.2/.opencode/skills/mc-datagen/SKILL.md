@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Forge 1.13.2 数据以手写 JSON 为主。触发词：DataGen、DataGenerator、数据包、资源包、recipes、loot_tables
 ---

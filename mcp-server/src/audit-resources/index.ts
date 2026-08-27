@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { join, relative } from "path";
 import { walkDirBounded } from "../utils/project-files.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 export interface AuditResourcesInput {
   resourceRoot: string;
@@ -91,7 +92,7 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     const r = rel(file);
     if (!MODEL_EXT.test(file) || !r.includes("/models/")) continue;
     try {
-      const json = JSON.parse(readFileSync(file, "utf8")) as unknown;
+      const json = parseJsonUtf8(readFileSync(file, "utf8")) as unknown;
       collectModelTextures(json, referenced);
     } catch {
       issues.push({ severity: "error", path: r, message: "模型 JSON 解析失败" });

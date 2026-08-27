@@ -90,45 +90,51 @@ export function parseAccessWidener(
         warnings.push(`第 ${lineNo} 行：transitive 仅在 accessWidener v2 支持（当前 v1）`);
       }
     }
-    if (tokens.length < 3) {
+    const types: AccessWidenerEntry["type"][] = [];
+    while (tokens.length > 0 && AW_TYPE_RE.test(tokens[0])) {
+      types.push(tokens[0] as AccessWidenerEntry["type"]);
+      tokens = tokens.slice(1);
+    }
+    if (types.length === 0) {
+      errors.push({
+        target: line,
+        issue: `未知 AW 类型「${line.split(/\s+/)[0] ?? ""}」（第 ${lineNo} 行）`,
+        suggestion: "AW 类型应为 accessible / extendable / mutable（可并列，如 accessible extendable class）",
+      });
+      continue;
+    }
+    if (tokens.length < 2) {
       errors.push({
         target: line,
         issue: `无法解析 AW 条目（第 ${lineNo} 行）`,
-        suggestion: "格式：[transitive ]<accessible|extendable|mutable> <class|method|field> <owner> [<member> <descriptor>]",
+        suggestion: "格式：[transitive ]<accessible|extendable|mutable>… <class|method|field> <owner> [<member> <descriptor>]",
       });
       continue;
     }
-    const type = tokens[0];
-    if (!AW_TYPE_RE.test(type)) {
-      errors.push({
-        target: line,
-        issue: `未知 AW 类型「${type}」（第 ${lineNo} 行）`,
-        suggestion: "AW 类型应为 accessible / extendable / mutable",
-      });
-      continue;
-    }
-    const kindToken = tokens[1];
+    const kindToken = tokens[0];
     if (!/^(class|method|field)$/.test(kindToken)) {
       errors.push({
         target: line,
         issue: `未知成员种类「${kindToken}」（第 ${lineNo} 行）`,
-        suggestion: "AW 条目第二个 token 应为 class / method / field",
+        suggestion: "AW 条目在 access 关键字之后应为 class / method / field",
       });
       continue;
     }
-    if (tokens.length > 5) {
+    if (tokens.length > 4) {
       warnings.push(`第 ${lineNo} 行 token 过多，多余部分忽略: ${line}`);
     }
-    entries.push({
-      type: type as AccessWidenerEntry["type"],
-      owner: tokens[2],
-      member: tokens[3],
-      descriptor: tokens[4],
-      kind: kindToken === "class" ? "class" : "member",
-      transitive,
-      raw: line,
-      lineNo,
-    });
+    for (const type of types) {
+      entries.push({
+        type,
+        owner: tokens[1],
+        member: tokens[2],
+        descriptor: tokens[3],
+        kind: kindToken === "class" ? "class" : "member",
+        transitive,
+        raw: line,
+        lineNo,
+      });
+    }
   }
   if (!headerSeen) {
     errors.push({ target: "(header)", issue: "缺少 accessWidener header", suggestion: "首行应为：accessWidener v2 <namespace>" });

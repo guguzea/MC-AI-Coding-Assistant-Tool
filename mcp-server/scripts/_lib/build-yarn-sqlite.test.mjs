@@ -68,3 +68,24 @@ test("initYarnSchema is idempotent", () => {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test("initYarnSchema creates name_official/intermediary indexes", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "yarn-idx-"));
+  const dbPath = path.join(dir, "s.sqlite");
+  const db = openYarnDb(dbPath);
+  try {
+    initYarnSchema(db);
+    const names = db.prepare("SELECT name FROM sqlite_master WHERE type='index'").all().map((r) => r.name);
+    for (const n of [
+      "idx_methods_name_official",
+      "idx_methods_name_intermediary",
+      "idx_fields_name_official",
+      "idx_fields_name_intermediary",
+    ]) {
+      assert.ok(names.includes(n), `missing ${n}: ${names.join(",")}`);
+    }
+  } finally {
+    db.close();
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

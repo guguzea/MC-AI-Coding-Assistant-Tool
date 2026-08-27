@@ -21,9 +21,10 @@ import { crc32, deflateRawSync } from "node:zlib";
 
 import { parseClassFile, loadClassFileFromJar, collectJarClasses, buildJarIndex, ClassFormatError, Cp } from "./dist/mixin/bytecode.js";
 import { validateAccessTransformer, validateAccessTransformerFiles, ownersMatch } from "./dist/mixin/access-transformer.js";
-import { validateAccessWidener, validateAccessWidenerFiles } from "./dist/mixin/access-widener.js";
+import { validateAccessWidener, validateAccessWidenerFiles, parseAccessWidener } from "./dist/mixin/access-widener.js";
 import { deepValidateMixins, validateAtHandler, validateAwHandler } from "./dist/mixin/deep-validate.js";
 import { mixinAnalyze } from "./dist/mixin/index.js";
+import { parseMixinJavaSource } from "./dist/mixin/parser.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, "..", "data");
@@ -460,6 +461,18 @@ function testAccessWidener(index) {
   ], index);
   assert.equal(sameOwner.crossFileConflicts.length, 0, JSON.stringify(sameOwner.crossFileConflicts));
   assert.ok(sameOwner.warnings.some((w) => /重复/.test(w)), JSON.stringify(sameOwner.warnings));
+
+  const dualLine = parseAccessWidener(
+    "accessWidener v2 named\naccessible extendable class com/example/Fixture\n",
+  );
+  assert.equal(dualLine.errors.length, 0, JSON.stringify(dualLine.errors));
+  assert.equal(dualLine.entries.length, 2, JSON.stringify(dualLine.entries));
+  assert.deepEqual(dualLine.entries.map((e) => e.type).sort(), ["accessible", "extendable"]);
+  const dualValid = validateAccessWidener(
+    "accessWidener v2 named\naccessible extendable class com/example/Fixture\n",
+    index,
+  );
+  assert.equal(dualValid.errors.length, 0, JSON.stringify(dualValid.errors));
   console.log("  [ok] AW: 存在性/transitive/namespace 告警/跨文件冲突");
 }
 
@@ -512,6 +525,31 @@ async function testDeepValidate() {
   assert.equal(ownersMatch("Outer.Inner", "Outer$Inner"), true);
   assert.equal(ownersMatch("a/Foo", "a/Bar"), false);
   console.log("  [ok] deep-validate: 目标类/选择器/@At 调用点");
+
+  const ghostSrc = `
+/**
+ * javadoc @Inject ghost must not occupy a slot
+ */
+@Mixin(com.example.Fixture.class)
+public class GhostMixin {
+  // @Inject line-comment ghost
+  @Inject(method="realMethod")
+  private void real(CallbackInfo ci) {}
+}
+`;
+  const ghostParsed = parseMixinJavaSource(ghostSrc);
+  assert.equal(ghostParsed?.injections.length, 1, JSON.stringify(ghostParsed?.injections));
+  assert.equal(ghostParsed?.injections[0]?.methodRefs[0]?.methodName, "realMethod");
+  const ghostDeep = await deepValidateMixins({
+    javaFiles: [{ path: "GhostMixin.java", content: ghostSrc }],
+    version: "1.20.1",
+    jarPath: JAR_PATH,
+  });
+  assert.equal(
+    ghostDeep.errors.some((e) => /缺少 method/.test(e.issue)),
+    false,
+    JSON.stringify(ghostDeep.errors),
+  );
 
   // validate_at / validate_aw 工具 handler
   const hAt = validateAtHandler({ atContent: AT_VALID, version: "1.20.1", jarPath: JAR_PATH });

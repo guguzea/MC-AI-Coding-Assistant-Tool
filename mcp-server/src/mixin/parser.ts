@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { mergeInjectMethodAndDesc, parseMethodArrayLiteral, parseMethodReference, type ParsedMethodRef } from "./method-string.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 export interface MixinClassRef {
   className: string;
@@ -81,7 +82,7 @@ export function parseMixinsJson(
 
   let config: Record<string, unknown>;
   try {
-    config = JSON.parse(content) as Record<string, unknown>;
+    config = parseJsonUtf8(content) as Record<string, unknown>;
   } catch {
     const failed: MixinsJsonSummary = {
       mixinClasses: [],
@@ -129,40 +130,136 @@ export function parseMixinsJson(
   return parsed;
 }
 
-type AnnBlock = { inner: string | null };
+export type JavaAnnBlock = { inner: string | null };
 
-function extractAnnotationBlock(source: string, name: string): AnnBlock[] {
-  const blocks: AnnBlock[] = [];
+const OPTIONAL_PAREN_KINDS = new Set(["Overwrite", "Accessor", "Invoker"]);
+
+/**
+ * 抽取 `@Name(...)` 注解块。跳过行注释、块注释与字符串字面量；
+ * 无括号的 `@Inject` 不算注入（javadoc/行注释里的同名 token 不得占 nth 槽）。
+ * `@Overwrite` / `@Accessor` / `@Invoker` 允许无括号。
+ */
+export function extractJavaAnnotationBlocks(source: string, name: string): JavaAnnBlock[] {
+  const blocks: JavaAnnBlock[] = [];
   const needle = `@${name}`;
+  const n = source.length;
   let i = 0;
-  while ((i = source.indexOf(needle, i)) >= 0) {
-    const afterName = i + needle.length;
-    const boundary = source[afterName];
-    if (boundary && /[A-Za-z0-9_]/.test(boundary)) {
-      i = afterName;
+  type Scan = "code" | "line" | "block" | "str" | "chr";
+  let state: Scan = "code";
+
+  while (i < n) {
+    const c = source[i];
+    const next = source[i + 1];
+    if (state === "line") {
+      if (c === "\n") state = "code";
+      i++;
       continue;
     }
-    let k = afterName;
-    while (k < source.length && /\s/.test(source[k])) k++;
-    if (source[k] !== "(") {
-      blocks.push({ inner: null });
-      i = k === afterName ? afterName + 1 : k;
+    if (state === "block") {
+      if (c === "*" && next === "/") {
+        state = "code";
+        i += 2;
+        continue;
+      }
+      i++;
       continue;
     }
-    let depth = 0;
-    let j = k;
-    for (; j < source.length; j++) {
-      const c = source[j];
-      if (c === "(") depth++;
-      else if (c === ")") {
-        depth--;
-        if (depth === 0) {
-          blocks.push({ inner: source.slice(k + 1, j) });
-          break;
+    if (state === "str") {
+      if (c === "\\") {
+        i += 2;
+        continue;
+      }
+      if (c === '"') state = "code";
+      i++;
+      continue;
+    }
+    if (state === "chr") {
+      if (c === "\\") {
+        i += 2;
+        continue;
+      }
+      if (c === "'") state = "code";
+      i++;
+      continue;
+    }
+    if (c === "/" && next === "/") {
+      state = "line";
+      i += 2;
+      continue;
+    }
+    if (c === "/" && next === "*") {
+      state = "block";
+      i += 2;
+      continue;
+    }
+    if (c === '"') {
+      state = "str";
+      i++;
+      continue;
+    }
+    if (c === "'") {
+      state = "chr";
+      i++;
+      continue;
+    }
+
+    if (c === "@" && source.startsWith(needle, i)) {
+      const afterName = i + needle.length;
+      const boundary = source[afterName];
+      if (boundary && /[A-Za-z0-9_]/.test(boundary)) {
+        i++;
+        continue;
+      }
+      let k = afterName;
+      while (k < n && /\s/.test(source[k])) k++;
+      if (source[k] !== "(") {
+        if (OPTIONAL_PAREN_KINDS.has(name)) blocks.push({ inner: null });
+        i = k === afterName ? afterName : k;
+        continue;
+      }
+      let depth = 0;
+      let j = k;
+      let inStr = false;
+      let inChr = false;
+      for (; j < n; j++) {
+        const ch = source[j];
+        if (inStr) {
+          if (ch === "\\") {
+            j++;
+            continue;
+          }
+          if (ch === '"') inStr = false;
+          continue;
+        }
+        if (inChr) {
+          if (ch === "\\") {
+            j++;
+            continue;
+          }
+          if (ch === "'") inChr = false;
+          continue;
+        }
+        if (ch === '"') {
+          inStr = true;
+          continue;
+        }
+        if (ch === "'") {
+          inChr = true;
+          continue;
+        }
+        if (ch === "(") depth++;
+        else if (ch === ")") {
+          depth--;
+          if (depth === 0) {
+            blocks.push({ inner: source.slice(k + 1, j) });
+            break;
+          }
         }
       }
+      i = j + 1;
+      continue;
     }
-    i = j + 1;
+    i++;
   }
   return blocks;
 }
@@ -225,7 +322,7 @@ export function parseMixinJavaSource(
   ] as const;
 
   for (const kind of kinds) {
-    for (const { inner } of extractAnnotationBlock(source, kind)) {
+    for (const { inner } of extractJavaAnnotationBlocks(source, kind)) {
       if (inner === null) {
         injections.push({ kind, methodRefs: [] });
         continue;
@@ -252,7 +349,7 @@ export function parseMixinJavaSource(
 
   const extras = ["ModifyExpressionValue", "WrapOperation", "WrapWithCondition", "ModifyReturnValue"];
   for (const name of extras) {
-    const found = extractAnnotationBlock(source, name);
+    const found = extractJavaAnnotationBlocks(source, name);
     if (found.length) {
       warnings.push(`MixinExtras @${name} 记为 Unknown，不要当成 @Inject`);
       for (const { inner } of found) {

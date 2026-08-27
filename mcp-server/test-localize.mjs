@@ -154,6 +154,11 @@ function testPlaceholderNormalize() {
   assert.equal(placeholdersMatch("%2$s", "%1$s"), false, "位置式按编号");
   assert.equal(placeholdersMatch("%S %D", "%s %d"), true);
   assert.equal(placeholdersMatch("%.2f done", "完 %f"), true);
+  assert.equal(placeholdersMatch("Costs {0} coins", "花费金币"), false);
+  assert.equal(placeholdersMatch("Costs {0} coins", "花费 {0} 金币"), true);
+  assert.equal(placeholdersMatch("Hello {0}", "你好 %s"), true);
+  assert.equal(placeholdersMatch("Hello {name}", "你好 {0}"), false, "{name} 不是占位符");
+  assert.equal(placeholdersMatch("Hello {@x}", "你好 {0}"), false, "{@x} 不是占位符");
 }
 
 function testOwnDraft() {

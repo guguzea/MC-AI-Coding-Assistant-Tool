@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01-registry Forge 1.7.10
 alwaysApply: true
 ---

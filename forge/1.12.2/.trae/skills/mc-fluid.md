@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-fluid
 description: Minecraft Forge 流体开发。创建流体 Fluid、FluidRegistry、桶物品。触发词：Fluid、FluidRegistry、FluidStack、BucketHandler
 platform: forge

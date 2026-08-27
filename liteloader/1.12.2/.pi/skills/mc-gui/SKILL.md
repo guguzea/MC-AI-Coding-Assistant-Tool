@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: LiteLoader 1.12.2 HUD/Render。只使用核实表。
 platform: liteloader

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-entity
 description: Minecraft Forge 实体开发。创建生物、实体属性、AI 任务、实体渲染器。触发词：实体、Entity、EntityLiving、EntityType、RenderingRegistry
 platform: forge

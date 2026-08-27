@@ -1,6 +1,6 @@
 # Quilt / QSL 已核实表（差异层）
 
-- search_docs({platform:"quilt"}) 当前无独立 1.21.11 文档树（已入库 1.18.2 / 1.19.4 / 1.20.1 / 1.20.4 / 1.21.1）。
+- search_docs({platform:"quilt", version:"1.21.11"})：`data/quilt_1.21.11` 已入库（quilt-docs/1.21.11 + L0–L2）。
 - **禁止**编 `QuiltRegistry.register()`。
 - **02–10 仍读** `fabric/1.21.11`。
 

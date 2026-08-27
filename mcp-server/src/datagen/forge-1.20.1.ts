@@ -260,16 +260,15 @@ public class ${pascalName}BlockTagsProvider extends BlockTagsProvider {
 export function generateAdvancement(modId: string, targetName: string, classBase?: string): string {
   const pascalName = classBase || toPascalCase(modId);
   return `// Advancement Provider — Forge 1.20.1 (ForgeAdvancementProvider)
+// 1.20.2+ 才有 Holder 包装类型，禁止从 neo 1.21 回植。
 package com.example.${modId}.datagen;
 
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
@@ -296,16 +295,13 @@ public class ${pascalName}AdvancementProvider extends ForgeAdvancementProvider {
         @Override
         public void generate(
                 HolderLookup.Provider registries,
-                Consumer<AdvancementHolder> saver,
+                Consumer<Advancement> saver,
                 ExistingFileHelper existingFileHelper) {
             Advancement.Builder.advancement()
                 .addCriterion(
                     "has_${targetName}",
                     InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIAMOND))
-                .save(
-                    saver,
-                    new ResourceLocation("${modId}", "${targetName}"),
-                    existingFileHelper);
+                .save(saver, "${modId}:${targetName}");
         }
     }
 }

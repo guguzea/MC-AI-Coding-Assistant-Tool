@@ -31,6 +31,12 @@ export function parseTypeAt(desc: string, i: number, depth = 0): [string, number
     const simple = slash.includes("/") ? slash.slice(slash.lastIndexOf("/") + 1) : slash;
     return [simple.replace(/\$/g, "."), end + 1];
   }
+  // Method descriptor `()V;garbage`：`(` 不是字段类型。解析到返回类型为止，尾渣不渲染成 `?(`。
+  if (c === "(") {
+    const close = desc.indexOf(")", i);
+    if (close < 0) return ["?", desc.length];
+    return parseTypeAt(desc, close + 1, depth + 1);
+  }
   return [`?${c}`, i + 1];
 }
 

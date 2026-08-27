@@ -77,7 +77,7 @@ fabric-loot-tables / loot-api **v1**（改现有表用 `LootTableLoadingCallback
 
 ### fabric-key-binding-api-v1
 
-快捷键见 `KeyBindingHelper`（以本版 loader-api 为准），不要钉死 `fabric-key-bindings-v0:1.0.0+1.20.1`。
+快捷键见 `KeyBindingRegistry`（keybindings-v0；以本版 loader-api 为准），不要钉死 `fabric-key-bindings-v0:1.0.0+1.20.1`。
 
 ## 模块名备忘（1.14.4）
 

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-advancement
 description: 进度 JSON 与 AdvancementProvider。触发词：advancement、criteria
 platform: fabric

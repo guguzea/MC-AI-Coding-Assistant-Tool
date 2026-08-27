@@ -1,6 +1,6 @@
-﻿---
+---
 name: mc-capability
-description: Fabric 1.14.4 实体事件。AttackEntityCallback、ServerEntityEvents。触发词：实体事件、AttackEntityCallback
+description: Fabric 1.14.4 实体事件。AttackEntityCallback。触发词：实体事件、AttackEntityCallback
 platform: fabric
 version: "1.14.4"
 dependencies: []
@@ -15,19 +15,14 @@ Fabric **没有** Forge Capability，也 **没有** `ServerLivingEntityEvents`�
 
 ```java
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 
 AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
     return ActionResult.PASS;
 });
 
-ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-    // 实体加载到世界
-});
-
-ServerTickEvents.END_SERVER_TICK.register(server -> {
-    // 没有 EntityEvent.TICK；按需遍历实体
+ServerTickCallback.EVENT.register(server -> {
+    // 本档没有 ServerEntityEvents / EntityEvent.TICK；按需遍历实体
 });
 ```
 

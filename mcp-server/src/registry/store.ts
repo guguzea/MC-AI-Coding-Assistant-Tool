@@ -1,18 +1,11 @@
 import { existsSync } from "fs";
 import { DatabaseSync } from "node:sqlite";
-import { vanillaRegistrySqlitePath, buildRegistryIndex } from "./builder.js";
+import { vanillaRegistrySqlitePath } from "./builder.js";
 
 const _cache = new Map<string, DatabaseSync>();
 
 function openRegistryDb(version: string): DatabaseSync | null {
   const path = vanillaRegistrySqlitePath(version);
-  if (!existsSync(path)) {
-    try {
-      buildRegistryIndex(version);
-    } catch {
-      return null;
-    }
-  }
   if (!existsSync(path)) return null;
   if (_cache.has(path)) return _cache.get(path)!;
   const db = new DatabaseSync(path, { readOnly: true });

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: Forge 1.7.10 GameRegistry（javadoc）。
 platform: forge

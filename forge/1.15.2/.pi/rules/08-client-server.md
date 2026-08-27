@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08 — 客户端/服务端分离
 ---
 
@@ -170,8 +170,8 @@ public class ModKeyBindings {
 ```java
 // entities/MyEntity.java（服务端设置，客户端自动同步）
 public class MyEntity extends LivingEntity {
-    private static final DataManager.Entry<Integer> DATA_CUSTOM =
-        new DataManager.Entry<>(new DataSerializers.VARINT);
+    private static final DataParameter<Integer> DATA_CUSTOM =
+        EntityDataManager.createKey(MyEntity.class, DataSerializers.VARINT);
 
     @Override
     protected void registerData() {

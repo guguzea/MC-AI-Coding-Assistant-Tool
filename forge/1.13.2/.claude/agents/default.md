@@ -12,7 +12,7 @@
 | 平台 | Forge |
 | Minecraft 版本 | 1.13.2 |
 | 注册模式 | `@EventBusSubscriber` + `RegistryEvent.Register<T>` |
-| Java 版本 | **Java 11**（Forge 1.13.2 最低要求） |
+| Java 版本 | **Java 8**（Forge 1.13.2 最低要求） |
 | Gradle | Gradle 6.x + ForgeGradle 3.x |
 | Mappings | **MCP SRG**（`1.13.2` SRG 格式） |
 | Modules | **YES**（Forge 25.0+ 引入的模块系统） |
@@ -138,7 +138,7 @@ src/main/java/
 |------|---------------|--------------|------|
 | 注册方式 | `@EventBusSubscriber` + `RegistryEvent` | DeferredRegister（推荐）或 RegistryEvent | 1.14+ 推荐使用 DeferredRegister |
 | Modules | YES（25.0+） | YES | 模块系统引入 |
-| Java 版本 | Java 11 | Java 17（1.20+） | 旧版本需要 Java 11 |
+| Java 版本 | Java 8 | Java 17（1.20+） | 旧版本需要 Java 8 |
 | Gradle | Gradle 6.x | Gradle 8.x（1.20+） | 旧版本 Gradle |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。

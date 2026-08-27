@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: Minecraft Forge Mixin 注入。安全使用 @Mixin、@Inject、@At、@ModifyVariable。触发词：Mixin、@Inject、@At、mixins.json、AccessTransformer、ASM
 platform: forge

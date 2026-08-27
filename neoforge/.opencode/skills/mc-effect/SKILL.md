@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-effect
 description: MobEffect 状态效果。触发词：MobEffect、AttributeModifier
 platform: neoforge

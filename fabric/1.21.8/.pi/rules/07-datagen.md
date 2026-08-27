@@ -1,4 +1,4 @@
-﻿---
+---
 description: 07-datagen Fabric 1.21.8
 alwaysApply: true
 ---

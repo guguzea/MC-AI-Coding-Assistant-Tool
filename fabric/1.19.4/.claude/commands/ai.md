@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-ai
 description: 实体 AI Goal、Brain。触发词：Goal、targetSelector
 platform: fabric

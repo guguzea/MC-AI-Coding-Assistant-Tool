@@ -1,4 +1,4 @@
-﻿---
+---
 description: 10-gui Fabric 1.21.4
 alwaysApply: true
 ---

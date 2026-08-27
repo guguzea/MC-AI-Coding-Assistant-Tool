@@ -39,7 +39,7 @@ forge_version=45.4.0
 # ---- Mappings ----
 # parchment: 社区映射（有参数名和 javadoc，推荐用于开发）
 mapping_channel=parchment
-mapping_version=1.19.4-2023.04.04
+mapping_version=1.19.4-2023.06.26
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`
@@ -220,5 +220,5 @@ side="BOTH"                 # 加载侧：BOTH / CLIENT / SERVER
 
 - **MobCategory**：1.19.4 Forge / Mojmap 用 `MobCategory`。`SpawnGroup` 是 Yarn 名，不是本档 1.20.7 重命名
 - **pack_format**：1.19.4 数据包为 `12`、资源包为 `13`
-- **Parchment 映射**：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.04.04`
+- **Parchment 映射**：`mapping_channel=parchment`，`mapping_version=1.19.4-2023.06.26`
 - **Forge 版本**：`45.4.0`（对应 Minecraft 1.19.4）

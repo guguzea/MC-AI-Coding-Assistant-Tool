@@ -105,6 +105,7 @@ export class DocNotFoundError extends Error {
         ? version
         : `NeoForge 文档未找到: ${id} (版本 ${version})`
     );
+    this.name = "DocNotFoundError";
   }
 }
 
@@ -156,7 +157,7 @@ export class NeoForgeDocStore {
 
   private indexCache = new Map<string, CacheEntry<unknown>>();
   private fileCache = new Map<string, CacheEntry<string>>();
-  private searchCache = new Map<string, CacheEntry<unknown>>();
+  private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
   private symbolIndexCache = new Map<string, SymbolIndex>();
   private relatedCache = new Map<string, TtlCacheEntry<SearchResult[]>>();
   private searchLog: Array<{ query: string; version: string; resolvedVersion: string; results: number; timestamp: number }> = [];
@@ -380,7 +381,7 @@ export class NeoForgeDocStore {
 
   searchIndexDetailed(query: string, version: string, tags?: string[]): SearchIndexDetailed {
     const cacheKey = `${query}|${version}|${(tags ?? []).join(",")}`;
-    const cached = this.getCache(this.searchCache, cacheKey) as SearchIndexDetailed | undefined;
+    const cached = ttlCacheGet(this.searchCache, cacheKey);
     if (cached) {
       this._lastSearchMeta = {
         requestedVersion: cached.requestedVersion,
@@ -444,7 +445,7 @@ export class NeoForgeDocStore {
       resolvedVersion: effectiveVersion,
       versionFallback,
     };
-    this.setCache(this.searchCache, cacheKey, detailed);
+    ttlCacheSet(this.searchCache, cacheKey, detailed, 256, NeoForgeDocStore.CACHE_TTL);
 
     this.searchLog.push({
       query, version, resolvedVersion: effectiveVersion,
@@ -591,9 +592,9 @@ export class NeoForgeDocStore {
     if (hit) return hit;
 
     const l0 = this.loadIndex(version, "index-l0") as SearchResult[];
-    if (!Array.isArray(l0)) return [];
-    const target = l0.find(e => e.id === pageId);
-    if (!target) return [];
+    if (!Array.isArray(l0)) throw new DocNotFoundError(pageId, version);
+    const target = this.findByFlexibleId(l0, pageId, version);
+    if (!target) throw new DocNotFoundError(pageId, version);
 
     const targetTags = new Set(target.tags);
     const scored = l0

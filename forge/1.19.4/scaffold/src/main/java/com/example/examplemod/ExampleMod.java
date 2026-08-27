@@ -10,7 +10,8 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -43,8 +44,7 @@ public class ExampleMod {
 
     // ---- 注册方块 ----
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
-        () -> new Block(BlockBehaviour.Properties.of()
-            .mapColor(MapColor.STONE)
+        () -> new Block(BlockBehaviour.Properties.of(Material.STONE, MaterialColor.STONE)
             .strength(1.5f, 6.0f)
             .requiresCorrectToolForDrops()
         )

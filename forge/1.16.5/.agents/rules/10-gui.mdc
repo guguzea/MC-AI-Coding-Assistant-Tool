@@ -49,9 +49,9 @@ Player interacts
 Block#onBlockActivated (Server) ──► creates IContainerProvider ──► openGui (Server)
                                                                     │
                                                                     ▼
-                                                          AbstractContainerMenu + ContainerScreen
+                                                          Container + ContainerScreen
                                                                     │
-                                                          MenuScreens.register()
+                                                          ScreenManager.registerFactory()
                                                                     │
                                                                     ▼
                                                                 Renders Screen
@@ -61,20 +61,20 @@ Block#onBlockActivated (Server) ──► creates IContainerProvider ──► o
 
 ```
 IF interactable block with persistent data (machine, chest)
-  → AbstractContainerMenu + ContainerType + ContainerScreen
+  → Container + ContainerType + ContainerScreen
 
 IF just a simple interaction (no data)
   → IScreen / Screen directly (without Menu)
 
 IF inventory with multiple slots
-  → AbstractContainerMenu (for slot management and transferHandler)
+  → Container (for slot management and transferHandler)
 ```
 
 ## ContainerType Registration
 
 ```java
 // 1. Define the Container class
-public class MyContainer extends AbstractContainerMenu {
+public class MyContainer extends Container {
     public MyContainer(int windowId, PlayerInventory inv, PacketBuffer extraData) {
         super(MyContainerTypes.MY_CONTAINER.get(), windowId);
         // slot layout...
@@ -104,7 +104,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
         event.enqueueWork(() ->
-            MenuScreens.register(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
+            ScreenManager.registerFactory(MyContainerTypes.MY_CONTAINER.get(), MyScreen::new)
         );
     }
 }
@@ -117,7 +117,7 @@ public class ClientSetup {
 private final IIntArray dataSlots;
 
 public MyContainer(int windowId, PlayerInventory inv, PacketBuffer extraData) {
-    this.dataSlots = new IIntArray(1);
+    this.dataSlots = new IntArray(1);
     this.trackIntArray(this.dataSlots);
 }
 
@@ -141,12 +141,12 @@ public class MyBlock extends Block {
                 (ServerPlayerEntity) player,
                 new SimpleNamedContainerProvider(
                     (id, inv, p) -> new MyContainer(id, inv, world, pos),
-                    Text.of("My Container")
+                    new StringTextComponent("My Container")
                 ),
                 pos
             );
         }
-        return ActionResult.func_233537_a_(world.isRemote);
+        return ActionResult.sidedSuccess(world.isRemote);
     }
 }
 ```
@@ -154,7 +154,7 @@ public class MyBlock extends Block {
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `MenuScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `ScreenManager.registerFactory()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ Container not implementing `canInteractWith` properly → any player can access
-- ❌ Modifying world state in `AbstractContainerMenu` constructor → too early, use `detectAndSendChanges()`
+- ❌ Modifying world state in `Container` constructor → too early, use `detectAndSendChanges()`
 - ❌ ContainerData set from client → must be set server-side only

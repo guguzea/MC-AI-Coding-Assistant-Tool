@@ -1,4 +1,5 @@
 ---
+mcHint: 全版本通用；reobf 仅 FG≤1.20.4，MDG/NeoGradle/26.1+ 免 reobf
 id: authored/publishing
 title: 模组发布要点（CurseForge / Modrinth / GitHub / Maven）
 tags: [publishing, curseforge, modrinth, maven, release, readme]

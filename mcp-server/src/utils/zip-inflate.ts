@@ -7,7 +7,7 @@
  * - inflate 带 maxOutputLength 双保险；输出长度必须等于声明尺寸。
  */
 
-import { inflateRawSync } from "zlib";
+import { inflateRawSync, crc32 } from "zlib";
 
 export const DEFAULT_MAX_ENTRY_UNCOMPRESSED = 256 * 1024 * 1024;
 
@@ -60,4 +60,8 @@ export function inflateZipEntry(compressed: Buffer, opts: { name: string; declar
     );
   }
   return out;
+}
+
+export function zipCrc32(buf: Buffer): number {
+  return crc32(buf) >>> 0;
 }

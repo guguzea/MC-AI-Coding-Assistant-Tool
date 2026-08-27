@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-command
 description: CommandManager.literal、权限、客户端命令。触发词：command、Brigadier、argument
 platform: fabric

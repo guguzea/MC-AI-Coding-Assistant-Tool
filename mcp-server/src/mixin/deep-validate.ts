@@ -16,7 +16,7 @@ import { actionable, missingMcVersion, versionRequiredAction, type ActionEnvelop
 import { PROJECT_SCAN_SKIP_DIRS, walkProjectFiles } from "../utils/project-files.js";
 import { resolveCacheRoot } from "../decompile/cache.js";
 import { buildJarIndex } from "./bytecode.js";
-import { parseMixinJavaSource } from "./parser.js";
+import { parseMixinJavaSource, extractJavaAnnotationBlocks } from "./parser.js";
 
 export { PROJECT_SCAN_SKIP_DIRS, walkProjectFiles };
 import {
@@ -153,44 +153,6 @@ export interface AtInfo {
   targetIsField: boolean;
 }
 
-function extractAnnotationBlocks(source: string, name: string): string[] {
-  const blocks: string[] = [];
-  const re = new RegExp(`@${name}\\b`, "g");
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(source)) !== null) {
-    const i = m.index;
-    const open = source.indexOf("(", i + m[0].length);
-    if (open < 0 || open > i + m[0].length + 8) continue;
-    let depth = 0;
-    let j = open;
-    for (; j < source.length; j++) {
-      const c = source[j];
-      if (c === "(") depth++;
-      else if (c === ")") {
-        depth--;
-        if (depth === 0) {
-          blocks.push(source.slice(open + 1, j));
-          re.lastIndex = j + 1;
-          break;
-        }
-      }
-    }
-  }
-  return blocks;
-}
-
-const INJECTION_KINDS = [
-  "Inject",
-  "Redirect",
-  "ModifyVariable",
-  "ModifyArg",
-  "ModifyArgs",
-  "ModifyConstant",
-  "Overwrite",
-  "Accessor",
-  "Invoker",
-] as const;
-
 function parseAtTarget(target: string): { owner?: string; name: string; desc?: string; isField: boolean } {
   if (target.startsWith("L")) {
     const semi = target.indexOf(";");
@@ -305,8 +267,20 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
     // 注入块（按 kind 配对：parser 的 injections 含 9 种 kind + MixinExtras 追加项，
     // 全局下标配对会在 @ModifyArg*/MixinExtras 出现时错位，F-E106）
     const blocks: Array<{ kind: string; block: string }> = [];
-    for (const kind of INJECTION_KINDS) {
-      for (const block of extractAnnotationBlocks(f.content, kind)) blocks.push({ kind, block });
+    for (const kind of [
+      "Inject",
+      "Redirect",
+      "ModifyVariable",
+      "ModifyArg",
+      "ModifyArgs",
+      "ModifyConstant",
+      "Overwrite",
+      "Accessor",
+      "Invoker",
+    ] as const) {
+      for (const { inner } of extractJavaAnnotationBlocks(f.content, kind)) {
+        if (inner !== null) blocks.push({ kind, block: inner });
+      }
     }
     const injections = parsed.injections;
     const usedPerKind = new Map<string, number>();

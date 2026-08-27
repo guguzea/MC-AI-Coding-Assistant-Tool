@@ -284,6 +284,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   const inspected = inspectPack(platform, minecraftVersion, repoRoot);
   if (!inspected || inspected.status === "draft") {
     const draft = inspected?.status === "draft";
+    const metaUnreadable = inspected?.metaUnreadable === true;
     const candidates = listSameSeriesCandidates(platform, minecraftVersion);
     const ask =
       !draft && candidates.length
@@ -294,9 +295,11 @@ export function sessionPlatformPack(args: SessionArgs) {
       candidates: candidates.length ? candidates : undefined,
       action: actionable(
         "PACK_NOT_FOUND",
-        draft
-          ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
-          : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。ok≠已加载规则。${ask ? ask : ""}`,
+        metaUnreadable
+          ? `pack.meta.json 无法解析`
+          : draft
+            ? `${platform} ${minecraftVersion} 规则包 pack-status=draft，禁止 session/write（PACK_NOT_FOUND）。ok≠已加载规则。`
+            : `没有 ${platform} ${minecraftVersion} 的规则树，禁止读邻档 00–10。ok≠已加载规则。${ask ? ask : ""}`,
         packNotFoundNextSteps(platform, minecraftVersion, ask),
         packNotFoundRelatedTools(platform),
       ),
@@ -344,7 +347,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     warnings.push(`请求的规则 ${id} 在本档不存在，已跳过（不会静默丢）`);
   }
 
-  const { skills, donorWarning } = listMergedPackSkills(
+  const { skills, donorWarning, diverged } = listMergedPackSkills(
     pack.platform,
     pack.minecraftVersion,
     pack.packDir,
@@ -352,6 +355,11 @@ export function sessionPlatformPack(args: SessionArgs) {
     repoRoot,
   );
   if (donorWarning) warnings.unshift(donorWarning);
+  for (const d of diverged) {
+    warnings.push(
+      `Skill ${d.name} 多宿主内容不一致（canonical sha256 ${d.canonicalHash}；${d.others.map((o) => `${o.rel}:${o.hash}`).join(", ")}）`,
+    );
+  }
   const libSkills = listLibSkillIndex(platform, pack.minecraftVersion, repoRoot);
 
   if (skills.length === 0) warnings.push(NO_PLATFORM_SKILLS_WARNING);
@@ -474,7 +482,8 @@ export function sessionPlatformPack(args: SessionArgs) {
     libSkills,
     skillBodies,
     nextReads,
-    baseRuleIds: ids,
+    baseRuleIds: [...BASE_RULE_IDS],
+    ruleIds: ids,
     rulesMode,
     warnings,
     libSkillsNote:

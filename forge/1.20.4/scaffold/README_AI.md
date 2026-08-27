@@ -40,7 +40,7 @@ forge_version=49.0.0
 # official: MCP（默认，无参数名）
 # parchment: 社区映射（有参数名和 javadoc，推荐用于开发）
 mapping_channel=parchment
-mapping_version=2024.11.30-1.20.4
+mapping_version=2024.02.25-1.20.4
 
 # ---- Mod 元数据 ----
 mod_id=examplemod          # 全部小写，禁止含 `-`

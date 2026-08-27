@@ -1,4 +1,4 @@
-﻿---
+---
 description: 04-entity.mdc
 ---
 

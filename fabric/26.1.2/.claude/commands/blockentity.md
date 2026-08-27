@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-blockentity
 description: Fabric 26.1.2 方块实体。BlockEntity、EntityBlock、FabricBlockEntityTypeBuilder。触发词：BlockEntity、getTicker、saveAdditional
 platform: fabric

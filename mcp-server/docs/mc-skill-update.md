@@ -59,4 +59,4 @@ mc-skill-data-full-*.zip
 
 Release 数据包优先匹配 `mc-skill-data-full-*.zip` + `SHA256SUMS*.txt`；若没有，则接受 `data.zip` 并使用 GitHub asset `digest`（`sha256:…`）校验。
 
-`get_server_status.updateHint` 读取 `data/mc-skill-update-state.json` 中上次 check（过期则 `stale=true`，不自动联网）。
+`get_server_status.updateHint` 读取 `$MC_SKILL_CACHE/mc-skill-update-state.json`（缺则回退旧 `data/mc-skill-update-state.json`；过期则 `stale=true`，不自动联网）。只往缓存写，避免 check 污染 git 工作树。

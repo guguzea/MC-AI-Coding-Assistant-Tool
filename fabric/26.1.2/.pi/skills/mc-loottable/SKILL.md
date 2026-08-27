@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-loottable
 description: Fabric 26.1.2 战利品。LootTableEvents（loot-api-v3）、数据包 loot_table JSON。触发词：loot、LootTableEvents
 platform: fabric

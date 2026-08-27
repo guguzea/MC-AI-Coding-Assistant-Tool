@@ -52,7 +52,7 @@
 ### MCP Mappings
 
 - Forge 1.12.2 使用 **MCP SRG** 格式
-- `mappings = 'SRG'` 在 `minecraft` 块中设置
+- `mappings = "stable_39"` 在 `minecraft` 块中设置
 - MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
 
 ### 项目目录结构（强制规范）
@@ -146,7 +146,7 @@ sourceCompatibility = targetCompatibility = 1.8
 minecraft {
     version = minecraft_version
     runDir = "run"
-    mappings = 'SRG'
+    mappings = "stable_39"
     makeObfSourceJar = false
 }
 
@@ -155,7 +155,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // FG2：不要写 FG3 的 minecraft "net.minecraftforge:forge:..."；由 apply plugin: 'forge' 拉 Forge
 }
 
 jar {

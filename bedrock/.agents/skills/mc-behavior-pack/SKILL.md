@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-behavior-pack
 description: 基岩行为包 BP。触发词：minecraft:block、minecraft:item、minecraft:entity、validate_bp_json
 platform: bedrock

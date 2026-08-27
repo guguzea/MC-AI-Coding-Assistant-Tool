@@ -1,4 +1,5 @@
 ---
+mcHint: 全版本通用（日志路径随 loader 略有差异）
 id: authored/crash-reports
 title: 崩溃报告与日志
 tags: [crash, fml, logs, debug, mixin]

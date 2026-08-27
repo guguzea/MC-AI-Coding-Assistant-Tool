@@ -94,7 +94,7 @@ export function buildFtsQuery(query: string): string | null {
   return tokens.map((t) => `"${t.replace(/"/g, '""')}"*`).join(" AND ");
 }
 
-const _dbCache = new Map<string, DatabaseSync | null>();
+const _dbCache = new Map<string, { db: DatabaseSync | null; mtime: number; size: number }>();
 
 type EmbMatrixCache = {
   mtime: number;
@@ -108,9 +108,9 @@ export let embeddingMatrixCacheHits = 0;
 
 /** 关闭并清空所有缓存的语义库句柄（测试清理 / 数据重建时使用） */
 export function closeSemanticDbs(): void {
-  for (const db of _dbCache.values()) {
+  for (const e of _dbCache.values()) {
     try {
-      if (db) db.close();
+      e.db?.close();
     } catch {
       // 已关闭或损坏句柄，忽略
     }
@@ -151,11 +151,26 @@ function loadEmbeddingMatrix(db: DatabaseSync, dbPath: string): EmbMatrixCache |
   return packed;
 }
 
-/** 只读打开语义库（缓存）；缺失/损坏 → null */
+/** 只读打开语义库（缓存）；缺失不负缓存；损坏按 mtime/size 复检 */
 export function openSemanticDb(dbPath: string): DatabaseSync | null {
-  if (_dbCache.has(dbPath)) return _dbCache.get(dbPath)!;
+  let st: { mtimeMs: number; size: number } | null = null;
+  try {
+    if (existsSync(dbPath)) st = statSync(dbPath);
+  } catch {
+    st = null;
+  }
+  const hit = _dbCache.get(dbPath);
+  if (hit) {
+    if (st && hit.mtime === st.mtimeMs && hit.size === st.size) return hit.db;
+    try {
+      hit.db?.close();
+    } catch {
+      /* ignore */
+    }
+    _dbCache.delete(dbPath);
+  }
   let db: DatabaseSync | null = null;
-  if (existsSync(dbPath)) {
+  if (st) {
     try {
       const candidate = new DatabaseSync(dbPath, { readOnly: true });
       const row = candidate
@@ -169,8 +184,8 @@ export function openSemanticDb(dbPath: string): DatabaseSync | null {
     } catch {
       db = null;
     }
+    _dbCache.set(dbPath, { db, mtime: st.mtimeMs, size: st.size });
   }
-  _dbCache.set(dbPath, db);
   return db;
 }
 

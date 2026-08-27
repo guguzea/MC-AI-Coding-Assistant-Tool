@@ -5,7 +5,7 @@
 
 import { existsSync, readFileSync, statSync } from "fs";
 import { actionable, type ActionEnvelope } from "../utils/actionable.js";
-import { inflateZipEntry } from "../utils/zip-inflate.js";
+import { inflateZipEntry, zipCrc32 } from "../utils/zip-inflate.js";
 
 const LANG_ENTRY_RE = /^assets\/([^/]+)\/lang\/([^/]+)\.(json|lang)$/i;
 
@@ -49,6 +49,7 @@ interface CdEntry {
   compressedSize: number;
   uncompressedSize: number;
   localHeaderOffset: number;
+  crc32: number;
 }
 
 function readCentralDirectory(buf: Buffer): CdEntry[] | { error: string } {
@@ -69,6 +70,7 @@ function readCentralDirectory(buf: Buffer): CdEntry[] | { error: string } {
     if (pos + 46 > buf.length) return { error: "CD_OUT_OF_BOUNDS" };
     if (buf.readUInt32LE(pos) !== 0x02014b50) return { error: "BAD_CD_SIGNATURE" };
     const compression = buf.readUInt16LE(pos + 10);
+    const crc = buf.readUInt32LE(pos + 16);
     const compressedSize = buf.readUInt32LE(pos + 20);
     const uncompressedSize = buf.readUInt32LE(pos + 24);
     const nameLen = buf.readUInt16LE(pos + 28);
@@ -84,6 +86,7 @@ function readCentralDirectory(buf: Buffer): CdEntry[] | { error: string } {
         compressedSize,
         uncompressedSize,
         localHeaderOffset,
+        crc32: crc,
       });
     }
     pos += 46 + nameLen + extraLen + commentLen;
@@ -93,21 +96,34 @@ function readCentralDirectory(buf: Buffer): CdEntry[] | { error: string } {
 
 function extractEntry(buf: Buffer, entry: CdEntry): Buffer {
   const off = entry.localHeaderOffset;
+  if (off < 0 || off + 30 > buf.length) {
+    throw new Error(`local header 越界: ${entry.name}`);
+  }
   if (buf.readUInt32LE(off) !== 0x04034b50) {
     throw new Error(`无效 local header: ${entry.name}`);
   }
   const nameLen = buf.readUInt16LE(off + 26);
   const extraLen = buf.readUInt16LE(off + 28);
   const dataStart = off + 30 + nameLen + extraLen;
+  if (dataStart < 0 || dataStart + entry.compressedSize > buf.length) {
+    throw new Error(`条目数据越界: ${entry.name}`);
+  }
   const compressed = buf.subarray(dataStart, dataStart + entry.compressedSize);
+  let out: Buffer;
   if (entry.compression === 0) {
-    return Buffer.from(compressed);
+    if (entry.compressedSize !== entry.uncompressedSize) {
+      throw new Error(`store 尺寸不一致: ${entry.name}`);
+    }
+    out = Buffer.from(compressed);
+  } else if (entry.compression === 8) {
+    out = inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.uncompressedSize });
+  } else {
+    throw new Error(`不支持的压缩方式 ${entry.compression}: ${entry.name}`);
   }
-  if (entry.compression === 8) {
-    // A-1：受控解压——硬上限 + maxOutputLength + 输出长度必须等于声明尺寸
-    return inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.uncompressedSize });
+  if (zipCrc32(out) !== (entry.crc32 >>> 0)) {
+    throw new Error(`CRC 不匹配: ${entry.name}`);
   }
-  throw new Error(`不支持的压缩方式 ${entry.compression}: ${entry.name}`);
+  return out;
 }
 
 export function loadJarBuffer(jarPath: string):

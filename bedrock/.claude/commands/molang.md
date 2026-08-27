@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-molang
 description: 基岩 Molang。触发词：Molang、query.last_hit_by_player、q.、math.sin
 platform: bedrock

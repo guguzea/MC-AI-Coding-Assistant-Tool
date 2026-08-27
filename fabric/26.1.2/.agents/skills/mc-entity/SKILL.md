@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-entity
 description: Fabric 26.1.2 实体。PathfinderMob、FabricDefaultAttributeRegistry、EntityRendererRegistry。触发词：实体、EntityType、AttributeSupplier
 platform: fabric

@@ -201,7 +201,7 @@ section("version-manager");
 // ── 2. cache ─────────────────────────────────────────────────────────────────
 section("cache");
 {
-  const { resolveCacheRoot, ensureCachePaths, openCacheDb, setMeta, getMeta, acquireCacheLock } = await import(
+  const { resolveCacheRoot, ensureCachePaths, openCacheDb, setMeta, getMeta, acquireCacheLock, normalizeArtifactPath, sanitizeCacheSegment, isPathInside, listLocks } = await import(
     "./dist/decompile/cache.js"
   );
 
@@ -282,6 +282,41 @@ section("cache");
       "live lock with fresh owner.at must not be taken over",
     );
     rmSync(liveDir, { recursive: true, force: true });
+  });
+
+  test("E15 normalizeArtifactPath collapses Win case/slash", () => {
+    if (process.platform === "win32") {
+      assert.equal(normalizeArtifactPath("H:\\x.jar"), normalizeArtifactPath("h:\\X.jar"));
+    } else {
+      assert.ok(typeof normalizeArtifactPath("/tmp/X.jar") === "string");
+    }
+  });
+
+  test("E3 sanitizeCacheSegment keeps 1.20.1, rejects .. traversal", () => {
+    assert.equal(sanitizeCacheSegment("1.20.1"), "1.20.1");
+    assert.equal(sanitizeCacheSegment("my-mod"), "my-mod");
+    assert.equal(sanitizeCacheSegment(".."), null);
+    assert.equal(sanitizeCacheSegment("."), null);
+    assert.equal(sanitizeCacheSegment("foo..bar"), null);
+    assert.equal(sanitizeCacheSegment("a/b"), "a_b");
+  });
+
+  test("E3 decompiled-mods prefix guard (Win case-insensitive)", () => {
+    const p = ensureCachePaths(tmpRoot);
+    assert.equal(isPathInside(p.decompiledMods, join(p.decompiledMods, "mymod", "1.20.1")), true);
+    assert.equal(isPathInside(p.decompiledMods, join(p.decompiledMods, "..", "jars")), false);
+    assert.equal(p.decompiledMods.endsWith("decompiled-mods") || p.decompiledMods.endsWith("decompiled-mods\\") || /decompiled-mods$/.test(p.decompiledMods.replace(/\\/g, "/")), true);
+  });
+
+  test("E3 lock name .. does not escape locks/", async () => {
+    const release = await acquireCacheLock(tmpRoot, "..", 2000);
+    try {
+      const locks = listLocks(tmpRoot);
+      assert.ok(locks.every((n) => n !== ".." && n !== "." && !n.startsWith("..")), JSON.stringify(locks));
+      assert.ok(locks.some((n) => n.startsWith("invalid_")), JSON.stringify(locks));
+    } finally {
+      release();
+    }
   });
 
   rmSync(tmpRoot, { recursive: true, force: true });
@@ -483,16 +518,32 @@ section("search-mod-source");
 // ── 5. java-process（对本机真实 java，无需 Java 17）───────────────────────────
 section("java-process");
 {
-  const { probeJava, toolchainActionable, skipDownloadsEnabled } = await import(
+  const { probeJava, toolchainActionable, skipDownloadsEnabled, parseJavaMajor, parseJavaVersionOutput } = await import(
     "./dist/decompile/java/java-process.js"
   );
 
-  test("probeJava on this machine → NOT ready (Java is 1.8 / or absent)", async () => {
+  test("parseJavaVersionOutput table (H6)", () => {
+    assert.equal(parseJavaMajor("23"), 23);
+    assert.equal(parseJavaVersionOutput("23")?.major, 23);
+    const withWarn = parseJavaVersionOutput(
+      'Picked up JAVA_TOOL_OPTIONS: -Xmx\nopenjdk version "17.0.9" 2023-10-17\nOpenJDK Runtime Environment',
+    );
+    assert.equal(withWarn?.major, 17);
+    assert.match(withWarn?.versionText ?? "", /openjdk version "17/);
+    assert.equal(parseJavaMajor('java version "1.8.0_431"'), 8);
+    assert.equal(parseJavaVersionOutput("no version here"), null);
+  });
+
+  test("probeJava on this machine is honest about major", async () => {
     const probe = await probeJava(true);
-    assert.equal(probe.ready, false, `expected java <17 or missing, got ${JSON.stringify(probe)}`);
-    assert.ok(probe.reason === "TOO_OLD" || probe.reason === "NOT_FOUND", `reason=${probe.reason}`);
-    if (probe.major !== null) {
-      assert.ok(probe.major < 17, `major=${probe.major}`);
+    if (probe.ready) {
+      assert.ok(probe.major !== null && probe.major >= 17, JSON.stringify(probe));
+      assert.equal(probe.reason, "OK");
+    } else {
+      assert.ok(probe.reason === "TOO_OLD" || probe.reason === "NOT_FOUND", `reason=${probe.reason}`);
+      if (probe.major !== null) {
+        assert.ok(probe.major < 17, `major=${probe.major}`);
+      }
     }
   });
 
@@ -572,9 +623,12 @@ section("zip-inflate (A-1)");
     assert.equal(m.get("bomb.bin").length, 65536);
   });
 
-  test("declared usize over hard cap → ZIP_ENTRY_TOO_LARGE（不进 zlib）", () => {
+  test("declared usize over hard cap → ZIP_TOTAL_TOO_LARGE / ZIP_ENTRY_TOO_LARGE（不进 zlib）", () => {
     const forged = forgeUsize(legit, 0x40000000); // 1GB 声明，实际仅 64KB
-    assert.throws(() => readZip(forged), (err) => err.code === "ZIP_ENTRY_TOO_LARGE");
+    assert.throws(
+      () => readZip(forged),
+      (err) => err.code === "ZIP_TOTAL_TOO_LARGE" || err.code === "ZIP_ENTRY_TOO_LARGE",
+    );
   });
 
   test("declared usize under cap but real output exceeds it → ZIP_ENTRY_BOMB_SUSPECTED", () => {

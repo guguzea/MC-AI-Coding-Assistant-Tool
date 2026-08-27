@@ -79,22 +79,21 @@ if (ModList.get().isLoaded("jei")) {
 |------|-----|------|
 | 配方查看器 | JEI / EMI / REI | `authored/library-integration-jei-emi` |
 | 配置 | Cloth Config | `authored/lib-cloth-config` |
-| 配置 | YACL | `authored/lib-yacl`（未建成） |
+| 配置 | YACL | `authored/lib-yacl` |
 | 动画 | GeckoLib | `authored/lib-geckolib` |
 | 跨加载器 | Architectury | `authored/lib-architectury` |
 | 饰品 | Curios | `authored/lib-curios` |
-| 饰品 | Trinkets（Fabric） | `authored/lib-trinkets`（未建成） |
-| 世界生成 | TerraBlender | `authored/lib-terrablender`（未建成） |
-| GUI | owo-lib（UI 部分） | `authored/lib-owo`（未建成） |
-| 数据附加 | Patchouli（指南书） | `authored/lib-patchouli` |
-| 数据附加 | CCA（Cardinal Components） | `authored/lib-cca`（未建成） |
-| 服务端网络文本 | Polymer（服务端驱动显示） | `authored/lib-polymer`（未建成） |
-| 脚本语言 | KubeJS | `authored/lib-kubejs`（未建成） |
-| 全家桶 | owo-lib | `authored/lib-owo`（未建成） |
-| 版本陷阱 | 冻结 / 活跃窗口 | `authored/lib-traps-2026`（未建成） |
+| 饰品 | Trinkets（Fabric） | `authored/lib-trinkets` |
+| 世界生成 | TerraBlender | `authored/lib-terrablender` |
+| GUI | owo-lib（含 UI） | `authored/lib-owo` |
+| 指南书 | Patchouli | `authored/lib-patchouli` |
+| 数据附加 | CCA（Cardinal Components） | `authored/lib-cca` |
+| 服务端网络文本 | Polymer（服务端驱动显示） | `authored/lib-polymer` |
+| 脚本语言 | KubeJS | `authored/lib-kubejs` |
+| 版本陷阱 | 冻结 / 活跃窗口 | `authored/lib-traps-2026` |
 | Gradle 坐标 | CurseMaven 等 | `authored/cursemaven-optional-deps` |
 | 运行时探测 | ModList / Loader 门闩 | `authored/soft-deps-modlist` |
-未建成条目按 id 占位，写作时同步创建。
+上表短文均已建成；不清楚方法名时回官方文档 / `search_community_docs`。
 ## 不清楚时
 - Skill：`mc-compat-jei`、`mc-curios`、`mc-geckolib`（骨架 + 指向官方）
 - `community_knowledge/AGENT_USAGE.md`：短文不能替代 API 查询

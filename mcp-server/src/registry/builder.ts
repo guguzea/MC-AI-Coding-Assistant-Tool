@@ -5,6 +5,7 @@ import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
 import { resolveDataDir } from "../utils/path.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 export interface RegistryJsonEntry {
   id: string;
@@ -29,7 +30,7 @@ export function vanillaRegistrySqlitePath(version: string): string {
 }
 
 function loadRegistryJson(filePath: string): RegistryJsonEntry[] {
-  const raw = JSON.parse(readFileSync(filePath, "utf8")) as unknown;
+  const raw = parseJsonUtf8(readFileSync(filePath, "utf8")) as unknown;
   if (Array.isArray(raw)) {
     return raw.filter((e): e is RegistryJsonEntry => typeof e === "object" && e !== null && "id" in e);
   }

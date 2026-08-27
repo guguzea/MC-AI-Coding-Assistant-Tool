@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-compat-jei
 description: JEI/EMI 兼容层（构件核验白名单）。触发词：JEI、EMI、RecipeCategory、jei_plugins、EmiPlugin、IModPlugin
 platform: forge

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Minecraft NeoForge 事件系统。@SubscribeEvent、事件总线、物理端检测。触发词：事件、@SubscribeEvent、Bus.FORGE、Bus.MOD、DistExecutor、AttachCapabilitiesEvent
 platform: neoforge

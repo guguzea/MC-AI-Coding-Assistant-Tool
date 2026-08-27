@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Fabric 26.1.2 数据生成。DataGeneratorEntrypoint、FabricRecipeProvider.createRecipeProvider。触发词：DataGen、DataGenerator、RecipeProvider
 platform: fabric

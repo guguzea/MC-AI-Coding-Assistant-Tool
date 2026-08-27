@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08 — 物理端（NeoForge 1.21.8）
 ---
 

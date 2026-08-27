@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: Minecraft Forge 注册系统。注册方块、物品、实体、方块实体等。触发词：注册、register、RegistryEvent、@EventBusSubscriber、ForgeRegistries、@Mod
 platform: forge

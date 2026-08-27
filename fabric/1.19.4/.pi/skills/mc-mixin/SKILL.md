@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: Fabric Mixin 注入。Loom 一流支持，fabric.mixins.json，@Mixin、@Inject、@At。触发词：Mixin、@Inject、@At、fabric.mixins.json、AccessWidener
 platform: fabric

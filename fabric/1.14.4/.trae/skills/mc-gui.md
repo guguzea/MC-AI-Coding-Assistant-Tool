@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Fabric 1.14.4 GUI。Container、ContainerType、ScreenProviderRegistry。触发词：GUI、Container、Screen、ScreenProviderRegistry
 platform: fabric

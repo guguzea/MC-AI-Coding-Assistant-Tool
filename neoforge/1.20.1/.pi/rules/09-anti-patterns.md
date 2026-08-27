@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09-anti-patterns NeoForge 1.20.1
 globs:
 alwaysApply: true

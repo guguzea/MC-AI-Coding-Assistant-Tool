@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00-project-setup NeoForge 1.20.1
 globs:
 alwaysApply: true

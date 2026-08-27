@@ -412,6 +412,9 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
           warnings: warnings.length ? warnings : undefined,
         };
     }
+    if (code) {
+      code = prependDocsReview(code, "search_forge_docs", "1.20.1");
+    }
   }
   } catch (e) {
     return {

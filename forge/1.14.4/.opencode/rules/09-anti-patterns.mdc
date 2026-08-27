@@ -149,26 +149,27 @@ public void invalidate() {
 ### ❌ 在消息处理器中直接修改世界（未用 execute）
 
 ```java
-// 错误
-@SubscribeEvent
-public static void onMessage(MyMessage message, MessageContext ctx) {
+// 错误：1.12 SimpleImpl 的 MessageContext / getServerHandler
+public static void handle(MyMessage message, MessageContext ctx) {
     ctx.getServerHandler().player.getServerWorld().setBlockState(
         ctx.getServerHandler().player.getPosition(), Blocks.AIR.getDefaultState()
-    ); // ❌ 不安全
+    );
 }
 ```
 
-**错误症状**：异步修改世界导致数据损坏或崩溃
+**错误症状**：本档网络是 `SimpleChannel`，没有 SimpleImpl；网络线程改世界会崩。
 
 **正确方案**：
 
 ```java
-@SubscribeEvent
-public static void onMessage(MyMessage message, MessageContext ctx) {
-    ctx.getServerHandler().execute(() -> {
-        ServerWorld world = ctx.getServerHandler().player.getServerWorld();
-        world.setBlockState(ctx.getServerHandler().player.getPosition(), Blocks.AIR.getDefaultState());
+public static void handle(MyMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+        ServerPlayerEntity player = ctx.get().getSender();
+        if (player == null) return;
+        ServerWorld world = player.getServerWorld();
+        world.setBlockState(player.getPosition(), Blocks.AIR.getDefaultState());
     });
+    ctx.get().setPacketHandled(true);
 }
 ```
 

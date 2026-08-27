@@ -1,6 +1,6 @@
 # LiteLoader 1.12.2 — Agent 总纲
 
-纯客户端加载器。**不要**把 Forge `RegistryEvent` 改名交差。
+纯客户端加载器。纯净工程**没有 Gradle**（`scaffold/pure`）；只有混合 `liteloader_forge` 才有 Gradle。**不要**把 Forge `RegistryEvent` 改名交差。
 
 ## 两套入口
 

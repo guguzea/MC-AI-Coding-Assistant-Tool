@@ -5668,7 +5668,7 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     role: "api",
     communityDocId: "authored/lib-curios",
     skillId: "mc-curios",
-    officialUrls: ["https://github.com/TheIllusiveC4/Curios","https://docs.illusivesoulworks.com/category/curios）为准。","https://github.com/emilyploszaj/trinkets"],
+    officialUrls: ["https://github.com/TheIllusiveC4/Curios","https://docs.illusivesoulworks.com/category/curios"],
     notes: "",
     verifiedApi: {
       "1.20.1/forge": {
@@ -18090,70 +18090,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
     officialUrls: ["https://github.com/mezz/JustEnoughItems","https://github.com/emilyploszaj/emi","https://github.com/shedaniel/RoughlyEnoughItems"],
     notes: "",
     verifiedApi: {
-      "1.10/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.11.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.13.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.14.4/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.16.1/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.16.4/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.18/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.18.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "1.19.1/fabric": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -18166,14 +18102,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "mezz.jei.fabric.JustEnoughItems",
           "mezz.jei.fabric.JustEnoughItemsClient"
         ],
-        "notes": "自动反编译提取"
-      },
-      "1.19.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.19.4/fabric": {
@@ -18192,14 +18120,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         ],
         "notes": "自动反编译提取"
       },
-      "1.20/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "1.20.2/fabric": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -18214,70 +18134,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "mezz.jei.library.plugins.jei.JeiInternalPlugin",
           "mezz.jei.library.plugins.vanilla.VanillaPlugin"
         ],
-        "notes": "自动反编译提取"
-      },
-      "1.20.4/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.20.6/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.10/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.4/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.8/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.8.8/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.9.4/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "26.2/fabric": {
@@ -18429,86 +18285,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         "entrypoints": [],
         "notes": "自动反编译提取"
       },
-      "1.10.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.12/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.14.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.15.1/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.16.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.16.5/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.18.1/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.19.1/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.20.4/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.20.6/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "1.21.11/fabric": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -18524,30 +18300,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         ],
         "notes": "自动反编译提取"
       },
-      "1.21.5/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.9/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.8.9/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "26.1/fabric": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -18561,14 +18313,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "mezz.jei.library.plugins.jei.JeiInternalPlugin",
           "mezz.jei.library.plugins.vanilla.VanillaPlugin"
         ],
-        "notes": "自动反编译提取"
-      },
-      "26.2/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.19.2/fabric": {
@@ -18699,54 +18443,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
         ],
         "notes": "自动反编译提取"
       },
-      "1.11/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.12.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.14.3/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.15.2/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.16.3/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.17.1/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
       "1.18.2/fabric": {
         "verifiedAt": "2026-08",
         "packages": [
@@ -18759,14 +18455,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "mezz.jei.fabric.JustEnoughItems",
           "mezz.jei.fabric.JustEnoughItemsClient"
         ],
-        "notes": "自动反编译提取"
-      },
-      "1.19/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.21/fabric": {
@@ -18799,46 +18487,6 @@ export const LIBRARY_CATALOG: LibraryCatalogEntry[] = [
           "mezz.jei.library.plugins.jei.JeiInternalPlugin",
           "mezz.jei.library.plugins.vanilla.VanillaPlugin"
         ],
-        "notes": "自动反编译提取"
-      },
-      "1.21.11/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.21.7/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.8/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "1.9/forge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
-        "notes": "自动反编译提取"
-      },
-      "26.1/neoforge": {
-        "verifiedAt": "2026-08",
-        "packages": [
-          "net.darkhax.bookshelf"
-        ],
-        "entrypoints": [],
         "notes": "自动反编译提取"
       },
       "1.18.2/quilt": {

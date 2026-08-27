@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01-registry Fabric 1.21.8
 alwaysApply: true
 ---

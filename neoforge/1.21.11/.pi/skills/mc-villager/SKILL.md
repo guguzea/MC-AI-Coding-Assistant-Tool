@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-villager
 description: NeoForge 1.21.11 mc-villager。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

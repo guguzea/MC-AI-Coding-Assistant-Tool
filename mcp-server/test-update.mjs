@@ -430,6 +430,26 @@ async function testMdkUnpackPinGate() {
   }
 }
 
+async function testWriteUpdateStateFailure() {
+  const blocker = mkdtempSync(join(tmpdir(), "mc-upd-ro-"));
+  const asFile = join(blocker, "not-a-dir");
+  writeFileSync(asFile, "x");
+  const res = state.writeUpdateState(
+    {
+      lastCheck: {
+        at: new Date().toISOString(),
+        updateAvailable: false,
+        remoteTag: "v0",
+        scopes: [],
+      },
+    },
+    asFile,
+  );
+  assert.equal(res.writeFailed, true, JSON.stringify(res));
+  assert.ok(res.warning && /无法写入更新状态/.test(res.warning), res.warning);
+  rmSync(blocker, { recursive: true, force: true });
+}
+
 async function testPendingRestartHint() {
   const dataDir = mkdtempSync(join(tmpdir(), "mc-upd-data-"));
   state.writeUpdateState(
@@ -532,6 +552,7 @@ async function main() {
   await testTlsCertErrorDetect();
   await testMdkUnpackPinGate();
   await testPendingRestartHint();
+  await testWriteUpdateStateFailure();
   await testInvalidActionSkipsNetwork();
   console.log("test-update: ok");
 }

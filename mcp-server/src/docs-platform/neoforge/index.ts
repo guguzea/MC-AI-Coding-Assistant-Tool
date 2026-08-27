@@ -53,6 +53,24 @@ function getNeoStore(): NeoForgeDocStore {
   return s;
 }
 
+/** versionFallback 才盖信封；Neo 1.20.1 Forge 兼容层不得 fallback:true。 */
+function annotateNeoGetResult(
+  version: string,
+  resolution: ReturnType<NeoForgeDocStore["describeVersionResolution"]>,
+  payload: Record<string, unknown>,
+): Record<string, unknown> {
+  return withDocsFallbackFields({
+    ...payload,
+    version,
+    resolvedVersion: resolution.resolved,
+    versionFallback: resolution.versionFallback,
+    warning: joinSearchWarnings(
+      typeof payload.warning === "string" ? payload.warning : undefined,
+      resolution.warning,
+    ),
+  });
+}
+
 function versionRequiredDocResult(): CallToolResult {
   return {
     content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
@@ -273,11 +291,9 @@ export async function getNeoForgeDocSummary(args: {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
+        text: JSON.stringify(annotateNeoGetResult(version, resolution, {
           ok: true,
           ...summary,
-          versionFallback: resolution.versionFallback,
-          warning: resolution.warning,
           ...(resolution.sourcePlatform === "forge"
             ? {
                 forgeCompatible: true,
@@ -285,7 +301,7 @@ export async function getNeoForgeDocSummary(args: {
                 sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
               }
             : {}),
-        }, null, 2),
+        }), null, 2),
       }],
     };
   } catch (e) {
@@ -335,18 +351,16 @@ export async function getNeoForgeDocFull(args: {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
+        text: JSON.stringify(annotateNeoGetResult(version, resolution, {
           ok: true,
           ...result,
-          versionFallback: resolution.versionFallback,
-          warning: resolution.warning,
           ...(resolution.sourcePlatform === "forge"
             ? {
                 forgeCompatible: true,
                 source_version: resolution.sourceVersion,
               }
             : {}),
-        }, null, 2),
+        }), null, 2),
       }],
     };
   } catch (e) {
@@ -405,12 +419,9 @@ export async function getNeoForgeDocRelated(args: {
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
+        text: JSON.stringify(annotateNeoGetResult(version, resolution, {
           ok: true,
           id: args.id,
-          version,
-          versionFallback: resolution.versionFallback,
-          warning: resolution.warning,
           ...(resolution.sourcePlatform === "forge"
             ? {
                 forgeCompatible: true,
@@ -418,7 +429,7 @@ export async function getNeoForgeDocRelated(args: {
               }
             : {}),
           results,
-        }, null, 2),
+        }), null, 2),
       }],
     };
   } catch (e) {

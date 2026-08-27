@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-villager
 description: 村民交易 VillagerTrades。触发词：villager、trade、POI
 platform: forge

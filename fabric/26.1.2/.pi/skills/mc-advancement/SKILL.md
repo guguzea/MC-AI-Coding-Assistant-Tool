@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-advancement
 description: Fabric 26.1.2 进度 DataGen。FabricAdvancementProvider.generateAdvancement。触发词：advancement、进度
 platform: fabric

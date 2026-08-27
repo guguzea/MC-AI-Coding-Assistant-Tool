@@ -57,7 +57,7 @@ public class MyMessage implements IMessage {
     public static class Handler implements IMessageHandler<MyMessage, IMessage> {
         @Override
         public IMessage onMessage(MyMessage msg, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+            EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
                 // 主线程游戏逻辑
             });

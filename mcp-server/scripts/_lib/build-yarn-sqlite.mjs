@@ -1,7 +1,9 @@
 /**
- * Build per-version yarn-mappings.sqlite (schema v3) from Tiny / TSRG / SRG / CSV.
+ * Build per-version yarn-mappings.sqlite (schema v4) from Tiny / TSRG / SRG / CSV.
  *
  * schema v3 adds `fields` + `searge_fields` (v2 class/method tables unchanged).
+ * schema v4 adds single-column name_official / name_intermediary indexes
+ * (lookupByObfuscated UNION queries; runtime is readOnly and must not CREATE INDEX).
  * Runtime MUST NOT load yarn-mappings.json; only the sqlite artefact is queried.
  *
  * Usage:
@@ -18,7 +20,7 @@ import { importTsrgStream } from "./import-tsrg.mjs";
 import { importForgeSrgStream } from "./import-forge-srg.mjs";
 import { importMcpCsvMethods, importMcpCsvFields } from "./import-mcp-csv.mjs";
 
-const SCHEMA_VERSION = "3";
+const SCHEMA_VERSION = "4";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -55,6 +57,8 @@ export function initYarnSchema(db) {
       ON methods(owner_named, name_official, descriptor_official);
     CREATE INDEX IF NOT EXISTS idx_methods_named
       ON methods(owner_named, name_named);
+    CREATE INDEX IF NOT EXISTS idx_methods_name_official ON methods(name_official);
+    CREATE INDEX IF NOT EXISTS idx_methods_name_intermediary ON methods(name_intermediary);
 
     CREATE TABLE IF NOT EXISTS fields (
       owner_named TEXT NOT NULL,
@@ -69,6 +73,8 @@ export function initYarnSchema(db) {
       ON fields(owner_named, name_official, descriptor_official);
     CREATE INDEX IF NOT EXISTS idx_fields_named
       ON fields(owner_named, name_named);
+    CREATE INDEX IF NOT EXISTS idx_fields_name_official ON fields(name_official);
+    CREATE INDEX IF NOT EXISTS idx_fields_name_intermediary ON fields(name_intermediary);
 
     CREATE TABLE IF NOT EXISTS searge_methods (
       searge TEXT PRIMARY KEY,

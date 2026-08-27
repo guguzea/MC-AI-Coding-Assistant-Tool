@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: 分发到版本目录。1.20.1 = Forge SimpleChannel 形态；1.20.4+ = Payload。
 platform: neoforge

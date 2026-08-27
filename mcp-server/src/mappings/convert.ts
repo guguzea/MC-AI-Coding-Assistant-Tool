@@ -21,6 +21,8 @@ import { resolveObfuscatedThreeWay } from "./lookup-obfuscated.js";
 import { suggestSimilarMethods } from "./suggest.js";
 import { isUnobfuscatedMcVersion, UNOBFUSCATED_MAPPING_HINT } from "./unobfuscated.js";
 import { ownGet } from "../utils/own-record.js";
+import { isSafeVersionSegment } from "../utils/minecraft-version.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 const DEFAULT_VERSION = "1.20.1";
 
@@ -66,6 +68,8 @@ export interface MappingResult {
   returnType?: string;
   schemaVersion?: string | null;
   action?: ActionEnvelope;
+  /** csv = MCP CSV 层；yarn-tiny 不得作为 to=mcp/parchment 的成功来源 */
+  source?: "csv" | "yarn-tiny";
 }
 
 type ParchmentParam = { index: number; name: string };
@@ -84,6 +88,9 @@ type ParchmentClass = {
 const _dataCache = new Map<string, { apiIndex: Record<string, ParchmentClass>; classNames: string[] }>();
 
 function resolveVersionDataDir(version: string): string {
+  if (!isSafeVersionSegment(version)) {
+    throw new Error("INVALID_INPUT");
+  }
   return resolveDataDir(`forge_${version}`, "extracted");
 }
 
@@ -92,8 +99,9 @@ const MAPPING_CACHE_CAP = 8;
 function loadParchment(version: string): {
   apiIndex: Record<string, ParchmentClass>;
   classNames: string[];
+  indexCorrupt?: boolean;
 } {
-  if (!/^\d+(\.\d+)*$/.test(version)) {
+  if (!isSafeVersionSegment(version)) {
     return { apiIndex: {}, classNames: [] };
   }
   const cached = _dataCache.get(version);
@@ -107,19 +115,20 @@ function loadParchment(version: string): {
   const classNamesPath = join(dataDir, "class-names.json");
   let apiIndex: Record<string, ParchmentClass> = {};
   let classNames: string[] = [];
-  // 数据文件损坏/截断（如 Release 包半截）时降级为空索引 + 警告，不让工具以未结构化异常崩溃
   if (existsSync(apiIndexPath)) {
     try {
-      apiIndex = JSON.parse(readFileSync(apiIndexPath, "utf-8")) as Record<string, ParchmentClass>;
+      apiIndex = parseJsonUtf8(readFileSync(apiIndexPath, "utf-8")) as Record<string, ParchmentClass>;
     } catch (err) {
-      console.error(`[convert_mapping] api-index.json 解析失败（${version}），按空索引进度: ${(err as Error).message}`);
+      console.error(`[convert_mapping] api-index.json 解析失败（${version}）: ${(err as Error).message}`);
+      return { apiIndex: {}, classNames: [], indexCorrupt: true };
     }
   }
   if (existsSync(classNamesPath)) {
     try {
-      classNames = JSON.parse(readFileSync(classNamesPath, "utf-8")) as string[];
+      classNames = parseJsonUtf8(readFileSync(classNamesPath, "utf-8")) as string[];
     } catch (err) {
-      console.error(`[convert_mapping] class-names.json 解析失败（${version}），按空表处理: ${(err as Error).message}`);
+      console.error(`[convert_mapping] class-names.json 解析失败（${version}）: ${(err as Error).message}`);
+      return { apiIndex: {}, classNames: [], indexCorrupt: true };
     }
   }
   const data = { apiIndex, classNames };
@@ -186,7 +195,7 @@ function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): Mapping
       resolvedAction = actionable(
         ActionCodes.SCHEMA_FIELDS_UNAVAILABLE,
         "当前 sqlite 为 schema v2，无 fields 表",
-        ["运行 npm run build:yarn-sqlite --all 重建为 schema v3", "或改查 method/class"],
+        ["运行 npm run build:yarn-sqlite --all 重建为 schema v4", "或改查 method/class"],
         ["get_server_status"],
       );
     } else {
@@ -233,6 +242,8 @@ function outputFromMethodRow(
   if (to === "mojang" || to === "obfuscated") return row.name_official;
   if (to === "intermediary") return row.name_intermediary ?? row.name_named;
   if (to === "yarn") return row.name_named;
+  // mcp/parchment：仅允许 CSV 覆盖后的 named；调用方必须先校验 source==="csv"
+  if (to === "mcp" || to === "parchment") return row.name_named;
   return row.name_named;
 }
 
@@ -247,7 +258,35 @@ function outputFromFieldRow(
   if (to === "mojang" || to === "obfuscated") return row.name_official;
   if (to === "intermediary") return row.name_intermediary ?? row.name_named;
   if (to === "yarn") return row.name_named;
+  if (to === "mcp" || to === "parchment") return row.name_named;
   return row.name_named;
+}
+
+function yarnTinyNoMcpLayer(
+  query: MappingQuery,
+  extras: { mappingEra?: string | null; schemaVersion?: string | null; mappingType?: MappingResult["mappingType"] },
+): MappingResult {
+  const { to } = query;
+  return fail(query, {
+    resultKind: "YARN_TINY_NO_MCP_LAYER",
+    mappingEra: extras.mappingEra,
+    mappingType: extras.mappingType,
+    schemaVersion: extras.schemaVersion,
+    notes: [
+      `version=${query.version} 只有 yarn-tiny 数据（named 列为 Yarn 名），没有 MCP/Parchment 可读层，拒绝把 Yarn 名冒充 ${to} 名返回。`,
+      "需要 Mojang/Parchment 可读名请用 query_api / get_method_params（Parchment 索引约 1.16.5–1.20.4）。",
+      "或改 to=yarn 获取 Yarn 名。",
+    ],
+    action: actionable(
+      ActionCodes.DATA_UNAVAILABLE,
+      `yarn-tiny 数据无 ${to} 可读层（version=${query.version}）`,
+      [
+        "Mojang/Parchment 可读名改用 query_api / get_method_params",
+        "或改 to=yarn",
+      ],
+      ["query_api", "get_method_params"],
+    ),
+  });
 }
 
 export function convertMapping(query: MappingQuery): MappingResult {
@@ -266,6 +305,23 @@ export function convertMapping(query: MappingQuery): MappingResult {
     };
   }
   const version = query.version!.trim();
+  if (!isSafeVersionSegment(version)) {
+    return {
+      found: false,
+      original: memberName,
+      converted: null,
+      direction,
+      confidence: "low",
+      mappingType: "class",
+      notes: [`version 非法（${version}）：只允许数字与点，禁止 .. 与路径分隔符`],
+      action: actionable(
+        ActionCodes.INVALID_INPUT,
+        `version 非法：${version}`,
+        ["传入精确 Minecraft 版本（如 1.20.1）", "禁止 .. 与 / \\ 路径穿越"],
+        ["convert_mapping"],
+      ),
+    };
+  }
 
   // 5.5 兼容：to=mojang 保持旧行为（混淆短名），notes 提示改用 obfuscated 层
   const mojangHint =
@@ -396,6 +452,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
     dbPath
   ) {
     const hit = resolveObfuscatedThreeWay(version, memberName);
+    if (hit.found && (hit.kind === "method" || hit.kind === "field") && (to === "mcp" || to === "parchment")) {
+      return yarnTinyNoMcpLayer(query, {
+        mappingEra: hit.mappingEra ?? era,
+        schemaVersion,
+        mappingType: hit.kind,
+      });
+    }
     if (hit.found && hit.kind === "method") {
       const r = hit.row;
       const converted = outputFromMethodRow(
@@ -573,6 +636,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
       });
     }
     if (looked.found && looked.row) {
+      if ((to === "mcp" || to === "parchment") && looked.source !== "csv") {
+        return yarnTinyNoMcpLayer(query, {
+          mappingEra: looked.mappingEra ?? era,
+          schemaVersion,
+          mappingType: "field",
+        });
+      }
       const converted = outputFromFieldRow(looked.row, to);
       return {
         found: true,
@@ -587,6 +657,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         official: looked.row.name_official,
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
+        source: looked.source,
         notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
         schemaVersion,
       };
@@ -690,6 +761,13 @@ export function convertMapping(query: MappingQuery): MappingResult {
       });
     }
     if (looked.found && looked.row) {
+      if ((to === "mcp" || to === "parchment") && looked.source !== "csv") {
+        return yarnTinyNoMcpLayer(query, {
+          mappingEra: looked.mappingEra ?? era,
+          schemaVersion,
+          mappingType: "method",
+        });
+      }
       const converted = outputFromMethodRow(looked.row, to);
       const desc = looked.row.descriptor_named || descriptor || "";
       return {
@@ -705,6 +783,7 @@ export function convertMapping(query: MappingQuery): MappingResult {
         official: looked.row.name_official,
         named: looked.row.name_named,
         intermediary: looked.row.name_intermediary ?? undefined,
+        source: looked.source,
         notes: mojangHint.length ? [...(looked.notes ?? []), ...mojangHint] : looked.notes,
         schemaVersion,
         ...(desc
@@ -747,6 +826,21 @@ export function convertMapping(query: MappingQuery): MappingResult {
 
   if (dbPath) {
     const yarn = convertYarnMember(version, from, to, memberName);
+    if (yarn.ambiguous) {
+      return fail(query, {
+        mappingType: "class",
+        mappingEra: era,
+        notes: yarn.notes,
+        schemaVersion,
+        ambiguous: true,
+        action: actionable(
+          ActionCodes.AMBIGUOUS,
+          `classes.official 命中多条: ${memberName}`,
+          ["传入更精确的类名或检查 mapping sqlite"],
+          ["convert_mapping"],
+        ),
+      });
+    }
     if (yarn.found) {
       return {
         found: true,
@@ -819,6 +913,23 @@ export function getMethodParams(query: ParamQuery): ParamResult {
     };
   }
   const version = query.version!.trim();
+  if (!isSafeVersionSegment(version)) {
+    return {
+      found: false,
+      className: query.className,
+      methodName: query.methodName,
+      parameters: [],
+      descriptor: "",
+      returnType: "void",
+      note: `version 非法（${version}）：只允许数字与点，禁止 .. 与路径分隔符`,
+      action: actionable(
+        ActionCodes.INVALID_INPUT,
+        `version 非法：${version}`,
+        ["传入精确 Minecraft 版本（如 1.20.1）", "禁止 .. 与 / \\ 路径穿越"],
+        ["get_method_params"],
+      ),
+    };
+  }
   if (isUnobfuscatedMcVersion(version) || /^1\.21(\.|$)/.test(version) || /^26\./.test(version)) {
     return {
       found: false,
@@ -836,8 +947,25 @@ export function getMethodParams(query: ParamQuery): ParamResult {
       ),
     };
   }
-  const { apiIndex, classNames } = loadParchment(version);
+  const { apiIndex, classNames, indexCorrupt } = loadParchment(version);
   const { className, methodName, descriptor } = query;
+  if (indexCorrupt) {
+    return {
+      found: false,
+      className,
+      methodName,
+      parameters: [],
+      descriptor: "",
+      returnType: "void",
+      note: `api-index.json 无法解析（version=${version}），不是 NOT_FOUND`,
+      action: actionable(
+        ActionCodes.INDEX_CORRUPT,
+        `API 索引损坏（version=${version}）`,
+        ["检查 extracted/api-index.json 是否截断", "重新解压 data 包"],
+        ["get_server_status", "diagnose_data_paths"],
+      ),
+    };
+  }
   const slash = toSlash(className);
   const cls = ownGet(apiIndex, slash);
 
@@ -871,6 +999,7 @@ export function getMethodParams(query: ParamQuery): ParamResult {
   });
 
   if (methods.length === 0) {
+    const looksJni = descriptor ? /^\(/.test(descriptor) : true;
     return {
       found: false,
       className,
@@ -878,11 +1007,13 @@ export function getMethodParams(query: ParamQuery): ParamResult {
       parameters: [],
       descriptor: "",
       returnType: "void",
-      note: `在 ${className} 中未找到方法 ${methodName}`,
+      note: !looksJni
+        ? `在 ${className} 中未找到方法 ${methodName}。descriptor 应为 JNI 形态，例如 (I)V，而不是「${descriptor}」`
+        : `在 ${className} 中未找到方法 ${methodName}`,
       action: actionable(
         ActionCodes.NOT_FOUND,
         `方法未找到: ${methodName}`,
-        ["确认 Mojang/Parchment 方法名（非 Yarn）", "用 query_api 列出类方法"],
+        ["确认 Mojang/Parchment 方法名（非 Yarn）", "用 query_api 列出类方法", "descriptor 用 JNI，如 (I)V"],
         ["query_api"],
       ),
     };
@@ -912,6 +1043,8 @@ export function getMethodParams(query: ParamQuery): ParamResult {
   }
 
   const m = methods[0];
+  const indexNote =
+    "参数 index 在索引中可能从 0 或 1 起编（Blaze3D 等从 0，部分从 1），不要假定统一。";
   return {
     found: true,
     className,
@@ -923,8 +1056,8 @@ export function getMethodParams(query: ParamQuery): ParamResult {
     javadoc: m.javadoc ?? undefined,
     note:
       methods.length > 1
-        ? `找到 ${methods.length} 个重载，请使用 descriptor 参数精确定位`
-        : undefined,
+        ? `找到 ${methods.length} 个重载，请使用 descriptor 参数精确定位。${indexNote}`
+        : indexNote,
   };
 }
 

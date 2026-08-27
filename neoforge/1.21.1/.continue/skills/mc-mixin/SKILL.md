@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: NeoForge 1.21.1 Mixin。[[mixins]] 来自官方 modfiles 页。触发词：Mixin、@Inject、mixins.json、neoforge.mods.toml
 platform: neoforge

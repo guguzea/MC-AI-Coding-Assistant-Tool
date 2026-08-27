@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync, utimesSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
 
-import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocRelated } from "./dist/docs-platform/forge/index.js";
-import { analyzePortingPath, portProject } from "./dist/porting/index.js";
+import { listVersions, searchForgeDocs, searchDocs, getDocFull, getDocSummary, getDocRelated, getForgeDocSummary, getForgeDocFull } from "./dist/docs-platform/forge/index.js";
+import { analyzePortingPath, portProject, javaForMcVersion } from "./dist/porting/index.js";
 import { convertYarnMember, closeAllYarnDbs } from "./dist/mappings/yarn-sqlite.js";
 import { convertMapping, suggestSimilarMethods } from "./dist/mappings/index.js";
 import { createFabricDocStore } from "./dist/docs-platform/fabric/store.js";
@@ -20,12 +20,12 @@ import {
 import { resolvePlatformDataDir } from "./dist/docs-platform/store.js";
 import { NeoForgeDocStore } from "./dist/docs-platform/neoforge/store.js";
 import { assertWritablePath, ProjectPathError, isInsideReal, nativeReal } from "./dist/utils/project-sandbox.js";
-import { searchNeoForgeDocs } from "./dist/docs-platform/neoforge/index.js";
+import { searchNeoForgeDocs, getNeoForgeDocSummary, getNeoForgeDocFull, getNeoForgeDocRelated } from "./dist/docs-platform/neoforge/index.js";
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
-import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket } from "./dist/generators/index.js";
+import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
-import { isExactMcVersionToken, matchesExactMcVersion } from "./dist/utils/minecraft-version.js";
-import { withDocsFallbackFields, matchDocIndexId } from "./dist/docs-platform/search-utils.js";
+import { isExactMcVersionToken, matchesExactMcVersion, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
+import { withDocsFallbackFields, matchDocIndexId, pathBoost } from "./dist/docs-platform/search-utils.js";
 import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
@@ -51,7 +51,7 @@ import {
   getCommunityDocFull,
 } from "./dist/docs-platform/community/index.js";
 import { CommunityDocStore, stripLeadingFrontmatter } from "./dist/docs-platform/community/store.js";
-import { analyzeCrash } from "./dist/crash/index.js";
+import { analyzeCrash, CRASH_ANALYZE_MAX, CRASH_HARD_MAX } from "./dist/crash/index.js";
 import { validateProject } from "./dist/validate/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
 import { collectJavaSources, collectCrashReports } from "./dist/utils/project-files.js";
@@ -276,6 +276,9 @@ async function testExtractCommonArchitecturyLayout() {
     }));
     assert.equal(out.ok, true);
     assert.ok(out.candidates?.some((c) => /A\.java/.test(c.relPath)), JSON.stringify(out));
+    const cand = out.candidates.find((c) => /A\.java/.test(c.relPath));
+    assert.equal(cand.status, "has_loader_calls", `仅 import 也应 has_loader_calls: ${JSON.stringify(cand)}`);
+    assert.notEqual(cand.status, "safe_to_move");
     writeFileSync(join(root, "build.gradle"), "plugins { id 'net.minecraftforge.gradle' }\n", "utf8");
     const analyzed = JSON.parse(await analyzePortingPath({
       projectPath: root,
@@ -347,7 +350,7 @@ async function testYarnShortNameAndMojangHeuristic() {
       "net.minecraft.world.level.block.Block",
     );
     assert.equal(fqn.found, true);
-    assert.equal(fqn.converted, "net/minecraft/block/Block");
+    assert.equal(fqn.converted, "net.minecraft.block.Block");
 
     // yarn-tiny 库无 MCP/Parchment 可读层：拒绝把 Yarn 名冒充 mcp/parchment 名（F-D202）
     const refuse = convertYarnMember("1.20.1", "yarn", "parchment", "Block");
@@ -762,6 +765,7 @@ async function testDatagenAndMappingGates() {
     assert.ok(!d.code?.includes("::iterator"), `${t} must not use ::iterator`);
     assert.ok(d.code?.includes("net.minecraftforge"), `${t} forge imports`);
     assert.ok(!d.code?.includes("net.neoforged"), `${t} must not be NeoForge`);
+    assert.ok(d.code?.includes("search_forge_docs"), `${t} docs-review`);
     if (t === "loottable") assert.ok(d.code?.includes("void generate()"), "loot generate()");
     assert.ok(!d.code?.includes("fromNamespaceAndPath"), `${t} 1.20.1 must not use 1.21 factory`);
   }
@@ -801,10 +805,14 @@ async function testDatagenAndMappingGates() {
     });
     assert.ok(nfExtra.code?.includes("net.neoforged"), `${t} neoforge path`);
     if (t === "advancement") {
+      assert.ok(forgeExtra.code?.includes("Consumer<Advancement>"), "GH1 Forge 1.20.1 Consumer<Advancement>");
+      assert.ok(!forgeExtra.code?.includes("AdvancementHolder"), "GH1 must not copy neo Holder");
+      assert.ok(forgeExtra.code?.includes("search_forge_docs"), "GH1 docs-review on 1.20.1 providers");
       assert.ok(
         nfExtra.code?.includes("net.neoforged.neoforge.common.data.AdvancementProvider"),
         "NeoForge AdvancementProvider",
       );
+      assert.ok(nfExtra.code?.includes("AdvancementHolder"), "neo 1.21 must keep Holder");
     }
     if (t === "sound") {
       assert.ok(nfExtra.code?.includes("SoundDefinitionsProvider"), "sound datagen provider");
@@ -836,6 +844,8 @@ async function testDatagenAndMappingGates() {
   assert.ok(sugg.includes("getMaxHealth"));
   const short = suggestSimilarMethods("getH", ["getHunger", "getMaxHealth", "getHealth"]);
   assert.equal(short.length, 0, "getH must not suggest unrelated methods");
+  assert.equal(suggestSimilarMethods("a".repeat(65), ["getHealth"]).length, 0, "input>64 must return []");
+  assert.equal(suggestSimilarMethods("getHealth", ["x".repeat(97)]).length, 0, "candidate>96 must skip");
 
   const mapped = convertMapping({
     from: "mcp",
@@ -937,6 +947,64 @@ async function testDatagenAndMappingGates() {
     csvOwner.converted && !String(csvOwner.converted).startsWith("func_"),
     "1.14.4 yarn owner path must return obf not searge",
   );
+
+  // D1：Yarn 专名不得冒充 MCP；CSV 同名（getHealth）走 csv 源
+  const fake114 = convertMapping({
+    from: "yarn",
+    to: "mcp",
+    memberName: "applyDamage",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.14.4",
+  });
+  assert.equal(fake114.found, false, "1.14.4 yarn applyDamage must not masquerade as MCP");
+  assert.equal(fake114.converted, null);
+  assert.equal(fake114.resultKind, "YARN_TINY_NO_MCP_LAYER", fake114.resultKind);
+  const fake115 = convertMapping({
+    from: "yarn",
+    to: "mcp",
+    memberName: "applyDamage",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.15.2",
+  });
+  assert.equal(fake115.found, false, "1.15.2 yarn applyDamage must not be MCP");
+  assert.equal(fake115.converted, null);
+  assert.ok(
+    fake115.resultKind === "YARN_TINY_NO_MCP_LAYER" || fake115.resultKind === "csv-no-owner",
+    fake115.resultKind,
+  );
+  const yarnNamedCsv = convertMapping({
+    from: "yarn",
+    to: "mcp",
+    memberName: "getHealth",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.14.4",
+  });
+  assert.equal(yarnNamedCsv.found, true, JSON.stringify(yarnNamedCsv));
+  assert.equal(yarnNamedCsv.converted, "getHealth");
+  assert.equal(yarnNamedCsv.source, "csv");
+  const yarnParchment201 = convertMapping({
+    from: "yarn",
+    to: "parchment",
+    memberName: "LivingEntity",
+    version: "1.20.1",
+    memberKind: "class",
+  });
+  assert.equal(yarnParchment201.found, false);
+  assert.equal(yarnParchment201.resultKind, "YARN_TINY_NO_MCP_LAYER");
+  const yarnToParchment = convertMapping({
+    from: "yarn",
+    to: "parchment",
+    memberName: "applyDamage",
+    ownerClass: "net.minecraft.entity.LivingEntity",
+    version: "1.14.4",
+  });
+  assert.notEqual(yarnToParchment.converted, "applyDamage");
+  assert.ok(yarnToParchment.found === false || yarnToParchment.confidence !== "high" || yarnToParchment.source === "csv");
+
+  const pktDesc = generateNetworkPacketDescription();
+  for (const tok of NETWORK_PACKET_PLATFORMS) {
+    assert.ok(pktDesc.includes(tok), `A1 description missing ${tok}`);
+  }
 
   // 1.12.2 / 1.13.2：SRG/TSRG + CSV — 带 owner 的 MCP 名 → 真正 obf（非 func_）
   for (const [ver, obf] of [
@@ -1268,9 +1336,11 @@ async function testCrashAnalyzeKindAndMissingDep() {
   assert.ok(!(anon.deobfuscated ?? []).some((s) => /Minecraft\$1$/.test(s) || /\$\$Lambda/.test(s)), JSON.stringify(anon.deobfuscated));
 
   const lateQuilt = `${"x".repeat(70 * 1024)}\norg.quiltmc.loader.impl.QuiltLoader crashed`;
-  assert.notEqual(detectCrashKind(lateQuilt), "quilt");
+  assert.equal(detectCrashKind(lateQuilt), "quilt");
   const earlyQuilt = `org.quiltmc.loader.impl.QuiltLoader crashed\n${"x".repeat(70 * 1024)}`;
   assert.equal(detectCrashKind(earlyQuilt), "quilt");
+  const midOnlyQuilt = `${"x".repeat(70 * 1024)}\norg.quiltmc.loader.impl.QuiltLoader crashed\n${"x".repeat(70 * 1024)}`;
+  assert.notEqual(detectCrashKind(midOnlyQuilt), "quilt");
 
   const unknown = analyzeCrash({ crashReport: "not a crash report at all", version: "1.20.1" });
   assert.equal(unknown.crashKind, "unknown");
@@ -1336,6 +1406,24 @@ async function testCrashAnalyzeKindAndMissingDep() {
   });
   assert.ok(!(lambdaCrash.deobfuscated ?? []).some((s) => /lambda\$/i.test(s)), JSON.stringify(lambdaCrash.deobfuscated));
   assert.ok(!(lambdaCrash.deobfuscated ?? []).some((s) => /\$Properties/i.test(s)), JSON.stringify(lambdaCrash.deobfuscated));
+
+  const oversizeBody = `---- Minecraft Crash Report ----\nFabric Loader\n${("xxxxxxxx\n").repeat(70_000)}`;
+  const oversize = analyzeCrash({
+    crashReport: oversizeBody,
+    version: "1.20.1",
+  });
+  assert.ok(oversizeBody.length > CRASH_ANALYZE_MAX);
+  assert.equal(oversize.ok, true, "超过 512KB 应截断后分析，不得整份拒绝");
+  assert.equal(oversize.truncated, true);
+  assert.notEqual(oversize.action?.code, "INVALID_INPUT");
+  assert.ok((oversize.logHints ?? []).some((h) => /截断/.test(h)), JSON.stringify(oversize.logHints));
+
+  const tooHuge = analyzeCrash({
+    crashReport: "x".repeat(CRASH_HARD_MAX + 1),
+    version: "1.20.1",
+  });
+  assert.equal(tooHuge.ok, false);
+  assert.equal(tooHuge.action?.code, "INVALID_INPUT");
 }
 
 async function testPlatformDataMissing() {
@@ -1497,6 +1585,23 @@ async function testObfuscatedLayerAndLookup() {
   assert.equal(obfId.found, true);
   assert.equal(obfId.converted, "er");
   assert.equal(obfId.resultKind, "identity");
+
+  const evilIdentity = convertMapping({
+    from: "yarn",
+    to: "yarn",
+    memberName: "foo",
+    version: "..\\..\\evil",
+  });
+  assert.equal(evilIdentity.found, false, "from===to must not succeed on path-traversal version");
+  assert.equal(evilIdentity.action?.code, "INVALID_INPUT");
+  const slashIdentity = convertMapping({
+    from: "yarn",
+    to: "yarn",
+    memberName: "foo",
+    version: "../../evil",
+  });
+  assert.equal(slashIdentity.found, false);
+  assert.equal(slashIdentity.action?.code, "INVALID_INPUT");
 
   // 5. 字段：field_6247 → bI（无 owner 全局反查）
   const obfField = convertMapping({
@@ -2199,6 +2304,29 @@ async function testReviewFixes() {
     rmSync(quiltLoomOnly, { recursive: true, force: true });
   }
 
+  const fabToQuilt = mkdtempSync(join(tmpdir(), "mc-skill-fab-quilt-"));
+  try {
+    mkdirSync(join(fabToQuilt, "src", "main", "resources"), { recursive: true });
+    writeFileSync(join(fabToQuilt, "build.gradle"), "plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\n", "utf8");
+    writeFileSync(
+      join(fabToQuilt, "src", "main", "resources", "fabric.mod.json"),
+      JSON.stringify({ schemaVersion: 1, id: "fabmod", version: "1.0.0" }),
+      "utf8",
+    );
+    const q = JSON.parse(
+      await analyzePortingPath({ projectPath: fabToQuilt, targetPlatform: "quilt", targetVersion: "1.21.1" }),
+    );
+    assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
+    assert.equal(q.analysis.current.platform, "fabric");
+    assert.equal(q.analysis.recommendedRoute, "version_migration", JSON.stringify(q.analysis.recommendedRoute));
+    assert.ok(
+      !(q.analysis.routeSteps ?? []).some((s) => /init_architectury/.test(s)),
+      JSON.stringify(q.analysis.routeSteps),
+    );
+  } finally {
+    rmSync(fabToQuilt, { recursive: true, force: true });
+  }
+
   const bpRoot = mkdtempSync(join(tmpdir(), "mc-skill-bp-port-"));
   try {
     mkdirSync(join(bpRoot, "BP"), { recursive: true });
@@ -2798,6 +2926,20 @@ async function testPrototypeOwnKeys() {
 }
 
 function testPlan1Fixes() {
+  assert.equal(javaForMcVersion("26.1"), 25);
+  assert.equal(javaForMcVersion("27.0"), 25);
+  assert.equal(javaForMcVersion("1.21.11"), 25);
+  assert.equal(javaForMcVersion("1.21.1"), 21);
+  assert.equal(javaForMcVersion("1.21"), 21);
+  assert.equal(javaForMcVersion("1.20.5"), 21);
+  assert.equal(javaForMcVersion("1.20.6"), 21);
+  assert.equal(javaForMcVersion("1.20.4"), 17);
+  assert.equal(javaForMcVersion("1.18.2"), 17);
+  assert.equal(javaForMcVersion("1.17"), 16);
+  assert.equal(javaForMcVersion("1.17.1"), 16);
+  assert.equal(javaForMcVersion("1.16.5"), 8);
+  assert.equal(javaForMcVersion("1.12.2"), 8);
+
   assert.equal(detectMinecraftVersion({ gradleProperties: "minecraft_version=1.20.1\n" }), "1.20.1");
   assert.equal(detectMinecraftVersion({ gradleProperties: "neo_version=27.0.1\n" }), "27.0.1");
   assert.equal(isExactMcVersionToken("27.0"), true);
@@ -2816,6 +2958,9 @@ function testPlan1Fixes() {
   assert.equal(matchDocIndexId("1.20.1/concepts_registries", "concepts/registries", "1.20.1"), true);
   assert.equal(matchDocIndexId("1.20.1/concepts_registries", "1.20.1/concepts_registries", "1.20.1"), true);
   assert.equal(matchDocIndexId("other/page", "concepts/registries", "1.20.1"), false);
+  assert.equal(pathBoost("concepts/registries", true), 12);
+  assert.equal(pathBoost("concepts/registries", false), 0);
+  assert.ok(pathBoost("foo/datagen", true) < pathBoost("concepts/registries", true));
   const genericFb = withDocsFallbackFields({
     fallback: true,
     requestedVersion: "1.20.4",
@@ -2830,6 +2975,14 @@ function testPlan1Fixes() {
     "1.20.1",
   );
   assert.equal(detectMinecraftVersion({ buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n" }), "unknown");
+
+  assert.equal(classifyMinecraftVersion("1.21"), "1.21.x");
+  assert.equal(classifyMinecraftVersion("1.21.1"), "1.21.x");
+  assert.equal(classifyMinecraftVersion("1.21.11"), "1.21.x");
+  assert.equal(classifyMinecraftVersion("26.1"), "26.x");
+  assert.equal(classifyMinecraftVersion("26.1.1"), "26.x");
+  assert.equal(classifyMinecraftVersion("1.20.1"), "1.20.1");
+  assert.equal(classifyMinecraftVersion("1.15.2"), "other");
 
   const g1204 = diagnoseGradle({
     buildGradle: `
@@ -2958,6 +3111,26 @@ public class ExampleMod { }
   assert.ok(fab261.code?.includes("FabricPackOutput"));
   assert.ok(!/net\.minecraftforge/.test(fab261.code || ""));
   assert.ok(!/net\.neoforged/.test(fab261.code || ""));
+
+  const fabTag21 = generateDatagen({
+    providerType: "tag",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "1.21.4",
+  });
+  assert.ok(fabTag21.code?.includes("FabricTagProvider.ItemTagProvider"), fabTag21.code?.slice(0, 600));
+  assert.ok(!fabTag21.code?.includes("FabricTagsProvider"), "GH2 1.21.x must be singular FabricTagProvider");
+  assert.ok(fabTag21.code?.includes("getOrCreateTagBuilder"), "GH2 keep getOrCreateTagBuilder");
+  const fabTag261 = generateDatagen({
+    providerType: "tag",
+    modId: "demo",
+    targetName: "x",
+    platform: "fabric",
+    version: "26.1.2",
+  });
+  assert.ok(fabTag261.code?.includes("FabricTagsProvider.ItemTagsProvider"), "GH2 26.1 keeps plural");
+  assert.ok(!fabTag261.code?.includes("FabricTagProvider.ItemTagProvider"), "GH2 26.1 must not use 1.21 singular");
 
   const fabGen = generateDatagen({
     providerType: "recipe",
@@ -3223,6 +3396,15 @@ public class ExampleMod { }
     });
     assert.ok((pubFat.jars ?? []).some((j) => /mod-all\.jar$/.test(j)), JSON.stringify(pubFat));
     assert.ok(!(pubFat.jars ?? []).some((j) => /mod-sources\.jar$/.test(j)), JSON.stringify(pubFat));
+    assert.ok(pubFat.warnings.some((w) => /\*-all\.jar/.test(w)), JSON.stringify(pubFat.warnings));
+
+    writeFileSync(join(fatRoot, "build", "libs", "mod.jar"), "thin");
+    const pubBoth = checkPublishReady({
+      projectPath: fatRoot,
+      fabricModJson: JSON.stringify({ id: "examplemod", version: "1.0.0", license: "MIT" }),
+    });
+    assert.ok((pubBoth.jars ?? []).some((j) => /mod\.jar$/.test(j)), JSON.stringify(pubBoth));
+    assert.ok(!(pubBoth.jars ?? []).some((j) => /mod-all\.jar$/.test(j)), JSON.stringify(pubBoth));
   } finally {
     rmSync(fatRoot, { recursive: true, force: true });
   }
@@ -3238,16 +3420,44 @@ public class ExampleMod { }
     rmSync(logRoot, { recursive: true, force: true });
   }
 
+  const inspCrashRoot = mkdtempSync(join(tmpdir(), "mc-inspect-crash-"));
+  try {
+    const body = `---- Minecraft Crash Report ----\nFabric Loader\n${("xxxxxxxx\n").repeat(70_000)}`;
+    writeFileSync(join(inspCrashRoot, "crash-latest.txt"), body);
+    const insp = inspectRuntime({
+      crashReportsDir: inspCrashRoot,
+      version: "1.20.1",
+      maxBytes: 2 * 1024 * 1024,
+    });
+    assert.equal(insp.ok, true, JSON.stringify(insp));
+    assert.ok((insp.warnings ?? []).some((w) => /截断/.test(w)), JSON.stringify(insp.warnings));
+    assert.notEqual(insp.crashAnalysis?.action?.code, "INVALID_INPUT", JSON.stringify(insp.crashAnalysis));
+    assert.equal(insp.crashAnalysis?.ok, true);
+  } finally {
+    rmSync(inspCrashRoot, { recursive: true, force: true });
+  }
+
   const crashCapRoot = mkdtempSync(join(tmpdir(), "mc-crash-cap-"));
   try {
     mkdirSync(join(crashCapRoot, "crash-reports"), { recursive: true });
     for (let i = 0; i < 22; i++) {
       const n = String(i).padStart(2, "0");
-      writeFileSync(join(crashCapRoot, "crash-reports", `crash-${n}.txt`), `report ${n}\n`);
+      const p = join(crashCapRoot, "crash-reports", `crash-${n}.txt`);
+      writeFileSync(p, `report ${n}\n`);
+      const ts = 1_700_000_000 + i;
+      utimesSync(p, ts, ts);
     }
     const capped = collectCrashReports(crashCapRoot);
     assert.equal(capped.reports.length, 20, JSON.stringify(capped.reports.map((r) => r.path)));
     assert.match(String(capped.warning), /截断/);
+    const now = Date.now() / 1000;
+    utimesSync(join(crashCapRoot, "crash-reports", "crash-21.txt"), now, now);
+    utimesSync(join(crashCapRoot, "crash-reports", "crash-20.txt"), now, now);
+    const newest = collectCrashReports(crashCapRoot);
+    const newestPaths = newest.reports.map((r) => r.path);
+    assert.ok(newestPaths.includes("crash-reports/crash-21.txt"), JSON.stringify(newestPaths));
+    assert.ok(newestPaths.includes("crash-reports/crash-20.txt"), JSON.stringify(newestPaths));
+    assert.ok(!newestPaths.includes("crash-reports/crash-00.txt"), JSON.stringify(newestPaths));
     const small = collectCrashReports(crashCapRoot);
     assert.ok(small.reports.every((r) => r.path.startsWith("crash-reports/")), JSON.stringify(small.reports));
   } finally {
@@ -3288,6 +3498,98 @@ public class ExampleMod { }
   }
 }
 
+async function testW2MappingDocsFixes() {
+  assert.equal(VERSION_SEGMENT_RE.test("1.20.1"), true);
+  assert.equal(isSafeVersionSegment("1.20.1"), true);
+  assert.equal(isSafeVersionSegment("..\\..\\evil"), false);
+  assert.equal(isSafeVersionSegment("../../evil"), false);
+  assert.equal(isExactMcVersionToken("1.16.5"), true, "path gate must not be isExactMcVersionToken-only");
+
+  const s1201 = parseToolText(await searchDocs({ query: "block", version: "1.20.1", platform: "forge" }));
+  assert.equal(s1201.ok, true, JSON.stringify(s1201).slice(0, 400));
+  assert.ok(s1201.fallback !== true, "exact forge 1.20.1 must not stamp fallback:true");
+  assert.equal(s1201.source_route, undefined, "source_route is deprecated");
+
+  const dedicated1201 = parseToolText(await searchForgeDocs({ query: "block", version: "1.20.1" }));
+  assert.ok(dedicated1201.fallback !== true);
+  assert.equal(dedicated1201.source_route, undefined);
+
+  const s1204 = parseToolText(await searchDocs({ query: "block", version: "1.20.4", platform: "forge" }));
+  if (s1204.ok && !s1204.versionFallback) {
+    assert.ok(s1204.fallback !== true, "1.20.4 dedicated-route must not fake versionFallback envelope");
+    assert.match(String(s1204.warning ?? ""), /1\.20\.x/);
+    assert.equal(s1204.source_route, undefined);
+  }
+
+  const forgeStore = new ForgeDocStore(resolveDataDir());
+  if (forgeStore.getAvailableVersions().includes("1.16.5")) {
+    const s168 = parseToolText(await searchDocs({ query: "registries", version: "1.16.8", platform: "forge" }));
+    assert.equal(s168.ok, true, JSON.stringify({ ok: s168.ok, error: s168.error, warning: s168.warning }).slice(0, 400));
+    assert.equal(s168.fallback, true);
+    assert.equal(s168.versionFallback, true);
+    assert.equal(s168.source_version, s168.resolvedVersion);
+    assert.equal(s168.resolvedVersion, "1.16.5");
+    assert.equal(s168.source_route, undefined);
+    assert.equal(s168.confidence, "fallback");
+    assert.equal(s168.action?.code, "VERSION_FALLBACK");
+
+    const hitId = s168.results?.[0]?.id;
+    assert.ok(hitId, "1.16.8 search should return a page id");
+    const sum = parseToolText(await getDocSummary({ id: hitId, version: "1.16.8", platform: "forge" }));
+    assert.equal(sum.fallback, true);
+    assert.equal(sum.source_version, "1.16.5");
+    assert.equal(sum.confidence, "fallback");
+    assert.equal(sum.action?.code, "VERSION_FALLBACK");
+    assert.equal(sum.versionFallback, true);
+    assert.ok(sum.warning, "neighbor get_doc_summary must include warning");
+
+    const full = parseToolText(await getDocFull({ id: hitId, version: "1.16.8", platform: "forge" }));
+    assert.equal(full.fallback, true);
+    assert.equal(full.source_version, "1.16.5");
+    assert.equal(full.action?.code, "VERSION_FALLBACK");
+
+    const forgeSum = parseToolText(await getForgeDocSummary({ id: hitId, version: "1.16.8" }));
+    assert.equal(forgeSum.fallback, true);
+    assert.equal(forgeSum.source_version, "1.16.5");
+    const forgeFull = parseToolText(await getForgeDocFull({ id: hitId, version: "1.16.8" }));
+    assert.equal(forgeFull.fallback, true);
+    assert.equal(forgeFull.source_version, "1.16.5");
+  }
+
+  const exactSum = parseToolText(await getDocSummary({
+    id: "concepts/registries",
+    version: "1.20.1",
+    platform: "forge",
+  }));
+  if (exactSum.ok !== false && !exactSum.error) {
+    assert.ok(exactSum.fallback !== true, "exact get_doc_summary must not add fallback envelope");
+    assert.equal(exactSum.source_route, undefined);
+  }
+
+  const neoSum = parseToolText(await getNeoForgeDocSummary({ id: "concepts/registries", version: "1.20.1" }));
+  assert.ok(neoSum.ok !== false, JSON.stringify(neoSum).slice(0, 400));
+  assert.equal(neoSum.forgeCompatible, true);
+  assert.ok(neoSum.fallback !== true, "Neo 1.20.1 Forge-compat must not get fallback:true");
+  const neoFull = parseToolText(await getNeoForgeDocFull({ id: "concepts/registries", version: "1.20.1" }));
+  assert.equal(neoFull.forgeCompatible, true);
+  assert.ok(neoFull.fallback !== true);
+  const neoRel = parseToolText(await getNeoForgeDocRelated({ id: "concepts/registries", version: "1.20.1" }));
+  assert.equal(neoRel.forgeCompatible, true);
+  assert.ok(neoRel.fallback !== true);
+
+  const neo262 = parseToolText(await getNeoForgeDocSummary({ id: "concepts/registries", version: "26.2" }));
+  if (neo262.ok !== false && neo262.versionFallback) {
+    assert.equal(neo262.fallback, true);
+    assert.equal(neo262.source_version, neo262.resolvedVersion);
+    assert.equal(neo262.action?.code, "VERSION_FALLBACK");
+  }
+
+  const { queryApi } = await import("./dist/api/index.js");
+  const qa = await queryApi({ className: "Item", version: "..\\..\\evil" });
+  assert.equal(qa.found, false);
+  assert.equal(qa.action?.code, "INVALID_INPUT");
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -3318,6 +3620,7 @@ await testMdkUnpackFixtures();
 await testProjectPathFill();
 testPlan1Fixes();
 await testPrototypeOwnKeys();
+await testW2MappingDocsFixes();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

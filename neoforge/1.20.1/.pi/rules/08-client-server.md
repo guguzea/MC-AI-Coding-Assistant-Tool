@@ -1,4 +1,4 @@
-﻿---
+---
 description: 08-client-server NeoForge 1.20.1
 globs:
 alwaysApply: false

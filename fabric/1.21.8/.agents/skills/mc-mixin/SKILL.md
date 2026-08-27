@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-mixin
 description: Fabric 1.21.8 mc-mixin。类名只来自本档核实表与 search_fabric_docs。
 platform: fabric

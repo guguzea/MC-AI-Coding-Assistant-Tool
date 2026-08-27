@@ -5,7 +5,7 @@
 ```json
 {
   "pack": {
-    "pack_description": "My Resource Pack",
+    "description": "My Resource Pack",
     "pack_format": 4
   }
 }

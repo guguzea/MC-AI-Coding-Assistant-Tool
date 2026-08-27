@@ -1,4 +1,4 @@
-﻿---
+---
 description: 00-project-setup Fabric 1.21.4
 alwaysApply: true
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-command
 description: ICommand、CommandBase、权限。触发词：command、ICommand、CommandBase
 platform: forge

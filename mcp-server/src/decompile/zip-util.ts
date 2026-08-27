@@ -9,11 +9,13 @@
  * 不做路径穿越/解压到盘，仅内存读取。
  */
 
-import { inflateZipEntry } from "../utils/zip-inflate.js";
+import { inflateZipEntry, zipCrc32 } from "../utils/zip-inflate.js";
 
 export class ZipParseError extends Error {
-  constructor(message: string) {
+  code?: string;
+  constructor(message: string, code?: string) {
     super(`ZIP 解析失败: ${message}`);
+    this.code = code;
   }
 }
 
@@ -24,6 +26,7 @@ interface CentralEntry {
   usize: number;
   localOffset: number;
   flags: number;
+  crc32: number;
 }
 
 const EOCD_SIG = 0x06054b50;
@@ -49,6 +52,7 @@ function parseCentralEntries(buf: Buffer, cdOffset: number, cdSize: number, coun
     if (buf.readUInt32LE(pos) !== CENTRAL_SIG) throw new ZipParseError("中央目录条目签名错误");
     const flags = buf.readUInt16LE(pos + 8);
     const method = buf.readUInt16LE(pos + 10);
+    const crc = buf.readUInt32LE(pos + 16);
     const csize = buf.readUInt32LE(pos + 20);
     const usize = buf.readUInt32LE(pos + 24);
     const nameLen = buf.readUInt16LE(pos + 28);
@@ -60,14 +64,16 @@ function parseCentralEntries(buf: Buffer, cdOffset: number, cdSize: number, coun
     }
     const nameBuf = buf.subarray(pos + 46, pos + 46 + nameLen);
     const name = flags & 0x800 ? nameBuf.toString("utf8") : nameBuf.toString("latin1");
-    entries.push({ name, method, csize, usize, localOffset, flags });
+    entries.push({ name, method, csize, usize, localOffset, flags, crc32: crc });
     pos += 46 + nameLen + extraLen + commentLen;
   }
   return entries;
 }
 
 function readEntryData(buf: Buffer, entry: CentralEntry): Buffer {
-  if (entry.localOffset + 30 > buf.length) throw new ZipParseError("local header 越界");
+  if (entry.localOffset < 0 || entry.localOffset + 30 > buf.length) {
+    throw new ZipParseError("local header 越界");
+  }
   if (buf.readUInt32LE(entry.localOffset) !== LOCAL_SIG) {
     throw new ZipParseError(`条目 ${entry.name} local header 签名错误`);
   }
@@ -76,16 +82,22 @@ function readEntryData(buf: Buffer, entry: CentralEntry): Buffer {
   const dataStart = entry.localOffset + 30 + nameLen + extraLen;
   if (dataStart + entry.csize > buf.length) throw new ZipParseError(`条目 ${entry.name} 数据越界`);
   const compressed = buf.subarray(dataStart, dataStart + entry.csize);
+  let out: Buffer;
   if (entry.method === 0) {
     if (entry.csize !== entry.usize) throw new ZipParseError(`条目 ${entry.name} store 尺寸不一致`);
-    return Buffer.from(compressed);
+    out = Buffer.from(compressed);
+  } else if (entry.method === 8) {
+    out = inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.usize });
+  } else {
+    throw new ZipParseError(`条目 ${entry.name} 使用不支持的压缩方法 ${entry.method}（仅 store/deflate）`);
   }
-  if (entry.method === 8) {
-    // A-1：受控解压——硬上限 + maxOutputLength + 输出长度必须等于声明 usize
-    return inflateZipEntry(compressed, { name: entry.name, declaredSize: entry.usize });
+  if (zipCrc32(out) !== (entry.crc32 >>> 0)) {
+    throw new ZipParseError(`条目 ${entry.name} CRC 不匹配`);
   }
-  throw new ZipParseError(`条目 ${entry.name} 使用不支持的压缩方法 ${entry.method}（仅 store/deflate）`);
+  return out;
 }
+
+const ZIP_TOTAL_MAX_UNCOMPRESSED = 512 * 1024 * 1024;
 
 /** 读取 zip/jar 二进制 → 条目名 → 内容（不含目录项）。 */
 export function readZip(buffer: Buffer): Map<string, Buffer> {
@@ -98,6 +110,17 @@ export function readZip(buffer: Buffer): Map<string, Buffer> {
   const cdOffset = buffer.readUInt32LE(eocd + 16);
 
   const entries = parseCentralEntries(buffer, cdOffset, cdSize, count);
+  let totalUsize = 0;
+  for (const entry of entries) {
+    if (entry.name.endsWith("/")) continue;
+    totalUsize += entry.usize;
+    if (totalUsize > ZIP_TOTAL_MAX_UNCOMPRESSED) {
+      throw new ZipParseError(
+        `ZIP 声明解压总量超过 ${(ZIP_TOTAL_MAX_UNCOMPRESSED / 1048576).toFixed(0)}MB`,
+        "ZIP_TOTAL_TOO_LARGE",
+      );
+    }
+  }
   const out = new Map<string, Buffer>();
   for (const entry of entries) {
     if (entry.name.endsWith("/")) continue; // 目录项

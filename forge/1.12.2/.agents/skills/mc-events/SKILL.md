@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Forge 1.12.2 事件系统。@SubscribeEvent、@EventHandler、EVENT_BUS。触发词：事件、Event、@SubscribeEvent、@EventHandler
 platform: forge

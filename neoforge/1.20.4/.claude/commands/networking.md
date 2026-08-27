@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: NeoForge 1.20.4 mc-networking。类名来自本档核实表、loader-api 反编译摘要与 search_neoforge_docs。
 platform: neoforge

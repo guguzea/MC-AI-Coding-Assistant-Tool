@@ -35,8 +35,18 @@ function githubUrls(docId) {
   if (!existsSync(p)) return [];
   const body = readFileSync(p, "utf8");
   const re = /https?:\/\/[^\s)\]]+/g;
-  const urls = [...new Set(body.match(re) ?? [])].filter((u) => /github\.com|docs\.|curseforge\.com|modrinth\.com/.test(u));
-  return urls.slice(0, 3);
+  const cleaned = [];
+  for (const raw of body.match(re) ?? []) {
+    const u = raw.replace(/[）\u3002].*$/, "");
+    try {
+      const parsed = new URL(u);
+      if (!/github\.com|docs\.|curseforge\.com|modrinth\.com/.test(parsed.hostname)) continue;
+      cleaned.push(parsed.href);
+    } catch {
+      /* skip */
+    }
+  }
+  return [...new Set(cleaned)].slice(0, 3);
 }
 
 const keyMap = parseEntryKeys(text);

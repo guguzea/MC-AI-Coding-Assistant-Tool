@@ -198,8 +198,8 @@ MC_skill/
 
 **配置本地 MCP Server：**
 
-> 将 `[AUTO_SETUP.md](./AUTO_SETUP.md)` 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
-> 要求 **Node.js >= 22.5**（**22.5–22.12 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，79 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
+> 将 [AUTO_SETUP.md](./AUTO_SETUP.md) 拖入当前 AI IDE / CLI。Agent 应识别宿主（Cursor / Claude Code / VS Code / Continue / Trae / OpenCode / Codex 等），编译 `mcp-server`，按该宿主格式生成配置草稿，**经你确认后合并**（不会静默覆盖）。  
+> 要求 **Node.js >= 22.5**（**22.5–22.12 与 23.0–23.3 需加 `--experimental-sqlite` 启动**——内置 `node:sqlite` 在 22.13 / 23.4 起才默认开启；服务入口会检测并给出醒目指引）；服务名 `MC-AI-Coding-Assistant-Tool`（stdio，79 个工具）。无 MCP 客户端时用 `node mcp-server/dist/cli.js`。
 
 ## 社区知识与库模组
 
@@ -213,7 +213,7 @@ MC_skill/
 | `permitted/` | 作者许可入库的社区帖提炼 | 仍不确定时打开原文 URL |
 | `links/` | 仅标题 / 摘要 / 外链 | **禁止**把网页正文当已入库全文 |
 
-索引：`indexes/index-l0.json`（约 **81** 条）。MCP：`list_community_sources` → `search_community_docs` → `get_community_doc_summary` / `get_community_doc_full`。环境变量 `MC_SKILL_COMMUNITY` 可改根路径。
+索引：`indexes/index-l0.json`（约 **109** 条）。MCP：`list_community_sources` → `search_community_docs` → `get_community_doc_summary` / `get_community_doc_full`。环境变量 `MC_SKILL_COMMUNITY` 可改根路径。
 
 **主题速查**（完整表见 [`community_knowledge/README.md`](./community_knowledge/README.md)）：发布 / 崩溃 / 软依赖 / 机器 GUI / 本地化 / 代码模式（`patterns/`）等。**库集成**另有 48 篇 `authored/lib-*.md` + 总览 `library-catalog-2026`、陷阱 `lib-traps-2026`、配方集成 `library-integration` / `library-integration-jei-emi`。
 
@@ -249,7 +249,7 @@ MC_skill/
 
 ## MCP 工具使用注意
 
-本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**79** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
+本地 MCP 服务名：`MC-AI-Coding-Assistant-Tool`（**79** 个工具）。配置时请使用 **绝对路径** + `MC_SKILL_DATA` 指向本仓库 `data/`。要求 **Node.js >= 22.5**（Yarn 映射使用内置 `node:sqlite`；**22.5–22.12 与 23.0–23.3 需在 NODE_OPTIONS 或启动参数加 `--experimental-sqlite`，22.13+ / 23.4+ 无需**）。仓库 / Release **不含** `node_modules`，需自行 `npm ci && npm run build`（建议再跑 `npm run build:yarn-sqlite`）。
 
 **测试**：`cd mcp-server && npm test`（构建 + 全部单测：核心 / 脚本 / 数据审计 / Wave BCD / localize / update / CLI / 反编译 / 深 mixin / MCP 协议）。CI 语义：`MC_SKILL_SKIP_DOWNLOAD=1` 时下载类工具诚实失败。
 
@@ -331,7 +331,7 @@ MC_skill/
 
 **不能**开关 Cursor/Claude 等 Skill 扫描器。重载 MCP 不会让设置页出现条目。
 
-### 边界
+### 工具边界
 
 文档向量搜索 **补不了** Vanilla 方法签名。缺索引时保持 `found:false` / 空结果 + 说明，
 
@@ -417,7 +417,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 | 知识读取 | `read_knowledge_resource`  | 按 URI 读正文                                                                                            |
 
 
-常用 URI：`mcskill://patterns/README`（→ `community_knowledge/patterns/README.md`）、`mcskill://schema/sqlite`、`mcskill://matrix/mixin-support`、`mcskill://version-changes/1.21`、`mcskill://antipatterns/registry`、`mcskill://workflow/<模板名>`、`mcskill://community/<authored-id>`。兼容说明见 `[mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md)`。
+常用 URI：`mcskill://patterns/README`（→ `community_knowledge/patterns/README.md`）、`mcskill://schema/sqlite`、`mcskill://matrix/mixin-support`、`mcskill://version-changes/1.21`、`mcskill://antipatterns/registry`、`mcskill://workflow/<模板名>`、`mcskill://community/<authored-id>`。兼容说明见 [mcp-server/docs/prompts-client-compat.md](./mcp-server/docs/prompts-client-compat.md)。
 
 **补充文档**（`mcp-server/docs/`）：`mixin-support.md`（字节码校验支持矩阵）、`vanilla-registries.md` / `registry-data-source.md`（Registry 数据源）、`mc-skill-update.md`（自更新机制）、`prompts-client-compat.md`（Prompt/Resource 客户端兼容）。
 
@@ -438,7 +438,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 - 完整数据包可通过 GitHub Release 的 `mc-skill-data-full-*.zip` + `SHA256SUMS-*.txt` + `data-manifest.json` 分发。
 - 本地原始包丢失时应重新 fetch，不要跨版本复制改名。
 
-第三方文档与映射的许可说明见 `[THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)`。
+第三方文档与映射的许可说明见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
 
 ## 目录约定
 
@@ -500,7 +500,7 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 ## MCP Server 工具（79 个）
 
-服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 `[AUTO_SETUP.md](./AUTO_SETUP.md)`、`[mcp-server/README.md](./mcp-server/README.md)`。
+服务名：`MC-AI-Coding-Assistant-Tool`。安装与配置见 [AUTO_SETUP.md](./AUTO_SETUP.md)、[mcp-server/README.md](./mcp-server/README.md)。
 
 推荐通用流程：
 
@@ -673,7 +673,7 @@ authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-
   → check_dependencies 消费 catalog + manifest（库识别 / supportedVersions / 版本摘要）
 ```
 
-相关脚本均在 `mcp-server/scripts/`；数据位置见「反编译数据产物」一节。
+相关脚本均在 `mcp-server/scripts/`；数据位置见 [反编译数据产物](#反编译数据产物) 一节。
 
 
 
@@ -755,6 +755,8 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 **与 `query_api` 的分工**：`query_api` / `get_method_params` 查 **1.16.5–1.20.4 Vanilla** 签名（快、离线）；**不含** Forge/Fabric API，**26.1+ 无索引**。以上 4 工具仅在确实需要完整源码/反编译时使用（下载量大）。各工具 description 均带 ⚠️ 提示。各工具 description 带边界说明。
 
+### 反编译数据产物
+
 **已入库的反编译数据产物**（供 `check_dependencies` 等消费，clone 后即用）：
 
 | 数据 | 位置 | 内容 |
@@ -830,7 +832,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 ### 独立 CLI（`mc-skill`，79 工具全可用）
 
-flags-only（`--key value` / `--key=value` / 裸 `--key`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。完整语义见 `[mcp-server/README.md](./mcp-server/README.md)` §独立 CLI：
+flags-only（`--key value` / `--key=value` / 裸 `--flag`→true），输出统一 JSON 包装 `{success, tool, result|error}`，退出码 0=成功 / 1=工具错误 / 2=用法错误。全局 flag（不进工具 schema）：`--help`/`-h`、`--version`、`--json`、`--compact`、`--fail-on-error`、`--project <dir>`、`--file field=path`；所有 string 字段支持文件输入——`--crashReport @./latest.txt` 读文件、`--crashReport=-` / `@-` 读 stdin（全进程一次）、`--file crashReport=./latest.txt` 等价写法，单文件上限约 8MB。**加 `--fail-on-error` 时，`found:false` 与 `errors[]` 非空也升为退出码 1**。`--fail-on-error=false` **关闭**该行为（不要把写出 `=false` 当成开启）。布尔 flag 只接受 `true/false/1/0/yes/no/on/off`；`--flag=junk` 拒绝。完整语义见 [mcp-server/README.md](./mcp-server/README.md) §独立 CLI：
 
 > ⚠️ **Windows PowerShell 5.1 控制台坑（E-7）**：PS 5.1 在 GBK 代码页下用管道捕获本 CLI 的 UTF-8 JSON 会引入坏控制字符导致 `JSON.parse` 失败；纯 Node `spawnSync` 管道解析同一输出完全正常。脚本化消费请用 Node 子进程，或先 `chcp 65001`。
 

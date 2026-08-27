@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-recipe
 description: Minecraft Forge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方。触发词：Recipe、RecipeType、RecipeSerializer
 platform: forge

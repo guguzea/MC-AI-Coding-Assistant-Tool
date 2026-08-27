@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-dimension
 description: NeoForge 1.21.11 mc-dimension。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

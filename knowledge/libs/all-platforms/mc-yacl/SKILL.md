@@ -8,7 +8,7 @@ communityDocId: authored/lib-yacl
 
 # YACL 配置库集成
 
-YACL（Yet Another Config Lib）是新项目配置库首选之一（1.11 亿下载，F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API，界面贴近原版风格，因 Cloth Config 冷冻而生。版本与 API 以官方 README 为准。
+YACL（Yet Another Config Lib）是新项目配置库首选之一（下载量以 Modrinth 页面为准；F/Forge/Neo/Quilt，1.19-26.3）。Builder 式 API，界面贴近原版风格，因 Cloth Config 冷冻而生。版本与 API 以官方 README 为准。
 
 ## Decision: 要不要用 YACL
 

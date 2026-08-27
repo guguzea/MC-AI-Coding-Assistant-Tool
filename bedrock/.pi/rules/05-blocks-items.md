@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05 — 方块与物品 JSON
 ---
 

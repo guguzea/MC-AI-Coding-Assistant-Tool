@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09-anti-patterns — 反模式
 ---
 

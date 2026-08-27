@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-capability
 description: Fabric Attachment 与实体事件。AttachmentRegistry、ServerLivingEntityEvents。触发词：Attachment、AFTER_DEATH、getAttached
 platform: fabric

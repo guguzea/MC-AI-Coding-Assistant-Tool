@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-capability
 description: Minecraft Forge Capability 系统。AttachCapabilitiesEvent、ICapabilityProvider、ICapabilitySerializable。触发词：Capability、IStorage、ICapabilitySerializable、AttachCapabilitiesEvent、getCapability
 platform: forge

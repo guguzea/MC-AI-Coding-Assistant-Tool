@@ -1,4 +1,5 @@
 ---
+mcHint: 1.18+ / 26.x；按各库 mcHint 再收窄
 id: authored/library-catalog-2026
 title: 库模组总目录（2026 版）
 tags: [library-catalog, cloth-config, yacl, fabric-language-kotlin, architectury, geckolib, collective, puzzles-lib, text-placeholder-api, balm, owo-lib, bookshelf, terrablender, curios, trinkets, cardinal-components, kubejs, jei, emi]
@@ -23,7 +24,7 @@ skillId: mc-lib-catalog
 
 - 数据口径：下载量为 **Modrinth 单平台累计下载**（CurseForge 数字通常更大，另行标注）；支持版本为该项目发布过的所有 MC 版本（含 2026 年 26.1/26.2 新版号）。加载器：Fabric / Forge / NeoForge / Quilt。
 - 内容：真正意义上的"通用库" Top 12（按 Modrinth 下载量排序，排除纯作者个人库）、按功能分类详解（配置 / 动画 / 跨加载器 / 饰品 / 世界生成 / GUI / 数据附加 / 服务端·网络·文本 / 配方 / 脚本）、作者"全家桶"式共享库、平台推荐路线、八条陷阱。
-- 下文中 `lib-xxx.md` 为相对路径链接：已建成的可直接读，未建成的（如 `lib-yacl`）先作占位，后续批次补齐。
+- 下文中 `lib-xxx.md` 为相对路径链接：磁盘已有对应 `authored/lib-*` 短文，可直接读。
 
 ## 一、通用库 Top 12（按 Modrinth 下载量）
 

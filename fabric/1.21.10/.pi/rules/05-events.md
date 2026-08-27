@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05-events Fabric 1.21.10
 alwaysApply: true
 ---

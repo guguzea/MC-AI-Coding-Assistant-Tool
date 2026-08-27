@@ -17,7 +17,7 @@
 | 注册模式 | `DeferredRegister`（推荐）/ `RegisterEvent`（备选） |
 | Java 版本 | **Java 17**（Forge 1.19.4 最低要求） |
 | Gradle | Gradle 8.x + ForgeGradle 6.x |
-| Mappings | **Parchment**（`1.19.4-2023.04.04`，带参数名和文档） |
+| Mappings | **Parchment**（`1.19.4-2023.06.26`，带参数名和文档） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-kotlin
 description: Fabric Kotlin 语言支持。fabric-language-kotlin、kotlin("jvm")、@PublishedApi。触发词：Kotlin、fabric-language-kotlin、build.gradle.kts
 platform: fabric

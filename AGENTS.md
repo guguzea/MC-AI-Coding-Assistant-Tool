@@ -14,6 +14,8 @@
 
 写盘、运行 Gradle、拷贝 jar 到游戏目录、上传发布是**高风险操作**：先给清单 / `dryRun` 预览，**经用户确认后再执行**。不要把「工作流没有代跑 Gradle / 没有自动装 jar / 没有代上传」理解成功能缺失；那是人在环设计。`generate_*` 只吐文本；`port_project` 等写盘工具默认 dryRun。
 
+`get_workflow_template` 是**人在环清单**（步骤、检索顺序、确认点），不是无人值守流水线。Agent **不得**代跑用户工程的 Gradle、**不得**把 jar 拷进游戏目录、**不得**代上传发布。工作流模板只告诉你先问什么、再查什么、何时停下来等人确认。
+
 ## 第一步：判断项目使用的平台和版本
 
 打开任何 MC Mod / Add-On 项目时，**必须按此顺序**判断（Quilt → NeoForge → Fabric；残留 `fabric.mod.json` 不得压过 Neo 元数据，也不得压过 LiteLoader 插件 / `litemod.json`；LiteLoader 元数据在「看见 ForgeGradle 就算 Forge」之前）：
@@ -280,7 +282,7 @@ Decision: 选择注册方式
 | `analyze_porting_path` / `port_project` | 移植分析与脚手架动作 |
 | `diagnose_data_paths` | 诊断数据目录与 `community_knowledge` 配置 |
 | `query_registry` / `mixin_analyze` / `audit_resources` / `validate_datapack_json` | Registry ID、Mixin、资源与数据包校验 |
-| `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调；人在环清单，不代跑 Gradle/上传）与知识 URI |
+| `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调；**人在环清单，不是无人值守流水线**；不代跑用户 Gradle / 不拷 jar / 不上传）与知识 URI |
 | `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
 | `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |
@@ -298,7 +300,7 @@ Decision: 选择注册方式
 - **文档 fallback 仅限查询 API**，不代表规则树可用；命中邻近版时结果含 `fallback: true` 与 `source_version`。本版无树则 `PACK_NOT_FOUND`。
 - **文档 `id` 只用搜索结果**，不要用网站 URL；全文一次 ≤ 2 页。
 - **社区短文不能当 API 规范**（`community_knowledge/AGENT_USAGE.md`）。
-- **人在环 / 写盘类默认 dryRun**（`port_project` / `mc_skill_update apply` / `activate_platform_pack write`）；`generate_*` 只吐文本。Gradle、拷 jar、上传发布须用户确认后执行，不要当成漏实现的自动编排。
+- **人在环 / 写盘类默认 dryRun**（`port_project` / `mc_skill_update apply` / `activate_platform_pack write`）；`generate_*` 只吐文本。`get_workflow_template` 是清单不是流水线。Gradle、拷 jar、上传发布须用户确认后执行，不要当成漏实现的自动编排。
 - **不要克隆版本文档**（1.21 wiki ≠ 26.1.2；26.1 ≠ 26.2）。
 
 ### 工具不可用排查（clone 后必读）

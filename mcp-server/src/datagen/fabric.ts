@@ -121,14 +121,14 @@ ${entrypoint(modId, pascalName, `${pascalName}BlockLootTableProvider`)}
 `;
     case "tag":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 ${fabricIdImport(idStyle)}
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+public class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> EXAMPLE =
         TagKey.create(Registries.ITEM, ${fabricIdFactory(idStyle, modId, targetName)});
 

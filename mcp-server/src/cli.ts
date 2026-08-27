@@ -20,12 +20,14 @@ import {
   DATA_DIR_TOOLS,
   extractGlobalFlags,
   isToolFailure,
+  InvalidBooleanFlagError,
   mapShortCommand,
   MIGRATION_NOTICE,
   parseFlags,
   POSITIONAL_COMMANDS,
   resolveFlagKey,
   schemaObjectShape,
+  unusedPositionals,
   UnknownFlagError,
   zodToJsonSchema,
   type RawFlags,
@@ -89,11 +91,41 @@ function printGlobalHelp(json: boolean, compact: boolean): void {
       ...USAGE_LINES.map((l) => `  ${l}`),
       "",
       "全局 flag: --help  --version  --json  --compact  --fail-on-error  --project <dir>  --file field=path",
+      "布尔 flag 只接受 true/false/1/0/yes/no/on/off；裸 --flag 为 true；--flag=junk 拒绝（exit 2）",
       "文件输入: --crashReport @./latest.txt   --crashReport=-   --file crashReport=./latest.txt",
       "退出码: 0 成功 / 1 工具失败 / 2 用法错误",
       "",
     ].join("\n"),
   );
+}
+
+async function printNamedToolHelp(userCmd: string, json: boolean, compact: boolean): Promise<void> {
+  if (userCmd === "list-tools") {
+    printToolHelp("list-tools", "列出全部 MCP 工具及其 JSON Schema", z.object({}), json, compact);
+    return;
+  }
+  if (userCmd === "descriptor") {
+    printToolHelp(
+      "descriptor",
+      "解析 JNI 描述符（本地命令，不加载 MCP 工具）",
+      descriptorSchema,
+      json,
+      compact,
+    );
+    return;
+  }
+  const { tool: mapped } = mapShortCommand(userCmd);
+  const reg = await loadRegistry();
+  const entry = toolHandlers.get(mapped) ?? toolHandlers.get(userCmd);
+  const listed = reg.listAllToolSchemas().find((t) => t.name === mapped || t.name === userCmd);
+  if (!entry && !listed) {
+    printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}` }, compact);
+    process.exitCode = 2;
+    return;
+  }
+  const schema = (entry?.inputSchema ?? listed?.inputSchema) as z.ZodTypeAny;
+  const description = entry?.description ?? listed?.description ?? "";
+  printToolHelp(mapped, description, schema, json, compact);
 }
 
 async function loadRegistry() {
@@ -261,7 +293,20 @@ async function main(): Promise<void> {
   }
 
   const { flags: rawFlags, positional } = parseFlags(argv);
-  const { globals, rest } = extractGlobalFlags(rawFlags);
+  let globals: ReturnType<typeof extractGlobalFlags>["globals"];
+  let rest: ReturnType<typeof extractGlobalFlags>["rest"];
+  try {
+    const extracted = extractGlobalFlags(rawFlags);
+    globals = extracted.globals;
+    rest = extracted.rest;
+  } catch (err) {
+    if (err instanceof InvalidBooleanFlagError) {
+      printJson({ success: false, tool: positional[0] ?? "cli", error: err.message }, false);
+      process.exitCode = 2;
+      return;
+    }
+    throw err;
+  }
 
   if (positional.length === 0 && (rawFlags.version === true || rawFlags.version === "true")) {
     process.stdout.write(cliVersion() + "\n");
@@ -282,37 +327,17 @@ async function main(): Promise<void> {
   const cmdPositional = positional.slice(1);
 
   if (userCmd === "help") {
-    printGlobalHelp(globals.json, globals.compact);
+    const helpTarget = cmdPositional[0];
+    if (!helpTarget) {
+      printGlobalHelp(globals.json, globals.compact);
+      return;
+    }
+    await printNamedToolHelp(helpTarget, globals.json, globals.compact);
     return;
   }
 
   if (globals.help) {
-    if (userCmd === "list-tools") {
-      printToolHelp("list-tools", "列出全部 MCP 工具及其 JSON Schema", z.object({}), globals.json, globals.compact);
-      return;
-    }
-    if (userCmd === "descriptor") {
-      printToolHelp(
-        "descriptor",
-        "解析 JNI 描述符（本地命令，不加载 MCP 工具）",
-        descriptorSchema,
-        globals.json,
-        globals.compact,
-      );
-      return;
-    }
-    const { tool: mapped } = mapShortCommand(userCmd);
-    const reg = await loadRegistry();
-    const entry = toolHandlers.get(mapped) ?? toolHandlers.get(userCmd);
-    const listed = reg.listAllToolSchemas().find((t) => t.name === mapped || t.name === userCmd);
-    if (!entry && !listed) {
-      printJson({ success: false, tool: userCmd, error: `未知命令：${userCmd}` }, globals.compact);
-      process.exitCode = 2;
-      return;
-    }
-    const schema = (entry?.inputSchema ?? listed?.inputSchema) as z.ZodTypeAny;
-    const description = entry?.description ?? listed?.description ?? "";
-    printToolHelp(mapped, description, schema, globals.json, globals.compact);
+    await printNamedToolHelp(userCmd, globals.json, globals.compact);
     return;
   }
 
@@ -375,6 +400,10 @@ async function main(): Promise<void> {
       coerceFlags(rest, schema, inject),
       cmdPositional,
     );
+    const leftover = unusedPositionals(userCmd, cmdPositional);
+    if (leftover.length > 0) {
+      process.stderr.write(`警告: 忽略多余位置参数: ${leftover.join(" ")}\n`);
+    }
     const parsed = schema.safeParse(params);
     if (!parsed.success) {
       const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "(root)"}：${i.message}`).join("；");
@@ -413,19 +442,21 @@ async function main(): Promise<void> {
       }
     }
   } catch (err) {
-    if (err instanceof UnknownFlagError) {
-      printJson({ success: false, tool: userCmd, error: err.message }, globals.compact);
+    const toolName = positional[0] ?? "cli";
+    const compact = false;
+    if (err instanceof UnknownFlagError || err instanceof InvalidBooleanFlagError) {
+      printJson({ success: false, tool: toolName, error: err.message }, compact);
       process.exitCode = 2;
       return;
     }
     if (err instanceof CliUsageError) {
-      printJson({ success: false, tool: err.tool, error: err.message }, globals.compact);
+      printJson({ success: false, tool: err.tool, error: err.message }, compact);
       process.exitCode = 2;
       return;
     }
     printJson(
-      { success: false, tool: userCmd, error: err instanceof Error ? err.message : String(err) },
-      globals.compact,
+      { success: false, tool: toolName, error: err instanceof Error ? err.message : String(err) },
+      compact,
     );
     process.exitCode = 1;
   }

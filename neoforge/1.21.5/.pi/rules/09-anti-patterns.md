@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09 — 反模式（NeoForge 1.21.5）
 globs:
 alwaysApply: true

@@ -1,4 +1,4 @@
-﻿---
+---
 description: Client-Server separation and GUI (Forge 1.15.2)
 ---
 
@@ -57,7 +57,7 @@ Block#onBlockActivated (Server) ──► creates ITextComponent ──► openC
                                                        ▼
                                               Container + ContainerScreen pair
                                                        │
-                                               ContainerScreens.register()
+                                               ScreenManager.registerFactory()
                                                        │
                                                        ▼
                                                    Renders Screen
@@ -112,7 +112,7 @@ public static final RegistryObject<ContainerType<MyContainer>> MY_CONTAINER =
 public class ClientSetup {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent event) {
-        ContainerScreens.register(MyContainers.MY_CONTAINER.get(), MyScreen::new);
+        ScreenManager.registerFactory(MyContainers.MY_CONTAINER.get(), MyScreen::new);
     }
 }
 ```
@@ -156,7 +156,7 @@ public class MyBlock extends Block {
                 (ServerPlayerEntity) player,
                 new SimpleNamedContainerProvider(
                     (id, inv, p) -> new MyContainer(id, inv, target),
-                    Component.translatable("container.my_container")
+                    new TranslationTextComponent("container.my_container")
                 )
             );
         }
@@ -168,7 +168,7 @@ public class MyBlock extends Block {
 ## Common errors
 
 - ❌ Opening a Container on the server without a registered `ContainerType` → crash
-- ❌ `ContainerScreens.register()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
+- ❌ `ScreenManager.registerFactory()` called on server → `FMLClientSetupEvent` already prevents this, but guard with `@OnlyIn(Dist.CLIENT)`
 - ❌ `transferStackInSlot` not implemented → Shift-click does nothing
 - ❌ Modifying world state in `Container` constructor → too early, use `onContainerOpened()`
 - ❌ Data set from client → must be set server-side only

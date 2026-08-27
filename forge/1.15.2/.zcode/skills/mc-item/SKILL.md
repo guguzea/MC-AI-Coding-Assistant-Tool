@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-item
 description: Minecraft Forge 物品开发。创建物品、工具（剑/镐/斧）、盔甲、食物。触发词：物品、Item、ItemStack、Item.Properties、ITier、SwordItem、PickaxeItem、ArmorItem
 platform: forge

@@ -1,4 +1,5 @@
 import { versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
+import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 export interface ValidateDatapackInput {
   jsonContent: string;
@@ -46,7 +47,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
 
   let data: Record<string, unknown>;
   try {
-    data = JSON.parse(input.jsonContent) as Record<string, unknown>;
+    data = parseJsonUtf8(input.jsonContent) as Record<string, unknown>;
   } catch (e) {
     return {
       valid: false,

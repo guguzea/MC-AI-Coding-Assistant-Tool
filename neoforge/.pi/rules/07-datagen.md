@@ -1,4 +1,4 @@
-﻿---
+---
 description: 07-datagen.mdc
 ---
 

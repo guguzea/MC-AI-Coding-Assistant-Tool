@@ -1,4 +1,4 @@
-﻿---
+---
 description: 10 — GUI（NeoForge 1.20.6）
 ---
 

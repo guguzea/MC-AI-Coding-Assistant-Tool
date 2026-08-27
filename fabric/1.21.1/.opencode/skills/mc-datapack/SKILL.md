@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datapack
 description: 数据包布局、pack.mcmeta、validate_datapack_json。触发词：datapack、data/
 platform: fabric

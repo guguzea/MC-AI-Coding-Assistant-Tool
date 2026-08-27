@@ -1,4 +1,4 @@
-﻿---
+---
 description: 06 — 网络通信
 ---
 
@@ -16,7 +16,7 @@ description: 06 — 网络通信
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
 - 禁止在客户端包类中直接访问服务端独有类（如 `WorldServer`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
-- 使用 `level.isClientSide` 判断当前逻辑端（应使用 `isClientSide`）
+- 使用 `level.isRemote` 判断当前逻辑端（应使用 `isRemote`）
 
 ### SimpleChannel 配置
 

@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-loottable
 description: 战利品表 JSON 与 LootTableProvider。触发词：loot_table、pools
 platform: fabric

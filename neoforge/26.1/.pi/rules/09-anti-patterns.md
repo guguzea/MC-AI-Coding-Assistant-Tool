@@ -1,4 +1,4 @@
-﻿---
+---
 description: 09 — 反模式（NeoForge 26.1）
 ---
 
@@ -14,4 +14,4 @@ description: 09 — 反模式（NeoForge 26.1）
 | 无 `mappingsVersion` 的反编译摘要 | 视为无效 |
 | Yarn / 克隆 26.2 文档树 | 26.1 去混淆 + Identifier。禁止 Yarn。query_api 无本版索引。 |
 
-未建档版本 1.20.1/1.20.6/1.21.5/1.21.10：禁止用本档顶上，改口 `search_neoforge_docs`。
+1.20.1 / 1.20.6 / 1.21.5 / 1.21.10 已有薄包：读 `neoforge/<ver>/`，禁止用本档 00–10 顶上。

@@ -3,8 +3,10 @@
  * 不含 IO（@file / stdin / --project 在 cli.ts 适配层）。
  */
 import * as z from "zod";
-import { parseFlagTruthy } from "./utils/flags.js";
+import { parseBooleanToken, parseFlagTruthy, InvalidBooleanFlagError } from "./utils/flags.js";
 import { ownGet } from "./utils/own-record.js";
+
+export { parseFlagTruthy, parseBooleanToken, InvalidBooleanFlagError } from "./utils/flags.js";
 
 export type FlagScalar = string | boolean;
 export type FlagValue = FlagScalar | FlagScalar[];
@@ -57,8 +59,6 @@ export const SHORT_COMMANDS: Record<string, { tool: string; inject?: Record<stri
   warmup: { tool: "get_server_status", inject: { warmup: true } },
 };
 
-export { parseFlagTruthy } from "./utils/flags.js";
-
 export function kebabToCamel(key: string): string {
   return key.replace(/-([a-zA-Z0-9])/g, (_, c: string) => c.toUpperCase());
 }
@@ -91,6 +91,10 @@ export function parseFlags(argv: string[]): { flags: RawFlags; positional: strin
   const positional: string[] = [];
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
+    if (a === "--") {
+      positional.push(...argv.slice(i + 1));
+      break;
+    }
     if (a === "-h") {
       appendFlag(flags, "help", true);
       continue;
@@ -156,13 +160,6 @@ export function schemaPropertyType(schema: z.ZodTypeAny | undefined, key: string
   return "string";
 }
 
-function parseBooleanToken(value: string): boolean | undefined {
-  const v = value.trim().toLowerCase();
-  if (v === "true" || v === "1" || v === "yes") return true;
-  if (v === "false" || v === "0" || v === "no") return false;
-  return undefined;
-}
-
 function parseArrayish(value: string): unknown[] {
   try {
     const parsed: unknown = JSON.parse(value);
@@ -187,7 +184,8 @@ export function coerceFlagValue(value: string, expectedType?: string, itemType?:
     }
     case "boolean": {
       const b = parseBooleanToken(value);
-      return b === undefined ? value : b;
+      if (b === undefined) throw new InvalidBooleanFlagError(value);
+      return b;
     }
     case "array":
     case "tuple": {
@@ -282,19 +280,19 @@ export function extractGlobalFlags(raw: RawFlags): {
   for (const [k, v] of Object.entries(raw)) {
     const camel = kebabToCamel(k);
     if (k === "help" || k === "h") {
-      help = parseFlagTruthy(v);
+      help = parseFlagTruthy(v, k);
       continue;
     }
     if (k === "json") {
-      json = parseFlagTruthy(v);
+      json = parseFlagTruthy(v, "json");
       continue;
     }
     if (k === "compact") {
-      compact = parseFlagTruthy(v);
+      compact = parseFlagTruthy(v, "compact");
       continue;
     }
     if (k === "fail-on-error" || camel === "failOnError") {
-      failOnError = parseFlagTruthy(v);
+      failOnError = parseFlagTruthy(v, "fail-on-error");
       continue;
     }
     if (k === "project") {
@@ -380,8 +378,29 @@ export function applyPositionalCompat(
     }
   } else if (cmd === "descriptor") {
     if (typeof out.descriptor !== "string" && positional[0]) out.descriptor = positional[0];
+  } else if (cmd === "warmup" || cmd === "status" || cmd === "get_server_status") {
+    if (typeof out.version !== "string" && positional[0]) out.version = positional[0];
   }
   return out;
+}
+
+/** 位置参数里未被 applyPositionalCompat 消费的剩余项（供 CLI stderr 警告）。 */
+export function unusedPositionals(cmd: string, positional: string[]): string[] {
+  let used = 0;
+  if (cmd === "query" || cmd === "query_api") used = Math.min(2, positional.length);
+  else if (
+    cmd === "convert" ||
+    cmd === "convert_mapping" ||
+    cmd === "descriptor" ||
+    cmd === "warmup" ||
+    cmd === "status" ||
+    cmd === "get_server_status"
+  ) {
+    used = Math.min(1, positional.length);
+  } else if (cmd === "update" || cmd === "mc_skill_update") {
+    used = positional[0] === "check" || positional[0] === "apply" ? 1 : 0;
+  }
+  return positional.slice(used);
 }
 
 export function isToolFailure(result: unknown, isError: boolean, failOnError: boolean): boolean {
@@ -391,14 +410,12 @@ export function isToolFailure(result: unknown, isError: boolean, failOnError: bo
   if (r.ok === false) return true;
   if (r.status === "skipped") return false;
   if (r.passed === false) return true;
-  if (r.found === false && !failOnError) {
-    /* 查询无命中默认成功 */
-  } else if (r.found !== false) {
-    const err = r.error;
-    if (err && typeof err === "object" && err !== null && "code" in err && r.ok !== true) {
-      return true;
-    }
-  }
+  const nestedErr = r.error;
+  const hasErrorCode =
+    nestedErr && typeof nestedErr === "object" && nestedErr !== null && "code" in nestedErr;
+  if (r.found === false && hasErrorCode && r.ok !== true) return true;
+  if (r.found === false && !failOnError) return false;
+  if (hasErrorCode && r.ok !== true) return true;
   if (failOnError) {
     if (r.found === false) return true;
     if (Array.isArray(r.errors) && r.errors.length > 0) return true;
@@ -478,6 +495,9 @@ export const POSITIONAL_COMMANDS = new Set([
   "descriptor",
   "update",
   "mc_skill_update",
+  "warmup",
+  "status",
+  "get_server_status",
 ]);
 
 /** 调用前可能依赖 MC_SKILL_DATA 的工具（help/descriptor 不在此列） */

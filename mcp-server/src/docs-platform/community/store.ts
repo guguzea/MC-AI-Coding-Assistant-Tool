@@ -8,7 +8,7 @@
  */
 
 import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { join, relative, resolve, isAbsolute } from "path";
 import { resolveCommunityDir } from "../../utils/path.js";
 
 export type CommunitySourceKind = "permitted" | "authored" | "links" | "unknown";
@@ -276,7 +276,8 @@ export class CommunityDocStore {
       };
     }
     const filePath = join(this.root, e.path);
-    if (!existsSync(filePath)) {
+    const rel = relative(resolve(this.root), resolve(filePath));
+    if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filePath)) {
       throw new Error(`Community doc file missing: ${e.path}`);
     }
     let content = stripLeadingFrontmatter(readFileSync(filePath, "utf8"));

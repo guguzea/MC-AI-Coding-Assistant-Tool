@@ -1,4 +1,4 @@
-﻿---
+---
 description: 01 — BaseMod（仅安全表）
 ---
 

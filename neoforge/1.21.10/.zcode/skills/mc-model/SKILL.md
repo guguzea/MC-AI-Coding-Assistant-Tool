@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-model
 description: NeoForge 1.21.10 mc-model。类名只来自本档核实表与 search_neoforge_docs。
 platform: neoforge

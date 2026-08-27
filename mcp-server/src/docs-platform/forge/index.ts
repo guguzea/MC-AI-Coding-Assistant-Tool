@@ -67,6 +67,29 @@ function getForgeStore(): ForgeDocStore {
   return s;
 }
 
+type VersionResolutionExtra = {
+  warning?: string;
+  versionFallback?: boolean;
+  resolved?: string;
+  sourcePlatform?: string;
+  sourceVersion?: string;
+};
+
+/** 仅 store versionFallback（resolved≠requested）才盖信封；精确版本原样返回。 */
+function withGetDocFallback(
+  requested: string,
+  extra: VersionResolutionExtra | undefined,
+  payload: Record<string, unknown>,
+): Record<string, unknown> {
+  if (!extra?.versionFallback) return payload;
+  return withDocsFallbackFields({
+    ...payload,
+    requestedVersion: requested,
+    resolvedVersion: extra.resolved,
+    versionFallback: true,
+  });
+}
+
 function platformRequiredResult(): CallToolResult {
   return {
     content: [{
@@ -227,9 +250,6 @@ export async function searchForgeDocs(
               version: args.version,
               resolvedVersion: detailed.resolvedVersion,
               versionFallback: detailed.versionFallback,
-              ...(args.version === "1.20.4"
-                ? { fallback: true, source_route: "1.20.x" }
-                : {}),
               warning: joinSearchWarnings(
                 detailed.versionFallback
                   ? `请求版本 ${args.version} 无独立文档，已降级到 ${detailed.resolvedVersion}`
@@ -302,11 +322,15 @@ export async function getForgeDocSummary(
       args.id,
       args.version,
     );
+    const extra = getForgeStore().describeVersionResolution(args.version);
+    const payload = extra.versionFallback
+      ? withGetDocFallback(args.version, extra, { ...result, warning: extra.warning })
+      : result;
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(result, null, 2),
+          text: JSON.stringify(payload, null, 2),
         },
       ],
     };
@@ -390,11 +414,15 @@ export async function getForgeDocFull(
       args.version,
       args.highlight_key ?? true,
     );
+    const extra = getForgeStore().describeVersionResolution(args.version);
+    const payload = extra.versionFallback
+      ? withGetDocFallback(args.version, extra, { ...result, warning: extra.warning })
+      : result;
     return {
       content: [
         {
           type: "text",
-          text: JSON.stringify(result, null, 2),
+          text: JSON.stringify(payload, null, 2),
         },
       ],
     };
@@ -474,7 +502,22 @@ export async function getForgeDocRelated(
       args.version,
       args.limit ?? 5,
     );
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    const extra = getForgeStore().describeVersionResolution(args.version);
+    if (!extra.versionFallback) {
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify(withGetDocFallback(args.version, extra, {
+          ok: true,
+          id: args.id,
+          version: args.version,
+          warning: extra.warning,
+          results: result,
+        }), null, 2),
+      }],
+    };
   } catch (e) {
     if (e instanceof DocNotFoundError) {
       return {
@@ -754,8 +797,19 @@ export async function searchDocs(
     } catch (e) {
       const rec = e as { name?: string; availableVersions?: unknown };
       if (platform === "neoforge" && (rec.name === "VersionNotFoundError" || Array.isArray(rec.availableVersions))) {
-        threwMissing = true;
-        result = [];
+        const describeVersionResolution = (
+          store as { describeVersionResolution?: (v: string) => { mainDocsMissing?: boolean } }
+        ).describeVersionResolution;
+        const neoResolution =
+          typeof describeVersionResolution === "function"
+            ? describeVersionResolution(args.version)
+            : undefined;
+        if (neoResolution?.mainDocsMissing) {
+          threwMissing = true;
+          result = [];
+        } else {
+          throw e;
+        }
       } else {
         throw e;
       }
@@ -843,9 +897,6 @@ export async function searchDocs(
               version: args.version,
               resolvedVersion,
               versionFallback,
-              ...(platform === "forge" && resolvedVersion.startsWith("1.20.")
-                ? { fallback: true, source_route: "1.20.x", resolvedVersion }
-                : {}),
               ...(loaderWikiWarn ? { wikiIsCurrentSite: true } : {}),
               warning: joinSearchWarnings(
                 threwMissing
@@ -924,30 +975,25 @@ export async function getDocSummary(
     const result = store.loadSummary(args.id, args.version);
     const extra =
       platform === "forge" || platform === "neoforge"
-        ? (store as { describeVersionResolution?: (v: string) => {
-            warning?: string;
-            versionFallback?: boolean;
-            sourcePlatform?: string;
-            sourceVersion?: string;
-          } }).describeVersionResolution?.(args.version)
+        ? (store as { describeVersionResolution?: (v: string) => VersionResolutionExtra }).describeVersionResolution?.(args.version)
         : undefined;
     const wikiWarn = thinLoaderWikiWarning(platform, [result]);
+    const payload = withGetDocFallback(args.version, extra, {
+      ...result,
+      warning: joinSearchWarnings(extra?.warning, wikiWarn),
+      ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+      ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
+        ? {
+          forgeCompatible: true,
+          source_version: extra.sourceVersion ?? "1.20.1",
+          sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+        }
+        : {}),
+    });
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
-          ...result,
-          warning: joinSearchWarnings(extra?.warning, wikiWarn),
-          ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
-          ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
-          ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
-            ? {
-              forgeCompatible: true,
-              source_version: extra.sourceVersion ?? "1.20.1",
-              sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
-            }
-            : {}),
-        }, null, 2),
+        text: JSON.stringify(payload, null, 2),
       }],
     };
   } catch (e) {
@@ -1004,32 +1050,27 @@ export async function getDocFull(
     );
     const extra =
       platform === "forge" || platform === "neoforge"
-        ? (store as { describeVersionResolution?: (v: string) => {
-            warning?: string;
-            versionFallback?: boolean;
-            sourcePlatform?: string;
-            sourceVersion?: string;
-          } }).describeVersionResolution?.(args.version)
+        ? (store as { describeVersionResolution?: (v: string) => VersionResolutionExtra }).describeVersionResolution?.(args.version)
         : undefined;
     const wikiWarn = thinLoaderWikiWarning(platform, [
       { id: args.id, url: result.meta?.url },
     ]);
+    const payload = withGetDocFallback(args.version, extra, {
+      ...result,
+      warning: joinSearchWarnings(extra?.warning, wikiWarn),
+      ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
+      ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
+        ? {
+          forgeCompatible: true,
+          source_version: extra.sourceVersion ?? "1.20.1",
+          sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
+        }
+        : {}),
+    });
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({
-          ...result,
-          warning: joinSearchWarnings(extra?.warning, wikiWarn),
-          ...(extra?.warning ? { versionFallback: extra.versionFallback } : {}),
-          ...(wikiWarn ? { wikiIsCurrentSite: true } : {}),
-          ...(platform === "neoforge" && extra?.sourcePlatform === "forge"
-            ? {
-              forgeCompatible: true,
-              source_version: extra.sourceVersion ?? "1.20.1",
-              sourceNote: "NeoForge 1.20.1 使用 Forge 1.20.1 文档数据（API 语义兼容）",
-            }
-            : {}),
-        }, null, 2),
+        text: JSON.stringify(payload, null, 2),
       }],
     };
   } catch (e) {

@@ -318,7 +318,7 @@ function isRegistryishQuery(terms: string[]): boolean {
   });
 }
 
-function pathBoost(id: string, registryQuery: boolean): number {
+export function pathBoost(id: string, registryQuery: boolean): number {
   const idLower = id.toLowerCase();
   let boost = 0;
   if (registryQuery) {

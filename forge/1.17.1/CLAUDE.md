@@ -55,17 +55,17 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.md` | Java 16, Gradle 7.x, build.gradle structure |
-| `01-registry.md` | DeferredRegister, RegistryObject (most important) |
-| `02-block.md` | Block, EntityBlock, BlockEntity |
-| `03-item.md` | Item, SwordItem, ArmorItem, FoodProperties |
-| `04-entity.md` | EntityType, LivingEntity, EntityRenderer |
-| `05-events.md` | @SubscribeEvent, Bus.FORGE vs Bus.MOD |
-| `06-networking.md` | SimpleChannel, IMessage, DistExecutor |
-| `07-datagen.md` | GatherDataEvent, RecipeProvider, LootTableProvider |
-| `08-client-server.md` | @OnlyIn, DistExecutor, KeyBinding |
-| `09-anti-patterns.md` | Common mistakes and fixes |
-| `10-gui.md` | MenuType, AbstractContainerMenu, Screen |
+| `00-project-setup.mdc` | Java 16, Gradle 7.x, build.gradle structure |
+| `01-registry.mdc` | DeferredRegister, RegistryObject (most important) |
+| `02-block.mdc` | Block, EntityBlock, BlockEntity |
+| `03-item.mdc` | Item, SwordItem, ArmorItem, FoodProperties |
+| `04-entity.mdc` | EntityType, LivingEntity, EntityRenderer |
+| `05-events.mdc` | @SubscribeEvent, Bus.FORGE vs Bus.MOD |
+| `06-networking.mdc` | SimpleChannel, IMessage, DistExecutor |
+| `07-datagen.mdc` | GatherDataEvent, RecipeProvider, LootTableProvider |
+| `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyBinding |
+| `09-anti-patterns.mdc` | Common mistakes and fixes |
+| `10-gui.mdc` | MenuType, AbstractContainerMenu, Screen |
 
 ---
 

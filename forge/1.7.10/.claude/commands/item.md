@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-item
 description: Forge 1.7.10 ItemBlock（javadoc）。
 platform: forge

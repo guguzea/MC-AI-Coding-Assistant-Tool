@@ -1,11 +1,18 @@
-/** Extract Minecraft-style format placeholders for comparison. */
-const PLACEHOLDER_RE = /%(?:\d+\$)?(?:\.\d+)?[sSdDfFx%]|%\d+\$[a-zA-Z]/g;
+/** Extract Minecraft-style format placeholders for comparison.
+ *  Compare already-parsed lang *values* only — file-level `{` / JSON braces must not enter.
+ */
+const FORMATTER_RE = /%(?:\d+\$)?(?:\.\d+)?[sSdDfFx%]|%\d+\$[a-zA-Z]/g;
+/** MessageFormat `{0}` / `{}`. `{name}` / `{@x}` / JSON objects are NOT placeholders. */
+const MESSAGE_FORMAT_RE = /\{(\d+)\}|\{\}/g;
 
 export type PlaceholderKind = { indexed: string | null; type: string };
 
-/** Normalize %s / %S / %.2f / %2$s into a comparable kind. Sequential tokens keep indexed=null. */
+/** Normalize %s / %S / %.2f / %2$s / {0} / {} into a comparable kind. Sequential tokens keep indexed=null. */
 export function placeholderKind(p: string): PlaceholderKind {
   if (p === "%%") return { indexed: null, type: "%%" };
+  if (p === "{}") return { indexed: null, type: "s" };
+  const mf = /^\{(\d+)\}$/.exec(p);
+  if (mf) return { indexed: String(Number(mf[1]) + 1), type: "s" };
   const indexed = /^%(\d+)\$(\.\d+)?([a-zA-Z%])$/.exec(p);
   if (indexed) return { indexed: indexed[1], type: indexed[3].toLowerCase() };
   const plain = /^%(\.\d+)?([sSdDfFx%])$/.exec(p);
@@ -14,7 +21,16 @@ export function placeholderKind(p: string): PlaceholderKind {
 }
 
 export function extractRawPlaceholders(text: string): string[] {
-  return text.match(PLACEHOLDER_RE) ?? [];
+  const found: { index: number; value: string }[] = [];
+  for (const re of [FORMATTER_RE, MESSAGE_FORMAT_RE]) {
+    re.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(text)) !== null) {
+      found.push({ index: m.index, value: m[0] });
+    }
+  }
+  found.sort((a, b) => a.index - b.index);
+  return found.map((f) => f.value);
 }
 
 function typeMultiset(kinds: PlaceholderKind[]): Map<string, number> {
@@ -52,6 +68,7 @@ function seqAsIndexed(seq: PlaceholderKind[]): PlaceholderKind[] {
 /**
  * Sequential placeholders (`%s and %d` vs `%d ge, %s`) match by type multiset.
  * Numbered placeholders (`%2$s`) match by index+type.
+ * `{0}` is MessageFormat index 0 ≡ sequential `%s` / `%1$s`.
  * One side sequential and the other numbered maps sequential to 1..n by appearance
  * (`Hello %s` vs `你好 %1$s`). True mixed strings still compare the two families independently.
  */

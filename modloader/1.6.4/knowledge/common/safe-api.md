@@ -17,14 +17,14 @@
 
 | 方法 | 说明 |
 |------|------|
-| `ModLoader.addRecipe(ItemStack, Object...)` | 有序合成 |
-| `ModLoader.addShapelessRecipe(ItemStack, Object...)` | 无序合成 |
+| `ModLoader.addRecipe(ItemStack, Object...)` 🟡 | 有序合成（公开索引覆盖缺口，内部与已证实半表一致；标 🟡 不删） |
+| `ModLoader.addShapelessRecipe(ItemStack, Object...)` 🟡 | 无序合成（公开索引覆盖缺口；标 🟡 不删） |
 | `ModLoader.addName(Object, String)` | 语言名 |
 | `ModLoader.addLocalization(String, String)` | 本地化键 |
 | `ModLoader.registerBlock(Block)` | 注册方块 |
-| `ModLoader.registerBlock(Block, Class)` | 带 ItemBlock |
+| `ModLoader.registerBlock(Block, Class)` 🟡 | 带 ItemBlock（公开索引覆盖缺口；标 🟡 不删） |
 | `ModLoader.registerTileEntity(Class, String)` | TileEntity |
-| `ModLoader.addSpawn(Class, int, int, int, EnumCreatureType)` | 生物生成 |
+| `ModLoader.addSpawn(Class, int, int, int, EnumCreatureType)` 🟡 | 生物生成（公开索引覆盖缺口；标 🟡 不删） |
 | `ModLoader.getUniqueEntityId()` | 实体网络 ID |
 | `ModLoader.setInGameHook(BaseMod, boolean, boolean)` | 游戏内 tick 钩子 |
 | `ModLoader.setInGUIHook(BaseMod, boolean, boolean)` | GUI 钩子 |

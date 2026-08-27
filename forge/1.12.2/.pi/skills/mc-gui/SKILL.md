@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-gui
 description: Minecraft Forge GUI/菜单开发。创建 Container、Slot、IInteractionObject、GuiHandler。触发词：Screen、Container、Slot、GuiHandler、IInteractionObject
 platform: forge

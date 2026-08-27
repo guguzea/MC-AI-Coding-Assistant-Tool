@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-resource-pack
 description: 基岩资源包 RP。触发词：terrain_texture、item_texture、client_entity、attachables、sounds.json
 platform: bedrock

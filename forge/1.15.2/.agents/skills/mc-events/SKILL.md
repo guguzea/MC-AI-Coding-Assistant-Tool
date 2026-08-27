@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Minecraft Forge 事件系统。@SubscribeEvent、事件总线、Forge 事件监听。触发词：事件、Event、@SubscribeEvent、Bus.FORGE、Bus.MOD
 platform: forge

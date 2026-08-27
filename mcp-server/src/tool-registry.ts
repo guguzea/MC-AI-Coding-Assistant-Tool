@@ -613,10 +613,7 @@ server.registerTool(
       const result = await listCommunitySources();
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     } catch (e) {
-      return {
-        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
-        isError: true,
-      };
+      return communityDocError(e);
     }
   }
 );
@@ -636,10 +633,7 @@ server.registerTool(
       const result = await searchCommunityDocs(args);
       return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     } catch (e) {
-      return {
-        content: [{ type: "text", text: `错误: ${(e as Error).message}` }],
-        isError: true,
-      };
+      return communityDocError(e);
     }
   }
 );
@@ -1122,7 +1116,7 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "generate_bp_entity", description: "只吐 BP 实体 JSON 文本，不写盘。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。", inputSchema: generateBpEntitySchema },
 ];
 
-/** 全部工具 schema（index + wave；基岩 8 个工具计入 index）。 */
+/** 全部工具 schema（index + wave；基岩 9 个工具计入 index）。 */
 export function listAllToolSchemas(): ToolSchemaEntry[] {
   return [...indexToolSchemas, ...waveToolSchemas];
 }

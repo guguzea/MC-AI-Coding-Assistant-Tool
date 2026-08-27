@@ -31,24 +31,39 @@ function hasVersion(text: string): boolean {
   return /^\s*version\s*=/im.test(text) || /"version"\s*:/i.test(text);
 }
 
-function listReleaseJars(projectRoot: string): string[] {
+function listReleaseJars(projectRoot: string): { jars: string[]; warnings: string[] } {
   const dir = join(projectRoot, "build", "libs");
-  if (!existsSync(dir)) return [];
+  const warnings: string[] = [];
+  if (!existsSync(dir)) return { jars: [], warnings };
   try {
-    if (!statSync(dir).isDirectory()) return [];
+    if (!statSync(dir).isDirectory()) return { jars: [], warnings };
   } catch {
-    return [];
+    return { jars: [], warnings };
   }
   let names: string[] = [];
   try {
     names = readdirSync(dir);
   } catch {
-    return [];
+    return { jars: [], warnings };
   }
-  return names
+  const candidates = names
     .filter((n) => n.endsWith(".jar"))
-    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-changelog|-obf)\.jar$/i.test(n))
-    .map((n) => `build/libs/${n}`);
+    .filter((n) => !/(-sources|-javadoc|-dev|-slim|-changelog|-obf)\.jar$/i.test(n));
+  const regular = candidates.filter((n) => !/-all\.jar$/i.test(n));
+  const allJars = candidates.filter((n) => /-all\.jar$/i.test(n));
+  const regularSet = new Set(regular);
+  const kept = [...regular];
+  let onlyAll = false;
+  for (const n of allJars) {
+    const stem = n.replace(/-all\.jar$/i, ".jar");
+    if (regularSet.has(stem)) continue;
+    kept.push(n);
+    onlyAll = true;
+  }
+  if (onlyAll) {
+    warnings.push("仅找到 *-all.jar（可能是 shadow fat），发布前请确认不是把依赖打进包");
+  }
+  return { jars: kept.map((n) => `build/libs/${n}`), warnings };
 }
 
 export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult {
@@ -77,7 +92,9 @@ export function checkPublishReady(query: PublishReadyQuery): PublishReadyResult 
     fabricModJson = preferExplicit(fabricModJson, loaded.fabricModJson);
     quiltModJson = preferExplicit(quiltModJson, loaded.quiltModJson);
     neoModsToml = preferExplicit(neoModsToml, loaded.neoModsToml);
-    jars = listReleaseJars(resolved.root);
+    const listed = listReleaseJars(resolved.root);
+    jars = listed.jars;
+    warnings.push(...listed.warnings);
     const licenseFile = ["LICENSE", "LICENSE.txt", "LICENSE.md"].some((n) => existsSync(join(resolved.root, n)));
     if (licenseFile) checks.push("根目录 LICENSE 文件");
   }

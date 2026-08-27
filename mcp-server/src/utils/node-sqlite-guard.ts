@@ -56,4 +56,15 @@ if (inSqliteFlagWindow && !hasSqliteFlag) {
   process.exit(1);
 }
 
+const origEmitWarning = process.emitWarning.bind(process);
+process.emitWarning = ((warning: string | Error, ...rest: unknown[]) => {
+  const text = typeof warning === "string" ? warning : warning?.message ?? "";
+  const ctorName = typeof warning === "object" && warning && "name" in warning ? String((warning as Error).name) : "";
+  const typeName = typeof rest[0] === "string" ? rest[0] : "";
+  if (/sqlite/i.test(text) && /ExperimentalWarning/i.test(`${ctorName} ${typeName} ${text}`)) {
+    return;
+  }
+  return (origEmitWarning as (...a: unknown[]) => void)(warning, ...rest);
+}) as typeof process.emitWarning;
+
 export {};

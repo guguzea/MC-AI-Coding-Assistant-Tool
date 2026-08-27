@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-fluid
 description: Minecraft NeoForge 流体开发。创建流体 Fluid、FluidType、FlowingFluid、桶物品。触发词：Fluid、FluidType、FlowingFluid、BucketItem、桶、bucket、流体
 platform: neoforge

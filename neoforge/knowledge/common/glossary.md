@@ -87,7 +87,7 @@
 
 | 映射层 | 说明 |
 |--------|------|
-| **mojang** | Minecraft 的原始混淆名（srg），如 `aqm`、`b_` |
+| **mojang** | Mojang 官方可读映射名（**不是** SRG/混淆名） |
 | **mcp** | Forge/NeoForge 维护的中间映射（已废弃，由 official 取代） |
 | **official** | MCP 的官方版本，Mojang 混淆名 + MCP 映射 |
 | **yarn** | Fabric 社区的映射，与 MCP 类似 |

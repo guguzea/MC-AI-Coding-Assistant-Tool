@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-recipe
 description: Minecraft NeoForge 自定义配方开发。RecipeType、RecipeSerializer、自定义配方实现、Datagen。触发词：Recipe、RecipeType、RecipeSerializer、RecipeProvider、ProcessingRecipe、Ingredient
 platform: neoforge

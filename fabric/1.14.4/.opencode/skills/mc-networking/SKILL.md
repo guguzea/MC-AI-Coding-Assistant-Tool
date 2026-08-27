@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-networking
 description: Fabric 1.14.4 网络。ClientSidePacketRegistry、ServerSidePacketRegistry、PacketByteBuf。触发词：网络、Networking、PacketByteBuf、ClientSidePacketRegistry
 platform: fabric

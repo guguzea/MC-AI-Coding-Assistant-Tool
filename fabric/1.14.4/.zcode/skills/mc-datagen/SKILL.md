@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-datagen
 description: Fabric 1.14.4 没有 fabric-datagen。手写 JSON 到 resources。触发词：DataGen、DataGenerator、配方 JSON、模型 JSON
 platform: fabric

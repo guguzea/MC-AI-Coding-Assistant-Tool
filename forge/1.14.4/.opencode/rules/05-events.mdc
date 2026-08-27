@@ -61,7 +61,7 @@ if (FMLEnvironment.dist == Dist.CLIENT) {
 ```
 IF 监听玩家右键点击方块
   → PlayerInteractEvent.RightClickBlock（或 RightClickItem）
-  → 注意：此事件双侧触发（客户端+服务端），改世界前用 level.isClientSide 守卫
+  → 注意：此事件双侧触发（客户端+服务端），改世界前用 world.isRemote 守卫
 
 IF 监听生物死亡
   → LivingDeathEvent
@@ -87,7 +87,7 @@ IF 监听方块放置/破坏
   → BlockEvent.PlaceEvent
 
 IF 监听配方解锁（合成/烧炼/烟熏等）
-  → `CraftingEvent`（玩家完成合成时）
+  → `PlayerEvent.ItemCraftedEvent`（玩家完成合成时）
   → `FurnaceSmeltEvent`（物品被烧炼时）
   → 优先使用数据生成器注册配方，而非监听事件
 
@@ -135,11 +135,11 @@ IF 不确定
 | 实体死亡时处理掉落 | `LivingDeathEvent` | 与 `LivingDropsEvent` 区分 |
 | 修改方块掉落物 | `BlockEvent.BreakEvent` | 可用 `setExpToDrop()` 改变经验值 |
 | 修改方块掉落列表 | `LivingDropsEvent` | 可操作 `getDrops()` 列表 |
-| 添加合成配方 | `CraftingEvent` 或数据生成器 | 优先用数据生成器 |
+| 添加合成配方 | `PlayerEvent.ItemCraftedEvent` 或数据生成器 | 优先用数据生成器 |
 | 监听烧炼 | `FurnaceSmeltEvent` | 熔炉烧炼时触发 |
 | 监听药水效果 | `PotionEvent` | 多个子事件 |
 | 监听实体生成 | `EntityJoinWorldEvent` | 注意不要做重操作 |
-| 修改物品 NBT | `CraftingEvent` 或 `AnvilUpdateEvent` | |
+| 修改物品 NBT | `PlayerEvent.ItemCraftedEvent` 或 `AnvilUpdateEvent` | |
 
 ---
 
@@ -211,10 +211,10 @@ KeyBinding 注册应使用 `ClientRegistry.registerKeyBinding()`，而非直接�
 ```java
 @SubscribeEvent
 public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-    if (event.getObject() instanceof PlayerEntity player) {
+    if (event.getObject() instanceof PlayerEntity) {
         event.addCapability(
             new ResourceLocation(ExampleMod.MOD_ID, "my_capability"),
-            new ICapabilityProvider<>() {
+            new ICapabilitySerializable<CompoundNBT>() {
                 private final MyCapability instance = new MyCapability();
 
                 @Override
@@ -228,8 +228,8 @@ public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> ev
                 }
 
                 @Override
-                public boolean isInvalid() {
-                    return false;
+                public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+                    return LazyOptional.empty();
                 }
             }
         );

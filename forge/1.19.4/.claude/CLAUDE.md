@@ -42,17 +42,17 @@ IF build.gradle contains "neoforge" OR "neogradle"
 
 | File | Topic |
 |------|-------|
-| `00-project-setup.md` | Java 17, Gradle 8.x, build.gradle structure |
-| `01-registry.md` | DeferredRegister, RegistryObject (most important) |
-| `02-block.md` | Block, EntityBlock, BlockEntity |
-| `03-item.md` | Item, SwordItem, ArmorItem, FoodProperties |
-| `04-entity.md` | EntityType, LivingEntity, EntityRenderer |
-| `05-events.md` | @SubscribeEvent, Bus.FORGE vs Bus.MOD |
-| `06-networking.md` | SimpleChannel, IMessage, DistExecutor |
-| `07-datagen.md` | GatherDataEvent, RecipeProvider, LootTableProvider |
-| `08-client-server.md` | @OnlyIn, DistExecutor, KeyBinding |
-| `09-anti-patterns.md` | Common mistakes and fixes |
-| `10-gui.md` | MenuType, AbstractContainerMenu, Screen |
+| `00-project-setup.mdc` | Java 17, Gradle 8.x, build.gradle structure |
+| `01-registry.mdc` | DeferredRegister, RegistryObject (most important) |
+| `02-block.mdc` | Block, EntityBlock, BlockEntity |
+| `03-item.mdc` | Item, SwordItem, ArmorItem, FoodProperties |
+| `04-entity.mdc` | EntityType, LivingEntity, EntityRenderer |
+| `05-events.mdc` | @SubscribeEvent, Bus.FORGE vs Bus.MOD |
+| `06-networking.mdc` | SimpleChannel, IMessage, DistExecutor |
+| `07-datagen.mdc` | GatherDataEvent, RecipeProvider, LootTableProvider |
+| `08-client-server.mdc` | @OnlyIn, DistExecutor, KeyBinding |
+| `09-anti-patterns.mdc` | Common mistakes and fixes |
+| `10-gui.mdc` | MenuType, AbstractContainerMenu, Screen |
 
 ---
 
@@ -84,6 +84,6 @@ src/main/java/com/example/mod/
 ## Version-Specific Notes (1.19.4)
 
 - **MobCategory** is used for entity spawn groups (Yarn `SpawnGroup` is not a Forge 1.20.7 rename)
-- **Parchment mappings** recommended: `1.19.4-2023.04.04`
+- **Parchment mappings** recommended: `1.19.4-2023.06.26`
 - **pack_format**：数据包 **12**、资源包 **13**（1.19.4）
 - **Forge 45.4.x** for Minecraft 1.19.4

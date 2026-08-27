@@ -492,6 +492,10 @@ description: |
   assert.match(String(cfg?.description), /Cloth Config/);
   assert.doesNotMatch(String(cfg?.description), /改口 mc-config/);
   assert.equal(pkt?.description, GENERATE_NETWORK_PACKET_DESCRIPTION);
+  const { NETWORK_PACKET_PLATFORMS } = await import("./dist/generators/index.js");
+  for (const tok of NETWORK_PACKET_PLATFORMS) {
+    assert.ok(String(pkt?.description).includes(tok), `A1 missing token ${tok}`);
+  }
   assert.equal(cap?.description, GENERATE_CAPABILITY_DESCRIPTION);
   assert.equal(mdl?.description, GENERATE_MODEL_DESCRIPTION);
   console.log("generate_* description single source: ok");

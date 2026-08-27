@@ -1,4 +1,4 @@
-﻿---
+---
 description: 02 — 方块（NeoForge 1.20.4）
 ---
 

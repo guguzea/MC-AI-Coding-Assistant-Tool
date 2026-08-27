@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-events
 description: Minecraft Forge 事件系统。监听 Forge/FML 事件、@SubscribeEvent、物理端判断。触发词：事件、Event、@SubscribeEvent、FMLCommonSetupEvent、PlayerInteractEvent、LivingDeathEvent
 platform: forge

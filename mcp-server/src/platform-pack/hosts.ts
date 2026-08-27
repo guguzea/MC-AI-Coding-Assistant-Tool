@@ -15,11 +15,15 @@ export function expandHosts(raw: string[] | undefined): PackHost[] | { error: st
   if (!raw || raw.length === 0) {
     return { error: "hosts 必填（cursor|claude|continue|trae|opencode|codex|zcode|pi，或 all）。禁止默认 Cursor。" };
   }
-  if (raw.map((h) => h.toLowerCase()).includes("all")) return [...PACK_HOSTS];
   const out: PackHost[] = [];
   const seen = new Set<string>();
+  let sawAll = false;
   for (const h of raw) {
     const k = h.trim().toLowerCase();
+    if (k === "all") {
+      sawAll = true;
+      continue;
+    }
     if (!(PACK_HOSTS as readonly string[]).includes(k)) {
       return { error: `未知 host：${h}。允许：${PACK_HOSTS.join(", ")} 或 all` };
     }
@@ -27,6 +31,7 @@ export function expandHosts(raw: string[] | undefined): PackHost[] | { error: st
     seen.add(k);
     out.push(k as PackHost);
   }
+  if (sawAll) return [...PACK_HOSTS];
   return out;
 }
 
@@ -84,8 +89,17 @@ export function upsertHostMarker(text: string, host: PackHost, platform: string,
     `<!-- BEGIN MC_SKILL_PACK host=${host}\\b[\\s\\S]*?<!-- END MC_SKILL_PACK host=${host} -->\\s*`,
     "g",
   );
-  const replaced = text.replace(re, block);
-  if (replaced !== text) return replaced;
+  const matches = text.match(re);
+  re.lastIndex = 0;
+  if (matches && matches.length > 1) {
+    const stripped = text.replace(re, "");
+    const base = stripped.endsWith("\n") || stripped.length === 0 ? stripped : `${stripped}\n`;
+    return `${base}\n${block}`;
+  }
+  if (re.test(text)) {
+    re.lastIndex = 0;
+    return text.replace(re, block);
+  }
   const base = text.endsWith("\n") || text.length === 0 ? text : `${text}\n`;
   return `${base}\n${block}`;
 }
@@ -99,9 +113,13 @@ export function removeHostMarker(text: string, host: PackHost): string {
 }
 
 export function entryBody(host: PackHost, platform: string, version: string): string {
+  const layout = hostLayout(host);
+  const rulesLine = layout.rulesDir
+    ? `规则见 ${layout.rulesDir}/mc-skill-*${layout.rulesExt}`
+    : `本宿主不落盘规则；请 action=session；不要假设 .cursor/rules；技能 stub 见 ${layout.skillsDir}`;
   return [
     `本工程已激活 MC Skill 平台包：${platform} ${version}（host=${host}）。`,
-    "规则见本工程对应 IDE 目录（如 .cursor/rules/mc-skill-*.mdc）。",
+    rulesLine,
     "也可调用 activate_platform_pack action=session 取会话索引。不要读邻版 00–10。",
   ].join("\n");
 }

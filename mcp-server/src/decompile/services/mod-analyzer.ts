@@ -12,6 +12,7 @@
 import { existsSync, readFileSync, statSync } from "fs";
 import { isAbsolute } from "path";
 import { actionable, type ActionEnvelope } from "../../utils/actionable.js";
+import { parseJsonUtf8 } from "../../utils/json-utf8.js";
 import { readZip, listZipEntries } from "../zip-util.js";
 import { parseModsToml } from "./toml-parse.js";
 
@@ -46,6 +47,7 @@ export interface ModMetadata {
   accessWideners: string[];
   accessTransformers: string[];
   warnings: string[];
+  mods?: Array<{ modId: string; version?: string; displayName?: string; description?: string }>;
   error?: string;
   action?: ActionEnvelope;
 }
@@ -153,7 +155,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const quiltJson = entries.get("quilt.mod.json");
   if (quiltJson) {
     try {
-      const quilt = JSON.parse(quiltJson.toString("utf8")) as Record<string, unknown>;
+      const quilt = parseJsonUtf8(quiltJson.toString("utf8")) as Record<string, unknown>;
       meta.loaders.push("quilt");
       const loader = quilt.quilt_loader as Record<string, unknown> | undefined;
       const qid = loader && typeof loader.id === "string" ? loader.id : typeof quilt.id === "string" ? quilt.id : undefined;
@@ -175,7 +177,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const fabricJson = entries.get("fabric.mod.json");
   if (fabricJson) {
     try {
-      const fabric = JSON.parse(fabricJson.toString("utf8")) as Record<string, unknown>;
+      const fabric = parseJsonUtf8(fabricJson.toString("utf8")) as Record<string, unknown>;
       const quiltWins = meta.loaders.includes("quilt");
       if (!quiltWins) {
         meta.loaders.push("fabric");
@@ -226,6 +228,10 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
     try {
       const toml = parseModsToml(tomlSource.toString("utf8"));
       meta.loaders.push(neoforgeToml ? "neoforge" : "forge");
+      if (toml.mods.length) meta.mods = toml.mods;
+      if (toml.mods.length > 1) {
+        meta.warnings.push(`mods.toml 含 ${toml.mods.length} 个 [[mods]]，已全部列入 mods[]；主字段取首个 ${toml.mods[0].modId}`);
+      }
       if (!meta.modId && toml.mods[0]?.modId) meta.modId = toml.mods[0].modId;
       if (!meta.modVersion && toml.mods[0]?.version) meta.modVersion = toml.mods[0].version;
       if (!meta.modName && toml.mods[0]?.displayName) meta.modName = toml.mods[0].displayName;
@@ -240,7 +246,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const mcmodInfo = entries.get("mcmod.info");
   if (mcmodInfo && !meta.loaders.includes("forge") && !meta.loaders.includes("neoforge")) {
     try {
-      const parsed = JSON.parse(mcmodInfo.toString("utf8")) as unknown;
+      const parsed = parseJsonUtf8(mcmodInfo.toString("utf8")) as unknown;
       const first = Array.isArray(parsed) ? parsed[0] : parsed;
       if (first && typeof first === "object") {
         const rec = first as Record<string, unknown>;
@@ -258,7 +264,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const litemodJson = entries.get("litemod.json");
   if (litemodJson) {
     try {
-      const lite = JSON.parse(litemodJson.toString("utf8")) as Record<string, unknown>;
+      const lite = parseJsonUtf8(litemodJson.toString("utf8")) as Record<string, unknown>;
       if (!meta.loaders.includes("liteloader")) meta.loaders.push("liteloader");
       if (!meta.modId && typeof lite.name === "string") meta.modId = lite.name;
       if (!meta.modVersion && typeof lite.version === "string") meta.modVersion = lite.version;
@@ -272,7 +278,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const riftJson = entries.get("riftmod.json") ?? entries.get("rift.mod.json");
   if (riftJson) {
     try {
-      const rift = JSON.parse(riftJson.toString("utf8")) as Record<string, unknown>;
+      const rift = parseJsonUtf8(riftJson.toString("utf8")) as Record<string, unknown>;
       meta.loaders.push("rift");
       if (!meta.modId && typeof rift.id === "string") meta.modId = rift.id;
       if (!meta.modName && typeof rift.name === "string") meta.modName = rift.name;
@@ -291,7 +297,7 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
   const addonManifest = entries.get("manifest.json");
   if (addonManifest) {
     try {
-      const man = JSON.parse(addonManifest.toString("utf8")) as Record<string, unknown>;
+      const man = parseJsonUtf8(addonManifest.toString("utf8")) as Record<string, unknown>;
       if (man.format_version != null && Array.isArray(man.modules)) {
         meta.loaders.push("bedrock");
         const header = man.header as Record<string, unknown> | undefined;

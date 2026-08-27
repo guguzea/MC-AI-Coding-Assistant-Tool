@@ -1,4 +1,4 @@
-﻿---
+---
 description: 05-events NeoForge 1.20.1
 globs:
 alwaysApply: false

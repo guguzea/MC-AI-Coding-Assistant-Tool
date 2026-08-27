@@ -1,4 +1,4 @@
-﻿---
+---
 name: mc-registry
 description: NeoForge 1.20.1 注册。Forge 兼容 DeferredRegister。
 platform: neoforge

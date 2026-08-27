@@ -2,18 +2,15 @@ package com.example.examplemod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,8 +34,6 @@ public class ExampleMod {
         DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
     public static final DeferredRegister<Item> ITEMS =
         DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     // ---- 注册方块 ----
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block",
@@ -77,45 +72,22 @@ public class ExampleMod {
         )
     );
 
-    // ---- 注册创造模式标签 ----
-    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab",
-        () -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-                output.accept(EXAMPLE_ITEM.get());
-                output.accept(EXAMPLE_FOOD.get());
-            })
-            .build()
-    );
-
     public ExampleMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
         // 将 DeferredRegister 注册到 modEventBus
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
 
         // FMLCommonSetupEvent 在所有 mod constructor 执行完毕后触发
         modEventBus.addListener(this::commonSetup);
 
         // 注册服务端事件监听器
         MinecraftForge.EVENT_BUS.register(this);
-
-        // 注册创造模式标签内容
-        modEventBus.addListener(this::addCreative);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("ExampleMod commonSetup — mod loaded");
-    }
-
-    // ---- 将物品添加到创造模式标签（通过事件订阅）----
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTab.TAB_MISC) {
-            event.accept(EXAMPLE_ITEM);
-        }
     }
 
     // ---- 服务端事件 ----

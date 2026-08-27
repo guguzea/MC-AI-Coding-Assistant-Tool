@@ -12,13 +12,24 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSy
 import { basename, join, relative, sep } from "path";
 import { actionable, withAction, type ActionEnvelope } from "../../utils/actionable.js";
 import { parseMinecraftVersion, type MappingChoice } from "../version-manager.js";
-import { ensureCachePaths, openCacheDb, setArtifact, getArtifact, acquireCacheLock, CacheLockBusyError, normalizeArtifactPath } from "../cache.js";
+import {
+  ensureCachePaths,
+  openCacheDb,
+  setArtifact,
+  getArtifact,
+  acquireCacheLock,
+  CacheLockBusyError,
+  normalizeArtifactPath,
+  sanitizeCacheSegment,
+  isPathInside,
+} from "../cache.js";
 import { probeJava, runJava, toolchainActionable, skipDownloadsEnabled, downloadDisabledActionable } from "../java/java-process.js";
 import { ensureResourceJar, VINEFLOWER_DEF, TINY_REMAPPER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
 import { analyzeModJar } from "./mod-analyzer.js";
+import { assertVineflowerDiskSpace } from "./java-pipeline.js";
 
 export interface DecompileModJarArgs {
   jarPath: string;
@@ -40,6 +51,7 @@ export interface ModDecompileResult {
   javaFileCount?: number;
   topLevelDirs?: string[];
   sampleFiles?: string[];
+  truncated?: boolean;
   remapped?: boolean;
   note?: string;
   error?: string;
@@ -51,10 +63,10 @@ function tail(s: string, n = 800): string {
   return t.length > n ? "…" + t.slice(-n) : t;
 }
 
-function walkJava(dir: string, limit = 5000): string[] {
+function walkJava(dir: string, limit = 5000): { files: string[]; truncated: boolean } {
   const out: string[] = [];
   const stack = [dir];
-  while (stack.length > 0 && out.length < limit) {
+  while (stack.length > 0) {
     const cur = stack.pop()!;
     let entries;
     try {
@@ -65,19 +77,29 @@ function walkJava(dir: string, limit = 5000): string[] {
     for (const e of entries) {
       const full = join(cur, e.name);
       if (e.isDirectory()) stack.push(full);
-      else if (e.isFile() && e.name.endsWith(".java")) out.push(full);
+      else if (e.isFile() && e.name.endsWith(".java")) {
+        if (out.length >= limit) return { files: out, truncated: true };
+        out.push(full);
+      }
     }
   }
-  return out;
+  return { files: out, truncated: false };
 }
 
-function summarizeTree(outDir: string): { fileCount: number; javaFileCount: number; topLevelDirs: string[]; sampleFiles: string[] } {
-  const javaFiles = walkJava(outDir);
+function summarizeTree(outDir: string): { fileCount: number; javaFileCount: number; topLevelDirs: string[]; sampleFiles: string[]; truncated?: boolean } {
+  const walked = walkJava(outDir);
+  const javaFiles = walked.files;
   const topLevelDirs = readdirSync(outDir, { withFileTypes: true })
     .filter((e) => e.isDirectory())
     .map((e) => e.name);
   const sampleFiles = javaFiles.slice(0, 15).map((f) => relative(outDir, f).split(sep).join("/"));
-  return { fileCount: javaFiles.length, javaFileCount: javaFiles.length, topLevelDirs, sampleFiles };
+  return {
+    fileCount: javaFiles.length,
+    javaFileCount: javaFiles.length,
+    topLevelDirs,
+    sampleFiles,
+    ...(walked.truncated ? { truncated: true } : {}),
+  };
 }
 
 /** 为 search_mod_code 定位：jarPath → 已反编译目录（cache.db 索引） */
@@ -145,7 +167,15 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   if (!meta.found) {
     return withAction({ found: false, error: meta.action?.code ?? "NOT_FOUND", jarPath: args.jarPath }, meta.action);
   }
-  const modId = (meta.modId ?? "unknown-mod").replace(/[^a-z0-9._-]/gi, "_");
+  const modId = sanitizeCacheSegment(meta.modId ?? "unknown-mod");
+  if (!modId) {
+    return withAction(
+      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
+      actionable("INVALID_INPUT", `modId 非法（含路径穿越或空段）：${meta.modId ?? ""}`, [
+        "modId 只允许 [a-z0-9._-]，且不得为 `.` / `..` 或包含 `..`",
+      ]),
+    );
+  }
   // Forge 的 mods.toml 版本可用 ${file.jarVersion} 占位符（加载时按 jar 文件名解析）。
   // 此处按 FML 语义回退：去 .jar 后缀、取最后一个 '-' 之后的片段。避免把占位符
   // 原样用作输出目录名（含 ".jar" 子串会让 VineFlower 走单文件保存路径而失败）。
@@ -155,16 +185,32 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     const dash = stem.lastIndexOf("-");
     rawModVersion = dash >= 0 ? stem.slice(dash + 1) : stem;
   }
-  const modVersion = rawModVersion.replace(/[^a-z0-9._-]/gi, "_");
+  const modVersion = sanitizeCacheSegment(rawModVersion);
+  if (!modVersion) {
+    return withAction(
+      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
+      actionable("INVALID_INPUT", `modVersion 非法（含路径穿越或空段）：${rawModVersion}`, [
+        "version 只允许 [a-z0-9._-]，且不得为 `.` / `..` 或包含 `..`",
+      ]),
+    );
+  }
   const cache = ensureCachePaths();
   const outDir = join(cache.decompiledMods, modId, modVersion);
+  if (!isPathInside(cache.decompiledMods, outDir)) {
+    return withAction(
+      { found: false, error: "INVALID_INPUT", jarPath: args.jarPath },
+      actionable("INVALID_INPUT", "反编译输出目录逃出 decompiled-mods", [
+        "modId/modVersion 不得把产物写到 $MC_SKILL_CACHE/decompiled-mods 之外",
+      ]),
+    );
+  }
 
   // 并发防护：同一 jar 的反编译/重映射只允许一个任务持有缓存锁（B13）
   let release: (() => void) | undefined;
   try {
     release = await acquireCacheLock(
       cache.root,
-      `mod-decompile:${modId}:${modVersion}:${normalizeArtifactPath(args.jarPath)}`,
+      `mod-decompile:${normalizeArtifactPath(outDir)}`,
       10 * 60_000,
     );
   } catch (err) {
@@ -208,10 +254,17 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
         const tiny = await ensureResourceJar(TINY_REMAPPER_DEF, { cacheRoot: cache.root });
         // 缓存键：yarn 用 yarn-named（两步最终产物），避免命中旧单步 official→intermediary 的
         // `mod-*-yarn.jar`（仅 intermediary 名）。中间步独立键 yarn-intermediary。
-        const remappedJar =
+        const remapStem =
           mapping === "yarn"
-            ? join(cache.remapped, `mod-${modId}-${modVersion}-yarn-named.jar`)
-            : join(cache.remapped, `mod-${modId}-${modVersion}-mojmap.jar`);
+            ? sanitizeCacheSegment(`mod-${modId}-${modVersion}-yarn-named`)
+            : sanitizeCacheSegment(`mod-${modId}-${modVersion}-mojmap`);
+        if (!remapStem) {
+          throw new Error("remap 输出文件名非法（含路径穿越）");
+        }
+        const remappedJar = join(cache.remapped, `${remapStem}.jar`);
+        if (!isPathInside(cache.remapped, remappedJar)) {
+          throw new Error("remap 输出路径逃出 remapped 缓存目录");
+        }
         if (!existsSync(remappedJar) || args.force) {
           let mappings: string;
           if (mapping === "yarn") {
@@ -254,7 +307,14 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             mappings = mojmapPath;
           }
           if (mapping === "yarn") {
-            const step1 = join(cache.remapped, `mod-${modId}-${modVersion}-yarn-intermediary.jar`);
+            const step1Stem = sanitizeCacheSegment(`mod-${modId}-${modVersion}-yarn-intermediary`);
+            if (!step1Stem) {
+              throw new Error("remap 中间文件名非法（含路径穿越）");
+            }
+            const step1 = join(cache.remapped, `${step1Stem}.jar`);
+            if (!isPathInside(cache.remapped, step1)) {
+              throw new Error("remap 中间路径逃出 remapped 缓存目录");
+            }
             const r1 = await runJava([
               "-jar", tiny,
               "--forceLocal", "--ignoreConflicts",
@@ -297,6 +357,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
   try {
     const vineflower = await ensureResourceJar(VINEFLOWER_DEF, { cacheRoot: cache.root });
     mkdirSync(outDir, { recursive: true });
+    assertVineflowerDiskSpace(outDir, inputJar);
     const r = await runJava(["-jar", vineflower, "-dgs=1", "-asc=1", inputJar, outDir]);
     if (r.code !== 0) {
       return withAction(
@@ -318,6 +379,12 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
       return withAction(
         { found: false, error: err.code, modId },
         actionable(err.code, err.message, ["检查网络后重试", "或手动预置 jar 到 $MC_SKILL_CACHE/resources/"]),
+      );
+    }
+    if ((err as { code?: string }).code === "DISK_INSUFFICIENT") {
+      return withAction(
+        { found: false, error: "DISK_INSUFFICIENT", modId },
+        actionable("DISK_INSUFFICIENT", (err as Error).message, ["清理磁盘后重试"]),
       );
     }
     return withAction(
