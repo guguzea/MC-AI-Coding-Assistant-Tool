@@ -630,6 +630,42 @@ function warningForSkippedLoader(loader: DetectedLoader): string {
   }
 }
 
+/**
+ * 判断单份内容是否形态上确为基岩 add-on manifest。
+ *
+ * 必须同时满足：以 `{` 开头、不含 Java 源码特征（class/package/import 声明）、
+ * 可 JSON 解析、`format_version` 为数字或字符串、`modules` 为数组。
+ *
+ * 注意：不要在拼接后的 javaBlob 上做 JSON.parse——`javaBlobFromFiles` 会把
+ * `路径\n内容` 逐文件拼接，整体永远不是合法 JSON。必须逐文件判定。
+ */
+function isAddonManifestContent(content: unknown): boolean {
+  const t = String(content ?? "").trim();
+  if (!t.startsWith("{")) return false;
+  if (/\b(class|package|import)\s+[\w.]+/.test(t)) return false;
+  try {
+    const j = JSON.parse(t) as Record<string, unknown>;
+    const fv = j.format_version;
+    if (typeof fv !== "number" && typeof fv !== "string") return false;
+    return Array.isArray(j.modules);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 是否存在「路径是 manifest.json 且内容形态符合基岩 manifest」的源文件。
+ * 这是唯一可靠的采信依据——光凭内容里出现两个带引号的 key 会误判 Java 工程。
+ */
+function filesLookLikeAddonManifest(files?: Array<{ path: string; content: string }>): boolean {
+  for (const f of files ?? []) {
+    const p = String(f?.path ?? "").replace(/\\/g, "/");
+    if (!/(^|\/)manifest\.json$/i.test(p)) continue;
+    if (isAddonManifestContent(f?.content)) return true;
+  }
+  return false;
+}
+
 /** 用已有输入调 detectProjectLoaders（含 Java 补强），与 detect_mod_project 共用判定。 */
 function detectValidateProject(query: ValidateQuery): ProjectLoaderDetection {
   const gradle = query.buildGradle ?? "";
@@ -637,7 +673,12 @@ function detectValidateProject(query: ValidateQuery): ProjectLoaderDetection {
   if (query.quiltModJson) extras.quiltModJson = query.quiltModJson;
   const javaBlob = javaBlobFromFiles(query.javaFiles);
   if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) {
-    extras.addonManifest = javaBlob;
+    // 与 F-E204（quilt_loader）同款陷阱：Java 源码里的 `"format_version"` / `"modules"`
+    // 字符串常量或注释不得劫持平台判定。仅当某个源文件本身就是 manifest.json
+    // 且内容形态确为基岩 manifest 时才采信（逐文件判定，见 looksLikeAddonManifest）。
+    if (filesLookLikeAddonManifest(query.javaFiles)) {
+      extras.addonManifest = javaBlob;
+    }
   }
   if (/quilt_loader/.test(javaBlob)) {
     // F-E204：Java 源里的 "quilt_loader" 字符串（跨平台兼容探测、注释）不得劫持 loader 判定——

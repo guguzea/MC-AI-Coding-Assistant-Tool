@@ -107,23 +107,42 @@ export function buildMkDocsEntry(version, probe, chapters, baseUrl) {
 
 // ── HTTP probe (overridable for tests) ──────────────────────────────────────
 
-export async function defaultFetch(url /* , retries */) {
+/** 默认网络超时（ms）。无超时的请求会永久挂起，卡死整个 probe/fetch 流程。 */
+export const DEFAULT_TIMEOUT_MS = 30_000;
+
+// 注意：第二参是 opts（可注入 timeoutMs），不是 retries——
+// 旧签名里的 `/* , retries */` 只是注释残留，且无任何调用方按 retries 传参。
+export async function defaultFetch(url, opts = {}) {
   const https = await import("node:https");
   const http = await import("node:http");
   const mod = url.startsWith("https") ? https : http;
+  // timeoutMs 可注入：既便于测试（否则要等满 30s），也便于抓取慢站时调大
+  const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   return new Promise((resolve, reject) => {
-    mod.get(url, (res) => {
+    let settled = false;
+    let req;
+    const timer = setTimeout(() => {
+      if (!settled) req?.destroy(new Error(`请求超时（${timeoutMs}ms）: ${url}`));
+    }, timeoutMs);
+    const done = (fn, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      fn(value);
+    };
+    req = mod.get(url, (res) => {
       const chunks = [];
       res.on("data", (c) => chunks.push(c));
       res.on("end", () =>
-        resolve({
+        done(resolve, {
           ok: res.statusCode === 200,
           status: res.statusCode,
           content: Buffer.concat(chunks).toString("utf8"),
           finalUrl: url,
         })
       );
-    }).on("error", reject);
+    });
+    req.on("error", (e) => done(reject, e));
   });
 }
 

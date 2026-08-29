@@ -16,6 +16,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
+import { decompileDegradation } from "./dist/decompile/services/mod-decompile.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -667,6 +668,35 @@ section("zip-inflate (A-1)");
     assert.equal(stripTomlCommentOutsideQuotes(' "1.0" # c').trim(), '"1.0"');
   });
 }
+
+// ── #9 remap 失败必须诚实标记降级（不得只写进 note 却仍 found:true）────────
+// 抽成纯函数以便 CI 安全测试（本套件约定：无需 Java 17 / 无网络）。
+test("remap 失败 → remapFailed/degraded 均为 true 且带 warning", () => {
+  const r = decompileDegradation(false, "模组 remap 失败(code=1): boom");
+  assert.equal(r.remapFailed, true, "remap 失败必须标记 remapFailed");
+  assert.equal(r.degraded, true, "remap 失败必须标记 degraded");
+  assert.ok(
+    r.warnings.some((w) => /混淆|中间名/.test(w)),
+    `必须给出明确警告，实际: ${JSON.stringify(r.warnings)}`,
+  );
+  assert.ok(
+    r.warnings.some((w) => w.includes("boom")),
+    "警告应带错误摘要（但不 dump 全量 stderr）",
+  );
+});
+test("免 remap（无错误）→ 不算降级", () => {
+  // 26.1+ 免 remap / 未提供匹配版本：remapped=false 但 remapError 为 null
+  const r = decompileDegradation(false, null);
+  assert.equal(r.remapFailed, false, "免 remap 不得标记 remapFailed");
+  assert.equal(r.degraded, false, "免 remap 不得标记 degraded");
+  assert.deepEqual(r.warnings, [], "免 remap 不应产生警告");
+});
+test("正常重映射 → 无降级标记", () => {
+  const r = decompileDegradation(true, null);
+  assert.equal(r.remapFailed, false);
+  assert.equal(r.degraded, false);
+  assert.deepEqual(r.warnings, []);
+});
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

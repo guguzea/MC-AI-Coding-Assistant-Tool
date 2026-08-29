@@ -26,7 +26,7 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
-import { missingSemanticDbWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import { knowledgeVersion } from "../../platform-pack/catalog.js";
 import {
   findFabricPorting,
@@ -368,8 +368,13 @@ export async function searchFabricDocs(
         tags,
         limit: 10,
         version,
+        allowedIds: new Set(results.map((r: { id: string }) => r.id)),
       }) as typeof results;
     }
+    // 补齐 stale 警告（此前 fabric 独立路径未接入，仅 quilt 回退路径有）
+    const staleWarn = joinSearchWarnings(
+      ...sources.map((src) => semanticStaleSearchWarning(getDataRoot(), "fabric", version, src)),
+    );
 
     const topic = detectFabricDocsTopic(String(args.query ?? ""));
     let wikiTopicFallback = false;
@@ -428,6 +433,7 @@ export async function searchFabricDocs(
               semantic: semanticRanked,
               warning: joinSearchWarnings(
                 missingSemanticDbWarning(semanticMissing),
+                staleWarn,
                 extraWarn,
                 emptyDocsNote,
                 wikiInvolved ? FABRIC_WIKI_CURRENT_SITE_WARNING : undefined,

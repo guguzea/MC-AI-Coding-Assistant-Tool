@@ -225,7 +225,7 @@ MC_skill/
 
 1. **社区短文** — `authored/lib-*.md`，经 `search_community_docs` 检索；含反编译验证小节（`verifiedApi` 来源）。
 2. **库 Skill 源稿** — `knowledge/libs/<group>/mc-<name>/SKILL.md`，**不落盘**到平台 `.cursor/skills`；按 `AGENTS.md`「库模组 Skill」解析：platform → 组映射（`forge-only`+`all-platforms` / `fabric-only`+`all-platforms` / `neo-only`+`all-platforms` / `bedrock-only`）+ frontmatter 二次过滤。不确定选哪个库 → 先读 `knowledge/libs/all-platforms/mc-lib-catalog/SKILL.md`。
-3. **数据链** — 短文 frontmatter → `mcp-server/scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1880** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**44** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。
+3. **数据链** — 短文 frontmatter → `mcp-server/scripts/build-library-catalog-from-authored.mjs` → `library-catalog.ts`（**50** 条 / **1836** `verifiedApi` 键）+ `lib-manifests/all.json`（**45** slug / **2867** 版本条目）+ `lib-api-summaries/`（**44** 库 API 摘要）→ `check_dependencies` 识别依赖与版本窗口。（计数口径与脚本位置见 §7.5）
 
 **Agent 推荐路径（库相关）**：`check_dependencies`（看 `detectedLibraries`）→ `search_community_docs`（`lib-<name>` 或 `library-catalog-2026`）→ 按 `skillId` 或名称 Read `knowledge/libs/.../SKILL.md` → 仍缺签名再走 `search_*_docs` / `query_loader_api`。
 
@@ -665,15 +665,30 @@ Fabric 另含 `mc-fabric-api`、`mc-kotlin`、`mc-cloth-config`；Forge 1.12.2�
 
 ```
 authored/lib-*.md frontmatter（+ library-integration / library-integration-jei-emi 导航专篇）
-  → mcp-server/scripts/build-library-catalog-from-authored.mjs → library-catalog.ts（50 条 catalog / 1880 verifiedApi 键 / supportedVersions / officialUrls）
-  → build-lib-manifest.mjs（Modrinth API）→ lib-manifests/all.json（45 slug / 2867 版本条目）
-  → batch-decompile.mjs（分批反编译，源码按需生成到 $MC_SKILL_CACHE，不入库）
-  → merge-verified-api.mjs → 回填 verifiedApi
-  → build-api-summaries.mjs → lib-api-summaries/（44 库 API 摘要）
-  → check_dependencies 消费 catalog + manifest（库识别 / supportedVersions / 版本摘要）
+  → mcp-server/scripts/build-library-catalog-from-authored.mjs → library-catalog.ts（50 条 catalog / 1836 verifiedApi 键 / officialUrls）
+  → scripts/build-lib-manifest.mjs（Modrinth API）→ lib-manifests/all.json（45 slug / 2867 版本条目）
+  → scripts/batch-decompile.mjs（分批反编译，源码按需生成到 $MC_SKILL_CACHE，不入库）
+  → scripts/merge-verified-api.mjs → 回填 verifiedApi
+  → scripts/build-api-summaries.mjs → lib-api-summaries/（44 库 API 摘要）
+  → check_dependencies 消费 catalog + manifest（库识别 / 版本摘要）
 ```
 
-相关脚本均在 `mcp-server/scripts/`；数据位置见 [反编译数据产物](#反编译数据产物) 一节。
+**脚本位置分散，两处都有**（勿只查一处）：
+
+| 脚本 | 位置 |
+|---|---|
+| `build-library-catalog-from-authored.mjs` | `mcp-server/scripts/` |
+| `build-lib-manifest.mjs` | **`scripts/`（仓库根）** |
+| `batch-decompile.mjs` | **`scripts/`（仓库根）** |
+| `merge-verified-api.mjs` | **`scripts/`（仓库根）** |
+| `build-api-summaries.mjs` | **`scripts/`（仓库根）** |
+
+数据位置见 [反编译数据产物](#反编译数据产物) 一节。
+
+> **计数口径**：`verifiedApi` 键数 = 对 `library-catalog.ts` 每个 entry 取 `Object.keys(verifiedApi).length` 后求和，
+> 实算 **1836**（复核日期 2026-08-29；此前文档写的 1880 有误）。
+> 版本窗口另见各 entry 的 `supportedVersions: string[]`（Modrinth 实测的受支持 MC 版本列表），
+> 与 `verifiedApi` 的 `gameVersion/loader` 键是**两个独立字段**，二者并存。
 
 
 
@@ -761,7 +776,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 | 数据 | 位置 | 内容 |
 |---|---|---|
-| `library-catalog.ts` | `mcp-server/src/diagnostics/` | **50** 条 catalog（48 篇 `lib-*` + 集成导航专篇）/ **1880 个 verifiedApi 键**（`gameVersion/loader → packages/entrypoints`）+ `supportedVersions` 版本窗口 + `officialUrls` |
+| `library-catalog.ts` | `mcp-server/src/diagnostics/` | **50** 条 catalog（48 篇 `lib-*` + 集成导航专篇）/ **1836 个 verifiedApi 键**（`gameVersion/loader → packages/entrypoints`）+ **`supportedVersions` 版本窗口**（Modrinth 实测受支持 MC 版本列表，反编译验证）+ `officialUrls` |
 | `lib-api-summaries/*.json` | `mcp-server/data/` | 44 库 / 12,225 个 public 类 / 49,040 方法签名摘要（轻量 javadoc，约 4MB） |
 | `lib-manifests/all.json` | `mcp-server/data/` | **45** slug / **2867** 版本条目（版本号/URL/hash/loader 矩阵，Modrinth API 生成） |
 
@@ -870,7 +885,7 @@ node dist/cli.js get_community_doc_summary --id authored/lib-curios
 | Phase 2   | ✅ 完成  | Agent Skills + 代码模式库                                  |
 | Phase 3   | ✅ 完成  | MCP Server（文档 + 映射 + 移植 + 社区 + Wave B/C/D 扩展 + 五平台；工具数以 `list-tools` 为准） |
 | Phase 4   | ✅ 完成  | 知识库 / 反模式 / 数据审计与 Release 分发 |
-| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇 `lib-*` 短文 + 33 唯一库 Skill（`knowledge/libs` 35 份源稿）+ check_dependencies 增强 + 全量反编译（1515 jar → 1880 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
+| Phase 4.5 | ✅ 完成  | **库模组全覆盖**：48 篇 `lib-*` 短文 + 33 唯一库 Skill（`knowledge/libs` 35 份源稿）+ check_dependencies 增强 + 全量反编译（jar 数**待核**，产物按需生成到 `$MC_SKILL_CACHE` 不入库；→ 1836 verifiedApi 键）+ API 摘要 + manifest + 通用 CLI dispatch |
 | Phase 5   | 📋 部分  | `inspect_runtime` = 日志型 inspector（非 JVM attach）；微调数据集仍暂缓 |
 
 

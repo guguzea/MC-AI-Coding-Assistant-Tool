@@ -53,6 +53,14 @@ export interface ModDecompileResult {
   sampleFiles?: string[];
   truncated?: boolean;
   remapped?: boolean;
+  /**
+   * remap 抛错、已降级为「对原始 jar 反编译」。
+   * 与 `remapped: false` 的区别：后者也可能是「26.1+ 免 remap」这种**正常**情况。
+   */
+  remapFailed?: boolean;
+  /** 输出中的类/方法名为混淆名或中间名，不可当正式 API 使用。 */
+  degraded?: boolean;
+  warnings?: string[];
   note?: string;
   error?: string;
   action?: ActionEnvelope;
@@ -99,6 +107,33 @@ function summarizeTree(outDir: string): { fileCount: number; javaFileCount: numb
     topLevelDirs,
     sampleFiles,
     ...(walked.truncated ? { truncated: true } : {}),
+  };
+}
+
+/**
+ * remap 降级标记（纯函数，便于无 Java / 无网络的 CI 测试）。
+ *
+ * 区分三种情形，调用方据此判断输出是否可信：
+ * - `remapped: true`         → 正常重映射，名称可信
+ * - `remapped: false` 且无错 → **正常**免 remap（如 26.1+），不算降级
+ * - `remapped: false` 且有错 → **降级**：输出为混淆/中间名，不可当正式 API 使用
+ *
+ * 背景：原实现把降级只写进 `note` 字符串，却仍返回 `found: true`，
+ * 调用方无法可靠判定结果是否可用（输出混淆 jar 却报成功）。
+ */
+export function decompileDegradation(
+  remapped: boolean,
+  remapError: string | null,
+): { remapFailed: boolean; degraded: boolean; warnings: string[] } {
+  const failed = !remapped && remapError !== null;
+  return {
+    remapFailed: failed,
+    degraded: failed,
+    warnings: failed
+      ? [
+          `输出为混淆/中间名：remap 已失败降级（${remapError}），源码中的类/方法名不可当正式 API 使用。`,
+        ]
+      : [],
   };
 }
 
@@ -395,6 +430,8 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
 
   recordDecompiledDir(args.jarPath, outDir, modId, cache.root);
   writeDecompiledMeta(outDir, args.jarPath);
+  // remap 失败降级后输出的是混淆/中间名，必须在**结构字段**上诚实暴露，
+  // 不能只写进 note——调用方无法从字符串里可靠判定结果是否可用。
   return {
     found: true,
     modId,
@@ -404,6 +441,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     outputDir: outDir,
     ...summarizeTree(outDir),
     remapped,
+    ...decompileDegradation(remapped, remapError),
     note: remapped
       ? `已按 ${args.version} 重映射后反编译（yarn 两步 / mojmap 单步）。`
       : remapError

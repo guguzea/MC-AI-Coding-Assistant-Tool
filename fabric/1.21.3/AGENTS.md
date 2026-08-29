@@ -29,7 +29,8 @@
 > - `fabric-attachment-api-v1`：用 `AttachmentRegistry`，不是 NeoForge `getData`
 > - `fabric-language-kotlin` 需要特定版本兼容 1.21+
 >
-> ⚠️ **Pack Format**: `pack 34`（从 pack 22 升级）
+> ⚠️ **Pack Format**: `pack 42`（从 pack 22 升级；34 是 1.21–1.21.1 的值，勿混用。
+> 数据包是另一套数值，1.21.3 为 57）
 >
 > ⚠️ **Java**: 必须使用 Java 21（不再支持 Java 17）
 

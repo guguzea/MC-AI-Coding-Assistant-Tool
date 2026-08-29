@@ -2,14 +2,18 @@
 name: mc-kotlin-for-forge
 description: Kotlin for Forge（KFF）语言加载器（NeoForge）。触发词：Kotlin、KFF、kotlinforforge、协程、coroutines、语言加载器
 platforms: [neoforge]
-mcVersions: ["1.20.1-26.2"]
+mcVersions: ["1.14-1.21.10"]
 communityDocId: authored/lib-kotlin-for-forge
 mappings: hint
 ---
 
 # Kotlin for Forge（NeoForge）
 
-NeoForge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（约 1.20.1-26.2）。Modrinth 上 KFF 大量版本同时标 `forge`+`neoforge`，较新版本也有纯 Neo 构建。Fabric 平台用 `mc-fabric-language-kotlin`。
+NeoForge 模组用 Kotlin 编写：语言加载器把 Kotlin 标准库、kotlinx-coroutines 运行时带进游戏（1.14-1.21.10）。Modrinth 上 KFF 大量版本同时标 `forge`+`neoforge`，较新版本也有纯 Neo 构建。Fabric 平台用 `mc-fabric-language-kotlin`。
+
+> 版本区间口径：以 `library-catalog.ts` 的 `verifiedApi` 实测键为准（最低 1.14、最高 1.21.10）。
+> catalog 里 KFF 是**单一条目**（`loaders: [forge, neoforge]`），未按 loader 拆分版本，
+> 故本档与 `forge-only/mc-kotlin-for-forge` 取同一区间。**26.2 无实测记录，勿写入。**
 
 > 本稿位于 `knowledge/libs/neo-only/`，供 NeoForge 解析路径使用。Forge 工程请读 `forge-only/mc-kotlin-for-forge`。
 

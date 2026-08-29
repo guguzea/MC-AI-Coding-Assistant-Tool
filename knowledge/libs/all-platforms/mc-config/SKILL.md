@@ -2,7 +2,7 @@
 name: mc-config
 description: 配置库选型总纲。触发词：配置、config、ConfigScreen、ForgeConfigSpec、Cloth、YACL、Fzzy、owo-config、配置界面、ConfigBuilder、Mod Menu
 platforms: [fabric, forge, neoforge]
-mcVersions: ["1.20.1+"]
+mcVersions: ["1.14-26.2"]
 communityDocId: authored/lib-cloth-config
 ---
 

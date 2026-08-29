@@ -80,15 +80,29 @@ export function isSemanticIndexStale(opts: {
   builtAtIso?: string | null;
   storedFingerprint?: string | null;
   versionDir: string;
-}): { stale: boolean; reason?: string } {
+}): { stale: boolean; reason?: string; fingerprintMismatchOnly?: boolean } {
   const fp = computeSourceFingerprint(opts.versionDir);
-  if (fp && opts.storedFingerprint && fp !== opts.storedFingerprint) {
-    return { stale: true, reason: "source_fingerprint mismatch" };
-  }
   const builtMs = opts.builtAtIso ? Date.parse(opts.builtAtIso) : NaN;
   const srcMtime = maxProcessedMtimeMs(opts.versionDir);
-  if (Number.isFinite(builtMs) && srcMtime > builtMs + 1000) {
+  const srcNewer = Number.isFinite(builtMs) && srcMtime > builtMs + 1000;
+  const mismatched = Boolean(fp && opts.storedFingerprint && fp !== opts.storedFingerprint);
+
+  if (mismatched && srcNewer) {
+    return { stale: true, reason: "source_fingerprint mismatch (source newer than built_at)" };
+  }
+  if (srcNewer) {
     return { stale: true, reason: "processed mtime newer than built_at" };
+  }
+  if (mismatched) {
+    // 指纹不一致，但源并不比索引新 → 判为**假性过期**。
+    // 成因：指纹对 rel 路径敏感（versionDir 传入形式的差异就会改变 rel），
+    // 重建索引后往往依旧 mismatch，误报会污染每次 search 的输出。
+    // 保守处理：不判 stale，但把信息回传以便诊断。
+    return {
+      stale: false,
+      reason: "fingerprint mismatch (source unchanged)",
+      fingerprintMismatchOnly: true,
+    };
   }
   return { stale: false };
 }

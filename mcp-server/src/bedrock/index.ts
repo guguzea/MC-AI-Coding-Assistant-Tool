@@ -125,6 +125,7 @@ export async function searchBedrockDocs(
       tags: args.tags,
       limit: 20,
       version: detailed.resolvedVersion,
+      allowedIds: new Set(results.map((r) => r.id)),
     });
   }
   return jsonOk(

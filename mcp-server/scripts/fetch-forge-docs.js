@@ -81,6 +81,9 @@ const USER_AGENTS = [
 let uaIndex = 0;
 function nextUA() { return USER_AGENTS[uaIndex++ % USER_AGENTS.length]; }
 
+/** 网络超时（ms）：curl 的 --max-time 与 node https 回退路径共用。 */
+const FETCH_TIMEOUT_MS = 30_000;
+
 async function fetchUrlViaCurl(url) {
   try {
     const { stdout } = await execFileAsync(
@@ -89,8 +92,10 @@ async function fetchUrlViaCurl(url) {
         "-sS",
         "-L",
         "--ssl-no-revoke",
+        "--connect-timeout",
+        String(Math.ceil(FETCH_TIMEOUT_MS / 1000) / 2),
         "--max-time",
-        "30",
+        String(Math.ceil(FETCH_TIMEOUT_MS / 1000)),
         "-A",
         nextUA(),
         "-w",
@@ -125,15 +130,28 @@ async function fetchUrl(url, retries = 3) {
     let r;
     try {
       r = await new Promise((resolve, reject) => {
-        mod.get(currentUrl, { headers }, (httpRes) => {
+        let settled = false;
+        let req;
+        // 无超时的 https.get 会永久挂起（curl 路径已有 --max-time，这里必须补）
+        const timer = setTimeout(() => {
+          if (!settled) req?.destroy(new Error(`请求超时（${FETCH_TIMEOUT_MS}ms）: ${currentUrl}`));
+        }, FETCH_TIMEOUT_MS);
+        const done = (fn, value) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          fn(value);
+        };
+        req = mod.get(currentUrl, { headers }, (httpRes) => {
           const chunks = [];
           httpRes.on("data", c => chunks.push(c));
-          httpRes.on("end", () => resolve({
+          httpRes.on("end", () => done(resolve, {
             status: httpRes.statusCode,
             location: httpRes.headers.location || "",
             body: Buffer.concat(chunks).toString("utf8")
           }));
-        }).on("error", reject);
+        });
+        req.on("error", (e) => done(reject, e));
       });
     } catch (e) { continue; }
 

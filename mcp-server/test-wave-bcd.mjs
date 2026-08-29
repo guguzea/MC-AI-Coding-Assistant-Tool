@@ -12,6 +12,7 @@ import {
 import { parseMixinsJson, parseMixinJavaSource } from "./dist/mixin/parser.js";
 import { queryRegistry, buildRegistryIndex, closeRegistryDbs } from "./dist/registry/index.js";
 import { validateDatapackJson } from "./dist/datapack/index.js";
+import { analyzeBedrockContentLog } from "./dist/bedrock/content-log.js";
 import {
   generateModel,
   generateNetworkPacket,
@@ -319,7 +320,144 @@ async function main() {
   testMixinsJson();
   await testMixinAnalyzeMissing();
   testWorkersAndDescriptor();
+  testContentLogLevelParsing();
+  testDatapackSmithingAndRecursive();
   console.log("test-wave-bcd: ok");
+}
+
+// ── #5 content-log 锁定测试 ───────────────────────────────────────────────
+// 背景：曾有一份审查报告称 CONTENT_LINE_RE 有 6 个捕获组、解构错位，导致
+// 「ERROR/WARN 永不识别」，并给出「跳 2 格」/「跳 4 格」两种改法。
+// 实测该正则**只有 5 个捕获组**（两处外括号都是 (?: 非捕获），
+// 现有 `const [, , , level, tag, msg]` 取值完全正确，两种改法都会改坏。
+// 本用例把「当前行为即正确行为」钉死，防止后人按错误报告去「修复」。
+function testContentLogLevelParsing() {
+  const dir = mkdtempSync(join(tmpdir(), "mc-contentlog-"));
+  const logPath = join(dir, "content_log.txt");
+  writeFileSync(
+    logPath,
+    [
+      "[2024-05-01 12:00:00.123][ERROR][script] Something failed",
+      "[12:00:01][WARNING][addon] Deprecated API",
+      "[2024-05-01 12:00:02][INFO] no tag line",
+      "this is not a log line",
+    ].join("\n"),
+  );
+  const r = analyzeBedrockContentLog({ logPath });
+
+  assert.equal(r.levelCounts.ERROR, 1, "长日期时间 ERROR 行应被识别");
+  assert.equal(r.levelCounts.WARNING, 1, "短时间戳 WARNING 行应被识别");
+  assert.equal(r.levelCounts.INFO, 1, "无标签 INFO 行应被识别");
+
+  // tag 取自 m[4]、msg 取自 m[5]；level 不进条目文本
+  assert.ok(r.errors[0].includes("Something failed"));
+  assert.ok(r.errors[0].startsWith("[script]"), `errors[0] 应以 [tag] 开头，实际: ${r.errors[0]}`);
+  assert.ok(r.warnings.some((w) => w.includes("Deprecated API")));
+
+  // 无标签行不得产生 "?" 占位 tag
+  assert.ok(!r.topTags.some((t) => t.tag === "?"), "无标签行不应产生 ? 占位 tag");
+  assert.deepEqual(r.topTags.map((t) => t.tag).sort(), ["addon", "script"]);
+
+  assert.deepEqual(r.unparsedLines, ["this is not a log line"]);
+  rmSync(dir, { recursive: true, force: true });
+}
+
+// ── #7 datapack：smithing 字段按 vanilla 事实 + 递归校验 ──────────────────
+function testDatapackSmithingAndRecursive() {
+  const v = "1.20.1";
+
+  // smithing_transform 缺 result → 必须报错（原实现会假通过）
+  const noResult = validateDatapackJson({
+    kind: "recipe",
+    version: v,
+    jsonContent: JSON.stringify({
+      type: "minecraft:smithing_transform",
+      template: { item: "minecraft:diamond" },
+      base: { item: "minecraft:stone" },
+      addition: { item: "minecraft:gold_ingot" },
+    }),
+  });
+  assert.equal(noResult.valid, false, "smithing_transform 缺 result 必须报 error");
+  assert.ok(noResult.errors.some((e) => e.includes("result")));
+
+  // template/addition 是可选的，只写 base+result 应通过
+  const minimal = validateDatapackJson({
+    kind: "recipe",
+    version: v,
+    jsonContent: JSON.stringify({
+      type: "minecraft:smithing_transform",
+      base: { item: "minecraft:stone" },
+      result: { id: "minecraft:diamond", count: 1 },
+    }),
+  });
+  assert.equal(
+    minimal.valid,
+    true,
+    `smithing_transform 省略 template/addition 应合法，errors=${JSON.stringify(minimal.errors)}`,
+  );
+
+  // smithing_trim 无 result 属正常，不得报错
+  const trim = validateDatapackJson({
+    kind: "recipe",
+    version: v,
+    jsonContent: JSON.stringify({
+      type: "minecraft:smithing_trim",
+      template: { item: "minecraft:diamond" },
+      base: { item: "minecraft:stone" },
+      addition: { item: "minecraft:gold_ingot" },
+    }),
+  });
+  assert.equal(trim.valid, true, `smithing_trim 无 result 应合法，errors=${JSON.stringify(trim.errors)}`);
+
+  // 递归：嵌套结构里的非法资源 id 应出 warning（不 fail）
+  const nested = validateDatapackJson({
+    kind: "loot_table",
+    version: v,
+    jsonContent: JSON.stringify({
+      pools: [{ entries: [{ type: "minecraft:item", name: "Bad Item Name" }] }],
+    }),
+  });
+  assert.ok(
+    nested.warnings.some((w) => w.includes("Bad Item Name")),
+    `嵌套非法 id 应产生 warning，warnings=${JSON.stringify(nested.warnings)}`,
+  );
+
+  // 递归：合法嵌套不误报
+  const nestedOk = validateDatapackJson({
+    kind: "loot_table",
+    version: v,
+    jsonContent: JSON.stringify({
+      pools: [{ entries: [{ type: "minecraft:item", name: "minecraft:stone" }] }],
+    }),
+  });
+  assert.ok(
+    !nestedOk.warnings.some((w) => w.includes("看起来不是合法")),
+    `合法嵌套不应误报，warnings=${JSON.stringify(nestedOk.warnings)}`,
+  );
+
+  // packFormat 形态校验：浮点/非法值 → warning
+  const badPf = validateDatapackJson({
+    kind: "tag",
+    version: v,
+    packFormat: 69.5,
+    jsonContent: JSON.stringify({ values: ["minecraft:stone"] }),
+  });
+  assert.ok(
+    badPf.warnings.some((w) => w.includes("pack_format")),
+    `packFormat=69.5 应产生 warning，warnings=${JSON.stringify(badPf.warnings)}`,
+  );
+
+  // 合法整数 packFormat 不报 warning
+  const okPf = validateDatapackJson({
+    kind: "tag",
+    version: v,
+    packFormat: 15,
+    jsonContent: JSON.stringify({ values: ["minecraft:stone"] }),
+  });
+  assert.ok(
+    !okPf.warnings.some((w) => w.includes("pack_format")),
+    `packFormat=15 不应报 warning，warnings=${JSON.stringify(okPf.warnings)}`,
+  );
 }
 
 main().catch((e) => {

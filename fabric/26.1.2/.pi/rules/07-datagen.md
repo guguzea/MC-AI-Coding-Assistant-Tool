@@ -7,7 +7,12 @@ description: 07 — 数据生成器
 > 适用版本：Fabric 26.1.2（Mojmap）
 
 文档入口（若本机文档索引有 26.1.2）：`develop_data-generation_setup` / `recipes` / `loot-tables` / `tags`。
-本档方法名来自 `query_loader_api`（26.1.2 fabric-api），**不要**把 Yarn 1.21 的 `Identifier` / `generate(Consumer)` 抄过来。
+本档方法名来自 `query_loader_api`（26.1.2 fabric-api），**不要**把 Yarn 1.21 的 `generate(Consumer)` 抄过来。
+
+> ⚠️ 易错点：**`Identifier` 不是 Yarn 名**。Mojang 官方映射自 **1.21.11** 起把 `ResourceLocation`
+> 改名为 `Identifier`（mappings.dev 核实：1.21.10 及更早为 `ResourceLocation`，1.21.11 起为 `Identifier`）。
+> 26.1 的「去混淆」是另一件事，与本次改名不是同一节点。本档（26.1.2）与 1.21.11 起各档一律用 `Identifier`；
+> 1.21.10 及更早才用 `ResourceLocation`。
 
 ---
 

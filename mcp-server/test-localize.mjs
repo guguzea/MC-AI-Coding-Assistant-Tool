@@ -443,6 +443,23 @@ function testPackFormatMap() {
   const unknown = resolvePackFormat("9.9.9");
   assert.equal(unknown.packFormat, 15);
   assert.ok(unknown.notes.some((n) => /未知 mcVersion/.test(n)));
+
+  // #6：<1.19.4 段补全。此前该表从 1.19.4 起，老版本一律回落到 15（错误）。
+  // 依据 Minecraft Wiki「Pack format」表（资源包）。
+  assert.equal(resolvePackFormat("1.12.2").packFormat, 3, "1.12.2 应为 3，不得回落 15");
+  assert.equal(resolvePackFormat("1.11.2").packFormat, 3);
+  assert.equal(resolvePackFormat("1.13.2").packFormat, 4);
+  assert.equal(resolvePackFormat("1.14.4").packFormat, 4);
+  assert.equal(resolvePackFormat("1.15.2").packFormat, 5);
+  assert.equal(resolvePackFormat("1.16.1").packFormat, 5);
+  assert.equal(resolvePackFormat("1.16.5").packFormat, 6);
+  assert.equal(resolvePackFormat("1.17.1").packFormat, 7);
+  assert.equal(resolvePackFormat("1.18.2").packFormat, 8);
+  assert.equal(resolvePackFormat("1.19.2").packFormat, 9);
+  assert.equal(resolvePackFormat("1.19.3").packFormat, 12);
+  assert.equal(resolvePackFormat("1.19.4").packFormat, 13);
+  // 老版本不得再回落到 1.20 的值
+  assert.notEqual(resolvePackFormat("1.12.2").packFormat, 15);
 }
 
 function testWorkflow() {

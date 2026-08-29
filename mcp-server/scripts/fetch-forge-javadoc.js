@@ -39,6 +39,9 @@ const USER_AGENTS = [
 let uaIndex = 0;
 function nextUA() { return USER_AGENTS[uaIndex++ % USER_AGENTS.length]; }
 
+/** 网络超时（ms）。无超时的 https.get 会永久挂起，卡死整个抓取流程。 */
+const FETCH_TIMEOUT_MS = 30_000;
+
 async function fetchUrl(url, retries = 3) {
   const https = await import("node:https");
   let currentUrl = url;
@@ -50,15 +53,27 @@ async function fetchUrl(url, retries = 3) {
     let r;
     try {
       r = await new Promise((resolve, reject) => {
-        https.get(currentUrl, { headers }, (httpRes) => {
+        let settled = false;
+        let req;
+        const timer = setTimeout(() => {
+          if (!settled) req?.destroy(new Error(`请求超时（${FETCH_TIMEOUT_MS}ms）: ${currentUrl}`));
+        }, FETCH_TIMEOUT_MS);
+        const done = (fn, value) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          fn(value);
+        };
+        req = https.get(currentUrl, { headers }, (httpRes) => {
           const chunks = [];
           httpRes.on("data", c => chunks.push(c));
-          httpRes.on("end", () => resolve({
+          httpRes.on("end", () => done(resolve, {
             status: httpRes.statusCode,
             location: httpRes.headers.location || "",
             body: Buffer.concat(chunks).toString("utf8")
           }));
-        }).on("error", reject);
+        });
+        req.on("error", (e) => done(reject, e));
       });
     } catch (e) { continue; }
 

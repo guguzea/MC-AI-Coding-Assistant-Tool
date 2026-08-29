@@ -766,16 +766,24 @@ export function withDocsFallbackFields<T extends Record<string, unknown>>(payloa
  * - 应用 tags 过滤（与 enhancedSearch 同语义：所有 tag 均需命中）
  * - 语义侧的 matches 写入合并结果（L0 独有条目无 matches）
  * - 截断到 limit
+ *
+ * @param opts.allowedIds 可选。**新调用方必须传**（传 L0 结果的 id 集合）。
+ *   不传 = 不做成员校验。语义 sqlite 与 processed/ 是两份数据源，
+ *   文档删除后 sqlite 里必然残留；不做成员校验，已删除文档会经语义通道「浮出」，
+ *   表现为搜得到但打不开。
  */
 export function mergeSemanticResults(
   results: SearchResultLike[],
   semanticHits: SemanticHitLike[],
-  opts: { tags?: string[]; limit?: number; version?: string },
+  opts: { tags?: string[]; limit?: number; version?: string; allowedIds?: ReadonlySet<string> },
 ): SearchResultLike[] {
   const limit = opts.limit ?? 10;
   const normalizedTags = (opts.tags ?? []).map(normalizeTag);
+  const allowedIds = opts.allowedIds;
 
   const filteredHits = semanticHits.filter((h) => {
+    // 成员校验：不在 L0 结果集内的语义命中一律丢弃（防已删除文档浮出）
+    if (allowedIds && !allowedIds.has(h.docId)) return false;
     if (normalizedTags.length === 0) return true;
     return normalizedTags.every((wanted) =>
       (h.tags ?? []).some((t) => normalizeTag(t).includes(wanted)),

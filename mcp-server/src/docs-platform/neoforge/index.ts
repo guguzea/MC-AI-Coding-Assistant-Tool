@@ -27,7 +27,7 @@ import {
 } from "../platform-data.js";
 import { semanticSearch } from "../semantic/search.js";
 import { mergeSemanticResults, joinSearchWarnings, withDocsFallbackFields } from "../search-utils.js";
-import { missingSemanticDbWarning } from "../semantic/status.js";
+import { missingSemanticDbWarning, semanticStaleSearchWarning } from "../semantic/status.js";
 import {
   findPrimer,
   isPrimerDocId,
@@ -214,6 +214,7 @@ export async function searchNeoForgeDocs(args: {
           tags: args.tags,
           limit: 20,
           version: detailed.resolvedVersion,
+          allowedIds: new Set(detailed.results.map((r) => r.id)),
         });
     const primerHits = searchNeoForgePrimers({ query: args.query, version, dataRoot: neoDataRoot() });
     if (primerHits.length) {
@@ -237,6 +238,13 @@ export async function searchNeoForgeDocs(args: {
             primerHits.length ? "结果含 source=primer（迁移 Primer，不是 loader API 全文）" : undefined,
             version === "26.1" ? "NeoForge 26.1 官方无 /docs/26.1/，抓的是未版本化现行 /docs/（unversionedCurrent）。26.2 成为现行后禁止 --force 覆盖本树，也不要克隆成 26.2。" : undefined,
             missingSemanticDbWarning(semanticHits === null && !resolution.mainDocsMissing),
+            // 补齐 stale 警告（此前仅 forge/search_docs 路径有，neoforge 独立路径缺失）
+            semanticStaleSearchWarning(
+              neoDataRoot(),
+              forgeCompatible ? "forge" : "neoforge",
+              forgeCompatible ? (resolution.sourceVersion ?? "1.20.1") : detailed.resolvedVersion,
+              forgeCompatible ? "forge-docs" : "neoforge-docs",
+            ),
           ),
           forgeCompatible: forgeCompatible || undefined,
           source_version: resolutionSource,

@@ -40,12 +40,37 @@ function collectModelTextures(obj: unknown, out: Set<string>): void {
   for (const v of Object.values(rec)) collectModelTextures(v, out);
 }
 
+/**
+ * 拆分纹理引用为「命名空间 + 路径」，保留命名空间信息。
+ * 同时剥离 `#layer0` 片段；`#` 之后为空则不视为路径。
+ *
+ * 保留命名空间是关键：旧实现直接剥掉 `namespace:` 前缀，导致
+ * `minecraft:block/stone` 与 `mymod:block/stone` 都塌成 `block/stone`，
+ * 跨命名空间互相匹配，孤儿纹理与缺失纹理双双判定错乱。
+ */
+export function splitTextureRef(ref: string): { ns: string | null; path: string | null } {
+  const noHash = ref.split("#")[0]?.trim() ?? "";
+  if (!noHash) return { ns: null, path: null };
+  const colon = noHash.indexOf(":");
+  if (colon === -1) {
+    return { ns: null, path: noHash.replace(/^\/+/, "").replace(/\\/g, "/") };
+  }
+  const ns = noHash.slice(0, colon).trim();
+  const p = noHash.slice(colon + 1).replace(/^\/+/, "").replace(/\\/g, "/");
+  if (!p) return { ns: null, path: null };
+  return { ns: ns || null, path: p };
+}
+
 /** Strip `#layer0` fragments and `namespace:` prefix; empty after `#` is not a path. */
 export function normalizeTextureRef(ref: string): string | null {
-  const noHash = ref.split("#")[0]?.trim() ?? "";
-  if (!noHash) return null;
-  const withoutNs = noHash.includes(":") ? noHash.slice(noHash.indexOf(":") + 1) : noHash;
-  return withoutNs.replace(/^\/+/, "").replace(/\\/g, "/");
+  return splitTextureRef(ref).path;
+}
+
+/** `assets/<ns>/...` → `<ns>`；非 assets 布局返回 null。 */
+export function textureNamespaceFromRel(rel: string): string | null {
+  const n = rel.replace(/\\/g, "/");
+  const m = n.match(/(?:^|\/)assets\/([^/]+)\//);
+  return m ? m[1] : null;
 }
 
 /** Path-segment aligned: `block/foo` matches `foo` only as `.../foo`, never substring `foo` in `food`. */
@@ -79,14 +104,19 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
 
   const all = walkFiles(root);
   const rel = (p: string) => relative(root, p).replace(/\\/g, "/");
-  const textureByKey = new Map<string, string>();
+  // 命名空间感知索引：ns -> (path -> rel)。
+  // ns 为 "" 表示该纹理不在 assets/<ns>/ 布局下（退化为未知命名空间）。
+  const texturesByNs = new Map<string, Map<string, string>>();
   for (const p of all) {
     const r = rel(p);
     const key = textureKeyFromRel(r);
-    if (key) textureByKey.set(key, r);
+    if (!key) continue;
+    const ns = textureNamespaceFromRel(r) ?? "";
+    if (!texturesByNs.has(ns)) texturesByNs.set(ns, new Map());
+    // 旧实现用裸 key，多命名空间同名纹理会互相覆盖——这里按 ns 分桶，不再覆盖
+    texturesByNs.get(ns)!.set(key, r);
   }
   const referenced = new Set<string>();
-  const referencedKeys = new Set<string>();
 
   for (const file of all) {
     const r = rel(file);
@@ -99,18 +129,50 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     }
   }
 
+  // 引用侧同样按命名空间分桶：ns -> Set<path>。
+  // ns 为 "" 表示引用未写命名空间（"block/foo"），按宽松规则匹配任意命名空间。
+  const refsByNs = new Map<string, Set<string>>();
+  const recordRef = (ns: string | null, path: string | null): void => {
+    if (!path) return;
+    const k = ns ?? "";
+    if (!refsByNs.has(k)) refsByNs.set(k, new Set());
+    refsByNs.get(k)!.add(path);
+  };
+
   for (const tex of referenced) {
-    const key = normalizeTextureRef(tex);
-    if (!key) continue;
-    referencedKeys.add(key);
-    if (!textureByKey.has(key) && ![...textureByKey.keys()].some((k) => textureKeysAlign(k, key))) {
-      issues.push({ severity: "warn", path: tex, message: "模型引用的纹理未在资源树中找到对应 .png" });
+    const { ns, path } = splitTextureRef(tex);
+    if (!path) continue;
+    recordRef(ns, path);
+
+    // 缺失判定：写了命名空间就只在该命名空间内找；未写则宽松匹配任意命名空间。
+    const found = ns
+      ? [...(texturesByNs.get(ns)?.keys() ?? [])].some((k) => textureKeysAlign(k, path))
+      : [...texturesByNs.values()].some((paths) =>
+          [...paths.keys()].some((k) => textureKeysAlign(k, path)),
+        );
+    if (!found) {
+      issues.push({
+        severity: "warn",
+        path: tex,
+        message: ns
+          ? `模型引用的纹理未在命名空间 ${ns} 下找到对应 .png`
+          : "模型引用的纹理未在资源树中找到对应 .png",
+      });
     }
   }
 
-  const orphanTextures = [...textureByKey.entries()]
-    .filter(([key]) => !referencedKeys.has(key) && ![...referencedKeys].some((ref) => textureKeysAlign(key, ref)))
-    .map(([, path]) => path);
+  // 孤儿判定：纹理未被「同命名空间引用」或「无命名空间引用」命中即为孤儿
+  const orphanTextures: string[] = [];
+  for (const [ns, paths] of texturesByNs) {
+    for (const [key, relPath] of paths) {
+      const sameNs = refsByNs.get(ns);
+      const anyNs = refsByNs.get("");
+      const isRef =
+        (sameNs ? [...sameNs].some((p) => textureKeysAlign(key, p)) : false) ||
+        (anyNs ? [...anyNs].some((p) => textureKeysAlign(key, p)) : false);
+      if (!isRef) orphanTextures.push(relPath);
+    }
+  }
 
   if (input.modId && /[A-Z]/.test(input.modId)) {
     issues.push({

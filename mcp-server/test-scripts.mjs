@@ -41,4 +41,52 @@ assert.equal(
 );
 assert.equal(extractScriptApiStable("<p>no versions here</p>"), null);
 
+// ── #11 网络超时：挂起连接必须在超时后降级/报错，而不是永久挂起 ──────────
+// 用本地 server 模拟 writeHead 后永不 end 的对端。**禁止访问真实外网。**
+const { createServer } = await import("node:http");
+const hanging = createServer((_req, res) => {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  // 刻意不调用 res.end()，连接保持挂起
+});
+await new Promise((r) => hanging.listen(0, "127.0.0.1", r));
+const hangingUrl = `http://127.0.0.1:${hanging.address().port}/hang`;
+
+const { defaultFetch } = await import("./scripts/probe-forge-versions.js");
+const { fetchPageHtml } = await import("./scripts/_lib/pipeline-helpers.mjs");
+
+const startedAt = Date.now();
+let timedOut = false;
+try {
+  await defaultFetch(hangingUrl, { timeoutMs: 200 });
+} catch {
+  timedOut = true;
+}
+const elapsed = Date.now() - startedAt;
+assert.ok(timedOut, "defaultFetch 在挂起连接上未超时");
+assert.ok(elapsed < 5_000, `defaultFetch 超时耗时异常: ${elapsed}ms`);
+
+let htmlTimedOut = false;
+try {
+  const res = await fetchPageHtml(hangingUrl, { timeoutMs: 200 });
+  // fetchPageHtml 也可能以非 2xx / error 形式降级返回，两者都算没挂死
+  htmlTimedOut = res.status !== 200 || Boolean(res.error);
+} catch {
+  htmlTimedOut = true;
+}
+assert.ok(htmlTimedOut, "fetchPageHtml 在挂起连接上未超时/降级");
+
+await new Promise((r) => hanging.close(r));
+
+// ── #12 forge 1.20.4 数据版本归属断言（必须挂载，独立脚本不会被测试链执行）──
+const { assertLinkForge1204, DEFAULT_DEST_DIR } = await import(
+  "./scripts/assert-link-forge-1.20.4.mjs"
+);
+const { existsSync } = await import("node:fs");
+if (existsSync(DEFAULT_DEST_DIR)) {
+  assertLinkForge1204(DEFAULT_DEST_DIR);
+} else {
+  // 数据未生成不算失败（该目录是抓取产物），但需显式记录
+  console.log("skip: forge_1.20.4 data not present");
+}
+
 console.log("script helper regression tests passed");

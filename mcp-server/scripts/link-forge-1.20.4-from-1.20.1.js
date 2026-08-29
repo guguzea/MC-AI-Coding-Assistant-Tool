@@ -22,6 +22,83 @@ const DEST_VERSION = "1.20.4";
 const srcForgeDocs  = join(DATA_DIR, `forge_${SRC_VERSION}`,  "forge-docs", SRC_VERSION);
 const destForgeDocs = join(DATA_DIR, `forge_${DEST_VERSION}`, "forge-docs", DEST_VERSION);
 
+// ── 版本重写 ───────────────────────────────────────────────────────────────
+// 纯拷贝会把 SRC 的 id/version/url 原样带进 DEST 目录，导致
+// `forge_1.20.4/forge-docs/1.20.4/index-l0.json` 里出现 `1.20.1/...` 的 id——
+// 目录名与内容版本不一致。必须在落盘后重写。
+//
+// url 例外：Forge 文档站对 1.20.x 系列用 `/en/1.20.x/` 这一共用路径段，
+// 不是具体版本号，故 SRC 的 `/en/1.20.1/` 要重写成 `/en/1.20.x/`（与既有数据一致）。
+const URL_SRC_SEG = `/en/${SRC_VERSION}/`;
+const URL_DEST_SEG = `/en/1.20.x/`;
+
+function rewriteVersionDeep(node) {
+  if (Array.isArray(node)) return node.map(rewriteVersionDeep);
+  if (!node || typeof node !== "object") {
+    if (typeof node === "string") return node.split(URL_SRC_SEG).join(URL_DEST_SEG);
+    return node;
+  }
+  const out = {};
+  for (const [k, v] of Object.entries(node)) {
+    if (k === "id" && typeof v === "string" && v.startsWith(`${SRC_VERSION}/`)) {
+      out[k] = `${DEST_VERSION}/${v.slice(SRC_VERSION.length + 1)}`;
+    } else if (k === "version" && v === SRC_VERSION) {
+      out[k] = DEST_VERSION;
+    } else {
+      out[k] = rewriteVersionDeep(v);
+    }
+  }
+  return out;
+}
+
+/** 重写 index-l0/l1/l2.json。返回是否发生了改动。 */
+function rewriteIndexFiles(dir) {
+  let changed = false;
+  for (const name of ["index-l0.json", "index-l1.json", "index-l2.json"]) {
+    const p = join(dir, name);
+    if (!existsSync(p)) continue;
+    const before = readFileSync(p, "utf8");
+    const after = JSON.stringify(rewriteVersionDeep(JSON.parse(before)), null, 2) + "\n";
+    if (after !== before) {
+      writeFileSync(p, after);
+      changed = true;
+    }
+  }
+  return changed;
+}
+
+/**
+ * 重写 processed/*.md 里的 frontmatter 版本（若存在）。
+ * 当前这批 processed 文件没有 frontmatter，此函数为空操作——
+ * 保留是为了将来若改成带 frontmatter 的格式时不会漏重写。
+ */
+function rewriteProcessedFrontmatter(dir) {
+  const pd = join(dir, "processed");
+  if (!existsSync(pd)) return false;
+  let changed = false;
+  for (const name of readdirSync(pd)) {
+    if (!name.endsWith(".md")) continue;
+    const p = join(pd, name);
+    const before = readFileSync(p, "utf8");
+    const m = before.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+    if (!m) continue;
+    const fm = m[1]
+      .split("\n")
+      .map((line) =>
+        /^(\s*version\s*:\s*)(["']?)1\.20\.1\2\s*$/.test(line)
+          ? line.replace("1.20.1", DEST_VERSION)
+          : line,
+      )
+      .join("\n");
+    const after = before.replace(m[0], `---\n${fm}\n---\n`);
+    if (after !== before) {
+      writeFileSync(p, after);
+      changed = true;
+    }
+  }
+  return changed;
+}
+
 function copyDirRecursive(src, dest, skips = []) {
   mkdirSync(dest, { recursive: true });
   const entries = readdirSync(src, { withFileTypes: true });
@@ -63,5 +140,20 @@ const result = copyDirRecursive(srcForgeDocs, destForgeDocs, skips);
 
 console.log(`  Copied:  ${result.copied} files`);
 console.log(`  Skipped: ${result.skipped} files (already exist)`);
-console.log(`\n✅ Done! forge_${DEST_VERSION} now has forge-docs from ${SRC_VERSION}`);
-console.log(`   Note: Processed index files are copied; the ${DEST_VERSION} docs are ready for mapping.`);
+
+// 版本重写：把拷进来的 1.20.1 id/version/url 改写成 1.20.4
+const rewroteIndex = rewriteIndexFiles(destForgeDocs);
+const rewroteMd = rewriteProcessedFrontmatter(destForgeDocs);
+console.log(`  Rewrote: ${rewroteIndex ? "index-l*.json" : "index (no change)"}` +
+  `${rewroteMd ? ", processed frontmatter" : ""}`);
+
+// 落盘自检：失败即非零退出，防止版本污染静默溜进数据层
+const { assertLinkForge1204 } = await import("./assert-link-forge-1.20.4.mjs");
+try {
+  assertLinkForge1204(destForgeDocs);
+  console.log(`\n✅ Done! forge_${DEST_VERSION} now has forge-docs from ${SRC_VERSION}`);
+  console.log(`   自检通过：无 ${SRC_VERSION}/ id 前缀，version 均为 ${DEST_VERSION}`);
+} catch (e) {
+  console.error(`\n❌ 自检失败：${e.message}`);
+  process.exit(1);
+}

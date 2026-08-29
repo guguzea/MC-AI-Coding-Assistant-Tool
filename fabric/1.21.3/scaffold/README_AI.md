@@ -25,7 +25,7 @@ fabric-mod/
     │
     └── resources/
         ├── fabric.mod.json     # Fabric 元数据（modId / 版本 / 依赖声明）
-        ├── pack.mcmeta        # 资源包标识（pack_format: 34）
+        ├── pack.mcmeta        # 资源包标识（pack_format: 42）
         ├── examplemod.mixins.json # Mixin 配置
         └── assets/examplemod/  # 资源文件（textures、models 等）
 ```
@@ -233,7 +233,9 @@ public class ExampleModClient implements ClientModInitializer {
 
 ### Pack Format
 
-- 1.21.3 使用 `pack_format: 34`
+- 1.21.3 资源包使用 `pack_format: 42`（1.21.2–1.21.3 同为 42；34 是 1.21–1.21.1 的值，勿混用）
+- 数据包是**另一套** pack_format（1.21.3 为 57），见 `knowledge/common/datapack-format.md`；
+  不要把资源包数值套到数据包上
 
 ### Java 版本
 

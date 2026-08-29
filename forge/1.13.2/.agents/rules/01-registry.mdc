@@ -39,9 +39,10 @@ private static final String MOD_ID = "examplemod";
 private static final String MOD_ID = "ExampleMod";    // 不能大写
 ```
 
-### RegistryObject 使用规范
+### 持有注册对象的规范
 
-Forge 1.13.2 不支持 `DeferredRegister`，使用**静态字段 + RegistryEvent**：
+Forge 1.13.2 不支持 `DeferredRegister`，也**没有 `RegistryObject`**（二者都是 1.14+ 才引入）。
+使用**静态字段 + RegistryEvent** 持有注册对象：
 
 ```java
 // ✅ 正确：使用静态字段持有注册对象

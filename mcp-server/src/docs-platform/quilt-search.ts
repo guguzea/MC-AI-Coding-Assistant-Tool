@@ -170,6 +170,7 @@ export async function searchQuiltDocs(args: {
           tags: args.tags,
           limit: 20,
           version: detailedRes.resolvedVersion,
+          allowedIds: new Set(results.map((r) => r.id)),
         });
       }
       return jsonOk({
@@ -228,6 +229,7 @@ export async function searchQuiltDocs(args: {
         tags: args.tags,
         limit: 20,
         version: fabricDetailed.resolvedVersion,
+        allowedIds: new Set(results.map((r) => r.id)),
       });
     }
     const filtered = filterFabricFallbackHits(results);

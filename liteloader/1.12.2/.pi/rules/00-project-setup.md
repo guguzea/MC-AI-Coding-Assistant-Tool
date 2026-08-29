@@ -4,7 +4,11 @@ description: 00 — LiteLoader 工程
 
 # 00 — LiteLoader 工程
 
-- Java 8。混合 **只** apply `net.minecraftforge.gradle.liteloader`
+- Java 8。混合 **只** apply `net.minecraftforge.gradle.liteloader`（LiteLoaderForgeGradle 专用插件 id）
+
+> **辨析（易混）**：`net.minecraftforge.gradle.liteloader` 是 **LiteLoader 混合工程专用**的 ForgeGradle 插件 id，本档用它是对的。
+> **`tweaker-client` 是 Rift 的**（见 `rift/1.13.2/scaffold/build.gradle`），与 LiteLoader 无关；
+> 不要因为看到「tweaker 客户端」这类表述就把 Rift 的写法搬到这里，也不要把本 id 用到 Rift 工程上。
 - 钉死 `mappings = 'stable_39'`（或当时文档要求的 channel，禁止臆造）
 - 产出 `.litemod` / 按 FG 文档打包
 - 纯 LiteLoader 工程无 Gradle（不要当 Forge 1.20 跑 `diagnose_gradle`）；混合工程才用 `scaffold/hybrid/build.gradle`

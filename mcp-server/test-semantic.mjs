@@ -38,6 +38,8 @@ import {
 } from "./dist/docs-platform/search-utils.js";
 
 import { mergeSemanticResults } from "./dist/docs-platform/search-utils.js";
+import { getSemanticIndexStatus } from "./dist/docs-platform/semantic/status.js";
+import { isSemanticIndexStale } from "./dist/docs-platform/semantic/fingerprint.js";
 
 let failures = 0;
 let passed = 0;
@@ -409,6 +411,122 @@ test("mergeSemanticResults: priority 仅作排序副键，不改 score 数值", 
 });
 
 // ── 汇总 ──────────────────────────────────────────────────────────────────────
+
+// ── #1 术语表：expandZhQuery / buildExpandedFtsExpr 必须真正参与检索链路 ───
+// 此前这两个函数零生产调用（死代码），mc-zh-en.json 对检索零影响。
+test("#1 术语表扩展形状与 FTS 表达式", () => {
+  const dataRoot = process.env.MC_SKILL_DATA || join("..", "data");
+  const e = expandZhQuery("数据组件", dataRoot);
+  // 计划已核实签名：{ text, terms, expanded }
+  assert.equal(typeof e.text, "string", "expansion.text 必须是字符串");
+  assert.ok(Array.isArray(e.terms), "expansion.terms 必须是数组");
+  assert.equal(typeof e.expanded, "boolean", "expansion.expanded 必须是布尔");
+  assert.equal(e.expanded, e.terms.length > 0, "expanded 应与 terms 非空一致");
+
+  // 英文查询不应触发中文扩展（CJK 守卫）
+  const en = expandZhQuery("data component", dataRoot);
+  assert.equal(en.expanded, false, "纯英文查询不应触发中文术语扩展");
+
+  // 有术语时 buildExpandedFtsExpr 必须产出可用表达式
+  if (e.terms.length > 0) {
+    const expr = buildExpandedFtsExpr(e.terms);
+    assert.ok(typeof expr === "string" && expr.length > 0, "应产出非空 FTS 表达式");
+  }
+  // 空术语必须安全返回假值（不得抛错、不得产出可执行的 MATCH 表达式）
+  const emptyExpr = buildExpandedFtsExpr([]);
+  assert.ok(!emptyExpr, `空术语应返回假值，实际: ${JSON.stringify(emptyExpr)}`);
+});
+
+// ── #2 mergeSemanticResults 成员校验：已在 L0 中删除的文档不得经语义通道浮出 ──
+test("#2 allowedIds 过滤已删除文档", () => {
+  const l0 = [
+    { id: "alive", version: "1.20.1", label: "A", url: "", tags: [], priority: "中", sectionCount: 0 },
+  ];
+  const hits = [
+    { docId: "alive", score: 0.9, label: "A", url: "", tags: [], priority: "中", sectionCount: 0 },
+    // 语义库里的残留：L0 已不存在该文档
+    { docId: "deleted", score: 0.99, label: "D", url: "", tags: [], priority: "高", sectionCount: 0 },
+  ];
+
+  // 不传 allowedIds：默认行为不变（保留向后兼容）
+  const legacy = mergeSemanticResults(l0, hits, { limit: 10, version: "1.20.1" });
+  assert.ok(
+    legacy.some((r) => r.id === "deleted"),
+    "不传 allowedIds 时保持旧行为（不做成员校验）",
+  );
+
+  // 传 allowedIds：deleted 必须被丢弃，即使分数更高
+  const guarded = mergeSemanticResults(l0, hits, {
+    limit: 10,
+    version: "1.20.1",
+    allowedIds: new Set(l0.map((r) => r.id)),
+  });
+  assert.ok(
+    !guarded.some((r) => r.id === "deleted"),
+    `已删除文档不得经语义通道浮出: ${JSON.stringify(guarded.map((r) => r.id))}`,
+  );
+  assert.ok(guarded.some((r) => r.id === "alive"), "存活文档应保留");
+});
+
+// ── #3 模型就绪探针：必须识别实际分发的 onnx/model_quantized.onnx ───────────
+// 本仓 data/_models 下只有 quantized 权重；旧探针只认 model.onnx，
+// 导致模型明明可用却报 fts5-only（modeHint 降级）。
+test("#3 模型探针识别 quantized 权重", () => {
+  const dataRoot = process.env.MC_SKILL_DATA || join("..", "data");
+  const st = getSemanticIndexStatus(dataRoot);
+  assert.equal(
+    st.modelsReady,
+    true,
+    `真实数据目录下模型应就绪（不得因文件名是 quantized 而误判）: ${JSON.stringify(st.modelsReady)}`,
+  );
+  assert.equal(st.modeHint, "hybrid", `应有向量能力，modeHint 应为 hybrid，实际 ${st.modeHint}`);
+
+  // 空目录必须判未就绪（防探针退化成“恒为 true”）
+  const empty = mkdtempSync(join(tmpdir(), "mc-model-empty-"));
+  try {
+    assert.equal(getSemanticIndexStatus(empty).modelsReady, false, "空目录应判模型未就绪");
+  } finally {
+    rmSync(empty, { recursive: true, force: true });
+  }
+});
+
+// ── #4 指纹：mismatch 但源未更新 → 不得判 stale（消除假性过期）─────────────
+test("#4 指纹 mismatch 但源未更新不判 stale", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mc-fp-"));
+  try {
+    mkdirSync(join(dir, "processed"), { recursive: true });
+    writeFileSync(join(dir, "processed", "a.md"), "# A\n");
+
+    const futureIso = new Date(Date.now() + 60_000).toISOString();
+    const r = isSemanticIndexStale({
+      builtAtIso: futureIso, // 索引建于“未来” → 源不可能比它新
+      storedFingerprint: "totally-different-fingerprint",
+      versionDir: dir,
+    });
+    assert.equal(r.stale, false, `源未更新时不得判 stale: ${JSON.stringify(r)}`);
+    assert.equal(r.fingerprintMismatchOnly, true, "应标记为「仅指纹不一致」");
+    assert.match(r.reason ?? "", /source unchanged/, "reason 应说明源未变化");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// 反向守护：源确实更新时**必须**判 stale（防止为消除误报而矫枉过正）
+test("#4b 源更新时仍须判 stale", () => {
+  const dir = mkdtempSync(join(tmpdir(), "mc-fp2-"));
+  try {
+    mkdirSync(join(dir, "processed"), { recursive: true });
+    writeFileSync(join(dir, "processed", "a.md"), "# A\n");
+    const stale = isSemanticIndexStale({
+      builtAtIso: new Date(Date.now() - 120_000).toISOString(), // 源比索引新
+      storedFingerprint: "different",
+      versionDir: dir,
+    });
+    assert.equal(stale.stale, true, `源更新时必须判 stale: ${JSON.stringify(stale)}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
 
 await Promise.all(asyncTasks);
 

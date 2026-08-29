@@ -58,10 +58,12 @@ description: 00 — 项目结构与构建
 
 ### Mappings 约束
 
-- Forge 1.20.4 推荐使用 **Parchment**
-- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本
-- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `official`（除非用户明确要求且项目已适配）
-- Parchment 映射将混淆的 Minecraft 方法映射为可读名称，并附带参数名和 javadoc
+- 映射基线默认是 **official（Mojang 官方名）**；**Parchment 是叠加在 official 之上的可选增强层**，
+  只补参数名与 javadoc，**不改变类名/方法名的映射通道**
+- 需要参数名与 javadoc 时推荐加 Parchment：`mappings channel: 'parchment', version: '<parchment版本>-<mc版本>'`
+- `gradle.properties` 中的 `mappings_version` 对应 Parchment 版本（未启用 Parchment 时该值不参与映射）
+- **禁止**在 `build.gradle` 中切换到 `yarn`，也**禁止混用映射通道**（不要把 Parchment 与 MCP/SRG 名混写在同一份代码里）
+- Parchment 不是必须项；项目已有映射配置时以既有配置为准，不要擅自切换通道
 
 ### 项目目录结构（强制规范）
 

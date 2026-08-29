@@ -103,8 +103,82 @@ function testShortRefDoesNotSwallowOrphan() {
   }
 }
 
+// ── #8 跨命名空间：minecraft:block/foo 与 demo:block/foo 不得互相顶替 ──────
+// 旧实现 normalizeTextureRef 直接剥掉 `ns:` 前缀，两个命名空间同名纹理
+// 会塌成同一个 key，孤儿/缺失判定双双错乱。
+function testCrossNamespaceNotConfused() {
+  const root = mkdtempSync(join(tmpdir(), "mc-audit-ns-"));
+  try {
+    // 两个命名空间下各放一个同名纹理
+    const mcTex = join(root, "assets", "minecraft", "textures", "block");
+    const demoTex = join(root, "assets", "demo", "textures", "block");
+    const demoModel = join(root, "assets", "demo", "models", "block");
+    mkdirSync(mcTex, { recursive: true });
+    mkdirSync(demoTex, { recursive: true });
+    mkdirSync(demoModel, { recursive: true });
+    writePng(join(mcTex, "shared.png"));
+    writePng(join(demoTex, "shared.png"));
+
+    // 只引用 demo 命名空间的那一个
+    writeFileSync(
+      join(demoModel, "shared.json"),
+      JSON.stringify({ textures: { all: "demo:block/shared" } }),
+    );
+    const r = auditResources({ resourceRoot: root, modId: "demo" });
+
+    // demo:block/shared 已引用 → 不得标孤儿
+    assert.ok(
+      !r.orphanTextures.some((p) => p.includes("assets/demo/")),
+      `demo 的 shared 已引用，不得标孤儿: ${JSON.stringify(r.orphanTextures)}`,
+    );
+    // minecraft 命名空间下那个未被引用 → 应标孤儿（不再被 demo 的引用“顶替”）
+    assert.ok(
+      r.orphanTextures.some((p) => p.includes("assets/minecraft/")),
+      `minecraft 的 shared 未引用，应标孤儿: ${JSON.stringify(r.orphanTextures)}`,
+    );
+    // 引用写了命名空间 → 不得报找不到
+    assert.ok(
+      !r.issues.some((i) => /未在命名空间|未找到对应/.test(i.message)),
+      `跨命名空间引用不应误报缺失: ${JSON.stringify(r.issues)}`,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+// 引用不存在的命名空间 → 应报缺失（且提示该命名空间）
+function testWrongNamespaceReported() {
+  const root = mkdtempSync(join(tmpdir(), "mc-audit-badns-"));
+  try {
+    const demoTex = join(root, "assets", "demo", "textures", "block");
+    const demoModel = join(root, "assets", "demo", "models", "block");
+    mkdirSync(demoTex, { recursive: true });
+    mkdirSync(demoModel, { recursive: true });
+    writePng(join(demoTex, "x.png"));
+    writeFileSync(
+      join(demoModel, "x.json"),
+      // 纹理实际在 demo 下，却写成 other 命名空间
+      JSON.stringify({ textures: { all: "other:block/x" } }),
+    );
+    const r = auditResources({ resourceRoot: root, modId: "demo" });
+    assert.ok(
+      r.issues.some((i) => /命名空间 other/.test(i.message)),
+      `引用不存在的命名空间应报缺失并点名该命名空间: ${JSON.stringify(r.issues)}`,
+    );
+    // demo:block/x 无人引用 → 孤儿
+    assert.ok(
+      r.orphanTextures.some((p) => p.includes("assets/demo/")),
+      `demo/block/x 应标孤儿: ${JSON.stringify(r.orphanTextures)}`,
+    );
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 testAssetsRootReferencedNotOrphan();
 testHashLayerNotPath();
 testPngMcmetaNotTextureSet();
 testShortRefDoesNotSwallowOrphan();
+testCrossNamespaceNotConfused();
+testWrongNamespaceReported();
 console.log("test-audit-resources: ok");

@@ -237,6 +237,7 @@ export async function searchForgeDocs(
           tags: args.tags,
           limit: 10,
           version: detailed.resolvedVersion,
+          allowedIds: new Set(detailed.results.map((r) => r.id)),
         });
     return {
       content: [
@@ -870,6 +871,7 @@ export async function searchDocs(
           tags: args.tags,
           limit: 20,
           version: resolvedVersion,
+          allowedIds: new Set(result.map((r) => r.id)),
         });
     let finalResults = finalResultsBase;
     let primerNote: string | undefined;

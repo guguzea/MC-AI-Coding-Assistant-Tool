@@ -10,6 +10,7 @@ import { existsSync, statSync } from "fs";
 import { join } from "path";
 import { DatabaseSync } from "node:sqlite";
 import { cosine, EMBEDDING_DIM, getEmbedder } from "./embeddings.js";
+import { buildExpandedFtsExpr, expandZhQuery } from "../search-utils.js";
 
 export interface SemanticMatchSnippet {
   /** 来自 chunk 正文首行 `#` 标题，或 chunk_type 回退 */
@@ -395,6 +396,13 @@ export async function semanticSearch(
     return null;
   }
 
+  // 中文术语扩展：「数据组件」→ data component 这类英文术语。
+  // 单独成一路 ranking 参与 RRF，**不拼进主 MATCH**——
+  // 否则扩展词的 BM25 权重会污染主查询的排序。
+  const zh = expandZhQuery(query, dataRoot);
+  const zhExpr = zh.expanded ? buildExpandedFtsExpr(zh.terms) : null;
+  const zhFtsDocs = zhExpr ? ftsMatchExec(db, zhExpr, 30) : [];
+
   const ftsExpr = opts?.ftsExpr ?? buildFtsQuery(query);
   const ftsDocs = ftsExpr
     ? ftsMatchExec(db, ftsExpr, 30)
@@ -407,7 +415,8 @@ export async function semanticSearch(
     const countRow = db.prepare("SELECT COUNT(*) AS n FROM chunk_embeddings").get() as { n: number };
     if (countRow.n > 0) {
       const embedder = await getEmbedder(dataRoot);
-      const [qVec] = await embedder.embed([query]);
+      // 向量通道用扩展后的文本（原查询 + 英文术语），语义更贴近英文语料库
+      const [qVec] = await embedder.embed([zh.expanded ? zh.text : query]);
       if (qVec) {
         const packed = loadEmbeddingMatrix(db, dbPath);
         if (packed) {
@@ -433,7 +442,7 @@ export async function semanticSearch(
   // 融合与取回段：部分损坏库（有 chunks_fts 但缺 docs/chunk_embeddings 表）在此抛错，
   // 按模块契约「永不该抛异常」吞掉并返回 null → 调用方保持纯 L0 行为（F-D102）
   try {
-    const fused = rrfFuse([ftsDocs, semanticDocs], 60).slice(0, limit);
+    const fused = rrfFuse([ftsDocs, zhFtsDocs, semanticDocs], 60).slice(0, limit);
     if (fused.length === 0) return [];
 
     const stmt = db.prepare(

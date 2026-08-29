@@ -88,15 +88,23 @@ export function isIntentionallyClearedTree(
   return false;
 }
 
+/** onnx 权重文件名按优先级排列。`fetch-embedding-model.mjs` 实际分发的是量化版。 */
+const ONNX_WEIGHT_CANDIDATES = [
+  ["onnx", "model_quantized.onnx"],
+  ["onnx", "model.onnx"],
+  ["model_quantized.onnx"],
+  ["model.onnx"],
+] as const;
+
 function modelsDirReady(dataRoot: string): boolean {
   const root = join(dataRoot, "_models", "Xenova", "all-MiniLM-L6-v2");
   if (!existsSync(root)) return false;
-  // tokenizer + config 存在即视为可加载（onnx 权重可能较大，存在即可）
-  return (
-    existsSync(join(root, "config.json")) &&
-    existsSync(join(root, "tokenizer.json")) &&
-    (existsSync(join(root, "onnx", "model.onnx")) || existsSync(join(root, "model.onnx")))
-  );
+  if (!existsSync(join(root, "config.json")) || !existsSync(join(root, "tokenizer.json"))) {
+    return false;
+  }
+  // 只要任一候选权重存在即可。旧实现只认 model.onnx，而实际分发的是
+  // onnx/model_quantized.onnx → 模型明明可用却误报 fts5-only。
+  return ONNX_WEIGHT_CANDIDATES.some((parts) => existsSync(join(root, ...parts)));
 }
 
 export function inspectSemanticDb(dbPath: string): Pick<SemanticSample, "docs" | "chunks" | "embedded" | "mode"> & {

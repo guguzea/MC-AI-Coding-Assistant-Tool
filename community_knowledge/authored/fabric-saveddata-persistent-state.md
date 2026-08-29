@@ -20,7 +20,7 @@ public class SavedBlockData extends SavedData {
     private int blocksBroken;
 
     public void incrementBlocksBroken() { blocksBroken++; setDirty(); }   // 不 setDirty 不落盘
-    public int getBlocksBroken() { return blocksBlocked; }                // 示意
+    public int getBlocksBroken() { return blocksBroken; }                 // 字段名与 Codec 一致
     public SavedBlockData(int count) { this.blocksBroken = count; }
 }
 
