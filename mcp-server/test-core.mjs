@@ -26,7 +26,7 @@ import { generateLang, generateCapability, generateConfig, generateEntityRendere
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
 import { isExactMcVersionToken, matchesExactMcVersion, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
 import { withDocsFallbackFields, matchDocIndexId, pathBoost } from "./dist/docs-platform/search-utils.js";
-import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock } from "./dist/diagnostics/index.js";
+import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock, javaBlobFromFiles } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
 import { resolvePackFormat } from "./dist/localize/pack-format.js";
 import { mapShortCommand } from "./dist/cli-parse.js";
@@ -3498,6 +3498,68 @@ public class ExampleMod { }
   }
 }
 
+// ── #10 基岩误判 ───────────────────────────────────────────────────────────
+// Java 源码里出现 "format_version" / "modules" 这两个带引号的字符串常量，
+// 会被误判成基岩 add-on。javaBlob 只由 collectJavaSources 产出（恒为
+// src/main/java/**.java），永远不含基岩 manifest；真基岩也没有 Java 源码。
+// 故该启发式只可能产生误报，基岩应走 extras.addonManifest（真实 manifest.json）。
+function testBedrockMisdetectionFixed() {
+  const javaWithKeys = [
+    {
+      path: "src/main/java/com/example/MyMod.java",
+      content: [
+        "package com.example;",
+        "public class MyMod {",
+        '    public static final String FORMAT_VERSION_KEY = "format_version";',
+        '    public static final String MODULES_KEY = "modules";',
+        "}",
+      ].join("\n"),
+    },
+  ];
+  const forgeGradle = [
+    "buildscript { repositories { maven { url = 'https://maven.minecraftforge.net/' } } }",
+    "apply plugin: 'net.minecraftforge.gradle'",
+  ].join("\n");
+
+  // 1) 有 Forge build.gradle：不得被 Java 里的常量污染
+  assert.equal(
+    detectProjectLoaders({ buildGradle: forgeGradle, javaBlob: javaBlobFromFiles(javaWithKeys) }).primary,
+    "forge",
+    "Forge 工程不得因 Java 字符串常量被判为基岩",
+  );
+
+  // 2) 无任何可识别元数据：也不得回落成基岩（这是 reinforceLoaderWithJava 的路径）
+  assert.notEqual(
+    detectProjectLoaders({ javaBlob: javaBlobFromFiles(javaWithKeys) }).primary,
+    "bedrock",
+    "javaBlob 不得作为基岩判定依据",
+  );
+
+  // 3) validateProject 端到端同样不得误判
+  const r = validateProject({ javaFiles: javaWithKeys, buildGradle: forgeGradle });
+  assert.notEqual(r.status, "failed", `validate_project 不应失败: ${JSON.stringify(r.errors)}`);
+
+  // 4) 阳性对照：真实 manifest.json 仍必须能识别为基岩（防止矫枉过正）
+  const realManifest = JSON.stringify({
+    format_version: 2,
+    header: { name: "pack", description: "d", min_engine_version: [1, 21, 0], uuid: "u1", version: [1, 0, 0] },
+    modules: [{ type: "data", uuid: "u2", version: [1, 0, 0] }],
+  });
+  assert.equal(
+    detectProjectLoaders({ extras: { addonManifest: realManifest } }).primary,
+    "bedrock",
+    "真实 manifest.json 必须仍被识别为基岩",
+  );
+
+  // 5) 阳性对照：manifest 内容缺 modules 时不得判基岩（形状校验生效）
+  const noModules = JSON.stringify({ format_version: 2 });
+  assert.notEqual(
+    detectProjectLoaders({ extras: { addonManifest: noModules } }).primary,
+    "bedrock",
+    "缺少 modules 的 manifest 不得判为基岩",
+  );
+}
+
 async function testW2MappingDocsFixes() {
   assert.equal(VERSION_SEGMENT_RE.test("1.20.1"), true);
   assert.equal(isSafeVersionSegment("1.20.1"), true);
@@ -3621,6 +3683,7 @@ await testProjectPathFill();
 testPlan1Fixes();
 await testPrototypeOwnKeys();
 await testW2MappingDocsFixes();
+testBedrockMisdetectionFixed();
 console.log("core regression tests passed");
 
 // queryApi starts a Worker; SQLite handles must close — otherwise Node hangs after pass.

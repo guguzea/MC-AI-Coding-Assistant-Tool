@@ -329,7 +329,12 @@ export function reinforceLoaderWithJava(fromDetect: DetectedLoader, javaBlob: st
   if (/extends\s+BaseMod\b/.test(javaBlob) && !/cpw\.mods\.fml|net\.minecraftforge/.test(javaBlob)) {
     return "modloader";
   }
-  if (/"format_version"/.test(javaBlob) && /"modules"/.test(javaBlob)) return "bedrock";
+  // 基岩判定**不走 javaBlob**。
+  // 理由：javaBlob 只由 collectJavaSources 产出，内容恒为 `src/main/java/**.java`，
+  // 永远不包含基岩 manifest.json；而真正的基岩 add-on 没有 Java 源码（javaBlob 为空）。
+  // 因此这条规则**不可能**正确命中真基岩，只会把「Java 里出现 "format_version"/"modules"
+  // 字符串常量」的 Java 模组工程误判成基岩。
+  // 基岩应走 detectLoaderFromMetadata 的 extras.addonManifest（来自真实 manifest.json）。
   return fromDetect;
 }
 
