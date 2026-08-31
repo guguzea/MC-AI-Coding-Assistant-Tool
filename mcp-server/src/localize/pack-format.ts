@@ -73,10 +73,8 @@ const PACK_FORMAT_BY_MC: Record<string, number> = {
 // 1.21.9+ 官方 pack_format 是「主版本+次版本」对（如 [69, 0]）——本表用整数主版本，整数写法仍合法；
 // 注意写成浮点 69.0 会被判 "Broken or incompatible"，数组写法 `[69, 0]` 亦可。
 
-const DEFAULT_PACK_FORMAT = 15;
-
 export function resolvePackFormat(mcVersion?: string): {
-  packFormat: number;
+  packFormat: number | null;
   mcVersionUsed: string | null;
   packFormatNeedsReview: true;
   unknownVersion?: boolean;
@@ -84,9 +82,9 @@ export function resolvePackFormat(mcVersion?: string): {
 } {
   const notes: string[] = ["请按目标游戏版本核对 pack_format（packFormatNeedsReview=true）。"];
   if (!mcVersion?.trim()) {
-    notes.push(`未提供 mcVersion，使用保守默认 pack_format=${DEFAULT_PACK_FORMAT}。`);
+    notes.push("未提供 mcVersion，不猜测 pack_format。请传入 mcVersion 或自行填写 pack_format。");
     return {
-      packFormat: DEFAULT_PACK_FORMAT,
+      packFormat: null,
       mcVersionUsed: null,
       packFormatNeedsReview: true,
       notes,
@@ -107,7 +105,7 @@ export function resolvePackFormat(mcVersion?: string): {
   }
   notes.push(`未知 mcVersion=${v}，不猜测 pack_format（禁止一律回退 15）`);
   return {
-    packFormat: DEFAULT_PACK_FORMAT,
+    packFormat: null,
     mcVersionUsed: v,
     packFormatNeedsReview: true,
     unknownVersion: true,

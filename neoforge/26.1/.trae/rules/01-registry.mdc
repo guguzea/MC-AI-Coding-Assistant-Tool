@@ -7,7 +7,9 @@
 ```java
 public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ExampleMod.MODID);
 public static final DeferredBlock<Block> DRIEDGHAST_BLOCK =
-    BLOCKS.registerSimpleBlock("driedghast_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    BLOCKS.registerSimpleBlock("driedghast_block", () -> BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+    // 或 UnaryOperator：BLOCKS.registerSimpleBlock("id", props -> props.mapColor(MapColor.STONE));
+    // 禁止裸 Properties（那是 1.21.1 重载）。也可 registerSimpleBlock("id") 用默认属性。
 public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ExampleMod.MODID);
 public static final DeferredItem<BlockItem> DRIEDGHAST_BLOCK_ITEM =
     ITEMS.registerSimpleBlockItem("driedghast_block", DRIEDGHAST_BLOCK);
@@ -25,3 +27,7 @@ public static final DeferredItem<BlockItem> DRIEDGHAST_BLOCK_ITEM =
 - 禁止 `NeoForgeAddonPlugin`。
 
 自定义 datapack registry：`ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("yourmodid", "spells"))` 一类写法，以该版 registries 页为准。
+
+## DataAttachment
+
+26.1 用 NeoForge `AttachmentType` + `DeferredRegister`（`NeoForgeRegistries.ATTACHMENT_TYPES`），**不是** Forge Capability。骨架走 `generate_capability`（`platform=neoforge` + `version=26.1`）；先定义 Data 类再注册，本工具不生成 Data 类。查询用 `search_neoforge_docs` / `query_loader_api`；本档无独立 attachments 页时标注 fallback，禁止把 Forge `CapabilityManager` 抄进来。

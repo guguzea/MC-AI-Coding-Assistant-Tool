@@ -60,21 +60,27 @@ function keepMainJava(posix) {
 
 async function downloadZip(url, dest) {
   const tmp = `${dest}.tmp`;
-  const r = spawnSync(
-    "curl.exe",
-    ["-fL", "--retry", "3", "--retry-delay", "2", "--connect-timeout", "30", "-A", "MC-AI-Coding-Assistant-Tool", "-o", tmp, url],
-    { windowsHide: true, encoding: "utf8" },
-  );
-  if (r.status === 0 && existsSync(tmp) && statSync(tmp).size > 1000) {
-    return { ok: true, path: tmp, bytes: statSync(tmp).size };
-  }
   try {
+    if (process.platform === "win32") {
+      const r = spawnSync(
+        "curl.exe",
+        ["-fL", "--retry", "3", "--retry-delay", "2", "--connect-timeout", "30", "-A", "MC-AI-Coding-Assistant-Tool", "-o", tmp, url],
+        { windowsHide: true, encoding: "utf8" },
+      );
+      if (r.status === 0 && existsSync(tmp) && statSync(tmp).size > 1000) {
+        return { ok: true, path: tmp, bytes: statSync(tmp).size };
+      }
+    }
     const res = await fetch(url, { headers: UA, redirect: "follow" });
-    if (!res.ok) return { ok: false, status: res.status, url };
+    if (!res.ok) {
+      rmSync(tmp, { force: true });
+      return { ok: false, status: res.status, url };
+    }
     writeFileSync(tmp, Buffer.from(await res.arrayBuffer()));
     return { ok: true, path: tmp, bytes: statSync(tmp).size, status: res.status };
   } catch (e) {
-    return { ok: false, error: String(e), url, curlStatus: r.status, curlErr: r.stderr };
+    rmSync(tmp, { force: true });
+    return { ok: false, error: String(e), url };
   }
 }
 
@@ -166,7 +172,7 @@ async function extractOne(target, extractCompilationUnit, repoSafeSourcePath, de
     mapping: "mojmap",
     version: target.version,
     source: "qsl-github-java",
-    fetchedAt: "2026-08-17",
+    fetchedAt: new Date().toISOString(),
     repo: "https://github.com/QuiltMC/quilt-standard-libraries",
     ref: commit.sha,
     branch: target.branch,

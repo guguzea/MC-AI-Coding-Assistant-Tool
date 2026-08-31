@@ -61,7 +61,7 @@ IF 生成语言文件
   → FabricLanguageProvider
 ```
 
-Yarn 覆盖 `generate`；不要抄 wiki 的 `buildRecipes`。
+官方主推 `FabricRecipeProvider.createRecipeProvider` + `buildRecipes`（Mojmap `RecipeOutput`）。不要再把「不要抄 buildRecipes」当本档口径。
 
 ## 常见错误
 

@@ -14,7 +14,7 @@
 
 import * as z from "zod";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { ForgeDocStore, DocNotFoundError, VersionNotFoundError } from "./store.js";
+import { ForgeDocStore, DocNotFoundError, VersionNotFoundError, IndexCorruptError } from "./store.js";
 import { createDocStore, resolvePlatformDataDir, type IDocStore, type Platform, UNSUPPORTED_PLATFORM_HINT, UNSUPPORTED_PLATFORM_MSG } from "../store.js";
 import { searchFabricDocs } from "../fabric/index.js";
 import { resolveDataDir } from "../../utils/path.js";
@@ -166,7 +166,18 @@ export async function listForgeVersions(): Promise<CallToolResult> {
     const versions = getForgeStore().getAvailableVersions();
     if (versions.length === 0) return platformDataMissingResult("forge");
     return {
-      content: [{ type: "text", text: JSON.stringify({ ok: true, platform: "forge", versions }, null, 2) }],
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: true,
+          platform: "forge",
+          versions,
+          notes: [
+            "本列表是已入库的 Forge **文档**版本，不是规则树清单。",
+            "forge/1.21.1 为 draft：无 00–10 规则树，也不在本清单；session 返回 PACK_NOT_FOUND。禁止用 NeoForge 1.21.1 或 Forge 1.20.4 顶上。",
+          ],
+        }, null, 2),
+      }],
     };
   } catch (e) {
     const miss = asPlatformDataMissingResult(e);
@@ -624,6 +635,22 @@ function handleError(e: unknown, platform: string = "forge"): CallToolResult {
             code: "VERSION_NOT_FOUND",
             message: rec.message ?? String(e),
             hint: `请使用支持的版本：${versions.join(", ") || "未知"}。先 list_forge_versions / list_doc_versions。`,
+          },
+        }, null, 2),
+      }],
+    };
+  }
+  if (e instanceof IndexCorruptError || (typeof e === "object" && e !== null && (e as { name?: string }).name === "IndexCorruptError")) {
+    const rec = e as { message?: string };
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          error: {
+            code: "INDEX_CORRUPT",
+            message: rec.message ?? String(e),
+            hint: "索引 JSON 损坏或截断，请勿当成 VERSION_NOT_FOUND。",
           },
         }, null, 2),
       }],

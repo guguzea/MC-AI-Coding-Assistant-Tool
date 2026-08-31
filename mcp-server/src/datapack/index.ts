@@ -1,5 +1,6 @@
 import { versionRequiredAction, missingMcVersion } from "../utils/actionable.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
+import { ownGet } from "../utils/own-record.js";
 
 export interface ValidateDatapackInput {
   jsonContent: string;
@@ -216,7 +217,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
     case "recipe":
       requireKeys(data, ["type"], errors);
       // smithing 系列按 vanilla 事实校验字段（template/addition 可选，不做版本分叉）
-      const smithingRequired = SMITHING_REQUIRED_KEYS[String(data.type ?? "")];
+      const smithingRequired = ownGet(SMITHING_REQUIRED_KEYS, String(data.type ?? ""));
       if (smithingRequired) {
         requireKeys(data, smithingRequired, errors);
       } else if (recipeRequiresResult(data.type) && !("result" in data)) {
@@ -247,7 +248,7 @@ export function validateDatapackJson(input: ValidateDatapackInput): ValidateData
       break;
     case "advancement":
       requireKeys(data, ["criteria"], errors);
-      if (version.startsWith("1.21") && !("rewards" in data)) {
+      if (/^1\.21(\.|$)/.test(version) && !("rewards" in data)) {
         warnings.push("1.21+ advancement 建议包含 rewards 或显式空对象");
       }
       break;

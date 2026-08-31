@@ -42,7 +42,7 @@ public class ${pascalName}RecipeProvider extends RecipeProvider {
     public static void gatherData(GatherDataEvent event) {
         event.getGenerator().addProvider(
             event.includeServer(),
-            new ${pascalName}RecipeProvider(event.getGenerator().getPackOutput()));
+            ${pascalName}RecipeProvider::new);
     }
 }
 `;

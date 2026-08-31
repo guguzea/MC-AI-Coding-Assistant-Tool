@@ -4,7 +4,7 @@
  * Forge 1.20.1、NeoForge 1.21.x、NeoForge 26.1、Fabric Loom。
  */
 
-import { isExactMcVersionToken } from "../utils/minecraft-version.js";
+import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
 import { normalizeModIdentifier, toJavaClassName } from "./common.js";
 import * as forge from "./forge-1.20.1.js";
 import { generateFabric, type FabricProviderType, type FabricIdStyle } from "./fabric.js";
@@ -44,7 +44,7 @@ export interface DatagenResult {
 /** NeoForge 1.21.0–1.21.4：GatherDataEvent + addProvider（非 Client 分轨）。只认 Minecraft 版本 1.21 / 1.21.x；Neo 构建号 21.1.x 返回 null。 */
 export function parseNeo21Patch(version: string): number | null {
   const v = version.trim();
-  if (/^26\.1/.test(v)) return null;
+  if (isMcVersionFamily(v, "26.1")) return null;
   if (v === "1.21") return 0;
   const m = v.match(/^1\.21(?:\.(\d+))?$/);
   if (!m) return null;
@@ -85,13 +85,13 @@ function looksLikeNeoForgeBuildNumber(version: string): boolean {
 function isUnsupportedNeoForge21(platform: string, version: string): boolean {
   if (platform !== "neoforge") return false;
   const v = version.trim();
-  if (/^26\.1/.test(v)) return false;
+  if (isMcVersionFamily(v, "26.1")) return false;
   if (!/^1\.21(\.|$)/.test(v)) return false;
   return !isNeoForge21Platform(platform, version);
 }
 
 export function isNeoForge261Platform(platform: string, version: string): boolean {
-  return platform === "neoforge" && /^26\.1/.test(version.trim());
+  return platform === "neoforge" && isMcVersionFamily(version.trim(), "26.1");
 }
 
 function isNeoForge1204Datagen(platform: string, version: string): boolean {
@@ -118,7 +118,7 @@ function fabricDatagenRecipeMethod(version: string): "generate" | "buildRecipes"
 
 function isFabricDatagenVersion(version: string): boolean {
   const v = version.trim();
-  if (/^26\.1/.test(v)) return true;
+  if (isMcVersionFamily(v, "26.1")) return true;
   return fabricDatagenRecipeMethod(v) !== null;
 }
 
@@ -297,29 +297,40 @@ export function generateDatagen(query: DatagenQuery): DatagenResult {
     if (platform === "fabric") {
     const recipeMethod = fabricDatagenRecipeMethod(ver) ?? "buildRecipes";
     // Mojmap：1.21.10→1.21.11 之间 ResourceLocation 改名为 Identifier（net.minecraft.resources）
-    const idStyle: FabricIdStyle = ver === "1.21.11" || /^26\.1/.test(ver) ? "Identifier" : "ResourceLocation";
+    const idStyle: FabricIdStyle = ver === "1.21.11" || isMcVersionFamily(ver, "26.1") ? "Identifier" : "ResourceLocation";
     code = generateFabric(
       providerType as FabricProviderType,
       modId,
       targetName,
       classBase,
-      /^26\.1/.test(ver),
+      isMcVersionFamily(ver, "26.1"),
       recipeMethod,
       idStyle,
     );
-    if (ver !== "1.21.11" && !/^26\.1/.test(ver)) {
+    if (ver !== "1.21.11" && !isMcVersionFamily(ver, "26.1")) {
       code = prependDocsReview(code, "search_fabric_docs", ver);
       warnings.push(`Fabric ${ver} Datagen：recipe 方法为 ${recipeMethod}（search_fabric_docs version=${ver}）。`);
+    }
+    if (providerType === "particle" || providerType === "sound") {
+      warnings.push(
+        `Fabric 无独立 ${providerType} DataGen Provider；骨架仅为资源路径注释，请 search_fabric_docs 手写 JSON。`,
+      );
     }
     if (idStyle === "Identifier") {
       warnings.push(
         `Fabric ${ver} Mojmap 已改名：TagKey 用 net.minecraft.resources.Identifier.fromNamespaceAndPath（1.21.11 起，非 Yarn 的 net.minecraft.util.Identifier/of）。`,
       );
     }
-    if (providerType === "recipe" && !/^26\.1/.test(ver)) {
-      warnings.push(
-        "Mojmap 骨架参数类型为 RecipeOutput；Yarn 工程请改为 RecipeExporter。禁止混映射。",
-      );
+    if (providerType === "recipe" && !isMcVersionFamily(ver, "26.1")) {
+      if (recipeMethod === "generate") {
+        warnings.push(
+          "Yarn 骨架：generate(RecipeExporter)。Mojmap 工程请改为 buildRecipes(RecipeOutput)。禁止混映射。",
+        );
+      } else {
+        warnings.push(
+          "Mojmap 骨架：buildRecipes(RecipeOutput)。Yarn 工程请改为 generate(RecipeExporter)。禁止混映射。",
+        );
+      }
     }
   } else if (platform === "neoforge" && neo261) {
     code = generateNeoForge261(providerType as NeoForge261ProviderType, modId, targetName, classBase);

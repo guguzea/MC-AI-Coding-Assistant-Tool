@@ -88,7 +88,7 @@ export function queryRegistry(input: QueryRegistryInput): QueryRegistryResult {
   }
 
   if (looksLikeJavaIdentifier(query)) {
-    const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 10);
+    const matches = searchRegistryEntries(version, input.registry, query, input.limit ?? 25);
     return withAction(
       {
         found: matches.length > 0,

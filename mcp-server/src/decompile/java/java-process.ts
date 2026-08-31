@@ -215,7 +215,11 @@ export async function runJava(
       if (next.truncated) truncated = true;
     });
     const timer = setTimeout(() => {
-      child.kill();
+      if (process.platform === "win32" && child.pid) {
+        spawn("taskkill", ["/T", "/F", "/PID", String(child.pid)], { windowsHide: true, stdio: "ignore" });
+      } else {
+        child.kill();
+      }
       resolve({ code: null, stdout, stderr: (stderr + "\n[timed out]").trim(), truncated });
     }, timeoutMs);
     child.on("error", (err) => {

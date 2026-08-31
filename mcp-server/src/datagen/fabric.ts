@@ -75,11 +75,12 @@ import net.minecraft.core.HolderLookup;
 `;
 
   switch (providerType) {
-    case "recipe":
+    case "recipe": {
+      const exporterType = recipeMethod === "generate" ? "RecipeExporter" : "RecipeOutput";
       return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.${exporterType};
 import net.minecraft.world.item.Items;
 
 public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
@@ -87,9 +88,9 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
-    // Mojmap: RecipeOutput；Yarn 工程改为 RecipeExporter（禁止混映射）
+    // Yarn: generate(RecipeExporter)；Mojmap: buildRecipes(RecipeOutput)。禁止混映射。
     @Override
-    public void ${recipeMethod}(RecipeOutput exporter) {
+    public void ${recipeMethod}(${exporterType} exporter) {
         shapeless(RecipeCategory.MISC, Items.DIAMOND)
             .requires(Items.EMERALD)
             .unlockedBy("has_emerald", has(Items.EMERALD))
@@ -103,6 +104,7 @@ public class ${pascalName}RecipeProvider extends FabricRecipeProvider {
 }
 ${entrypoint(modId, pascalName, `${pascalName}RecipeProvider`)}
 `;
+    }
     case "loottable":
       return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
@@ -142,6 +144,59 @@ public class ${pascalName}ItemTagProvider extends FabricTagProvider.ItemTagProvi
     }
 }
 ${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
+`;
+    case "blockstate":
+    case "itemmodel":
+      return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+
+public class ${pascalName}ModelProvider extends FabricModelProvider {
+    public ${pascalName}ModelProvider(FabricDataOutput output) {
+        super(output);
+    }
+
+    @Override
+    public void generateBlockStateModels(BlockModelGenerators gen) {
+        ${providerType === "blockstate" ? "gen.createTrivialCube(Blocks.STONE); // TODO: 换成已注册方块" : "// itemmodel：方块状态可留空"}
+    }
+
+    @Override
+    public void generateItemModels(ItemModelGenerators gen) {
+        ${providerType === "itemmodel" ? "gen.generateFlatItem(Items.APPLE, ModelTemplates.FLAT_ITEM); // TODO: 换成已注册物品" : "// blockstate：物品模型可留空"}
+    }
+}
+${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
+`;
+    case "advancement":
+      return `${header}import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
+import java.util.function.Consumer;
+import net.minecraft.advancements.AdvancementHolder;
+
+public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
+    public ${pascalName}AdvancementProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        super(output, registryLookup);
+    }
+
+    @Override
+    public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+        // TODO: Advancement.Builder 写入 consumer；search_fabric_docs develop_data-generation_advancements
+    }
+}
+${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
+`;
+    case "particle":
+    case "sound":
+      return `${header}
+/** 无独立 Fabric ${providerType} Provider。请手写 assets/${modId}/${providerType === "particle" ? "particles" : "sounds.json"} 并 search_fabric_docs。 */
+public final class ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets {
+    private ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets() {}
+}
 `;
     default:
       return `${header}
@@ -242,6 +297,52 @@ public class ${pascalName}ItemTagProvider extends FabricTagsProvider.ItemTagsPro
     }
 }
 ${entrypoint(modId, pascalName, `${pascalName}ItemTagProvider`)}
+`;
+    case "blockstate":
+    case "itemmodel":
+      return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+
+public class ${pascalName}ModelProvider extends FabricModelProvider {
+    public ${pascalName}ModelProvider(FabricPackOutput output) {
+        super(output);
+    }
+
+    @Override
+    public void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
+        ${providerType === "blockstate" ? "blockModels.createTrivialCube(Blocks.STONE); // TODO: 换成已注册方块" : "itemModels.generateFlatItem(Items.APPLE, ModelTemplates.FLAT_ITEM); // TODO: 换成已注册物品"}
+    }
+}
+${entrypoint(modId, pascalName, `${pascalName}ModelProvider`)}
+`;
+    case "advancement":
+      return `${header}import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
+import java.util.function.Consumer;
+import net.minecraft.advancements.AdvancementHolder;
+
+public class ${pascalName}AdvancementProvider extends FabricAdvancementProvider {
+    public ${pascalName}AdvancementProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        super(output, registryLookup);
+    }
+
+    @Override
+    public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+        // TODO: search_fabric_docs version=26.1.2 develop_data-generation_advancements
+    }
+}
+${entrypoint(modId, pascalName, `${pascalName}AdvancementProvider`)}
+`;
+    case "particle":
+    case "sound":
+      return `${header}
+/** 无独立 Fabric ${providerType} Provider。请手写资源 JSON 并 search_fabric_docs(version=26.1.2)。 */
+public final class ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets {
+    private ${pascalName}${providerType === "particle" ? "Particle" : "Sound"}Assets() {}
+}
 `;
     default:
       return `${header}

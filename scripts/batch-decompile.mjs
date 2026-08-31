@@ -34,7 +34,7 @@ const FETCH_TIMEOUT_MS = 120_000; // 单个 jar 下载超时
 const KNOWN_FLAGS = new Set([
   "filter", "limit", "resume", "concurrency-download", "concurrency-decompile",
   "java-xmx", "jar-dir", "output", "progress", "timeout-ms", "help",
-  "shard", "cache-dir",
+  "shard", "cache-dir", "reset",
 ]);
 const FILTER_KEYS = new Set(["gameVersion", "loader", "slug"]);
 /** 非包目录（VineFlower 产物里可能出现的资源目录） */
@@ -123,6 +123,7 @@ function validateFlags({ flags, positional }) {
     timeoutMs: intValue(flags, "timeout-ms", 1_800_000),
     shard,
     cacheDir: strValue(flags, "cache-dir", null),
+    reset: flags.reset === true || flags.reset === "1" || flags.reset === "true",
   };
 }
 
@@ -147,6 +148,7 @@ flags:
   --timeout-ms <ms>             单 jar 全流程超时（默认 1800000 = 30 分钟）
   --shard <i/N>                 分片：只处理索引 mod N === i-1 的 jar（如 1/3）
   --cache-dir <dir>             反编译缓存根（设置 MC_SKILL_CACHE；多分片请用不同目录）
+  --reset                       无 --resume 时清空 output/progress（默认拒绝覆盖已有文件）
   --help / -h                   打印本帮助
 
 示例:
@@ -552,7 +554,13 @@ async function main() {
   if (opts.resume && !existsSync(opts.progress)) {
     console.error("⚠️ --resume 指定但进度文件不存在，按全新批次处理");
   }
-  if (!opts.resume) { // 全新批次：清空输出与进度
+  if (!opts.resume) {
+    if ((existsSync(opts.output) && readFileSync(opts.output, "utf8").trim()) || existsSync(opts.progress)) {
+      if (!opts.reset) {
+        console.error("输出或进度文件已存在。加 --resume 继续，或 --reset 清空后重跑。");
+        return 1;
+      }
+    }
     writeFileSync(opts.output, "");
     writeFileSync(opts.progress, "{}");
   }

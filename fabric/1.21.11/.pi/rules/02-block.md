@@ -5,7 +5,7 @@ description: 02 — 方块开发
 # 02 — 方块开发
 
 > 适用版本：Fabric 1.21.11
-> FAPI：`net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings` 有 `copyOf(AbstractBlock)` / `of`。**没有** `create()`，1.18.2+ loader-api **没有** `breakByTool`。地图色：Yarn `MapColor.STONE_GRAY`，不要 `MapColor.STONE`。FAPI `mapColor(DyeColor)` 与原版 `mapColor(MapColor)` / `materialColor(MapColor)` 不要混签名。
+> 方块属性用 Yarn `AbstractBlock.Settings`（`copy` / `of`）。Mojmap 对应 `BlockBehaviour.Properties`。**不要**写已删除的 `FabricBlockSettings`。地图色：Yarn `MapColor.STONE_GRAY`，不要 `MapColor.STONE`。
 > Yarn 1.21.11：子类重写 `writeData(WriteView)` / `readData(ReadView)`（`net.minecraft.storage`）。不要写 Mojmap 的 `saveAdditional(ValueOutput)`，也不要抄 1.21.1 的 `writeNbt(NbtCompound, WrapperLookup)`。库存用 `Inventories.writeData` / `readData`。
 
 ---
@@ -17,7 +17,7 @@ description: 02 — 方块开发
 - 方块必须在 `Registry.register(Registries.BLOCK, id, block)` 中注册
 - 如需方块物品形态，在 `Registries.ITEM` 中注册同名 `BlockItem`
 - 方块类继承 `Block` 或其子类
-- 使用 `FabricBlockSettings`（或原版 `AbstractBlock.Settings`）配置方块属性
+- 使用 Yarn `AbstractBlock.Settings`（Mojmap：`BlockBehaviour.Properties`）配置方块属性
 - **禁止**在服务端直接创建客户端专用对象
 
 ---
@@ -28,8 +28,8 @@ description: 02 — 方块开发
 
 ```
 IF 简单静态方块
-  → new Block(FabricBlockSettings.copyOf(Blocks.STONE))
-  → 或 FabricBlockSettings.of()
+  → new Block(AbstractBlock.Settings.copy(Blocks.STONE))
+  → 或 AbstractBlock.Settings.create() / of()（以本档 Yarn 名为准）
 
 IF 可配置方块（如可交互、可放置）
   → 自定义 Block 子类
@@ -43,12 +43,12 @@ IF 需要自定义渲染
 
 ---
 
-## FabricBlockSettings
+## AbstractBlock.Settings
 
-不要写 `suffocates(Blocks::isSolid, bound)` 这种编造调用。
+不要写 `suffocates(Blocks::isSolid, bound)` 这种编造调用。Mojmap 工程把类型换成 `BlockBehaviour.Properties`。
 
 ```java
-FabricBlockSettings.of()
+AbstractBlock.Settings.create()
     .strength(1.5f)
     .strength(1.5f, 6.0f)
     .requiresTool()
@@ -64,7 +64,7 @@ FabricBlockSettings.of()
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+    new Block(AbstractBlock.Settings.copy(Blocks.STONE).strength(1.5f))
 );
 
 private static final Item MY_STONE_ITEM = Registry.register(
@@ -76,7 +76,7 @@ private static final Item MY_STONE_ITEM = Registry.register(
 private static final Block MY_PLANT = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_plant"),
-    new Block(FabricBlockSettings.copyOf(Blocks.DANDELION).noCollision().breakInstantly())
+    new Block(AbstractBlock.Settings.copy(Blocks.DANDELION).noCollision().breakInstantly())
 );
 
 public class MySlabBlock extends Block {
@@ -152,7 +152,7 @@ public static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
 - ❌ 在 `onInitialize()` 外注册 — 注册不会生效
 - ❌ 把未注册的 Block 传给 BlockItem
 - ❌ 在服务端创建客户端渲染对象
-- ❌ `FabricBlockSettings.create()`（本档 FAPI 没有这个静态方法）
+- ❌ `FabricBlockSettings`（本档已删除；用 `AbstractBlock.Settings` / Mojmap `BlockBehaviour.Properties`）
 - ❌ Yarn `DiggerItem`（镐斧铲父类是 `MiningToolItem`，1.21.11 起连 SwordItem 类也删了）
 
 ## 扩展点

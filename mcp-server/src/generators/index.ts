@@ -1,8 +1,9 @@
 import { normalizeModIdentifier, toPascalCase, toJavaClassName, stripJavaTypeSuffix, type GeneratorResult, noNativeGeneratorError, docsToolForGeneratorPlatform, exactMcVersion } from "./common.js";
+import { isMcVersionFamily } from "../utils/minecraft-version.js";
 
 function usesClientItemsModelPath(version: string): boolean {
   const v = version.trim();
-  if (/^26\.1/.test(v)) return true;
+  if (isMcVersionFamily(v, "26.1")) return true;
   if (v === "1.21.11") return true;
   const m = v.match(/^1\.21(?:\.(\d+))?$/);
   if (!m) return false;
@@ -96,6 +97,9 @@ export function generateModel(
 export function generateLang(modId: string, entries: Record<string, string>, version?: string): GeneratorResult {
   if (!version?.trim()) {
     return { code: null, errors: ["version is required。lang 骨架不随 pack_format 变。" + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
+  }
+  if (!exactMcVersion(version)) {
+    return { code: null, errors: [`version 必须是精确 MC 版本，收到 ${version}。` + noNativeGeneratorError("search_*_docs", "规则 07 / generate_lang")] };
   }
   const mod = normalizeModIdentifier(modId);
   if (!mod) return { code: null, errors: ["无效 modId"] };
@@ -700,6 +704,7 @@ package com.example.${mod.value}.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
@@ -722,6 +727,7 @@ public record ${pascal}Payload(String message) implements CustomPacketPayload {
         return ID;
     }
 
+    @SubscribeEvent
     public static void register(RegisterPayloadHandlerEvent event) {
         final IPayloadRegistrar registrar = event.registrar("${mod.value}");
         registrar.play(
@@ -1100,11 +1106,15 @@ public class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
         DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, "${mod.value}");
 
-    public static final net.neoforged.neoforge.registries.DeferredHolder<AttachmentType<?>, AttachmentType<${pascal}Data>> ${cap.value.toUpperCase()} =
-        ATTACHMENTS.register("${cap.value}", () -> AttachmentType.builder(() -> new ${pascal}Data()).build());
+    // TODO: 先定义 Data 类再注册。本工具不生成 Data 类。
+    public static final net.neoforged.neoforge.registries.DeferredHolder<AttachmentType<?>, AttachmentType<Object>> ${cap.value.toUpperCase()} =
+        ATTACHMENTS.register("${cap.value}", () -> AttachmentType.builder(() -> new Object()).build());
 }
 `,
       experimental: true,
+      warnings: [
+        "先定义 Data 类再注册；本工具不生成 Data 类。将 AttachmentType<Object> 换成你的数据类型。",
+      ],
     };
   }
 
@@ -1211,7 +1221,7 @@ public final class ${toPascalCase(mod.value)}Config {
       warnings: [
         "Cloth Config 最小骨架：请在 build.gradle / fabric.mod.json（或 quilt.mod.json）声明 cloth-config 依赖；未声明则无法编译。",
         "配置屏仅客户端；不要在服务端加载 ConfigBuilder。",
-        "Cloth Config 不是官方 loader API。",
+        "Cloth Config 不是官方 loader API；Cloth 骨架以 knowledge/libs/all-platforms/mc-config/SKILL.md 为准，不要把本模板当 loader 文档。",
         ...(loader === "quilt" ? ["Quilt 不要把 Cloth Config 当成 QSL。"] : []),
       ],
     };
@@ -1219,7 +1229,7 @@ public final class ${toPascalCase(mod.value)}Config {
 
   if (loader === "neoforge") {
     const v = version.trim();
-    const useModConfig = /^1\.21(\.|$)/.test(v) || /^26\.1(\.|$)/.test(v) || /^1\.20\.(4|6)$/.test(v);
+    const useModConfig = /^1\.21(\.|$)/.test(v) || isMcVersionFamily(v, "26.1") || /^1\.20\.(4|6)$/.test(v);
     if (useModConfig) {
       const reviewed = /^1\.20\.(4|6)$/.test(v);
       const body = `package com.example.${mod.value}.config;
@@ -1356,6 +1366,7 @@ export function generateEntityRenderer(
 package com.example.${mod.value}.client;
 
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -1364,21 +1375,41 @@ import net.neoforged.fml.common.EventBusSubscriber;
 public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
     public static final Identifier TEXTURE =
         Identifier.fromNamespaceAndPath("${mod.value}", "textures/entity/${ent.value}.png");
+
+    // TODO: 自行提供 ${pascal}Model（本工具不生成 Model 类）
+    public ${pascal}Renderer(EntityRendererProvider.Context ctx) {
+        super(ctx);
+    }
+
+    @Override
+    public Identifier getTextureLocation(${pascal} entity) {
+        return TEXTURE;
+    }
 }
 `,
       experimental: true,
       warnings: [
         "26.1 用 Identifier，不要 ResourceLocation / @OnlyIn。",
         "注册事件名请 search_neoforge_docs，不要默写 EntityRenderersEvent。",
+        "本工具不生成 Model 类，请自行提供。",
       ],
     };
   }
   return {
     code: `// 客户端 EntityRenderer 骨架 — GeckoLib 见 mc-geckolib skill
+package com.example.${mod.value}.client;
+
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 @OnlyIn(Dist.CLIENT)
-public class ${pascal}Renderer extends MobRenderer<${pascal}, ${pascal}Model> {
+public class ${pascal}Renderer extends EntityRenderer<${pascal}> {
+    // TODO: 自行提供 ${pascal}Model（本工具不生成 Model 类）
     public ${pascal}Renderer(EntityRendererProvider.Context ctx) {
-        super(ctx, new ${pascal}Model(ctx.bakeLayer(${pascal}Model.LAYER)), 0.5f);
+        super(ctx);
     }
     @Override
     public ResourceLocation getTextureLocation(${pascal} entity) {
@@ -1387,6 +1418,7 @@ public class ${pascal}Renderer extends MobRenderer<${pascal}, ${pascal}Model> {
 }
 `,
     experimental: true,
+    warnings: ["本工具不生成 Model 类，请自行提供。"],
   };
 }
 

@@ -18,9 +18,10 @@ import { Readable } from "node:stream";
  *   obfToNamed: Map<string, string>,
  *   namedToObf: Map<string, string>,
  *   methodsByObf: Map<string, { name: string, descriptor: string }>,
+ *   fieldsByObf: Map<string, { name: string, descriptor: string }>,
  * }} MojangMaps
  *
- * methodsByObf key: `${obfOwner}\t${obfDesc}\t${obfName}`
+ * methodsByObf / fieldsByObf key: `${obfOwner}\t${obfDesc}\t${obfName}`
  */
 
 /** @param {string} type */
@@ -93,6 +94,8 @@ export async function parseMojangProguard(input) {
   const namedToObf = new Map();
   /** @type {Array<{ namedOwner: string, returnType: string, name: string, args: string, obfName: string }>} */
   const pendingMethods = [];
+  /** @type {Array<{ namedOwner: string, type: string, name: string, obfName: string }>} */
+  const pendingFields = [];
 
   const stream =
     typeof input === "string" || Buffer.isBuffer(input)
@@ -130,7 +133,16 @@ export async function parseMojangProguard(input) {
       });
       continue;
     }
-    // fields ignored for now
+    // field: type name -> obf  （无括号；含内部类 Outer$Inner 与数组）
+    const fieldMatch = withoutRange.match(/^(.+?)\s+(\S+)\s*->\s*(\S+)\s*$/);
+    if (fieldMatch) {
+      pendingFields.push({
+        namedOwner: currentNamed,
+        type: fieldMatch[1].trim(),
+        name: fieldMatch[2],
+        obfName: fieldMatch[3],
+      });
+    }
   }
 
   /** @type {Map<string, { name: string, descriptor: string }>} */
@@ -144,7 +156,54 @@ export async function parseMojangProguard(input) {
     methodsByObf.set(key, { name: pm.name, descriptor: namedDesc });
   }
 
-  return { obfToNamed, namedToObf, methodsByObf };
+  /** @type {Map<string, { name: string, descriptor: string }>} */
+  const fieldsByObf = new Map();
+  for (const pf of pendingFields) {
+    const obfOwner = namedToObf.get(pf.namedOwner);
+    if (!obfOwner) continue;
+    const obfDesc = proguardTypeToJvm(pf.type, namedToObf);
+    const namedDesc = remapDescriptor(obfDesc, obfToNamed);
+    const key = `${obfOwner}\t${obfDesc}\t${pf.obfName}`;
+    fieldsByObf.set(key, { name: pf.name, descriptor: namedDesc });
+  }
+
+  return { obfToNamed, namedToObf, methodsByObf, fieldsByObf };
+}
+
+/**
+ * Emit Tiny v2 (two namespaces: official = obfuscated, named = Mojang).
+ * Descriptor on members is in the official (obf) namespace, as Tiny v2 requires.
+ * @param {MojangMaps} maps
+ * @param {string} [fromNs]
+ * @param {string} [toNs]
+ */
+export function emitTinyV2(maps, fromNs = "official", toNs = "named") {
+  const lines = [`tiny\t2\t0\t${fromNs}\t${toNs}`];
+  const classes = [...maps.obfToNamed.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  for (const [obf, named] of classes) {
+    lines.push(`c\t${obf}\t${named}`);
+    const methods = [];
+    for (const [key, val] of maps.methodsByObf) {
+      const [owner, desc, obfName] = key.split("\t");
+      if (owner !== obf) continue;
+      methods.push({ desc, obfName, named: val.name });
+    }
+    methods.sort((a, b) => a.obfName.localeCompare(b.obfName) || a.desc.localeCompare(b.desc));
+    for (const m of methods) {
+      lines.push(`\tm\t${m.desc}\t${m.obfName}\t${m.named}`);
+    }
+    const fields = [];
+    for (const [key, val] of maps.fieldsByObf ?? []) {
+      const [owner, desc, obfName] = key.split("\t");
+      if (owner !== obf) continue;
+      fields.push({ desc, obfName, named: val.name });
+    }
+    fields.sort((a, b) => a.obfName.localeCompare(b.obfName) || a.desc.localeCompare(b.desc));
+    for (const f of fields) {
+      lines.push(`\tf\t${f.desc}\t${f.obfName}\t${f.named}`);
+    }
+  }
+  return lines.join("\n") + "\n";
 }
 
 /**

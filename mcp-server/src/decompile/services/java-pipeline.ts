@@ -6,8 +6,9 @@
  * Java 探测、skip-download 门控、锁与缓存命中。
  */
 
-import { existsSync, readFileSync, statSync, mkdirSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync, statSync, mkdirSync, writeFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath, pathToFileURL } from "url";
 import { createHash } from "crypto";
 import {
   ensureCachePaths,
@@ -42,6 +43,42 @@ export interface DownloadGate {
 export function tail(s: string, n = 800): string {
   const t = s.trim();
   return t.length > n ? "…" + t.slice(-n) : t;
+}
+
+/** ProGuard client.txt → Tiny v2（official/named），tiny-remapper 0.14 只读 Tiny。 */
+export async function ensureMojmapTiny(proguardPath: string): Promise<string> {
+  if (proguardPath.endsWith(".tiny")) return proguardPath;
+  const tinyPath = proguardPath.replace(/\.txt$/i, ".tiny");
+  if (existsSync(tinyPath) && existsSync(proguardPath)) {
+    try {
+      if (statSync(tinyPath).mtimeMs >= statSync(proguardPath).mtimeMs && statSync(tinyPath).size > 0) {
+        return tinyPath;
+      }
+    } catch {
+      /* rewrite */
+    }
+  }
+  const parserUrl = pathToFileURL(
+    join(dirname(fileURLToPath(import.meta.url)), "../../../scripts/_lib/parse-mojang-proguard.mjs"),
+  ).href;
+  const { parseMojangProguardFile, emitTinyV2 } = await import(parserUrl) as {
+    parseMojangProguardFile: (p: string) => Promise<unknown>;
+    emitTinyV2: (maps: unknown) => string;
+  };
+  const maps = await parseMojangProguardFile(proguardPath);
+  writeFileSync(tinyPath, emitTinyV2(maps), "utf8");
+  return tinyPath;
+}
+
+export function remapperCli(
+  tinyJar: string,
+  inputJar: string,
+  outputJar: string,
+  mappings: string,
+  fromNs: string,
+  toNs: string,
+): string[] {
+  return ["-jar", tinyJar, "--ignoreConflicts", inputJar, outputJar, mappings, fromNs, toNs];
 }
 
 /** 下载输入产物（client jar + 映射 + 工具 jar），全部带哈希校验 */
@@ -109,6 +146,8 @@ export async function prepareInputs(
           const info = await resolveYarnMappings(version);
           const result = await downloadFile(info.jarUrl, yarnJarPath, {
             label: `yarn mappings ${info.build}`,
+            expectedSha256: info.sha256 ?? null,
+            expectedSha1: info.sha1 ?? null,
           });
           setArtifact(db, `mc-mappings:${version}:yarn`, "mappings", yarnJarPath, {
             version: info.build,
@@ -150,7 +189,7 @@ export interface RemapOutcome {
 /**
  * tiny-remapper 重映射：
  * - yarn：两步 official→intermediary→named（与 README 支持矩阵一致）
- * - mojmap（1.14–1.21.11）：client_mappings.txt 单步 official→mojmap
+ * - mojmap（1.14–1.21.11）：client_mappings.txt → Tiny v2 后单步 official→named
  * - 26.1+：免 remap，直接用 client jar
  */
 export async function remapClientJar(
@@ -169,32 +208,27 @@ export async function remapClientJar(
 
   if (gate.yarn) {
     const step1 = join(cache.remapped, `minecraft-${version}-yarn-step1.jar`);
-    const r1 = await runJava([
-      "-jar", gate.tinyRemapper,
-      "--forceLocal", "--ignoreConflicts",
-      gate.clientJar, step1, gate.mappings, "official", "intermediary",
-    ]);
+    const r1 = await runJava(
+      remapperCli(gate.tinyRemapper, gate.clientJar, step1, gate.mappings, "official", "intermediary"),
+    );
     if (r1.code !== 0) {
       throw new Error(`tiny-remapper official→intermediary 失败(code=${r1.code}): ${tail(r1.stderr)}`);
     }
-    const r2 = await runJava([
-      "-jar", gate.tinyRemapper,
-      "--forceLocal", "--ignoreConflicts",
-      step1, outJar, gate.mappings, "intermediary", "named",
-    ]);
+    const r2 = await runJava(
+      remapperCli(gate.tinyRemapper, step1, outJar, gate.mappings, "intermediary", "named"),
+    );
     if (r2.code !== 0) {
       throw new Error(`tiny-remapper intermediary→named 失败(code=${r2.code}): ${tail(r2.stderr)}`);
     }
     return { jar: outJar, how: "two-step-yarn" };
   }
 
-  const r = await runJava([
-    "-jar", gate.tinyRemapper,
-    "--forceLocal", "--ignoreConflicts",
-    gate.clientJar, outJar, gate.mappings, "official", "mojmap",
-  ]);
+  const tinyMappings = await ensureMojmapTiny(gate.mappings);
+  const r = await runJava(
+    remapperCli(gate.tinyRemapper, gate.clientJar, outJar, tinyMappings, "official", "named"),
+  );
   if (r.code !== 0) {
-    throw new Error(`tiny-remapper official→mojmap 失败(code=${r.code}): ${tail(r.stderr)}`);
+    throw new Error(`tiny-remapper official→named 失败(code=${r.code}): ${tail(r.stderr)}`);
   }
   return { jar: outJar, how: "single-step-mojmap" };
 }

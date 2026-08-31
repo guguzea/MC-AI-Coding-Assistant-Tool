@@ -415,15 +415,6 @@ async function main(): Promise<void> {
     try {
       const raw = await entry.handler(parsed.data as Record<string, unknown>);
       const { result, isError } = unwrapHandlerResult(raw);
-      if (
-        result &&
-        typeof result === "object" &&
-        ((result as { action?: { code?: string } }).action?.code === "DATA_UNAVAILABLE" ||
-          (result as { error?: { code?: string } }).error?.code === "DATA_UNAVAILABLE" ||
-          (result as { error?: { code?: string } }).error?.code === "PLATFORM_DATA_MISSING")
-      ) {
-        await maybeHintDataDir(mappedTool);
-      }
       const failed = isToolFailure(result, isError, globals.failOnError);
       printJson({ success: !failed, tool: userCmd, result }, globals.compact);
       if (failed) process.exitCode = 1;
@@ -443,7 +434,7 @@ async function main(): Promise<void> {
     }
   } catch (err) {
     const toolName = positional[0] ?? "cli";
-    const compact = false;
+    const compact = globals.compact;
     if (err instanceof UnknownFlagError || err instanceof InvalidBooleanFlagError) {
       printJson({ success: false, tool: toolName, error: err.message }, compact);
       process.exitCode = 2;

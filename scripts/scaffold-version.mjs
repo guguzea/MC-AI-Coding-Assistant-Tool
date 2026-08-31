@@ -32,6 +32,13 @@ function arg(name) {
 }
 
 const FORCE = process.argv.includes("--force");
+const PLATFORMS = new Set(["forge", "fabric", "neoforge", "quilt", "liteloader", "rift", "modloader", "bedrock"]);
+
+function isSafeVersionSegment(version) {
+  if (!/^\d+(\.\d+)*$/.test(version)) return false;
+  if (version.includes("..") || /[\\/]/.test(version)) return false;
+  return true;
+}
 
 function writeUnlessExists(filePath, body) {
   if (!FORCE && fs.existsSync(filePath)) {
@@ -99,12 +106,23 @@ function main() {
     console.error("需要 --platform= 与 --minecraftVersion=");
     process.exit(1);
   }
+  if (!PLATFORMS.has(platform) || !isSafeVersionSegment(ver)) {
+    console.error("platform 必须是已知加载器；minecraftVersion 只能是数字与点（禁止 .. 与路径分隔符）。");
+    process.exit(2);
+  }
   const indexPath = findIndexL0(platform, ver);
   if (!indexPath) {
     console.error(`没有 ${platform} ${ver} 的 index-l0.json，不写规则树。`);
     process.exit(2);
   }
-  const packDir = path.join(ROOT, platform, ver);
+  const packDir = path.resolve(path.join(ROOT, platform, ver));
+  const rootResolved = path.resolve(ROOT);
+  const packNorm = packDir.replace(/\\/g, "/").toLowerCase();
+  const rootNorm = rootResolved.replace(/\\/g, "/").toLowerCase();
+  if (packNorm !== rootNorm && !packNorm.startsWith(rootNorm + "/")) {
+    console.error("拒绝写出仓库根之外的路径。");
+    process.exit(2);
+  }
   const rulesDir = path.join(packDir, ".cursor", "rules");
   fs.mkdirSync(rulesDir, { recursive: true });
   const docsTool =

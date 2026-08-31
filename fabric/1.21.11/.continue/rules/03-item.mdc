@@ -25,7 +25,7 @@ IF 只是手持物品（无特殊行为）
 
 IF 是工具（剑/镐）
   → new Item(ToolMaterial.IRON.applySwordSettings / applyToolSettings)
-  → 不要 DiggerItem、不要编造 DurableToolItem、不要抄已删除的 SwordItem 类
+  → 镐斧铲走 `MiningToolItem`；**`AxeItem` 仍在**。不要 DiggerItem、不要编造 DurableToolItem、不要抄已删除的 SwordItem 类
 
 IF 是盔甲
   → 使用 ArmorItem + ArmorMaterial

@@ -124,7 +124,7 @@ public static final ScreenHandlerType<MyScreenHandler> MY_SCREEN_HANDLER =
 
 1.19.3+ 构造是 `(Factory, FeatureSet)`。Yarn 字段 `FeatureFlags.VANILLA_FEATURES`（官方 Yarn javadoc）。wiki `tutorial:screenhandler` 也可用 `FeatureSet.empty()`。
 
-Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。不要把 26.1.2 Mojmap `MenuType` / `CustomPacketPayload` 抄进本档。
+Yarn 移位是 `quickMove`。客户端只用 `HandledScreens.register`。`ScreenHandlerType` 构造若访问未映射成员，须在 fabric-api 的 access widener 覆盖下编译（不要手写已删除的 `ScreenHandlerRegistry`）。不要把 26.1.2 Mojmap `MenuType` / `CustomPacketPayload` 抄进本档。
 额外数据：`getScreenOpeningData`（1.21.11 loader-api 已核）。
 
 ## NamedScreenHandlerFactory（普通打开）

@@ -88,7 +88,7 @@ IF 平台 = Fabric
   → 跳转 fabric/1.20.1/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
 
 IF 平台 = NeoForge
-  → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未建档版本（1.20.1/1.20.6/1.21.5/1.21.10）禁止读邻档 00–10，改口 search_neoforge_docs。
+  → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未列入 `list_neoforge_versions` 的版本禁止读邻档 00–10，改口 search_neoforge_docs。
 ```
 
 ### Decision: 注册什么类型？
@@ -134,8 +134,9 @@ IF 一个方块有 BlockEntity
   → Block 的 registry name 必须与 BlockEntityType 关联的 Block 匹配
 
 IF 一个物品有 Capability
-  → Capability 注册应在 FMLCommonSetupEvent 中执行
-  → Item 注册在 DeferredRegister 中执行（更早）
+  → 主推 `RegisterCapabilitiesEvent`（**mod bus**）或 `@AutoRegisterCapability`
+  → lifecycle 页若仍写 `FMLCommonSetupEvent` 注册 Capability：**勿采信**（过时）
+  → Item 本身仍在 DeferredRegister 中注册（更早）
 ```
 
 ### Decision: 常见 Registry 报错处理

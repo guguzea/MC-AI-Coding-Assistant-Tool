@@ -244,7 +244,7 @@ Java 前置：本机需 Java 17+（Temurin/Adoptium https://adoptium.net/temurin
     body: `清单（人在环：Agent 出步骤与草稿；Gradle / 写盘 / 上传须用户确认后执行）。对应 Skill：mc-recipe / mc-loottable / mc-advancement；规则 07-datagen。
 1. 确认平台与精确 MC 版本。
 2. 配方/战利品/进度 JSON 路径按该档 data/<modid>/。
-3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 1.21.1/1.21.4/1.21.8 为 generate()，1.21.10/1.21.11 为 buildRecipes，26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
+3. generate_datagen 仅白名单版本（Forge 1.20.1 / 1.20.4 FinishedRecipe；NeoForge 1.20.1 改口 search_neoforge_docs，禁止默写 Forge import；NeoForge 1.20.4 / 1.20.6 仅 recipe——1.20.4 一参 PackOutput+RecipeOutput，1.20.6 两参 PackOutput+HolderLookup；1.21.0–1.21.4 为 GatherDataEvent+addProvider，1.21.5+ 为 GatherDataEvent.Client+createProvider，1.21.11/26.1 用 Identifier；Fabric 1.21.1/1.21.3/1.21.4/1.21.8 为 generate()，1.21.10/1.21.11 为 buildRecipes，26.1 Loom；Quilt 无足够 QSL 类名则 error）。其它版本 search_*_docs + 手写，参考 07-datagen / mc-datagen。
 4. validate_datapack_json 须传 version；minecraft:crafting_special_* 无 result 不报错。`,
   },
   "mc-audio-vfx": {

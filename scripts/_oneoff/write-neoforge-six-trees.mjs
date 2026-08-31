@@ -8,7 +8,7 @@ import { mkdirSync, writeFileSync, rmSync, existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 const RULE_TREE = ["1.20.4", "1.21.1", "1.21.3", "1.21.8", "1.21.11", "26.1"];
 const UNVERSIONED = ["1.20.1", "1.20.6", "1.21.5", "1.21.10"];

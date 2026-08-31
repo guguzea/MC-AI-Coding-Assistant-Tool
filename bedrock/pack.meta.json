@@ -1,0 +1,20 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "bedrock",
+  "ruleSchema": "bedrock",
+  "note": "基岩规则编号与 Java 00–10 无关。禁止按 Java 主题号跨平台复用 topics/task。",
+  "ruleIds": {
+    "00": "project-setup",
+    "01": "manifest",
+    "02": "resource-pack",
+    "03": "behavior-pack",
+    "04": "entity",
+    "05": "blocks-items",
+    "06": "molang",
+    "07": "script-api",
+    "08": "worldgen",
+    "09": "anti-patterns",
+    "10": "publish"
+  }
+}

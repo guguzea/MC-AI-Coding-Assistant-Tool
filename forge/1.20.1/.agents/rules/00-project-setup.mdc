@@ -44,20 +44,21 @@
   ```properties
   minecraft_version=1.20.1
   forge_version=47.2.0
-  mappings_version=1.20.1
+  mapping_channel=official
+  mapping_version=1.20.1
   loader_version=47.2.0
   ```
   > 注意：
-  > - `build.gradle` 中引用时用 `mapping_version`（不带 s），属性名必须与 `build.gradle` 中的 `${property名}` 完全一致
+  > - `gradle.properties` 与 `build.gradle` 属性名统一为 `mapping_version`（不要写成 `mappings_version`）
   > - `loader_version` 填 Forge 版本号，与 mods.toml 中的 `loaderVersion` 字段对应
 - **禁止在 `build.gradle` 中直接写版本号**，必须引用 `${minecraft_version}` 等属性
 
 ### Mappings 约束
 
-- Forge 1.20.1 默认使用 **MCP**
-- `gradle.properties` 中的 `mappings_version` 对应 MCP 版本
-- **禁止**在 `build.gradle` 中切换到 `yarn` 或 `parchment`（除非用户明确要求且项目已适配）
-- MCP 映射将混淆的 Minecraft 方法映射为可读名称，如 `func_12345_a` → `getHealth`
+- Forge 1.20.1 默认使用 **Mojang official（mojmap）**：`mappings channel: 'official', version: mapping_version`
+- `mapping_version` 在 official 通道下与 Minecraft 版本字符串一致（1.20.1），**不是** MCP snapshot 号；不要把 MCP 通道的日期戳填成另一个 MC 版本
+- **禁止**在 `build.gradle` 中切换到 `yarn`（除非用户明确要求且项目已适配）
+- official 映射将混淆名映射为 Mojang 可读名，如 `getHealth`
 
 ### 项目目录结构（强制规范）
 

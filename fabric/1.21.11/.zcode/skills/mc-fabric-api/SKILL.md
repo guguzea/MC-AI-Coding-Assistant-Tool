@@ -64,7 +64,7 @@ Screen 注册与额外数据见 `10-gui.mdc` / `mc-gui`。不要在这里抄邻�
 
 ### fabric-object-builder-api-v1
 
-本档物品设置优先 `Item.Settings`。方块 helper 以本版 `FabricBlockSettings` / `AbstractBlock.Settings` 为准。不要编造通用 `ObjectBuilder`。
+本档物品设置优先 `Item.Settings`。方块 helper 以本版 Yarn `AbstractBlock.Settings`（Mojmap `BlockBehaviour.Properties`）为准。不要写已删除的 `FabricBlockSettings`，不要编造通用 `ObjectBuilder`。
 
 ### 战利品 API
 

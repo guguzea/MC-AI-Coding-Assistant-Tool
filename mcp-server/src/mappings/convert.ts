@@ -24,8 +24,6 @@ import { ownGet } from "../utils/own-record.js";
 import { isSafeVersionSegment } from "../utils/minecraft-version.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
-const DEFAULT_VERSION = "1.20.1";
-
 export interface MappingQuery {
   from: MappingLayer;
   to: MappingLayer;
@@ -222,7 +220,7 @@ function fail(query: MappingQuery, extras: Partial<MappingResult> = {}): Mapping
     memberKind: kind === "parameter" ? "method" : kind,
     fallbackUsed: allow,
     deprecation: allow ? "allow_fallback will be removed" : undefined,
-    schemaVersion: getSchemaVersion(query.version ?? DEFAULT_VERSION),
+    schemaVersion: query.version ? getSchemaVersion(query.version) : undefined,
     ...rest,
     resultKind: allow ? "fallback-identity" : extrasKind,
     notes,

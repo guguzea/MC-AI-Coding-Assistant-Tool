@@ -35,12 +35,105 @@ export const NEXT_READS_LIMIT = 8;
 const BASE_ONLY_WARNING =
   "已加载底座规则 00/01/09；写方块/物品请立刻再 session 传 task=mc-new-block / mc-new-item（或 topics）。如涉及 GUI/网络等主题，请传 task 或 topics，否则主题规则不在上下文中。";
 
+const BEDROCK_BASE_ONLY_WARNING =
+  "已加载底座规则 00/01/09；写方块/物品请立刻再 session 传 task=mc-bedrock-block-item / mc-addon-manifest（禁止 task=mc-new-block）。基岩规则编号与 Java 00–10 无关。";
+
+const BEDROCK_SCHEMA_WARNING =
+  "基岩规则编号与 Java 00–10 无关；禁止按 Java 主题号跨平台复用 topics/task";
+
 function missingBaseRulesWarning(missingIds: string[]): string {
   return `平台包存在但底座规则文件缺失（${missingIds.join("/")}），rules[] 未注入这些正文。不要把 session 当已加载 00/01/09。`;
 }
 
 const NO_PLATFORM_SKILLS_WARNING =
   "该档无平台 Skill 索引，session 成功不等于技能齐全；库 Skill 若有也只在显式 skillNames 时注入。请用已注入规则 + 核实表 / search_docs。";
+
+type TaskSpec = { rules: string[]; skills: string[]; nextReads: string[]; warning?: string };
+
+const JAVA_ONLY_TOPIC_ALIASES = new Set([
+  "registry",
+  "datagen",
+  "client",
+  "gui",
+  "capability",
+  "mixin",
+  "mc-mixin",
+  "network",
+  "networking",
+  "recipe",
+  "loot",
+  "fluid",
+  "events",
+  "event",
+]);
+
+const BEDROCK_TOPIC_ALIASES: Record<string, string> = {
+  manifest: "01",
+  resource: "02",
+  "resource-pack": "02",
+  behavior: "03",
+  "behavior-pack": "03",
+  entity: "04",
+  block: "05",
+  item: "05",
+  molang: "06",
+  script: "07",
+  "script-api": "07",
+  worldgen: "08",
+  publish: "10",
+};
+
+const BEDROCK_TASK_SPECS: Record<string, TaskSpec> = {
+  "mc-bedrock-block-item": { rules: ["05"], skills: ["mc-bedrock-block-item"], nextReads: ["mc-behavior-pack"] },
+  "mc-addon-manifest": { rules: ["01"], skills: ["mc-addon-manifest"], nextReads: ["mc-addon-setup"] },
+  "mc-bedrock-addon": {
+    rules: ["01", "02", "03", "05"],
+    skills: ["mc-addon-setup", "mc-addon-manifest"],
+    nextReads: ["mc-bedrock-block-item"],
+  },
+  "mc-bedrock-worldgen": { rules: ["08"], skills: ["mc-bedrock-worldgen"], nextReads: [] },
+  "mc-publish-addon": { rules: ["10"], skills: ["mc-publish-addon"], nextReads: [] },
+  "mc-resource-pack": { rules: ["02"], skills: ["mc-resource-pack"], nextReads: [] },
+  "mc-behavior-pack": { rules: ["03"], skills: ["mc-behavior-pack"], nextReads: [] },
+  "mc-script-api": { rules: ["07"], skills: ["mc-script-api"], nextReads: ["mc-molang"] },
+  "mc-molang": { rules: ["06"], skills: ["mc-molang"], nextReads: [] },
+};
+
+const JAVA_TASKS_ON_BEDROCK = new Set([
+  "mc-new-block",
+  "block",
+  "mc-new-item",
+  "item",
+  "mc-new-entity",
+  "mc-new-blockentity",
+  "blockentity",
+  "mc-new-gui",
+  "gui",
+  "mc-worldgen",
+  "worldgen",
+  "mc-networking",
+  "network",
+  "networking",
+  "mc-capability",
+  "capability",
+  "mc-mixin",
+  "mixin",
+  "mc-fluid",
+  "mc-datagen",
+  "datagen",
+]);
+
+const BEDROCK_RULE_SKILL_HINTS: Record<string, string[]> = {
+  "01": ["mc-addon-manifest"],
+  "02": ["mc-resource-pack"],
+  "03": ["mc-behavior-pack"],
+  "04": ["mc-bedrock-entity"],
+  "05": ["mc-bedrock-block-item"],
+  "06": ["mc-molang"],
+  "07": ["mc-script-api"],
+  "08": ["mc-bedrock-worldgen"],
+  "10": ["mc-publish-addon"],
+};
 
 const TOPIC_ALIASES: Record<string, string> = {
   registry: "01",
@@ -60,8 +153,6 @@ const TOPIC_ALIASES: Record<string, string> = {
   fluid: "02",
   capability: "05",
 };
-
-type TaskSpec = { rules: string[]; skills: string[]; nextReads: string[]; warning?: string };
 
 const TASK_SPECS: Record<string, TaskSpec> = {
   "mc-new-block": { rules: ["02"], skills: ["mc-block"], nextReads: ["mc-blockentity"] },
@@ -162,6 +253,23 @@ function uniqueIds(ids: string[]): string[] {
 function lookupTask(raw?: string, platform?: string): { spec: TaskSpec | null; key: string; warning?: string } {
   const key = String(raw ?? "").trim().toLowerCase();
   if (!key) return { spec: null, key: "" };
+  const p = String(platform ?? "").toLowerCase();
+  if (p === "bedrock") {
+    if (JAVA_TASKS_ON_BEDROCK.has(key)) {
+      return {
+        spec: null,
+        key,
+        warning: `Java task "${raw}" 在基岩不灌规则（不会注入 02-resource-pack 当方块教程）。请用 task=mc-bedrock-addon / mc-bedrock-block-item。${BEDROCK_SCHEMA_WARNING}`,
+      };
+    }
+    const bedrockSpec = ownGet(BEDROCK_TASK_SPECS, key);
+    if (isTaskSpec(bedrockSpec)) return { spec: bedrockSpec, key };
+    return {
+      spec: null,
+      key,
+      warning: `未知基岩 task "${raw}"，已忽略。请用 mc-bedrock-addon / mc-bedrock-block-item / mc-addon-manifest。${BEDROCK_SCHEMA_WARNING}`,
+    };
+  }
   if (key === "mc-kotlin" || key === "kotlin") {
     const p = String(platform ?? "").toLowerCase();
     const skills =
@@ -180,7 +288,7 @@ function lookupTask(raw?: string, platform?: string): { spec: TaskSpec | null; k
 }
 
 /** 只解析 topics：规则号 + mixin 这类 skill hint。禁止 padStart 乱切。 */
-export function parseTopicTokens(topics?: string[]): {
+export function parseTopicTokens(topics?: string[], platform?: string): {
   ruleIds: string[];
   skillHints: string[];
   warnings: string[];
@@ -190,11 +298,16 @@ export function parseTopicTokens(topics?: string[]): {
   const warnings: string[] = [];
   const seenRule = new Set<string>();
   const seenHint = new Set<string>();
+  const isBedrock = String(platform ?? "").toLowerCase() === "bedrock";
   for (const t of topics ?? []) {
     const raw = String(t).trim();
     if (!raw) continue;
     const lower = raw.toLowerCase();
     if (lower === "mixin" || lower === "mc-mixin") {
+      if (isBedrock) {
+        warnings.push(`Java 主题 mixin 在基岩拒绝。${BEDROCK_SCHEMA_WARNING}`);
+        continue;
+      }
       const hint = "mc-mixin";
       if (!seenHint.has(hint)) {
         seenHint.add(hint);
@@ -212,7 +325,11 @@ export function parseTopicTokens(topics?: string[]): {
       id = String(n).padStart(2, "0");
     } else {
       const num = raw.match(/(^|\D)(0\d|10)(\D|$)/);
-      const alias = ownGet(TOPIC_ALIASES, lower);
+      if (isBedrock && JAVA_ONLY_TOPIC_ALIASES.has(lower) && !ownGet(BEDROCK_TOPIC_ALIASES, lower)) {
+        warnings.push(`Java 主题别名 "${raw}" 在基岩拒绝（不要静默映射到错误号）。${BEDROCK_SCHEMA_WARNING}`);
+        continue;
+      }
+      const alias = ownGet(isBedrock ? BEDROCK_TOPIC_ALIASES : TOPIC_ALIASES, lower);
       id = num ? num[2] : alias;
     }
     if (!id) {
@@ -231,8 +348,9 @@ export function resolveTopicIds(
   topics?: string[],
   includeAll?: boolean,
   extraRuleIds?: string[],
+  platform?: string,
 ): { ids: string[]; warnings: string[]; skillHints: string[] } {
-  const parsed = parseTopicTokens(topics);
+  const parsed = parseTopicTokens(topics, platform);
   if (includeAll) {
     return { ids: [...ALL_RULE_IDS], warnings: parsed.warnings, skillHints: parsed.skillHints };
   }
@@ -323,7 +441,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   const taskSpec = taskLookup.spec;
   if (taskSpec?.warning) warnings.push(taskSpec.warning);
   const extraRules = taskSpec?.rules ?? [];
-  const { ids, warnings: topicWarnings, skillHints } = resolveTopicIds(args.topics, includeAll, extraRules);
+  const { ids, warnings: topicWarnings, skillHints } = resolveTopicIds(args.topics, includeAll, extraRules, platform);
   warnings.push(...topicWarnings);
 
   const resolved = resolvePackRules({
@@ -365,7 +483,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   if (skills.length === 0) warnings.push(NO_PLATFORM_SKILLS_WARNING);
 
   const extraRuleSet = new Set(extraRules);
-  for (const id of parseTopicTokens(args.topics).ruleIds) extraRuleSet.add(id);
+  for (const id of parseTopicTokens(args.topics, platform).ruleIds) extraRuleSet.add(id);
 
   const candidateNames: string[] = [];
   const seenCand = new Set<string>();
@@ -391,13 +509,19 @@ export function sessionPlatformPack(args: SessionArgs) {
       truncated = true;
       continue;
     }
-    skillBodies.push({
-      name: hit.name,
-      absPath: hit.absPath,
-      relPosix: hit.relPosix,
-      text: wrapSkillBody(hit, readText(hit.absPath)),
-    });
-    inBodies.add(canonicalSkillName(hit.name));
+    try {
+      skillBodies.push({
+        name: hit.name,
+        absPath: hit.absPath,
+        relPosix: hit.relPosix,
+        text: wrapSkillBody(hit, readText(hit.absPath)),
+      });
+      inBodies.add(canonicalSkillName(hit.name));
+    } catch (err) {
+      warnings.push(
+        `读取 Skill 正文失败: ${hit.name}（${hit.relPosix}）：${(err as Error).message}。已跳过，索引仍可用。`,
+      );
+    }
   }
   if (truncated) {
     warnings.push(`skillBodies 上限 ${SKILL_BODY_LIMIT}（去重后的正文条数），多余候选已截断。`);
@@ -414,7 +538,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   for (const h of skillHints) pushHint(h);
   for (const h of taskSpec?.nextReads ?? []) pushHint(h);
   for (const id of extraRuleSet) {
-    for (const h of ownGet(RULE_SKILL_HINTS, id) ?? []) pushHint(h);
+    for (const h of ownGet(platform === "bedrock" ? BEDROCK_RULE_SKILL_HINTS : RULE_SKILL_HINTS, id) ?? []) pushHint(h);
   }
   const libNames = new Set(libSkills.map((s) => canonicalSkillName(s.name)));
   const nextReads: Array<{ name: string; absPath: string; relPosix: string; description: string }> = [];
@@ -436,7 +560,7 @@ export function sessionPlatformPack(args: SessionArgs) {
   else {
     const expanded = ids.length > BASE_RULE_IDS.length;
     const validTask = Boolean(taskSpec);
-    const validTopic = parseTopicTokens(args.topics).ruleIds.length > 0 || skillHints.length > 0;
+    const validTopic = parseTopicTokens(args.topics, platform).ruleIds.length > 0 || skillHints.length > 0;
     if ((validTask || validTopic) && expanded) rulesMode = "extended";
     else rulesMode = "base";
   }
@@ -464,7 +588,10 @@ export function sessionPlatformPack(args: SessionArgs) {
       ),
     };
   }
-  if (rulesMode === "base" && !includeAll) warnings.push(BASE_ONLY_WARNING);
+  if (platform === "bedrock") warnings.push(BEDROCK_SCHEMA_WARNING);
+  if (rulesMode === "base" && !includeAll) {
+    warnings.push(platform === "bedrock" ? BEDROCK_BASE_ONLY_WARNING : BASE_ONLY_WARNING);
+  }
 
   return {
     ok: true,
@@ -473,6 +600,7 @@ export function sessionPlatformPack(args: SessionArgs) {
     minecraftVersion,
     knowledgeVersion: pack.minecraftVersion,
     packDir: pack.packDir.replace(/\\/g, "/"),
+    ruleSchema: platform === "bedrock" ? "bedrock" : "java",
     agents: readText(pack.agentsPath),
     rules: ruleBodies,
     ruleIndex: resolved.localIndex,
@@ -498,7 +626,7 @@ export function sessionPlatformPack(args: SessionArgs) {
               action: "session",
               platform: pack.platform,
               minecraftVersion,
-              task: "mc-new-block",
+              task: platform === "bedrock" ? "mc-bedrock-block-item" : "mc-new-block",
             },
           }
         : undefined,

@@ -1,6 +1,6 @@
-# Fabric 1.20.1 — Agent 总纲
+# Fabric 1.21.3 — Agent 总纲
 
-> 本规则集适用于 **Fabric 1.20.1**，推荐使用 `Registry.register()` 注册模式。
+> 本规则集适用于 **Fabric 1.21.3**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
 > ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
@@ -13,14 +13,26 @@
 | 项目 | 值 |
 |------|-----|
 | 平台 | Fabric |
-| Minecraft 版本 | 1.20.1 |
+| Minecraft 版本 | 1.21.3 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 17**（Fabric 1.20.1 最低要求） |
-| Gradle | Gradle 8.x + Loom |
-| Mappings | **Yarn**（`net.fabricmc:yarn:1.20.1+build.10:v2`）|
+| Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
+| Gradle | Gradle 8.5+ / 8.6+ |
+| Mappings | **Yarn**（`net.fabricmc:yarn:1.21.3+build.2:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
+
+### 重要版本变化（1.20.1 → 1.21.3）
+
+> ⚠️ **Fabric API 0.110.x 重大变化**：
+> - `fabric-networking-api-v1` 方法签名变更（`ServerPlayNetworking` 等）
+> - `fabric-attachment-api-v1`：用 `AttachmentRegistry`，不是 NeoForge `getData`
+> - `fabric-language-kotlin` 需要特定版本兼容 1.21+
+>
+> ⚠️ **Pack Format**: `pack 42`（从 pack 22 升级；34 是 1.21–1.21.1 的值，勿混用。
+> 数据包是另一套数值，1.21.3 为 57）
+>
+> ⚠️ **Java**: 必须使用 Java 21（不再支持 Java 17）
 
 ---
 
@@ -35,17 +47,28 @@ Decision: 本规则集是否适用？
         → 检查 build.gradle 中 Loom 配置
         → 继续加载本规则集（Fabric 1.21.3）
     → ELSE → fabric.mod.json schema 版本不匹配，跳转根目录 AGENTS.md
-→ ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml
-    → 这是 Forge 项目，跳转到 ../forge/1.20.1/AGENTS.md
+→ ELSE IF 项目中存在 src/main/resources/META-INF/mods.toml 或 neoforge.mods.toml
+    → 回根目录 AGENTS.md 重判平台与精确版本。Forge 1.21.1 无规则树（PACK_NOT_FOUND）；NeoForge 读 neoforge/<精确版本>
 → ELSE → 无法判断，询问用户确认平台和版本
 ```
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -147,12 +170,33 @@ fabric-mod/
 
 ### Minecraft 版本兼容性
 
-- Fabric 1.20.1 支持 Minecraft 1.20.1
-- Fabric Loader 0.15.x（推荐 0.15.11）
-- Fabric API 0.91.x for 1.20.1
-- Java 17+
+- Fabric 1.21.3 支持 Minecraft 1.21.3
+- Fabric Loader 0.16.x（推荐 0.16.9）
+- Fabric API 0.110.0+1.21.3 for 1.21.3
+- Java 21+
 
 ---
+
+
+## 1.21.x 网络与 Attachment
+
+网络：`CustomPayload` + `PayloadTypeRegistry.playC2S()` / `playS2C()` + `ServerPlayNetworking` / `ClientPlayNetworking`。不要 `FabricPacket`、`ClientSidePacketRegistry`。Yarn 用 `Identifier.of` 与 `net.minecraft.util.Identifier`。
+
+Attachment（替代「能力」附加数据）：
+
+```java
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.util.Identifier;
+
+public static final AttachmentType<Integer> CLICKS =
+    AttachmentRegistry.create(Identifier.of(MOD_ID, "clicks"));
+
+entity.setAttached(CLICKS, 1);
+Integer n = entity.getAttached(CLICKS);
+```
+
+不要用 NeoForge 的 `Registries.ATTACHMENT_TYPE` / `getData` / `setData`。
 
 ## 规则文件索引
 
@@ -164,11 +208,11 @@ fabric-mod/
 02-block.mdc            → 方块开发
 03-item.mdc             → 物品开发
 04-entity.mdc           → 实体开发
-05-events.mdc           → 事件系统
+05-events.mdc            → 事件系统
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 
@@ -202,3 +246,18 @@ fabric-mod/
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
 - [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+
+<!-- MC_SKILL_WORKFLOW_NOTE -->
+
+## 工作流提醒（人在环）
+
+完整流程（从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 发布 / 反编译研究）才调 `get_workflow_template`；改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。
+
+- 汉化：`localize_mod`（diff / draft_zh / jar extract / pack_draft；无机器翻译）。
+- 崩溃分诊：`crash_analyze`。
+- 发布：`mc-publish` 工作流 + `check_publish_ready`；不代跑 Gradle、不拷 jar、不上传。
+- 写盘 / Gradle / 拷 jar / 上传均须用户确认（人在环）。

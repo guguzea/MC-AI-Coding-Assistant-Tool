@@ -10,7 +10,7 @@
 ### 核心原则
 
 - 必须 `Registry.register`；只 `new` 不注册的对象不会出现在游戏中
-- **所有注册**必须在 `onInitialize()` 方法（或 entrypoint）中通过 `Registry.register()` 执行
+- **所有注册**必须经由主入口触发：在 `onInitialize()`（或它调用的 `ModItems.initialize()` 等）里执行 `Registry.register()`。允许静态字段由 initialize 触发；**禁止**无 entrypoint 的类加载副作用注册
 - Fabric **没有** modEventBus，所有注册直接调用 `Registry`
 - mod ID 必须与 `fabric.mod.json` 中的 `id` 完全一致
 - 使用 Yarn `Identifier.of(MOD_ID, "registry_name")`（1.21 构造器是 private；不要写 `new Identifier`，也不要抄 Mojmap `ResourceLocation`）
@@ -25,7 +25,7 @@
 | 实体类型 | `Registry.register(Registries.ENTITY_TYPE, id, type)` | `onInitialize()` |
 | 粒子类型 | `Registry.register(Registries.PARTICLE_TYPE, id, type)` | `onInitialize()` |
 | 声音事件 | `Registry.register(Registries.SOUND_EVENT, id, soundEvent)` | `onInitialize()` |
-| 附魔 | `Registry.register(Registries.ENCHANTMENT, id, enchantment)` | `onInitialize()` |
+| 附魔 | DataGen `bootstrap()` + `register()`（`FabricDynamicRegistryProvider`）。`Registries.ENCHANTMENT` 只作 tag provider 的 `registryKey`。**不要**在 `onInitialize()` 里 `Registry.register(Registries.ENCHANTMENT, ...)` | DataGen |
 | 流体 | `Registry.register(Registries.FLUID, id, fluid)` | `onInitialize()` |
 
 ### mod ID 规范
@@ -56,8 +56,12 @@ Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "myAwesomeItem"), myIte
 ### Decision: 选择注册方式
 
 ```
-IF 注册 方块 / 物品 / 实体 / 方块实体 / 附魔 / 粒子 / 声音等标准内容
+IF 注册 方块 / 物品 / 实体 / 方块实体 / 粒子 / 声音等标准内容
   → 使用 Registry.register() 在 onInitialize() 中执行
+
+IF 注册 附魔
+  → 1.21.x 数据驱动：DataGen 生成器的 `bootstrap()` 里 `register()`，见 07-datagen
+  → `Registries.ENCHANTMENT` 只给 `FabricTagProvider<Enchantment>` 当 registryKey
 
 IF 注册 方块实体类型
   → Registry.register(Registries.BLOCK_ENTITY_TYPE, id, BlockEntityType)
@@ -86,6 +90,10 @@ IF 一个方块有 BlockEntity
 
 IF 一个物品有 Fabric API Capability
   → Capability 注册应在 onInitialize() 中通过 Fabric API 处理
+
+IF 附加数据（Attachment）
+  → `fabric-attachment-api-v1`：`AttachmentRegistry.create`（见 AGENTS「1.21.x 网络与 Attachment」与 `mc-capability` Skill）
+  → 不要用 NeoForge `Registries.ATTACHMENT_TYPE` / `getData` / `setData`；不要用 Forge Capability
 ```
 
 ---
@@ -104,7 +112,7 @@ public class ExampleMod implements ModInitializer {
 
     private static final Block MY_BLOCK =
         Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"),
-            new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f)));
+            new Block(AbstractBlock.Settings.copy(Blocks.STONE).strength(1.5f)));
 
     // BlockItem 与方块同名注册
     private static final Item MY_BLOCK_ITEM =

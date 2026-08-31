@@ -527,11 +527,9 @@ async function main() {
       continue;
     }
     writeFileSync(dest, got.buf);
-    if (mv) {
-      const side = { mappingsVersion: mv, mappingsSource: "mdk-gradle.properties", coord, url: got.url };
-      writeFileSync(`${dest}.mappings.json`, JSON.stringify({ ...side, from: side.mappingsSource }, null, 2));
-      writeFileSync(`${dest}.sidecar`, JSON.stringify(side, null, 2));
-    }
+    const side = { mappingsVersion: mv ?? null, mappingsSource: mv ? "mdk-gradle.properties" : "missing", coord, url: got.url };
+    writeFileSync(`${dest}.mappings.json`, JSON.stringify({ ...side, from: side.mappingsSource }, null, 2));
+    writeFileSync(`${dest}.sidecar`, JSON.stringify(side, null, 2));
     if (!got.buf.includes(Buffer.from(".java"))) {
       log.push({ root, coord, key, warning: "downloaded jar has no .java entries; sources classifier 优先但仍可能是 userdev" });
     }

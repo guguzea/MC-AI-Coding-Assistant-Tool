@@ -470,7 +470,7 @@ Cursor 主路径是 **tools**；协议层仍注册 Prompt/Resource，工具兜�
 
 ## Agent Skills（**35** 个 Forge 唯一名 + 平台扩展，多 IDE 镜像）
 
-路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 已用 `scripts/propagate-wave-d-skills.mjs` 同步到各平台/版本，再经 `scripts/sync-skills.ps1 -All` 镜像到各 IDE。
+路径示例：`forge/1.20.1/.agents/skills/<name>/`（另有 `.cursor` / `.continue` / `.opencode` / `.zcode` 等宿主镜像）。Wave D 新增 skill 曾用 `scripts/_oneoff/propagate-wave-d-skills.mjs` 同步（一次性，勿再跑），日常镜像用 `scripts/sync-skills.ps1 -All`。
 
 > 库模组 Skill（`mc-config` / `mc-geckolib` / `mc-curios` / `mc-patchouli` 等）**不落盘**：源稿在根目录 `knowledge/libs/<group>/mc-<name>/SKILL.md`（`all-platforms` / `fabric-only` / `neo-only` / `forge-only` / `bedrock-only`），按 AGENTS.md「库模组 Skill」解析规则使用；`propagate-wave-d-skills.mjs` 与平台 `.cursor/skills` **不再包含库项**。当前库源稿：all-platforms 20 + fabric-only 9 + forge-only 2 + neo-only 2（Curios/KFF 镜像）+ bedrock-only 2 = **35 份** / **33 唯一 skillId**（以 `knowledge/libs` 实际源稿为准）。
 
@@ -787,7 +787,7 @@ jar 未缓存时返回 `CACHE_MISS` 引导（先调 `get_minecraft_source`），
 
 工作流模板通过 `registerPrompt` 注册（支持 prompts 的客户端可用）；数量以 `get_workflow_template` 列表为准。Cursor 等仅 tools 客户端用该工具获取同款全文。
 
-这些模板是 **Agent 步骤清单**（人在环）：对齐创意与版本取舍后给出检索/草稿/校验顺序。不代跑 Gradle、不自动拷 mods、不上传商店——高风险步骤写明「用户确认后执行」，这是设计。
+这些模板是 **Agent 步骤清单**（人在环）：对齐创意与版本取舍后给出检索/草稿/校验顺序。**没有** Gradle / 拷 jar 进游戏目录 / 上传发布的 MCP 工具；`mc-build-mod` / `mc-ingame-iterate` 只列步骤，须用户确认后在本机执行。不代跑 Gradle、不自动拷 mods、不上传商店——高风险步骤写明「用户确认后执行」，这是设计。
 
 
 | 模板名               | 标题      | 流程要点                                                                                                              |

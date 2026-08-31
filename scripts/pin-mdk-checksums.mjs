@@ -43,7 +43,7 @@ async function ghJson(url) {
   if (process.env.GITHUB_TOKEN || process.env.MC_SKILL_GITHUB_TOKEN) {
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN || process.env.MC_SKILL_GITHUB_TOKEN}`;
   }
-  const res = await fetch(url, { headers, redirect: "follow" });
+  const res = await fetch(url, { headers, redirect: "follow", signal: AbortSignal.timeout(30_000) });
   return { status: res.status, json: res.ok ? await res.json() : null, url };
 }
 
@@ -133,7 +133,13 @@ async function main() {
     console.error("need mcp-server dist: cd mcp-server && npm run build");
     process.exit(1);
   }
-  const raw = JSON.parse(readFileSync(CHECKSUMS, "utf8"));
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(CHECKSUMS, "utf8"));
+  } catch (e) {
+    console.error(`无法解析 ${CHECKSUMS}: ${e.message}`);
+    process.exit(1);
+  }
   const planned = [];
   const skipped = [];
 

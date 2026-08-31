@@ -96,6 +96,7 @@ export function buildFtsQuery(query: string): string | null {
 }
 
 const _dbCache = new Map<string, { db: DatabaseSync | null; mtime: number; size: number }>();
+const SEMANTIC_DB_CACHE_MAX = 8;
 
 type EmbMatrixCache = {
   mtime: number;
@@ -141,7 +142,19 @@ function loadEmbeddingMatrix(db: DatabaseSync, dbPath: string): EmbMatrixCache |
   const kept: Float32Array[] = [];
   for (const r of rows) {
     if (r.embedding.byteLength < EMBEDDING_DIM * 4) continue;
-    kept.push(new Float32Array(r.embedding.buffer, r.embedding.byteOffset, EMBEDDING_DIM));
+    let vec: Float32Array;
+    try {
+      if (r.embedding.byteOffset % 4 === 0) {
+        vec = new Float32Array(r.embedding.buffer, r.embedding.byteOffset, EMBEDDING_DIM);
+      } else {
+        throw new RangeError("unaligned");
+      }
+    } catch {
+      const copy = new Uint8Array(EMBEDDING_DIM * 4);
+      copy.set(r.embedding.subarray(0, EMBEDDING_DIM * 4));
+      vec = new Float32Array(copy.buffer);
+    }
+    kept.push(vec);
     chunkIds.push(r.chunk_id);
     docIds.push(r.doc_id);
   }
@@ -149,6 +162,11 @@ function loadEmbeddingMatrix(db: DatabaseSync, dbPath: string): EmbMatrixCache |
   kept.forEach((v, i) => matrix.set(v, i * EMBEDDING_DIM));
   const packed: EmbMatrixCache = { mtime: st.mtimeMs, size: st.size, chunkIds, docIds, matrix };
   _embMatrixCache.set(dbPath, packed);
+  while (_embMatrixCache.size > SEMANTIC_DB_CACHE_MAX) {
+    const oldest = _embMatrixCache.keys().next().value;
+    if (oldest === undefined) break;
+    _embMatrixCache.delete(oldest);
+  }
   return packed;
 }
 
@@ -186,6 +204,19 @@ export function openSemanticDb(dbPath: string): DatabaseSync | null {
       db = null;
     }
     _dbCache.set(dbPath, { db, mtime: st.mtimeMs, size: st.size });
+    while (_dbCache.size > SEMANTIC_DB_CACHE_MAX) {
+      const oldest = _dbCache.keys().next().value;
+      if (oldest === undefined) break;
+      const evicted = _dbCache.get(oldest);
+      _dbCache.delete(oldest);
+      if (oldest !== dbPath) {
+        try {
+          evicted?.db?.close();
+        } catch {
+          /* ignore */
+        }
+      }
+    }
   }
   return db;
 }

@@ -25,10 +25,14 @@ BP `minecraft:block` / `minecraft:item` + RP 纹理引用。identifier 必须 `n
   "format_version": "1.21.80",
   "minecraft:block": {
     "description": { "identifier": "demo:die" },
-    "components": {}
+    "components": {
+      "minecraft:geometry": "minecraft:geometry.full_block"
+    }
   }
 }
 ```
+
+`format_version` **1.21.80+** 的方块模板**必须**带 `minecraft:geometry`（Learn custom-block）。不要输出空 `components: {}`。
 
 `description.identifier` 必须带命名空间。组件只从 `stable/block-components` 抄，例如已出现在该页的 `minecraft:collision_box`、`minecraft:geometry`、`minecraft:friction`、`minecraft:light_emission`、`minecraft:destructible_by_mining`、`minecraft:flammable`。标 Legacy / experimental / Upcoming-Creator-Features 的条目未点名实验不要用。
 

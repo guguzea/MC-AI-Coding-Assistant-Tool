@@ -113,14 +113,23 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     if (!key) continue;
     const ns = textureNamespaceFromRel(r) ?? "";
     if (!texturesByNs.has(ns)) texturesByNs.set(ns, new Map());
-    // 旧实现用裸 key，多命名空间同名纹理会互相覆盖——这里按 ns 分桶，不再覆盖
-    texturesByNs.get(ns)!.set(key, r);
+    const bucket = texturesByNs.get(ns)!;
+    const prev = bucket.get(key);
+    if (prev && prev !== r) {
+      issues.push({
+        severity: "warn",
+        path: r,
+        message: `同命名空间 ${ns || "(default)"} 下纹理 key「${key}」重复，保留先出现的 ${prev}，忽略 ${r}`,
+      });
+    } else {
+      bucket.set(key, r);
+    }
   }
   const referenced = new Set<string>();
 
   for (const file of all) {
     const r = rel(file);
-    if (!MODEL_EXT.test(file) || !r.includes("/models/")) continue;
+    if (!MODEL_EXT.test(file) || !/(^|\/)models\//.test(r.replace(/\\/g, "/"))) continue;
     try {
       const json = parseJsonUtf8(readFileSync(file, "utf8")) as unknown;
       collectModelTextures(json, referenced);

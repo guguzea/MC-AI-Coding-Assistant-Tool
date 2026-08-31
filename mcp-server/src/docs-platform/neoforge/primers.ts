@@ -120,7 +120,13 @@ export function loadNeoForgePrimers(dataRoot = resolveDataDir()): PrimerEntry[] 
   for (const name of readdirSync(dir)) {
     if (!name.endsWith(".md")) continue;
     const filePath = join(dir, name);
-    const raw = readFileSync(filePath, "utf8");
+    let raw: string;
+    try {
+      raw = readFileSync(filePath, "utf8");
+    } catch (err) {
+      console.warn(`[primers] skip unreadable ${filePath}: ${(err as Error).message}`);
+      continue;
+    }
     const { fm, body } = parseFrontmatter(raw);
     const slug = (fm.primerKey || name.replace(/\.md$/, "")).trim();
     const to = (fm.to || slug).trim();

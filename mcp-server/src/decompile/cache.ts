@@ -209,26 +209,32 @@ function writeOwner(lockDir: string): void {
 /** 持锁方心跳：续租 owner.at（同时刷新目录 mtime），防止长任务（VineFlower 可超时窗）被误抢占。 */
 const lockHeartbeats = new Map<string, NodeJS.Timeout>();
 
+function lockHeartbeatKey(root: string, name: string): string {
+  return `${root}\0${name}`;
+}
+
 function startLockHeartbeat(root: string, name: string, lockDir: string, timeoutMs: number): void {
-  stopLockHeartbeat(name);
+  stopLockHeartbeat(root, name);
   const interval = Math.max(1_000, Math.min(Math.floor(timeoutMs / 3), 30_000));
+  const key = lockHeartbeatKey(root, name);
   const timer = setInterval(() => {
     try {
       writeOwner(lockDir);
     } catch {
       /* 锁目录被异常移除时停止续租 */
-      stopLockHeartbeat(name);
+      stopLockHeartbeat(root, name);
     }
   }, interval);
   timer.unref?.();
-  lockHeartbeats.set(name, timer);
+  lockHeartbeats.set(key, timer);
 }
 
-function stopLockHeartbeat(name: string): void {
-  const timer = lockHeartbeats.get(name);
+function stopLockHeartbeat(root: string, name: string): void {
+  const key = lockHeartbeatKey(root, name);
+  const timer = lockHeartbeats.get(key);
   if (timer) {
     clearInterval(timer);
-    lockHeartbeats.delete(name);
+    lockHeartbeats.delete(key);
   }
 }
 
@@ -311,7 +317,7 @@ export async function acquireCacheLock(
     if (!tryAcquire()) return null;
     startLockHeartbeat(root, name, lockDir, timeoutMs);
     return () => {
-      stopLockHeartbeat(name);
+      stopLockHeartbeat(root, name);
       rmSync(lockDir, { recursive: true, force: true });
     };
   };

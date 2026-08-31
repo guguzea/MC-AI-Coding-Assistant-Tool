@@ -48,6 +48,7 @@ function parseArgs(argv) {
     maxDepth: 12,
     maxVersions: 40,
     maxFileKb: 2048,
+    write: false,
   };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -62,6 +63,7 @@ function parseArgs(argv) {
       case '--max-depth': opt.maxDepth = Number(argv[++i]); break;
       case '--max-versions': opt.maxVersions = Number(argv[++i]); break;
       case '--max-file-kb': opt.maxFileKb = Number(argv[++i]); break;
+      case '--write': opt.write = true; break;
       case '-h': case '--help':
         console.log(`用法: node scripts/build-api-summaries.mjs [--only <slug|id|modId>] [--out <dir>] [--cache s1,s2,s3] [--max-* <n>]`);
         process.exit(0);
@@ -279,7 +281,7 @@ function collectJavaFiles(dir, relPkg, prefixes, out, maxFiles, depth, maxDepth)
 const CLASS_RE = /^(public\s+(?:(?:abstract|final|sealed|non-sealed|static)\s+)*(?:class|interface|enum|record)\s+)([A-Za-z_$][\w$]*)/;
 // Kotlin 反编译形态（Kotlin 类默认 public，VineFlower 输出 open class / object / fun）
 const KCLASS_RE = /^(?:(?:public)\s+)?(?:(?:abstract|final|open|sealed|data|value)\s+)*(?:enum\s+)?(?:class|interface|object|annotation)\s+([A-Za-z_$][\w$]*)/;
-const KOTLIN_MARKER = /(@SourceDebugExtension|import kotlin\.|\bopen class|\bsealed class|\bdata class|\benum class|\bobject [A-Za-z_$]|\bfun\s+[A-Za-z_$]|\bval\s+[A-Za-z_$]|\bvar\s+[A-Za-z_$])/;
+const KOTLIN_MARKER = /(@SourceDebugExtension|import kotlin\.|\bopen class|\bsealed class|\bdata class|\benum class|\bobject [A-Za-z_$]|\bfun\s+[A-Za-z_$]|\bval\s+[A-Za-z_$])/;
 const REJECT_WORDS = new Set(['new', 'return', 'this', 'super', 'case', 'throw', 'assert', 'class', 'instanceof', 'if', 'while', 'for', 'switch', 'catch']);
 // '>' 覆盖 switch 箭头 (-> foo())；+ - * / % 覆盖字段初始化里的算术调用
 const REJECT_CHARS = new Set(['.', '=', '(', ',', '!', '?', ':', ';', '[', ')', '{', '}', '>', '-', '+', '*', '/', '%']);
@@ -581,10 +583,8 @@ function processLib(entry, opt) {
   let classCount = 0;
   let methodCount = 0;
   let truncated = false;
-  let capsHit = false;
 
   for (const ver of versionDirs) {
-    // 文件：逐来源目录收集（合并模式按目录去重）
     const fileSet = new Set();
     for (const sd of srcDirs) {
       const verDir = path.join(sd.dir, ver);
@@ -600,9 +600,11 @@ function processLib(entry, opt) {
     const methods = {};
     const sizeCapBytes = opt.maxFileKb * 1024;
     let verTruncated = false;
+    let verClassCount = 0;
+    let verMethodCount = 0;
 
     for (const f of files) {
-      if (classCount >= opt.maxClasses || methodCount >= opt.maxMethods) { verTruncated = true; break; }
+      if (verClassCount >= opt.maxClasses || verMethodCount >= opt.maxMethods) { verTruncated = true; break; }
       let src;
       try {
         const st = fs.statSync(f);
@@ -611,7 +613,6 @@ function processLib(entry, opt) {
       } catch { continue; }
       const isKotlin = KOTLIN_MARKER.test(src);
       if (!isKotlin && !/(^|[^A-Za-z0-9_$])(public|protected|default)\s/.test(src)) continue;
-      // 包名取自相对路径（相对该文件所属来源目录的版本目录；取最长前缀目录，避免 cardinal-components 误配 -base）
       const srcDir = srcDirs.filter((sd) => f.startsWith(sd.dir)).sort((a, b) => b.dir.length - a.dir.length)[0] ?? srcDirs[0];
       const rel = path.relative(path.join(srcDir.dir, ver), f);
       const segs = rel.split(path.sep);
@@ -619,24 +620,24 @@ function processLib(entry, opt) {
       let clsList;
       try { clsList = scanJavaFile(src, opt.maxMethodsPerClass, isKotlin); } catch { continue; }
       for (const cls of clsList) {
-        if (classCount >= opt.maxClasses || methodCount >= opt.maxMethods) { verTruncated = true; break; }
+        if (verClassCount >= opt.maxClasses || verMethodCount >= opt.maxMethods) { verTruncated = true; break; }
         const fqn = pkg ? `${pkg}.${cls.name}` : cls.name;
         if (classes.includes(fqn)) continue;
         classes.push(fqn);
+        verClassCount++;
         classCount++;
         const m = [];
         for (const mm of cls.methods) {
-          if (methodCount >= opt.maxMethods) { verTruncated = true; break; }
+          if (verMethodCount >= opt.maxMethods) { verTruncated = true; break; }
           if (m.length >= opt.maxMethodsPerClass) break;
           m.push(mm.sig);
+          verMethodCount++;
           methodCount++;
         }
         methods[fqn] = m;
       }
     }
-    if (verTruncated || classCount >= opt.maxClasses || methodCount >= opt.maxMethods) {
-      truncated = true;
-    }
+    if (verTruncated) truncated = true;
     versions[ver] = {
       packages: entry.prefixes,
       classes,
@@ -670,6 +671,10 @@ function processLib(entry, opt) {
     methodCount,
     ...(truncated ? { truncated: true } : {}),
   };
+  if (!opt.write) {
+    console.log(`[dry-run] ${slug} | 版本 ${Object.keys(versions).length} | 类 ${classCount} | 方法 ${methodCount}（加 --write 才落盘）`);
+    return result;
+  }
   fs.writeFileSync(
     path.join(opt.out, `${slug}.json`),
     JSON.stringify(result, null, 2),
@@ -689,7 +694,7 @@ function processLib(entry, opt) {
 // ---------- main ----------
 function main() {
   const opt = parseArgs(process.argv.slice(2));
-  fs.mkdirSync(opt.out, { recursive: true });
+  if (opt.write) fs.mkdirSync(opt.out, { recursive: true });
   loadJsonlDirs();
   const entries = parseCatalog();
   console.log(`库清单: ${entries.length} 条 (${CATALOG_PATH})`);
@@ -721,9 +726,11 @@ function main() {
   // 产物大小
   let totalBytes = 0;
   let fileCount = 0;
-  for (const f of fs.readdirSync(opt.out)) {
-    const p = path.join(opt.out, f);
-    try { totalBytes += fs.statSync(p).size; fileCount++; } catch { /* ignore */ }
+  if (opt.write && fs.existsSync(opt.out)) {
+    for (const f of fs.readdirSync(opt.out)) {
+      const p = path.join(opt.out, f);
+      try { totalBytes += fs.statSync(p).size; fileCount++; } catch { /* ignore */ }
+    }
   }
   console.log(`\n===== 汇总 =====`);
   console.log(`成功 ${ok} / 处理 ${filtered.length} (共 ${entries.length} 条)`);

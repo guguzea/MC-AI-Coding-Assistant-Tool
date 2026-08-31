@@ -72,7 +72,7 @@ export function classToRelPath(className: string): { ok: boolean; relPath?: stri
   return { ok: true, relPath };
 }
 
-function readSnippet(file: string, lines?: [number, number]): { totalLines: number; snippet: SourceSnippetLine[] } {
+function readSnippet(file: string, lines?: [number, number]): { totalLines: number; snippet: SourceSnippetLine[]; error?: string } {
   const text = readFileSync(file, "utf8");
   const all = text.split(/\r?\n/);
   const total = all.length;
@@ -80,10 +80,11 @@ function readSnippet(file: string, lines?: [number, number]): { totalLines: numb
   let end = Math.min(total, SNIPPET_DEFAULT_LINES);
   if (Array.isArray(lines) && lines.length === 2) {
     const [s, e] = lines;
-    if (Number.isFinite(s) && Number.isFinite(e) && s >= 1 && e >= s) {
-      start = Math.min(s, total);
-      end = Math.min(e, total);
+    if (!Number.isFinite(s) || !Number.isFinite(e) || s < 1 || e < s) {
+      return { totalLines: total, snippet: [], error: `非法 lines 区间 [${s}, ${e}]，须 1-based 且 start<=end，禁止静默改范围` };
     }
+    start = Math.min(s, total);
+    end = Math.min(e, total);
   }
   const snippet: SourceSnippetLine[] = [];
   for (let i = start; i <= end; i++) {
@@ -151,7 +152,11 @@ export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<Min
 
   // 3. 缓存命中（非 force）
   if (!args.force && existsSync(sourceFile) && statSync(sourceFile).size > 0) {
-    const { totalLines, snippet } = readSnippet(sourceFile, args.lines);
+    const sn = readSnippet(sourceFile, args.lines);
+    if (sn.error) {
+      return toErrorResult("INVALID_INPUT", actionable("INVALID_INPUT", sn.error, ["传入 lines=[start,end]，1-based 且 start<=end"]), { version });
+    }
+    const { totalLines, snippet } = sn;
     return {
       found: true,
       version,
@@ -195,7 +200,11 @@ export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<Min
     } finally {
       db.close();
     }
-    const { totalLines, snippet } = readSnippet(file, args.lines);
+    const sn = readSnippet(file, args.lines);
+    if (sn.error) {
+      return toErrorResult("INVALID_INPUT", actionable("INVALID_INPUT", sn.error, ["传入 lines=[start,end]，1-based 且 start<=end"]), { version });
+    }
+    const { totalLines, snippet } = sn;
     return {
       found: true,
       version,

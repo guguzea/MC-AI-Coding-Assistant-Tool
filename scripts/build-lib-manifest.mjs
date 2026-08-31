@@ -18,6 +18,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { wantWrite, logDryRunBanner } from "./_lib/write-guard.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -73,7 +74,12 @@ function walkFiles(dir, ext, out = []) {
   if (!existsSync(dir)) return out;
   for (const name of readdirSync(dir)) {
     const p = join(dir, name);
-    const st = statSync(p);
+    let st;
+    try {
+      st = statSync(p);
+    } catch {
+      continue;
+    }
     if (st.isDirectory()) walkFiles(p, ext, out);
     else if (name.endsWith(ext)) out.push(p);
   }
@@ -290,6 +296,23 @@ async function main() {
   }
 
   // 4. 写盘
+  const WRITE = wantWrite();
+  if (!WRITE) {
+    logDryRunBanner("build-lib-manifest");
+    console.log(`将写入 ${manifest.length} 库 / ${totalEntries} 条目；失败 ${failed.length}`);
+    if (failed.length > 0) {
+      console.log("失败/跳过：");
+      for (const f of failed) console.log(`  ⚠️ ${f}`);
+    }
+    return;
+  }
+  if (failed.length > 0 && existsSync(OUT_FILE) && !process.argv.includes("--force")) {
+    console.error(`[manifest] ${failed.length} 个 slug 失败，拒绝覆盖已有 ${OUT_FILE}（加 --force 才覆盖，或修失败项后 --write）`);
+    process.exit(2);
+  }
+  if (existsSync(OUT_FILE)) {
+    writeFileSync(`${OUT_FILE}.bak`, readFileSync(OUT_FILE));
+  }
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT_FILE, JSON.stringify(manifest, null, 2), "utf8");
 

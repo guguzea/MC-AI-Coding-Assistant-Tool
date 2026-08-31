@@ -74,7 +74,6 @@ function tokenize(text) {
 }
 
 function dice(aTokens, bTokens) {
-  if (aTokens.length === 0 && bTokens.length === 0) return 1;
   if (aTokens.length === 0 || bTokens.length === 0) return 0;
   const a = new Map();
   for (const t of aTokens) a.set(t, (a.get(t) ?? 0) + 1);

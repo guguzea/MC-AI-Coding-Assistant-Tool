@@ -32,13 +32,13 @@ export const VINEFLOWER_DEF: ResourceDef = {
   note: "Java 17+ 反编译器（LGPL-3.0）",
 };
 
-/** tiny-remapper 0.14.0（Fabric maven；2026-08 实测 SHA256） */
+/** tiny-remapper 0.14.0 fat（含 ASM + mapping-io；0.14.0 已删 --forceLocal） */
 export const TINY_REMAPPER_DEF: ResourceDef = {
   id: "tiny-remapper",
-  version: "0.14.0",
-  url: "https://maven.fabricmc.net/net/fabricmc/tiny-remapper/0.14.0/tiny-remapper-0.14.0.jar",
-  sha256: "0a86f606ca086bd7f90cededa884d23d014696a7d97a8bedc159f9efc5e6026a",
-  note: "JAR remapper（Apache-2.0）",
+  version: "0.14.0-fat",
+  url: "https://maven.fabricmc.net/net/fabricmc/tiny-remapper/0.14.0/tiny-remapper-0.14.0-fat.jar",
+  sha256: "9dbaf8030981338373abe029cd9c07732bff437887a56de1735ba2c3c76b0acf",
+  note: "JAR remapper fat（Apache-2.0；内含 ASM / mapping-io）",
 };
 
 export class DownloadDisabledError extends Error {

@@ -26,7 +26,7 @@ description: 05 — 事件系统
 | `EventPriority` | Fabric **Phase**（`Event.DEFAULT_PHASE`），不是 Forge 的优先级枚举 |
 | `event.setCanceled(true)` | 返回 `ActionResult` / `boolean`；不是 `CanceledEvent` |
 
-不要编造 `ItemEvents` / `BlockEvents` / `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。
+不要编造 `EntityEvents` / `PlayerTickEvents` / `EntityTickEvents` / `AttackEvents`。`BlockEvents` / `ItemEvents` 若出现在本档 Fabric API 文档中则按其签名使用，不要当「编造名」一笔抹掉。
 
 ---
 
@@ -211,7 +211,7 @@ modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_versi
 - ❌ 在客户端 lambda 里改服务端世界数据 — 用 `world.isClient` 区分，写世界只在服务端
 - ❌ 忘记处理返回值 — `ActionResult` / `TypedActionResult` / `boolean` 决定是否取消或消费
 - ❌ 把 `PlayerBlockBreakEvents.BEFORE` 当成 `ActionResult` — 它是 `boolean`
-- ❌ 用 `ItemEvents` / `BlockEvents` / `PlayerTickEvents` — 不是本档 Fabric API
+- ❌ 用 `PlayerTickEvents` — 不是本档 Fabric API（`BlockEvents` / `ItemEvents` 以本档 FAPI 为准，不要当编造名）
 
 ## 扩展点
 

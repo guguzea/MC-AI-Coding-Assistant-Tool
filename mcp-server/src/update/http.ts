@@ -116,7 +116,34 @@ function headersToPairs(init?: RequestInit): Array<[string, string]> {
   return out;
 }
 
+function isAllowedGithubHost(hostname: string): boolean {
+  const h = hostname.toLowerCase();
+  if (h === "api.github.com" || h === "github.com" || h === "objects.githubusercontent.com" || h === "release-assets.githubusercontent.com") {
+    return true;
+  }
+  const envBase = process.env.MC_SKILL_GITHUB_API_BASE;
+  if (envBase) {
+    try {
+      return new URL(envBase).hostname.toLowerCase() === h;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
+
+function assertAllowedGithubUrl(url: string): void {
+  const parsed = new URL(url);
+  if (parsed.protocol !== "https:") {
+    throw new Error(`拒绝非 HTTPS 重定向: ${parsed.protocol}`);
+  }
+  if (!isAllowedGithubHost(parsed.hostname)) {
+    throw new Error(`拒绝重定向到未白名单主机: ${parsed.hostname}`);
+  }
+}
+
 async function nodeFetch(url: string, init?: RequestInit): Promise<Response> {
+  assertAllowedGithubUrl(url);
   const timeoutMs = githubTimeoutMs();
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), timeoutMs);
@@ -134,16 +161,23 @@ async function nodeFetch(url: string, init?: RequestInit): Promise<Response> {
       signal,
       redirect: init?.redirect ?? "follow",
     };
-    return await fetch(url, opts);
+    const res = await fetch(url, opts);
+    if (res.url) assertAllowedGithubUrl(res.url);
+    return res;
   } finally {
     clearTimeout(timer);
   }
+}
+
+function curlSafeToken(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/[\r\n]/g, "");
 }
 
 export async function curlGetToBuffer(
   url: string,
   init?: RequestInit,
 ): Promise<{ status: number; body: Buffer }> {
+  assertAllowedGithubUrl(url);
   const timeoutSec = Math.max(5, Math.ceil(githubTimeoutMs() / 1000));
   const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-w", "\n__MC_SKILL_HTTP_STATUS__:%{http_code}"];
   const proxy = proxyUrl();
@@ -151,19 +185,28 @@ export async function curlGetToBuffer(
   const configLines: string[] = [];
   for (const [k, v] of headersToPairs(init)) {
     if (k.toLowerCase() === "authorization") {
-      configLines.push(`header = "Authorization: ${v.replace(/"/g, '\\"')}"`);
+      configLines.push(`header = "Authorization: ${curlSafeToken(v).replace(/"/g, '\\"')}"`);
       continue;
     }
-    args.push("-H", `${k}: ${v}`);
+    args.push("-H", `${curlSafeToken(k)}: ${curlSafeToken(v)}`);
   }
   if (configLines.length) args.push("-K", "-");
-  args.push(url);
-  const { stdout } = await execFileStdin("curl.exe", args, {
-    encoding: "buffer",
-    maxBuffer: 32 * 1024 * 1024,
-    windowsHide: true,
-    input: configLines.length ? Buffer.from(configLines.join("\n") + "\n") : undefined,
-  });
+  args.push(curlSafeToken(url));
+  let stdout: Buffer;
+  try {
+    ({ stdout } = await execFileStdin("curl.exe", args, {
+      encoding: "buffer",
+      maxBuffer: 32 * 1024 * 1024,
+      windowsHide: true,
+      input: configLines.length ? Buffer.from(configLines.join("\n") + "\n") : undefined,
+    }));
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
+      throw new Error("curl 输出超过 32MB 上限");
+    }
+    throw err;
+  }
   const text = stdout.toString("utf8");
   const m = text.match(/\n__MC_SKILL_HTTP_STATUS__:(\d+)\s*$/);
   const status = m ? Number(m[1]) : 0;
@@ -178,25 +221,35 @@ export async function curlGetToFile(
   timeoutMs?: number,
 ): Promise<{ status: number }> {
   const timeoutSec = Math.max(5, Math.ceil((timeoutMs ?? githubTimeoutMs()) / 1000));
+  assertAllowedGithubUrl(url);
   const args = ["-sS", "-L", "--ssl-no-revoke", "--max-time", String(timeoutSec), "-o", destPath, "-w", "%{http_code}"];
   const proxy = proxyUrl();
   if (proxy) args.push("-x", proxy);
   const configLines: string[] = [];
   for (const [k, v] of headersToPairs(init)) {
     if (k.toLowerCase() === "authorization") {
-      configLines.push(`header = "Authorization: ${v.replace(/"/g, '\\"')}"`);
+      configLines.push(`header = "Authorization: ${curlSafeToken(v).replace(/"/g, '\\"')}"`);
       continue;
     }
-    args.push("-H", `${k}: ${v}`);
+    args.push("-H", `${curlSafeToken(k)}: ${curlSafeToken(v)}`);
   }
   if (configLines.length) args.push("-K", "-");
-  args.push(url);
-  const { stdout } = await execFileStdin("curl.exe", args, {
-    encoding: "utf8",
-    maxBuffer: 1024,
-    windowsHide: true,
-    input: configLines.length ? configLines.join("\n") + "\n" : undefined,
-  });
+  args.push(curlSafeToken(url));
+  let stdout: string;
+  try {
+    ({ stdout } = await execFileStdin("curl.exe", args, {
+      encoding: "utf8",
+      maxBuffer: 1024,
+      windowsHide: true,
+      input: configLines.length ? configLines.join("\n") + "\n" : undefined,
+    }));
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
+      throw new Error("curl 输出超过缓冲区上限");
+    }
+    throw err;
+  }
   return { status: Number(stdout.trim()) || 0 };
 }
 

@@ -10,8 +10,8 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const CATALOG = join(__dirname, "..", "mcp-server", "src", "diagnostics", "library-catalog.ts");
-const AUTH_DIR = join(__dirname, "..", "community_knowledge", "authored");
+const CATALOG = join(__dirname, "..", "..", "mcp-server", "src", "diagnostics", "library-catalog.ts");
+const AUTH_DIR = join(__dirname, "..", "..", "community_knowledge", "authored");
 
 const text = readFileSync(CATALOG, "utf8");
 

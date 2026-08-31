@@ -6,6 +6,6 @@ platform: bedrock
 
 # 基岩包结构
 
-读 `bedrock/.cursor/rules/00-project-setup.mdc`。文档：`search_bedrock_docs` id `stable/getting-started`。
+读 `00-project-setup.mdc`。文档：`search_bedrock_docs` id `stable/getting-started`。
 
 禁止 Gradle / `src/main/java` / `query_api`。校验用 `validate_addon_manifest`。

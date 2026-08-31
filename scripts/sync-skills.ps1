@@ -254,22 +254,28 @@ function Sync-VersionDir {
         }
     }
 
-    # Agents
+    # Agents：AGENTS.md 为权威，覆盖 .cursor/agent/default.md（单数 agent）并镜像到 .claude/.trae
     Write-Host "[Agents] Syncing agents..." -ForegroundColor Yellow
     $agentsSrc = "$Base\AGENTS.md"
-    $agentsCursor = "$Base\.cursor\agents\default.md"
+    $agentsCursor = "$Base\.cursor\agent\default.md"
     if (Test-Path $agentsSrc) {
+        Ensure-Dir "$Base\.cursor\agent"
+        Copy-Item $agentsSrc $agentsCursor -Force
+        Ensure-Dir "$Base\.claude\agents"
+        Ensure-Dir "$Base\.trae\agents"
         Copy-Item $agentsSrc "$Base\.claude\agents\default.md" -Force
         Copy-Item $agentsSrc "$Base\.trae\agents\default.md" -Force
-        Write-Host "  Synced: AGENTS.md → .claude/ & .trae/" -ForegroundColor Green
+        Write-Host "  Synced: AGENTS.md → .cursor/agent/default.md + .claude/ & .trae/" -ForegroundColor Green
     } elseif (Test-Path $agentsCursor) {
+        Ensure-Dir "$Base\.claude\agents"
+        Ensure-Dir "$Base\.trae\agents"
         Copy-Item $agentsCursor "$Base\.claude\agents\default.md" -Force
         Copy-Item $agentsCursor "$Base\.trae\agents\default.md" -Force
-        Write-Host "  Synced: .cursor/agents/default.md → .claude/ & .trae/" -ForegroundColor Green
+        Write-Host "  Synced: .cursor/agent/default.md → .claude/ & .trae/" -ForegroundColor Green
     } else {
         Write-Host "  SKIP: No AGENTS.md found" -ForegroundColor DarkGray
     }
-    Write-Host "  Preserved: .cursor/agents/default.md (if present)`n" -ForegroundColor DarkGray
+    Write-Host "  Authority: AGENTS.md → .cursor/agent/default.md`n" -ForegroundColor DarkGray
 
     $claudeSrc = "$Base\CLAUDE.md"
     if (Test-Path $claudeSrc) {

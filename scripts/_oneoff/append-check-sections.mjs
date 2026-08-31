@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const CATALOG = join(ROOT, "mcp-server/src/diagnostics/library-catalog.ts");
 const AUTH = join(ROOT, "community_knowledge/authored");
 const text = readFileSync(CATALOG, "utf8");

@@ -29,7 +29,6 @@ if (isMainModule()) {
   });
   process.on("uncaughtException", (err) => {
     console.error("[mc-mcp-server] uncaughtException:", err);
-    process.exit(1);
   });
 
   if (process.env.MC_SKILL_DEBUG_PATHS === "1") {

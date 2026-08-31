@@ -32,7 +32,7 @@
 | 来源 | 做法 |
 |------|------|
 | 短文末「不清楚时」或 frontmatter 给出的 URL | 用浏览器 / `WebFetch` 打开该页 |
-| `permitted/`（如 3993） | 可读仓库提炼；仍不确定时打开帖内原文 URL |
+| `permitted/`（如 3993） | 与 `links/` 相同：**仅指针**（ATTRIBUTION + 原文 URL），不入库正文；不确定时打开帖内原文 URL |
 | `links/`（如 6071） | **仅浏览** https://www.mcmod.cn/post/6071.html 等；**禁止把网页正文拷进仓库或长篇复述** |
 | API / 类名 | `search_*_docs`、`get_*_doc_full`、`query_api` — 不要用社区短文代替 |
 
@@ -43,5 +43,5 @@
 
 ## 与 6071 / 3993
 
-- **3993**（许可入库）：`permitted/mcmod-3993-forge-mod-guide/` + https://www.mcmod.cn/post/3993.html  
+- **3993**（许可入库指针）：`permitted/mcmod-3993-forge-mod-guide/` + https://www.mcmod.cn/post/3993.html（**不入库正文**）  
 - **6071**（禁转载）：`links/mcmod-6071-forge-engineering.md` + 原文 URL；自写 `authored/` 是二次总结，细节以打开原文 + 官方 API 为准。

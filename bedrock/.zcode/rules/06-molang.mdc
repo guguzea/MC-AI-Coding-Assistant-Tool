@@ -8,7 +8,7 @@
 → 入门 → stable/molang-intro
 → 语法/函数 → stable/molang-syntax
 → 用在动画、战利品、实体 JSON → 短表达式；不要把 @minecraft/server 脚本当 Molang
-→ 不确定的 query → 打开 syntax 页
+→ 不确定的 query → 打开 intro / syntax；不要把 syntax 当查询清单
 ```
 
 ## 已核实约束（Learn molang-intro）
@@ -19,7 +19,7 @@ Learn 示例用完整 `query.` / `math.` 前缀，例如：
 - `query.life_time`
 - `Math.Random(1,3)` / `math.sin(...)`
 
-简写 `q.` / `v.` 以 `stable/molang-syntax` 为准；语法页没有的查询禁止输出。
+`stable/molang-syntax` **不是**查询清单（该页指向 Learn「Query Functions」文，本库未入库该页）。intro 页示例（`query.last_hit_by_player`、`query.life_time`、`Math.Random`）可用，不要用「syntax 页没有」误杀它们。其余 query 打开 intro/syntax；未入库的 Query Functions 禁止臆造。
 
 Molang 写在 JSON 字符串里（动画、战利品 `on_death`、实体事件）。Script API 的 `world.afterEvents` 不是 Molang。
 

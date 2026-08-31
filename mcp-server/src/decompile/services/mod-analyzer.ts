@@ -220,17 +220,26 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
     }
   }
 
-  // ── META-INF/mods.toml / neoforge.mods.toml ────────────────────────────────
+  // ── META-INF/mods.toml / neoforge.mods.toml（两份都解析，loaders 可含两个）──
   const neoforgeToml = entries.get("META-INF/neoforge.mods.toml");
   const forgeToml = entries.get("META-INF/mods.toml");
-  const tomlSource = neoforgeToml ?? forgeToml;
-  if (tomlSource) {
+  const applyToml = (buf: Buffer | undefined, loader: "neoforge" | "forge", label: string) => {
+    if (!buf) return;
     try {
-      const toml = parseModsToml(tomlSource.toString("utf8"));
-      meta.loaders.push(neoforgeToml ? "neoforge" : "forge");
-      if (toml.mods.length) meta.mods = toml.mods;
+      const toml = parseModsToml(buf.toString("utf8"));
+      if (!meta.loaders.includes(loader)) meta.loaders.push(loader);
+      const mods = meta.mods ?? (meta.mods = []);
+      if (toml.mods.length) {
+        const seen = new Set(mods.map((m) => m.modId));
+        for (const m of toml.mods) {
+          if (!seen.has(m.modId)) {
+            mods.push(m);
+            seen.add(m.modId);
+          }
+        }
+      }
       if (toml.mods.length > 1) {
-        meta.warnings.push(`mods.toml 含 ${toml.mods.length} 个 [[mods]]，已全部列入 mods[]；主字段取首个 ${toml.mods[0].modId}`);
+        meta.warnings.push(`${label} 含 ${toml.mods.length} 个 [[mods]]，已全部列入 mods[]；主字段取首个 ${toml.mods[0].modId}`);
       }
       if (!meta.modId && toml.mods[0]?.modId) meta.modId = toml.mods[0].modId;
       if (!meta.modVersion && toml.mods[0]?.version) meta.modVersion = toml.mods[0].version;
@@ -238,9 +247,11 @@ export function analyzeModJar(jarPath: string): AnalyzeResult {
       if (!meta.description && toml.mods[0]?.description) meta.description = toml.mods[0].description;
       for (const dep of toml.dependencies) meta.dependencies.push(dep);
     } catch (err) {
-      meta.warnings.push(`${neoforgeToml ? "neoforge.mods.toml" : "mods.toml"} 解析失败: ${(err as Error).message}`);
+      meta.warnings.push(`${label} 解析失败: ${(err as Error).message}`);
     }
-  }
+  };
+  applyToml(neoforgeToml, "neoforge", "neoforge.mods.toml");
+  applyToml(forgeToml, "forge", "mods.toml");
 
   // ── 旧 Forge mcmod.info（1.12 混合常与 litemod.json 并存）────────────────
   const mcmodInfo = entries.get("mcmod.info");

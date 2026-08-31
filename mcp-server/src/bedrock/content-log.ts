@@ -123,7 +123,17 @@ export function analyzeBedrockContentLog(
     }
   }
 
-  const fd = openSync(abs, "r");
+  let fd: number;
+  try {
+    fd = openSync(abs, "r");
+  } catch (err) {
+    return {
+      ok: false,
+      action: actionable(ActionCodes.NOT_FOUND, `无法打开 content_log: ${(err as Error).message}`, [
+        "核对路径权限与文件是否存在",
+      ]),
+    };
+  }
   let text = "";
   let bytes = 0;
   let truncated = false;
@@ -132,7 +142,14 @@ export function analyzeBedrockContentLog(
     const start = size > maxBytes ? size - maxBytes : 0;
     bytes = Math.max(0, size - start);
     const buf = Buffer.alloc(bytes);
-    if (bytes > 0) readSync(fd, buf, 0, bytes, start);
+    if (bytes > 0) {
+      let off = 0;
+      while (off < bytes) {
+        const n = readSync(fd, buf, off, bytes - off, start + off);
+        if (n <= 0) break;
+        off += n;
+      }
+    }
     let t = buf.toString("utf8");
     if (start > 0 && t.charCodeAt(0) === 0xfffd) {
       const nl = t.indexOf("\n");

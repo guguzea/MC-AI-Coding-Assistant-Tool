@@ -82,7 +82,7 @@ function versionSegmentMatch(fileName: string, version: string): boolean {
 function versionIsExactSegment(jarPath: string, version: string): boolean {
   const name = basename(jarPath);
   const escaped = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`^${escaped}([\\/.\\-_]|$)|([\\/.\\-_])${escaped}$`).test(name);
+  return new RegExp(`(?:^|[._-])${escaped}(?:[._-]|\\.jar$)`, "i").test(name);
 }
 
 /** 扫描 $MC_SKILL_CACHE 找版本对应的重映射客户端 jar（不自动下载）。 */
@@ -279,7 +279,7 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
       "Invoker",
     ] as const) {
       for (const { inner } of extractJavaAnnotationBlocks(f.content, kind)) {
-        if (inner !== null) blocks.push({ kind, block: inner });
+        blocks.push({ kind, block: inner ?? "" });
       }
     }
     const injections = parsed.injections;
@@ -289,7 +289,8 @@ export function deepValidateMixins(input: DeepValidateInput): DeepValidationResu
       checkedTargets += 1;
       const nth = usedPerKind.get(inj.kind) ?? 0;
       usedPerKind.set(inj.kind, nth + 1);
-      const blockText = blocks.find((b) => b.kind === inj.kind) ? (blocks.filter((b) => b.kind === inj.kind)[nth]?.block ?? "") : "";
+      const kindBlocks = blocks.filter((b) => b.kind === inj.kind);
+      const blockText = kindBlocks[nth]?.block ?? "";
       const atInfo = parseAtDeep(blockText);
       const selectorMatches: Array<{ name: string; descriptor: string; owner: string; kind: "method" | "field" | "record" }> = [];
 
@@ -442,7 +443,13 @@ export function joinProjectAccessFiles(
   return paths
     .map((p) => {
       const rel = relative(root, p).replace(/\\/g, "/");
-      const body = readFileSync(p, "utf8");
+      const body = (() => {
+        try {
+          return readFileSync(p, "utf8");
+        } catch (err) {
+          return `# ===== file: ${rel} =====\n# READ_ERROR: ${(err as Error).message}\n`;
+        }
+      })();
       return `# ===== file: ${rel} =====\n${body}`;
     })
     .join("\n");

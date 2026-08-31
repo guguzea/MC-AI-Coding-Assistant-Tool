@@ -74,7 +74,13 @@ function resolveDetectRoot(projectPath?: string): { ok: true; root: string; from
     };
   }
   const root = resolve(raw);
-  if (!existsSync(root) || !statSync(root).isDirectory()) {
+  let isDir = false;
+  try {
+    isDir = existsSync(root) && statSync(root).isDirectory();
+  } catch {
+    isDir = false;
+  }
+  if (!isDir) {
     return {
       ok: false,
       action: actionable("NOT_FOUND", `项目根不存在或不是目录：${root}`, ["检查路径"]),
@@ -108,9 +114,11 @@ export function detectModProject(args: DetectModProjectArgs = {}): DetectModProj
     };
   }
   const loaded = loadModProject(resolved.root);
+  const javafmlToml =
+    (loaded.modsTomls ?? []).find((t) => /modLoader\s*=\s*["']javafml["']/i.test(t)) ?? loaded.modsToml;
   const detected = detectProjectLoaders({
     buildGradle: loaded.buildGradle,
-    modsToml: loaded.modsToml,
+    modsToml: javafmlToml,
     fabricModJson: loaded.fabricModJson,
     neoModsToml: loaded.neoModsToml,
     extras: {

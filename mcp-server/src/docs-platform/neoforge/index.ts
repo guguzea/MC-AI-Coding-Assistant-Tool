@@ -18,6 +18,7 @@ import {
   NeoForgeDocStore,
   DocNotFoundError,
   VersionNotFoundError,
+  IndexCorruptError,
 } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
@@ -91,6 +92,21 @@ function handleError(e: unknown): CallToolResult {
             code: "VERSION_NOT_FOUND",
             message: e.message,
             hint: `请使用支持的版本：${e.availableVersions.join(", ") || "未知"}`,
+          },
+        }, null, 2),
+      }],
+    };
+  }
+  if (e instanceof IndexCorruptError) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          error: {
+            code: "INDEX_CORRUPT",
+            message: e.message,
+            hint: "索引 JSON 损坏或截断，请勿当成 VERSION_NOT_FOUND。",
           },
         }, null, 2),
       }],

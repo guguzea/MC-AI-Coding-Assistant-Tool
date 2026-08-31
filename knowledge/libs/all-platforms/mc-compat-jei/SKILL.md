@@ -17,8 +17,8 @@ mappings: hint
 IF 配方已通过 DataGen 生成到 data/<modid>/recipes/*.json
   → 零插件代码，三查看器自动显示（首选路径）
 IF 需要自定义分类 / 隐藏条目 / 特殊展示
-  → 新模组优先 JEI + EMI 双插件
-  → 1.20.x 及更老以 JEI 为主；NeoForge 1.21+ 生态 EMI 渗透率上升，EMI 与 JEI 平级
+  → 新模组优先 JEI；1.21.1 及更早可再加 EMI 双插件
+  → 1.20.x 及更老以 JEI 为主；EMI 上限为 **1.21.1**（之后无稳定线）。**26.x 只推 JEI / REI**，不要再把 EMI 与 JEI 平级
 IF 用户问要不要写 REI 插件
   → 通常不需要：REI 的 JEI 插件兼容层可直接跑 JEI 插件
   → 若 REI 与 JEI 同装，注意插件别被两边重复注册
@@ -33,7 +33,7 @@ IF 用户问要不要写 REI 插件
 ## 集成要点
 
 - 自定义展示：JEI 实现 `IModPlugin`（@JeiPlugin 注解），EMI 实现 `EmiPlugin` 在 register 回调加分类，REI 实现 `REIClientPlugin`；接口名以官方文档为准
-- 1.21.2+ / 26.x：JEI 服务端也需安装以同步配方，只装客户端会出现配方缺失
+- 1.21.2+ / 26.x：JEI 服务端也需安装以同步配方，只装客户端会出现配方缺失；26.x 不要再推 EMI
 - DataGen 已覆盖的配方不要重复注册，避免条目重复
 
 ## 官方文档

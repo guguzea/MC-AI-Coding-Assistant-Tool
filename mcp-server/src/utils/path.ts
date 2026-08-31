@@ -98,7 +98,7 @@ export function isResolvedInside(root: string, candidate: string): boolean {
  */
 export function resolveCacheRoot(): string {
   const env = process.env.MC_SKILL_CACHE;
-  if (env) return env;
+  if (env) return isAbsolute(env) ? env : resolve(env);
   if (process.platform === "win32") {
     const appData = process.env.APPDATA;
     if (appData) return join(appData, "mc-skill-cache");

@@ -1,7 +1,10 @@
 # Forge 1.14.4 — Agent 总纲
 
-> 本规则集适用于 **Forge 1.14.4**，推荐使用 `RegistryEvent` 注册模式（DeferredRegister 自 Forge 1.16 起才完全支持）。
+> 本规则集适用于 **Forge 1.14.4**，推荐使用 `DeferredRegister` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
+
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_forge_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
 
 ---
 
@@ -11,9 +14,9 @@
 |------|-----|
 | 平台 | Forge |
 | Minecraft 版本 | 1.14.4 |
-| 注册模式 | `RegistryEvent`（主要）/ `DeferredRegister`（部分可用） |
-| Java 版本 | **Java 8**（Forge 1.14.4 要求） |
-| Gradle | Gradle 5.x + ForgeGradle 3.x |
+| 注册模式 | `DeferredRegister`（推荐）/ `RegistryEvent.Register`（备选） |
+| Java 版本 | **Java 8**（Forge 1.14.4 官方要求） |
+| Gradle | Gradle 4.9 + ForgeGradle 3.+（官方 1.14.4 MDK 组合） |
 | Mappings | **MCP**（`minecraft "1.14.4"` 下默认） |
 | 构建工具 | ForgeGradle（`build.gradle`） |
 
@@ -119,12 +122,11 @@ src/main/java/
 
 ## 常见陷阱（必读）
 
-1. **注册方式**：`Forge 1.14.4` 主要使用 `RegistryEvent`，`DeferredRegister` 部分可用但 API 不同
+1. **DeferredRegister 已可用**：`DeferredRegister` 自 Forge 1.14 起引入并可用，1.14.4 完全支持
 2. **不要用 Mixin 的 `@Inject` 在构造函数里修改 final 字段**：会导致游戏崩溃
 3. **不要在 `server` 包里放 `@OnlyIn(Dist.CLIENT)` 的代码**：客户端类会被服务端打包进 jar，导致混淆问题
 4. **不要忘记 `mods.toml` 中的 `dependencies`**：任何对 Forge API 的依赖必须声明
 5. **不要在 `FMLClientSetupEvent` 里直接执行游戏逻辑**：只用于注册 KeyBinding 和渲染器
-6. **Java 8**：Forge 1.14.4 必须使用 Java 8，**禁止**使用 Java 11+
 
 ---
 
@@ -133,21 +135,26 @@ src/main/java/
 1. 先读 `01-registry.mdc` 确认注册方式
 2. 再读对应主题的规则文件（如 `02-block.mdc`）
 3. 检查 `09-anti-patterns.mdc` 确认没有踩坑
-4. 最后运行 `validate_project` 自查
+4. 最后运行 `validate_project` 自查（Phase 1.5 CLI 工具）
 
 ---
 
 ## 关于 1.14.4 与其他版本的差异
 
-| 功能 | 1.14.4 Forge | 1.20.1 Forge | 备注 |
-|------|---------------|--------------|------|
-| 注册方式 | `RegistryEvent`（主要） | `DeferredRegister`（推荐） | 1.14.4 DeferredRegister 不完整 |
-| Block 属性 | `Block.Properties` | `BlockBehaviour.Properties` | API 不同 |
-| NBT 类 | `NBTTagCompound` | `CompoundTag` | 类名不同 |
-| Fluid 注册 | 无 FluidType | `FluidType` | 1.14.4 无 FluidType |
-| DataGen | 有限支持 | 完整支持 | 1.14.4 DataGen 非常有限 |
+| 功能 | 1.14.4 Forge | 1.20.1+ Forge | 备注 |
+|------|---------------|----------------|------|
+| 注册方式 | `DeferredRegister` | `DeferredRegister` | 一致（均推荐） |
+| Java 版本 | Java 11 | Java 17+ | 1.14.4 要求 Java 11 |
+| pack_format | 5 | 15 | 1.20.x 用 15 |
+| DataGen | 有 | 有 | API 有差异 |
+| BlockEntity | 旧版签名 | 相同 | - |
 
 如果你发现用户的代码与本规则集描述不符，先询问 Minecraft 版本。
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+
 <!-- MC_SKILL_WORKFLOW_NOTE -->
 
 ## 工作流提醒（人在环）

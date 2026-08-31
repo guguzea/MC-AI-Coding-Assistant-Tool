@@ -1,5 +1,5 @@
-import { readFileSync, existsSync, writeFileSync, mkdirSync, unlinkSync, renameSync } from "fs";
-import { join, relative, basename } from "path";
+import { readFileSync, existsSync, writeFileSync, mkdirSync, unlinkSync, renameSync, rmdirSync } from "fs";
+import { join, relative, basename, dirname, resolve as pathResolve, sep } from "path";
 import { fileURLToPath } from "url";
 import { resolveDataDir } from "../utils/path.js";
 import { resolveProjectPath, ProjectPathError, assertWritablePath, assertCreatableDir, getAllowRootReal } from "../utils/project-sandbox.js";
@@ -9,6 +9,7 @@ import { isKnowledgeRepo } from "../platform-pack/write.js";
 import { walkDirBounded, javaSourceRoots } from "../utils/project-files.js";
 import { analyzePortingPathSchema, portProjectSchema } from "./types.js";
 import { parseMinecraftVersion } from "../decompile/version-manager.js";
+import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
 import type {
   AnalyzePortingOutput,
   AnalyzePortingError,
@@ -72,12 +73,41 @@ function globNameMatch(name: string, pat: string): boolean {
   return re.test(name);
 }
 
-export function javaForMcVersion(ver: string): number {
+/** 回滚时删掉本次 mkdir 留下的空目录，停在工程根（B-18）。 */
+function pruneEmptyParents(fileAbs: string, projectRoot: string): void {
+  const pathsEqual = (a: string, b: string) => {
+    const ra = pathResolve(a);
+    const rb = pathResolve(b);
+    return process.platform === "win32" ? ra.toLowerCase() === rb.toLowerCase() : ra === rb;
+  };
+  const isUnderRoot = (dir: string, root: string) => {
+    const d = pathResolve(dir);
+    const r = pathResolve(root);
+    if (pathsEqual(d, r)) return true;
+    const prefix = (process.platform === "win32" ? r.toLowerCase() : r) + sep;
+    const probe = process.platform === "win32" ? d.toLowerCase() : d;
+    return probe.startsWith(prefix);
+  };
+  let dir = dirname(fileAbs);
+  const stop = pathResolve(projectRoot);
+  while (dir && isUnderRoot(dir, stop) && !pathsEqual(dir, stop)) {
+    try {
+      rmdirSync(dir);
+    } catch {
+      break;
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+}
+
+export function javaForMcVersion(ver: string): number | undefined {
   const vi = parseMinecraftVersion(ver);
   const major = vi.major;
   const minor = vi.minor;
   const patch = vi.patch ?? 0;
-  if (!vi.valid && major === 0 && minor === 0) return 21;
+  if (!vi.valid && major === 0 && minor === 0) return undefined;
   // 26.x / 27.x / 1.21.11+
   if (major >= 26) return 25;
   if (major === 1) {
@@ -88,7 +118,7 @@ export function javaForMcVersion(ver: string): number {
     if (minor === 17) return 16;
     if (minor <= 16) return 8;
   }
-  return 21;
+  return undefined;
 }
 
 function collectJavaKtSources(root: string): string[] {
@@ -113,9 +143,6 @@ function inferCurrentPlatform(root: string): string {
     readContent(join(root, "fabric/src/main/resources/fabric.mod.json"));
   const detected = detectLoader(gradle, modsToml, fabricJson, neoToml);
   if (detected === "liteloader_forge") return "liteloader";
-  if (detected === "unknown" && /net\.minecraftforge/i.test(gradle) && !/net\.neoforged/i.test(gradle)) {
-    return "forge";
-  }
   return detected;
 }
 
@@ -246,22 +273,52 @@ function addBuildMetadataEvidence(
 function queryBreakingChanges(currentVer: string, targetVer: string): {
   breakingChanges: unknown[];
   knowledgeGaps: string[];
+  kbLoadError?: string;
 } {
-  const kb = loadVersionsKB() as { versions: Record<string, { breakingChanges?: unknown[] }> };
+  const kb = loadVersionsKB() as {
+    versions: Record<string, { breakingChanges?: unknown[] }>;
+    _loadError?: string;
+  };
   const versions = kb.versions ?? {};
 
   const breakingChanges: unknown[] = [];
   const knowledgeGaps: string[] = [];
+  if (kb._loadError) {
+    return { breakingChanges, knowledgeGaps, kbLoadError: kb._loadError };
+  }
 
+  const keys = Object.keys(versions);
+  const lo = parseMinecraftVersion(currentVer);
+  const hi = parseMinecraftVersion(targetVer);
+  const inRange = (key: string): boolean => {
+    if (key === currentVer || key === targetVer) return true;
+    if (currentVer === "unknown" || !lo.valid || !hi.valid) return false;
+    const k = parseMinecraftVersion(key);
+    if (!k.valid) return false;
+    const a = lo.major * 1e6 + lo.minor * 1e3 + (lo.patch ?? 0);
+    const b = hi.major * 1e6 + hi.minor * 1e3 + (hi.patch ?? 0);
+    const c = k.major * 1e6 + k.minor * 1e3 + (k.patch ?? 0);
+    const min = Math.min(a, b);
+    const max = Math.max(a, b);
+    return c >= min && c <= max;
+  };
+
+  if (currentVer !== "unknown" && !versions[currentVer]) {
+    knowledgeGaps.push(currentVer);
+  }
   if (!versions[targetVer]) {
     knowledgeGaps.push(targetVer);
   }
 
-  if (versions[currentVer] && versions[currentVer].breakingChanges) {
-    (breakingChanges as unknown[]).push(...(versions[currentVer].breakingChanges ?? []));
-  }
-  if (versions[targetVer] && versions[targetVer].breakingChanges) {
-    (breakingChanges as unknown[]).push(...(versions[targetVer].breakingChanges ?? []));
+  const seen = new Set<string>();
+  for (const key of keys) {
+    if (!inRange(key)) continue;
+    for (const item of versions[key]?.breakingChanges ?? []) {
+      const sig = JSON.stringify(item);
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+      breakingChanges.push(item);
+    }
   }
 
   return { breakingChanges, knowledgeGaps };
@@ -358,7 +415,7 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
       version: targetVersion,
       reason: "NeoForge 特有 API 请用 search_neoforge_docs；query_api 无 NeoForge 类索引",
     });
-    if (targetVersion === "26.1" || targetVersion.startsWith("26.")) {
+    if (isMcVersionFamily(targetVersion, "26.1") || (isExactMcVersionToken(targetVersion) && Number(targetVersion.split(".")[0]) >= 26)) {
       suggestions.push({
         action: "search_neoforge_docs",
         query: "ItemStack",
@@ -369,7 +426,7 @@ function buildQuerySuggestions(targetVersion: string, targetPlatform: string | u
     return suggestions;
   }
 
-  if (targetVersion === "26.1" || targetVersion.startsWith("26.")) {
+  if (isMcVersionFamily(targetVersion, "26.1") || (isExactMcVersionToken(targetVersion) && Number(targetVersion.split(".")[0]) >= 26)) {
     suggestions.push({
       action: "search_neoforge_docs",
       query: "ItemStack",
@@ -398,12 +455,12 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
   if (platform === "neoforge" || platform === "forge") {
     links.unshift({ title: "NeoForge 1.20.2 发布说明", url: "https://neoforged.net/news/20.2release/" });
   }
-  // 仅目标版本 >= 26 时附带 26.1 链接
-  const major = parseFloat(version);
-  if (!Number.isNaN(major) && major >= 26) {
+  // 仅目标版本 26.x 时附带 26.1 链接
+  const v = version.trim();
+  if (isExactMcVersionToken(v) && Number(v.split(".")[0]) >= 26) {
     links.push({ title: "Fabric 移植索引（线上当前多为 26.1→26.2）", url: "https://docs.fabricmc.net/develop/porting/index" });
     links.push({ title: "NeoForge Primer 26.1", url: "https://docs.neoforged.net/primer/docs/26.1/" });
-    if (version === "26.2" || version.startsWith("26.2")) {
+    if (isMcVersionFamily(v, "26.2")) {
       links.push({ title: "NeoForge Primer 26.2", url: "https://docs.neoforged.net/primer/docs/26.2/" });
       links.push({ title: "Fabric API 26.2 概述", url: "https://fabricmc.net/2026/06/15/262.html" });
     }
@@ -411,7 +468,7 @@ function buildReferenceLinks(platform: string, version: string): Array<{ title: 
   if (platform === "fabric") {
     links.push({ title: "Fabric Wiki", url: "https://fabricmc.net/wiki/" });
     links.push({ title: "Yarn 映射浏览", url: "https://linkie.shedaniel.dev/mappings" });
-    if (version.startsWith("1.20")) {
+    if (isMcVersionFamily(v, "1.20")) {
       links.push({ title: "Fabric Docs", url: "https://docs.fabricmc.net/" });
     }
   }
@@ -458,6 +515,13 @@ export async function analyzePortingPath(args: unknown) {
   }
 
   const { targetPlatform: userTargetPlatform, targetVersion: userTargetVersion } = parsed.data;
+  if (userTargetVersion && !isExactMcVersionToken(userTargetVersion)) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: { code: "INVALID_INPUT", message: `targetVersion 必须是精确 MC 版本 token，收到 ${userTargetVersion}` },
+    };
+    return JSON.stringify(e);
+  }
   let root: string;
   try {
     root = resolveProjectPath(parsed.data.projectPath, false);
@@ -470,6 +534,13 @@ export async function analyzePortingPath(args: unknown) {
       return JSON.stringify(e);
     }
     throw err;
+  }
+  if (!existsSync(root)) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: { code: "PATH_NOT_FOUND", message: `项目路径不存在：${root}` },
+    };
+    return JSON.stringify(e);
   }
 
   // 1. 解析构建配置
@@ -673,7 +744,24 @@ export async function analyzePortingPath(args: unknown) {
   }
 
   const UNSUPPORTED_PORT = new Set(["liteloader", "rift", "modloader", "bedrock"]);
-  const targetPlatform = userTargetPlatform ?? (currentPlatform === "forge" ? "neoforge" : currentPlatform);
+  if (!userTargetPlatform) {
+    if (UNSUPPORTED_PORT.has(currentPlatform)) {
+      const e: AnalyzePortingError = {
+        ok: false,
+        error: {
+          code: "UNSUPPORTED_PORT",
+          message: `不支持自动移植 ${currentPlatform}。基岩 / LiteLoader / Rift / ModLoader 只提供升级路径分析笔记，不改工程（port_project 无脚手架）。`,
+        },
+      };
+      return JSON.stringify(e);
+    }
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: { code: "INVALID_INPUT", message: "targetPlatform 必填，禁止静默默认 forge→neoforge" },
+    };
+    return JSON.stringify(e);
+  }
+  const targetPlatform = userTargetPlatform;
 
   if (UNSUPPORTED_PORT.has(currentPlatform) || UNSUPPORTED_PORT.has(targetPlatform)) {
     const portPlat = UNSUPPORTED_PORT.has(targetPlatform) ? targetPlatform : currentPlatform;
@@ -732,7 +820,18 @@ export async function analyzePortingPath(args: unknown) {
     return JSON.stringify(e, null, 2);
   }
   const currentVer = mcVersion ?? "unknown";
-  const { knowledgeGaps } = queryBreakingChanges(currentVer, targetVer);
+  const { knowledgeGaps, breakingChanges, kbLoadError } = queryBreakingChanges(currentVer, targetVer);
+  if (kbLoadError) {
+    const e: AnalyzePortingError = {
+      ok: false,
+      error: {
+        code: "KNOWLEDGE_BASE_UNAVAILABLE",
+        message: `porting 知识库加载失败: ${kbLoadError}`,
+        hint: "检查 data/porting/knowledge-base/versions.json；不要把空 breakingChanges 当成「无风险」。",
+      },
+    };
+    return JSON.stringify(e, null, 2);
+  }
 
   // 7. 风险评估
   const riskAssessment = assessRisk(stats, currentPlatform, targetPlatform);
@@ -773,7 +872,7 @@ export async function analyzePortingPath(args: unknown) {
       targetPlatform === "fabric" || targetPlatform === "quilt"
         ? (/^26\./.test(targetVer) ? "mojmap" : "yarn")
         : (targetVersionInfo?.mappings?.[0] ?? mappings ?? null),
-    java: targetVersionInfo?.java ?? javaForMcVersion(targetVer),
+    java: targetVersionInfo?.java ?? javaForMcVersion(targetVer) ?? null,
   };
 
   const output: AnalyzePortingOutput = {
@@ -782,6 +881,7 @@ export async function analyzePortingPath(args: unknown) {
       current: currentInfo,
       target: targetInfo,
       knowledgeGaps,
+      breakingChanges,
       riskAssessment,
       recommendedRoute:
         currentPlatform === "unknown"
@@ -846,10 +946,10 @@ function generateRootBuildGradleContent(mcVersion: string): string {
     "        silentMojangMappingsLicense()",
     "    }",
     "    dependencies {",
-    "        minecraft \"com.mojang:minecraft:\\${rootProject.minecraft_version}\"",
+    "        minecraft \"com.mojang:minecraft:${rootProject.minecraft_version}\"",
     "        mappings loom.layered {",
     "            officialMojangMappings()",
-    "            parchment(\"org.parchmentmc.data:parchment-\\${rootProject.minecraft_version}:2024.01.20@zip\")",
+    "            parchment(\"org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.01.20@zip\")",
     "        }",
     "    }",
     "}",
@@ -913,12 +1013,12 @@ function checkConflicts(root: string): string[] {
   return ARCHITECTURY_SKELETON_FILES.filter((f) => existsSync(join(root, f)));
 }
 
-function buildArchitecturySkeleton(root: string, modId: string, mcVersion: string) {
+function buildArchitecturySkeleton(root: string, modId: string, mcVersion: string, neoforgeVersion: string) {
   const files: Record<string, string> = {};
 
   files["settings.gradle"] = generateSettingsGradleContent(modId);
   files["build.gradle"] = generateRootBuildGradleContent(mcVersion);
-  files["gradle.properties"] = `minecraft_version=${mcVersion}\nneoforge_version=\nloom.platform=fabric\n`;
+  files["gradle.properties"] = `minecraft_version=${mcVersion}\nneoforge_version=${neoforgeVersion}\nloom.platform=fabric\n`;
 
   files["common/build.gradle"] = generateCommonBuildGradle(modId);
   files["fabric/build.gradle"] = generateFabricBuildGradle();
@@ -1006,7 +1106,10 @@ function applyPackageRenames(root: string, dryRun: boolean): {
   rollbackError?: string;
   srcNotFound?: boolean;
 } {
-  const files = collectJavaKtSources(root);
+  const files = collectJavaKtSources(root).filter((file) => {
+    const rel = pathRel(root, file);
+    return !rel.startsWith("fabric/") && !rel.startsWith("quilt/");
+  });
   if (files.length === 0) {
     return { renames: [], unreviewed: [], modified: [], srcNotFound: true };
   }
@@ -1074,8 +1177,8 @@ function applyPackageRenames(root: string, dryRun: boolean): {
 
 function unreviewedCandidates(): { file: string; reason: string }[] {
   return [
-    { file: "需要人工 review", reason: "RegistryObject → DeferredHolder 变更（见 data/porting 知识库 / 平台 porting 文档）" },
-    { file: "需要人工 review", reason: "NeoForge 1.20.2+ 事件总线订阅方式（mod bus / forge bus）" },
+    { file: "src/main/java/**/*Registry*.java", reason: "RegistryObject → DeferredHolder 变更（见 data/porting 知识库 / 平台 porting 文档）" },
+    { file: "src/main/java/**/*Event*.java", reason: "NeoForge 1.20.2+ 事件总线订阅方式（mod bus / forge bus）" },
   ];
 }
 
@@ -1139,6 +1242,16 @@ export async function portProject(args: unknown) {
   }
 
   if (action === "init_architectury") {
+    const neoVer = parsed.data.neoforgeVersion?.trim();
+    if (!neoVer) {
+      return JSON.stringify({
+        ok: false,
+        error: {
+          code: "NEOFORGE_VERSION_REQUIRED",
+          message: "init_architectury 必须传入 neoforgeVersion（写入 gradle.properties 的 neoforge_version）。禁止留下空值。",
+        },
+      });
+    }
     const derived =
       basename(root)
         .toLowerCase()
@@ -1181,7 +1294,7 @@ export async function portProject(args: unknown) {
       return JSON.stringify(output, null, 2);
     }
 
-    const files = buildArchitecturySkeleton(root, modId, mcVersion);
+    const files = buildArchitecturySkeleton(root, modId, mcVersion, neoVer);
 
     if (doWrite) {
       const allowRoot = getAllowRootReal();
@@ -1189,7 +1302,7 @@ export async function portProject(args: unknown) {
       try {
         for (const [filePath, content] of Object.entries(files)) {
           const full = join(root, filePath);
-          const parent = join(full, "..");
+          const parent = dirname(full);
           assertCreatableDir(parent, allowRoot);
           mkdirSync(parent, { recursive: true });
           assertWritablePath(full, allowRoot);
@@ -1200,6 +1313,7 @@ export async function portProject(args: unknown) {
         for (const p of [...written].reverse()) {
           try {
             if (existsSync(p)) unlinkSync(p);
+            pruneEmptyParents(p, root);
           } catch {
             /* ignore */
           }
@@ -1348,7 +1462,6 @@ export async function portProject(args: unknown) {
     }
 
     const todoBlocks: { file: string; lines: number }[] = [];
-    manualNotes.push("todoBlocksAdded 尚未实现（reserved, always []），请人工核对 unreviewedCandidates。");
 
     const output: ApplyMigrationOutput = {
       ok: true,

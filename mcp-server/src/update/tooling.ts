@@ -28,6 +28,7 @@ export function gitDescribe(repoRoot?: string): string | undefined {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
+      timeout: 30_000,
     }).trim();
   } catch {
     return undefined;
@@ -40,6 +41,7 @@ function git(repoRoot: string, args: string[]): string {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
     windowsHide: true,
+    timeout: 120_000,
   }).trim();
 }
 
@@ -287,12 +289,12 @@ export function applyToolingUpdate(opts: ToolingApplyOpts): ToolingApplyResult {
         execFileSync(
           process.platform === "win32" ? "npm.cmd" : "npm",
           ["ci"],
-          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
+          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true, timeout: 600_000 },
         );
         execFileSync(
           process.platform === "win32" ? "npm.cmd" : "npm",
           ["run", "build"],
-          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true },
+          { cwd: join(repoRoot, "mcp-server"), stdio: "pipe", windowsHide: true, timeout: 600_000 },
         );
       } catch (err) {
         return {

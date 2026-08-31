@@ -8,7 +8,7 @@
 - 许可说明：作者在评论区（约 51 楼）回复「随意吧」，允许本仓库收录提炼内容用于 MCP / 知识库。
 - 注意：教程主体偏 **1.18.X**；查当前版本 API 仍以官方文档与 `search_*_docs` 为准。
 
-提炼页位于 `permitted/mcmod-3993-forge-mod-guide/`。
+指针页位于 `permitted/mcmod-3993-forge-mod-guide/`（与 `links/` 相同，**不入库正文**）。
 
 ## Kaupenjoe 教程仓库（MIT 许可）
 
@@ -42,5 +42,5 @@
 |------|------|
 | https://www.mcmod.cn/post/6071.html | Kadar_Visico《工程化 Forge 开发指南》（1.20.1）。文首禁止转载 → 仅 `links/mcmod-6071-forge-engineering.md`；增量实务见 `authored/` 自写短文，不收录原文。 |
 | https://www.mcmod.cn/post/3282.html | 《用Java代码开发匠魂3附属模组》（Forge 1.18.2）。作者设定未经允许禁止转载 → 仅 `links/mcmod-dev-tutorials.md` 收录指针（2026-08-23 核实）。 |
-| https://www.mcmod.cn/post/3160.html | 《KubeJS6 面向新手的配方魔改教程》（KubeJS 6 / MC 1.19.2–1.21.1）。页面未见显式声明，按站点默认 BY-NC-SA 3.0 处理；保守仅收指针 → `links/mcmod-dev-tutorials.md`。 |
+| https://www.mcmod.cn/post/3160.html | 《KubeJS6 面向新手的配方魔改教程》（KubeJS 6 / MC 1.19.2–1.21.1）。页面未见显式声明，按站点默认 BY-NC-SA **4.0** 处理；保守仅收指针 → `links/mcmod-dev-tutorials.md`。 |
 | 3340 / 5442 / 2306 / 3603 / 3887 / 4987 / 4880 / 2500 | 《MixinBooter 的简单使用》《起源开发文档翻译·数据表指南》《CraftTweaker 和 KubeJs 配方修改》《战利品表数据包制作》《KubeJS 开发的奇巧方法》《NeoForge 前置 Json 动画实例》《站内收录模组加载器汇总》《Fabric 模组开发入门（过时）》。除 3340/5442/2306/3603/3887 为**显式 BY-NC-SA**、4987 为**未声明**（与 `links/mcmod-dev-tutorials.md` 一致）、4880/2500 按站点默认 BY-NC-SA 外无特殊声明；全部仅以指针形式收录于 `links/mcmod-dev-tutorials.md`（2026-08-23 逐篇核实，另附约 20 篇未逐篇核实的同主题帖 id 清单）。 |

@@ -1,26 +1,16 @@
 ---
 id: mcmod-3993/items-registry
-title: 物品注册：1.18/1.19 与 1.20 差异
-tags: [item, registry, deferredregister, creativetab]
+title: 物品注册：1.18/1.19 与 1.20 差异（仅指针）
+url: https://www.mcmod.cn/post/3993.html
+tags: [item, registry, deferredregister, creativetab, link-only]
 mcHint: 1.18-1.20
+sourceKind: permitted-pointer
 ---
 
-# 物品注册：版本差异摘要
+# 物品注册：版本差异（仅指针）
 
-> 提炼自社区教程；实现以各版本官方 API 与本仓库 rules 为准。
+- 原文：https://www.mcmod.cn/post/3993.html
+- 作者：耿悠博
+- 许可：见 `community_knowledge/ATTRIBUTION.md`（**本页不入库正文**）
 
-## 1.18.X / 1.19.X（常见写法）
-
-- `Item.Properties().tab(...)` 可直接挂创造页签。
-- 仍可见 `RegistryEvent.Register<Item>` + `setRegistryName` 一类写法（较旧）。
-
-## 1.20.X（推荐）
-
-- 使用 `DeferredRegister<Item>` + `RegistryObject`。
-- **不要**在 `Item.Properties` 上再 `.tab(...)`；创造页签改为：
-  - `DeferredRegister<CreativeModeTab>` 注册 Tab
-  - `BuildCreativeModeTabContentsEvent` 的 `event.accept(...)` 放入物品
-
-## 建议
-
-写新模组默认按 **1.20.1 DeferredRegister** 规则（见 `forge/1.20.1/.cursor/rules/01-registry.mdc`）。
+实现以各版本官方 API 与本仓库 `01-registry` 为准。写新模组默认按当前工程精确版本的 rules，不要从本页默写 `Item.Properties().tab`。

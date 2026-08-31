@@ -70,6 +70,7 @@ import {
   CommunityDocNotFoundError,
 } from "./docs-platform/index.js";
 import { diagnoseDataPaths, resolveDataDir } from "./utils/path.js";
+import { probeJava } from "./decompile/java/java-process.js";
 import { getSemanticIndexStatus } from "./docs-platform/semantic/status.js";
 import { analyzePortingPath, portProject } from "./porting/index.js";
 import { registerWaveExtensions, waveToolSchemas } from "./wave/register.js";
@@ -213,6 +214,7 @@ export const portProjectSchema = z.object({
   dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
   confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
   action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
+  neoforgeVersion: z.string().optional().describe("init_architectury 写入 gradle.properties 的 neoforge_version；缺省则拒绝"),
 });
 
 function communityDocError(e: unknown): CallToolResult {
@@ -294,7 +296,7 @@ const GENERATE_DATAGEN_DESC =
   "适用于：需要为方块/物品生成资源文件时（配方、方块状态、物品模型、掉落表、方块标签）。" +
   "注意：platform 与 version 均必填。Forge 1.20.1（Consumer<FinishedRecipe>）与 1.20.4（仅 recipe，buildRecipes(RecipeOutput)）；" +
   "NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；" +
-  "Fabric 精确档 1.21.1/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
+      "Fabric 精确档 1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
   "其它 Forge 版本（含 1.12.2）返回 error。" +
   "返回完整的 Java 代码模板。" +
   "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。";
@@ -406,13 +408,21 @@ server.registerTool(
   async ({ version, warmup }): Promise<CallToolResult> => {
     if (warmup === true) {
       if (missingMcVersion(version)) {
+        const action = versionRequiredAction();
+        action.nextSteps = [
+          "先调用 detect_mod_project 得到精确 minecraftVersion",
+          ...action.nextSteps,
+        ];
+        action.relatedTools = ["detect_mod_project", ...(action.relatedTools ?? [])];
         return {
-          content: [{ type: "text", text: JSON.stringify({ ok: false, action: versionRequiredAction() }, null, 2) }],
+          content: [{ type: "text", text: JSON.stringify({ ok: false, action }, null, 2) }],
+          isError: true,
         };
       }
       await warmupApi([version!.trim()]);
     }
     const focusVersion = String(version ?? "").trim();
+    const javaProbe = await probeJava();
     const result = {
       ok: true,
       focus: focusVersion ? getApiPreloadStatus(focusVersion) : { note: "未指定 focus version", preloaded: listApiPreloadStatuses() },
@@ -429,6 +439,15 @@ server.registerTool(
         returnType: returnType("()F"),
         readableSignature: readableSignature("getHealth", "()F"),
         parameterTypes: parameterTypes("(IF)V"),
+      },
+      java: {
+        node: process.version,
+        JAVA_HOME: process.env.JAVA_HOME ?? null,
+        version: javaProbe.versionText,
+        ready: javaProbe.ready,
+        hint: javaProbe.ready
+          ? "JDK 可用（反编译 / remap 需要 17+）。"
+          : "反编译 / remap 需要 JDK 17+。未设置 JAVA_HOME 时请安装 Temurin 17+ 并加入 PATH。",
       },
     };
     return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };

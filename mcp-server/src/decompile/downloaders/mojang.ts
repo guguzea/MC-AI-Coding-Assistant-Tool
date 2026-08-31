@@ -38,7 +38,15 @@ export async function fetchVersionManifest(force = false): Promise<{ versions: A
   if (!res.ok) {
     throw new DownloadError("DOWNLOAD_FAILED", `Mojang version manifest: HTTP ${res.status}`);
   }
-  const json = (await res.json()) as { versions: Array<{ id: string; url: string }> };
+  let json: { versions: Array<{ id: string; url: string }> };
+  try {
+    json = (await res.json()) as { versions: Array<{ id: string; url: string }> };
+  } catch (err) {
+    throw new DownloadError("DOWNLOAD_FAILED", `Mojang version manifest JSON 无法解析: ${(err as Error).message}`);
+  }
+  if (!Array.isArray(json?.versions)) {
+    throw new DownloadError("DOWNLOAD_FAILED", "Mojang version manifest 缺少 versions 数组");
+  }
   cachedManifest = { data: json, loadedAt: Date.now() };
   return json;
 }
@@ -55,7 +63,11 @@ export async function resolveMojangVersion(version: string, force = false): Prom
     if (!res.ok) {
       throw new DownloadError("DOWNLOAD_FAILED", `Mojang version json ${id}: HTTP ${res.status}`);
     }
-    versionJson = (await res.json()) as VersionJson;
+    try {
+      versionJson = (await res.json()) as VersionJson;
+    } catch (err) {
+      throw new DownloadError("DOWNLOAD_FAILED", `Mojang version json ${id} 无法解析: ${(err as Error).message}`);
+    }
   } else {
     throw new DownloadError(
       "VERSION_NOT_FOUND",
@@ -63,7 +75,7 @@ export async function resolveMojangVersion(version: string, force = false): Prom
     );
   }
 
-  const client = versionJson.downloads.client;
+  const client = versionJson.downloads?.client;
   if (!client?.url) {
     throw new DownloadError("VERSION_NOT_FOUND", `版本 ${id} 无 client jar 下载项`);
   }
@@ -74,7 +86,7 @@ export async function resolveMojangVersion(version: string, force = false): Prom
     clientJarSha1: client.sha1,
     clientJarSize: Number(client.size) || 0,
   };
-  const maps = versionJson.downloads.client_mappings;
+  const maps = versionJson.downloads?.client_mappings;
   if (maps?.url) {
     entry.clientMappingsUrl = maps.url;
     if (maps.sha1) entry.clientMappingsSha1 = maps.sha1;

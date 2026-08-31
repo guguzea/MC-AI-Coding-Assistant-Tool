@@ -41,6 +41,14 @@ function walkRelTree(
       symlinks.push(rel);
       continue;
     }
+    let real: string;
+    try {
+      real = realpathSync(p);
+    } catch {
+      continue;
+    }
+    if (seenReal.has(real)) continue;
+    seenReal.add(real);
     if (st.isDirectory()) {
       dirs.push(rel);
       walkRelTree(p, base, depth + 1, seenReal, files, dirs, symlinks);

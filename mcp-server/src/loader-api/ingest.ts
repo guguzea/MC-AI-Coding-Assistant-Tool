@@ -142,7 +142,18 @@ export function ingestLoaderApi(args: IngestLoaderApiArgs) {
     };
   }
 
-  const entries = readZip(readFileSync(jarPath));
+  let entries: Map<string, Buffer>;
+  try {
+    entries = readZip(readFileSync(jarPath));
+  } catch (err) {
+    return {
+      ok: false,
+      action: actionable("ZIP_PARSE_ERROR", `jar 条目读取失败: ${(err as Error).message}`, [
+        "核对 jar 是否完整、CRC 是否损坏",
+        "不要把损坏 zip 当 API 摘要源",
+      ]),
+    };
+  }
   const rawClasses: LoaderClassRecord[] = [];
   for (const [name, data] of entries) {
     const posix = name.replace(/\\/g, "/");

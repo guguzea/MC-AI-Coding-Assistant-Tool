@@ -17,7 +17,7 @@ import * as z from "zod";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { createFabricDocStore, DocNotFoundError, VersionNotFoundError, type SearchResult } from "./store.js";
+import { createFabricDocStore, DocNotFoundError, VersionNotFoundError, IndexCorruptError, type SearchResult } from "./store.js";
 import { resolveDataDir } from "../../utils/path.js";
 import {
   asPlatformDataMissingResult,
@@ -45,14 +45,31 @@ function fabricDocsVersion(requested: string): { requested: string; resolved: st
 
 // 按 source 缓存 store 实例（避免重复创建；key 含 dataRoot）
 const _stores = new Map<string, ReturnType<typeof createFabricDocStore>>();
+const STORE_CACHE_MAX = 8;
+
+function stripInternalSource<T extends Record<string, unknown>>(row: T): Omit<T, "_source"> {
+  const { _source: _drop, ...rest } = row as T & { _source?: unknown };
+  void _drop;
+  return rest;
+}
 
 function getStore(version: string, source: string) {
   const root = getDataRoot();
   const key = `${root}:${version}:${source}`;
-  if (!_stores.has(key)) {
-    _stores.set(key, createFabricDocStore(version, source, root));
+  const hit = _stores.get(key);
+  if (hit) {
+    _stores.delete(key);
+    _stores.set(key, hit);
+    return hit;
   }
-  return _stores.get(key)!;
+  const store = createFabricDocStore(version, source, root);
+  _stores.set(key, store);
+  while (_stores.size > STORE_CACHE_MAX) {
+    const oldest = _stores.keys().next().value;
+    if (oldest === undefined) break;
+    _stores.delete(oldest);
+  }
+  return store;
 }
 
 export const FABRIC_WIKI_CURRENT_SITE_WARNING =
@@ -94,12 +111,15 @@ function annotateFabricGetResult(
   source: string,
   payload: Record<string, unknown>,
 ): Record<string, unknown> {
+  const { _source: _drop, ...clean } = payload;
+  void _drop;
   const wiki = source === "fabric-wiki";
   const idVer = fabricPageIdVersion(id);
   const neighbor = Boolean(idVer && idVer !== requested);
-  if (!wiki && !neighbor) return payload;
+  if (!wiki && !neighbor) return { ...clean, source };
   return withDocsFallbackFields({
-    ...payload,
+    ...clean,
+    source,
     version: requested,
     requestedVersion: requested,
     resolvedVersion: wiki ? "fabric-wiki" : idVer,
@@ -170,6 +190,21 @@ function handleError(e: unknown): CallToolResult {
       }],
     };
   }
+  if (e instanceof IndexCorruptError) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          ok: false,
+          error: {
+            code: "INDEX_CORRUPT",
+            message: e.message,
+            hint: "索引 JSON 损坏或截断，请勿当成 VERSION_NOT_FOUND；检查 data/fabric_* 的 index-l*.json",
+          },
+        }, null, 2),
+      }],
+    };
+  }
   if (e instanceof DocNotFoundError) {
     const code = e.code === "UNSUPPORTED_PLATFORM" ? "UNSUPPORTED_PLATFORM" : "DOC_NOT_FOUND";
     const hint = e.code === "UNSUPPORTED_PLATFORM"
@@ -226,7 +261,9 @@ export async function listFabricVersions(): Promise<CallToolResult> {
           if (existsSync(docsL0) || existsSync(wikiL0)) versionSet.add(ver);
         }
       }
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.warn(`[fabric] 扫描 fabric_* 版本目录失败: ${(err as Error).message}`);
+    }
   }
   const allVersions = [...versionSet].sort();
   if (allVersions.length === 0) return platformDataMissingResult("fabric");
@@ -403,7 +440,7 @@ export async function searchFabricDocs(
     }
 
     const extraWarn =
-      requested === "26.2" || requested.startsWith("26.2")
+      requested === "26.2"
         ? "无 fabric_26.2 主文档树；26.2 移植页是独立旁路（source=porting-extra），26.1.2 develop_porting_index 是到 26.1。"
         : undefined;
     const wikiInvolved = resolvedSource === "fabric-wiki" || resolvedSource === "all" || usedWikiFallback;
@@ -445,7 +482,7 @@ export async function searchFabricDocs(
                   : undefined,
               ),
               total: (results as unknown as Array<unknown>).length,
-              results,
+              results: (results as Array<Record<string, unknown>>).map((r) => stripInternalSource(r)),
             }),
             null,
             2,
@@ -508,7 +545,6 @@ export async function getFabricDocSummary(
               url: page.url,
               firstParagraph: page.body.split(/\n/).find((l) => l.trim() && !l.startsWith("#")) ?? "",
               source: "porting-extra",
-              _source: "porting-extra",
             }),
           },
         ],
@@ -527,7 +563,6 @@ export async function getFabricDocSummary(
           text: JSON.stringify(
             annotateFabricGetResult(args.version, args.id, resolvedSource, {
               ...result,
-              _source: resolvedSource,
               ...(resolvedSource === "fabric-wiki"
                 ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
                 : {}),
@@ -598,7 +633,6 @@ export async function getFabricDocFull(
               content: page.body,
               meta: { id: page.id, version: page.to, label: page.title, url: page.url },
               source: "porting-extra",
-              _source: "porting-extra",
             }),
           },
         ],
@@ -618,7 +652,6 @@ export async function getFabricDocFull(
           text: JSON.stringify(
             annotateFabricGetResult(args.version, args.id, resolvedSource, {
               ...result,
-              _source: resolvedSource,
               ...(resolvedSource === "fabric-wiki"
                 ? { wikiIsCurrentSite: true, warning: FABRIC_WIKI_CURRENT_SITE_WARNING }
                 : {}),
@@ -685,7 +718,7 @@ export async function getFabricDocRelated(
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({ results: others, _source: "fabric-porting", id: args.id }, null, 2),
+          text: JSON.stringify({ results: others, source: "fabric-porting", id: args.id }, null, 2),
         }],
       };
     }
@@ -699,7 +732,7 @@ export async function getFabricDocRelated(
     return {
       content: [{
         type: "text",
-        text: JSON.stringify({ results: result, _source: resolvedSource }, null, 2),
+        text: JSON.stringify({ results: result, source: resolvedSource }, null, 2),
       }],
     };
   } catch (e) {

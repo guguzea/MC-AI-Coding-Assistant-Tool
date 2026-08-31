@@ -3,6 +3,7 @@ import { actionable, versionRequiredAction, missingMcVersion, type ActionEnvelop
 import { lookupObfuscated } from "../mappings/lookup-obfuscated.js";
 import { lineBounded } from "../utils/regex.js";
 import { ownGet } from "../utils/own-record.js";
+import { isExactMcVersionToken, isMcVersionFamily } from "../utils/minecraft-version.js";
 
 export type CrashKind =
   | "fml"
@@ -248,7 +249,20 @@ const KNOWN_PATTERNS: Array<{
     ],
     relatedMistakes: ["mc-registry: 注册名重复导致覆盖"],
   },
-  // ── 加载期：缺前置 / 版本不兼容 ──────────────────────────────────────────
+  // ── 加载期：版本不兼容须先于宽松 loading-failed / missing ────────────────
+  {
+    // A-4：`requires.*\[.*\].*but` 的顺序 .* 量化在 [ 密集输入下是多项式回溯，
+    // 收紧为行内否定字符类 + 有界量词。
+    pattern:
+      /ModResolutionException|Incompatible mods found|version range|VersionConstraint|ModLoadingException[^\n]{0,200}version|requires[^\n]{0,400}\[[^\]\n]{0,300}\][^\n]{0,200}\bbut\b/i,
+    cause: "模组或 loader 版本范围不兼容",
+    fix: [
+      "核对 Minecraft / Forge|Fabric|NeoForge 版本是否在依赖声明范围内",
+      "升级或降级冲突模组到兼容构建",
+      "检查 loaderVersion / depends 与当前安装是否一致",
+    ],
+    relatedMistakes: ["mc-project-setup: 版本范围写错"],
+  },
   {
     pattern: new RegExp(
       lineBounded(
@@ -265,19 +279,6 @@ const KNOWN_PATTERNS: Array<{
       "可配合 search_community_docs 查阅「软依赖 / 发布」实务要点",
     ],
     relatedMistakes: ["mc-project-setup: 强制依赖未声明或未安装"],
-  },
-  {
-    // A-4：`requires.*\[.*\].*but` 的顺序 .* 量化在 [ 密集输入下是多项式回溯，
-    // 收紧为行内否定字符类 + 有界量词。
-    pattern:
-      /ModResolutionException|Incompatible mods found|version range|VersionConstraint|ModLoadingException[^\n]{0,200}version|requires[^\n]{0,400}\[[^\]\n]{0,300}\][^\n]{0,200}\bbut\b/i,
-    cause: "模组或 loader 版本范围不兼容",
-    fix: [
-      "核对 Minecraft / Forge|Fabric|NeoForge 版本是否在依赖声明范围内",
-      "升级或降级冲突模组到兼容构建",
-      "检查 loaderVersion / depends 与当前安装是否一致",
-    ],
-    relatedMistakes: ["mc-project-setup: 版本范围写错"],
   },
   {
     pattern: /com\.mumfrey\.liteloader/i,
@@ -401,7 +402,7 @@ function rewriteFixesForLoader(
   const quilt = /org\.quiltmc/i.test(crashReport) || crashKind === "quilt";
   const known = neo || forgeOnly || fabric || quilt || crashKind === "liteloader" || crashKind === "rift" || crashKind === "modloader";
   const v = version?.trim() ?? "";
-  const neoNoDistExecutor = neo && (/^26\.1/.test(v) || v === "1.21.1");
+  const neoNoDistExecutor = neo && (isMcVersionFamily(v, "26.1") || v === "1.21.1");
 
   const mapFix = (s: string): string | null => {
     if (/DistExecutor|@OnlyIn\(Dist\.CLIENT\)/.test(s)) {
@@ -453,7 +454,9 @@ function buildLogHints(kind: CrashKind, matchedKnown: boolean): string[] {
 }
 
 function relatedToolsForCrashVersion(version: string): string[] {
-  if (/^26\.|^1\.21/.test(version.trim())) {
+  const t = version.trim();
+  const major26 = isExactMcVersionToken(t) && Number(t.split(".")[0]) >= 26;
+  if (major26 || isMcVersionFamily(t, "1.21")) {
     return ["search_neoforge_docs", "search_fabric_docs", "lookup_obfuscated"];
   }
   return ["lookup_obfuscated", "convert_mapping", "search_forge_docs"];
@@ -600,19 +603,26 @@ export function analyzeCrash(query: CrashQuery): CrashResult {
     truncated = true;
   }
   const deobfuscated: string[] = [];
+  const seenDeobf = new Set<string>();
+  const DEOBF_CAP = 64;
   const crashKind = detectCrashKind(crashReport);
 
   for (const line of crashReport.split("\n")) {
     const m = line.match(/([a-z][a-z0-9_]*(\$[a-z0-9_]+)+)/gi);
     if (m) {
       for (const name of m) {
+        if (seenDeobf.size >= DEOBF_CAP) break;
         if (/^lambda\$/i.test(name)) continue;
         if (/\$Properties$/i.test(name)) continue;
         if (/\$\$Lambda/i.test(name)) continue;
         if (/\$\d+$/.test(name)) continue;
+        const key = name.toLowerCase();
+        if (seenDeobf.has(key)) continue;
+        seenDeobf.add(key);
         deobfuscated.push(name);
       }
     }
+    if (seenDeobf.size >= DEOBF_CAP) break;
   }
 
   for (const { pattern, cause, fix, relatedMistakes } of KNOWN_PATTERNS) {

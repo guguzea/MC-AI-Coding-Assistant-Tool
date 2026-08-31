@@ -121,6 +121,14 @@ export class VersionNotFoundError extends Error {
   }
 }
 
+export class IndexCorruptError extends Error {
+  override name = "IndexCorruptError";
+  constructor(public version: string, public filepath: string) {
+    super(`INDEX_CORRUPT: 文档索引无法解析（version=${version}）`);
+    this.name = "IndexCorruptError";
+  }
+}
+
 // ── 版本降级映射 ─────────────────────────────────────────────────────────
 
 /**
@@ -324,7 +332,12 @@ export class NeoForgeDocStore {
     if (!existsSync(path)) {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
-    const data = JSON.parse(readFileSync(path, "utf-8"));
+    let data: unknown;
+    try {
+      data = JSON.parse(readFileSync(path, "utf-8"));
+    } catch {
+      throw new IndexCorruptError(version, path);
+    }
     this.setCache(this.indexCache, cacheKey, data);
     return data;
   }
@@ -336,7 +349,9 @@ export class NeoForgeDocStore {
     if (cached !== undefined) return cached;
 
     const path = join(versionDir, processedFile);
-    if (!existsSync(path)) return "";
+    if (!existsSync(path)) {
+      throw new DocNotFoundError(processedFile, basename(versionDir));
+    }
     const data = readFileSync(path, "utf-8");
     this.setCache(this.fileCache, cacheKey, data);
     return data;
@@ -451,7 +466,7 @@ export class NeoForgeDocStore {
       query, version, resolvedVersion: effectiveVersion,
       results: top.length, timestamp: Date.now(),
     });
-    if (this.searchLog.length > 500) this.searchLog.shift();
+    if (this.searchLog.length > 500) this.searchLog.splice(0, 100);
 
     return detailed;
   }
@@ -541,10 +556,10 @@ export class NeoForgeDocStore {
       content = banner + content;
     }
 
-    const keyBlocks = highlightKey ? this.extractKeyBlocks(content) : [];
+    const keyBlocks = highlightKey ? this.extractKeyBlocks(content) : undefined;
 
     return {
-      keyBlocks,
+      ...(keyBlocks ? { keyBlocks } : {}),
       content,
       meta: {
         id: raw.id,
@@ -596,16 +611,16 @@ export class NeoForgeDocStore {
     const target = this.findByFlexibleId(l0, pageId, version);
     if (!target) throw new DocNotFoundError(pageId, version);
 
-    const targetTags = new Set(target.tags);
+    const targetTags = new Set(target.tags ?? []);
     const scored = l0
-      .filter(e => e.id !== pageId)
-      .map(e => ({ ...e, _score: e.tags.filter(t => targetTags.has(t)).length }))
+      .filter(e => e.id !== target.id)
+      .map(e => ({ ...e, _score: (e.tags ?? []).filter(t => targetTags.has(t)).length }))
       .filter(e => e._score > 0)
       .sort((a, b) => b._score - a._score)
       .slice(0, limit)
       .map(({ _score, ...rest }) => rest);
 
-    ttlCacheSet(this.relatedCache, cacheKey, scored);
+    ttlCacheSet(this.relatedCache, cacheKey, scored, 256, NeoForgeDocStore.CACHE_TTL);
     return scored;
   }
 }

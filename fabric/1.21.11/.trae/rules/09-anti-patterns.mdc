@@ -16,27 +16,28 @@
 
 ## 1. 注册系统反模式
 
-### ❌ 在 onInitialize() 外注册
+### ❌ 无入口的类加载副作用注册
 
 ```java
-// ❌ 错误
+// ❌ 错误：static {} 在没有任何 entrypoint 调用时就会跑，专用服务端/类加载顺序不可控
 public class ExampleMod implements ModInitializer {
     private static final Item MY_ITEM = new Item(new Item.Settings());
-
-    // 类加载时注册，但应在 onInitialize() 中
     static {
         Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), MY_ITEM);
     }
 }
 
-// ✅ 正确
+// ✅ 正确：onInitialize 触发静态注册（官方常见 ModItems.initialize()）
+public class ModItems {
+    public static final Item MY_ITEM = new Item(new Item.Settings());
+    public static void initialize() {
+        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), MY_ITEM);
+    }
+}
 public class ExampleMod implements ModInitializer {
-    private static final Item MY_ITEM =
-        Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_item"), new Item(new Item.Settings()));
-
     @Override
     public void onInitialize() {
-        // 静态初始化已在类加载时完成，但最佳实践是在此处初始化
+        ModItems.initialize();
     }
 }
 ```
@@ -210,6 +211,23 @@ dependencies {
     modApi("net.fabricmc.fabric-api:fabric-api:0.141.3+1.21.11")  // 传递依赖
     modImplementation("com.example:third-party-mod:1.0.0")  // 不传递
 }
+```
+
+---
+
+### ❌ 使用已删除的 Fabric API
+
+本档 **1.21.11** 不要再用：
+
+- `ScreenHandlerRegistry` / `ScreenRegistry` — 用 `Registry.register(Registries.SCREEN_HANDLER, …)` + `HandledScreens.register`；`ScreenHandlerType` 构造依赖 fabric-api access widener
+- `FabricItemSettings` — 用原版 `Item.Settings`
+- `FuelRegistry`（旧命令式 API）— 用本档 datagen / 燃料数据包，不要抄邻版 `FuelRegistry.INSTANCE.add`
+
+```java
+// ❌ 错误：这些类已从本档 Fabric API 移除
+ScreenHandlerRegistry.registerSimple(...);
+new FabricItemSettings();
+FuelRegistry.INSTANCE.add(...);
 ```
 
 ---

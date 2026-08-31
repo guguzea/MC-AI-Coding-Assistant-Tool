@@ -22,7 +22,7 @@ description: 01 — manifest.json
 
 - `format_version`：资源/行为/世界模板用 **2**。**3** 是 Preview（semver 字符串版本、自定义 pack 设置）；未点名 Preview 不要写 3。皮肤包可用 1。
 - `header`：`name` / `description` / `uuid` / `version` / `min_engine_version`。世界模板另有 `base_game_version`、`allow_random_seed`（仅 world template）。
-- `modules[].type`：`resources` | `data` | `script` | `world_template`。
+- `modules[].type`：`resources` | `data` | `script` | `world_template` | `client_data`。Learn 表与部分示例不完全一致：`client_data` 出现在官方示例/校验器中，写 RP 客户端数据模块时可用；不要把 SP 当第三种顶层包（脚本模块放在 BP 内）。
 - `capabilities` 可选；Learn pack-manifest **未列出** `script_eval`（勿当已核实能力举例）。**不是** 世界「Beta APIs」开关。
 - **禁止** `"experimentalGameplay": true`。世界实验见 07 与 `knowledge/common/experiments.md`。
 

@@ -479,13 +479,14 @@ export function extractCompilationUnit(javaText: string, fileHint?: string): Loa
     const msg = err instanceof Error ? err.message : String(err);
     return [
       {
-        fqcn: `__parse_error__:${(fileHint ?? "unknown").replace(/\\/g, "/")}`,
+        fqcn: `__parse_error__:${repoSafeSourcePath(fileHint) ?? "unknown"}`,
         simpleName: "unknown",
         apiStatusInternal: false,
         environment: false,
         methods: [],
         parseError: String(msg)
           .replace(/[A-Za-z]:[\\/][^\s"']+/g, "[redacted-path]")
+          .replace(/(?:\/home|\/Users|\/tmp|\/var|\/opt|\/usr)\/[^\s"']+/g, "[redacted-path]")
           .replace(/mc-skill-temp[^\s"']*/gi, "[redacted-path]"),
         file: repoSafeSourcePath(fileHint),
       },

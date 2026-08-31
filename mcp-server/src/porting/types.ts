@@ -22,6 +22,10 @@ export const portProjectSchema = z.object({
   dryRun: z.boolean().optional().default(true).describe("默认 true：仅输出 diff 预览，不写入任何文件"),
   confirmed: z.boolean().optional().describe("仅在 dryRun=false 时有效，用户显式确认后才实际写入"),
   action: z.enum(["init_architectury", "extract_common", "apply_version_migration"]).describe("要执行的动作"),
+  neoforgeVersion: z
+    .string()
+    .optional()
+    .describe("init_architectury 写入 gradle.properties 的 neoforge_version；缺省则拒绝"),
 });
 
 export type PortProjectInput = z.infer<typeof portProjectSchema>;
@@ -111,6 +115,7 @@ export interface AnalyzePortingOutput {
     current: CurrentInfo;
     target: TargetInfo;
     knowledgeGaps: string[];
+    breakingChanges: unknown[];
     riskAssessment: RiskAssessment;
     recommendedRoute: string;
     routeSteps: string[];

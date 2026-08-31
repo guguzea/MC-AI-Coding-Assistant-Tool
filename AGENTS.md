@@ -107,7 +107,7 @@ loaderVersion="[44,)"
 id 'net.minecraftforge.gradle'
 ```
 
-如果匹配 → 调用 `activate_platform_pack action=session`（`platform=forge` + 精确 `minecraftVersion`）。禁止把 `forge/<ver>/.cursor` 当加载器 Read。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=forge` + 精确 `minecraftVersion`）。禁止把 `forge/<ver>/.cursor` 当加载器 Read。**`forge/1.21.1` 是 draft**：无 00–10 规则树、**不在** `list_forge_versions` 文档版本清单；session 返回 `PACK_NOT_FOUND`。禁止用 NeoForge 1.21.1 或 Forge 1.20.4 顶上。
 
 ### 6. 检查 Rift
 
@@ -125,7 +125,7 @@ id 'net.minecraftforge.gradle'
 
 查找包根 `manifest.json` 且含 `format_version` + `modules`（`resources` / `data` / `script` / `world_template`）。
 
-如果匹配 → 调用 `activate_platform_pack action=session`（`platform=bedrock`）。不要用 Java `query_api` / Yarn / Mixin。禁止把 `bedrock/.cursor` 当加载器 Read。
+如果匹配 → 调用 `activate_platform_pack action=session`（`platform=bedrock`）。不要用 Java `query_api` / Yarn / Mixin。禁止把 `bedrock/.cursor` 当加载器 Read。session 的 `topics` 数字在基岩**不是** Java 主题：写方块看 **05**（`05-blocks-items`）不是 02；02 是资源包。Java task（`mc-new-block`）在基岩不会灌 `02-resource-pack`。
 
 ### 9. 未知平台
 
@@ -252,7 +252,7 @@ Decision: 选择注册方式
 
 ## MCP Server 工具（可选）
 
-如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**（**22.5–22.12 还需 `--experimental-sqlite`**，22.13+ 免），`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
+如果项目根目录下存在 `mcp-server/`（即本项目 `MC_skill`），可以使用本地 stdio MCP（服务名 **`MC-AI-Coding-Assistant-Tool`**；需 Node **>= 22.5**（**22.5–22.12 与 23.0–23.3 需 `--experimental-sqlite`**，22.13+ / 23.4+ 免），`MC_SKILL_DATA` 指向 `data/`，可选 `MC_SKILL_COMMUNITY`）：
 
 | 工具 | 功能 |
 | --- | --- |

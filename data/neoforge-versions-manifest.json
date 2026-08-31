@@ -7,9 +7,9 @@
     "26.1": {
       "version": "26.1",
       "mcVersion": "26.1",
-      "neoforgeVersion": "26.1.x",
+      "neoforgeVersion": "26.1.0.x",
       "javaVersion": 25,
-      "mappings": "mojmaps+parchment",
+      "mappings": "mojmap-only",
       "route": "",
       "unversionedCurrent": true,
       "docBase": "https://docs.neoforged.net/docs/",
@@ -43,7 +43,7 @@
     "1.21.11": {
       "version": "1.21.11",
       "mcVersion": "1.21.11",
-      "neoforgeVersion": "21.1.113+",
+      "neoforgeVersion": "21.11.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.21.11",
@@ -78,7 +78,7 @@
     "1.21.10": {
       "version": "1.21.10",
       "mcVersion": "1.21.10",
-      "neoforgeVersion": "21.1.90+",
+      "neoforgeVersion": "21.10.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.21.10",
@@ -114,7 +114,7 @@
     "1.21.8": {
       "version": "1.21.8",
       "mcVersion": "1.21.8",
-      "neoforgeVersion": "21.1.70+",
+      "neoforgeVersion": "21.8.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.21.8",
@@ -149,7 +149,7 @@
     "1.21.5": {
       "version": "1.21.5",
       "mcVersion": "1.21.5",
-      "neoforgeVersion": "21.1.50+",
+      "neoforgeVersion": "21.5.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.21.5",
@@ -184,7 +184,7 @@
     "1.21.3": {
       "version": "1.21.3",
       "mcVersion": "1.21.3",
-      "neoforgeVersion": "21.1.30+",
+      "neoforgeVersion": "21.3.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.21.3",
@@ -254,7 +254,7 @@
     "1.20.6": {
       "version": "1.20.6",
       "mcVersion": "1.20.6",
-      "neoforgeVersion": "20.4.100+",
+      "neoforgeVersion": "20.6.x",
       "javaVersion": 21,
       "mappings": "mojmaps+parchment",
       "route": "1.20.6",
@@ -325,7 +325,7 @@
     "26.2": {
       "version": "26.2",
       "mcVersion": "26.2",
-      "neoforgeVersion": "26.2.x",
+      "neoforgeVersion": "26.2.0.x",
       "javaVersion": 25,
       "mappings": "mojmap-only",
       "route": "26.2",

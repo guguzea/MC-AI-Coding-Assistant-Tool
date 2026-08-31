@@ -29,7 +29,7 @@ import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
 import { analyzeModJar } from "./mod-analyzer.js";
-import { assertVineflowerDiskSpace } from "./java-pipeline.js";
+import { assertVineflowerDiskSpace, ensureMojmapTiny, remapperCli } from "./java-pipeline.js";
 
 export interface DecompileModJarArgs {
   jarPath: string;
@@ -306,7 +306,11 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             const info = await resolveYarnMappings(args.version);
             const yarnPath = join(cache.mappings, `yarn-${args.version}.jar`);
             if (!mappingCacheViable(cache.root, yarnPath, `mc-mappings:${args.version}:yarn`)) {
-              const dl = await downloadFile(info.jarUrl, yarnPath, { label: `yarn mappings ${info.build}` });
+              const dl = await downloadFile(info.jarUrl, yarnPath, {
+                label: `yarn mappings ${info.build}`,
+                expectedSha256: info.sha256 ?? null,
+                expectedSha1: info.sha1 ?? null,
+              });
               const db = openCacheDb(cache.root);
               try {
                 setArtifact(db, `mc-mappings:${args.version}:yarn`, "mappings", yarnPath, {
@@ -350,28 +354,23 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
             if (!isPathInside(cache.remapped, step1)) {
               throw new Error("remap 中间路径逃出 remapped 缓存目录");
             }
-            const r1 = await runJava([
-              "-jar", tiny,
-              "--forceLocal", "--ignoreConflicts",
-              args.jarPath, step1, mappings, "official", "intermediary",
-            ]);
+            const r1 = await runJava(
+              remapperCli(tiny, args.jarPath, step1, mappings, "official", "intermediary"),
+            );
             if (r1.code !== 0) {
               throw new Error(`模组 remap 失败 step1 official→intermediary(code=${r1.code}): ${tail(r1.stderr)}`);
             }
-            const r2 = await runJava([
-              "-jar", tiny,
-              "--forceLocal", "--ignoreConflicts",
-              step1, remappedJar, mappings, "intermediary", "named",
-            ]);
+            const r2 = await runJava(
+              remapperCli(tiny, step1, remappedJar, mappings, "intermediary", "named"),
+            );
             if (r2.code !== 0) {
               throw new Error(`模组 remap 失败 step2 intermediary→named(code=${r2.code}): ${tail(r2.stderr)}`);
             }
           } else {
-            const r = await runJava([
-              "-jar", tiny,
-              "--forceLocal", "--ignoreConflicts",
-              args.jarPath, remappedJar, mappings, "official", "mojmap",
-            ]);
+            const tinyMappings = await ensureMojmapTiny(mappings);
+            const r = await runJava(
+              remapperCli(tiny, args.jarPath, remappedJar, tinyMappings, "official", "named"),
+            );
             if (r.code !== 0) {
               throw new Error(`模组 remap 失败(code=${r.code}): ${tail(r.stderr)}`);
             }

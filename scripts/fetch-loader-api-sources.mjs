@@ -11,8 +11,11 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import os from "os";
 import { redactAbs } from "./_lib/redact-abs.mjs";
+import { wantWrite, logDryRunBanner } from "./_lib/write-guard.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const WRITE = wantWrite();
+if (!WRITE) logDryRunBanner("fetch-loader-api-sources");
 const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const SRC = join(CACHE, "loader-api-src");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
@@ -76,10 +79,10 @@ const FILES = [
     key: "1.12.2-liteloader",
     mappingsVersion: "mcp-1.12.2",
     urls: [
-      "http://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/HUDRenderListener.java",
-      "http://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/RenderListener.java",
-      "http://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/ViewportListener.java",
-      "http://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/main/java/com/mumfrey/liteloader/PluginChannelListener.java",
+      "https://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/HUDRenderListener.java",
+      "https://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/RenderListener.java",
+      "https://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/client/java/com/mumfrey/liteloader/ViewportListener.java",
+      "https://develop.liteloader.com/liteloader/LiteLoader/-/raw/1.12.2/src/main/java/com/mumfrey/liteloader/PluginChannelListener.java",
     ],
   },
 ];
@@ -186,9 +189,9 @@ for (const group of FILES) {
     writeFileSync(dest, got.text, "utf8");
   }
   const classes = extractDir(dir);
-  if (group.key === "1.12.2-liteloader" && classes.length === 0) {
-    console.log("1.12.2-liteloader: skip overwrite (GitLab login wall); keep handwritten summary");
-    report.push({ key: group.key, classes: 0, okUrls: 0, skippedWrite: true });
+  if (classes.length === 0) {
+    console.log(`${group.key}: skip overwrite (empty classes); keep existing summary`);
+    report.push({ key: group.key, classes: 0, okUrls: fetched.filter((f) => f.ok).length, skippedWrite: true });
     continue;
   }
   const summary = {
@@ -201,16 +204,24 @@ for (const group of FILES) {
     fetched,
     note: "源码只在 $MC_SKILL_CACHE，不入库。缺 mappingsVersion 视为无效。",
   };
-  writeFileSync(join(OUT, `${group.key}.json`), JSON.stringify(summary, null, 2), "utf8");
+  const outPath = join(OUT, `${group.key}.json`);
+  if (!WRITE) {
+    report.push({ key: group.key, classes: classes.length, okUrls: fetched.filter((f) => f.ok).length, dryRun: true });
+    console.log(`${group.key}: ${classes.length} classes (dry-run)`);
+    continue;
+  }
+  writeFileSync(outPath, JSON.stringify(summary, null, 2), "utf8");
   report.push({ key: group.key, classes: classes.length, okUrls: fetched.filter((f) => f.ok).length });
   console.log(`${group.key}: ${classes.length} classes, ${fetched.filter((f) => f.ok).length}/${fetched.length} files`);
 }
 
-const lastDir = join(CACHE, "loader-api-summaries");
-mkdirSync(lastDir, { recursive: true });
-writeFileSync(
-  join(lastDir, "fetch-loader-api-sources-last.json"),
-  JSON.stringify({ cache: "$MC_SKILL_CACHE", report: redactAbs(report, { cache: CACHE, repo: ROOT }) }, null, 2),
-  "utf8",
-);
+if (WRITE) {
+  const lastDir = join(CACHE, "loader-api-summaries");
+  mkdirSync(lastDir, { recursive: true });
+  writeFileSync(
+    join(lastDir, "fetch-loader-api-sources-last.json"),
+    JSON.stringify({ cache: "$MC_SKILL_CACHE", report: redactAbs(report, { cache: CACHE, repo: ROOT }) }, null, 2),
+    "utf8",
+  );
+}
 console.log("done", SRC);

@@ -136,6 +136,21 @@ export function normalizeZipLayout(entries: string[]): {
 }
 
 export function extractZip(zipPath: string, destDir: string): { ok: boolean; action?: ActionEnvelope } {
+  const listed = listZipEntries(zipPath);
+  if (!listed.ok) return { ok: false, action: listed.action };
+  for (const e of listed.entries ?? []) {
+    if (isUnsafeZipEntry(e)) {
+      return {
+        ok: false,
+        action: actionable(
+          "DATA_ZIP_LAYOUT_INVALID",
+          `不安全路径: ${e}`,
+          ["Release zip 不得含 .. / 绝对路径 / Windows 保留名"],
+          ["mc_skill_update"],
+        ),
+      };
+    }
+  }
   // GNU tar 不能解 zip；必须探测 unzip / 7z / bsdtar（与 mdk 同一套探测）
   const tool = probeUnzipTool();
   if (!tool) {

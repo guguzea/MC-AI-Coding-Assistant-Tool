@@ -81,7 +81,7 @@ data/**/*-journal
 
 # 测试残留（MCP 解包产物，勿入库；已跟踪的需 git rm -r --cached data/test_mcp_check）
 data/test_mcp_check/
-
+mcp-server/--only=*/
 # 会话缓存 / 提交信息草稿（本地工作文件）
 _tmp_session.json
 .gitcommitmsg.txt

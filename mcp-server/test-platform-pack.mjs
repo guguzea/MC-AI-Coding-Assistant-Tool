@@ -1261,6 +1261,29 @@ function assertHasRuleIds(s, want, label) {
   console.log("LH1 payload mod-bus wording: ok");
 }
 
+{
+  const s = sessionPlatformPack({ platform: "bedrock", minecraftVersion: "1.21.0", task: "mc-new-block" });
+  assert.equal(s.ok, true, JSON.stringify(s).slice(0, 400));
+  assert.equal(s.ruleSchema, "bedrock");
+  const names = (s.rules ?? []).map((r) => r.fileName);
+  assert.ok(!names.some((n) => /02-resource-pack/.test(n) && (s.ruleIds ?? []).includes("02")), names.join(","));
+  assert.ok(!(s.ruleIds ?? []).includes("02"), `mc-new-block 不得灌 02，got ${JSON.stringify(s.ruleIds)}`);
+  const w = (s.warnings ?? []).join(" | ");
+  assert.ok(/mc-bedrock-addon|mc-bedrock-block-item|与 Java 无关/.test(w), w);
+  console.log("bedrock task=mc-new-block does not inject 02: ok");
+}
+
+{
+  const s = sessionPlatformPack({ platform: "bedrock", minecraftVersion: "1.21.0", topics: ["08"] });
+  assert.equal(s.ok, true, JSON.stringify(s).slice(0, 400));
+  const hit = (s.rules ?? []).find((r) => r.id === "08");
+  assert.ok(hit, JSON.stringify((s.rules ?? []).map((r) => r.fileName)));
+  assert.equal(hit.fileName, "08-worldgen.mdc");
+  const w = (s.warnings ?? []).join(" | ");
+  assert.ok(/与 Java 无关|Java 00–10 无关/.test(w), w);
+  console.log("bedrock topics=08 is worldgen + Java-unrelated warning: ok");
+}
+
 if (savedRoot) process.env.MC_SKILL_PROJECT_ROOT = savedRoot;
 else delete process.env.MC_SKILL_PROJECT_ROOT;
 if (savedAllow) process.env.MC_SKILL_ALLOW_WRITE = savedAllow;

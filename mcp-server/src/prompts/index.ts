@@ -60,7 +60,24 @@ export function readKnowledgeResource(uri: string): { found: boolean; uri: strin
 
   if (uri === "mcskill://schema/sqlite" || uri.startsWith("mcskill://schema/sqlite?")) {
     const q = uri.includes("?") ? Object.fromEntries(new URLSearchParams(uri.split("?")[1] ?? "")) : {};
-    const ver = (q.version ?? "1.20.1").replace(/[^0-9.]/g, "") || "1.20.1";
+    const rawVer = String(q.version ?? "").trim();
+    if (!rawVer) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text: "缺少 version 参数，禁止默认 1.20.1。请使用 mcskill://schema/sqlite?version=<精确 MC 版本>",
+      };
+    }
+    const ver = rawVer.replace(/[^0-9.]/g, "");
+    if (!ver) {
+      return {
+        found: false,
+        uri,
+        mimeType: "text/plain",
+        text: `非法 version「${rawVer}」，禁止默认 1.20.1。`,
+      };
+    }
     const p = join(resolveDataDir(`forge_${ver}`, "mappings"), "yarn-mappings.sqlite");
     return {
       found: true,

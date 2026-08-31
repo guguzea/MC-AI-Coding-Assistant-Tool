@@ -1,6 +1,6 @@
 ---
 name: mc-block
-description: Fabric 方块开发。FabricBlockSettings、Block、BlockItem、BlockEntity。触发词：方块、Block、FabricBlockSettings、BlockEntity
+description: Fabric 方块开发。AbstractBlock.Settings、Block、BlockItem、BlockEntity。触发词：方块、Block、AbstractBlock.Settings、BlockEntity
 platform: fabric
 version: "1.21.11"
 dependencies: []
@@ -9,7 +9,7 @@ mappings: yarn
 
 # 方块开发（Fabric 1.21.11）
 
-FAPI 用 `copyOf(Blocks.STONE)` / `FabricBlockSettings.of()`。**没有** `create()`。地图色用 `MapColor.STONE_GRAY`。
+方块属性用 Yarn `AbstractBlock.Settings`（`copy` / `of` / `create`）。Mojmap 对应 `BlockBehaviour.Properties`。**不要**写已删除的 `FabricBlockSettings`。地图色用 `MapColor.STONE_GRAY`。
 
 ## 快速开始
 
@@ -17,7 +17,7 @@ FAPI 用 `copyOf(Blocks.STONE)` / `FabricBlockSettings.of()`。**没有** `creat
 private static final Block MY_STONE = Registry.register(
     Registries.BLOCK,
     Identifier.of(MOD_ID, "my_stone"),
-    new Block(FabricBlockSettings.copyOf(Blocks.STONE).strength(1.5f))
+    new Block(AbstractBlock.Settings.copy(Blocks.STONE).strength(1.5f))
 );
 
 private static final Item MY_STONE_ITEM = Registry.register(
@@ -31,7 +31,7 @@ private static final Item MY_STONE_ITEM = Registry.register(
 
 ```
 IF 静态方块（无特殊行为）
-  → new Block(FabricBlockSettings.copyOf(Blocks.STONE))
+  → new Block(AbstractBlock.Settings.copy(Blocks.STONE))
 
 IF 需要交互
   → 自定义 Block 子类
@@ -43,10 +43,10 @@ IF 需要自定义渲染
   → Block + 客户端 renderer
 ```
 
-## FabricBlockSettings 常用配置
+## AbstractBlock.Settings 常用配置
 
 ```java
-FabricBlockSettings.of()
+AbstractBlock.Settings.create()
     .strength(1.5f)
     .strength(1.5f, 6.0f)
     .requiresTool()
@@ -106,7 +106,7 @@ private static final BlockEntityType<MyChestBlockEntity> MY_CHEST =
 - ❌ BlockItem 与 Block 使用不同 registry name — 物品形态缺失
 - ❌忘记注册 BlockItem — 方块无法放入物品栏
 - ❌ 在服务端创建客户端渲染对象
-- ❌ `FabricBlockSettings.create()`
+- ❌ `FabricBlockSettings`（本档已删除；用 `AbstractBlock.Settings` / Mojmap `BlockBehaviour.Properties`）
 
 ## 扩展点
 

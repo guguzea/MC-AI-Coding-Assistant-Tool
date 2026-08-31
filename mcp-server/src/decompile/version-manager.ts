@@ -160,6 +160,9 @@ export interface MappingDecision {
  * - mojmap：全支持区间可用
  */
 export function resolveMappingChoice(mapping: string | undefined, vi: VersionInfo): MappingDecision {
+  if (mapping !== undefined && mapping !== "" && mapping !== "auto" && mapping !== "yarn" && mapping !== "mojmap") {
+    return { error: `未知 mapping「${mapping}」，仅支持 auto / yarn / mojmap` };
+  }
   if (mapping === "mojmap") return { mapping: "mojmap" };
   if (mapping === "yarn") {
     if (!vi.hasYarn) {

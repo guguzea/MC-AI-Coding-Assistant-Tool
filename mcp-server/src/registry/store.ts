@@ -3,13 +3,30 @@ import { DatabaseSync } from "node:sqlite";
 import { vanillaRegistrySqlitePath } from "./builder.js";
 
 const _cache = new Map<string, DatabaseSync>();
+const REGISTRY_DB_CAP = 8;
 
 function openRegistryDb(version: string): DatabaseSync | null {
   const path = vanillaRegistrySqlitePath(version);
   if (!existsSync(path)) return null;
-  if (_cache.has(path)) return _cache.get(path)!;
+  const cached = _cache.get(path);
+  if (cached) {
+    _cache.delete(path);
+    _cache.set(path, cached);
+    return cached;
+  }
   const db = new DatabaseSync(path, { readOnly: true });
   _cache.set(path, db);
+  while (_cache.size > REGISTRY_DB_CAP) {
+    const oldest = _cache.keys().next().value;
+    if (oldest === undefined) break;
+    const old = _cache.get(oldest);
+    _cache.delete(oldest);
+    try {
+      old?.close();
+    } catch {
+      /* ignore */
+    }
+  }
   return db;
 }
 

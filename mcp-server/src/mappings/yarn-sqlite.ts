@@ -66,6 +66,19 @@ function dbCacheKey(dbPath: string): string {
   return process.platform === "win32" ? dbPath.toLowerCase() : dbPath;
 }
 
+function withReadOnlyDb<T>(dbPath: string, fn: (db: MappingDb) => T): T {
+  const db = new DatabaseSync(dbPath, { readOnly: true });
+  try {
+    return fn(db);
+  } finally {
+    try {
+      db.close();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 function openDbCached(dbPath: string): MappingDb | null {
   const key = dbCacheKey(dbPath);
   const cached = _dbs.get(key);
@@ -120,11 +133,11 @@ export function resolveMappingDbPath(version: string): string | null {
   let chosen: string | null = null;
   if (existsSync(fabric)) {
     try {
-      const db = new DatabaseSync(fabric, { readOnly: true });
-      const era = readMeta(db, "mappingEra") || "";
-      const mc = methodCountOf(db);
-      db.close();
-      if (mc > 0 || era === "yarn-tiny") chosen = fabric;
+      chosen = withReadOnlyDb(fabric, (db) => {
+        const era = readMeta(db, "mappingEra") || "";
+        const mc = methodCountOf(db);
+        return mc > 0 || era === "yarn-tiny" ? fabric : null;
+      });
     } catch {
       chosen = null; // 打开失败不乐观缓存（B19），转 forge 兜底
     }
@@ -134,19 +147,15 @@ export function resolveMappingDbPath(version: string): string | null {
   }
   if (chosen === fabric && existsSync(forge)) {
     try {
-      const fdb = new DatabaseSync(fabric, { readOnly: true });
-      const fabMc = methodCountOf(fdb);
-      fdb.close();
-      const gdb = new DatabaseSync(forge, { readOnly: true });
-      const forgeMc = methodCountOf(gdb);
-      gdb.close();
+      const fabMc = withReadOnlyDb(fabric, methodCountOf);
+      const forgeMc = withReadOnlyDb(forge, methodCountOf);
       if (fabMc === 0 && forgeMc > 0) chosen = forge;
     } catch {
       /* keep fabric */
     }
   }
 
-  if (chosen) _pathCache.set(v, chosen);
+  _pathCache.set(v, chosen);
   return chosen;
 }
 
@@ -158,23 +167,23 @@ export function resolveCsvMappingDbPath(version: string): string | null {
   let chosen: string | null = null;
   if (forge && existsSync(forge)) {
     try {
-      const db = new DatabaseSync(forge, { readOnly: true });
-      const era = readMeta(db, "mappingEra");
-      let seargeCount = 0;
-      try {
-        seargeCount = (
-          db.prepare("SELECT COUNT(*) AS c FROM searge_methods").get() as { c: number }
-        ).c;
-      } catch {
-        seargeCount = 0;
-      }
-      db.close();
-      if (era === "mcp-csv" || seargeCount > 0) chosen = forge;
+      chosen = withReadOnlyDb(forge, (db) => {
+        const era = readMeta(db, "mappingEra");
+        let seargeCount = 0;
+        try {
+          seargeCount = (
+            db.prepare("SELECT COUNT(*) AS c FROM searge_methods").get() as { c: number }
+          ).c;
+        } catch {
+          seargeCount = 0;
+        }
+        return era === "mcp-csv" || seargeCount > 0 ? forge : null;
+      });
     } catch {
       /* ignore */
     }
   }
-  if (chosen) _csvPathCache.set(v, chosen);
+  _csvPathCache.set(v, chosen);
   return chosen;
 }
 
@@ -205,7 +214,7 @@ export function closeAllYarnDbs(): void {
 
 export function yarnDbIsOpen(version: string): boolean {
   const p = resolveMappingDbPath(version);
-  return p ? _dbs.has(p) : false;
+  return p ? _dbs.has(dbCacheKey(p)) : false;
 }
 
 function toSlash(name: string): string {
@@ -416,7 +425,8 @@ export function lookupField(
           },
         };
       }
-    } else {
+    }
+    if (!isSearge) {
       const rows = csvDb
         .prepare(
           "SELECT searge, name_named, descriptor_named FROM searge_fields WHERE name_named = ? LIMIT 20",
@@ -636,7 +646,7 @@ export function resolveOwnerClassNamed(
   const hit = db
     .prepare("SELECT named FROM classes WHERE named = ? LIMIT 1")
     .get(slash) as { named: string } | undefined;
-  return hit?.named ?? slash;
+  return hit?.named ?? null;
 }
 
 type SeargeCsvRow = {
@@ -923,8 +933,8 @@ export function lookupMethod(
         .prepare("SELECT searge, name_named, descriptor_named FROM searge_methods WHERE searge = ?")
         .get(memberName) as SeargeCsvRow | undefined;
       if (row) return methodRowFromCsv(csvDb, row, methodsDb);
-      // fall through to yarn-tiny if available
-    } else {
+    }
+    if (!isSearge) {
       const rows = csvDb
         .prepare(
           "SELECT searge, name_named, descriptor_named FROM searge_methods WHERE name_named = ? LIMIT 20",

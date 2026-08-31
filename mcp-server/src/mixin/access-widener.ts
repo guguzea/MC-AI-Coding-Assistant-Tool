@@ -127,9 +127,9 @@ export function parseAccessWidener(
       entries.push({
         type,
         owner: tokens[1],
-        member: tokens[2],
-        descriptor: tokens[3],
-        kind: kindToken === "class" ? "class" : "member",
+        member: kindToken === "class" ? undefined : tokens[2],
+        descriptor: kindToken === "class" ? undefined : tokens[3],
+        kind: kindToken === "class" || tokens[2] === undefined ? "class" : "member",
         transitive,
         raw: line,
         lineNo,
@@ -266,8 +266,16 @@ function detectWidenerConflicts(entries: AccessWidenerEntry[]): { conflicts: Acc
   return { conflicts, warnings };
 }
 
-/** 单一 content 内 `# ==== file: 名字 ====` 注释行作为文件边界，用于跨文件冲突检测。 */
+/** 单一 content 内 `# ==== file: 名字 ====` 注释行作为文件边界，用于跨文件冲突检测。后续段若缺 header 则继承第一段。 */
 export function splitWidenerFiles(content: string): string[] {
-  const segments = content.split(/^#\s*={3,}.*$/gm);
-  return segments.map((s) => s.trim()).filter((s) => s.length > 0);
+  const segments = content.split(/^#\s*={3,}.*$/gm).map((s) => s.trim()).filter((s) => s.length > 0);
+  if (segments.length <= 1) return segments;
+  const headerMatch = segments[0].match(/^accessWidener\s+\S+\s+\S+/m);
+  const header = headerMatch?.[0];
+  if (!header) return segments;
+  return segments.map((s, i) => {
+    if (i === 0) return s;
+    if (/^accessWidener\s/m.test(s)) return s;
+    return `${header}\n${s}`;
+  });
 }

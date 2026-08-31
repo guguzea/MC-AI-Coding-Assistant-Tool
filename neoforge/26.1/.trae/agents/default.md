@@ -19,6 +19,8 @@
 
 26.1 是独立档：Java 25、去混淆、ModContainer 构造参数、GatherDataEvent 拆分。官方 /docs/26.2/ 仍 404，禁止克隆本档冒充 26.2。
 
+**入库官方页原文可能残留旧版本号**（例如 `minecraft_version=1.20.6`、`neo_version=20.6.62`）。那是上游 gettingstarted 示例未改干净，**禁止照抄**进 26.1 工程；`neo_version` 以 maven 26.1 线最新为准。
+
 工作流提醒（**不是硬门**）：只有从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 反编译研究才调 `get_workflow_template`。改已有类不要调。从零工程 step1 用 `download_official_mdk`（dryRun 先看 URL；26.1.x/26.2 必须传 buildPlugin）。
 
 ## 加载顺序

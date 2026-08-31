@@ -202,23 +202,24 @@ function setVersionDataEntry(version: string, data: VersionData): void {
   }
   _versionData.set(version, data);
 }
-/** 兜底：未匹配任何 version 时使用的默认版本 */
-const _defaultData: VersionData = {
-  apiIndex: {},
-  classNames: [],
-  trieIndex: null,
-  trieSkipped: false,
-  loaded: false,
-  preloading: false,
-  lazyMode: false,
-  missingData: false,
-  worker: null,
-  preloadPromise: null,
-};
+function emptyVersionData(): VersionData {
+  return {
+    apiIndex: {},
+    classNames: [],
+    trieIndex: null,
+    trieSkipped: false,
+    loaded: false,
+    preloading: false,
+    lazyMode: false,
+    missingData: false,
+    worker: null,
+    preloadPromise: null,
+  };
+}
 
-/** 获取指定版本的数据；缺失时返回空壳，禁止回退 1.20.1 */
+/** 获取指定版本的数据；缺失时返回独立空壳（禁止共享 _defaultData，FIFO 驱逐后再查必须走磁盘加载） */
 function getVersionData(version: string): VersionData {
-  return _versionData.get(version) ?? _defaultData;
+  return _versionData.get(version) ?? emptyVersionData();
 }
 
 /** 解析某版本对应的 extracted 数据目录。找不到则返回 null。 */
@@ -649,11 +650,12 @@ function buildClassResult(
   const methods = cls.methods.slice(0, METHODS_CAP);
   const javadoc = cls.javadoc ? cls.javadoc.slice(0, JAVADOC_CAP) : undefined;
   const truncated = cls.methods.length > METHODS_CAP || Boolean(cls.javadoc && cls.javadoc.length > JAVADOC_CAP);
+  const lastDot = className.lastIndexOf(".");
   return {
     found: true,
     className,
     classJavadoc: javadoc,
-    packagePath: className.substring(0, className.lastIndexOf(".")),
+    packagePath: lastDot < 0 ? "" : className.substring(0, lastDot),
     methods,
     mappings: { mojang: className.replace(/\./g, "/"), parchment: className.replace(/\./g, "/") },
     suggestions,
@@ -738,8 +740,11 @@ export async function queryApi(query: ApiQuery): Promise<ApiResult> {
     );
   }
 
-  // 确保该版本的预加载已完成（或降级）
+  // 确保该版本的预加载已完成（或降级）。FIFO 驱逐后条目已删除，必须重新走磁盘加载，禁止落到共享 _defaultData。
   await startPreloader(version);
+  if (!_versionData.has(version)) {
+    await startPreloader(version);
+  }
 
   const vData = getVersionData(version);
   const coverageWarning = queryApiCoverageWarning(version, vData.classNames?.length ?? 0);

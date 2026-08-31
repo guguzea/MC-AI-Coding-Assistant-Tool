@@ -98,10 +98,16 @@ function htmlToMd(html) {
 }
 
 async function fetchUrl(url) {
+  const UA = { "User-Agent": "MC-AI-Coding-Assistant-Tool" };
   let lastErr;
   for (let i = 0; i < 4; i++) {
     try {
-      const res = await fetch(url, { redirect: "follow" });
+      const res = await fetch(url, { redirect: "follow", headers: UA, signal: AbortSignal.timeout(30_000) });
+      if (res.status === 429 || res.status >= 500) {
+        lastErr = new Error(`HTTP ${res.status}`);
+        await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+        continue;
+      }
       const text = await res.text();
       return { ok: res.ok, status: res.status, text };
     } catch (e) {

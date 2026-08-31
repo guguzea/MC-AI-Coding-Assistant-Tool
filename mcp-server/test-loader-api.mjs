@@ -224,8 +224,11 @@ public class Other {
 }
 
 {
-  const listed = searchLoaderApi({ mode: "list" });
-  assert.ok(Array.isArray(listed.indexed) && listed.indexed.length > 0);
+  const listedBare = searchLoaderApi({ mode: "list" });
+  assert.equal(listedBare.ok, false);
+  assert.equal(listedBare.code, "INVALID_INPUT");
+  const listed = searchLoaderApi({ mode: "list", platform: "neoforge", minecraftVersion: "1.21.1" });
+  assert.ok(Array.isArray(listed.indexed));
   assert.ok(Array.isArray(listed.mavenNotIndexed));
   const s = searchLoaderApi({
     platform: "neoforge",
@@ -368,7 +371,7 @@ void readFileSync;
       assert.equal(isThinLoaderSummary(j), false, `${name} must not be thin`);
     }
   }
-  const listed = searchLoaderApi({ mode: "list" });
+  const listed = searchLoaderApi({ mode: "list", platform: "fabric", minecraftVersion: "1.18.2" });
   assert.ok(Array.isArray(listed.mavenNotIndexed));
   assert.ok(
     !listed.mavenNotIndexed.some((x) => x.key === "1.18.2-fabric-api"),

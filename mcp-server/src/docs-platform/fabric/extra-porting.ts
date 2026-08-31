@@ -4,6 +4,7 @@
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { resolveDataDir } from "../../utils/path.js";
+import { ownGet } from "../../utils/own-record.js";
 
 export interface FabricPortingPage {
   id: string;
@@ -27,21 +28,28 @@ function parseFrontmatter(raw: string): { fm: Record<string, string>; body: stri
   return { fm, body: m[2] };
 }
 
-let cache: { entries: FabricPortingPage[]; loadedAt: number } | null = null;
+let cacheByRoot = new Map<string, { entries: FabricPortingPage[]; loadedAt: number }>();
 const INDEX_TTL_MS = 5 * 60 * 1000;
 
 export function loadFabricPortingPages(dataRoot = resolveDataDir()): FabricPortingPage[] {
-  if (cache && Date.now() - cache.loadedAt < INDEX_TTL_MS) return cache.entries;
+  const hit = cacheByRoot.get(dataRoot);
+  if (hit && Date.now() - hit.loadedAt < INDEX_TTL_MS) return hit.entries;
   const dir = join(dataRoot, "fabric_porting");
   if (!existsSync(dir)) {
-    cache = { entries: [], loadedAt: Date.now() };
-    return cache.entries;
+    cacheByRoot.set(dataRoot, { entries: [], loadedAt: Date.now() });
+    return [];
   }
   const out: FabricPortingPage[] = [];
   for (const name of readdirSync(dir)) {
     if (!name.endsWith(".md")) continue;
     const filePath = join(dir, name);
-    const raw = readFileSync(filePath, "utf8");
+    let raw: string;
+    try {
+      raw = readFileSync(filePath, "utf8");
+    } catch (err) {
+      console.warn(`[extra-porting] skip unreadable ${filePath}: ${(err as Error).message}`);
+      continue;
+    }
     const { fm, body } = parseFrontmatter(raw);
     const to = fm.to || name.replace(/\.md$/, "");
     out.push({
@@ -54,12 +62,12 @@ export function loadFabricPortingPages(dataRoot = resolveDataDir()): FabricPorti
       filePath,
     });
   }
-  cache = { entries: out, loadedAt: Date.now() };
-  return cache.entries;
+  cacheByRoot.set(dataRoot, { entries: out, loadedAt: Date.now() });
+  return out;
 }
 
 export function resetFabricPortingCache(): void {
-  cache = null;
+  cacheByRoot = new Map();
 }
 
 export function isFabricPortingId(id: string): boolean {
@@ -76,7 +84,7 @@ const PORTING_VERSION_ALIASES: Record<string, string[]> = {
 
 function versionMatchesPortingPage(version: string, p: FabricPortingPage): boolean {
   if (version === p.to || version === p.from) return true;
-  const aliases = PORTING_VERSION_ALIASES[version] ?? [];
+  const aliases = ownGet(PORTING_VERSION_ALIASES, version) ?? [];
   return aliases.includes(p.to);
 }
 
@@ -88,7 +96,11 @@ export function searchFabricPortingPages(query: string, version: string) {
     const title = p.title.toLowerCase();
     const meta = `${p.title} ${p.from} ${p.to}`.toLowerCase();
     const topicHit = /porting|migrat|移植/.test(q);
-    const tokens = q.split(/\s+/).filter((t) => t.length >= 4);
+    const tokens = q.split(/\s+/).filter((t) => {
+      if (!t) return false;
+      if (/[\u4e00-\u9fff]/.test(t)) return t.length >= 2;
+      return t.length >= 4;
+    });
     const tokenHit = tokens.some((t) => title.includes(t) || meta.includes(t));
     const qHit = topicHit || tokenHit;
     if (!verHit && !qHit) continue;

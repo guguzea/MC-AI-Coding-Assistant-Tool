@@ -131,6 +131,10 @@ async function fetchZipBuffer(
           if (res.status === 404) break;
           continue;
         }
+        if (res.url && !urlAllowed(res.url)) {
+          last = `redirect target not allowed: ${res.url}`;
+          break;
+        }
         // 响应体积上限：声明超限直接拒；无 Content-Length 时流式累计防堆耗尽
         const declared = Number(res.headers.get("content-length") ?? "");
         if (Number.isFinite(declared) && declared > FETCH_ZIP_MAX_BYTES) {
@@ -243,17 +247,15 @@ export function probeUnzipTool(): UnzipTool | null {
     if (p && existsSync(p)) return { kind: "7z", executable: p };
   }
 
-  const tar = whichCmd("tar") || (process.platform === "win32" && existsSync("C:\\Windows\\System32\\tar.exe")
-    ? "C:\\Windows\\System32\\tar.exe"
-    : null);
+  const tar = whichCmd("tar") || (process.platform === "win32" ? whichCmd("tar.exe") : null);
   if (tar) {
     const help = spawnSync(tar, ["--help"], { encoding: "utf8", windowsHide: true, timeout: 120_000 });
     const text = `${help.stdout || ""}\n${help.stderr || ""}`;
     // Windows 不整体短路接受任意 PATH tar（MSYS/GnuWin32 的 GNU tar 解不了 zip）；
     // 仅 help 文本证明是 bsdtar/libarchive，或解析到 System32 自带的 bsdtar 时才接受。
+    const resolvedTar = resolve(tar).replace(/\//g, "\\").toLowerCase();
     const isSystemBsdtar =
-      process.platform === "win32" &&
-      resolve(tar).toLowerCase() === "c:\\windows\\system32\\tar.exe";
+      process.platform === "win32" && resolvedTar.endsWith("\\windows\\system32\\tar.exe");
     if (/bsdtar|libarchive/i.test(text) || isSystemBsdtar) {
       return { kind: "bsdtar", executable: tar };
     }
@@ -308,7 +310,7 @@ export function listZipEntries(zipPath: string, tool: UnzipTool): string[] {
     const names: string[] = [];
     for (const line of (r.stdout || "").split(/\r?\n/)) {
       const m = line.match(/^Path = (.+)$/);
-      if (m && m[1] && !m[1].endsWith(".zip") && m[1] !== zipPath) names.push(m[1].trim());
+      if (m && m[1] && m[1] !== zipPath) names.push(m[1].trim());
     }
     return names.filter((n) => n !== zipPath);
   }
@@ -354,7 +356,8 @@ export function zipUncompressedBytes(zipPath: string, tool: UnzipTool): number |
       if (r.status !== 0) return zipSizeFallback(zipPath);
       let total = 0;
       for (const line of (r.stdout ?? "").split(/\r?\n/)) {
-        const m = line.match(/^\s*\d+\s+(\d+)\s/);
+        // Info-ZIP `unzip -l`：Length 在第一列，随后是 Date Time Name
+        const m = line.match(/^\s*(\d+)\s+\d{2}-\d{2}-\d{4}\s/);
         if (m) total += Number(m[1]);
       }
       if (total <= 0) return zipSizeFallback(zipPath);
@@ -429,8 +432,7 @@ function parseGradleProps(root: string): {
   const loaderVersion =
     txt.match(/neo_version\s*=\s*(\S+)/)?.[1] ??
     txt.match(/neoforge_version\s*=\s*(\S+)/)?.[1] ??
-    txt.match(/forge_version\s*=\s*(\S+)/)?.[1] ??
-    txt.match(/minecraft_version\s*=\s*(\S+)/)?.[1];
+    txt.match(/forge_version\s*=\s*(\S+)/)?.[1];
   const parchmentMc = txt.match(/parchment_minecraft_version\s*=\s*(\S+)/)?.[1];
   const parchmentMap = txt.match(/parchment_mappings_version\s*=\s*(\S+)/)?.[1];
   const neoForm = txt.match(/neo_form_version\s*=\s*(\S+)/)?.[1];
@@ -803,6 +805,15 @@ function cacheLooksReady(destCache: string, entry: MdkChecksumEntry): { ready: b
   return { ready: true, unpackedRoot: root };
 }
 
+/** 下载失败时的宽松 cache：只要 unpacked 能解析出 entryClass，不要求 sha/ref 完全匹配。 */
+function cacheLooksUsable(destCache: string): { ready: boolean; unpackedRoot?: string } {
+  const unpacked = join(destCache, "unpacked");
+  if (!existsSync(unpacked)) return { ready: false };
+  const root = resolveUnpackedRoot(unpacked);
+  if (!parseExampleEntry(root).entryClass) return { ready: false };
+  return { ready: true, unpackedRoot: root };
+}
+
 export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promise<Record<string, unknown>> {
   const dryRun = args.dryRun !== false;
   const resolved = resolveMdkEntry(args);
@@ -970,17 +981,29 @@ export async function downloadOfficialMdk(args: DownloadOfficialMdkArgs): Promis
   }
 
   mkdirSync(destCache, { recursive: true });
+  if (args.confirmed !== true) {
+    return {
+      ...base,
+      ok: false,
+      downloaded: false,
+      error: {
+        code: "NOT_CONFIRMED",
+        message: "dryRun=false 写入 $MC_SKILL_CACHE 仍会联网下载，需要 confirmed=true（无 destPath 也不例外）",
+      },
+    };
+  }
   let zip: Buffer;
   const fetched = await fetchZipBuffer(entry.archiveUrl);
   if (!fetched.ok) {
-    if (args.allowCacheFallback && cached.ready) {
-      const parsed = parseExampleEntry(cached.unpackedRoot!);
+    const loose = cacheLooksUsable(destCache);
+    if (args.allowCacheFallback && loose.ready) {
+      const parsed = parseExampleEntry(loose.unpackedRoot!);
       return {
         ...base,
         downloaded: false,
         cacheFallback: true,
         dest: destCache,
-        unpackedRoot: cached.unpackedRoot,
+        unpackedRoot: loose.unpackedRoot,
         warning: `官方 URL 失败 ${fetched.message}，已用同一 platform+version 的 cache（禁止邻版）。`,
         ...parsed,
       };

@@ -25,13 +25,13 @@ export function detectMinecraftVersion(opts: {
   const bg = opts.buildGradle ?? "";
 
   const fromProps =
-    props.match(/^\s*minecraft_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*mod_minecraft_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*mc_version\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*minecraftVersion\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*mcVersion\s*=\s*(\S+)/m)?.[1] ??
-    props.match(/^\s*modMinecraftVersion\s*=\s*(\S+)/m)?.[1];
-  const neoVerRaw = props.match(/^\s*neo_version\s*=\s*(\S+)/m)?.[1];
+    props.match(/^\s*minecraft_version\s*=\s*([^\s#]+)/m)?.[1] ??
+    props.match(/^\s*mod_minecraft_version\s*=\s*([^\s#]+)/m)?.[1] ??
+    props.match(/^\s*mc_version\s*=\s*([^\s#]+)/m)?.[1] ??
+    props.match(/^\s*minecraftVersion\s*=\s*([^\s#]+)/m)?.[1] ??
+    props.match(/^\s*mcVersion\s*=\s*([^\s#]+)/m)?.[1] ??
+    props.match(/^\s*modMinecraftVersion\s*=\s*([^\s#]+)/m)?.[1];
+  const neoVerRaw = props.match(/^\s*neo_version\s*=\s*([^\s#]+)/m)?.[1];
   // neo_version 在 MDK 里常是加载器版本（21.1.x），只有写成 1.x / 26.x 才当 MC 版本
   const neoAsMc =
     neoVerRaw && /^(1|26|27)\.\d/.test(stripQuotes(neoVerRaw)) ? neoVerRaw : undefined;
@@ -112,6 +112,20 @@ export function matchesExactMcVersion(input: string, pinned: string): boolean {
   return a === b;
 }
 
+/**
+ * 版本族匹配：`26.1` 命中 `26.1` / `26.1.2`，不命中 `26.12`。
+ * `family` 与 `input` 均须通过 isExactMcVersionToken（family 允许缺 patch）。
+ */
+export function isMcVersionFamily(input: string, family: string): boolean {
+  const a = input.trim();
+  const b = family.trim();
+  if (!isExactMcVersionToken(a) || !isExactMcVersionToken(b)) return false;
+  const partsA = a.split(".");
+  const partsB = b.split(".");
+  if (partsB.length > partsA.length) return false;
+  return partsB.every((p, i) => p === partsA[i]);
+}
+
 export type McVersionBand =
   | "1.20.1"
   | "1.20.4"
@@ -129,7 +143,7 @@ export function classifyMinecraftVersion(version: string): McVersionBand {
   if (!v || v === "unknown") return "unknown";
   if (v === "1.20.1") return "1.20.1";
   if (v === "1.20.4") return "1.20.4";
-  if (v.startsWith("1.20.")) return "1.20.x";
+  if (v === "1.20" || v.startsWith("1.20.")) return "1.20.x";
   if (v === "1.21" || v.startsWith("1.21.")) return "1.21.x";
   if (v === "26" || v.startsWith("26.")) return "26.x";
   if (v.startsWith("1.18.") || v.startsWith("1.19.") || v === "1.18" || v === "1.19") {

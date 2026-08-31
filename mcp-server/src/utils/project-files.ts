@@ -89,8 +89,17 @@ export function walkProjectFiles(
   maxFiles = 5000,
 ): string[] {
   const out: string[] = [];
+  const seen = new Set<string>();
   const walk = (dir: string, depth: number) => {
     if (depth > maxDepth || out.length >= maxFiles) return;
+    let real: string;
+    try {
+      real = realpathSync(dir);
+    } catch {
+      return;
+    }
+    if (seen.has(real)) return;
+    seen.add(real);
     let entries;
     try {
       entries = readdirSync(dir, { withFileTypes: true });
@@ -105,6 +114,19 @@ export function walkProjectFiles(
       if (e.isDirectory()) {
         if (PROJECT_SCAN_SKIP_DIRS.has(name)) continue;
         walk(abs, depth + 1);
+        continue;
+      }
+      if (e.isSymbolicLink()) {
+        let isDir = false;
+        try {
+          isDir = statSync(abs).isDirectory();
+        } catch {
+          continue;
+        }
+        if (isDir) {
+          if (PROJECT_SCAN_SKIP_DIRS.has(name)) continue;
+          walk(abs, depth + 1);
+        }
         continue;
       }
       if (!e.isFile()) continue;
@@ -236,6 +258,7 @@ export function collectJavaSources(root: string): JavaScanResult {
 export function collectCrashReports(root: string): {
   reports: Array<{ path: string; content: string }>;
   warning?: string;
+  truncated?: boolean;
 } {
   const dir = join(root, "crash-reports");
   if (!existsSync(dir)) return { reports: [] };
@@ -253,6 +276,7 @@ export function collectCrashReports(root: string): {
   const MAX_REPORTS = 20;
   const MAX_TOTAL_BYTES = JAVA_SCAN_MAX_BYTES;
   const collected: Array<{ path: string; content: string; mtime: number; size: number }> = [];
+  const oversized: string[] = [];
   for (const e of entries) {
     if (!e.isFile()) continue;
     const name = String(e.name);
@@ -261,7 +285,10 @@ export function collectCrashReports(root: string): {
     try {
       const st = statSync(abs);
       if (!st.isFile()) continue;
-      if (st.size > JAVA_SCAN_MAX_BYTES) continue;
+      if (st.size > JAVA_SCAN_MAX_BYTES) {
+        oversized.push(`crash-reports/${name}`);
+        continue;
+      }
       collected.push({
         path: `crash-reports/${name}`,
         content: "",
@@ -292,11 +319,16 @@ export function collectCrashReports(root: string): {
     }
   }
   const reports = out;
+  const sizeNote = oversized.length
+    ? `；超大已跳过: ${oversized.join(", ")}（单份 > ${JAVA_SCAN_MAX_BYTES} 字节）`
+    : "";
   return {
     reports,
-    warning: truncated
-      ? `crash-reports 已截断：最多 ${MAX_REPORTS} 份、合计 ${MAX_TOTAL_BYTES} 字节（已读 ${reports.length} 份）`
-      : undefined,
+    truncated: truncated || oversized.length > 0 ? true : undefined,
+    warning:
+      truncated || oversized.length
+        ? `crash-reports 已截断：最多 ${MAX_REPORTS} 份、合计 ${MAX_TOTAL_BYTES} 字节（已读 ${reports.length} 份）${sizeNote}`
+        : undefined,
   };
 }
 

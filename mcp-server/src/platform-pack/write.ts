@@ -369,9 +369,22 @@ function capWriteWarnings(warnings: string[]): { warnings: string[]; truncated?:
 }
 
 function pruneEmptyParents(fileAbs: string, projectRoot: string): void {
+  const pathsEqual = (a: string, b: string) => {
+    const ra = resolve(a);
+    const rb = resolve(b);
+    return process.platform === "win32" ? ra.toLowerCase() === rb.toLowerCase() : ra === rb;
+  };
+  const isUnderRoot = (dir: string, root: string) => {
+    const d = resolve(dir);
+    const r = resolve(root);
+    if (pathsEqual(d, r)) return true;
+    const prefix = (process.platform === "win32" ? r.toLowerCase() : r) + sep;
+    const probe = process.platform === "win32" ? d.toLowerCase() : d;
+    return probe.startsWith(prefix);
+  };
   let dir = dirname(fileAbs);
   const stop = resolve(projectRoot);
-  while (dir && resolve(dir) !== stop) {
+  while (dir && isUnderRoot(dir, stop) && !pathsEqual(dir, stop)) {
     try {
       rmdirSync(winLongPath(dir));
     } catch (err) {
@@ -543,20 +556,23 @@ export function writePlatformPack(args: WriteArgs) {
   const created: string[] = [];
   const patched: string[] = [];
   const backups = new Map<string, string | null>();
+  const newlyCreated = new Set<string>();
   const hostFiles: Manifest["hostFiles"] = {};
   for (const h of hosts) hostFiles[h] = { created: [], patched: [] };
   const partial: string[] = [];
 
   const rollback = () => {
-    for (const rel of [...created].reverse()) {
+    for (const rel of [...newlyCreated].reverse()) {
       const abs = join(proj.root, rel.split("/").join(sep));
       try {
         if (existsSync(abs)) unlinkSync(winLongPath(abs));
+        pruneEmptyParents(abs, proj.root);
       } catch {
         /* ignore */
       }
     }
     for (const [rel, prev] of backups) {
+      if (newlyCreated.has(rel)) continue;
       const abs = join(proj.root, rel.split("/").join(sep));
       try {
         if (prev === null) {
@@ -589,6 +605,7 @@ export function writePlatformPack(args: WriteArgs) {
           hostFiles[op.host].patched.push(op.rel);
         } else {
           created.push(op.rel);
+          newlyCreated.add(op.rel);
           hostFiles[op.host].created.push(op.rel);
         }
         partial.push(op.rel);
@@ -603,6 +620,7 @@ export function writePlatformPack(args: WriteArgs) {
         writeFileSync(winLongPath(abs), next, "utf8");
         if (!existed) {
           created.push(op.rel);
+          newlyCreated.add(op.rel);
           hostFiles[op.host].created.push(op.rel);
         } else {
           patched.push(op.rel);

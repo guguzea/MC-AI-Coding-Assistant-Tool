@@ -11,11 +11,12 @@
 - 入口：`DataGeneratorEntrypoint.onInitializeDataGenerator`
 - `fabric.mod.json` 用 `"fabric-datagen"`，**不要** `init_data`
 - 用 `generator.createPack()` 再 `pack.addProvider(...)`
-- Yarn：配方覆盖 `RecipeProvider.generate(...)`，**不要**抄 wiki 的 `buildRecipes`（那是 Mojmap）
+- 官方主推 `FabricRecipeProvider#createRecipeProvider` + 内部 `buildRecipes()`（Mojmap `RecipeOutput`）
 - 语言：`generateTranslations(RegistryWrapper.WrapperLookup, TranslationBuilder)`
-- 配方 exporter 类型是 `RecipeExporter`（仍覆盖 Yarn 的 `generate`）
+- 不要把已过时的「不要抄 buildRecipes」当本档口径
 - 生成目录常见 `src/main/generated`；**禁止**手改
 - **禁止** `DataGeneratorInitializer`、`ExistingFileHelper`、`DataStreamOutputSupplier`、`offerShapedRecipe`
+- 模型：`net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider`（不要用旧包 `datagen.v1.provider` 无 client）
 
 ---
 
@@ -38,6 +39,11 @@ IF 生成方块掉落
 
 IF 生成标签
   → FabricTagProvider.ItemTagProvider / BlockTagProvider
+
+IF 生成自定义附魔定义
+  → `FabricDynamicRegistryProvider`，在生成器 **`bootstrap()`** 里 `register()`
+  → 附魔 tag 用 `FabricTagProvider<Enchantment>`，构造里把 `Registries.ENCHANTMENT` 传给 `super` 作 registryKey
+  → **不要**在 `onInitialize()` 里 `Registry.register(Registries.ENCHANTMENT, ...)`
 ```
 
 ---
@@ -61,7 +67,7 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         FabricDataGenerator.Pack pack = generator.createPack();
-        pack.addProvider(MyRecipeProvider::new);
+        pack.addProvider(FabricRecipeProvider.createRecipeProvider(MyRecipeProvider::new));
         pack.addProvider(MyModelProvider::new);
         pack.addProvider(MyEnLangProvider::new);
         pack.addProvider(MyBlockLootProvider::new);
@@ -69,7 +75,7 @@ public class ExampleModDataGenerator implements DataGeneratorEntrypoint {
     }
 }
 ```
-> Yarn 1.21.x 不要把入库 wiki 里的 `buildRecipes` / `ResourceLocation` / `RecipeOutput` 当本档名字。
+> 官方主推 `FabricRecipeProvider.createRecipeProvider` + 内部 `buildRecipes`（Mojmap `RecipeOutput`）。Yarn 工程类名可能是 `RecipeExporter`，以本档 loader-api / 官方 wiki 为准，不要再把「不要抄 buildRecipes」当口径。
 
 ## 注册 fabric-datagen
 
@@ -114,14 +120,14 @@ public class MyRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(RecipeExporter exporter) {
+    public void buildRecipes(RecipeOutput output) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, MY_ITEM)
             .pattern("AAA")
             .pattern("A A")
             .pattern(" A ")
             .input('A', Items.DIAMOND)
             .criterion("has_diamond", conditionsFromItem(Items.DIAMOND))
-            .offerTo(exporter);
+            .offerTo(output);
     }
 }
 ```
@@ -190,6 +196,14 @@ public class MyItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 }
 ```
+
+## 自定义附魔（数据驱动）
+
+1.21.11 附魔定义走 DataGen，不在 `onInitialize()` 里 `Registry.register`。官方页：`search_fabric_docs` → `develop/data-generation/enchantments`。
+
+- 生成器类里用 **`bootstrap()`** 调 `register()` 写出附魔定义
+- tag：`FabricTagProvider<Enchantment>`，构造把 `Registries.ENCHANTMENT` 传给 `super` 作 `registryKey`
+- 签名与 Yarn/Mojmap 类名以本档 loader-api / 该页为准，禁止默写邻版 `Enchantment.Builder`
 
 ## 运行 DataGen
 

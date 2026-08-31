@@ -29,6 +29,13 @@ const ROOT = join(__dirname, "..");
 const LIBS_ROOT = join(ROOT, "knowledge", "libs");
 const AUTHORED_DIR = join(ROOT, "community_knowledge", "authored");
 
+const GROUP_DEFAULT_PLATFORMS = {
+  "forge-only": ["forge"],
+  "fabric-only": ["fabric", "quilt"],
+  "neo-only": ["neoforge"],
+  "all-platforms": ["forge", "fabric", "quilt", "neoforge"],
+  "bedrock-only": ["bedrock"],
+};
 const GROUPS = {
   forge: ["forge-only", "all-platforms"],
   fabric: ["fabric-only", "all-platforms"],
@@ -126,13 +133,22 @@ function loadAllSkills() {
         skillId: meta.name || dirName,
         path: file.replace(/\\/g, "/").replace(ROOT.replace(/\\/g, "/") + "/", ""),
         group,
-        platforms: Array.isArray(meta.platforms) ? meta.platforms : [],
+        platforms: Array.isArray(meta.platforms)
+          ? meta.platforms
+          : meta.platforms
+            ? parseArray(String(meta.platforms))
+            : [],
         mcVersions: Array.isArray(meta.mcVersions || meta.minecraftVersions)
           ? meta.mcVersions || meta.minecraftVersions
           : [],
         communityDocId: String(meta.communityDocId || ""),
         file,
       });
+      const last = skills[skills.length - 1];
+      if (!last.platforms.length) {
+        last.platforms = GROUP_DEFAULT_PLATFORMS[group] ?? [];
+        console.warn(`[resolve] 缺 platforms，按组默认 ${group} → ${last.platforms.join(",")}: ${last.path}`);
+      }
     }
   }
   return skills;

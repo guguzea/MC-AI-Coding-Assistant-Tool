@@ -26,6 +26,8 @@
 
 00–10 只引用 `data/fabric_26.1.2` 能核到的 id。核不到的编号是「未核实、禁止输出」stub，**不是缺文件**。
 
+本档知识在 **rules + `search_fabric_docs`(version=26.1.2)**。`knowledge/` **有意为空**，禁止克隆 `fabric/1.21.11/knowledge`。
+
 ## 配置（不落盘树级 mc-config）
 
 不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。

@@ -127,6 +127,14 @@ export class VersionNotFoundError extends Error {
   }
 }
 
+export class IndexCorruptError extends Error {
+  override name = "IndexCorruptError";
+  constructor(public version: string, public filepath: string) {
+    super(`INDEX_CORRUPT: 文档索引无法解析（version=${version}）`);
+    this.name = "IndexCorruptError";
+  }
+}
+
 // ── Store 工厂函数（支持 fabric-docs + fabric-wiki 子目录）────────────
 
 const SUBDIR_MAP: Record<string, string> = {
@@ -149,9 +157,10 @@ export function createFabricDocStore(
   version: string,
   source = "fabric-docs",
   rootDir?: string,
+  dirPrefix = "fabric",
 ): FabricDocStore {
   const root = rootDir ?? join(process.cwd(), "data");
-  return new FabricDocStore(root, version, source);
+  return new FabricDocStore(root, version, source, dirPrefix);
 }
 
 interface CacheEntry<T> {
@@ -372,7 +381,6 @@ export class FabricDocStore {
    */
   private ensureValidated(): void {
     if (this._validated) return;
-    this._validated = true;
 
     if (!existsSync(this.dataDir)) {
       throw new PlatformDataMissingError(this.dirPrefix as DocPlatform);
@@ -380,6 +388,7 @@ export class FabricDocStore {
     if (this.getAvailableVersionsUnchecked().length === 0) {
       throw new PlatformDataMissingError(this.dirPrefix as DocPlatform);
     }
+    this._validated = true;
   }
 
   // ── 公开 API ──────────────────────────────────────────────────────────
@@ -524,7 +533,7 @@ export class FabricDocStore {
     if (!this.indexFileExists(version, "index-l2.json")) {
       if (this.indexFileExists(version, "index-l0.json")) {
         const thin = this.getRelatedDocsFromL0(id, version, limit);
-        ttlCacheSet(this.relatedCache, cacheKey, thin);
+        ttlCacheSet(this.relatedCache, cacheKey, thin, 256, FabricDocStore.CACHE_TTL);
         return thin;
       }
       throw new VersionNotFoundError(version, this.getAvailableVersions());
@@ -551,7 +560,7 @@ export class FabricDocStore {
     const currentKeywords = new Set([...pathKws, ...sectionKws]);
 
     const results = (l2 as Array<L2Entry & { overlap: number }>)
-      .filter((e) => e.id !== id)
+      .filter((e) => e.id !== current.id)
       .map((e) => {
         const otherPathKws = this.extractPathKeywords(e.id);
         const otherSectionKws = e.sections
@@ -573,7 +582,7 @@ export class FabricDocStore {
       .slice(0, limit)
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
-    ttlCacheSet(this.relatedCache, cacheKey, results);
+    ttlCacheSet(this.relatedCache, cacheKey, results, 256, FabricDocStore.CACHE_TTL);
     return results;
   }
 
@@ -670,7 +679,12 @@ export class FabricDocStore {
     if (!existsSync(filepath)) {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
-    const data = JSON.parse(readFileSync(filepath, "utf-8")) as T;
+    let data: T;
+    try {
+      data = JSON.parse(readFileSync(filepath, "utf-8")) as T;
+    } catch {
+      throw new IndexCorruptError(version, filepath);
+    }
     this.indexCache.set(cacheKey, {
       data,
       expiry: Date.now() + FabricDocStore.CACHE_TTL,

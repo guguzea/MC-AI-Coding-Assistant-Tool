@@ -341,7 +341,7 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
   }
   if (lower.includes("方块实体") || lower.includes("blockentity")) {
     const v = info.version;
-    if (/^1\.(7|8|9|10|11|12)(\.|$)/.test(v)) {
+    if (/^1\.(7|8|9|10|11|12|13|14|15|16)(\.|$)/.test(v)) {
       return {
         ...info,
         recommendation:
@@ -368,7 +368,7 @@ function suggestBasedOnAction(info: VersionInfo, action: string): VersionInfo {
         recommendation: "请用 search_forge_docs 查本版属性注册 API，不要套用邻版属性注册键与具体类名",
       };
     }
-    const usesDeferred = /DeferredRegister/i.test(info.recommendation);
+    const usesDeferred = ownGet(REGISTER_MODE, info.version) === "deferred";
     const is117plus = (() => {
       const m = info.version.match(/^(\d+)\.(\d+)/);
       if (!m) return false;

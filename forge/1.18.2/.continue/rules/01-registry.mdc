@@ -86,7 +86,7 @@ IF 平台 = Fabric
   → 跳转 fabric/1.18.2/AGENTS.md（Fabric 使用 Registry.register() in onInitialize）
 
 IF 平台 = NeoForge
-  → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未建档版本（1.20.1/1.20.6/1.21.5/1.21.10）禁止读邻档 00–10，改口 search_neoforge_docs。
+  → 不要读本 Forge 规则。list_neoforge_versions 锁定精确版本后读 neoforge/<ver>/AGENTS.md。未列入 `list_neoforge_versions` 的版本禁止读邻档 00–10，改口 search_neoforge_docs。
 ```
 
 ### Decision: 注册什么类型？

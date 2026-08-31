@@ -10,7 +10,7 @@
 
 - **所有网络包只能在物理端分隔的类中使用**
 - 服务端 mod 的网络包发送给客户端时，客户端收到的是**反序列化后的数据对象**，不是完整类
-- 禁止在 `AbstractClientPacket` 等客户端包类中直接访问服务端独有类（如 `ServerWorld`）
+- 禁止在 `AbstractClientPacket` 等客户端包类中直接访问服务端独有类（如 `ServerLevel`）
 - 使用 `DistExecutor` 或 `FMLEnvironment.dist` 判断当前物理端
 - 使用 `level.isClientSide` 判断当前逻辑端
 
@@ -94,7 +94,7 @@ IF 实现 GUI 打开/关闭同步
 
 IF 实现实体状态同步（属性修改）
   → 服务端修改 → 发送数据给客户端 → 客户端更新渲染
-  → 优先考虑 EntityDataManager / SynchedEntityData
+  → 优先考虑 SynchedEntityData
 
 IF 实现方块实体数据同步
   → 使用 getUpdateTag() / ClientboundBlockEntityDataPacket.create() 机制
@@ -212,7 +212,6 @@ public class NetworkHandler {
 ```java
 // 在客户端代码中（玩家输入等触发）
 NetworkHandler.INSTANCE.sendToServer(new MyOpenGuiMessage(targetId, value));
-// sendToServer() 是 SimpleChannel 的快捷方法，等同于 send(PacketDistributor.TRACKING_ENTITY.with(...), msg)
 ```
 
 ## 示例：服务端广播消息

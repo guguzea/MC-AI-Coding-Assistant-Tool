@@ -32,6 +32,7 @@ export interface BedrockDocsStatus {
   fetchedAt: string | null;
   stale: boolean;
   warning?: string;
+  code?: "NOT_FETCHED" | "CORRUPT" | "STALE" | "OK";
 }
 
 export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsStatus {
@@ -44,6 +45,7 @@ export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsS
     fetchedAt: null,
     stale: true,
     warning: "未找到 data/bedrock-docs-status.json；基岩文档可能尚未抓取。",
+    code: "NOT_FETCHED",
   };
   if (!existsSync(p)) return empty;
   try {
@@ -66,9 +68,10 @@ export function loadBedrockDocsStatus(dataRoot = resolveDataDir()): BedrockDocsS
       fetchedAt,
       stale,
       warning,
+      code: stale ? "STALE" : "OK",
     };
   } catch {
-    return { ...empty, warning: "bedrock-docs-status.json 解析失败" };
+    return { ...empty, warning: "bedrock-docs-status.json 损坏或无法解析", code: "CORRUPT" };
   }
 }
 
@@ -267,7 +270,7 @@ export function validateAddonManifest(manifestJson: string): Record<string, unkn
   }
   if (Object.prototype.hasOwnProperty.call(parsed, "experimentalGameplay")) {
     errors.push(
-      "禁止写入 experimentalGameplay。世界 Beta APIs 在 level.dat 的 experiments.gametest / 游戏设置 → Experiments，pack JSON 打不开该开关。",
+      "禁止写入 experimentalGameplay。世界 Beta APIs 须在游戏 UI 打开；level.dat 实验键名**未核实**（不要写死 experiments.gametest）。pack JSON 打不开该开关。",
     );
   }
   const caps = parsed.capabilities;
@@ -327,7 +330,10 @@ export const generateAddonManifestSchema = z.object({
   packName: z.string().describe("header.name"),
   description: z.string().optional(),
   packType: z.enum(["resources", "data", "both", "script"]).describe("resources=RP data=BP both=各一份 script=BP+script 模块"),
-  minEngineVersion: z.array(z.number()).optional().describe("默认 [1, 21, 0]"),
+  minEngineVersion: z
+    .tuple([z.number().int(), z.number().int(), z.number().int()])
+    .optional()
+    .describe("必须长度为 3 的整数数组；默认 [1, 21, 80]"),
   beta: z.boolean().optional().describe("仅当用户明确要 pack 侧 @minecraft/server 的 version: \"beta\"（须在世界打开 Beta APIs）时为 true。不是 @minecraft/server-beta 包名。"),
   scriptEval: z.boolean().optional().describe("仅当需要 eval 时写入 capabilities: [script_eval]"),
   headerUuid: z.string().optional(),
@@ -339,12 +345,12 @@ function fakeUuid(_seed: string): string {
 }
 
 export function generateAddonManifest(args: z.infer<typeof generateAddonManifestSchema>): Record<string, unknown> {
-  const min = args.minEngineVersion ?? [1, 21, 0];
+  const min = args.minEngineVersion ?? [1, 21, 80];
   const status = loadBedrockDocsStatus();
   const warnings: string[] = [];
   if (args.beta) {
     warnings.push(
-      "该功能依赖实验性玩法 / Beta APIs。必须在世界设置打开「Beta APIs」。禁止把 experimentalGameplay 写入 pack JSON。世界实验在 level.dat 的 experiments.gametest（见 wiki.bedrock.dev/nbt/enabling-experiments）。Learn：" +
+      "该功能依赖实验性玩法 / Beta APIs。必须在世界设置打开「Beta APIs」。禁止把 experimentalGameplay 写入 pack JSON。level.dat 实验键名**未核实**（不要写死 experiments.gametest）。Learn：" +
         LEARN_EXPERIMENTS,
     );
   }
@@ -352,6 +358,9 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
     warnings.push(
       "min_engine_version 低于约 1.19.80：不要把现行 capabilities 列表倒灌到旧引擎；生成前对照该引擎版本的 Learn/wiki 归档。",
     );
+  }
+  if (args.scriptEval && args.packType === "resources") {
+    warnings.push("script_eval 只写入行为包（BP）；资源包（RP）不会写入 capabilities。");
   }
   const stableVer = status.scriptApiStable ?? "1.11.0";
   warnings.push(
@@ -388,7 +397,7 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
           : { module_name: "@minecraft/server", version: stableVer },
       ];
     }
-    if (args.scriptEval) {
+    if (args.scriptEval && type !== "resources") {
       manifest.capabilities = ["script_eval"];
     }
     return manifest;
@@ -399,11 +408,9 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
   else if (args.packType === "data") files["BP/manifest.json"] = one("data", headerUuid, moduleUuid);
   else if (args.packType === "script") files["BP/manifest.json"] = one("script", headerUuid, moduleUuid);
   else {
-    const rpHeader = fakeUuid(`hdr-rp-${args.packName}`);
-    const rpModule = fakeUuid(`mod-rp-${args.packName}`);
     const bpHeader = fakeUuid(`hdr-bp-${args.packName}`);
     const bpModule = fakeUuid(`mod-bp-${args.packName}`);
-    files["RP/manifest.json"] = one("resources", rpHeader, rpModule);
+    files["RP/manifest.json"] = one("resources", headerUuid, moduleUuid);
     files["BP/manifest.json"] = one("data", bpHeader, bpModule);
   }
 
@@ -452,7 +459,7 @@ export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): 
       packName: `${cleaned} scripts`,
       packType: "script",
       beta: true,
-      minEngineVersion: [1, 21, 0],
+      minEngineVersion: [1, 21, 80],
     });
     const bpMan = (man.files as Record<string, unknown> | undefined)?.["BP/manifest.json"];
     if (bpMan) files["BP/manifest.json"] = bpMan;

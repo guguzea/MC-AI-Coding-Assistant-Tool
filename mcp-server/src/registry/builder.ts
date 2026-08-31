@@ -79,8 +79,9 @@ export function buildRegistryIndex(
         } else {
           db.close();
         }
-      } catch {
+      } catch (err) {
         try { db.close(); } catch { /* ignore */ }
+        console.warn(`[registry] 复用 sqlite 失败，将重建: ${(err as Error).message}`);
       }
     } catch {
       /* rebuild */

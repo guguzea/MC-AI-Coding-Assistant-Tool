@@ -115,7 +115,12 @@ function resolvePlatformDataDir(platform: Platform): string {
       let count = 0;
       try {
         const content = readFileSync(indexPath, "utf-8");
-        count = (JSON.parse(content) as unknown[]).length;
+        const parsed = JSON.parse(content) as unknown;
+        count = Array.isArray(parsed)
+          ? parsed.length
+          : parsed && typeof parsed === "object"
+            ? Object.keys(parsed as object).length
+            : 0;
       } catch { /* ignore */ }
 
       const isJavadoc = entry.name === `${platform}_javadoc`;

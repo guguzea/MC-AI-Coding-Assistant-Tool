@@ -77,7 +77,7 @@ ItemStack stack = new ItemStack(MY_ITEM);
 // ✅ 正确：BlockItem 与 Block 使用完全相同的 Identifier
 private static final Block MY_BLOCK =
     Registry.register(Registries.BLOCK, Identifier.of(MOD_ID, "my_block"),
-        new Block(FabricBlockSettings.copyOf(Blocks.STONE)));
+        new Block(AbstractBlock.Settings.copy(Blocks.STONE)));
 
 private static final Item MY_BLOCK_ITEM =
     Registry.register(Registries.ITEM, Identifier.of(MOD_ID, "my_block"),  // 同名！

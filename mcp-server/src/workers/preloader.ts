@@ -147,7 +147,8 @@ async function preload(timeoutMs = 15000): Promise<void> {
   const skipTrieStage1 = elapsedRead > timeoutMs * 0.5;
 
   const classNames = results.classNames as string[];
-  const trieFlat = skipTrieStage1 ? null : buildTrieIndex(classNames);
+  const pastDeadline = Date.now() >= deadline;
+  const trieFlat = skipTrieStage1 || pastDeadline ? null : buildTrieIndex(classNames);
 
   // 阶段二检查（精确兜底）：buildTrieIndex 耗时可能很长，在 postMessage 前再次检查
   const skipTrie = skipTrieStage1 || Date.now() >= deadline;

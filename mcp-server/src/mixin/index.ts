@@ -112,6 +112,9 @@ export async function mixinAnalyze(input: MixinAnalyzeInput): Promise<MixinAnaly
   if (input.mixinsJson) {
     jsonSummary = parseMixinsJson(input.mixinsJson);
     warnings.push(...jsonSummary.warnings);
+    if (jsonSummary.parseFailed) {
+      errors.push("mixins.json JSON 解析失败");
+    }
     for (const name of jsonSummary.mixinClasses) {
       const file = findMixinClassInFiles(name, javaFiles);
       if (!file) {

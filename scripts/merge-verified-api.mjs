@@ -30,7 +30,8 @@ const USAGE = `用法：
 参数：
   --input <path>    反编译结果 JSONL（默认 temp/verified-api-results.jsonl）
   --catalog <path>  library-catalog.ts 路径（默认 mcp-server/src/diagnostics/library-catalog.ts）
-  --dry-run         只打印将变更，不写盘
+  --dry-run         只打印将变更，不写盘（默认）
+  --write           真正写盘
   --force           覆盖已存在键（默认保留）
   --help            显示本帮助`;
 
@@ -38,7 +39,7 @@ function parseArgs(argv) {
   const opts = {
     input: "temp/verified-api-results.jsonl",
     catalog: "mcp-server/src/diagnostics/library-catalog.ts",
-    dryRun: false,
+    dryRun: true,
     force: false,
     help: false,
   };
@@ -60,6 +61,9 @@ function parseArgs(argv) {
         break;
       case "--catalog":
         opts.catalog = String(val);
+        break;
+      case "--write":
+        opts.dryRun = false;
         break;
       case "--dry-run":
         opts.dryRun = true;
@@ -86,8 +90,14 @@ function extractEntries(text) {
   let m;
   while ((m = reId.exec(text)) !== null) {
     const id = m[1];
-    const vmIdx = text.indexOf("verifiedApi:", m.index);
-    if (vmIdx < 0) continue;
+    const saved = reId.lastIndex;
+    const next = reId.exec(text);
+    const searchEnd = next ? next.index : text.length;
+    reId.lastIndex = saved;
+    const slice = text.slice(m.index, searchEnd);
+    const vmRel = slice.indexOf("verifiedApi:");
+    if (vmRel < 0) continue;
+    const vmIdx = m.index + vmRel;
     const seg = text.slice(m.index, vmIdx);
     const sm = seg.match(/modrinthSlug:\s*"([^"]*)"/);
     const slug = sm ? sm[1] : "";
@@ -136,9 +146,8 @@ function keyExists(entry, rawVa, key) {
 
 /** TS 对象字面量 → JSON（引号键 + 单引号归一 + 容忍尾逗号，与 build-library-catalog-from-authored.mjs 同思路）；失败返回 null */
 function parseVa(raw) {
-  let json = raw
-    .replace(/([{,]\s*)([A-Za-z_$][\w$]*)\s*:/g, '$1"$2":')
-    .replace(/'/g, '"');
+  let json = raw.replace(/([{,]\s*)([A-Za-z_$][\w$]*)\s*:/g, '$1"$2":');
+  json = json.replace(/'((?:\\'|[^'])*)'/g, (_, inner) => JSON.stringify(inner.replace(/\\'/g, "'")));
   json = json.replace(/,(\s*[}\]])/g, "$1"); // 容忍 TS 尾逗号
   try {
     return JSON.parse(json);

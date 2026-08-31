@@ -14,6 +14,7 @@ import { loadModProject, preferExplicit, resolveProjectDir } from "../utils/proj
 import {
   classifyMinecraftVersion,
   detectMinecraftVersion,
+  isMcVersionFamily,
 } from "../utils/minecraft-version.js";
 
 export { detectMinecraftVersion } from "../utils/minecraft-version.js";
@@ -365,7 +366,7 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
   const warnings: string[] = [];
   const suggestions: string[] = [];
   const mcVersion = detectMinecraftVersion({ buildGradle, gradleProperties });
-  const is261 = /^26\.1/.test(mcVersion);
+  const is261 = isMcVersionFamily(mcVersion, "26.1");
   const hasNewFabricPlugin = /id\s+['"]net\.fabricmc\.fabric-loom['"]/.test(buildGradle);
   const hasOldFabricPlugin = /id\s+['"]fabric-loom['"]/.test(buildGradle);
   const hasQuiltPlugin = /id\s+['"]org\.quiltmc\.loom['"]|quilt-loom/i.test(buildGradle);
@@ -399,7 +400,7 @@ function diagnoseLoomGradle(buildGradle: string, gradleProperties: string | unde
   } else {
     if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle) && !/JavaVersion\.VERSION_\d+\b/.test(buildGradle)) {
       errors.push("未找到 Java toolchain 配置（1.21 建议 JavaLanguageVersion.of(21) 或 JavaVersion.VERSION_21）");
-    } else if (/^1\.21/.test(mcVersion) && !hasJavaLanguageVersionOf(buildGradle, 21) && !hasJavaLanguageVersionOf(buildGradle, 25)) {
+    } else if (isMcVersionFamily(mcVersion, "1.21") && !hasJavaLanguageVersionOf(buildGradle, 21) && !hasJavaLanguageVersionOf(buildGradle, 25)) {
       warnings.push("1.21.x 建议 Java toolchain 21");
     }
   }
@@ -413,7 +414,7 @@ function diagnoseNeoGradle(buildGradle: string, gradleProperties: string | undef
   const suggestions: string[] = ["可配合 search_neoforge_docs 核 NeoGradle / ModDevGradle"];
   const props = parseGradleProperties(gradleProperties ?? "");
   const mcVersion = detectMinecraftVersion({ buildGradle, gradleProperties });
-  const is261 = /^26\.1/.test(mcVersion);
+  const is261 = isMcVersionFamily(mcVersion, "26.1");
   const hasUserdev = /net\.neoforged\.gradle\.userdev/.test(buildGradle);
   const hasModdev = /net\.neoforged\.moddev|id\s*\(?\s*['"]net\.neoforged\.moddev|moddevgradle|net\.neoforged\.gradle\.common/i.test(buildGradle);
 
@@ -433,7 +434,7 @@ function diagnoseNeoGradle(buildGradle: string, gradleProperties: string | undef
     if (!/JavaLanguageVersion\.of\(\s*25\s*\)/.test(buildGradle) && !/JavaVersion\.VERSION_25\b/.test(buildGradle)) {
       errors.push("26.1 需要 Java toolchain 25");
     }
-  } else if (/^1\.21/.test(mcVersion) || mcVersion.startsWith("1.20")) {
+  } else if (isMcVersionFamily(mcVersion, "1.21") || isMcVersionFamily(mcVersion, "1.20")) {
     if (!/JavaLanguageVersion\.of\s*\(/.test(buildGradle)) {
       errors.push("未找到 Java toolchain 配置（1.20.4/1.21 建议 21）");
     }

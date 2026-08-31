@@ -4,7 +4,7 @@
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { createFabricDocStore, FabricDocStore } from "./fabric/store.js";
+import { createFabricDocStore } from "./fabric/store.js";
 import { hasPlatformDocData, platformDataMissingPayload } from "./platform-data.js";
 import { resolveDataDir } from "../utils/path.js";
 import { semanticSearch } from "./semantic/search.js";
@@ -58,7 +58,7 @@ function isDocNotFoundLike(e: unknown): boolean {
   const rec = e as { name?: string; id?: unknown; availableVersions?: unknown; code?: unknown };
   if (Array.isArray(rec.availableVersions)) return false;
   if (rec.code === "UNSUPPORTED_PLATFORM") return false;
-  return rec.name === "DocNotFoundError" || typeof rec.id === "string";
+  return rec.name === "DocNotFoundError" || rec.code === "DOC_NOT_FOUND";
 }
 
 function isVersionNotFoundLike(e: unknown): boolean {
@@ -124,7 +124,12 @@ export async function searchQuiltDocs(args: {
     if (fb && fb !== args.version && quiltIndexHasPages(fb, dataRoot)) {
       const inner = await searchQuiltDocs({ ...args, version: fb });
       const text = inner.content?.[0] && inner.content[0].type === "text" ? inner.content[0].text : "{}";
-      const rec = JSON.parse(text) as Record<string, unknown>;
+      let rec: Record<string, unknown>;
+      try {
+        rec = JSON.parse(text) as Record<string, unknown>;
+      } catch {
+        rec = { ok: false, query: args.query, version: args.version, platform: "quilt" };
+      }
       rec.version = args.version;
       rec.requestedVersion = args.version;
       rec.resolvedVersion = fb;
@@ -154,7 +159,7 @@ export async function searchQuiltDocs(args: {
   }
 
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
-    const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+    const store = createFabricDocStore(args.version, "quilt-docs", dataRoot, "quilt");
     try {
       const detailedRes = store.searchIndexDetailed(args.query, args.version, args.tags);
       let results: SearchResultLike[] = detailedRes.results;
@@ -267,7 +272,7 @@ export async function getQuiltDocSummary(args: { id: string; version: string }):
   const dataRoot = resolveDataDir();
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
-      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      const store = createFabricDocStore(args.version, "quilt-docs", dataRoot, "quilt");
       const result = store.loadSummary(args.id, args.version);
       return jsonOk({ ...result, platform: "quilt", fallback: null });
     } catch (e) {
@@ -344,7 +349,7 @@ export async function getQuiltDocFull(args: {
   const highlight = args.highlight_key ?? true;
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
-      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      const store = createFabricDocStore(args.version, "quilt-docs", dataRoot, "quilt");
       const result = await store.loadFullDoc(args.id, args.version, highlight);
       return jsonOk({ ...result, platform: "quilt", fallback: null });
     } catch (e) {
@@ -440,7 +445,7 @@ export function getQuiltDocRelated(args: {
   const limit = args.limit ?? 5;
   if (hasQuiltDocsIndex(args.version, dataRoot)) {
     try {
-      const store = new FabricDocStore(dataRoot, args.version, "quilt-docs", "quilt");
+      const store = createFabricDocStore(args.version, "quilt-docs", dataRoot, "quilt");
       return jsonRelatedList(store.getRelatedDocs(args.id, args.version, limit));
     } catch (e) {
       if (!isDocNotFoundLike(e)) throw e;

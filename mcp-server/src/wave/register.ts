@@ -71,6 +71,10 @@ export const validateDatapackJsonSchema = z.object({
   jsonContent: z.string(),
   kind: z.enum(["recipe", "loot_table", "advancement", "tag"]),
   version: z.string().optional().describe("MC 版本，强烈建议传入精确版本，禁止默认 1.20.1"),
+  packFormat: z
+    .union([z.number(), z.tuple([z.number(), z.number()])])
+    .optional()
+    .describe("可选 pack.mcmeta pack_format（正整数或 1.21.9+ [主,次] 数组）"),
 });
 export const getWorkflowTemplateSchema = z.object({
   name: z.enum([
@@ -150,9 +154,10 @@ export const DOWNLOAD_OFFICIAL_MDK_DESCRIPTION =
   "下载官方 MDK 到 $MC_SKILL_CACHE/mdk/<platform>/<version>/<plugin>/。" +
   "GitHub 必须 pin commit SHA（见 mcp-server/data/mdk-checksums.json），不对 branch HEAD zip 做校验和。" +
   "pin 条目 sha256 为空时 fail-closed（MDK_NOT_PINNED）；显式 allowUnpinned:true 才接受未校验下载并回写 hash。" +
-  "默认 dryRun。26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
+  "默认 dryRun。dryRun=false 且无 destPath 时仍会联网写入 cache（不是只预览），需要 confirmed=true。" +
+  "26.1.1 / 26.1.2 / 26.2 均同时提供 ModDevGradle 与 NeoGradle，须传 buildPlugin。" +
   "白名单落到具体 repo：NeoForgeMDKs/MDK-*、MinecraftForge/MinecraftForge、FabricMC/fabric-example-mod、QuiltMC/quilt-template-mod。" +
-  "写入用户工程需 confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。";
+  "写入用户工程另需 destPath + confirmed + MC_SKILL_ALLOW_WRITE + MC_SKILL_PROJECT_ROOT。LiteLoader 禁止再分发。";
 export const VALIDATE_AT_DESCRIPTION =
   "校验 `*_at.cfg`：目标类/成员必须存在于 remapped 客户端 jar（含继承成员、record 组件、Outer$Inner 内部类）；" +
   "SRG/混淆名与 jar 映射层不匹配时给出 convert_mapping 建议；多文件冲突告警。\n" +
@@ -260,7 +265,7 @@ export const downloadOfficialMdkSchema = z.object({
     .optional()
     .describe("26.1.1/26.1.2/26.2 均同时提供 ModDevGradle 与 NeoGradle，必须显式选择"),
   dryRun: z.boolean().optional().default(true),
-  confirmed: z.boolean().optional().describe("写入用户工程时必须 true"),
+  confirmed: z.boolean().optional().describe("dryRun=false 联网写入 cache 或写入用户工程时必须 true"),
   destPath: z.string().optional().describe("可选：解压到用户工程（需 ALLOW_WRITE）"),
   allowCacheFallback: z.boolean().optional().describe("官方 URL 404 时仅允许同一 platform+version 的 cache"),
   allowUnpinned: z
@@ -341,8 +346,8 @@ export const queryLoaderApiSchema = z.object({
   className: z.string().describe("FQCN 或 simpleName；嵌套类用 Outer$Inner"),
 });
 export const searchLoaderApiSchema = z.object({
-  platform: z.string().optional().describe("search 必填；mode=list 时可省略以列出全部已索引档"),
-  minecraftVersion: z.string().optional(),
+  platform: z.string().optional().describe("search 与 list 均必填；缺则 INVALID_INPUT，禁止静默全量索引"),
+  minecraftVersion: z.string().optional().describe("search 与 list 均必填"),
   query: z.string().optional().describe("fqcnIndex 子串（mode=search 必填）"),
   mode: z.enum(["search", "list"]).optional().describe("默认 search；list 列出已索引/skipped/overlay"),
   limit: z.number().optional().describe("默认 20，封顶 50"),
@@ -361,6 +366,7 @@ export const ingestLoaderApiSchema = z.object({
   mappingsSource: z.string().optional(),
   dryRun: z.boolean().optional().default(true),
   confirmed: z.boolean().optional(),
+  force: z.boolean().optional().describe("CACHE_STALE 时覆盖 overlay 摘要"),
 });
 export const detectModProjectSchema = z.object({
   projectPath: z
@@ -726,7 +732,7 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Search loader-api FQCN index or list indexed packs",
       description:
-        "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。",
+        "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。platform 与 minecraftVersion 必填（list 也不再默默全量）。",
       inputSchema: searchLoaderApiSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(searchLoaderApi(args)),
@@ -765,7 +771,7 @@ export function registerWaveExtensions(server: McpServer): void {
     {
       title: "Check publish checklist (no upload)",
       description:
-        "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。",
+        "发布前机器检查：只硬检查 license/version 字段与 build/libs 是否像正式 jar。默认不写盘、不读 publishing.md、不调 Curse/Modrinth 上传 API。",
       inputSchema: checkPublishReadySchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(checkPublishReady(args)),
@@ -852,10 +858,10 @@ export const waveToolSchemas: Array<{ name: string; description: string; inputSc
   { name: "validate_at", description: VALIDATE_AT_DESCRIPTION, inputSchema: validateAtSchema },
   { name: "validate_aw", description: VALIDATE_AW_DESCRIPTION, inputSchema: validateAwSchema },
   { name: "query_loader_api", description: "查询 Forge/NeoForge/Fabric-API/QSL 等 loader 摘要中的类与 MethodInfo。必填 platform+minecraftVersion，无默认 1.20.1。不是 query_api（Parchment Vanilla）。found:false 不代表游戏里没有该类。LiteLoader/Rift/ModLoader 无摘要时 PLATFORM_SKIPPED（可 ingest）。", inputSchema: queryLoaderApiSchema },
-  { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。必填 platform+version（list 可省略以列出全部）。", inputSchema: searchLoaderApiSchema },
+  { name: "search_loader_api", description: "在 loader-api-summaries 的 fqcnIndex 上子串搜索（limit 默认 20 封顶 50）。mode=list 列出已索引档、skipped、cache overlay。platform 与 minecraftVersion 必填（list 也不再默默全量）。", inputSchema: searchLoaderApiSchema },
   { name: "ingest_loader_api", description: "把用户自备的 LiteLoader/Rift/ModLoader（等官方不代下）jar 抽成摘要，只写 $MC_SKILL_CACHE/loader-api-summaries overlay，禁止写仓库 data/。jarPath 绝对路径 + mappingsVersion 必填。默认 dryRun。", inputSchema: ingestLoaderApiSchema },
   { name: "detect_mod_project", description: DETECT_MOD_PROJECT_DESCRIPTION, inputSchema: detectModProjectSchema },
   { name: "activate_platform_pack", description: ACTIVATE_PLATFORM_PACK_DESCRIPTION, inputSchema: activatePlatformPackSchema },
-  { name: "check_publish_ready", description: "发布前机器检查：license/version 字段、build/libs 是否像正式 jar。默认不写盘、不调 Curse/Modrinth 上传 API。对照 community_knowledge/authored/publishing.md。", inputSchema: checkPublishReadySchema },
+  { name: "check_publish_ready", description: "发布前机器检查：只硬检查 license/version 字段与 build/libs 是否像正式 jar。默认不写盘、不读 publishing.md、不调 Curse/Modrinth 上传 API。", inputSchema: checkPublishReadySchema },
   { name: "inspect_runtime", description: "日志型 runtime inspector。优先只读用户确认的 logsDir/crashReportsDir；否则在 projectPath 下有界探测 run/logs、runs/client/logs、build/run/logs。禁止向上走到盘符根、禁止全盘。默认只读文件尾部 N 行并设字节上限。复用 analyze_log / crash_analyze。不做 JDWP attach。", inputSchema: inspectRuntimeSchema },
 ];

@@ -58,7 +58,7 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
   let current: string | null = null;
 
   for (const rawLine of text.split(/\r?\n/)) {
-    const line = rawLine.trim();
+    const line = stripTomlCommentOutsideQuotes(rawLine).trim();
     if (!line || line.startsWith("#")) continue;
     if (line.startsWith("[[")) {
       const base = line.slice(2, line.length - 2).trim();
@@ -84,7 +84,14 @@ function parseTomlRows(text: string): { sections: Map<string, TomlRow[]> } {
     if (eq === -1) continue;
     const rawVal = line.slice(eq + 1);
     const valueSrc = stripTomlCommentOutsideQuotes(rawVal);
-    const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value: parseTomlValue(valueSrc) };
+    let value: string;
+    try {
+      value = parseTomlValue(valueSrc);
+    } catch (err) {
+      if ((err as Error).message === "TOML_INLINE_UNSUPPORTED") continue;
+      throw err;
+    }
+    const row: TomlRow = { table: current ?? "", key: line.slice(0, eq).trim(), value };
     const tableKey = current ?? "";
     if (!sections.has(tableKey)) sections.set(tableKey, []);
     sections.get(tableKey)!.push(row);

@@ -39,6 +39,7 @@ export interface MixinsJsonSummary {
   client: string[];
   server: string[];
   warnings: string[];
+  parseFailed?: boolean;
 }
 
 const PARSE_CACHE_MAX = 32;
@@ -90,6 +91,7 @@ export function parseMixinsJson(
       client: [],
       server: [],
       warnings: ["mixins.json JSON 解析失败"],
+      parseFailed: true,
     };
     lruSet(jsonCache, key, failed);
     return failed;

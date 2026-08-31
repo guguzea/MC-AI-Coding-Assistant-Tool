@@ -6,7 +6,7 @@
  * - ⚠️ pooling/normalize 必须在调用时传参；构造时选项会被忽略，
  *   返回 last_hidden_state [1, seq, 384]（已实测验证）
  */
-import { join } from "path";
+import { join, resolve } from "path";
 
 export const EMBEDDING_DIM = 384;
 export const EMBEDDING_MODEL = "Xenova/all-MiniLM-L6-v2";
@@ -16,15 +16,17 @@ export interface Embedder {
   embed(texts: string[]): Promise<Float32Array[]>;
 }
 
-let embedderPromise: Promise<Embedder> | null = null;
+const embedderByRoot = new Map<string, Promise<Embedder>>();
 
 /**
- * 获取懒加载嵌入器（进程内单例）。
- * 加载失败时允许下次重试（清空缓存并重抛）。
+ * 获取懒加载嵌入器（按 dataRoot 分键）。
+ * 加载失败时允许下次重试（清空该根缓存并重抛）。
  */
 export function getEmbedder(dataRoot: string): Promise<Embedder> {
-  if (!embedderPromise) {
-    embedderPromise = (async () => {
+  const key = resolve(dataRoot);
+  const existing = embedderByRoot.get(key);
+  if (existing) return existing;
+  const created = (async () => {
       const { env, pipeline } = await import("@xenova/transformers");
       env.cacheDir = join(dataRoot, "_models");
       // 红线 2：运行时禁止静默联网——模型缺失时直接失败并降级 FTS5，而非从 Hub 静默下载
@@ -39,6 +41,9 @@ export function getEmbedder(dataRoot: string): Promise<Embedder> {
           const dims = out.dims as number[];
           const n = dims[0] ?? 0;
           const d = dims[1] ?? EMBEDDING_DIM;
+          if (d !== EMBEDDING_DIM) {
+            throw new Error(`嵌入维数 ${d} ≠ ${EMBEDDING_DIM}（all-MiniLM-L6-v2），拒绝使用`);
+          }
           const rows: Float32Array[] = [];
           for (let i = 0; i < n; i++) {
             rows.push(flat.subarray(i * d, (i + 1) * d));
@@ -47,11 +52,11 @@ export function getEmbedder(dataRoot: string): Promise<Embedder> {
         },
       };
     })().catch((err: unknown) => {
-      embedderPromise = null; // 允许下次重试
+      embedderByRoot.delete(key);
       throw err;
     });
-  }
-  return embedderPromise;
+  embedderByRoot.set(key, created);
+  return created;
 }
 
 /** 归一化向量余弦相似度（向量已归一化时即点积）；空向量返回 0 */

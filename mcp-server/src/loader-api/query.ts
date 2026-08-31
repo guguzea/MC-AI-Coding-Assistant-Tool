@@ -136,6 +136,17 @@ export function queryLoaderApi(args: QueryLoaderApiArgs) {
     };
   }
   if (matches.length === 0) {
+    if (/\s/.test(className) || className.includes("?") || className.length < 2) {
+      return {
+        found: false,
+        code: "QUERY_MALFORMED" as const,
+        platform,
+        minecraftVersion,
+        key: hit.key,
+        notes: ["className 不像合法 Java 类型名（空白/过短/含 ?）。这不是 INDEXED_WITHOUT_BODY。"],
+        action: actionable("INVALID_INPUT", "className 查询写法无效。", ["使用 FQCN 或 simpleName，不要用自然语言"]),
+      };
+    }
     const indexed = indexHasClass(hit.summary.fqcnIndex ?? [], className);
     return {
       found: false,
@@ -183,17 +194,25 @@ export function searchLoaderApi(args: SearchLoaderApiArgs) {
   if (mode === "list") {
     const platform = String(args.platform ?? "").trim();
     const minecraftVersion = String(args.minecraftVersion ?? "").trim();
-    let indexed = listIndexed();
-    if (platform && minecraftVersion) {
-      const keys = candidateKeysSafe(platform, minecraftVersion);
-      if (!keys.ok) {
-        return { ok: false, found: false, code: "INVALID_INPUT" as const, action: keys.action };
-      }
-      const hit = findSummary(platform, minecraftVersion);
-      indexed = hit
-        ? indexed.filter((x) => x.key === hit.key)
-        : [];
+    if (!platform || !minecraftVersion) {
+      return {
+        ok: false,
+        found: false,
+        code: "INVALID_INPUT" as const,
+        action: actionable("INVALID_INPUT", "list 模式也需要 platform 与 minecraftVersion，禁止静默全量索引。", [
+          "传入 platform 与 minecraftVersion",
+        ]),
+      };
     }
+    let indexed = listIndexed();
+    const keys = candidateKeysSafe(platform, minecraftVersion);
+    if (!keys.ok) {
+      return { ok: false, found: false, code: "INVALID_INPUT" as const, action: keys.action };
+    }
+    const hit = findSummary(platform, minecraftVersion);
+    indexed = hit
+      ? indexed.filter((x) => x.key === hit.key)
+      : [];
     const catalog = readSkippedCatalog();
     const overlayKeys = indexed.filter((x) => x.overlay).map((x) => x.key);
     return {

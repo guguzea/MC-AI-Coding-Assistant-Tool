@@ -6,11 +6,12 @@
  * 警告：会覆盖 quilt/rift/liteloader/modloader/bedrock 的 AGENTS 与 00–10。
  * 计划 1 加厚后不要无脑重跑；只需更新 indexKnowledge 列表并单独写 processed/L0。
  */
-import { mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
+import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { indexKnowledge } from "../_lib/index-knowledge.mjs";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 function w(rel, text) {
   const p = join(ROOT, rel);
   mkdirSync(dirname(p), { recursive: true });
@@ -862,52 +863,52 @@ function indexKnowledge(platform, ver, source, files) {
     } catch {
       existing = [];
     }
-  }
-  const byId = new Map(existing.filter((e) => e && typeof e.id === "string").map((e) => [e.id, e]));
-  for (const [id, rel] of files) {
-    const src = join(ROOT, rel);
-    if (!existsSync(src)) continue;
-    const body = readFileSync(src, "utf8");
-    const dest = join(processed, `${id}.md`);
-    writeFileSync(dest, body, "utf8");
-    const entry = {
-      id: `${ver}/${id}`,
-      version: ver,
-      label: id,
-      url: rel,
-      tags: [platform],
-      priority: "⭐",
-      sectionCount: 1,
-      source,
-      fetchedAt: new Date().toISOString(),
-    };
-    byId.set(entry.id, entry);
-  }
-  writeFileSync(indexPath, JSON.stringify([...byId.values()], null, 2), "utf8");
+}
+const byId = new Map(existing.filter((e) => e && typeof e.id === "string").map((e) => [e.id, e]));
+for (const [id, rel] of files) {
+  const src = join(ROOT, rel);
+  if (!existsSync(src)) continue;
+  const body = readFileSync(src, "utf8");
+  const dest = join(processed, `${id}.md`);
+  writeFileSync(dest, body, "utf8");
+  const entry = {
+    id: `${ver}/${id}`,
+    version: ver,
+    label: id,
+    url: rel,
+    tags: [platform],
+    priority: "⭐",
+    sectionCount: 1,
+    source,
+    fetchedAt: new Date().toISOString(),
+  };
+  byId.set(entry.id, entry);
+}
+writeFileSync(indexPath, JSON.stringify([...byId.values()], null, 2), "utf8");
 }
 
-indexKnowledge("rift", "1.13.2", "rift-docs", [
+indexKnowledge(ROOT, "rift", "1.13.2", "rift-docs", [
   ["upstream-readme", "rift/1.13.2/knowledge/common/upstream-readme.md"],
   ["making-mods-wiki", "rift/1.13.2/knowledge/common/making-mods-wiki.md"],
   ["listeners", "rift/1.13.2/knowledge/common/listeners.md"],
 ]);
-indexKnowledge("modloader", "1.6.4", "modloader-docs", [
+indexKnowledge(ROOT, "modloader", "1.6.4", "modloader-docs", [
   ["safe-api", "modloader/1.6.4/knowledge/common/safe-api.md"],
 ]);
-indexKnowledge("liteloader", "1.12.2", "liteloader-docs", [
+indexKnowledge(ROOT, "liteloader", "1.12.2", "liteloader-docs", [
   ["hybrid", "liteloader/1.12.2/HYBRID.md"],
   ["verified-api", "liteloader/1.12.2/knowledge/common/verified-api.md"],
 ]);
-indexKnowledge("liteloader", "1.10.2", "liteloader-docs", [
+indexKnowledge(ROOT, "liteloader", "1.10.2", "liteloader-docs", [
   ["verified-api", "liteloader/1.10.2/knowledge/common/verified-api.md"],
 ]);
-indexKnowledge("liteloader", "1.8.9", "liteloader-docs", [
+indexKnowledge(ROOT, "liteloader", "1.8.9", "liteloader-docs", [
   ["verified-api", "liteloader/1.8.9/knowledge/common/verified-api.md"],
 ]);
-indexKnowledge("modloader", "1.5.2", "modloader-docs", [
+indexKnowledge(ROOT, "modloader", "1.5.2", "modloader-docs", [
   ["safe-api", "modloader/1.5.2/knowledge/common/safe-api.md"],
 ]);
-indexKnowledge("modloader", "1.2.5", "modloader-docs", [
+indexKnowledge(ROOT, "modloader", "1.2.5", "modloader-docs", [
   ["safe-api", "modloader/1.2.5/knowledge/common/safe-api.md"],
 ]);
 

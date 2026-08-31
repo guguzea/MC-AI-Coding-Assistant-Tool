@@ -383,6 +383,7 @@ async function runTests() {
     dryRun: false,
     confirmed: true,
     modId: "sandboxmod",
+    neoforgeVersion: "20.4.237",
   });
   const cp1 = JSON.parse(rp1.result.content[0].text);
   // 保留安全行为：不得真正写入。允许沙箱错误，或强制降级为 dryRun 预览。

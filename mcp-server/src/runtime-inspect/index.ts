@@ -96,7 +96,14 @@ function readTail(abs: string, maxBytes: number, maxLines: number): { text: stri
     const start = size > maxBytes ? size - maxBytes : 0;
     const len = Math.max(0, size - start);
     const buf = Buffer.alloc(len);
-    if (len > 0) readSync(fd, buf, 0, len, start);
+    if (len > 0) {
+      let off = 0;
+      while (off < len) {
+        const n = readSync(fd, buf, off, len - off, start + off);
+        if (n <= 0) break;
+        off += n;
+      }
+    }
     let text = buf.toString("utf8");
     if (start > 0 && text.charCodeAt(0) === 0xfffd) {
       const nl = text.indexOf("\n");

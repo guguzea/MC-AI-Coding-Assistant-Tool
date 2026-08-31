@@ -462,12 +462,25 @@ function checkMixinConfig(
       }
     }
 
-    // 收集所有 Java 文件中的类名
+    // 收集所有 Java 文件中的类名（每文件全部 public class）
     const existingClasses = new Set<string>();
     for (const { path: p, content } of javaFiles) {
-      const classMatch = content.match(/public\s+class\s+(\w+)/);
-      if (classMatch) {
+      for (const classMatch of content.matchAll(/public\s+class\s+(\w+)/g)) {
         existingClasses.add(classMatch[1]);
+      }
+    }
+
+    const rawMixins = config.mixins as unknown;
+    if (Array.isArray(rawMixins)) {
+      for (const entry of rawMixins) {
+        if (typeof entry === "object" && entry !== null && "mixin" in entry) {
+          const target = (entry as { mixin: string; target: string }).target;
+          if (target && target.startsWith(".")) {
+            warnings.push(
+              `mixins.json 中 target='${target}' 以 '.' 开头，应使用完整类名如 'net.minecraft.world.entity.Entity'`,
+            );
+          }
+        }
       }
     }
 
@@ -481,21 +494,6 @@ function checkMixinConfig(
         warnings.push(
           `mixins.json 中引用了 mixin 类 '${mixin}'，但在提供的 Java 文件中未找到对应的类定义`,
         );
-      }
-
-      // 检查目标类格式
-      const rawMixins = config.mixins as unknown;
-      if (Array.isArray(rawMixins)) {
-        for (const entry of rawMixins) {
-          if (typeof entry === "object" && entry !== null && "mixin" in entry) {
-            const target = (entry as { mixin: string; target: string }).target;
-            if (target && target.startsWith(".")) {
-              warnings.push(
-                `mixins.json 中 target='${target}' 以 '.' 开头，应使用完整类名如 'net.minecraft.world.entity.Entity'`,
-              );
-            }
-          }
-        }
       }
     }
   } catch {

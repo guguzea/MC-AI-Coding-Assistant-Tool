@@ -6,7 +6,7 @@ import { mkdirSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 function w(rel, text) {
   const p = join(ROOT, rel);
   mkdirSync(dirname(p), { recursive: true });

@@ -1,7 +1,7 @@
 # LiteLoader 1.12.2 已核实客户端接口
 
 - **抓取日**：2026-08-15
-- **源**（只作本地参考，许可证禁止把 loader 源码再分发进本仓库）：http://develop.liteloader.com/liteloader/LiteLoader 分支 `1.12.2`
+- **源**（只作本地参考，许可证禁止把 loader 源码再分发进本仓库）：https://develop.liteloader.com/liteloader/LiteLoader 分支 `1.12.2`
 - 表外禁止输出。不要用 Fabric `ServerPlayNetworking` 或 1.20 Payload。
 
 ## LiteMod / 生命周期（先前已核）

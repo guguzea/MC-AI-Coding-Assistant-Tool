@@ -278,7 +278,7 @@ export class CommunityDocStore {
     const filePath = join(this.root, e.path);
     const rel = relative(resolve(this.root), resolve(filePath));
     if (rel.startsWith("..") || isAbsolute(rel) || !existsSync(filePath)) {
-      throw new Error(`Community doc file missing: ${e.path}`);
+      throw new CommunityDocNotFoundError(id);
     }
     let content = stripLeadingFrontmatter(readFileSync(filePath, "utf8"));
     let truncated = false;

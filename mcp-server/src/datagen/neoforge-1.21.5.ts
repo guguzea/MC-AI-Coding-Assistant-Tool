@@ -83,6 +83,8 @@ export function generateModel(
   return `// ModelProvider — NeoForge 1.21.5+（Client Items / blockstate）
 package com.example.${modId}.datagen;
 
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -94,7 +96,7 @@ public class ${pascalName}ModelProvider extends ModelProvider {
     }
 
     @Override
-    protected void registerModels() {
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // ${modId}:${targetName}
     }
 ${gatherClient(`${pascalName}ModelProvider::new`)}

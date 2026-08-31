@@ -49,10 +49,6 @@ function listVersionDirs() {
       out.push({ plat, ver: name, base: verDir, rel: `${plat}/${name}` });
     }
   }
-  const nf = join(repoRoot, "neoforge");
-  if (existsSync(join(nf, ".cursor", "rules"))) {
-    out.push({ plat: "neoforge", ver: "", base: nf, rel: "neoforge" });
-  }
   const be = join(repoRoot, "bedrock");
   if (existsSync(join(be, ".cursor", "rules"))) {
     out.push({ plat: "bedrock", ver: "", base: be, rel: "bedrock" });

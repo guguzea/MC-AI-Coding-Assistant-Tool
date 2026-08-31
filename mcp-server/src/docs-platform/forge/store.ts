@@ -108,6 +108,14 @@ export class VersionNotFoundError extends Error {
   }
 }
 
+export class IndexCorruptError extends Error {
+  override name = "IndexCorruptError";
+  constructor(public version: string, public filepath: string) {
+    super(`INDEX_CORRUPT: 文档索引无法解析（version=${version}）`);
+    this.name = "IndexCorruptError";
+  }
+}
+
 /** 系列键：去掉尾部 .x 后的前两段数字。1.16.8 / 1.16.x / 1.16 → 1.16；26.1.2 → 26.1 */
 export function seriesKey(version: string): string | null {
   const n = version.trim().replace(/\.x$/i, "");
@@ -215,7 +223,6 @@ export class ForgeDocStore {
    */
   private ensureValidated(): void {
     if (this._validated) return;
-    this._validated = true;
 
     if (!existsSync(this.dataDir)) {
       throw new PlatformDataMissingError("forge");
@@ -223,6 +230,7 @@ export class ForgeDocStore {
     if (this.getAvailableVersionsUnchecked().length === 0) {
       throw new PlatformDataMissingError("forge");
     }
+    this._validated = true;
   }
 
   // ── 公开 API ──────────────────────────────────────────────────────────
@@ -444,7 +452,7 @@ export class ForgeDocStore {
     const topSeg = id.replace(/^\d+\.\d+(\.\d+)?\//, "").split(/[/_]/)[0]?.toLowerCase() ?? "";
 
     const results = (l2 as Array<import("./types.js").L2Entry & { overlap: number }>)
-      .filter((e) => e.id !== id)
+      .filter((e) => e.id !== current.id)
       .map((e) => {
         const otherPathKws = this.extractPathKeywords(e.id);
         const otherSectionKws = e.sections
@@ -483,7 +491,7 @@ export class ForgeDocStore {
       .slice(0, limit)
       .map(({ overlap: _o, ...rest }) => rest as unknown as SearchResult);
 
-    ttlCacheSet(this.relatedCache, cacheKey, results);
+    ttlCacheSet(this.relatedCache, cacheKey, results, 256, ForgeDocStore.CACHE_TTL);
     return results;
   }
 
@@ -581,7 +589,12 @@ export class ForgeDocStore {
     if (!existsSync(filepath)) {
       throw new VersionNotFoundError(version, this.getAvailableVersions());
     }
-    const data = JSON.parse(readFileSync(filepath, "utf-8")) as T;
+    let data: T;
+    try {
+      data = JSON.parse(readFileSync(filepath, "utf-8")) as T;
+    } catch {
+      throw new IndexCorruptError(version, filepath);
+    }
     this.indexCache.set(cacheKey, {
       data,
       expiry: Date.now() + ForgeDocStore.CACHE_TTL,

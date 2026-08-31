@@ -21,6 +21,10 @@ const CACHE = process.env.MC_SKILL_CACHE || join(os.tmpdir(), "mc-skill-cache");
 const JAR_DIR = join(CACHE, "loader-jars");
 const OUT = join(ROOT, "mcp-server", "data", "loader-api-summaries");
 const INDEX_ONLY = process.argv.includes("--index-only");
+const WRITE = process.argv.includes("--write");
+if (!INDEX_ONLY && !WRITE) {
+  console.log("[decompile-loader-apis] dry-run：不会覆盖摘要。确认后加 --write。");
+}
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(JAR_DIR, { recursive: true });
@@ -35,7 +39,9 @@ MCP 运行时（resolveCacheRoot）与本脚本都读 \`MC_SKILL_CACHE\`。不�
 键形如 \`1.20.4-neoforge\`、\`26.1-neoforge\`、\`1.20.4-fabric-api\`。
 **不要**把摘要合并进 Parchment query_api。摘要必须含 mappingsVersion。
 `;
-writeFileSync(join(OUT, "README.md"), NOTE, "utf8");
+if (WRITE) {
+  writeFileSync(join(OUT, "README.md"), NOTE, "utf8");
+}
 
 function inferMappings(fileBase) {
   const name = fileBase.replace(/\.jar$/i, "").toLowerCase();
@@ -382,6 +388,7 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
   }
   const inferred = await resolveMappings(name, jarPath);
   if (!inferred.mappingsVersion) {
+    const existingPath = join(OUT, `${key}.json`);
     const invalid = {
       file: name,
       mappingsVersion: null,
@@ -389,7 +396,15 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
       note: "缺少 mappingsVersion，视为无效，禁止写进规则",
     };
     summaries.push(invalid);
-    writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(invalid, null, 2), "utf8");
+    if (existsSync(existingPath)) {
+      console.error("skip overwrite of existing summary (missing mappingsVersion):", existingPath);
+      continue;
+    }
+    if (!WRITE) {
+      console.log("dry-run skip invalid write:", key);
+      continue;
+    }
+    writeFileSync(existingPath, JSON.stringify(invalid, null, 2), "utf8");
     continue;
   }
   const jarSha = sha256File(jarPath);
@@ -552,20 +567,31 @@ for (const name of readdirSync(JAR_DIR).filter((f) => f.endsWith(".jar") && !f.s
   summary.classes = dedupeLoaderClasses(classes);
   summary.classCount = summary.classes.length;
   summaries.push(summary);
-  writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(summary, null, 2), "utf8");
-  writeFileSync(
-    `${jarPath}.sidecar`,
-    JSON.stringify(
-      {
-        mappingsVersion: inferred.mappingsVersion,
-        mappingsSource: inferred.mappingsSource,
-        sourceJarSha256: jarSha,
-      },
-      null,
-      2,
-    ),
-    "utf8",
-  );
+  if (!WRITE) {
+    console.log("dry-run skip summary write:", key);
+  } else {
+    writeFileSync(join(OUT, basename(name, ".jar") + ".json"), JSON.stringify(summary, null, 2), "utf8");
+    let prevSide = {};
+    try {
+      if (existsSync(`${jarPath}.sidecar`)) prevSide = JSON.parse(readFileSync(`${jarPath}.sidecar`, "utf8"));
+    } catch {
+      prevSide = {};
+    }
+    writeFileSync(
+      `${jarPath}.sidecar`,
+      JSON.stringify(
+        {
+          ...prevSide,
+          mappingsVersion: inferred.mappingsVersion,
+          mappingsSource: inferred.mappingsSource,
+          sourceJarSha256: jarSha,
+        },
+        null,
+        2,
+      ),
+      "utf8",
+    );
+  }
 }
 
 async function thickenFromClassUrls(jsonPath, key) {

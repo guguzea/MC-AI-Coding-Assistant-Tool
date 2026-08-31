@@ -497,16 +497,20 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
       mcVersionUsed: pf.mcVersionUsed,
       packFormatNeedsReview: true as const,
       files: {
-        "pack.mcmeta": JSON.stringify(
-          {
-            pack: {
-              pack_format: pf.packFormat,
-              description: `Chinese lang pack for ${nsRes.namespace} (existing zh only)`,
-            },
-          },
-          null,
-          2,
-        ) + "\n",
+        ...(pf.packFormat != null
+          ? {
+              "pack.mcmeta": JSON.stringify(
+                {
+                  pack: {
+                    pack_format: pf.packFormat,
+                    description: `Chinese lang pack for ${nsRes.namespace} (existing zh only)`,
+                  },
+                },
+                null,
+                2,
+              ) + "\n",
+            }
+          : {}),
         [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.zhFormat}`]:
           loadedNs.zhFormat === "lang"
             ? serializeDotLang(existingZh)
@@ -586,17 +590,21 @@ function handleThirdParty(args: LocalizeModArgs): Record<string, unknown> {
     keyRenameHint: KEY_RENAME_HINT,
     zhCn: drafted.zhCn,
     files: {
-      "pack.mcmeta":
-        JSON.stringify(
-          {
-            pack: {
-              pack_format: pf.packFormat,
-              description: `Chinese lang draft for ${nsRes.namespace}`,
-            },
-          },
-          null,
-          2,
-        ) + "\n",
+      ...(pf.packFormat != null
+        ? {
+            "pack.mcmeta":
+              JSON.stringify(
+                {
+                  pack: {
+                    pack_format: pf.packFormat,
+                    description: `Chinese lang draft for ${nsRes.namespace}`,
+                  },
+                },
+                null,
+                2,
+              ) + "\n",
+          }
+        : {}),
       [`assets/${nsRes.namespace}/lang/zh_cn.${loadedNs.zhFormat}`]:
         loadedNs.zhFormat === "lang"
           ? serializeDotLang(drafted.zhCn)

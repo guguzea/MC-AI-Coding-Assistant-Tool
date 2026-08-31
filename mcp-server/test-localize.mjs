@@ -441,10 +441,11 @@ function testPackFormatMap() {
   assert.equal(resolvePackFormat("1.21.5").packFormat, 55);
   assert.equal(resolvePackFormat("26.1").packFormat, 84);
   const unknown = resolvePackFormat("9.9.9");
-  assert.equal(unknown.packFormat, 15);
+  assert.equal(unknown.packFormat, null);
+  assert.equal(unknown.unknownVersion, true);
   assert.ok(unknown.notes.some((n) => /未知 mcVersion/.test(n)));
 
-  // #6：<1.19.4 段补全。此前该表从 1.19.4 起，老版本一律回落到 15（错误）。
+  // #6：<1.19.4 段补全。未知版本不再回落 15。
   // 依据 Minecraft Wiki「Pack format」表（资源包）。
   assert.equal(resolvePackFormat("1.12.2").packFormat, 3, "1.12.2 应为 3，不得回落 15");
   assert.equal(resolvePackFormat("1.11.2").packFormat, 3);

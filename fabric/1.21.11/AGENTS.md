@@ -17,7 +17,7 @@
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 21**（Fabric 1.21.x 最低要求） |
 | Gradle | Gradle 9.5.1 + Loom remap（官方 example-mod 1.21.11 @ 8cd77ea） |
-| Mappings | **Yarn**（`net.fabricmc:yarn:1.21.11+build.6:v2`）|
+| Mappings | **默认可跟官方 Mojmap**；Yarn 仍可用（`net.fabricmc:yarn:1.21.11+build.6:v2`）。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档。 |
 | Build 工具 | Loom（`net.fabricmc.fabric-loom-remap` `${loom_version}` = 1.17-SNAPSHOT） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|

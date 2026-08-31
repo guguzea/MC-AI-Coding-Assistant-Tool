@@ -24,7 +24,7 @@ import { searchNeoForgeDocs, getNeoForgeDocSummary, getNeoForgeDocFull, getNeoFo
 import { generateDatagen, parseNeo21Patch } from "./dist/datagen/index.js";
 import { generateLang, generateCapability, generateConfig, generateEntityRenderer, generateNetworkPacket, NETWORK_PACKET_PLATFORMS, generateNetworkPacketDescription } from "./dist/generators/index.js";
 import { diagnoseGradle, detectMinecraftVersion } from "./dist/gradle/index.js";
-import { isExactMcVersionToken, matchesExactMcVersion, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
+import { isExactMcVersionToken, matchesExactMcVersion, isMcVersionFamily, VERSION_SEGMENT_RE, isSafeVersionSegment, classifyMinecraftVersion } from "./dist/utils/minecraft-version.js";
 import { withDocsFallbackFields, matchDocIndexId, pathBoost } from "./dist/docs-platform/search-utils.js";
 import { detectLoader, detectProjectLoaders, classifyJavaFmlToml, getMigrationGuide, checkDependencies, extractGradleDependenciesBlock, javaBlobFromFiles } from "./dist/diagnostics/index.js";
 import { getVersionInfo } from "./dist/version/index.js";
@@ -138,6 +138,7 @@ async function testArchitecturyDryRunDoesNotWrite() {
       projectPath: root,
       action: "init_architectury",
       targetVersion: "1.20.4",
+      neoforgeVersion: "20.4.237",
       modId: "examplemod",
       dryRun: true,
     }));
@@ -164,6 +165,7 @@ async function testWriteBlockedWithoutAllowEnv() {
       dryRun: false,
       confirmed: true,
       modId: "sandboxmod",
+      neoforgeVersion: "20.4.237",
     }));
     assert.equal(result.ok, false);
     assert.equal(result.error.code, "WRITE_DISABLED");
@@ -317,10 +319,20 @@ async function testPortingTargetVersionRequired() {
     assert.equal(missingMigrate.ok, false);
     assert.equal(missingMigrate.error.code, "TARGET_VERSION_REQUIRED");
 
+    const missingNeo = JSON.parse(await portProject({
+      projectPath: root,
+      action: "init_architectury",
+      modId: "examplemod",
+      dryRun: true,
+    }));
+    assert.equal(missingNeo.ok, false);
+    assert.equal(missingNeo.error.code, "NEOFORGE_VERSION_REQUIRED");
+
     const initDefault = JSON.parse(await portProject({
       projectPath: root,
       action: "init_architectury",
       modId: "examplemod",
+      neoforgeVersion: "20.4.237",
       dryRun: true,
     }));
     assert.equal(initDefault.ok, true);
@@ -413,6 +425,7 @@ async function testSandboxAssertWritablePath() {
       dryRun: false,
       confirmed: true,
       modId: "relmod",
+      neoforgeVersion: "20.4.237",
     }));
     assert.equal(blocked.ok, false);
     assert.equal(blocked.error.code, "PROJECT_ROOT_REQUIRED");
@@ -1829,6 +1842,19 @@ async function testFivePlatformRouting() {
     "fabric",
     "fabric-loom 工程里的残留 litemod.json 不得压过 Fabric",
   );
+  assert.equal(
+    detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n', leftoverFab),
+    "forge",
+    "残留 fabric.mod.json 不得压过 javafml mods.toml",
+  );
+  const llOnlyLoaders = detectProjectLoaders({
+    buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
+    modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
+    extras: { litemodJson: '{"name":"x"}' },
+  });
+  assert.equal(llOnlyLoaders.primary, "liteloader_forge");
+  assert.ok(llOnlyLoaders.loaders.includes("liteloader_forge"));
+  assert.equal(llOnlyLoaders.loaders.includes("liteloader"), false, JSON.stringify(llOnlyLoaders.loaders));
   const llFabLoaders = detectProjectLoaders({
     buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
     modsToml: 'modLoader="javafml"\n[[mods]]\nmodId="demo"',
@@ -1836,7 +1862,8 @@ async function testFivePlatformRouting() {
     extras: { litemodJson: '{"name":"x"}' },
   });
   assert.equal(llFabLoaders.primary, "liteloader_forge");
-  assert.ok(llFabLoaders.loaders.includes("liteloader") || llFabLoaders.loaders.includes("liteloader_forge"));
+  assert.ok(llFabLoaders.loaders.includes("liteloader_forge"));
+  assert.equal(llFabLoaders.loaders.includes("liteloader"), false, JSON.stringify(llFabLoaders.loaders));
   assert.ok(llFabLoaders.loaders.includes("fabric"));
   assert.equal(llFabLoaders.multiLoader, true);
   assert.ok(isQslSpecificQuery("QSL QuiltRegistry 注册"));
@@ -1971,6 +1998,14 @@ async function testFivePlatformRouting() {
   assert.equal(classifyJavaFmlToml(neoTomlOnly), "neoforge");
   assert.equal(
     detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n'),
+    "unknown",
+    "loaderVersion [47,) 单独不能区分 Forge 1.20.1 与 NeoForge 1.20.1",
+  );
+  assert.equal(
+    detectLoader(
+      "",
+      'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n[[dependencies.examplemod]]\nmodId="forge"\n',
+    ),
     "forge",
   );
   const javafmlBare = 'modLoader="javafml"\n[[mods]]\nmodId="demo"\n';
@@ -2487,6 +2522,7 @@ async function testReviewFixes() {
   assert.equal(bedrockVal.deprecated_legacy_passed, undefined);
 
   const forgeVal = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
     modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
     javaFiles: [{
       path: "src/main/java/com/example/ExampleMod.java",
@@ -2824,6 +2860,7 @@ function testProjectPathFill() {
   assert.equal(deps.detectedLoader, "forge", JSON.stringify(deps));
 
   const stillContent = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
     modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
     javaFiles: [{
       path: "src/main/java/com/example/ExampleMod.java",
@@ -2882,7 +2919,8 @@ async function testPrototypeOwnKeys() {
     assert.equal(wf.found, false, `get_workflow_template(${k}) must not be found`);
 
     const pf = resolvePackFormat(k);
-    assert.equal(typeof pf.packFormat, "number", `pack_format(${k}) must be a number`);
+    assert.notEqual(typeof pf.packFormat, "function", `pack_format(${k}) must not resolve to Function`);
+    assert.ok(pf.packFormat === null || typeof pf.packFormat === "number", `pack_format(${k}) must be number|null`);
     assert.ok(pf.notes.some((n) => /未知 mcVersion/.test(n)), JSON.stringify(pf.notes));
 
     const short = mapShortCommand(k);
@@ -2912,6 +2950,13 @@ async function testPrototypeOwnKeys() {
   assert.ok(v112be.recommendation.includes("ITileEntityProvider"), v112be.recommendation);
   assert.ok(v112be.recommendation.includes("BlockContainer"), v112be.recommendation);
   assert.ok(v112be.recommendation.includes("不要使用"), v112be.recommendation);
+
+  const v165be = await getVersionInfo({ version: "1.16.5", action: "blockentity", platform: "forge" });
+  assert.match(v165be.recommendation, /ITileEntityProvider/);
+  assert.match(v165be.recommendation, /不要使用 EntityBlock/);
+  const v132be = await getVersionInfo({ version: "1.13.2", action: "blockentity", platform: "forge" });
+  assert.match(v132be.recommendation, /ITileEntityProvider/);
+  assert.match(v132be.recommendation, /不要使用 EntityBlock/);
 
   const v1211be = await getVersionInfo({ version: "1.21.1", action: "blockentity", platform: "forge" });
   assert.ok(/search_forge_docs/.test(v1211be.recommendation), v1211be.recommendation);
@@ -2946,6 +2991,9 @@ function testPlan1Fixes() {
   assert.equal(isExactMcVersionToken("27.0-beta"), false);
   assert.equal(matchesExactMcVersion("27.0", "27.0"), true);
   assert.equal(matchesExactMcVersion("27.0", "26.1"), false);
+  assert.equal(isMcVersionFamily("26.1.2", "26.1"), true);
+  assert.equal(isMcVersionFamily("26.12", "26.1"), false);
+  assert.equal(isMcVersionFamily("1.21.11", "1.21"), true);
 
   const forgeFb = withDocsFallbackFields({
     fallback: true,
@@ -2982,6 +3030,7 @@ function testPlan1Fixes() {
   assert.equal(classifyMinecraftVersion("26.1"), "26.x");
   assert.equal(classifyMinecraftVersion("26.1.1"), "26.x");
   assert.equal(classifyMinecraftVersion("1.20.1"), "1.20.1");
+  assert.equal(classifyMinecraftVersion("1.20"), "1.20.x");
   assert.equal(classifyMinecraftVersion("1.15.2"), "other");
 
   const g1204 = diagnoseGradle({
@@ -3014,6 +3063,7 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.4-49.0.0' }
   assert.ok(!g165.warnings.some((w) => /不以 47/.test(w)), JSON.stringify(g165.warnings));
 
   const modern = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
     modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
     javaFiles: [{
       path: "src/main/java/com/example/ExampleMod.java",
@@ -3033,6 +3083,7 @@ public class ExampleMod {
   assert.ok(!modern.errors.some((e) => /DeferredRegister|modEventBus/.test(e)), JSON.stringify(modern.errors));
 
   const constMod = validateProject({
+    buildGradle: "plugins { id 'net.minecraftforge.gradle' }\n",
     modsToml: 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\nversion="1.0.0"\n',
     javaFiles: [{
       path: "src/main/java/com/example/ExampleMod.java",
@@ -3139,13 +3190,13 @@ public class ExampleMod { }
     platform: "fabric",
     version: "1.21.4",
   });
-  assert.ok(fabGen.code?.includes("void generate("), fabGen.code?.slice(0, 500));
+  assert.ok(fabGen.code?.includes("void generate(RecipeExporter"), fabGen.code?.slice(0, 500));
   assert.ok(!fabGen.code?.includes("void buildRecipes("), fabGen.code?.slice(0, 400));
   assert.ok(
     fabGen.warnings?.some((w) => /RecipeExporter/.test(w)),
     JSON.stringify(fabGen.warnings),
   );
-  assert.ok(fabGen.code?.includes("Yarn 工程改为 RecipeExporter"), fabGen.code?.slice(0, 800));
+  assert.ok(fabGen.code?.includes("generate(RecipeExporter)"), fabGen.code?.slice(0, 800));
 
   const fab213 = generateDatagen({
     providerType: "recipe",
@@ -3253,7 +3304,31 @@ public class ExampleMod { }
   });
   assert.ok(neo1204.code?.includes("RecipeOutput"), neo1204.code?.slice(0, 400));
   assert.ok(neo1204.code?.includes("PackOutput output)"), neo1204.code?.slice(0, 500));
+  assert.ok(neo1204.code?.includes("RecipeProvider::new"), neo1204.code?.slice(0, 800));
   assert.ok(!/CompletableFuture/.test(neo1204.code || ""), "1.20.4 neo must not copy 1.21 two-arg ctor");
+
+  const neo215model = generateDatagen({
+    providerType: "itemmodel",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "1.21.5",
+  });
+  assert.ok(
+    neo215model.code?.includes("registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)"),
+    neo215model.code?.slice(0, 800),
+  );
+  const neo261model = generateDatagen({
+    providerType: "itemmodel",
+    modId: "demo",
+    targetName: "x",
+    platform: "neoforge",
+    version: "26.1",
+  });
+  assert.ok(
+    neo261model.code?.includes("registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels)"),
+    neo261model.code?.slice(0, 800),
+  );
 
   const neo1206 = generateDatagen({
     providerType: "recipe",
@@ -3294,6 +3369,8 @@ public class ExampleMod { }
 
   const capNeo1204 = generateCapability("my_mod", "mana", "neoforge", "1.20.4");
   assert.ok(capNeo1204.code?.includes("AttachmentType"), capNeo1204.code);
+  assert.ok(!/ManaData/.test(capNeo1204.code || ""), capNeo1204.code);
+  assert.ok(capNeo1204.code?.includes("AttachmentType<Object>"), capNeo1204.code);
 
   const cfgNeo1204 = generateConfig("my_mod", "neoforge", "1.20.4");
   assert.ok(cfgNeo1204.code?.includes("ModConfigSpec"), cfgNeo1204.code);
@@ -3326,7 +3403,15 @@ public class ExampleMod { }
 
   const rendOk = generateEntityRenderer("my_mod", "slime", "forge", "1.20.1");
   assert.ok(rendOk.code?.includes("@OnlyIn"), rendOk.code);
+  assert.ok(rendOk.code?.includes("package com.example"), rendOk.code);
+  assert.ok(rendOk.code?.includes("getTextureLocation"), rendOk.code);
+  assert.ok(!/extends MobRenderer/.test(rendOk.code || ""), rendOk.code);
+  assert.ok(!/new \w+Model\(/.test(rendOk.code || ""), rendOk.code);
   assert.ok(!rendOk.code?.includes("fromNamespaceAndPath"), rendOk.code);
+
+  const pkt1204 = generateNetworkPacket("demo", "sync", "neoforge_1.20.4");
+  assert.ok(pkt1204.code?.includes("@SubscribeEvent"), pkt1204.code);
+  assert.ok(pkt1204.code?.includes("import net.neoforged.bus.api.SubscribeEvent"), pkt1204.code);
 
   const triage = getWorkflowTemplate("mc-crash-triage");
   assert.equal(triage.found, true);
@@ -3638,6 +3723,11 @@ async function testW2MappingDocsFixes() {
   const neoRel = parseToolText(await getNeoForgeDocRelated({ id: "concepts/registries", version: "1.20.1" }));
   assert.equal(neoRel.forgeCompatible, true);
   assert.ok(neoRel.fallback !== true);
+  const neoRelHits = neoRel.results ?? neoRel.related ?? [];
+  assert.ok(
+    !neoRelHits.some((r) => r.id === "concepts/registries" || r.id === neoRel.id),
+    JSON.stringify(neoRelHits.map((r) => r.id)).slice(0, 400),
+  );
 
   const neo262 = parseToolText(await getNeoForgeDocSummary({ id: "concepts/registries", version: "26.2" }));
   if (neo262.ok !== false && neo262.versionFallback) {

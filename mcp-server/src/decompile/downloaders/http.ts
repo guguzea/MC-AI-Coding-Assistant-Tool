@@ -106,7 +106,12 @@ export async function downloadFile(
     );
   }
 
-  renameSync(partPath, dest);
+  try {
+    renameSync(partPath, dest);
+  } catch (err) {
+    rmSync(partPath, { force: true });
+    throw new DownloadError("DOWNLOAD_FAILED", `${label}: 落盘 rename 失败 ${(err as Error).message}`);
+  }
   return { path: dest, sha256: gotSha256, sha1: gotSha1, bytes };
 }
 

@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const VERS = ["1.20.4", "1.21.1", "1.21.3", "1.21.8", "1.21.11", "26.1"];
 
 for (const ver of VERS) {

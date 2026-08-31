@@ -33,7 +33,17 @@ for (const ver of VERSIONS) {
     continue;
   }
   copyFileSync(src, dest);
-  const index = JSON.parse(readFileSync(indexPath, "utf8"));
+  let index;
+  try {
+    index = JSON.parse(readFileSync(indexPath, "utf8"));
+  } catch (e) {
+    console.warn(`skip ${ver}: index JSON 无法解析 (${e.message})`);
+    continue;
+  }
+  if (!Array.isArray(index)) {
+    console.warn(`skip ${ver}: index-l0 不是数组`);
+    continue;
+  }
   const id = `${ver}/qsl-verified`;
   if (index.some((e) => e.id === id)) {
     console.log(`${ver}: processed copied, L0 already has ${id}`);
@@ -43,7 +53,7 @@ for (const ver of VERSIONS) {
     id,
     version: ver,
     label: "QSL 已核实表（差异层）",
-    url: "qsl-verified",
+    url: `https://github.com/QuiltMC/quilt-standard-libraries`,
     tags: ["quilt", "qsl", "registry"],
     priority: "⭐",
     sectionCount: 1,

@@ -51,16 +51,15 @@ description: 00 — 项目结构与构建
   ```properties
 minecraft_version=1.21.11
 yarn_mappings=1.21.11+build.6
-loader_version=0.16.9
+loader_version=0.19.3
 fabric_api_version=0.141.3+1.21.11
   ```
 - **禁止**在 `build.gradle` 中直接写版本号，必须引用 `${minecraft_version}` 等属性
 
 ### Mappings 约束
 
-- Fabric 1.21.11 默认使用 **Yarn**
-- `mappings` 配置：`net.fabricmc:yarn:${yarn_mappings}:v2`
-- **禁止**切换到 MCP 或 Mojang（除非用户明确要求）
+- **默认可跟官方 Mojmap**（`loom.officialMojangMappings()`）。Yarn 仍可用：`net.fabricmc:yarn:${yarn_mappings}:v2`
+- **禁止**混用 Yarn 与 Mojmap 名。**26.1+ 必须 Mojmap**，不要把 Yarn 抄到去混淆档
 - Yarn 映射使用 `class_XXXXX` / `method_XXXXX` / `field_XXXXX` 表示未解析的成员
 
 ---
@@ -108,7 +107,7 @@ IF 报错包含 "No resource bundling found"
 
 ```groovy
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom-remap' version '1.17-SNAPSHOT'
     id 'maven-publish'
     id 'eclipse'
     id 'idea'

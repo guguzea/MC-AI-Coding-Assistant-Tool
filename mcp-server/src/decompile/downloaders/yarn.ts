@@ -42,6 +42,27 @@ export interface YarnMappingsInfo {
   version: string;
   build: string;
   jarUrl: string;
+  sha256?: string | null;
+  sha1?: string | null;
+}
+
+async function fetchMavenChecksum(jarUrl: string): Promise<{ sha256?: string; sha1?: string }> {
+  for (const [ext, hexLen] of [
+    ["sha256", 64],
+    ["sha1", 40],
+  ] as const) {
+    try {
+      const res = await fetch(`${jarUrl}.${ext}`, { signal: AbortSignal.timeout(30_000) });
+      if (!res.ok) continue;
+      const hex = (await res.text()).trim().split(/\s+/)[0];
+      if (new RegExp(`^[a-fA-F0-9]{${hexLen}}$`).test(hex)) {
+        return ext === "sha256" ? { sha256: hex.toLowerCase() } : { sha1: hex.toLowerCase() };
+      }
+    } catch {
+      /* try next */
+    }
+  }
+  return {};
 }
 
 function parseMetadataVersion(xml: string): string | null {
@@ -67,9 +88,19 @@ export async function resolveYarnMappings(version: string): Promise<YarnMappings
   if (!full) {
     throw new DownloadError("MAPPINGS_NOT_FOUND", `yarn 元数据无可用 build（${version}）`);
   }
+  const jarUrl = `${YARN_BASE}/${version}/yarn-${full}-v2.jar`;
+  const sum = await fetchMavenChecksum(jarUrl);
+  if (!sum.sha256 && !sum.sha1) {
+    throw new DownloadError(
+      "MAPPINGS_CHECKSUM_MISSING",
+      `yarn 映射 ${full} 无 maven .sha256/.sha1 sidecar，拒绝无校验下载`,
+    );
+  }
   return {
     version,
     build: full,
-    jarUrl: `${YARN_BASE}/${version}/yarn-${full}-v2.jar`,
+    jarUrl,
+    sha256: sum.sha256 ?? null,
+    sha1: sum.sha1 ?? null,
   };
 }

@@ -223,6 +223,7 @@ export function classifyJavaFmlToml(toml: string): "forge" | "neoforge" | "unkno
   if (m) {
     const n = Number(m[1]);
     if (n === 21 || (n >= 1 && n <= 9)) return "neoforge";
+    if (n === 47) return "unknown";
     if (n >= 13 && n !== 21) return "forge";
     return "unknown";
   }
@@ -257,9 +258,18 @@ export function detectLoader(
   const fabricLoom =
     /fabric-loom|fabric-api/i.test(buildGradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(buildGradle);
 
-  // 残留 fabric.mod.json 不得压过 LiteLoader 插件 / litemod.json。
+  // 残留 fabric.mod.json 不得压过 LiteLoader 插件 / litemod.json，也不得压过 javafml mods.toml。
   // fabric-loom 仍是强 Fabric 信号：Loom 工程里的残留 litemod.json 不得把工程判成 LiteLoader。
-  if (leftoverFabricJson && !hasLlPlugin && !hasLiteMeta) return "fabric";
+  if (leftoverFabricJson && !hasLlPlugin && !hasLiteMeta) {
+    const tomlPeek = modsToml?.trim();
+    if (tomlPeek) {
+      const javaFmlPeek = classifyJavaFmlToml(tomlPeek);
+      if (javaFmlPeek === "neoforge") return "neoforge";
+      if (javaFmlPeek === "forge" || javaFmlPeek === "unknown") return "forge";
+    } else {
+      return "fabric";
+    }
+  }
   if (fabricLoom && !hasLlPlugin) return "fabric";
 
   if (hasLlPlugin) {
@@ -405,7 +415,7 @@ export function detectProjectLoaders(input: {
     Boolean(extras.litemodJson?.trim()) ||
     /net\.minecraftforge\.gradle\.liteloader/.test(gradle) ||
     /\bLiteMod\b|litemod\.json|com\.mumfrey\.liteloader/i.test(`${gradle}\n${javaBlob}`);
-  if (anyLite) found.add("liteloader");
+  if (anyLite && primary !== "liteloader_forge") found.add("liteloader");
   if (primary !== "unknown") found.add(primary);
 
   const loaders = [...found];

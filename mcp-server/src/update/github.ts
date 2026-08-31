@@ -16,6 +16,8 @@ export type { FetchFn } from "./http.js";
 
 export type UpdateChannel = "stable" | "latest" | "tag";
 
+const RELEASE_LIST_MAX_PAGES = 5;
+
 export interface GhAsset {
   name: string;
   size: number;
@@ -128,7 +130,20 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
       action: httpStatusAction(res.status),
     };
   }
-  const json = (await res.json()) as GhRelease | GhRelease[];
+  let json: GhRelease | GhRelease[];
+  try {
+    json = (await res.json()) as GhRelease | GhRelease[];
+  } catch (err) {
+    return {
+      ok: false,
+      action: actionable(
+        "UPDATE_CHECK_FAILED",
+        `GitHub 响应不是合法 JSON: ${(err as Error).message}`,
+        ["检查代理/镜像是否改写了响应", "不要把解析失败当成连不上 GitHub"],
+        ["mc_skill_update"],
+      ),
+    };
+  }
   if (Array.isArray(json) || !json || typeof json !== "object" || typeof (json as GhRelease).tag_name !== "string") {
     return {
       ok: false,
@@ -143,7 +158,12 @@ async function parseGithubResponse(res: Response): Promise<FetchReleaseResult> {
   return { ok: true, release: json as GhRelease };
 }
 
-const RELEASE_LIST_MAX_PAGES = 5;
+function encodeGithubRepoPath(repo: string): string {
+  return repo
+    .split("/")
+    .map((p) => encodeURIComponent(p))
+    .join("/");
+}
 
 export async function fetchReleasesList(
   repo: string,
@@ -151,10 +171,11 @@ export async function fetchReleasesList(
   perPage = 30,
 ): Promise<{ ok: boolean; releases?: GhRelease[]; action?: ActionEnvelope }> {
   const all: GhRelease[] = [];
-  let lastUrl = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}&page=1`;
+  const encoded = encodeGithubRepoPath(repo);
+  let lastUrl = `https://api.github.com/repos/${encoded}/releases?per_page=${perPage}&page=1`;
   try {
     for (let page = 1; page <= RELEASE_LIST_MAX_PAGES; page++) {
-      const url = `https://api.github.com/repos/${repo}/releases?per_page=${perPage}&page=${page}`;
+      const url = `https://api.github.com/repos/${encoded}/releases?per_page=${perPage}&page=${page}`;
       lastUrl = url;
       const res = await fetchImpl(url, { headers: apiHeaders() });
       if (res.status === 429) {
@@ -175,7 +196,20 @@ export async function fetchReleasesList(
           action: httpStatusAction(res.status),
         };
       }
-      const batch = (await res.json()) as GhRelease[];
+      let batch: GhRelease[];
+      try {
+        batch = (await res.json()) as GhRelease[];
+      } catch (err) {
+        return {
+          ok: false,
+          action: actionable(
+            "UPDATE_CHECK_FAILED",
+            `GitHub 响应不是合法 JSON: ${(err as Error).message}`,
+            ["检查代理/镜像是否改写了响应", "不要把解析失败当成连不上 GitHub"],
+            ["mc_skill_update"],
+          ),
+        };
+      }
       if (!Array.isArray(batch) || batch.length === 0) break;
       all.push(...batch.filter((r) => !r.draft));
       if (batch.length < perPage) break;
@@ -213,7 +247,7 @@ export async function resolveRelease(opts: {
           ),
         };
       }
-      const url = `https://api.github.com/repos/${repo}/releases/tags/${encodeURIComponent(opts.tagName.trim())}`;
+      const url = `https://api.github.com/repos/${encodeGithubRepoPath(repo)}/releases/tags/${encodeURIComponent(opts.tagName.trim())}`;
       const res = await fetchImpl(url, { headers: apiHeaders() });
       const parsed = await parseGithubResponse(res);
       if (!parsed.ok || !parsed.release) return parsed;
@@ -253,7 +287,7 @@ export async function resolveRelease(opts: {
     }
     return { ok: true, release: stable, notes: truncateBody(stable.body) };
   } catch (err) {
-    const url = `https://api.github.com/repos/${repo}/releases`;
+    const url = `https://api.github.com/repos/${encodeGithubRepoPath(repo)}/releases`;
     return {
       ok: false,
       action: networkFailureAction(err, url),
@@ -324,11 +358,7 @@ export function dataNeedsUpdate(
   const vs = gitDescribeVsRemote(gitDescribe, remoteTag);
   if (vs === "ahead" || vs === "equal") return false;
   if (!localTag) return true;
-  if (localTag !== remoteTag) return isNewer(remoteTag, localTag) || stripSimple(localTag) !== stripSimple(remoteTag);
+  if (localTag !== remoteTag) return isNewer(remoteTag, localTag);
   if (localAsset && localAsset !== remoteAsset) return true;
   return false;
-}
-
-function stripSimple(t: string): string {
-  return t.trim().replace(/^v/i, "");
 }
