@@ -23,6 +23,7 @@ import type {
   InitArchitecturyOutput,
   ApplyMigrationOutput,
   QueryApiSuggestion,
+  NextStep,
 } from "./types.js";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
@@ -354,53 +355,103 @@ function assessRisk(stats: PortingStats, currentPlatform: string, targetPlatform
   };
 }
 
-// ── routeSteps 动态生成 ────────────────────────────────────────────────────
+// ── routeSteps / nextSteps 生成 ────────────────────────────────────────────
+// routeSteps 是对外契约里的自然语言清单（string[]，见 README「analyze_porting_path」）；
+// nextSteps 才承载机器可读交接，且 args 必须**可直接调用**：
+//   · search_docs 必填 platform + version + query（search_forge_docs 根本没有 platform 参数）
+//   · port_project 必填 projectPath + action；init_architectury 还需 neoforgeVersion，缺省会被拒
+//   · get_migration_guide 的 route 必须是 "1.20.1->1.21.1" / "forge->neoforge" 形态
+// 必填参数拿不到时退化为纯文本步骤，不挂一个必然失败的 tool。
 
-function generateRouteSteps(
-  isArchitectury: boolean,
-  ambiguous: boolean,
-  currentPlatform: string,
-  targetPlatform: string | undefined,
-  needCrossPlatform: boolean,
-  userSpecifiedTarget: boolean,
-): string[] {
-  if (ambiguous && !userSpecifiedTarget) {
-    return ["显式指定目标平台（targetPlatform）后重新调用 analyze_porting_path 分析"];
+interface RouteCtx {
+  isArchitectury: boolean;
+  ambiguous: boolean;
+  currentPlatform: string;
+  targetPlatform: string;
+  needCrossPlatform: boolean;
+  /** 已解析的项目根，port_project 直接可用 */
+  root: string;
+  mcVersion: string | null;
+  targetVer: string;
+  /** 版本 KB 里的 NeoForge 版本；缺省则 init_architectury 只给文本步骤 */
+  neoforgeVersion?: string;
+}
+
+function buildRoutePlan(ctx: RouteCtx): { routeSteps: string[]; nextSteps: NextStep[] } {
+  const routeSteps: string[] = [];
+  const nextSteps: NextStep[] = [];
+  const add = (text: string, tool?: string, args?: Record<string, unknown>): void => {
+    routeSteps.push(text);
+    nextSteps.push(tool && args ? { text, tool, args } : { text });
+  };
+
+  if (ctx.ambiguous) {
+    add(`当前平台证据不足，已按 targetPlatform=${ctx.targetPlatform} 规划`);
   }
 
-  const prefix =
-    ambiguous && userSpecifiedTarget
-      ? [`当前平台证据不足，已按 targetPlatform=${targetPlatform} 规划`]
-      : [];
-
-  const forgeToNeo =
-    currentPlatform === "forge" && targetPlatform === "neoforge";
-  const migrateHint = forgeToNeo
-    ? "执行 forge→neoforge 包名迁移（port_project action=apply_version_migration，先 dryRun）"
-    : "按本档 search_*_docs 做 MC 版本 API 迁移（apply_version_migration 仅用于 forge→neoforge 包名，同平台升级不要调用）";
-
-  if (isArchitectury && !needCrossPlatform) {
-    return [...prefix, migrateHint];
+  const forgeToNeo = ctx.currentPlatform === "forge" && ctx.targetPlatform === "neoforge";
+  if (forgeToNeo) {
+    add(
+      "执行 forge→neoforge 包名迁移（port_project action=apply_version_migration，先 dryRun）",
+      "port_project",
+      {
+        projectPath: ctx.root,
+        action: "apply_version_migration",
+        targetPlatform: "neoforge",
+        dryRun: true,
+      },
+    );
+  } else {
+    add(
+      "按本档 search_*_docs 做 MC 版本 API 迁移（apply_version_migration 仅用于 forge→neoforge 包名，同平台升级不要调用）",
+      "search_docs",
+      {
+        platform: ctx.targetPlatform,
+        version: ctx.targetVer,
+        query: "migration breaking changes",
+      },
+    );
+    // route 需要两端版本号；缺当前版本就只留文本，别发一个 schema 通不过的调用
+    const route = ctx.mcVersion ? `${ctx.mcVersion}->${ctx.targetVer}` : null;
+    add(
+      "同平台升级可配合 get_migration_guide（不要对同平台升级调用 apply_version_migration）",
+      route ? "get_migration_guide" : undefined,
+      route ? { route, platform: ctx.targetPlatform } : undefined,
+    );
   }
 
-  if (!isArchitectury && needCrossPlatform) {
-    return [
-      ...prefix,
+  if (ctx.isArchitectury && !ctx.needCrossPlatform) return { routeSteps, nextSteps };
+
+  if (!ctx.isArchitectury && ctx.needCrossPlatform) {
+    add(
       "初始化 MultiLoader 项目结构（调用 port_project action=init_architectury）",
+      ctx.neoforgeVersion ? "port_project" : undefined,
+      ctx.neoforgeVersion
+        ? {
+            projectPath: ctx.root,
+            action: "init_architectury",
+            targetPlatform: ctx.targetPlatform,
+            neoforgeVersion: ctx.neoforgeVersion,
+            dryRun: true,
+          }
+        : undefined,
+    );
+    add(
       "从当前源码提取 common 模块候选（调用 port_project action=extract_common：仅静态分析，不搬文件）",
-      "通过 @ExpectPlatform 抽象 Registry 层（根据 extract_common 输出人工处理）",
-      "拆分 Mixin 配置到 fabric/ 和 neoforge/ 子工程（Agent 手动处理）",
-      "验证 fabric/ 模块编译通过",
-      "验证 neoforge/ 模块编译通过",
-      migrateHint,
-    ];
+      "port_project",
+      { projectPath: ctx.root, action: "extract_common", dryRun: true },
+    );
+    add("通过 @ExpectPlatform 抽象 Registry 层（根据 extract_common 输出人工处理）");
+    add("拆分 Mixin 配置到 fabric/ 和 neoforge/ 子工程（Agent 手动处理）");
+    add("验证 fabric/ 模块编译通过");
+    add("验证 neoforge/ 模块编译通过");
+    return { routeSteps, nextSteps };
   }
 
-  if (!isArchitectury && !needCrossPlatform) {
-    return [...prefix, migrateHint];
-  }
+  if (!ctx.isArchitectury && !ctx.needCrossPlatform) return { routeSteps, nextSteps };
 
-  return [...prefix, "分析完成，请根据上述报告人工决定下一步"];
+  add("分析完成，请根据上述报告人工决定下一步");
+  return { routeSteps, nextSteps };
 }
 
 // ── query_api 建议 ─────────────────────────────────────────────────────────
@@ -744,23 +795,6 @@ export async function analyzePortingPath(args: unknown) {
   }
 
   const UNSUPPORTED_PORT = new Set(["liteloader", "rift", "modloader", "bedrock"]);
-  if (!userTargetPlatform) {
-    if (UNSUPPORTED_PORT.has(currentPlatform)) {
-      const e: AnalyzePortingError = {
-        ok: false,
-        error: {
-          code: "UNSUPPORTED_PORT",
-          message: `不支持自动移植 ${currentPlatform}。基岩 / LiteLoader / Rift / ModLoader 只提供升级路径分析笔记，不改工程（port_project 无脚手架）。`,
-        },
-      };
-      return JSON.stringify(e);
-    }
-    const e: AnalyzePortingError = {
-      ok: false,
-      error: { code: "INVALID_INPUT", message: "targetPlatform 必填，禁止静默默认 forge→neoforge" },
-    };
-    return JSON.stringify(e);
-  }
   const targetPlatform = userTargetPlatform;
 
   if (UNSUPPORTED_PORT.has(currentPlatform) || UNSUPPORTED_PORT.has(targetPlatform)) {
@@ -836,22 +870,32 @@ export async function analyzePortingPath(args: unknown) {
   // 7. 风险评估
   const riskAssessment = assessRisk(stats, currentPlatform, targetPlatform);
 
-  // 8. 动态生成 routeSteps
-  const routeSteps = generateRouteSteps(
+  // 8. 动态生成 routeSteps（+ 可执行的 nextSteps 交接）
+  const kb = loadVersionsKB() as { versions?: Record<string, { neoforge?: string; fabric?: string; mappings?: string[]; java?: number }> };
+  const targetVersionInfo = kb.versions?.[targetVer];
+  const { routeSteps, nextSteps } = buildRoutePlan({
     isArchitectury,
     ambiguous,
     currentPlatform,
     targetPlatform,
     needCrossPlatform,
-    Boolean(userTargetPlatform),
-  );
+    root,
+    mcVersion,
+    targetVer,
+    neoforgeVersion: targetVersionInfo?.neoforge,
+  });
   if (targetPlatform === "quilt" || currentPlatform === "quilt") {
-    routeSteps.push("Quilt 工程优先 org.quiltmc / QSL；禁止把 net.fabricmc.fabric.api.event.registry 当 QSL 注册");
+    const quiltText =
+      "Quilt 工程优先 org.quiltmc / QSL；禁止把 net.fabricmc.fabric.api.event.registry 当 QSL 注册";
+    routeSteps.push(quiltText);
+    nextSteps.push({
+      text: quiltText,
+      tool: "search_docs",
+      args: { platform: "quilt", version: targetVer, query: "QSL registry" },
+    });
   }
 
   // 9. 建议目标信息
-  const kb = loadVersionsKB() as { versions?: Record<string, { neoforge?: string; fabric?: string; mappings?: string[]; java?: number }> };
-  const targetVersionInfo = kb.versions?.[targetVer];
 
   const currentInfo: CurrentInfo = {
     platform: currentPlatform,
@@ -892,6 +936,7 @@ export async function analyzePortingPath(args: unknown) {
               ? "architectury_common_refactor"
               : "version_migration",
       routeSteps,
+      nextSteps,
       referenceLinks: buildReferenceLinks(targetPlatform, targetVer),
       queryApiSuggestions: buildQuerySuggestions(targetVer, targetPlatform),
     },

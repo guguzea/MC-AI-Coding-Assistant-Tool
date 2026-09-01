@@ -6,6 +6,7 @@ import {
   lookupMojangMethod,
   remapDescriptor,
   emitTinyV2,
+  tinyV2HasClasses,
 } from "./parse-mojang-proguard.mjs";
 
 const SAMPLE = [
@@ -159,4 +160,83 @@ test("emitTinyV2 is parseable Tiny v2 official/named and round-trips Entity anch
 
   const living = classes.get("bfz");
   assert.ok(living.methods.some((m) => m.named === "getHealth" && m.obf === "er" && m.desc === "()F"));
+});
+
+// ── emitTinyV2 回归锁：曾经对每个类全量重扫成员（≈5 万类 × 百万成员 → 永不返回）────
+
+const ord = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+/** 直白实现（每类重扫），用作线性重写的等价性基准。 */
+function emitTinyV2Naive(maps, fromNs = "official", toNs = "named") {
+  const lines = [`tiny\t2\t0\t${fromNs}\t${toNs}`];
+  const classes = [...maps.obfToNamed.entries()].sort((a, b) => ord(a[0], b[0]));
+  for (const [obf, named] of classes) {
+    lines.push(`c\t${obf}\t${named}`);
+    const methods = [];
+    for (const [key, val] of maps.methodsByObf) {
+      const [owner, desc, obfName] = key.split("\t");
+      if (owner !== obf) continue;
+      methods.push({ desc, obfName, named: val.name });
+    }
+    methods.sort((a, b) => ord(a.obfName, b.obfName) || ord(a.desc, b.desc));
+    for (const m of methods) lines.push(`\tm\t${m.desc}\t${m.obfName}\t${m.named}`);
+    const fields = [];
+    for (const [key, val] of maps.fieldsByObf) {
+      const [owner, desc, obfName] = key.split("\t");
+      if (owner !== obf) continue;
+      fields.push({ desc, obfName, named: val.name });
+    }
+    fields.sort((a, b) => ord(a.obfName, b.obfName) || ord(a.desc, b.desc));
+    for (const f of fields) lines.push(`\tf\t${f.desc}\t${f.obfName}\t${f.named}`);
+  }
+  return lines.join("\n") + "\n";
+}
+
+/** 合成一份 obf 名短且互不相同的映射（结构与真实 mojmap 同形）。 */
+function synthMaps(classCount, methodsPerClass, fieldsPerClass) {
+  const obfToNamed = new Map();
+  const methodsByObf = new Map();
+  const fieldsByObf = new Map();
+  for (let c = 0; c < classCount; c++) {
+    const obf = `c${String(c).padStart(5, "0")}`;
+    obfToNamed.set(obf, `synth/pkg${c % 97}/Class${c}`);
+    for (let m = 0; m < methodsPerClass; m++) {
+      methodsByObf.set(`${obf}\t(I)V\tm${c}_${m}`, { name: `doThing${m}`, descriptor: "(I)V" });
+    }
+    for (let f = 0; f < fieldsPerClass; f++) {
+      fieldsByObf.set(`${obf}\tI\tf${c}_${f}`, { name: `field${f}`, descriptor: "I" });
+    }
+  }
+  return { obfToNamed, namedToObf: new Map(), methodsByObf, fieldsByObf };
+}
+
+test("emitTinyV2 matches a straightforward reference emitter byte-for-byte", async () => {
+  const maps = await parseMojangProguard(INNER_SAMPLE);
+  assert.equal(emitTinyV2(maps), emitTinyV2Naive(maps));
+  assert.equal(emitTinyV2(maps, "official", "mojmap"), emitTinyV2Naive(maps, "official", "mojmap"));
+  assert.equal(emitTinyV2(synthMaps(120, 6, 3)), emitTinyV2Naive(synthMaps(120, 6, 3)));
+});
+
+test("emitTinyV2 scales linearly (quadratic rescan would blow the budget)", () => {
+  const maps = synthMaps(10_000, 20, 5); // 10k classes / 250k members
+  const startedAt = Date.now();
+  const tiny = emitTinyV2(maps);
+  const elapsedMs = Date.now() - startedAt;
+  const lines = tiny.trimEnd().split("\n");
+  assert.equal(lines.length, 1 + 10_000 + 250_000, `line count: ${lines.length}`);
+  // 线性实现约百毫秒级；每类重扫的旧实现是 ~2.5e9 次迭代（数十秒起），必然越界。
+  assert.ok(elapsedMs < 5_000, `emitTinyV2 took ${elapsedMs}ms — 退化成每类全量重扫了`);
+});
+
+test("emitTinyV2 output is stable across calls (artifact must not churn)", () => {
+  const maps = synthMaps(300, 4, 2);
+  assert.equal(emitTinyV2(maps), emitTinyV2(maps));
+});
+
+test("tinyV2HasClasses rejects a header-only Tiny", () => {
+  // 实测：这种文件让 tiny-remapper 退出码 0 并产出**仍然混淆**的 jar。
+  assert.equal(tinyV2HasClasses("tiny\t2\t0\tofficial\tnamed\n"), false);
+  assert.equal(tinyV2HasClasses("tiny\t2\t0\tofficial\tnamed\nc\ta\tFoo\n"), true);
+  assert.equal(tinyV2HasClasses(""), false);
+  assert.equal(tinyV2HasClasses(emitTinyV2(synthMaps(1, 1, 1))), true);
 });

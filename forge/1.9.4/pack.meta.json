@@ -1,0 +1,7 @@
+{
+  "status": "ready",
+  "pack-status": "ready",
+  "platform": "forge",
+  "minecraftVersion": "1.9.4",
+  "note": "薄档：javadoc + search_forge_docs；仅 00/01/09；禁止邻档 API"
+}

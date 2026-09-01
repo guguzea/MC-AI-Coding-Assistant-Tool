@@ -228,6 +228,12 @@ export async function getMinecraftSource(args: MinecraftSourceArgs): Promise<Min
         "或手动将文件放入 $MC_SKILL_CACHE 对应目录（哈希须匹配）",
       ]), { version, mapping });
     }
+    if ((err as { code?: string }).code === "MAPPINGS_EMPTY") {
+      return toErrorResult("MAPPINGS_EMPTY", actionable("MAPPINGS_EMPTY", (err as Error).message, [
+        "删除该映射文件后重试（force: true），让它重新下载并解析",
+        "tiny-remapper 对空映射仍会退出码 0 并产出混淆 jar，因此这里直接失败而不是返回结果",
+      ]), { version, mapping });
+    }
     if ((err as { code?: string }).code === "DISK_INSUFFICIENT") {
       return toErrorResult("DISK_INSUFFICIENT", actionable("DISK_INSUFFICIENT", (err as Error).message, [
         "清理磁盘后重试",

@@ -3,6 +3,9 @@
 > 本规则集适用于 **Fabric 1.19.4**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
+> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
+> 不要依赖硬编码默认值，每次对话开始时主动探查。
+
 ---
 
 ## 基本信息
@@ -12,8 +15,8 @@
 | 平台 | Fabric |
 | Minecraft 版本 | 1.19.4 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
-| Java 版本 | **Java 17**（Fabric 1.19.x 最低要求） |
-| Gradle | Gradle 7.x + Loom |
+| Java 版本 | **Java 17**（Fabric 1.19.4 最低要求） |
+| Gradle | Gradle 8.4 + Loom 1.0.18 |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.19.4+build.2:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
@@ -39,10 +42,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.cursor/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.cursor/skills/mc-*.md`
-4. 遇到问题查 `knowledge/antipatterns/`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -145,8 +159,8 @@ fabric-mod/
 ### Minecraft 版本兼容性
 
 - Fabric 1.19.4 支持 Minecraft 1.19.4
-- Fabric Loader 0.14.x（推荐 0.14.21）
-- Fabric API 0.76.x for 1.19.4
+- Fabric Loader 0.14.x / 0.15.x
+- Fabric API 0.87.x for 1.19.4
 - Java 17+
 
 ---
@@ -187,6 +201,9 @@ fabric-mod/
 | `query_loader_api` | **Fabric API** 类摘要（必填 `platform=fabric` + `minecraftVersion`）；不是 `query_api` |
 | `convert_mapping` | Yarn ↔ Mojang/Parchment/Intermediary 互转（工程用 Yarn 时核对名） |
 | `diagnose_gradle` | 诊断 Gradle/Loom 构建问题 |
+| `search_community_docs` 等 | 社区实务（见仓库根 `community_knowledge/`） |
+
+用到社区短文时若不清楚，按 `community_knowledge/AGENT_USAGE.md` 打开原文 / 官方文档，禁止臆造 API。
 
 ---
 
@@ -198,3 +215,18 @@ fabric-mod/
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
 - [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+
+<!-- MC_SKILL_WORKFLOW_NOTE -->
+
+## 工作流提醒（人在环）
+
+完整流程（从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 发布 / 反编译研究）才调 `get_workflow_template`；改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。
+
+- 汉化：`localize_mod`（diff / draft_zh / jar extract / pack_draft；无机器翻译）。
+- 崩溃分诊：`crash_analyze`。
+- 发布：`mc-publish` 工作流 + `check_publish_ready`；不代跑 Gradle、不拷 jar、不上传。
+- 写盘 / Gradle / 拷 jar / 上传均须用户确认（人在环）。

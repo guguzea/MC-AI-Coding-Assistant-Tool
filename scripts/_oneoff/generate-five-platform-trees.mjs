@@ -851,41 +851,7 @@ public class mod_Example extends BaseMod {
 );
 
 // 把已落盘 Rift wiki 编进 L0，便于 search_docs(platform=rift)
-function indexKnowledge(platform, ver, source, files) {
-  const processed = join(ROOT, "data", `${platform}_${ver}`, source, ver, "processed");
-  mkdirSync(processed, { recursive: true });
-  const indexPath = join(ROOT, "data", `${platform}_${ver}`, source, ver, "index-l0.json");
-  let existing = [];
-  if (existsSync(indexPath)) {
-    try {
-      const parsed = JSON.parse(readFileSync(indexPath, "utf8"));
-      if (Array.isArray(parsed)) existing = parsed;
-    } catch {
-      existing = [];
-    }
-}
-const byId = new Map(existing.filter((e) => e && typeof e.id === "string").map((e) => [e.id, e]));
-for (const [id, rel] of files) {
-  const src = join(ROOT, rel);
-  if (!existsSync(src)) continue;
-  const body = readFileSync(src, "utf8");
-  const dest = join(processed, `${id}.md`);
-  writeFileSync(dest, body, "utf8");
-  const entry = {
-    id: `${ver}/${id}`,
-    version: ver,
-    label: id,
-    url: rel,
-    tags: [platform],
-    priority: "⭐",
-    sectionCount: 1,
-    source,
-    fetchedAt: new Date().toISOString(),
-  };
-  byId.set(entry.id, entry);
-}
-writeFileSync(indexPath, JSON.stringify([...byId.values()], null, 2), "utf8");
-}
+// indexKnowledge 已抽到 ../_lib/index-knowledge.mjs（见文件顶部 import）
 
 indexKnowledge(ROOT, "rift", "1.13.2", "rift-docs", [
   ["upstream-readme", "rift/1.13.2/knowledge/common/upstream-readme.md"],

@@ -1,11 +1,92 @@
 import { existsSync, readFileSync } from "fs";
-import { join, relative } from "path";
+import { join, relative, resolve } from "path";
 import { walkDirBounded } from "../utils/project-files.js";
 import { parseJsonUtf8 } from "../utils/json-utf8.js";
 
 export interface AuditResourcesInput {
-  resourceRoot: string;
+  /** assets 根；与 projectPath 二选一（可同时传：显式 resourceRoot 优先） */
+  resourceRoot?: string;
+  /** 模组工程根：从 fabric.mod.json / mods.toml / neoforge.mods.toml 推 assets/<modid> */
+  projectPath?: string;
   modId?: string;
+}
+
+/** 从工程元数据解析 modId（只读，失败返回 null）。 */
+export function inferModIdFromProject(projectRoot: string): string | null {
+  const fabricPath = join(projectRoot, "src/main/resources/fabric.mod.json");
+  if (existsSync(fabricPath)) {
+    try {
+      const j = parseJsonUtf8(readFileSync(fabricPath, "utf8")) as { id?: string };
+      if (typeof j.id === "string" && j.id.trim()) return j.id.trim();
+    } catch {
+      /* ignore */
+    }
+  }
+  const quiltPath = join(projectRoot, "src/main/resources/quilt.mod.json");
+  if (existsSync(quiltPath)) {
+    try {
+      const j = parseJsonUtf8(readFileSync(quiltPath, "utf8")) as {
+        id?: string;
+        quilt_loader?: { id?: string };
+      };
+      const id = j.quilt_loader?.id ?? j.id;
+      if (typeof id === "string" && id.trim()) return id.trim();
+    } catch {
+      /* ignore */
+    }
+  }
+  for (const rel of [
+    "src/main/resources/META-INF/neoforge.mods.toml",
+    "src/main/resources/META-INF/mods.toml",
+  ]) {
+    const p = join(projectRoot, rel);
+    if (!existsSync(p)) continue;
+    try {
+      const t = readFileSync(p, "utf8");
+      const m = t.match(/modId\s*=\s*["']([^"']+)["']/);
+      if (m?.[1] && m[1] !== "${mod_id}" && m[1] !== "${modId}") return m[1];
+    } catch {
+      /* ignore */
+    }
+  }
+  return null;
+}
+
+function resolveResourceRoot(input: AuditResourcesInput): {
+  root: string | null;
+  modId?: string;
+  error?: string;
+} {
+  if (input.resourceRoot?.trim()) {
+    return { root: resolve(input.resourceRoot.trim()), modId: input.modId };
+  }
+  if (!input.projectPath?.trim()) {
+    return { root: null, error: "需要 resourceRoot 或 projectPath" };
+  }
+  const projectRoot = resolve(input.projectPath.trim());
+  if (!existsSync(projectRoot)) {
+    return { root: null, error: `projectPath 不存在：${projectRoot}` };
+  }
+  const modId = input.modId?.trim() || inferModIdFromProject(projectRoot);
+  if (!modId) {
+    return {
+      root: null,
+      error: "无法从 fabric.mod.json / quilt.mod.json / mods.toml 推断 modId；请显式传 modId 或 resourceRoot",
+    };
+  }
+  const candidates = [
+    join(projectRoot, "src/main/resources/assets", modId),
+    join(projectRoot, "common/src/main/resources/assets", modId),
+    join(projectRoot, "src/main/resources"),
+  ];
+  for (const c of candidates) {
+    if (existsSync(c)) return { root: c, modId };
+  }
+  return {
+    root: null,
+    modId,
+    error: `未找到 assets/${modId}（已试 src/main/resources/assets/${modId}）`,
+  };
 }
 
 export interface AuditResourcesResult {
@@ -90,7 +171,24 @@ export function textureKeyFromRel(rel: string): string | null {
 }
 
 export function auditResources(input: AuditResourcesInput): AuditResourcesResult {
-  const root = input.resourceRoot;
+  const resolved = resolveResourceRoot(input);
+  if (!resolved.root) {
+    return {
+      ok: false,
+      scannedFiles: 0,
+      issues: [
+        {
+          severity: "error",
+          path: input.resourceRoot ?? input.projectPath ?? "",
+          message: resolved.error ?? "无法解析资源根",
+        },
+      ],
+      referencedTextures: [],
+      orphanTextures: [],
+    };
+  }
+  const root = resolved.root;
+  const effectiveModId = input.modId ?? resolved.modId;
   const issues: AuditResourcesResult["issues"] = [];
   if (!existsSync(root)) {
     return {
@@ -183,10 +281,10 @@ export function auditResources(input: AuditResourcesInput): AuditResourcesResult
     }
   }
 
-  if (input.modId && /[A-Z]/.test(input.modId)) {
+  if (effectiveModId && /[A-Z]/.test(effectiveModId)) {
     issues.push({
       severity: "warn",
-      path: input.modId,
+      path: effectiveModId,
       message: "modId 含大写，资源路径应全小写并使用下划线（Fabric/Quilt 允许连字符）",
     });
   }

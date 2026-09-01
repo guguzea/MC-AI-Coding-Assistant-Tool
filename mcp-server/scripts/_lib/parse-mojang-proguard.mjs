@@ -171,6 +171,44 @@ export async function parseMojangProguard(input) {
 }
 
 /**
+ * Codepoint ordering, not localeCompare: the emitted Tiny is a cached artifact,
+ * so the byte output must be identical on every machine and ICU locale.
+ * @param {string} a
+ * @param {string} b
+ */
+function compareOrdinal(a, b) {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * Bucket `${obfOwner}\t${obfDesc}\t${obfName}` keyed members by owner in ONE pass
+ * and sort each bucket once — the per-class output order is unchanged, but the
+ * emitter stays linear instead of rescanning every member for every class.
+ * @param {Map<string, { name: string }> | undefined} byObf
+ * @returns {Map<string, Array<{ desc: string, obfName: string, named: string }>>}
+ */
+function bucketMembersByOwner(byObf) {
+  /** @type {Map<string, Array<{ desc: string, obfName: string, named: string }>>} */
+  const out = new Map();
+  if (!byObf) return out;
+  for (const [key, val] of byObf) {
+    const sep1 = key.indexOf("\t");
+    const sep2 = key.indexOf("\t", sep1 + 1);
+    if (sep1 < 0 || sep2 < 0) continue;
+    const owner = key.slice(0, sep1);
+    const desc = key.slice(sep1 + 1, sep2);
+    const obfName = key.slice(sep2 + 1);
+    const bucket = out.get(owner);
+    if (bucket) bucket.push({ desc, obfName, named: val.name });
+    else out.set(owner, [{ desc, obfName, named: val.name }]);
+  }
+  for (const bucket of out.values()) {
+    bucket.sort((a, b) => compareOrdinal(a.obfName, b.obfName) || compareOrdinal(a.desc, b.desc));
+  }
+  return out;
+}
+
+/**
  * Emit Tiny v2 (two namespaces: official = obfuscated, named = Mojang).
  * Descriptor on members is in the official (obf) namespace, as Tiny v2 requires.
  * @param {MojangMaps} maps
@@ -178,32 +216,29 @@ export async function parseMojangProguard(input) {
  * @param {string} [toNs]
  */
 export function emitTinyV2(maps, fromNs = "official", toNs = "named") {
+  const methodsByOwner = bucketMembersByOwner(maps.methodsByObf);
+  const fieldsByOwner = bucketMembersByOwner(maps.fieldsByObf);
   const lines = [`tiny\t2\t0\t${fromNs}\t${toNs}`];
-  const classes = [...maps.obfToNamed.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  for (const [obf, named] of classes) {
-    lines.push(`c\t${obf}\t${named}`);
-    const methods = [];
-    for (const [key, val] of maps.methodsByObf) {
-      const [owner, desc, obfName] = key.split("\t");
-      if (owner !== obf) continue;
-      methods.push({ desc, obfName, named: val.name });
-    }
-    methods.sort((a, b) => a.obfName.localeCompare(b.obfName) || a.desc.localeCompare(b.desc));
-    for (const m of methods) {
+  const classes = [...maps.obfToNamed.keys()].sort(compareOrdinal);
+  for (const obf of classes) {
+    lines.push(`c\t${obf}\t${maps.obfToNamed.get(obf)}`);
+    for (const m of methodsByOwner.get(obf) ?? []) {
       lines.push(`\tm\t${m.desc}\t${m.obfName}\t${m.named}`);
     }
-    const fields = [];
-    for (const [key, val] of maps.fieldsByObf ?? []) {
-      const [owner, desc, obfName] = key.split("\t");
-      if (owner !== obf) continue;
-      fields.push({ desc, obfName, named: val.name });
-    }
-    fields.sort((a, b) => a.obfName.localeCompare(b.obfName) || a.desc.localeCompare(b.desc));
-    for (const f of fields) {
+    for (const f of fieldsByOwner.get(obf) ?? []) {
       lines.push(`\tf\t${f.desc}\t${f.obfName}\t${f.named}`);
     }
   }
   return lines.join("\n") + "\n";
+}
+
+/**
+ * A header-only Tiny v2 is syntactically valid but maps nothing; tiny-remapper
+ * then "succeeds" and emits an obfuscated jar. Callers must reject such files.
+ * @param {string} text
+ */
+export function tinyV2HasClasses(text) {
+  return /^c\t/m.test(text);
 }
 
 /**

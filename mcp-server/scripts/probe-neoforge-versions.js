@@ -7,7 +7,9 @@
  *   node scripts/probe-neoforge-versions.js
  *   node scripts/probe-neoforge-versions.js --dry-run
  *   node scripts/probe-neoforge-versions.js --version=26.1
- *   node scripts/probe-neoforge-versions.js --force
+ *
+ *   全量重跑按 VERSION_CONFIG 重写 manifest；--version=<v> 只替换该版本，其余条目
+ *   从现有 manifest 原样带过（neoforgeVersion / mappings 是人工核实字段，probe 验证不了）。
  */
 
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "fs";
@@ -71,13 +73,22 @@ async function fetchHtml(url, retries = 2) {
 
 // ── Version configs (HTTP status verified) ──────────────────────────────────
 
+/**
+ * 本表是 data/neoforge-versions-manifest.json 的**生成源**：这里写错，下次跑 probe
+ * 就会把手工修正过的 manifest 覆盖回错值。
+ *
+ * 不变式：NeoForge 加载器版本前两段 = MC 版本去掉前导 "1."。
+ *   MC 1.21.11 → 21.11.x（不是 21.1.113+）；MC 1.20.6 → 20.6.x（不存在 20.4.100+）；
+ *   MC 26.1 → 26.1.0.x。probe 只验证文档 URL 可用性，**验证不了**加载器版本，
+ *   所以 neoforgeVersion / mappings 属于人工核实字段，改它们要对着 manifest 与官方发布页。
+ */
 const VERSION_CONFIG = [
   {
     version: "26.1",
     mcVersion: "26.1",
-    neoforgeVersion: "26.1.x",
+    neoforgeVersion: "26.1.0.x",
     javaVersion: 25,
-    mappings: "mojmaps+parchment",
+    mappings: "mojmap-only",
     route: "26.1",
     docBase: "https://docs.neoforged.net/docs/26.1/",
     testUrl: "https://docs.neoforged.net/docs/26.1/gettingstarted/",
@@ -91,7 +102,7 @@ const VERSION_CONFIG = [
   {
     version: "1.21.11",
     mcVersion: "1.21.11",
-    neoforgeVersion: "21.1.113+",
+    neoforgeVersion: "21.11.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.21.11",
@@ -107,7 +118,7 @@ const VERSION_CONFIG = [
   {
     version: "1.21.10",
     mcVersion: "1.21.10",
-    neoforgeVersion: "21.1.90+",
+    neoforgeVersion: "21.10.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.21.10",
@@ -124,7 +135,7 @@ const VERSION_CONFIG = [
   {
     version: "1.21.8",
     mcVersion: "1.21.8",
-    neoforgeVersion: "21.1.70+",
+    neoforgeVersion: "21.8.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.21.8",
@@ -140,7 +151,7 @@ const VERSION_CONFIG = [
   {
     version: "1.21.5",
     mcVersion: "1.21.5",
-    neoforgeVersion: "21.1.50+",
+    neoforgeVersion: "21.5.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.21.5",
@@ -156,7 +167,7 @@ const VERSION_CONFIG = [
   {
     version: "1.21.3",
     mcVersion: "1.21.3",
-    neoforgeVersion: "21.1.30+",
+    neoforgeVersion: "21.3.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.21.3",
@@ -188,7 +199,7 @@ const VERSION_CONFIG = [
   {
     version: "1.20.6",
     mcVersion: "1.20.6",
-    neoforgeVersion: "20.4.100+",
+    neoforgeVersion: "20.6.x",
     javaVersion: 21,
     mappings: "mojmaps+parchment",
     route: "1.20.6",
@@ -221,7 +232,7 @@ const VERSION_CONFIG = [
   {
     version: "26.2",
     mcVersion: "26.2",
-    neoforgeVersion: "26.2.x",
+    neoforgeVersion: "26.2.0.x",
     javaVersion: 25,
     mappings: "mojmap-only",
     // Official /docs/26.2/ may 404; probe will fall back to unversioned /docs/ when labeled newer, else mark unavailable.
@@ -287,10 +298,15 @@ const PRIMER_CONFIG = [
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
-const force = args.includes("--force");
 const targetVer = args.find(a => a.startsWith("--version="))?.split("=")[1];
 
-if (dryRun) {
+// Only the direct CLI invocation may print-and-exit or run the probe; an imported
+// module must never consume the host runner's argv (tests import this file).
+const invokedDirectly =
+  process.argv[1] &&
+  import.meta.url === `file:///${process.argv[1].replace(/\\/g, "/")}`;
+
+if (dryRun && invokedDirectly) {
   console.log("=== NeoForge Version Probe Dry Run ===");
   console.log(`Total versions: ${VERSION_CONFIG.length}`);
   console.log(`Primers: ${PRIMER_CONFIG.length}`);
@@ -406,7 +422,7 @@ function extractVersionLabel(html) {
 async function probeVersion(cfg) {
   const res = await fetchHtml(cfg.testUrl);
   if (!res.ok && cfg.version === "26.1") {
-    // /docs/26.1/ 常 404；回退未版本化 /docs/ 并标记，禁止日后 --force 用现行最新覆盖
+    // /docs/26.1/ 常 404；回退未版本化 /docs/ 并标记，禁止日后全量重跑用现行最新覆盖
     console.log(`  ${cfg.version}: pinned /docs/26.1/ HTTP ${res.status}; trying unversioned /docs/`);
     const unversioned = { ...cfg, route: "", docBase: "https://docs.neoforged.net/docs/", testUrl: "https://docs.neoforged.net/docs/gettingstarted/" };
     const ures = await fetchHtml(unversioned.testUrl);
@@ -450,6 +466,31 @@ async function probePrimers() {
   return results;
 }
 
+/** 读取现有 manifest 的 versions 表；缺失 / 解析失败 → null（调用方按「无可继承」处理）。 */
+export function readPreviousVersions(file) {
+  if (!existsSync(file)) return null;
+  try {
+    const prev = JSON.parse(readFileSync(file, "utf-8"));
+    return prev && prev.versions && typeof prev.versions === "object" ? prev.versions : null;
+  } catch {
+    console.warn(`  现有 manifest 无法解析，本次不继承任何条目：${file}`);
+    return null;
+  }
+}
+
+/**
+ * 单版本重跑（`--version=<v>`）只探测 probeConfigs，其余条目必须原样带过去；
+ * 全量重跑（prevVersions = null）以 VERSION_CONFIG 为准，不继承，避免 stale 条目永生。
+ */
+export function carryUnprobedVersions(prevVersions, probeConfigs, probed) {
+  if (!prevVersions) return { ...probed };
+  const out = { ...prevVersions };
+  for (const cfg of probeConfigs) {
+    if (probed[cfg.version]) out[cfg.version] = probed[cfg.version];
+  }
+  return out;
+}
+
 // ── Main ───────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -463,7 +504,15 @@ async function main() {
   const probeConfigs = targetVer
     ? VERSION_CONFIG.filter(c => c.version === targetVer)
     : VERSION_CONFIG;
+  if (targetVer && probeConfigs.length === 0) {
+    throw new Error(
+      `--version=${targetVer} 不在 VERSION_CONFIG 中；可选：${VERSION_CONFIG.map((c) => c.version).join(", ")}`,
+    );
+  }
 
+  // --version=<v> 只重探一个版本：其余条目必须从现有 manifest 原样带过来，
+  // 否则单版本重跑会把它没碰过的已核实条目（含 chapters）整批清掉。
+  const prevVersions = targetVer ? readPreviousVersions(OUT_FILE) : null;
   const probedVersions = {};
   for (const cfg of probeConfigs) {
     const result = await probeVersion(cfg);
@@ -473,6 +522,7 @@ async function main() {
       await new Promise(r => setTimeout(r, 300));
     }
   }
+  const versions = carryUnprobedVersions(prevVersions, probeConfigs, probedVersions);
 
   // Probe primers
   console.log("\nProbing primers...");
@@ -484,17 +534,20 @@ async function main() {
     probeScript: "probe-neoforge-versions.js",
     docBaseUrl: "https://docs.neoforged.net/docs/",
     primerBaseUrl: "https://docs.neoforged.net/primer/docs/",
-    versions: probedVersions,
+    versions,
     primers: primerResults,
   };
 
   // Stats
-  const availableVersions = Object.entries(probedVersions).filter(([k, v]) => v.available);
-  const unavailableVersions = Object.entries(probedVersions).filter(([k, v]) => !v.available);
+  const availableVersions = Object.entries(versions).filter(([k, v]) => v.available);
+  const unavailableVersions = Object.entries(versions).filter(([k, v]) => !v.available);
+  const availableInProbe = probeConfigs.filter((c) => probedVersions[c.version]?.available);
   const availablePrimers = Object.entries(primerResults).filter(([k, v]) => v.available);
 
   console.log(`\n=== Results ===`);
-  console.log(`Available main docs: ${availableVersions.length}/${VERSION_CONFIG.length}`);
+  console.log(
+    `Available main docs: ${availableVersions.length}/${Object.keys(versions).length} (manifest), 本次探测 ${availableInProbe.length}/${probeConfigs.length}`,
+  );
   if (unavailableVersions.length > 0) {
     console.log(`Unavailable: ${unavailableVersions.map(([k]) => k).join(", ")}`);
   }
@@ -504,7 +557,11 @@ async function main() {
   console.log(`\nWritten: ${OUT_FILE}`);
 }
 
-main().catch(err => {
-  console.error("Probe failed:", err);
-  process.exit(1);
-});
+if (invokedDirectly) {
+  main().catch(err => {
+    console.error("Probe failed:", err);
+    process.exit(1);
+  });
+}
+
+export { VERSION_CONFIG, PRIMER_CONFIG, extractChapterPaths, extractVersionLabel };

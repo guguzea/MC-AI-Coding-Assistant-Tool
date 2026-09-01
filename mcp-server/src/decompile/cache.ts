@@ -192,13 +192,18 @@ export function isPathInside(parent: string, child: string): boolean {
   return b.startsWith(prefix);
 }
 
-function sanitizeLockName(name: string): string {
+/**
+ * 锁目录名 = 清洗段 + 原名 sha1 前 8 位。
+ * 必须导出：测试若手写 `locks/<name>` 而真实路径是 `locks/<name>_<hash>`，
+ * 「陈旧锁抢占」「心跳锁不被抢」两个用例会在从未触达被测代码的情况下假绿。
+ */
+export function sanitizeLockName(name: string): string {
   const hash = createHash("sha1").update(name).digest("hex").slice(0, 8);
   const segment = sanitizeCacheSegment(name.toLowerCase()) ?? "invalid";
   return `${segment.slice(0, 80)}_${hash}`;
 }
 
-function lockDirOf(root: string, name: string): string {
+export function lockDirOf(root: string, name: string): string {
   return join(root, "locks", sanitizeLockName(name));
 }
 

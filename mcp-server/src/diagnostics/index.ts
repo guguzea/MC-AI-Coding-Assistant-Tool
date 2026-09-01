@@ -265,7 +265,11 @@ export function detectLoader(
     if (tomlPeek) {
       const javaFmlPeek = classifyJavaFmlToml(tomlPeek);
       if (javaFmlPeek === "neoforge") return "neoforge";
-      if (javaFmlPeek === "forge" || javaFmlPeek === "unknown") return "forge";
+      // 只认「明确 forge」。「unknown」（如 loaderVersion [47,) 同覆盖 Forge 1.20.1 与
+      // NeoForge 1.20.1 的 20.1 兼容层）不得在这里拍板成 forge：残留 fabric.mod.json
+      // 的存在不该把歧义输入变成确定答案（无该残留时同一 toml 走 :296 得 unknown）。
+      // 继续往下：fabric-loom 强信号 → Gradle 插件 → 最终 unknown（PICK_PLATFORM 问用户）。
+      if (javaFmlPeek === "forge") return "forge";
     } else {
       return "fabric";
     }
@@ -388,10 +392,19 @@ export function detectProjectLoaders(input: {
     Boolean(extras.quiltModJson?.trim()) ||
     (input.quiltModJsons ?? []).some((s) => s.trim()) ||
     /org\.quiltmc\.loom|quilt-loom|quilt\.mod\.json/i.test(gradle);
+  const fabricLoom =
+    /fabric-loom|fabric-api/i.test(gradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(gradle);
+  const hasLeftoverFabricJson =
+    Boolean(input.fabricModJson?.trim()) || (input.fabricModJsons ?? []).some((s) => s.trim());
+  const hasJavaFmlToml = [input.modsToml, ...(input.modsTomls ?? [])].some(
+    (t) => t && /modLoader\s*=\s*["']javafml["']/i.test(t),
+  );
+  // 残留 fabric.mod.json：无 Loom、非 Architectury、且 primary 已因 javafml 收成 forge 时
+  // 不得再进 loaders[] 造成假 multiLoader。Neo / LiteLoader 混合 / Architectury 仍保留 fabric 信号。
   const anyFabric =
-    Boolean(input.fabricModJson?.trim()) ||
-    (input.fabricModJsons ?? []).some((s) => s.trim()) ||
-    (/fabric-loom|fabric-api/i.test(gradle) && !/quilt-loom|org\.quiltmc\.loom/i.test(gradle));
+    fabricLoom ||
+    (hasLeftoverFabricJson &&
+      !(primary === "forge" && hasJavaFmlToml && !fabricLoom && !architectury));
   const anyNeo =
     Boolean(input.neoModsToml?.trim()) ||
     (input.neoModsTomls ?? []).some((s) => s.trim()) ||

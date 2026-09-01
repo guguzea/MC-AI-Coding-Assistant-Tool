@@ -15,7 +15,7 @@ npm run build
 
 ## 能力概览
 
-- 共 **79** 个 MCP 工具：`src/tool-registry.ts` **45** + `src/wave/register.ts` **34**
+- 共 **80** 个 MCP 工具：`src/tool-registry.ts` **45** + `src/wave/register.ts` **35**
 - 依赖仓库根 `data/`（API extracted、parchment/mcp、**yarn-mappings.sqlite**、文档索引、porting 等）
 - 官方文档三级：L0 搜索 → L1 摘要 → L2/L2+ 全文
 - **禁止**运行时全量加载 `yarn-mappings.json`（>1.5GB，易 OOM）
@@ -86,7 +86,7 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 
 ### 3. 验收
 
-重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **79**。不要只让用户「看设置页」。
+重载该宿主的 MCP 后，Agent 应调用 `get_server_status`、`diagnose_data_paths`。应出现服务名 **`MC-AI-Coding-Assistant-Tool`**，工具数 **80**。不要只让用户「看设置页」。
 
 ### 4. 环境变量
 
@@ -94,8 +94,8 @@ VS Code 项目级配置顶层键是 `servers`（不是 `mcpServers`）。Continu
 |------|------|------|
 | `MC_SKILL_DATA` | data 根目录（非版本子目录） | `H:/MC_skill/data` |
 | `MC_SKILL_COMMUNITY` | 社区知识库根（可选） | `H:/MC_skill/community_knowledge` |
-| `MC_SKILL_ALLOW_WRITE` | `1` 允许 `port_project` / `mc_skill_update` 写盘 | `1` |
-| `MC_SKILL_PROJECT_ROOT` | 允许写入的根（更新工具须为 **MC_skill 仓库根**） | `H:/MC_skill` |
+| `MC_SKILL_ALLOW_WRITE` | `1` 允许 `port_project` / `mc_skill_update` / `generate_*`（`write=true`）写盘 | `1` |
+| `MC_SKILL_PROJECT_ROOT` | 允许写入的根（更新工具须为 **MC_skill 仓库根**）。`generate_*` 写盘必须设它——单次调用的 `projectPath` 只能在其内选子目录，不能替代它 | `H:/MC_skill` |
 | `MC_SKILL_UPDATE_REPO` | GitHub `owner/repo`（默认本仓库） | `guguzea/MC-AI-Coding-Assistant-Tool` |
 | `MC_SKILL_UPDATE_REMOTE` | 强制 git remote 名；空则扫描匹配 URL | `origin` |
 | `MC_SKILL_UPDATE_CACHE_TTL_SEC` | `get_server_status` updateHint 缓存 TTL | `3600` |

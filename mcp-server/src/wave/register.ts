@@ -19,6 +19,8 @@ import {
   generateEntityRenderer,
   generateWorldgen,
 } from "../generators/index.js";
+import { maybeWriteGeneratorResult } from "../generators/write-helper.js";
+import { analyzeBuildLog, analyzeBuildLogSchema } from "../build-log/index.js";
 import { analyzeLog, getMigrationGuide, checkDependencies } from "../diagnostics/index.js";
 import { getWorkflowTemplate, listKnowledgeResources, readKnowledgeResource } from "../prompts/index.js";
 import { WORKFLOW_TEMPLATES } from "../prompts/templates.js";
@@ -64,9 +66,23 @@ export const mixinAnalyzeSchema = z.object({
   projectPath: z.string().optional().describe("模组项目根：扫 mixin 相关 java 与 mixins.json（显式正文优先）"),
 });
 export const auditResourcesSchema = z.object({
-  resourceRoot: z.string().describe("assets 根目录，如 src/main/resources/assets/<modid>"),
+  resourceRoot: z
+    .string()
+    .optional()
+    .describe("assets 根目录，如 src/main/resources/assets/<modid>（与 projectPath 二选一）"),
+  projectPath: z
+    .string()
+    .optional()
+    .describe("模组工程根：从 fabric.mod.json / mods.toml 推 assets/<modid>"),
   modId: z.string().optional(),
 });
+
+/** generate_* 可选写盘字段（默认仍只吐文本） */
+const generateWriteFields = {
+  write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
+  confirmed: z.boolean().optional().describe("write=true 时必填 true"),
+  projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
+};
 export const validateDatapackJsonSchema = z.object({
   jsonContent: z.string(),
   kind: z.enum(["recipe", "loot_table", "advancement", "tag"]),
@@ -136,12 +152,12 @@ export const readKnowledgeResourceSchema = z.object({ uri: z.string() });
 export const ANALYZE_LOG_DESCRIPTION = "Analyze game / crash log excerpt";
 export const READ_KNOWLEDGE_RESOURCE_DESCRIPTION = "Read knowledge resource by URI";
 export const GENERATE_CONFIG_DESCRIPTION =
-  "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖（非官方 loader API）。不写盘。";
+  "Generate config spec skeleton。loader 与 version 必填，禁止默认 forge。neoforge 1.21+/26.1/1.20.4/1.20.6 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec（Forge 兼容）。fabric/quilt 生成 Cloth Config 最小骨架并 warning 声明依赖（非官方 loader API）。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
 export const GENERATE_NETWORK_PACKET_DESCRIPTION = generateNetworkPacketDescription();
 export const GENERATE_CAPABILITY_DESCRIPTION =
-  "Generate Capability / DataAttachment skeleton。platform 与 version 必填。当前支持：forge 1.20.1（及 1.18.2–1.20.4）Capability；neoforge 1.20.1 同 Capability 形态，1.20.4+ Data Attachment。fabric/quilt → error 改口 CCA。返回骨架文本，不写盘。";
+  "Generate Capability / DataAttachment skeleton。platform 与 version 必填。当前支持：forge 1.20.1（及 1.18.2–1.20.4）Capability；neoforge 1.20.1 同 Capability 形态，1.20.4+ Data Attachment。fabric/quilt → error 改口 CCA。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
 export const GENERATE_MODEL_DESCRIPTION =
-  "Generate block model JSON templates。version 必填。kind 默认 block；kind=item 只出物品模型（无 blockstates）。返回 JSON 骨架文本，不写盘。";
+  "Generate block model JSON templates。version 必填。kind 默认 block；kind=item 只出物品模型（无 blockstates）。返回 JSON 骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。";
 export const DETECT_MOD_PROJECT_DESCRIPTION =
   "只读探测用户模组工程：Quilt 在 Fabric 前；LiteLoader 混合插件。projectPath（CLI --project）优先于 MC_SKILL_PROJECT_ROOT。" +
   "知识库根 / 某版 scaffold → KNOWLEDGE_REPO_NOT_MOD。对不上规则树 → PACK_NOT_FOUND，禁止邻档 00–10。";
@@ -188,11 +204,13 @@ export const generateModelSchema = z.object({
   blockName: z.string(),
   version: z.string().describe("必填 MC 版本"),
   kind: z.enum(["block", "item"]).optional().describe("默认 block；item 为物品模型"),
+  ...generateWriteFields,
 });
 export const generateLangSchema = z.object({
   modId: z.string(),
   entries: z.record(z.string()),
   version: z.string().describe("必填 MC 版本"),
+  ...generateWriteFields,
 });
 export const generateNetworkPacketSchema = z.object({
   modId: z.string(),
@@ -200,30 +218,39 @@ export const generateNetworkPacketSchema = z.object({
   platform: z
     .enum(NETWORK_PACKET_PLATFORMS)
     .describe("必填。须带版本后缀；禁止只传 fabric / neoforge"),
+  ...generateWriteFields,
 });
 export const generateCapabilitySchema = z.object({
   modId: z.string(),
   name: z.string(),
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge=Capability；neoforge=1.20.4+ Data Attachment；fabric/quilt 改口 CCA"),
   version: z.string().describe("必填。forge 1.20.1 Capability；neoforge 1.20.1 同 Capability 形态，1.20.4+ Attachment"),
+  ...generateWriteFields,
 });
 export const generateConfigSchema = z.object({
   modId: z.string(),
   loader: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填，禁止默认 forge"),
   version: z.string().describe("必填。neoforge 1.20.4+/1.21+/26.1 用 ModConfigSpec；1.20.1 用 ForgeConfigSpec；fabric/quilt 为 Cloth Config 骨架"),
+  ...generateWriteFields,
 });
 export const generateEntityRendererSchema = z.object({
   modId: z.string(),
   entityName: z.string(),
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。forge 1.20.1/1.20.4 与 neoforge 26.1 生成代码"),
   version: z.string().describe("必填。forge 仅 1.20.1 / 1.20.4；neoforge 仅 26.1"),
+  ...generateWriteFields,
 });
 export const generateWorldgenSchema = z.object({
   modId: z.string(),
   featureName: z.string(),
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("必填。fabric/quilt 不出 forge/biome_modifier"),
   version: z.string().describe("必填 MC 版本"),
+  ...generateWriteFields,
 });
+export { analyzeBuildLogSchema };
+export const ANALYZE_BUILD_LOG_DESCRIPTION =
+  "解析用户粘贴的 Gradle/javac 构建失败日志（cannot find symbol、incompatible types、MissingPropertyException、Loom remap 等）。" +
+  "不执行 gradlew、不写盘。返回符号/文件与建议工具（query_loader_api / search_*_docs）。与 analyze_log（游戏/崩溃日志）不同。";
 export const analyzeLogSchema = z.object({
   logText: z.string().optional().describe("日志全文（与 logPath 二选一）"),
   logPath: z.string().optional().describe("日志文件路径（与 logText 二选一）"),
@@ -466,7 +493,8 @@ export function registerWaveExtensions(server: McpServer): void {
     "audit_resources",
     {
       title: "Audit mod resource pack graph",
-      description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。",
+      description:
+        "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。可传 resourceRoot，或 projectPath（从 fabric.mod.json / mods.toml 推 assets/<modid>）。",
       inputSchema: auditResourcesSchema,
     },
     async (args): Promise<CallToolResult> => jsonResult(auditResources(args)),
@@ -536,47 +564,101 @@ export function registerWaveExtensions(server: McpServer): void {
     title: "Generate block model JSON templates",
     description: GENERATE_MODEL_DESCRIPTION,
     inputSchema: generateModelSchema,
-  }, async (a) => jsonResult(generateModel(a.modId, a.blockName, a.version, a.kind)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateModel(a.modId, a.blockName, a.version, a.kind), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }),
+    ));
 
   server.registerTool("generate_lang", {
     title: "Generate en_us + zh_cn lang JSON",
-    description: "Generate en_us + zh_cn lang JSON。version 必填。骨架不随 pack_format 变。返回 en_us/zh_cn lang JSON 骨架，不写盘、无机器翻译。",
+    description: "Generate en_us + zh_cn lang JSON。version 必填。骨架不随 pack_format 变。返回 en_us/zh_cn lang JSON 骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。",
     inputSchema: generateLangSchema,
-  }, async (a) => jsonResult(generateLang(a.modId, a.entries, a.version)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateLang(a.modId, a.entries, a.version), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }),
+    ));
 
   server.registerTool("generate_network_packet", {
     title: "Generate network packet skeleton",
     description: GENERATE_NETWORK_PACKET_DESCRIPTION,
     inputSchema: generateNetworkPacketSchema,
   }, async (a) =>
-    jsonResult(generateNetworkPacket(a.modId, a.packetName, a.platform)));
+    jsonResult(
+      maybeWriteGeneratorResult(generateNetworkPacket(a.modId, a.packetName, a.platform), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }, { singleFileName: `${a.packetName.replace(/[^A-Za-z0-9_]/g, "")}Packet.java` }),
+    ));
 
   server.registerTool("generate_capability", {
     title: "Generate Capability / DataAttachment skeleton",
     description: GENERATE_CAPABILITY_DESCRIPTION,
     inputSchema: generateCapabilitySchema,
-  }, async (a) => jsonResult(generateCapability(a.modId, a.name, a.platform, a.version)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateCapability(a.modId, a.name, a.platform, a.version), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }, { singleFileName: `${a.name.replace(/[^A-Za-z0-9_]/g, "")}Capability.java` }),
+    ));
 
   server.registerTool("generate_config", {
     title: "Generate config spec skeleton",
     description: GENERATE_CONFIG_DESCRIPTION,
     inputSchema: generateConfigSchema,
-  }, async (a) => jsonResult(generateConfig(a.modId, a.loader, a.version)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateConfig(a.modId, a.loader, a.version), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }, { singleFileName: "ModConfig.java" }),
+    ));
 
   server.registerTool("generate_entity_renderer", {
     title: "Generate entity renderer skeleton",
     description:
       "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1。" +
-      "fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。",
+      "fabric/quilt 直接 error。返回实体渲染器骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。",
     inputSchema: generateEntityRendererSchema,
-  }, async (a) => jsonResult(generateEntityRenderer(a.modId, a.entityName, a.platform, a.version)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateEntityRenderer(a.modId, a.entityName, a.platform, a.version), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }, { singleFileName: `${a.entityName.replace(/[^A-Za-z0-9_]/g, "")}Renderer.java` }),
+    ));
 
   server.registerTool("generate_worldgen", {
     title: "Generate worldgen JSON templates",
     description:
-      "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架文本，不写盘。",
+      "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。",
     inputSchema: generateWorldgenSchema,
-  }, async (a) => jsonResult(generateWorldgen(a.modId, a.featureName, a.platform, a.version)));
+  }, async (a) =>
+    jsonResult(
+      maybeWriteGeneratorResult(generateWorldgen(a.modId, a.featureName, a.platform, a.version), {
+        write: a.write,
+        confirmed: a.confirmed,
+        projectPath: a.projectPath,
+      }),
+    ));
+
+  server.registerTool("analyze_build_log", {
+    title: "Analyze Gradle / javac build log",
+    description: ANALYZE_BUILD_LOG_DESCRIPTION,
+    inputSchema: analyzeBuildLogSchema,
+  }, async (a) => jsonResult(analyzeBuildLog(a)));
 
   // ── Wave C: diagnostics ──────────────────────────────────────────────────
   server.registerTool("analyze_log", {
@@ -832,19 +914,20 @@ export function registerWaveExtensions(server: McpServer): void {
 export const waveToolSchemas: Array<{ name: string; description: string; inputSchema: z.ZodTypeAny }> = [
   { name: "query_registry", description: "查询 Vanilla 注册表资源 ID（minecraft:stone）。nameLayer=registry_id；类/方法映射请用 convert_mapping。【边界】不是模组 DeferredRegister / Fabric Registry。", inputSchema: queryRegistrySchema },
   { name: "mixin_analyze", description: MIXIN_ANALYZE_DESCRIPTION, inputSchema: mixinAnalyzeSchema },
-  { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。", inputSchema: auditResourcesSchema },
+  { name: "audit_resources", description: "静态检查模型引用的纹理、孤儿纹理、modId 命名等问题。可传 resourceRoot，或 projectPath（从 fabric.mod.json / mods.toml 推 assets/<modid>）。", inputSchema: auditResourcesSchema },
   { name: "validate_datapack_json", description: "recipe / loot_table / advancement / tag 的精简 JSON 校验。minecraft:crafting_special_* 与 smithing_trim 等无 result 不报错；普通 crafting_shaped 缺 result 仍报。【边界】不是全 pack_format 官方 schema。", inputSchema: validateDatapackJsonSchema },
   { name: "get_workflow_template", description: "返回与 MCP Prompt 同名的工作流全文；Cursor 等仅支持 tools 时使用。仅在用户要完整流程（从零建模组、崩溃分诊、移植）时调用；给已有工程加方块/改代码不要调。模板是人在环步骤清单：创意/兼容/API/性能/调试由用户拍板；写盘、Gradle、拷 jar、上传须确认，不是无人值守编排器。", inputSchema: getWorkflowTemplateSchema },
   { name: "localize_mod", description: "自有模组 diff/draft_zh，或第三方 jar extract/pack_draft。无机器翻译；标 needsTranslation。无 en_us 时回退其它语言文件作源。默认只返回文本/files，不写盘。", inputSchema: localizeModSchema },
   { name: "list_knowledge_resources", description: "列出 mcskill:// 资源 URI；配合 read_knowledge_resource 读取正文。", inputSchema: listKnowledgeResourcesSchema },
   { name: "read_knowledge_resource", description: READ_KNOWLEDGE_RESOURCE_DESCRIPTION, inputSchema: readKnowledgeResourceSchema },
   { name: "generate_model", description: GENERATE_MODEL_DESCRIPTION, inputSchema: generateModelSchema },
-  { name: "generate_lang", description: "Generate en_us + zh_cn lang JSON。version 必填。骨架不随 pack_format 变。返回 en_us/zh_cn lang JSON 骨架，不写盘、无机器翻译。", inputSchema: generateLangSchema },
+  { name: "generate_lang", description: "Generate en_us + zh_cn lang JSON。version 必填。骨架不随 pack_format 变。返回 en_us/zh_cn lang JSON 骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。", inputSchema: generateLangSchema },
   { name: "generate_network_packet", description: GENERATE_NETWORK_PACKET_DESCRIPTION, inputSchema: generateNetworkPacketSchema },
   { name: "generate_capability", description: GENERATE_CAPABILITY_DESCRIPTION, inputSchema: generateCapabilitySchema },
   { name: "generate_config", description: GENERATE_CONFIG_DESCRIPTION, inputSchema: generateConfigSchema },
-  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1。fabric/quilt 直接 error。返回实体渲染器骨架文本，不写盘。", inputSchema: generateEntityRendererSchema },
-  { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架文本，不写盘。", inputSchema: generateWorldgenSchema },
+  { name: "generate_entity_renderer", description: "Generate entity renderer skeleton。platform 与 version 必填。当前支持 forge 1.18.2 / forge 1.19.4 / forge 1.20.1 / forge 1.20.4 / neoforge 26.1。fabric/quilt 直接 error。返回实体渲染器骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。", inputSchema: generateEntityRendererSchema },
+  { name: "generate_worldgen", description: "Generate worldgen JSON templates。platform 与 version 必填。当前支持 forge / neoforge 的 feature JSON，以及 fabric / quilt 仅 configured_feature / placed_feature（禁止 forge biome_modifier）。无模板时 errors 列出支持档。返回骨架与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。", inputSchema: generateWorldgenSchema },
+  { name: "analyze_build_log", description: ANALYZE_BUILD_LOG_DESCRIPTION, inputSchema: analyzeBuildLogSchema },
   { name: "analyze_log", description: ANALYZE_LOG_DESCRIPTION, inputSchema: analyzeLogSchema },
   { name: "get_migration_guide", description: GET_MIGRATION_GUIDE_DESCRIPTION, inputSchema: getMigrationGuideSchema },
   { name: "download_official_mdk", description: DOWNLOAD_OFFICIAL_MDK_DESCRIPTION, inputSchema: downloadOfficialMdkSchema },

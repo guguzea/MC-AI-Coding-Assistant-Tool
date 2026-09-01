@@ -3,9 +3,6 @@
 > 本规则集适用于 **Fabric 1.18.2**，推荐使用 `Registry.register()` 注册模式。
 > 如果你判断用户的项目是其他版本或平台，请返回根目录 `AGENTS.md` 重新判断。
 
-> ⚠️ 使用 MCP Server 文档工具前，必须先用 `list_fabric_versions` 查询当前有哪些版本。
-> 不要依赖硬编码默认值，每次对话开始时主动探查。
-
 ---
 
 ## 基本信息
@@ -16,11 +13,12 @@
 | Minecraft 版本 | 1.18.2 |
 | 注册方式 | `Registry.register()` 在 `onInitialize()` 中执行 |
 | Java 版本 | **Java 17**（Fabric 1.18.2 最低要求） |
-| Gradle | Gradle 7.6.1 + Loom 0.14.x |
+| Gradle | Gradle 8.4 + Loom 1.0.18 |
 | Mappings | **Yarn**（`net.fabricmc:yarn:1.18.2+build.4:v2`）|
 | Build 工具 | Loom（`fabric-loom` 插件） |
 | Mod 元数据 | `fabric.mod.json` |
 | Mixin 支持 | **Loom 一流支持**（无需额外插件）|
+| Pack 格式 | **8**（1.18.x 对应 pack 8）|
 
 ---
 
@@ -42,10 +40,21 @@ Decision: 本规则集是否适用？
 
 ### 本规则集的 IDE 加载优先级
 
-1. 先读 `AGENTS.md`（本文件）
-2. 再按编号读 `.trae/rules/00-10.mdc`
-3. 如需深入了解特定领域，读 `.trae/skills/mc-*.md`
-4. 遇到问题查 `.trae/rules/09-anti-patterns.mdc`
+各 AI 助手会优先读取自己对应的配置目录（零修改复刻自 Cursor）：
+
+| AI 助手 | 读取路径 |
+|---------|---------|
+| Cursor | `.cursor/rules/*.mdc` + `.cursor/skills/` |
+| Claude Desktop | `.claude/rules/*.mdc` + `.claude/commands/` |
+| Continue.dev | `.continue/rules/*.mdc` + `.continue/skills/` |
+| Trae AI | `.trae/rules/*.mdc` + `.trae/skills/` |
+| OpenCode | `AGENTS.md` + `.opencode/skills/` |
+| Codex | `AGENTS.md` + `.agents/skills/` |
+| ZCode | `AGENTS.md` + `.zcode/skills/` |
+| Pi | `.pi/rules/*.md`（+ `AGENTS.md`） |
+
+当上述路径不存在时，会降级读取本文件（`AGENTS.md`）和 `.cursor/` 目录。
+
 
 ---
 
@@ -60,6 +69,21 @@ Decision: 本规则集是否适用？
 | Mappings | MCP（方法名如 `func_12345_a`） | **Yarn**（可读名如 `getHealth()`；`method_12345` 是 Intermediary）|
 | API 生态 | Forge 内置 | **Fabric API 模块化**（按需引入）|
 | 事件系统 | Forge 事件总线（`@SubscribeEvent`） | **Fabric 事件回调**（`net.fabricmc.fabric.api.event.Event`，如 `AttackBlockCallback`）|
+
+---
+
+## 1.18.x 与 1.20.x 的关键差异
+
+| 维度 | 1.18.x | 1.20.x |
+|------|--------|--------|
+| Registry | `Registry.BLOCK`（静态字段） | `Registries.ITEM` / `Registries.BLOCK` |
+| `fabric.mod.json` | 有 `environment` 字段（schemaVersion 1 一直支持） | 有 `environment` 字段 |
+| Block class | `Block` + `AbstractBlock.Settings` | `Block` + `AbstractBlock.Settings`（类名未改成「只有 AbstractBlock」） |
+| BlockItem | `BlockItem` | `BlockItem` |
+| Pack format（数据包） | **8** | **15**（1.20.1） |
+| FoodComponent | `FoodComponent.Builder` | `FoodComponent.Builder` |
+| EntityType | `EntityType.Builder.create()` | `EntityType.Builder.create()` |
+| 实体分类 | `SpawnGroup`（Yarn 1.18） | `SpawnGroup` |
 
 ---
 
@@ -91,13 +115,12 @@ fabric-mod/
     ├── java/
     │   └── com/example/examplemod/
     │       ├── ExampleMod.java    # implements ModInitializer 入口类
-    │       ├── registry/          # 注册类（可选）
-    │       ├── mixins/            # Mixin 类（可选）
+    │       ├── ExampleModClient.java # 客户端入口（implements ClientModInitializer）
     │       └── ...
     │
     └── resources/
         ├── fabric.mod.json         # Fabric 元数据（必需）
-        ├── pack.mcmeta            # 资源包标识
+        ├── pack.mcmeta            # 资源包标识（pack_format: 8）
         └── assets/{modid}/
             ├── lang/
             ├── models/
@@ -142,7 +165,7 @@ fabric-mod/
 ### 命名规范
 
 - `id`：全小写；允许下划线与连字符（须与 fabric.mod.json 一致）
-- 注册名称：`Identifier(MOD_ID, "registry_name")`
+- 注册名称：`new Identifier(MOD_ID, "registry_name")`
 - 资源路径：`assets/{modid}/...` 全小写
 
 ### Minecraft 版本兼容性
@@ -151,6 +174,7 @@ fabric-mod/
 - Fabric Loader 0.14.x（推荐 0.14.24）
 - Fabric API 0.77.x for 1.18.2
 - Java 17+
+- Pack format **8**
 
 ---
 
@@ -168,7 +192,7 @@ fabric-mod/
 06-networking.mdc       → 网络通信
 07-datagen.mdc          → 数据生成器（Fabric Loom DataGen）
 08-client-server.mdc    → 客户端/服务端分离
-09-anti-patterns.mdc   → 反模式库
+09-anti-patterns.mdc    → 反模式库
 10-gui.mdc              → GUI / Screen 开发
 ```
 
@@ -201,3 +225,18 @@ fabric-mod/
 - [Mixin](https://github.com/SpongePowered/Mixin) — 字节码注入框架
 - [Yarn](https://github.com/FabricMC/yarn) — 社区维护映射
 - [Parchment](https://parchmentmc.org/) — 带参数的 Yarn（兼容 Fabric）
+
+## 配置（不落盘树级 mc-config）
+
+不要为本档新写 `mc-config` Skill。配置走仓库根 `knowledge/libs/all-platforms/mc-config/SKILL.md` + `generate_config`（工作流 `mc-config`）。LiteLoader / Rift / ModLoader / 基岩不要套 Cloth / ForgeConfigSpec。
+
+<!-- MC_SKILL_WORKFLOW_NOTE -->
+
+## 工作流提醒（人在环）
+
+完整流程（从零建工程 / 完整新方块 / GUI / 崩溃分诊 / 移植 / 真机循环 / 汉化 / 发布 / 反编译研究）才调 `get_workflow_template`；改已有代码、补方法、查文档走规则 + Skill + `search_*_docs`，不要先调工作流。
+
+- 汉化：`localize_mod`（diff / draft_zh / jar extract / pack_draft；无机器翻译）。
+- 崩溃分诊：`crash_analyze`。
+- 发布：`mc-publish` 工作流 + `check_publish_ready`；不代跑 Gradle、不拷 jar、不上传。
+- 写盘 / Gradle / 拷 jar / 上传均须用户确认（人在环）。

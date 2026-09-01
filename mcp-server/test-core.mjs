@@ -77,9 +77,13 @@ async function testNeoForgeGenericRouting() {
 async function testUnknownPlatformEvidence() {
   const root = mkdtempSync(join(tmpdir(), "mc-skill-empty-"));
   try {
-    const result = JSON.parse(await analyzePortingPath({ projectPath: root }));
-    assert.equal(result.ok, false);
-    assert.equal(result.error.code, "NOT_A_MOD_PROJECT");
+    // targetPlatform 是必填：缺参数属于输入非法，必须在扫工程之前就以 INVALID_INPUT 拒掉，
+    // 且消息点名是哪个字段（否则调用方只看到一个与缺参无关的 NOT_A_MOD_PROJECT）。
+    const noTarget = JSON.parse(await analyzePortingPath({ projectPath: root }));
+    assert.equal(noTarget.ok, false);
+    assert.equal(noTarget.error.code, "INVALID_INPUT");
+    assert.match(noTarget.error.message, /targetPlatform/, noTarget.error.message);
+    // 参数齐了才轮到工程判定
     const withTarget = JSON.parse(await analyzePortingPath({ projectPath: root, targetPlatform: "fabric" }));
     assert.equal(withTarget.ok, false);
     assert.equal(withTarget.error.code, "NOT_A_MOD_PROJECT");
@@ -1842,10 +1846,34 @@ async function testFivePlatformRouting() {
     "fabric",
     "fabric-loom 工程里的残留 litemod.json 不得压过 Fabric",
   );
+  // 歧义 mods.toml（[47,) 同覆盖 Forge 1.20.1 / NeoForge 20.1）+ 残留 fabric.json：
+  // 不得因为「有个残留 fabric 文件」就拍板成 forge，也不得判成 fabric → unknown（PICK_PLATFORM）。
   assert.equal(
     detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n', leftoverFab),
+    "unknown",
+    "残留 fabric.mod.json 不得把歧义 javafml mods.toml 变成确定 forge",
+  );
+  // 同一 toml 有无残留 fabric.json 必须同判（一致性：残留文件不该改变 Forge/Neo 判定）
+  assert.equal(
+    detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n', leftoverFab),
+    detectLoader("", 'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n'),
+    "有无残留 fabric.mod.json 不得影响 Forge/Neo 判定",
+  );
+  // 明确 forge 依赖时，残留 fabric.mod.json 仍不得压过 Forge 元数据（原断言的意图保留）
+  assert.equal(
+    detectLoader(
+      "",
+      'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n[[dependencies.examplemod]]\nmodId="forge"\n',
+      leftoverFab,
+    ),
     "forge",
-    "残留 fabric.mod.json 不得压过 javafml mods.toml",
+    "残留 fabric.mod.json 不得压过明确 javafml mods.toml",
+  );
+  // 旧实现 unknown→forge 早退，永远碰不到 :273；修后 fabric-loom 强信号必须可达
+  assert.equal(
+    detectLoader("id 'fabric-loom'", 'modLoader="javafml"\n[[mods]]\nmodId="demo"\n', leftoverFab),
+    "fabric",
+    "仅裸 javafml 的残留 mods.toml 不得压过 fabric-loom",
   );
   const llOnlyLoaders = detectProjectLoaders({
     buildGradle: "apply plugin: 'net.minecraftforge.gradle.liteloader'",
@@ -2354,9 +2382,21 @@ async function testReviewFixes() {
     assert.equal(q.ok, true, JSON.stringify(q.error ?? q));
     assert.equal(q.analysis.current.platform, "fabric");
     assert.equal(q.analysis.recommendedRoute, "version_migration", JSON.stringify(q.analysis.recommendedRoute));
+    // routeSteps 公开契约 = string[]。旧断言写成 `typeof s === "string" ? s : s?.text ?? ""`
+    // 双形态兜底，正是让「改成对象数组」这次契约破坏无声通过的原因。现在必须逐元素是字符串。
+    assert.ok(Array.isArray(q.analysis.routeSteps), "routeSteps 必须是数组");
     assert.ok(
-      !(q.analysis.routeSteps ?? []).some((s) => /init_architectury/.test(s)),
+      q.analysis.routeSteps.every((s) => typeof s === "string"),
+      `routeSteps 契约是 string[]，实际：${JSON.stringify(q.analysis.routeSteps)}`,
+    );
+    assert.ok(
+      !q.analysis.routeSteps.some((s) => /init_architectury/.test(s)),
       JSON.stringify(q.analysis.routeSteps),
+    );
+    assert.equal(
+      q.analysis.nextSteps.length,
+      q.analysis.routeSteps.length,
+      "nextSteps 必须与 routeSteps 一一对应",
     );
   } finally {
     rmSync(fabToQuilt, { recursive: true, force: true });
@@ -2374,10 +2414,15 @@ async function testReviewFixes() {
       }),
       "utf8",
     );
-    const bp = JSON.parse(await analyzePortingPath({ projectPath: bpRoot }));
+    // targetPlatform 必填后，基岩包也要带着目标来问；UNSUPPORTED_PORT 消息同时点名两端
+    const noTarget = JSON.parse(await analyzePortingPath({ projectPath: bpRoot }));
+    assert.equal(noTarget.ok, false, JSON.stringify(noTarget));
+    assert.equal(noTarget.error.code, "INVALID_INPUT");
+    const bp = JSON.parse(await analyzePortingPath({ projectPath: bpRoot, targetPlatform: "fabric" }));
     assert.equal(bp.ok, false, JSON.stringify(bp));
     assert.equal(bp.error.code, "UNSUPPORTED_PORT");
     assert.match(String(bp.error.message), /bedrock/i);
+    assert.match(String(bp.error.message), /fabric/, "消息应点名目标端");
   } finally {
     rmSync(bpRoot, { recursive: true, force: true });
   }
@@ -3742,6 +3787,92 @@ async function testW2MappingDocsFixes() {
   assert.equal(qa.action?.code, "INVALID_INPUT");
 }
 
+// ── R4/R6：analyze_porting_path 交接必须真实可调用 ──────────────────────────
+async function testPortingHandoffArgsAreCallable() {
+  const { analyzePortingPathSchema, portProjectSchema } = await import("./dist/porting/types.js");
+  const { getMigrationGuideSchema } = await import("./dist/wave/register.js");
+  const { searchDocsSchema } = await import("./dist/docs-platform/forge/index.js");
+  const schemas = {
+    port_project: portProjectSchema,
+    get_migration_guide: getMigrationGuideSchema,
+    search_docs: searchDocsSchema.inputSchema ?? searchDocsSchema,
+  };
+
+  // R4：契约是「必填」，就必须在 schema 边界拒掉，别让调用方先吃一次运行时 INVALID_INPUT
+  assert.equal(
+    analyzePortingPathSchema.safeParse({ projectPath: "/tmp/x" }).success,
+    false,
+    "targetPlatform 缺失必须被 schema 拒绝（旧 schema 写 optional，与实际运行时契约相反）",
+  );
+  assert.equal(
+    analyzePortingPathSchema.safeParse({ projectPath: "/tmp/x", targetPlatform: "neoforge" }).success,
+    true,
+  );
+
+  const forgeGradle =
+    "plugins { id 'net.minecraftforge.gradle' version '6.0.6' }\n" +
+    "minecraft { mappings channel: 'official', version: '1.20.1' }\n";
+  const forgeModsToml =
+    'modLoader="javafml"\nloaderVersion="[47,)"\n[[mods]]\nmodId="examplemod"\n' +
+    '[[dependencies.examplemod]]\nmodId="forge"\n';
+  const fabricGradle = "plugins { id 'fabric-loom' version '1.6-SNAPSHOT' }\n";
+  const fabricJson = JSON.stringify({ schemaVersion: 1, id: "fabmod", version: "1.0.0" });
+
+  const cases = [
+    { label: "forge→neoforge", files: { "build.gradle": forgeGradle, "src/main/resources/mods.toml": forgeModsToml }, args: { targetPlatform: "neoforge", targetVersion: "1.20.4" } },
+    { label: "fabric→quilt", files: { "build.gradle": fabricGradle, "gradle.properties": "minecraft_version=1.20.1\n", "src/main/resources/fabric.mod.json": fabricJson }, args: { targetPlatform: "quilt", targetVersion: "1.21.1" } },
+    { label: "fabric→neoforge(跨平台)", files: { "build.gradle": fabricGradle, "gradle.properties": "minecraft_version=1.20.1\n", "src/main/resources/fabric.mod.json": fabricJson }, args: { targetPlatform: "neoforge", targetVersion: "1.20.4" } },
+  ];
+
+  let actionableSteps = 0;
+  for (const c of cases) {
+    const root = mkdtempSync(join(tmpdir(), "mc-skill-handoff-"));
+    try {
+      for (const [p, content] of Object.entries(c.files)) {
+        mkdirSync(join(root, dirname(p)), { recursive: true });
+        writeFileSync(join(root, p), content, "utf8");
+      }
+      const out = JSON.parse(await analyzePortingPath({ projectPath: root, ...c.args }));
+      assert.equal(out.ok, true, `${c.label}: ${JSON.stringify(out.error ?? out)}`);
+      assert.ok(
+        out.analysis.routeSteps.every((s) => typeof s === "string"),
+        `${c.label}: routeSteps 契约是 string[] → ${JSON.stringify(out.analysis.routeSteps)}`,
+      );
+      assert.equal(
+        out.analysis.nextSteps.length,
+        out.analysis.routeSteps.length,
+        `${c.label}: nextSteps 与 routeSteps 不平行`,
+      );
+      for (const ns of out.analysis.nextSteps) {
+        if (!ns.tool) continue;
+        actionableSteps += 1;
+        const schema = schemas[ns.tool];
+        assert.ok(schema, `${c.label}: nextSteps 引用未登记 schema 的工具 ${ns.tool}`);
+        const parsed = schema.safeParse(ns.args);
+        assert.equal(
+          parsed.success,
+          true,
+          `${c.label}: ${ns.tool} 的 args 不可直接调用 → ${JSON.stringify(ns.args)} / ${JSON.stringify(parsed.error?.issues ?? parsed.error)}`,
+        );
+        for (const [k, v] of Object.entries(ns.args ?? {})) {
+          assert.ok(
+            !/^\s*(check|todo|tbd|n\/?a|null|<.*>|\{\{.*\}\})/i.test(String(v)),
+            `${c.label}: ${ns.tool}.${k}=${JSON.stringify(v)} 是占位值，不是合法参数`,
+          );
+        }
+      }
+      // 每条路线都至少要有一个可执行交接（否则 nextSteps 形同不存在）
+      assert.ok(
+        out.analysis.nextSteps.some((ns) => ns.tool),
+        `${c.label}: 没有任何可执行交接`,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+  assert.ok(actionableSteps >= 3, `可执行交接过少：${actionableSteps}`);
+}
+
 await testNeoForgeGenericRouting();
 await testUnknownPlatformEvidence();
 await testForgeDetectedFromGradleOnly();
@@ -3773,6 +3904,7 @@ await testProjectPathFill();
 testPlan1Fixes();
 await testPrototypeOwnKeys();
 await testW2MappingDocsFixes();
+await testPortingHandoffArgsAreCallable();
 testBedrockMisdetectionFixed();
 console.log("core regression tests passed");
 

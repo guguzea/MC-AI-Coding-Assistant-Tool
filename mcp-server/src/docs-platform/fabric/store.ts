@@ -26,6 +26,7 @@ import {
   buildSymbolIndex,
   enhancedSearch,
   stripScores,
+  trimOldest,
   ttlCacheGet,
   ttlCacheSet,
   type SymbolIndex,
@@ -178,18 +179,28 @@ export interface SearchIndexDetailed {
 export class FabricDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
 
+  /**
+   * 条数上界。TTL 只保证「不会读到过期值」，不会限制条目数；长驻 MCP 进程必须有条数硬界。
+   * index / symbol 两条按 source|version 组合计条目，单条是解析后的 JSON（最大 index-l2.json
+   * 160 KB → 解析对象更大），故界比 fileCache 紧一档。
+   */
+  private static readonly FILE_CACHE_MAX = 256;
+  private static readonly INDEX_CACHE_MAX = 64;
+  private static readonly SYMBOL_CACHE_MAX = 64;
+
   /** 当前数据源（fabric-docs 或 fabric-wiki） */
   public readonly source: string;
 
-  /** 按 `${source}/${version}/${indexName}` 缓存 index JSON */
+  /** 按 `${source}/${version}/${indexName}` 缓存 index JSON（TTL 5 分钟 + 64 条上界） */
   private indexCache = new Map<string, CacheEntry<unknown>>();
 
-  /** 按 `${version}/${processedFile}` 缓存文件内容 */
+  /** 按 `${version}/${processedFile}` 缓存文件内容（TTL 5 分钟 + 256 条上界） */
   private fileCache = new Map<string, CacheEntry<string>>();
 
   /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟，ttlCacheSet max=256） */
   private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
 
+  /** 符号索引（key = source|version，64 条上界；被淘汰只导致下次重建） */
   private symbolIndexCache = new Map<string, SymbolIndex>();
 
   /** 相关文档缓存（以 id|version|limit 为 key，TTL 5min） */
@@ -284,6 +295,7 @@ export class FabricDocStore {
       data: content,
       expiry: Date.now() + FabricDocStore.CACHE_TTL,
     });
+    trimOldest(this.fileCache, FabricDocStore.FILE_CACHE_MAX);
     return content;
   }
 
@@ -508,6 +520,7 @@ export class FabricDocStore {
       const l1 = this.loadIndexL1(version);
       const idx = buildSymbolIndex(l1, { byteSize, generation: 1 });
       this.symbolIndexCache.set(key, idx);
+      trimOldest(this.symbolIndexCache, FabricDocStore.SYMBOL_CACHE_MAX);
       return idx;
     } catch {
       return null;
@@ -640,6 +653,7 @@ export class FabricDocStore {
         data: content,
         expiry: Date.now() + FabricDocStore.CACHE_TTL,
       });
+      trimOldest(this.fileCache, FabricDocStore.FILE_CACHE_MAX);
     }
 
     return this.buildResult(content, meta, highlightKey);
@@ -689,6 +703,7 @@ export class FabricDocStore {
       data,
       expiry: Date.now() + FabricDocStore.CACHE_TTL,
     });
+    trimOldest(this.indexCache, FabricDocStore.INDEX_CACHE_MAX);
     return data;
   }
 

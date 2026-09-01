@@ -89,4 +89,354 @@ if (existsSync(DEFAULT_DEST_DIR)) {
   console.log("skip: forge_1.20.4 data not present");
 }
 
+// ── #13 NeoForge 生成源 ↔ 产物 manifest 一致性 ─────────────────────────────
+// 背景：fix_p0_p1 计划只手工修正了「产物」data/neoforge-versions-manifest.json
+// （1.21.11→21.11.x、1.20.6→20.6.x、26.1→26.1.0.x + mojmap-only），没改「生成源」
+// probe-neoforge-versions.js 的 VERSION_CONFIG。任何人再跑一次全量 probe，错值就会
+// 复活并覆盖修正——所以「产物对了」不等于「修好了」。
+const {
+  VERSION_CONFIG: NEO_CFG,
+  PRIMER_CONFIG: NEO_PRIMERS,
+  readPreviousVersions,
+  carryUnprobedVersions,
+} = await import("./scripts/probe-neoforge-versions.js");
+const { readFileSync } = await import("node:fs");
+const NEO_MANIFEST = JSON.parse(
+  readFileSync(new URL("../data/neoforge-versions-manifest.json", import.meta.url), "utf-8"),
+);
+
+/** NeoForge 加载器版本前两段 = MC 版本去掉前导 "1."（1.21.11 → 21.11，26.1 → 26.1）。 */
+function loaderSeries(mcVersion) {
+  return mcVersion.startsWith("1.") ? mcVersion.slice(2) : mcVersion;
+}
+
+function checkLoaderVersion(mcVersion, neoforgeVersion) {
+  const bad = [];
+  if (neoforgeVersion.includes("+")) {
+    bad.push(`含 '+' 开区间：${neoforgeVersion}（probe 只验文档可用性，验不了加载器版本，禁止猜）`);
+  }
+  if (!/^\d+\.\d+(\.\d+)?(\.x)?$/.test(neoforgeVersion)) bad.push(`不是具体版本号或 .x 掩码：${neoforgeVersion}`);
+  const series = loaderSeries(mcVersion);
+  if (neoforgeVersion !== series && !neoforgeVersion.startsWith(`${series}.`)) {
+    bad.push(`${neoforgeVersion} 与 MC ${mcVersion} 不同号（应以前缀 ${series}. 开头）`);
+  }
+  return bad;
+}
+
+// 校验规则本身必须仍然判得掉历史上真出现过的错值，不能跟着数据一起被「改对」。
+assert.ok(checkLoaderVersion("1.21.11", "21.1.113+").length, "规则失效：21.1.113+ 曾是 1.21.11 的配置值");
+assert.ok(checkLoaderVersion("1.20.6", "20.4.100+").length, "规则失效：20.4.100+ 曾是 1.20.6 的配置值");
+assert.equal(checkLoaderVersion("1.21.1", "21.1.113").length, 0, "规则误杀：21.1.113 对 MC 1.21.1 合法");
+assert.equal(checkLoaderVersion("26.1", "26.1.0.x").length, 0, "规则误杀：26.1.0.x 对 MC 26.1 合法");
+
+const NEO_CURATED = ["mcVersion", "neoforgeVersion", "javaVersion", "mappings", "type", "priority", "fallbackVersion", "forgeVersion"];
+const neoDrift = [];
+for (const cfg of NEO_CFG) {
+  for (const msg of checkLoaderVersion(cfg.mcVersion, cfg.neoforgeVersion)) {
+    neoDrift.push(`${cfg.version}.neoforgeVersion: ${msg}`);
+  }
+  const docPath = new URL(cfg.docBase).pathname;
+  const wantPath = cfg.route ? `/docs/${cfg.route}/` : "/docs/";
+  if (docPath !== wantPath) neoDrift.push(`${cfg.version}: docBase 路径 ${docPath} ≠ ${wantPath}（版本令牌未锚定）`);
+  if (!cfg.testUrl.startsWith(cfg.docBase)) neoDrift.push(`${cfg.version}: testUrl 不在 docBase 之下`);
+
+  const entry = NEO_MANIFEST.versions[cfg.version];
+  if (!entry) {
+    neoDrift.push(`manifest 缺 ${cfg.version}：生成源新增后未重跑，产物与源不同步`);
+    continue;
+  }
+  // 26.1 走「pinned /docs/26.1/ 404 → 未版本化 /docs/」回退：route/docBase/testUrl 由探测期改写，不参与比对。
+  const probeRewritten = entry.unversionedCurrent ? ["route", "docBase", "testUrl"] : [];
+  for (const key of [...NEO_CURATED, "route", "docBase", "testUrl"]) {
+    if (probeRewritten.includes(key)) continue;
+    if (String(cfg[key] ?? "") !== String(entry[key] ?? "")) {
+      neoDrift.push(`${cfg.version}.${key}: 生成源 ${JSON.stringify(cfg[key])} ≠ 产物 ${JSON.stringify(entry[key])}`);
+    }
+  }
+}
+const seenLoader = new Map();
+for (const cfg of NEO_CFG) {
+  const prev = seenLoader.get(cfg.neoforgeVersion);
+  if (prev) neoDrift.push(`${prev} 与 ${cfg.version} 加载器同号 ${cfg.neoforgeVersion}（不同 MC 版本不得共用）`);
+  seenLoader.set(cfg.neoforgeVersion, cfg.version);
+  if (cfg.fallbackVersion && !NEO_CFG.some((c) => c.version === cfg.fallbackVersion)) {
+    neoDrift.push(`${cfg.version}.fallbackVersion=${cfg.fallbackVersion} 不在 VERSION_CONFIG 内`);
+  }
+}
+for (const v of Object.keys(NEO_MANIFEST.versions)) {
+  if (!NEO_CFG.some((c) => c.version === v)) {
+    neoDrift.push(`manifest 有 ${v} 而生成源没有 → 全量重跑会静默丢掉该条目`);
+  }
+}
+for (const [v, p] of Object.entries(NEO_MANIFEST.primers ?? {})) {
+  const cfg = NEO_PRIMERS.find((x) => x.version === v);
+  if (!cfg) {
+    neoDrift.push(`manifest primer ${v} 不在 PRIMER_CONFIG → 全量重跑会丢掉`);
+    continue;
+  }
+  for (const key of ["url", "from", "to"]) {
+    if (String(cfg[key]) !== String(p[key])) neoDrift.push(`primer ${v}.${key}: 生成源 ${cfg[key]} ≠ 产物 ${p[key]}`);
+  }
+}
+assert.deepEqual(neoDrift, [], `probe-neoforge-versions 生成源与 manifest 漂移：\n  ${neoDrift.join("\n  ")}`);
+
+// 单版本重跑必须保留它没探测过的条目；全量重跑以生成源为准，不继承 stale 条目。
+const oneProbe = NEO_CFG.filter((c) => c.version === "26.1");
+const merged = carryUnprobedVersions(NEO_MANIFEST.versions, oneProbe, { "26.1": { available: true } });
+assert.equal(Object.keys(merged).length, Object.keys(NEO_MANIFEST.versions).length, "--version=<v> 重跑不得减少 manifest 条目");
+assert.deepEqual(merged["1.20.4"], NEO_MANIFEST.versions["1.20.4"], "未探测条目必须原样带过去");
+assert.equal(merged["26.1"].available, true, "被探测的条目必须换成新结果");
+assert.deepEqual(Object.keys(carryUnprobedVersions(null, NEO_CFG, { "26.1": {} })), ["26.1"], "全量重跑不得继承 stale 条目");
+assert.equal(readPreviousVersions(new URL("../data/__no_such_manifest__.json", import.meta.url)), null, "缺失 manifest → null（不继承）");
+
+// ── #14 PowerShell gate 自检：证明它真的会失败（不投毒仓库文件）─────────────
+// 背景：本轮我自己引入过一次同类缺陷——给 scripts/sync-skills.ps1 加中文注释后，
+// Windows PowerShell 5.1 按 GBK 解码无 BOM 文件，多字节尾字节和紧跟的 ASCII 引号配成
+// 一对被吞掉 → 14 个 AST 解析错误，而所有按 UTF-8 读文本的检查照常通过。会不会出错取决
+// 于「引号之前累计字节数的奇偶」（"同" 炸、"同步" 不炸），文本层检查原理上看不见它。
+// 同理，neoforge 根档守卫只有实际执行 sync 才验得出来。所以本块跑真 gate、投真毒。
+const { spawnSync } = await import("node:child_process");
+const { mkdirSync, rmSync, rmdirSync, writeFileSync } = await import("node:fs");
+const { dirname, join: jpath } = await import("node:path");
+const { fileURLToPath } = await import("node:url");
+const GATE_SCRATCH = jpath(import.meta.dirname, "_debug_gate_selftest");
+/** 收掉空的伞目录：rmdir 对非空目录会失败，所以兄弟自检块还在时什么都不删。 */
+function dropIfEmpty(dir) {
+  try {
+    rmdirSync(dir);
+  } catch {
+    /* 非空或不存在：不碰 */
+  }
+}
+const PS_GATE = fileURLToPath(new URL("./scripts/assert-powershell.mjs", import.meta.url));
+const SYNC_PS = fileURLToPath(new URL("../scripts/sync-skills.ps1", import.meta.url));
+const GUARD = '$meta.Platform -eq "neoforge" -and -not $meta.Version';
+
+const psProbe = spawnSync("powershell.exe", ["-NoProfile", "-Command", "1"], {
+  encoding: "utf8",
+  windowsHide: true,
+});
+if (psProbe.status !== 0) {
+  console.log("skip: powershell.exe 不可用（assert-powershell 自检依赖 Windows PowerShell）");
+} else {
+  const syncSrc = readFileSync(SYNC_PS, "utf8");
+  assert.ok(syncSrc.includes(GUARD), "sync-skills.ps1 里的 neoforge 根档守卫不见了（R9 回归）");
+
+  // 假仓库根建在 mcp-server/_debug_gate_selftest/powershell/：`.gitignore` 已有的 `**/_debug*`
+  // 覆盖它，不需要为自检新增忽略规则。gate 从假根起算相对路径，所以 `_debug_` 那段不在
+  // 它遍历到的相对路径里，不会被 gate 自己的 SCRATCH 跳过规则误伤。
+  const FAKE_ROOT = jpath(GATE_SCRATCH, "powershell");
+  const buildFakeRoot = ({ poison, guarded }) => {
+    rmSync(FAKE_ROOT, { recursive: true, force: true });
+    const wf = (rel, text) => {
+      const abs = jpath(FAKE_ROOT, ...rel.split("/"));
+      mkdirSync(dirname(abs), { recursive: true });
+      writeFileSync(abs, text, "utf8");
+    };
+    wf("neoforge/.cursor/rules/00-test.mdc", "# rule\n");
+    wf("evil.ps1", poison ? 'Write-Host "同"\n' : 'Write-Host "sync"\n');
+    wf("scripts/sync-skills.ps1", guarded ? syncSrc : syncSrc.replace(GUARD, "$null"));
+    return FAKE_ROOT;
+  };
+  const runPsGate = (root) =>
+    spawnSync(process.execPath, [PS_GATE], {
+      env: { ...process.env, MC_SKILL_PS_TEST_ROOT: root },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  const cases = [
+    { poison: false, guarded: true },
+    { poison: true, guarded: true },
+    { poison: false, guarded: false },
+  ];
+  const results = [];
+  try {
+    for (const c of cases) {
+      const root = buildFakeRoot(c);
+      try {
+        results.push({ ...c, run: runPsGate(root) });
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    }
+  } finally {
+    // 只收自己的摊位（_debug_gate_selftest/powershell）；兄弟目录与仓库文件一律不碰。
+    rmSync(FAKE_ROOT, { recursive: true, force: true });
+    dropIfEmpty(GATE_SCRATCH);
+  }
+  const [clean, poisoned, unguarded] = results;
+  assert.equal(
+    clean.run.status,
+    0,
+    `gate 在干净根目录上也失败 = 自检无效（投毒永远「通过」）：\n${clean.run.stdout}${clean.run.stderr}`,
+  );
+  assert.notEqual(poisoned.run.status, 0, "gate 漏掉了无 BOM + 奇数字节 CJK 的 .ps1（PowerShell 5.1 解析错误类）");
+  assert.match(poisoned.run.stderr, /evil\.ps1.*解析错误/, `投毒未被点名：\n${poisoned.run.stderr}`);
+  assert.notEqual(unguarded.run.status, 0, "gate 漏掉了 sync-skills.ps1 根档守卫失效（一次 sync 复活 325 个已删投影）");
+  assert.match(unguarded.run.stderr, /REFUSE/, `未报「没有 REFUSE」：\n${unguarded.run.stderr}`);
+  assert.match(unguarded.run.stderr, /投影树/, `未报投影树泄漏：\n${unguarded.run.stderr}`);
+  console.log(
+    `  assert-powershell 自检: 干净=0 / 投毒=${poisoned.run.status} / 去守卫=${unguarded.run.status}`,
+  );
+}
+
+// ── #15 java-spawn-cwd gate 自检：证明它真的会失败（假包根，不碰 src/）───────
+// 背景（R10）：runJava 的 opts.cwd 是可选的，缺省继承 MCP 进程 cwd = 用户仓库。
+// VineFlower / tiny-remapper 一旦把某个参数当相对输出路径，垃圾就落在人家仓库里——
+// 实测仓库根被写出整个 `--only=net/fabricmc/tinyremapper/Main/…`（85 个文件，同一
+// 时间戳）。修法是不改签名（调用点已经全部传对），改用静态 gate 钉住这个不变式。
+// 和 #14 同理：gate 只有被投毒过一次才算数。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-java-spawn-cwd.mjs", import.meta.url));
+  const FAKE_PKG = jpath(GATE_SCRATCH, "java-spawn");
+  const DECL = [
+    "export interface JavaRunResult { code: number | null; stdout: string; stderr: string; }",
+    "export async function runJava(",
+    "  args: string[],",
+    "  opts: { javaPath?: string | null; timeoutMs?: number; cwd?: string; env?: NodeJS.ProcessEnv } = {},",
+    "): Promise<JavaRunResult> {",
+    "  return { code: 0, stdout: \"\", stderr: \"\" };",
+    "}",
+    "",
+  ].join("\n");
+  const serviceSrc = (callTail, mapArg) => {
+    const lines = [
+      'import { ensureCachePaths } from "../cache.js";',
+      'import { runJava } from "../java/java-process.js";',
+      'import { remapperCli } from "./java-pipeline.js";',
+      "export async function step(gate: { cacheRoot: string; mappings: string }, cli: (a: string, b: string) => string[]) {",
+      "  const cache = ensureCachePaths(gate.cacheRoot);",
+      "  const tiny = ensureMojmapTiny(gate.mappings);",
+      `  const r = await runJava(cli("x", "y")${callTail});`,
+    ];
+    if (mapArg === null) {
+      lines.push("  return r.code;");
+    } else {
+      lines.push(`  const extra = remapperCli(["tr.jar"], "in.jar", "out.jar", ${mapArg}, "official", "named");`);
+      lines.push("  return r.code === null ? extra.length : r.code;");
+    }
+    lines.push("}", "");
+    return lines.join("\n");
+  };
+  const build = (callTail, mapArg = "tiny") => {
+    rmSync(FAKE_PKG, { recursive: true, force: true });
+    const wf = (rel, text) => {
+      const abs = jpath(FAKE_PKG, ...rel.split("/"));
+      mkdirSync(dirname(abs), { recursive: true });
+      writeFileSync(abs, text, "utf8");
+    };
+    wf("src/decompile/java/java-process.ts", DECL);
+    wf("src/decompile/services/pipeline.ts", serviceSrc(callTail, mapArg));
+  };
+  const runGate = (env) =>
+    spawnSync(process.execPath, [GATE], { env: { ...process.env, ...env }, encoding: "utf8", windowsHide: true });
+
+  try {
+    build(", { cwd: cache.root }");
+    const ok = runGate({ MC_SKILL_JAVA_GATE_TEST_PKG: FAKE_PKG });
+    assert.equal(ok.status, 0, `gate 在干净调用点上也失败 = 自检无效：\n${ok.stdout}${ok.stderr}`);
+    // 声明本身（export async function runJava）不是调用点：写 gate 时先错过一次。
+    assert.match(ok.stdout, /runJava 调用点 1 个/, `调用点计数把函数声明算进去了：\n${ok.stdout}`);
+    assert.match(ok.stdout, /remapperCli 调用点 1 个/, `映射检查没扫到调用点（已退化成空检查）：\n${ok.stdout}`);
+
+    // <mappings> 内联调用形态同样是合法来源，不能被「必须是已证明变量名」误伤。
+    build(", { cwd: cache.root }", 'ensureYarnTiny("yarn-1.20.1+build.10-mergedv2.jar")');
+    const inline = runGate({ MC_SKILL_JAVA_GATE_TEST_PKG: FAKE_PKG });
+    assert.equal(inline.status, 0, `内联 ensureYarnTiny(...) 被误判：\n${inline.stdout}${inline.stderr}`);
+
+    const cases = [
+      { tail: ", { timeoutMs: 1000 }", why: /没有 cwd/, name: "opts 缺 cwd" },
+      { tail: "", why: /未传 opts 对象/, name: "完全没有 opts" },
+      { tail: ", { cwd: process.cwd() }", why: /process\.cwd/, name: "cwd=用户仓库" },
+      { tail: ", { cwd: someOtherDir }", why: /不源自缓存根/, name: "cwd 非缓存根" },
+      // 真实血案：yarn 分支把下载目录里的 jar 路径直接当 <mappings> 喂 tiny-remapper。
+      {
+        tail: ", { cwd: cache.root }",
+        mapArg: "gate.mappings",
+        why: /<mappings>=gate\.mappings 不是 ensureYarnTiny/,
+        name: "映射参数不是 .tiny 产物",
+      },
+      // 规则本身也不能退化成空扫描：函数改名/正则失效时必须自己叫。
+      {
+        tail: ", { cwd: cache.root }",
+        mapArg: null,
+        why: /一个 remapperCli 调用点都没扫到/,
+        name: "remapperCli 扫描失效",
+      },
+    ];
+    for (const c of cases) {
+      build(c.tail, c.mapArg);
+      const r = runGate({ MC_SKILL_JAVA_GATE_TEST_PKG: FAKE_PKG });
+      assert.notEqual(r.status, 0, `gate 漏掉了「${c.name}」——用户仓库会重新变成 Java 工具的落盘目录`);
+      assert.match(r.stderr, c.why, `「${c.name}」未被点名：\n${r.stderr}`);
+    }
+
+    // 真树上必须通过，且真的扫到调用点：防 gate 路径写错退化成空检查。
+    const real = runGate({});
+    assert.equal(real.status, 0, `真树 gate 失败：\n${real.stdout}${real.stderr}`);
+    const realCount = Number((real.stdout.match(/runJava 调用点 (\d+) 个/) || [])[1] ?? 0);
+    assert.ok(realCount >= 5, `gate 只扫到 ${realCount} 个 runJava 调用点，多半是路径失效（它已退化成空检查）：\n${real.stdout}`);
+    const realRemap = Number((real.stdout.match(/remapperCli 调用点 (\d+) 个/) || [])[1] ?? 0);
+    assert.ok(realRemap >= 4, `gate 只扫到 ${realRemap} 个 remapperCli 调用点，映射检查多半已失效：\n${real.stdout}`);
+    console.log(
+      `  assert-java-spawn-cwd 自检: 干净=0 / ${cases.length} 种投毒全部失败 / 真树 ${realCount} 个 runJava + ${realRemap} 个 remapperCli 调用点通过`,
+    );
+  } finally {
+    rmSync(FAKE_PKG, { recursive: true, force: true });
+    dropIfEmpty(GATE_SCRATCH);
+  }
+}
+
+// ── #16 yarn-json-slurp gate 自检：证明收窄后的读文件规则仍然咬得住 ───────────
+// 该 gate 第 2 条原本写作 readFileSync(...yarn...)，会把「读 yarn jar」也算命中；
+// 反编译链路里 ensureYarnTiny 必须 readFileSync 一个 1.3MB 的 yarn mergedv2 jar，
+// 于是规则被收窄成 readFileSync(...yarn...json)。收窄是有代价的：一旦被证明的那条
+// 腿其实不再咬人，gate 就退化成装饰。所以这里跑真 gate + 投真毒。
+{
+  const GATE = fileURLToPath(new URL("./scripts/assert-no-yarn-json-slurp.mjs", import.meta.url));
+  const FAKE_SRC = jpath(GATE_SCRATCH, "yarn-slurp");
+  const build = (body) => {
+    rmSync(FAKE_SRC, { recursive: true, force: true });
+    mkdirSync(FAKE_SRC, { recursive: true });
+    writeFileSync(jpath(FAKE_SRC, "convert.ts"), body, "utf8");
+  };
+  const runGate = () =>
+    spawnSync(process.execPath, [GATE], {
+      env: { ...process.env, MC_SKILL_YARN_SLURP_GATE_SRC: FAKE_SRC },
+      encoding: "utf8",
+      windowsHide: true,
+    });
+
+  try {
+    build('import { readFileSync } from "node:fs";\nconst e = readZip(readFileSync(yarnJarPath));\nexport default e;\n');
+    const clean = runGate();
+    assert.equal(clean.status, 0, `gate 把「读 yarn jar」误判成 slurp JSON，反编译链路会被自己的规则挡死：\n${clean.stdout}${clean.stderr}`);
+
+    const cases = [
+      {
+        name: "字面量 yarn-mappings.json",
+        body: 'const o = JSON.parse(readFileSync(join(dataDir, "yarn-mappings.json"), "utf8"));\nexport default o;\n',
+        why: /yarn-mappings\\.json/,
+      },
+      {
+        name: "变量名暗示 yarn JSON",
+        body: 'const o = JSON.parse(readFileSync(yarnMappingsJson, "utf8"));\nexport default o;\n',
+        // 关键：必须仍被 readFileSync 那条（已收窄的）规则点名，不能只靠 JSON.parse 兜。
+        why: /readFileSync.*yarn.*json/i,
+      },
+    ];
+    for (const c of cases) {
+      build(c.body);
+      const r = runGate();
+      assert.notEqual(r.status, 0, `gate 漏掉了「${c.name}」——25.8MB 映射表会重新被读进运行时`);
+      assert.match(r.stderr, c.why, `「${c.name}」的 readFileSync 规则没咬住（说明收窄过头）：\n${r.stderr}`);
+    }
+    console.log(`  assert-no-yarn-json-slurp 自检: 读 yarn jar=0 / ${cases.length} 种 slurp 全部失败`);
+  } finally {
+    rmSync(FAKE_SRC, { recursive: true, force: true });
+    dropIfEmpty(GATE_SCRATCH);
+  }
+}
+
 console.log("script helper regression tests passed");

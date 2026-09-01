@@ -338,6 +338,9 @@ export const generateAddonManifestSchema = z.object({
   scriptEval: z.boolean().optional().describe("仅当需要 eval 时写入 capabilities: [script_eval]"),
   headerUuid: z.string().optional(),
   moduleUuid: z.string().optional(),
+  write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
+  confirmed: z.boolean().optional().describe("write=true 时必填 true"),
+  projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
 });
 
 function fakeUuid(_seed: string): string {
@@ -426,6 +429,9 @@ export function generateAddonManifest(args: z.infer<typeof generateAddonManifest
 export const generateBpEntitySchema = z.object({
   identifier: z.string().describe("如 demo:widget"),
   betaExplodeEvent: z.boolean().optional().describe("仅当用户点名方块爆炸等仍属 Beta 的事件"),
+  write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
+  confirmed: z.boolean().optional().describe("write=true 时必填 true"),
+  projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
 });
 
 export function generateBpEntity(args: z.infer<typeof generateBpEntitySchema>): Record<string, unknown> {

@@ -45,15 +45,24 @@ let failures = 0;
 let passed = 0;
 
 function test(name, fn) {
+  let r;
   try {
-    fn();
-    passed++;
-    console.log(`  ✔ ${name}`);
+    r = fn();
   } catch (e) {
     failures++;
     console.error(`  ✘ ${name}`);
     console.error(`      ${e.message.split("\n").join("\n      ")}`);
+    return;
   }
+  if (r && typeof r.then === "function") {
+    failures++;
+    console.error(`  ✘ ${name}`);
+    console.error(`      async 用例被交给同步 test()：断言永不按序执行。改用 testAsync(...)`);
+    r.catch(() => {});
+    return;
+  }
+  passed++;
+  console.log(`  ✔ ${name}`);
 }
 
 async function testAsync(name, fn) {

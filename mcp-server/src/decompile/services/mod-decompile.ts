@@ -24,12 +24,18 @@ import {
   isPathInside,
 } from "../cache.js";
 import { probeJava, runJava, toolchainActionable, skipDownloadsEnabled, downloadDisabledActionable } from "../java/java-process.js";
-import { ensureResourceJar, VINEFLOWER_DEF, TINY_REMAPPER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
+import { ensureResourceJar, ensureTinyRemapperJars, VINEFLOWER_DEF, DownloadDisabledError } from "../downloaders/resources.js";
 import { downloadFile, DownloadError } from "../downloaders/http.js";
 import { resolveYarnMappings, mappingCacheViable } from "../downloaders/yarn.js";
 import { resolveMojangVersion } from "../downloaders/mojang.js";
 import { analyzeModJar } from "./mod-analyzer.js";
-import { assertVineflowerDiskSpace, ensureMojmapTiny, remapperCli } from "./java-pipeline.js";
+import {
+  assertVineflowerDiskSpace,
+  ensureMojmapTiny,
+  ensureYarnTiny,
+  remapperCli,
+  vineflowerCli,
+} from "./java-pipeline.js";
 
 export interface DecompileModJarArgs {
   jarPath: string;
@@ -286,7 +292,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     if (vi.valid && vi.supported && !vi.unobfuscated) {
       const mapping: MappingChoice = args.mapping === "mojmap" ? "mojmap" : "yarn";
       try {
-        const tiny = await ensureResourceJar(TINY_REMAPPER_DEF, { cacheRoot: cache.root });
+        const tinyJars = await ensureTinyRemapperJars({ cacheRoot: cache.root });
         // 缓存键：yarn 用 yarn-named（两步最终产物），避免命中旧单步 official→intermediary 的
         // `mod-*-yarn.jar`（仅 intermediary 名）。中间步独立键 yarn-intermediary。
         const remapStem =
@@ -304,7 +310,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
           let mappings: string;
           if (mapping === "yarn") {
             const info = await resolveYarnMappings(args.version);
-            const yarnPath = join(cache.mappings, `yarn-${args.version}.jar`);
+            const yarnPath = join(cache.mappings, `yarn-${args.version}-mergedv2.jar`);
             if (!mappingCacheViable(cache.root, yarnPath, `mc-mappings:${args.version}:yarn`)) {
               const dl = await downloadFile(info.jarUrl, yarnPath, {
                 label: `yarn mappings ${info.build}`,
@@ -321,7 +327,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
                 db.close();
               }
             }
-            mappings = yarnPath;
+            mappings = ensureYarnTiny(yarnPath);
           } else {
             const entry = await resolveMojangVersion(args.version);
             if (!entry.clientMappingsUrl) {
@@ -355,13 +361,15 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
               throw new Error("remap 中间路径逃出 remapped 缓存目录");
             }
             const r1 = await runJava(
-              remapperCli(tiny, args.jarPath, step1, mappings, "official", "intermediary"),
+              remapperCli(tinyJars, args.jarPath, step1, mappings, "official", "intermediary"),
+              { cwd: cache.root },
             );
             if (r1.code !== 0) {
               throw new Error(`模组 remap 失败 step1 official→intermediary(code=${r1.code}): ${tail(r1.stderr)}`);
             }
             const r2 = await runJava(
-              remapperCli(tiny, step1, remappedJar, mappings, "intermediary", "named"),
+              remapperCli(tinyJars, step1, remappedJar, mappings, "intermediary", "named"),
+              { cwd: cache.root },
             );
             if (r2.code !== 0) {
               throw new Error(`模组 remap 失败 step2 intermediary→named(code=${r2.code}): ${tail(r2.stderr)}`);
@@ -369,7 +377,8 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
           } else {
             const tinyMappings = await ensureMojmapTiny(mappings);
             const r = await runJava(
-              remapperCli(tiny, args.jarPath, remappedJar, tinyMappings, "official", "named"),
+              remapperCli(tinyJars, args.jarPath, remappedJar, tinyMappings, "official", "named"),
+              { cwd: cache.root },
             );
             if (r.code !== 0) {
               throw new Error(`模组 remap 失败(code=${r.code}): ${tail(r.stderr)}`);
@@ -392,7 +401,7 @@ export async function decompileModJar(args: DecompileModJarArgs): Promise<ModDec
     const vineflower = await ensureResourceJar(VINEFLOWER_DEF, { cacheRoot: cache.root });
     mkdirSync(outDir, { recursive: true });
     assertVineflowerDiskSpace(outDir, inputJar);
-    const r = await runJava(["-jar", vineflower, "-dgs=1", "-asc=1", inputJar, outDir]);
+    const r = await runJava(vineflowerCli(vineflower, inputJar, outDir), { cwd: cache.root });
     if (r.code !== 0) {
       return withAction(
         { found: false, error: "DECOMPILE_FAILED", modId, outputDir: outDir },

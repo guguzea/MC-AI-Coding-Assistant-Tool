@@ -340,8 +340,25 @@ dependencies { minecraft 'net.minecraftforge:forge:1.20.1-47.2.0' }`,
     note("warn", "analyze_porting_path", "referenceLinks include 26.1 while target is fabric 1.20.1", links.map((x) => x.title));
   }
   const steps = a?.routeSteps ?? [];
-  if (a?.target?.platform === "fabric" && steps.some((s) => /验证.*neoforge|neoforge.*验证/i.test(s))) {
+  // routeSteps 契约 = string[]。这里曾写 `typeof s === "string" ? s : s?.text ?? ""` 双形态兜底，
+  // 正是它让「改成对象数组」的契约破坏静默通过；形状一变直接报 error。
+  if (steps.some((s) => typeof s !== "string")) {
+    note("error", "analyze_porting_path", "routeSteps must be string[] (contract drift)", steps);
+  }
+  if (a?.target?.platform === "fabric" && steps.some((s) => /验证.*neoforge|neoforge.*验证/i.test(String(s)))) {
     note("warn", "analyze_porting_path", "fabric target still instructs verify neoforge module", steps);
+  }
+  if (!Array.isArray(a?.nextSteps) || a.nextSteps.length !== steps.length) {
+    note("error", "analyze_porting_path", "nextSteps 缺失或与 routeSteps 不平行", {
+      nextSteps: a?.nextSteps,
+      routeSteps: steps,
+    });
+  } else {
+    for (const ns of a.nextSteps) {
+      if (ns.tool && (typeof ns.args !== "object" || ns.args === null)) {
+        note("error", "analyze_porting_path", `nextSteps.${ns.tool} 缺可调用 args`, ns);
+      }
+    }
   }
 
   step("port_project");

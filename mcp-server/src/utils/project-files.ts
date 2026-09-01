@@ -5,6 +5,7 @@
 import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
 import { actionable, type ActionEnvelope } from "./actionable.js";
+import { isInsideReal } from "./project-sandbox.js";
 
 /** 扫描时跳过的常见构建 / IDE / 依赖目录 */
 export const PROJECT_SCAN_SKIP_DIRS = new Set([
@@ -90,6 +91,12 @@ export function walkProjectFiles(
 ): string[] {
   const out: string[] = [];
   const seen = new Set<string>();
+  let rootReal: string;
+  try {
+    rootReal = realpathSync(root);
+  } catch {
+    return out;
+  }
   const walk = (dir: string, depth: number) => {
     if (depth > maxDepth || out.length >= maxFiles) return;
     let real: string;
@@ -98,6 +105,9 @@ export function walkProjectFiles(
     } catch {
       return;
     }
+    // 环检测之外还必须限制在工程内：指向工程外的符号链接若跟进去，
+    // 家目录等处的文件会被当成工程文件枚举并被调用方读取。
+    if (!isInsideReal(real, rootReal)) return;
     if (seen.has(real)) return;
     seen.add(real);
     let entries;

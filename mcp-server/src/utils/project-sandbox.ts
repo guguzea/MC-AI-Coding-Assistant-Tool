@@ -60,9 +60,13 @@ export function isInsideReal(childReal: string, parentReal: string): boolean {
  * 写盘 allowlist 根：MC_SKILL_PROJECT_ROOT 为硬边界（AND 口径，与 port_project/resolveAllowRoot 一致）。
  * - 设置了 MC_SKILL_PROJECT_ROOT：explicitRoot（projectPath）必须落在 env root 内，否则拒绝（破坏性变更）。
  * - 未设置 env：保持 explicitRoot 自身作为根（供平台包写入用户模组工程）。
+ *   `requireEnvRoot` 会关掉这条兜底——generate_* 的 projectPath 完全由模型给，单参数即写盘等于只有一道守卫。
  * 仍要求 MC_SKILL_ALLOW_WRITE=1。
  */
-export function resolveWriteAllowRoot(explicitRoot?: string): string {
+export function resolveWriteAllowRoot(
+  explicitRoot?: string,
+  opts?: { requireEnvRoot?: boolean },
+): string {
   if (process.env.MC_SKILL_ALLOW_WRITE !== "1") {
     throw new ProjectPathError(
       "写操作已禁用。设置环境变量 MC_SKILL_ALLOW_WRITE=1，并以 dryRun=false 且 confirmed=true 执行。",
@@ -71,6 +75,13 @@ export function resolveWriteAllowRoot(explicitRoot?: string): string {
   }
 
   const envRoot = (process.env.MC_SKILL_PROJECT_ROOT || "").trim();
+  if (!envRoot && opts?.requireEnvRoot) {
+    throw new ProjectPathError(
+      "该写操作要求显式设置 MC_SKILL_PROJECT_ROOT（绝对路径）作为硬边界；" +
+        "只传 projectPath 不足以放行——projectPath 由调用方/模型给出，与写盘根同义时沙箱形同虚设。",
+      "PROJECT_ROOT_REQUIRED",
+    );
+  }
   if (envRoot) {
     if (!isAbsolute(envRoot)) {
       throw new ProjectPathError(

@@ -13,7 +13,7 @@
 import assert from "node:assert/strict";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, deflateRawSync } from "node:zlib";
 import { decompileDegradation } from "./dist/decompile/services/mod-decompile.js";
@@ -122,16 +122,47 @@ side="BOTH"
 
 let passed = 0;
 let failed = 0;
+
+/**
+ * 同步断言用例。fn() 返回 thenable 一律判失败：`test(name, async () => ...)` 若只
+ * `fn(); passed+=1;` 就会假绿——断言在别人的用例之后才执行（tmpRoot 已删、锁顺序打乱），
+ * 失败时还会以 unhandledRejection 崩掉整个套件。async 用例写 `await atest(...)`。
+ */
 function test(name, fn) {
+  let result;
   try {
-    fn();
+    result = fn();
+  } catch (err) {
+    failed += 1;
+    console.error(`  FAIL ${name}\n      ${err?.message ?? err}`);
+    return;
+  }
+  if (result && typeof result.then === "function") {
+    failed += 1;
+    console.error(
+      `  FAIL ${name}\n      async 用例被交给同步 test()：断言永不按序执行。改成 await atest(...)`,
+    );
+    result.catch(() => {
+      /* 吞掉浮动 rejection，让套件跑完并如实汇总，而不是崩在半路 */
+    });
+    return;
+  }
+  passed += 1;
+  console.log(`  ok  ${name}`);
+}
+
+/** 异步断言用例：调用方必须 `await`，否则后续清理（rmSync tmpRoot）会抢在断言之前。 */
+async function atest(name, fn) {
+  try {
+    await fn();
     passed += 1;
     console.log(`  ok  ${name}`);
   } catch (err) {
     failed += 1;
-    console.error(`  FAIL ${name}\n      ${err.message}`);
+    console.error(`  FAIL ${name}\n      ${err?.message ?? err}`);
   }
 }
+
 function section(title) {
   console.log(`\n=== ${title} ===`);
 }
@@ -202,7 +233,7 @@ section("version-manager");
 // ── 2. cache ─────────────────────────────────────────────────────────────────
 section("cache");
 {
-  const { resolveCacheRoot, ensureCachePaths, openCacheDb, setMeta, getMeta, acquireCacheLock, normalizeArtifactPath, sanitizeCacheSegment, isPathInside, listLocks } = await import(
+  const { resolveCacheRoot, ensureCachePaths, openCacheDb, setMeta, getMeta, acquireCacheLock, normalizeArtifactPath, sanitizeCacheSegment, isPathInside, listLocks, lockDirOf, sanitizeLockName } = await import(
     "./dist/decompile/cache.js"
   );
 
@@ -248,7 +279,7 @@ section("cache");
     db.close();
   });
 
-  test("acquireCacheLock: second acquire on same key is busy, release frees", async () => {
+  await atest("acquireCacheLock: second acquire on same key is busy, release frees", async () => {
     const release = await acquireCacheLock(tmpRoot, "test-key", 2000);
     await assert.rejects(
       () => acquireCacheLock(tmpRoot, "test-key", 50),
@@ -260,29 +291,67 @@ section("cache");
     release2();
   });
 
-  test("acquireCacheLock: stale lock taken over via rename; live heartbeat lock is not", async () => {
-    const { touchCacheLock } = await import("./dist/decompile/cache.js");
-    // 人工构造陈旧锁（owner.at 远超 timeout，模拟持锁进程死亡）→ 应被 rename 抢占
-    const staleDir = join(tmpRoot, "locks", "stale-key");
-    mkdirSync(staleDir, { recursive: true });
-    writeFileSync(
-      join(staleDir, "owner.json"),
-      JSON.stringify({ pid: 999999, at: Date.now() - 60_000 }),
-    );
-    const release = await acquireCacheLock(tmpRoot, "stale-key", 1000);
-    release();
+  await atest("acquireCacheLock: 陈旧锁经 rename CAS 抢占（夹具必须落在真实哈希锁目录）", async () => {
+    const name = "stale-key";
+    const staleDir = lockDirOf(tmpRoot, name);
+    // 假绿防线：旧夹具写 locks/<name>，被测代码看的是 locks/<name>_<hash> → 从未触达
+    assert.notEqual(basename(staleDir), name, "锁目录名必须带 sha1 后缀");
+    assert.ok(!existsSync(join(tmpRoot, "locks", name)), "裸名目录不得存在（存在即夹具写错路径）");
 
-    // 活锁（owner.at 新鲜）即使 mtime 旧也不得被抢；touchCacheLock 续租
-    const liveDir = join(tmpRoot, "locks", "live-key");
+    mkdirSync(staleDir, { recursive: true });
+    writeFileSync(join(staleDir, "owner.json"), JSON.stringify({ pid: 999999, at: Date.now() - 60_000 }));
+    // 抢占走 rename→复核→rmSync→mkdir：哨兵文件必须随旧目录一起消失
+    writeFileSync(join(staleDir, "SENTINEL"), "prev-holder", "utf8");
+
+    const release = await acquireCacheLock(tmpRoot, name, 1000);
+    try {
+      assert.ok(!existsSync(join(staleDir, "SENTINEL")), "旧锁目录未被丢弃 → 抢占路径没有真正执行");
+      const owner = JSON.parse(readFileSync(join(staleDir, "owner.json"), "utf8"));
+      assert.equal(owner.pid, process.pid, "新持有者未写 owner.json");
+    } finally {
+      release();
+    }
+    assert.ok(!existsSync(staleDir), "release 必须删除锁目录");
+  });
+
+  await atest("acquireCacheLock: owner.at 新鲜即活锁，目录 mtime 很旧也不得被抢", async () => {
+    const name = "live-key";
+    const liveDir = lockDirOf(tmpRoot, name);
     mkdirSync(liveDir, { recursive: true });
-    writeFileSync(join(liveDir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() }));
-    touchCacheLock("live-key", tmpRoot);
+    writeFileSync(join(liveDir, "owner.json"), JSON.stringify({ pid: 999999, at: Date.now() }));
+    // mtime 倒退 1h：只看 mtime 的判陈旧实现会误抢，并把别人的锁 rename 走
+    const { utimesSync } = await import("node:fs");
+    const back = new Date(Date.now() - 3_600_000);
+    utimesSync(liveDir, back, back);
+
     await assert.rejects(
-      () => acquireCacheLock(tmpRoot, "live-key", 30_000),
+      () => acquireCacheLock(tmpRoot, name, 30_000),
       (err) => err && err.code === "CACHE_LOCK_BUSY",
-      "live lock with fresh owner.at must not be taken over",
+      "owner.at 新鲜的活锁不得被抢占",
+    );
+    assert.ok(existsSync(liveDir), "被拒的获取方不得破坏持有者的锁目录");
+    assert.equal(
+      JSON.parse(readFileSync(join(liveDir, "owner.json"), "utf8")).pid,
+      999999,
+      "被拒的获取方不得改写 owner.json",
     );
     rmSync(liveDir, { recursive: true, force: true });
+  });
+
+  await atest("touchCacheLock 续租真实锁目录；release 后不得残留心跳", async () => {
+    const { touchCacheLock } = await import("./dist/decompile/cache.js");
+    const name = "hb-key";
+    const dir = lockDirOf(tmpRoot, name);
+    const release = await acquireCacheLock(tmpRoot, name, 5_000);
+    try {
+      writeFileSync(join(dir, "owner.json"), JSON.stringify({ pid: process.pid, at: Date.now() - 400_000 }));
+      touchCacheLock(name, tmpRoot);
+      const at = JSON.parse(readFileSync(join(dir, "owner.json"), "utf8")).at;
+      assert.ok(Date.now() - at < 5_000, `续租没写回真实锁目录：age=${Date.now() - at}ms`);
+    } finally {
+      release();
+    }
+    assert.ok(!existsSync(dir), "release 后锁目录残留");
   });
 
   test("E15 normalizeArtifactPath collapses Win case/slash", () => {
@@ -309,12 +378,20 @@ section("cache");
     assert.equal(p.decompiledMods.endsWith("decompiled-mods") || p.decompiledMods.endsWith("decompiled-mods\\") || /decompiled-mods$/.test(p.decompiledMods.replace(/\\/g, "/")), true);
   });
 
-  test("E3 lock name .. does not escape locks/", async () => {
+  await atest("E3 lock name .. does not escape locks/", async () => {
+    // 命名层直接锁死：`..` / `.` / `a/../../b` 必须折成 invalid_<hash>，不得成为目录名
+    for (const bad of ["..", ".", "../..", "a/../../b", "..\\..\\x"]) {
+      const nm = sanitizeLockName(bad);
+      assert.ok(nm.startsWith("invalid_"), `${bad} → ${nm} 未落到 invalid_ 前缀`);
+      assert.ok(!nm.includes("..") && !nm.includes("/") && !nm.includes("\\"), `${bad} → ${nm} 含穿越字符`);
+    }
+    assert.ok(sanitizeLockName("1.20.1").startsWith("1.20.1_"), "合法版本段应保留可读前缀");
     const release = await acquireCacheLock(tmpRoot, "..", 2000);
     try {
       const locks = listLocks(tmpRoot);
       assert.ok(locks.every((n) => n !== ".." && n !== "." && !n.startsWith("..")), JSON.stringify(locks));
       assert.ok(locks.some((n) => n.startsWith("invalid_")), JSON.stringify(locks));
+      assert.ok(isPathInside(join(tmpRoot, "locks"), lockDirOf(tmpRoot, "..")), "锁目录必须落在 locks/ 内");
     } finally {
       release();
     }
@@ -535,7 +612,7 @@ section("java-process");
     assert.equal(parseJavaVersionOutput("no version here"), null);
   });
 
-  test("probeJava on this machine is honest about major", async () => {
+  await atest("probeJava on this machine is honest about major", async () => {
     const probe = await probeJava(true);
     if (probe.ready) {
       assert.ok(probe.major !== null && probe.major >= 17, JSON.stringify(probe));
@@ -697,6 +774,310 @@ test("正常重映射 → 无降级标记", () => {
   assert.equal(r.degraded, false);
   assert.deepEqual(r.warnings, []);
 });
+
+// ── #10 java 工具链 argv / 依赖 classpath / 空映射防护（R1·R2·R10 回归锁）──────
+// 实测依据（本机 VineFlower 1.10.1 + tiny-remapper 0.14.0）：
+//  - `--only=` 放在 destination 之后 → VineFlower 输出 0 个文件（定向反编译形同不存在，每次都全量兜底）
+//  - thin tiny-remapper `java -jar` 真实 remap → ClassNotFoundException；`-cp 主 jar + 6 依赖` → 类与方法均正确改名
+//  - 只含 header 的 Tiny v2 → tiny-remapper **退出码 0**，产出的 jar 名称仍然混淆
+section("java-pipeline argv / remapper classpath / mojmap tiny guard");
+{
+  const { delimiter } = await import("node:path");
+  const { mkdtempSync, utimesSync } = await import("node:fs");
+  const {
+    remapperCli,
+    classpathOf,
+    vineflowerCli,
+    ensureMojmapTiny,
+    TINY_REMAPPER_MAIN,
+  } = await import("./dist/decompile/services/java-pipeline.js");
+  const {
+    TINY_REMAPPER_DEF,
+    TINY_REMAPPER_CLASSPATH_DEFS,
+    VINEFLOWER_DEF,
+    MAPPING_IO_DEF,
+  } = await import("./dist/decompile/downloaders/resources.js");
+
+  const tempCase = (label) => mkdtempSync(join(tmpdir(), `mc-dc-${label}-`));
+  const VF = "/cache/resources/vineflower-1.10.1.jar";
+  const JAR = "/cache/remapped/minecraft-1.20.1-mojmap.jar";
+  const OUT = "/cache/decompiled/1.20.1/mojmap";
+  const MAIN = "/cache/resources/tiny-remapper-0.14.0.jar";
+  const DEPS = TINY_REMAPPER_CLASSPATH_DEFS.map((d) => `/cache/resources/${d.id}-${d.version}.jar`);
+
+  await atest("remapper 走 -cp（thin jar 绝不能 java -jar）", () => {
+    const args = remapperCli([MAIN, ...DEPS], "/in.jar", "/out.jar", "/m.tiny", "official", "named");
+    assert.equal(args[0], "-cp", `必须 -cp 启动，实际: ${JSON.stringify(args)}`);
+    assert.ok(!args.includes("-jar"), "java -jar 加载不到 ASM/mapping-io，真实 remap 会 ClassNotFound");
+    assert.equal(args[2], TINY_REMAPPER_MAIN);
+    assert.ok(!args.some((a) => a.includes("forceLocal")), "0.14.0 已删除 --forceLocal");
+  });
+
+  await atest("-cp 含主 jar 与全部依赖，主 jar 在前", () => {
+    const args = remapperCli([MAIN, ...DEPS], "/in.jar", "/out.jar", "/m.tiny", "official", "named");
+    const cp = args[1].split(delimiter);
+    assert.equal(cp[0], MAIN, "主 jar 必须在最前");
+    for (const dep of DEPS) assert.ok(cp.includes(dep), `classpath 缺依赖 ${dep}`);
+    assert.equal(cp.length, 1 + TINY_REMAPPER_CLASSPATH_DEFS.length);
+  });
+
+  await atest("位置参数按 usage 行顺序，flag 收尾", () => {
+    const args = remapperCli([MAIN, ...DEPS], "/in.jar", "/out.jar", "/m.tiny", "official", "named");
+    assert.deepEqual(args.slice(3), ["/in.jar", "/out.jar", "/m.tiny", "official", "named", "--ignoreConflicts"]);
+  });
+
+  await atest("空 jar 列表必须拒绝（防止退回 thin jar 单跑）", () => {
+    assert.throws(() => remapperCli([], "/in.jar", "/out.jar", "/m.tiny", "official", "named"));
+  });
+
+  await atest("classpath 分隔符按平台（写死 ':' 在 Windows 静默失效）", () => {
+    assert.equal(classpathOf(["a.jar", "b.jar"]), `a.jar${delimiter}b.jar`);
+  });
+
+  await atest("tiny-remapper 钉回 0.14.0 thin：缓存文件名与既有工件一致", () => {
+    assert.equal(TINY_REMAPPER_DEF.version, "0.14.0");
+    assert.equal(`${TINY_REMAPPER_DEF.id}-${TINY_REMAPPER_DEF.version}.jar`, "tiny-remapper-0.14.0.jar");
+    assert.ok(TINY_REMAPPER_DEF.url.endsWith("/tiny-remapper-0.14.0.jar"), TINY_REMAPPER_DEF.url);
+    assert.ok(!TINY_REMAPPER_DEF.url.includes("-fat"), "fat jar 已弃用");
+  });
+
+  await atest("依赖清单齐全（asm×5 + mapping-io），钉值均为 https + 64hex", () => {
+    const ids = TINY_REMAPPER_CLASSPATH_DEFS.map((d) => d.id);
+    for (const want of ["asm", "asm-commons", "asm-tree", "asm-analysis", "asm-util", "mapping-io"]) {
+      assert.ok(ids.includes(want), `缺依赖 ${want}（实测缺一即 NoClassDefFoundError）`);
+    }
+    assert.equal(MAPPING_IO_DEF.id, "mapping-io");
+    for (const d of [VINEFLOWER_DEF, TINY_REMAPPER_DEF, ...TINY_REMAPPER_CLASSPATH_DEFS]) {
+      assert.match(d.sha256, /^[0-9a-f]{64}$/, `${d.id} sha256 非法`);
+      assert.ok(d.url.startsWith("https://"), `${d.id} 必须 https`);
+      assert.ok(d.url.endsWith(`/${d.id}-${d.version}.jar`), `${d.id} url 与 id/version 不符`);
+    }
+  });
+
+  await atest("vineflowerCli：--only 必须在 source/destination 之前", () => {
+    const args = vineflowerCli(VF, JAR, OUT, "net/minecraft/world/item/ItemStack");
+    const only = args.findIndex((a) => a.startsWith("--only="));
+    assert.ok(only >= 0, "定向反编译必须带 --only");
+    assert.equal(args[only], "--only=net/minecraft/world/item/ItemStack");
+    assert.ok(only < args.indexOf(JAR), "--only 必须在 jar 之前（放后面输出 0 文件）");
+    assert.ok(only < args.indexOf(OUT), "--only 必须在 outDir 之前");
+    assert.ok(args.indexOf(JAR) < args.indexOf(OUT), "usage: <source>... <destination>");
+    assert.equal(args[0], "-jar");
+  });
+
+  await atest("vineflowerCli：全量兜底不含 --only", () => {
+    const args = vineflowerCli(VF, JAR, OUT);
+    assert.ok(!args.some((a) => a.startsWith("--only")), `全量反编译不应带 --only: ${JSON.stringify(args)}`);
+    assert.deepEqual(args.slice(-2), [JAR, OUT]);
+  });
+
+  await atest("ensureMojmapTiny：空 ProGuard 映射 → MAPPINGS_EMPTY 且不留残缺 .tiny", async () => {
+    const txt = join(tempCase("empty-map"), "mojmap-9.9.9.txt");
+    writeFileSync(txt, "# 只有注释，没有任何类行\n\n", "utf8");
+    await assert.rejects(
+      async () => ensureMojmapTiny(txt),
+      (err) => err.code === "MAPPINGS_EMPTY" && /MAPPINGS_EMPTY/.test(err.message),
+    );
+    assert.ok(!existsSync(txt.replace(/\.txt$/i, ".tiny")), "拒绝后不得留下会被下次当命中的空 Tiny");
+  });
+
+  await atest("ensureMojmapTiny：正常映射产出含类行的 Tiny", async () => {
+    const txt = join(tempCase("good-map"), "mojmap-1.20.1.txt");
+    writeFileSync(
+      txt,
+      "net.minecraft.world.item.Item -> awu:\n    1:1:net.minecraft.world.item.ItemStack getDefaultInstance() -> a\n",
+      "utf8",
+    );
+    const tiny = await ensureMojmapTiny(txt);
+    assert.ok(tiny.endsWith(".tiny"));
+    assert.match(readFileSync(tiny, "utf8"), /^c\tawu\tnet\/minecraft\/world\/item\/Item$/m, "类映射丢失");
+  });
+
+  await atest("ensureMojmapTiny：header-only 缓存必须重算，不能当命中", async () => {
+    const txt = join(tempCase("stale-tiny"), "mojmap-1.20.1.txt");
+    writeFileSync(txt, "net.minecraft.world.item.Item -> awu:\n", "utf8");
+    const tiny = txt.replace(/\.txt$/i, ".tiny");
+    writeFileSync(tiny, "tiny\t2\t0\tofficial\tnamed\n", "utf8");
+    const future = new Date(Date.now() + 60_000);
+    utimesSync(tiny, future, future); // mtime 比 .txt 更新：旧实现只看 size>0 就会当命中
+    const got = await ensureMojmapTiny(txt);
+    assert.equal(got, tiny);
+    assert.match(readFileSync(tiny, "utf8"), /^c\t/m, "残缺 Tiny 被复用了");
+  });
+}
+
+{
+  const { pickYarnBuild, resolveYarnMappings } = await import("./dist/decompile/downloaders/yarn.js");
+  // yarn maven 只有一个顶层 maven-metadata.xml，build 平铺成 `<MCver>+build.<n>`。
+  const META = `<metadata><groupId>net.fabricmc</groupId><artifactId>yarn</artifactId><versioning>
+<latest>1.21.9+build.2</latest><release>1.21.9+build.2</release><versions>
+<version>1.20.1+build.1</version>
+<version>1.20.1+build.10</version>
+<version>1.20.1+build.9</version>
+<version>1.20.11+build.3</version>
+<version>1.21.1+build.3</version>
+<version>1.21.9+build.2</version>
+</versions><lastUpdated>20260101</lastUpdated></versioning></metadata>`;
+
+  await atest("pickYarnBuild：按 build 数值取最大，不按字符串序/列表尾", () => {
+    assert.equal(pickYarnBuild(META, "1.20.1"), "1.20.1+build.10");
+    assert.notEqual(pickYarnBuild(META, "1.20.1"), "1.20.1+build.9", "字符串序会把 build.9 当最新");
+  });
+
+  await atest("pickYarnBuild：<latest> 是全局最新，不得顶替本 MC 版本的 build", () => {
+    assert.notEqual(pickYarnBuild(META, "1.20.1"), "1.21.9+build.2");
+    assert.equal(pickYarnBuild(META, "1.21.1"), "1.21.1+build.3");
+  });
+
+  await atest("pickYarnBuild：前缀相同的邻版（1.20.11）不串味；无 yarn 返回 null", () => {
+    assert.equal(pickYarnBuild(META, "1.20.11"), "1.20.11+build.3");
+    assert.equal(pickYarnBuild(META, "1.19.4"), null);
+  });
+
+  await atest("pickYarnBuild：允许调用方直接点名完整 build", () => {
+    assert.equal(pickYarnBuild(META, "1.20.1+build.1"), "1.20.1+build.1");
+  });
+
+  await atest("resolveYarnMappings：元数据走顶层，jar 落在全版本号目录（旧路径恒 404）", async () => {
+    const seen = [];
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      seen.push(String(url));
+      const u = String(url);
+      if (u === "https://maven.fabricmc.net/net/fabricmc/yarn/maven-metadata.xml") {
+        return { ok: true, status: 200, text: async () => META };
+      }
+      if (u.endsWith(".sha256")) {
+        return { ok: true, status: 200, text: async () => `${"a".repeat(64)}  yarn-v2.jar` };
+      }
+      return { ok: false, status: 404, text: async () => "" };
+    };
+    try {
+      const info = await resolveYarnMappings("1.20.1");
+      assert.equal(info.build, "1.20.1+build.10");
+      assert.equal(
+        info.jarUrl,
+        "https://maven.fabricmc.net/net/fabricmc/yarn/1.20.1+build.10/yarn-1.20.1+build.10-mergedv2.jar",
+        info.jarUrl,
+      );
+      assert.equal(info.sha256, "a".repeat(64));
+      assert.ok(
+        !seen.some((u) => /yarn\/1\.20\.1\/maven-metadata\.xml/.test(u)),
+        `又去要 per-version 元数据了：${JSON.stringify(seen)}`,
+      );
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
+  await atest("resolveYarnMappings：本版无 build 时报 MAPPINGS_NOT_FOUND 而不是打下一个版本", async () => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = async () => ({ ok: true, status: 200, text: async () => META });
+    try {
+      await assert.rejects(() => resolveYarnMappings("1.19.4"), /MAPPINGS_NOT_FOUND|1\.19\.4/);
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+
+  await atest("resolveYarnMappings：无 .sha256/.sha1 sidecar 拒绝下载（yarn 哈希随 build 变，不能裸下）", async () => {
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = async (url) => {
+      if (String(url).endsWith("maven-metadata.xml")) {
+        return { ok: true, status: 200, text: async () => META };
+      }
+      return { ok: false, status: 404, text: async () => "" };
+    };
+    try {
+      await assert.rejects(
+        () => resolveYarnMappings("1.20.1"),
+        /MAPPINGS_CHECKSUM_MISSING|sidecar/,
+        "无校验 sidecar 仍返回了可下载 URL",
+      );
+    } finally {
+      globalThis.fetch = realFetch;
+    }
+  });
+}
+
+{
+  const { ensureYarnTiny, remapperCli } = await import("./dist/decompile/services/java-pipeline.js");
+  const { mkdtempSync, statSync, utimesSync } = await import("node:fs");
+  const MERGED =
+    "tiny\t2\t0\tofficial\tintermediary\tnamed\n" +
+    "c\ta\tnet/minecraft/class_7833\tnet/minecraft/util/math/RotationAxis\n";
+  const caseDir = (label) => mkdtempSync(join(tmpdir(), `mc-yarn-${label}-`));
+  const jarWith = (label, tinyText) => {
+    const dir = caseDir(label);
+    const p = join(dir, "yarn-1.20.1.jar");
+    writeFileSync(p, makeZip([{ name: "META-INF/MANIFEST.MF", data: "Manifest-Version: 1.0\n" },
+      { name: "mappings/mappings.tiny", data: tinyText, deflate: true }]));
+    return p;
+  };
+
+  await atest("ensureYarnTiny：交棒给 remapper 的必须是解出的 .tiny（jar 会被 mapping-io 判非法格式）", () => {
+    const jar = jarWith("ok", MERGED);
+    const tiny = ensureYarnTiny(jar);
+    assert.ok(tiny.endsWith(".tiny") && !tiny.endsWith(".jar"), `返回了 ${tiny}`);
+    assert.equal(readFileSync(tiny, "utf8"), MERGED);
+    const hitMtime = statSync(tiny).mtimeMs;
+    assert.equal(ensureYarnTiny(jar), tiny, "二次调用没命中缓存");
+    assert.equal(statSync(tiny).mtimeMs, hitMtime, "命中缓存却重写了 .tiny");
+  });
+
+  await atest("ensureYarnTiny：jar 比 .tiny 新必须重解，不能复用陈旧副本", () => {
+    const jar = jarWith("stale", MERGED);
+    const tiny = ensureYarnTiny(jar);
+    const before = statSync(tiny).mtimeMs;
+    writeFileSync(join(dirname(jar), "other.txt"), "touch", "utf8");
+    const back = new Date(Date.now() - 600_000);
+    utimesSync(tiny, back, back); // 模拟 .tiny 早于 jar（重新下载过映射）
+    assert.equal(ensureYarnTiny(jar), tiny);
+    assert.ok(statSync(tiny).mtimeMs > before, "陈旧 .tiny 被当成命中复用了");
+  });
+
+  await atest("ensureYarnTiny：intermediary/named 两列的 -v2.jar 形状必须拒绝（official 列缺失）", () => {
+    const jar = jarWith(
+      "nov2col",
+      "tiny\t2\t0\tintermediary\tnamed\nc\tc_1\tnet/minecraft/Foo\n",
+    );
+    assert.throws(() => ensureYarnTiny(jar), /MAPPINGS_EMPTY.*official/);
+  });
+
+  await atest("ensureYarnTiny：三列 Tiny v1 也只认 Tiny v2（缺 v2 头单独可失败）", () => {
+    const jar = jarWith("v1", "v1\tofficial\tintermediary\tnamed\nCLASS\tnet/minecraft/A\tnet/minecraft/Foo\n");
+    assert.throws(() => ensureYarnTiny(jar), /不是 Tiny v2/);
+  });
+
+  await atest("ensureYarnTiny：header-only / 缺 mappings 条目都 fail-closed", () => {
+    assert.throws(
+      () => ensureYarnTiny(jarWith("hdr", "tiny\t2\t0\tofficial\tintermediary\tnamed\n")),
+      /不含任何 c\\t/,
+    );
+    const dir = caseDir("noentry");
+    const p = join(dir, "yarn-1.20.1.jar");
+    writeFileSync(p, makeZip([{ name: "extra/notes.txt", data: "nothing" }]));
+    assert.throws(() => ensureYarnTiny(p), /没有唯一 mappings/);
+  });
+
+  await atest("remapperCli 只吃 .tiny：调用点漏解包时在进程内就炸，不给 mapping-io 栈", () => {
+    const jars = ["/c/tiny-remapper-0.14.0.jar", "/c/asm-9.9.1.jar"];
+    assert.throws(
+      () => remapperCli(jars, "/in.jar", "/out.jar", "/c/mappings/yarn-1.20.1.jar", "official", "intermediary"),
+      /必须是 \.tiny/,
+      "yarn jar 又被当映射参数了",
+    );
+    assert.throws(
+      () => remapperCli(jars, "/in.jar", "/out.jar", "/c/mappings/mojmap-1.20.1.txt", "official", "named"),
+      /必须是 \.tiny/,
+    );
+    assert.ok(
+      remapperCli(jars, "/in.jar", "/out.jar", "/c/mappings/yarn-1.20.1.tiny", "official", "intermediary").includes(
+        "/c/mappings/yarn-1.20.1.tiny",
+      ),
+    );
+  });
+}
 
 console.log(`\n${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);

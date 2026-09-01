@@ -4,7 +4,14 @@ import { z } from "zod";
 
 export const analyzePortingPathSchema = z.object({
   projectPath: z.string().describe("项目根目录（绝对或相对路径）"),
-  targetPlatform: z.enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"]).optional().describe("目标平台（可选，未指定则自动推断）"),
+  targetPlatform: z
+    .enum(["fabric", "neoforge", "forge", "quilt", "liteloader", "rift", "modloader", "bedrock"], {
+      required_error:
+        "targetPlatform 必填：Forge 1.20.1 与 NeoForge 1.20.1 元数据同为 javafml/47，禁止静默推断，请先问用户要迁往哪个平台",
+    })
+    .describe(
+      "目标平台（必填）。不做静默推断：Forge 1.20.1 与 NeoForge 1.20.1 的 mods.toml 同为 javafml/47，无法区分，缺失时返回 INVALID_INPUT。",
+    ),
   targetVersion: z.string().optional().describe("目标 MC 版本（如 1.20.4）"),
 });
 
@@ -109,6 +116,17 @@ export interface TargetInfo {
   java: number | null;
 }
 
+/**
+ * 机器可读交接。契约：`tool` + `args` 必须是**可直接调用**的一组参数——
+ * 必填参数（projectPath / action / route …）齐备，禁止 `"check targetVersion"` 这类占位值。
+ * 填不齐就只写 text，不要挂一个必然失败的 tool。
+ */
+export interface NextStep {
+  text: string;
+  tool?: string;
+  args?: Record<string, unknown>;
+}
+
 export interface AnalyzePortingOutput {
   ok: true;
   analysis: {
@@ -119,6 +137,7 @@ export interface AnalyzePortingOutput {
     riskAssessment: RiskAssessment;
     recommendedRoute: string;
     routeSteps: string[];
+    nextSteps: NextStep[];
     referenceLinks: ReferenceLink[];
     queryApiSuggestions: QueryApiSuggestion[];
   };

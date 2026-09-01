@@ -285,7 +285,7 @@ Decision: 选择注册方式
 | `get_workflow_template` / `list_knowledge_resources` / `read_knowledge_resource` | 工作流全文（仅完整流程才调，改已有代码不要调；**人在环清单，不是无人值守流水线**；不代跑用户 Gradle / 不拷 jar / 不上传）与知识 URI |
 | `generate_model` / `generate_lang` / `generate_network_packet` 等 | 代码/JSON 骨架生成（见根 `README.md`） |
 | `localize_mod` | 模组汉化：diff/draft_zh / jar extract/pack_draft（无机器翻译） |
-| `analyze_log` / `get_migration_guide` / `check_dependencies` | 日志、迁移与依赖提示 |
+| `analyze_log` / `analyze_build_log` / `get_migration_guide` / `check_dependencies` | 游戏日志、Gradle/javac 构建日志、迁移与依赖提示 |
 | `lookup_obfuscated` | 崩溃短名反查 |
 | `get_minecraft_source` / `decompile_mod_jar` / `search_mod_code` / `analyze_mod_jar` | 按需反编译与 jar 元数据 |
 | `validate_at` / `validate_aw` | AT / AW 字节码校验 |
@@ -310,7 +310,7 @@ Decision: 选择注册方式
   cd mcp-server && npm ci && npm run build
   ```
   （Node 需 >= 22.5；Yarn 映射可再 `npm run build:yarn-sqlite`。配置宿主见 `AUTO_SETUP.md`：先识别 IDE/CLI，再按该宿主的文件与顶层键合并草稿，不要默认写 Cursor 的 `mcp.json`。）
-- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，79 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
+- **无 MCP 客户端时**：可用独立 CLI 调用任意工具——`node mcp-server/dist/cli.js <工具名> --参数=值`（通用 dispatch，80 工具全可用；如 `search_docs` / `check_dependencies` / `analyze_mod_jar`）。工程类工具可加 `--project <dir>`（映射到 `projectPath`）。
 - **`get_server_status` 返回 `buildStatus.buildRequired=true`**：src 有比 dist 更新的修改，需重新 `npm run build`，然后**重载宿主 MCP**（只编 dist 不够， AI IDE 进程仍跑旧代码）。
 - **反编译工具报 `TOOLCHAIN_MISSING`**：需要 Java 17+（VineFlower/tiny-remapper）；安装 Temurin 17+ 后重启 MCP，或按返回指引操作。
 - **`search_mod_code` 报 `NOT_FOUND`**：反编译源码尚未生成（按设计不入库），按返回指引先调 `decompile_mod_jar` / `get_minecraft_source` 按需生成。

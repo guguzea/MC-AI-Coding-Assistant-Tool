@@ -202,6 +202,29 @@ function setVersionDataEntry(version: string, data: VersionData): void {
   }
   _versionData.set(version, data);
 }
+
+/**
+ * 测试接缝：经真实驱逐路径注入版本缓存条目。生产代码不得导入。
+ * A-5 要求被驱逐条目必须清 timer / settle / terminate worker 并从 map 删除，
+ * 而单测无法稳定造出 64 个在飞 Worker 预加载，只能直接注入条目形状。
+ */
+export const testOnlyVersionCache = {
+  put: (
+    version: string,
+    data?: {
+      preloadTimer?: ReturnType<typeof setTimeout> | null;
+      settlePreload?: (() => void) | null;
+      worker?: { terminate(): void } | null;
+      preloadPromise?: Promise<void> | null;
+    },
+  ): void => {
+    setVersionDataEntry(
+      version,
+      { ...emptyVersionData(), ...(data as object) } as VersionData,
+    );
+  },
+};
+
 function emptyVersionData(): VersionData {
   return {
     apiIndex: {},

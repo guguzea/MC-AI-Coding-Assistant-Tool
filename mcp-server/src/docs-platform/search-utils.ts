@@ -705,6 +705,19 @@ export function ttlCacheSet<T>(
   }
 }
 
+/**
+ * 与 ttlCacheSet 同口径的插入序淘汰，供条目形状不是 TtlCacheEntry 的缓存复用
+ * （indexCache / fileCache / symbolIndexCache 存的是 {data, expiry} 或裸对象）。
+ * 只在 set 之后调用；过期由各自的 TTL 负责，这里只兜长驻进程的条数上界。
+ */
+export function trimOldest<T>(map: Map<string, T>, max: number): void {
+  while (map.size > max) {
+    const first = map.keys().next().value;
+    if (first === undefined) break;
+    map.delete(first);
+  }
+}
+
 function docsPlatformLabel(payload: Record<string, unknown>): string {
   const p = String(payload.platform ?? payload.sourcePlatform ?? "").toLowerCase();
   if (p === "forge") return "Forge";

@@ -1,6 +1,7 @@
 /**
  * 契约：VERSION_REQUIRED、get_version_info 仅 Forge、Architectury PICK_PLATFORM、
- * worldgen platform、topic 别名、Neo 主档 Skill 必须含 search_neoforge_docs。
+ * worldgen platform、topic 别名、Neo 主档 Skill 必须含 search_neoforge_docs、
+ * generate_* 的 suggestedPath 由代码里的 package/类名推导 + 写盘双守卫。
  */
 import assert from "node:assert/strict";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -17,8 +18,13 @@ const { getVersionInfo } = await import("./dist/version/index.js");
 const { resolveTopicIds, sessionPlatformPack } = await import("./dist/platform-pack/session.js");
 const { detectModProject } = await import("./dist/platform-pack/detect.js");
 const { listSameSeriesCandidates } = await import("./dist/platform-pack/catalog.js");
-const { generateWorldgen, generateNetworkPacket } = await import("./dist/generators/index.js");
-const { generateEntityRenderer } = await import("./dist/generators/index.js");
+const { generateWorldgen, generateNetworkPacket, generateConfig, generateEntityRenderer } = await import(
+  "./dist/generators/index.js"
+);
+const { suggestPathsForGenerator, maybeWriteGeneratorResult } = await import(
+  "./dist/generators/write-helper.js"
+);
+const { resolveWriteAllowRoot, nativeReal } = await import("./dist/utils/project-sandbox.js");
 const { generateDatagen } = await import("./dist/datagen/index.js");
 const { getWorkflowTemplate, readKnowledgeResource, WORKFLOW_TEMPLATES } = await import(
   "./dist/prompts/index.js"
@@ -824,6 +830,417 @@ description: |
   const erNeo211 = generateEntityRenderer("demo", "beast", "neoforge", "1.21.11");
   assert.equal(erNeo211.code, null);
   console.log("D3 generate_entity_renderer forge_1.18.2 过门 / neoforge_1.21.11 拒绝: ok");
+}
+
+// ── generate_* 写盘：suggestedPath 跟代码里的 package/public 类名走；沙箱双守卫 ──
+{
+  const prevAllow = process.env.MC_SKILL_ALLOW_WRITE;
+  const prevRoot = process.env.MC_SKILL_PROJECT_ROOT;
+  const restoreEnv = () => {
+    if (prevAllow === undefined) delete process.env.MC_SKILL_ALLOW_WRITE;
+    else process.env.MC_SKILL_ALLOW_WRITE = prevAllow;
+    if (prevRoot === undefined) delete process.env.MC_SKILL_PROJECT_ROOT;
+    else process.env.MC_SKILL_PROJECT_ROOT = prevRoot;
+  };
+  const sandbox = mkdtempSync(join(tmpdir(), "mc-skill-gen-write-"));
+  try {
+    const cfg = generateConfig("examplemod", "fabric", "1.21.1");
+    // 骨架里声明的是 ExamplemodConfig，而工具合成的文件名是 ModConfig.java：
+    // public 类名 != 文件名，落盘后 javac 直接报错，所以路径必须跟着代码走。
+    const cfgPaths = suggestPathsForGenerator(cfg, { singleFileName: "ModConfig.java" });
+    assert.equal(
+      cfgPaths.suggestedPath,
+      "src/main/java/com/example/examplemod/config/ExamplemodConfig.java",
+    );
+    assert.equal(cfgPaths.pathWarnings.length, 1, JSON.stringify(cfgPaths.pathWarnings));
+    // 警告必须同时点名「原名」和「新类型名」：松正则会被 suggestedPath 里的文件名满足，抓不到漏写。
+    assert.match(
+      cfgPaths.pathWarnings[0],
+      /文件名 ModConfig\.java 与顶层类型 ExamplemodConfig 不一致/,
+      cfgPaths.pathWarnings[0],
+    );
+    assert.match(cfgPaths.pathWarnings[0], /已按类型名改名/, cfgPaths.pathWarnings[0]);
+    // singleFileName 是工具按参数拼的（register.ts 里 packetName / entityName / classBase），
+    // 不是调用方传的文件名，警告不得这么写。
+    assert.equal(
+      cfgPaths.pathWarnings[0].includes("调用方"),
+      false,
+      cfgPaths.pathWarnings[0],
+    );
+    const pkt = generateNetworkPacket("demo", "sync", "neoforge_1.21.1");
+    assert.equal(
+      suggestPathsForGenerator(pkt, { singleFileName: "SyncPacket.java" }).suggestedPath,
+      "src/main/java/com/example/demo/network/SyncPayload.java",
+    );
+    // 类名与给定文件名一致时不改名，也不该冒出警告
+    const pkt1122 = generateNetworkPacket("demo", "sync", "forge_1.12.2");
+    const sameName = suggestPathsForGenerator(pkt1122, { singleFileName: "SyncPacket.java" });
+    assert.equal(sameName.suggestedPath, "src/main/java/com/example/demo/network/SyncPacket.java");
+    assert.equal(sameName.pathWarnings.length, 0, JSON.stringify(sameName.pathWarnings));
+    // 无 package（骨架不带包声明）→ 保持旧的 javaPrefix 兜底；自定义 javaPrefix 仍生效
+    const bare = { code: "public class Bare {\n}\n", warnings: undefined };
+    assert.equal(
+      suggestPathsForGenerator(bare, { singleFileName: "Bare.java" }).suggestedPath,
+      "src/main/java/Bare.java",
+    );
+    assert.equal(
+      suggestPathsForGenerator(cfg, { singleFileName: "ModConfig.java", javaPrefix: "src/java" })
+        .suggestedPath,
+      "src/java/com/example/examplemod/config/ExamplemodConfig.java",
+    );
+    // 注释里的 `package` 不能当真声明
+    const decoy = {
+      code: "// package com.decoy.should.not.win;\n/* package com.decoy2.no; */\npackage com.example.demo.net;\npublic class PingPacket {}\n",
+    };
+    assert.equal(
+      suggestPathsForGenerator(decoy, { singleFileName: "PingPacket.java" }).suggestedPath,
+      "src/main/java/com/example/demo/net/PingPacket.java",
+    );
+    // Kotlin 不要求文件名 == 类型名：包目录跟代码走，文件名保留传入的
+    const kt = {
+      code: "package com.example.demo.util\n\nfun main() {}\n\nclass Greeter\n",
+    };
+    assert.equal(
+      suggestPathsForGenerator(kt, { singleFileName: "Hello.kt" }).suggestedPath,
+      "src/main/java/com/example/demo/util/Hello.kt",
+    );
+    console.log("generate_* suggestedPath 由 package + public 类名推导: ok");
+
+    const proj = join(sandbox, "myMod");
+    mkdirSync(proj, { recursive: true });
+    process.env.MC_SKILL_ALLOW_WRITE = "1";
+
+    // 只给 ALLOW_WRITE + projectPath：生成器写盘要拒绝（projectPath 由模型给，单参数即写盘 = 一道守卫）
+    delete process.env.MC_SKILL_PROJECT_ROOT;
+    const refused = maybeWriteGeneratorResult(cfg, { write: true, confirmed: true, projectPath: proj }, {
+      singleFileName: "ModConfig.java",
+    });
+    assert.equal(refused.writeError?.code, "PROJECT_ROOT_REQUIRED");
+    assert.equal(refused.written, undefined);
+    assert.equal(existsSync(join(proj, "src")), false, "拒绝写盘却仍建出了 src/");
+    // 同一 env 下 port_project/activate_platform_pack write 仍按旧口径把 projectPath 当根
+    const legacy = resolveWriteAllowRoot(proj);
+    assert.equal(nativeReal(legacy).toLowerCase(), nativeReal(proj).toLowerCase(), "非生成器调用方的 explicitRoot 兜底被改坏了");
+
+    // env root 是父目录：文件要落进 projectPath，而不是落在边界（=父目录）上
+    process.env.MC_SKILL_PROJECT_ROOT = sandbox;
+    const ok = maybeWriteGeneratorResult(cfg, { write: true, confirmed: true, projectPath: proj }, {
+      singleFileName: "ModConfig.java",
+    });
+    assert.equal(ok.writeError, undefined, JSON.stringify(ok.writeError));
+    const landed = join(proj, "src", "main", "java", "com", "example", "examplemod", "config", "ExamplemodConfig.java");
+    assert.equal(existsSync(landed), true, `未落盘：${ok.written?.join(",")}`);
+    assert.match(readFileSync(landed, "utf8"), /public final class ExamplemodConfig/);
+    assert.equal(existsSync(join(sandbox, "src")), false, "按 allowlist 边界当写入基准（写到了父目录）");
+    assert.ok(
+      (ok.written ?? []).every((p) => p.replace(/\\/g, "/").toLowerCase().startsWith(proj.replace(/\\/g, "/").toLowerCase())),
+      JSON.stringify(ok.written),
+    );
+    // 多文件 files 图同样落进 projectPath
+    const lang = { code: null, files: { "assets/demo/lang/en_us.json": "{\"k\":\"v\"}" } };
+    const langOut = maybeWriteGeneratorResult(lang, { write: true, confirmed: true, projectPath: proj }, {
+      resourcesPrefix: "src/main/resources",
+    });
+    assert.equal(
+      existsSync(join(proj, "src", "main", "resources", "assets", "demo", "lang", "en_us.json")),
+      true,
+      JSON.stringify(langOut.written ?? langOut.writeError),
+    );
+    console.log("generate_* write：env root 缺失拒绝 + 落点在 projectPath: ok");
+
+    // 绝对 rel 会顶掉 projectBase，`..` 段能溜到同沙箱的别的工程
+    const escapeCases = ["../escaped.java"];
+    if (process.platform === "win32") escapeCases.push("C:/Windows/Temp/escaped.java");
+    for (const evil of escapeCases) {
+      const out = maybeWriteGeneratorResult(
+        { code: null, files: { [evil]: "x" } },
+        { write: true, confirmed: true, projectPath: proj },
+      );
+      assert.equal(out.writeError?.code, "PATH_OUTSIDE_ALLOWLIST", `${evil} 竟然被接受`);
+      assert.equal(out.written, undefined, `${evil} 拒绝前已落盘`);
+    }
+    assert.equal(existsSync(join(sandbox, "escaped.java")), false);
+    // 前导斜杠会被 path 层 normalize 成工程内相对路径：写进了工程，但没逃逸到 /etc
+    const leadSlash = maybeWriteGeneratorResult(
+      { code: null, files: { "/etc/escaped.java": "x" } },
+      { write: true, confirmed: true, projectPath: proj },
+    );
+    assert.equal(leadSlash.writeError, undefined, JSON.stringify(leadSlash.writeError));
+    assert.equal(existsSync(join(proj, "etc", "escaped.java")), true, JSON.stringify(leadSlash.written));
+    assert.equal(existsSync(join(sandbox, "tmp", "escaped.java")), false);
+    console.log("generate_* write：绝对路径 / .. 相对路径一律拒绝: ok");
+  } finally {
+    restoreEnv();
+    rmSync(sandbox, { recursive: true, force: true });
+  }
+}
+
+// ── A-5：版本缓存 FIFO 驱逐必须释放被驱逐条目的资源 ─────────────────────────
+{
+  const {
+    testOnlyVersionCache,
+    listApiPreloadStatuses,
+    getApiPreloadStatus,
+    warmupApi,
+    disposeApiData,
+  } = await import("./dist/api/index.js");
+
+  const CAP = 64; // 钉死 src/api/index.ts 的 _MAX_VERSION_CACHE：改常量必须连带改这里
+  const keys = () => listApiPreloadStatuses().map((s) => s.version);
+
+  disposeApiData();
+  let timerFired = false;
+  let settled = 0;
+  let terminated = 0;
+  const oldest = {
+    preloadTimer: setTimeout(() => {
+      timerFired = true;
+    }, 40),
+    settlePreload: () => {
+      settled += 1;
+    },
+    worker: {
+      terminate: () => {
+        terminated += 1;
+      },
+    },
+    preloadPromise: Promise.resolve(),
+  };
+  testOnlyVersionCache.put("9.0.0", oldest);
+  for (let i = 1; i <= CAP; i += 1) testOnlyVersionCache.put(`9.0.${i}`);
+
+  const after = keys();
+  assert.equal(after.length, CAP, `第 ${CAP + 1} 条没触发 FIFO 驱逐：${after.length} 条`);
+  assert.equal(after[0], "9.0.1", "FIFO 驱逐必须丢最旧插入项");
+  assert.equal(after.includes("9.0.0"), false);
+  assert.equal(after[CAP - 1], "9.0.64");
+  assert.equal(settled, 1, "被驱逐条目没跑 settlePreload → awaiter 永久挂起");
+  assert.equal(terminated, 1, "被驱逐条目没 terminate Worker → 线程泄漏");
+  await new Promise((r) => setTimeout(r, 90));
+  assert.equal(timerFired, false, "漏了 clearTimeout：被驱逐条目仍会回调改状态");
+  console.log("A-5 版本缓存 FIFO 驱逐释放 timer / settle / worker: ok");
+
+  disposeApiData();
+  const reload = await warmupApi(["9.0.0"]);
+  assert.equal(reload[0].status, "missing_data", "驱逐后再查没重新走加载路径");
+  assert.deepEqual(keys(), ["9.0.0"], "驱逐后残留了别的默认条目");
+  disposeApiData();
+  console.log("A-5 驱逐后再查重新走加载路径（不落共享默认对象）: ok");
+
+  for (let i = 0; i < CAP; i += 1) testOnlyVersionCache.put(`9.1.${i}`);
+  testOnlyVersionCache.put("9.1.0"); // 覆盖已存在的 key
+  assert.equal(keys().length, CAP);
+  assert.equal(keys()[0], "9.1.0", "覆盖已有版本时误顶掉最旧条目");
+  disposeApiData();
+  console.log("A-5 覆盖已有 key 不误驱逐: ok");
+
+  testOnlyVersionCache.put("9.2.0", {
+    settlePreload: () => {
+      throw new Error("already settled");
+    },
+  });
+  for (let i = 1; i <= CAP; i += 1) testOnlyVersionCache.put(`9.2.${i}`);
+  assert.equal(keys().length, CAP, "settlePreload 抛错中断了驱逐");
+  assert.equal(keys().includes("9.2.0"), false);
+  disposeApiData();
+  console.log("A-5 settlePreload 抛错不阻断驱逐: ok");
+}
+
+// ── A-1：NeoForge 索引列了 processedFile 但文件缺失 → 必须报错，禁止空串 ─────
+{
+  const { NeoForgeDocStore, DocNotFoundError } = await import(
+    "./dist/docs-platform/neoforge/store.js"
+  );
+  const root = mkdtempSync(join(tmpdir(), "mc-neo-doc-"));
+  try {
+    const ver = "1.21.9";
+    const dir = join(root, `neoforge_${ver}`, "neoforge-docs", ver);
+    mkdirSync(join(dir, "processed"), { recursive: true });
+    writeFileSync(join(dir, "index-l0.json"), "[]", "utf8");
+    writeFileSync(join(dir, "index-l1.json"), "[]", "utf8");
+    writeFileSync(
+      join(dir, "index-l2.json"),
+      JSON.stringify([
+        { id: `${ver}/present_page`, processedFile: "processed/present_page.md" },
+        { id: `${ver}/ghost_page`, processedFile: "processed/ghost_page.md" },
+      ]),
+      "utf8",
+    );
+    writeFileSync(join(dir, "processed", "present_page.md"), "# present\n\n正文在。\n", "utf8");
+
+    const store = new NeoForgeDocStore(root);
+    const hit = await store.loadFullDoc(`${ver}/present_page`, ver);
+    assert.match(hit.content, /正文在/);
+
+    let err = null;
+    try {
+      err = await store.loadFullDoc(`${ver}/ghost_page`, ver);
+    } catch (e) {
+      err = e;
+    }
+    assert.ok(
+      err instanceof DocNotFoundError,
+      `缺正文必须抛 DocNotFoundError，实得 ${JSON.stringify(err ?? null).slice(0, 200)}`,
+    );
+    assert.match(String(err.id), /ghost_page/);
+
+    // 工具层同一入口：必须 DOC_NOT_FOUND，而不是 ok:true + content:""
+    const prevData = process.env.MC_SKILL_DATA;
+    process.env.MC_SKILL_DATA = root;
+    try {
+      const { getNeoForgeDocFull } = await import("./dist/docs-platform/neoforge/index.js");
+      const ghost = JSON.parse(
+        (await getNeoForgeDocFull({ id: `${ver}/ghost_page`, version: ver })).content[0].text,
+      );
+      assert.equal(ghost.ok, false, JSON.stringify(ghost).slice(0, 240));
+      assert.equal(ghost.error?.code, "DOC_NOT_FOUND");
+      const good = JSON.parse(
+        (await getNeoForgeDocFull({ id: `${ver}/present_page`, version: ver })).content[0].text,
+      );
+      assert.equal(good.ok, true, JSON.stringify(good.error ?? {}).slice(0, 200));
+      assert.match(good.content, /正文在/);
+    } finally {
+      if (prevData === undefined) delete process.env.MC_SKILL_DATA;
+      else process.env.MC_SKILL_DATA = prevData;
+    }
+    console.log("A-1 NeoForge 缺 processedFile → DocNotFoundError / DOC_NOT_FOUND: ok");
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
+// ── A-32：三个文档 store 的缓存必须有硬条数上界（TTL 只挡过期，不挡增长）────
+{
+  const { FabricDocStore } = await import("./dist/docs-platform/fabric/store.js");
+  const { ForgeDocStore } = await import("./dist/docs-platform/forge/store.js");
+  const { NeoForgeDocStore } = await import("./dist/docs-platform/neoforge/store.js");
+
+  // 两位数序号：避免 "9.7.6" 成为 "9.7.69" 的子串而误命中
+  const CHURN = Array.from({ length: 70 }, (_, i) => `9.7.${i + 10}`);
+  const pageId = (i) => `page${String(i).padStart(3, "0")}`;
+  const PAGES = 261; // > FILE_CACHE_MAX(256)
+  const hasVer = (map, token) => [...map.keys()].some((k) => k.includes(token));
+  const hasPage = (map, ver, page) =>
+    [...map.keys()].some((k) => k.includes(ver) && k.includes(page));
+
+  // trees 一一对应 store 里的 fileCache 写入分支：
+  //   l2   → loadFullDoc 读 index-l2 的分支
+  //   thin → 只有 index-l0（FabricDocStore 独有的第二个写入点 readProcessedFile）
+  const specs = [
+    {
+      name: "fabric",
+      Store: FabricDocStore,
+      dir: (v) => [`fabric_${v}`, "fabric-docs", v],
+      make: (r) => new FabricDocStore(r, CHURN[0]),
+      trees: [
+        { ver: "9.8.1", kind: "l2" },
+        { ver: "9.8.2", kind: "thin" },
+      ],
+    },
+    {
+      name: "forge",
+      Store: ForgeDocStore,
+      dir: (v) => [`forge_${v}`, "forge-docs", v],
+      make: (r) => new ForgeDocStore(r),
+      trees: [{ ver: "9.8.1", kind: "l2" }],
+    },
+    {
+      name: "neoforge",
+      Store: NeoForgeDocStore,
+      dir: (v) => [`neoforge_${v}`, "neoforge-docs", v],
+      make: (r) => new NeoForgeDocStore(r),
+      trees: [{ ver: "9.8.1", kind: "l2" }],
+    },
+  ];
+
+  for (const spec of specs) {
+    const root = mkdtempSync(join(tmpdir(), `mc-doc-cache-${spec.name}-`));
+    try {
+      const put = (v, file, text) => {
+        const dir = join(root, ...spec.dir(v));
+        mkdirSync(join(dir, "processed"), { recursive: true });
+        writeFileSync(join(dir, file), text, "utf8");
+      };
+      for (const v of CHURN) {
+        // l0 必须非空：NeoForge 空 l0 提前 return，走不到符号索引
+        put(v, "index-l0.json", JSON.stringify([{ id: `${v}/stub`, label: "registry", tags: [] }]));
+        put(v, "index-l1.json", "[]");
+      }
+      for (const t of spec.trees) {
+        const l0 = [];
+        const l2 = [];
+        for (let i = 0; i < PAGES; i += 1) {
+          const id = pageId(i);
+          l0.push({ id: `${t.ver}/${id}`, label: id, tags: [] });
+          l2.push({ id: `${t.ver}/${id}`, label: id, tags: [], processedFile: `processed/${id}.md` });
+          const dir = join(root, ...spec.dir(t.ver), "processed");
+          mkdirSync(dir, { recursive: true });
+          writeFileSync(join(dir, `${id}.md`), `# ${id}\n\n正文\n`, "utf8");
+        }
+        put(t.ver, "index-l0.json", JSON.stringify(l0));
+        if (t.kind === "l2") {
+          put(t.ver, "index-l1.json", "[]");
+          put(t.ver, "index-l2.json", JSON.stringify(l2));
+        }
+      }
+
+      const store = spec.make(root);
+      for (const v of CHURN) store.searchIndexDetailed("registry", v);
+      const IDX = spec.Store.INDEX_CACHE_MAX;
+      const SYM = spec.Store.SYMBOL_CACHE_MAX;
+      const FILE = spec.Store.FILE_CACHE_MAX;
+      assert.ok(IDX === 64 && SYM === 64 && FILE === 256, `${spec.name} 上界被改动 ${IDX}/${SYM}/${FILE}`);
+      assert.equal(store.indexCache.size, IDX, `${spec.name} indexCache 没收敛到上界`);
+      assert.equal(store.symbolIndexCache.size, SYM, `${spec.name} symbolIndexCache 没收敛到上界`);
+      assert.equal(hasVer(store.indexCache, CHURN[0]), false, `${spec.name} 最旧 index 条目没被淘汰`);
+      assert.equal(hasVer(store.indexCache, CHURN[CHURN.length - 1]), true, `${spec.name} 最新 index 条目丢了`);
+      assert.equal(hasVer(store.symbolIndexCache, CHURN[0]), false, `${spec.name} 最旧符号索引没被淘汰`);
+      assert.equal(hasVer(store.symbolIndexCache, CHURN[CHURN.length - 1]), true, `${spec.name} 最新符号索引丢了`);
+
+      for (const t of spec.trees) {
+        for (let i = 0; i < PAGES; i += 1) {
+          await store.loadFullDoc(`${t.ver}/${pageId(i)}`, t.ver);
+        }
+        assert.equal(store.fileCache.size, FILE, `${spec.name} ${t.kind} 树 fileCache 没收敛到上界`);
+        assert.equal(
+          hasPage(store.fileCache, t.ver, `${pageId(0)}.md`),
+          false,
+          `${spec.name} ${t.kind} 树最旧正文没被淘汰`,
+        );
+        assert.equal(
+          hasPage(store.fileCache, t.ver, `${pageId(PAGES - 1)}.md`),
+          true,
+          `${spec.name} ${t.kind} 树最新正文丢了`,
+        );
+      }
+      console.log(`A-32 ${spec.name} index/symbol/file 缓存上界（${spec.trees.map((t) => t.kind).join("+")}）: ok`);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+}
+
+// ── A-32b：ttlCacheSet 自带淘汰 = 上界 + 丢最旧（searchCache / relatedCache 全靠它兜底）──
+{
+  const { ttlCacheGet, ttlCacheSet } = await import("./dist/docs-platform/search-utils.js");
+  const MAX = 8;
+  const map = new Map();
+  for (let i = 0; i < MAX + 6; i += 1) ttlCacheSet(map, `k${i}`, i, MAX, 60_000);
+  assert.equal(map.size, MAX, `ttlCacheSet 没兜住条数上界：${map.size}`);
+  assert.equal(ttlCacheGet(map, "k0"), undefined, "ttlCacheSet 丢的不是最旧插入项");
+  assert.equal(ttlCacheGet(map, `k${MAX + 5}`), MAX + 5, "最新条目丢了");
+
+  const order = [...map.keys()];
+  ttlCacheSet(map, order[1], 999, MAX, 60_000); // 覆盖已有 key
+  assert.equal(map.size, MAX, "覆盖已有 key 让条目数增长");
+  assert.deepEqual([...map.keys()], order, "覆盖已有 key 改变了淘汰顺序");
+  assert.equal(ttlCacheGet(map, order[1]), 999);
+
+  const expiring = new Map();
+  ttlCacheSet(expiring, "gone", 1, MAX, -1);
+  assert.equal(ttlCacheGet(expiring, "gone"), undefined, "过期条目仍可读");
+  assert.equal(expiring.size, 0, "读侧没回收过期条目（幽灵条目永久占位）");
+  console.log("ttlCacheSet 上界 + 丢最旧 + 覆盖不重排 + 读侧回收过期: ok");
 }
 
 console.log("test-assistant-gaps: all passed");

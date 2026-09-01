@@ -19,6 +19,7 @@ import {
   buildSymbolIndex,
   enhancedSearch,
   stripScores,
+  trimOldest,
   ttlCacheGet,
   ttlCacheSet,
   matchDocIndexId,
@@ -174,16 +175,21 @@ export interface SearchIndexDetailed {
 export class ForgeDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
 
-  /** 按 `${version}/${indexName}` 缓存 index JSON */
+  /** 条数硬界（同 FabricDocStore）：TTL 只挡过期，不挡条目数增长。 */
+  private static readonly FILE_CACHE_MAX = 256;
+  private static readonly INDEX_CACHE_MAX = 64;
+  private static readonly SYMBOL_CACHE_MAX = 64;
+
+  /** 按 `${version}/${indexName}` 缓存 index JSON（TTL 5 分钟 + 64 条上界） */
   private indexCache = new Map<string, CacheEntry<unknown>>();
 
-  /** 按 `${version}/${processedFile}` 缓存文件内容 */
+  /** 按 `${version}/${processedFile}` 缓存文件内容（TTL 5 分钟 + 256 条上界） */
   private fileCache = new Map<string, CacheEntry<string>>();
 
   /** 搜索结果缓存（key = "query|version|tags"，TTL 5 分钟，ttlCacheSet max=256） */
   private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
 
-  /** L1 符号倒排（按 resolved version） */
+  /** L1 符号倒排（按 resolved version，64 条上界；被淘汰只导致下次重建） */
   private symbolIndexCache = new Map<string, SymbolIndex>();
 
   /** 相关文档缓存（以 id|version|limit 为 key，TTL 5min） */
@@ -385,6 +391,7 @@ export class ForgeDocStore {
       const l1 = this.loadIndexL1(version);
       const idx = buildSymbolIndex(l1, { byteSize, generation: 1 });
       this.symbolIndexCache.set(version, idx);
+      trimOldest(this.symbolIndexCache, ForgeDocStore.SYMBOL_CACHE_MAX);
       return idx;
     } catch {
       return null;
@@ -550,6 +557,7 @@ export class ForgeDocStore {
         data: content,
         expiry: Date.now() + ForgeDocStore.CACHE_TTL,
       });
+      trimOldest(this.fileCache, ForgeDocStore.FILE_CACHE_MAX);
     }
 
     return this.buildResult(content, meta, highlightKey);
@@ -599,6 +607,7 @@ export class ForgeDocStore {
       data,
       expiry: Date.now() + ForgeDocStore.CACHE_TTL,
     });
+    trimOldest(this.indexCache, ForgeDocStore.INDEX_CACHE_MAX);
     return data;
   }
 

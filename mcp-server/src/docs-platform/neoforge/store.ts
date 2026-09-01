@@ -21,6 +21,7 @@ import { join, basename } from "path";
 import {
   buildSymbolIndex,
   enhancedSearch,
+  trimOldest,
   ttlCacheGet,
   ttlCacheSet,
   type SymbolIndex,
@@ -162,10 +163,17 @@ export interface SearchIndexDetailed {
 
 export class NeoForgeDocStore {
   private static readonly CACHE_TTL = 5 * 60 * 1000; // 5 分钟
+  /** 条数硬界（同 FabricDocStore）：TTL 只挡过期，不挡条目数增长。 */
+  private static readonly FILE_CACHE_MAX = 256;
+  private static readonly INDEX_CACHE_MAX = 64;
+  private static readonly SYMBOL_CACHE_MAX = 64;
 
+  /** 解析后的 index JSON（TTL 5 分钟 + 64 条上界） */
   private indexCache = new Map<string, CacheEntry<unknown>>();
+  /** 处理的正文文件（TTL 5 分钟 + 256 条上界） */
   private fileCache = new Map<string, CacheEntry<string>>();
   private searchCache = new Map<string, TtlCacheEntry<SearchIndexDetailed>>();
+  /** L1 符号倒排（按 resolved version，64 条上界） */
   private symbolIndexCache = new Map<string, SymbolIndex>();
   private relatedCache = new Map<string, TtlCacheEntry<SearchResult[]>>();
   private searchLog: Array<{ query: string; version: string; resolvedVersion: string; results: number; timestamp: number }> = [];
@@ -339,6 +347,7 @@ export class NeoForgeDocStore {
       throw new IndexCorruptError(version, path);
     }
     this.setCache(this.indexCache, cacheKey, data);
+    trimOldest(this.indexCache, NeoForgeDocStore.INDEX_CACHE_MAX);
     return data;
   }
 
@@ -354,6 +363,7 @@ export class NeoForgeDocStore {
     }
     const data = readFileSync(path, "utf-8");
     this.setCache(this.fileCache, cacheKey, data);
+    trimOldest(this.fileCache, NeoForgeDocStore.FILE_CACHE_MAX);
     return data;
   }
 
@@ -488,6 +498,7 @@ export class NeoForgeDocStore {
       if (!Array.isArray(l1)) return null;
       const idx = buildSymbolIndex(l1, { byteSize, generation: 1 });
       this.symbolIndexCache.set(cacheKey, idx);
+      trimOldest(this.symbolIndexCache, NeoForgeDocStore.SYMBOL_CACHE_MAX);
       return idx;
     } catch {
       return null;

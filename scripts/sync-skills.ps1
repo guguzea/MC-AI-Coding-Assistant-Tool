@@ -111,6 +111,13 @@ function Sync-VersionDir {
     $meta = Resolve-PlatformVersion $Base
     $rel = $meta.Rel
 
+    # Legacy neoforge root pack (empty Version) = trap; see neoforge/LEGACY-NOTICE.md.
+    # Current packs are neoforge/<ver>/; the root must never gain projections.
+    if ($meta.Platform -eq "neoforge" -and -not $meta.Version) {
+        Write-Host "REFUSE: $Base is the legacy neoforge root pack (see neoforge/LEGACY-NOTICE.md); sync neoforge/<version>/ instead." -ForegroundColor Red
+        return
+    }
+
     Write-Host "`n=== MC Skill Sync (cursor → claude/continue/trae/opencode/agents/zcode/pi) ===" -ForegroundColor Cyan
     Write-Host "Base: $Base"
     if ($rel) { Write-Host "Rel : $rel" }
@@ -302,8 +309,9 @@ if ($All) {
             }
         }
     }
-    $nf = Join-Path $repoRoot "neoforge"
-    if (Test-Path (Join-Path $nf ".cursor\rules")) { $targets += $nf }
+    # The neoforge/ ROOT pack is the legacy trap (neoforge/LEGACY-NOTICE.md): live packs are neoforge/<ver>/.
+    # Its 7 projection trees were deleted on purpose, so -All must never nominate the root again --
+    # one sync would regenerate the whole legacy tree from stale sources.
     $be = Join-Path $repoRoot "bedrock"
     if (Test-Path (Join-Path $be ".cursor\rules")) { $targets += $be }
 

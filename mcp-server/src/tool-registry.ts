@@ -11,6 +11,7 @@ import { getUpdateHint } from "./update/index.js";
 import { getVersionInfo } from "./version/index.js";
 import { diagnoseGradle } from "./gradle/index.js";
 import { generateDatagen } from "./datagen/index.js";
+import { maybeWriteGeneratorResult } from "./generators/write-helper.js";
 import { analyzeCrash } from "./crash/index.js";
 import { validateProject } from "./validate/index.js";
 import {
@@ -174,6 +175,9 @@ export const generateDatagenSchema = z.object({
   targetName: z.string().describe("目标注册名（无 modId 前缀），如 my_block"),
   version: z.string().describe("Minecraft 版本，必填，禁止默认 1.20.1"),
   platform: z.enum(["forge", "neoforge", "fabric", "quilt"]).describe("loader 平台，必填，禁止默认 forge"),
+  write: z.boolean().optional().describe("默认 false。true 时写入 projectPath（须 confirmed + MC_SKILL_ALLOW_WRITE=1 + MC_SKILL_PROJECT_ROOT；projectPath 不能替代后者）"),
+  confirmed: z.boolean().optional().describe("write=true 时必填 true"),
+  projectPath: z.string().optional().describe("写入目标工程根（须在 MC_SKILL_PROJECT_ROOT 内）"),
 });
 
 export const crashAnalyzeSchema = z.object({
@@ -298,8 +302,8 @@ const GENERATE_DATAGEN_DESC =
   "NeoForge 1.20.1 改口 search_neoforge_docs（禁止默写 Forge import）；NeoForge 1.20.4 / 1.20.6（均仅 recipe）/ 1.21.x / 26.1；" +
       "Fabric 精确档 1.21.1/1.21.3/1.21.4/1.21.8/1.21.10/1.21.11 与 26.1；Quilt 无足够 QSL 类名则 error。" +
   "其它 Forge 版本（含 1.12.2）返回 error。" +
-  "返回完整的 Java 代码模板。" +
-  "【边界】只返回 Java 模板文本，不写盘；不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。";
+  "返回完整的 Java 代码模板与 suggestedPath。" +
+  "【边界】默认只返回 Java 模板文本；可选 write+confirmed 走沙箱写盘。不是所有 MC 版本的 DataGen API。Fabric/Quilt 改口文档，不生成 Forge DataGen。";
 
 const VALIDATE_PROJECT_DESC =
   "校验模组项目结构。Forge：mods.toml / DeferredRegister / @Mod。" +
@@ -324,6 +328,8 @@ const ANALYZE_PORTING_PATH_DESC =
   "扫描 build.gradle、mods.toml、fabric.mod.json 和源码，识别当前平台、版本、" +
   "Mappings、是否使用 Architectury，并输出风险评估、动态 routeSteps、" +
   "参考链接和建议的 query_api 调用。" +
+  "targetPlatform 必填（不做静默推断；Forge 1.20.1 与 NeoForge 1.20.1 元数据无法区分）。" +
+  "routeSteps 是给人读的自然语言清单；nextSteps 是机器可读交接（tool + 可直接调用的 args）。" +
   "targetPlatform 可含 quilt；基岩/LiteLoader/Rift/ModLoader 返回 UNSUPPORTED_PORT。" +
   "适用于：用户询问如何将 Mod 移植到其他平台或版本时。";
 
@@ -332,7 +338,7 @@ const PORT_PROJECT_DESC =
   "所有写文件操作默认 dryRun=true，仅输出 diff 预览。" +
   "实际写入需要：dryRun=false、confirmed=true、环境变量 MC_SKILL_ALLOW_WRITE=1，" +
   "且 projectPath 位于 MC_SKILL_PROJECT_ROOT 允许目录内。" +
-  "适用于：接收到 analyze_porting_path 输出的 routeSteps 后，按步骤执行。" +
+  "适用于：接收到 analyze_porting_path 输出的 nextSteps 后，按步骤执行。" +
   "注意：extract_common 仅做静态分析，输出候选清单，不执行文件移动。" +
   "apply_version_migration 在确认写入时会真实执行包名替换（两阶段提交，失败自动回滚）；冲突文件在 confirmed 写入时会被拒绝。";
 
@@ -494,7 +500,7 @@ server.registerTool(
     description: GENERATE_DATAGEN_DESC,
     inputSchema: generateDatagenSchema,
   },
-  async ({ providerType, modId, targetName, version, platform }): Promise<CallToolResult> => {
+  async ({ providerType, modId, targetName, version, platform, write, confirmed, projectPath }): Promise<CallToolResult> => {
     const result = generateDatagen({
       providerType,
       modId,
@@ -502,7 +508,32 @@ server.registerTool(
       version,
       platform,
     });
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    const classBase = `${targetName.replace(/(^|_)([a-z])/g, (_, __, c: string) => c.toUpperCase()).replace(/_/g, "")}`;
+    const wrapped = maybeWriteGeneratorResult(
+      {
+        code: result.code,
+        warnings: result.warnings,
+        errors: result.errors,
+      },
+      { write, confirmed, projectPath },
+      { singleFileName: `${classBase}Provider.java` },
+    );
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(
+            {
+              ...wrapped,
+              usedModId: result.usedModId,
+              usedTargetName: result.usedTargetName,
+            },
+            null,
+            2,
+          ),
+        },
+      ],
+    };
   }
 );
 
@@ -1058,23 +1089,66 @@ server.registerTool(
   "generate_addon_manifest",
   {
     title: "Generate Bedrock manifest JSON",
-    description: "只吐 manifest JSON 文本，不写盘。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。",
+    description:
+      "只吐 manifest JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。",
     inputSchema: generateAddonManifestSchema,
   },
-  async (args): Promise<CallToolResult> => ({
-    content: [{ type: "text", text: JSON.stringify(generateAddonManifest(args), null, 2) }],
-  }),
+  async (args): Promise<CallToolResult> => {
+    const result = generateAddonManifest(args);
+    const filesRaw = (result.files as Record<string, unknown> | undefined) ?? {};
+    const files: Record<string, string> = {};
+    for (const [k, v] of Object.entries(filesRaw)) {
+      files[k] = typeof v === "string" ? v : JSON.stringify(v, null, 2);
+    }
+    const wrapped = maybeWriteGeneratorResult(
+      { code: null, files, warnings: result.warnings as string[] | undefined },
+      { write: args.write, confirmed: args.confirmed, projectPath: args.projectPath },
+      { resourcesPrefix: "." },
+    );
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({ ...result, ...wrapped, files: result.files }, null, 2),
+        },
+      ],
+    };
+  },
 );
 server.registerTool(
   "generate_bp_entity",
   {
     title: "Generate Bedrock BP entity JSON",
-    description: "只吐 BP 实体 JSON 文本，不写盘。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。",
+    description:
+      "只吐 BP 实体 JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。",
     inputSchema: generateBpEntitySchema,
   },
-  async (args): Promise<CallToolResult> => ({
-    content: [{ type: "text", text: JSON.stringify(generateBpEntity(args), null, 2) }],
-  }),
+  async (args): Promise<CallToolResult> => {
+    const result = generateBpEntity(args);
+    const filesRaw = (result.files as Record<string, unknown> | undefined) ?? {};
+    const files: Record<string, string> = {};
+    for (const [k, v] of Object.entries(filesRaw)) {
+      files[k] = typeof v === "string" ? v : JSON.stringify(v, null, 2);
+    }
+    const wrapped = maybeWriteGeneratorResult(
+      {
+        code: null,
+        files,
+        warnings: result.warnings as string[] | undefined,
+        errors: result.errors as string[] | undefined,
+      },
+      { write: args.write, confirmed: args.confirmed, projectPath: args.projectPath },
+      { resourcesPrefix: "." },
+    );
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({ ...result, ...wrapped, files: result.files }, null, 2),
+        },
+      ],
+    };
+  },
 );
 
 registerWaveExtensions(server);
@@ -1131,8 +1205,8 @@ export const indexToolSchemas: ToolSchemaEntry[] = [
   { name: "analyze_bedrock_log", description: "基岩版内容日志分析器（只读）。路径：logPath（content_log.txt 绝对路径）或 logsDir / projectPath（自动找最近的 content_log*.txt，有界读取）。按 Bedrock content-log 行格式独立解析（[时间][级别][标签] 消息），给出级别统计、Top 标签、错误/警告样本与问题归类。不是 Java 崩溃日志拆解。不写盘、不联网。", inputSchema: analyzeBedrockContentLogSchema },
   { name: "validate_addon_manifest", description: "校验基岩 manifest.json（header/modules/UUID/capabilities）。不是 validate_project。禁止 experimentalGameplay。", inputSchema: validateAddonManifestSchema },
   { name: "validate_bp_json", description: "精简校验 entity/block/item/recipe JSON。不是 validate_datapack_json（Java pack_format）。", inputSchema: validateBpJsonSchema },
-  { name: "generate_addon_manifest", description: "只吐 manifest JSON 文本，不写盘。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。", inputSchema: generateAddonManifestSchema },
-  { name: "generate_bp_entity", description: "只吐 BP 实体 JSON 文本，不写盘。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。", inputSchema: generateBpEntitySchema },
+  { name: "generate_addon_manifest", description: "只吐 manifest JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。默认 stable @minecraft/server；beta=true 才写 beta 依赖并提示世界 Beta APIs。", inputSchema: generateAddonManifestSchema },
+  { name: "generate_bp_entity", description: "只吐 BP 实体 JSON 文本与 suggestedPath；默认不写盘。可选 write+confirmed 走沙箱。点名 Beta 爆炸事件时才给 script 片段，并附带 BP/manifest.json（@minecraft/server version=beta）。禁止写 experimentalGameplay。", inputSchema: generateBpEntitySchema },
 ];
 
 /** 全部工具 schema（index + wave；基岩 9 个工具计入 index）。 */

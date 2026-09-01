@@ -32,6 +32,9 @@ export interface GeneratorResult {
   warnings?: string[];
   errors?: string[];
   experimental?: boolean;
+  /** 建议写入的相对工程路径（generate_* 包装后填充；默认仍只吐文本） */
+  suggestedPath?: string | null;
+  suggestedPaths?: string[];
 }
 
 export type PlatformTarget = "forge_1.20.1" | "neoforge_1.21";

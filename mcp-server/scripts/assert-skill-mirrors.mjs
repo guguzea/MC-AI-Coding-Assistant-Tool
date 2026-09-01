@@ -1,6 +1,13 @@
 /**
  * Assert .cursor/skills|rules 与各 IDE 镜像规范化后哈希一致。
  * 规范化与 scripts/sync-skills.ps1 对齐（路径引用、BOM、换行）。
+ *
+ * 末尾另有 pack-tree 不变式（同一份「源稿 ↔ 派生树」契约）：
+ *   - neoforge/ 根档 = legacy trap：只留 .cursor 源稿，7 套投影树必须为空。
+ *   - 任何档不得有 `.cursor/agents/`（复数）——sync 只写 `.cursor/agent/`（单数）。
+ *   - AGENTS.md → .cursor/agent + .claude/agents + .trae/agents 三镜像：
+ *     存量漂移记在 KNOWN_AGENTS_DRIFT 台账里，新增漂移直接失败；
+ *     台账条目一旦不再漂移也必须删（跑过一次真 sync 就得缩短），否则它变成永久豁免名单。
  */
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
@@ -192,10 +199,100 @@ for (const pack of listVersionDirs()) {
   }
 }
 
+// ── Pack-tree 不变式 ────────────────────────────────────────────────────────
+// 下面三类都源于「只改派生产物 / 只删产物，源稿与生成器照旧」：
+// 一次 sync-skills.ps1 就能把删掉的东西整套写回来，所以必须机器守住。
+
+/** sync-skills.ps1 在每档写的 7 套投影树根（与 RULE_MIRRORS + .pi 一致）。 */
+const PROJECTION_DIRS = [
+  ".claude",
+  ".continue",
+  ".trae",
+  ".opencode",
+  ".agents",
+  ".zcode",
+  ".pi",
+];
+
+// (1) neoforge/ 根档是 legacy trap（neoforge/LEGACY-NOTICE.md）：现行版档在
+//     neoforge/<ver>/，根档只留 .cursor 源稿。它曾有 325 个投影文件；删掉后
+//     只要 sync 再把根目录列进 targets，一条命令就整套复活。
+const nfRoot = join(repoRoot, "neoforge");
+if (existsSync(join(nfRoot, ".cursor", "rules"))) {
+  for (const host of PROJECTION_DIRS) {
+    if (existsSync(join(nfRoot, host))) {
+      failures.push(
+        `legacy neoforge root pack gained projection ${relative(repoRoot, join(nfRoot, host))} ` +
+          "(see neoforge/LEGACY-NOTICE.md; live packs are neoforge/<ver>/)",
+      );
+    }
+  }
+}
+
+// (2) `.cursor/agents/`（复数）不是任何生成器的目标：sync-skills.ps1 只写
+//     `.cursor/agent/default.md`（单数）+ `.claude/agents/` + `.trae/agents/`。
+//     复数目录 = 旧时代手改投影留下的孤儿，没人读，也没人覆盖它。
+for (const plat of PLATS) {
+  const platDir = join(repoRoot, plat);
+  if (!existsSync(platDir)) continue;
+  const candidates = [{ base: platDir, rel: plat }];
+  for (const name of readdirSync(platDir)) {
+    const dir = join(platDir, name);
+    if (statSync(dir).isDirectory()) candidates.push({ base: dir, rel: `${plat}/${name}` });
+  }
+  for (const { base, rel } of candidates) {
+    const plural = join(base, ".cursor", "agents");
+    if (existsSync(plural) && statSync(plural).isDirectory()) {
+      failures.push(
+        `orphan ${rel}/.cursor/agents/ (plural is never a sync target — keep .cursor/agent/default.md only)`,
+      );
+    }
+  }
+}
+
+// (3) AGENTS.md 是权威源稿，sync 把它覆盖到三处镜像。台账原本是 sweep47 留下的存量漂移
+//     （改了各档 AGENTS.md 却没重跑 sync）；2026-09-01 真跑 sync-skills.ps1 -All 后实测漂移 0 档，已清空。
+//     只准临时挂账：先跑 node scripts/assert-skill-mirrors.mjs 看 rel，加一行、修好、删一行。
+//     下面的双向检查会同时拒绝「新漂移」和「台账里的僵尸条目」，所以挂账不会变成永久豁免。
+const KNOWN_AGENTS_DRIFT = new Set([]);
+
+const agentsDrift = new Set();
+for (const pack of listVersionDirs()) {
+  const agentsSrc = join(pack.base, "AGENTS.md");
+  if (!existsSync(agentsSrc)) continue;
+  const want = sha(readFileSync(agentsSrc, "utf8"));
+  const mirrors = [
+    join(pack.base, ".cursor", "agent", "default.md"),
+    join(pack.base, ".claude", "agents", "default.md"),
+    join(pack.base, ".trae", "agents", "default.md"),
+  ];
+  const drifted = mirrors.filter((m) => !existsSync(m) || sha(readFileSync(m, "utf8")) !== want);
+  if (!drifted.length) continue;
+  agentsDrift.add(pack.rel);
+  if (KNOWN_AGENTS_DRIFT.has(pack.rel)) continue;
+  failures.push(
+    `AGENTS.md mirrors out of sync in ${pack.rel}: ` +
+      drifted.map((m) => relative(repoRoot, m)).join(", ") +
+      " (run scripts/sync-skills.ps1 -TargetDir <pack>)",
+  );
+}
+
+// 台账是「待重同步」清单，不是永久豁免名单：真跑过一次 sync，条目就必须删掉。
+// 不这么要求的话，「只准缩短」只是句注释，台账会悄悄变成 36 档的长期免检。
+const staleLedger = [...KNOWN_AGENTS_DRIFT].filter((rel) => !agentsDrift.has(rel));
+if (staleLedger.length) {
+  failures.push(
+    `agents 漂移台账里有 ${staleLedger.length}/${KNOWN_AGENTS_DRIFT.size} 条已经不再漂移：` +
+      `把这些 rel 从 KNOWN_AGENTS_DRIFT 删掉（跑 scripts/sync-skills.ps1 -All 后收敛）：${staleLedger.slice(0, 40).join(", ")}`,
+  );
+}
+
 if (failures.length) {
   console.error(`assert-skill-mirrors: ${failures.length} mismatch(es)`);
   for (const f of failures.slice(0, 40)) console.error(`  ${f}`);
   if (failures.length > 40) console.error(`  … +${failures.length - 40} more`);
   process.exit(1);
 }
-console.log("assert-skill-mirrors: ok");
+console.log(
+  `assert-skill-mirrors: ok (实测 AGENTS 漂移 ${agentsDrift.size} 档 / 台账 ${KNOWN_AGENTS_DRIFT.size} 档，只准缩短)`,
+);
